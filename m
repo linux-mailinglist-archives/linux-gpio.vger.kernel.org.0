@@ -1,127 +1,205 @@
-Return-Path: <linux-gpio+bounces-10681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 216B898D12F
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 12:27:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3265C98D137
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 12:29:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ACFF1F237D1
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 10:27:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4ABFA1C21931
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 10:29:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D58C1E6338;
-	Wed,  2 Oct 2024 10:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C4C1E6DC2;
+	Wed,  2 Oct 2024 10:29:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DeYiUKwu"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yB1oAT7E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MhIpu/ca"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB0E1E501B
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 10:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253B12564;
+	Wed,  2 Oct 2024 10:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727864854; cv=none; b=iIom6TSl9seG7OtqbZXHG2p6l/MaObKsCFVnzOJDZ5z8QnhK4VA1tuaI94D0gpUxJ+dY0/xrcKhT6HdW7l/pTTJqpd/SnMPRUkgT56xLxOu0pL3GF1QIQXMnyMTtmyg7eXxpxtzwFUae8kHbFGtnI0N/rr8AxBZHWw6GWRV2ci8=
+	t=1727864982; cv=none; b=Pj3ZfSNidnOnzPbrop6/8BXktwNlIEmFYysOAifcS2d0gQJwkW5huKbrt6/x/jiD2szQ+mI2Jctqoy77f4z7GrskA/1qWneXpdSmtFET5Jxcq6cgsCNtsysuc94CyMEE42V7LXb0GQkjoPrYBPx8vY4opPuDaN3W/8N1ZnhKzPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727864854; c=relaxed/simple;
-	bh=QhP8dAfjWNSaYUmoZ4flnUlLOBgW5BBKq7Dys4CJcPU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rz6ZBr1xueLu657zhIc7ly6EuiUFRIWfnO3XuOsW9AhG440sA/eRlP8pKWJcOYt9CuNDh3g9OPPO0YyUdB20rRIq/wVR28jaRhPoHueguZyt/4eI3nu7VptvmMDhC93zYH2Bhv2sQ53/JdWztKmuIybvMRxNNl/vfSiWRA9NZz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DeYiUKwu; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2e0a74ce880so5390046a91.2
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 03:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727864852; x=1728469652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QhP8dAfjWNSaYUmoZ4flnUlLOBgW5BBKq7Dys4CJcPU=;
-        b=DeYiUKwu4J9nNTYpb+DB82MvLkFxjyeCiy38RxltVFFjrbtL7H3zTECTXjYclDDXem
-         Cyw9/3sSiBMHOky+zQys3wFRkU3jB4oyy5d2Y+eeFk0/LfPixXihAFR7h1kOr0rgzoyG
-         ldndZjwlrtXJ2VMAcilNAC6NezVqZNgcKGiVDbsUpvYVbxuryef1TXSS0xxV9hG0ntOb
-         VNNvYP4oYcoW+bPxkkF/Wh+RDoK16+/XFabxe9CWaVUorW/4J9cX4FxJJGMHa8rQWFCR
-         62CF1t7JPjnXhs+EoQNb/941Lr50+ia5f31cGt7Gad7VdDtNjjO8Po7OvdFojsBCZv/H
-         BUgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727864852; x=1728469652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QhP8dAfjWNSaYUmoZ4flnUlLOBgW5BBKq7Dys4CJcPU=;
-        b=jAlzJRkpPYnV9q1FQvuhqJ6sl6lqqpr28Uo2GN+Ki8dXnxdmrgRJuJ4xzJIyfDzB2V
-         UOyegp2PzcWhvYMHuxPfKZlJ2C5vXfpwYFeg7udAbl/dyoZHB+oB5Qq8Ts+eQJEnLlcG
-         a6AfBPYy8DwGM/tqzKSOQZDzFodVt3jbk6O77148HwTj5z0b4exfb1BE6p0IQxHsR7WY
-         +ZgFe1WVg7V5X9xbQbNQKaIAb+nbXCUAq+lG+howHktINDa07tfyEGONYzQAxhqaRYmo
-         MA3UlMgARHfk9E91N3ZAkXed+fGVzRP5OapDb/tAioIoA4l2C7iTdG7U6X6sEr97fFWv
-         yvCg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3V09RBgoV1jpicjecLugDXgQMtzPUVK6istWXo/noya8+Ssr/rfK4+PlyOl+9lCvyEjrWpvT7G3ne@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeLVASpENsk01Um6f6fpcAis6rdOL3NnMoCI4/H+fpmIYvjPwL
-	O8eRIQVPP7X6FZh/T1u9DvKl22bfgMDQgXU0jxISvnpKWhEb/bnSRzZ7QMfNi1eXyav0puOH30q
-	Q3OyEUkltJfCVwwJc2FuVO6C3WENgJzWpcKZIpg==
-X-Google-Smtp-Source: AGHT+IGiI611bF0LSNL9d1Wo5FWjadPESUy6tI49+wZGoCskFJasqOAr97AM7LwOhTLXYHQPCWHSierz4rQt1kIywXA=
-X-Received: by 2002:a17:90a:ce84:b0:2e0:788f:6253 with SMTP id
- 98e67ed59e1d1-2e18455899fmr3665606a91.10.1727864852193; Wed, 02 Oct 2024
- 03:27:32 -0700 (PDT)
+	s=arc-20240116; t=1727864982; c=relaxed/simple;
+	bh=LDK9u0Rh2qGiHVfadHoNtSjm2vY0JJcNEyZQH38Ru+k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DM00VS+VeXdL+ChT61T9bKtO6/jgDqFBl5n5fDYSrx4N2gcDiso6Z7KmYGXDn4puqy5Rjpylbt3jO6i1SrpkVqaTCuNBAIEGkXCS3zXJHrEr/upegOB81Fwyi+bF0sqkbmQUfG0nWFuU8EdvqSsfRm8ViFIYBLDyqf7TDgTQQ6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yB1oAT7E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MhIpu/ca; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1727864979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PJVrnVEM5cfMb5vScxdTKMt9fhDfO9Z+hAavmEhwIU=;
+	b=yB1oAT7E1XlN630uOzFK88nJIYEI99pPkqNC7MzylFVOj1IHHLL4wQdAvyaZyP4PagTpOx
+	bxnuVy3hPxeaRunRUQWRz7PLnx8jC0XM/QBipRCtwDXt5yk/GnTnLgawl6+Jpj357eInF4
+	feHK1LkX8aAxPoSFSnq6FIiAbwkHqopcOJoxhHy670GOTPC6bBLMxPFLRA0TkjO6QuHrgM
+	dnySzEfNcKCD4u6/Ie7tYBxX+e2CISpmNjazTC0R1oQIBq9Ylik81p5JcGwgXjOL58GSxN
+	55PJEsrPb5JN7Vz1JoYqp0HGychuDbfIpdbgbOUe0N70jPiGXLaRsgrf6hFtoQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1727864979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PJVrnVEM5cfMb5vScxdTKMt9fhDfO9Z+hAavmEhwIU=;
+	b=MhIpu/cax/LLZ8lM46QyQvLchwXnRKNKa5cv+msYl2uLTyj87E3kBnHwolI8nutZOK39SI
+	uCKJQkyTfUQG9jCQ==
+To: Arturs Artamonovs via B4 Relay
+ <devnull+arturs.artamonovs.analog.com@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Greg Malysa
+ <greg.malysa@timesys.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Utsav Agarwal <Utsav.Agarwal@analog.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson
+ <olof@lixom.net>, soc@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-serial@vger.kernel.org, Arturs Artamonovs
+ <arturs.artamonovs@analog.com>, adsp-linux@analog.com, Arturs Artamonovs
+ <Arturs.Artamonovs@analog.com>, Nathan Barrett-Morrison
+ <nathan.morrison@timesys.com>
+Subject: Re: [PATCH 11/21] irqchip: Add irqchip for ADI ADSP-SC5xx platform
+In-Reply-To: <20240912-test-v1-11-458fa57c8ccf@analog.com>
+References: <20240912-test-v1-0-458fa57c8ccf@analog.com>
+ <20240912-test-v1-11-458fa57c8ccf@analog.com>
+Date: Wed, 02 Oct 2024 12:29:38 +0200
+Message-ID: <87ed4yyezx.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
- <20240919094339.2407641-7-billy_tsai@aspeedtech.com> <CACRpkdbFD9CiqVwQ5xxZ9SfQtVvDJGCr=8spxBG4u-JQ0PKJ3w@mail.gmail.com>
-In-Reply-To: <CACRpkdbFD9CiqVwQ5xxZ9SfQtVvDJGCr=8spxBG4u-JQ0PKJ3w@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 2 Oct 2024 12:27:19 +0200
-Message-ID: <CAMRc=MdvV7Z2yPpoR9mXLH6UCF5uA=TbkC_qUSj=akP_09M0WQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] gpio: aspeed: Add the flush write to ensure the
- write complete.
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Billy Tsai <billy_tsai@aspeedtech.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com, Peter.Yin@quantatw.com, 
-	Jay_Zhang@wiwynn.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Oct 1, 2024 at 4:18=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
+On Thu, Sep 12 2024 at 19:24, Arturs Artamonovs via wrote:
+> From: Arturs Artamonovs <arturs.artamonovs@analog.com>
 >
-> On Thu, Sep 19, 2024 at 11:43=E2=80=AFAM Billy Tsai <billy_tsai@aspeedtec=
-h.com> wrote:
->
-> > Performing a dummy read ensures that the register write operation is fu=
-lly
-> > completed, mitigating any potential bus delays that could otherwise imp=
-act
-> > the frequency of bitbang usage. E.g., if the JTAG application uses GPIO=
- to
-> > control the JTAG pins (TCK, TMS, TDI, TDO, and TRST), and the applicati=
-on
-> > sets the TCK clock to 1 MHz, the GPIO=E2=80=99s high/low transitions wi=
-ll rely on
-> > a delay function to ensure the clock frequency does not exceed 1 MHz.
-> > However, this can lead to rapid toggling of the GPIO because the write
-> > operation is POSTed and does not wait for a bus acknowledgment.
-> >
-> > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
->
-> If this applies cleanly on mainline I think it should go into fixes as-is=
-.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yours,
-> Linus Walleij
+> Support seting extra indepdendent interrupt on pin activity.
 
-I agree but it doesn't. :(
+So the subject says it adds a new interrupt chip. Now the changelog
+mumbles about support of something extra.
 
-Billy: please send it separately and - while at it - use a C-style comment.
+Please describe your changes properly and explain what this is
+about. Also spell check your change log.
 
-Bart
+> +struct adsp_pint {
+> +	struct irq_chip chip;
+> +	void __iomem *regs;
+> +	struct irq_domain *domain;
+> +	unsigned int irq;
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+
+And please read and follow the rest of that document too.
+
+> + * This relies on the default configuration of the hardware, which we do not
+> + * expose an interface to change.
+> + */
+> +int adsp_attach_pint_to_gpio(struct adsp_gpio_port *port)
+
+Where is this function declared and where is it used?
+
+> +static void adsp_pint_dispatch_irq(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct adsp_pint *pint = to_adsp_pint(chip);
+> +	unsigned int type = irqd_get_trigger_type(&desc->irq_data);
+> +	u32 pos = BIT(desc->irq_data.hwirq);
+> +
+> +	/* for both edge interrupt, toggle invert bit to catch next edge */
+> +	if (type == IRQ_TYPE_EDGE_BOTH) {
+> +		u32 invert = readl(pint->regs + ADSP_PINT_REG_INVERT_SET) & pos;
+> +
+> +		if (invert)
+> +			writel(pos, pint->regs + ADSP_PINT_REG_INVERT_CLEAR);
+> +		else
+> +			writel(pos, pint->regs + ADSP_PINT_REG_INVERT_SET);
+
+What protects pint->regs against concurrent modifications?
+
+> +static void adsp_pint_irq_mask(struct irq_data *d)
+> +{
+> +	struct adsp_pint *pint = irq_data_get_irq_chip_data(d);
+> +
+> +	writel(BIT(d->hwirq), pint->regs + ADSP_PINT_REG_MASK_CLEAR);
+
+Same question.
+
+> +static int adsp_pint_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct adsp_pint *pint;
+> +
+> +	pint = devm_kzalloc(dev, sizeof(*pint), GFP_KERNEL);
+> +	if (!pint)
+> +		return -ENOMEM;
+> +
+> +	pint->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(pint->regs))
+> +		return PTR_ERR(pint->regs);
+> +
+> +	pint->chip.name = "adsp-pint";
+> +	pint->chip.irq_ack = adsp_pint_irq_ack;
+> +	pint->chip.irq_mask = adsp_pint_irq_mask;
+> +	pint->chip.irq_unmask = adsp_pint_irq_unmask;
+> +	pint->chip.irq_set_type = adsp_pint_irq_set_type;
+> +	// @todo potentially only SEC supports wake options, not gic
+> +
+> +	// @todo determine if we actually need a raw spinlock
+
+This should have been determined before posting, no?
+
+> +	pint->domain = irq_domain_add_linear(np, ADSP_PINT_IRQS,
+> +		&adsp_irq_domain_ops, pint);
+
+devm_irq_domain_instantiate()
+
+> +	if (!pint->domain) {
+> +		dev_err(dev, "Could not create irq domain\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pint->irq = platform_get_irq(pdev, 0);
+> +	if (!pint->irq) {
+> +		dev_err(dev, "Could not find parent interrupt for port\n");
+> +		return -EINVAL;
+
+Then this would not leak the interrupt domain. Also why is this not
+checked _before_ instantiating the domain?
+
+> +static int __init adsp_pint_init(void)
+> +{
+> +	return platform_driver_register(&adsp_pint_driver);
+> +}
+> +
+
+Pointless new line
+
+> +arch_initcall(adsp_pint_init);
+> +
+> +MODULE_DESCRIPTION("Analog Devices IRQChip driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Greg Malysa <greg.malysa@timesys.com>");
+> \ No newline at end of file
+
+This message has a meaning, no?
+
+Thanks,
+
+        tglx
 
