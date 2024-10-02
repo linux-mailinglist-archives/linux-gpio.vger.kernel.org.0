@@ -1,133 +1,111 @@
-Return-Path: <linux-gpio+bounces-10749-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10750-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A96398E330
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 20:55:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11FF398E38C
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 21:37:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D260284343
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 18:55:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA285285C82
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 19:37:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2D54216A22;
-	Wed,  2 Oct 2024 18:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20B6212F1A;
+	Wed,  2 Oct 2024 19:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1b++OUI"
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="BMFrkAZM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DBB221E24
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 18:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C905157A6C;
+	Wed,  2 Oct 2024 19:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727895033; cv=none; b=HrhutUx1ZlnJhue2z1c0OLr00KHG/95WkwYDTZ9Vi8ds3CrUthSY+Qyyp3pfaMY2ATX3UtLUi/6h3s2knx1SmASs2fpxEYyj/4rpxa6qVUzLMK5LNdK/VvBJJOxOuukdst6BYbbwEtS5XYb1jUS4Ep5fgS7QKEezqpJqhf+x1Wc=
+	t=1727897834; cv=none; b=izZMOWLaSIJflopj1lTsUca0BhuS43k6WPu9VNh46xo9aTQPThanem4gFMpD4r6bCoj+rUHte0tCizrGfZW8GPedOReIU9ma7I7Rd5b4TSBOJmENQIA+3QK93so7VOXTe925stUfpCb7Xd+gKhuIytJaEk222tbaNoyslHvcX5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727895033; c=relaxed/simple;
-	bh=kFlIFumcWI5DnyV/SVBK0Zf8SxnMGxnGS1bghaaosEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ILj3AasowS5/3n8jmnX9yBS/4nnHC9wD1MfJO6qudx+zr9916s/TeHvFg8XLmSrBYzVnampijt5sIzQbDi3v5o3RtAly6zEoW295ojwe1A39f5RVyy/3JQiv0oLoewYIz/oNA9KsZ1jrlHxUVwLwz53JXf31TXZsV9yeP097WT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1b++OUI; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727895032; x=1759431032;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=kFlIFumcWI5DnyV/SVBK0Zf8SxnMGxnGS1bghaaosEQ=;
-  b=B1b++OUI8W5yjcPLd38+XPsW5StdeGRHdtFqBzQre+5U0uab+5WjBExm
-   yyChzjZeM0Xr9/Ib8K3oUsxj819N3WgrXh6c2tdOhs/F71Wwj2ZQRFudB
-   Q+splk7SagaUlGM3lxO9paeSg+OD3Oo/t5uGBMnosut73kXRmX/nVgVNd
-   6AZvULf4fcLa+AoHvUY7Hl5ew8EhEBmOrdLJ4pkz7tgbwugDLQFLLBHqJ
-   ISIYwN7IOjuvFp9P00bAS4A6wrgfFTUoz39CjLX5anM/NOgQDzr1LvILh
-   BEMhrhcKChQ8DxfzuvMKsrfNBpzlDTF9muML1alXZJGzsdFBcIBimF0BR
-   Q==;
-X-CSE-ConnectionGUID: 6qu8bgN2QtyRntngbHBXsA==
-X-CSE-MsgGUID: vwAJXipjQXWQFSn8G9R0Cg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="26580090"
-X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="26580090"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 11:50:31 -0700
-X-CSE-ConnectionGUID: 1Mt92jv6SCau9hxksGkAlg==
-X-CSE-MsgGUID: ljYSm+M/Sv6JUD/jeVEXxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
-   d="scan'208";a="73769013"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 02 Oct 2024 11:50:30 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sw4Qd-000UPF-1X;
-	Wed, 02 Oct 2024 18:50:27 +0000
-Date: Thu, 3 Oct 2024 02:49:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Esben Haabendal <esben@geanix.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [linusw-pinctrl:devel 8/22]
- drivers/pinctrl/freescale/pinctrl-imx27.c:21:9: warning: 'PC' macro
- redefined
-Message-ID: <202410030214.dPrgmUqd-lkp@intel.com>
+	s=arc-20240116; t=1727897834; c=relaxed/simple;
+	bh=RoFKBVRxYfTHWfBz6uS38ckS7VuXYibcgS/2JavRY7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qCNYXT2G5t0HSd0tIM7RlJc7haH9yyGbYTHZQpdvXMiAOb/Uw9z6bAR2QNTDivJ19j2dU4G6riSWYsirXZgb+yQB8VaDomWZcnQuUQ4EnErsQOEGOkiO/Wm+pE2oouszX/zoeLrwxMCCmQfBb2YrAzRfyIA2/uVg9ct1zrgmmOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=BMFrkAZM; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1727897824; bh=RoFKBVRxYfTHWfBz6uS38ckS7VuXYibcgS/2JavRY7E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BMFrkAZMQg/Uxb/7vcM4o7BbiH+chLwVFy+EHYXuy+i1aL+Ym2XwSZtj4pEv6yTuY
+	 E1VHLcL0qaaQE4HonN0nDjrHmlPAJUEjZO2tlPnfNpZrpd9qtbRyfT4On7ppjMoYsH
+	 PCeEtRvCO5BXUMpUXs62y5SA4bhom53lY2cL/LzNvX4kldDNdooyPfKoXhTSK4dWxR
+	 eFtC3TuZwDfxSfZ3aLKMgx4Wix0AY+nJgJjGnvK15WxwJCgLxSTFOr0nYhvUPAKqPw
+	 GBmldsRIiaMjpbqlTWwD/zKQilAbHs74x/ovUEjltOwUo8UXewvrK02vWEefcWmH4l
+	 DNlqkfwS5ehiY0X1yIQwLkA6GLCcMR1fpY8IRJCWg3SwnEPlN9pLd0McatOsoZSiFC
+	 xJfnGehxadjFaK9Gs+O7Ib8nKKkOuJesfbh4T8+jtUaAkKhL7fOPQHqhW3DLvnWCzq
+	 FNlGuxcdtBDwV99itYAyW3FHya7oQpoEqGL5crsJGQF334t1ZzSl++drGiK7Yk9f6A
+	 SFFoGwUYYf8DG9b57SeIdcwg5agVDrGTJ3ZE8aOqvCkPAmJpV+2j9VRNZastgS8Glt
+	 GyMxQix/SC1J5wEqMjPBuPrZnKo7GFDdCf2A/mq067rACCL7SLI1Zv6oIeXNZldj9d
+	 KYBhB3vYrU4qWpT2wIJVXstc=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id A8660168387;
+	Wed,  2 Oct 2024 21:37:02 +0200 (CEST)
+Message-ID: <87770518-5f63-4adf-b6ea-c7f92b58ce22@ijzerbout.nl>
+Date: Wed, 2 Oct 2024 21:36:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/8] pinctrl: Add driver for the T-Head TH1520 SoC
+To: Drew Fustini <dfustini@tenstorrent.com>, Drew Fustini <drew@pdp7.com>,
+ Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240930-th1520-pinctrl-v3-0-32cea2bdbecb@tenstorrent.com>
+ <20240930-th1520-pinctrl-v3-2-32cea2bdbecb@tenstorrent.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20240930-th1520-pinctrl-v3-2-32cea2bdbecb@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-head:   30e830b8b952e550344224546f8cd83c5c49a5bf
-commit: a55222b7a1327fabad71e1e61661077ab66bb98d [8/22] pinctrl: freescale: enable use with COMPILE_TEST
-config: mips-randconfig-r112-20241002 (https://download.01.org/0day-ci/archive/20241003/202410030214.dPrgmUqd-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project fef3566a25ff0e34fb87339ba5e13eca17cec00f)
-reproduce: (https://download.01.org/0day-ci/archive/20241003/202410030214.dPrgmUqd-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410030214.dPrgmUqd-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/freescale/pinctrl-imx27.c:21:9: warning: 'PC' macro redefined [-Wmacro-redefined]
-      21 | #define PC 2
-         |         ^
-   arch/mips/include/uapi/asm/ptrace.h:17:9: note: previous definition is here
-      17 | #define PC              64
-         |         ^
-   1 warning generated.
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for PINCTRL_IMX_SCU
-   Depends on [n]: PINCTRL [=y] && IMX_SCU [=n]
-   Selected by [y]:
-   - PINCTRL_IMX8QM [=y] && PINCTRL [=y] && OF [=y] && (IMX_SCU [=n] && ARCH_MXC && ARM64 || COMPILE_TEST [=y])
-   - PINCTRL_IMX8DXL [=y] && PINCTRL [=y] && OF [=y] && (IMX_SCU [=n] && ARCH_MXC && ARM64 || COMPILE_TEST [=y])
-
-
-vim +/PC +21 drivers/pinctrl/freescale/pinctrl-imx27.c
-
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  17  
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  18  #define PAD_ID(port, pin) (port*32 + pin)
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  19  #define PA 0
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  20  #define PB 1
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29 @21  #define PC 2
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  22  #define PD 3
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  23  #define PE 4
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  24  #define PF 5
-e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  25  
-
-:::::: The code at line 21 was first introduced by commit
-:::::: e16dbf6011137343f51685c1e0c5be36a68fc501 pinctrl: imx27: imx27 pincontrol driver
-
-:::::: TO: Markus Pargmann <mpa@pengutronix.de>
-:::::: CC: Linus Walleij <linus.walleij@linaro.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Op 30-09-2024 om 21:50 schreef Drew Fustini:
+> From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+>
+> Add pinctrl driver for the T-Head TH1520 RISC-V SoC.
+>
+> Tested-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> [dfustini: use thead,pad-group to identify the pin controller instance]
+> Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
+> ---
+>   MAINTAINERS                      |   1 +
+>   drivers/pinctrl/Kconfig          |  13 +
+>   drivers/pinctrl/Makefile         |   1 +
+>   drivers/pinctrl/pinctrl-th1520.c | 907 +++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 922 insertions(+)
+>
+> [...]
+> +static int th1520_pinmux_set_mux(struct pinctrl_dev *pctldev,
+> +				 unsigned int fsel, unsigned int gsel)
+> +{
+> +	struct th1520_pinctrl *thp = pinctrl_dev_get_drvdata(pctldev);
+> +	const struct function_desc *func = pinmux_generic_get_function(pctldev, fsel);
+func can be NULL after calling pinmux_generic_get_function
+Please add something to avoid NULL pointer dereferencing in the next 
+statement.
+All other callers of pinmux_generic_get_function have something like this:
+     if (!func)
+         return -EINVAL;
+> +
+> +	return th1520_pinmux_set(thp, thp->desc.pins[gsel].number,
+> +				 (uintptr_t)thp->desc.pins[gsel].drv_data & TH1520_PAD_MUXDATA,
+> +				 (uintptr_t)func->data);
+> +}
+> +
 
