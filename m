@@ -1,77 +1,83 @@
-Return-Path: <linux-gpio+bounces-10763-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10764-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D6FB98E837
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 04:08:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4879C98E873
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 04:33:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 551341C22EC2
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 02:07:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C56691F25375
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 02:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0F8614012;
-	Thu,  3 Oct 2024 02:07:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B73BA17C9B;
+	Thu,  3 Oct 2024 02:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhdmihML"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9X/XCIg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E66B3FEC
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 02:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341D117C77;
+	Thu,  3 Oct 2024 02:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727921275; cv=none; b=d8XzNFlTWYr9Z/DK+ABb0OY55k+8hbP5IydJl/AGQKigPFcx0mGXvDji5VptYU0MZ9mY1MMX9oNEgquSQ48COH8Ew7yOhYEGU4RhM277LN38j74waQ7+rcGCEmJdwZXg4MAcW/Hi2QRrEpOHq+H791SQMWEBnMIIfYWN3CRHsF4=
+	t=1727922827; cv=none; b=Mf0LkDenD5nBDSBy3pM1w8VHj34InhtakW7IC6TDpZerZ1MrGOoHmw3CjAOvWWHR7pm+dm6lBQtNzvdGgryjvJKTdCwIJkeqGjoxKOBClsgktdFNX6bULCTkJysKJ/Tisn5SYd13BIkVrISqFbzk6ax0qPO8PzXC01N9/Lg7lu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727921275; c=relaxed/simple;
-	bh=vZj7PNA8iC5KaD7c8SG4x0g+OW28eW4sWRrRKaxCffI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O80bHjOgRFvnefisTodvxhYko9Eg0A74uKVT/0vzWbSl3Her3tkK29HmibulPv6JfMWxNJntwC/pOoPCouMqHf6lrgGR1dBZSZKNykAaosw4meNGelKDPUim1Mqcsr3hT8u9hW1+oc5bZzYatRMWNKELKn1v/6E26CL+WSeEys0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhdmihML; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1727922827; c=relaxed/simple;
+	bh=pXD3its+D6Ck82m0Q6YYxgIi5A33XIqV35PGr+ZT9vk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iY+bN0FoHumITzAmCPFdF3K3+Zc6PR3ur7GHHqnUc6Aiu0c/WQLTCkH8S2J9NugdlYOcVMYCbIuNmuz89Dmul8pmzx+PvaTmo+1BVIf3MgFzh8s1htHpGGfil+N1ai5YnNaQfRRMU2geAJrgIuaOB0b4/v97je9JuCR0XnTgCEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9X/XCIg; arc=none smtp.client-ip=209.85.216.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2e07d91f78aso352054a91.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 19:07:54 -0700 (PDT)
+Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-2e084dc44bcso45454a91.0;
+        Wed, 02 Oct 2024 19:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727921273; x=1728526073; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1727922825; x=1728527625; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUEk8GH+Hswo4vdvbm1OCXAjgfFsOyUqS9vxbxymxj4=;
-        b=mhdmihMLmIhgc3NzTd0UTqtTyHYGKEiwh2gmPRGR6pD7RMcVv2WAJBgQziYsghc2m2
-         ZpJ0gzJfJewWhkzOCyXcyLK+KilK8hF7cdWxxtoMLOhPpDPBckNoRcWddhHEucr3XE1q
-         lqozVqahZlW6L0q2LHFoDqTMjeSLnwdyhCKIKdmQvE72nmk8luoGYdkLmcyJ8yU/4GUH
-         xaDB26GNRkOjUzbrqU9qCsbFyAfAsK5hr2BW/L4uqS8jVUX1t7guT1jC1E6ny1eiTg3M
-         3Hg75hADxWxtRP1KwFfke4C2qIDNRpOe6M5Itr4Qj7WHMqC6kOrOq/BKNhwNVwCyfP+b
-         9O0A==
+        bh=OYOhOaNZnjAn4zMumq/IMa/aCdY1Da9KJs3RHuJCp/s=;
+        b=C9X/XCIgDU+TH+WQz2YyF4sROw899ZUmbapTIZjXkqbtmaH+OfEzpz/+2onzP4YsLU
+         WdB0HvGT2iFMtiY1JbySJQ3UrfknkWE9/AucPKugl5IFXnBybmUH68hCOcz4a9QF5I3c
+         Iyj0q4k8BeT5E+tPVgdBWOZnqlbRl1JZ516hmdm68zzhLoUap6UW+B8dk+oGaJCxAHoY
+         eRM47nunfZcDmWOI8/zCfpOf698XQvwT3w0MViNF2hCTwMSoTB3WBwDqK4W7O3jCGRdS
+         AV3Fp2VYrypS/oE/yEzELgMoxLLQjzPqrTFDDNNHNbXaAUrdDMmHdbhysIYzeQX2eHWM
+         jpgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727921273; x=1728526073;
+        d=1e100.net; s=20230601; t=1727922825; x=1728527625;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uUEk8GH+Hswo4vdvbm1OCXAjgfFsOyUqS9vxbxymxj4=;
-        b=RWPjuFd4oEHgewfP7vi9Wkm3Si9HtzaY1AtiMGQ1/xgYCaRP3/8sbZ8RXn/iw7xJJ6
-         ILR1TiGVvL3vZyHn90JBfhCMiq5h3617KuxRzIUC73pznJ083FveIkB4D9DAT36H+vqo
-         +5Sf3P8ic1Y2LCoKu+oZrP2ebTX+XTx/2RY/fPfYe3SHHlU+eE6Z4qaRz3J13Ri0IGHI
-         Ja2es5mvZ4i0UJl4VyW49F+EOsAZc032qmdThz725X2sLc9sAglhuXju8CYJK55cwItE
-         qjmeBJ1V/IuTCU17GYAwYaGJVUPxF+iOAmpTh5M3CfgcvA4L1u1EAOknJp5DPZr7zM9r
-         BIxA==
-X-Gm-Message-State: AOJu0Yw7uwFggGEoEQMka1Dl0zXCmywmSqL6+cIJPGibRvCwYgLbxO+b
-	pdxgn6raFHqijCptxnucTT+hq2K9j6uxpDKY8bdj0raFBZJNygBI4hmyzj06
-X-Google-Smtp-Source: AGHT+IFmv/QPXNtZbuiuWYOfJMs2dvQjO1oxtqqda9mRvPsGnFrK9f/HJU5P0VdNHiGmMzxsmJV1Vw==
-X-Received: by 2002:a17:90b:1051:b0:2e0:cace:4ccb with SMTP id 98e67ed59e1d1-2e1848fa270mr6076007a91.26.1727921273316;
-        Wed, 02 Oct 2024 19:07:53 -0700 (PDT)
-Received: from rigel.home.arpa (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e18fa05057sm2378562a91.41.2024.10.02.19.07.51
+        bh=OYOhOaNZnjAn4zMumq/IMa/aCdY1Da9KJs3RHuJCp/s=;
+        b=d4Hjb7rk1lzeZv1Le8PcXOcQBJiSSACXnzEbOd+mhFinq5j1CEPfjHLDYUKwTjhHeP
+         +HDioACrgsYjEL+YQ02/6twEzUn5m5aIIQ+67tOUwxNBevbneDuFtMTCZBzK4DkbyIgR
+         /MKcnTJubDiF3ZQseAuqZCp+Szdj3Pvbn7cczIZluwjPV1wS2SOOovkk9WgKGXSBXJgA
+         HkzFZdbzTAHBb6z3oeVucCCVzgXNFMYFv/0IKgY14D7G5wkwCiuSm3DDVX0AmN6e5QOv
+         Mw8WoD56IHr19S5xEinz/Kw5tlvRTIhmvZPHHpnI7LatWFyW6zXURXbrHMOSeL3WxcHA
+         t0zA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyx6YH5lHrzljifwOeuhv1rvJKAh3MAZs5fVSXlc42m9w/LAHCs/9zGHnq7jrUqdWJh4N4QYuN4mQB@vger.kernel.org, AJvYcCV9pZaXDDfJMRkSBhBrkaDFLBHIj79GlliKcxb0Q0tyc/RGlkeJpCnALwHvbruoUApdBSaxNQ6d88rMODnZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh8rnlA2kmuaTkXptmnKuDJjGxwFEIyuEbJy1w08o0OFHfSq65
+	pTGs2D5zVgjU/40ZdBa5JfuXLrrtMcydpHkxLbEWUW2S9gTpGweapDZkcjptbPvknm9t
+X-Google-Smtp-Source: AGHT+IGYxkNOKFaghUlztt39c4/ZdNDHNPlas4VMOl/JXBrzfhjZirZfZNwFdvwyoYrQsXcGP1OMcg==
+X-Received: by 2002:a17:90a:8c3:b0:2d8:9f4e:1c3d with SMTP id 98e67ed59e1d1-2e1848d7d29mr2540150a91.5.1727922825253;
+        Wed, 02 Oct 2024 19:33:45 -0700 (PDT)
+Received: from user.. ([206.237.119.150])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e1bfb1787asm275548a91.21.2024.10.02.19.33.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 19:07:52 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] tools: line wrap period help
-Date: Thu,  3 Oct 2024 10:07:43 +0800
-Message-Id: <20241003020743.27194-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Wed, 02 Oct 2024 19:33:44 -0700 (PDT)
+From: clingfei <clf700383@gmail.com>
+To: drew@pdp7.com,
+	guoren@kernel.org,
+	wefu@redhat.com,
+	linus.walleij@linaro.org
+Cc: linux-riscv@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	clf700383@gmail.com
+Subject: [PATCH] pinctrl: fix Null pointer dereference
+Date: Thu,  3 Oct 2024 10:33:07 +0800
+Message-Id: <20241003023307.2138695-1-clf700383@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -80,35 +86,28 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The help for periods is overly long so wrap it to make it more
-consistent with other help lines.
+pinmux_generic_get_function may returns NULL, and its retval is
+dereferenced without check, which will cause a null pointer dereference.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: clingfei <clf700383@gmail.com>
 ---
-I've been meaning to send this one in for a while, not seeing a release
-coming quite so soon.
+ drivers/pinctrl/pinctrl-th1520.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Cheers,
-Kent.
-
- tools/tools-common.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 4340bce..a684fcb 100644
---- a/tools/tools-common.c
-+++ b/tools/tools-common.c
-@@ -215,7 +215,8 @@ void print_period_help(void)
- {
- 	printf("\nPeriods:\n");
- 	printf("    Periods are taken as milliseconds unless units are specified. e.g. 10us.\n");
--	printf("    Supported units are 'm', 's', 'ms', and 'us' for minutes, seconds, milliseconds and microseconds respectively.\n");
-+	printf("    Supported units are 'm', 's', 'ms', and 'us' for minutes, seconds, milliseconds and\n");
-+	printf("    microseconds respectively.\n");
- }
+diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+index 1bb78b212fd5..9331f4462480 100644
+--- a/drivers/pinctrl/pinctrl-th1520.c
++++ b/drivers/pinctrl/pinctrl-th1520.c
+@@ -798,6 +798,8 @@ static int th1520_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 	struct th1520_pinctrl *thp = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct function_desc *func = pinmux_generic_get_function(pctldev, fsel);
  
- #define TIME_BUFFER_SIZE 20
++	if (!func)
++		return -EINVAL;
+ 	return th1520_pinmux_set(thp, thp->desc.pins[gsel].number,
+ 				 (uintptr_t)thp->desc.pins[gsel].drv_data & TH1520_PAD_MUXDATA,
+ 				 (uintptr_t)func->data);
 -- 
-2.39.5
+2.34.1
 
 
