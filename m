@@ -1,132 +1,134 @@
-Return-Path: <linux-gpio+bounces-10799-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10800-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D41BB98F1BA
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 16:44:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96D5C98F2A4
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 17:32:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71346B2253C
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 14:44:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28F48B20DD3
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 15:32:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21B819F13A;
-	Thu,  3 Oct 2024 14:44:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D17D019F470;
+	Thu,  3 Oct 2024 15:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DeMT+SH0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JW6wiGlo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B739413D245
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 14:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C796DDA8;
+	Thu,  3 Oct 2024 15:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727966688; cv=none; b=lQ9o30TPwTafR0jCCf8H/L+Y8bwuSOdeAf/2NQQoLmkJuSsbgdWZ2/OSKtIESJvZbthyNMO1a3/b3zegniwKdSU/H0HYaBywG9B7JpY4vqwYbpwxe5iLTvAIxzRHQu9MQWqUNwAa22GOXz/g6scUbIgg1+P9KwYNt6heySj6OhU=
+	t=1727969557; cv=none; b=VtnTy1A/DYw2/TAFK8NNN2f+B0+OaA+w9Xl9w7waadDkXx+N7QmOpdYtIf+nZNiJLdkA5It9AQ5KkspdDYF8TNIV5ihQ7URUJDDqZInO/gBzzVu+qpbh8XAy94Hw9ELdN3Rv3NxbBhrR+8RJ1AdUSdatfzBlQgfyXMHOZEvhYmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727966688; c=relaxed/simple;
-	bh=7+aP9ngiERY++bSipEn/meXfFGZWq0pGflH9pnNus2M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SERZRMF2ZR8ihlKYR+HcBYepkm0qPt2Se4RJUasOmWCrDZZeONJgIKen7xTARsWFfmutNMn6WIHVah8jmyzchOuODP6D++pd7qy8nS30HjaG1eSZV/q0EtYUTBUzC5dgid5i8P3CLn6FAXgccMhre3s4l2kyCdr3g+/ba2xIfJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DeMT+SH0; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5c8784e3bc8so1352857a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2024 07:44:46 -0700 (PDT)
+	s=arc-20240116; t=1727969557; c=relaxed/simple;
+	bh=jahUCEKj9NRTWQg1+eog4R85O0MFnIuBfeHhBf4QMZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hlGuq9hY1dwy2DZz4QL+6OhfuiI0Rauo6yH4rFDiYjsZvTawiJ/UwDpLk4/D3nuh7NWPdRGAtukqmloVxTdTc/ABLpa6CX7zAIerGSvDl3VS6VolrI6OynOidTECF+tfvQz8B03dk/TStsEow/lcHM8CGO7KGWw2rxfvRL7HFfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JW6wiGlo; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-287b8444ff3so225195fac.1;
+        Thu, 03 Oct 2024 08:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727966685; x=1728571485; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YiGfpCn+Qx4GWXnhyGLUPQaxnXcCAhGF+c2SZKzhn4w=;
-        b=DeMT+SH0s6xKn/WSYG//YnDHdCzVHUCVmwMBe6VO0KfQ9yvLR+92DqZ484foUuvUPf
-         di25Pwkb/rxm5Wc//0jP1BudFiYb7Dzk0M5aj8vA04vjoxN2YzNmNb28+ZlYIaWRQ/fZ
-         BKXLyK/SCYamqBZOp0p4zVSBT4ajRdhvpmU9Xt/d04bXO/tCRyFvZ+RQQNQAtgHGAEnG
-         nMc+bLXznKfSbW2r5UxXW4uttfY0PlRaYujEZL27awoniOAcGieAs5BwFrCUf1TNHB0j
-         Cz//I/hwZAxVL+3YGq7Zbl4+DLgE8b7MzhDgduGKXMB2iQinA6dTj7swnW8JBPcxtBIw
-         usHw==
+        d=gmail.com; s=20230601; t=1727969555; x=1728574355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jahUCEKj9NRTWQg1+eog4R85O0MFnIuBfeHhBf4QMZQ=;
+        b=JW6wiGlo53t21DwJKAYRAHUyCf2NSxLrvjOlUv5D2By0FbG3k54gJpYkOJ1JFkOiPz
+         O1w41yNnu7RqkOIvrviUKGCNBdogS9dHQX4DfQqFK3of6ZCYWCtQjk/44p2j4TvwmB80
+         4Du3sGBRgVx0YPPbfDsTAWp5hl54YJfdvmkbLMA9IoJwhslJSB4iIXh9iDIacsV2HDFX
+         ZT9ukVF9sVmm+I2lc1jkBPAUvnsyjgCTUX2Hs+7YFSIksduE0wOrRVYRFEm8HNJ85Lzc
+         jlfxnu9FqYuz/HIKztaeuQmuMZHJ+ymQFZGV7AuNhNXSRCAlRNJBiRe+pSObtQPRqFEc
+         3RtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727966685; x=1728571485;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YiGfpCn+Qx4GWXnhyGLUPQaxnXcCAhGF+c2SZKzhn4w=;
-        b=Y8/i+BrtYyQFgO3cbGtfKQzdNG69Vip8JHp71h9zoorjkPEs1/R/PtCYatezT2zksP
-         PsfI3qLgL+3pVAwhdnJqGobeDWANwBc8zE6ZA9XysR4XOClzM3LnakSD/d+yvWz5bgxM
-         z4+76UMbHbdnzh4KTUA8bnoWW/8Kh/CcWLxSbfO2zPc0Rq3q+7luRZyuuhd7MhdXJw3j
-         VVsD2lmUHjIpuQRJ9qVwcAUv6Rg+wuhUI5cXRD/43pXgD0QKtzoCc8q0p0YPA4SD+4DG
-         7hiAMkPOQtU5y1GFgQUZWnc6YCkpWiL1pwzY53v8Ctvqsq1nu77VlNgkI6R9PSwCLnu4
-         Px9g==
-X-Gm-Message-State: AOJu0Yw0krNJkmC8WHMvvg1xQgDc5OixNCQXuy0WPuRpZ7LJlBM/faMo
-	A9aTBZ87Y74mLpG2JhLLFq4ztgku4dkcAlCsUJCRrrXJRCuXIABsA79wh6xfZhVVsEKtshK4ALt
-	z
-X-Google-Smtp-Source: AGHT+IGlM58JqIGSSPSJyNt4LFBxxbnV2Q0ItrsV7E6eHUFcLaZn/WIj4bDjrxyyM1UbuYacvQDjgw==
-X-Received: by 2002:a17:907:3687:b0:a8d:2c00:949a with SMTP id a640c23a62f3a-a98f8213ddcmr589513266b.9.1727966685140;
-        Thu, 03 Oct 2024 07:44:45 -0700 (PDT)
-Received: from lino.lan ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99102a99efsm94427966b.92.2024.10.03.07.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 07:44:44 -0700 (PDT)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 03 Oct 2024 16:44:43 +0200
-Subject: [PATCH] pinctrl: k230: Drop unused code
+        d=1e100.net; s=20230601; t=1727969555; x=1728574355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jahUCEKj9NRTWQg1+eog4R85O0MFnIuBfeHhBf4QMZQ=;
+        b=jVELJryxQTl+r8nqgWpQpKtUE7Zjmqv4hnfxb21VDduUIJBgeR0HK7tpouvk6YYE9W
+         /QVvwAjwhEhWa9BRjR8XYUFYLi7PhQKD/f7J9JSXCbE6o+3soeurZ9UOrM+p3LOJiuuF
+         nR+vjBwSmte9f6t+T2iJKDAX9p0sw91rbMzmXPwYrEzjKnvmRIBTUVzTzPkUAEsXUBxq
+         J1SUH4lQDOdn1AzxdWomKbugAE7yj97BxywoxJvSGdZ74EOSBsVrQ39PrHGNuFLqtudp
+         2zaJcjdF42r12NiGKHB14GfYimcGLUWEIKz3cIhwVTHOSUtSHEMkblvfo1erb7nG6Xmi
+         EmAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDAEh8C7dCaLi8/xdxx9i4gyi5JVhoZstJOmwoNHLI4wgs10LD4e5F9wv25qCB2KMWJ/hXCZ+DvUghDOLW1m+wSrs=@vger.kernel.org, AJvYcCVT2RjQYOTVxPOo8dRg6sbzNffnmpT/bc/6an/9aOoN3SNWp4VrDo181E4xyQpXfRrRyKs5EFRXb2AI@vger.kernel.org, AJvYcCVtqS3LkblJXTDV5wD+s8iFnNbCPoyZixpR5g8cBuP3LtndgCefOyJJXC/X/PgNiIfu7hc0OKRR6Ahx9hdZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo/lKoFB5AoyuzWBb4ZZ1E5fwIEB96Y15QvKrf2XIkeUrObDFD
+	MB8y1nTPcJagTNsJ3LY+Of8bK5xDKv7NXUDttWr39UbD5v9375vhHytuS7bJ62N37Wqz+PKb4vB
+	3kR0IFJOPRZM9z6b1knaEl8dkTT8=
+X-Google-Smtp-Source: AGHT+IGWgHG1pZLAJW1/0INFYGZK0vzLTtDKn/CvN91U6G58RVlzwkIQ+mHchK9Eyqu2EfUsF5ZJzF7dOXTRO5Q+5L4=
+X-Received: by 2002:a05:6870:d1c2:b0:277:d932:deb1 with SMTP id
+ 586e51a60fabf-28788a8b15emr5118049fac.18.1727969555113; Thu, 03 Oct 2024
+ 08:32:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241003-k320-unused-v1-1-72e65bc2f27b@linaro.org>
-X-B4-Tracking: v=1; b=H4sIANqt/mYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDAwNj3WxjIwPd0rzS4tQUXdOk5BQzE2MzU6NkYyWgjoKi1LTMCrBp0bG
- 1tQAyzx94XQAAAA==
-To: Ze Huang <18771902331@163.com>
-Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.14.0
+References: <20241003131642.472298-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVknArz3W5XhPVj-ZGCu97SWyf2EqHhJRXOg6pJ1=tF=w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVknArz3W5XhPVj-ZGCu97SWyf2EqHhJRXOg6pJ1=tF=w@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 3 Oct 2024 16:32:08 +0100
+Message-ID: <CA+V-a8v-zumfwm4q7icQxwB60SXetGogNOi0fBBFZRQwTsTxEw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Always call rzg2l_gpio_request()
+ for interrupt pins
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The build robot complains about unused code. Let's drop it,
-this can be restored with simple git revert when needed.
+Hi Geert,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202410021136.ie3cFM2w-lkp@intel.com/
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-k230.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Thu, Oct 3, 2024 at 2:46=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Oct 3, 2024 at 3:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Ensure that rzg2l_gpio_request() is called for GPIO pins configured as
+> > interrupts, regardless of whether they are muxed in u-boot. This
+> > guarantees that the pinctrl core is aware of the GPIO pin usage via
+> > pinctrl_gpio_request(), which is invoked through rzg2l_gpio_request().
+> >
+> > Fixes: 2fd4fe19d0150 ("pinctrl: renesas: rzg2l: Configure interrupt inp=
+ut mode")
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > Output before this patch on G2L/SMARC:
+> > root@smarc-rzg2l:~# cat /sys/kernel/debug/pinctrl/11030000.pinctrl-pinc=
+trl-rzg2l/pinmux-pins | grep P2_1
+> > pin 17 (P2_1): UNCLAIMED
+> >
+> > Output after this patch G2L/SMARC:
+> > root@smarc-rzg2l:~# cat /sys/kernel/debug/pinctrl/11030000.pinctrl-pinc=
+trl-rzg2l/pinmux-pins | grep P2_1
+> > pin 17 (P2_1): GPIO 11030000.pinctrl:529
+>
+> Just wondering: is this restored to UNCLAIMED after releasing the
+> interrupt (i.e. after unbinding the ADV7535 driver)?
+>
+Actually it doesn't report `UNCLAIMED` after `modprobe -r adv7511`,
+pinmux-pins reports P2_1 is claimed 11030000.pinctrl:529. `modprobe
+adv7511` later succeeds though (maybe because it's the same device).
+rzg2l_gpio_free() is called from the rzg2l_gpio_irq_domain_free()
+path, either this path is not being called when IRQ is freed or the
+adv7511 isn't releasing the IRQ.
 
-diff --git a/drivers/pinctrl/pinctrl-k230.c b/drivers/pinctrl/pinctrl-k230.c
-index 4266516886fc..a9b4627b46b0 100644
---- a/drivers/pinctrl/pinctrl-k230.c
-+++ b/drivers/pinctrl/pinctrl-k230.c
-@@ -156,7 +156,7 @@ static void k230_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
- 				      struct seq_file *s, unsigned int offset)
- {
- 	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
--	u32 val, mode, bias, drive, input, output, slew, schmitt, power;
-+	u32 val, bias, drive, input, slew, schmitt, power;
- 	struct k230_pin_group *grp = k230_pins[offset].drv_data;
- 	static const char * const biasing[] = {
- 			"pull none", "pull down", "pull up", "" };
-@@ -167,11 +167,9 @@ static void k230_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
- 
- 	regmap_read(info->regmap_base, offset * 4, &val);
- 
--	mode	= (val & K230_PC_SEL) >> K230_SHIFT_SEL;
- 	drive	= (val & K230_PC_DS) >> K230_SHIFT_DS;
- 	bias	= (val & K230_PC_BIAS) >> K230_SHIFT_BIAS;
- 	input	= (val & K230_PC_IE) >> K230_SHIFT_IE;
--	output	= (val & K230_PC_OE) >> K230_SHIFT_OE;
- 	slew	= (val & K230_PC_SL) >> K230_SHIFT_SL;
- 	schmitt	= (val & K230_PC_ST) >> K230_SHIFT_ST;
- 	power	= (val & K230_PC_MSC) >> K230_SHIFT_MSC;
-
----
-base-commit: 58414a31c5713afb5449fd74a26a843d34cc62e8
-change-id: 20241003-k320-unused-5bcd643652c3
-
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
-
+Cheers,
+Prabhakar
 
