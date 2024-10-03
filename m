@@ -1,212 +1,170 @@
-Return-Path: <linux-gpio+bounces-10806-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10807-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA87798F864
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 23:02:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 756FF98F927
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 23:47:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 288CBB21DD9
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 21:02:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B074C1C2129A
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 21:47:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AA251B85C7;
-	Thu,  3 Oct 2024 21:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B1F1AAE11;
+	Thu,  3 Oct 2024 21:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM/4axmF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRlqLShW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEF61AB506;
-	Thu,  3 Oct 2024 21:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4C617C77;
+	Thu,  3 Oct 2024 21:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727989317; cv=none; b=nwKXd8F3qpqmrF/Ytnny3J86y0lwW5N3IBEqFml0MlbRcZvN7e9cFI5OMlZOCUj9/pStr0+bmqqsiAbvTA+v/+zSJP3dlnf/fvBxazh9L+NaQTciiT0a40xwYjowEClxr2DxrdQx9mK08j3BQvBAIGPnX0oy2yZWmIg9CEsW9iQ=
+	t=1727992070; cv=none; b=Je9Ar6wNMBSD2Zu6XZikkkd1JnS8MGlYYLcoWhBXZfKMdJ81nIRKhjgxdzP0cvcYePNAGDKuiJ3bex4Ov2kxJuii1o2AkuojS8trVRWE1tdeX1HJ8Kp5Vi21cUOkKtRRDJJF4FTpaSeVbyhqpQ2RTMg7QQWkjmNcXWuiQsXV93k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727989317; c=relaxed/simple;
-	bh=8eh574O4F9l+mKqRltFV+olJd6g3O6Fay42ID4YMX2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1faqxgzvXda9fG1ytLi10QJEfNcyVh4G+qyCgr8tIORjl72ZjyzdE6mGUq5X6sR6sjlPg+cbwT3KkOs6yubl2AeUHJp6N3SA+bTyiLMJ4EBjfmremHby0tBk6onQSMalDa/FcYC17tzfso91SeGw85QU1z8ijTCLWvWVyHkJO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM/4axmF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0444FC4CECC;
-	Thu,  3 Oct 2024 21:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727989316;
-	bh=8eh574O4F9l+mKqRltFV+olJd6g3O6Fay42ID4YMX2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PM/4axmFF0+7VXZB/glU985zwWmYbSL1v8BvxDrgS3+WkyM2CRYLqYgMhkVmNAN53
-	 Lc9D9XcHTVUbIMNZM4cMtxX8IKF+3oY/9ZiNnFXpOaScmv07wd7ic/WJH02qewlfQU
-	 rK5uCNCmS9Mirm5kTedGuv3uvAcTbhcM9l1/eBEQZy7djMw9QQYlmYjoIYYaNHWRey
-	 nOZGqhwgvPqOkKYZAvCX6OTLebLdzvcoGOFTaKkixqTlDQbjZWAe/2QOH3PiZbxQHu
-	 EOYvWzZ2+I1n7t5J2PxpOwWdVPI+MPA54kRNX575iBGlKCD/XH3lauRa40hIcLP4Pf
-	 8pOHmzy1a0Hkg==
-Date: Thu, 3 Oct 2024 22:01:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+	s=arc-20240116; t=1727992070; c=relaxed/simple;
+	bh=Cmq5eIfd7dF2DBNe1zh0om/nxF2DZ5dPEnATH7OPjMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mTEhjyxv+ixm8aZhmwINtzRKOEj8ayzK24nBzh2ZchMBa5Wn5xDargsmZyoKSs5Dezh4jzXdK9scmrOZg+/+Fn5df5LHDmUH02+neR8VFAaiHP4WxyPxIauv6xGkZVAs/7a8cq2B1K6CUjlEHJGhmkQoF10AMV+MlP03aQIj7Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRlqLShW; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7cd8803fe0aso1002792a12.0;
+        Thu, 03 Oct 2024 14:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727992068; x=1728596868; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpKhnrCiToOYHN1pw+7+JMdclUxzZsmOklrrm50ukd0=;
+        b=gRlqLShWdLL/y4+BPW3Q+uMPFSgBRzKPfDtUfLApa5Z2T9NJUV33/CIrUOuJ3ITBlR
+         TK04F8jre5S08TTT4HDrSZBFLeLfBFgJTTzesr70TWWOnmu8eue8N+Gozu9LmRAUf5eL
+         YSNv70jiOhnRtBFoezPFxdVek3M9kQwr0cCM9/bdginpQAJIXwueKnjcXxQ5F8ToB2xp
+         TkwIW5ejvIN30WxTj3uLlfQk5EadiVAWSCN/vMxC7k+5Q99Yx7o9qbrGQYaukKYuUpQ7
+         FsIZ8zkTXO8OY1bKCsrYUY3JWk851R59CG/1Z8FJ3j5eV5zafeYgb1QHMoMIoA7JWRsK
+         kwdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727992068; x=1728596868;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NpKhnrCiToOYHN1pw+7+JMdclUxzZsmOklrrm50ukd0=;
+        b=V4cZfjdUkZWljOHps9ZHCFIULpQU8sfAHRZwrR8xam0xtqzzNlK3Iyuf6TZoWVfLfj
+         h+00hrdPiEOs7R/AIN/KIC4KTNXyrGfWCl1F9WQ4JChWRAa4+MC7RBNxBzTU2Ro3GWev
+         1UkftORxT+XSUYyFlBqBpS8y6nEtHRqAz3ivcZ4EHoLlXk+eoFHwKoVUB9xNnsFSS0hU
+         EOr2nuGH04jinCckOhh/uIIBTHzQLEqKEkQyfsxi+nbNuWgR+J2+U3WyVGe7mT2LE7h1
+         fVK51SFlFp3c8W/Cj3VuWhR1nCdZRKZg0AOro+NRmK6OApvzKriE+gBhS7snSvETkDW5
+         BZnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKh+0GiLFSQwLEdgyO3wqYGiXGLfehSzCFM5PmXkjeFCzpM5qYAabG33S8vqjURta2r2+agcS0lA/wu3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxobd7pkMsM3Z7wzLYn0zbi/tFkAOONz7BhoxPLzzcjf2ZS1oyT
+	v/8kZH6BFWE856e5pyrwwPY9vK9cxFmMuQSXKBvOvYZdsMLGMybaxqRXQN4b
+X-Google-Smtp-Source: AGHT+IFLVRXwy4rrbtcVpK2hq5udADNdS2MpsZyjrL8C4iv9iZVofZF5dg75RfGAZl8yUcX67ZbJTQ==
+X-Received: by 2002:a17:90b:3a4f:b0:2d8:e524:797b with SMTP id 98e67ed59e1d1-2e1e6273485mr582358a91.18.1727992068369;
+        Thu, 03 Oct 2024 14:47:48 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8200:dab8::a86])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beead8dcfsm13513695ad.4.2024.10.03.14.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2024 14:47:47 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: gpio: add support for NXP
- S32G2/S32G3 SoCs
-Message-ID: <20241003-overall-unblended-7139b17eae23@spud>
-References: <20240926143122.1385658-1-andrei.stefanescu@oss.nxp.com>
- <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
- <20240926-apricot-unfasten-5577c54a3e2f@spud>
- <c2d8f121-903d-4722-825f-c00604ef3991@oss.nxp.com>
- <20240930-shortness-unedited-650f7996e912@spud>
- <20240930-bamboo-curliness-eb4787b81ea3@spud>
- <20d46ef0-8c58-407d-9130-3c961dd1656f@oss.nxp.com>
- <230e575e-b8b6-4671-a37a-085fef761240@oss.nxp.com>
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pinctrl: aw9523: use devm_mutex_init
+Date: Thu,  3 Oct 2024 14:47:46 -0700
+Message-ID: <20241003214746.146207-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="K9R0DwJtUt9wGfTI"
-Content-Disposition: inline
-In-Reply-To: <230e575e-b8b6-4671-a37a-085fef761240@oss.nxp.com>
+Content-Transfer-Encoding: 8bit
 
+Simplifies probe by removing all gotos and removing mutex_destroy from
+_remove.
 
---K9R0DwJtUt9wGfTI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/pinctrl/pinctrl-aw9523.c | 36 ++++++++++++--------------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-On Thu, Oct 03, 2024 at 01:22:35PM +0300, Andrei Stefanescu wrote:
-> Hi Conor,
->=20
-> >>>>>
-> >>>>> Huh, I only noticed this now. Are you sure that this is a correct
-> >>>>> representation of this device, and it is not really part of some sy=
-scon?
-> >>>>> The "random" nature of the addresses  and the tiny sizes of the
-> >>>>> reservations make it seem that way. What other devices are in these
-> >>>>> regions?
-> >>>
-> >>> Thanks for your answer to my second question, but I think you missed =
-this
-> >>> part here ^^^
-> >>
-> >> Reading it again, I think you might have answered my first question,
-> >> though not explicitly. The regions in question do both pinctrl and gpi=
-o,
-> >> but you have chosen to represent it has lots of mini register regions,
-> >> rather than as a simple-mfd type device - which I think would be the
-> >> correct representation. .
-> >=20
-> > Yes, SIUL2 is mostly used for pinctrl and GPIO. The only other uses cas=
-e is
-> > to register a nvmem device for the first two registers in the SIUL2 MID=
-R1/MIDR2
-> > (MCU ID Register) which tell us information about the SoC (revision,
-> > SRAM size and so on).
-> >=20
-> > I will convert the SIUL2 node into a simple-mfd device and switch the
-> > GPIO and pinctrl drivers to use the syscon regmap in v5.
->=20
-> I replied in the other patch series
-> https://lore.kernel.org/all/a924bbb6-96ec-40be-9d82-a76b2ab73afd@oss.nxp.=
-com/
-> that I actually decided to unify the pinctrl&GPIO drivers instead of maki=
-ng
-> them mfd_cells.
+diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
+index f6df8d32225b..5cb24c1dcb0d 100644
+--- a/drivers/pinctrl/pinctrl-aw9523.c
++++ b/drivers/pinctrl/pinctrl-aw9523.c
+@@ -976,18 +976,19 @@ static int aw9523_probe(struct i2c_client *client)
+ 	if (awi->vio_vreg && awi->vio_vreg != -ENODEV)
+ 		return awi->vio_vreg;
+ 
+-	mutex_init(&awi->i2c_lock);
++	ret = devm_mutex_init(dev, &awi->i2c_lock);
++	if (ret)
++		return ret;
++
+ 	lockdep_set_subclass(&awi->i2c_lock, i2c_adapter_depth(client->adapter));
+ 
+ 	pdesc = devm_kzalloc(dev, sizeof(*pdesc), GFP_KERNEL);
+-	if (!pdesc) {
+-		ret = -ENOMEM;
+-		goto err_disable_vregs;
+-	}
++	if (!pdesc)
++		return -ENOMEM;
+ 
+ 	ret = aw9523_hw_init(awi);
+ 	if (ret)
+-		goto err_disable_vregs;
++		return ret;
+ 
+ 	pdesc->name = dev_name(dev);
+ 	pdesc->owner = THIS_MODULE;
+@@ -999,29 +1000,20 @@ static int aw9523_probe(struct i2c_client *client)
+ 
+ 	ret = aw9523_init_gpiochip(awi, pdesc->npins);
+ 	if (ret)
+-		goto err_disable_vregs;
++		return ret;
+ 
+ 	if (client->irq) {
+ 		ret = aw9523_init_irq(awi, client->irq);
+ 		if (ret)
+-			goto err_disable_vregs;
++			return ret;
+ 	}
+ 
+ 	awi->pctl = devm_pinctrl_register(dev, pdesc, awi);
+-	if (IS_ERR(awi->pctl)) {
+-		ret = dev_err_probe(dev, PTR_ERR(awi->pctl), "Cannot register pinctrl");
+-		goto err_disable_vregs;
+-	}
+-
+-	ret = devm_gpiochip_add_data(dev, &awi->gpio, awi);
+-	if (ret)
+-		goto err_disable_vregs;
++	if (IS_ERR(awi->pctl))
++		return dev_err_probe(dev, PTR_ERR(awi->pctl),
++				     "Cannot register pinctrl");
+ 
+-	return ret;
+-
+-err_disable_vregs:
+-	mutex_destroy(&awi->i2c_lock);
+-	return ret;
++	return devm_gpiochip_add_data(dev, &awi->gpio, awi);
+ }
+ 
+ static void aw9523_remove(struct i2c_client *client)
+@@ -1039,8 +1031,6 @@ static void aw9523_remove(struct i2c_client *client)
+ 		aw9523_hw_init(awi);
+ 		mutex_unlock(&awi->i2c_lock);
+ 	}
+-
+-	mutex_destroy(&awi->i2c_lock);
+ }
+ 
+ static const struct i2c_device_id aw9523_i2c_id_table[] = {
+-- 
+2.46.2
 
-Yeah, I'm sorry I didn't reply to that sooner. I was being a lazy shit,
-and read a book instead of replying yesterday. Almost did it again today
-too...
-
-To answer the question there, about simple-mfd/syscon not being quite
-right:
-I guess you aren't a simple-mfd, but this region does seem to be an mfd
-to me, given it has 3 features. I wouldn't object to this being a single
-node/device with two reg regions, given you're saying that the SIUL2_0
-and SIUL2_1 registers both are required for the SIUL2 device to work but
-are in different regions of the memory map.
-
-> I have a question regarding the NVMEM driver that I mentioned earlier. I =
-haven't
-> yet created a patch series to upstream it but I wanted to discuss about it
-> here since it relates to SIUL2 and, in the future, we would like to upstr=
-eam it
-> as well.
->=20
-> We register a NVMEM driver for the first two registers of SIUL2 which can
-> then be read by other drivers to get information about the SoC. I think
-> there are two options for integrating it:
->=20
-> - Separate it from the pinctrl&GPIO driver as if it were part of a differ=
-ent
-> IP. This would look something like this in the device tree
->=20
-> /* SIUL2_0 base address is 0x4009c000 */
-> /* SIUL2_1 base address is 0x44010000 */
->=20
-> nvmem1@4009c000 {
-> 	/* The registers are 32bit wide but start at offset 0x4 */
-> 	reg =3D <0x4009c000 0xc>;
-> 	[..]
-> };
->=20
-> pinctrl-gpio@4009c010 {
-> 	reg =3D <0x4009c010 0xb84>,  /* SIUL2_0 32bit registers */
-> 	      <0x4009d700 0x50>,   /* SIUL2_0 16bit registers */
-> 	      <0x44010010 0x11f0>, /* SIUL2_1 32bit registers */
-> 	      <0x4401170c 0x4c>,   /* SIUL2_1 16bit registers */ =20
-> 	[..]
-> };
->=20
-> nvmem2@0x44010000 {
-> 	reg =3D <0x44010000 0xc>;
-> 	[..]
-> }
->=20
-> - have the nvmem as an mfd cell and the pinctrl&GPIO as another mfd cell
->=20
-> The first option keeps the nvmem completely separated from pinctrl&GPIO
-> but it makes the pinctrl&GPIO node start at an "odd" address. The second =
-one
-> more accurately represents the hardware (since the functionality is part =
-of
-> the same hardware block) but I am not sure if adding the mfd layer would =
-add
-> any benefit since the two functionalities don't have any shared resources=
- in
-> common.
-
-That's kinda what mfd is for innit, multiple (disparate) functions. I'm
-not sure that you need an nvmem child node though, you may be able to
-"just" ref nvmem.yaml, but I am not 100% sure how that interacts with
-the pinctrl child node you will probably want to house pinctrl
-properties in. The mfd driver would be capable of registering drivers
-for each of the functions, you don't need to have a child node and a
-compatible to register them. Cos of that, you shouldn't really require
-a child node for GPIO, the gpio controller properties could go in the
-mfd node itself.
-
---K9R0DwJtUt9wGfTI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZv8GPgAKCRB4tDGHoIJi
-0gfaAQCK6A6FyKv8heEKlrefSlhG3fuedIfwM1oYYR5XcOSwlwEAhspxpxTZ7SIz
-HAtpUFOcJqqJf8c3/88JGym5xb29IA0=
-=+j7w
------END PGP SIGNATURE-----
-
---K9R0DwJtUt9wGfTI--
 
