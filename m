@@ -1,160 +1,109 @@
-Return-Path: <linux-gpio+bounces-10778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10780-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6ED198EBD6
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 10:45:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D79998EBF6
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 10:59:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ED251F217DD
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 08:45:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF9211F23B28
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 08:59:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66FC0126C15;
-	Thu,  3 Oct 2024 08:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10D113DDA7;
+	Thu,  3 Oct 2024 08:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="trZC9L44"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wAYfAHsz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74E38F40
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 08:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5813664E
+	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 08:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727945150; cv=none; b=cbDgWrrmvRFuZVku1byEb6E7U3OILlvcMO4vZDqVjLXFijrefqXw704Y5omvdLRA9WUVcLqIySNsgcgLidlnnz5HOgfsf0xpCao7YpnLUdkH4UhyzDoevyhz5OuLYeZ/ChcXAy/5z0eTKkwMvEFJblHy67DLyiNXkPQHZnzdLZc=
+	t=1727945951; cv=none; b=BcTr+/HTTtUDGwat+bg0Vn4mFG1Ue+BcSffBC2iKQCQDOc/eEbEzWT6X2Y/GmOsaUPf98zwZq2dxclQQUPEanSLe8rshxEs6O0F62eQpir46I7fM0fdTrBkruBCkH8fV60xCfVtb/EWA6iqtp1dcXgJAtk8NDPL2mWuW/HRNSZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727945150; c=relaxed/simple;
-	bh=C35vDfBXY0RRY6OTT7kDHBVQThWOnE6wKXF/Y0Gcs1M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JV8ej785MTOi9SV8jasy8XtCAmEgmOdKw9jeChUQVJpYLe8DCzxMPgYpQDI6BwgC6WimDeTjN3X4nz9mk/RKr/eN+OTjBR72Mck+UV9MHVoYMTrtEMMImVN8uSqrMtGLdgn96eOJNTDoV4ZcOshGVZusfSTWK9jWE1AJMtpRPRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=trZC9L44; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1727945951; c=relaxed/simple;
+	bh=z7XnV08Ua6Aa6A7lA3xNC2if7kvQHIDZ9lwtvoSGsPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TTfXwxM+V9ED8p9IjiIs0x6xyqq/o64k2ODOd3HMMk8cAZU8LXUb8ZWh7+KIrZygpxEudj1OLrMWHzhWwk7nPt26Tc2+3HTRL0JZah55xFS75njtlsiBhy4P7CRmEIANNBRXxIWfNAxoupzlTkmcOqTbJqYFDq47sFtA4XK/ijc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wAYfAHsz; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fad15b3eeeso8226341fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2024 01:45:48 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5366fd6fdf1so950018e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2024 01:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727945147; x=1728549947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727945948; x=1728550748; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZzaVFI974o6SeZJYJJ7amGJv13vzsID0iQdBTSEktbA=;
-        b=trZC9L44LqJCguA6zkiE+d+yUUqxbyEiwT3WEVs7bJjBQfAo/PGTWve1uSr08PjSeK
-         YK+HjvafCM0GUpZ+iTs27Gd29IR939HBNZNaJcuyy1/aztzPr+BefuAeovO54CZnwwv/
-         HAmntedWVXDQzlG4R0WwX4ruSzk2QrMp210vH1CApKTAuWmgD1H5Kyql5qf0HU+hDD2V
-         Ao/+reYtc5qL0l40fhp4p1xYDmhQ6lb6g9rmL2vBBzxuu8ep9VniYFSU1MxELJQR1dwU
-         uHbhAG4MGRWfxdoucHRys61/qNHWp1bIfXIWNPBJeiRhf8S71k6iPcJPoaGfsnUDMXdb
-         z3qw==
+        bh=+kYGk7GZ2dJHgeys1hkaLX2excaWw85sc4TsoL6y3nU=;
+        b=wAYfAHszK0r73KhlDsQjuBcL8UbeJMReGnI8DBHDPaL7LnLC73MWjMvFtl53dmCKu6
+         Ry1llGjJSbDw9GFWyQIdyBL/c8RLSqqiA6cQe33xUySBQlfdCEu7g469/H0Nk1Kgn7gG
+         ZxXo8Lrfpysk2TukJ6s9ryVr9a5hNMbEwzKVb/RVOI7+BsteWNm9hTrZBFfjdfsD2Sjo
+         Q4fd2eK66bQSbKDE1SO7QFgWHtW2bkP5qJ5cBI/SJme9mQ12c4ZU09YD3Dvnt7QFsfGI
+         R2kqShRS7Cqj4gxowCPN+tIcYIQGr0u3gQJRZnCMS/kwFQs3vygrWlKY0AW1+z3ACVej
+         +BeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727945147; x=1728549947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1727945948; x=1728550748;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZzaVFI974o6SeZJYJJ7amGJv13vzsID0iQdBTSEktbA=;
-        b=QTmtmWe/NiNeaQ3Yx/rM3ajIh9RQwaCKUDWweMzOeHua6fhxBe0eSTDsNXxKl9D0EU
-         FABQA2DfmllD8Tpdc2r1iOcdZvDEi1Fmwdbp+duC7yoJ6Bmnypu6s4hXxhDvr67mnFj4
-         Ci5Du/bBAYUrW/GnbYV7vXSSdtlR7TbiHAWUrAhIrPcGwcnYfaO0Ta/EjMoHoX669CEV
-         NRPy1zlsyk7B2OA/jbQQ183BRtV2/qYpepSaFUTY+2jRJy4whh0cSq4xXcw0IA0KtXz1
-         qKZ9vXNQ6C1N+XUumuciGWaxySqBSC4VI6a4kiABdwcMDzHQDAdTA3cuIayAWvVVUMZA
-         T9SQ==
-X-Gm-Message-State: AOJu0YxKUwOO6goFdd46RdVW3SCufRYjrR9mvpU/J0p+p2uh5OYUxbv9
-	zLuGYl4xS+3t7iip2du9lt2kELWvjc2+/1omae1JVeFShr504OvE0nIb79Ljvexb07BNjLO4UkD
-	7JcNXCzCXs9DNpwvIdR5yKSxpRU5Pzg9gxQv5Cpi8ntNAdoFY
-X-Google-Smtp-Source: AGHT+IEYF+3kC8hchPS2CaUpIoOte4/zWBrquzMWMlQx0Qhc0a9s6CTP0B42FwQZXU0kIrExVzmngVV7XLOX5nlfAfw=
-X-Received: by 2002:a2e:a584:0:b0:2f3:b71a:1e91 with SMTP id
- 38308e7fff4ca-2fae105ae02mr35942921fa.17.1727945146614; Thu, 03 Oct 2024
- 01:45:46 -0700 (PDT)
+        bh=+kYGk7GZ2dJHgeys1hkaLX2excaWw85sc4TsoL6y3nU=;
+        b=J3nGmHQaF5H/L17t4IelPKL6Ve7htFWDBl0jN98COEZ457tm1UdGd907m1Cd7flJAf
+         Z+SvYgW7stIximQs7M99TsVJnC+PAz+AgrJsOmV68PV5CPgDsAttN6ToDqV19I4ofCeb
+         5acWuPONRdsnw1pbcQz+xYyV6PovP+ucX57xtzx7TU5j1NPhEIwgForaTQCZ0rGl13MV
+         OICgIfQDBqGhI8+4a9CYUXyA6/Esp68aEWOTJFv+Y2e2BE9p8HIxNPPdkp0J8hEwvtf8
+         FHSzzUPhHBAzEcrRlHC+8ca/ESlGUgHCpksjaHUjKwvf181Fm/L1mlU1a1n7FpziXQ+y
+         LOFw==
+X-Gm-Message-State: AOJu0Ywb1Id+LjOrVWdA/rsaXk5JrGEqhovJSaoQ1LpYTnBkn/4tDIph
+	8C/HBqPA58CuFdX4rRM5WfhNlatGlMBc+cmkKDSZLU5K6vxtBFVnObD6enpG4eyq6/jz3BJY+8j
+	E
+X-Google-Smtp-Source: AGHT+IFB6+OaAU0xjafGr/uaE8xgcbAaraThfWO00ImdF5t1gbGeGIzVBoIb/k8AF4Pbl9STAqn0Bg==
+X-Received: by 2002:a5d:4ec3:0:b0:374:c90c:226 with SMTP id ffacd0b85a97d-37cfb8aa840mr3844894f8f.9.1727945448883;
+        Thu, 03 Oct 2024 01:50:48 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d16b:3a82:8bfb:222a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d081f7012sm782799f8f.10.2024.10.03.01.50.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2024 01:50:48 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] tools: line wrap period help
+Date: Thu,  3 Oct 2024 10:50:46 +0200
+Message-ID: <172794542679.27791.10531237486467230140.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241003020743.27194-1-warthog618@gmail.com>
+References: <20241003020743.27194-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McgmBnY5vTKySyjS0OX_wFEitDYX-GQVtsaaYEsozPt2Q@mail.gmail.com>
- <CAMRc=Meo2ObyrpeYQ0TGS5Xhy6_hG7SvGdmrOvX_vVz4R7JogQ@mail.gmail.com>
- <20241003032457.GA63612@rigel> <20241003033640.GB63612@rigel>
-In-Reply-To: <20241003033640.GB63612@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Oct 2024 10:45:35 +0200
-Message-ID: <CAMRc=MfO2NB0jpzhHU-cU00zVesdofM7EUqd11xmE9sCVdBQ-w@mail.gmail.com>
-Subject: Re: [ANNOUNCE] libgpiod v2.2-rc2
-To: Kent Gibson <warthog618@gmail.com>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Vincent Fazio <vfazio@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 3, 2024 at 5:36=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Thu, Oct 03, 2024 at 11:24:57AM +0800, Kent Gibson wrote:
-> > On Wed, Oct 02, 2024 at 07:50:04PM +0200, Bartosz Golaszewski wrote:
-> > > On Wed, Oct 2, 2024 at 3:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> > > >
-> > > > I've just tagged and pushed out the first release candidate for lib=
-gpiod v2.2.
-> > > >
-> > > > It's a big release that - next to an assortment of smaller
-> > > > improvements and bug-fixes - brings in a big new feature: D-Bus dae=
-mon
-> > > > and command-line client together with GObject bindings to core
-> > > > libgpiod.
-> > > >
-> > > > It's in good enough shape to now focus on ironing out the creases a=
-nd
-> > > > make it available in the following weeks.
-> > > >
-> > > > The tarball and git tree are in their usual places[1][2].
-> > > >
-> > > > Bart
-> > > >
-> > > > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-> > > > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-> > >
-> > > Well, that wasn't very good, rc1 had a build issue in the tarball. I
-> > > had to fix it up and release rc2 which now builds fine in yocto.
-> > >
-> >
-> > I'm trying to do a build without any glib related targets:
-> >
-> > ./autogen.sh --prefix=3D/usr/local --enable-bindings-python --enable-bi=
-ndings-cxx --enable-tools --enable-tests --enable-gpioset-interactive --ena=
-ble-examples
-> >
-> > but I get:
-> >
-> > checking for glib-2.0 >=3D 2.50... no
-> > configure: error: Package requirements (glib-2.0 >=3D 2.50) were not me=
-t:
-> >
-> > Package 'glib-2.0', required by 'virtual:world', not found
-> >
-> >
-> > Why is glib now required?
-> >
->
-> Similarly (after commenting out the GLIB and GIO checks tripping above):
->
-> Making all in gpiosim-glib
-> make[3]: Entering directory '/home/pi/libgpiod/tests/gpiosim-glib'
->   CC       gpiosim-glib.lo
-> In file included from gpiosim-glib.c:9:
-> gpiosim-glib.h:7:10: fatal error: gio/gio.h: No such file or directory
->     7 | #include <gio/gio.h>
->       |          ^~~~~~~~~~~
->
->
-> Why is gpiosim-glib being built?  I'm not using glib.  I don't have
-> glib. I don't want to install glib.  But now I can't build. Yay.
->
-> Cheers,
-> Kent.
->
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That wasn't the goal of course. Let me build a vm with minimal
-environment and go through each build option individually.
 
-Bart
+On Thu, 03 Oct 2024 10:07:43 +0800, Kent Gibson wrote:
+> The help for periods is overly long so wrap it to make it more
+> consistent with other help lines.
+> 
+> 
+
+Come on, I don't see how this is "quite soon". :)
+
+Applied, thanks!
+
+[1/1] tools: line wrap period help
+      commit: 07c5c49862961f24863128c46de41dbd1b1c7e16
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
