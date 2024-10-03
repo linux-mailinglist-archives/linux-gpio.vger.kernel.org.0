@@ -1,150 +1,133 @@
-Return-Path: <linux-gpio+bounces-10772-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10773-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 639AF98E8E1
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 05:36:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FEDC98EA55
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 09:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABC0F288280
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 03:36:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB1501F239E6
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 07:28:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF2E20328;
-	Thu,  3 Oct 2024 03:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE87126BFC;
+	Thu,  3 Oct 2024 07:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGJV7hr5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HL3Svvap"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCDE17C77
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 03:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791CA53363;
+	Thu,  3 Oct 2024 07:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727926607; cv=none; b=EgEUSYgraALoVBmMQRhfnh2vfVL+EbU1PPplZYNAeGvIPzmR4IuyAhlqRDplQvpECQfrEd+zuCPRwXlItOB9EZdvQijXRaFaUo33eOFjSLXesti8K4mbeKH9nGU6CK2NmvQzTdTLX7nyoHPtoYp0FUv3LxX9IBj7NrQI/4/2Xpk=
+	t=1727940500; cv=none; b=CjBFzgEeVyEwueJp0Kyq7MQpHhoej5WP40s0toI4mKpd9rv+YY0+4l/A/lhkvwwJy+tRj457Fm0c5PdEi+7z6j9qYFo4axtjzx8l3KFpbyzPXloI9d92g0/PxG23CMN5GLGAfWJWuWGD3Bmcy2iMYjukLIyl3vsnJk0hgnYet3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727926607; c=relaxed/simple;
-	bh=VQK1iIi6Bx9X9iHa2i56lDRgh2XtvdSaQcPQ97/AYFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JeBPDFWzsFBKH1SVM15jjfCUcYrwWfJvSNQH3tF12KnpWvYCqATSYJq6m2TE1wDmtU6g7crmblj0Se3clKHnykriv0uqAu4qZzsX3zKHsBx3M9zRJGat+hkwKcawLTWZLl67q+SbOA2cMWkRItr2l+WPPiVdaw0EpMO06QF5MpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGJV7hr5; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20bb92346caso3433015ad.0
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 20:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727926605; x=1728531405; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EdPajD6j3bJ2MzSb/hG2HMVzn30Oq1J1X2b8Gik2lLc=;
-        b=jGJV7hr5oaI80YMToxSMhOaQF62pUzGZ7aeQ9tewJjaLuyPotdNTQo949m5h+W5eM6
-         ETx6Fb2b6Y/0P+/1+gWdqkbZQAZk49rqmzVz6c3zzJ/+XTkRO1HOrm7fFH+fH6WfdEHP
-         UtFLcNFIOa+TMW1yl37g2cr1M2yG+BrTxABGuqm76KFMK3wcboO7/irQzkEg3pqcyjrC
-         eDeHkobAPcbiFS1e6OHFJUyTdUxHIXCN8I4xou3w4P9vH1ZmIaYNWXVaOzUN4Xl4EoQJ
-         8YdP4Ms9Wu24zHvc9q2DH7+W1ZA5ADi0TSSu30PrAACWSdvWFOUu4mimFAGs6tU/qzNi
-         UIfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727926605; x=1728531405;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EdPajD6j3bJ2MzSb/hG2HMVzn30Oq1J1X2b8Gik2lLc=;
-        b=o/W/4wpWvPG+W23E1nu3wt9cEBqGJ3YGss9uB49iRzs0sMA37hzAkOB5ePFGq/+7P/
-         yhm0AMfQ4uPGgCLwx1JE+Z4APk80utKn3RQNpKVU6FtKseOA1yLZSthLdTZ46ISIZjHJ
-         fEIufir9bKJFd0biUz7/Iq8mnRPwO11RV6cKqAAb6R3AvB/9q2UaMIrcAaDS6PfKtD0E
-         0FDWmZF4LUlUeY5l64OP/Y3Jn16WR8mmPNVOUGB9iyF4WibzyXd6ByMgv/vTMzc8cxRL
-         fI3VKgTHKARu4nlwLXz7GeKJovUkBx9KkG5XWUwdwIgOOFQiXXSqajzXxaYu3UQ3K8mV
-         /qXg==
-X-Gm-Message-State: AOJu0YzFRugqqgbzrRV2kEOKxnSTZC76Ytj1N9oKWQO8aJTn7aE4cQKg
-	Infba3L+wYp62NI1dQgpPM+CHGL0BUOLZgVL+HGxJF5Bz0k59lPQIaxflDTl
-X-Google-Smtp-Source: AGHT+IEfdJhbcLeTbAEUnffoVDngB1eFxpQY1ERParp4cfXFPLLB9Y/1FA2vNYj+vBHMEJEmLFvEYA==
-X-Received: by 2002:a17:902:da81:b0:20b:a8ad:9b0c with SMTP id d9443c01a7336-20be18c544amr31241335ad.3.1727926605065;
-        Wed, 02 Oct 2024 20:36:45 -0700 (PDT)
-Received: from rigel (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beef8ea3csm474035ad.129.2024.10.02.20.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 20:36:44 -0700 (PDT)
-Date: Thu, 3 Oct 2024 11:36:40 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Vincent Fazio <vfazio@gmail.com>
-Subject: Re: [ANNOUNCE] libgpiod v2.2-rc2
-Message-ID: <20241003033640.GB63612@rigel>
-References: <CAMRc=McgmBnY5vTKySyjS0OX_wFEitDYX-GQVtsaaYEsozPt2Q@mail.gmail.com>
- <CAMRc=Meo2ObyrpeYQ0TGS5Xhy6_hG7SvGdmrOvX_vVz4R7JogQ@mail.gmail.com>
- <20241003032457.GA63612@rigel>
+	s=arc-20240116; t=1727940500; c=relaxed/simple;
+	bh=k+kxyNjNtiHS+3bLGbe8kTVQyuCh/XyHx1/6zPqxCsQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gYSFGywXKaKgH8DqWW79Bd7FOo+yQSpDckV9bfcdZRbt+F10MJbBc9s8DsJiVk3q9n+o+mrAvU4PX9Qq0XBz1V6WhacB+qKACsyJfVxGRiQIhmqZkfOEKM8NI9VBqMqiBOtJiR6RZr/z2M5PSBc47Vu1ArhKewJ7xrl7A8sZEPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HL3Svvap; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7367C4CEC7;
+	Thu,  3 Oct 2024 07:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727940500;
+	bh=k+kxyNjNtiHS+3bLGbe8kTVQyuCh/XyHx1/6zPqxCsQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HL3SvvapWF3Fb/ngjGnE23hkADQdtuanWfUA1YYOG1h18LgmvUxiln5FoliSKs4lA
+	 Xgzz+X1Vl7yVWzRwSf6GwUXck6d8iU9z7GjuJBUyl8YfSvo+f1EO5ySsqsRrzM3iM+
+	 YMJfdRjjiCfAv/vuh7jq8+etvRwyF+hlOUWK2CC/gS7OHFJoZ8a7ETe6Dj+yItkZ08
+	 mqKxTvJSM80fTJX9s+cGiZ8D8HTXWeQoSCM+64AGa6WMsbHlARZtB15wbvSIILrBHM
+	 iGv3/vRQhq8eG1kef0GZrGqdF0N/uKKb0zcJ9QqtIpt6qGWMFvVZ8VadMY5qxh2j/U
+	 Ax46UiM+CYVGQ==
+Message-ID: <4da5d801-6f23-4c9a-ba6c-54b81549f071@kernel.org>
+Date: Thu, 3 Oct 2024 09:28:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241003032457.GA63612@rigel>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/5] dt-bindings: arm: qcom: add Linksys EA9350 V3
+To: Karl Chan <exxxxkc@getgoogleoff.me>, linux-arm-msm@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20241002232804.3867-1-exxxxkc@getgoogleoff.me>
+ <20241002232804.3867-2-exxxxkc@getgoogleoff.me>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241002232804.3867-2-exxxxkc@getgoogleoff.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 03, 2024 at 11:24:57AM +0800, Kent Gibson wrote:
-> On Wed, Oct 02, 2024 at 07:50:04PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Oct 2, 2024 at 3:31 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > I've just tagged and pushed out the first release candidate for libgpiod v2.2.
-> > >
-> > > It's a big release that - next to an assortment of smaller
-> > > improvements and bug-fixes - brings in a big new feature: D-Bus daemon
-> > > and command-line client together with GObject bindings to core
-> > > libgpiod.
-> > >
-> > > It's in good enough shape to now focus on ironing out the creases and
-> > > make it available in the following weeks.
-> > >
-> > > The tarball and git tree are in their usual places[1][2].
-> > >
-> > > Bart
-> > >
-> > > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-> > > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-> >
-> > Well, that wasn't very good, rc1 had a build issue in the tarball. I
-> > had to fix it up and release rc2 which now builds fine in yocto.
-> >
->
-> I'm trying to do a build without any glib related targets:
->
-> ./autogen.sh --prefix=/usr/local --enable-bindings-python --enable-bindings-cxx --enable-tools --enable-tests --enable-gpioset-interactive --enable-examples
->
-> but I get:
->
-> checking for glib-2.0 >= 2.50... no
-> configure: error: Package requirements (glib-2.0 >= 2.50) were not met:
->
-> Package 'glib-2.0', required by 'virtual:world', not found
->
->
-> Why is glib now required?
->
+On 03/10/2024 01:28, Karl Chan wrote:
+> Document linksys,jamaica for Linksys EA9350 V3.
+> 
+> Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Similarly (after commenting out the GLIB and GIO checks tripping above):
+You received one valid tag. That tag should be added.
 
-Making all in gpiosim-glib
-make[3]: Entering directory '/home/pi/libgpiod/tests/gpiosim-glib'
-  CC       gpiosim-glib.lo
-In file included from gpiosim-glib.c:9:
-gpiosim-glib.h:7:10: fatal error: gio/gio.h: No such file or directory
-    7 | #include <gio/gio.h>
-      |          ^~~~~~~~~~~
+In previous versions you added that valid tag and then you added some
+fake tags to other patches. I asked to drop the fake tags, not the valid
+one.
+
+Can you please read carefully submitting patches document?
 
 
-Why is gpiosim-glib being built?  I'm not using glib.  I don't have
-glib. I don't want to install glib.  But now I can't build. Yay.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Cheers,
-Kent.
-
+Best regards,
+Krzysztof
 
 
