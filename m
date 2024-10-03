@@ -1,216 +1,131 @@
-Return-Path: <linux-gpio+bounces-10770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10771-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BF4298E89D
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 05:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 01E3598E8CB
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 05:25:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D7FE1C225CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 03:04:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC1191C231CA
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 03:25:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF6D418054;
-	Thu,  3 Oct 2024 03:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E35F1E481;
+	Thu,  3 Oct 2024 03:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cZVDOs3H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Prgno/vA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C930D1C32
-	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 03:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81DB8F40
+	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 03:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727924635; cv=none; b=pUH6YT98Hpg0kGujopY+4dRAVYdRBZW8vJ4S5Cw72tyLk+qqT8mYVFLSHHowYcIrT80QAhulDk7B6gQ0VqfPR9Gg/N4Az8q7iY2MJRIKzB/nT/+5J9caJ+SkISQjsHnEyfFlORMV7oVzjBRiNNM9RzwQZ1Dkx0hHpYeRYN0bQSM=
+	t=1727925904; cv=none; b=lrgqye8VJ4aL2wsDyznmBSxTk1aZT4Dv3LKlomu3v8lm78B9dIXppjjeOoXEN19ig+sa0t9GDY8gYvdS40wTHnt5ZG6IIOvILmsXV5sw2M+aPeY/51AAuKVSpgZcKjF1DcCIGmPgcuh3x+1o51+pojCBXwov+fHtCLiN3JlfHBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727924635; c=relaxed/simple;
-	bh=UXACKs/+whQu7gaf7z6ul4FiBZdQU7+/KskES2U+Do8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PaA1LRHlji3Sp/ApNh6ei0AsFwqJka2UWLjxv5+im0vAIsQzFfHevpfxo48HplXGZRPJGL5TYqYxJi9L2U11SMkBDn2c0yobiDpOJc5t81FOIYhknYFRq1ZVppgx9C/TrFZqWnM0KZzVZI+nVTCctK86X5WxKEyDoEI4YxZsq+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cZVDOs3H; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727924634; x=1759460634;
-  h=date:from:to:cc:subject:message-id;
-  bh=UXACKs/+whQu7gaf7z6ul4FiBZdQU7+/KskES2U+Do8=;
-  b=cZVDOs3HXQ0YvbLyClp4TkPFt9mjv1tQgT5ielx1BlGg1PimHsHGx/ro
-   9HifUDcZc0nV6XkTfehXLHWOfaFmV8MyzJTQNBUgQ1N/knHnXP4saDceq
-   qbDFCCrSfUWd7VEQkXl6RfsivQnvXpKkZbe/WrxazOqCPU1P41CnbOoOx
-   SHdZKdBQBasTMrOcvyNYxRlrp3CmAtaDObu7fKWuCtCpbYAqaMFHFAD/p
-   x9hU1SIlwcal0BpY5pOcX7PqBCBbZhafQSPHC8V3OhZEsoTS+jjRfkdDk
-   85wzJYJO3dmFtqcsONSTkdPJfxZYbn02LwTqp/Ka/nrGj0bZHLCFniqMr
-   Q==;
-X-CSE-ConnectionGUID: e7Bz1d3TTKKNhlw8sTQUag==
-X-CSE-MsgGUID: 4ir22iA+S/mj6tHzuRWjug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="27261342"
-X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
-   d="scan'208";a="27261342"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 20:03:53 -0700
-X-CSE-ConnectionGUID: LiLZTwD2TH+702uVS6OwAA==
-X-CSE-MsgGUID: t8+VEhjIR5ux2A7CC498LA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
-   d="scan'208";a="74236012"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 02 Oct 2024 20:03:52 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1swC85-000Usf-2R;
-	Thu, 03 Oct 2024 03:03:49 +0000
-Date: Thu, 03 Oct 2024 11:02:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 5a431e50e9d4189800be1607eef9deaf95959fc3
-Message-ID: <202410031138.12lGbZWg-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1727925904; c=relaxed/simple;
+	bh=jU04ggkyPD8X/pIW4JoUcd/IcY40WUFZrJH4NWH+GQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lj9gLR4UTGgKrvuwjN10kwaP4+jNLsFErZbFq9W4AOiNJaH/RKHVae9NVvxho8oWXrvhp0MLnYTsOQf3tOZWeSqi7XowMNnIbpS3p1ErmxVgbtuu9uSnNEZYSSx65Xfp83Jm7gEK5xKWf9vO8WV03EUiY84ZAuBQD5N2S5luR2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Prgno/vA; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-71dba8b05cbso512019b3a.3
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 20:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727925902; x=1728530702; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jU04ggkyPD8X/pIW4JoUcd/IcY40WUFZrJH4NWH+GQ4=;
+        b=Prgno/vAI5cpwxTU3E2vpByTnrMqHrxD9OWnVuQA7bphHGomJ4dNJmKHJfphY5Xinp
+         qqdhYgnY2KjBeW+pqFxSnJWPVPXDlOVXk00OqkqBa80/kiUMXqwLRGyX+LncRA//nPAe
+         qpepZb1VI9PIlLORbp/76x2uvop61LfbqeF7uWqYVCSl/QY2zTrhO7THEnqzJjkkbZKs
+         9fdO3RhzVTY1Ot0Ad+uz40J3yYAGDYqgzSEYAz61VeM23X4ZLCjruYkxVTySwZDfasKa
+         Qkw6ggutbiPtlx9vjxqJH4+2v4ChuJ6b91IZWFmisR4mNEa70+q0JGOkMsvas2VHrvoi
+         aKyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727925902; x=1728530702;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jU04ggkyPD8X/pIW4JoUcd/IcY40WUFZrJH4NWH+GQ4=;
+        b=jACLrLkNaog3mlk193EkO2jGf0L0Gy1TrtefK97eEUzREpGgjsSPW2J0rog4QHhRZv
+         zrMYd8Xyj/7MsdRmJz40Vtz2ExwyYJS1URSfdVRFCBSlMtI4ZkGZUJIVPU3wmkHSzog1
+         3udDGQ69IfRJRSnQ9z9qmF8QFBI69Bi8jUNd0TFGKqXyvrmDeDIdNqdhFcbTyzZ9t+U0
+         vLI5XXQ7B5YK4l16uG3nzo4DUfDxYdcBItFNhSFDjgNLlgqgvUEyRYogn9sWDtMewyCF
+         cBKeZpPvOfaFsQmAUBDGmTC5h2A2nMKUhJ6QLPBXDqYDENjLujARidI+EPI/3fd0g6kO
+         Ww5g==
+X-Gm-Message-State: AOJu0Yx7k9qcehW5TQBR4Wxd8gNd/qmDfCVfjKbc+B8T/VZPaKx/enjs
+	V/sEZH46pjNpLtcfiuDJ+cgr3Gts4hL2hz18FEKRpKxBb8DDPSB3
+X-Google-Smtp-Source: AGHT+IG+4VJiCA6Ku3RwuBN5Fe8kqPz8ZD/b8jqc3now4NJwK0lkVDoXuHpjn0zdcEWC8rdqbfFkcA==
+X-Received: by 2002:a05:6a00:1396:b0:717:8a87:7d02 with SMTP id d2e1a72fcca58-71dc5d5cfc2mr9254443b3a.23.1727925901987;
+        Wed, 02 Oct 2024 20:25:01 -0700 (PDT)
+Received: from rigel (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71dd9d8be6asm275408b3a.78.2024.10.02.20.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 20:25:01 -0700 (PDT)
+Date: Thu, 3 Oct 2024 11:24:57 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Vincent Fazio <vfazio@gmail.com>
+Subject: Re: [ANNOUNCE] libgpiod v2.2-rc2
+Message-ID: <20241003032457.GA63612@rigel>
+References: <CAMRc=McgmBnY5vTKySyjS0OX_wFEitDYX-GQVtsaaYEsozPt2Q@mail.gmail.com>
+ <CAMRc=Meo2ObyrpeYQ0TGS5Xhy6_hG7SvGdmrOvX_vVz4R7JogQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Meo2ObyrpeYQ0TGS5Xhy6_hG7SvGdmrOvX_vVz4R7JogQ@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 5a431e50e9d4189800be1607eef9deaf95959fc3  gpio: davinci: Fix condition for irqchip registration
+On Wed, Oct 02, 2024 at 07:50:04PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Oct 2, 2024 at 3:31 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > I've just tagged and pushed out the first release candidate for libgpiod v2.2.
+> >
+> > It's a big release that - next to an assortment of smaller
+> > improvements and bug-fixes - brings in a big new feature: D-Bus daemon
+> > and command-line client together with GObject bindings to core
+> > libgpiod.
+> >
+> > It's in good enough shape to now focus on ironing out the creases and
+> > make it available in the following weeks.
+> >
+> > The tarball and git tree are in their usual places[1][2].
+> >
+> > Bart
+> >
+> > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+> > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+>
+> Well, that wasn't very good, rc1 had a build issue in the tarball. I
+> had to fix it up and release rc2 which now builds fine in yocto.
+>
 
-elapsed time: 964m
+I'm trying to do a build without any glib related targets:
 
-configs tested: 123
-configs skipped: 3
+./autogen.sh --prefix=/usr/local --enable-bindings-python --enable-bindings-cxx --enable-tools --enable-tests --enable-gpioset-interactive --enable-examples
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+but I get:
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241003    gcc-12
-i386        buildonly-randconfig-002-20241003    gcc-12
-i386        buildonly-randconfig-003-20241003    gcc-12
-i386        buildonly-randconfig-004-20241003    gcc-12
-i386        buildonly-randconfig-005-20241003    gcc-12
-i386        buildonly-randconfig-006-20241003    gcc-12
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241003    gcc-12
-i386                  randconfig-002-20241003    gcc-12
-i386                  randconfig-003-20241003    gcc-12
-i386                  randconfig-004-20241003    gcc-12
-i386                  randconfig-005-20241003    gcc-12
-i386                  randconfig-006-20241003    gcc-12
-i386                  randconfig-011-20241003    gcc-12
-i386                  randconfig-012-20241003    gcc-12
-i386                  randconfig-013-20241003    gcc-12
-i386                  randconfig-014-20241003    gcc-12
-i386                  randconfig-015-20241003    gcc-12
-i386                  randconfig-016-20241003    gcc-12
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64      buildonly-randconfig-001-20241003    clang-18
-x86_64      buildonly-randconfig-002-20241003    clang-18
-x86_64      buildonly-randconfig-003-20241003    clang-18
-x86_64      buildonly-randconfig-004-20241003    clang-18
-x86_64      buildonly-randconfig-005-20241003    clang-18
-x86_64      buildonly-randconfig-006-20241003    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241003    clang-18
-x86_64                randconfig-002-20241003    clang-18
-x86_64                randconfig-003-20241003    clang-18
-x86_64                randconfig-004-20241003    clang-18
-x86_64                randconfig-005-20241003    clang-18
-x86_64                randconfig-006-20241003    clang-18
-x86_64                randconfig-011-20241003    clang-18
-x86_64                randconfig-012-20241003    clang-18
-x86_64                randconfig-013-20241003    clang-18
-x86_64                randconfig-014-20241003    clang-18
-x86_64                randconfig-015-20241003    clang-18
-x86_64                randconfig-016-20241003    clang-18
-x86_64                randconfig-071-20241003    clang-18
-x86_64                randconfig-072-20241003    clang-18
-x86_64                randconfig-073-20241003    clang-18
-x86_64                randconfig-074-20241003    clang-18
-x86_64                randconfig-075-20241003    clang-18
-x86_64                randconfig-076-20241003    clang-18
-x86_64                               rhel-8.3    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-xtensa                            allnoconfig    gcc-14.1.0
+checking for glib-2.0 >= 2.50... no
+configure: error: Package requirements (glib-2.0 >= 2.50) were not met:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Package 'glib-2.0', required by 'virtual:world', not found
+
+
+Why is glib now required?
+
+Cheers,
+Kent.
 
