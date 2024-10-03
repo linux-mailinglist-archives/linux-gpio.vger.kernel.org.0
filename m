@@ -1,88 +1,160 @@
-Return-Path: <linux-gpio+bounces-10777-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10778-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02E0298EB89
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 10:26:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6ED198EBD6
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 10:45:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67B7B283927
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 08:26:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ED251F217DD
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Oct 2024 08:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A624013B2AF;
-	Thu,  3 Oct 2024 08:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66FC0126C15;
+	Thu,  3 Oct 2024 08:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="trZC9L44"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200FE126C04;
-	Thu,  3 Oct 2024 08:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74E38F40
+	for <linux-gpio@vger.kernel.org>; Thu,  3 Oct 2024 08:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727943958; cv=none; b=Zmz8+O5VY1wN8AX8vcQhlbK5j5RvaT/rm4L7HcaIz+1SKRBuQL3t+jVeb5rC6vowhy9BLimYACeTK36TRWeJjbWnW4atQeaAMmYL5+Hv+AVsQm2P+nMdcuWirvyOf7EI4K3OCCnv6LLXoLUyAHaRf3sUvJ1FGmBqewYEFPnN6ic=
+	t=1727945150; cv=none; b=cbDgWrrmvRFuZVku1byEb6E7U3OILlvcMO4vZDqVjLXFijrefqXw704Y5omvdLRA9WUVcLqIySNsgcgLidlnnz5HOgfsf0xpCao7YpnLUdkH4UhyzDoevyhz5OuLYeZ/ChcXAy/5z0eTKkwMvEFJblHy67DLyiNXkPQHZnzdLZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727943958; c=relaxed/simple;
-	bh=RAp6bf0v8an72Q9/9OFojiamTjkTeqn6e2CebZqxWOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XoBLP7b/pQ1y0YC3OE84FRVi1V892anDZ4yDdjkpo8VWvXLqmTYMTURgsnJrIVj7YLWIc00T4E3I0qyE2K3l5mv33Oc+W5PkesN2p2zsg3Tx7vSCcmwX9L8j/DbrPCp4igqJlbA/VJWl/iIVCtlUuFj+eAMs22GprpTzbHBQJBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.11,173,1725289200"; 
-   d="scan'208";a="220676587"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Oct 2024 17:25:54 +0900
-Received: from localhost.localdomain (unknown [10.226.92.119])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5C4C341B69E0;
-	Thu,  3 Oct 2024 17:25:52 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v2] pinctrl: renesas: rzg2l: Fix missing return statement
-Date: Thu,  3 Oct 2024 09:25:48 +0100
-Message-ID: <20241003082550.33341-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1727945150; c=relaxed/simple;
+	bh=C35vDfBXY0RRY6OTT7kDHBVQThWOnE6wKXF/Y0Gcs1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JV8ej785MTOi9SV8jasy8XtCAmEgmOdKw9jeChUQVJpYLe8DCzxMPgYpQDI6BwgC6WimDeTjN3X4nz9mk/RKr/eN+OTjBR72Mck+UV9MHVoYMTrtEMMImVN8uSqrMtGLdgn96eOJNTDoV4ZcOshGVZusfSTWK9jWE1AJMtpRPRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=trZC9L44; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fad15b3eeeso8226341fa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Oct 2024 01:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727945147; x=1728549947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZzaVFI974o6SeZJYJJ7amGJv13vzsID0iQdBTSEktbA=;
+        b=trZC9L44LqJCguA6zkiE+d+yUUqxbyEiwT3WEVs7bJjBQfAo/PGTWve1uSr08PjSeK
+         YK+HjvafCM0GUpZ+iTs27Gd29IR939HBNZNaJcuyy1/aztzPr+BefuAeovO54CZnwwv/
+         HAmntedWVXDQzlG4R0WwX4ruSzk2QrMp210vH1CApKTAuWmgD1H5Kyql5qf0HU+hDD2V
+         Ao/+reYtc5qL0l40fhp4p1xYDmhQ6lb6g9rmL2vBBzxuu8ep9VniYFSU1MxELJQR1dwU
+         uHbhAG4MGRWfxdoucHRys61/qNHWp1bIfXIWNPBJeiRhf8S71k6iPcJPoaGfsnUDMXdb
+         z3qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727945147; x=1728549947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZzaVFI974o6SeZJYJJ7amGJv13vzsID0iQdBTSEktbA=;
+        b=QTmtmWe/NiNeaQ3Yx/rM3ajIh9RQwaCKUDWweMzOeHua6fhxBe0eSTDsNXxKl9D0EU
+         FABQA2DfmllD8Tpdc2r1iOcdZvDEi1Fmwdbp+duC7yoJ6Bmnypu6s4hXxhDvr67mnFj4
+         Ci5Du/bBAYUrW/GnbYV7vXSSdtlR7TbiHAWUrAhIrPcGwcnYfaO0Ta/EjMoHoX669CEV
+         NRPy1zlsyk7B2OA/jbQQ183BRtV2/qYpepSaFUTY+2jRJy4whh0cSq4xXcw0IA0KtXz1
+         qKZ9vXNQ6C1N+XUumuciGWaxySqBSC4VI6a4kiABdwcMDzHQDAdTA3cuIayAWvVVUMZA
+         T9SQ==
+X-Gm-Message-State: AOJu0YxKUwOO6goFdd46RdVW3SCufRYjrR9mvpU/J0p+p2uh5OYUxbv9
+	zLuGYl4xS+3t7iip2du9lt2kELWvjc2+/1omae1JVeFShr504OvE0nIb79Ljvexb07BNjLO4UkD
+	7JcNXCzCXs9DNpwvIdR5yKSxpRU5Pzg9gxQv5Cpi8ntNAdoFY
+X-Google-Smtp-Source: AGHT+IEYF+3kC8hchPS2CaUpIoOte4/zWBrquzMWMlQx0Qhc0a9s6CTP0B42FwQZXU0kIrExVzmngVV7XLOX5nlfAfw=
+X-Received: by 2002:a2e:a584:0:b0:2f3:b71a:1e91 with SMTP id
+ 38308e7fff4ca-2fae105ae02mr35942921fa.17.1727945146614; Thu, 03 Oct 2024
+ 01:45:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAMRc=McgmBnY5vTKySyjS0OX_wFEitDYX-GQVtsaaYEsozPt2Q@mail.gmail.com>
+ <CAMRc=Meo2ObyrpeYQ0TGS5Xhy6_hG7SvGdmrOvX_vVz4R7JogQ@mail.gmail.com>
+ <20241003032457.GA63612@rigel> <20241003033640.GB63612@rigel>
+In-Reply-To: <20241003033640.GB63612@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Oct 2024 10:45:35 +0200
+Message-ID: <CAMRc=MfO2NB0jpzhHU-cU00zVesdofM7EUqd11xmE9sCVdBQ-w@mail.gmail.com>
+Subject: Re: [ANNOUNCE] libgpiod v2.2-rc2
+To: Kent Gibson <warthog618@gmail.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Vincent Fazio <vfazio@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix the missing return statement on the error path for
-rzg2l_pinctrl_register().
+On Thu, Oct 3, 2024 at 5:36=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Thu, Oct 03, 2024 at 11:24:57AM +0800, Kent Gibson wrote:
+> > On Wed, Oct 02, 2024 at 07:50:04PM +0200, Bartosz Golaszewski wrote:
+> > > On Wed, Oct 2, 2024 at 3:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
+> > > >
+> > > > I've just tagged and pushed out the first release candidate for lib=
+gpiod v2.2.
+> > > >
+> > > > It's a big release that - next to an assortment of smaller
+> > > > improvements and bug-fixes - brings in a big new feature: D-Bus dae=
+mon
+> > > > and command-line client together with GObject bindings to core
+> > > > libgpiod.
+> > > >
+> > > > It's in good enough shape to now focus on ironing out the creases a=
+nd
+> > > > make it available in the following weeks.
+> > > >
+> > > > The tarball and git tree are in their usual places[1][2].
+> > > >
+> > > > Bart
+> > > >
+> > > > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+> > > > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+> > >
+> > > Well, that wasn't very good, rc1 had a build issue in the tarball. I
+> > > had to fix it up and release rc2 which now builds fine in yocto.
+> > >
+> >
+> > I'm trying to do a build without any glib related targets:
+> >
+> > ./autogen.sh --prefix=3D/usr/local --enable-bindings-python --enable-bi=
+ndings-cxx --enable-tools --enable-tests --enable-gpioset-interactive --ena=
+ble-examples
+> >
+> > but I get:
+> >
+> > checking for glib-2.0 >=3D 2.50... no
+> > configure: error: Package requirements (glib-2.0 >=3D 2.50) were not me=
+t:
+> >
+> > Package 'glib-2.0', required by 'virtual:world', not found
+> >
+> >
+> > Why is glib now required?
+> >
+>
+> Similarly (after commenting out the GLIB and GIO checks tripping above):
+>
+> Making all in gpiosim-glib
+> make[3]: Entering directory '/home/pi/libgpiod/tests/gpiosim-glib'
+>   CC       gpiosim-glib.lo
+> In file included from gpiosim-glib.c:9:
+> gpiosim-glib.h:7:10: fatal error: gio/gio.h: No such file or directory
+>     7 | #include <gio/gio.h>
+>       |          ^~~~~~~~~~~
+>
+>
+> Why is gpiosim-glib being built?  I'm not using glib.  I don't have
+> glib. I don't want to install glib.  But now I can't build. Yay.
+>
+> Cheers,
+> Kent.
+>
+>
 
-Fixes: f73f63b24491 ("pinctrl: renesas: rzg2l: Use dev_err_probe()")
-Reported-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Closes: https://lore.kernel.org/all/OS0PR01MB638837327E5487B71D88A70392712@OS0PR01MB6388.jpnprd01.prod.outlook.com/
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v1->v2:
- * Fixed mail id of Nobuhiro Iwamatsu in Reported-by tag
- * Replaced tab with space charater after return statement
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That wasn't the goal of course. Let me build a vm with minimal
+environment and go through each build option individually.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 5a403915fed2..3a81837b5e62 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2710,7 +2710,7 @@ static int rzg2l_pinctrl_register(struct rzg2l_pinctrl *pctrl)
- 
- 	ret = pinctrl_enable(pctrl->pctl);
- 	if (ret)
--		dev_err_probe(pctrl->dev, ret, "pinctrl enable failed\n");
-+		return dev_err_probe(pctrl->dev, ret, "pinctrl enable failed\n");
- 
- 	ret = rzg2l_gpio_register(pctrl);
- 	if (ret)
--- 
-2.43.0
-
+Bart
 
