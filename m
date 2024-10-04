@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-10839-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10840-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01363990316
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 14:37:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 246C699031A
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 14:37:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CC521C218AB
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 12:37:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B91CE2824E2
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 12:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E591D415F;
-	Fri,  4 Oct 2024 12:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4BD91D2B32;
+	Fri,  4 Oct 2024 12:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2xEE+HV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWcLM6y8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C451D271C;
-	Fri,  4 Oct 2024 12:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17501D415D;
+	Fri,  4 Oct 2024 12:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728045435; cv=none; b=N29cvEqP8RF5x84WSJ7IWSJRoErzqG71CCpGoBzjFExntB2u5xhEuDm9Ur5Avi0JKBSBmqRIQPYPfptLUKYvjZkogpCQbk0kNbtazpMdXZIbcv7JQyZFPP7qThELU/3JlxE47U1tzaXmscJfFKniutpHQA3FqCKzaDxK6r4noWI=
+	t=1728045437; cv=none; b=REVuoc+CGkGZWdB6VeNPfaQsyCXnxOxT3ZB8rDtlDjjgsq+0CsEmpAm9NtB2WcZMQ+V0cCpOgPbjaM7A9Em456Dtj+1efmT2YHV6IpfP8qxwMGewJ65aw9kX8ZSfNOCawXAC6U1SugXURYX0q6NY5DtL3p9xKYw3tVVe6DZQBBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728045435; c=relaxed/simple;
-	bh=iDa4q0EGy+SOCPsH7APipW+rwuIfD0+r8FuA8LgXyk8=;
+	s=arc-20240116; t=1728045437; c=relaxed/simple;
+	bh=4BBNMYwM3bArToQvua/9nkuOAZApAYuroIv+f0FVVEc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tImLyZT5u6WxOp5tpjp9TzW1VIm4O5W83u7USsG0Bl5tBWBkiugVSCqi1ia2HKxJBDKPfTC+++qzuS55FDsYJtkdvQ0lV39913zHL0Hm1dfHZxCMeTWQexp+VcTLT+7mFksBmJKjebiCc/HO9T+dQoar47wDFduUK1K71aXcFF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2xEE+HV; arc=none smtp.client-ip=209.85.218.43
+	 MIME-Version; b=XNShEm1174MXXSSXlpo+JkEx2pWfJr8FOhQRuziy8U57tXzjIB4dGtXJkQYKjmopH5eODkSHb+NLHH2wuye5J0tm86iSgd3iAUgXHn6XK6u5VerkFI0oNVm0VYqKXVSIke8VFPDaAQIFzCqBaTNchPLjRCzJcXjFx0GVqXtQA/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWcLM6y8; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a8d3cde1103so268708466b.2;
-        Fri, 04 Oct 2024 05:37:13 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2fad6de2590so34960161fa.0;
+        Fri, 04 Oct 2024 05:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728045432; x=1728650232; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728045434; x=1728650234; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PHNka6klozf6Nlp3gQ5Dw96SnP2dpYHmui1gZbUUuHI=;
-        b=M2xEE+HVL3GJIPg4icEzbJXFArYPz9yIzjw+2MNcvYBqoAEpR9MMl8b/Y7nWmdQ4mG
-         NEqm83OObdnKBPxTkj/mGuViI1Nmqhayij8uqXXfad6r7MqRuS+LEoCeL9Y8FkO+1UNz
-         jBnMG3g/38jOz5c3Ihb40g7wFDMEl1dAKqFOoezCvliEXgvmrF4QXuuDDPfA3b3wmS64
-         P/PPTJ+72eAgsgByLuytcVkeBK3Hz4t1JamzxB44kmLV3Yowz2bD6T+4y+geDi3V/6M0
-         M742/8IDaPr/0JSp6qOzs8VK4s+oRbgjBe2JGtfBJ6S3SF2tVLWbmybYJEcKhWfKK3J4
-         Hu0A==
+        bh=xX8aRy2R9IVitUqBnE1mlHTx6SRUmp7WK/BrUoRev2A=;
+        b=jWcLM6y8SfVLTWC1cTJV4zUaipNdva0ViOntXtsaeWxtP2cgjyTh+DZHVD9w6H3aS0
+         uU9PggP4Qwbm6gNulty3FqzAk5EuJjQsFiETLvZujZTvm0T0gkb3w873dUfmQtcimDKA
+         lzgF81CYzft9qYcg3AGri+R5VVHQxRV+eNSrhRRFXJpURXH8cl6Z4GJYNkfSSRXSqsEV
+         aMRLAcPQ+SAV3S5VMLp4oUuLhW45seoCGH8d1D3Je36mSeQrVDcaYMnuc9IpgPzyJwax
+         UWiNdb3kPudJ0WdqvIp9FWs+vi2V2AP8uz6S8POLwTl4mYmBucxOYZQ4zg+4woS3isUC
+         VfqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728045432; x=1728650232;
+        d=1e100.net; s=20230601; t=1728045434; x=1728650234;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PHNka6klozf6Nlp3gQ5Dw96SnP2dpYHmui1gZbUUuHI=;
-        b=ScyaSnWGv/b0N0CC/ecEpiacK0Ugl+h81hNmfuHqojxxkUg3uEKtyoxD3r3GUw7EuP
-         09F0I4EHOF7hEKaGcswg2/tEeY7jhl1xvyKaxWrIb0zuLVJMRDRte4h/j5EeNvGma9wv
-         N8PI2Czw7Yl89gVBtcisFMoU41ZASTEgXjIE/aTT+V2SJ45Mga+63TDXpOryRX1b7QPO
-         jxS3U51QREXvrw5jBg27EKFcKzMYjXDBgGniuw7WmlDAkB9HIIwGTZzCzXc26W6YoRm8
-         Kq0VR1mmEYg7JPGhPFrsl18RQEVxmD7ZTALoUt3k18fKQc8l2VxegYj5chy4/Xt4nh3C
-         0Q4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCURnmgscBZ5TbLbLOPaNaZofHAxoMb94Z0yy+0baP5FHljIBhMlLrJs16FN0yxiRbEah8Ree7pV7HS+IPGtWfEeqXg=@vger.kernel.org, AJvYcCWVbIrFvq32Bj62Gwh7YfP9E3iDk2ayyFPkkCY+99K+ZoXTyIRdo9twfV/NQUjF9+xPaDcITJsvEqgD@vger.kernel.org, AJvYcCXAKtfU+perE17FYsvhrfC/ZAwhQplZE1ysMsgPiHhl0lqGGGJuvNtSQv8jyvRlWT8mmK9GiC6V1eqbNvO4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJGg2Z0s/lv94xjMBRgJEbEiQKZwmoC7ghkI8MGnXWBJJQkgV0
-	FVopmnyvbi5mLj/vynzhT49sjeX/6PV0aG1lVT4pmq2gvb3wzpVTISjMdg==
-X-Google-Smtp-Source: AGHT+IGmgImN/5525gLT2kNV35K/3qFRa9LF8GZwEMOHSYlTb39Sdf2SmRsNsx8wg+Sd8XsboaEfcA==
-X-Received: by 2002:a17:907:3d8d:b0:a8d:1284:6de5 with SMTP id a640c23a62f3a-a991bd3fc29mr269025466b.14.1728045432054;
-        Fri, 04 Oct 2024 05:37:12 -0700 (PDT)
+        bh=xX8aRy2R9IVitUqBnE1mlHTx6SRUmp7WK/BrUoRev2A=;
+        b=EWZZafTuVf19cle9HHcD7I0XLt13nZcltTgNU0zO+daLwBIjNxuAfI53x2PGU/X2k7
+         Ty28ZU2b8sVdZG/2x7kyH+ZeEEIZwAjfxGoCCGn7n+tOmYzqAhpI3gUyGfhONbIOMkRi
+         w8g4YwQ4I4xfFHge/LkAHhPzDier56pbBMchfk7Cz2/fQ7NGnBMmPTS6veQyOYtePwrG
+         TgGOJIYH/hP00W7DUfUwOHm9Xe1ZX/V1G0+R2CGBxwHbPGlg39UnnlOJ+WBLV77lQ+eM
+         CWy9e3A6uxdIAUBnUSNkF8iJxfN+KNmQg2dokiIvRxyn09Du2Yo6WyRJTbFLv2oigpFU
+         eOkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWIcAloCODz4znrb904GThdcEkq5mIR0xCdK54rsUJ4KlM4Lna2sTQG9Pr8YTkBcLkkdJADMO5TwFz@vger.kernel.org, AJvYcCWPZMwQbepmEKA9vufX1DhMk/332CuScdpOyt4dom2LraSzM+o1v31LIIaImfB1Bk6KVCK3IuUOpMBslaCR5Li6+f8=@vger.kernel.org, AJvYcCXSbV2MBZBNqjNh1O9UuQSqV+SDrFRhQVWFvyRv8EtsWYQ5Qac4fTwmmyF/B5Y4clq6irkmy6dWa1mGg2va@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLZGiY2jUHsrfATyyFlnjzyatMxfi6zCveDyLSCKT1rXOU2axL
+	2SsR3tiaw66PuImh9WzwUr69Wa/Oa3GfdVPCj/2RwHKB2xccoR4HVNHjaA==
+X-Google-Smtp-Source: AGHT+IG2Slm11cpazobv9t04cqXOWIHb/N6RY5QpiUUdRG0WgeXAMz/IHnlxRgGReCnk7rSnApZ1MQ==
+X-Received: by 2002:a2e:878a:0:b0:2f7:5a41:b0b with SMTP id 38308e7fff4ca-2faf3c44dc5mr18810751fa.26.1728045433408;
+        Fri, 04 Oct 2024 05:37:13 -0700 (PDT)
 Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9910285ad0sm221601166b.34.2024.10.04.05.37.10
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9910285ad0sm221601166b.34.2024.10.04.05.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 05:37:11 -0700 (PDT)
+        Fri, 04 Oct 2024 05:37:12 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -83,9 +83,9 @@ Cc: devicetree@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 1/3] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow schmitt and open drain properties
-Date: Fri,  4 Oct 2024 13:36:56 +0100
-Message-ID: <20241004123658.764557-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 2/3] pinctrl: renesas: rzg2l: Add support for enabling/disabling open-drain outputs
+Date: Fri,  4 Oct 2024 13:36:57 +0100
+Message-ID: <20241004123658.764557-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241004123658.764557-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20241004123658.764557-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -99,39 +99,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On the RZ/V2H(P) SoC we can configure the 'input-schmitt-{enable,disable}'
-, 'drive-open-drain' and 'drive-push-pull' of multiplexed pins. Update the
-binding documentation to include these properties.
+Add support for enabling and disabling open-drain outputs.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-Hi Rob,
-I have dropped your Ack from v1 as I have updated the commit message and
-included `drive-push-pull` property in v2.
-
-Cheers, Prabhakar
-
 v1->v2
-- Added `drive-push-pull` property
+- Implemented PIN_CONFIG_DRIVE_OPEN_DRAIN to disable open drain
 ---
- .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-index 56d90c8e1fa3..a1805b6e3f63 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-@@ -119,6 +119,10 @@ additionalProperties:
-         bias-disable: true
-         bias-pull-down: true
-         bias-pull-up: true
-+        input-schmitt-enable: true
-+        input-schmitt-disable: true
-+        drive-open-drain: true
-+        drive-push-pull: true
-         renesas,output-impedance:
-           description:
-             Output impedance for pins on the RZ/V2H(P) SoC. The value provided by this
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index b2d309f742af..8d576cc74003 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -139,6 +139,7 @@
+ #define IEN(off)		(0x1800 + (off) * 8)
+ #define PUPD(off)		(0x1C00 + (off) * 8)
+ #define ISEL(off)		(0x2C00 + (off) * 8)
++#define NOD(off)		(0x3000 + (off) * 8)
+ #define SD_CH(off, ch)		((off) + (ch) * 4)
+ #define ETH_POC(off, ch)	((off) + (ch) * 4)
+ #define QSPI			(0x3008)
+@@ -160,6 +161,7 @@
+ #define IOLH_MASK		0x03
+ #define SR_MASK			0x01
+ #define PUPD_MASK		0x03
++#define NOD_MASK		0x01
+ 
+ #define PM_INPUT		0x1
+ #define PM_OUTPUT		0x2
+@@ -1337,6 +1339,18 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 		break;
+ 	}
+ 
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		if (!(cfg & PIN_CFG_NOD))
++			return -EINVAL;
++
++		arg = rzg2l_read_pin_config(pctrl, NOD(off), bit, NOD_MASK);
++		if (!arg && param != PIN_CONFIG_DRIVE_PUSH_PULL)
++			return -EINVAL;
++		if (arg && param != PIN_CONFIG_DRIVE_OPEN_DRAIN)
++			return -EINVAL;
++		break;
++
+ 	case RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE:
+ 		if (!(cfg & PIN_CFG_IOLH_RZV2H))
+ 			return -EINVAL;
+@@ -1466,6 +1480,15 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 			rzg2l_rmw_pin_config(pctrl, IOLH(off), bit, IOLH_MASK, index);
+ 			break;
+ 
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			if (!(cfg & PIN_CFG_NOD))
++				return -EINVAL;
++
++			rzg2l_rmw_pin_config(pctrl, NOD(off), bit, NOD_MASK,
++					     param == PIN_CONFIG_DRIVE_OPEN_DRAIN ? 1 : 0);
++			break;
++
+ 		case RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE:
+ 			if (!(cfg & PIN_CFG_IOLH_RZV2H))
+ 				return -EINVAL;
 -- 
 2.43.0
 
