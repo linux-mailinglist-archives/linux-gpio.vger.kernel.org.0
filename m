@@ -1,231 +1,152 @@
-Return-Path: <linux-gpio+bounces-10834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB57990203
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1204990235
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:41:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 49715B20909
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 11:22:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7736AB21770
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 11:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C254157487;
-	Fri,  4 Oct 2024 11:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66D2A15990E;
+	Fri,  4 Oct 2024 11:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aMGeT2j7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmH/dN+p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC5137903;
-	Fri,  4 Oct 2024 11:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D30146A63;
+	Fri,  4 Oct 2024 11:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728040965; cv=none; b=js3x4X7wOru1tcKdBclqxOw/fdVo57zM1yIkt7pW75NOLSxSQ/y5ALi/TsTd9EbVtmM8oipj6nzgj2k+Xtv/tz1eb36R2GhnXr4mLC9IrZ75/GwoAb2aCFvRj+SFaOahB6JJZ8RgdmnWfobMPCRdoVoSj7Wxuxu6y/2btFjDLqQ=
+	t=1728042052; cv=none; b=ssYIGil+n1nN5zB9zrVnze1nRJve5XQoEhC8XkS4XUWgIFU6e7JUAwaUfvreCy5zASTu4oiGVX5lyG7rBQ+eq1qIQDFGjYPHfsAGrhOlnA1PKyRrgAob8GDIJz1tdtVylcjLooKHeWaNOXWHPmJMYA0m0er4+wXE3wpvP2bsgTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728040965; c=relaxed/simple;
-	bh=JuzY7QcYQMFTsKFhb6M6Epx2VLSYGJ5bXpDgThfuniw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ut5ba3jkN+IFrFMc5SNxBeNeyDkuDvy4NbBzRoKaUa1CbO3xBooQp6tYhhIdHv+eX7X06JEhk1Htgi5G7pht68G44+HsZDgnpq+96yG30x/HyCQqED8Z1GbzmBZFxxSR6o/3R+xRPh1M9d2n36eh3FOxxcGjjWg4EwBGRhe/UdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aMGeT2j7; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 494B4ZvR019120;
-	Fri, 4 Oct 2024 11:22:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0DfXXY9TOZZaA/uIw9ViWZGEVxfNaqj4IRcafnRdJVQ=; b=aMGeT2j7m6oL1xTa
-	7SvPwTStGHDLVsOALOdm1kdNu3POu03P9rF6fgxvcmZmi08XBS1yoRZpRGfltfKB
-	kL6Bng1CbbobZymGie9Kv73uTurWPIl79CCfzCVj3FXRMwYg/7HaXKlEv5Cyip3A
-	e6YzpjFrzX83JPGlLYf8kg0rE5QGgU5bUl0C0oVeXRPAtmsCPYOEu1AdMMmMnHM0
-	4wjmnvwRmDiYqADn7jFwb9Wjfx3UKhXMDQ5KDx2dYaF80YpgvnEJ1OQIE3RvvzjM
-	r5ojl0fWx1tgxLI21rBXw+N2X732+WN9QHqY+ArKmKU+/tTlLYuxjBQH1B1jLfkR
-	Ii6YLQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42205n1wsv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Oct 2024 11:22:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 494BMQRZ008219
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Oct 2024 11:22:26 GMT
-Received: from [10.151.37.217] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 4 Oct 2024
- 04:22:19 -0700
-Message-ID: <1ac5e0e5-06c1-4930-8c03-f465d6e07848@quicinc.com>
-Date: Fri, 4 Oct 2024 16:51:57 +0530
+	s=arc-20240116; t=1728042052; c=relaxed/simple;
+	bh=otYBiSqYpzQvcEOzrqVXTkSSDkEtAGRqXVxQRVTPTtI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WmNb76MvknDfc7Bg0nis9udN1KCN9/b7xapoyYKfLychas4FIV2C/MIIqLSSn+5NOrs/1LwP7yNDbR+3rKHk8KVyEfirtcg04EnLWyIkGVJLQZaqpwbX+IcgPS6YKNb75Zjzm0nzs1IbVHiSNr7SaoOssLGTyYqbQbGqoVHzn+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmH/dN+p; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-50923780607so569869e0c.1;
+        Fri, 04 Oct 2024 04:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728042049; x=1728646849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gKCQdo+p8Gze0vcICMzXMRiWujRcC5yLqN4wtvnwSaI=;
+        b=cmH/dN+pICvFiKF2aGOFg/PmqZLXUPlcRMoKNhSJFkaOUZbl9R1t2Hlppo1wxurK4f
+         zMk5esdcOycvLOk0PN1fhzSHGAbiwpAYVSkkvnC81j95JyYTbxGHkfU7c5FcGEUk99W4
+         Ocnwko9pvkl/PJtN9RkYK69u3ue9x/ZSvvt/h/sQ4FNh9FnB3djLZDNArqO7ZRU6x0VI
+         ha5eauv3Bdh8rmw/56N9hmJBrG9eIBe300hLnThhWCWh9v74J6iZKgz6nmdjSdo9MKH9
+         B6JhEF4hdbJBolU0EWP255xXDJCKu+pQ+9kqo5HFJ6z3z6oHmhxjNdFZaDW1/AN8TV4d
+         Kphg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728042049; x=1728646849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gKCQdo+p8Gze0vcICMzXMRiWujRcC5yLqN4wtvnwSaI=;
+        b=KFTBvtaeiOgfw/m12v21Q/dfy+UzaWx6ZS2qQfBhXf5iiRbRLP0VJaprV1kVNVelNr
+         3UQoKNhbThbSS3H3nfTkLoQqBjxnghMQYdYzDQT+kWQ9/evpXTx6Paj9FlcVuTRPnvHs
+         9k/nt2x17yVsVNnXrDWHdIneQ1WAuSM3xYfvt0rmIUoK5LcZag63qq7FiQEDQ8neMzEA
+         0eJn5dVuaBpD3yytvmqrTrCu8vWBbUwZ1Q9XRJDedOvzgraK98qW8Aw4XSfP2NOKW5KX
+         wzTl6zgZmIgrtq7d/B4TA3Gamkdfyl9A2t7r/KRCWFEVmbrByCvoR0W/qadm+PzNMiSC
+         NcOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDQGa3FlMuZKNsOJuMmzpt+bvSRMSNvjJcLUwhFVLNKXVRrCt+dRRo0FqTXD1cDZcYzzKgr2s/L0hi@vger.kernel.org, AJvYcCUEorBTeBK9JNdT6GqZgsS9eaic8aiQxvWsEQJyCErlUwGcqXgkwcQznGX+ljzURewdE8a+9uUKkblD8kV1@vger.kernel.org, AJvYcCWvX8S7spi0ILEUnwBWR7G/iDVUjTda5sk9Ma8hbvhml/CoL9PUl7oHIFcl47S96fsoOeEPVWdX8JPetg==@vger.kernel.org, AJvYcCX0ydIEyVWrhvSb7X3HnM1v9HgW8H7fmcFQjgaehtFG6p7VpIpTKKuAb+U1+0Az2sxJZiyEkg2D89te2QM1pVKqQ+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym+CfpPWbELDQsN3rJm5eULTcLtk/w62eL4Cl3ZlqkPP1Ymvbp
+	MiAhXDRMXymtuUf4JoAKGH9WUV10R3NbuKXIe+VxcMA4tClfis0YZLblI91GOTE00Wr4ebDZzCc
+	Pqc0tXqS6TQFFxUpviRHdDxHJP3w=
+X-Google-Smtp-Source: AGHT+IFC3OyNNIPDOrsFuuPwGn8CfLR42u8mLnHhuVlMaBMOyEKFYgtYXlGu9lM/6h3sqSwjih5kARz8PE6Wwu/A0Fs=
+X-Received: by 2002:a05:6122:180d:b0:4fc:e3c2:2c71 with SMTP id
+ 71dfb90a1353d-50c85444ac7mr1617808e0c.2.1728042049555; Fri, 04 Oct 2024
+ 04:40:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 4/7] clk: qcom: add Global Clock controller (GCC)
- driver for IPQ5424 SoC
-To: Sricharan R <quic_srichara@quicinc.com>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulf.hansson@linaro.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
-        <geert+renesas@glider.be>, <dmitry.baryshkov@linaro.org>,
-        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <quic_varada@quicinc.com>
-References: <20241004102342.2414317-1-quic_srichara@quicinc.com>
- <20241004102342.2414317-5-quic_srichara@quicinc.com>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <20241004102342.2414317-5-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: V8UXvjLB4DwVVK88mDCfD3_3xjLk1YGv
-X-Proofpoint-GUID: V8UXvjLB4DwVVK88mDCfD3_3xjLk1YGv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- clxscore=1011 bulkscore=0 malwarescore=0 phishscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410040083
+References: <20240918120909.284930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240918120909.284930-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWkHvHh=AhJhOutFRAJMczpCGdUCPvPuqjY_V4aiMvmAg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWkHvHh=AhJhOutFRAJMczpCGdUCPvPuqjY_V4aiMvmAg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 4 Oct 2024 12:40:22 +0100
+Message-ID: <CA+V-a8v7Y83cS4EHd0K5hvbCLFxE8xrv9zajDMvwT_R0RH59vg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow
+ 'input-schmitt-{enable,disable}' and 'drive-open-drain' properties
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Geert,
 
+Thank you for the review.
 
-On 10/4/2024 3:53 PM, Sricharan R wrote:
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> 
-> Add support for the global clock controller found on IPQ5424 SoC.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
->   [V3] Added Reviewed tag
-> 
->   drivers/clk/qcom/Kconfig       |    8 +
->   drivers/clk/qcom/Makefile      |    1 +
->   drivers/clk/qcom/gcc-ipq5424.c | 3309 ++++++++++++++++++++++++++++++++
->   3 files changed, 3318 insertions(+)
->   create mode 100644 drivers/clk/qcom/gcc-ipq5424.c
-> 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index a3e2a09e2105..6a576bc2301c 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -213,6 +213,14 @@ config IPQ_GCC_5332
->   	  Say Y if you want to use peripheral devices such as UART, SPI,
->   	  i2c, USB, SD/eMMC, etc.
->   
-> +config IPQ_GCC_5424
-> +	tristate "IPQ5424 Global Clock Controller"
-> +	depends on ARM64 || COMPILE_TEST
-> +	help
-> +	  Support for the global clock controller on ipq5424 devices.
-> +	  Say Y if you want to use peripheral devices such as UART, SPI,
-> +	  i2c, USB, SD/eMMC, etc.
-> +
->   config IPQ_GCC_6018
->   	tristate "IPQ6018 Global Clock Controller"
->   	help
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 2b378667a63f..d58ba0f9a482 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
->   obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
->   obj-$(CONFIG_IPQ_GCC_5018) += gcc-ipq5018.o
->   obj-$(CONFIG_IPQ_GCC_5332) += gcc-ipq5332.o
-> +obj-$(CONFIG_IPQ_GCC_5424) += gcc-ipq5424.o
->   obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
->   obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
->   obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
-> diff --git a/drivers/clk/qcom/gcc-ipq5424.c b/drivers/clk/qcom/gcc-ipq5424.c
-> new file mode 100644
-> index 000000000000..3458c1c98bb7
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-ipq5424.c
-> @@ -0,0 +1,3309 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <dt-bindings/clock/qcom,ipq5424-gcc.h>
-> +#include <dt-bindings/reset/qcom,ipq5424-gcc.h>
-> +
-> +#include "clk-alpha-pll.h"
-> +#include "clk-branch.h"
-> +#include "clk-rcg.h"
-> +#include "clk-regmap.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-regmap-mux.h"
-> +#include "clk-regmap-phy-mux.h"
-> +#include "common.h"
-> +#include "reset.h"
-> +
-> +enum {
-> +	DT_XO,
-> +	DT_SLEEP_CLK,
-> +	DT_PCIE30_PHY0_PIPE_CLK,
-> +	DT_PCIE30_PHY1_PIPE_CLK,
-> +	DT_PCIE30_PHY2_PIPE_CLK,
-> +	DT_PCIE30_PHY3_PIPE_CLK,
-> +	DT_USB_PCIE_WRAPPER_PIPE_CLK,
-> +};
-> +
-> +enum {
-> +	P_GCC_GPLL0_OUT_MAIN_DIV_CLK_SRC,
-> +	P_GPLL0_OUT_AUX,
-> +	P_GPLL0_OUT_MAIN,
-> +	P_GPLL2_OUT_AUX,
-> +	P_GPLL2_OUT_MAIN,
-> +	P_GPLL4_OUT_AUX,
-> +	P_GPLL4_OUT_MAIN,
-> +	P_SLEEP_CLK,
-> +	P_XO,
-> +	P_USB3PHY_0_PIPE,
-> +};
-> +
+On Fri, Oct 4, 2024 at 8:54=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Fabrizio,
+>
+> On Wed, Sep 18, 2024 at 2:09=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > On the RZ/V2H(P) SoC we can configure the 'input-schmitt-{enable,disabl=
+e}'
+> > and 'drive-open-drain' of multiplexed pins. Update the binding
+> > documentation to include these properties.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
+aml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
+aml
+> > @@ -119,6 +119,9 @@ additionalProperties:
+> >          bias-disable: true
+> >          bias-pull-down: true
+> >          bias-pull-up: true
+> > +        input-schmitt-enable: true
+> > +        input-schmitt-disable: true
+> > +        drive-open-drain: true
+>
+> I think you also need "drive-push-pull", to disable open drain.
+>
+Agreed, I will add support for it and send a v2.
 
+Cheers,
+Prabhakar
 
-<snip>
-
-> +
-> +static const struct freq_tbl ftbl_gcc_qupv3_uart0_clk_src[] = {
-> +	F(960000, P_XO, 10, 2, 5),
-> +	F(4800000, P_XO, 5, 0, 0),
-> +	F(9600000, P_XO, 2, 4, 5),
-> +	F(16000000, P_GPLL0_OUT_MAIN, 10, 1, 5),
-> +	F(24000000, P_XO, 1, 0, 0),
-> +	F(25000000, P_GPLL0_OUT_MAIN, 16, 1, 2),
-> +	F(50000000, P_GPLL0_OUT_MAIN, 16, 0, 0),
-> +	F(64000000, P_GPLL0_OUT_MAIN, 12.5, 0, 0),
-> +	{ }
-> +};
-> +
-
-There are few more frequencies got added to this table. Can we 
-incorporate that as well?
-
-Thanks, Kathiravan T.
+> >          renesas,output-impedance:
+> >            description:
+> >              Output impedance for pins on the RZ/V2H(P) SoC. The value =
+provided by this
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
 
