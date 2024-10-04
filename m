@@ -1,76 +1,90 @@
-Return-Path: <linux-gpio+bounces-10849-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10838-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C59B6990387
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 15:07:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AA04990312
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 14:37:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7A99B230ED
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:07:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1ABE1F25A07
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 12:37:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CA5C2101A8;
-	Fri,  4 Oct 2024 13:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA05B1D363C;
+	Fri,  4 Oct 2024 12:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="wBzLlyEK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJsTPQ2m"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E69210196;
-	Fri,  4 Oct 2024 13:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A111D0E37;
+	Fri,  4 Oct 2024 12:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728047250; cv=none; b=YasTbK+JnmoQilli63V+GA7Nb+FhqV6au1f9oTQUvVnEUnVJ+t+d9W3zeQGeSkodmAymGF9FcfmZwb9u4bbpgJmeYM5wfjyWKhBvopM8UMUWhzhEu66jfyk1tLdTps2O7eHIBx+6wWAhV7Hw6BIOGA9NT0Ao7uAAB24hngXCrvM=
+	t=1728045434; cv=none; b=b9pm6KEKjvjcoXm0KdaC7M4AR78SIr+4bq1xRDHr75GB9eYyWIdTjXEHCS38vvbDiXNxpPw4KwJ8RyuwKYD1CWje2Nt/SuRLQIcfiIef8OrrnyCHDr7YLnYTX59xxkAcizUyAxc/rBzOvzrKIN/mcV5aHLX/X9GAiKGRGssvbJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728047250; c=relaxed/simple;
-	bh=3QuucO44aM8Y58TvxXol1DNmIrh/KXQXmg6mGjTUmZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c9RHLqTMUJpNEqZokPwIYSTalCvD0WWEznnVsXqvKQB99pW/ksH6fGzc7KTYRC6HHqb0Hs/7btLjhYMdHliPry0REKDZRIp8SJpYeI+YARDhaqYxrT1c87jPAzB70Y9/rmsax3RisQZ6UG7oVEKD4WD+CoQGtLhc5M6iU2hPzqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=wBzLlyEK; arc=none smtp.client-ip=134.0.28.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-	by mxout2.routing.net (Postfix) with ESMTP id 77ED45FB6C;
-	Fri,  4 Oct 2024 12:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1728046671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hGNkAERzmbmhktLSThqm9IZzpYMeb4IRfHtIToZxK3U=;
-	b=wBzLlyEKIZFYvpGhovJM4fer3lSKPI3bViPYTbE8qet4hgTuXi5gBYPfjmp+EceXvjmwRR
-	IJnOP+2tgiibVaR3j5xQY9xFzTJiZsCt5If6ny0gaSRS2lkdworvIJZZD13e3LZMp8jhtl
-	XSJ7oZm7StU83yjhKqPuD2DE/6YoyNI=
-Received: from frank-u24.. (fttx-pool-217.61.153.189.bambit.de [217.61.153.189])
-	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id B1BF840040;
-	Fri,  4 Oct 2024 12:57:50 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1728045434; c=relaxed/simple;
+	bh=id7grdGNXAFXeKeGrb6nVKSAWiDb/eXl5OSyAJzokxI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rgdQP3S0dcAu1RGqc1veD+he35msOfAU14j5XsTmBKwCtu7cA2GLxoJ/hqCQ9Nd1uAB8oxGqlm1/k2iILSDLhPdbxO0OJK8OIP5dDZYjgJX8QlvNkoT+JeWvs8+JrLaxyOl9EUmelZm8fRoLGRPQcLA6zxE8S5q5Yi4c7Eq5B3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJsTPQ2m; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a8d60e23b33so289967466b.0;
+        Fri, 04 Oct 2024 05:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728045431; x=1728650231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DwlSNCAo771k5BRm77+2Y9w0fghV+km2XqjlKUt2KU8=;
+        b=nJsTPQ2mVEzTcxzdXwbhhmOGo/DsbXc8tZyeNllSmOEqOmO3I9VNtTHpRYGQJLTWPt
+         VBzR481JbTj25qn1CQHlauIXfjWzFNLpWuKj9vy+gaHMqcIY6KoZYe3BJk7JMBPJahyX
+         eE7N2nx7KKlqsuGZ3nHuceOPht4NE6hJKtkynDS3JeOaRjXR8VK3/yubvCZUMSpH2xCD
+         w6hz2/0nFamiRMsH72G2Ry0/32F7vT891a8jQIHmh63aPBYRPHQTY2hYVwFdoqCVqGFk
+         WAz8/uI2c+U3I9lK1DvNnGVIeLzjD3Zx7g60LfdlkNKtjTfi2JNL+8YzSRKDWkKY/iY+
+         Jp9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728045431; x=1728650231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DwlSNCAo771k5BRm77+2Y9w0fghV+km2XqjlKUt2KU8=;
+        b=Y8wsXaRd7BmEFYTW8Y3tTAGbKr57OivvB02OfbfGi+93IDiTsuM3ELZOZnXGwH6c+K
+         bS1QGxxIIBNXOiswHUT+kl9kRlSJj6dypJFPe1hCLMd/sySCye3+K/kEnfPFcwtUWz9L
+         dmR5PDRNVZpx1Xwt5XG4LdIGDokJ8N7rBJbkjpYC9/I8uFX0O63pU4XM4S9K9WgcmgRJ
+         DXB7aUBv5q1Mb8w3cU7OdiBYw1JS/E9fgEq9xFDmRrpvsjRZII1WGg6CnbJgI5TDpHQV
+         nY/rw5B/9gtczmRLQpcCi2/axPHY79b30u6GXMNsuYSv3aVbMCazKppD6oZ48mZHrk6v
+         GOAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAyaV92y1TzV6ZPjBpmrgdXe55sj4uOvAYvmmV+gT7HcQf4QLL7a6KEgWGZAOXNIA8Pb9xsZpXcDpef9gY@vger.kernel.org, AJvYcCX3UEJaYSVN1T6kD61fSXhFIpAvqC+PAqkXQ/Xx8cy+utbUGjA866qPf0Z7F1OknF4o8HkuQRu3jGcc@vger.kernel.org, AJvYcCXo13mV+XYyn0IDdF/8/Xpj5LDUBlRmV7FcS95WCX+sbDNOJMrGczfqskfHaZxLK3bE1TtYuF6rVYhPb1Q6Wgaih00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnutGKODsOfS8VZ3tqJJzXbrqNUckrCraHhLOdUahqMtpcLyE1
+	fR94cSeTmkyD/8bCXL/vv9i0wfNfVCpoJAZb4JWDLryqZae7FmTRdFqY8Q==
+X-Google-Smtp-Source: AGHT+IGH077f3yrGtSebb4Fk484F/ZepvBTHu+4EiI3uKYDDGv4DeCONyrcBY6oJ7nzZEBn2mduHvA==
+X-Received: by 2002:a17:907:745:b0:a86:9d39:a2a with SMTP id a640c23a62f3a-a991bcfbc70mr259824166b.8.1728045430740;
+        Fri, 04 Oct 2024 05:37:10 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9910285ad0sm221601166b.34.2024.10.04.05.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2024 05:37:10 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	daniel@makrotopia.org,
-	john@phrozen.org,
-	ansuelsmth@gmail.com,
-	eladwf@gmail.com
-Subject: [PATCH v1 4/4] arm64: dts: mediatek: mt7988: add pinctrl support
-Date: Fri,  4 Oct 2024 14:34:18 +0200
-Message-ID: <20241004123423.34519-5-linux@fw-web.de>
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/3] pinctrl: renesas: rzg2l: Add support to configure open-drain and schmitt-trigger properties
+Date: Fri,  4 Oct 2024 13:36:55 +0100
+Message-ID: <20241004123658.764557-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241004123423.34519-1-linux@fw-web.de>
-References: <20241004123423.34519-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,276 +92,33 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: dd6e6c2b-f958-40c9-8efd-a8b3355d0527
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add mt7988a pinctrl node.
+Hi All,
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 241 ++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
+This patch series aims to add support for configuring open-drain and
+schmitt-trigger properties for pins on Renesas RZ/V2H(P) SoC.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index aa728331e876..096d11a002ff 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -3,6 +3,7 @@
- #include <dt-bindings/clock/mediatek,mt7988-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/pinctrl/mt65xx.h>
- 
- / {
- 	compatible = "mediatek,mt7988a";
-@@ -105,6 +106,246 @@ clock-controller@1001e000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7988-pinctrl";
-+			reg = <0 0x1001f000 0 0x1000>,
-+			<0 0x11c10000 0 0x1000>,
-+			<0 0x11d00000 0 0x1000>,
-+			<0 0x11d20000 0 0x1000>,
-+			<0 0x11e00000 0 0x1000>,
-+			<0 0x11f00000 0 0x1000>,
-+			<0 0x1000b000 0 0x1000>;
-+			reg-names = "gpio", "iocfg_tr",
-+				    "iocfg_br", "iocfg_rb",
-+				    "iocfg_lb", "iocfg_tl", "eint";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 84>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+
-+			mdio0_pins: mdio0-pins {
-+				mux {
-+					function = "eth";
-+					groups = "mdc_mdio0";
-+				};
-+
-+				conf {
-+					pins = "SMI_0_MDC", "SMI_0_MDIO";
-+					drive-strength = <MTK_DRIVE_8mA>;
-+				};
-+			};
-+
-+			i2c0_pins: i2c0-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c0_1";
-+				};
-+			};
-+
-+			i2c1_pins: i2c1-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c1_0";
-+				};
-+			};
-+
-+			i2c1_sfp_pins: i2c1-sfp-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c1_sfp";
-+				};
-+			};
-+
-+			i2c2_0_pins: i2c2-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c2_0";
-+				};
-+			};
-+
-+			i2c2_1_pins: i2c2-g1-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c2_1";
-+				};
-+			};
-+
-+			gbe0_led0_pins: gbe0-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe0_led0";
-+				};
-+			};
-+
-+			gbe1_led0_pins: gbe1-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe1_led0";
-+				};
-+			};
-+
-+			gbe2_led0_pins: gbe2-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe2_led0";
-+				};
-+			};
-+
-+			gbe3_led0_pins: gbe3-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe3_led0";
-+				};
-+			};
-+
-+			gbe0_led1_pins: gbe0-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe0_led1";
-+				};
-+			};
-+
-+			gbe1_led1_pins: gbe1-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe1_led1";
-+				};
-+			};
-+
-+			gbe2_led1_pins: gbe2-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe2_led1";
-+				};
-+			};
-+
-+			gbe3_led1_pins: gbe3-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe3_led1";
-+				};
-+			};
-+
-+			i2p5gbe_led0_pins: 2p5gbe-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "2p5gbe_led0";
-+				};
-+			};
-+
-+			i2p5gbe_led1_pins: 2p5gbe-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "2p5gbe_led1";
-+				};
-+			};
-+
-+			mmc0_pins_emmc_45: mmc0-emmc-45-pins {
-+				mux {
-+					function = "flash";
-+					groups = "emmc_45";
-+				};
-+			};
-+
-+			mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+				mux {
-+					function = "flash";
-+					groups = "emmc_51";
-+				};
-+			};
-+
-+			mmc0_pins_sdcard: mmc0-sdcard-pins {
-+				mux {
-+					function = "flash";
-+					groups = "sdcard";
-+				};
-+			};
-+
-+			uart0_pins: uart0-pins {
-+				mux {
-+					function = "uart";
-+					groups =  "uart0";
-+				};
-+			};
-+
-+			snfi_pins: snfi-pins {
-+				mux {
-+					function = "flash";
-+					groups = "snfi";
-+				};
-+			};
-+
-+			spi0_pins: spi0-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi0";
-+				};
-+			};
-+
-+			spi0_flash_pins: spi0-flash-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi0", "spi0_wp_hold";
-+				};
-+			};
-+
-+			spi1_pins: spi1-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi1";
-+				};
-+			};
-+
-+			spi2_pins: spi2-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi2";
-+				};
-+			};
-+
-+			spi2_flash_pins: spi2-flash-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi2", "spi2_wp_hold";
-+				};
-+			};
-+
-+			pcie0_pins: pcie0-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_2l_0_pereset", "pcie_clk_req_n0_0",
-+						 "pcie_wake_n0_0";
-+				};
-+			};
-+
-+			pcie1_pins: pcie1-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_2l_1_pereset", "pcie_clk_req_n1",
-+						 "pcie_wake_n1_0";
-+				};
-+			};
-+
-+			pcie2_pins: pcie2-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_1l_0_pereset", "pcie_clk_req_n2_0",
-+						 "pcie_wake_n2_0";
-+				};
-+			};
-+
-+			pcie3_pins: pcie3-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_1l_1_pereset", "pcie_clk_req_n3",
-+						 "pcie_wake_n3_0";
-+				};
-+			};
-+		};
-+
- 		pwm@10048000 {
- 			compatible = "mediatek,mt7988-pwm";
- 			reg = <0 0x10048000 0 0x1000>;
+v1->v2
+- Added `drive-push-pull` property to binding doc
+- Implemented PIN_CONFIG_DRIVE_OPEN_DRAIN to disable open drain
+- Included RB tag
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (3):
+  dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow schmitt and open
+    drain properties
+  pinctrl: renesas: rzg2l: Add support for enabling/disabling open-drain
+    outputs
+  pinctrl: renesas: rzg2l: Add support for configuring schmitt-trigger
+
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  4 ++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 41 +++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+
 -- 
 2.43.0
 
