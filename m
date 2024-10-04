@@ -1,112 +1,120 @@
-Return-Path: <linux-gpio+bounces-10823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE40A99005D
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 11:57:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E6A899008C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 12:09:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD9AE1C234D2
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 09:57:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B7DB285192
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 10:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845F9148827;
-	Fri,  4 Oct 2024 09:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C36B14A0B9;
+	Fri,  4 Oct 2024 10:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5JoM15+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F20140E50;
-	Fri,  4 Oct 2024 09:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180DB146A72
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Oct 2024 10:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728035865; cv=none; b=cz1jgOds+40IN7wFZz3t9tsixmn+3WLHC4jPOF284QxEFZ/iq0dJmyBHyZjBfxLxMj3KH8yyPLisam1cXDvmFJrFqRA+2wQYkt1amTx3XrybfL37WndYzN2oFVOVcpILqvof3CiQVYdaKd/RsGVSbO1OGQXEVXgJSe6BLCpzyxc=
+	t=1728036536; cv=none; b=amrLSAWxBQP+qfbScjf0LPQO4GrDrcg1wzHNsIcM+oz35xm1Rv1Y7PJgV7QjjYBl48j37us7xpmgDBVNorZ/mCOktwfXwct3Ok5SeuHBIieRKsoiGhDeVgnq9Q8e7XUNWi3vwM2OIXBhvqLpI+8WV5B0iyuWksLpoZMGW/6lMx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728035865; c=relaxed/simple;
-	bh=MSfU+z/WpDjG2DPCdHoQTrXJTyTvSCU7+V3VD3oE6FA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8FRLW8k70IPA8NBlIWc0EWMfxRk7iln4LpprSrfxHMOQQ5dHaFfGPflQY0wKCYo0jFBI6JwaIatdCWKM194OL5EuSJAkH4768NujeT5CEpdf5xn/IygxBUkFen2/l8vDGjaALTynHSgWqAco/sJBtyEhKAIUxpF5djpse5ReX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e026a2238d8so1862212276.0;
-        Fri, 04 Oct 2024 02:57:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728035862; x=1728640662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AEK6203kg7Gf9kxHoXN6C1/DGtS57JA6OSLQ9kUayeE=;
-        b=bnYanHmz7fQm1cdZ9LDPuzmXBCBw69TtZVg48AfdxbjeY+XkSTRD5Y79HDXmOOlpSI
-         NKCGtkHgnv/DbyXKLGdjk5IEvzaK/q89nlGnxk6TfAFq2NVHu5TRpuKzybB6NJQ8ED4i
-         YdByFiKw1mlAOcKtZisRKB0LMiSX1zmqYD8Iia3OXcdRvWeq6bdHORKblRRqSAqyB/TT
-         vz8aQajjyHCv1EgVnw8XB3PoiE4vQ96JbaUrmKaevTRUOXwJTbt9EpS2HzvOYfMLGCDf
-         1Px64+wrucmuIuNAfaLUY18/WG7z8zfPjHs7U7YLQjCDi+dPdBrt3kOn1m+8AAP15UVh
-         CBhw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/8kWPM8tQeEHJfSD7uP87Ta41YBlU5Mu47wtuGujbRnOvbQW3O+JNQG6687+T4eY7tkjcRK0n5TpFZj0F@vger.kernel.org, AJvYcCWeH+GwRf9Fc2f1DyngO9vLB1FpSouAKwOJkxy47do0Fx8xAVQbMZjVAWEyq1kfMQnZlYNudr/YXR9L87DPzIb5sXw=@vger.kernel.org, AJvYcCX+AwGME3eyMbNVO/YA1sh8OWyZN1pEzxD3pU0Fh3xtVWOnBEt52XaZk/jnwsCF2Caf/9x541SloWK9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYBOj9V/WP57ltf/qJ5+n0cYlY3UHrsROWj1naPCw2feVQmIPN
-	8LPtVpHOVymr/Ej98V+5MkMqI7YTo0iEhHm2Dl01l7M3/HVeTwMLbz/KaGZ6
-X-Google-Smtp-Source: AGHT+IGLC92n6s4KrV30WK8dEmY5KW2pKudhs8UBtIMMMUwarbZGXlr6HjlMSpA6AJKJaZ6zLBzFrA==
-X-Received: by 2002:a05:6902:2b02:b0:e25:ce87:6437 with SMTP id 3f1490d57ef6-e2893951aebmr1279877276.44.1728035861908;
-        Fri, 04 Oct 2024 02:57:41 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e2bcfb557bsm5699267b3.125.2024.10.04.02.57.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2024 02:57:41 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e05f25fb96eso1711910276.1;
-        Fri, 04 Oct 2024 02:57:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVB0F22mlmT6tpN0A+y6vZjDKVAc+tBDeiphVWtbUpy70yL7xEZMUoCqcE9vMR72Ff7FPH4T3p5jPMOusW+@vger.kernel.org, AJvYcCW6WTmOYskWdJzIZxzlo/LowwgaarRkT4iJEOZd4qXmypKNJVhzq37sFOeWd8LVOXnt8twwudAG5hxS@vger.kernel.org, AJvYcCXpLSgj5uOW5VDWidZ9LcsEAXAp2P28daKkN8kmmR3wOKn/P/RvKhofRn3rQJ2ep3LRLnxNmmEgN0dgCcQY4grwRos=@vger.kernel.org
-X-Received: by 2002:a05:6902:2405:b0:e28:6dc6:279d with SMTP id
- 3f1490d57ef6-e2893951d52mr1268324276.41.1728035861099; Fri, 04 Oct 2024
- 02:57:41 -0700 (PDT)
+	s=arc-20240116; t=1728036536; c=relaxed/simple;
+	bh=vRVs9ZwJ5kPErNpUu5wj2GBI0XmTBdG16MrT61DaPyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J9BZxj8DLGKmuwMiidXfZI6mSx8PhArgcgEN962RKYkLpJgHjjWr7TZKJ1E69HnNANU6BcVD6rP+p1D/MV8y2RXiYK7LhYeUohRDZ2qcEqJRyhvkWclKVtXPXIy/NqL/J30ESj+w/HHIAbEfriIufi9zG4cWUDLoHF3RoWVych0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5JoM15+; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728036535; x=1759572535;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vRVs9ZwJ5kPErNpUu5wj2GBI0XmTBdG16MrT61DaPyI=;
+  b=O5JoM15+oUzAHQ62uSW18Wx3R9Eu6K2G7OilbQnGQeythIE8zRIfa45L
+   7TZYCAyrDTH2pFgm2xSwmlxDy9vyZWslRDkh5iM1GotWLmXhume0WVACo
+   z+6u1EVvjTYvZFDDXIN+Cml32mxO7aKVC/lM5KqG+a4QxuoEC9SQKKiHp
+   UDb6B0ohCIRqieiPeMdFUjON8ML50moy9gOSaTOtbdrUjlCuVunMV6YPc
+   A+/UaBWdQOz5Ng73+4TFDUYOa+ZRCAucK5y3z/5PLEUZTvKh6krAsUB6c
+   j9cbRkRw0v7x/NO4GgEdwpEDzkN/TEYjEltgFC33cMSN4jtEttGdWSGMw
+   g==;
+X-CSE-ConnectionGUID: gw7jazBDSoCt/weOek3lug==
+X-CSE-MsgGUID: ELJMGt2wQheidutZf7xifA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="38389074"
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="38389074"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 03:08:54 -0700
+X-CSE-ConnectionGUID: 02P2b3YuTXyok5+SxChFwA==
+X-CSE-MsgGUID: 59yodGdrR22q4TdwnBkh0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="78658321"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 03:08:53 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 7D0C511F727;
+	Fri,  4 Oct 2024 13:08:50 +0300 (EEST)
+Date: Fri, 4 Oct 2024 10:08:50 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 08/51] gpio: Switch to __pm_runtime_put_autosuspend()
+Message-ID: <Zv--slwrimdSIUwm@kekkonen.localdomain>
+References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
+ <20241004094112.113487-1-sakari.ailus@linux.intel.com>
+ <CAMRc=Mfx+OagrGPkMw2LFu_Yzu4cpDnCQPVA3C3rJarCBGE_bw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240930145244.356565-1-fabrizio.castro.jz@renesas.com> <20240930145244.356565-2-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20240930145244.356565-2-fabrizio.castro.jz@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 4 Oct 2024 11:57:28 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXwhe4NeT4uepDNHreoaZ8q=UiGr0fU0woy+YarBODcFg@mail.gmail.com>
-Message-ID: <CAMuHMdXwhe4NeT4uepDNHreoaZ8q=UiGr0fU0woy+YarBODcFg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] pinctrl: renesas: rzg2l: Remove RZG2L_TINT_IRQ_START_INDEX
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mfx+OagrGPkMw2LFu_Yzu4cpDnCQPVA3C3rJarCBGE_bw@mail.gmail.com>
 
-On Mon, Sep 30, 2024 at 4:53=E2=80=AFPM Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> The RZ/V2H(P) has 16 IRQ interrupts, while every other platforms
-> has 8, and this affects the start index of TINT interrupts
-> (1 + 16 =3D 17, rather than 1 + 8 =3D 9).
-> Macro RZG2L_TINT_IRQ_START_INDEX cannot work anymore, replace
-> it with a new member within struct rzg2l_hwcfg.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> ---
-> v1->v2:
-> * No change
+Hi Bart,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.13.
+On Fri, Oct 04, 2024 at 11:55:01AM +0200, Bartosz Golaszewski wrote:
+> On Fri, Oct 4, 2024 at 11:41 AM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> >
+> > pm_runtime_put_autosuspend() will soon be changed to include a call to
+> > pm_runtime_mark_last_busy(). This patch switches the current users to
+> > __pm_runtime_put_autosuspend() which will continue to have the
+> > functionality of old pm_runtime_put_autosuspend().
+> >
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> 
+> Sakari,
+> 
+> You didn't Cc me on the cover letter, please do it next time whenever
+> you post such a big series.
 
-Gr{oetje,eeting}s,
+I thought of that but it would have included 120 more recipients. That
+wouldn't make it through to most lists.
 
-                        Geert
+> 
+> I got the cover letter from lore but it doesn't explain how this will
+> be merged, are there prerequisites earlier in the series? Or are the
+> patches independent? If the latter, why not send them separately
+> targeting individual subsystems?
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+This patch can be merged independently and my intention was the tree
+maintainers could pick them.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+Kind regards,
+
+Sakari Ailus
 
