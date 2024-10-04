@@ -1,152 +1,113 @@
-Return-Path: <linux-gpio+bounces-10835-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10836-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1204990235
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:41:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19EB699024C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:45:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7736AB21770
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 11:40:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFC3F1F23C2B
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 11:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66D2A15990E;
-	Fri,  4 Oct 2024 11:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB6415B11D;
+	Fri,  4 Oct 2024 11:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmH/dN+p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HjR8GugK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D30146A63;
-	Fri,  4 Oct 2024 11:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F9614A4F0
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Oct 2024 11:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728042052; cv=none; b=ssYIGil+n1nN5zB9zrVnze1nRJve5XQoEhC8XkS4XUWgIFU6e7JUAwaUfvreCy5zASTu4oiGVX5lyG7rBQ+eq1qIQDFGjYPHfsAGrhOlnA1PKyRrgAob8GDIJz1tdtVylcjLooKHeWaNOXWHPmJMYA0m0er4+wXE3wpvP2bsgTY=
+	t=1728042303; cv=none; b=jrX4abtRvrck9+pzGEd4wqpqu5Wrl+J9HfQ2/REglsEEt/saqkvt5oY4A2vEzx9HD1vl4Pgbu91uURCYfyGUEtM0gf9g2nIldx9cGi3QGDoQ1iGFKjAsVt1L8NcsyDOYGq07pd3r17AzkR2gyUdGV6MSS44PzpMMiO6PQYR1SgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728042052; c=relaxed/simple;
-	bh=otYBiSqYpzQvcEOzrqVXTkSSDkEtAGRqXVxQRVTPTtI=;
+	s=arc-20240116; t=1728042303; c=relaxed/simple;
+	bh=ddGvXf1L/Fq3c4RMPyxrOA14cqgWI9P90J4zJ4pJs4I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WmNb76MvknDfc7Bg0nis9udN1KCN9/b7xapoyYKfLychas4FIV2C/MIIqLSSn+5NOrs/1LwP7yNDbR+3rKHk8KVyEfirtcg04EnLWyIkGVJLQZaqpwbX+IcgPS6YKNb75Zjzm0nzs1IbVHiSNr7SaoOssLGTyYqbQbGqoVHzn+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmH/dN+p; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-50923780607so569869e0c.1;
-        Fri, 04 Oct 2024 04:40:50 -0700 (PDT)
+	 To:Cc:Content-Type; b=JsGJIry7yye/SgqUXPygZiXOOkWbPcjSvgf/XIy43vcerGi5zoih+pEIjwd6pFQpBovpxC7su69ZIERCDSaZWYeuAifd2t/tbVSGzbBmOxJdviMUvFjvl8dSSzJL+VH1tKO5wWT+xBEPH+D6vPPZNBDRrTuayyjYgSofK1fEwa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HjR8GugK; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2faccada15bso20988861fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2024 04:45:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728042049; x=1728646849; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1728042299; x=1728647099; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gKCQdo+p8Gze0vcICMzXMRiWujRcC5yLqN4wtvnwSaI=;
-        b=cmH/dN+pICvFiKF2aGOFg/PmqZLXUPlcRMoKNhSJFkaOUZbl9R1t2Hlppo1wxurK4f
-         zMk5esdcOycvLOk0PN1fhzSHGAbiwpAYVSkkvnC81j95JyYTbxGHkfU7c5FcGEUk99W4
-         Ocnwko9pvkl/PJtN9RkYK69u3ue9x/ZSvvt/h/sQ4FNh9FnB3djLZDNArqO7ZRU6x0VI
-         ha5eauv3Bdh8rmw/56N9hmJBrG9eIBe300hLnThhWCWh9v74J6iZKgz6nmdjSdo9MKH9
-         B6JhEF4hdbJBolU0EWP255xXDJCKu+pQ+9kqo5HFJ6z3z6oHmhxjNdFZaDW1/AN8TV4d
-         Kphg==
+        bh=Khwkr05lsMPVSpq7TCjaX0gPVi7sWovxm4CAOdt4/3s=;
+        b=HjR8GugKRCDjLPeodO8HloyjgQ1OLPxVoLDlQlXKO2iSZOkvjJy0DTvLv2+4rxk8A2
+         9QtantMsXz4bxkjCWgpec8Nhg9JuUgDOeTjdVEFVgGtnNqcOMvwq36OgW1nPFYPT2760
+         H7fUVJRbq7EXeYfn7sEZMaTr1OYR5cJZuYS+tpPdlNKEtALPfKBeh9XkJ/e0Ta61XMXh
+         c6QGKeRXtjX5gB1uBpNfUrarXzxpsKiV52MAsiv86aduOF4HO7FMIT67lAttqYVjp6Ak
+         EoeC3GBL1oqtoKOPwM9D7toIcqNiuokz8gBOFcgK6dl/x0Xsbosk7zgOdMuVK+3hc5uu
+         If+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728042049; x=1728646849;
+        d=1e100.net; s=20230601; t=1728042299; x=1728647099;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gKCQdo+p8Gze0vcICMzXMRiWujRcC5yLqN4wtvnwSaI=;
-        b=KFTBvtaeiOgfw/m12v21Q/dfy+UzaWx6ZS2qQfBhXf5iiRbRLP0VJaprV1kVNVelNr
-         3UQoKNhbThbSS3H3nfTkLoQqBjxnghMQYdYzDQT+kWQ9/evpXTx6Paj9FlcVuTRPnvHs
-         9k/nt2x17yVsVNnXrDWHdIneQ1WAuSM3xYfvt0rmIUoK5LcZag63qq7FiQEDQ8neMzEA
-         0eJn5dVuaBpD3yytvmqrTrCu8vWBbUwZ1Q9XRJDedOvzgraK98qW8Aw4XSfP2NOKW5KX
-         wzTl6zgZmIgrtq7d/B4TA3Gamkdfyl9A2t7r/KRCWFEVmbrByCvoR0W/qadm+PzNMiSC
-         NcOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDQGa3FlMuZKNsOJuMmzpt+bvSRMSNvjJcLUwhFVLNKXVRrCt+dRRo0FqTXD1cDZcYzzKgr2s/L0hi@vger.kernel.org, AJvYcCUEorBTeBK9JNdT6GqZgsS9eaic8aiQxvWsEQJyCErlUwGcqXgkwcQznGX+ljzURewdE8a+9uUKkblD8kV1@vger.kernel.org, AJvYcCWvX8S7spi0ILEUnwBWR7G/iDVUjTda5sk9Ma8hbvhml/CoL9PUl7oHIFcl47S96fsoOeEPVWdX8JPetg==@vger.kernel.org, AJvYcCX0ydIEyVWrhvSb7X3HnM1v9HgW8H7fmcFQjgaehtFG6p7VpIpTKKuAb+U1+0Az2sxJZiyEkg2D89te2QM1pVKqQ+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym+CfpPWbELDQsN3rJm5eULTcLtk/w62eL4Cl3ZlqkPP1Ymvbp
-	MiAhXDRMXymtuUf4JoAKGH9WUV10R3NbuKXIe+VxcMA4tClfis0YZLblI91GOTE00Wr4ebDZzCc
-	Pqc0tXqS6TQFFxUpviRHdDxHJP3w=
-X-Google-Smtp-Source: AGHT+IFC3OyNNIPDOrsFuuPwGn8CfLR42u8mLnHhuVlMaBMOyEKFYgtYXlGu9lM/6h3sqSwjih5kARz8PE6Wwu/A0Fs=
-X-Received: by 2002:a05:6122:180d:b0:4fc:e3c2:2c71 with SMTP id
- 71dfb90a1353d-50c85444ac7mr1617808e0c.2.1728042049555; Fri, 04 Oct 2024
- 04:40:49 -0700 (PDT)
+        bh=Khwkr05lsMPVSpq7TCjaX0gPVi7sWovxm4CAOdt4/3s=;
+        b=w1P5aLifuUc8K11YDgaeU+a7ChYGJQr4/VJNosO45dLEWoxtmOrPIg5Pl2mGw9+qbh
+         rcGsqn6NoYzNfz+3L6FrO279+MzugcJc9uITVH48blNxbgv8SsQve4n8SkCHPnTpdfxk
+         bNG4H9rbm/TiTxe9lAEoX8MAFHplWAOcwYVborp/HXlt1S2oE8RSfRQpSG81dYAu45RY
+         Hk+9DEYQxasNIzuYZV4SrjBYM/NsmKFob4HmJyfYj03v+4jxxGuUjoPzGAaYMXEojzv2
+         xpPJ15zYkJIUiCYYUtO6IVz9GIl200/w8vuYfu98B+YO75DRqrGWn9IJNqobgM6bupxf
+         5FVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoRXbzLeTIe9PamQQaDqDSYitSzLZjYMl0n6SW6eee0OjAiismR5LPE1s0B2AeNbKN9VBG4/7DjzQy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZmaAvCxOb0UaPSgB+XfxwsEYI3HJTHLAJN38eAgKFWoXFdCxw
+	OKKXuWyS9+bryVKGR2tlwSCSjD5vB/XKaSFPyVooLKhLKj7oIwf8nqNMomuDcGYaw7iHugQGRvE
+	w5bIYrKOAINY9NxeOYXo5kF3CK9rVijSXv5huAw==
+X-Google-Smtp-Source: AGHT+IGiTQzYERLjm/jzUGh/crV6ATYuQpv4nXIEVrS7JrXOOcQzJB/z1NXK08Yox/oqqZ9WwDQ8tFMFsN0Zrte3h1I=
+X-Received: by 2002:a05:651c:b22:b0:2fa:d4c1:3b6b with SMTP id
+ 38308e7fff4ca-2faf3d74e2cmr12168961fa.33.1728042299452; Fri, 04 Oct 2024
+ 04:44:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240918120909.284930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240918120909.284930-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWkHvHh=AhJhOutFRAJMczpCGdUCPvPuqjY_V4aiMvmAg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWkHvHh=AhJhOutFRAJMczpCGdUCPvPuqjY_V4aiMvmAg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 4 Oct 2024 12:40:22 +0100
-Message-ID: <CA+V-a8v7Y83cS4EHd0K5hvbCLFxE8xrv9zajDMvwT_R0RH59vg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow
- 'input-schmitt-{enable,disable}' and 'drive-open-drain' properties
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20241002232804.3867-1-exxxxkc@getgoogleoff.me> <20241002232804.3867-5-exxxxkc@getgoogleoff.me>
+In-Reply-To: <20241002232804.3867-5-exxxxkc@getgoogleoff.me>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Oct 2024 13:44:47 +0200
+Message-ID: <CACRpkdZnBBAEgHZ=HShwvaXaN-6icC5hzwHqDNWWy_PKJDh+Fw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] pinctrl: qcom: ipq5018: allow it to be bulid on arm32
+To: Karl Chan <exxxxkc@getgoogleoff.me>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, andersson@kernel.org, 
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+On Thu, Oct 3, 2024 at 1:29=E2=80=AFAM Karl Chan <exxxxkc@getgoogleoff.me> =
+wrote:
 
-Thank you for the review.
+> There are some ipq5018 based device's firmware only can able to boot
+> arm32 but the pinctrl driver dont allow it to be compiled on
+> arm32.Therefore this patch needed for those devices.
+>
+> Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
+(...)
+> -       depends on ARM64 || COMPILE_TEST
+> +       depends on ARM || ARM64 || COMPILE_TEST
 
-On Fri, Oct 4, 2024 at 8:54=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Fabrizio,
->
-> On Wed, Sep 18, 2024 at 2:09=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > On the RZ/V2H(P) SoC we can configure the 'input-schmitt-{enable,disabl=
-e}'
-> > and 'drive-open-drain' of multiplexed pins. Update the binding
-> > documentation to include these properties.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > @@ -119,6 +119,9 @@ additionalProperties:
-> >          bias-disable: true
-> >          bias-pull-down: true
-> >          bias-pull-up: true
-> > +        input-schmitt-enable: true
-> > +        input-schmitt-disable: true
-> > +        drive-open-drain: true
->
-> I think you also need "drive-push-pull", to disable open drain.
->
-Agreed, I will add support for it and send a v2.
+Can we get some more context for this?
 
-Cheers,
-Prabhakar
+Is this another one of those cases where the SoC is actually a
+64bit core but vendors just choose to run it in 32bit mode because
+that is what they want or what is the reason here? AFAIK
+IPQ5018 is always Cortex-A53?
 
-> >          renesas,output-impedance:
-> >            description:
-> >              Output impedance for pins on the RZ/V2H(P) SoC. The value =
-provided by this
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+I just want to know if this is something we should encourage
+or leave out-of-tree.
+
+Yours,
+Linus Walleij
 
