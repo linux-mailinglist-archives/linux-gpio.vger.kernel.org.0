@@ -1,115 +1,140 @@
-Return-Path: <linux-gpio+bounces-10846-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10851-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43DDF99037C
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 15:06:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 641D0990513
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 16:00:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EF3B1C2199F
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 13:06:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9472C1C22A49
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 14:00:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F141C20FAB5;
-	Fri,  4 Oct 2024 13:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE812139C6;
+	Fri,  4 Oct 2024 13:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hCgOOuHK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD45479F3;
-	Fri,  4 Oct 2024 13:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B793B2139C9
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Oct 2024 13:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728047177; cv=none; b=I5d2EzplgxMelBvsxspctaRUUWoiSWfDENCaqO+VZIrI7kfHv3rW7zN6i7hC+qRwN5dN4XJ1aF0kBrHaOX8OUZHwpNRBvfP02DsYDCa6lz0us6b88ZWPXHN0j9a3NjEkx9piYnyBmAY/ZkiRHX/rqXeG+vDzCh7381vjncy+DWA=
+	t=1728050275; cv=none; b=lVOlAe1vi88cIanWXbRpgBsLSJ0QUYCdeIJPP3WzWGrDn+ejz5oGUVjFEYzKT0Xb+BCuva8OPt3xBLfsV7cT08OEBdPvT2pvDubo6lNZ6W2pUsvEXPLsJMXLJGEUFdq/FEKXTgYsstRVx/cNHQ2iRVW7k7W69SNXPnFN6tSTh0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728047177; c=relaxed/simple;
-	bh=2A3yHjQHzQxZp5DtRP6N/mis7I/BXNuXL6OV7WHAdS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=co/3DlkNSpfhBlItsq5uduQCPcHEotNLqd2hUhCUzO1eVIz7qIKoNGwT8CnZg9Wko0P7FIjzHXYgGsSn/kNSuVUzzVrbMsx8EKybCJhhf48pdPRQ/O2V5yGr1nVROfGrFOhdEkK3Xj5aEhc/+SZ+gxCUjS65MCFR7kG7nsYiQpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6db836c6bd7so20094757b3.3;
-        Fri, 04 Oct 2024 06:06:15 -0700 (PDT)
+	s=arc-20240116; t=1728050275; c=relaxed/simple;
+	bh=RiAraQPAbIAi8z6cI1HEpV8MMXU8lulYq1Zb18jcIjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X13uyWpldreNofbuMKuxPj8K5eEe4312T0fW2KbDGe+HfhAjrvRltL+yq4iOsckKHbL9m8xrfcg8DM4x/aVu6ZtTj2LA1VP4NM6kab4UJvRfK10J9EI+EGk3IHVugEhwYny/clNkyrglk9tvw/DjCJhyWG7i0Ky86hHkmHawPdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hCgOOuHK; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c40aea5c40so4479882a12.0
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Oct 2024 06:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728050271; x=1728655071; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RiAraQPAbIAi8z6cI1HEpV8MMXU8lulYq1Zb18jcIjI=;
+        b=hCgOOuHKHyHWoEqLmaeR9NXJqndBsjbHvqC3ZoVM+eByj//0GTgDGSdXBZFHWp30tc
+         g7i4fEfi34/zvoQ2ZSbqthK1JdLlb4Y2A8TkE9vUgkoZxPWrRoa7Ykg0ixcadsodcr3x
+         70WBZc+wWjknF32g8DIZW6A36NL2Te+WVpXP+SgdbfsfnVzr9mI4JxPaRVNmPu5B4IqX
+         FnwnQP8Q99Bn4txksarCtlhvGxAAGVYBrBawANeQumC39AUWE8I4DXRfp5hkYjdT2fuf
+         tFbjhLxWQSJ1/QcU46kXG6RVjQcdTi5mfDpuGP4i2DUtnXP9S9YJenJN7R/1kTgrh9KV
+         fg1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728047174; x=1728651974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VowrLhQP35lJs0XbSijhLp9X88Dd5JScvNJygm1QI9g=;
-        b=riYpvMSExa2jOQOOkO7ZB2/FXnkGGt4XF3E/6i+WJPARCJFtxnoFIHKxymEnqkz2Co
-         2NP598zTgC+g0B6LptKAwtKiTZpBsSUwC5nKSIOLV4gxVt2HnsEsYhMbjcE0IxvLolkI
-         6wh5METnnA2KGrm4asnqPC4QSCkOOlHhb3lJkebBlFHbCoJuUZWgODDANQaoxcqe+ZpP
-         Gqf+9v5NirXg2iiWeolAl7t30vj44svaSG842H/JBkNOuxJaLdpaFjkY0wUZk/Y1ciqA
-         uysJflRkNdrOY/DnI4jii+u5dNSb7ZxCriTobD8FSnMLqvYIYHHcc3pkssFiabjXhS3m
-         Be5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMHDAwpMZAmjm9rixrg5i9OsnQy6fZoQBFEX3TadKrn+txrISqnKZMwvLFZn5ey5gnn0YhJRtdNOA8NA==@vger.kernel.org, AJvYcCV6i3bF3c1kepPHmIEr1NZkcgMF/UE7QZVd36dlJNwzUgZcYJLAIHJq0+luLh59DYTmiVZaekP+vZwh@vger.kernel.org, AJvYcCWhjHqYYQzR8ETQV/exICABqYjpZ3ohBjcaUJT9a38FJ/ZUgBLBeI3iNYhp5Co/fJBNzDP5vcaiHVZyPrFN@vger.kernel.org, AJvYcCXO1vmu3JFE90ZnO/KQg8D549Z01Do1C+uW9/cpmv89IHxAoYk+kJyyY1tYoHpzxjP5EVtawvyIqw22jRZUxbN44ic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEK15HuSqHB7I7Hv3PgW2d3XKp7ZQgnh7VtAACob3Tq7eo/K72
-	iQWcFRdQOI+hhwJlPevWZ3u99lZxsPXr08W8VUCSlEK39dIZjIhyH8rC9wJE
-X-Google-Smtp-Source: AGHT+IGB+anSEbdFh9t/tsbe+S1D2KzfpV6Pn8a9iIvEY243NqEYADeisol8dFSj6MCdviq8Kzlmkg==
-X-Received: by 2002:a05:690c:340f:b0:6db:d5dd:af76 with SMTP id 00721157ae682-6e2c7284226mr21904297b3.32.1728047173618;
-        Fri, 04 Oct 2024 06:06:13 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e2bbea21easm6350227b3.41.2024.10.04.06.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Oct 2024 06:06:13 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6db836c6bd7so20094627b3.3;
-        Fri, 04 Oct 2024 06:06:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4geQHc3MCoThz4tQZ68lgCe0JMirWXjCGdu75xEsMeUNm4cI3WkQOCi9wZsTpEhpdVqdjcZpgeuO7@vger.kernel.org, AJvYcCWET2Iors6ajnAfniWa9TF+EuKcgcUwHIxSUVoVmqy2XyHK16ppeAdeNr52G7ZaQh5PXK7KUAYPi6B/2CC+@vger.kernel.org, AJvYcCWeTCTRhiBTOssOZZzJ8Ppi3Duz5XaO+HCOuA4cS7StYtwGIw8+oNhG5ugOrXkirylT24r4stGiUN3tfA==@vger.kernel.org, AJvYcCWs7lQautRDTx0YFjQl4noeH42mnjNsKZPAKal+P+UZSJXJj5cGHGV1n520ac3f7/GZCPtAJrIH8lKedTzkzOIl0P4=@vger.kernel.org
-X-Received: by 2002:a05:690c:eca:b0:6e2:ad08:4914 with SMTP id
- 00721157ae682-6e2c6fc3638mr28617557b3.9.1728047173290; Fri, 04 Oct 2024
- 06:06:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728050271; x=1728655071;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RiAraQPAbIAi8z6cI1HEpV8MMXU8lulYq1Zb18jcIjI=;
+        b=Ge+y+OtmrTMK5lWBFcI6F+imSmvhsJrpYv7r/Y+KfoyIHzEUzwEux+nsAQCXRjuRtB
+         Q1oaNZ+pmFYrx2HOvj8JtDgQNGxvubCUc3CwA0KHcVkhFY5o/2DrkfmDSuCUPoUAs8Ls
+         tvgLMSIELgY9nR4SUnlC4uZusEwScTgG6cWjkslYjpCT8WoCFgbLQj9zZcNrb0OxQnNi
+         7MK2lWklZCpQmOyN3KHSQelzleMWJoOCG6aNNb3ONGbUf6nWFbxCtjth7BsSSVE4kLMu
+         eYbj6/TuM9j9S2/WxOPa+bdhnbLDDEkEgtMAU84NwrBvazSC1DHNNntch2raBRgnI9XX
+         tmFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmuouy+YHxhJk7GrTyunO/dOarg5oFRbBQWFOHWUJXnyPFzk43ZMMZ36M1SfmycQUnh9j1JoWJj8ax@vger.kernel.org
+X-Gm-Message-State: AOJu0YzstNs6O+dnw9h8oYVAgHssf+HLw/GDrAxpBB/EwQjoJcFvrt2r
+	gU4y7G3vTuAnwkZWR1w3YSpWJ/vlQcToEDk57bplGxSAi0n625g7g7sZnt3t1DQ=
+X-Google-Smtp-Source: AGHT+IG7t7UdkVGUfJ61pil2C1emJnQd7oRrkGl9HCha1KOBXBnH2jeCyLpBirVQK5quEDqnGagKGQ==
+X-Received: by 2002:a05:6402:5256:b0:5c8:a4c1:d59a with SMTP id 4fb4d7f45d1cf-5c8c0a0f276mr7035716a12.8.1728050270897;
+        Fri, 04 Oct 2024 06:57:50 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c8ca4d7e51sm1910491a12.71.2024.10.04.06.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2024 06:57:50 -0700 (PDT)
+Date: Fri, 4 Oct 2024 15:57:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: =?utf-8?Q?Jean-Micha=C3=ABl?= Celerier <jmcelerier@sat.qc.ca>, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: PWM-GPIO driver: how to configure it?
+Message-ID: <a2mjcu4g6z27463yviri7sozmyvlxntkviz7r5lkqjhimbiwfi@fgdthlvg37we>
+References: <CAA=GyxYyTvweUa1SWGeHkdtRRNuhFTri8cPTrFQY6pO+84vS0A@mail.gmail.com>
+ <20241004070655.GA60749@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004123658.764557-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20241004123658.764557-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20241004123658.764557-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 4 Oct 2024 15:06:01 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVf35_fAOC4S3246vhMUipSjDkd9hMowmdd7=ec+5J3Aw@mail.gmail.com>
-Message-ID: <CAMuHMdVf35_fAOC4S3246vhMUipSjDkd9hMowmdd7=ec+5J3Aw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: renesas: rzg2l: Add support for
- configuring schmitt-trigger
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cvapwdhtbsxk5hyw"
+Content-Disposition: inline
+In-Reply-To: <20241004070655.GA60749@rigel>
+
+
+--cvapwdhtbsxk5hyw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 4, 2024 at 2:37=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
-m> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add support for configuring the multiplexed pins as schmitt-trigger
-> inputs.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v1->v2
-> - Included RB tag
+Hello,
 
-Thanks, will queue in renesas-pinctrl for v6.13.
+On Fri, Oct 04, 2024 at 03:06:55PM +0800, Kent Gibson wrote:
+> On Wed, Oct 02, 2024 at 02:41:06PM -0400, Jean-Micha=EBl Celerier wrote:
+>=20
+> This is probably best asked on the PWM list, so cross-posting.
+>=20
+> > I am curious of trying the new pwm-gpio driver in Linux 6.11 with a
+> > Diolan DLN-2 chip, which exposes a gpiochip accessible to linux over
+> > USB.
+> >
+> > I haven't managed to see where the configuration options of the driver
+> > are set: for instance, let's say I want to create a PWM output channel
+> > over gpiochip1 line 4, 6 and 12, what should my modprobe line look
+> > like ?
+>=20
+> Good question.
+> I think it has to be setup by device tree, but that is just a guess.
 
-Gr{oetje,eeting}s,
+Setting up the pwm-gpio device via device tree only works if you manage
+to describe the USB gpio chip in the device tree, too, as teh pwm-gpio
+device must have valid gpio descriptors.
 
-                        Geert
+Otherwise you'd need to extend the pwm-gpio driver to instantiate
+devices dynamically somehow.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Best regards
+Uwe
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--cvapwdhtbsxk5hyw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmb/9FoACgkQj4D7WH0S
+/k5qOAf8C7praMpiccfbeyPRchS+W1A9ilkr84LMqoga5oR3CwS29jIDCjHE5GKX
+dHck7vc0POzmM2LkXemfBa8yxKVhNhGUVbbrZCUTqDeZPlou70pMsV7HfBwCSJGj
+8D5w8A1YlV0jn1mONqLCmldSdE7fGeukD5PmvKGZGi5j0DFbjk6AjEf/HV0w8RWG
+FKwKCe7ICoGubQvTzbqqZVufGzu9rK8nLjvQed+Qm4m5E2EUE7xAjqmD0qpofbj4
+K7jIqzz+r/qa36joGBo/OX4aSO4vCXy+Ft0GbffsN8cus7XzNCUC0AewAKJv8s9l
+bd4EeE+ovS/ftmRLuzyaNciskJ7XxQ==
+=dwTV
+-----END PGP SIGNATURE-----
+
+--cvapwdhtbsxk5hyw--
 
