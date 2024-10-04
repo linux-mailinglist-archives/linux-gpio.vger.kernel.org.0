@@ -1,274 +1,307 @@
-Return-Path: <linux-gpio+bounces-10863-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10864-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 374C79909A1
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 18:45:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 052EB990A05
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 19:15:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 576601C2155C
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 16:45:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EF841F22C31
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 17:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A4325570;
-	Fri,  4 Oct 2024 16:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEAB91CACC0;
+	Fri,  4 Oct 2024 17:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRAxo27x"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="AdZ7muOy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4961870
-	for <linux-gpio@vger.kernel.org>; Fri,  4 Oct 2024 16:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204641C879B
+	for <linux-gpio@vger.kernel.org>; Fri,  4 Oct 2024 17:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728060332; cv=none; b=r2ZlrCzHPTtEm/K17KfZEVIHFGjaedhPvzFxayr07N2XVjVewt7jUjLDHbJdp9mBfu2ChTNNJg7Gu5Oc3hKePLH6a1rrFpi0GTlKpSbH0L40twN0ACEIoqZyS6infJcXctIeewollanbZVyPEYB77vMKuh/9HOv+rCXpbvPHfAo=
+	t=1728062096; cv=none; b=I5HWRrG2J0F5V+c+7OxjeL5QHn4+TMtDnToYHwUwWfiw7OFy4wHCbVV6epP51SUv0MKRrA59XoZR4v6LVNuplPrruh/aUQxs8q5kIfMW0bHCPDVh3ZI38/jmruHfgX6J2EBfcPor25zHbjEpECbBPTaEDWIDnL9B37Yqfxx8ODw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728060332; c=relaxed/simple;
-	bh=Q54k7NHoWxwmHfPUN7cl9U12U+jY6FIRUhby76kyQyY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=YtFd+VU5zM8zhRNiVqtoQACflz6hW2ZxNIUMR2GtSCKmPCnsFNNOBF7PVxYMDxXEljhVWIVvfLtfty/utIevgUGhjwkmBJRDkAaS3Szc3bYrMxZvndASkE7m4uG6pw6e15dTgv9oTiIka5TDRaVvovWMBvRNsT/dRT+nz+nfGTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRAxo27x; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728060331; x=1759596331;
-  h=date:from:to:cc:subject:message-id;
-  bh=Q54k7NHoWxwmHfPUN7cl9U12U+jY6FIRUhby76kyQyY=;
-  b=kRAxo27x3OX7cwIWkgUhx+U5zA1skarWsyvN5reI9l5Qym5O8x+vqEI1
-   y/MeeZ/rsOeSWjGOb103q9Z3ZtJqXiPrSu27pyL/W7+tPNNVuQozSHaqe
-   9OBsHDfYYXVSuQ7gqPcjNTP0Wi9QHZSXGKyBYUVDJeYU0tVquCSbgMY2J
-   ekdsRSl5+EghbjD1ED9995ILU4PnFvc2VoRnmaGpm0uO99Rq5NlmB2op1
-   JYXuho5LJKOAcnq5t/vivPSqtjWTv8RUguqwpcazU/5u6I12UzB2M7XGt
-   5KDgW9sJWnxlO9uezevsRpgtjwtLsH7fzaWkfuKev9EF8rhO/iqUU55jE
-   A==;
-X-CSE-ConnectionGUID: PfKI3pczQkqPWDGP74PEjg==
-X-CSE-MsgGUID: HHUNNr/QSyOVBTdojt+F3g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="49819786"
-X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
-   d="scan'208";a="49819786"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 09:45:30 -0700
-X-CSE-ConnectionGUID: 7VRHDW00QCmI5+WsXAeuDA==
-X-CSE-MsgGUID: hDErCyzbSYiP5xqxrE+R4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,178,1725346800"; 
-   d="scan'208";a="79725366"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 04 Oct 2024 09:45:29 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1swlQk-0001w4-38;
-	Fri, 04 Oct 2024 16:45:26 +0000
-Date: Sat, 05 Oct 2024 00:44:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:b4/k320-unused] BUILD SUCCESS
- 204b349259c529fd3190c2712af155153d927693
-Message-ID: <202410050035.AYcjgRff-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1728062096; c=relaxed/simple;
+	bh=esvc5gNwMvwaEvCHgcFMCRh1Ja6mmiZwIHsrATAQ60g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=suZcDYk+9WIafgyQ/KZDKRmDNU0npnN07tiBThzDQcYOaYc+lH0XT0VDs+xbrVNkeCAyD3gZuvTUDzv/cx4qDP2QDf/bMRU290ECYZvercKGzj9Xy2QRddjTcMH90ltD9hWCxFgaaF+tIGrHNjJW0hY310oAA0ykskvfepoQ/Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=AdZ7muOy; arc=none smtp.client-ip=162.248.234.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
+Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
+	by mail.xes-mad.com (Postfix) with ESMTP id 179092042B;
+	Fri,  4 Oct 2024 12:14:47 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
+	t=1728062087; bh=esvc5gNwMvwaEvCHgcFMCRh1Ja6mmiZwIHsrATAQ60g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AdZ7muOyJb3aAF+tWh+8ADiFemUvDShx+Sx4YmMC/XswNyiweYf8rDevF3UDSkD9Y
+	 DzhfGXiJw37N239ZvJTYA8ZRbzzgTEhydED1za96ASf21ZXcUUFOFrhSd6HF0+14PD
+	 fsIhq5to3b6MjK8E0OJgK88BXy5oUaAttpQDfXRo=
+From: Vincent Fazio <vfazio@xes-inc.com>
+To: linux-gpio@vger.kernel.org
+Cc: vfazio@gmail.com,
+	Vincent Fazio <vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH] bindings: python: import gpiod attributes in external module
+Date: Fri,  4 Oct 2024 12:14:38 -0500
+Message-Id: <20241004171438.3066379-1-vfazio@xes-inc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/k320-unused
-branch HEAD: 204b349259c529fd3190c2712af155153d927693  pinctrl: k230: Drop unused code
+Previously, the external module relied on gpiod attributes being present
+within `globals()` to construct return values back to the caller.
 
-elapsed time: 1483m
+This assumption required callers of the external module to have imported
+the attributes to populate `globals()` for the interface to work.
 
-configs tested: 181
-configs skipped: 4
+Having this implicit contract is opaque and prone to causing issues if
+imports within gpiod modules ever get reworked.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Now, the external module explicitly imports attributes from gpiod in
+order to return values back to the caller.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arc                   randconfig-001-20241004    gcc-14.1.0
-arc                   randconfig-002-20241004    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                            dove_defconfig    clang-14
-arm                       multi_v4t_defconfig    clang-14
-arm                        neponset_defconfig    clang-14
-arm                   randconfig-001-20241004    gcc-14.1.0
-arm                   randconfig-002-20241004    gcc-14.1.0
-arm                   randconfig-003-20241004    gcc-14.1.0
-arm                   randconfig-004-20241004    gcc-14.1.0
-arm                           spitz_defconfig    clang-14
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-arm64                 randconfig-001-20241004    gcc-14.1.0
-arm64                 randconfig-002-20241004    gcc-14.1.0
-arm64                 randconfig-003-20241004    gcc-14.1.0
-arm64                 randconfig-004-20241004    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-csky                  randconfig-001-20241004    gcc-14.1.0
-csky                  randconfig-002-20241004    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-hexagon               randconfig-001-20241004    gcc-14.1.0
-hexagon               randconfig-002-20241004    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-18
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20241004    clang-18
-i386        buildonly-randconfig-002-20241004    clang-18
-i386        buildonly-randconfig-003-20241004    clang-18
-i386        buildonly-randconfig-004-20241004    clang-18
-i386        buildonly-randconfig-005-20241004    clang-18
-i386        buildonly-randconfig-006-20241004    clang-18
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241004    clang-18
-i386                  randconfig-002-20241004    clang-18
-i386                  randconfig-003-20241004    clang-18
-i386                  randconfig-004-20241004    clang-18
-i386                  randconfig-005-20241004    clang-18
-i386                  randconfig-006-20241004    clang-18
-i386                  randconfig-011-20241004    clang-18
-i386                  randconfig-012-20241004    clang-18
-i386                  randconfig-013-20241004    clang-18
-i386                  randconfig-014-20241004    clang-18
-i386                  randconfig-015-20241004    clang-18
-i386                  randconfig-016-20241004    clang-18
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-loongarch             randconfig-001-20241004    gcc-14.1.0
-loongarch             randconfig-002-20241004    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                       m5208evb_defconfig    clang-14
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-mips                            gpr_defconfig    clang-14
-mips                malta_qemu_32r6_defconfig    clang-14
-mips                      maltaaprp_defconfig    clang-14
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-nios2                 randconfig-001-20241004    gcc-14.1.0
-nios2                 randconfig-002-20241004    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20241004    gcc-14.1.0
-parisc                randconfig-002-20241004    gcc-14.1.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                   bluestone_defconfig    clang-14
-powerpc                     ep8248e_defconfig    clang-14
-powerpc                      ep88xc_defconfig    clang-14
-powerpc                  iss476-smp_defconfig    clang-14
-powerpc                   microwatt_defconfig    clang-14
-powerpc                   motionpro_defconfig    clang-14
-powerpc               randconfig-001-20241004    gcc-14.1.0
-powerpc               randconfig-002-20241004    gcc-14.1.0
-powerpc               randconfig-003-20241004    gcc-14.1.0
-powerpc                     sequoia_defconfig    clang-14
-powerpc64             randconfig-001-20241004    gcc-14.1.0
-powerpc64             randconfig-002-20241004    gcc-14.1.0
-powerpc64             randconfig-003-20241004    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20241004    gcc-14.1.0
-riscv                 randconfig-002-20241004    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20241004    gcc-14.1.0
-s390                  randconfig-002-20241004    gcc-14.1.0
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20241004    gcc-14.1.0
-sh                    randconfig-002-20241004    gcc-14.1.0
-sh                           se7751_defconfig    clang-14
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20241004    gcc-14.1.0
-sparc64               randconfig-002-20241004    gcc-14.1.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241004    gcc-14.1.0
-um                    randconfig-002-20241004    gcc-14.1.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64      buildonly-randconfig-001-20241004    clang-18
-x86_64      buildonly-randconfig-002-20241004    clang-18
-x86_64      buildonly-randconfig-003-20241004    clang-18
-x86_64      buildonly-randconfig-004-20241004    clang-18
-x86_64      buildonly-randconfig-005-20241004    clang-18
-x86_64      buildonly-randconfig-006-20241004    clang-18
-x86_64                              defconfig    clang-18
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                randconfig-001-20241004    clang-18
-x86_64                randconfig-002-20241004    clang-18
-x86_64                randconfig-003-20241004    clang-18
-x86_64                randconfig-004-20241004    clang-18
-x86_64                randconfig-005-20241004    clang-18
-x86_64                randconfig-006-20241004    clang-18
-x86_64                randconfig-011-20241004    clang-18
-x86_64                randconfig-012-20241004    clang-18
-x86_64                randconfig-013-20241004    clang-18
-x86_64                randconfig-014-20241004    clang-18
-x86_64                randconfig-015-20241004    clang-18
-x86_64                randconfig-016-20241004    clang-18
-x86_64                randconfig-071-20241004    clang-18
-x86_64                randconfig-072-20241004    clang-18
-x86_64                randconfig-073-20241004    clang-18
-x86_64                randconfig-074-20241004    clang-18
-x86_64                randconfig-075-20241004    clang-18
-x86_64                randconfig-076-20241004    clang-18
-x86_64                               rhel-8.3    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                randconfig-001-20241004    gcc-14.1.0
-xtensa                randconfig-002-20241004    gcc-14.1.0
+There should be no concern about circular imports as the external module
+should be completely imported by the time callers call into it.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Since Py_gpiod_GetGlobalType is no longer used, it has been replaced
+with Py_gpiod_GetModuleAttrString which returns a new PyObject*
+reference for the named module and attribute that must be decremented
+when no longer in use.
+
+Closes: https://github.com/brgl/libgpiod/issues/101
+Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+---
+ bindings/python/gpiod/ext/chip.c     | 39 +++++++++++++++++-----------
+ bindings/python/gpiod/ext/common.c   | 14 ++++++----
+ bindings/python/gpiod/ext/internal.h |  3 ++-
+ bindings/python/gpiod/ext/request.c  | 26 ++++++++++++-------
+ 4 files changed, 52 insertions(+), 30 deletions(-)
+
+diff --git a/bindings/python/gpiod/ext/chip.c b/bindings/python/gpiod/ext/chip.c
+index e8eaad8..fcfb960 100644
+--- a/bindings/python/gpiod/ext/chip.c
++++ b/bindings/python/gpiod/ext/chip.c
+@@ -75,31 +75,34 @@ static PyObject *chip_get_info(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 	struct gpiod_chip_info *info;
+ 	PyObject *type, *ret;
+ 
+-	type = Py_gpiod_GetGlobalType("ChipInfo");
++	type = Py_gpiod_GetModuleAttrString("gpiod.chip_info", "ChipInfo");
+ 	if (!type)
+ 		return NULL;
+ 
+ 	info = gpiod_chip_get_info(self->chip);
+-	if (!info)
++	if (!info) {
++		Py_DECREF(type);
+ 		return PyErr_SetFromErrno(PyExc_OSError);
++	}
+ 
+-	 ret = PyObject_CallFunction(type, "ssI",
+-				     gpiod_chip_info_get_name(info),
+-				     gpiod_chip_info_get_label(info),
+-				     gpiod_chip_info_get_num_lines(info));
+-	 gpiod_chip_info_free(info);
+-	 return ret;
++	ret = PyObject_CallFunction(type, "ssI",
++				    gpiod_chip_info_get_name(info),
++				    gpiod_chip_info_get_label(info),
++				    gpiod_chip_info_get_num_lines(info));
++	gpiod_chip_info_free(info);
++	Py_DECREF(type);
++	return ret;
+ }
+ 
+ static PyObject *make_line_info(struct gpiod_line_info *info)
+ {
+-	PyObject *type;
++	PyObject *type, *ret;
+ 
+-	type = Py_gpiod_GetGlobalType("LineInfo");
++	type = Py_gpiod_GetModuleAttrString("gpiod.line_info", "LineInfo");
+ 	if (!type)
+ 		return NULL;
+ 
+-	return PyObject_CallFunction(type, "IsOsiOiiiiOk",
++	ret = PyObject_CallFunction(type, "IsOsiOiiiiOk",
+ 				gpiod_line_info_get_offset(info),
+ 				gpiod_line_info_get_name(info),
+ 				gpiod_line_info_is_used(info) ?
+@@ -115,6 +118,8 @@ static PyObject *make_line_info(struct gpiod_line_info *info)
+ 				gpiod_line_info_is_debounced(info) ?
+ 							Py_True : Py_False,
+ 				gpiod_line_info_get_debounce_period_us(info));
++	Py_DECREF(type);
++	return ret;
+ }
+ 
+ static PyObject *chip_get_line_info(chip_object *self, PyObject *args)
+@@ -168,10 +173,6 @@ chip_read_info_event(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 	struct gpiod_info_event *event;
+ 	struct gpiod_line_info *info;
+ 
+-	type = Py_gpiod_GetGlobalType("InfoEvent");
+-	if (!type)
+-		return NULL;
+-
+ 	Py_BEGIN_ALLOW_THREADS;
+ 	event = gpiod_chip_read_info_event(self->chip);
+ 	Py_END_ALLOW_THREADS;
+@@ -186,12 +187,20 @@ chip_read_info_event(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 		return NULL;
+ 	}
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.info_event", "InfoEvent");
++	if (!type) {
++		Py_DECREF(info_obj);
++		gpiod_info_event_free(event);
++		return NULL;
++	}
++
+ 	event_obj = PyObject_CallFunction(type, "iKO",
+ 				gpiod_info_event_get_event_type(event),
+ 				gpiod_info_event_get_timestamp_ns(event),
+ 				info_obj);
+ 	Py_DECREF(info_obj);
+ 	gpiod_info_event_free(event);
++	Py_DECREF(type);
+ 	return event_obj;
+ }
+ 
+diff --git a/bindings/python/gpiod/ext/common.c b/bindings/python/gpiod/ext/common.c
+index 07fca8c..62201b6 100644
+--- a/bindings/python/gpiod/ext/common.c
++++ b/bindings/python/gpiod/ext/common.c
+@@ -64,15 +64,19 @@ PyObject *Py_gpiod_SetErrFromErrno(void)
+ 	return PyErr_SetFromErrno(exc);
+ }
+ 
+-PyObject *Py_gpiod_GetGlobalType(const char *type_name)
++PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
++				       const char *attrname)
+ {
+-	PyObject *globals;
++	PyObject *module, *attribute;
+ 
+-	globals = PyEval_GetGlobals();
+-	if (!globals)
++	module = PyImport_ImportModule(modname);
++	if (!module)
+ 		return NULL;
+ 
+-	return PyDict_GetItemString(globals, type_name);
++	attribute = PyObject_GetAttrString(module, attrname);
++	Py_DECREF(module);
++
++	return attribute;
+ }
+ 
+ unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong)
+diff --git a/bindings/python/gpiod/ext/internal.h b/bindings/python/gpiod/ext/internal.h
+index 7d223c0..15aedfb 100644
+--- a/bindings/python/gpiod/ext/internal.h
++++ b/bindings/python/gpiod/ext/internal.h
+@@ -8,7 +8,8 @@
+ #include <Python.h>
+ 
+ PyObject *Py_gpiod_SetErrFromErrno(void);
+-PyObject *Py_gpiod_GetGlobalType(const char *type_name);
++PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
++				       const char *attrname);
+ unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong);
+ void Py_gpiod_dealloc(PyObject *self);
+ PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request,
+diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/ext/request.c
+index 5db69fe..4a035f4 100644
+--- a/bindings/python/gpiod/ext/request.c
++++ b/bindings/python/gpiod/ext/request.c
+@@ -149,10 +149,6 @@ static PyObject *request_get_values(request_object *self, PyObject *args)
+ 	if (num_offsets < 0)
+ 		return NULL;
+ 
+-	type = Py_gpiod_GetGlobalType("Value");
+-	if (!type)
+-		return NULL;
+-
+ 	iter = PyObject_GetIter(offsets);
+ 	if (!iter)
+ 		return NULL;
+@@ -183,14 +179,21 @@ static PyObject *request_get_values(request_object *self, PyObject *args)
+ 	if (ret)
+ 		return Py_gpiod_SetErrFromErrno();
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.line", "Value");
++	if (!type)
++		return NULL;
++
+ 	for (pos = 0; pos < num_offsets; pos++) {
+ 		val = PyObject_CallFunction(type, "i", self->values[pos]);
+-		if (!val)
++		if (!val) {
++			Py_DECREF(type);
+ 			return NULL;
++		}
+ 
+ 		ret = PyList_SetItem(values, pos, val);
+ 		if (ret) {
+ 			Py_DECREF(val);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 	}
+@@ -279,10 +282,6 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 		max_events = 64;
+ 	}
+ 
+-	type = Py_gpiod_GetGlobalType("EdgeEvent");
+-	if (!type)
+-		return NULL;
+-
+ 	Py_BEGIN_ALLOW_THREADS;
+ 	ret = gpiod_line_request_read_edge_events(self->request,
+ 						 self->buffer, max_events);
+@@ -296,10 +295,17 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 	if (!events)
+ 		return NULL;
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.edge_event", "EdgeEvent");
++	if (!type) {
++		Py_DECREF(events);
++		return NULL;
++	}
++
+ 	for (i = 0; i < num_events; i++) {
+ 		event = gpiod_edge_event_buffer_get_event(self->buffer, i);
+ 		if (!event) {
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 
+@@ -311,6 +317,7 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 				gpiod_edge_event_get_line_seqno(event));
+ 		if (!event_obj) {
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 
+@@ -318,6 +325,7 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 		if (ret) {
+ 			Py_DECREF(event_obj);
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 	}
+-- 
+2.34.1
+
 
