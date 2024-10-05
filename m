@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-10874-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10875-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADD3899158C
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 11:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B23F99159B
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 11:54:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A056BB23340
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 09:49:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 879ACB20ACF
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 09:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44464145FEB;
-	Sat,  5 Oct 2024 09:49:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5AA13BC02;
+	Sat,  5 Oct 2024 09:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxV1Y3RU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnTxbNcO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A102D143722;
-	Sat,  5 Oct 2024 09:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0557FD27E;
+	Sat,  5 Oct 2024 09:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728121751; cv=none; b=YK9M0RXA/FpusxTyWsvdMjaPr+c1mOgi8VYHf+dijGs9eAKuagyR1lxrRDqd3C4z1MjqhbqXdauySPYZDJ+ApjZxJs0D7RqXCn5U95GqLGgXSvuk1cgkfv21ZNWOt4O1u19fEAU6Ekb68M5vufQnFNtEGY5uxXyCrvUrdB6ChH8=
+	t=1728122083; cv=none; b=aAmtozv4Ngf9yD60odTUjaetHHRyMLOKZDRf7voAZzv/YOzNiehtsK4W1AmYRWlMThqzSoDh/k3R+O+PrQV6apQ4X/n/QHKbbPsKjcad5czbcID5MeJJTfiDguXraeGWDrjFoT+UJY/J2Dq2eYHV0wW5631xC35DbkLIbmdJVRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728121751; c=relaxed/simple;
-	bh=8ONowbH8q0ENauwIlxunEnyQHJlyp0FFuaGM3eHZWs4=;
+	s=arc-20240116; t=1728122083; c=relaxed/simple;
+	bh=lGoUSGWniXVPZFWx9NUfW68r3snAy3+vw4xlKPKpiSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZA8TshNonSE/eVS/aR4c1fuvosZwlMTeJxEErECl7DmXHBsjLrdt7QFZZ96dfw5AXcpL/wLmnEvFZYxQbpCs8Xn/KRwCkzDHsvjrMDifTQJppeFNnXI/OGKiuJ9L98EBqQSnSxQIHZhlXP8MYVky8fELm9+MueJTb+cF86/WVCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxV1Y3RU; arc=none smtp.client-ip=209.85.210.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwTpaGJmZOV2N5sPHLEX1d76UwJZDxufk3hE7GaIoC3Mfgam69j8aZIcWMeOZLG5pdPeEVYRWESG/ZfDkAccigQdY2cj3skAmKj1zz2bT/Wg1YfBPKP8dCpu0hc3FMKyS76LIPbXj7i6QAvrvQgd54hyT4C8pGr7nB7o2PDfTRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnTxbNcO; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71dae4fc4c9so2503188b3a.0;
-        Sat, 05 Oct 2024 02:49:09 -0700 (PDT)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7e6bb2aa758so1267025a12.2;
+        Sat, 05 Oct 2024 02:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728121749; x=1728726549; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728122081; x=1728726881; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=rQMG5vGBJauOrVt5ripN3qu/e2mvWfHeahfKsFEF0xk=;
-        b=MxV1Y3RUprRDXglf1E2YXJM+oSmOQTfhUj0i5vbsXawV6JtUdJE5sFguGUjPQANHON
-         PEivWCjNfMAkjL2fwV8YTwyEdT70bGo3HJ5sG4SOFhTH5cvPCO9wVc+FFphbwRufr5bQ
-         CoKRFRTDaDB+0sZkwEmAcfhtnVvyEu610xu9gbcG+sTUhRepNytZnYzUOveQDdnyBqcm
-         AI4Wf6uqPlTvqgAUzcvYefexVX+4oJeRGzDJz7+EWogMtqdHmn/ofWbDNpnUZ/cmaDP0
-         LQ0eiZggTWLgruhds4NiTkkf0aG3UXbE4br10ht8AYvnzDrx8NjTiXlpIWLlGd5qb2Vw
-         KZ8g==
+        bh=sEsYnWEWq4RygIHhVkjnsPo7RuOOOcQUO/vrxkw08rE=;
+        b=nnTxbNcOPDTR8bgFBwnP9YOXAnXzM0YHY1pMn1kZTgLcrh5jsc2fUFd1k5VBhvDMNb
+         BvkRdPx7ikduWQrUrgbbpv3et0Ovb6sY4n7epQD4cNdc383uQvgH8WpIxlT8SorE/fpA
+         ERfweyWjqgjReRiGgn5/5PkRlfcVapMjGjfjfJJxSePaxyLZowdLCCHHIacTGV+BZ6fO
+         ukJzDmiToubL5bRIlz+soMmBtZ2JdX7CUbka0JQJgkC24HzbzhjnRoevWAJKFaQwjFpV
+         urmY6PkkRUYLI67m1iGYlXmImC+IDoYkuZiOnhq8vpSPmj/BekP08EJI3qYExUlEXg8b
+         AXQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728121749; x=1728726549;
+        d=1e100.net; s=20230601; t=1728122081; x=1728726881;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQMG5vGBJauOrVt5ripN3qu/e2mvWfHeahfKsFEF0xk=;
-        b=LzS2XNiGl2NSeRl0uRBpYiatiGprpBsSg7AnnraKXoTZ4jhCj2dpGrL79keFN/gN3b
-         JIQz/TRuF2yxeTwEYW80WnigEcNpGjGjzoPCdA2BtM9Dy2jWbLnXp0SgXJsdZzh7saBB
-         3Ck9a4DblmTLTXrB0Npq/XRlgB/KPJcf9LFqzfI6omUS+D/1pa56YYeCHgVc0BH2ZSjk
-         IBWhvgmNXbqsw6JUK58IOk7vGo17oKakIiv4sF8K66h4ua4L+Hqc3xUV/8wLHgu/FOuM
-         nmhQGYKpsj4DmLYYZoON2M5Sv6zpwq8eNNMjbkDZJ5NOpq6e9eymybVoAWSyfnBQauIr
-         OlVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3wrBlHkIyb8ss1K6CMX6AXgqvUvLePzXuuZTeUHPbvQA+Vcu47/OUhuC99KN2l2h6yaKxIx0nw4b1LvRO@vger.kernel.org, AJvYcCWLhh0N0kr8Ug3d3cKuTFqEx1/bbCNlYU3SDB3MShJSgFX5Tej90B82kiI3O4ykkdlvzjDWIkXfOZUT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz62ZjoJGAFxlRLDBiZigZETRFd0jPlkn+h2/d3O3pwKLBo0DPA
-	N2aj0PUCloqGNSqzgJjKIcVQKcq8SukIVfUgggRRUhPRXwt3qG0JUYVROsNY
-X-Google-Smtp-Source: AGHT+IEIYSG2Zzdg4/tbBDZL5luAg/oi1QJA9M5XXuoJzBhWA9cX+cZKuy+bAQRBzR2o7fP5UG9iIw==
-X-Received: by 2002:a05:6a00:22cc:b0:706:6962:4b65 with SMTP id d2e1a72fcca58-71de23e2d59mr8938898b3a.14.1728121748933;
-        Sat, 05 Oct 2024 02:49:08 -0700 (PDT)
+        bh=sEsYnWEWq4RygIHhVkjnsPo7RuOOOcQUO/vrxkw08rE=;
+        b=DQsjLiMivfhRLR98rgp+Ba7CTRAWkDLh+JPLso8LZK/dn+O0/KJwqWqWRQoV+PPxIp
+         wx7vQ01FsvEI2edVrJYNJNSyipzW4SzOyx41QNQWZixCYIHvXAs5PZQVGDc+c5kAVpNd
+         Fl8gOPH0bNAZ56ceBSy7moGZZhHv4DklBGe8CtVrPoDBmtCneClhQJq0z0bjQUjddkyk
+         Yk2ZWpGqWSQo68LjMF7aTpIHfDJEDRR+LW6+1ngofTM5RTrHGIlSA9j3gaBmKyv4s1BF
+         Vp1WXQ5cZTjUSLzAEZC6eJ9s8QFiAONZ3U8jzQ2kvHgij1b6E+wTuHEoSEEQ822A4Sy7
+         LJ1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUXoYg/STRAswh/aia2QPQq8jo67xvkEy1E/xt7vJ9YzOe6SmrItK7+smmZawR2Y2jeFZagfnv5IZut5A56@vger.kernel.org, AJvYcCVVxTYFEKWJl69Q8+9cn70UDmxVIDwWbjlLNwly2ePBYHW08L7gyXD9rqemjqYMnD1Ptbgsq3WPmRK2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+ofqepGloHy5eivDQMApyoNb62I2OtFIOBSl6eKtEwBj5VKT2
+	paqWG6Ff/4oHCSGsmMG9dcYtbzVrQpK5BjMVvetoO+WD/uT7OZGk
+X-Google-Smtp-Source: AGHT+IHnmQiXM9kpp5cWEP+GN/WRsGLpsYFYlYzNHVuNWKusso2BypeVuSLlu+0IFJGJhtvkR6PAug==
+X-Received: by 2002:a05:6a20:b58b:b0:1cf:6533:5c86 with SMTP id adf61e73a8af0-1d6dfa40a0fmr7293933637.21.1728122081188;
+        Sat, 05 Oct 2024 02:54:41 -0700 (PDT)
 Received: from rigel (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d66324sm1205788b3a.172.2024.10.05.02.49.06
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d47863sm1176384b3a.119.2024.10.05.02.54.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Oct 2024 02:49:08 -0700 (PDT)
-Date: Sat, 5 Oct 2024 17:49:04 +0800
+        Sat, 05 Oct 2024 02:54:40 -0700 (PDT)
+Date: Sat, 5 Oct 2024 17:54:36 +0800
 From: Kent Gibson <warthog618@gmail.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 4/5] gpiolib: simplify notifying user-space about line
- requests
-Message-ID: <20241005094904.GA238189@rigel>
+Subject: Re: [PATCH 5/5] gpiolib: notify user-space about in-kernel line
+ state changes
+Message-ID: <20241005095436.GB238189@rigel>
 References: <20241004-gpio-notify-in-kernel-events-v1-0-8ac29e1df4fe@linaro.org>
- <20241004-gpio-notify-in-kernel-events-v1-4-8ac29e1df4fe@linaro.org>
- <20241005034604.GA41715@rigel>
- <CAMRc=MeL9B+oCLb4SFupmBzK5E+JoGfCvtUp-RvYNT=L9i5M1Q@mail.gmail.com>
+ <20241004-gpio-notify-in-kernel-events-v1-5-8ac29e1df4fe@linaro.org>
+ <20241005074635.GA174602@rigel>
+ <CAMRc=MdU5+AC4PyPjuXuG_S7R59OJ-DaaCdX2fZfoCcs5BveJg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,59 +89,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeL9B+oCLb4SFupmBzK5E+JoGfCvtUp-RvYNT=L9i5M1Q@mail.gmail.com>
+In-Reply-To: <CAMRc=MdU5+AC4PyPjuXuG_S7R59OJ-DaaCdX2fZfoCcs5BveJg@mail.gmail.com>
 
-On Sat, Oct 05, 2024 at 11:34:26AM +0200, Bartosz Golaszewski wrote:
-> On Sat, Oct 5, 2024 at 5:46 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sat, Oct 05, 2024 at 11:42:34AM +0200, Bartosz Golaszewski wrote:
+> On Sat, Oct 5, 2024 at 9:46 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > On Fri, Oct 04, 2024 at 04:43:25PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Oct 04, 2024 at 04:43:26PM +0200, Bartosz Golaszewski wrote:
 > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > >
-> > > Instead of emitting the line state change event on request in three
-> > > different places, just do it once, closer to the source: in
-> > > gpiod_request_commit().
+> > > There is a problem with gpiod_direction_output/input(), namely the fact
+> > > that they can be called both from sleeping as well as atomic context. We
+> > > cannot call the blocking notifier from atomic and we cannot switch to
+> > > atomic notifier because the pinctrl functions we call higher up the stack
+> > > take a mutex. Let's instead use a workqueue and schedule a task to emit
+> > > the event from process context on the unbound system queue for minimal
+> > > latencies.
 > > >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> > >  drivers/gpio/gpiolib-cdev.c | 6 ------
-> > >  drivers/gpio/gpiolib.c      | 4 ++--
-> > >  2 files changed, 2 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > > index b0050250ac3a..f614a981253d 100644
-> > > --- a/drivers/gpio/gpiolib-cdev.c
-> > > +++ b/drivers/gpio/gpiolib-cdev.c
-> > > @@ -372,8 +372,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
-> > >                               goto out_free_lh;
-> > >               }
-> > >
-> > > -             gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
-> > > -
-> > >               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> > >                       offset);
 > >
-> > This moves the notify to before the desc->flags have been set.
-> > So the notified will now see the flags as previously set, not what they
-> > have been requested as.
+> > So now there is a race between the state of the desc changing and the
+> > notified reading it?
 > >
 >
-> Ah, I got fooled by the libgpiod tests passing. I guess we should
-> cover that first in tests-kernel-uapi.c.
->
-> > That might be acceptible if you subsequently issue GPIO_V2_LINE_CHANGED_CONFIG
-> > when the flags are set, but that is not done here and you explicitly don't
-> > notify from here in patch 5 when you add notifying to gpiod_direction_output()
-> > etc.
-> >
->
-> IMO it doesn't make sense to always emit REQUESTED and CONFIG_CHANGED
-> events together. The initial config should be part of the request
-> event. I'll get back to the drawing board.
+> Theoretically? Well, yes... In practice I don't think this would
+> matter. But I understand the concern and won't insist if it's a
+> deal-breaker for you.
 >
 
-Oh, I agree - that "might" is doing a lot of heavy lifting - there should
-only be the one event.
+I don't like that correctness depends on timing, so this is a deal
+breaker for me as it stands.  I would like to see the relevant state passed
+via the notifier chain, rather than assuming it can be pulled from the desc
+when the notifier is eventually called.
 
 Cheers,
 Kent.
+
+> Ideally we'd switch to an atomic notifier but I don't have a good idea
+> on how to handle pinctrl_gpio_can_use_line(). It digs deep into the
+> pinctrl code and it's all synchronized with a mutex. Unlike GPIO, it
+> doesn't make any sense to spend days converting pinctrl to SRCU for a
+> single corner-case.
+>
+> I wanted to use in_atomic() to determine whether we can emit the event
+> immediately or (if we're in interrupt or with a spinlock taken) we
+> should use a workqueue as a fallback but checkpatch.pl is very adamant
+> about it being an error (in capital reds).
+>
+> Bart
 
