@@ -1,75 +1,74 @@
-Return-Path: <linux-gpio+bounces-10867-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10868-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD929914AD
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 07:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 424769914B6
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 08:03:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0CE41F24E2D
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 05:42:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B5981F2343E
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 06:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6859A4595B;
-	Sat,  5 Oct 2024 05:42:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BAE03B7A8;
+	Sat,  5 Oct 2024 06:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VGoZI6SV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGewV0h4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9770D4085D
-	for <linux-gpio@vger.kernel.org>; Sat,  5 Oct 2024 05:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C656F29CA
+	for <linux-gpio@vger.kernel.org>; Sat,  5 Oct 2024 06:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728106920; cv=none; b=GJBoi7rDOUN9YF/F4TywOD7mkHszbv2dAKybkppp13BmrdMqd/YmGKtuQWr18qlkZNPasnpkktFUxssn0qsmuibsm0r2iMVwrR2QewG0PNnBhaMISRnv3JGTKPn7uxUbvFG2UU3Cdj2UTuSu6GT0g52L8JXLgsPrvZ1l8QF2FPY=
+	t=1728108181; cv=none; b=VnSET7C56mjz/7Mew5QkjTZUdZuwjw2b58VWSYg4vRVXUxE5i/52nt4K4uaQq+ahkbUsk+fP19AGOcKHmjgf1ib8l28xdDubQWff87vIiN8ClcHB3BCw3weH6u7p3XtBaqhhCjtGLHE/87B0S+mtO6pvLiIbzRfqUNE8G/bFoP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728106920; c=relaxed/simple;
-	bh=1iSXnX9wZz1IICn+RflohnYQTH5v8rvAESMzwCsmGVk=;
+	s=arc-20240116; t=1728108181; c=relaxed/simple;
+	bh=15g1/je+mb4ei6wwANETPUeBKPqGZAuCTFNSuxsgpBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=b0qDT1khincMrOJdqhWabOWuSw+ginncarMamWn00LYNCfkrG8qVCSRz9xA2Shl3XSpOxK+FEMg8GsZrwnpiI5Ze+0oYqqvUr09FM11Aqv4tLCgIxfZ1AivaYwP3WGkr5t4yybEDOEb2MsV/QMewa6FUxolzE8YrQNqHL0Fx7Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VGoZI6SV; arc=none smtp.client-ip=192.198.163.9
+	 Content-Disposition; b=GOLdO8CPboZ0Z0O8JWuMUMaR46zCdtLkMVChR00MNJRJ5nYLGzmB7TlkgVyWeprDhc4TvsVcfjVlfn4EnTmxtK1XwoFZ29PeC5+TiJepEHKhmnFRpUOZc2ucRT/zwoNzAL65pb+1BIhfyj7D7KGT44ISDtvwjw4hl4LeD2UkbS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGewV0h4; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728106919; x=1759642919;
+  t=1728108179; x=1759644179;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=1iSXnX9wZz1IICn+RflohnYQTH5v8rvAESMzwCsmGVk=;
-  b=VGoZI6SVX0qSSyZjzNa8FInZSZIOimx+DEmdqfW1LLLEh8K3b3WAI504
-   Wx294Rb/RGzjDNKjlGHOm3ua4GnfXL0H7HvlfRt1E2hBRqwLjcUubPrYf
-   o4Rz1uU8BZzY3Uon2lmbRj4+91zh/7sNgufnMZ34+zmNqdsFHEXDVXnCh
-   Zkz5dz3dZecfRsUtzx1wns4h+SK0NkizIcW8G40tLBDfKPG6lQq/oXWG8
-   JtblkBf0Za4FpG3iiQ4PqqZaE2fjZRp3uRyB6xylAwsrMJN1fyn/n32Nr
-   42jagC8o3ZUIGsqkN10ZavY+Ko6/aPw+SFHo6A03FqonL7fw4bXEQs5XD
-   A==;
-X-CSE-ConnectionGUID: yeHic2NBQ72okF0vMmvY+A==
-X-CSE-MsgGUID: p67K35xTTFOJ+foeHt765w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="37986873"
+  bh=15g1/je+mb4ei6wwANETPUeBKPqGZAuCTFNSuxsgpBQ=;
+  b=QGewV0h4ilpVbAPfZUKn4jVsmXvmTB+d8TRIasoZXl5eHGmfal0nbnMl
+   zUk+eR9zUZCu42vyEtJTFJZdF9Q5c77LaQ5OdCQJTHG7r5Bv1waw/0nW0
+   M6LxEWWZRkxmgH+9i7oArYgxJiwZ3PP4WYu58f888jcbb2FnvlrOnBHh8
+   zl0n4uFhdY/paLJNlEnHfag1Pw05HHcKtZP41ahCgsLAQwEmhXD7zat7E
+   GLGa0dB88Yi4jqicJ361ZtBjsON1UAAtsJZzylJ37W7jkV3C5vz9jKji+
+   wJuU4rv+OTf+ZSMCMuB0S4miSeEX9bJxcQ/wU2AnSLrjFcD2ArcGQb40Y
+   g==;
+X-CSE-ConnectionGUID: 9BXzJjWBRQCum9WNP55tLQ==
+X-CSE-MsgGUID: CxsuqB03SGKYTMcnZHZPBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11215"; a="38696825"
 X-IronPort-AV: E=Sophos;i="6.11,179,1725346800"; 
-   d="scan'208";a="37986873"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 22:41:58 -0700
-X-CSE-ConnectionGUID: /qV8NzDXSRGmaCuyUsGIOw==
-X-CSE-MsgGUID: K+Xifs7hRHK8PEQ8rvFamA==
+   d="scan'208";a="38696825"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 23:02:58 -0700
+X-CSE-ConnectionGUID: z9Hn16AcRKmWgQob5cirJA==
+X-CSE-MsgGUID: o9eh4BQlSYiXtAFFcr64yQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,179,1725346800"; 
-   d="scan'208";a="79875371"
+   d="scan'208";a="74600028"
 Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 04 Oct 2024 22:41:56 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 04 Oct 2024 23:02:57 -0700
 Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1swxYA-0002by-1R;
-	Sat, 05 Oct 2024 05:41:54 +0000
-Date: Sat, 5 Oct 2024 13:41:29 +0800
+	id 1swxsV-0002d8-0c;
+	Sat, 05 Oct 2024 06:02:55 +0000
+Date: Sat, 5 Oct 2024 14:02:08 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
 Subject: [linusw-pinctrl:for-next 5/5]
- drivers/pinctrl/pinctrl-aw9523.c:988:8: error: use of undeclared label
- 'err_disable_vregs'
-Message-ID: <202410051344.Js99f2o2-lkp@intel.com>
+ drivers/pinctrl/pinctrl-aw9523.c:988:17: error: label 'err_disable_vregs'
+ used but not defined
+Message-ID: <202410051342.W9kssugb-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,21 +81,21 @@ Content-Disposition: inline
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
 head:   8498e6b2b8524b52f94ab22d65b50cd4508673c7
 commit: 8498e6b2b8524b52f94ab22d65b50cd4508673c7 [5/5] Merge branch 'devel' into for-next
-config: i386-buildonly-randconfig-002-20241005 (https://download.01.org/0day-ci/archive/20241005/202410051344.Js99f2o2-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241005/202410051344.Js99f2o2-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-006-20241005 (https://download.01.org/0day-ci/archive/20241005/202410051342.W9kssugb-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241005/202410051342.W9kssugb-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410051344.Js99f2o2-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410051342.W9kssugb-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/pinctrl/pinctrl-aw9523.c:988:8: error: use of undeclared label 'err_disable_vregs'
+   drivers/pinctrl/pinctrl-aw9523.c: In function 'aw9523_probe':
+>> drivers/pinctrl/pinctrl-aw9523.c:988:17: error: label 'err_disable_vregs' used but not defined
      988 |                 goto err_disable_vregs;
-         |                      ^
-   1 error generated.
+         |                 ^~~~
 
 
 vim +/err_disable_vregs +988 drivers/pinctrl/pinctrl-aw9523.c
