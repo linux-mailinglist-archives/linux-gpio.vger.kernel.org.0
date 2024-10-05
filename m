@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-10885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10886-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C28F991A04
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 21:43:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2D40991A24
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 21:55:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EFC1283C96
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 19:43:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F475283C93
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 19:55:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C34015957D;
-	Sat,  5 Oct 2024 19:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77893158DCC;
+	Sat,  5 Oct 2024 19:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="SbdM5s44"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tG8BkyyC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from msa.smtpout.orange.fr (msa-216.smtpout.orange.fr [193.252.23.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725C9487A5;
-	Sat,  5 Oct 2024 19:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1739C130AC8;
+	Sat,  5 Oct 2024 19:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728157400; cv=none; b=h+lnQKH+QEP6f8259nj3hKsZuopHOXEC63kO8ThRZ8N3hi+rBIFbs8Na+7hX+HVuPT05H3I+UFaHCeCY17QXJBQ+JjSzvp24nyEZT3oR7XsyjNMIoppj0L1OzI5B4Jp7NTvGDvSHTJCRPbSTyPD36xZGGXq2Aaja6NAAHoTXMbw=
+	t=1728158106; cv=none; b=UA26ddkF5deT0yNwEVgDKcRmrjy4yWhqrlCzPD3BubtMWVYTO8EyGR9yoOZE+5OUxcfNPUY1ZU57LC1lNGKMzfo8eAk9fr1zJHCuFmAXSs7A8bx2j2Dij2OAOPLgaFs+fzZzrZ5SAiushwfIARuvL89iZPtj0fC7M4ri93ftbf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728157400; c=relaxed/simple;
-	bh=8MAvA9ubbsg1fxcVpJU+uwV5MjQY1ejVRrtVaHdouwU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jpF1foR8orb+0KWhNqGdopHwBfZkVkl+z3h3/7IQbapqqhEnS7+8PMjDs3UNzWIAsnzH0BQsNVAhZ938RDBHKiWQBWUPrbwnTiavlRcOufIECYDe3Esfj5iG67yDY12JsfeIcmvcMN3N97ouzh3yStD3vjskVGtfioccl1+J78c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=SbdM5s44; arc=none smtp.client-ip=193.252.23.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id xAgGsMYyMHPunxAgGsZaMT; Sat, 05 Oct 2024 21:43:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1728157390;
-	bh=uVTxSZ1QCpD+AHyNGxez/F+Qz/tYFhVlU8T4Mvuja4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=SbdM5s44g1/SP9yUNyzsQAX/07lA+C513byvOzb46p4ls0i/2quldk7bF1wkMnqnB
-	 rJFBhM8O+qEG7Txwp1MmetMiL1wXQBvDf5geLsOUQcHbwx7tRdugZk/pH9bOZbwk/C
-	 mFkHioOqoc2IjaR/hd+Pb+nmXdmequ0QEGVSMVeSxDwOb6pROK5zRKZ/NVfitv5Czs
-	 UVerpYtDVyjSjJ/3cdzfYx+giUSy6MRUCzklxdM+zpg/VxjvhPjUvNM81DWp6b8Zex
-	 H3/UyVtgryFvzfJusVVxnZUVn1rLjhCJ7vSJNDPO2hodqSWob5mzEdjdu3eyOlka3b
-	 oobPrkuSHNFug==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 05 Oct 2024 21:43:10 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <a42a738a-b52d-4ff9-ac21-cffd808bc055@wanadoo.fr>
-Date: Sat, 5 Oct 2024 21:43:06 +0200
+	s=arc-20240116; t=1728158106; c=relaxed/simple;
+	bh=XiRgGL0XWUByx5kn7nI+Tco3WgxYx8RWawJzD97E6YI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=tIONsdVoebJpcSe/yHhvszV8JKh/iKgaLyB1SDdlkFYNBZFL8JmdlkW07Y2879r0yVsDOHoH3QuqahP6PwJHhA2hmMO4nobg5O+Vn1hzNLQ3ZprEirgmxgykfL2ar86+1nj5JLvLjHlijBJnYJLzaQSFNYXwaFi36OLSvI9IfnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tG8BkyyC; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1728158082; x=1728762882; i=markus.elfring@web.de;
+	bh=XiRgGL0XWUByx5kn7nI+Tco3WgxYx8RWawJzD97E6YI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=tG8BkyyCyzZhaT7ac3zn3ZLenl0gCu2oZ9+yCdhcEvQ7fGO7cJIItVedOupoTYHe
+	 Vv0R8i0GAu+dddr+wIuTtRtqjNNPC5oOznwueuKysBvmGp6I7y88E6GiLRgxBiCip
+	 wbAmVvgkETeqTUMtzSbCsVH428I/hJO8baLX3DUTQ4p1jGI5WE+Z5FxNpMZt/Zs6I
+	 E0cba9vcCzHwg96WtOgqYuDlPFN5c5UaWpY76HQSdIByF5fI/wd+nl/ouQ9AZOHVh
+	 Zac0nRhn2aI4S1JtuxV9bRA0zgqaJLDOfoAGTl91JDTKw10KYwaESJCv56SJ4pbST
+	 z6oazykU7fl7qKqKqA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N14ta-1tzTlg16WQ-017FyV; Sat, 05
+ Oct 2024 21:54:42 +0200
+Message-ID: <e7ca4426-8434-4516-9361-c74e73a7f8bd@web.de>
+Date: Sat, 5 Oct 2024 21:54:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,88 +57,52 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+To: Drew Fustini <dfustini@tenstorrent.com>, linux-gpio@vger.kernel.org,
+ linux-riscv@lists.infradead.org, Fu Wei <wefu@redhat.com>,
+ Guo Ren <guoren@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Drew Fustini <drew@pdp7.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20241005-th1520-pinctrl-fixes-v1-1-5c65dffa0d00@tenstorrent.com>
 Subject: Re: [PATCH 1/2] pinctrl: th1520: Convert to thp->mutex to guarded
  mutex
-To: Drew Fustini <dfustini@tenstorrent.com>, Drew Fustini <drew@pdp7.com>,
- Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241005-th1520-pinctrl-fixes-v1-0-5c65dffa0d00@tenstorrent.com>
- <20241005-th1520-pinctrl-fixes-v1-1-5c65dffa0d00@tenstorrent.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
 In-Reply-To: <20241005-th1520-pinctrl-fixes-v1-1-5c65dffa0d00@tenstorrent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:L1xTGNTpMfBwZHnEWbpNfA/GhqDYBd8sh779FOBV/qcakDLVyl7
+ 9m+X5pQbOVme+hCyZo8j9ob7FP4FOgJGapCqwULxjE34FuHRRKZ2umGG7TfG8cZHQAkFBqo
+ o/+UFZxLCD4P+W4fzpOPrbK9FsX3a6XuhkFbnqYXO4ceUSt3ARer73tJWDy86XhKbdIpwqr
+ bfzcPGfB5T78v2QXIi3UQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9VZ7pMe4lfQ=;RvGZu1eAHN96lNtvsvlc5ajc5o9
+ Bhp/ZvSkoQYXkMXd3jYIuKfy9ysq7h+dYQ+Uz+/MWUkq3MyMO0nerHdzO1Kyzid3Fz6AS6TO7
+ 5hzlfl+5QhzS5gjKqNrd7gvEGIa5f/1euLxEgcVEiexB1b7MOOuMtKUAW7oUs2T5yG7Wn8bV9
+ cWuLY1YV+x+AdHDl4qzPNLqNDWqdRRaqSUBIXLsOU2oh4GH+RiIv8zXaX1FoYSZqXHSFtXEty
+ CG+CPbUPmx1C+MNCmkYkiU7c0919HLSJa5lwfzbhqGgx317RfvjFFG6XiqBu+7m1x0IFADvvM
+ hvqLCDdjKC7lP6GuncQC9fFuq0lFL5YseStQNSfhwjYO60qAI+U+o+j6xQV5yLHyTvRl29FEI
+ ELielZuQs2gMXTv6AcOpGqeqNseO+sHx2Jay2eqF2DuxFb0LrInhw9xyQunjVxEN9CLgwRrWu
+ ql4b7HpGY62N0PgRWU7PWDwettio1o4COmAPLfpKD0cf3VTRmSRs9nlnY1ziQ0H1X4xshzkHk
+ ecTZhj6PFgUMHP7NI0+olkPslk/sbjcvPStIVDl4wfxvXjmGjTg6kAFt0Zy9qfjzOhzPri92F
+ Jxop1KL/e++eVXSMKIee1VWn1AmSfmg27so9Mlj8hSnDwzGKG00KFqt9oftLYw4YZfpL2/rQ3
+ Qiv03KhAaFLSDPnYnWiIwyr6Pk6QZviKWeEcILPJfq2Gm5iY4Rg8TyLXrqBTiw5GvyHpzvNdn
+ xPTy/nEA8dXUxFhPDBySeeobNnB6TrxZkuzLy9AAbVgMGDckfwR2U2WnQENH8d2JaNqptmBCG
+ /hPvdtucnraAMJgkuCseEa3rUgWrOpv76mJYa6a0usy9c=
 
-Le 05/10/2024 à 21:35, Drew Fustini a écrit :
 > Convert th1520_pinctrl_dt_node_to_map() to use guarded mutex for
 > thp->mutex.
-> 
-> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
-> ---
->   drivers/pinctrl/pinctrl-th1520.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-> 
 
-Hi,
+How does the proposed usage of the programming interface =E2=80=9Cfor_each=
+_available_child_of_node_scoped=E2=80=9D
+fit to such a change description?
 
-> diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
-> index 9331f4462480..d03a0a34220a 100644
-> --- a/drivers/pinctrl/pinctrl-th1520.c
-> +++ b/drivers/pinctrl/pinctrl-th1520.c
-> @@ -425,7 +425,7 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->   	int ret;
->   
->   	nmaps = 0;
-> -	for_each_available_child_of_node(np, child) {
-> +	for_each_available_child_of_node_scoped(np, child) {
+Would you like to omit the first word =E2=80=9Cto=E2=80=9D from the summar=
+y phrase?
 
-Using _scoped iterator is not described in the commit message.
-Is it expected to be part of this patch?
 
-If yes, the "of_node_put(child);" just a few lines below should be removed.
+Would you generally like to increase the application of scope-based resour=
+ce management
+(also in this software area)?
 
->   		int npins = of_property_count_strings(child, "pins");
->   
->   		if (npins <= 0) {
-> @@ -444,8 +444,8 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->   		return -ENOMEM;
->   
->   	nmaps = 0;
-> -	mutex_lock(&thp->mutex);
-> -	for_each_available_child_of_node(np, child) {
-> +	guard(mutex)(&thp->mutex);
-> +	for_each_available_child_of_node_scoped(np, child) {
-
-Same here...
-
->   		unsigned int rollback = nmaps;
->   		enum th1520_muxtype muxtype;
->   		struct property *prop;
-> @@ -530,7 +530,6 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->   
->   	*maps = map;
->   	*num_maps = nmaps;
-> -	mutex_unlock(&thp->mutex);
->   	return 0;
->   
->   free_configs:
-> @@ -538,7 +537,6 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
->   put_child:
->   	of_node_put(child);
-
-... this should be removed, and maybe the label renamed.
-
-CJ
-
->   	th1520_pinctrl_dt_free_map(pctldev, map, nmaps);
-> -	mutex_unlock(&thp->mutex);
->   	return ret;
->   }
->   
-> 
-
+Regards,
+Markus
 
