@@ -1,79 +1,127 @@
-Return-Path: <linux-gpio+bounces-10865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 380C1990F7A
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 22:00:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC62D991429
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 05:46:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 694131C20885
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Oct 2024 20:00:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B21EC1C22561
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Oct 2024 03:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C4D1F8EEC;
-	Fri,  4 Oct 2024 19:04:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F4C1C687;
+	Sat,  5 Oct 2024 03:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftdtf4pJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6AFv6Zx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DFF1DD898;
-	Fri,  4 Oct 2024 19:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D72810F4;
+	Sat,  5 Oct 2024 03:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728068655; cv=none; b=TM3flVj82iYOK5cKBCOzyLdwdNwZ/AR84paMawJY4qpE7HqRrlQbs+i/KY18LNvKCwNiH0h/YTqZCYU3To3ZpFULIAt7CB/R94nUi8MctUmbzDb8So+/xObYAI+cuO8eC9NLZFs5VPmKHUb6MV3wA2mGGqh9PwiwwF8H+I+B8Zg=
+	t=1728099971; cv=none; b=SjSjTwzqMEqnkL9XO9c+dGdIeNeJmpCbNq9ar4IEvNJ37zsS76cZS3VqeySNtUZ9LkjkRajHlxb9v6p/Tbgqw08FElSm+7hNakyNkERkl8qIw0OhOCIw7g4CxhdDxG9GezW6lY1YXuuJ1Ex4I/LDgm7W9JJnVER+4ncBSo/128A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728068655; c=relaxed/simple;
-	bh=Xk4XmSCUlpzGoF8qGdWYTEAPmR2pFT+0iPsmK/CWTLo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VZcmyACJ7w3Do9mGT83da3LAuQoAcirkw1PVK7TSc54TquIPj0rDs09W6Krh19EBGj96IbJRPIzNv3YTUnjTiwgM4wYqzNA+trQJQ7+rwaNAWXmz/66Ov81fF3yht3yBALpOk9dscloQFmKdnBWe+z5RYGGhgIBvbHqKc3mAF7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftdtf4pJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C57C4CEC6;
-	Fri,  4 Oct 2024 19:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728068654;
-	bh=Xk4XmSCUlpzGoF8qGdWYTEAPmR2pFT+0iPsmK/CWTLo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ftdtf4pJSF+2HQjWjSE4hAWJGMGLdVUADA4u2zfcTE2FZBjfkjMgcMGnjbZJT7e+i
-	 CqGdPHe7iVOtoVZvGNZFQf0eWkRXFJBcHbj0fDpvFxKwFfRzQ/dNJUD/1O6YdFiTaN
-	 gi618hQ/YjEBdgxp5pB3AgdTY+0Bfta3LZ2JMopGv1/QAFRpZv5fXbaxBSPr+d9I+O
-	 2WH1wkIbtTWDYi/EW5PiElUqlQJhI7rgpwwzGAXP+DrqlyXPtKdsY2fWkti9+n0Oib
-	 c1BJPN8hKeE5E2Pr6wAjxUNt8n+CI2msxwP9jX0yjEGZ8FPlcue0QUD8hvZ+g7zwe0
-	 oEtWTCDgvFjcQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE8C39F76FF;
-	Fri,  4 Oct 2024 19:04:19 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.12-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20241004142100.53097-1-brgl@bgdev.pl>
-References: <20241004142100.53097-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20241004142100.53097-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc2
-X-PR-Tracked-Commit-Id: 7b99b5ab885993bff010ebcd93be5e511c56e28a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cc70ce8fccd3f81c58f1e983336568d7c9df0e3b
-Message-Id: <172806865819.2706447.12112759096373086169.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Oct 2024 19:04:18 +0000
+	s=arc-20240116; t=1728099971; c=relaxed/simple;
+	bh=jj1hTTDTs7gvVuUjnCJAlO83/Ioa7dCrpGtA6y6/RoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqxz+/vZbi3SICNZinxBVQdZdlC+wOCXrmvbkRvWstNDZ+4Tw4+V+2xG7irRSK7v6BbV0iam6EbtNkwe0FK993uHPf+NlwxckseWlDtASz0Ikchge2O0kL7/IHWqJceSeVkZXJKw0yMjw4DfFpKuyk5AABhF0VcIHYbRxHhc0oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6AFv6Zx; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2e0a5088777so2194932a91.2;
+        Fri, 04 Oct 2024 20:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728099969; x=1728704769; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+FKLPp297pv4YqZ8PC1oE0NCgF9pFVYsLCW0C43Yfes=;
+        b=C6AFv6Zx4w0zd4U9hfhn0w5K9yfGeDAVUjXdc7zXjfcVuiY2ZE1FJXprfQnakv8tkd
+         z7i5O2ACVbj/CcbrQBbSa8Y/VjETR6eZGnTEK2GgidT9mxx9YiCoC0B++rhOkwZo8NAE
+         LPo1RzAdbePNb6JVVmdE0ugyAkb0BjPpcAYrpK6polE74N5wwrA98zjujUSBwQCmM+ni
+         v+BaQ3D38X4NSVQ2dxXG2EgnvNpHxYNxyZo99I8ch9u6TB1boCN+4F4RynQ4uBuALD6H
+         SgNjIq7UjT3b3SA7ck6K26v/lu8hHm2z7BdGoX5IXJkI++v+bUszIefNc4kzgw92OSnc
+         G8ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728099969; x=1728704769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+FKLPp297pv4YqZ8PC1oE0NCgF9pFVYsLCW0C43Yfes=;
+        b=RxjlVhGfiawgyd9o3r1QAiSgOis4+pzocG4N62/TS7IAxZluqO6bBCfoPgLyY+ABmk
+         NVtVYgGV/0w7mk1SmOKdNfMCTI6VXv51XhOMRROokQg0Eq5O3BO3iygRFxwyggvqWy9y
+         8ONFsfEdIcApPqGVbCh3foD4Miu7Wfz8j+Xn0uWml6MPDL/Pok91wABPPevUlhS0EiI/
+         raa/I7k4MZjqTdsYHFzRZNpXDKZRy7W4ojv2JaJLIwdNC68qIBfJ4ca4sz9oZdJ2nAQ+
+         fDbiwq+xFL9zd06z/V0ZM3FldTP2mm1t6oyuneY/K81+gEMAELAhbLDvIROilO0S6aV6
+         iQ3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUZNT1VnpaNKmm+X1wSGiPsHaQ+uXX40RIaMBXn9HtHzlUP0Ynulr8XP0bR0W6RLOxPKJEJAxEXMcnfUTbX@vger.kernel.org, AJvYcCUnAMy4OO2CXnbskSbOyyhWQUWJ/dZJyWba9zjzww8YxT7bg9pze3KAC1uMetlXnU3oWZdOTIALBnFj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3EQzAlezjO4FHlf48ZF5J+Z9sI7rlYho8qVYBE89ybI/eulBN
+	dcTVc6xn0SWw/HO14UGEY9BSQqWNBqZ3F8VufSlTtKe/fMY3nC1df0DtIQJz
+X-Google-Smtp-Source: AGHT+IGMOfQqhSvpYqUX6LnHIGe6u5APM9+ucwyxPTRUDfoGVhvLzLx1eOfyTjthd8fFSNQx0Fok3A==
+X-Received: by 2002:a17:90b:1b05:b0:2e0:a77e:82ff with SMTP id 98e67ed59e1d1-2e1e6365024mr5684342a91.33.1728099969575;
+        Fri, 04 Oct 2024 20:46:09 -0700 (PDT)
+Received: from rigel (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e20b0f6467sm768721a91.45.2024.10.04.20.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Oct 2024 20:46:09 -0700 (PDT)
+Date: Sat, 5 Oct 2024 11:46:04 +0800
+From: Kent Gibson <warthog618@gmail.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 4/5] gpiolib: simplify notifying user-space about line
+ requests
+Message-ID: <20241005034604.GA41715@rigel>
+References: <20241004-gpio-notify-in-kernel-events-v1-0-8ac29e1df4fe@linaro.org>
+ <20241004-gpio-notify-in-kernel-events-v1-4-8ac29e1df4fe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241004-gpio-notify-in-kernel-events-v1-4-8ac29e1df4fe@linaro.org>
 
-The pull request you sent on Fri,  4 Oct 2024 16:21:00 +0200:
+On Fri, Oct 04, 2024 at 04:43:25PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Instead of emitting the line state change event on request in three
+> different places, just do it once, closer to the source: in
+> gpiod_request_commit().
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 6 ------
+>  drivers/gpio/gpiolib.c      | 4 ++--
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index b0050250ac3a..f614a981253d 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -372,8 +372,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+>  				goto out_free_lh;
+>  		}
+>
+> -		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
+> -
+>  		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+>  			offset);
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc2
+This moves the notify to before the desc->flags have been set.
+So the notified will now see the flags as previously set, not what they
+have been requested as.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cc70ce8fccd3f81c58f1e983336568d7c9df0e3b
+That might be acceptible if you subsequently issue GPIO_V2_LINE_CHANGED_CONFIG
+when the flags are set, but that is not done here and you explicitly don't
+notify from here in patch 5 when you add notifying to gpiod_direction_output()
+etc.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cheers,
+Kent.
 
