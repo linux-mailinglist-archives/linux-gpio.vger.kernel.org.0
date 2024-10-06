@@ -1,74 +1,76 @@
-Return-Path: <linux-gpio+bounces-10905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10904-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7790992011
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8810C992010
 	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2024 19:43:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0673C1C20FC1
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2024 17:43:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB1B81C21525
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Oct 2024 17:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548CB18A6A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5486618A6A7;
 	Sun,  6 Oct 2024 17:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="dI1KmE5g"
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="YUa3z7Ee"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C776101F2
-	for <linux-gpio@vger.kernel.org>; Sun,  6 Oct 2024 17:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DD9189B8B
+	for <linux-gpio@vger.kernel.org>; Sun,  6 Oct 2024 17:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728236606; cv=none; b=iXL/A2KweLVNPUw86hUvYieroA7xnAvj6S8DsBs/2pr3ymAAqdV5nB/iBSMp1tNZ5SF7c/uT/EprEqCxplmKb4GcEwBBT0AFiY2cWQColhiqv3bT6yJhKxEQSrZ5rIB/d7jSIi9pTiZwlipViSgRSG1IaHxTrYoijRKA86eJ1nc=
+	t=1728236606; cv=none; b=SZTIqiQcqoamYaYSXujZiKFw2HOhOlHz2Yfq5ZslRZoRHM2u+8R3gqGFi+f50822kaOeQvPczOPdl8d1EDKj/2N5nlEiFaZqWDJks1GNu7H+BT59QiE78yHgGU5p+gRG0Zl4FPmXnxBe3oS2hDEKzJz7MOGb4Row7Y/JSMkGMNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728236606; c=relaxed/simple;
-	bh=iF5IaUjbFHWZvRREAbEepoAFURE11s/pMqmogjiDuvM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UEL6JWekTo1lXK1Uhjy70i8ikyFyklEoB7s+xg6c/Y3KLde8sWUNcxSOVlUKbeY8WByoEXizg/f0DjP2/uiT9tcX0Pk4xPt46WpjlNMImxejRk1xrcK96CX0AqdKm24zbgWdZTmzHTxOHx7FFt1RfuJt0IFHUoygWzAb0woKQ4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=dI1KmE5g; arc=none smtp.client-ip=209.85.210.181
+	bh=1mJpiNVP/4OrjcFTAp0TvKU8K5r9YHdExKD16255m4c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Y+C/JbCRjIz1FGzgBt9x5wc+G97QWpn1ecMUBuDsiIcQf8zfSaW9Mb3a/nmoDXU2v1fyRFJav6l4arosQHIPyFFMCqVfGCtQUOToKeooehmZyvRDYkl3gIfleTy2JQV1tAlspOpyRxxyPHFV1hjKcpad2JtyPHpcEmPwsB5WNz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=YUa3z7Ee; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71ddfc61c78so2347681b3a.2
-        for <linux-gpio@vger.kernel.org>; Sun, 06 Oct 2024 10:43:23 -0700 (PDT)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-71df0dbee46so907588b3a.0
+        for <linux-gpio@vger.kernel.org>; Sun, 06 Oct 2024 10:43:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1728236603; x=1728841403; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=spALRDUsYOwVLjrj+itG5SK1W6mJ4BemNUJT/dXw+2w=;
-        b=dI1KmE5guor3Dabk6JaNuXA0zx+FQaoplEbg2OMK6bMbxvPU+f59KMCUkUmyYHNNJ8
-         pzYOxIXr5zj/g7paCV17g+0bWGrRf4AZBqcQVUAhdByD+UQkhp+KsfKk7I1NjUGrUkVY
-         tb1IVEdl5nxx+V/hhr1aMAULWXR0s0fk9jbLmWvHsIW9J3khvba0jvtRmJTPVwxkccrQ
-         WWOp+PqGx+wft07pjHfUtLC4T3ff4lwwHFekn0bmopoY9fBywR0Nlrlz23BFcxj/icG5
-         h7z6FmRcmalp2oCdgmLrjey/bPDZ5VYeMH47hnArLEWxsTvxjd5jfbo3r0ucADBnqK3V
-         Qk+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728236603; x=1728841403;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=tenstorrent.com; s=google; t=1728236604; x=1728841404; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=spALRDUsYOwVLjrj+itG5SK1W6mJ4BemNUJT/dXw+2w=;
-        b=Z5Uf7gMTibcmSAVYS5/EvXQp6AVdXhh37CKojki0WTtgz1IzgKkOc2jAx3o+fW48PH
-         JHfgau/CqaZ/0QHkjW0PAHYlZEl4j3NTZ2WW0uA8qa4ESsOKpVQOkfrGtfVIcrIsRgfR
-         9nL9VZTe5ytQrNoloLgM0S6gY8cTz0xgLc2CzPH9x3aLaOjgGxgET1EoDor0gvbJPzKn
-         Eb6ErpO6cmODNz8PeNq25o8ogXF5k4eKOKRoAB0x9anyG/GySkrYOJw17xi+kuJpBkFJ
-         xbEeiB4Sc8gxI39yV0YcZdJXhvxeMIn66w5VIP7iSN+gDHG4fIWkNGFp1O1Yq7Y7fEcj
-         GPCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVk+azVd9XDOJVZcnFhWec6JQQZQCSeEY6b1VtGVGDobXs/QpQRrjYxNOmJ/ru9oYkXFmfov0za25Ru@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKUJAx2uvEWrcQq+KF1nClp0MLtVyn6VcGXy75XYaxVsgMjvu7
-	FM1ptM6edh03eACnqkIh6JdqXhyi53MaRXz6n7ZegkWhL6XCQhqKdi8v5BGktbU=
-X-Google-Smtp-Source: AGHT+IGMq3wabIJdCjVaKWXN4FS9fMNNTljNtGBedaNmcPo1nYMUBIfKrJpWTH3HdQf2za7dBdMOLQ==
-X-Received: by 2002:a05:6a20:6f91:b0:1d2:f00e:47bb with SMTP id adf61e73a8af0-1d6dfa417a1mr13006921637.21.1728236602914;
-        Sun, 06 Oct 2024 10:43:22 -0700 (PDT)
+        bh=J2dcGg6sikxvnM8Tn6Zg71r8Ca2eyP6yTGUfifpMwTY=;
+        b=YUa3z7EeYanq21vQXUg4wpHNmxbWN/+1SfThcZxzQ7DuowGiOyI8PPsjGODnWPr36F
+         7PTYzYe9youthA8nH3GMl9V4RiZu/dlKOtIQhKAuhH7RHtkqihVILd4g/f+O7y0gkZDR
+         3E894HBMddwrAY+HgskvOWXbbrF+W4UX2bX6JRCqD4VaazFZJlom8d+mcwS6DBwgZXKP
+         Uioku4k0DCVsqyMFhjUvlzaTOaZfaK6XBCKuiv+n8ybfG6ZBRt2aBi14BLXkpKEUiJfU
+         Li/pD0FNVpxtnkmHAkwjYBaM3IDOp5tM5vCNhEybQ4cfyY9qWJbvNO1GDyzQYx1M5cgm
+         o80Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728236604; x=1728841404;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J2dcGg6sikxvnM8Tn6Zg71r8Ca2eyP6yTGUfifpMwTY=;
+        b=iZ1SBVewz5AAViuUmyX4gQjR+tNWQTrVXgchzvTHDHY6ToAa4gez+uFzTCWAXyVBM3
+         D1Gme2bRVu9/jSpf2NTVzIwBAtoJWujkikomFucITQpMGptn7C7cmRVSpM76ldKFy5Mj
+         hW86w9UvpzDWXqPpHN2f+2l09g0FrzVn7PeaFAkDkCEDkILZL6zxKJT3tv+sV5aHiDWW
+         H8WZQUaQPRnXuCr9cALq0edPUXNf1r6CqUfYF3Svif0pyzqU3pflWfSqV2cTzVja7RXk
+         bVuP0nfC+XG8FgwMJh+N9bf599BycPArUfxkLQGDsazyPGP44N9tkSLASpfvSwBfz/s3
+         YSqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIZO8BSPRWSSItf+MYsJTy+mXda8tPT69Thq1iXlXJKkqj8ocrNXPJuOMQh5fB6z9Cj29YrF6lELxF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7V0KdsB1I8qmqbD1kmpVN7T5H4ZStORP71aTEqn63mGcmt5ZC
+	ivAHhd+1d6+Qinlfmf6Pq4/q4bw5VBVS2Dj/agNStVZ8S8B2eShKkEUC17MoUew=
+X-Google-Smtp-Source: AGHT+IEW4o7tvLckDilWYjuXJtcfmQwtg0eJys42bHOEUexDRrnhKPRGjs/rA1lE+MfbcUv1uwJCiQ==
+X-Received: by 2002:a05:6a21:a34b:b0:1d2:eb91:c0c1 with SMTP id adf61e73a8af0-1d6dfaef79cmr14944850637.42.1728236603796;
+        Sun, 06 Oct 2024 10:43:23 -0700 (PDT)
 Received: from [127.0.1.1] (71-34-69-82.ptld.qwest.net. [71.34.69.82])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d6526bsm2999591b3a.159.2024.10.06.10.43.22
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d6526bsm2999591b3a.159.2024.10.06.10.43.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Oct 2024 10:43:22 -0700 (PDT)
+        Sun, 06 Oct 2024 10:43:23 -0700 (PDT)
 From: Drew Fustini <dfustini@tenstorrent.com>
-Subject: [PATCH v2 0/3] pinctrl: th1520: Improve code quality
-Date: Sun, 06 Oct 2024 10:43:20 -0700
-Message-Id: <20241006-th1520-pinctrl-fixes-v2-0-b1822ae3a6d7@tenstorrent.com>
+Date: Sun, 06 Oct 2024 10:43:21 -0700
+Subject: [PATCH v2 1/3] pinctrl: th1520: Fix return value for unknown pin
+ error
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,10 +79,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADjMAmcC/4WNQQrCMBBFr1Jm7cgkmlhceQ/poiYTO6BpSUJRS
- u9u2gu4fP/z/l8gcxLOcG0WSDxLljFW0IcG3NDHJ6P4yqBJnxWRwTIoowknia6kFwb5cEavyT9
- se2ovbKGqU+K9qOa9qzxILmP67i+z2tI/g7NCQuOs8SH05IluheO2kTiWoxvf0K3r+gPvOrexv
- gAAAA==
+Message-Id: <20241006-th1520-pinctrl-fixes-v2-1-b1822ae3a6d7@tenstorrent.com>
+References: <20241006-th1520-pinctrl-fixes-v2-0-b1822ae3a6d7@tenstorrent.com>
+In-Reply-To: <20241006-th1520-pinctrl-fixes-v2-0-b1822ae3a6d7@tenstorrent.com>
 To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
  Fu Wei <wefu@redhat.com>, Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, 
@@ -88,41 +89,30 @@ Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
  Dan Carpenter <dan.carpenter@linaro.org>
 X-Mailer: b4 0.14.1
 
-This series contains code quality improvements for the new TH1520
-pinctrl driver [1]:
+Fix th1520_pinctrl_dt_node_to_map() to set the return value before
+jumping to free_configs when an unknown pin error occurs.
 
- - Fix smatch warning that the return value is not correctly set when an
-   unknown pin error occurs
- - Linus suggested using guarded mutexs so I've converted the thp->mutex
-   lock to that usage.
- - Linus also suggested using a scoped iterator for the DT for-each
-   child node loop: for_each_available_child_of_node_scoped.
-
-The series is based on the linusw devel branch [2].
-
-[1] https://lore.kernel.org/lkml/CACRpkdavPAv2sPRREQhx_A7EtOj6Ld_n+NcO+vH0QCnfVedXKw@mail.gmail.com/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
-
-Changes since v1:
-- Move the scoped iterator conversion to a separate patch and remove the
-  child put operations as they are no longer needed
-- Link: https://lore.kernel.org/lkml/20241005-th1520-pinctrl-fixes-v1-0-5c65dffa0d00@tenstorrent.com/
-
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202410022336.xyWlV0Tf-lkp@intel.com/
 Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
 ---
-Drew Fustini (3):
-      pinctrl: th1520: Fix return value for unknown pin error
-      pinctrl: th1520: Convert thp->mutex to guarded mutex
-      pinctrl: th1520: Convert dt child node loop to scoped iterator
+ drivers/pinctrl/pinctrl-th1520.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/pinctrl/pinctrl-th1520.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
----
-base-commit: 2694868880705e8f6bb61b24b1b25adc42a4a217
-change-id: 20241005-th1520-pinctrl-fixes-d20db68387e6
+diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+index 9331f4462480..265a75a78d5a 100644
+--- a/drivers/pinctrl/pinctrl-th1520.c
++++ b/drivers/pinctrl/pinctrl-th1520.c
+@@ -499,6 +499,7 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 				nmaps = rollback;
+ 				dev_err(thp->pctl->dev, "%pOFn.%pOFn: unknown pin '%s'\n",
+ 					np, child, pinname);
++				ret = -EINVAL;
+ 				goto free_configs;
+ 			}
+ 
 
-Best regards,
 -- 
-Drew Fustini <dfustini@tenstorrent.com>
+2.34.1
 
 
