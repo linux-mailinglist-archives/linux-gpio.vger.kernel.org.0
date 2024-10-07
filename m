@@ -1,207 +1,120 @@
-Return-Path: <linux-gpio+bounces-11001-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11002-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E4A99938E3
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 23:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18DC79938F0
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 23:18:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACA82B22B76
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 21:17:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B36B5B22B16
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 21:18:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF02A1DE2C4;
-	Mon,  7 Oct 2024 21:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CB51DE4EE;
+	Mon,  7 Oct 2024 21:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K6dhJkHO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HIGW3OsJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K6dhJkHO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HIGW3OsJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTFWnH27"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8125C175D44;
-	Mon,  7 Oct 2024 21:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACDC320F;
+	Mon,  7 Oct 2024 21:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728335817; cv=none; b=dYYlHHB8vOt1/KBF0AoW29gQ9WqvS0bebtlAB8v/PuU/YVYOf9TW8Ykr89FPCizVaRUgHLleZ+8K2gZjwqruffiDEq44FmnTao+/Rx1aeN3dX1/dke99ntPbx2rKx62yh0ViDiMC6JaBdgr3QooPLe+7Cfm5WHcAydymvxs6tgI=
+	t=1728335911; cv=none; b=kf1Ds2GADFJf1+QMDYtB0Fmyvcz4j1hi1Z/XjkBSWe+iv38a+bXPvjmdPM+yMN8vzI7WZgN3Wt3Gtw8H3t/pAQosW6Tv/zkSPA/sd2dS+U9rhSeNt3RmP7hMfL7u1Y2NwxrCYWKOISw713ElJpyScI1b40V30cOWB9J2ZUkPOUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728335817; c=relaxed/simple;
-	bh=HsHMFZnl73qXPJp3WcFgeBGK5RIe2dlqb5wRxWZf9m4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kliYK+GuK88/EKlUY8RdpU+QAL7Tr4bqSAw3RgIqcdHZVMMuF7IoLDfzVYpcgExDltvf6VDgToceGdBWAV1k2huojKBsgo2AthwCZwruX1AkHGQZywYQ4a9qS1hJvySNN/BIthG4w6AohK/l1lgSMLrtBgqhxsAFP5JBr6erQ2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K6dhJkHO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HIGW3OsJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K6dhJkHO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HIGW3OsJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 779191FD7D;
-	Mon,  7 Oct 2024 21:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728335812; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PAxY0WSthsU5XJUyf0vGpauYU8mriadEugO/Of+e39w=;
-	b=K6dhJkHO64ckfET+2DCyV2dLb8XL1SVLVTRoLE26PjTDjlVOaleW7exXb1QWEcopIIw0Bx
-	zZ7r2NPP+2OgoQqb1CylZZXsSgUnq70eo5QxFUIXcoZ6s4Pd4tQkp3N2UF7SxP2UjRPjw7
-	8FlD9w514denRrF3wPKAmjQi9mxNA1s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728335812;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PAxY0WSthsU5XJUyf0vGpauYU8mriadEugO/Of+e39w=;
-	b=HIGW3OsJDSVYX7uGtgHtZSrmtQnMDwvxW+OjtHzKBHwpuciACGD+TyJoJ/+VGYHDzMFRQQ
-	iLRfOrCpFdbwuwAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=K6dhJkHO;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HIGW3OsJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1728335812; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PAxY0WSthsU5XJUyf0vGpauYU8mriadEugO/Of+e39w=;
-	b=K6dhJkHO64ckfET+2DCyV2dLb8XL1SVLVTRoLE26PjTDjlVOaleW7exXb1QWEcopIIw0Bx
-	zZ7r2NPP+2OgoQqb1CylZZXsSgUnq70eo5QxFUIXcoZ6s4Pd4tQkp3N2UF7SxP2UjRPjw7
-	8FlD9w514denRrF3wPKAmjQi9mxNA1s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1728335812;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PAxY0WSthsU5XJUyf0vGpauYU8mriadEugO/Of+e39w=;
-	b=HIGW3OsJDSVYX7uGtgHtZSrmtQnMDwvxW+OjtHzKBHwpuciACGD+TyJoJ/+VGYHDzMFRQQ
-	iLRfOrCpFdbwuwAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30769132BD;
-	Mon,  7 Oct 2024 21:16:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ulcMCcRPBGdgcgAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Mon, 07 Oct 2024 21:16:52 +0000
-Message-ID: <ce0ac1bfe2fb54feb10dc06827091caea57b7a19.camel@suse.de>
-Subject: Re: [PATCH] gpio: pca953x: fix pca953x_irq_bus_sync_unlock race
-From: Jean Delvare <jdelvare@suse.de>
-To: Ian Ray <ian.ray@gehealthcare.com>, Linus Walleij
- <linus.walleij@linaro.org>,  Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 07 Oct 2024 23:16:51 +0200
-In-Reply-To: <20240620042915.2173-1-ian.ray@gehealthcare.com>
-References: <20240620042915.2173-1-ian.ray@gehealthcare.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1728335911; c=relaxed/simple;
+	bh=HrN67y6Cy1Pyc/S6hivHO4mRSYQ/s+XYFkTpBAfO33A=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=SH6YRyNP+hpwwFW7xfAbu/GFzdRnURKrCWj33B9MuavHS/M5ZGJr7LeOHOv6WG+kl/pbXrLssSDeUsfETky+T/ACPWxBrP0R6G4g2Ck2K5aGBtoWLn25VGqoOwHAvOxi68LyVb+umnFWhfaLcTWCCoqk72v67E+ixuXxJjllpF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTFWnH27; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B25CC4CEC6;
+	Mon,  7 Oct 2024 21:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728335910;
+	bh=HrN67y6Cy1Pyc/S6hivHO4mRSYQ/s+XYFkTpBAfO33A=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pTFWnH27DhMY9xXoJsniYDjNAAEsXRaLBHmDDr8Ic5uzQ/sccd2e7YNNFSygEeOOB
+	 +C6XDOwwBVzzfOJdo1Gmy7Sn9wr8b2+Xbr7+gZl4d+2cOGhr3mElQOtViRPsz7p+J3
+	 3I+URejXY5DpbxBL1yIyojaRpdKOVoHP8NHZF38t1WLz/6N2C8G4xVvsj4sxVmaWgC
+	 5ovAQi4n4+vmPpNKHUsPdVY9D9wA4EMzywqhF2qoPdd4RRWmdpcdAAfa4BiLHiNW59
+	 MdvALtquDMghJLamdHBOwmNa/yslJBfr3eNyhwnZiNXQL/vEhygu3QFfY5rCJABezk
+	 I8DzbN6tfVv6A==
+Date: Mon, 07 Oct 2024 16:18:29 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 779191FD7D
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: eladwf@gmail.com, Linus Walleij <linus.walleij@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-mediatek@lists.infradead.org, 
+ Frank Wunderlich <frank-w@public-files.de>, daniel@makrotopia.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, 
+ ansuelsmth@gmail.com, Sean Wang <sean.wang@kernel.org>, 
+ linux-kernel@vger.kernel.org, john@phrozen.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20241007203053.72862-4-linux@fw-web.de>
+References: <20241007203053.72862-1-linux@fw-web.de>
+ <20241007203053.72862-4-linux@fw-web.de>
+Message-Id: <172833590964.2590037.11713747544689826039.robh@kernel.org>
+Subject: Re: [PATCH v3 3/4] dt-bindings: pinctrl: add binding for MT7988
+ SoC
 
-Hi Ray,
 
-On Thu, 2024-06-20 at 07:29 +0300, Ian Ray wrote:
-> Ensure that `i2c_lock' is held when setting interrupt latch and mask in
-> pca953x_irq_bus_sync_unlock() in order to avoid races.
+On Mon, 07 Oct 2024 22:30:44 +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> The other (non-probe) call site pca953x_gpio_set_multiple() ensures the
-> lock is held before calling pca953x_write_regs().
+> This adds bindings for MT7988 pinctrl driver.
 > 
-> The problem occurred when a request raced against irq_bus_sync_unlock()
-> approximately once per thousand reboots on an i.MX8MP based system.
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> changes in v3:
+> - limit conf subnode name with optional suffix like mmc on mt7986
+> - match mux subnode without wildcards
 > 
->  * Normal case
-> 
->    0-0022: write register AI|3a {03,02,00,00,01} Input latch P0
->    0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
->    0-0022: write register AI|08 {ff,00,00,00,00} Output P3
->    0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-> 
->  * Race case
-> 
->    0-0022: write register AI|08 {ff,00,00,00,00} Output P3
->    0-0022: write register AI|08 {03,02,00,00,01} *** Wrong register ***
->    0-0022: write register AI|12 {fc,00,00,00,00} Config P3
->    0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
+> changes in v2:
+> - drop gpio-cells description
+> - move ref in mux subnode up
+> - order uart-functions alphanumeric and fix typo
+> ---
+>  .../pinctrl/mediatek,mt7988-pinctrl.yaml      | 569 ++++++++++++++++++
+>  1 file changed, 569 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
 > 
 
-I have more questions on this. Where does the above log come from?
-Specifically, at which layer (bus driver, regmap, gpio device drier)?
-What do these values represent exactly? Which GPIO chip was used on
-your system? Which i2c bus driver is being used on that system? What
-are the "requests" you mention in the description above?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I'm asking because I do not understand how writing to the wrong
-register can happen, even without holding i2c_lock in
-pca953x_irq_bus_sync_unlock(). The i2c layer has a per-i2c_adapter lock
-which is taken before any bus transfer, so it isn't possible that two
-transfers collide at the bus level. So the lack of locking at the
-device driver level could lead to data corruption (for example read-
-modify-write cycles overlapping), but not to data being written to the
-wrong register.
+yamllint warnings/errors:
 
-As a side note, I dug through the history of the gpio-pca953x driver
-and found that i2c_lock was introduced before the driver was converted
-to regmap by:
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml: patternProperties:-pins$:patternProperties: '^mux$' should not be valid under {'pattern': '^\\^[a-zA-Z0-9,\\-._#@]+\\$$'}
+	hint: Fixed strings belong in 'properties', not 'patternProperties'
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
 
-commit 6e20fb18054c179d7e64c0af43d855b9310a3394
-Author: Roland Stigge
-Date:   Thu Feb 10 15:01:23 2011 -0800
+doc reference errors (make refcheckdocs):
 
-    drivers/gpio/pca953x.c: add a mutex to fix race condition
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241007203053.72862-4-linux@fw-web.de
 
-The fix added locking around read-modify-write cycles (which was indeed
-needed) and also around simple register reads (which I don't think was
-needed).
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-It turns out that regmap has its own protection around read-modify-
-write cycles (see regmap_update_bits_base) so I think several uses of
-i2c_lock should have been removed from the gpio-pca953x driver when it
-was converted to regmap as they became redundant then. This driver-side
-lock is still needed in a number of functions though, where the read-
-modify-write is handled outside of regmap (for example in
-pca953x_gpio_set_multiple).
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Thanks,
--- 
-Jean Delvare
-SUSE L3 Support
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
