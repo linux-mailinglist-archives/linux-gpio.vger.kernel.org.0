@@ -1,83 +1,83 @@
-Return-Path: <linux-gpio+bounces-10986-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10987-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555019934FF
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 19:28:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C5DA9935A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 20:04:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 866E31C235E1
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 17:28:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C87A1F23F4D
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 18:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796691DD871;
-	Mon,  7 Oct 2024 17:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F341DDC0D;
+	Mon,  7 Oct 2024 18:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jkA+jjWf"
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="Dh5qIncH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B7E1DCB06
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Oct 2024 17:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCFC1DC054
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Oct 2024 18:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728322104; cv=none; b=IIeZhufSGAeb0/tbOASNGvmgaAQ5SlkIG4qDoDZh5qrm7IoNJTVZgc3Y3ebG5DDTOr+k7vvqTHDKmpYm7PxC3KUuZWW2vKaQCCMX4nD/WiK34/tj603xsIqBokBVMxtH96/2bjKRMwAPDf4JFKXVHou/ZZLqOkJI/l7hsPMaFxo=
+	t=1728324240; cv=none; b=ZoxQvCrILA2x85r5F3HqzV9fLvq0B+xET333Cl2XiHHx053mGZpsQ9HV3sHV5syvegg1/kxX1v2brfd+6gzq+yYfPBE6B9y6+kxKKNSdUNql4GWQr67MToGmE/0qA0nh4GHGV/4dTOiW6KSJaksJqgk+AIibrc6pi7d9ekn2bnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728322104; c=relaxed/simple;
-	bh=eihS6TG9sOicZxVq7FC5zUYqLhMxZKk8b6Q/6MFIiyY=;
+	s=arc-20240116; t=1728324240; c=relaxed/simple;
+	bh=I22d/+GHsIHGfgt+4eFMnOhieCI52FZK/3/kffHd95E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JSpFrezjL/TESJwDI5Kg9lJ15UiDEoEwu4kdkIj5M9isvgbk5P4blx253a/0UuzHK7CeKCkSwkGU9jQXayEwUIpACAYOSdph7Q8bmAvswMew8rOez59bIJPzZFJ4hJ0d4sztki9/tjznZTTM7cj1JRBoglxPUjGSwZQMcN1pL64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jkA+jjWf; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fad784e304so57059901fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2024 10:28:21 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HiwBt3n7BQZHyDir5hQ7XGFWV9ONWVzMGgwZXNCldFktaxL1NX0608JJZ+m9Sv37+VKX3AoSPCMBYj8+RSf0pm1hJSPYUdZAcRcYWgGvfbUf+60/gh75HYaeoxoyfgIzPRgCkKOS3P7dW+QhEX6yjin2IhIFXylj+haheD+6Xok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=Dh5qIncH; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-71df67c6881so1911110b3a.3
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2024 11:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728322100; x=1728926900; darn=vger.kernel.org;
+        d=tenstorrent.com; s=google; t=1728324236; x=1728929036; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SXNyRDdO40KsorjoROOJqGTRnV5NG+6TplQFkMTm+P0=;
-        b=jkA+jjWfd1wXEL+Ya2ppWYkq1Bn74hkGyzQ4Bi/ykA72gUfBclSD0mfXcZsj15A/3q
-         M4IjHORSjdcPL0dQtzLB3YAr2WgZZHHAUd6PEY7OKrj2fUWXTKO0O6Q9ntKg5D2hiF4V
-         MbKTlmuiHruFdpUIlgZE0yW6YGoPr4LI9NYFvGasouqU2Sic6iF1oESPXF783uQRh9Du
-         SDwDHebDFbyvKkDZZKOR7xK8xd4M9HycLRxWdcVqf632yGEgN00cLYWMvaMlYWmwFN39
-         2zgOcQs2vXGid+mHcgyw0rNZjWmtdHkM7kSjicW7f1Z8VL4DlP/8DvYeIwZpYfirmNGY
-         WFnQ==
+        bh=MVGSjDknVMXjQYoTQZQyn6ion9DZQ87YWfmvoPAOAL8=;
+        b=Dh5qIncHHp50VNMdKMlpNW8f1eVoYb2hDlauhPIfd+ZItpQzxe54bpqy/VNRwcDPw6
+         jpq99DOM5znGqo/Udnsfdr7suXCDfcFrAxr+15cAB/1uKt2lQsx/cqLNoobZzkPCR1nd
+         Ew0BW+FLVMq5vDXiW/1NEANb8v7g+8+xDmdbI3yxsUaPyfZopVOWPnJRWPckRTn+dtOB
+         7CzqkRJeDvdfcQ7hzPejQTaQ62dZrr1ksv6lsXw+MAdN4PvjDRV8w1YsE7oSB2entVzC
+         gbr0aYi7BUtRdm6xf7KyorcooLC5b732svFs8zbuwai0hkEWRm2LMbeVLyRAI+be5xp9
+         /RvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728322100; x=1728926900;
+        d=1e100.net; s=20230601; t=1728324236; x=1728929036;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SXNyRDdO40KsorjoROOJqGTRnV5NG+6TplQFkMTm+P0=;
-        b=GuPonZPJ4QypIBwH5DGGVgg5G3gnzdgYvZejBn5tdGC9qmp9Yv9xDU0HKSqOxd/MTN
-         ey8PDoJG9W2RqI93HqGYSh+DbPDcSWf5KLOGIHM6hwKzDxhpUpHy4RegcmT1s506B7p0
-         e3toLU+1cPN+aXPUwAo530s2nbNGpI10erK8K/4Es6fUlNQvZjqva3675WDFguVgIJVT
-         NyNjuRdqUQfJbOMIssx2N/n02D87auSGTBSPl5PUrfQuIpFtfSp6xIF23F4h+s0NmoJG
-         HouTuTTj/puAMst9ps1FY9Ml3CeD1yie966c8MLurQuYGue+laconIRdLLsifSvfzVdh
-         tsOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFIaDOuZP7ViYciNmOh6opSKVtzhJ1BauW8O8iqKJjzUZfR6ZNMvIEx3Wd3wYBkiGhajaPWuXjsoN6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5+zL1TMmEaXJRceG0N+kaf5gb4bAyjflRw5IeBKwqAfze2zL9
-	06UDXKK0Fmxj7QG1EBMaW9Hyl8Ix2gwwqOOt9QZC83p6ztxjCgWqruCFd5zbq9M=
-X-Google-Smtp-Source: AGHT+IFa8X2yJwUs868d9QR9d4bZPFRttVj19i+vFYbPX91oAx08bCqYkiwSIpoSe3hCZ0CmoBUzaQ==
-X-Received: by 2002:a2e:b8c3:0:b0:2ec:55b5:ed45 with SMTP id 38308e7fff4ca-2faf3c420b2mr56549151fa.24.1728322099500;
-        Mon, 07 Oct 2024 10:28:19 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00-89ea-67f6-92cd-b49.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:89ea:67f6:92cd:b49])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2faf9ab1690sm8765041fa.12.2024.10.07.10.28.16
+        bh=MVGSjDknVMXjQYoTQZQyn6ion9DZQ87YWfmvoPAOAL8=;
+        b=ksfXgrufJ+oNOB2CoSjRS3oaGz4LpLm8aV5D5uFjjpbDk6b78WptrYTa1K0eoy4ZQG
+         nrikndnpSXrd/lp/9AKXW8t287XCxUxgn3J2p4LIEBRnspcHIiBHq4xSHSIfZD4GheSg
+         KciKq4OrX8viI8UVKGrWGPuOP4GSRkqTfP61RRzXXZsQ+OVy3kqi+7DKU+dBWh1Glafs
+         JiZYlirrmi2DDt2mK7mSrTViSLomBlxJgGcSVRSAFRV4ZXE5qU14mGN5U415JqhKAqMq
+         SZFGb9Xc1JbrSkw/pWyOfH0eoHwnrK0CJQ04xUQTGhsprXQhW7TdCqfImdooVOFXiJ0E
+         zPsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxCWiVRgwqP3Xl8o5Qm6ahRswWZwjYluFcXVUpSnWAU8c8C5B6uMEXZf7cPttMiONiauF6OV9wyQTT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBEvHw9on51h14Y2CINCUT6EZGtoWF4YvGaJTC8BEX7htWJS6J
+	QMSguS2Egj8RsGM/vTULoCmgWOn+45ylYonIl1bSBWr6NDhdcNM9rEmf+6D/V5A=
+X-Google-Smtp-Source: AGHT+IHtCkLsJksWiActtwWLrS0eD/m1ABPJG3RzxhSPeEyDzgju5CyXRLJOluQztqFFZN29rhif1Q==
+X-Received: by 2002:a05:6a00:2d8c:b0:71e:b8:1930 with SMTP id d2e1a72fcca58-71e00b81b19mr9261207b3a.16.1728324236611;
+        Mon, 07 Oct 2024 11:03:56 -0700 (PDT)
+Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d47edfsm4662653b3a.128.2024.10.07.11.03.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 10:28:17 -0700 (PDT)
-Date: Mon, 7 Oct 2024 20:28:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Karl Chan <exxxxkc@getgoogleoff.me>
-Cc: linux-arm-msm@vger.kernel.org, andersson@kernel.org, 
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v6 2/5] arm64: dts: qcom: add Linksys EA9350 V3
-Message-ID: <2lumlvmn6244rn7imm2zeluglknnpaufjb3oqz7n672bmsivst@rn7nlv3do65z>
-References: <20241007163414.32458-1-exxxxkc@getgoogleoff.me>
- <20241007163414.32458-3-exxxxkc@getgoogleoff.me>
+        Mon, 07 Oct 2024 11:03:56 -0700 (PDT)
+Date: Mon, 7 Oct 2024 11:03:54 -0700
+From: Drew Fustini <dfustini@tenstorrent.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Linus Walleij <linus.walleij@linaro.org>,
+	oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] pinctrl: th1520: Convert dt child node loop to
+ scoped iterator
+Message-ID: <ZwQiijdDKDHvwcOx@x1>
+References: <20241006-th1520-pinctrl-fixes-v2-3-b1822ae3a6d7@tenstorrent.com>
+ <202410072033.XpRqZ8nz-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,31 +86,46 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007163414.32458-3-exxxxkc@getgoogleoff.me>
+In-Reply-To: <202410072033.XpRqZ8nz-lkp@intel.com>
 
-On Tue, Oct 08, 2024 at 12:34:11AM GMT, Karl Chan wrote:
-> Add device tree source for Linksys EA9350 V3
-> which is a WiFi router based on the IPQ5018 SoC.
-> As of now , only the UART,USB,USB LED,buttons is working.
-> The front PWM LED require the IPQ PWM driver.
-> Therefore the PWM LED isn't configed in the tree.
+On Mon, Oct 07, 2024 at 08:26:28PM +0800, kernel test robot wrote:
+> Hi Drew,
 > 
-> The original firmware of EA9350V3 from Linksys can only boot ARM32 kernels.
-> However there seem to a identical device that come with 64bit firmware.
-> Also There are seems to be no way to boot ARM64 kernels on EA9350.
+> kernel test robot noticed the following build warnings:
 > 
-> Therefore,the only way to boot on EA9350 V3 is using this tree and a 32bit kernel.
+> [auto build test WARNING on 2694868880705e8f6bb61b24b1b25adc42a4a217]
 > 
-> Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/ipq5018-linksys-jamaica.dts | 109 ++++++++++++++++++
->  2 files changed, 110 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-linksys-jamaica.dts
+> url:    https://github.com/intel-lab-lkp/linux/commits/Drew-Fustini/pinctrl-th1520-Fix-return-value-for-unknown-pin-error/20241007-014953
+> base:   2694868880705e8f6bb61b24b1b25adc42a4a217
+> patch link:    https://lore.kernel.org/r/20241006-th1520-pinctrl-fixes-v2-3-b1822ae3a6d7%40tenstorrent.com
+> patch subject: [PATCH v2 3/3] pinctrl: th1520: Convert dt child node loop to scoped iterator
+> config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20241007/202410072033.XpRqZ8nz-lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 13.3.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241007/202410072033.XpRqZ8nz-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202410072033.XpRqZ8nz-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/pinctrl/pinctrl-th1520.c: In function 'th1520_pinctrl_dt_node_to_map':
+> >> drivers/pinctrl/pinctrl-th1520.c:420:29: warning: unused variable 'child' [-Wunused-variable]
+>      420 |         struct device_node *child;
+>          |                             ^~~~~
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+It seems this is because the scoped iterator declares *child in the
+macro and thus no separate declaration is needed:
 
--- 
-With best wishes
-Dmitry
+ #define for_each_available_child_of_node_scoped(parent, child) \
+         for (struct device_node *child __free(device_node) =            \
+              of_get_next_available_child(parent, NULL);                 \
+              child != NULL;                                             \
+              child = of_get_next_available_child(parent, child))
+
+I'll fix in next revision.
+
+Thanks,
+Drew
 
