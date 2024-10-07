@@ -1,135 +1,131 @@
-Return-Path: <linux-gpio+bounces-10976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1501993354
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 18:34:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7862B993366
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 18:36:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4151283AE2
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 16:34:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA8311C236CD
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 16:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A321DACB0;
-	Mon,  7 Oct 2024 16:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D501F1DBB1D;
+	Mon,  7 Oct 2024 16:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="dj+8jTQO"
+	dkim=pass (2048-bit key) header.d=getgoogleoff.me header.i=@getgoogleoff.me header.b="jGvYOe5A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7706212E75
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Oct 2024 16:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA841DA0F1;
+	Mon,  7 Oct 2024 16:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728318841; cv=none; b=ay5o2cpmiyFnrAL5o/MzsArH0qlZSau7lAfdR7ovM0aqTq/peb9onz2D9O9noMkaExix3JSIXSQXR/tvbcTLcbE6nf8Fdc2xy7Sxw3EimbG8BdvLRtG+yL6Lxowc0o7jh9zQ6p7qWYw6fwOmLpKFiW5reDdmPf/qlGt1XxMrU/0=
+	t=1728318961; cv=none; b=SDi4VIW1Cqm1HC1JtIgqzUQTRZ4PIK+AehIHnFiFlNN/LQx6HlwhKYGX/mTXV4j9Q8hAMoH9d9v9LnYHxWVjRIJfreMy8Ym0zyLu7+mZwCxnxjqUCPxafFTsarJPAieGNtCgmNlCPu5LWcokfBHsrzZLsNDDeF43nX93TVCsRaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728318841; c=relaxed/simple;
-	bh=DdutLgm7LnJZUydsu87UTwymGUlWI6mMAxVG/ZJc31s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qs/2Lg4kQKJBXPnTzuQXGaNnKMVyGd3mFw8EiTJi/zeKd0JrG0tGugGQkkVZg3m/b+qfMGGXE5g0bxajfLBphBBvPUIqmXFRe6lJKw2NnJiAGbyzk2q7YZu/yPs8B6kViaNvqkxrdeZwQMPTULJgSMtllxOYzfCZ36TpcKttVBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=dj+8jTQO; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71e0c3e85c5so570410b3a.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2024 09:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1728318838; x=1728923638; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZWM6QTmBe9B09ML2vqXCSoB0/AzhE/+M2NioGDzKy8=;
-        b=dj+8jTQOYb5U/boZEpygD2rjOq762FeMoC5lNAYzq2H1PjmRkGDAtNJlEYsguS2uuO
-         +kqUahIk57P1e2C7T8zJis73pxFkA5CnbtB12EV4/QCa+AgLixnORGQrsIEDkZRDtnTo
-         r+PxO+HHm1mvvhgAOiteTosQ6aHXKK6EbrzJg+t0ASK0M1Yjy8WG48qyOWlfWIudvd2D
-         rypHrkgZffx3ZGCZyOjjFhBdBFwA4Jqvz/IZF0uvMJzNQmbeYHm5He4xTd/aVsn54Nrk
-         F4qNZuXWYGWdoS/d7bBTxLIv/IZbVStYGqo+4anCI3zMLpgjri1K/a7MnmWPdJM/pW4f
-         +EMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728318838; x=1728923638;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZWM6QTmBe9B09ML2vqXCSoB0/AzhE/+M2NioGDzKy8=;
-        b=eW/ArZ+bf7oxTh0+Jz8ngpzuJ0MCJwbtk5AmVVsvJksnegpmFhGNZcbEkiDZJX/aCt
-         p0mN3iF2konoFGUQ3OeC3mMlN+16J67TiDGIDbcdRFfKJ646pD1Q20iNogGz6GdAMDtI
-         5eYiDDyMmrbV/eDeuvTG8Rlc/YmmbdPScesRRPCZCKltdNqrAN//njusxYIBLJOqLNYh
-         fOv1iofTKOeu4+dSPOGdzMiXUmvvqcYbsbkBgUaijNOgE/yRs+cpautEsbZdQYQyGT8Q
-         2XbFd8VniWEOQdPbxDuCIq5KCKjwzvYLy0gak5ODHnM8KzK4269Et17X1FN07C0vZ01M
-         2U6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXV6MPunkjBNM9nyiIeBXEkkDHkZoqMjJLM7v+CapXrgtIHhLMjB5mGI77oEK4LUjEJ0AXkjSZF+JM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOgszBxd0P/phlqMdzTxUq/8689O9cULfqEPTnFOrqsqmCwBvS
-	i9OHcsTCfHhcBEwlpbT+p6corD2Z3EUTC1MTLu3gLlioQz9xdfYNcJTqA3Dnw2eqTEFUQAM9vzx
-	u
-X-Google-Smtp-Source: AGHT+IEOn2aNJRc6PNcmA1E8hHomUDAvzvN8DoqLjg4IGSM4t5x9BXT+gVd7xFtvp6ibMbgO/sW9JA==
-X-Received: by 2002:a05:6a00:1ad0:b0:717:8044:3169 with SMTP id d2e1a72fcca58-71de23b5f19mr17937448b3a.9.1728318837846;
-        Mon, 07 Oct 2024 09:33:57 -0700 (PDT)
-Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71df0d4a1f4sm4590147b3a.113.2024.10.07.09.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 09:33:57 -0700 (PDT)
-Date: Mon, 7 Oct 2024 09:33:55 -0700
-From: Drew Fustini <dfustini@tenstorrent.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev, Drew Fustini <drew@pdp7.com>,
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Linus Walleij <linus.walleij@linaro.org>, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pinctrl: th1520: Convert to thp->mutex to guarded
- mutex
-Message-ID: <ZwQNc9/sO9lhUvmw@x1>
-References: <20241005-th1520-pinctrl-fixes-v1-1-5c65dffa0d00@tenstorrent.com>
- <6b3d9f7a-c87b-4ef5-8571-77276f3896a1@stanley.mountain>
+	s=arc-20240116; t=1728318961; c=relaxed/simple;
+	bh=H4EtT+HCyJJiH5ULRPWfwetZm4DNjajIw7ek0MxBUrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hBnCSSppE1wLjUQsOp3reCYvvPORq2W1Svap3p947jYzuQJC9ZMQ6MGft8CNFrqZ0AfsLfPw/Svpu6ZufKNvJLxgTWLuFCIL4mY0glAdxEaxGnUKvKs5Jv8UZdCUE31M588M9kVxJUvfg+mE+8MESi1rvDeWwH7IZgMAKUnDS3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=getgoogleoff.me; spf=pass smtp.mailfrom=getgoogleoff.me; dkim=pass (2048-bit key) header.d=getgoogleoff.me header.i=@getgoogleoff.me header.b=jGvYOe5A; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=getgoogleoff.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=getgoogleoff.me
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0CF8A23F5B;
+	Mon,  7 Oct 2024 18:35:55 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id DXfyCf6pQ-gt; Mon,  7 Oct 2024 18:35:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=getgoogleoff.me;
+	s=mail; t=1728318954;
+	bh=H4EtT+HCyJJiH5ULRPWfwetZm4DNjajIw7ek0MxBUrY=;
+	h=From:To:Cc:Subject:Date;
+	b=jGvYOe5AIGKUenYzh6OpG101lN82Ob9Hyq+CQYcF1OffCz81+/f0qmzpKyaZoNURV
+	 dPwVXIjRNl+Zxl4U973xkspHqDZIKRtQwSFONMuszYpXj41TYkVqqvIXCNCAiVMUMh
+	 qZexMmor5b2QpeY8+6W2RpmjVqgjEyKOfypaiG4qIdlRvqe6zXaTkU5d04RC64l98f
+	 M/6GRWs6CQM9ok1SkzysNUe+DvPo/rHpumr0bDnyFzo6QFPA3i9VcPKnktb9PAdtuv
+	 jH+lxf7AwkoY+MclN8IugLpfJmhpjl8micjIhwbpqU6oULd1d0mJnQPHitcNuVWxEg
+	 LcsSXGc3Sg0rg==
+From: Karl Chan <exxxxkc@getgoogleoff.me>
+To: linux-arm-msm@vger.kernel.org
+Cc: andersson@kernel.org,
+	konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	linus.walleij@linaro.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Karl Chan <exxxxkc@getgoogleoff.me>
+Subject: [PATCH v6 0/5] Initial Support for Linksys EA9350 V3 (linksys-jamaica)
+Date: Tue,  8 Oct 2024 00:34:09 +0800
+Message-ID: <20241007163414.32458-1-exxxxkc@getgoogleoff.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6b3d9f7a-c87b-4ef5-8571-77276f3896a1@stanley.mountain>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 07, 2024 at 06:41:36PM +0300, Dan Carpenter wrote:
-> Hi Drew,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Drew-Fustini/pinctrl-th1520-Convert-to-thp-mutex-to-guarded-mutex/20241006-033647
-> base:   2694868880705e8f6bb61b24b1b25adc42a4a217
-> patch link:    https://lore.kernel.org/r/20241005-th1520-pinctrl-fixes-v1-1-5c65dffa0d00%40tenstorrent.com
-> patch subject: [PATCH 1/2] pinctrl: th1520: Convert to thp->mutex to guarded mutex
-> config: parisc-randconfig-r072-20241007 (https://download.01.org/0day-ci/archive/20241007/202410072108.uG2sVTN4-lkp@intel.com/config)
-> compiler: hppa-linux-gcc (GCC) 14.1.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> | Closes: https://lore.kernel.org/r/202410072108.uG2sVTN4-lkp@intel.com/
-> 
-> New smatch warnings:
-> drivers/pinctrl/pinctrl-th1520.c:538 th1520_pinctrl_dt_node_to_map() error: uninitialized symbol 'child'.
+Add device tree source for Linksys EA9350 V3 which is a WiFi router based on the IPQ5018 SoC.
 
-It seems this is because the scoped iterator declares *child in the
-macro and thus no separate declaration is needed:
+As of now , only the UART,USB,USB LED,buttons is working.The front PWM LED require the IPQ PWM driver.Therefore the PWM LED isn't configed in the tree.
 
-#define for_each_available_child_of_node_scoped(parent, child) \
-	for (struct device_node *child __free(device_node) =		\
-	     of_get_next_available_child(parent, NULL);			\
-	     child != NULL;						\
-	     child = of_get_next_available_child(parent, child))
+Also The original firmware from Linksys can only boot ARM32 kernels.
 
-I'll fix in future revision.
+As of now There seems to be no way to boot ARM64 kernels on those device.
 
-> 
-> Old smatch warnings:
-> drivers/pinctrl/pinctrl-th1520.c:502 th1520_pinctrl_dt_node_to_map() warn: missing error code 'ret'
+However, it is possible to use this device tree by compiling an ARM32 kernel instead.
 
-This has been fixed in the v2 series [1]
+Signed-off-by: Karl Chan <exxxxkc@getgoogleoff.me>
+---
+Changes in v6:
+  - Fix the subject in the cover letter (I messed that up in v5)
+  - Fix line wrap issue as Dmitry Baryshkov pointed out
+  - Mention the 64-bit variant in the commit message and the comment
+Changes in v5:
+  - drop all fake tags as Krzysztof Kozlowski pointed out
+  - (It was my bad i thought i dropped all the tag but i missed one that
+    in the cover letter)
+  - Link to v4:
+    https://lore.kernel.org/linux-arm-msm/20241002162812.31606-2-exxxxkc@getgoogleoff.me/T/#t
+Changes in v4:
+  - drop all fake tags as Krzysztof Kozlowski pointed out
+  - Link to v3: https://lore.kernel.org/linux-arm-msm/20241002152419.30364-1-exxxxkc@getgoogleoff.me/T/#t
+Changes in v3:
+  - Add 2 commit that I forgot to send in v1/2.
+  - Link to v2: https://lore.kernel.org/linux-arm-msm/20241002132302.31608-1-exxxxkc@getgoogleoff.me/T/#t
+Changes in v2:
+  - reorder the properties in the tree to follow the
+    usual order pointed out by Krzysztof Kozlowski
+  - Add the missing word to the cover letter
+  - Link to v1: https://lore.kernel.org/linux-arm-msm/20241002120804.25068-1-exxxxkc@getgoogleoff.me/T/#t
+---
+Karl Chan (5):
+  dt-bindings: arm: qcom: add Linksys EA9350 V3
+  arm64: dts: qcom: add Linksys EA9350 V3
+  clk: qcom: ipq5018: allow it to be bulid on arm32
+  pinctrl: qcom: ipq5018: allow it to be bulid on arm32
+  arm: dts: qcom-ipq5018-linksys-jamaica: Include dts from arm64
 
-Thanks,
-Drew
+ .../devicetree/bindings/arm/qcom.yaml         |   1 +
+ arch/arm/boot/dts/qcom/Makefile               |   1 +
+ .../dts/qcom/qcom-ipq5018-linksys-jamaica.dts |   2 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/ipq5018-linksys-jamaica.dts | 109 ++++++++++++++++++
+ drivers/clk/qcom/Kconfig                      |   2 +-
+ drivers/pinctrl/qcom/Kconfig.msm              |   2 +-
+ 7 files changed, 116 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom/qcom-ipq5018-linksys-jamaica.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-linksys-jamaica.dts
 
-[1] https://lore.kernel.org/linux-riscv/20241006-th1520-pinctrl-fixes-v2-0-b1822ae3a6d7@tenstorrent.com/
+-- 
+2.46.2
+
 
