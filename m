@@ -1,129 +1,103 @@
-Return-Path: <linux-gpio+bounces-10944-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E86D992961
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 12:41:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6BF6992ABC
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 13:51:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4326C1F23ECA
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 10:41:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E08E1F238C6
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Oct 2024 11:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E2DF1CC14B;
-	Mon,  7 Oct 2024 10:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D3C1D0F78;
+	Mon,  7 Oct 2024 11:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JR2MLbZi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxEPeKIk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948941C9B6B
-	for <linux-gpio@vger.kernel.org>; Mon,  7 Oct 2024 10:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908218A6AD
+	for <linux-gpio@vger.kernel.org>; Mon,  7 Oct 2024 11:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728297659; cv=none; b=GNR001hEyv/pul564KXUmED6N9DrZoXlxdC85eC4hKFYprIqUMMcrwd6Tu4icLfxCA1vq6TwQd+XCfodt3BtppTVbZM5uhfj4TyYL8pGmpZJdrCnm9oYwKrmmYrA3d9bxe5ENQOMqNVpxRZdhX/UO1H2dC6v+kCtfJea94hgckI=
+	t=1728301894; cv=none; b=dEfxqn3nHxF2QxsHdIgacoYMUPJe5K2Y5M6W0TaSKpJcgJ0u21NIXXhWAcN3o2Ce2cGULFiBv2JxRPuoMrwVwdazTrGeeuUbPFZp5Q/+iThA5jXjwTvQ29PrZSRbzKv7pV5w+nOmkxCWOIa+q6mEuKilazvTHV7mhjy1krTbdoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728297659; c=relaxed/simple;
-	bh=nZiIh8wnlcFC+dC0TYEiUd7EAPU85KmiRp50eWjyx7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rR/TmgtEbRHxgYGj/za35gTD6K1+PjDVb7zZORuE7DjwQbSGM/zR5JCsGrj22Ll1KHaMd7A1QNQ76Ihz7n00sUQugOBxfU09Wz2j6gPfd79sW+OlOUcXau33iK/3StaeItoSS3UUobeaaTms1McoQB5e3ex4XIF7JexYufvq1gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JR2MLbZi; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-37cfff59d04so3365684f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2024 03:40:57 -0700 (PDT)
+	s=arc-20240116; t=1728301894; c=relaxed/simple;
+	bh=Rar3gRgYHpcgBLUPr1prICpjuU8qRDOzk+bp/0TNuBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d1vCu63HiJar78VWihqDhTyKtPmZY07x4CI/ZqbiZ6v1X8MCUhlPqIB8ILjFYlsNnqBRyvOLPtlUwtRBFM3Zkbh0VR4+kCOdUftXVoemU4eydJbb6KUTqHdBOy+gTNdWRKZGV/Oc7rWSpzJGbS1iJ+NxnTMS5lQCKCs+DpFvtSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxEPeKIk; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5398b2f43b9so4968279e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Oct 2024 04:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728297656; x=1728902456; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5gtX24rM5dRR0MpdZIAsxYJR5vb0OJDvfm8ACG2rLjE=;
-        b=JR2MLbZiFOutfBRmHFa9FEwHUax0HjnsdoqQotrMHyUyNvJD2PXdW7maYbGHVmHWrd
-         zYZ5qKo6sbL2Nkog+Pl57+uDEPhlVUEDSJmgd3D/9hoU30gI03ViPiymoIvykTWR0aW5
-         WSnCTbkXHCmtCBIdAVDbgpx4f+s0AxWhz6DGtMwgussWkBt8MYVCcIBTorWo3qTWMKwS
-         p9fZilryPjOIgzNwFOu4HFUkWeN8AjNoVNXRShPcQmsf1FvVOw1cx6oa7Lwg1tvNi/KD
-         8tbbLX8Gsxfa914fm4GKdnxINKzIXsl03ol5PlMm220k3bo1CJWId86OV+p4zzYx86Bm
-         wEDg==
+        d=gmail.com; s=20230601; t=1728301890; x=1728906690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rar3gRgYHpcgBLUPr1prICpjuU8qRDOzk+bp/0TNuBc=;
+        b=FxEPeKIkv9ZIuzp1r7jx2WeiJOETkjr3QdmgDZTfs8gC3bQ+bYvHJqx/jT3JQTyVSn
+         zeL8i0urAJM1faMKc7A/acNrLE2Vo+gBhUHS3jbybZJccaJ7xlfPhmxO/5YUax2r4eEv
+         pBlSawH3KUviUw4UHpYD9f1L9jIA7z8PaubtJvMTtcce4GeNlEZMo5/V47DB++aNixGw
+         4kWXwuvfH7t7+h5b7POYUz3gx0rffvC5N0ywyKkg85wdzRe5KR9M+RAet6dEbZ7uO996
+         lzC5wfrDDKcCPAH+x8SVYXzyXnZ7ThVZjKJzOFIMzVnje60zmzZaBGry0Gpmkm+QXBE1
+         lG9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728297656; x=1728902456;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5gtX24rM5dRR0MpdZIAsxYJR5vb0OJDvfm8ACG2rLjE=;
-        b=n+O57l/8RsmQu6G58XLUqqJwhGVD5A8PkJrc86H9kflum+0lP7xxdvDDKxKwswX5gp
-         /8K4UecqMxlEupaxPE/pl5koJdUe4qYLex98OU10eYXI4gnZZqgPpJsYAdmCrgqJkG51
-         7gQeiVtOcaoy+/c7vXJPHCaHM/9wbxSy5GlGgceBJweqW4z651ep0XmVr2OC9DgrJu0s
-         v+4m9mbVMn7imMBemJlYhBa/FYwhEIQN5e20QKXepTc7Dmw9CfSLXAvxkcz3QFKWG6Do
-         TInMDZzMoNyRfVlEBc7Emf3VV7YSPj0HFCEjCiZcDTCa4usSj2qQJXbYDNsGM02lBywB
-         rGow==
-X-Gm-Message-State: AOJu0Yx9A1+P2c7nQPfHL7yOndIZmqUMBAKyvQprNhf4hViiyWCQwsvL
-	3oucn9YieVrTKQHz1/1pyHSKqxpn9q9zVBbiJU1+h8IIBAb8ingpuTDKMU3Fvzc=
-X-Google-Smtp-Source: AGHT+IGN+INg7r1OPDUzlA14lgX4GmFkJL4YfoB6G2zzkWnUEno8sj+zxEMpBokOQaUuFIDxm/83vw==
-X-Received: by 2002:a5d:4904:0:b0:374:be11:22d7 with SMTP id ffacd0b85a97d-37d0f6a4f46mr6254010f8f.13.1728297655930;
-        Mon, 07 Oct 2024 03:40:55 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6100:637:cbe9:f3bc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1690fc53sm5474682f8f.4.2024.10.07.03.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 03:40:55 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: ts4900: use generic device properties
-Date: Mon,  7 Oct 2024 12:40:52 +0200
-Message-ID: <20241007104052.39374-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1728301890; x=1728906690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rar3gRgYHpcgBLUPr1prICpjuU8qRDOzk+bp/0TNuBc=;
+        b=aVt77jAciQ8EJ1D5RpeaVVqD4aHxcXiafpxpw5Tc86lbcFX8pQuIgCVAY5H5Ma1LVQ
+         vmb5zU3vFP1FHCc9CrCxDBU67QECwv40zItyYHmzFqKN1H6hwZzxwZt0JDGqEbcwnBmj
+         Pzcme+0lNBmsUn1gfedJdQbkb88lc+She/M/V1yg60yftp64rkpQugHWRpolEbdFTLKC
+         WvvRYXgZkCANjzIFOZ2mLk7i/sVRLt1CWksmbMCvmTE+HAOjdhEoQUYfo10yN9bpwSdG
+         IjKei8pgIwVIm4BsLO0vzRbSvmoJ/6/YAw50Bafy9mVIrvYVpk7EKu+EDe294G3o5BzG
+         q2xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRmQsVmDg6RF3/e/AvWEKaeeiQ6sYxtAJermPO5BAXUyfjroq/snvrV9y0r047fEZVUr1U+SVYcPzj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdCv+2jelO76Wbpapq2zwqH5g2N8EG6SUIvWz0GiQvcDYtwmZY
+	MBH4NP+vy/QbDRTT5j2EPtB5Md+Zh69kaamOumQG9JtvJGtj+QcPHYqkkmNZy/XNsuyY3iq7/y4
+	y8FatS6qukXUeEFnP8X+nQn4ZUgIMDw==
+X-Google-Smtp-Source: AGHT+IH1b7AtDRdmVaSfJv3J1FI2YdaXAbDlTylH1s44fuUTjzLJGm/Lz3zXQL3hhmC94ehxBHKmM7+qFNFRaW/3CWo=
+X-Received: by 2002:a05:6512:6c6:b0:539:9155:e8cb with SMTP id
+ 2adb3069b0e04-539ac0a9e01mr3723679e87.0.1728301889319; Mon, 07 Oct 2024
+ 04:51:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241003-fix-imx27-pc-v1-1-0e78d1fc6175@linaro.org>
+In-Reply-To: <20241003-fix-imx27-pc-v1-1-0e78d1fc6175@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Mon, 7 Oct 2024 08:51:18 -0300
+Message-ID: <CAOMZO5DqwcM1U8FtybUHbHYZjLi-5BO6nGfifHXguKtcEY4DrA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: imx27: Fix too generic defines
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Esben Haabendal <esben@geanix.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Oct 3, 2024 at 11:16=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> The "PC" define is colliding with the (apparently broadcased)
+> define for "program counter" on Loongarch, so let's rename all
+> these 2-letter defines so they don't collide with stuff.
+>
+> Fixes: a55222b7a132 ("pinctrl: freescale: enable use with COMPILE_TEST")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202410030214.dPrgmUqd-lkp@i=
+ntel.com/
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-There's no reason to use OF-specific variants of property getters.
-Switch to using the preferred, generic device property helpers.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-ts4900.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
-index 0f6397b77c9d..5c806140fdf0 100644
---- a/drivers/gpio/gpio-ts4900.c
-+++ b/drivers/gpio/gpio-ts4900.c
-@@ -8,8 +8,8 @@
- 
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
--#include <linux/of.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- 
- #define DEFAULT_PIN_NUMBER	32
-@@ -142,7 +142,7 @@ static int ts4900_gpio_probe(struct i2c_client *client)
- 	u32 ngpio;
- 	int ret;
- 
--	if (of_property_read_u32(client->dev.of_node, "ngpios", &ngpio))
-+	if (device_property_read_u32(&client->dev, "ngpios", &ngpio))
- 		ngpio = DEFAULT_PIN_NUMBER;
- 
- 	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
-@@ -153,7 +153,7 @@ static int ts4900_gpio_probe(struct i2c_client *client)
- 	priv->gpio_chip.label = "ts4900-gpio";
- 	priv->gpio_chip.ngpio = ngpio;
- 	priv->gpio_chip.parent = &client->dev;
--	priv->input_bit = (uintptr_t)of_device_get_match_data(&client->dev);
-+	priv->input_bit = (uintptr_t)device_get_match_data(&client->dev);
- 
- 	priv->regmap = devm_regmap_init_i2c(client, &ts4900_regmap_config);
- 	if (IS_ERR(priv->regmap)) {
--- 
-2.43.0
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
