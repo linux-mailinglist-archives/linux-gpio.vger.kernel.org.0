@@ -1,106 +1,179 @@
-Return-Path: <linux-gpio+bounces-11030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D07CF9943D9
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 11:14:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10FBC994431
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 11:26:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DB2D1F221F5
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 09:14:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90BE01F24F4F
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 09:25:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDABF17ADF8;
-	Tue,  8 Oct 2024 09:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 838B718C02A;
+	Tue,  8 Oct 2024 09:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hl9pAJpY"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hxwAFAAj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A0D173336
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 09:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26532566;
+	Tue,  8 Oct 2024 09:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728378734; cv=none; b=DixjjSZdu4podDM0N6u52dmCY+AdLDAg31I6wYFrnOnLhfOWEVB3IaU31e0WFtNpupY/NHyQs614IRvjZ/YTjnXvBm74Txq1sHsltbEFTm+r67z3gqf1se0VkC/yrolcLRhxB4t2Nc6hMeutTFR8m07zijK3KYaSjiVJvgwliKA=
+	t=1728379536; cv=none; b=L1SUchZkfdpt0tOc4NU+7dxrYkJstAUGa0YXra8xkbhKngxUc6VR/vxY+WSb2O+gJ3KBP1ls8h+57zj9SuC88fSPVIZwBi1z37lcKRbZlwWPcjA7rPSpayM3beN8q1n+Fkr7W5OfDLTMpH9eN1dH8DPcXw/LvnTZwEvd+eR1faw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728378734; c=relaxed/simple;
-	bh=8R5mNUaqgWhw+SjU51bMScNSOuHChqgNVLLs9a/h8UA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BWFBH3V6QfP4VBZD11jKeHUarrpEUum4Z1PN/ixRXRNyLIbdC4p3Q0b24eK3fvXo5v8o2VpqpLnk4rAdqQKTDB+qsGQAY8sTXrSW+IXL9oZWwHMm7JGCFF36yxf8MGv5ii28P9mfcbtm7lD3QZzdxKP1dnc19qfNY5cAceXfcYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hl9pAJpY; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fad6de2590so79584411fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 02:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728378731; x=1728983531; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8R5mNUaqgWhw+SjU51bMScNSOuHChqgNVLLs9a/h8UA=;
-        b=hl9pAJpY0OMPoMPkT7x5fnU2Hc8B6zbOcLs6m5ueHzuUebAtQgCHTXN7vtw7UEVw04
-         fwqtRafXO0gImfVeJTFL918TVIgUE65xoMc0LOG/LNbteAM2RgFRObJpozJejnKpOIDv
-         bOBrcm+HDcvri/38HG/xIgCt6bZyDQA2Wx1RthPkECVA3crNg5JW2enQpFOY2/ZhhT+i
-         xa08LO1PhKbUa4YdV2kez3P3ZFMWsUBwM/p2grz1j+NqQyKNfML90eM8UN16aR0ipjA8
-         cprRIdRjfBqwaCDE6rE4iMjzZ4rdRrh/AEzHVAEoddEimYEnv8fksD1JZcSvrTm5biju
-         rzdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728378731; x=1728983531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8R5mNUaqgWhw+SjU51bMScNSOuHChqgNVLLs9a/h8UA=;
-        b=qSxvWu4pyTEvbKTPWZLAX+gA/mPQHdcbjmCanFHF9/Icq3iANEzcpyJhYUg0qjwopU
-         d7Vtf6CtDIxZ8GGYeP+T5T79zw2O81oB0xN822OpXVan8VWm/IXaoyq2ZzeZw7rCG+nP
-         A7fy8himiSplzbvjdj6zs1CAX2dn3brYOH54ATHIcpKW8T/RHugGvUDZm0BMl0jiI3qK
-         ibFZjnKXwbPNoKbzA7bwkW8mMwxz5Z3fz763n1UdVwBDmgIMio9e//0b1QRLc4KSATMo
-         kfJOBY1zARwUQcLnZv8Q4wL8zk83AMA9nxO9jEoTm4S8rkEzCptmA7n8XQV9wglWmCAJ
-         rYZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0V9Q3PRtGx974ZBoM9Ko2wI1iJGulc6+HoyMOD7AneWarPeIFN2yKMfskjvGV5I99j8rSUNGxKn3U@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL84Y+ho5aIccJn8tPwnI0kr3Em2FK5cbKcL4VtJJU8+LTKrME
-	N0CSw4a2XrIzGe3H4/WR3TdVJRQ+qh1yWJGHLIAw5GugWsQGdaSNkNQsIfG9y5Y1BFTFnQAkWEX
-	ex1TvjLbytrWh4ZuNmUIsV2rpya22u52Ivkme1w==
-X-Google-Smtp-Source: AGHT+IHcBA2jTE1QM6JyuIGCT7tc+Sb9Dr7eXCmaROonw0Ss9mIeMA8MiXWox+luFXYNnTEtJ3oq3bBdjFrsUAeO2LQ=
-X-Received: by 2002:a2e:e01:0:b0:2fa:cdac:8732 with SMTP id
- 38308e7fff4ca-2faf3d70720mr73174491fa.30.1728378730928; Tue, 08 Oct 2024
- 02:12:10 -0700 (PDT)
+	s=arc-20240116; t=1728379536; c=relaxed/simple;
+	bh=mtDO5KLeQFZJka3qU4g1xnMPPJGUuF7fdFmVF7afYvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=D8RULyjpeAbRoG4aiN19Ujowa8+7RBhR8B1xI3GukRK+g4jd1ByBwZSxKsEv8Azc0dtmqfyf88IbHg1BG637iWzYXJhJh04MNbuSto4sGv0SBEgMeQ4/DLLDOn7WScTCKD0UwUXJz18THQd66JaQuh514IBtXFDCBv+EOr7nTWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hxwAFAAj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49851aRr010551;
+	Tue, 8 Oct 2024 09:25:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	r+jm2UaIPcPi/2+yD1APcHC2pHVqzqD8ZVYpAYPtrKA=; b=hxwAFAAjURIXTP7f
+	QvxQUV4ULhc/HN4M0N1jnUHfH14FAtOFfiT+RJacAXzso3hQk0LZcPs8kIhvC4Dx
+	O41hLG11JjpZbh9Dhabn9fCXA27Rf1eH+HTUekDR4qCIoGP+cBYvfRFlxyGEsug+
+	8YIqi2S1x42o6lx0k/S5uaJWZB63rrHBz4l8IijNRY3fow72uryu8pibyzQ2P73q
+	unXRYKC3woCrRU1j1s/5vKXG4lVCYNIRyXUOIMv3pinZJTZiQdjDZ0r3bT9wCy1f
+	wtbeSCunEeArDp7wo6ApEcgkUdMjw8CuLRx7/s9YD4n1OXnLlLta96eJNhc3SOq2
+	RQTKjQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 424x7rrmt1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Oct 2024 09:25:10 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4989P9dC017414
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Oct 2024 09:25:09 GMT
+Received: from [10.50.47.90] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Oct 2024
+ 02:25:02 -0700
+Message-ID: <f95da02e-11b4-4037-a6dc-d73eb481c69a@quicinc.com>
+Date: Tue, 8 Oct 2024 14:54:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ad82005d-729d-4165-afa5-61ca82382bc5@app.fastmail.com> <20241008084744.30819-1-exxxxkc@getgoogleoff.me>
-In-Reply-To: <20241008084744.30819-1-exxxxkc@getgoogleoff.me>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 8 Oct 2024 11:11:59 +0200
-Message-ID: <CACRpkdaPBH1CE0YXGMKUDQWyJQTZvkYgnW=UTO2uxWmBvecu9g@mail.gmail.com>
-Subject: Re: Re: [PATCH v6 0/5] Initial Support for Linksys EA9350 V3 (linksys-jamaica)
-To: Karl Chan <exxxxkc@getgoogleoff.me>
-Cc: arnd@arndb.de, andersson@kernel.org, catalin.marinas@arm.com, 
-	conor+dt@kernel.org, devicetree@vger.kernel.org, konradybcio@kernel.org, 
-	krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mturquette@baylibre.com, robh@kernel.org, sboyd@kernel.org, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 2/7] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
+ binding
+To: Rob Herring <robh@kernel.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulf.hansson@linaro.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
+        <geert+renesas@glider.be>, <dmitry.baryshkov@linaro.org>,
+        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_varada@quicinc.com>
+References: <20241004102342.2414317-1-quic_srichara@quicinc.com>
+ <20241004102342.2414317-3-quic_srichara@quicinc.com>
+ <20241005182345.GA482031-robh@kernel.org>
+Content-Language: en-US
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <20241005182345.GA482031-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: T44Fz8J2z-M1GA5_5nVayamXjaRQ99da
+X-Proofpoint-ORIG-GUID: T44Fz8J2z-M1GA5_5nVayamXjaRQ99da
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410080061
 
-On Tue, Oct 8, 2024 at 10:49=E2=80=AFAM Karl Chan <exxxxkc@getgoogleoff.me>=
- wrote:
 
-> Also Other linksys ipq5018 based rotuer is capable of booting arm64.maybe=
- i could rip the
-> uboot from those rotuer and flash it to ea9350 v3 but i dont have another=
- linksys ipq5018
-> based rotuer.
 
-It's maybe scary to reflash U-Boot.
+On 10/5/2024 11:53 PM, Rob Herring wrote:
+> On Fri, Oct 04, 2024 at 03:53:37PM +0530, Sricharan R wrote:
+>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>>
+>> Add binding for the Qualcomm IPQ5424 Global Clock Controller
+>>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>> ---
+>>   [V3] Added only new clocks for IPQ5424 and ordered for both
+>>        IPQ5332 and IPQ5424 based on min/max items
+>>
+>>   .../bindings/clock/qcom,ipq5332-gcc.yaml      |  40 ++-
+>>   include/dt-bindings/clock/qcom,ipq5424-gcc.h  | 156 +++++++++
+>>   include/dt-bindings/reset/qcom,ipq5424-gcc.h  | 310 ++++++++++++++++++
+>>   3 files changed, 499 insertions(+), 7 deletions(-)
+>>   create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
+>>   create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+>> index 9193de681de2..1b6d64385116 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+>> @@ -4,30 +4,34 @@
+>>   $id: http://devicetree.org/schemas/clock/qcom,ipq5332-gcc.yaml#
+>>   $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>   
+>> -title: Qualcomm Global Clock & Reset Controller on IPQ5332
+>> +title: Qualcomm Global Clock & Reset Controller on IPQ5332 and IPQ5424
+>>   
+>>   maintainers:
+>>     - Bjorn Andersson <andersson@kernel.org>
+>>   
+>>   description: |
+>>     Qualcomm global clock control module provides the clocks, resets and power
+>> -  domains on IPQ5332.
+>> +  domains on IPQ5332 and IPQ5424.
+>>   
+>> -  See also:: include/dt-bindings/clock/qcom,gcc-ipq5332.h
+>> -
+>> -allOf:
+>> -  - $ref: qcom,gcc.yaml#
+>> +  See also::
+>> +    include/dt-bindings/clock/qcom,gcc-ipq5332.h
+>> +    include/dt-bindings/clock/qcom,gcc-ipq5424.h
+>>   
+>>   properties:
+>>     compatible:
+>> -    const: qcom,ipq5332-gcc
+>> +    enum:
+>> +      - qcom,ipq5332-gcc
+>> +      - qcom,ipq5424-gcc
+>>   
+>>     clocks:
+>> +    minItems: 5
+>>       items:
+>>         - description: Board XO clock source
+>>         - description: Sleep clock source
+>>         - description: PCIE 2lane PHY pipe clock source
+>>         - description: PCIE 2lane x1 PHY pipe clock source (For second lane)
+>> +      - description: PCIE 2-lane PHY2 pipe clock source
+>> +      - description: PCIE 2-lane PHY3 pipe clock source
+>>         - description: USB PCIE wrapper pipe clock source
+> 
+> New clocks go on the end of the list. Otherwise, it is an ABI break (or
+> the descriptions are wrong in one case).
 
-But you can boot a "new" U-Boot from U-Boot, so if you can compile a
-U-Boot with the proper hardware support and the RMR quirk, you should
-be able to boot that, and then use that to boot Linux into 64bit mode.
+ok got it. Had a similar comment from Krzysztof for this.
+Will fix in V4.
 
-Yours,
-Linus Walleij
+Regards,
+  Sricharan
+
+
 
