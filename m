@@ -1,165 +1,159 @@
-Return-Path: <linux-gpio+bounces-11036-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11037-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44F089946C2
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:25:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B11899492A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 14:21:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFEF21F21D9F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 11:25:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B88CEB21B2A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 12:21:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D45131D318A;
-	Tue,  8 Oct 2024 11:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA701DE8BD;
+	Tue,  8 Oct 2024 12:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TvFgMBwC"
+	dkim=pass (2048-bit key) header.d=getgoogleoff.me header.i=@getgoogleoff.me header.b="pwUIxftX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CF41CF7A2
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 11:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060431D12EA;
+	Tue,  8 Oct 2024 12:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728386661; cv=none; b=J3I6v4BvZwiPs2vE+EuL/j/LTedVpWCDrp2OSs84xUhHmaPhIlWKaW6IaUKGN1Yx+Vrg/M9v2f3enbHlE9RFs/CuSxCMRMma3BaYo8Da2Ee3e+37WB9SNhWiN18TRsWDeM6gpDmBinMbFLwVk/47uMsY+XbBWg4IRvmLQjzEalY=
+	t=1728390000; cv=none; b=Yo8v49aqsvkjsAYoxp+QWY0GkXWEsPgyOdhQw7ezK0qsGlTrmHRErUaAdJztUEdwamusQrY2RevcV1UlBwPoxIWVojz5du+fVxyACY3M+6hvCh4e+hBTHaagn20QuTuKD5TC8oFv4k7/hwhXnkyQz3FSibvzDFA0DsHpdACZTog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728386661; c=relaxed/simple;
-	bh=qrZwyj2OiyA38FmfDbni6i0m9jPXOMicf61zLJc3awg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBybW26Nqrnibsn4HhEuns8j7aZDcGF35HKBXWE5Ac1m0/zFKVXls7iTyGejpfasTflSzZRHzyH7ltQf/A2qlMQrwMZWP8t+epqwkn4I4llEwypYJ95iJcrNXP2mzCLoz6xA6tu8binYESb+A4Uy6LwHXPSvFlQSWGsEu1cB+OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TvFgMBwC; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fabc9bc5dfso62260101fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 04:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728386658; x=1728991458; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IoCLv8IIogdMAukcaogeava6N+RNe9O91LYYmKsVei8=;
-        b=TvFgMBwCzP0oj4R9DquhZINRtpBLblGuG3SseidbLZggXH92sdx2vNr0yZuvIBISRQ
-         XSknEIe6GktT0UnqcbZFpuxSAkFe6wHtvIWBWjA3j6VSK+bhQVw9QU047v45adGJtSS5
-         //Qf6XJxDpFNlPQIhtHUD5yRFYfzdX2xjZ2Ns2V6SJqbdZ32R9ZLyO59coJWoV0MkX2/
-         S2/5nEslIJnKmGYCDM5bKW50RG8zqEZmdf+vi09X3MZmAufowJVWlnVMM7AbQWbDZNUk
-         p3eodXalv17Hsb/MWJQExP8ctd72TwQ5iViElafoG4A+qArNylWPvETVxGnCfKETRFGJ
-         pLNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728386658; x=1728991458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IoCLv8IIogdMAukcaogeava6N+RNe9O91LYYmKsVei8=;
-        b=uC/oiVK5mxEd/Lxh18PAuGgC+F5V9vDHi/ERoa/E7KTPs8PtxchlyQyfEsMGiJdQt4
-         S0FSJDQsoyicTX+EqFRyATjuuyfcPzJs77LJIKalWdDf8N7PBT2dwDlWWYOJl8wlx9Kx
-         +VTo8S9XQ6VNRQqBHjoxze25XL91YIsZEzVAXrLCQEL3iLlNbCGmKbJEgs+pKRFZY4Tm
-         NYnkn7wD11Rwv4x7HDC4CKSDwB1dVgyVoHselgUHq8EU60RXIW9ZYbEM7BdNEqXDNl6Z
-         vwuNRevVkQW0G7ZwXBR+1V6+hAH46iuQ3kqHVCq5DqJb5VaVmyJY1dhjxQPdbDJyIBEW
-         yfrw==
-X-Gm-Message-State: AOJu0YzwthdgYLo2Jrk7zwrajFKTig3hYn6F1vcqJn1M2xTYcqI5NyNi
-	+U50+eVtTHHEkpscGOnsCOmLY+jKCXuJXmqLmZrP3twCPyXvBA2LthOFXjBVx1wSKhWKJ0LMCtP
-	vlji809ZNuVMMadvc43cFqJxC30RnETZPXJoKTQ==
-X-Google-Smtp-Source: AGHT+IGJqDe9pBUG1R9Vql6HOVm1E9xm7/00UeZYAtzbsEyRjdlMmd5QAhWYC8pZN2+/W6ij2+JwHJuQg3gEO4h7OXM=
-X-Received: by 2002:a2e:d1a:0:b0:2fa:fc41:cf85 with SMTP id
- 38308e7fff4ca-2fafc41d302mr37564231fa.36.1728386657778; Tue, 08 Oct 2024
- 04:24:17 -0700 (PDT)
+	s=arc-20240116; t=1728390000; c=relaxed/simple;
+	bh=c4BHYJvWUQYE6LoO0flq5esmA5WZr5DYIqfhtUFQetw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=glyL4FDNfOJy42jS/MqVcZELZIJGi8l5MlS54xnJVHDC932CNMycMmb+HX9LwqVngY4+P+XTeGfzY7+/LN4n/8U0EACX6NVeg+RqcwFiw2srvP6vUxzymAuWyApmSB4VUitpsE87h2Sa9UMZU5y2gIFMiYrm4ekoMlRu2UQRtTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=getgoogleoff.me; spf=pass smtp.mailfrom=getgoogleoff.me; dkim=pass (2048-bit key) header.d=getgoogleoff.me header.i=@getgoogleoff.me header.b=pwUIxftX; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=getgoogleoff.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=getgoogleoff.me
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id DB6DC23E90;
+	Tue,  8 Oct 2024 14:19:54 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id gQSHw2jR1W4o; Tue,  8 Oct 2024 14:19:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=getgoogleoff.me;
+	s=mail; t=1728389994;
+	bh=c4BHYJvWUQYE6LoO0flq5esmA5WZr5DYIqfhtUFQetw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=pwUIxftXm7MWh9BUVzD7w3V5AZssvvyCB/LCjMXmhQpoFxbpC1fqzXsSY3LOobAaJ
+	 TtvMVdXwWNhusrnF8Nw20h0RrDQJgEN0twlzzf2rT6Vkr98vKBhfGwTersI5Ecqlj3
+	 ggcS7NcEtE+KiBRN9+62To5Uuw8CjKmiPbGqmY/WcFjKxKLMs6eoH48m+PDGbOhmXe
+	 4IXrO7bJ3kWcSuHSAKkpJfPQ/LfxpJ0jkaoRGNBy5oFUp/iSJ2TuLkFFy/udYu6S66
+	 fjt9/P0srikA2DZJkNqX3pcw4hjwRGPtQ3AN4X2/2flFDPQctlEC2z1M11CLHxvvVp
+	 CrXGeplWmJn9Q==
+From: Karl Chan <exxxxkc@getgoogleoff.me>
+To: linus.walleij@linaro.org
+Cc: andersson@kernel.org,
+	arnd@arndb.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	exxxxkc@getgoogleoff.me,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mturquette@baylibre.com,
+	robh@kernel.org,
+	sboyd@kernel.org,
+	will@kernel.org
+Subject: Re: Re: Re: [PATCH v6 0/5] Initial Support for Linksys EA9350 V3 (linksys-jamaica)
+Date: Tue,  8 Oct 2024 20:18:19 +0800
+Message-ID: <20241008121819.16242-1-exxxxkc@getgoogleoff.me>
+In-Reply-To: <CACRpkdaPBH1CE0YXGMKUDQWyJQTZvkYgnW=UTO2uxWmBvecu9g@mail.gmail.com>
+References: <CACRpkdaPBH1CE0YXGMKUDQWyJQTZvkYgnW=UTO2uxWmBvecu9g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-2-91a7c2e20884@xes-inc.com>
-In-Reply-To: <20240927-vfazio-mypy-v1-2-91a7c2e20884@xes-inc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Oct 2024 13:24:06 +0200
-Message-ID: <CAMRc=MfqT0jFDsXz1P7fQANNM64ZuraNO8MwGwWQ7fy09iLSLA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 02/22] bindings: python: make internal a private submodule
-To: Vincent Fazio <vfazio@xes-inc.com>
-Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 27, 2024 at 9:05=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
-wrote:
->
-> The internal submodule shouldn't be exposed as part of the public
-> interface, so mark it private following PEP 8 convention [0].
->
-> Also, add a type annotation to `sec` for its possible types.
->
-> [0]: https://peps.python.org/pep-0008/#public-and-internal-interfaces
-> Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
-> ---
->  bindings/python/gpiod/{internal.py =3D> _internal.py} | 1 +
->  bindings/python/gpiod/chip.py                       | 2 +-
->  bindings/python/gpiod/line_request.py               | 2 +-
->  3 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/bindings/python/gpiod/internal.py b/bindings/python/gpiod/_i=
-nternal.py
-> similarity index 94%
-> rename from bindings/python/gpiod/internal.py
-> rename to bindings/python/gpiod/_internal.py
-> index d1e95e4ade3146f596643d52207b367e332e6f7e..c9b5d2850389d5314a12bf6d1=
-51774a96469a085 100644
-> --- a/bindings/python/gpiod/internal.py
-> +++ b/bindings/python/gpiod/_internal.py
-> @@ -9,6 +9,7 @@ __all__ =3D ["poll_fd"]
->
->
->  def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] =3D None=
-) -> bool:
-> +    sec: Union[float, None]
-
-This has nothing to do with marking internal as private. Can this be a
-separate commit?
-
-Otherwise, looks good.
-
-Bart
-
->      if isinstance(timeout, timedelta):
->          sec =3D timeout.total_seconds()
->      else:
-> diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.p=
-y
-> index 257a31eba8d19634fd14e3b1d33a1345a0363946..1a1bba4d6dd9e840a60394f1b=
-74903f6ad15a0f4 100644
-> --- a/bindings/python/gpiod/chip.py
-> +++ b/bindings/python/gpiod/chip.py
-> @@ -7,10 +7,10 @@ from errno import ENOENT
->  from typing import Optional, Union
->
->  from . import _ext
-> +from ._internal import poll_fd
->  from .chip_info import ChipInfo
->  from .exception import ChipClosedError
->  from .info_event import InfoEvent
-> -from .internal import poll_fd
->  from .line import Value
->  from .line_info import LineInfo
->  from .line_request import LineRequest
-> diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpio=
-d/line_request.py
-> index e48830450dcb5b7fa6c7983a0fe074cd9bd32ab7..154174872e488fa478b27f5e8=
-3d65e6040aca367 100644
-> --- a/bindings/python/gpiod/line_request.py
-> +++ b/bindings/python/gpiod/line_request.py
-> @@ -6,9 +6,9 @@ from datetime import timedelta
->  from typing import Optional, Union
->
->  from . import _ext
-> +from ._internal import poll_fd
->  from .edge_event import EdgeEvent
->  from .exception import RequestReleasedError
-> -from .internal import poll_fd
->  from .line import Value
->  from .line_settings import LineSettings, _line_settings_to_ext
->
->
-> --
-> 2.34.1
->
+=0D
+=0D
+I found a uboot for ipq5018 qcom reference boards https://git.codelinaro.or=
+g/clo/qsdk/oss/boot/u-boot-2016 .Considering my router is quite similar to =
+one of those boards so the uboot should workon EA9350 i think?=0D
+=0D
+Let me compile and try to chainload it from the stock uboot.(Btw I have nev=
+er tried chainloading on qcom platform but i did try that on amlogic platfo=
+rm.)=0D
+=0D
+=0D
+U-Boot 2016.01 (Dec 06 2021 - 10:08:47 +0800)=0D
+=0D
+CBT U-Boot ver: 3.2.08  ([IPQ5018].[SPF11.3].[CSU2])=0D
+=0D
+DRAM:  smem ram ptable found: ver: 1 len: 4=0D
+512 MiB=0D
+NAND:  QPIC controller support serial NAND=0D
+ID =3D 22c822c8=0D
+Vendor =3D c8=0D
+Device =3D 22=0D
+Serial Nand Device Found With ID : 0xc8 0x22=0D
+Serial NAND device Manufacturer:GD5F2GQ5REYIH=0D
+Device Size:256 MiB, Page size:2048, Spare Size:64, ECC:4-bit=0D
+SF: Unsupported flash IDs: manuf 00, jedec 0000, ext_jedec 0000=0D
+ipq_spi: SPI Flash not found (bus/cs/speed/mode) =3D (0/0/48000000/0)=0D
+256 MiB=0D
+MMC:   sdhci: Node Not found, skipping initialization=0D
+=0D
+PCI Link Intialized=0D
+PCI1 is not defined in the device tree=0D
+In:    serial@78AF000=0D
+Out:   serial@78AF000=0D
+Err:   serial@78AF000=0D
+machid: 8040001=0D
+eth0 MAC Address from ART is not valid=0D
+eth1 MAC Address from ART is not valid=0D
+=0D
+Updating boot_count ... done=0D
+=0D
+Hit any key to stop autoboot:  3 =08=08=08 0 =0D
+=0D
+Net:   cmbblk is stable 5=0D
+MAC1 addr:0:11:22:33:44:55=0D
+athrs17_reg_init: complete=0D
+S17c init  done=0D
+eth0=0D
+Warning: eth0 MAC addresses don't match:=0D
+Address in SROM is         00:11:22:33:44:55=0D
+Address in environment is  00:03:7f:ba:db:ad=0D
+=0D
+IPQ5018# =0D=0D
+IPQ5018# =0D=0D
+IPQ5018# usb start=0D=0D
+starting USB...=0D
+USB0:   Register 2000140 NbrPorts 2=0D
+Starting the controller=0D
+USB XHCI 1.10=0D
+scanning bus 0 for devices... 2 USB Device(s) found=0D
+IPQ5018# fatload usb 0 ${loadaddr} u-boot.bin=0D=0D
+reading u-boot.bin=0D
+419816 bytes read in 261 ms (1.5 MiB/s)=0D
+IPQ5018# go ${loadaddr}=0D=0D
+## Starting application at 0x44000000 ...=0D
+prefetch abort=0D
+pc : [<44000004>]	   lr : [<4a92891b>]=0D
+reloc pc : [<44000004>]	   lr : [<4a92891b>]=0D
+sp : 4a822840  ip : 0000001c	 fp : 00000002=0D
+r10: 00000000  r9 : 4a822ea0	 r8 : 4a97d300=0D
+r7 : 4a9288f1  r6 : 00000002	 r5 : 44000000  r4 : 4a828b74=0D
+r3 : 44000000  r2 : 4a828b74	 r1 : 4a828b74  r0 : 00000001=0D
+Flags: nzCv  IRQs off  FIQs off  Mode SVC_32=0D
+Resetting CPU ...=0D
+=0D
+resetting ...=0D
+=0D
+=0D
 
