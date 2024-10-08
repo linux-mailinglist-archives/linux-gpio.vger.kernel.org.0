@@ -1,133 +1,113 @@
-Return-Path: <linux-gpio+bounces-11034-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11035-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F834994535
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 12:18:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55E6F99465A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:16:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C35B628402B
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 10:18:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4071BB26449
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 11:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8756E1BA285;
-	Tue,  8 Oct 2024 10:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F581C9B77;
+	Tue,  8 Oct 2024 11:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c3lregHn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1CCKqMm6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7B11AD401;
-	Tue,  8 Oct 2024 10:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B791A18C900
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 11:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728382725; cv=none; b=JmEI5y6ycNt7QfdysmSDraoQqPfuh5AyUoENS5Q5i6qa3jJTHdlpZJfK7/E9uuvIuWnlUQKhQypaJz9LNECRbrzd+PCbPSfTnrJFTElNS4Kp/1WxfreqJWZLitKsgeYEeMxg93lqjjjYDIM7RtvEarw1ahDzMiaAGhedhJZ0b54=
+	t=1728386176; cv=none; b=pCaf42KpFcx00n+vSXzJrax0lVmEMP/8T6229avAvOSMB2PjxtQQroIk3d5oe9eW2W/JPZFAfdr05E0xvTSoT3gV2cZCrKf+NSCiF0SBR+I3+8F/hjcFmpA+xDs/jPzndyj8Ls+YrlDb8golqxBageUhV864ONiebnZOP4GA71g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728382725; c=relaxed/simple;
-	bh=u8xPnDu0qAYu6LejKWYoWWMdvK8gJRvYrhiJGpOdTLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=USFZyqxg1F6EZa77haswD1NOVwk/7SuUDGa7v6kbWJS3ftJTVnZILotFexI+v6uSCGmCddeS5iJuuaJBY4jZnSqUV4A4U13MDerhWbGWcv8/F9t9KtjR8gJTleCO6lfWAqtnHTUJjnil4yWE7wwwdJQ9yDHVO+5s7O78Hux6HYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c3lregHn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49896gcp004100;
-	Tue, 8 Oct 2024 10:18:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sqpFdTY+6jzDWQR097kkAMWTTO8iAiSE8pceKsB4sbM=; b=c3lregHnCu6sgvl0
-	IlAwZ2V8iFuSl5HXydolufxefzYRLOfjIfHvl1Y8ayfsOci9k8Uhxumg/Ka+D3Ec
-	IARenIIyvDYbyAKcQUATpms1qh7bU1nLbmkwGDX/pKxa9VNbE0QHrq+xh7S28aaU
-	hYh8utWbhkjaF3hZfRHC5XhXnulwaDbLTJxwGLXBEV9VGxzTsvB9GOUkRh5DG0sE
-	QE3CNZCpwzjLKRmGmF3ef3IkPkmKVeHKgGbWvSLybR+zSheqe9ELwrk8T2cawejk
-	LdAJvWdM697LCAUWcNN77d8KHBh5YMiTyvGfwx7j3rPaZf8AhGnY8MVk2vmx8hWB
-	OoB8aQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 424ndy9vd5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Oct 2024 10:18:21 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 498AIK0o006896
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 8 Oct 2024 10:18:20 GMT
-Received: from [10.50.47.90] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Oct 2024
- 03:18:13 -0700
-Message-ID: <5e8bac8a-8e6b-423c-8e13-b73db9a226fd@quicinc.com>
-Date: Tue, 8 Oct 2024 15:48:10 +0530
+	s=arc-20240116; t=1728386176; c=relaxed/simple;
+	bh=nEZSzoIrc+5LNzY5EwQNjJIvaBlbpvtr4FdcAE2lhME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FDZlZN416wCUQwQ6jydTYSIAAEMMyInzkJpsJsM9lPNlH76aiouIl3PWdJbAz43wBdM4yKwbpjomYAlScFscjdiQCOo1E5ObvR2qPrC/v2deFKzmCOrpG+nOSMHZffixm4H3zQT8RF0a7eEbJ7y7sYd6bO6rp2qerwvGWx3jx5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1CCKqMm6; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2fad100dd9fso77030141fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 04:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728386173; x=1728990973; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nEZSzoIrc+5LNzY5EwQNjJIvaBlbpvtr4FdcAE2lhME=;
+        b=1CCKqMm68vCRfw9JhoA44pMz3+fytgqbWGFfBY/9U0glZ9+fGI+LFOUML3jgq3ZUkO
+         quFc61uInFdV6/jVRH0BdfNiNp8AUigCEz4Q4Vho9H2G08C2z62Hso8XejRG1S1YbThn
+         wVyJEnq1TFUCcD0aT3GAebCEAaomKLVpzITXjM4VP4pP4ee1qUjiDF5/dZ2Icz6vXFhw
+         xv+BugL65VjIgxNe/f9Xq/17mOx3aztuDIFmT4CPtmkx6EqZ7kNqKblBcuKVFBkt7Cnv
+         YAX8vk++IP0YzBPngGzOIBEKJGJQrlTxKqNGvC+ACUzEKk2h3d8ANtWj4g9I/nFLuC4S
+         +VDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728386173; x=1728990973;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nEZSzoIrc+5LNzY5EwQNjJIvaBlbpvtr4FdcAE2lhME=;
+        b=EjccpGdIEz2CPOLKbPonTBkfc3c59bQNz2jYItODj35MwEZLkvjXmL37sEYdZw6q9B
+         yBiG+ezOYQYjrLekYxI5V/A9HaPqG0aHy8JWAJ2phdw29WXiXkdYxdPO63/AXxz0PdPq
+         pP2ZBHeN59vfoA5sHEUXm4C3AyS4urMeYyfvwCYTLKeHe2ohxprOnloFBu3y0Cf7pjOz
+         1K7OoXWm9qRiNqr3xDS3aFj/nxIg6zClsCAlkXa2R0o+yE0Fap25WRZ5e2fNzv24+YNv
+         3ywDJqdVtQF3Svuh9HrPKvHcaIGO1aFHqQup7AkCZWbarvL4Z7CTlYR9vo8m64vedSXN
+         HqeA==
+X-Gm-Message-State: AOJu0YxNnBqWi93FJIR8tsijY2l4uyF3Lu+89jm6IrBaPDBDNMo8eQ53
+	wmmQapvVp1QT96jPLQUUMUeR8+TGDRgDC2yKF3rqxxO8kahd/xkeyNbqsvhn1T5pwehpxeal0Nl
+	3wNBhfjGlT5ma5NL4qQqrAAyLIn0+uwjfpVU1Aw==
+X-Google-Smtp-Source: AGHT+IFxdQT/DpUAPJ7d/mhNhq4YK/GLrxW1VtCzwp95MSf0Q1snK1IsuY4Ow2cYwttY1+wlfIdJU/li3CXDKTO+fQ0=
+X-Received: by 2002:a05:651c:b0b:b0:2fa:f5f9:4194 with SMTP id
+ 38308e7fff4ca-2faf5f94416mr93984211fa.27.1728386172670; Tue, 08 Oct 2024
+ 04:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 4/7] clk: qcom: add Global Clock controller (GCC)
- driver for IPQ5424 SoC
-To: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
-        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC: <quic_varada@quicinc.com>
-References: <20241004102342.2414317-1-quic_srichara@quicinc.com>
- <20241004102342.2414317-5-quic_srichara@quicinc.com>
- <1ac5e0e5-06c1-4930-8c03-f465d6e07848@quicinc.com>
-Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <1ac5e0e5-06c1-4930-8c03-f465d6e07848@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: R4sxhw8CqABc2bubWh1F1geSuX3Npj5I
-X-Proofpoint-ORIG-GUID: R4sxhw8CqABc2bubWh1F1geSuX3Npj5I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410080067
+References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-1-91a7c2e20884@xes-inc.com>
+In-Reply-To: <20240927-vfazio-mypy-v1-1-91a7c2e20884@xes-inc.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 8 Oct 2024 13:16:01 +0200
+Message-ID: <CAMRc=MfUnOedJOsrFVBUWxpe23MXVNtk=fv3P1e16B4hLhvNjA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 01/22] bindings: python: clean up imports and exports
+To: Vincent Fazio <vfazio@xes-inc.com>
+Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 27, 2024 at 9:05=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
+wrote:
+>
+> Remove unused imports and sort the remainder following isort rules.
+>
+> Update submodules to use lists for `__all__` for ease of re-exporting
+> public classes from within gpiod.
+>
+> Also, fix instances where `line` wasn't imported via a relative import.
+> The library now consistently uses relative imports for submodules.
+>
+> Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+> ---
 
-> 
-> <snip>
-> 
->> +
->> +static const struct freq_tbl ftbl_gcc_qupv3_uart0_clk_src[] = {
->> +    F(960000, P_XO, 10, 2, 5),
->> +    F(4800000, P_XO, 5, 0, 0),
->> +    F(9600000, P_XO, 2, 4, 5),
->> +    F(16000000, P_GPLL0_OUT_MAIN, 10, 1, 5),
->> +    F(24000000, P_XO, 1, 0, 0),
->> +    F(25000000, P_GPLL0_OUT_MAIN, 16, 1, 2),
->> +    F(50000000, P_GPLL0_OUT_MAIN, 16, 0, 0),
->> +    F(64000000, P_GPLL0_OUT_MAIN, 12.5, 0, 0),
->> +    { }
->> +};
->> +
-> 
-> There are few more frequencies got added to this table. Can we 
-> incorporate that as well?
-> 
+This definitely improves the output of help(gpiod) but I was under the
+impression that we discussed re-exporting the definitions from
+gpiod.line directly from gpiod and I argued that this isn't really a
+good idea as they do fall under the umbrella of "line" definitions and
+should be imported from gpiod.line explicitly. I thought it would work
+more like:
 
-ok, yeah, since these patches are already reviewed, will send the
-additional updates here and also for dts etc in a separate series.
+>>> from gpiod import *
+# now we also imported line
+>>> line.Direction.OUTPUT
+<Direction.OUTPUT: 3>
 
-Regards,
-  Sricharan
+Is there any reason for not doing it this way?
 
+Bart
 
