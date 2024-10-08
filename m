@@ -1,155 +1,226 @@
-Return-Path: <linux-gpio+bounces-11041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B718994DA4
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:07:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CBA8994E07
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:12:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26FDF1F21BF7
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:07:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94702B24A48
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:09:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655841C9B99;
-	Tue,  8 Oct 2024 13:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3F61DF73C;
+	Tue,  8 Oct 2024 13:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="v35XlCkw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GSVtuxQP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DA71DE8A0
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAED91DF24B
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728392862; cv=none; b=cIDv7CrXrU4A0JuX7THLFmQTAvdtjyMRjpFgtXgt8CbaNCCYkgqx3YI27ijSY6QVCEis8ysOKXLJEhLOQ6NO8FB/sVQXWeLi+9K6W2f7Ho4PjJpMxOZNV3OzxLLIyMLfNYJ5lWCzXNg8iihBEGVgBklg2vl4pVLyAeyR8xFD8fY=
+	t=1728392928; cv=none; b=WpXYT/2/HiK0bf5xAAGrTsp4i9hvxPppSATPnVU3XTiLRGkUsJm07S6bFZ7S4F9MMvoSBnym/K/7HWFA+L1UCM/3b9qke/wM1DmFum33dgVypvB0+mUEd6BTdIPjptHYdPIGgwFFDcCDaknJVUk/PmqHYrlecwME6kMOn/rzRbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728392862; c=relaxed/simple;
-	bh=zduhSTnJIlqbfqAswC1Nk38ZLIzswGJyMvB4gGTTN/w=;
+	s=arc-20240116; t=1728392928; c=relaxed/simple;
+	bh=fPj0sPG/zxuBufy+ne53K8ep+EWVgSB8YTiJMTeLQDg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eW25x8lYXcD5a0CXaabc23b2gU/HRG3E8b1dRTHRnDgfcHg+UV5TghPco6gbw5p7G3qH0oNelGVGKD7oEn3FmeNOvuQdkphIyWfaSFsUPXeZMJnkS7j1DWNCQh7f2i5CcCHdlVJwAyIMUD0CCvlZJUKiMNNasf3yd2UzwVfi8VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=v35XlCkw; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=tlNJdYqVVcT4TkeNpV3pcMwgit7AlTQykxgY31NVUIuFpzhOILHXtrFssQgO8m1eFbZ6WIphCkwaP7noNcg28FmEPJf7LlCU1F3eDDxU/4eZFyWd8bj0xJ79pgpwhbUJiZE6+ie3PN/idFcAOWu+f6e3e1vBoMlN8unrgTnwMfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GSVtuxQP; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5398b2f43b9so6058226e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:07:39 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2fad6de2590so84176721fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728392858; x=1728997658; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728392924; x=1728997724; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tvVXW1geYIiC0Z2WcBtMzJ8OY5T4uKuXt/AzoWoLzOA=;
-        b=v35XlCkwT9mLYHzVGekLNRz5BjjdO5/MM01nsZ8zcaHj6ZWT/QZKDZoMLxRykFSN4p
-         uRUGpVb0Dczx0MQY/jKop18rGflvYqvvq4C6tIE5m+fX1pxA/mmsIExacc887z/1Sq6e
-         hOnOlyaJ01z81CVKumL+yNEkBDS8bsjN7f6npi2Pk+0GDpSfsfDlxQ/fL+w2hFJY/Hwu
-         qugklvEZn6ZU+pCK1soK3LaI1M5jJFwWfY8VPMS3OyRMZia692yEgPJQuC1WV1ebJFTu
-         GF+o+BJDC8WyK0YgMCBU4y9YuAZDFqmAwoo73z/8lhc5u9C4D8w6Sf9JX+UmkPPy7HJW
-         YK4w==
+        bh=rNiAf8zD4Fmsc4mfvWkwgkO2zlxmqdZFbYDwGQaHBPc=;
+        b=GSVtuxQPv7ysT0a6GFdBhH2Yka58DbfF7uIByfXtRWu5HzhXNDXiAMR2XJ8IjwQMIM
+         5LSaAeLasOVQi6nX1x6EcaV9LCQ0hit/enVymiq6hgqt4DKb4gXhO6JgVMD6TuiqQHiw
+         JBnmVHIyaNgLqsMM8i7rBwq7M3unDjn894QSvpV5UfXIgVJ+vjr6l53ouNW1ISoE2mlB
+         uYCCtutrCVPipAM8FYuuwfVEhyPWbY/jvTFjlATu8TDpaW61ys+zvcEbg3tjTIrqQ0ff
+         ewrei9HitxQKhqmGhBm5DWIDmyV9gGXbMWYCQBqanZlNUF8nPW0zfoOck5prlv248LfK
+         YPeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728392858; x=1728997658;
+        d=1e100.net; s=20230601; t=1728392924; x=1728997724;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tvVXW1geYIiC0Z2WcBtMzJ8OY5T4uKuXt/AzoWoLzOA=;
-        b=heljJWYJkeAcLTfJ9Ngg8oObedVLRzp1dZ0VdXbbiuj+8rKJVbNOHLXcVMpPgpgNqm
-         1uLWV8YX83/GWNilgLIt/QKU3i6cBMjbjO+JpGXfXX5Sus4AgEzfS/rNy5PXbkpPmIDy
-         zfuucX5imSeyv2wCiTqI1aokSQzw1mxbshYSJnbSK6yk66iW+LHHjaGTG91iflAPhuXg
-         GsbYUmBZykpbDrVmGNF8h/nRd2Yu6xdyyUpXEeoxIL2YDMeWgDoDUjEbHNngvI4S1mxx
-         4e5a/PZnhD+MPHbNWWJY00m3okdWy480NHcDCB+8ZYObtiqaaeKPZ+fM2jadunUD9k8+
-         q44A==
-X-Gm-Message-State: AOJu0YybRyo2Wcjz0Me39miVREhWhWl1d9nuvSdBcvyG3GZjAALicML4
-	qabG49pY1gS4r9jSMnI+5Q5JpyUADb8xn2SMH0xNUkxf6zJqyNfVGoWbKsU1d1sdnve/MopKgNx
-	uhXSDrUdbgHQE5zOmWR36zzWBi/hMoojTgFTE3w==
-X-Google-Smtp-Source: AGHT+IFa6enLUIaIrPk4anhQYbNgv5Ks8q9Jx3xPW6U+r/oHqFQO+vVXzrGi9U9vhmi02w4A0hPs6zVv9kOhVhSTwZ0=
-X-Received: by 2002:a05:6512:3b0e:b0:52e:fef4:2cab with SMTP id
- 2adb3069b0e04-539c2b0d111mr16439e87.2.1728392857992; Tue, 08 Oct 2024
- 06:07:37 -0700 (PDT)
+        bh=rNiAf8zD4Fmsc4mfvWkwgkO2zlxmqdZFbYDwGQaHBPc=;
+        b=KVVY6uxfcJDbHh/SDhtIfVIPuNolOGEsy+fZBRva5b+s5Uw6HM3fJho2HLpwvC7MSE
+         ktTStWPc4XcnvrdzGeSh4HY9TfUNwghOLnhyr5krvsj1FnhFo/M7rPyheq2HacvEjLEk
+         TUag5JpDzRGbWX3L0gtLpFl0xFqWzuRx1x1qmuT/J5d07gpuK8N/7WUmcxxoHBL8Dns0
+         Zy0L0a/JXYi0aIhVm/T1UwVwgp5o20uENIkQwMcIgJyv2idwSK4H9YNOVi48T9cTjZMk
+         BJdtFur9wF41Y8uKaOT3M5pLQy3VUHsVpBxMb9DAs332cy2lAQ+WacLRIMn63ieJCMej
+         2MHQ==
+X-Gm-Message-State: AOJu0YzELYdcxRkUi4v3TWWI5yuQ5xLv3QMJXBooLYA5mpT7vH8Qo+Qb
+	XuCdEvQD/5n22QA+nHWBpzYCcXn9aZaP+Frn7uYGx7g9PmsOmFBH4HQVsxWbedCHiZ4T+vprFpg
+	ZJ0Yn7TgwcJ4hY7ude4pRlHtjnfUEvgCDxeBbLRb8Ow5PupF7
+X-Google-Smtp-Source: AGHT+IHauFCdnn3cnmNe3QkG5Y+f5o/W9nRRXRJp4dtle6w2Vwod1t1wb5FqfV2WBEg1fNz5IPF2xFI96ot79BCj6po=
+X-Received: by 2002:a05:651c:1989:b0:2fa:d49d:45ae with SMTP id
+ 38308e7fff4ca-2faf3c0c2bcmr111220591fa.8.1728392923883; Tue, 08 Oct 2024
+ 06:08:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-4-91a7c2e20884@xes-inc.com>
-In-Reply-To: <20240927-vfazio-mypy-v1-4-91a7c2e20884@xes-inc.com>
+References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-5-91a7c2e20884@xes-inc.com>
+In-Reply-To: <20240927-vfazio-mypy-v1-5-91a7c2e20884@xes-inc.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Oct 2024 15:07:26 +0200
-Message-ID: <CAMRc=Mes2jxCmGJOExiGhWfpq7=vHFgznkMzF9CmuUrAP3gbGg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 04/22] bindings: python: add missing method type annotations
+Date: Tue, 8 Oct 2024 15:08:32 +0200
+Message-ID: <CAMRc=McBrLXD0FSNe4dr3+1oSt7eqYPN4p_Wshn1D6V5KZPdhg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 05/22] bindings: python: add type stubs for _ext
 To: Vincent Fazio <vfazio@xes-inc.com>
 Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 27, 2024 at 9:05=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
+On Fri, Sep 27, 2024 at 8:57=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
 wrote:
 >
-> Explicitly define the arguments for `gpiod.request_lines` so there is a
-> clearer linkage with the underlying `Chip.request_lines` interface.
->
+
+No empty commit messages please.
+
 > Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 > ---
->  bindings/python/gpiod/__init__.py      | 17 +++++++++++++++--
->  bindings/python/gpiod/chip.py          | 12 ++++++++++--
->  bindings/python/gpiod/chip_info.py     |  2 +-
->  bindings/python/gpiod/edge_event.py    |  2 +-
->  bindings/python/gpiod/exception.py     |  4 ++--
->  bindings/python/gpiod/info_event.py    |  2 +-
->  bindings/python/gpiod/line.py          |  2 +-
->  bindings/python/gpiod/line_info.py     |  2 +-
->  bindings/python/gpiod/line_request.py  | 16 ++++++++++++----
->  bindings/python/gpiod/line_settings.py |  4 ++--
->  10 files changed, 46 insertions(+), 17 deletions(-)
+>  bindings/python/gpiod/_ext.pyi | 93 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  bindings/python/setup.py       |  2 +-
+>  2 files changed, 94 insertions(+), 1 deletion(-)
 >
-> diff --git a/bindings/python/gpiod/__init__.py b/bindings/python/gpiod/__=
-init__.py
-> index 4d916f7f1a4eabd8ad1b2844262c20ed01a0798c..3cf39d61f64c3888584cd2518=
-787b8e17e185ed2 100644
-> --- a/bindings/python/gpiod/__init__.py
-> +++ b/bindings/python/gpiod/__init__.py
-> @@ -7,6 +7,8 @@ Python bindings for libgpiod.
->  This module wraps the native C API of libgpiod in a set of python classe=
-s.
->  """
->
-> +from typing import Optional, Union
+> diff --git a/bindings/python/gpiod/_ext.pyi b/bindings/python/gpiod/_ext.=
+pyi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1beb80dde9f080b729374b9dc=
+69322c01fc37889
+> --- /dev/null
+> +++ b/bindings/python/gpiod/_ext.pyi
+> @@ -0,0 +1,93 @@
+> +# SPDX-License-Identifier: LGPL-2.1-or-later
+> +# SPDX-FileCopyrightText: 2024 Vincent Fazio <vfazio@gmail.com>
 > +
->  from . import (
->      _ext,
->      chip,
-> @@ -83,7 +85,13 @@ def is_gpiochip_device(path: str) -> bool:
->      return _ext.is_gpiochip_device(path)
+> +from typing import Optional
+> +
+> +from .chip_info import ChipInfo
+> +from .edge_event import EdgeEvent
+> +from .info_event import InfoEvent
+> +from .line import Value
+> +from .line_info import LineInfo
+> +
+> +class LineSettings:
+> +    def __init__(
+> +        self,
+> +        direction: int,
+> +        edge_detection: int,
+> +        bias: int,
+> +        drive: int,
+> +        active_low: bool,
+> +        debounce_period: int,
+> +        event_clock: int,
+> +        output_value: int,
+> +    ) -> None: ...
+> +
+> +class LineConfig:
+> +    def __init__(self) -> None: ...
+> +    def add_line_settings(self, offsets: list[int], settings: LineSettin=
+gs) -> None: ...
+> +    def set_output_values(self, global_output_values: list[Value]) -> No=
+ne: ...
+> +
+> +class Request:
+> +    def release(self) -> None: ...
+> +    def get_values(self, offsets: list[int], values: list[Value]) -> Non=
+e: ...
+> +    def set_values(self, values: dict[int, Value]) -> None: ...
+> +    def reconfigure_lines(self, line_cfg: LineConfig) -> None: ...
+> +    def read_edge_events(self, max_events: Optional[int]) -> list[EdgeEv=
+ent]: ...
+> +    @property
+> +    def chip_name(self) -> str: ...
+> +    @property
+> +    def num_lines(self) -> int: ...
+> +    @property
+> +    def offsets(self) -> list[int]: ...
+> +    @property
+> +    def fd(self) -> int: ...
+> +
+> +class Chip:
+> +    def __init__(self, path: str) -> None: ...
+> +    def get_info(self) -> ChipInfo: ...
+> +    def line_offset_from_id(self, id: str) -> int: ...
+> +    def get_line_info(self, offset: int, watch: bool) -> LineInfo: ...
+> +    def request_lines(
+> +        self,
+> +        line_cfg: LineConfig,
+> +        consumer: Optional[str],
+> +        event_buffer_size: Optional[int],
+> +    ) -> Request: ...
+> +    def read_info_event(self) -> InfoEvent: ...
+> +    def close(self) -> None: ...
+> +    def unwatch_line_info(self, line: int) -> None: ...
+> +    @property
+> +    def path(self) -> str: ...
+> +    @property
+> +    def fd(self) -> int: ...
+> +
+> +def is_gpiochip_device(path: str) -> bool: ...
+> +
+> +api_version: str
+> +
+> +# enum constants
+> +BIAS_AS_IS: int
+> +BIAS_DISABLED: int
+> +BIAS_PULL_DOWN: int
+> +BIAS_PULL_UP: int
+> +BIAS_UNKNOWN: int
+> +CLOCK_HTE: int
+> +CLOCK_MONOTONIC: int
+> +CLOCK_REALTIME: int
+> +DIRECTION_AS_IS: int
+> +DIRECTION_INPUT: int
+> +DIRECTION_OUTPUT: int
+> +DRIVE_OPEN_DRAIN: int
+> +DRIVE_OPEN_SOURCE: int
+> +DRIVE_PUSH_PULL: int
+> +EDGE_BOTH: int
+> +EDGE_EVENT_TYPE_FALLING: int
+> +EDGE_EVENT_TYPE_RISING: int
+> +EDGE_FALLING: int
+> +EDGE_NONE: int
+> +EDGE_RISING: int
+> +INFO_EVENT_TYPE_LINE_CONFIG_CHANGED: int
+> +INFO_EVENT_TYPE_LINE_RELEASED: int
+> +INFO_EVENT_TYPE_LINE_REQUESTED: int
+> +VALUE_ACTIVE: int
+> +VALUE_INACTIVE: int
+> diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+> index 1f04b9939b47dc7b960679b6f24e87a6f2a4e46f..54790dfd88e77762719fce3d9=
+194499e8ff39d73 100644
+> --- a/bindings/python/setup.py
+> +++ b/bindings/python/setup.py
+> @@ -224,7 +224,7 @@ setup(
+>      name=3D"gpiod",
+>      url=3D"https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
+>      packages=3Dfind_packages(exclude=3D["tests", "tests.*"]),
+> -    package_data=3D{"gpiod": ["py.typed"]},
+> +    package_data=3D{"gpiod": ["py.typed", "_ext.pyi"]},
+>      python_requires=3D">=3D3.9.0",
+>      ext_modules=3D[gpiod_ext],
+>      cmdclass=3D{"build_ext": build_ext, "sdist": sdist},
 >
+> --
+> 2.34.1
 >
-> -def request_lines(path: str, *args, **kwargs) -> LineRequest:
-> +def request_lines(
-> +    path: str,
-> +    config: dict[Union[tuple[Union[int, str], ...], int, str], Optional[=
-LineSettings]],
-> +    consumer: Optional[str] =3D None,
-> +    event_buffer_size: Optional[int] =3D None,
-> +    output_values: Optional[dict[Union[int, str], line.Value]] =3D None,
-> +) -> LineRequest:
->      """
->      Open a GPIO chip pointed to by 'path', request lines according to th=
-e
->      configuration arguments, close the chip and return the request objec=
-t.
-> @@ -99,4 +107,9 @@ def request_lines(path: str, *args, **kwargs) -> LineR=
-equest:
->        Returns a new LineRequest object.
->      """
->      with Chip(path) as chip:
-> -        return chip.request_lines(*args, **kwargs)
-> +        return chip.request_lines(
-> +            config=3Dconfig,
-> +            consumer=3Dconsumer,
-> +            event_buffer_size=3Devent_buffer_size,
-> +            output_values=3Doutput_values,
-> +        )
 
-IMO this and the rest of this patch should become separate commits.
-Otherwise looks good.
+I had no idea this was possible, thanks!
+
+Looks good.
 
 Bart
 
