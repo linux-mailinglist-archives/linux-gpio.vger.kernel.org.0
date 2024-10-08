@@ -1,138 +1,370 @@
-Return-Path: <linux-gpio+bounces-11062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D311C995049
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EB559950BF
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:55:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 064621C217EE
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:38:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9269F1C2501B
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93181D3653;
-	Tue,  8 Oct 2024 13:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72C081DF976;
+	Tue,  8 Oct 2024 13:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FdC9U4kF"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ToaQpab0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD56E17C7C9
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0421DF96D
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728394680; cv=none; b=LxSVivai+Vw7kDRxjOfi4iHpwf4wAfpbbWZSS0vvl7nJ1VValtNQcZsYafcm2X5faYPRNRv2ozBeDmbQvzip1h8fAhnqaFu+P/o3vC7ghujKtfC9eVFhcnPnD6qr6dLOyu8+ytQ7T6ITxU+tAVXusU+knRfD9N0ye2Eu7EeAc5Q=
+	t=1728395671; cv=none; b=ZwC71sRwAkt4ucYG3vxW+rlDiMhPG/QeFed8/opWIK7AP1ZCpoIrJKlukqZhJNyubkDxjB9gqAx65TtmjTi53xrwbHR/lUHahE8sQ3NPAn7qlhGUtQhgqtCP7LiOG5ZScsEXSR+nhLMctiddanw7Xsgi8oEhFEDlAsZLSguR/Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728394680; c=relaxed/simple;
-	bh=xD2xrCFV+4g3FvOYrF0v+VTbGFCz7lk/iimOU17O4yw=;
+	s=arc-20240116; t=1728395671; c=relaxed/simple;
+	bh=DQztHWsi04EQwMXsHI7CB79/fHhik+DbebOyIq87O2w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tPn+7ZckGnw6tV4/MUnrceswqjidqWTJLgnjeAc7JjiFuDHXfE9iPxYRjFpZuMiDiI9VhUdLBj3g8AFJgwSNCZlJtlzew6XyZMnX7jk0AlfxcKx93CrgkYCzWzrIjwvIQ/PgJI+cKfvbsWrwXcgqkqrvbk2xq6pbJ0Mrl8s+EWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FdC9U4kF; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=Ux4OXbZMccUnmXic95FjuTsLMYln1QZdwBtIbWEsiEF0k8PwPiHeBil0RDYm63WRMjVdhYFI75UL5BJlkyz38Y0F1LT3cO4/GndtLHJvnznT74O99XOetbfymjoCtaRXwe6nvyM6dc2l7c2B67zhBVz48dayLAYe2Meh++lDnBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ToaQpab0; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5398e7dda5fso5662383e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:37:58 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2facaa16826so48556301fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728394677; x=1728999477; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728395667; x=1729000467; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xD2xrCFV+4g3FvOYrF0v+VTbGFCz7lk/iimOU17O4yw=;
-        b=FdC9U4kFAWoXQwgAW+LqdQlqMiVopDjDTZmEbLwgOOXTqh9KALK3ggMzxi1IelLx+K
-         fGblX1zXP4X0JLF7HxQ/ux1zVO5tKaAY8kY1DIDWxHXlPgjYT5p5DwgWuMgitxHX2zAx
-         huqx7lguFL/jgQGnMutVOtKF81WMdceyiW1/pdw/UYRscIROzvvp2QA/Y3jMFGl6fi8w
-         pH9f9qA7fe26mlUCsbQqRZyz4d4aRXxSeM4KzqeH9FtQtLw3/eFWZVKbYvwbdfg3bjzE
-         p6Ko2OivGX9Nois21TA87GEde7cLZS/mR4pwr2xzDYAL8wTRnyrQqNywLXPKGS+jMpTU
-         Hoyw==
+        bh=QJKs0WAUaXThI5oboP9ec6WWxX0ihGhBhSme/jgQzTA=;
+        b=ToaQpab0jLCGCHPLsVVSDevU6Ke5hetzaxW/+Qqk0Xx1cR8b17owdHwjz0YbzZUvPQ
+         XRt/ZR3RkZKWyI2kwBFYvO6GctRJHZSt8z6ElkKjMKFX6DFkA3ldqbvBVmiz6Go0TLpI
+         mrGy9kppM525ulcwCtc950v4HLvFVOk+Y3zDgV/9CUTn1YsLrYv6cpFu1mEkzuAs7622
+         bK4H5Km4VoczyiiZ/706YO0dvWrU17LdBUC7slJfABI2gVeffTI6dF7nbSd4SrXhm8i9
+         XbwKvGH16dfU+UeSJPlTbnqD+KlHs5Ow/V1/jF6xD9r38Z0hNWQd5AK7mhJKGg3DKS5f
+         lK1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728394677; x=1728999477;
+        d=1e100.net; s=20230601; t=1728395667; x=1729000467;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xD2xrCFV+4g3FvOYrF0v+VTbGFCz7lk/iimOU17O4yw=;
-        b=QI/y21neSrpD+xZMCvAbTVMr8I/Z0GHgo+uT/z29/vLPE99CWUCrLyfhYGBTVt6E+E
-         +IZIvtkE2wzQQ5/sjniSNlhN+36mXTxizYC1sFTvgcOooBXJ4TEI/rUChmoAOPgvmlUC
-         yxXgu0zCgimPHi8Dt/eRE8L4zqukabKE41H0gXiFIh0J/6j6g3GWexvS0NjAMQwyg9EN
-         8jJYrElRFQUR1E1Ze9cSi9TqmS0Vy+XDDmE0Joppytyf3/04M1RwkWNNpm9oAq6TIcgH
-         GB4deVirlqTgri6NKbMQ8yXl3Tl+SXi4eR3fxlmUcCbbLn/fqLwyFuXrlbDrpSzWNxho
-         2Vhg==
-X-Gm-Message-State: AOJu0YybbVtSJozGQEQq6750ZtvGQkF904qiEa9oZwk0CTXl+D4Bl4LI
-	Z7cFLfI9uRn5pMG+jdzi0uJVLO9I/hVQO3rq5aL/jdSzJH0gUDEJcA6LEU1FF6MbeeGBqkiD41J
-	A7m04nDF5aX+XzMgg2G65s3RUeIvHBEZGl6GiM1fpWHPVGuBb
-X-Google-Smtp-Source: AGHT+IFmlxH+N52Gzs0Ix202yPBd7+yTtgsdH4t7sOVeGsU72ZX2nswvPPPxnIn738gHJvIrfFkfj07uUed2376c5u0=
-X-Received: by 2002:a05:6512:33d0:b0:535:6cde:5c4d with SMTP id
- 2adb3069b0e04-539ab85b38dmr8360340e87.3.1728394676868; Tue, 08 Oct 2024
- 06:37:56 -0700 (PDT)
+        bh=QJKs0WAUaXThI5oboP9ec6WWxX0ihGhBhSme/jgQzTA=;
+        b=naN8wkBTlVKlvPEiUX9EBd8zuNmSNIKabSKQCImMS0MNTXVLZ5es1WZxzYIpiUQw2d
+         OXbonF9VMLaBOYIoPwDvMKkn1VXwKIvdOZ+TXnVA/rVo71pYtG/HzGuZD5PNZh+l3NSj
+         kv7AUcYG+3MVXauQcnTGv2lpicxKQCkEMK1U/LCFayw40mVIdvswo8Bk1vgDxAcQoKgF
+         zmmNZHFYcySFtnCRL4/+srbzLENBXDeiBBLk++dDzOOx+mq/TiPam9kzOb89j9eHlsQ0
+         TP2JyhnvncRNs3lxjZ/o/nK7Jdy7J2DLj3Cqnm3ofXNlvYL2F4NjRruEQGoKDzU/8+xt
+         J3QQ==
+X-Gm-Message-State: AOJu0YydEgVvuwzVLBVKHuPh7wPENLeKUyb/VPmi8FiVrWpc0W6KDPJr
+	JP8VS1hSMNGQshVKJfJbqHjjScOFAreShq+TueuxD3yqx7hWYVq8ek/vZfhRB+1WH6jeic2XzbM
+	BQEmQKL5wPVqr3dzpTb2AfQP2aXIsGHLn9NVhWQ==
+X-Google-Smtp-Source: AGHT+IEeoF0hXz5H+/XSM6/eHAlpjsVfBA5OtYAlUCWift8F2ugnQK1Sq3I6GtROruwoju6bsdsEmbm3iF3OnKLGIys=
+X-Received: by 2002:a2e:5109:0:b0:2f3:fa99:4bab with SMTP id
+ 38308e7fff4ca-2faf3c1ccbamr60259251fa.15.1728395667078; Tue, 08 Oct 2024
+ 06:54:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
-In-Reply-To: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
+References: <20241004171438.3066379-1-vfazio@xes-inc.com>
+In-Reply-To: <20241004171438.3066379-1-vfazio@xes-inc.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Oct 2024 15:37:45 +0200
-Message-ID: <CAMRc=MczLrE7PfO6xnXcMzcXcK4kmYNxhYrJ1hY=jxiZJBpQJA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 00/22] bindings: python: conform to mypy and
- ruff linter recommendations
+Date: Tue, 8 Oct 2024 15:54:15 +0200
+Message-ID: <CAMRc=MeD5ehaPkaJUNL2HYjK8iV=NLcuC5=ktSMVhcyqgpXt7Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: import gpiod attributes in
+ external module
 To: Vincent Fazio <vfazio@xes-inc.com>
 Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 27, 2024 at 9:05=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
-wrote:
+On Fri, Oct 4, 2024 at 7:15=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> w=
+rote:
 >
-> This patch series employs mypy [0] and ruff [1] to ensure the gpiod
-> library has correctly typed public interfaces, is performing proper type
-> checking internally, is consistently formatted in a standard code style
-> that targets Python 3.9 syntax, and passes a subset of linting checks.
+> Previously, the external module relied on gpiod attributes being present
+> within `globals()` to construct return values back to the caller.
 >
-> Patches 1 and 2 remove unused imports, sort the remainder, and ensure
-> the publicly usable classes are available from the gpiod base module.
+> This assumption required callers of the external module to have imported
+> the attributes to populate `globals()` for the interface to work.
 >
-> Patches 3 and 4 fix and add annotations to the gpiod bindings.
+> Having this implicit contract is opaque and prone to causing issues if
+> imports within gpiod modules ever get reworked.
 >
-> Patches 5-13 fix type and lint errors internal to the bindings.
+> Now, the external module explicitly imports attributes from gpiod in
+> order to return values back to the caller.
 >
-> Patch 14 fixes a duplicate test name identified by the linter.
+> There should be no concern about circular imports as the external module
+> should be completely imported by the time callers call into it.
 >
-> Patch 15 and 16 remove unused imports, sort the remainder, and fix lint
-> errors related to a shadowed export.
+> Since Py_gpiod_GetGlobalType is no longer used, it has been replaced
+> with Py_gpiod_GetModuleAttrString which returns a new PyObject*
+> reference for the named module and attribute that must be decremented
+> when no longer in use.
 >
-> Patches 17 and 18 fix and add annotations to the test gpiod bindings.
->
-> Patches 19-21 fix type and lint errors internal to the tests.
->
-> Patch 22 adds mypy and ruff configuration to pyproject.toml and adds
-> documentation to the readme so future patches can be evaluated against a
-> standard set of rules.
->
-> There should be no functional changes that impact existing code as part
-> of this series.
->
-> All unit tests continue to pass without changes and code coverage has
-> not changed.
->
-> After this series is applied, the public type annotations will reflect
-> the argument expectations of the class methods so consumers can type
-> check their code against the gpiod type annotations.
->
-> [0]: https://mypy.readthedocs.io/en/stable/
-> [1]: https://docs.astral.sh/ruff/
->
+> Closes: https://github.com/brgl/libgpiod/issues/101
 > Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 > ---
+>  bindings/python/gpiod/ext/chip.c     | 39 +++++++++++++++++-----------
+>  bindings/python/gpiod/ext/common.c   | 14 ++++++----
+>  bindings/python/gpiod/ext/internal.h |  3 ++-
+>  bindings/python/gpiod/ext/request.c  | 26 ++++++++++++-------
+>  4 files changed, 52 insertions(+), 30 deletions(-)
+>
+> diff --git a/bindings/python/gpiod/ext/chip.c b/bindings/python/gpiod/ext=
+/chip.c
+> index e8eaad8..fcfb960 100644
+> --- a/bindings/python/gpiod/ext/chip.c
+> +++ b/bindings/python/gpiod/ext/chip.c
+> @@ -75,31 +75,34 @@ static PyObject *chip_get_info(chip_object *self, PyO=
+bject *Py_UNUSED(ignored))
+>         struct gpiod_chip_info *info;
+>         PyObject *type, *ret;
+>
+> -       type =3D Py_gpiod_GetGlobalType("ChipInfo");
+> +       type =3D Py_gpiod_GetModuleAttrString("gpiod.chip_info", "ChipInf=
+o");
+>         if (!type)
+>                 return NULL;
+>
+>         info =3D gpiod_chip_get_info(self->chip);
+> -       if (!info)
+> +       if (!info) {
+> +               Py_DECREF(type);
+>                 return PyErr_SetFromErrno(PyExc_OSError);
+> +       }
+>
+> -        ret =3D PyObject_CallFunction(type, "ssI",
+> -                                    gpiod_chip_info_get_name(info),
+> -                                    gpiod_chip_info_get_label(info),
+> -                                    gpiod_chip_info_get_num_lines(info))=
+;
+> -        gpiod_chip_info_free(info);
+> -        return ret;
+> +       ret =3D PyObject_CallFunction(type, "ssI",
+> +                                   gpiod_chip_info_get_name(info),
+> +                                   gpiod_chip_info_get_label(info),
+> +                                   gpiod_chip_info_get_num_lines(info));
+> +       gpiod_chip_info_free(info);
+> +       Py_DECREF(type);
+> +       return ret;
+>  }
+>
+>  static PyObject *make_line_info(struct gpiod_line_info *info)
+>  {
+> -       PyObject *type;
+> +       PyObject *type, *ret;
+>
+> -       type =3D Py_gpiod_GetGlobalType("LineInfo");
+> +       type =3D Py_gpiod_GetModuleAttrString("gpiod.line_info", "LineInf=
+o");
+>         if (!type)
+>                 return NULL;
+>
+> -       return PyObject_CallFunction(type, "IsOsiOiiiiOk",
+> +       ret =3D PyObject_CallFunction(type, "IsOsiOiiiiOk",
+>                                 gpiod_line_info_get_offset(info),
+>                                 gpiod_line_info_get_name(info),
+>                                 gpiod_line_info_is_used(info) ?
+> @@ -115,6 +118,8 @@ static PyObject *make_line_info(struct gpiod_line_inf=
+o *info)
+>                                 gpiod_line_info_is_debounced(info) ?
+>                                                         Py_True : Py_Fals=
+e,
+>                                 gpiod_line_info_get_debounce_period_us(in=
+fo));
+> +       Py_DECREF(type);
+> +       return ret;
+>  }
+>
+>  static PyObject *chip_get_line_info(chip_object *self, PyObject *args)
+> @@ -168,10 +173,6 @@ chip_read_info_event(chip_object *self, PyObject *Py=
+_UNUSED(ignored))
+>         struct gpiod_info_event *event;
+>         struct gpiod_line_info *info;
+>
+> -       type =3D Py_gpiod_GetGlobalType("InfoEvent");
+> -       if (!type)
+> -               return NULL;
+> -
+>         Py_BEGIN_ALLOW_THREADS;
+>         event =3D gpiod_chip_read_info_event(self->chip);
+>         Py_END_ALLOW_THREADS;
+> @@ -186,12 +187,20 @@ chip_read_info_event(chip_object *self, PyObject *P=
+y_UNUSED(ignored))
+>                 return NULL;
+>         }
+>
+> +       type =3D Py_gpiod_GetModuleAttrString("gpiod.info_event", "InfoEv=
+ent");
+> +       if (!type) {
+> +               Py_DECREF(info_obj);
+> +               gpiod_info_event_free(event);
+> +               return NULL;
+> +       }
+> +
+>         event_obj =3D PyObject_CallFunction(type, "iKO",
+>                                 gpiod_info_event_get_event_type(event),
+>                                 gpiod_info_event_get_timestamp_ns(event),
+>                                 info_obj);
+>         Py_DECREF(info_obj);
+>         gpiod_info_event_free(event);
+> +       Py_DECREF(type);
+>         return event_obj;
+>  }
+>
+> diff --git a/bindings/python/gpiod/ext/common.c b/bindings/python/gpiod/e=
+xt/common.c
+> index 07fca8c..62201b6 100644
+> --- a/bindings/python/gpiod/ext/common.c
+> +++ b/bindings/python/gpiod/ext/common.c
+> @@ -64,15 +64,19 @@ PyObject *Py_gpiod_SetErrFromErrno(void)
+>         return PyErr_SetFromErrno(exc);
+>  }
+>
+> -PyObject *Py_gpiod_GetGlobalType(const char *type_name)
+> +PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
+> +                                      const char *attrname)
+>  {
+> -       PyObject *globals;
+> +       PyObject *module, *attribute;
+>
+> -       globals =3D PyEval_GetGlobals();
+> -       if (!globals)
+> +       module =3D PyImport_ImportModule(modname);
+> +       if (!module)
+>                 return NULL;
+>
+> -       return PyDict_GetItemString(globals, type_name);
+> +       attribute =3D PyObject_GetAttrString(module, attrname);
+> +       Py_DECREF(module);
+> +
+> +       return attribute;
+>  }
+>
+>  unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong)
+> diff --git a/bindings/python/gpiod/ext/internal.h b/bindings/python/gpiod=
+/ext/internal.h
+> index 7d223c0..15aedfb 100644
+> --- a/bindings/python/gpiod/ext/internal.h
+> +++ b/bindings/python/gpiod/ext/internal.h
+> @@ -8,7 +8,8 @@
+>  #include <Python.h>
+>
+>  PyObject *Py_gpiod_SetErrFromErrno(void);
+> -PyObject *Py_gpiod_GetGlobalType(const char *type_name);
+> +PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
+> +                                      const char *attrname);
+>  unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong);
+>  void Py_gpiod_dealloc(PyObject *self);
+>  PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request,
+> diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/=
+ext/request.c
+> index 5db69fe..4a035f4 100644
+> --- a/bindings/python/gpiod/ext/request.c
+> +++ b/bindings/python/gpiod/ext/request.c
+> @@ -149,10 +149,6 @@ static PyObject *request_get_values(request_object *=
+self, PyObject *args)
+>         if (num_offsets < 0)
+>                 return NULL;
+>
+> -       type =3D Py_gpiod_GetGlobalType("Value");
+> -       if (!type)
+> -               return NULL;
+> -
+>         iter =3D PyObject_GetIter(offsets);
+>         if (!iter)
+>                 return NULL;
+> @@ -183,14 +179,21 @@ static PyObject *request_get_values(request_object =
+*self, PyObject *args)
+>         if (ret)
+>                 return Py_gpiod_SetErrFromErrno();
+>
+> +       type =3D Py_gpiod_GetModuleAttrString("gpiod.line", "Value");
+> +       if (!type)
+> +               return NULL;
+> +
+>         for (pos =3D 0; pos < num_offsets; pos++) {
+>                 val =3D PyObject_CallFunction(type, "i", self->values[pos=
+]);
+> -               if (!val)
+> +               if (!val) {
+> +                       Py_DECREF(type);
+>                         return NULL;
+> +               }
+>
+>                 ret =3D PyList_SetItem(values, pos, val);
+>                 if (ret) {
+>                         Py_DECREF(val);
+> +                       Py_DECREF(type);
+>                         return NULL;
+>                 }
 
-Phew! Nice work!
+Don't you need to Py_DECREF(type) here before returning?
 
-My main concern is the lack of proper commit messages which makes some
-of the changes confusing to me - an intermediate python developer.
+>         }
+> @@ -279,10 +282,6 @@ static PyObject *request_read_edge_events(request_ob=
+ject *self, PyObject *args)
+>                 max_events =3D 64;
+>         }
+>
+> -       type =3D Py_gpiod_GetGlobalType("EdgeEvent");
+> -       if (!type)
+> -               return NULL;
+> -
+>         Py_BEGIN_ALLOW_THREADS;
+>         ret =3D gpiod_line_request_read_edge_events(self->request,
+>                                                  self->buffer, max_events=
+);
+> @@ -296,10 +295,17 @@ static PyObject *request_read_edge_events(request_o=
+bject *self, PyObject *args)
+>         if (!events)
+>                 return NULL;
+>
+> +       type =3D Py_gpiod_GetModuleAttrString("gpiod.edge_event", "EdgeEv=
+ent");
+> +       if (!type) {
+> +               Py_DECREF(events);
+> +               return NULL;
+> +       }
+> +
+>         for (i =3D 0; i < num_events; i++) {
+>                 event =3D gpiod_edge_event_buffer_get_event(self->buffer,=
+ i);
+>                 if (!event) {
+>                         Py_DECREF(events);
+> +                       Py_DECREF(type);
+>                         return NULL;
+>                 }
+>
+> @@ -311,6 +317,7 @@ static PyObject *request_read_edge_events(request_obj=
+ect *self, PyObject *args)
+>                                 gpiod_edge_event_get_line_seqno(event));
+>                 if (!event_obj) {
+>                         Py_DECREF(events);
+> +                       Py_DECREF(type);
+>                         return NULL;
+>                 }
+>
+> @@ -318,6 +325,7 @@ static PyObject *request_read_edge_events(request_obj=
+ect *self, PyObject *args)
+>                 if (ret) {
+>                         Py_DECREF(event_obj);
+>                         Py_DECREF(events);
+> +                       Py_DECREF(type);
+>                         return NULL;
+>                 }
 
-I added some other requests, some commits will need splitting into two
-but overall this looks nice and I'll be happy to pick it up.
+And here?
+
+>         }
+> --
+> 2.34.1
+>
+>
 
 Bart
 
