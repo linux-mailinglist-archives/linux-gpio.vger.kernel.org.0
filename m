@@ -1,144 +1,323 @@
-Return-Path: <linux-gpio+bounces-11072-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11073-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863BD99546A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 18:27:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2F8F99560A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 19:53:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3586E1F26A5D
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 16:27:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29530B2181E
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 17:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1621E0DC0;
-	Tue,  8 Oct 2024 16:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5356E20CCC9;
+	Tue,  8 Oct 2024 17:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npHcg7G8"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="YHYefLQ+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677F96F2F3;
-	Tue,  8 Oct 2024 16:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C391E0E0D
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 17:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728404863; cv=none; b=NFnfit+x3rIdVo08HIPaA32PE14MgGn0Sx0L1ygdoUvMbj23aZ+1C6N3ogS3gEiX9xv2fgtK4+4yLIlYRdasoz8qpk5gmWfUEjvRHPVoXYFfBNqhm8tTj+9CbFiz+XiK9gJfJepAwb8aeEgJITCWoQVjWNxC3r62K7cvZJZaxGE=
+	t=1728409977; cv=none; b=tFJK0Sc+GtxnICDioEWrh2Ep9ATmoztKEorPXchCjTmKo8tyUdTOG/2SBXdFsDXhto+BP1F1rbbnc0QjqO2R+hRvDLc1NzhZr3gRoRlvB3aq1ZZuJE97KY1Jz/cTkMp9LBP46MQr4byaPyYJI9EKL9Da3i9fw1XCHlTBIpMt6SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728404863; c=relaxed/simple;
-	bh=zWC1pggc7OwVOj3ZzpCupZ+Awrq6EYrzUUSPwO2P6s4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DYjyI6KfWzBR3d4TDCHg5wh53pscAy/+Bm3xF86qVDhg4VBKzkd679yfczN6hPDdSbRi3fL1zgwCUA8XCUljXnPjVFiAxwKcnnMRpLhGwwS5QgQcA04XQjORhcGGHzaUdikYpttFWgxIgjqSCdD1kModXNAOW0MI5r7PkiZnWVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npHcg7G8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C959BC4CEC7;
-	Tue,  8 Oct 2024 16:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728404863;
-	bh=zWC1pggc7OwVOj3ZzpCupZ+Awrq6EYrzUUSPwO2P6s4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=npHcg7G8v9mNQd/hWqnog6AFImMftyLySMr1I5ZN089a/f4FxKnHTH5lg0vHYX8e9
-	 3T3rg5gc/MtSAVeU4w+d2q0E+jPlyKa2Xw3AXkC0Q8kk3HHRnRemykH+XNo/xtgOZD
-	 iJqTByGKAXoT2N3o4rhss2c+KPcwS9TMl31jw+Ht6PgNjgt/cs/sqcVbMfXf/k1ujl
-	 5gQsCU9xlUt37BjDpiBOrOQxJW+DeivRvXIU93ZIX02g0PllJ9RPlYrW2h9QvhvWpc
-	 6NJnvHQM4sxSec8Om4c+2X7N5F109YCfdydpZxkrdh2Jz84iDpyeHHoig0W2iQyUFU
-	 waIaX4RXw3k2w==
-Date: Tue, 8 Oct 2024 17:27:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ze Huang <18771902331@163.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] Add initial support for Canaan Kendryte K230
- pinctrl
-Message-ID: <20241008-backboned-helium-167d99aac110@spud>
-References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
- <CACRpkdYk9aCp7mdWJJTT-1cwNZC4RN_eB6v5rducDY5MGJ_dbg@mail.gmail.com>
- <20241001-stratus-overplay-96266c33ca89@spud>
- <6a1a3e38-0c6b-4d79-a101-b3292a2ab3be@163.com>
+	s=arc-20240116; t=1728409977; c=relaxed/simple;
+	bh=zF4HSnMmIEnLzrrSWv/KmJFEl1sZ24iZeLwC0x411no=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jY8T/6up8yBlcHjXObLD/SaWzp23YTjTAGcLFT35D6jUYh232j64wOG+QUY6/KH1zn1Io4d7dfbjmS9osenZ2JfaZrbLAczHSHl3DCO4J76Tzw5LTsC71dOkXE/x00mdeQeeiRPPTtwwGwJM+7EKxJeWA4ooZJ42kgbmQKaQFXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=YHYefLQ+; arc=none smtp.client-ip=162.248.234.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
+Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
+	by mail.xes-mad.com (Postfix) with ESMTP id B51C4201EE;
+	Tue,  8 Oct 2024 12:52:47 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
+	t=1728409967; bh=zF4HSnMmIEnLzrrSWv/KmJFEl1sZ24iZeLwC0x411no=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YHYefLQ+tlQUTSXZ7kB6DDYiQcT2vQwbPt0cd4TVo1xWzZtwO/a3MwgZ6Fy5Mz6x1
+	 ZojojleUq1OOQ1vmbvVZRCBk6KZl2/PhPQtvC8Rk5gSxy9TuOxc5SSioiQoiJg+WqC
+	 cqs1XtWHbbBMSb4VzHWgoOQSZU3P/P3icLOtN7Co=
+From: Vincent Fazio <vfazio@xes-inc.com>
+To: linux-gpio@vger.kernel.org
+Cc: vfazio@gmail.com,
+	Vincent Fazio <vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH v2] bindings: python: import gpiod attributes in external module
+Date: Tue,  8 Oct 2024 12:51:39 -0500
+Message-Id: <20241008175139.1198980-1-vfazio@xes-inc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="spWZWIgtfKtTVugF"
-Content-Disposition: inline
-In-Reply-To: <6a1a3e38-0c6b-4d79-a101-b3292a2ab3be@163.com>
+Content-Transfer-Encoding: 8bit
 
+Previously, the external module relied on gpiod attributes being present
+within `globals()` to construct return values back to the caller.
 
---spWZWIgtfKtTVugF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This assumption required callers of the external module to have imported
+the attributes to populate `globals()` for the interface to work.
 
-On Tue, Oct 08, 2024 at 04:31:35PM +0800, Ze Huang wrote:
-> On 10/1/24 8:32 PM, Conor Dooley wrote:
-> > On Tue, Oct 01, 2024 at 02:27:25PM +0200, Linus Walleij wrote:
-> > > On Thu, Sep 26, 2024 at 5:58=E2=80=AFPM Ze Huang <18771902331@163.com=
-> wrote:
-> > >=20
-> > > > This patch series introduces support for the pinctrl driver of the =
-Canaan
-> > > > K230 SoC. The K230 SoC features 64 IO pins, each of which can be co=
-nfigured
-> > > > for up to five different functions.
-> > > >=20
-> > > > The controller manages the entire pin configuration and multiplexing
-> > > > through a single register, which control features such as schmitt t=
-rigger,
-> > > > drive strength, bias pull-up/down, input/output enable, power sourc=
-e, and
-> > > > mux mode.
-> > > >=20
-> > > > The changes have been tested on CanMV-K230-V1.1 board.
-> > > >=20
-> > > > The pin function definition can be found here [1], and most of the =
-DTS data
-> > > > was converted from the vendor's code [2].
-> > > Bindings ACKed and patches look good to I applied patch
-> > > 1 & 2 to the pin control tree.
-> > >=20
-> > > Please funnel patch 3 through the SoC tree.
-> > >=20
-> > > > prerequisite-message-id: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF=
-809@qq.com>
-> > > > prerequisite-patch-id: 704efc6e76814e1877748959d7319d558c8386c1
-> > > > prerequisite-patch-id: c2144cf468c57b856830a61615ba6ba501e8ec58
-> > > > prerequisite-patch-id: ced4a01ccd8ddab2fd308d543ddf47bd1641518a
-> > > > prerequisite-patch-id: f8b983b301d0c14f1448b9e4c321262a509e061e
-> > > > prerequisite-patch-id: 834b65b6a2b037daed5cffc6a41963622568dc9c
-> > > > prerequisite-patch-id: 2401703b57448c9ea2c3dc7650b4502491a28944
-> > > I don't know about all this stuff but neither bindings or code seems
-> > > to contain anything that won't compile so I just assume that any of t=
-hese
-> > > dependencies are purely for patch 3/3 and I nothing blocks me
-> > > merging patches 1 & 2 so I just went ahead with that.
-> > Yah, this should all be cos I haven't yet applied
-> > https://lore.kernel.org/all/tencent_22BA0425B4DF1CA1713B62E4423C1BFBF80=
-9@qq.com/
-> > as I am waiting for a clock driver to be sorted out.
->=20
-> Thank you very much for your time in reviewing and helping fix the bug!
-> Indeed, only patch 3 really depends on the previous patches. We are now
-> working on clock driver. Should we deal with patch 3 after that?
+Having this implicit contract is opaque and prone to causing issues if
+imports within gpiod modules ever get reworked.
 
-Yeah, send patch 3 to me when you're done with the clock driver.
+Now, the external module explicitly imports attributes from gpiod in
+order to return values back to the caller.
 
---spWZWIgtfKtTVugF
-Content-Type: application/pgp-signature; name="signature.asc"
+There should be no concern about circular imports as the external module
+should be completely imported by the time callers call into it.
 
------BEGIN PGP SIGNATURE-----
+Since Py_gpiod_GetGlobalType is no longer used, it has been replaced
+with Py_gpiod_GetModuleAttrString which returns a new PyObject*
+reference for the named module and attribute that must be decremented
+when no longer in use.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZwVdegAKCRB4tDGHoIJi
-0vM+AQDUK2jfSUbjSUKTs2s9LIlWGezF+H00zfOJ/3xz2cu8JgEA19Je82HcT04j
-Q32XZouXgVHrbuSNLIV/YZmruchA6g8=
-=VNFz
------END PGP SIGNATURE-----
+Closes: https://github.com/brgl/libgpiod/issues/101
+Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+---
+Changes since v1:
 
---spWZWIgtfKtTVugF--
+* decrement attribute reference on successful returns from 
+  request_get_values and request_read_edge_events (Thanks Bartosz)
+
+---
+ bindings/python/gpiod/ext/chip.c     | 39 +++++++++++++++++-----------
+ bindings/python/gpiod/ext/common.c   | 14 ++++++----
+ bindings/python/gpiod/ext/internal.h |  3 ++-
+ bindings/python/gpiod/ext/request.c  | 28 +++++++++++++-------
+ 4 files changed, 54 insertions(+), 30 deletions(-)
+
+diff --git a/bindings/python/gpiod/ext/chip.c b/bindings/python/gpiod/ext/chip.c
+index e8eaad8..fcfb960 100644
+--- a/bindings/python/gpiod/ext/chip.c
++++ b/bindings/python/gpiod/ext/chip.c
+@@ -75,31 +75,34 @@ static PyObject *chip_get_info(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 	struct gpiod_chip_info *info;
+ 	PyObject *type, *ret;
+ 
+-	type = Py_gpiod_GetGlobalType("ChipInfo");
++	type = Py_gpiod_GetModuleAttrString("gpiod.chip_info", "ChipInfo");
+ 	if (!type)
+ 		return NULL;
+ 
+ 	info = gpiod_chip_get_info(self->chip);
+-	if (!info)
++	if (!info) {
++		Py_DECREF(type);
+ 		return PyErr_SetFromErrno(PyExc_OSError);
++	}
+ 
+-	 ret = PyObject_CallFunction(type, "ssI",
+-				     gpiod_chip_info_get_name(info),
+-				     gpiod_chip_info_get_label(info),
+-				     gpiod_chip_info_get_num_lines(info));
+-	 gpiod_chip_info_free(info);
+-	 return ret;
++	ret = PyObject_CallFunction(type, "ssI",
++				    gpiod_chip_info_get_name(info),
++				    gpiod_chip_info_get_label(info),
++				    gpiod_chip_info_get_num_lines(info));
++	gpiod_chip_info_free(info);
++	Py_DECREF(type);
++	return ret;
+ }
+ 
+ static PyObject *make_line_info(struct gpiod_line_info *info)
+ {
+-	PyObject *type;
++	PyObject *type, *ret;
+ 
+-	type = Py_gpiod_GetGlobalType("LineInfo");
++	type = Py_gpiod_GetModuleAttrString("gpiod.line_info", "LineInfo");
+ 	if (!type)
+ 		return NULL;
+ 
+-	return PyObject_CallFunction(type, "IsOsiOiiiiOk",
++	ret = PyObject_CallFunction(type, "IsOsiOiiiiOk",
+ 				gpiod_line_info_get_offset(info),
+ 				gpiod_line_info_get_name(info),
+ 				gpiod_line_info_is_used(info) ?
+@@ -115,6 +118,8 @@ static PyObject *make_line_info(struct gpiod_line_info *info)
+ 				gpiod_line_info_is_debounced(info) ?
+ 							Py_True : Py_False,
+ 				gpiod_line_info_get_debounce_period_us(info));
++	Py_DECREF(type);
++	return ret;
+ }
+ 
+ static PyObject *chip_get_line_info(chip_object *self, PyObject *args)
+@@ -168,10 +173,6 @@ chip_read_info_event(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 	struct gpiod_info_event *event;
+ 	struct gpiod_line_info *info;
+ 
+-	type = Py_gpiod_GetGlobalType("InfoEvent");
+-	if (!type)
+-		return NULL;
+-
+ 	Py_BEGIN_ALLOW_THREADS;
+ 	event = gpiod_chip_read_info_event(self->chip);
+ 	Py_END_ALLOW_THREADS;
+@@ -186,12 +187,20 @@ chip_read_info_event(chip_object *self, PyObject *Py_UNUSED(ignored))
+ 		return NULL;
+ 	}
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.info_event", "InfoEvent");
++	if (!type) {
++		Py_DECREF(info_obj);
++		gpiod_info_event_free(event);
++		return NULL;
++	}
++
+ 	event_obj = PyObject_CallFunction(type, "iKO",
+ 				gpiod_info_event_get_event_type(event),
+ 				gpiod_info_event_get_timestamp_ns(event),
+ 				info_obj);
+ 	Py_DECREF(info_obj);
+ 	gpiod_info_event_free(event);
++	Py_DECREF(type);
+ 	return event_obj;
+ }
+ 
+diff --git a/bindings/python/gpiod/ext/common.c b/bindings/python/gpiod/ext/common.c
+index 07fca8c..62201b6 100644
+--- a/bindings/python/gpiod/ext/common.c
++++ b/bindings/python/gpiod/ext/common.c
+@@ -64,15 +64,19 @@ PyObject *Py_gpiod_SetErrFromErrno(void)
+ 	return PyErr_SetFromErrno(exc);
+ }
+ 
+-PyObject *Py_gpiod_GetGlobalType(const char *type_name)
++PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
++				       const char *attrname)
+ {
+-	PyObject *globals;
++	PyObject *module, *attribute;
+ 
+-	globals = PyEval_GetGlobals();
+-	if (!globals)
++	module = PyImport_ImportModule(modname);
++	if (!module)
+ 		return NULL;
+ 
+-	return PyDict_GetItemString(globals, type_name);
++	attribute = PyObject_GetAttrString(module, attrname);
++	Py_DECREF(module);
++
++	return attribute;
+ }
+ 
+ unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong)
+diff --git a/bindings/python/gpiod/ext/internal.h b/bindings/python/gpiod/ext/internal.h
+index 7d223c0..15aedfb 100644
+--- a/bindings/python/gpiod/ext/internal.h
++++ b/bindings/python/gpiod/ext/internal.h
+@@ -8,7 +8,8 @@
+ #include <Python.h>
+ 
+ PyObject *Py_gpiod_SetErrFromErrno(void);
+-PyObject *Py_gpiod_GetGlobalType(const char *type_name);
++PyObject *Py_gpiod_GetModuleAttrString(const char *modname,
++				       const char *attrname);
+ unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong);
+ void Py_gpiod_dealloc(PyObject *self);
+ PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request,
+diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/ext/request.c
+index 5db69fe..e1a2a42 100644
+--- a/bindings/python/gpiod/ext/request.c
++++ b/bindings/python/gpiod/ext/request.c
+@@ -149,10 +149,6 @@ static PyObject *request_get_values(request_object *self, PyObject *args)
+ 	if (num_offsets < 0)
+ 		return NULL;
+ 
+-	type = Py_gpiod_GetGlobalType("Value");
+-	if (!type)
+-		return NULL;
+-
+ 	iter = PyObject_GetIter(offsets);
+ 	if (!iter)
+ 		return NULL;
+@@ -183,18 +179,26 @@ static PyObject *request_get_values(request_object *self, PyObject *args)
+ 	if (ret)
+ 		return Py_gpiod_SetErrFromErrno();
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.line", "Value");
++	if (!type)
++		return NULL;
++
+ 	for (pos = 0; pos < num_offsets; pos++) {
+ 		val = PyObject_CallFunction(type, "i", self->values[pos]);
+-		if (!val)
++		if (!val) {
++			Py_DECREF(type);
+ 			return NULL;
++		}
+ 
+ 		ret = PyList_SetItem(values, pos, val);
+ 		if (ret) {
+ 			Py_DECREF(val);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 	}
+ 
++	Py_DECREF(type);
+ 	Py_RETURN_NONE;
+ }
+ 
+@@ -279,10 +283,6 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 		max_events = 64;
+ 	}
+ 
+-	type = Py_gpiod_GetGlobalType("EdgeEvent");
+-	if (!type)
+-		return NULL;
+-
+ 	Py_BEGIN_ALLOW_THREADS;
+ 	ret = gpiod_line_request_read_edge_events(self->request,
+ 						 self->buffer, max_events);
+@@ -296,10 +296,17 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 	if (!events)
+ 		return NULL;
+ 
++	type = Py_gpiod_GetModuleAttrString("gpiod.edge_event", "EdgeEvent");
++	if (!type) {
++		Py_DECREF(events);
++		return NULL;
++	}
++
+ 	for (i = 0; i < num_events; i++) {
+ 		event = gpiod_edge_event_buffer_get_event(self->buffer, i);
+ 		if (!event) {
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 
+@@ -311,6 +318,7 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 				gpiod_edge_event_get_line_seqno(event));
+ 		if (!event_obj) {
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 
+@@ -318,10 +326,12 @@ static PyObject *request_read_edge_events(request_object *self, PyObject *args)
+ 		if (ret) {
+ 			Py_DECREF(event_obj);
+ 			Py_DECREF(events);
++			Py_DECREF(type);
+ 			return NULL;
+ 		}
+ 	}
+ 
++	Py_DECREF(type);
+ 	return events;
+ }
+ 
+-- 
+2.34.1
+
 
