@@ -1,126 +1,140 @@
-Return-Path: <linux-gpio+bounces-11068-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11069-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A5B5995201
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 16:39:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05808995299
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 16:57:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB2CE1C24206
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 14:39:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC438283550
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 14:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553091E0DFF;
-	Tue,  8 Oct 2024 14:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A601DF998;
+	Tue,  8 Oct 2024 14:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnA2a081"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLJ46l7c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119061E0DBF
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 14:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9EF165F08
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 14:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728398220; cv=none; b=sz50OwKCkXatrTgILrImaI8MSGMvHpHmJyfWAb+ACcLsyxQ0JcmQ5bj9L8mqId8ZF8WMpIEFITgaDPc5873N5djJ7/oKj249HsnPI8m9zfzi8t+5ieTc2v3tepBdqmcOuUv0CKrGcMNy1DY4/X/QQaP12ghM18A0hGiQm7BpZcY=
+	t=1728399466; cv=none; b=BvCu5AlIjvoKzu6q3urLJe2yq2cpSOmFMdWu5UvXhARpaamuC8ow7UiA3f2GjVmJ1CCZlDWLiWgCWVXGNBV6FvcFiKNuDY6/FT1CyIUBna1bfS+9O58/2KG0BQDKY2jJ5xlYccvh2Iiwf6iZrCJtYrCAXtkugtVwi6YJl2sgFUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728398220; c=relaxed/simple;
-	bh=Ez1a1h8Ms+1O98dJlfS1HG3cTnUbVG7/3+aSOkVZLW8=;
+	s=arc-20240116; t=1728399466; c=relaxed/simple;
+	bh=2O6mlxbXjwqAxAkbPjSWOWi1d9MZpvRgzftBJL1K1gM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XMbfEdwwzRiAveIyTVaSjMnCJ/p9EDgjk4P/R6u/bVeoxRSTNKyO+3N/Li6QisqXQ1uPTBJktUIWxsNiielMrP39kRAumpTuXhMXZw/XqEZgPLU/b1YVpHyoB4XlOACNmP6Y38WIDZyGj94wOakoMPHQEjAWvjn9LLgTLLV7jac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JnA2a081; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e260754066cso5280153276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 07:36:57 -0700 (PDT)
+	 To:Cc:Content-Type; b=a3KGyafAJMtgmNLLCUoq2Nd/EbbTSiYAfIeLLpig3HHahGPiLCdmG2JKTmwwopkjMCEn+lMdmObZSK5sZ1xyqH5v+9lSBIgfkUrXex1BMCkPba94j1xIR2AN2BdbM5Qzk921w8xaMXfmHawiI9DjGNiY4Ynbw2kG99jIzDNOY24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLJ46l7c; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-84f9aa39710so413790241.2
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 07:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728398217; x=1729003017; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0854fPv0lxGwhhEzPUBFcu+X9bL4gK6hC6tSqeFnVo=;
-        b=JnA2a081KOkXDdPKkwHp/I0d0SpNvJcVPgNpQuLwmUclzZvYqOWhtocDcLJe5TYZWa
-         aQroEBpRZyVCuI88ZzODdleKbuJDArEGz7LjO53mrnSiQ2anpN3TSRUFXTNcPqqjbs7O
-         AWxpRFirw5Kyzc4S1tfXVDmbnbPevQdOaRoOvXzO9Om4wSJrnI4BfVR5GrfX9w4O3W+E
-         MJ3ultnGwsqTaqP8Xn84k8QUYANxmTGMWV8k8vPBhzJFBk3GlqSeH+XFavHlNRvIJdG4
-         IBYOEVzcmHJ0d5XAPQa2lgSa0DG4PkaQ5RJDGG3sKrQofUgPrTyhtMQrJMcx53LjxKLF
-         1l9g==
+        d=gmail.com; s=20230601; t=1728399464; x=1729004264; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nGzvNZMAA6+TgWvWO+5QBYAo4gQiBvkx2bDlTZSKpx8=;
+        b=PLJ46l7cujvvtokvZ4jLD9DD9Lx0KLVujPjfs0qR1Wh+4Sjhaqoocoa9jPGPi8dLV0
+         ilrdkVFcsJLtlVCz6BObvHaNw7t1TmOUz9PQhayHHqp4vUJZ1JsTI4E9Lom9IdYJr2ki
+         wP2eqfxl3X2h0H4iE1K9HChxXQAp5RDA4X/MRrsJUmFn+Ld9K2YZg5OVrJ3fb68cQhAj
+         F7NWbumpKxOVrq6XHWA/Ei6a1h3UX7Zra1KZaXJER2jxV76vpvwdYPmKC5omZPyl2SOC
+         0AYsZMC6b2xlkWsogxR+d79T6wiqm21cfMeV+tytQVyaJL/vSHHy1pN6GUNYTZ77p60w
+         XQqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728398217; x=1729003017;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l0854fPv0lxGwhhEzPUBFcu+X9bL4gK6hC6tSqeFnVo=;
-        b=pDLSixtXF09DyoxCfnp+PKd6ZO3IP66hP0XABriqmcrNIDXLoEjZTp+b0NDNrnBOlp
-         im4ZmBJcBeEGQHuGet888jthEPw5cwC6Tq/dUskWp0+hNwEkxo5CQ0QUYBTLkO6twi9I
-         1a/7W7uRX+zMkAxeV8DqscMEtRCA/D/8+hCYRpEDk73J/SOAEKu7KPzjMrwUvYh0Flhh
-         prEFm7zJDUJ65AuS4Efzi69FcC677LXz/8CpCAXswdlsFJ/6GpajGqoZS7QjoT+TzrQE
-         gS7ZwnKjQZ5fLjMa9x3dRBQeVng+bvy5koKV7rpfC2JVcuYPon0LzdT270hkpmfnfSjx
-         49FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRRIcyk69sztmfsqqUoHaDd+MZuEB1QIqzPGf7YWJ3vvZtKKPZIJ8i9Bv2lZdK6gnGvewOC4FmRQ2z@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywio6Pq8CGRJiHZfp6x15eK03PfX8qf1DJysnRAUoCCEtJ/+GC8
-	PWLT3TCgn12W1D/n4PyibNIgaUGHWjOishj0swwZZM0QXJLwSV1MQ10fXZ4CCgxAw7tkPSeIxtY
-	l8aJlOddk0YsT1dQ02V9xzc5ZvzXFnPpf5BHFig==
-X-Google-Smtp-Source: AGHT+IEpdZ58qdVQo5cCccRj1bt7ZYLuIPFt7p/LlY0sT9qZJ20yILj6veCoP8QqMxVxSPJujYJBI+RkTcFSBtzbu/I=
-X-Received: by 2002:a05:6902:2209:b0:e25:b49f:c8b7 with SMTP id
- 3f1490d57ef6-e28939555d3mr10923158276.50.1728398217034; Tue, 08 Oct 2024
- 07:36:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728399464; x=1729004264;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nGzvNZMAA6+TgWvWO+5QBYAo4gQiBvkx2bDlTZSKpx8=;
+        b=XTz33ox4lUba0ihpS1xeXxSqyN9/Nz1MOoJ4fAnSEXsNVBFoQIUrkIQQL5HUN+ksEX
+         xz3EFrrgGL/fZae1eUmkJlQh0Py7OpA+chjFHutWK8+5Wiq9Nrc7aiI8cgRThZ5JQQ4E
+         gHrDljEn5hFB33eIARibijja8TlLNhRAEL8HCdBP/1tA37Qs8DELFyam7FyFhUml0z0o
+         TsJ/iEhRmkFYsdbRZ261rUYjUfBdnK9z9l3CgyGsWhE/PsFEqutR79PXdTXe85KYAoxh
+         DVUz0Uo6TZJ1ytHG5OWpQhMmCf0XfzH76aDxtrDehViDGygShUeX8mIzhZQDV2wdVjtx
+         UDhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqnLDfqvH54Ir7wMJVzkbEei1dBus8RO0TL1306PdOEr9V7SxuWmVSBI5xAOruRbVu55CptQLyLReM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv+KU9iucWUOZL9j5uGctbPbzOIlWUNtsExYm8zv6HeaiiIbg3
+	2chxDTQEHBPnxk4NBiXuOR+FIZIlPLC2+MayoyZnpvhJspUUUoTRc9LTTkqu1A+D8p2WA65x5Py
+	ZkySa/y4ohdAqBeSNVs7cS9WHBKk0E+p6
+X-Google-Smtp-Source: AGHT+IFSK+kmbuQ/eU9Da3T9dbQ3P5zXnHz5/MmK10OjJbd17n+4odgMmU3tFccuKK1rsMbxmxL8cooe/TG+LRTXfe0=
+X-Received: by 2002:a05:6102:c8d:b0:4a3:cab7:18c2 with SMTP id
+ ada2fe7eead31-4a40578d76emr11708752137.15.1728399463642; Tue, 08 Oct 2024
+ 07:57:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004102342.2414317-1-quic_srichara@quicinc.com> <20241004102342.2414317-4-quic_srichara@quicinc.com>
-In-Reply-To: <20241004102342.2414317-4-quic_srichara@quicinc.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 8 Oct 2024 16:36:15 +0200
-Message-ID: <CAPDyKFo-x5RDPwh1XxsCqzofMvspux7qt-mrxWXF7c9Sp3D8ew@mail.gmail.com>
-Subject: Re: [PATCH V3 3/7] dt-bindings: mmc: sdhci-msm: add IPQ5424 compatible
-To: Sricharan R <quic_srichara@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, linus.walleij@linaro.org, catalin.marinas@arm.com, 
-	p.zabel@pengutronix.de, geert+renesas@glider.be, dmitry.baryshkov@linaro.org, 
-	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	quic_varada@quicinc.com
+References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
+ <20240927-vfazio-mypy-v1-7-91a7c2e20884@xes-inc.com> <CAMRc=MenC69BPpkqkU_9H5_skdeFP1nHTKx5_rHCaG0U5-v0xg@mail.gmail.com>
+In-Reply-To: <CAMRc=MenC69BPpkqkU_9H5_skdeFP1nHTKx5_rHCaG0U5-v0xg@mail.gmail.com>
+From: Vincent Fazio <vfazio@gmail.com>
+Date: Tue, 8 Oct 2024 09:57:32 -0500
+Message-ID: <CAOrEah507_TM2JV29agMwGKmvKOTfpPvwO4rLEz7Gaq-NAPmsQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 07/22] bindings: python: fix Chip union-attr
+ type errors
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Vincent Fazio <vfazio@xes-inc.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 4 Oct 2024 at 12:24, Sricharan R <quic_srichara@quicinc.com> wrote:
+On Tue, Oct 8, 2024 at 8:16=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 >
-> The IPQ5424 supports eMMC with an SDHCI controller. Add the appropriate
-> compatible to the documentation.
->
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> Ok, so I don't really understand what is happening here. We're going
+> to re-assign _chip in every function? What happens to cast() if _chip
+> IS None?
 
-Applied for next, thanks!
+In this scenario, self._chip cannot be None. The self._check_closed() guard
+ensures this, however, type checkers (at least mypy) cannot infer that from=
+ the
+current code pattern.
 
-Kind regards
-Uffe
+`cast` is informing the type checker that past this point, self._chip shoul=
+d
+not be considered as None and it's safe to reference attributes off the obj=
+ect
 
+This seemed like the cleanest alternative, though others are:
 
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
+* use a local variable for the cast result. This may be less confusing but
+  incurs more changed lines
+
+    self._check_closed()
+    chip =3D cast(_ext.Chip, self._chip)
+    return chip.path
+
+* use asserts. These aren't always enforced during runtime so we cannot rep=
+lace
+  _check_closed but it does inform the type checker that it can narrow the =
+type.
+  Using both is ok, just slightly redundant.
+
+    self._check_closed()
+    assert self._chip is not None
+    return self._chip.path
+
+* add a `if self._chip is None` check that duplicates _check_closed
+(or replace it completely)
+
+* other "creative" solutions like a wrapper that returns a Chip or
+throws an exception if it's None.
+
+    def _chip_or_exc(self) -> Chip:
+        if self._chip is None:
+            raise Exception
+        return self._chip
+
+    chip =3D self._chip_or_exc()
+    return chip.path
+
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index 11979b026d21..2b66c0f3129e 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -38,6 +38,7 @@ properties:
->            - enum:
->                - qcom,ipq5018-sdhci
->                - qcom,ipq5332-sdhci
-> +              - qcom,ipq5424-sdhci
->                - qcom,ipq6018-sdhci
->                - qcom,ipq9574-sdhci
->                - qcom,qcm2290-sdhci
-> --
-> 2.34.1
->
+> Bart
 
