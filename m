@@ -1,70 +1,70 @@
-Return-Path: <linux-gpio+bounces-11069-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11070-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05808995299
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 16:57:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDB869953C1
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 17:47:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC438283550
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 14:57:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 373541F21DCF
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:47:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A601DF998;
-	Tue,  8 Oct 2024 14:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72CA1E0B8B;
+	Tue,  8 Oct 2024 15:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLJ46l7c"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GJqd3Tva"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9EF165F08
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 14:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A011E04B6
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 15:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728399466; cv=none; b=BvCu5AlIjvoKzu6q3urLJe2yq2cpSOmFMdWu5UvXhARpaamuC8ow7UiA3f2GjVmJ1CCZlDWLiWgCWVXGNBV6FvcFiKNuDY6/FT1CyIUBna1bfS+9O58/2KG0BQDKY2jJ5xlYccvh2Iiwf6iZrCJtYrCAXtkugtVwi6YJl2sgFUo=
+	t=1728402432; cv=none; b=DwxWOu4QQm/334mWneGI3xT3Co1wPVoKsOFl7+KZIMd6K5NQTPF65iYq9Mle86uppqMzAkhyqZrYFbouk4nQzj7aOamNL09kwXEJLBQivHfOjAZ9Z5wiGhETyYE1ggB077XrgRHIDe7xjTYLqB3HWudC1rf+3uSzmmPbAuuQLbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728399466; c=relaxed/simple;
-	bh=2O6mlxbXjwqAxAkbPjSWOWi1d9MZpvRgzftBJL1K1gM=;
+	s=arc-20240116; t=1728402432; c=relaxed/simple;
+	bh=B8Fg4qdDTRYSFJF9olwvFBISLl9UJdDVN4uB5AhRUx4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a3KGyafAJMtgmNLLCUoq2Nd/EbbTSiYAfIeLLpig3HHahGPiLCdmG2JKTmwwopkjMCEn+lMdmObZSK5sZ1xyqH5v+9lSBIgfkUrXex1BMCkPba94j1xIR2AN2BdbM5Qzk921w8xaMXfmHawiI9DjGNiY4Ynbw2kG99jIzDNOY24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLJ46l7c; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-84f9aa39710so413790241.2
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 07:57:44 -0700 (PDT)
+	 To:Cc:Content-Type; b=Hi8nfg/mqZ7kspdvDu7tZGqxNVelzBdivQhjpn2IjAprk41p3Yf4oBI4/ybNiJWgpUDe1RvCu6tN637Vhv5FXADG3uy7qbNGeswp/2R2bi7dCZhGLbEU73EJljOPLBV0Zr6hKBq9PkG1J7iJEJLFv3jrQYwXLGP4BmrwNkutQ+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GJqd3Tva; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fac5eb10ceso51897611fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 08:47:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728399464; x=1729004264; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728402427; x=1729007227; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nGzvNZMAA6+TgWvWO+5QBYAo4gQiBvkx2bDlTZSKpx8=;
-        b=PLJ46l7cujvvtokvZ4jLD9DD9Lx0KLVujPjfs0qR1Wh+4Sjhaqoocoa9jPGPi8dLV0
-         ilrdkVFcsJLtlVCz6BObvHaNw7t1TmOUz9PQhayHHqp4vUJZ1JsTI4E9Lom9IdYJr2ki
-         wP2eqfxl3X2h0H4iE1K9HChxXQAp5RDA4X/MRrsJUmFn+Ld9K2YZg5OVrJ3fb68cQhAj
-         F7NWbumpKxOVrq6XHWA/Ei6a1h3UX7Zra1KZaXJER2jxV76vpvwdYPmKC5omZPyl2SOC
-         0AYsZMC6b2xlkWsogxR+d79T6wiqm21cfMeV+tytQVyaJL/vSHHy1pN6GUNYTZ77p60w
-         XQqg==
+        bh=vT6N1PBKTvGo5v5tRump2+HZCh+5tfAk/2bWSk9ekmE=;
+        b=GJqd3TvaTPCcfODXfjU590FHf01GSRbkg1nbCvsnrvhYRRDQ2ArG0duY6vxTpiN2kM
+         pR+R+mDJZl6dfAMg65dQ5kCShWaB922AUZ8D8qJpw05R8lj7q1YHxFP+Mf2OHzLuhShY
+         d+YNcloF4MLdedTGKqc4VIVUAXTrKDyVD6oqISry2vi1CiY0I/F59WwE7lsWz2Yb3b2C
+         LCIiFnnHM2BMB0MywBuYpflKVxdo20vrFlnQd2TaCxU8zMgjWYO9qInRodVsLKqwLeP5
+         sTiQeSJGR6uoaO3D4KAOJhzq6p9JPJ2+oDXvre1xIh+5bs3wBeraUEYmwtj3aseNxbxo
+         EZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728399464; x=1729004264;
+        d=1e100.net; s=20230601; t=1728402427; x=1729007227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nGzvNZMAA6+TgWvWO+5QBYAo4gQiBvkx2bDlTZSKpx8=;
-        b=XTz33ox4lUba0ihpS1xeXxSqyN9/Nz1MOoJ4fAnSEXsNVBFoQIUrkIQQL5HUN+ksEX
-         xz3EFrrgGL/fZae1eUmkJlQh0Py7OpA+chjFHutWK8+5Wiq9Nrc7aiI8cgRThZ5JQQ4E
-         gHrDljEn5hFB33eIARibijja8TlLNhRAEL8HCdBP/1tA37Qs8DELFyam7FyFhUml0z0o
-         TsJ/iEhRmkFYsdbRZ261rUYjUfBdnK9z9l3CgyGsWhE/PsFEqutR79PXdTXe85KYAoxh
-         DVUz0Uo6TZJ1ytHG5OWpQhMmCf0XfzH76aDxtrDehViDGygShUeX8mIzhZQDV2wdVjtx
-         UDhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqnLDfqvH54Ir7wMJVzkbEei1dBus8RO0TL1306PdOEr9V7SxuWmVSBI5xAOruRbVu55CptQLyLReM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv+KU9iucWUOZL9j5uGctbPbzOIlWUNtsExYm8zv6HeaiiIbg3
-	2chxDTQEHBPnxk4NBiXuOR+FIZIlPLC2+MayoyZnpvhJspUUUoTRc9LTTkqu1A+D8p2WA65x5Py
-	ZkySa/y4ohdAqBeSNVs7cS9WHBKk0E+p6
-X-Google-Smtp-Source: AGHT+IFSK+kmbuQ/eU9Da3T9dbQ3P5zXnHz5/MmK10OjJbd17n+4odgMmU3tFccuKK1rsMbxmxL8cooe/TG+LRTXfe0=
-X-Received: by 2002:a05:6102:c8d:b0:4a3:cab7:18c2 with SMTP id
- ada2fe7eead31-4a40578d76emr11708752137.15.1728399463642; Tue, 08 Oct 2024
- 07:57:43 -0700 (PDT)
+        bh=vT6N1PBKTvGo5v5tRump2+HZCh+5tfAk/2bWSk9ekmE=;
+        b=WjzUcV0nPY1VQeXNsXTIZpoDuRCNLcFeILnnZEpzhDW04+VYYmjX1Y1I8BW7WJoDO4
+         Cq7s7xrFRaWmQKOxmsFqzGrKHTjego4569LtQKKk7yKXHcpL5XH13wHGD48Py2YIFfu7
+         vAPKAFP5AoWn3Dfrh4da6MxfjO98Vp0xy06unSWMX8KgzY/tNU+40tethOeQleYasSyp
+         l/wa6LC3/pfo7VYmX0JNOrHBuxGebKnyzQm1AdkqMXXCrSz/KSYQNrjbwBhdWqMZrK1u
+         qB9suiSEOyXOefwOaNAEKPd03UVHWIZpZrhVBQjXWSTqvrueJxAEWrMLa15W3qpvEEkn
+         pgrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb+yBfsihqjC62AEvzTfy7g7/jxqEhM1Rqx3iT/BibQCQthjteJN2hqO7u6vXv/EwGtDA0yAzgKJ7i@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/87mtNW47H3MpYWVIIFl8eyLaTW3vd/F4zaM1a1BuZXKjXFOT
+	YScW6s4BS8EOWnCoMJzu2JHMVl21T6aXDeVW2w7BfA9jCqxtkPdg9MUpo6ZZDSabmcJeb86l5B7
+	RbB295P3zUYKN4sAyLdITwOFca0Bwz7YRal/znA4IjhlsqhQK
+X-Google-Smtp-Source: AGHT+IE18EtQY/7xrpx3ONmwK1rKLpkhGJ+CVmGobkqbfYN3gh9NtxLhUg6FBKQxZEV3mq2JBpM4ZL3D1deyE/BaURE=
+X-Received: by 2002:a2e:bc18:0:b0:2fa:c685:404a with SMTP id
+ 38308e7fff4ca-2fb1602652emr2152241fa.4.1728402427151; Tue, 08 Oct 2024
+ 08:47:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,68 +73,95 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
  <20240927-vfazio-mypy-v1-7-91a7c2e20884@xes-inc.com> <CAMRc=MenC69BPpkqkU_9H5_skdeFP1nHTKx5_rHCaG0U5-v0xg@mail.gmail.com>
-In-Reply-To: <CAMRc=MenC69BPpkqkU_9H5_skdeFP1nHTKx5_rHCaG0U5-v0xg@mail.gmail.com>
-From: Vincent Fazio <vfazio@gmail.com>
-Date: Tue, 8 Oct 2024 09:57:32 -0500
-Message-ID: <CAOrEah507_TM2JV29agMwGKmvKOTfpPvwO4rLEz7Gaq-NAPmsQ@mail.gmail.com>
+ <CAOrEah507_TM2JV29agMwGKmvKOTfpPvwO4rLEz7Gaq-NAPmsQ@mail.gmail.com>
+In-Reply-To: <CAOrEah507_TM2JV29agMwGKmvKOTfpPvwO4rLEz7Gaq-NAPmsQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 8 Oct 2024 17:46:55 +0200
+Message-ID: <CAMRc=MeGoRM+AEz3iq_ox=dWLAF-M5eFkee4hXBvUoHrSee0rA@mail.gmail.com>
 Subject: Re: [libgpiod][PATCH 07/22] bindings: python: fix Chip union-attr
  type errors
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vincent Fazio <vfazio@gmail.com>
 Cc: Vincent Fazio <vfazio@xes-inc.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 8, 2024 at 8:16=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Tue, Oct 8, 2024 at 4:57=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wro=
+te:
 >
+> On Tue, Oct 8, 2024 at 8:16=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> >
+> > Ok, so I don't really understand what is happening here. We're going
+> > to re-assign _chip in every function? What happens to cast() if _chip
+> > IS None?
 >
-> Ok, so I don't really understand what is happening here. We're going
-> to re-assign _chip in every function? What happens to cast() if _chip
-> IS None?
-
-In this scenario, self._chip cannot be None. The self._check_closed() guard
-ensures this, however, type checkers (at least mypy) cannot infer that from=
- the
-current code pattern.
-
-`cast` is informing the type checker that past this point, self._chip shoul=
-d
-not be considered as None and it's safe to reference attributes off the obj=
-ect
-
-This seemed like the cleanest alternative, though others are:
-
-* use a local variable for the cast result. This may be less confusing but
-  incurs more changed lines
-
-    self._check_closed()
-    chip =3D cast(_ext.Chip, self._chip)
-    return chip.path
-
-* use asserts. These aren't always enforced during runtime so we cannot rep=
-lace
-  _check_closed but it does inform the type checker that it can narrow the =
-type.
-  Using both is ok, just slightly redundant.
-
-    self._check_closed()
-    assert self._chip is not None
-    return self._chip.path
-
-* add a `if self._chip is None` check that duplicates _check_closed
-(or replace it completely)
-
-* other "creative" solutions like a wrapper that returns a Chip or
-throws an exception if it's None.
-
-    def _chip_or_exc(self) -> Chip:
-        if self._chip is None:
-            raise Exception
-        return self._chip
-
-    chip =3D self._chip_or_exc()
-    return chip.path
-
+> In this scenario, self._chip cannot be None. The self._check_closed() gua=
+rd
+> ensures this, however, type checkers (at least mypy) cannot infer that fr=
+om the
+> current code pattern.
 >
-> Bart
+> `cast` is informing the type checker that past this point, self._chip sho=
+uld
+> not be considered as None and it's safe to reference attributes off the o=
+bject
+>
+> This seemed like the cleanest alternative, though others are:
+>
+> * use a local variable for the cast result. This may be less confusing bu=
+t
+>   incurs more changed lines
+>
+>     self._check_closed()
+>     chip =3D cast(_ext.Chip, self._chip)
+>     return chip.path
+>
+
+For the sake of readability, I would lean more towards this option if
+I'm honest.
+
+Or even - if you need to use the cast variable only once:
+
+self._check_closed()
+return cast(_ext.Chip, self._chip).path
+
+?
+
+> * use asserts. These aren't always enforced during runtime so we cannot r=
+eplace
+>   _check_closed but it does inform the type checker that it can narrow th=
+e type.
+>   Using both is ok, just slightly redundant.
+>
+>     self._check_closed()
+>     assert self._chip is not None
+>     return self._chip.path
+>
+
+Yeah, this isn't optimal.
+
+> * add a `if self._chip is None` check that duplicates _check_closed
+> (or replace it completely)
+>
+
+Yep, no.
+
+> * other "creative" solutions like a wrapper that returns a Chip or
+> throws an exception if it's None.
+>
+>     def _chip_or_exc(self) -> Chip:
+>         if self._chip is None:
+>             raise Exception
+>         return self._chip
+>
+>     chip =3D self._chip_or_exc()
+>     return chip.path
+>
+
+Ugh. I see, cast() is the best solution.
+
+Please consider the small change I suggested.
+
+Bart
 
