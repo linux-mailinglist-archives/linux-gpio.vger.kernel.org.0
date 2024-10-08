@@ -1,115 +1,115 @@
-Return-Path: <linux-gpio+bounces-11027-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11028-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02D9C9942A6
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 10:49:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0CED9942CD
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 10:53:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BD861C2410C
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 08:49:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C62028CDE8
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 08:53:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C6E1DF72E;
-	Tue,  8 Oct 2024 08:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB4CF1E131E;
+	Tue,  8 Oct 2024 08:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MX+Z9ad8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EfW0N1xJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31511DF721
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F5D81E1300;
+	Tue,  8 Oct 2024 08:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728375771; cv=none; b=cLutfkC6IjanKH9N8xDPywF4lolM5r3CUS++Qhd9ry5fuu3Wxv2Uq2GxAUahHXrjfR32FFAm2r7BYJm+5wnKhzV8gVoFSv6u2slzpC3XTCPQUs6hb2uoEv8vnngmMTlZ51UxN9rTDYwxwqs9P8vMmYtnLCXQ+NDx1JN3+pbdwqA=
+	t=1728376344; cv=none; b=K6YPeS6+SdNmAEPzgQ1FxVcONITJJb/75/bpLIT5JZyOwADzDA6oAp15fiyJoIIGPADfgIS/H0t0cXgu3NtHzwDACj220JxxYl+xAm0FJ0YjdT3GtAOEYwaLjay2wVQAsU3dCprFtcvZQG1sZn5SazwL7pzJ+5GpEgQomAjsEPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728375771; c=relaxed/simple;
-	bh=V+QO1gZ1yi8AFrRG0aci7Zer7kz/k7zfNOxNVNqmN4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iG3s4ab48wfLuIZDABD4cWSChfB0/feeaUVRmd32Ww6UkdvOT13vrGuwtY4/oVKzs7c4O4pqh77Tihi++Mm3xx7T9tn55zH2VuhPOVGhbi9t0Fp2rnt1m95QsU+e3KGQ+6+FL9yxajCoQsMA3u7BTTTjoOm85htcqt6ODdhYVbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MX+Z9ad8; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42e7b7bef42so47450285e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 01:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728375768; x=1728980568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pGr1KOBqzMkq9zDAlpbx3jqH5CMbHVpkvLSNFLTTlCM=;
-        b=MX+Z9ad8AfdvtfNSUD6o7LluzPUi5rizLYknU1l9pXEY4RH9Co/D7YbNnhtnYOIk5A
-         hNwFiF4Tc856F1dMbKNjOHywO6N9nCmbtdS7Uztl9D4iCBRjvaI+6GxgFfp4Nn8fnre7
-         O5AvaXiiv6tZhLqBDitYF47acTE+uZ8PdPlBmaB4qR/chgIT72qmNCRkBYzwhCz+U3Vs
-         c1ZfIt3XfRKZvMZYlHv4Br4NRiDbQ9ZBBdcjkVsygsO/JPrLtFcM9I9hdZbHwPmlEiKN
-         w/e7eonnV22BEaPYcfnAj8H+OwmMmKmgw4oK8W3tpVLSVAY59ADC7ltrUZM5FujE9IrR
-         ygyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728375768; x=1728980568;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pGr1KOBqzMkq9zDAlpbx3jqH5CMbHVpkvLSNFLTTlCM=;
-        b=Qd77UspxDUZVK7Sx2nPClMxoc8MrYsR+FkE8UQq7bJxqZW/cTKOccrWXxUrT5puh2F
-         7189pdfIrCUhJACXJVoWUOgHg5aIUU3Z/YOHBZGk4ucL9VhKimApC1aT0GrGbzOULC/d
-         ucNQ92LpmhYhDFDwsM51iml8APNE/OF1qtzinV0SUgCXcV+wmdzv0dunvFHvZikr5gxr
-         PKSB34zVdFRIQuKioUY1ngnwMA86osBaaROmlr+CmgxqW9v9AJ/qNCdYXC8HeBOPyb8J
-         80QbEfsZhq+pyvYfTsgEvg6TgZH85ULPrzCnBKacxSwxqc6KXm4nz5g8LP0iWDyIQpT6
-         7atA==
-X-Forwarded-Encrypted: i=1; AJvYcCU34ihbdMv8jXiPCk547Q+FTE5qVB0BVQqM1wayRaE64y3vChEuTSRlR8ZpLH3FvcoU5EqpRNkAeHkJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/1UH6kaGMJdZ5vjUvKSbu98Y0hw3GwDvF3Sq+090hJQ9Oovpi
-	TX2wu9PNDY7qMIovTe3l7kENMS1MLNUYtQTPl3ekORYS24X2DUIySXTyME9CKac=
-X-Google-Smtp-Source: AGHT+IGs6yt8fxB2n+NjHQaLtndPKlWWB3FgWwvloahSXSBLUScPw7lYAquculPe8CZ0r9eHrs7qFA==
-X-Received: by 2002:a05:600c:1e22:b0:426:614b:1a72 with SMTP id 5b1f17b1804b1-42f85ac08d3mr117725465e9.17.1728375768211;
-        Tue, 08 Oct 2024 01:22:48 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:738a:20da:f541:94ff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4304efc2b1bsm9928185e9.1.2024.10.08.01.22.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 01:22:47 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/5] gpio: notify user-space about config changes in the kernel
-Date: Tue,  8 Oct 2024 10:22:46 +0200
-Message-ID: <172837574980.35320.14657169986213990017.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241004-gpio-notify-in-kernel-events-v1-0-8ac29e1df4fe@linaro.org>
-References: <20241004-gpio-notify-in-kernel-events-v1-0-8ac29e1df4fe@linaro.org>
+	s=arc-20240116; t=1728376344; c=relaxed/simple;
+	bh=L6hn56+wY3Cptqr18fuXGg+zcOl3Ut65We9gsf4eF8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q2NytGtHHdGYDIcELA7I6DYWFk+sUp5BRuzfh9kuOsn6JVr3i9lK2Daf1A3f0cc34gdgr2IZwTAOjMIHfFdDss1Y9OTzqX4DrFJQvB4j8ZsUdzlB9DiRs7YhV34K4A6J6EUU40BeTDQ1LFnkpbuihdKSCxRiaf9B3wBiSBma1Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EfW0N1xJ; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=L6hn56+wY3Cptqr18fuXGg+zcOl3Ut65We9gsf4eF8w=;
+	b=EfW0N1xJyCUF79glByvifp7jswsQSoJEFybOSsDOy9KVeOAsHSp2EAUBMYHrgk
+	KN++s2mCF296fEOgNadLcGWB2bz6LN+fcixWHBp8wNBWFYKYwHvZAOGwlMPKPl5b
+	xSysI5nUcDzWBHc4nA/Y1UpYNohA4JYmwHF211cWRcWbg=
+Received: from [192.168.31.242] (unknown [27.18.107.81])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBXf4Tn7QRnmf5rBg--.6114S2;
+	Tue, 08 Oct 2024 16:31:38 +0800 (CST)
+Message-ID: <6a1a3e38-0c6b-4d79-a101-b3292a2ab3be@163.com>
+Date: Tue, 8 Oct 2024 16:31:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] Add initial support for Canaan Kendryte K230
+ pinctrl
+To: Conor Dooley <conor@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
+ <CACRpkdYk9aCp7mdWJJTT-1cwNZC4RN_eB6v5rducDY5MGJ_dbg@mail.gmail.com>
+ <20241001-stratus-overplay-96266c33ca89@spud>
+Content-Language: en-US
+From: Ze Huang <18771902331@163.com>
+In-Reply-To: <20241001-stratus-overplay-96266c33ca89@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXf4Tn7QRnmf5rBg--.6114S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF1DAF1kJr4UKFWrZF15XFb_yoW8tr43pF
+	93KFs0ka1UJw4ayrZ29anFyFn0v3ZYyr90gFs8KryUXF9I9a42qFWxKr4jkF9xCr4Fkr4j
+	yrs0qw1xJanrXFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UOzV8UUUUU=
+X-CM-SenderInfo: zpryllqrzqjjitr6il2tof0z/1tbiJxlyomcEoY7FgAACsl
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 10/1/24 8:32 PM, Conor Dooley wrote:
+> On Tue, Oct 01, 2024 at 02:27:25PM +0200, Linus Walleij wrote:
+>> On Thu, Sep 26, 2024 at 5:58 PM Ze Huang <18771902331@163.com> wrote:
+>>
+>>> This patch series introduces support for the pinctrl driver of the Canaan
+>>> K230 SoC. The K230 SoC features 64 IO pins, each of which can be configured
+>>> for up to five different functions.
+>>>
+>>> The controller manages the entire pin configuration and multiplexing
+>>> through a single register, which control features such as schmitt trigger,
+>>> drive strength, bias pull-up/down, input/output enable, power source, and
+>>> mux mode.
+>>>
+>>> The changes have been tested on CanMV-K230-V1.1 board.
+>>>
+>>> The pin function definition can be found here [1], and most of the DTS data
+>>> was converted from the vendor's code [2].
+>> Bindings ACKed and patches look good to I applied patch
+>> 1 & 2 to the pin control tree.
+>>
+>> Please funnel patch 3 through the SoC tree.
+>>
+>>> prerequisite-message-id: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
+>>> prerequisite-patch-id: 704efc6e76814e1877748959d7319d558c8386c1
+>>> prerequisite-patch-id: c2144cf468c57b856830a61615ba6ba501e8ec58
+>>> prerequisite-patch-id: ced4a01ccd8ddab2fd308d543ddf47bd1641518a
+>>> prerequisite-patch-id: f8b983b301d0c14f1448b9e4c321262a509e061e
+>>> prerequisite-patch-id: 834b65b6a2b037daed5cffc6a41963622568dc9c
+>>> prerequisite-patch-id: 2401703b57448c9ea2c3dc7650b4502491a28944
+>> I don't know about all this stuff but neither bindings or code seems
+>> to contain anything that won't compile so I just assume that any of these
+>> dependencies are purely for patch 3/3 and I nothing blocks me
+>> merging patches 1 & 2 so I just went ahead with that.
+> Yah, this should all be cos I haven't yet applied
+> https://lore.kernel.org/all/tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com/
+> as I am waiting for a clock driver to be sorted out.
 
+Thank you very much for your time in reviewing and helping fix the bug!
+Indeed, only patch 3 really depends on the previous patches. We are now
+working on clock driver. Should we deal with patch 3 after that?
 
-On Fri, 04 Oct 2024 16:43:21 +0200, Bartosz Golaszewski wrote:
-> We currently only emit events on changed line config to user-space on
-> changes made from user-space. Users have no way of getting notified
-> about in-kernel changes. This series improves the situation and also
-> contains a couple other related improvements.
-> 
-> 
-
-Applied, thanks!
-
-[1/5] gpiolib: use v2 defines for line state change events
-      commit: ee194b12bf9a2f2ed57b9c5bc7a5f221f7f4a06f
-[2/5] gpiolib: unify two loops initializing GPIO descriptors
-      commit: fa17f749ee5bc6afdaa9e0ddbe6a816b490dad7d
-[3/5] gpio: cdev: update flags at once when reconfiguring from user-space
-      commit: b7adfb6076ff0c1ebbde56d1903daa3d07db92c5
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
