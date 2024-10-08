@@ -1,174 +1,309 @@
-Return-Path: <linux-gpio+bounces-11077-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11078-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF6B799596E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 23:47:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0A2F9959C8
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 00:04:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 636B91F2277F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 21:47:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 634C5285CCB
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 22:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D74517C9EA;
-	Tue,  8 Oct 2024 21:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EDAA1E103F;
+	Tue,  8 Oct 2024 22:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QEtIxFzG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clxtKb6u"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE72C15F3FF
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 21:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1CD179954;
+	Tue,  8 Oct 2024 22:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728424034; cv=none; b=QzladrrLqHAw+DF1kyEQ42FdvfpcY2HCoMhvhO4tj4WxqiG9scdzJguiiE+pH02JTc+xBAZy6F18LHisl4XKLBB+G49uoQ3RIqQctBbccPIU9Cbvo0VhvKKiITEF3QzaIvEFqZZaY6rJuVpMVZKZI/x8NXYoyQKypEMZErTFmFs=
+	t=1728425076; cv=none; b=eUkO79LxKoQQGoJtOmqXLrWF3vJjN/SKLJV3tE/0hfROJHsoZNGHBkV0jcKvEcOt7jvm8Are2g/NAsBSqVUi9wMM9yT9psySOuHXPP/5Q1F5ViuVEMu01C0hCsu2yztEpWde5VxC/T+GUjqy2eWzpjgxE340sXeRRr2rDb8zQIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728424034; c=relaxed/simple;
-	bh=ViHKXHXcphaWHIHpYQlVSjlEYmw4Pu6kGUiKCF4dGqs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=k8y2UCICMpsEFlAHjrfoXj06jA34YuMJ9xwKCVjYXymXH3SfEEbxW0wTrqW8l1oDXcyxgcs525dzOMAfchOI1grgjQwziy5dY1lCNPBm7OryklmHTT6EtVxTNmgbY735BkyPk28IevntlNUYvStYNn5TQ9+NG0RYLCvqH8qUhPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QEtIxFzG; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728424033; x=1759960033;
-  h=date:from:to:cc:subject:message-id;
-  bh=ViHKXHXcphaWHIHpYQlVSjlEYmw4Pu6kGUiKCF4dGqs=;
-  b=QEtIxFzGb4LkEHao1UEXh4o5iIX0J4Le7b7WOWYfUh/mHqGqQ9kPWGIV
-   cfPZxYqdRhWXzgwKuPbMhpsFaG/maQJTuclJ/y7o6ehOx3KuNMsaXtbHk
-   MLdh3fNtWuaae5qok5WjcLEUUDiVbqYWLsONLykXC7c25SBTeI44ebCNZ
-   Rl7/usuNuleJFHAoSRdM/DncaaaiQYOW+QZAgptfVbHFgys1o/VT6gnvO
-   vNsiB5+AxALs73fqbIqAvNhLej2jZ9g1paL5Ec/DfMTn3McJP8kiLVy5K
-   TtAzQtS3GkcnJTs6rXpiAZ4mYcg99kW/33P3WWVFQEPA3BxJeLxv5dQBU
-   Q==;
-X-CSE-ConnectionGUID: f7qAofIJQvChn7/ELE1ZaQ==
-X-CSE-MsgGUID: C7yFZIvTRJan/QTBLeLRbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="27554634"
-X-IronPort-AV: E=Sophos;i="6.11,188,1725346800"; 
-   d="scan'208";a="27554634"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 14:47:12 -0700
-X-CSE-ConnectionGUID: Q8loSQK/SRu5SYAaX45wcg==
-X-CSE-MsgGUID: CwxkSrfKQ8SnKThNldpyNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,188,1725346800"; 
-   d="scan'208";a="76252843"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 08 Oct 2024 14:47:11 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1syI2v-0008PW-08;
-	Tue, 08 Oct 2024 21:47:09 +0000
-Date: Wed, 09 Oct 2024 05:46:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- b7adfb6076ff0c1ebbde56d1903daa3d07db92c5
-Message-ID: <202410090529.EKSJATo9-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1728425076; c=relaxed/simple;
+	bh=ms7y13SKSl3l6x54yKv0dqYa0hkXrQlTObop68w2TTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vA3cqzXlealvKlzKqjNRo7vbLO9Sw3SMXcBOqDIbF4rUBhB0eaVC8RSntei/4VlcPxTLdpEZ8YrfCLNAwfYUSZm0P0f4c+LSywEtP1VvBpq/PsmyXZmmvooMmU8lxfVVz6tvAqFdVARHLlxUIbQS0gbjvFM9juyJa3mqQDStdbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clxtKb6u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394CDC4CECF;
+	Tue,  8 Oct 2024 22:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728425075;
+	bh=ms7y13SKSl3l6x54yKv0dqYa0hkXrQlTObop68w2TTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=clxtKb6uPWfUDdD1z+NjKt4020Xf1psaH3OQVC3cD4jDYPJWXAHFmHyJcBvcZ5DYw
+	 r2yUu15NRPsHpKLM48JiRf8G4jN5hXP15K03DUppXPtn7rAH9bKT75MIdg3VFVzhb0
+	 hYT2IL21c5XIRJECdGWnNfUegiUMWKvu6zAut6bGuIV0RydpOqOjcVz8VGwDKlIP1H
+	 IDI2Cwc8Qa/N/BvMSM1vp0g2Jy1cyaiPdoU3CJ0Bx/zNXrkN0mrSieEoX+m9OXo3R9
+	 Arcqd9hwGNKGfX9Nst20wL/IJ2giwlTEwU6ooSENHogKWxiWXcO0nyuweXFRBznC9o
+	 NdMgHmAoRYFYw==
+Date: Wed, 9 Oct 2024 00:04:33 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+Message-ID: <ZwWscWk5axQI9H1t@lore-desk>
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
+ <20241002132518.GD7504@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Ck0ElvyZLVpyJemd"
+Content-Disposition: inline
+In-Reply-To: <20241002132518.GD7504@google.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: b7adfb6076ff0c1ebbde56d1903daa3d07db92c5  gpio: cdev: update flags at once when reconfiguring from user-space
 
-elapsed time: 748m
+--Ck0ElvyZLVpyJemd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 81
-configs skipped: 3
+On Oct 02, Lee Jones wrote:
+> On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
+>=20
+> > From: Christian Marangi <ansuelsmth@gmail.com>
+> >=20
+> > Support for Airoha EN7581 Multi Function Device that
+> > expose PINCTRL functionality and PWM functionality.
+>=20
+> The device is a jumble of pinctrl registers, some of which can oscillate.
+>=20
+> This is *still* not an MFD.
+>=20
+> If you wish to spread this functionality over 2 drivers, use syscon to
+> obtain the registers and simple-mfd to automatically probe the drivers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi Lee,
 
-tested configs:
-alpha            allnoconfig    gcc-14.1.0
-alpha           allyesconfig    clang-20
-alpha              defconfig    gcc-14.1.0
-arc             allmodconfig    clang-20
-arc              allnoconfig    gcc-14.1.0
-arc             allyesconfig    clang-20
-arc                defconfig    gcc-14.1.0
-arm             allmodconfig    clang-20
-arm              allnoconfig    gcc-14.1.0
-arm             allyesconfig    clang-20
-arm                defconfig    gcc-14.1.0
-arm64           allmodconfig    clang-20
-arm64            allnoconfig    gcc-14.1.0
-arm64              defconfig    gcc-14.1.0
-csky             allnoconfig    gcc-14.1.0
-csky               defconfig    gcc-14.1.0
-hexagon         allmodconfig    clang-20
-hexagon          allnoconfig    gcc-14.1.0
-hexagon         allyesconfig    clang-20
-hexagon            defconfig    gcc-14.1.0
-i386            allmodconfig    clang-18
-i386             allnoconfig    clang-18
-i386            allyesconfig    clang-18
-i386               defconfig    clang-18
-loongarch       allmodconfig    gcc-14.1.0
-loongarch        allnoconfig    gcc-14.1.0
-loongarch          defconfig    gcc-14.1.0
-m68k            allmodconfig    gcc-14.1.0
-m68k             allnoconfig    gcc-14.1.0
-m68k            allyesconfig    gcc-14.1.0
-m68k               defconfig    gcc-14.1.0
-microblaze      allmodconfig    gcc-14.1.0
-microblaze       allnoconfig    gcc-14.1.0
-microblaze      allyesconfig    gcc-14.1.0
-microblaze         defconfig    gcc-14.1.0
-mips             allnoconfig    gcc-14.1.0
-nios2            allnoconfig    gcc-14.1.0
-nios2              defconfig    gcc-14.1.0
-openrisc         allnoconfig    clang-20
-openrisc         allnoconfig    gcc-14.1.0
-openrisc        allyesconfig    gcc-14.1.0
-openrisc           defconfig    gcc-12
-parisc          allmodconfig    gcc-14.1.0
-parisc           allnoconfig    clang-20
-parisc           allnoconfig    gcc-14.1.0
-parisc          allyesconfig    gcc-14.1.0
-parisc             defconfig    gcc-12
-parisc64           defconfig    gcc-14.1.0
-powerpc         allmodconfig    gcc-14.1.0
-powerpc          allnoconfig    clang-20
-powerpc          allnoconfig    gcc-14.1.0
-powerpc         allyesconfig    gcc-14.1.0
-riscv           allmodconfig    gcc-14.1.0
-riscv            allnoconfig    clang-20
-riscv            allnoconfig    gcc-14.1.0
-riscv           allyesconfig    gcc-14.1.0
-riscv              defconfig    gcc-12
-s390            allmodconfig    gcc-14.1.0
-s390             allnoconfig    clang-20
-s390            allyesconfig    gcc-14.1.0
-s390               defconfig    gcc-12
-sh              allmodconfig    gcc-14.1.0
-sh               allnoconfig    gcc-14.1.0
-sh              allyesconfig    gcc-14.1.0
-sh                 defconfig    gcc-12
-sparc           allmodconfig    gcc-14.1.0
-sparc64            defconfig    gcc-12
-um              allmodconfig    clang-20
-um               allnoconfig    clang-17
-um               allnoconfig    clang-20
-um              allyesconfig    clang-20
-um                 defconfig    gcc-12
-um            i386_defconfig    gcc-12
-um          x86_64_defconfig    gcc-12
-x86_64           allnoconfig    clang-18
-x86_64          allyesconfig    clang-18
-x86_64             defconfig    clang-18
-x86_64                 kexec    gcc-12
-x86_64              rhel-8.3    gcc-12
-x86_64         rhel-8.3-rust    clang-18
-xtensa           allnoconfig    gcc-14.1.0
+IIUC you are suggesting two possible approaches here:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+1- have a single driver implementing both pinctrl and pwm functionalities.
+   This approach will not let us reuse the code for future devices that
+   have just one of them in common, like pwm (but we can live with that).
+
+2- use a device node like the one below (something similar to [0])
+
+system-controller@1fbf0200 {
+	compatible =3D "syscon", "simple-mfd";
+	reg =3D <0x0 0x1fbf0200 0x0 0xc0>;
+
+	interrupt-parent =3D <&gic>;
+	interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+
+	gpio-controller;
+	#gpio-cells =3D <2>;
+
+	interrupt-controller;
+	#interrupt-cells =3D <2>;
+
+	pio: pinctrl {
+		compatible =3D "airoha,en7581-pinctrl";
+
+		[ some pinctrl properties here ]
+	};
+
+	#pwm-cells =3D <3>;
+
+	pwm {
+		compatible =3D "airoha,en7581-pwm";
+	};
+};
+
+Please correct me if I am wrong, but using syscon/simple-mfd as compatible
+string for the 'parent' device, will require to introduce the compatible st=
+rings
+even for the child devices in order to probe them, correct?=20
+If so, as pointed out by Christian, this is something nacked by Rob/Krzyszt=
+of/Conor
+(this is the main reason why we introduced a full mfd driver here).
+
+@Rob, Krzysztof, Conor: am I right?
+
+I guess we need to find a middle ground here between mfd and dts to support=
+ this
+uncommon hw device.
+
+Regards,
+Lorenzo
+
+[0] https://elixir.bootlin.com/linux/v6.11.2/source/arch/arm64/boot/dts/mar=
+vell/armada-ap80x.dtsi#L269
+
+>=20
+> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/mfd/Kconfig                   |  8 ++++
+> >  drivers/mfd/Makefile                  |  2 +
+> >  drivers/mfd/airoha-en7581-gpio-mfd.c  | 72 +++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/mfd/airoha-en7581-mfd.h |  9 +++++
+> >  4 files changed, 91 insertions(+)
+> >=20
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index f9325bcce1b9..eca221351ab7 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -32,6 +32,14 @@ config MFD_ADP5585
+> >  	  the core APIs _only_, you have to select individual components like
+> >  	  the GPIO and PWM functions under the corresponding menus.
+> > =20
+> > +config MFD_AIROHA_EN7581
+> > +	bool "Airoha EN7581 Multi Function Device"
+> > +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF
+> > +	select MFD_CORE
+> > +	help
+> > +	  Support for Airoha EN7581 Multi Function Device that
+> > +	  expose PINCTRL functionality and PWM functionality.
+> > +
+> >  config MFD_ALTERA_A10SR
+> >  	bool "Altera Arria10 DevKit System Resource chip"
+> >  	depends on ARCH_INTEL_SOCFPGA && SPI_MASTER=3Dy && OF
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 2a9f91e81af8..be8448e81a5b 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -257,6 +257,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+=3D intel_soc_p=
+mic_chtwc.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+=3D intel_soc_pmic_chtdc_ti.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+=3D intel_soc_pmic_mrfld.o
+> > =20
+> > +obj-$(CONFIG_MFD_AIROHA_EN7581)	+=3D airoha-en7581-gpio-mfd.o
+> > +
+> >  obj-$(CONFIG_MFD_ALTERA_A10SR)	+=3D altera-a10sr.o
+> >  obj-$(CONFIG_MFD_ALTERA_SYSMGR) +=3D altera-sysmgr.o
+> >  obj-$(CONFIG_MFD_STPMIC1)	+=3D stpmic1.o
+> > diff --git a/drivers/mfd/airoha-en7581-gpio-mfd.c b/drivers/mfd/airoha-=
+en7581-gpio-mfd.c
+> > new file mode 100644
+> > index 000000000000..88407ce5747e
+> > --- /dev/null
+> > +++ b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> > @@ -0,0 +1,72 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * MFD driver for Airoha EN7581
+> > + */
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/mfd/airoha-en7581-mfd.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/module.h>
+> > +
+> > +static struct resource airoha_mfd_pinctrl_intr[] =3D {
+> > +	{
+> > +		.flags =3D IORESOURCE_IRQ,
+> > +	},
+> > +};
+> > +
+> > +static const struct mfd_cell airoha_mfd_devs[] =3D {
+> > +	{
+> > +		.name =3D "pinctrl-airoha",
+> > +		.resources =3D airoha_mfd_pinctrl_intr,
+> > +		.num_resources =3D ARRAY_SIZE(airoha_mfd_pinctrl_intr),
+> > +	}, {
+> > +		.name =3D "pwm-airoha",
+> > +	},
+> > +};
+> > +
+> > +static int airoha_mfd_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct airoha_mfd *mfd;
+> > +	int irq;
+> > +
+> > +	mfd =3D devm_kzalloc(dev, sizeof(*mfd), GFP_KERNEL);
+> > +	if (!mfd)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, mfd);
+> > +
+> > +	mfd->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(mfd->base))
+> > +		return PTR_ERR(mfd->base);
+> > +
+> > +	irq =3D platform_get_irq(pdev, 0);
+> > +	if (irq < 0)
+> > +		return irq;
+> > +
+> > +	airoha_mfd_pinctrl_intr[0].start =3D irq;
+> > +	airoha_mfd_pinctrl_intr[0].end =3D irq;
+> > +
+> > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, airoha_mfd_devs,
+> > +				    ARRAY_SIZE(airoha_mfd_devs), NULL, 0,
+> > +				    NULL);
+> > +}
+> > +
+> > +static const struct of_device_id airoha_mfd_of_match[] =3D {
+> > +	{ .compatible =3D "airoha,en7581-gpio-sysctl" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, airoha_mfd_of_match);
+> > +
+> > +static struct platform_driver airoha_mfd_driver =3D {
+> > +	.probe =3D airoha_mfd_probe,
+> > +	.driver =3D {
+> > +		.name =3D KBUILD_MODNAME,
+> > +		.of_match_table =3D airoha_mfd_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(airoha_mfd_driver);
+> > +
+> > +MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
+> > +MODULE_DESCRIPTION("Driver for Airoha EN7581 MFD");
+> > diff --git a/include/linux/mfd/airoha-en7581-mfd.h b/include/linux/mfd/=
+airoha-en7581-mfd.h
+> > new file mode 100644
+> > index 000000000000..25e73952a777
+> > --- /dev/null
+> > +++ b/include/linux/mfd/airoha-en7581-mfd.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> > +#define _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> > +
+> > +struct airoha_mfd {
+> > +	void __iomem *base;
+> > +};
+> > +
+> > +#endif  /* _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_ */
+> >=20
+> > --=20
+> > 2.46.2
+> >=20
+>=20
+> --=20
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+
+--Ck0ElvyZLVpyJemd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZwWscAAKCRA6cBh0uS2t
+rEz/AQCFBJOOtzJqJ2Zgfn+hqeD0mG44RsxTxw/hCr8oWqE2TAD8CvJfaYJ/spUO
+GPey9tflRamTmCSiSKdx1wZE17e4Gwc=
+=OMHu
+-----END PGP SIGNATURE-----
+
+--Ck0ElvyZLVpyJemd--
 
