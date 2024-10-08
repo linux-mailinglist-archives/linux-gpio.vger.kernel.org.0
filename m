@@ -1,112 +1,126 @@
-Return-Path: <linux-gpio+bounces-11016-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11017-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91FE7994234
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 10:38:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1607994256
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 10:43:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 431701F26583
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 08:38:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A76BB2948E
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 08:42:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F87A13C80C;
-	Tue,  8 Oct 2024 08:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="clzmfAMN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901311DF241;
+	Tue,  8 Oct 2024 08:15:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48F21DA60C
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 08:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103A537E9;
+	Tue,  8 Oct 2024 08:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728374965; cv=none; b=vASPeR7B8/Sr024Doi6Nm3g6ELdkQ8jAKnWHpTnfZ3XqMdwl3MiWziLdwA0XKveKweFRGJYdORaBnoTn9Yl4tmfNWT3TCIxVd0QKXxcDGFksry//AC3RQ4tbPk8nAUwUjSroR2BVlVKtqf3hJt2ADf/cuIvx6wZAY/dkYH6aUoQ=
+	t=1728375301; cv=none; b=tARRCYLXDCX9rvImDLE0zBXvwC6daoe0UOVXZYSkZALG1Vr3hRzFXzc3jRyEb+NHIM7iBtYsyg7ZrKg/fic/rN5XPKEDyqQ+fQM5MBPL00K6HfbfY/TgpUvsVgcxYs8SfvXi7rKWMhthQLlTIvD60zONn5hXJWYqhkrsSvzYN9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728374965; c=relaxed/simple;
-	bh=zDeQXTiXUletPGiQ77lYmBtlj5Q0xqqvI4ZgDGlkPh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JzfNdyUhdbokMLjUE/wITis2FezGW27aWf/m36bW8kPjYMLroaS/ze0Bf+/jL5MRUSfgop4Dc7KjAcq7ve11vzlIwqCiDLYZzOLIGojEPuBY8L3dn+cplj5Z+RCRIAKm8Ud36QYfBMkrbAmOOK5sTXI3CQO4mnC1pQ41d/uX7V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=clzmfAMN; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42cc43454d5so42397545e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 01:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728374962; x=1728979762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vCi+bPFLApksSJh9xnndm615uMPRgHRJb3lAr7/SXn0=;
-        b=clzmfAMN39lUN4ljEaddpci+Dvps3Rjux0F19rHGo1b3ZZSW6YPm1zWoWswVaTzNKy
-         o68A3p6ZwXF+i97ANh2picAHVkoaQNUi2qt9RqtQSgxlDGG9scHSewaJvtGIqquSP3kA
-         3mIwTYP8vVa0yqd0phSwuMnkbnEL0QoE6QGle+8MkOPg8pArEVOpceHt+ppFCtgtJOBO
-         rtN3Q7iLKLte9FTJpfkUDKqUeKL6WQTZ34J/JbvH+ufAEqBrYD4pgTAqQ2KxspMwA5J+
-         aBJ7cJws4HxZB8k0H6ywUx9cxvBY3ApGZgRBrXJWXzL9zYUUk/fI9VPyQBXegnGbuH9u
-         Bzkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728374962; x=1728979762;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vCi+bPFLApksSJh9xnndm615uMPRgHRJb3lAr7/SXn0=;
-        b=DQCNAvnf0Mcwm0kgkxZGD4fNYefeszFVdNBruqKL/LIbZHBl4j2FILwTFOCkhsnK++
-         hXXv1aY+Q0c+h8kaQ5EgLeLtJoP9w3U/+34SAZGYdo3Oy2s4iAN9z5pQkchKIKtom7hi
-         DrRPz0I7Q5ghycMeMQs6Dt80V1Z5aQEXFHlAlG2c9fTaNdSCcWJednY+KXIzHbE5EqZM
-         VEtAsOO/gX/MVT7WToRy2z6MMtndEHJvicxxKe1+j9HTkGSbf7CeGqXkJUVHYhlL8o4d
-         6k9d5pSXDyihqu60ZDRfYvgQzvixmdIZ9EsebjSmFFfEatEKEryC5ax/KgBRqetMGv7O
-         iW3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVLfo+ZzI5rLdo4MQ+TaN8ZdOWtg+NjHmQsRxlwE5gHhVPDgdxykkw53Bst8QA6e40A2/o3ypCB52/L@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEU1/Dljh3hf9Eelb6QWbYbkErgJm9rXzrEta/XQa9/j6/cscD
-	PbwX78H6W0btlQjpfxSxtRr4zlIn7e0O03EfMTbSOsL2hSr6p7ZnUc1xbddDJCE=
-X-Google-Smtp-Source: AGHT+IFlU/2l+C25duvKbhYVoekFXnHwrsiYUIeAd4dZPEvF9IjzIB5nHvVhIu2Fb8BcMvoC3vJEBw==
-X-Received: by 2002:a05:600c:4449:b0:426:5dc8:6a63 with SMTP id 5b1f17b1804b1-42f85af408cmr93039285e9.30.1728374961932;
-        Tue, 08 Oct 2024 01:09:21 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:738a:20da:f541:94ff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f89ed9833sm99982225e9.48.2024.10.08.01.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 01:09:21 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: mvebu: allow building the module with COMPILE_TEST=y
-Date: Tue,  8 Oct 2024 10:09:20 +0200
-Message-ID: <172837494532.17503.15271041414971057291.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240930091111.32010-1-brgl@bgdev.pl>
-References: <20240930091111.32010-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1728375301; c=relaxed/simple;
+	bh=JdxHNMFWG0t/GN8GLGX0Zmj9OlvMB5Yd+plXD9mXfX4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j9t7bKRCn5/WJ69q4iYSaYpWIbPVoKl4FYO5taQZ7dVBWwHUYLO3g0ZCULvnXD+enqd7CVZ3/RV2gGiDCGDXNnx1PylalEsf9Yc1zVjj2kJDqvGs4s9N30enX/+Z0g6yzTAw9NPprVQkHkgvs+LfxAZR1OfZzJ226nExnh8+hos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 8 Oct
+ 2024 16:14:50 +0800
+Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Tue, 8 Oct 2024 16:14:50 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@codeconstruct.com.au>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<BMC-SW@aspeedtech.com>, <Peter.Yin@quantatw.com>, <Jay_Zhang@wiwynn.com>
+Subject: [PATCH v7 0/7] Add Aspeed G7 gpio support 
+Date: Tue, 8 Oct 2024 16:14:43 +0800
+Message-ID: <20241008081450.1490955-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The Aspeed 7th generation SoC features two GPIO controllers: one with 12
+GPIO pins and another with 216 GPIO pins. The main difference from the
+previous generation is that the control logic has been updated to support
+per-pin control, allowing each pin to have its own 32-bit register for
+configuring value, direction, interrupt type, and more.
+This patch serial also add low-level operations (llops) to abstract the
+register access for GPIO registers and the coprocessor request/release in
+gpio-aspeed.c making it easier to extend the driver to support different
+hardware register layouts.
 
+Change since v6:
+- Reorder the patch.
+- Reoder the llops assignments in the same order as the member declarations.
+- Add a comment explaining the logic used for the debounce timer array.
 
-On Mon, 30 Sep 2024 11:11:10 +0200, Bartosz Golaszewski wrote:
-> Make it possible to build the module when COMPILE_TEST is enabled for
-> better build coverage.
-> 
-> 
+Change since v5:
+- Reorder the aspeed_gpio_llops api
+- Add aspeed_gpio prefix for all of the api
+- Add mask value check before field_get and field_prep
+- Separate the devm_clk_get_enabled modification into a new patch.
 
-Applied, thanks!
+Change since v4:
+- Add `reg_bank_get` callback
+- `reg_bits_get` -> `reg_bit_get
+- `dcache_require` -> `require_dcache`
+- Use `devm_clk_get_enabled` to get the clock source
+- g4 specific api doesn't need to use the callback function 
 
-[1/2] gpio: mvebu: allow building the module with COMPILE_TEST=y
-      commit: 956ee0c5c969c9caf6744e166f5a80526be10c5b
-[2/2] gpio: mvebu: use generic device properties
-      commit: ddfdfe76ca54e5615a8e3eefd7dbe44c624ee9fa
+Change since v3:
+- Add `privilege_ctrl` and `privilege_init` callback
+- Use `bool aspeed_gpio_support_copro()` api to replace the
+`cmd_source_supoort` flag
+- Add the `dcache_require` flag and move the dcache usage into the
+reg_bit_set callback
+- `reg_bits_set` -> `reg_bit_set` and `reg_bits_read` -> `reg_bits_get`
+- `bool copro = 0` -> `bool copro = false`
+- `if (!gpio->config->llops->reg_bit_set || 
+!gpio->config->llops->reg_bits_get) return -EINVAL;`
+- Correct the access of reg_irq_status
+- Remove __init attribute to fix the compiler warning
 
-Best regards,
+Change since v2:
+- Correct minItems for gpio-line names
+- Remove the example for ast2700, because it's the same as the AST2600
+- Fix the sparse warning which is reported by the test robot
+- Remove the version and use the match data to replace it.
+- Add another two patches one for deferred probe one for flush write.
+
+Changes since v1:
+- Merge the gpio-aspeed-g7.c into the gpio-aspeed.c.
+- Create the llops in gpio-aspeed.c for flexibility.
+
+Billy Tsai (7):
+  gpio: aspeed: Add the flush write to ensure the write complete.
+  gpio: aspeed: Use devm_clk api to manage clock source
+  gpio: aspeed: Change the macro to support deferred probe
+  gpio: aspeed: Remove the name for bank array
+  gpio: aspeed: Create llops to handle hardware access
+  dt-bindings: gpio: aspeed,ast2400-gpio: Support ast2700
+  gpio: aspeed: Support G7 Aspeed gpio controller
+
+ .../bindings/gpio/aspeed,ast2400-gpio.yaml    |  19 +-
+ drivers/gpio/gpio-aspeed.c                    | 620 +++++++++++-------
+ 2 files changed, 408 insertions(+), 231 deletions(-)
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.25.1
+
 
