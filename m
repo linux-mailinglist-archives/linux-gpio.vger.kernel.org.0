@@ -1,81 +1,82 @@
-Return-Path: <linux-gpio+bounces-11049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11050-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 140A3994ED0
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:21:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAC7C994F3B
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 15:25:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B6281F21D34
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:21:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D372C1C20E3B
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Oct 2024 13:25:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF961DF991;
-	Tue,  8 Oct 2024 13:21:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A301E0B8B;
+	Tue,  8 Oct 2024 13:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xziEe2/Z"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sSXUlECj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF7D1DF977
-	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB891E04BA
+	for <linux-gpio@vger.kernel.org>; Tue,  8 Oct 2024 13:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728393665; cv=none; b=PyPbCO5+/vbimaLBehQU/W6F+Tz9NU9NtXi2HUOY3+GcEJVbwcrVVllsvxteK2uYP+zenpfZ+TfCK3Tn5AQv8xjqrTpyvrhVSxAwApGMhz5iTMFk+nuP/cRCHf3FnnuC+w1FwSkbFzA67wrTyZWARLoUAuJx3iL47ingfEYkJWE=
+	t=1728393819; cv=none; b=emLw3uzhfLaKTt0rHdSn7Y/XXx2ASRVioHj3y+rE/m9ua/97uE7FjUdzFCpENpi+8Xvh81Osj/snoT28/LHKKk/5kHyXfsuPiOb21i4yfuOX9UcM4B18+sN0HpV1o0e0TzXlXKqu9+WrWdqwKweMR5tKu83lIUJxzpxpwAukQ4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728393665; c=relaxed/simple;
-	bh=1iN9YqefhI1D2t3L2JaCID7NxwMvegjPA0optO6OLaM=;
+	s=arc-20240116; t=1728393819; c=relaxed/simple;
+	bh=WI1DMs/nqbj/uWd0u1h29LQzJ1rpQ7NF7zh9No6L1WI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ciu9owZZF5PZdpCupvqgZblpMSfTym8SvwrLB2pS7kj5vtO+I0Ix27dNQ93V91MUJXhhkmJOkCP25pCvq+p+XFqtaESc90qHtcE8wqO2453zQei71HcKGlz2yVEN3fODY4x7oOuWkX8UwAPo61HDqfeH3OCHffpzZTrjkoTk2po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xziEe2/Z; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=DM48Qewb+VXoQC5vJyUjjpNlRowDbEL8XrqaP0jWjKSv4H5AAwuapJPb74hjrn7GTluk8WEYqZdryWmTYvsmI4XYVBgMV+8Is9wFtQySSjyftyr99rKWm4uKKiLVHmbvQSCKKsJpS89slV2r2DWpy/qiYcW9bHYoZgvT8oZ5af4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sSXUlECj; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53995380bb3so6788454e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:21:03 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5398e58ceebso4884344e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Oct 2024 06:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728393662; x=1728998462; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728393816; x=1728998616; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DRQg/pYrM688ibfX4+Ttc9tzPXUxdeUsu+DwlPsYUOU=;
-        b=xziEe2/ZAeyFWH9mPtR9u4AW4B4enFmavmmbFi95cXYLLcGze2qNYpldxlZpuWwNcC
-         c4+Dxwbm0DNoO7ZFQ2YF3auQZ2oIX0ad3bsrf6kCheNeWsXP1o4u7AogO6tZFKyRK3tm
-         NvBZ/3KN1/K0//yRP3RsxE7hxGMRtRv5c/f/5V5JBqXDH28I6lTX7rpANC6MxEmwOpUM
-         /DHhTwgwUJnVopS7LNsNCA5jNt/EJIDok8UqAfCDFbnCqNirz98jyDFYDI8Zz59QW+al
-         iias4CcVqfRitVCkEQhasrK9gFmnpjsYgJdKptbPH2+ptquYcxxlTgND8qJewn0nRwn1
-         Tp5A==
+        bh=WI1DMs/nqbj/uWd0u1h29LQzJ1rpQ7NF7zh9No6L1WI=;
+        b=sSXUlECj+IpXKtPnENaKOy2fAcTMcwsnLpGKY8iDea6G0iS7TYMDsZAYf9ye5il9Y6
+         6z68jjP/K5QJTg/tQeV22OFgZ8FedfndGyM9oEiQVDXnvPeXkU6atFDcmILWBPS6VSr1
+         Nkq6KwytqQCzYNu9kYoyuMwpABcyZu8bo4hJ5nS2YwhaMtMFRHyf94GSoJHBlFUEXDnA
+         kmh9jJq56cpgRZl81PdUOnQm/MNBfAWaYa6qIyDdZ4hDEL8MGGLpkhcOALbMgakmBqfs
+         jwxKj/Wv3mbFCmtUEoIPZOSiw+167I7piR/V9JJeGgaLf7HFA7+bkMJB+PJOxtVNw1lZ
+         Cd5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728393662; x=1728998462;
+        d=1e100.net; s=20230601; t=1728393816; x=1728998616;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DRQg/pYrM688ibfX4+Ttc9tzPXUxdeUsu+DwlPsYUOU=;
-        b=nbLNgd3Cw3WYunoP3qi5UBlcIf2YAWvdpIIAwFr9yhKEwZXuC21XudcCFbE0pwPB5s
-         ylzOVh1ff7Rbw3DsL2vU25FnTMC4yGXvCxXQVAn6mng8/b7FU8uM/MGj9m7n59rvPTJj
-         GqQueHjQCQGCpuL6i93/gYCtXGdxDd5tNhbEclQBU/N104BKJNjVQ/eRo9ehxG/2tD7z
-         0Xqmp3YFBtZAoyH/YC7KlJM5kY2eymiP93Z/ss+f08dSek4JRhuEwJuf5FfFz79jXrm/
-         KADBedzBwKyQxDgi/C6BXbIXn5UP2pxYzsTK5NVnpJqP4wvU+SKHy6pWsHjE+j8HKS15
-         a3cw==
-X-Gm-Message-State: AOJu0YwqKROEeQCWXQpxfuFbP92svlX+D3uSPtjM/qrNkkV3CpzG5nbN
-	60Klb1EGDUN4KjYfr8zMNkAEogWmGgbxywxW6v+Ye/gHfDF5pWdBoRj5zeHYaG/ACaGletqmz6V
-	CLTSNgyMOid1QK9Q8jNxgKBCAbbmiyFpiiaIz7w==
-X-Google-Smtp-Source: AGHT+IF9EqWsDF8Qkczulsz9uqCEP2Moigmnro4gP+uLVn9yuZjQ5vMMGNf3KKW09xMA+PnHU2jF4vBKCwWyaIu7zm0=
-X-Received: by 2002:a05:6512:3094:b0:539:96a1:e4cf with SMTP id
- 2adb3069b0e04-539ab88c39cmr7781096e87.32.1728393662069; Tue, 08 Oct 2024
- 06:21:02 -0700 (PDT)
+        bh=WI1DMs/nqbj/uWd0u1h29LQzJ1rpQ7NF7zh9No6L1WI=;
+        b=FASWhhyVL4dJW1yPHfayUW5FFf7qzzjKgmhyhcRzynPjEGhPfEZ6cwv3QZASgG+1MA
+         gxMBmpUX60PCDa1wLZkP0jYoJyVq8XBK6BcxOhTfJTjt0GoGWtK+5gNfX/h2BHnap1DQ
+         OfGBMTCj73ZqiM02Z5Iz+EbCK9V8ue/pPfAlU1JZWeQafENZFYQ4b4m8r96HHEGUUwlU
+         SnLSjGYsjY5LlwxuskOv9JMpzEb4fZ7sdx3Z1JHV7Lk8uUu+LQQ20dgTdZ6i+oKhBqcc
+         pqiz3DvKRP5TBQJspNI/lW7vUYCQlxxaFTLUEfl7r4UQuYrRwYMSzO+A4WBO3SvQSpH6
+         HHZA==
+X-Gm-Message-State: AOJu0Yw6EXm2UAmpglsitAGKCNkExa3Rqg/hH6hbJmD9HWo68c4Ky44z
+	k7iSkOxqQwj5BC2TbwjOTgjBU1gvWDSEgYECe/HPcT84a10u/0WhH5QMvb9RqIZ8GehW16yqB2V
+	3TVdw2acOVrP/pb0afEHU5Fs1XgrcU43iUNZUqg==
+X-Google-Smtp-Source: AGHT+IHIyRLz2eRr8RrQfvNGIjIGbOX0bZIdZj+4JryAYGRZDxJQRMLhpbQ56ZFbx2SeuqPDTcGT47FV7J9Uio6tLgE=
+X-Received: by 2002:a05:6512:239c:b0:52c:ebf6:9a87 with SMTP id
+ 2adb3069b0e04-539c2b65376mr22871e87.26.1728393816288; Tue, 08 Oct 2024
+ 06:23:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-11-91a7c2e20884@xes-inc.com>
-In-Reply-To: <20240927-vfazio-mypy-v1-11-91a7c2e20884@xes-inc.com>
+References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com> <20240927-vfazio-mypy-v1-12-91a7c2e20884@xes-inc.com>
+In-Reply-To: <20240927-vfazio-mypy-v1-12-91a7c2e20884@xes-inc.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 8 Oct 2024 15:20:50 +0200
-Message-ID: <CAMRc=MeUbc8eovc2ZwhSvONbF4i=x86MnTbeA13S9eJkavztng@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 11/22] bindings: python: cast return value of LineRequest.get_values
+Date: Tue, 8 Oct 2024 15:23:25 +0200
+Message-ID: <CAMRc=Mf8JutXTdEeeWbb4JrDWAJkFmVu1EJKaRaei_eaqUxuwA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 12/22] bindings: python: raise exception type,
+ not exception instance
 To: Vincent Fazio <vfazio@xes-inc.com>
 Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
 Content-Type: text/plain; charset="UTF-8"
@@ -84,44 +85,14 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Sep 27, 2024 at 8:57=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
 wrote:
 >
-> The `values` argument of `_ext.Request.get_values` uses a preallocated
-> `list[None]` as a buffer that is populated with `Value`s by the external
-> module that are then returned from the function.
->
-> Use `cast` to inform the type checker it's a `list[Value]` despite how
-> it's allocated.
->
-> Also, as `lines` is typed as an `Iterable`, there is no guarantee it has
-> a `__len__` method. Instead, use the size of the `offsets` array to
-> allocate the buffer.
+> This resolves a strict no-untyped-call mypy warning.
 >
 > Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 > ---
->  bindings/python/gpiod/line_request.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpio=
-d/line_request.py
-> index a1ca64cfd82c32be5de3fc53f6c981026911bb9c..917020b9ec7046dd8e10158f7=
-0efb555fc87eade 100644
-> --- a/bindings/python/gpiod/line_request.py
-> +++ b/bindings/python/gpiod/line_request.py
-> @@ -122,7 +122,7 @@ class LineRequest:
->
->          offsets =3D [self._line_to_offset(line) for line in lines]
->
-> -        buf =3D [None] * len(lines)
-> +        buf =3D cast(list[Value], [None] * len(offsets))
->
->          self._req.get_values(offsets, buf)
->          return buf
->
-> --
-> 2.34.1
->
 
-I think this is the first time in this series where I understand what
-cast() really does. Looks good.
+Ok, so I see this is how it's done in the standard library but why? If
+an error doesn't take arguments, one should raise its type? Could you
+elaborate more in the commit message?
 
 Bart
 
