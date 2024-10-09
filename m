@@ -1,138 +1,95 @@
-Return-Path: <linux-gpio+bounces-11107-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11108-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB07C996F90
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 17:25:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B4899703A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 18:01:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32AB42845D0
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 15:25:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B28601C22557
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 16:01:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7E71D61B5;
-	Wed,  9 Oct 2024 15:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412F41C0DF3;
+	Wed,  9 Oct 2024 15:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2yn1ons"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubTSdqyG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AE41A255A;
-	Wed,  9 Oct 2024 15:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF1E1925A0;
+	Wed,  9 Oct 2024 15:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728486806; cv=none; b=SPzK3t7xfJAMNyEcTFwTQeAxuWpw2MjQ3TpgdpL3xQFpUtjlZucy2c/UCviMx/u7F3OUCDzdQ6KNJc7sUZ9dCNoRlZ8iFhpEKHV5ixZAEn/DPcO7HKKtJklZWMGALDYzy4jugkDR2E8x6eR6f5VXpum1BgYg48Smx5cVwPTLPVs=
+	t=1728488131; cv=none; b=PnXAxWMc0BvykK9tz0d5OLbt6ozKyAEyZU+Jq3kKhqdfT1ayNgSVobSl0H5eUSz9hulfA2Z3H+DfGkhlJr5fQo6tOZ93mD1EUnkhU52xPX4THyTb9P8IrNIB7yA0Jv5yw4NvjU7xxoOP2KWJCvUda4hTdu98Nut+ucvWcEnK3SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728486806; c=relaxed/simple;
-	bh=26zmDy5UoqTQK1n1AxRlDvukOxufHLjRuP41pT2T73I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pxPMObnWqFX4Z6aIjrEdobjKnFvYHGlJhLLLfIAR1/0Jy5/5azUVAL8xTmrRqYQrggJk4/jgEVig8QHU5S8Qq9oiqbdHKLQW3gh8OqNp/AaQnYPC18+SuNpFusdhWN6u4CyaGcxvR2nfsw4OND0HOn8dRaLpYHX75A2VmhKLa34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2yn1ons; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fad100dd9fso102680621fa.3;
-        Wed, 09 Oct 2024 08:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728486803; x=1729091603; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QdvWDk26/ZZBHPKCvwS0MvPf2U6fD5rvA9Tcc+fXWXk=;
-        b=f2yn1onsFAmgfolFtMNyKGoBrF0C+t89rk0GuFSdSAgTVk8h/Dgu1Smo+j/x12KPSz
-         W/YTbv2AX1zxiwrtp77815HWaI6saYUzPPqQeAFUyGYkbqUbCrh1cYK2N1CpkkMHDRPV
-         +A7+9P68U/gq8/W7mK8TXsALrl3jBGlryQUAYl2EyPPPeutYYhYKdQ1SoV9kjgmbx5kg
-         iKHexvu28dn1l+R6i0GSh9KzTOPBJ/FEQI9N6LjafFRi3+YMcJTMHXoUYj9Dxvy81BEd
-         6rwMV5u3I1d74XBlwugk+AUd2o+pzjkuuVwicLN9Aypddyg/WzNO0Rcdnvka6P4Q+Vsc
-         y+kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728486803; x=1729091603;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QdvWDk26/ZZBHPKCvwS0MvPf2U6fD5rvA9Tcc+fXWXk=;
-        b=afSxKlxwaZpSrLgKZqwEUCEwlCyLC1HQJkRIKNYpLpAjq6v6wXsqe6aOJXC0imOmZJ
-         b7YY80KWdsAHtGzN50Rq1CuRPyZ094bw+sHG+xuKDp+jotP/Q3W5OYwUdse25tDmoBzH
-         WNK35GOhEp9iafI2p0tGZGipfpSws3B+BYicC6HmnSC5FGp6Gl6rPUQgVpGIdbdDNeSI
-         tGjc4Fp0K5f4YA8vguCakEvQt106u62ginI/UjDWsa0GVOF2NMtje7JD05VC7DJ6ANbd
-         B8uJITL4C3omZhmzuUZJ2v+LB5czR6MVpjnGPTPCk3/lEILeQYcSzvQrh0JwuCxJvbuR
-         kNRA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5DEU/TQ4SFYGBRvbAnVtNNc/OCauv0+4u3UP9GKWiJ2ilYctbrzXiEc8GKGCbRWZFMCR0nDX42WvX@vger.kernel.org, AJvYcCXvNCUkrft718SoOPMQFg83xErzWmmhP7QEn5nygOZmFL6XkEHXuN9IY9qYwfiSnMpnsPy86i+6Q96cRJLB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEeG9pL6LHXJUnsSDUPPwOWqFgaoOjAFr6vp3q2XM0OkQ+teNV
-	ldcy4opigoQ2ocCYicWG8SsQow0su8Bbqns4sXVHAslLDZ8qbZf+gquk3A==
-X-Google-Smtp-Source: AGHT+IGAJI8bmysyk5Gsawk7h9nq4HXgCUZCOWp7QPaaj/2p02RU3yRJQwet8iHkONBs68wZSMJzCg==
-X-Received: by 2002:a2e:802:0:b0:2fb:cff:b535 with SMTP id 38308e7fff4ca-2fb1872fc57mr21823551fa.13.1728486802933;
-        Wed, 09 Oct 2024 08:13:22 -0700 (PDT)
-Received: from mfe-desktop.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a992e7864besm666367366b.113.2024.10.09.08.13.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 08:13:22 -0700 (PDT)
-From: marc.ferland@gmail.com
-X-Google-Original-From: marc.ferland@sonatest.com
-To: Basavaraj.Natikar@amd.com
-Cc: Shyam-sundar.S-k@amd.com,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marc Ferland <marc.ferland@sonatest.com>
-Subject: [PATCH] pinctrl: amd: Fix two small typos
-Date: Wed,  9 Oct 2024 11:12:49 -0400
-Message-Id: <20241009151249.2086702-1-marc.ferland@sonatest.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1728488131; c=relaxed/simple;
+	bh=3YKf4wKe97IZuGPzRWJvZsU/s9xM8HMmlYnkvbFJI0Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=EwT32akgyE6666Cbf1n8HnyJu2rZKiActY0Crd0pX0Mdhwu8FkH6WQRkSE4ZiO2pJCdboxhhcLEdT4Bmbhe6063l05AQQ1m+/N44W2Ml6K2Nf1R6bSDw1ZPCVERvmI0TOsl7cfiDPshhdMjyXa7g6V03pz32yrItXPxXRVxRhDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubTSdqyG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D880BC4CEC3;
+	Wed,  9 Oct 2024 15:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728488130;
+	bh=3YKf4wKe97IZuGPzRWJvZsU/s9xM8HMmlYnkvbFJI0Q=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ubTSdqyGo6z5z/ZicbAqro0XaI2uqoDHton7yrxCOJ5efww9Qgvg3PPesV7zgkmPv
+	 BazLs0C6im+4Lygt+FLdjJEcFrqDJFFd5UKlLdh3qoaqGRBhL5E1QpC2COaKprk6Wu
+	 S9kyamdWcuY0PHosV+KOpuDDxDvoa6lhCo43RvULn5bn+cSc7Mq8xjDo701cXJ+gLq
+	 EoEHYn4YCDPWLvTH1fcsQz33nZuEjTPhPl+GscVEYNhHhr58apExEIeA9L2VYaaRRl
+	 QLkVYBrMnTOia9LBc26h0cj3oNqZRYBPs8Jemy7Bvf3PNshornxsm8zaT9W6IBkSG3
+	 TdSmAq+4cw8uw==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Thomas Richard <thomas.richard@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com
+In-Reply-To: <20241001-congatec-board-controller-v3-0-39ceceed5c47@bootlin.com>
+References: <20241001-congatec-board-controller-v3-0-39ceceed5c47@bootlin.com>
+Subject: Re: [PATCH v3 0/5] Congatec Board Controller drivers
+Message-Id: <172848812261.638400.481811844035668418.b4-ty@kernel.org>
+Date: Wed, 09 Oct 2024 16:35:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-From: Marc Ferland <marc.ferland@sonatest.com>
+On Tue, 01 Oct 2024 13:53:26 +0200, Thomas Richard wrote:
+> This is the third iteration of the Congatec Board Controller series.
+> 
+> There are only few changes for the GPIO driver (commit message, Kconfig,
+> remove useless cast).
+> I also rebased the series on Linux v6.12-rc1.
+> 
+> Best Regards,
+> 
+> [...]
 
-Found those two while reading the code:
+Applied, thanks!
 
-EDGE_TRAGGER -> EDGE_TRIGGER
-BOTH_EADGE -> BOTH_EDGES
+[1/5] mfd: add Congatec Board Controller mfd driver
+      commit: 6f1067cfbee72b04fc42234f7f1588f838cec0b6
+[2/5] gpio: Congatec Board Controller gpio driver
+      commit: 4342bf63b64b09561f4ad1537de2e1a971cfb197
+[3/5] i2c: Congatec Board Controller i2c bus driver
+      commit: 6894f640b8f3f48700ccc828419ba60704f5a405
+[4/5] watchdog: Congatec Board Controller watchdog timer driver
+      commit: 6f264047869e9683520ff8f7c235c07c1ca989d6
+[5/5] MAINTAINERS: Add entry for Congatec Board Controller
+      commit: 590bcce85e014a2e16afe910bc6a20b4c1b2b374
 
-No functional changes, compile tested only.
-
-Signed-off-by: Marc Ferland <marc.ferland@sonatest.com>
----
- drivers/pinctrl/pinctrl-amd.c | 2 +-
- drivers/pinctrl/pinctrl-amd.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 7f66ec73199a..fbeab2ddef82 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -506,7 +506,7 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	case IRQ_TYPE_EDGE_BOTH:
- 		pin_reg &= ~BIT(LEVEL_TRIG_OFF);
- 		pin_reg &= ~(ACTIVE_LEVEL_MASK << ACTIVE_LEVEL_OFF);
--		pin_reg |= BOTH_EADGE << ACTIVE_LEVEL_OFF;
-+		pin_reg |= BOTH_EDGES << ACTIVE_LEVEL_OFF;
- 		irq_set_handler_locked(d, handle_edge_irq);
- 		break;
- 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index cf59089f2776..667be49c3f48 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -60,12 +60,12 @@
- #define DB_TYPE_PRESERVE_HIGH_GLITCH      0x2UL
- #define DB_TYPE_REMOVE_GLITCH             0x3UL
- 
--#define EDGE_TRAGGER	0x0UL
-+#define EDGE_TRIGGER	0x0UL
- #define LEVEL_TRIGGER	0x1UL
- 
- #define ACTIVE_HIGH	0x0UL
- #define ACTIVE_LOW	0x1UL
--#define BOTH_EADGE	0x2UL
-+#define BOTH_EDGES	0x2UL
- 
- #define ENABLE_INTERRUPT	0x1UL
- #define DISABLE_INTERRUPT	0x0UL
--- 
-2.34.1
+--
+Lee Jones [李琼斯]
 
 
