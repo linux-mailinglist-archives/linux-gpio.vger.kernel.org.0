@@ -1,209 +1,139 @@
-Return-Path: <linux-gpio+bounces-11087-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11088-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66D0D99600F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 08:47:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 465EB996066
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 09:14:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AFBF5B23E1A
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 06:47:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E59051F24911
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 07:14:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CA916B391;
-	Wed,  9 Oct 2024 06:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 343E417BB34;
+	Wed,  9 Oct 2024 07:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="OB3OKNYZ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o6Hw+WKv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44FA1E48A;
-	Wed,  9 Oct 2024 06:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908E84E18;
+	Wed,  9 Oct 2024 07:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728456455; cv=none; b=JQwucEJjTzfLKV0f3APg1vhIHzid1fep1fjlQul6DS8kPiqw45gSC3iacysc84zB76ZbDSTTjDB62kCxKbAbdrTqaX0JpxTyMwiVQhpmTS9WM5sWwJ4Deud1Fdg3LRx46M1M/ijsoTgLJ+CTiajE0Co9by22eWpPFYLGsOHhzDo=
+	t=1728458053; cv=none; b=GBWp5xuUyZRbREDowR4QQKXUjIPko1rxKDeHzqnVzI3f+3HUBeP5cbnSd2dhOb9AVUvQmjd05NuKigBTR503/aKAtRjSlJ9/A92isy+midrht0X+9hVL4Toe8IJgH0dnayC0d0y8Md0aOgXfqWdLltsHK9qJ//zV88qJ/YEj2l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728456455; c=relaxed/simple;
-	bh=l1qgJz07xqrXbLYGdSTGdOnNzyjr0DO3mrK8mE4tRDw=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lADw9qu9yJ+lkNN0leM0ezghAbspYZT2UqD2hpv1whiQzMtsCAp8/b2nMJcluH5S1X8smJYfpJdakTlEkHI0eWxNqNBMrdE5bAwMNKycoN7jWuEvCQQs/VssTeiMllersxE0gHsNqbBWJQ314LBD75ttHXdALhH2vkM6W2bnXL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=OB3OKNYZ; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1728456450;
-	bh=vP4ICph0zWuiJj2g+RQhmi046O+uRxzp9Xv2oj6XryM=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=OB3OKNYZwAdiVAe9fJP8EP/vxUmxJRXcUKIhvqnEApal2XtML10N87gC4e2kp3VvL
-	 e2p6IYY1Sm+F0Nxi/QdgqFAz9rP7pMB40xtjKvjCebdFtrpDm+JxStwPCtAYIhqopQ
-	 qrPrxQYluFhT8+Dr/+1A38SDUg+VOTG9AdF5yQceLS3jc+OAMR7K+adlEbxnIjFLBQ
-	 ii2w2fTXvcL8xTN9+9dnSfY3pcqtw5pR3eDGtbEMuQuXmx0zkOBXeFGKH1KUAD9ZCZ
-	 OuhXyEO0N+mMISyVH0MNsDdL3jbKA1PW/J1ckFRCPiKOGrU31Igk++h8sRKGFrE/94
-	 9Pawir4ANCzQQ==
-Received: from [192.168.68.112] (unknown [118.211.89.65])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id EB8FF64A86;
-	Wed,  9 Oct 2024 14:47:27 +0800 (AWST)
-Message-ID: <a0a372bcfd4255cbc5c6c68c3cca428d13c112ef.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v7 7/7] gpio: aspeed: Support G7 Aspeed gpio controller
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, "linus.walleij@linaro.org"
- <linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "joel@jms.id.au" <joel@jms.id.au>,  "linux-gpio@vger.kernel.org"
- <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
- <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>, 
- "Peter.Yin@quantatw.com" <Peter.Yin@quantatw.com>, "Jay_Zhang@wiwynn.com"
- <Jay_Zhang@wiwynn.com>
-Date: Wed, 09 Oct 2024 17:17:26 +1030
-In-Reply-To: <OSQPR06MB72526C8FE71BF336D8AF50758B7F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
-References: <20241008081450.1490955-1-billy_tsai@aspeedtech.com>
-	 <20241008081450.1490955-8-billy_tsai@aspeedtech.com>
-	 <66e619a9085a2ecb62e3945cd024822de5317f92.camel@codeconstruct.com.au>
-	 <OSQPR06MB72526C8FE71BF336D8AF50758B7F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1728458053; c=relaxed/simple;
+	bh=Vpc6CtypIrBeA+t2wxXIHUdYi2CHXKC/vx3hC1pUF8c=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=OYkxCQ3JZC12xE+WFLEn5ABbE3XoQHj3/CKsX+ASbFTwB9O/uGRQ9OTJfWNZa/bnIb/EjhxisriCphTt/Kn4WhRrS+akJ3s/hIy8InfK9DLwxJL1+vrtVLUUpo4SA5BzChWpXZgNMQOfe3pjpiHdT0/jgwUt/SPlSGcMvHM18gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o6Hw+WKv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4996OLu3029436;
+	Wed, 9 Oct 2024 07:14:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=swh+fhX7kn6sfhsfh3uCXm
+	cCSdhUKNzSFvApjqIuplY=; b=o6Hw+WKvUXByBZh7DbKZFlTnaBBC2aKT/JYPgD
+	EOefm3j6xk/1ge4w27l0znXe0yN/mvFkEX85a8D9/pCYnoSmLuBj9j1S4H7iEgRp
+	iI2oDa2iWMpY+xUT16JqSx+1DFw5a1ow2tuaMn9QzAz9TahkO6S1cCTUXCMx1WTt
+	W02L18eajw6VyVBv5Kmetrw63LL5z1Xdec/q4dPq25dS2ZBvdJ3urVO8Iq38J+B0
+	mbu2sga2Mi4Jz2WCqpdINNjhBOCMj8QyFv1zU7hF0Z0X5jZsTuWk01aMpAwelgo8
+	feDiVNc4cN4kQFj74sK7gzS9ejuiYlQxInaw1KMiAorMc1CQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 424yj03njt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Oct 2024 07:14:01 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4997E0nM009111
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Oct 2024 07:14:00 GMT
+Received: from jingyw-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 9 Oct 2024 00:13:55 -0700
+From: Jingyi Wang <quic_jingyw@quicinc.com>
+Subject: [PATCH v2 0/2] pinctrl: qcom: Introduce Pinctrl for QCS8300
+Date: Wed, 9 Oct 2024 15:13:32 +0800
+Message-ID: <20241009-qcs8300_tlmm-v2-0-9e40dee5e4f1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB0tBmcC/x2MwQ6CMBAFf4Xs2ZJtqbbl5H8YQkitsEaKtIgSw
+ r9buL15ycwK0QVyEcpsheBmijT4BOKUge0a3zpG98QgUEiOaNhooy4Q6+nV90whl6rR1pylgKS
+ 8g3vQ78jdqsQdxWkIy1Gf+f4eIdTc4EWaosi5UlqgZJyNH7L1k3y7fK/7Jm9zO/RQbdv2BycaQ
+ PunAAAA
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Richard
+ Cochran" <richardcochran@gmail.com>
+CC: <quic_tengfan@quicinc.com>, <quic_tingweiz@quicinc.com>,
+        <quic_aiquny@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Jingyi Wang
+	<quic_jingyw@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728458035; l=888;
+ i=quic_jingyw@quicinc.com; s=20240910; h=from:subject:message-id;
+ bh=Vpc6CtypIrBeA+t2wxXIHUdYi2CHXKC/vx3hC1pUF8c=;
+ b=QWnnTgA/fmO3O8w535rwishTCG1VAdgZFVdNjGUMnE1/yvO+7dqQOvb/2JdKS9HLvonmpZ8Mr
+ Wd9rjSSibR3BajEYfE+HefM9MrHPnImTQzD3ZQ3qs+RFN71ZUNK9+EE
+X-Developer-Key: i=quic_jingyw@quicinc.com; a=ed25519;
+ pk=ZRP1KgWMhlXXWlSYLoO7TSfwKgt6ke8hw5xWcSY+wLQ=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: oT_lF-ILcuUqBrivI2J70YpyuUty4Eu7
+X-Proofpoint-ORIG-GUID: oT_lF-ILcuUqBrivI2J70YpyuUty4Eu7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ bulkscore=0 mlxlogscore=767 mlxscore=0 adultscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410090047
 
-On Wed, 2024-10-09 at 02:28 +0000, Billy Tsai wrote:
-> > > In the 7th generation of the SoC from Aspeed, the control logic
-> > > of the
-> > > GPIO controller has been updated to support per-pin control. Each
-> > > pin now
-> > > has its own 32-bit register, allowing for individual control of
-> > > the pin's
-> > > value, direction, interrupt type, and other settings. The
-> > > permission for
-> > > coprocessor access is supported by the hardware but hasn't been
-> > > implemented in the current patch.
-> > >=20
-> > > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> > > ---
-> > > =C2=A0drivers/gpio/gpio-aspeed.c | 147
-> > > +++++++++++++++++++++++++++++++++++++
-> > > =C2=A01 file changed, 147 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-
-> > > aspeed.c
-> > > index 5d583cc9cbc7..208f95fb585e 100644
-> > > --- a/drivers/gpio/gpio-aspeed.c
-> > > +++ b/drivers/gpio/gpio-aspeed.c
-> > > @@ -30,6 +30,27 @@
-> > > =C2=A0#include <linux/gpio/consumer.h>
-> > > =C2=A0#include "gpiolib.h"
-> > >=20
-> > > +/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
-> > > +#define field_get(_mask, _reg)       (((_reg) & (_mask)) >>
-> > > (ffs(_mask) - 1))
-> > > +#define field_prep(_mask, _val)      (((_val) << (ffs(_mask) -
-> > > 1)) & (_mask))
-> > > +
-> > > +#define GPIO_G7_IRQ_STS_BASE 0x100
-> > > +#define GPIO_G7_IRQ_STS_OFFSET(x) (GPIO_G7_IRQ_STS_BASE + (x) *
-> > > 0x4)
-> > > +#define GPIO_G7_CTRL_REG_BASE 0x180
-> > > +#define GPIO_G7_CTRL_REG_OFFSET(x) (GPIO_G7_CTRL_REG_BASE + (x)
-> > > * 0x4)
-> > > +#define GPIO_G7_CTRL_OUT_DATA BIT(0)
-> > > +#define GPIO_G7_CTRL_DIR BIT(1)
-> > > +#define GPIO_G7_CTRL_IRQ_EN BIT(2)
-> > > +#define GPIO_G7_CTRL_IRQ_TYPE0 BIT(3)
-> > > +#define GPIO_G7_CTRL_IRQ_TYPE1 BIT(4)
-> > > +#define GPIO_G7_CTRL_IRQ_TYPE2 BIT(5)
-> > > +#define GPIO_G7_CTRL_RST_TOLERANCE BIT(6)
-> > > +#define GPIO_G7_CTRL_DEBOUNCE_SEL1 BIT(7)
-> > > +#define GPIO_G7_CTRL_DEBOUNCE_SEL2 BIT(8)
-> > > +#define GPIO_G7_CTRL_INPUT_MASK BIT(9)
-> > > +#define GPIO_G7_CTRL_IRQ_STS BIT(12)
-> > > +#define GPIO_G7_CTRL_IN_DATA BIT(13)
-> > > +
-> > > =C2=A0struct aspeed_bank_props {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int bank;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 input;
-> > > @@ -95,6 +116,22 @@ struct aspeed_gpio_bank {
-> > > =C2=A0=C2=A0*/
-> > >=20
-> > > =C2=A0static const int debounce_timers[4] =3D { 0x00, 0x50, 0x54, 0x5=
-8
-> > > };
-> > > +static const int g7_debounce_timers[4] =3D { 0x00, 0x00, 0x04,
-> > > 0x08 };
-> > > +
-> > > +/*
-> > > + * The debounce timers array is used to configure the debounce
-> > > timer settings.Here=E2=80=99s how it works:
-> > > + * Array Value: Indicates the offset for configuring the
-> > > debounce timer.
-> > > + * Array Index: Corresponds to the debounce setting register.
-> > > + * The debounce timers array follows this pattern for
-> > > configuring the debounce setting registers:
-> > > + * Array Index 0: No debounce timer is set;
-> > > + *             Array Value is irrelevant (don=E2=80=99t care).
-> > > + * Array Index 1: Debounce setting #2 is set to 1, and debounce
-> > > setting #1 is set to 0.
-> > > + *             Array Value: offset for configuring debounce
-> > > timer 0 (g4: 0x50, g7: 0x00)
-> > > + * Array Index 2: Debounce setting #2 is set to 0, and debounce
-> > > setting #1 is set to 1.
-> > > + *             Array Value: offset for configuring debounce
-> > > timer 1 (g4: 0x54, g7: 0x04)
-> > > + * Array Index 3: Debounce setting #2 is set to 1, and debounce
-> > > setting #1 is set to 1.
-> > > + *             Array Value: offset for configuring debounce
-> > > timer 2 (g4: 0x58, g7: 0x8)
-> > > + */
-> > >=20
-> > > =C2=A0static const struct aspeed_gpio_copro_ops *copro_ops;
-> > > =C2=A0static void *copro_data;
-> > > @@ -250,6 +287,39 @@ static void __iomem
-> > > *aspeed_gpio_g4_bank_reg(struct aspeed_gpio *gpio,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BUG();
-> > > =C2=A0}
-> > >=20
-> > > +static u32 aspeed_gpio_g7_reg_mask(const enum aspeed_gpio_reg
-> > > reg)
-> > > +{
-> > > +     switch (reg) {
-> > > +     case reg_val:
-> > > +             return GPIO_G7_CTRL_OUT_DATA;
->=20
-> > I think a problem is that we want this to be GPIO_G7_CTRL_IN_DATA
-> > for
-> > reads, but GPIO_G7_CTRL_OUT_DATA for writes?
->=20
-> Yes. So in my aspeed_g7_bit_get, I will change the mask to
-> GPIO_G7_CTRL_IN_DATA.
->=20
-> +static bool aspeed_g7_reg_bit_get(struct aspeed_gpio *gpio, unsigned
-> int offset,
-> +                                 const enum aspeed_gpio_reg reg)
-> +{
-> +       u32 mask =3D aspeed_gpio_g7_reg_mask(reg);
-> +       void __iomem *addr;
-> +
-> +       addr =3D gpio->base + GPIO_G7_CTRL_REG_OFFSET(offset);
-> +       if (reg =3D=3D reg_val)
-> +               mask =3D GPIO_G7_CTRL_IN_DATA;
-> +
-> +       if (mask)
-> +               return field_get(mask, ioread32(addr));
-> +       else
-> +               return 0;
-> +}
-> +
+Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
+---
+Changes in v2:
+- Add Reviewed-by tag for binding change
+- Patch rebased on new tag to avoid conflict
+- codestyle fixup
+- Link to v1: https://lore.kernel.org/r/20240819064933.1778204-1-quic_jingyw@quicinc.com
 
-Ah, I see that's already what you have. Thanks.
+---
+Jingyi Wang (2):
+      dt-bindings: pinctrl: describe qcs8300-tlmm
+      pinctrl: qcom: add the tlmm driver for QCS8300 platforms
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+ .../bindings/pinctrl/qcom,qcs8300-tlmm.yaml        |  118 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    7 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c             | 1246 ++++++++++++++++++++
+ 4 files changed, 1372 insertions(+)
+---
+base-commit: 33ce24234fca4c083e6685a18b460a18ebb5d5c1
+change-id: 20241009-qcs8300_tlmm-70147a8c9542
+
+Best regards,
+-- 
+Jingyi Wang <quic_jingyw@quicinc.com>
 
 
