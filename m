@@ -1,187 +1,209 @@
-Return-Path: <linux-gpio+bounces-11086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 366C2995F83
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 08:12:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66D0D99600F
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 08:47:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 599F21C2151F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 06:12:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AFBF5B23E1A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 06:47:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C514C15885E;
-	Wed,  9 Oct 2024 06:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CA916B391;
+	Wed,  9 Oct 2024 06:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJS5bhG4"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="OB3OKNYZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C73536D
-	for <linux-gpio@vger.kernel.org>; Wed,  9 Oct 2024 06:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44FA1E48A;
+	Wed,  9 Oct 2024 06:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728454354; cv=none; b=Q/LxTVOZiEnHyp6ZAF4sLiLK6prN+QQPv1PgsAK+1VhDBA6tMEIgLnJZX+6BJDZzkC5atc0r9e6kD1q3OCJ8hOTo7j43hdbnsmx7D1K2ArhFCJ1tGE2d/YajcZ1sI8YwcRRlV3eHQKy+4OkDBK72l3fht8AxNBM0XNyOv9tt/8s=
+	t=1728456455; cv=none; b=JQwucEJjTzfLKV0f3APg1vhIHzid1fep1fjlQul6DS8kPiqw45gSC3iacysc84zB76ZbDSTTjDB62kCxKbAbdrTqaX0JpxTyMwiVQhpmTS9WM5sWwJ4Deud1Fdg3LRx46M1M/ijsoTgLJ+CTiajE0Co9by22eWpPFYLGsOHhzDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728454354; c=relaxed/simple;
-	bh=OVhYd2uGCGAi21T4SUBcZLPkDWT3iOl3W013baE/LRk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=RfpN0aT/iMePHItfPntgh3sxjmX2f6AQSnBnldeguDNpMA4+ofdJCO0j4PVgLiBSVHObIZr2Y+9ziVRglj+UY/u0UGfGd8o/dmAPLcCwY6ZMuc7luthfHj7vYj5Cj307qZAj7SWECGS9hp6yZ2eRqNmucL7pLhnNms1pp2CeWfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJS5bhG4; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728454353; x=1759990353;
-  h=date:from:to:cc:subject:message-id;
-  bh=OVhYd2uGCGAi21T4SUBcZLPkDWT3iOl3W013baE/LRk=;
-  b=aJS5bhG4ipI04gpwDjKhY5gm4pK5/48REXSAFSmDenZeHFhA4sDzpWw+
-   iYvdh0gI8TUyl6pw3ZLt+WDMmClD6yDyZ4Wk4cFc3B0GMqRP2nGvnZ2RX
-   Oeaysxb0r+VNANdg1jFFWI+7ezOEa0IJz462z52Oo3SQb7mfKIWSwxalM
-   6Zu1GS1hglflf6dDHEkMhlhVzyqArloWV2KmM4Doy2IEZf0pg7XM9nJ3B
-   JLF/hSprNbIGYXUBCqvQjhh/rA4YRhhQbmxHO68WA5KPnYeZxvXTDHh9o
-   D2vAgfKknPBE9RFN3XqUz5ONJLFhMFkpQeURDVLbFMmyjXoC7wMQNMYP9
-   Q==;
-X-CSE-ConnectionGUID: lNbpbY/FQ7+TGme+xWW7sA==
-X-CSE-MsgGUID: Jj361V01S1G4aghaUmTTug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11219"; a="27210722"
-X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
-   d="scan'208";a="27210722"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2024 23:12:32 -0700
-X-CSE-ConnectionGUID: /kUfyVheSL+ATW1lSwTBGg==
-X-CSE-MsgGUID: w8BPUzTGS2Wx23ucNaFrEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,189,1725346800"; 
-   d="scan'208";a="76099051"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 08 Oct 2024 23:12:32 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1syPvx-0008po-0T;
-	Wed, 09 Oct 2024 06:12:29 +0000
-Date: Wed, 09 Oct 2024 14:12:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- a6191a3d18119184237f4ee600039081ad992320
-Message-ID: <202410091401.6B3JS5V7-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1728456455; c=relaxed/simple;
+	bh=l1qgJz07xqrXbLYGdSTGdOnNzyjr0DO3mrK8mE4tRDw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lADw9qu9yJ+lkNN0leM0ezghAbspYZT2UqD2hpv1whiQzMtsCAp8/b2nMJcluH5S1X8smJYfpJdakTlEkHI0eWxNqNBMrdE5bAwMNKycoN7jWuEvCQQs/VssTeiMllersxE0gHsNqbBWJQ314LBD75ttHXdALhH2vkM6W2bnXL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=OB3OKNYZ; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1728456450;
+	bh=vP4ICph0zWuiJj2g+RQhmi046O+uRxzp9Xv2oj6XryM=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=OB3OKNYZwAdiVAe9fJP8EP/vxUmxJRXcUKIhvqnEApal2XtML10N87gC4e2kp3VvL
+	 e2p6IYY1Sm+F0Nxi/QdgqFAz9rP7pMB40xtjKvjCebdFtrpDm+JxStwPCtAYIhqopQ
+	 qrPrxQYluFhT8+Dr/+1A38SDUg+VOTG9AdF5yQceLS3jc+OAMR7K+adlEbxnIjFLBQ
+	 ii2w2fTXvcL8xTN9+9dnSfY3pcqtw5pR3eDGtbEMuQuXmx0zkOBXeFGKH1KUAD9ZCZ
+	 OuhXyEO0N+mMISyVH0MNsDdL3jbKA1PW/J1ckFRCPiKOGrU31Igk++h8sRKGFrE/94
+	 9Pawir4ANCzQQ==
+Received: from [192.168.68.112] (unknown [118.211.89.65])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id EB8FF64A86;
+	Wed,  9 Oct 2024 14:47:27 +0800 (AWST)
+Message-ID: <a0a372bcfd4255cbc5c6c68c3cca428d13c112ef.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v7 7/7] gpio: aspeed: Support G7 Aspeed gpio controller
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, "linus.walleij@linaro.org"
+ <linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "joel@jms.id.au" <joel@jms.id.au>,  "linux-gpio@vger.kernel.org"
+ <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+ <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>, 
+ "Peter.Yin@quantatw.com" <Peter.Yin@quantatw.com>, "Jay_Zhang@wiwynn.com"
+ <Jay_Zhang@wiwynn.com>
+Date: Wed, 09 Oct 2024 17:17:26 +1030
+In-Reply-To: <OSQPR06MB72526C8FE71BF336D8AF50758B7F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+References: <20241008081450.1490955-1-billy_tsai@aspeedtech.com>
+	 <20241008081450.1490955-8-billy_tsai@aspeedtech.com>
+	 <66e619a9085a2ecb62e3945cd024822de5317f92.camel@codeconstruct.com.au>
+	 <OSQPR06MB72526C8FE71BF336D8AF50758B7F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: a6191a3d18119184237f4ee600039081ad992320  gpio: aspeed: Use devm_clk api to manage clock source
+On Wed, 2024-10-09 at 02:28 +0000, Billy Tsai wrote:
+> > > In the 7th generation of the SoC from Aspeed, the control logic
+> > > of the
+> > > GPIO controller has been updated to support per-pin control. Each
+> > > pin now
+> > > has its own 32-bit register, allowing for individual control of
+> > > the pin's
+> > > value, direction, interrupt type, and other settings. The
+> > > permission for
+> > > coprocessor access is supported by the hardware but hasn't been
+> > > implemented in the current patch.
+> > >=20
+> > > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> > > ---
+> > > =C2=A0drivers/gpio/gpio-aspeed.c | 147
+> > > +++++++++++++++++++++++++++++++++++++
+> > > =C2=A01 file changed, 147 insertions(+)
+> > >=20
+> > > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-
+> > > aspeed.c
+> > > index 5d583cc9cbc7..208f95fb585e 100644
+> > > --- a/drivers/gpio/gpio-aspeed.c
+> > > +++ b/drivers/gpio/gpio-aspeed.c
+> > > @@ -30,6 +30,27 @@
+> > > =C2=A0#include <linux/gpio/consumer.h>
+> > > =C2=A0#include "gpiolib.h"
+> > >=20
+> > > +/* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
+> > > +#define field_get(_mask, _reg)       (((_reg) & (_mask)) >>
+> > > (ffs(_mask) - 1))
+> > > +#define field_prep(_mask, _val)      (((_val) << (ffs(_mask) -
+> > > 1)) & (_mask))
+> > > +
+> > > +#define GPIO_G7_IRQ_STS_BASE 0x100
+> > > +#define GPIO_G7_IRQ_STS_OFFSET(x) (GPIO_G7_IRQ_STS_BASE + (x) *
+> > > 0x4)
+> > > +#define GPIO_G7_CTRL_REG_BASE 0x180
+> > > +#define GPIO_G7_CTRL_REG_OFFSET(x) (GPIO_G7_CTRL_REG_BASE + (x)
+> > > * 0x4)
+> > > +#define GPIO_G7_CTRL_OUT_DATA BIT(0)
+> > > +#define GPIO_G7_CTRL_DIR BIT(1)
+> > > +#define GPIO_G7_CTRL_IRQ_EN BIT(2)
+> > > +#define GPIO_G7_CTRL_IRQ_TYPE0 BIT(3)
+> > > +#define GPIO_G7_CTRL_IRQ_TYPE1 BIT(4)
+> > > +#define GPIO_G7_CTRL_IRQ_TYPE2 BIT(5)
+> > > +#define GPIO_G7_CTRL_RST_TOLERANCE BIT(6)
+> > > +#define GPIO_G7_CTRL_DEBOUNCE_SEL1 BIT(7)
+> > > +#define GPIO_G7_CTRL_DEBOUNCE_SEL2 BIT(8)
+> > > +#define GPIO_G7_CTRL_INPUT_MASK BIT(9)
+> > > +#define GPIO_G7_CTRL_IRQ_STS BIT(12)
+> > > +#define GPIO_G7_CTRL_IN_DATA BIT(13)
+> > > +
+> > > =C2=A0struct aspeed_bank_props {
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int bank;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 input;
+> > > @@ -95,6 +116,22 @@ struct aspeed_gpio_bank {
+> > > =C2=A0=C2=A0*/
+> > >=20
+> > > =C2=A0static const int debounce_timers[4] =3D { 0x00, 0x50, 0x54, 0x5=
+8
+> > > };
+> > > +static const int g7_debounce_timers[4] =3D { 0x00, 0x00, 0x04,
+> > > 0x08 };
+> > > +
+> > > +/*
+> > > + * The debounce timers array is used to configure the debounce
+> > > timer settings.Here=E2=80=99s how it works:
+> > > + * Array Value: Indicates the offset for configuring the
+> > > debounce timer.
+> > > + * Array Index: Corresponds to the debounce setting register.
+> > > + * The debounce timers array follows this pattern for
+> > > configuring the debounce setting registers:
+> > > + * Array Index 0: No debounce timer is set;
+> > > + *             Array Value is irrelevant (don=E2=80=99t care).
+> > > + * Array Index 1: Debounce setting #2 is set to 1, and debounce
+> > > setting #1 is set to 0.
+> > > + *             Array Value: offset for configuring debounce
+> > > timer 0 (g4: 0x50, g7: 0x00)
+> > > + * Array Index 2: Debounce setting #2 is set to 0, and debounce
+> > > setting #1 is set to 1.
+> > > + *             Array Value: offset for configuring debounce
+> > > timer 1 (g4: 0x54, g7: 0x04)
+> > > + * Array Index 3: Debounce setting #2 is set to 1, and debounce
+> > > setting #1 is set to 1.
+> > > + *             Array Value: offset for configuring debounce
+> > > timer 2 (g4: 0x58, g7: 0x8)
+> > > + */
+> > >=20
+> > > =C2=A0static const struct aspeed_gpio_copro_ops *copro_ops;
+> > > =C2=A0static void *copro_data;
+> > > @@ -250,6 +287,39 @@ static void __iomem
+> > > *aspeed_gpio_g4_bank_reg(struct aspeed_gpio *gpio,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BUG();
+> > > =C2=A0}
+> > >=20
+> > > +static u32 aspeed_gpio_g7_reg_mask(const enum aspeed_gpio_reg
+> > > reg)
+> > > +{
+> > > +     switch (reg) {
+> > > +     case reg_val:
+> > > +             return GPIO_G7_CTRL_OUT_DATA;
+>=20
+> > I think a problem is that we want this to be GPIO_G7_CTRL_IN_DATA
+> > for
+> > reads, but GPIO_G7_CTRL_OUT_DATA for writes?
+>=20
+> Yes. So in my aspeed_g7_bit_get, I will change the mask to
+> GPIO_G7_CTRL_IN_DATA.
+>=20
+> +static bool aspeed_g7_reg_bit_get(struct aspeed_gpio *gpio, unsigned
+> int offset,
+> +                                 const enum aspeed_gpio_reg reg)
+> +{
+> +       u32 mask =3D aspeed_gpio_g7_reg_mask(reg);
+> +       void __iomem *addr;
+> +
+> +       addr =3D gpio->base + GPIO_G7_CTRL_REG_OFFSET(offset);
+> +       if (reg =3D=3D reg_val)
+> +               mask =3D GPIO_G7_CTRL_IN_DATA;
+> +
+> +       if (mask)
+> +               return field_get(mask, ioread32(addr));
+> +       else
+> +               return 0;
+> +}
+> +
 
-elapsed time: 907m
+Ah, I see that's already what you have. Thanks.
 
-configs tested: 94
-configs skipped: 3
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241009    clang-18
-i386        buildonly-randconfig-002-20241009    clang-18
-i386        buildonly-randconfig-003-20241009    clang-18
-i386        buildonly-randconfig-004-20241009    clang-18
-i386        buildonly-randconfig-005-20241009    clang-18
-i386        buildonly-randconfig-006-20241009    clang-18
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241009    clang-18
-i386                  randconfig-002-20241009    clang-18
-i386                  randconfig-003-20241009    clang-18
-i386                  randconfig-004-20241009    clang-18
-i386                  randconfig-005-20241009    clang-18
-i386                  randconfig-006-20241009    clang-18
-i386                  randconfig-011-20241009    clang-18
-i386                  randconfig-012-20241009    clang-18
-i386                  randconfig-013-20241009    clang-18
-i386                  randconfig-014-20241009    clang-18
-i386                  randconfig-015-20241009    clang-18
-i386                  randconfig-016-20241009    clang-18
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    gcc-14.1.0
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    gcc-14.1.0
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.1.0
-powerpc                          allyesconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    gcc-14.1.0
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-17
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-x86_64                          rhel-8.3-rust    clang-18
-xtensa                            allnoconfig    gcc-14.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
