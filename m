@@ -1,357 +1,157 @@
-Return-Path: <linux-gpio+bounces-11118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11121-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0599099725A
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 18:53:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7673C9974DD
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 20:24:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D812B20370
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 16:53:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38D34281B2C
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 18:24:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 658951AD9ED;
-	Wed,  9 Oct 2024 16:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07E11DE4CE;
+	Wed,  9 Oct 2024 18:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="aQrxLOaf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vuz+ecUQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433071922EB;
-	Wed,  9 Oct 2024 16:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A181A704B
+	for <linux-gpio@vger.kernel.org>; Wed,  9 Oct 2024 18:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728492767; cv=none; b=hPOQLxxgwuYJVn7Y0G1chCzNoGPdoL3jb6rduRJKSBexPN1C61wRTrw3kgOyftCB+wrXFkT9m028+Bbl+XUUDbvg2ozCqlu3Ek0+HZoe2YlcEN2blMCJc/ds0FWk5Es7ceH6NdUGnRc8cjoWmEW4Peb7F6x22MflRBPA8PjH1n0=
+	t=1728498260; cv=none; b=RGUWbXOxTQ5NsLUja4cO1BfHPfHKit7qCZxusBlEvIWgjVidatNHUxbQXSTNYBJ68oMiukRWpXQxnSxpiNl9YkBa1WbTNn2+c2OvDpx2VDkziEII5NnbSa8Hs9DLhzIu5r5LKKAhK75sbxqnCGpBWtjYTt9mrTGlUZKo+C7je4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728492767; c=relaxed/simple;
-	bh=X2AYz492IGwzeV/lL9o4hdoM82zMb6McD+iCKqSflNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i2aYdGeMpVWHiXythswIRIRlIzCH25F0MtMRUpG8le5OQnupssUcvBKhJrteLNrCTbhsdEng0NCbjGw0dSov3WmJaOt0fvbfI6YyomA1yeWnoJLmt+Jjf4uHY47yVtzqjH2/Lw0LMLyJM+BR5nWusS8pyUd8uEUCAeyq6PpAho0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=aQrxLOaf; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout4.routing.net (Postfix) with ESMTP id 93C2F10167A;
-	Wed,  9 Oct 2024 16:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1728492757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vNCopJmZccHmcVKLfF7eeviRLCI1O70ul3xqsxNplgQ=;
-	b=aQrxLOafDkbp3clBnARtpZ3GYMO/4lSRBRgOnp0PTiJu9eZYM9j0+vvBObWm82nzFxPmwx
-	OA3MOoJf8sSid/y1i5V5dBeV3uSORVe2kiy3+xZDhHBrx2e06W9w0qa7MGkcbzPJJbNXZw
-	LmZMwmf7RvNM6mIW4GO8FzSWKrlUKSk=
-Received: from frank-u24.. (fttx-pool-217.61.150.182.bambit.de [217.61.150.182])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id C193C80345;
-	Wed,  9 Oct 2024 16:52:36 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	daniel@makrotopia.org,
-	john@phrozen.org,
-	ansuelsmth@gmail.com,
-	eladwf@gmail.com
-Subject: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl support
-Date: Wed,  9 Oct 2024 18:52:14 +0200
-Message-ID: <20241009165222.5670-5-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241009165222.5670-1-linux@fw-web.de>
-References: <20241009165222.5670-1-linux@fw-web.de>
+	s=arc-20240116; t=1728498260; c=relaxed/simple;
+	bh=kwx2JflPPmYiwBEnX6wdYc31/7p5yWQyVj7J4vKdsQ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ORIJAz60fiymL+nxF9JbIvBNUp/PAgVVj+8cMxqWqnsTQJPNDLfb0I6S3AffgOTSdSsr/03WC0s/9oeznQlaoM9BEhXvbKLTamwzUX8jTrWOHrVKYD0+zSY6J7A306iGrbNAAy3GVvOBCdJkaWKNkbi51bLSpT3vkQdEFttEoPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vuz+ecUQ; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fad100dd9fso899381fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Oct 2024 11:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728498256; x=1729103056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=US6Zed3EObcKYBNXw27IVmHEEKLisMNCpotZ25QpgGo=;
+        b=vuz+ecUQ3lJKo9X8kRjwZ1LrTpoJ3QYR5EXcbGAG4G0yZEkwxn0hLGdKKC/3IFjjXy
+         T85TlF9qjymO3zw1WrIfnsNw10Fs0FrWZuk2bI8WSfSGhEYy0P7JBVyDNL770MxEC5nn
+         T/qoZhInstauIMRErwHFPsohEOZjBw2Llh1WX/rSF2+lNQLqJNhDSOijqxc+xiB1NVBK
+         T/uYPZZsLkQSoBkgSllPe9h2QmaSSO5MK/PU2JwWn6dfZdi3m9fCwJ92whOpv0Q3T/vq
+         U0JoQhk7mUtUM5xl5+Fz1wg8ZggUl2xMkkUmPbk0Jv3kRYwhwjmWWOX39Ej55JtPpmhG
+         8VGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728498256; x=1729103056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=US6Zed3EObcKYBNXw27IVmHEEKLisMNCpotZ25QpgGo=;
+        b=ajo48IrTCyK2nJ1ai5pWKpfbKUa8tCCZhCgz8c19yS4SaR1e8MR/hKaGnJK7+wJCSA
+         zbq9bWDV7pBLUaVpzS+vvzDfeYqYoZCw7lY5h0i/lfqVu6qt7uCeKiYQg1zNBb+f4Gvp
+         4nzN30YBPcXkV92rGSUOL0JxoFNnRK7u/lrO8peVjoCGosNDyJgU99LlmU3bI1O0fe8O
+         PIvHH9lswQMiGNDQzirBRJQEvl8vvlIaMoojsPc6V45nmMcXLyqtFvb39P0IRGUrSMKr
+         pOcAIFLGJKyof3Pq+hJ+iMm+oJjIUjjLXcasUatnz5XJ0bBbRJSmMAfAoQFR+dTBxSDS
+         6gjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqk27GSX8QFeKWDQEJ5hZhKU22GEr/kWoiXaFi3ug/cFaTR8QLd7HAeZug2lQxyDSj+zBOtm0Dts6k@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbvT9NgXodOH2XF39cPYDre84pw6GK/6XjEzT7d5WwAo4QcOsx
+	4UmYsfoVd0wYCeGMoa5o/e4axze7pYTXqVOXaaoVc+8QmCM3WeBTl6QUjE5eW8PEQIIselpHAXQ
+	pOGhLZ7algg0w8j72rrt0NZoxIlnh9BelcWwluhISYPzWipbOMFU=
+X-Google-Smtp-Source: AGHT+IGM7+nnvIjWW8NQgGoD5wSz7VBTTSil37Y81pGnDak0OmuiL6d8CPRwti6EW/sctHsHDQHufbavc47qPqIaJDE=
+X-Received: by 2002:a05:651c:b11:b0:2fa:c5d9:105b with SMTP id
+ 38308e7fff4ca-2fb1871e59bmr31714661fa.2.1728498255412; Wed, 09 Oct 2024
+ 11:24:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: e7690522-3d64-46c9-8b60-77ae981316c4
+References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
+ <20240927-vfazio-mypy-v1-18-91a7c2e20884@xes-inc.com> <CAMRc=Mf8_Opks07HmruFTYvt9n9MHM02ykQYUoFcfofHv0NA6w@mail.gmail.com>
+ <CAOrEah7pBF7dzCpPC=5v8CBv5DdUAoD9XBU9r-cFjNePq7Fw=g@mail.gmail.com>
+In-Reply-To: <CAOrEah7pBF7dzCpPC=5v8CBv5DdUAoD9XBU9r-cFjNePq7Fw=g@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 9 Oct 2024 20:24:03 +0200
+Message-ID: <CAMRc=McxQdHs6QvndE1wd7S0jctqf0YcUrnvOO5hBaSuCE9Rtw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 18/22] bindings: python: tests: add missing type annotations
+To: Vincent Fazio <vfazio@gmail.com>
+Cc: Vincent Fazio <vfazio@xes-inc.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Wed, Oct 9, 2024 at 6:41=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wro=
+te:
+>
+> On Tue, Oct 8, 2024 at 8:32=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> >
+> > I admit I don't know any better but does it really make sense to do it
+> > for individual test cases?
+>
+> Some projects type their tests while others don't make it a priority. The=
+ way I
+> see it, the overhead is minimal when adding a new test so why not add it.
+>
+> One of the caveats is that mypy does not type check the bodies of functio=
+ns
+> that have untyped function definitions. So:
+>
+>   def _internal_fn(arg: str) -> str:
+>     return arg
+>
+>   def test_fn():  # will not be type checked by default
+>     _internal_fn(10)  # so this will not raise a type error
+>
+> It seems important to ensure the test cases are either abiding by the typ=
+ed
+> library interface or knowingly using invalid arguments to test "negative"=
+ cases
+> (type errors which are suppressed in patch 19) for callers who do not lev=
+erage
+> or ignore the library's type annotations.
+>
+> When fixing the type annotations for gpiod, I used the tests and examples=
+ as a
+> reference for what the call interface is expected to support.
+>
+> For the situation above re untyped function definitions, mypy does have a=
+ knob
+> that allows type checking the bodies of untyped functions. If we used tha=
+t, it
+> could be argued that the majority of this patch could be dropped.
+>
+> So, I guess some questions:
+>
+> Do you want the test suite type checked?
+>
 
-Add mt7988a pinctrl node.
+Yes, you've already done most of the work, so I'm all in favor of
+keeping it. I see value in having everything typed and I don't expect
+to be writing a lot of new tests so it won't involve much overhead.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-v2:
-- fix wrong alignment of reg values
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 241 ++++++++++++++++++++++
- 1 file changed, 241 insertions(+)
+> If not, a lot of the patches touching tests can be dropped
+>
+> If you do, to what degree? Do you want function bodies type checked?
+>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index c9649b815276..7e15934efe0b 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -3,6 +3,7 @@
- #include <dt-bindings/clock/mediatek,mt7988-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/pinctrl/mt65xx.h>
- 
- / {
- 	compatible = "mediatek,mt7988a";
-@@ -105,6 +106,246 @@ clock-controller@1001e000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7988-pinctrl";
-+			reg = <0 0x1001f000 0 0x1000>,
-+			      <0 0x11c10000 0 0x1000>,
-+			      <0 0x11d00000 0 0x1000>,
-+			      <0 0x11d20000 0 0x1000>,
-+			      <0 0x11e00000 0 0x1000>,
-+			      <0 0x11f00000 0 0x1000>,
-+			      <0 0x1000b000 0 0x1000>;
-+			reg-names = "gpio", "iocfg_tr",
-+				    "iocfg_br", "iocfg_rb",
-+				    "iocfg_lb", "iocfg_tl", "eint";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 84>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+
-+			mdio0_pins: mdio0-pins {
-+				mux {
-+					function = "eth";
-+					groups = "mdc_mdio0";
-+				};
-+
-+				conf {
-+					pins = "SMI_0_MDC", "SMI_0_MDIO";
-+					drive-strength = <MTK_DRIVE_8mA>;
-+				};
-+			};
-+
-+			i2c0_pins: i2c0-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c0_1";
-+				};
-+			};
-+
-+			i2c1_pins: i2c1-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c1_0";
-+				};
-+			};
-+
-+			i2c1_sfp_pins: i2c1-sfp-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c1_sfp";
-+				};
-+			};
-+
-+			i2c2_0_pins: i2c2-g0-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c2_0";
-+				};
-+			};
-+
-+			i2c2_1_pins: i2c2-g1-pins {
-+				mux {
-+					function = "i2c";
-+					groups = "i2c2_1";
-+				};
-+			};
-+
-+			gbe0_led0_pins: gbe0-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe0_led0";
-+				};
-+			};
-+
-+			gbe1_led0_pins: gbe1-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe1_led0";
-+				};
-+			};
-+
-+			gbe2_led0_pins: gbe2-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe2_led0";
-+				};
-+			};
-+
-+			gbe3_led0_pins: gbe3-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe3_led0";
-+				};
-+			};
-+
-+			gbe0_led1_pins: gbe0-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe0_led1";
-+				};
-+			};
-+
-+			gbe1_led1_pins: gbe1-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe1_led1";
-+				};
-+			};
-+
-+			gbe2_led1_pins: gbe2-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe2_led1";
-+				};
-+			};
-+
-+			gbe3_led1_pins: gbe3-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "gbe3_led1";
-+				};
-+			};
-+
-+			i2p5gbe_led0_pins: 2p5gbe-led0-pins {
-+				mux {
-+					function = "led";
-+					groups = "2p5gbe_led0";
-+				};
-+			};
-+
-+			i2p5gbe_led1_pins: 2p5gbe-led1-pins {
-+				mux {
-+					function = "led";
-+					groups = "2p5gbe_led1";
-+				};
-+			};
-+
-+			mmc0_pins_emmc_45: mmc0-emmc-45-pins {
-+				mux {
-+					function = "flash";
-+					groups = "emmc_45";
-+				};
-+			};
-+
-+			mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+				mux {
-+					function = "flash";
-+					groups = "emmc_51";
-+				};
-+			};
-+
-+			mmc0_pins_sdcard: mmc0-sdcard-pins {
-+				mux {
-+					function = "flash";
-+					groups = "sdcard";
-+				};
-+			};
-+
-+			uart0_pins: uart0-pins {
-+				mux {
-+					function = "uart";
-+					groups =  "uart0";
-+				};
-+			};
-+
-+			snfi_pins: snfi-pins {
-+				mux {
-+					function = "flash";
-+					groups = "snfi";
-+				};
-+			};
-+
-+			spi0_pins: spi0-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi0";
-+				};
-+			};
-+
-+			spi0_flash_pins: spi0-flash-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi0", "spi0_wp_hold";
-+				};
-+			};
-+
-+			spi1_pins: spi1-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi1";
-+				};
-+			};
-+
-+			spi2_pins: spi2-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi2";
-+				};
-+			};
-+
-+			spi2_flash_pins: spi2-flash-pins {
-+				mux {
-+					function = "spi";
-+					groups = "spi2", "spi2_wp_hold";
-+				};
-+			};
-+
-+			pcie0_pins: pcie0-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_2l_0_pereset", "pcie_clk_req_n0_0",
-+						 "pcie_wake_n0_0";
-+				};
-+			};
-+
-+			pcie1_pins: pcie1-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_2l_1_pereset", "pcie_clk_req_n1",
-+						 "pcie_wake_n1_0";
-+				};
-+			};
-+
-+			pcie2_pins: pcie2-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_1l_0_pereset", "pcie_clk_req_n2_0",
-+						 "pcie_wake_n2_0";
-+				};
-+			};
-+
-+			pcie3_pins: pcie3-pins {
-+				mux {
-+					function = "pcie";
-+					groups = "pcie_1l_1_pereset", "pcie_clk_req_n3",
-+						 "pcie_wake_n3_0";
-+				};
-+			};
-+		};
-+
- 		pwm@10048000 {
- 			compatible = "mediatek,mt7988-pwm";
- 			reg = <0 0x10048000 0 0x1000>;
--- 
-2.43.0
+I take it your changes already do it? Sure, let's keep it.
 
+> For example, mypy identified the problems in patch 14 and 16. Even if unt=
+yped
+> functions aren't checked, those problems would still have been flagged.
+>
+> If you think there's value in type checking functions, do you want to use
+> explicitly typed function signatures or leverage `check_untyped_defs` [0]=
+ (this
+> could be added to the mypy configuration in pyproject.toml).
+>
+
+Thanks,
+Bart
 
