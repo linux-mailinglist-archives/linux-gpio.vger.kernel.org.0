@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-11119-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11118-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F55699725B
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 18:53:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0599099725A
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 18:53:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24B50283940
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 16:53:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D812B20370
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Oct 2024 16:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95FE21D318A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 658951AD9ED;
 	Wed,  9 Oct 2024 16:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="UdMwMRbB"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="aQrxLOaf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
+Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E811547CF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433071922EB;
 	Wed,  9 Oct 2024 16:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728492767; cv=none; b=WNTKkBMARSCmG1QQxbsn1SZHFbvC4/PcaXm+ZiAaSQcv7LQVRT9AcxWD6jh0vl4OIxZiCr27wKSgSFfKv2tUaw2/k1VSWKO05UiWhdqy2engUGdbQn0WqrjVJWcBOOxmLHMuDEIgNThsxmXYJOJVuwDOdfKIIVcuPA+mZkKEk0Y=
+	t=1728492767; cv=none; b=hPOQLxxgwuYJVn7Y0G1chCzNoGPdoL3jb6rduRJKSBexPN1C61wRTrw3kgOyftCB+wrXFkT9m028+Bbl+XUUDbvg2ozCqlu3Ek0+HZoe2YlcEN2blMCJc/ds0FWk5Es7ceH6NdUGnRc8cjoWmEW4Peb7F6x22MflRBPA8PjH1n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728492767; c=relaxed/simple;
-	bh=LTLf3PvQTmHw/MFBkQID4NcnfBV30orHgE1f6a0uek8=;
+	bh=X2AYz492IGwzeV/lL9o4hdoM82zMb6McD+iCKqSflNY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IeBG4mc/XMJGrtYcvf/aRh8cjK+hJznBGXKBwQFE8tX/gzEcHS5PE1SthmsDF2pJMKQGSBaaQzsb6p6yAHFGwPCaZQ4xf4JrSwLl/431qznjaCAHMMATZEuUmqOUvtY+scF4zDbw3yk1SKT8jfpn8s8habyK0qsmu9jZcC8ITgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=UdMwMRbB; arc=none smtp.client-ip=134.0.28.11
+	 MIME-Version; b=i2aYdGeMpVWHiXythswIRIRlIzCH25F0MtMRUpG8le5OQnupssUcvBKhJrteLNrCTbhsdEng0NCbjGw0dSov3WmJaOt0fvbfI6YyomA1yeWnoJLmt+Jjf4uHY47yVtzqjH2/Lw0LMLyJM+BR5nWusS8pyUd8uEUCAeyq6PpAho0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=aQrxLOaf; arc=none smtp.client-ip=134.0.28.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout1.routing.net (Postfix) with ESMTP id D35314093B;
-	Wed,  9 Oct 2024 16:52:36 +0000 (UTC)
+	by mxout4.routing.net (Postfix) with ESMTP id 93C2F10167A;
+	Wed,  9 Oct 2024 16:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1728492756;
+	s=20200217; t=1728492757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J4DMHsAySinwkCwn9V5HoB2CLpOEv5mRzML0pYgQIjo=;
-	b=UdMwMRbBKHBhVWzfMo3CbxkOtldH/+2oBjoyHBah6XJhjnN4yRV7Tal4q1yl4XyYzDivGy
-	MO0CSmngYJFWXrYcV0aAZxFLl4/ZBCBdeWwQK8oPnpAcJoqxJfkUk31pStY9DW4MYTJFFg
-	ObsPwot6qQqIkI2ip/aceRIFzHcC6hc=
+	bh=vNCopJmZccHmcVKLfF7eeviRLCI1O70ul3xqsxNplgQ=;
+	b=aQrxLOafDkbp3clBnARtpZ3GYMO/4lSRBRgOnp0PTiJu9eZYM9j0+vvBObWm82nzFxPmwx
+	OA3MOoJf8sSid/y1i5V5dBeV3uSORVe2kiy3+xZDhHBrx2e06W9w0qa7MGkcbzPJJbNXZw
+	LmZMwmf7RvNM6mIW4GO8FzSWKrlUKSk=
 Received: from frank-u24.. (fttx-pool-217.61.150.182.bambit.de [217.61.150.182])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 04D388023D;
-	Wed,  9 Oct 2024 16:52:35 +0000 (UTC)
+	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id C193C80345;
+	Wed,  9 Oct 2024 16:52:36 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -65,9 +65,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	john@phrozen.org,
 	ansuelsmth@gmail.com,
 	eladwf@gmail.com
-Subject: [PATCH v4 3/4] dt-bindings: pinctrl: add binding for MT7988 SoC
-Date: Wed,  9 Oct 2024 18:52:13 +0200
-Message-ID: <20241009165222.5670-4-linux@fw-web.de>
+Subject: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl support
+Date: Wed,  9 Oct 2024 18:52:14 +0200
+Message-ID: <20241009165222.5670-5-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241009165222.5670-1-linux@fw-web.de>
 References: <20241009165222.5670-1-linux@fw-web.de>
@@ -78,610 +78,279 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 8df3d095-a6f6-44d0-a167-f8b1c5ef0db7
+X-Mail-ID: e7690522-3d64-46c9-8b60-77ae981316c4
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-This adds bindings for MT7988 pinctrl driver.
+Add mt7988a pinctrl node.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
-changes in v4:
-- dt-binding: pinctrl: fix dt_binding_check fixed-string error
-
-'^mux$' should not be valid under {'pattern': '^\\^[a-zA-Z0-9,\\-._#@]+\\$$'}
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-
-changes in v3:
-- limit conf subnode name with optional suffix like mmc on mt7986
-- match mux subnode without wildcards
-
-changes in v2:
-- drop gpio-cells description
-- move ref in mux subnode up
-- order uart-functions alphanumeric and fix typo
+v2:
+- fix wrong alignment of reg values
 ---
- .../pinctrl/mediatek,mt7988-pinctrl.yaml      | 571 ++++++++++++++++++
- 1 file changed, 571 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 241 ++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
-new file mode 100644
-index 000000000000..22a39ea05570
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
-@@ -0,0 +1,571 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/mediatek,mt7988-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+index c9649b815276..7e15934efe0b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+@@ -3,6 +3,7 @@
+ #include <dt-bindings/clock/mediatek,mt7988-clk.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy.h>
++#include <dt-bindings/pinctrl/mt65xx.h>
+ 
+ / {
+ 	compatible = "mediatek,mt7988a";
+@@ -105,6 +106,246 @@ clock-controller@1001e000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		pio: pinctrl@1001f000 {
++			compatible = "mediatek,mt7988-pinctrl";
++			reg = <0 0x1001f000 0 0x1000>,
++			      <0 0x11c10000 0 0x1000>,
++			      <0 0x11d00000 0 0x1000>,
++			      <0 0x11d20000 0 0x1000>,
++			      <0 0x11e00000 0 0x1000>,
++			      <0 0x11f00000 0 0x1000>,
++			      <0 0x1000b000 0 0x1000>;
++			reg-names = "gpio", "iocfg_tr",
++				    "iocfg_br", "iocfg_rb",
++				    "iocfg_lb", "iocfg_tl", "eint";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pio 0 0 84>;
++			interrupt-controller;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&gic>;
++			#interrupt-cells = <2>;
 +
-+title: MediaTek MT7988 Pin Controller
++			mdio0_pins: mdio0-pins {
++				mux {
++					function = "eth";
++					groups = "mdc_mdio0";
++				};
 +
-+maintainers:
-+  - Sean Wang <sean.wang@kernel.org>
++				conf {
++					pins = "SMI_0_MDC", "SMI_0_MDIO";
++					drive-strength = <MTK_DRIVE_8mA>;
++				};
++			};
 +
-+description:
-+  The MediaTek's MT7988 Pin controller is used to control SoC pins.
++			i2c0_pins: i2c0-g0-pins {
++				mux {
++					function = "i2c";
++					groups = "i2c0_1";
++				};
++			};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt7988-pinctrl
++			i2c1_pins: i2c1-g0-pins {
++				mux {
++					function = "i2c";
++					groups = "i2c1_0";
++				};
++			};
 +
-+  reg:
-+    minItems: 7
-+    maxItems: 7
++			i2c1_sfp_pins: i2c1-sfp-g0-pins {
++				mux {
++					function = "i2c";
++					groups = "i2c1_sfp";
++				};
++			};
 +
-+  reg-names:
-+    items:
-+      - const: gpio
-+      - const: iocfg_tr
-+      - const: iocfg_br
-+      - const: iocfg_rb
-+      - const: iocfg_lb
-+      - const: iocfg_tl
-+      - const: eint
++			i2c2_0_pins: i2c2-g0-pins {
++				mux {
++					function = "i2c";
++					groups = "i2c2_0";
++				};
++			};
 +
-+  gpio-controller: true
++			i2c2_1_pins: i2c2-g1-pins {
++				mux {
++					function = "i2c";
++					groups = "i2c2_1";
++				};
++			};
 +
-+  "#gpio-cells":
-+    const: 2
++			gbe0_led0_pins: gbe0-led0-pins {
++				mux {
++					function = "led";
++					groups = "gbe0_led0";
++				};
++			};
 +
-+  gpio-ranges:
-+    minItems: 1
-+    maxItems: 5
-+    description:
-+      GPIO valid number range.
++			gbe1_led0_pins: gbe1-led0-pins {
++				mux {
++					function = "led";
++					groups = "gbe1_led0";
++				};
++			};
 +
-+  interrupt-controller: true
++			gbe2_led0_pins: gbe2-led0-pins {
++				mux {
++					function = "led";
++					groups = "gbe2_led0";
++				};
++			};
 +
-+  interrupts:
-+    maxItems: 1
++			gbe3_led0_pins: gbe3-led0-pins {
++				mux {
++					function = "led";
++					groups = "gbe3_led0";
++				};
++			};
 +
-+  "#interrupt-cells":
-+    const: 2
++			gbe0_led1_pins: gbe0-led1-pins {
++				mux {
++					function = "led";
++					groups = "gbe0_led1";
++				};
++			};
 +
-+allOf:
-+  - $ref: pinctrl.yaml#
++			gbe1_led1_pins: gbe1-led1-pins {
++				mux {
++					function = "led";
++					groups = "gbe1_led1";
++				};
++			};
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - gpio-controller
-+  - "#gpio-cells"
++			gbe2_led1_pins: gbe2-led1-pins {
++				mux {
++					function = "led";
++					groups = "gbe2_led1";
++				};
++			};
 +
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
++			gbe3_led1_pins: gbe3-led1-pins {
++				mux {
++					function = "led";
++					groups = "gbe3_led1";
++				};
++			};
 +
-+    properties:
-+      'mux':
-+        type: object
-+        additionalProperties: false
-+        $ref: /schemas/pinctrl/pinmux-node.yaml
-+        description: |
-+          pinmux configuration nodes.
++			i2p5gbe_led0_pins: 2p5gbe-led0-pins {
++				mux {
++					function = "led";
++					groups = "2p5gbe_led0";
++				};
++			};
 +
-+          The following table shows the effective values of "group", "function"
-+          properties and chip pinout pins
++			i2p5gbe_led1_pins: 2p5gbe-led1-pins {
++				mux {
++					function = "led";
++					groups = "2p5gbe_led1";
++				};
++			};
 +
-+          groups               function           pins (in pin#)
-+          ---------------------------------------------------------------------
-+          "tops_jtag0_0"       "jtag"             0, 1, 2, 3, 4
-+          "wo0_jtag"           "jtag"             50, 51, 52, 53, 54
-+          "wo1_jtag"           "jtag"             50, 51, 52, 53, 54
-+          "wo2_jtag"           "jtag"             50, 51, 52, 53, 54
-+          "jtag"               "jtag"             58, 59, 60, 61, 62
-+          "tops_jtag0_1"       "jtag"             58, 59, 60, 61, 62
-+          "int_usxgmii"        "int_usxgmii"      2, 3
-+          "pwm0"               "pwm"              57
-+          "pwm1"               "pwm"              21
-+          "pwm2"               "pwm"              80
-+          "pwm3"               "pwm"              81
-+          "pwm4"               "pwm"              82
-+          "pwm5"               "pwm"              83
-+          "pwm6"               "pwm"              69
-+          "pwm7"               "pwm"              70
-+          "dfd"                "dfd"              0, 1, 2, 3, 4
-+          "xfi_phy0_i2c0"      "i2c"              0, 1
-+          "xfi_phy1_i2c0"      "i2c"              0, 1
-+          "xfi_phy_pll_i2c0"   "i2c"              3, 4
-+          "xfi_phy_pll_i2c1"   "i2c"              3, 4
-+          "i2c0_0"             "i2c"              5, 6
-+          "i2c1_sfp"           "i2c"              5, 6
-+          "xfi_pextp_phy0_i2c" "i2c"              5, 6
-+          "xfi_pextp_phy1_i2c" "i2c"              5, 6
-+          "i2c0_1"             "i2c"              15, 16
-+          "u30_phy_i2c0"       "i2c"              15, 16
-+          "u32_phy_i2c0"       "i2c"              15, 16
-+          "xfi_phy0_i2c1"      "i2c"              15, 16
-+          "xfi_phy1_i2c1"      "i2c"              15, 16
-+          "xfi_phy_pll_i2c2"   "i2c"              15, 16
-+          "i2c1_0"             "i2c"              17, 18
-+          "u30_phy_i2c1"       "i2c"              17, 18
-+          "u32_phy_i2c1"       "i2c"              17, 18
-+          "xfi_phy_pll_i2c3"   "i2c"              17, 18
-+          "sgmii0_i2c"         "i2c"              17, 18
-+          "sgmii1_i2c"         "i2c"              17, 18
-+          "i2c1_2"             "i2c"              69, 70
-+          "i2c2_0"             "i2c"              69, 70
-+          "i2c2_1"             "i2c"              71, 72
-+          "mdc_mdio0"          "eth"              5, 6
-+          "2p5g_ext_mdio"      "eth"              28, 29
-+          "gbe_ext_mdio"       "eth"              30, 31
-+          "mdc_mdio1"          "eth"              69, 70
-+          "pcie_wake_n0_0"     "pcie"             7
-+          "pcie_clk_req_n0_0"  "pcie"             8
-+          "pcie_wake_n3_0"     "pcie"             9
-+          "pcie_clk_req_n3"    "pcie"             10
-+          "pcie_clk_req_n0_1"  "pcie"             10
-+          "pcie_p0_phy_i2c"    "pcie"             7, 8
-+          "pcie_p1_phy_i2c"    "pcie"             7, 8
-+          "pcie_p3_phy_i2c"    "pcie"             9, 10
-+          "pcie_p2_phy_i2c"    "pcie"             7, 8
-+          "ckm_phy_i2c"        "pcie"             9, 10
-+          "pcie_wake_n0_1"     "pcie"             13
-+          "pcie_wake_n3_1"     "pcie"             14
-+          "pcie_2l_0_pereset"  "pcie"             19
-+          "pcie_1l_1_pereset"  "pcie"             20
-+          "pcie_clk_req_n2_1"  "pcie"             63
-+          "pcie_2l_1_pereset"  "pcie"             73
-+          "pcie_1l_0_pereset"  "pcie"             74
-+          "pcie_wake_n1_0"     "pcie"             75
-+          "pcie_clk_req_n1"    "pcie"             76
-+          "pcie_wake_n2_0"     "pcie"             77
-+          "pcie_clk_req_n2_0"  "pcie"             78
-+          "pcie_wake_n2_1"     "pcie"             79
-+          "pmic"               "pmic"             11
-+          "watchdog"           "watchdog"         12
-+          "spi0_wp_hold"       "spi"              22, 23
-+          "spi0"               "spi"              24, 25, 26, 27
-+          "spi1"               "spi"              28, 29, 30, 31
-+          "spi2"               "spi"              32, 33, 34, 35
-+          "spi2_wp_hold"       "spi"              36, 37
-+          "snfi"               "flash"            22, 23, 24, 25, 26, 27
-+          "emmc_45"            "flash"            21, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
-+          "sdcard"             "flash"            32, 33, 34, 35, 36, 37
-+          "emmc_51"            "flash"            38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
-+          "uart2"              "uart"             0, 1, 2, 3
-+          "tops_uart0_0"       "uart"             22, 23
-+          "uart2_0"            "uart"             28, 29, 30, 31
-+          "uart1_0"            "uart"             32, 33, 34, 35
-+          "uart2_1"            "uart"             32, 33, 34, 35
-+          "net_wo0_uart_txd_0" "uart"             28
-+          "net_wo1_uart_txd_0" "uart"             29
-+          "net_wo2_uart_txd_0" "uart"             30
-+          "tops_uart1_0"       "uart"             28, 29
-+          "tops_uart0_1"       "uart"             30, 31
-+          "tops_uart1_1"       "uart"             36, 37
-+          "uart0"              "uart"             55, 56
-+          "tops_uart0_2"       "uart"             55, 56
-+          "uart2_2"            "uart"             50, 51, 52, 53
-+          "uart1_1"            "uart"             58, 59, 60, 61
-+          "uart2_3"            "uart"             58, 59, 60, 61
-+          "uart1_2"            "uart"             80, 81, 82, 83
-+          "uart1_2_lite"       "uart"             80, 81
-+          "tops_uart1_2"       "uart"             80, 81
-+          "net_wo0_uart_txd_1" "uart"             80
-+          "net_wo1_uart_txd_1" "uart"             81
-+          "net_wo2_uart_txd_1" "uart"             82
-+          "udi"                "udi"              32, 33, 34, 35, 36
-+          "i2s"                "audio"            50, 51, 52, 53, 54
-+          "pcm"                "audio"            50, 51, 52, 53
-+          "gbe0_led1"          "led"              58
-+          "gbe1_led1"          "led"              59
-+          "gbe2_led1"          "led"              60
-+          "gbe3_led1"          "led"              61
-+          "2p5gbe_led1"        "led"              62
-+          "gbe0_led0"          "led"              64
-+          "gbe1_led0"          "led"              65
-+          "gbe2_led0"          "led"              66
-+          "gbe3_led0"          "led"              67
-+          "2p5gbe_led0"        "led"              68
-+          "drv_vbus_p1"        "usb"              63
-+          "drv_vbus"           "usb"              79
++			mmc0_pins_emmc_45: mmc0-emmc-45-pins {
++				mux {
++					function = "flash";
++					groups = "emmc_45";
++				};
++			};
 +
-+        properties:
-+          function:
-+            description:
-+              A string containing the name of the function to mux to the group.
-+            enum: [audio, dfd, eth, flash, i2c, int_usxgmii, jtag, led, pcie, pmic, pwm, spi,
-+                   uart, udi, usb, watchdog]
-+          groups:
-+            description:
-+              An array of strings. Each string contains the name of a group.
-+        required:
-+          - function
-+          - groups
++			mmc0_pins_emmc_51: mmc0-emmc-51-pins {
++				mux {
++					function = "flash";
++					groups = "emmc_51";
++				};
++			};
 +
-+        allOf:
-+          - if:
-+              properties:
-+                function:
-+                  const: audio
-+            then:
-+              properties:
-+                groups:
-+                  enum: [i2s, pcm]
-+          - if:
-+              properties:
-+                function:
-+                  const: jtag
-+            then:
-+              properties:
-+                groups:
-+                  enum: [jtag, tops_jtag0_0, tops_jtag0_1, wo0_jtag, wo1_jtag, wo2_jtag]
-+          - if:
-+              properties:
-+                function:
-+                  const: int_usxgmii
-+            then:
-+              properties:
-+                groups:
-+                  enum: [int_usxgmii]
-+          - if:
-+              properties:
-+                function:
-+                  const: dfd
-+            then:
-+              properties:
-+                groups:
-+                  enum: [dfd]
-+          - if:
-+              properties:
-+                function:
-+                  const: flash
-+            then:
-+              properties:
-+                groups:
-+                  enum: [emmc_45, emmc_51, sdcard, snfi]
-+          - if:
-+              properties:
-+                function:
-+                  const: eth
-+            then:
-+              properties:
-+                groups:
-+                  enum: [2p5g_ext_mdio, gbe_ext_mdio, mdc_mdio0, mdc_mdio1]
-+          - if:
-+              properties:
-+                function:
-+                  const: i2c
-+            then:
-+              properties:
-+                groups:
-+                  enum: [xfi_phy0_i2c0, xfi_phy1_i2c0, xfi_phy_pll_i2c0,
-+                         xfi_phy_pll_i2c1, i2c0_0, i2c1_sfp, xfi_pextp_phy0_i2c,
-+                         xfi_pextp_phy1_i2c, i2c0_1, u30_phy_i2c0, u32_phy_i2c0,
-+                         xfi_phy0_i2c1, xfi_phy1_i2c1, xfi_phy_pll_i2c2, i2c1_0,
-+                         u30_phy_i2c1, u32_phy_i2c1, xfi_phy_pll_i2c3, sgmii0_i2c,
-+                         sgmii1_i2c, i2c1_2, i2c2_0, i2c2_1]
-+          - if:
-+              properties:
-+                function:
-+                  const: led
-+            then:
-+              properties:
-+                groups:
-+                  enum: [2p5gbe_led0, 2p5gbe_led1, gbe0_led0, gbe0_led1, gbe1_led0, gbe1_led1,
-+                         gbe2_led0, gbe2_led1, gbe3_led0, gbe3_led1, wf5g_led0, wf5g_led1]
-+          - if:
-+              properties:
-+                function:
-+                  const: pcie
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [pcie_wake_n0_0, pcie_clk_req_n0_0, pcie_wake_n3_0,
-+                           pcie_clk_req_n3, pcie_p0_phy_i2c, pcie_p1_phy_i2c,
-+                           pcie_p3_phy_i2c, pcie_p2_phy_i2c, ckm_phy_i2c,
-+                           pcie_wake_n0_1, pcie_wake_n3_1, pcie_2l_0_pereset,
-+                           pcie_1l_1_pereset, pcie_clk_req_n2_1, pcie_2l_1_pereset,
-+                           pcie_1l_0_pereset, pcie_wake_n1_0, pcie_clk_req_n1,
-+                           pcie_wake_n2_0, pcie_clk_req_n2_0, pcie_wake_n2_1,
-+                           pcie_clk_req_n0_1]
-+                  maxItems: 3
-+          - if:
-+              properties:
-+                function:
-+                  const: pmic
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [pmic]
-+                  maxItems: 1
-+          - if:
-+              properties:
-+                function:
-+                  const: pwm
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, pwm7]
-+                  maxItems: 2
-+          - if:
-+              properties:
-+                function:
-+                  const: spi
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [spi0, spi0_wp_hold, spi1, spi2, spi2_wp_hold]
-+                  maxItems: 2
-+          - if:
-+              properties:
-+                function:
-+                  const: uart
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [net_wo0_uart_txd_0, net_wo0_uart_txd_1, net_wo1_uart_txd_0,
-+                           net_wo1_uart_txd_1, net_wo2_uart_txd_0, net_wo2_uart_txd_1,
-+                           tops_uart0_0, tops_uart0_1, tops_uart0_2, tops_uart1_0,
-+                           tops_uart1_1, tops_uart1_2, uart0, uart1_0, uart1_1, uart1_2,
-+                           uart1_2_lite, uart2, uart2_0, uart2_1, uart2_3]
-+                  maxItems: 2
-+          - if:
-+              properties:
-+                function:
-+                  const: watchdog
-+            then:
-+              properties:
-+                groups:
-+                  enum: [watchdog]
-+          - if:
-+              properties:
-+                function:
-+                  const: udi
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [udi]
-+                  maxItems: 1
-+          - if:
-+              properties:
-+                function:
-+                  const: usb
-+            then:
-+              properties:
-+                groups:
-+                  items:
-+                    enum: [drv_vbus, drv_vbus_p1]
-+                  maxItems: 1
++			mmc0_pins_sdcard: mmc0-sdcard-pins {
++				mux {
++					function = "flash";
++					groups = "sdcard";
++				};
++			};
 +
-+    patternProperties:
-+      '^conf(-[-a-z]*)?$':
-+        type: object
-+        additionalProperties: false
-+        description:
-+          pinconf configuration nodes.
-+        $ref: /schemas/pinctrl/pincfg-node.yaml
++			uart0_pins: uart0-pins {
++				mux {
++					function = "uart";
++					groups =  "uart0";
++				};
++			};
 +
-+        properties:
-+          pins:
-+            description:
-+              An array of strings. Each string contains the name of a pin.
-+            items:
-+              enum: [UART2_RXD, UART2_TXD, UART2_CTS, UART2_RTS, GPIO_A, SMI_0_MDC,
-+                     SMI_0_MDIO, PCIE30_2L_0_WAKE_N, PCIE30_2L_0_CLKREQ_N,
-+                     PCIE30_1L_1_WAKE_N, PCIE30_1L_1_CLKREQ_N, GPIO_P, WATCHDOG,
-+                     GPIO_RESET, GPIO_WPS, PMIC_I2C_SCL, PMIC_I2C_SDA, I2C_1_SCL,
-+                     I2C_1_SDA, PCIE30_2L_0_PRESET_N, PCIE30_1L_1_PRESET_N, PWMD1,
-+                     SPI0_WP, SPI0_HOLD, SPI0_CSB, SPI0_MISO, SPI0_MOSI, SPI0_CLK,
-+                     SPI1_CSB, SPI1_MISO, SPI1_MOSI, SPI1_CLK, SPI2_CLK, SPI2_MOSI,
-+                     SPI2_MISO, SPI2_CSB, SPI2_HOLD, SPI2_WP, EMMC_RSTB, EMMC_DSL,
-+                     EMMC_CK, EMMC_CMD, EMMC_DATA_7, EMMC_DATA_6, EMMC_DATA_5,
-+                     EMMC_DATA_4, EMMC_DATA_3, EMMC_DATA_2, EMMC_DATA_1,
-+                     EMMC_DATA_0, PCM_FS_I2S_LRCK, PCM_CLK_I2S_BCLK,
-+                     PCM_DRX_I2S_DIN, PCM_DTX_I2S_DOUT, PCM_MCK_I2S_MCLK,
-+                     UART0_RXD, UART0_TXD, PWMD0, JTAG_JTDI, JTAG_JTDO, JTAG_JTMS,
-+                     JTAG_JTCLK, JTAG_JTRST_N, USB_DRV_VBUS_P1, LED_A, LED_B, LED_C,
-+                     LED_D, LED_E, GPIO_B, GPIO_C, I2C_2_SCL, I2C_2_SDA,
-+                     PCIE30_2L_1_PRESET_N, PCIE30_1L_0_PRESET_N,
-+                     PCIE30_2L_1_WAKE_N, PCIE30_2L_1_CLKREQ_N,
-+                     PCIE30_1L_0_WAKE_N, PCIE30_1L_0_CLKREQ_N, USB_DRV_VBUS_P0,
-+                     UART1_RXD, UART1_TXD, UART1_CTS, UART1_RTS]
-+            maxItems: 84
++			snfi_pins: snfi-pins {
++				mux {
++					function = "flash";
++					groups = "snfi";
++				};
++			};
 +
-+          bias-disable: true
++			spi0_pins: spi0-pins {
++				mux {
++					function = "spi";
++					groups = "spi0";
++				};
++			};
 +
-+          bias-pull-up:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull up.
-+              - enum: [100, 101, 102, 103]
-+                description:
-+                  PUPD/R1/R0 pull down type. See MTK_PUPD_SET_R1R0 defines in
-+                  dt-bindings/pinctrl/mt65xx.h.
++			spi0_flash_pins: spi0-flash-pins {
++				mux {
++					function = "spi";
++					groups = "spi0", "spi0_wp_hold";
++				};
++			};
 +
-+          bias-pull-down:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull down.
-+              - enum: [100, 101, 102, 103]
-+                description:
-+                  PUPD/R1/R0 pull down type. See MTK_PUPD_SET_R1R0 defines in
-+                  dt-bindings/pinctrl/mt65xx.h.
++			spi1_pins: spi1-pins {
++				mux {
++					function = "spi";
++					groups = "spi1";
++				};
++			};
 +
-+          input-enable: true
++			spi2_pins: spi2-pins {
++				mux {
++					function = "spi";
++					groups = "spi2";
++				};
++			};
 +
-+          input-disable: true
++			spi2_flash_pins: spi2-flash-pins {
++				mux {
++					function = "spi";
++					groups = "spi2", "spi2_wp_hold";
++				};
++			};
 +
-+          output-enable: true
++			pcie0_pins: pcie0-pins {
++				mux {
++					function = "pcie";
++					groups = "pcie_2l_0_pereset", "pcie_clk_req_n0_0",
++						 "pcie_wake_n0_0";
++				};
++			};
 +
-+          output-low: true
++			pcie1_pins: pcie1-pins {
++				mux {
++					function = "pcie";
++					groups = "pcie_2l_1_pereset", "pcie_clk_req_n1",
++						 "pcie_wake_n1_0";
++				};
++			};
 +
-+          output-high: true
++			pcie2_pins: pcie2-pins {
++				mux {
++					function = "pcie";
++					groups = "pcie_1l_0_pereset", "pcie_clk_req_n2_0",
++						 "pcie_wake_n2_0";
++				};
++			};
 +
-+          input-schmitt-enable: true
++			pcie3_pins: pcie3-pins {
++				mux {
++					function = "pcie";
++					groups = "pcie_1l_1_pereset", "pcie_clk_req_n3",
++						 "pcie_wake_n3_0";
++				};
++			};
++		};
 +
-+          input-schmitt-disable: true
-+
-+          drive-strength:
-+            enum: [2, 4, 6, 8, 10, 12, 14, 16]
-+
-+          mediatek,pull-up-adv:
-+            description: |
-+              Valid arguments for 'mediatek,pull-up-adv' are '0', '1', '2', '3'
-+              Pull up settings for 2 pull resistors, R0 and R1. Valid arguments
-+              are described as below:
-+              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
-+              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
-+              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
-+              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            enum: [0, 1, 2, 3]
-+
-+          mediatek,pull-down-adv:
-+            description: |
-+              Valid arguments for 'mediatek,pull-up-adv' are '0', '1', '2', '3'
-+              Pull down settings for 2 pull resistors, R0 and R1. Valid arguments
-+              are described as below:
-+              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
-+              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
-+              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
-+              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            enum: [0, 1, 2, 3]
-+
-+        required:
-+          - pins
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/pinctrl/mt65xx.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pio: pinctrl@1001f000 {
-+        compatible = "mediatek,mt7988-pinctrl";
-+        reg = <0 0x1001f000 0 0x1000>,
-+        <0 0x11c10000 0 0x1000>,
-+        <0 0x11d00000 0 0x1000>,
-+        <0 0x11d20000 0 0x1000>,
-+        <0 0x11e00000 0 0x1000>,
-+        <0 0x11f00000 0 0x1000>,
-+        <0 0x1000b000 0 0x1000>;
-+        reg-names = "gpio", "iocfg_tr",
-+          "iocfg_br", "iocfg_rb",
-+          "iocfg_lb", "iocfg_tl", "eint";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&pio 0 0 84>;
-+        interrupt-controller;
-+        interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-parent = <&gic>;
-+        #interrupt-cells = <2>;
-+
-+        i2c0_pins: i2c0-g0-pins {
-+          mux {
-+            function = "i2c";
-+            groups = "i2c0_1";
-+          };
-+        };
-+
-+        mdio0_pins: mdio0-pins {
-+          mux {
-+            function = "eth";
-+            groups = "mdc_mdio0";
-+          };
-+
-+          conf {
-+            pins = "SMI_0_MDC", "SMI_0_MDIO";
-+            drive-strength = <MTK_DRIVE_8mA>;
-+          };
-+        };
-+
-+        mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+          mux {
-+            function = "flash";
-+            groups = "emmc_51";
-+          };
-+        };
-+
-+        mmc0_pins_sdcard: mmc0-sdcard-pins {
-+          mux {
-+            function = "flash";
-+            groups = "sdcard";
-+          };
-+        };
-+
-+        pcie0_pins: pcie0-pins {
-+          mux {
-+            function = "pcie";
-+            groups = "pcie_2l_0_pereset", "pcie_clk_req_n0_0",
-+                     "pcie_wake_n0_0";
-+          };
-+        };
-+
-+        pcie1_pins: pcie1-pins {
-+          mux {
-+            function = "pcie";
-+            groups = "pcie_2l_1_pereset", "pcie_clk_req_n1",
-+                     "pcie_wake_n1_0";
-+          };
-+        };
-+
-+        pcie2_pins: pcie2-pins {
-+          mux {
-+            function = "pcie";
-+            groups = "pcie_1l_0_pereset", "pcie_clk_req_n2_0",
-+                     "pcie_wake_n2_0";
-+          };
-+        };
-+
-+        pcie3_pins: pcie3-pins {
-+          mux {
-+            function = "pcie";
-+            groups = "pcie_1l_1_pereset", "pcie_clk_req_n3",
-+                     "pcie_wake_n3_0";
-+          };
-+        };
-+
-+        uart0_pins: uart0-pins {
-+          mux {
-+            function = "uart";
-+            groups =  "uart0";
-+          };
-+        };
-+      };
-+    };
+ 		pwm@10048000 {
+ 			compatible = "mediatek,mt7988-pwm";
+ 			reg = <0 0x10048000 0 0x1000>;
 -- 
 2.43.0
 
