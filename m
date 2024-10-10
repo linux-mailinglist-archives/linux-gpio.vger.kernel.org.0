@@ -1,126 +1,171 @@
-Return-Path: <linux-gpio+bounces-11153-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11154-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3280999197
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 21:03:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67C8D9991DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 21:09:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35BE028366E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 19:03:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E181E1F27998
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 19:09:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D67181F9A90;
-	Thu, 10 Oct 2024 18:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F5B19ABA3;
+	Thu, 10 Oct 2024 19:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KrwFmaU3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ijy9bFwY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AE61CCEF0;
-	Thu, 10 Oct 2024 18:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0919C188A08;
+	Thu, 10 Oct 2024 19:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728586099; cv=none; b=WRFketTX9B5QqfQljbul5MoKJq9ATCoIRG/afX8ELIXQUpPI5xMJxnO/JxNqJpQtt0dCQbvQpJ5Yx+WSJrXhsLecKshYgFQNgF7uQxV0knVHUsXtlMpy5flSSsZpkbisPHH8Ax8tBf5fy2dMybi0eu3EnpPukLyc+lXZa7K0SYs=
+	t=1728587017; cv=none; b=fKTWsziKamJi0S81oFTviGKcOIN4ysPe+kuNC0WXy0Xh8rrgHlFyZ1R1EfoW9QblcUyMVn75UyV5vJT7g3KCP+6vOzYrtdO7ggYY/0TMFZGTWuZA2CiD+kZyfuwlcBL75sfKTSHZmksufgTxDj99MIOcn2Pr0tu5AAODnZtMZBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728586099; c=relaxed/simple;
-	bh=PQJkDvEyk3UIfsKwpvyY3mLyiKWfKdTOLxySV12GXAA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rxx+sR5MvToAwLKGRR0o2tYVH2N3AZC0PIXyGej5x5Wf3Vi7r8hM3Cq0tsrwJSUsF33Z1lOq3XkdMyILeybd76ne9GvMTvQH0vWlxfLD1d3KjER1WmNSvNHMuE9RXXw+sbh7RWxtpYtH+5Vlc0dajSJPE8B5EFvoep/x+rQRGTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KrwFmaU3; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49AIm6HT127830;
-	Thu, 10 Oct 2024 13:48:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1728586086;
-	bh=1oTPBF+SUaJaGZnyWmHn1NEj1otLNrz6Cnmjj8FEe5s=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KrwFmaU33OAvMoM65SdPjTIQr2STEQGegSm2qJ7bWElyUgYtMvnC511P9urEWgarX
-	 N3aHkrc98mR6WvYkbpMApcuchpKusx0X4QXh6BQg5c2mWLehzsxXdattcuOvRDPj4V
-	 uXQ/MGDbCc2P+SxMsWKRV9JIf1O8qb1kHqnaKwPA=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 49AIm6oB034468
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Oct 2024 13:48:06 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Oct 2024 13:48:06 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Oct 2024 13:48:06 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49AIm3VA011182;
-	Thu, 10 Oct 2024 13:48:06 -0500
-From: Judith Mendez <jm@ti.com>
-To: Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        Judith Mendez
-	<jm@ti.com>, Bin Liu <b-liu@ti.com>
-Subject: [PATCH 2/2] serial: 8250: omap: Move pm_runtime_get_sync
-Date: Thu, 10 Oct 2024 13:48:02 -0500
-Message-ID: <20241010184802.203441-3-jm@ti.com>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241010184802.203441-1-jm@ti.com>
-References: <20241010184802.203441-1-jm@ti.com>
+	s=arc-20240116; t=1728587017; c=relaxed/simple;
+	bh=Y16JbD2tTLMVZ+XQHkqkCO/EcAcy4g8c84gyNLuC2Ok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AUeDZ3b5unJ1M1cPWFKADjUmHjqWd0I5OO3tJY60WC0djtj/ELOciwOjGDGX3mpuJcENK0Qc2E6mswLMu3B1AP17dIFLDsLsrOW+DdHvHE5ABR8f28DiQNVNKVtQfzYb1+uDBCXjoUPocrsd5JtTSkaxbho0s6BMqLg3rSg7t9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ijy9bFwY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728587016; x=1760123016;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y16JbD2tTLMVZ+XQHkqkCO/EcAcy4g8c84gyNLuC2Ok=;
+  b=Ijy9bFwYUn1zkDi1HgmVCQnYX08g0Eg+llbN1wqvlLHSLIOW1eOFPAmj
+   MLyljcvkRmntuSM3zB74gUwdfKORhYix5O4q93s3V1UtWq7vBHpfU6Lye
+   et82PDcBVU6km+nKUmcMaP4Um7/6UfOBKUOYWMlOnDlAwoACevOGemy6B
+   C1RlKmDS9tHtcW+rMWv00QGFcQGT7l7/kpAJpL8G0n+o4slLUvOcFZEYg
+   52kawSMlNsO8A8jSqok+IJgx8+tDhuY8aiDIKe+9Ut8xwm+eBArD9jMI2
+   TwJvCdecqTSxMZkkfQU8zKj176IadS4TikHi/rMHQamuh3DdlZ1Bn/pCd
+   w==;
+X-CSE-ConnectionGUID: esA8UI+iTiqWcJGnXSxD6Q==
+X-CSE-MsgGUID: zEQVmTkSRfasQMXtPCow8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="31664562"
+X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
+   d="scan'208";a="31664562"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 12:03:35 -0700
+X-CSE-ConnectionGUID: ehKnKpFWST6T8cGjMdRl8w==
+X-CSE-MsgGUID: W0m087IXRB2TQuPrC2Zyxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,193,1725346800"; 
+   d="scan'208";a="76337924"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 10 Oct 2024 12:03:28 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1syyRa-000B9h-2L;
+	Thu, 10 Oct 2024 19:03:26 +0000
+Date: Fri, 11 Oct 2024 03:03:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v2 11/14] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <202410110257.OAO10pXN-lkp@intel.com>
+References: <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
 
-Currently in omap_8250_shutdown, the dma->rx_running
-flag is set to zero in omap_8250_rx_dma_flush. Next
-pm_runtime_get_sync is called, which is a runtime
-resume call stack which can re-set the flag. When the
-call omap_8250_shutdown returns, the flag is expected
-to be UN-SET, but this is not the case. This is causing
-issues the next time UART is re-opened and omap_8250_rx_dma
-is called. Fix by moving pm_runtime_get_sync before the
-omap_8250_rx_dma_flush.
+Hi Andrea,
 
-Fixes: 0e31c8d173ab ("tty: serial: 8250_omap: add custom DMA-RX callback")
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
----
- drivers/tty/serial/8250/8250_omap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 88b58f44e4e9..0dd68bdbfbcf 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -776,12 +776,12 @@ static void omap_8250_shutdown(struct uart_port *port)
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 	struct omap8250_priv *priv = port->private_data;
- 
-+	pm_runtime_get_sync(port->dev);
-+
- 	flush_work(&priv->qos_work);
- 	if (up->dma)
- 		omap_8250_rx_dma_flush(up);
- 
--	pm_runtime_get_sync(port->dev);
--
- 	serial_out(up, UART_OMAP_WER, 0);
- 	if (priv->habit & UART_HAS_EFR2)
- 		serial_out(up, UART_OMAP_EFR2, 0x0);
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on clk/clk-next char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.12-rc2 next-20241010]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrea-della-Porta/dt-bindings-clock-Add-RaspberryPi-RP1-clock-bindings/20241007-204440
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta%40suse.com
+patch subject: [PATCH v2 11/14] misc: rp1: RaspberryPi RP1 misc driver
+config: alpha-randconfig-r061-20241011 (https://download.01.org/0day-ci/archive/20241011/202410110257.OAO10pXN-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241011/202410110257.OAO10pXN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410110257.OAO10pXN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/misc/rp1/rp1_pci.c: In function 'rp1_mask_irq':
+>> drivers/misc/rp1/rp1_pci.c:139:9: error: implicit declaration of function 'pci_msi_mask_irq'; did you mean 'pci_msix_free_irq'? [-Werror=implicit-function-declaration]
+     139 |         pci_msi_mask_irq(pcie_irqd);
+         |         ^~~~~~~~~~~~~~~~
+         |         pci_msix_free_irq
+   drivers/misc/rp1/rp1_pci.c: In function 'rp1_unmask_irq':
+>> drivers/misc/rp1/rp1_pci.c:147:9: error: implicit declaration of function 'pci_msi_unmask_irq' [-Werror=implicit-function-declaration]
+     147 |         pci_msi_unmask_irq(pcie_irqd);
+         |         ^~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [y]:
+   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
+
+
+vim +139 drivers/misc/rp1/rp1_pci.c
+
+   133	
+   134	static void rp1_mask_irq(struct irq_data *irqd)
+   135	{
+   136		struct rp1_dev *rp1 = irqd->domain->host_data;
+   137		struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+   138	
+ > 139		pci_msi_mask_irq(pcie_irqd);
+   140	}
+   141	
+   142	static void rp1_unmask_irq(struct irq_data *irqd)
+   143	{
+   144		struct rp1_dev *rp1 = irqd->domain->host_data;
+   145		struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+   146	
+ > 147		pci_msi_unmask_irq(pcie_irqd);
+   148	}
+   149	
+
 -- 
-2.46.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
