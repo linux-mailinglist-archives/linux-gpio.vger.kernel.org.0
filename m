@@ -1,138 +1,170 @@
-Return-Path: <linux-gpio+bounces-11161-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11162-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F257199933E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 21:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A515E9993B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 22:32:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7ADEBB2B39E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 19:53:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 41AECB23942
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 20:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B12BC1CDFC2;
-	Thu, 10 Oct 2024 19:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09EA1D0483;
+	Thu, 10 Oct 2024 20:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6hv54ez"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="jptT0D+f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC4719B3CB;
-	Thu, 10 Oct 2024 19:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9951A1CCEDF;
+	Thu, 10 Oct 2024 20:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728589972; cv=none; b=SclLe8wvtf5LHK2H81s11W6phZbt23d9UtLSNljxpWrEC3trXVozuSqrIftDWCWPkahBxAAeyPJb8VIDxMBRtdoUPg1ynKfFSHye2LfRLmpTIW1LvK8J5SH6CP3hLr0VZEhXhhAN/Be1x7Q+W/vLKjpQi0Fyx5ozd2wQGS4KmsQ=
+	t=1728592355; cv=none; b=kEYWucQsGSk5ZaGPvJSF+cvr0BUhs0paW1GcZv8/WqyDNnqVcYtvU8uNkCBRjz6R1iU9pMRdnC2FkEBXU2soirYHaY9sIfMJCMDHwQ3RoCmm1H4HYx8VcT2ZrzRzJ2fyL0FVExYdyiDfmOY01RVyn9ciaOXNgDpCfgdIBxH3bh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728589972; c=relaxed/simple;
-	bh=Dv8ScenVzzecZ9PQIm1c8dRNjUPdLBI18C5uRbFisgg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i3paAbp+84+ZgSllb7dfGJUawy91GoLbVXMTiGuobcxAQCnJJ5UIXi9T2S2TkubZiyY2Q99MGBWqacDHzZaBtlflBvXpmqKT4zDj1WnkzrNZ8NF/BnC3gwyEXItKhGE6Gecgx7u+9Sxt7X1OkTGJFX2LNhz0PyZkMQt16q+HB7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6hv54ez; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-50cf67a2ef7so368592e0c.1;
-        Thu, 10 Oct 2024 12:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728589970; x=1729194770; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dv8ScenVzzecZ9PQIm1c8dRNjUPdLBI18C5uRbFisgg=;
-        b=l6hv54ezvBxqsID6a/MW6jz2QF9urOXgA5INMUhcb0wgG2ODfSdT2b9Dfng91KiyUl
-         497DHVpvgrS6Wcv5cXtc8dKLBSUIubzsCnnirGMvusQEZEBtYDKSoB3TsZprrSII97So
-         GquhK+CjLbEko9Ai4wl0vXnYu8tZWTzjJnYKh5nPlfATMDNqxlZB9jyAvpazOmQacXS/
-         0iqPxOqgqCziujv0ghdl9CkyWfPByIf0kU+GXsBzUBdvksInk9YdyrtO40egu5KJknds
-         4mOzQlT9lX5TjKqeOuX0lifEgdWw70ksnnZiPb9aJn+Fn9+AAwIVSANr0ulyDG+U7v68
-         lIDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728589970; x=1729194770;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dv8ScenVzzecZ9PQIm1c8dRNjUPdLBI18C5uRbFisgg=;
-        b=GUhAjNqLbBXFJJI8MwvuCb/dz1kQJDVUKo+u7JR97BVq1AxQIZVuAxH2OBVmKpSRZH
-         1b2WjGgLiOVBvSHV75S2ChRbsySTENNt3KTQdad73fksZfDZlpa0Hw5OlCqLuckv5KgY
-         MT+lM5ko7kokGyswHx1Q8x1+15534H3AjkW+SKkkfVjoHTQkrWetvE6lOkner2nsSwqi
-         vkhIl7Pozh0FDydSbZBxvF/CZSNoVOG2T8rvllQrvZA4gN1j7x0DrwA4Nmjr7NFxykkK
-         zIL/eyiqzm4NRn+8eWO4kXbM0jQKn4ihlUMrvuxUoxCmTQbszf7IevB8RxRoUEv2ih7S
-         FD4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVviTHnglYpHHe1IxPsH/9VcSQUXFJiu1ae/BoyXTaRVusv20Wv4AvoDGbL2HvGIbS8LpiTPVIx+yxN@vger.kernel.org, AJvYcCWOFED+may6Ub2zl/1xla4MgXSid/jXcUcKYd8ZVoghfYe0GTAIThN3hsSuksQ4e5lJ2PqEdTL8uFLfO/yeeTksr7Y=@vger.kernel.org, AJvYcCWaB1g8spb50ZiIhd0P1kWetEUen6JU9xMdxm1d4qDUSjKn4zVo4hCpdFcyfYBO+DsgUM1EDL3EoalP5NQX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxNRp808GBj326jtVwTspMv6uSVyVvyF87LkPzVwVVLZJo3g2p
-	2swCRUuXDzqE6/w840q6mhGyRpWVJgf37uVChovnmMPVB/cPANkNOi5Xt/NnK5M7xO7isDB+O+q
-	GmBPCX+OYFQ9L9PNS1Au5Dd+eMyz5SOXF
-X-Google-Smtp-Source: AGHT+IECnwyYm6oX3xIJTYXOyAK8E60VhUQWoVlZLK4j55nxlb/55YA4vppnZ8HKR3hqPj5gdj7Zx0SPDrLilqG1imI=
-X-Received: by 2002:a05:6122:3116:b0:50b:e9a5:cd7b with SMTP id
- 71dfb90a1353d-50cf0c4d769mr6149491e0c.9.1728589969790; Thu, 10 Oct 2024
- 12:52:49 -0700 (PDT)
+	s=arc-20240116; t=1728592355; c=relaxed/simple;
+	bh=3CGxP2qN6YVYFEjezTAaN5IgNYLK7qN98hoW+HQJYGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AjvIrp2DYr1rueS1uFI5GTX8uMXz3Tfa91TgXxFpO8A+WlUpFziCNDChXyFvGMn/o2EKqj5qQ5jFPEJheTRgmATDSFVRtgTPNBGSDQN12keOsu2T5kuMCz16rMonM0Z/fzEQdz9PJlC2q6qhPKS4ejof42QH9ufy7fGEwfR/olY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=jptT0D+f; arc=none smtp.client-ip=80.12.242.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id yzpfsmaeQKZwWyzpfsd0g9; Thu, 10 Oct 2024 22:32:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1728592344;
+	bh=toazOp+FeqwFOgTVRmgDHxm9wBZ5QCQUUtICBR3zZlg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=jptT0D+fIZM4qTdCVDJDm1s3zfNrGTSbRT64abfZ2FmKdZyhqwdDMF+B4IvOejfX2
+	 xFADYq85rwV2NSUoc7/zF4EZX7VTpVUWPaSJFW2wzV4UQbkSLlygfparQpLmnf8nnr
+	 kzk3jfU+y1750ELoiMlI3d7n5Fmiq9KJKcNHOwpgCzahzXv7upL2xXp8lOQZ9RN4hF
+	 YWtryh96Mz2hNeM1x1/jVYezL1KM8SGV4HiF8KivnwCJI+i4IbdQf0aPNj7v/5OhmM
+	 GcE1umDXbjWTgsOyWQ1BJoQEwR9GVG9ZdAxG2Zq2Ew1v0B/Mpm0VnLyRf8GrMsH7GX
+	 NPEloBniuOgoA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 10 Oct 2024 22:32:24 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <de04ad2d-7203-4308-9bd2-74051546bb37@wanadoo.fr>
+Date: Thu, 10 Oct 2024 22:32:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241003131642.472298-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <7fe863c8-b883-45b0-b0e9-e376764d0bb7@tuxon.dev> <CA+V-a8tQ5vYbzhpdoeBFX483DV-nRpARCdWJnhm-vvTLzpTW2g@mail.gmail.com>
- <CACRpkdak=nv3R4z6PxNEcGgc7B6MV3bjwRbuFoTjgRCQ6CVOXw@mail.gmail.com>
-In-Reply-To: <CACRpkdak=nv3R4z6PxNEcGgc7B6MV3bjwRbuFoTjgRCQ6CVOXw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 10 Oct 2024 20:52:23 +0100
-Message-ID: <CA+V-a8uQ=b_3VRA9tbkfCNZt-UGt-_rfWbfx6HpMj6D3QWALsQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Always call rzg2l_gpio_request()
- for interrupt pins
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: claudiu beznea <claudiu.beznea@tuxon.dev>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: sophgo: fix double free in
+ cv1800_pctrl_dt_node_to_map()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, error27@gmail.com
+References: <20241010111830.3474719-1-harshit.m.mogalapalli@oracle.com>
+ <41acfc55-9741-4cef-9254-f9e4be4da956@wanadoo.fr>
+ <aac19faa-fd95-4c6a-9a41-e4f03f8e1733@stanley.mountain>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <aac19faa-fd95-4c6a-9a41-e4f03f8e1733@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+Le 10/10/2024 à 20:33, Dan Carpenter a écrit :
+> On Thu, Oct 10, 2024 at 07:17:19PM +0200, Christophe JAILLET wrote:
+>> Le 10/10/2024 à 13:18, Harshit Mogalapalli a écrit :
+>>> 'map' is allocated using devm_* which takes care of freeing the allocated
+>>> data, but in error paths there is a call to pinctrl_utils_free_map()
+>>> which also does kfree(map) which leads to a double free.
+>>>
+>>> Use kcalloc() instead of devm_kcalloc() as freeing is manually handled.
+>>>
+>>> Fixes: a29d8e93e710 ("pinctrl: sophgo: add support for CV1800B SoC")
+>>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+>>> ---
+>>> This is based on static analysis with smatch, only compile tested.
+>>> ---
+>>>    drivers/pinctrl/sophgo/pinctrl-cv18xx.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+>>> index d18fc5aa84f7..57f2674e75d6 100644
+>>> --- a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+>>> +++ b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+>>> @@ -221,7 +221,7 @@ static int cv1800_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+>>>    	if (!grpnames)
+>>>    		return -ENOMEM;
+>>> -	map = devm_kcalloc(dev, ngroups * 2, sizeof(*map), GFP_KERNEL);
+>>> +	map = kcalloc(ngroups * 2, sizeof(*map), GFP_KERNEL);
+>>>    	if (!map)
+>>>    		return -ENOMEM;
+>>
+>> Hi,
+>>
+>> drivers/pinctrl/nuvoton/pinctrl-ma35.c seems to have the same issue.
+>>
+> 
+> Yep.  That one is too complicated for Smatch to find.  In this case, the kfree()
+> happened in the cleanup so it was in the same function.
+> 
+> regards,
+> dan carpenter
+> 
+> 
 
-On Thu, Oct 10, 2024 at 8:47=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Oct 9, 2024 at 10:27=E2=80=AFAM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Oct 9, 2024 at 9:11=E2=80=AFAM claudiu beznea <claudiu.beznea@t=
-uxon.dev> wrote:
->
-> > > All these ports are hogs to configure them as input. Removing the hog
-> > > property make this patch work but I'm not sure this is the right appr=
-oach
-> > > (see below diff).
-> > >
-> > I have dropped a query [0] to GPIO maintainers to check on the correct =
-approach.
-> >
-> > https://lore.kernel.org/all/CA+V-a8vxUjTWccV-wLgy5CJiFYfEMsx-f+8weCJDP6=
-uD_dh4AA@mail.gmail.com/
->
-> Yeah I replied, the callbacks in struct irq_chip rzg2l_gpio_irqchip
-> should be calling the following callbacks:
->
-Sorry I wanted to do some poc before I responded to your email.
 
-> /* lock/unlock as IRQ */
-> int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
-> void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
->
-> In its
-> .irq_request_resources and .irq_release_resources callbacks.
->
-> And it currently doesn't even define these callbacks.
->
-> If the driver was using the GPIOLIB_IRQCHIP and adding the
-> irqchip in the standard way along with the gpiochip, this would
-> not be a problem.
->
-> Can you look into simply using GPIOLIB_IRQCHIP like most
-> other drivers as well?
->
-Thanks for the pointers, I'll investigate and add support for it.
+For the records, I spotted the other case with coccinelle:
 
-Cheers,
-Prabhakar
+@ok1@
+identifier X, fct;
+@@
+
+struct pinctrl_ops X = {
+	.dt_node_to_map = fct,
+	.dt_free_map = pinconf_generic_dt_free_map,
+};
+
+@test1 depends on ok1@
+identifier fct = ok1.fct;
+identifier fct2 =~ "devm";
+expression x =~ "map";
+@@
+
+int fct(...)
+{
+	...
+*	x = fct2(...);
+	...
+}
+
+
+
+
+@ok2@
+identifier X, fct;
+@@
+
+struct pinctrl_ops X = {
+	.dt_node_to_map = fct,
+	.dt_free_map = pinctrl_utils_free_map,
+};
+
+@test2 depends on ok2@
+identifier fct = ok2.fct;
+identifier fct2 =~ "devm";
+expression x =~ "map";
+@@
+
+int fct(...)
+{
+	...
+*	x = fct2(...);
+	...
+}
+
+CJ
 
