@@ -1,253 +1,166 @@
-Return-Path: <linux-gpio+bounces-11126-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11127-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECF5F997AC3
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 04:52:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FD39997D46
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 08:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0EC51C21C2D
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 02:52:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F07AB22152
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 06:34:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58BFB187849;
-	Thu, 10 Oct 2024 02:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AB311A0BCA;
+	Thu, 10 Oct 2024 06:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCZBVcl+"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="aKUf0B/s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080C9224CF;
-	Thu, 10 Oct 2024 02:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B090E3D6B;
+	Thu, 10 Oct 2024 06:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728528767; cv=none; b=nGEarggUeExLlZklyEqZlU6Z8wMoFIMTOgeLgMhwJT2tCViqOg96sJ3i0zIKTQOVtCFgGw1R23g412aNeoRadFvb5KoOjvKAiGb9HOauyK2TRjEQEWyPEQB8cdTr/hcPED9UvYH8I3GoWumpZRy6FJfYTl+gZ1uoFl8s86zztfU=
+	t=1728542064; cv=none; b=FN1BKbyf5VfQS2kzFwNk8sfQFtG275/j6VObG9n78gB5iULSrBRo7PepyEoZKDynvg4CXV8EtMn5vhcFWV36WrLWBW/0HqciXACOFAytwe6y5O3l8xwZM4sWRGIlwxzRCFkoW77b0TMZ9+alAL7EXp2uuTBGAoYrdy87KycKdEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728528767; c=relaxed/simple;
-	bh=jNUa/nUADGuQ/kbBLvMP9Cp3on/BTO7uQawWJ3unJ1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JqPrqTW5nWElHkSaK9idvEgxc7IKgz/fiqnGhXhXcGtSN/FljCBvBmdFIySdCVlD/mZ59JvArP21v4lJnTdC5K2Rj5hMj+cgFCDskaE2xunCOLuAALuIEEP2X6Hu7B5zIjzOLhuzGvOs2bDcWkoebYLth9h0d6pAzySUVcfFQaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCZBVcl+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7A2C4CEC3;
-	Thu, 10 Oct 2024 02:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728528765;
-	bh=jNUa/nUADGuQ/kbBLvMP9Cp3on/BTO7uQawWJ3unJ1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZCZBVcl+KuCpQYVQP1WWm3+CwZaVniAk7FaV/Oydqo5MZ93uX/9kGBRJkCRGinZ3f
-	 PKKYPW9VZbCcb/INEzAOZbbHIM4NRkDZUK0p19O+oo/+ZpJ19SU2EhCPxMq2nCrMKa
-	 6J4jODeBZsnnewWKx5Ci8FqiE4LfG/CtjEmWVn4jol6HzznaRD5JvJTSMchajOr6+V
-	 lYNCCnp4foTph3fBLxI1HILKPWWmD7i23TtR5wHuYioyUo0Ok5okrlCvgl2bcKhxEs
-	 Tp02GoEt7OmSxciunSfLlOP9SbMd77Jt0102+A8VLdl7NkhMhxqWAYJhqp3PCGUhjj
-	 dbehRiwJHkbXA==
-Date: Wed, 9 Oct 2024 21:52:44 -0500
-From: Rob Herring <robh@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 04/14] dt-bindings: misc: Add device specific bindings
- for RaspberryPi RP1
-Message-ID: <20241010025244.GB978628-robh@kernel.org>
-References: <cover.1728300189.git.andrea.porta@suse.com>
- <3141e3e7898c1538ea658487923d3446b3d7fd0c.1728300189.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1728542064; c=relaxed/simple;
+	bh=n9KdWSYtOkDPUZ8+WHXTWzm0R5vDqUZAPIbwPNsnWTA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=TtFj2ZnI3HWszl4UsuNF22661DQiV/UkOUVp14Ly7Qlm6GNccZbozj8yin9nw+dDpbirQGPdCS2eE2N6KO5kodxC6NGcquAkARF5PMs+w9j8493vUobj2/fO6J4ZTURZJpyUHTAAO9fCSiPYKLHTcFumq5udCcyjwn40KPS8Ons=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=aKUf0B/s; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1728542028; x=1729146828; i=markus.elfring@web.de;
+	bh=qUNkm5MuOxf6IBBgFwcWmJvYdFILddjvzkOVjLt32J4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=aKUf0B/s/s1c0xxdCZZxrFjr8kti99z1b8uoZEx73Bv1VPxMvI8+uptDNUqD3Ark
+	 0beqcQLnO0E/NpB6m6eP0CpC8WCr1joQyQTNeRt0wqxaOuTkFxUJ/1KzNDhYcd/S9
+	 aIXBRtu3ow3Vta8xWSwP5NUb+mHuuKw/Q1Df1zqbaBtyqKVvBbLBUfhzpb8FNueHQ
+	 F5kujdJUhelUDIG0rJtSiRj5zmgofTPp/SPYfXkVOIpp5256tzThjFhe5cYT4dbiA
+	 ABF5rI7j0X2KKxgedE5CPZqn0KbAUzTMXM6/Cj062ZgB3LH2LDYwBCzbwErhcPXSP
+	 anBKuW6VNg9L0/WO6A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M2Phc-1szLEr3wLe-001VZe; Thu, 10
+ Oct 2024 08:33:48 +0200
+Message-ID: <89844cfc-f349-4515-a683-572c09c4143a@web.de>
+Date: Thu, 10 Oct 2024 08:33:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3141e3e7898c1538ea658487923d3446b3d7fd0c.1728300189.git.andrea.porta@suse.com>
+User-Agent: Mozilla Thunderbird
+To: linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Drew Fustini <drew@pdp7.com>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Fu Wei <wefu@redhat.com>, Guo Ren <guoren@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pinctrl: th1520: Use common error handling code in
+ th1520_pinctrl_dt_node_to_map()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HQ3BmE4H7byNJFSJkDiLtddpR/WLhnzeHaqc10HnvkaLhIYcKbt
+ PanD5avtKht7V5P+L4T0o5BgKdtS9h/UY1i5qKLeOviAjeEFVnHVa+JsMqx730y4+KN836c
+ fKxtvv221YlGZ9DlHTlZs5/GMfdxd71INGdnzuft+mqRc/JYLRxzcbwVZ+bCpTbG+mjdZ8r
+ f64HhqLxit/i4H0zqkVkg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+ttVb/jb5AI=;Wd/VkN8iGadL+vAUjxOjIlAciuD
+ pyXE69ogDJSKGwJPDM0J6nd2zWXVyKrws0ilG2rhqWXUPMv5cRQCuzro2Mc6/9e6X8YqPPmyQ
+ f2hYGO6LxVlmPojplG66BS3QRZapoTmraluDKv5YjjQIh5Qsrug9e01Ckskcl6+ScHSsNL9+d
+ hQXjkJswt9iZnl8v2k+NSSrS831WGUxQ7EvjdkT0sXJKPBG70aC94SxOPCGM4nOzq+FUSMpv/
+ ni2oSqlgXCBxnLc4z8ikvUsQQlD/D1QVOAWUiQ2IZyFwmalXRrizgHKmPOWtaBDtFM5XvglIh
+ b+KRN1azZCmYEavMI3MObikm2yP/Y0yPDAyjgf7VwG6i/I4TGW82vyNgkj7HCj0dUSK88Sx43
+ mWpuLLGbGmV4NBWFEmgNdxbTnJP38c3NU9bFTWH6+WNZGtn95JFX/vodVckM8C6i5QRoeKtWp
+ lnPdvNTqL9VRhTKwZY4+5JaG/JvjmVUfN4sPQv4yAmg8Ymenf7WzvvRMG6fdcgvg7WABWlfyp
+ XJ0y9B9J9tcByuzCO//HiRB1TYg5Cy76Evqe1YhUicplz75zcyMlSzb3hH/IBYCpQrYYkzXlj
+ ANLXjA2cb0N5y1YUB/7OORDPTUiYnXmN8Y2k5f0LOjSupMhNfG1exjnHZk4VQnBT/P0EX/AQX
+ YeCJLmD3qYdb6LG3xCk1UgBz806QEe4c6aEg4g27Gmbsj3bGfQv8edqIAOesiN4vkxXNYmOSi
+ SonEpufsE2w31dS6y2EtuOuTHplNcNFpt2B4Fv919LgwJm2PbLWjhuyaDuCaNbt1nY0IHdwWN
+ WvyuOLORsTlBn1ijy3gT7qrg==
 
-On Mon, Oct 07, 2024 at 02:39:47PM +0200, Andrea della Porta wrote:
-> The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> schema is intended as minimal support for the clock generator and
-> gpio controller peripherals which are accessible through BAR1.
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  .../devicetree/bindings/misc/pci1de4,1.yaml   | 110 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/pci1de4,1.yaml b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> new file mode 100644
-> index 000000000000..3f099b16e672
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/misc/pci1de4,1.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RaspberryPi RP1 MFD PCI device
-> +
-> +maintainers:
-> +  - Andrea della Porta <andrea.porta@suse.com>
-> +
-> +description:
-> +  The RaspberryPi RP1 is a PCI multi function device containing
-> +  peripherals ranging from Ethernet to USB controller, I2C, SPI
-> +  and others.
-> +  The peripherals are accessed by addressing the PCI BAR1 region.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-ep-bus.yaml
-> +
-> +properties:
-> +  compatible:
-> +    additionalItems: true
-> +    maxItems: 3
-> +    items:
-> +      - const: pci1de4,1
-> +
-> +patternProperties:
-> +  "^pci-ep-bus@[0-2]$":
-> +    $ref: '#/$defs/bar-bus'
-> +    description:
-> +      The bus on which the peripherals are attached, which is addressable
-> +      through the BAR.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 10 Oct 2024 08:22:14 +0200
 
-No need for this because pci-ep-bus.yaml already has a schema for the 
-child nodes.
+Add jump targets so that a bit of exception handling can be better reused
+at the end of this function implementation.
 
-> +
-> +unevaluatedProperties: false
-> +
-> +$defs:
-> +  bar-bus:
-> +    $ref: /schemas/pci/pci-ep-bus.yaml#/$defs/pci-ep-bus
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      "#interrupt-cells":
-> +        const: 2
-> +        description:
-> +          Specifies respectively the interrupt number and flags as defined
-> +          in include/dt-bindings/interrupt-controller/irq.h.
-> +
-> +      interrupt-controller: true
-> +
-> +      interrupt-parent:
-> +        description:
-> +          Must be the phandle of this 'pci-ep-bus' node. It will trigger
-> +          PCI interrupts on behalf of peripheral generated interrupts.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/pinctrl/pinctrl-th1520.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th=
+1520.c
+index c8d2ee6defa7..8556dd6b881e 100644
+=2D-- a/drivers/pinctrl/pinctrl-th1520.c
++++ b/drivers/pinctrl/pinctrl-th1520.c
+@@ -464,23 +464,18 @@ static int th1520_pinctrl_dt_node_to_map(struct pinc=
+trl_dev *pctldev,
+ 			if (!muxtype) {
+ 				dev_err(thp->pctl->dev, "%pOFn.%pOFn: unknown function '%s'\n",
+ 					np, child, funcname);
+-				ret =3D -EINVAL;
+-				goto free_configs;
++				goto e_inval;
+ 			}
 
-Do you have an interrupt controller per bus? These should be in the 
-parent node I think.
+ 			funcname =3D devm_kasprintf(thp->pctl->dev, GFP_KERNEL, "%pOFn.%pOFn",
+ 						  np, child);
+-			if (!funcname) {
+-				ret =3D -ENOMEM;
+-				goto free_configs;
+-			}
++			if (!funcname)
++				goto e_nomem;
 
+ 			npins =3D of_property_count_strings(child, "pins");
+ 			pgnames =3D devm_kcalloc(thp->pctl->dev, npins, sizeof(*pgnames), GFP_=
+KERNEL);
+-			if (!pgnames) {
+-				ret =3D -ENOMEM;
+-				goto free_configs;
+-			}
++			if (!pgnames)
++				goto e_nomem;
+ 		} else {
+ 			funcname =3D NULL;
+ 		}
+@@ -497,8 +492,7 @@ static int th1520_pinctrl_dt_node_to_map(struct pinctr=
+l_dev *pctldev,
+ 				nmaps =3D rollback;
+ 				dev_err(thp->pctl->dev, "%pOFn.%pOFn: unknown pin '%s'\n",
+ 					np, child, pinname);
+-				ret =3D -EINVAL;
+-				goto free_configs;
++				goto e_inval;
+ 			}
 
-> +
-> +    patternProperties:
-> +      "^clocks(@[0-9a-f]+)?$":
-> +        type: object
-> +        $ref: /schemas/clock/raspberrypi,rp1-clocks.yaml
-> +
-> +      "^ethernet(@[0-9a-f]+)?$":
-> +        type: object
-> +        $ref: /schemas/net/cdns,macb.yaml
-> +
-> +      "^pinctrl(@[0-9a-f]+)?$":
-> +        type: object
-> +        $ref: /schemas/pinctrl/raspberrypi,rp1-gpio.yaml
+ 			if (nconfigs) {
+@@ -531,6 +525,12 @@ static int th1520_pinctrl_dt_node_to_map(struct pinct=
+rl_dev *pctldev,
+ 	*num_maps =3D nmaps;
+ 	return 0;
 
-IMO, these child nodes can be omitted. We generally don't define all the 
-child nodes in an SoC.
++e_nomem:
++	ret =3D -ENOMEM;
++	goto free_configs;
++
++e_inval:
++	ret =3D -EINVAL;
+ free_configs:
+ 	kfree(configs);
+ free_map:
+=2D-
+2.46.1
 
-If you do want to define them, then just do:
-
-additionalProperties: true
-properties:
-  compatible:
-    contains: the-child-compatible
-
-> +
-> +    required:
-> +      - interrupt-parent
-> +      - interrupt-controller
-> +
-> +examples:
-> +  - |
-> +    pci {
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +
-> +        rp1@0,0 {
-> +            compatible = "pci1de4,1";
-> +            ranges = <0x01 0x00 0x00000000
-> +                      0x82010000 0x00 0x00
-> +                      0x00 0x400000>;
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +
-> +            pci_ep_bus: pci-ep-bus@1 {
-> +                compatible = "simple-bus";
-> +                ranges = <0xc0 0x40000000
-> +                          0x01 0x00 0x00000000
-> +                          0x00 0x00400000>;
-> +                dma-ranges = <0x10 0x00000000
-> +                              0x43000000 0x10 0x00000000
-> +                              0x10 0x00000000>;
-> +                #address-cells = <2>;
-> +                #size-cells = <2>;
-> +                interrupt-controller;
-> +                interrupt-parent = <&pci_ep_bus>;
-> +                #interrupt-cells = <2>;
-> +
-> +                rp1_clocks: clocks@c040018000 {
-> +                    compatible = "raspberrypi,rp1-clocks";
-> +                    reg = <0xc0 0x40018000 0x0 0x10038>;
-> +                    #clock-cells = <1>;
-> +                    clocks = <&clk_rp1_xosc>;
-> +                    clock-names =  "rp1-xosc";
-> +                };
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ccf123b805c8..2aea5a6166bd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19384,6 +19384,7 @@ RASPBERRY PI RP1 PCI DRIVER
->  M:	Andrea della Porta <andrea.porta@suse.com>
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-> +F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
->  F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
->  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
->  F:	include/dt-bindings/clock/rp1.h
-> -- 
-> 2.35.3
-> 
 
