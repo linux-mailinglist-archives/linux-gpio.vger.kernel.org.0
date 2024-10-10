@@ -1,146 +1,119 @@
-Return-Path: <linux-gpio+bounces-11146-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11147-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D21219986D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 14:57:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CE589987A2
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 15:28:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1DAF1C2116F
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 12:57:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F74E1C23A56
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 13:28:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF4CB1CB328;
-	Thu, 10 Oct 2024 12:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A391C1C9EA8;
+	Thu, 10 Oct 2024 13:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yH1xqL5r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxxU/pOH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3FD1CB31D
-	for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2024 12:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76081C9EA5;
+	Thu, 10 Oct 2024 13:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728564967; cv=none; b=WfxOEGze/1klSTALBw2ilZ03O5JthEvxQCUaNLosIDZVCGLuFutZfcpkcPa+SYNCmnmTcInvU40PGo1z+nUwF53jFgWdCAhGBBj2iB+bJ8N6Bdocu7A119NWvtHNG1KR0wz9I6bPrBEPvUJetqs1IY3PgH5/bzoSrQS/k2/AKAw=
+	t=1728566863; cv=none; b=INdir/lgtPe7fijh1bJREFEXaU8FQKxfcMiYZ0+GzMDgsiRjlALeVPMLB52zr6QBsjcOHrKXZ01AFzDWfC6+Oq+wg8a5aanCAFew/6chgmeUdLEYTfEybbWZUVbQttOBzIMahtma4TPRBEHhfFkNAg4KRigeiwPgjkDrSnWuLsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728564967; c=relaxed/simple;
-	bh=tOHp6AWjbTv4yI6UVldQljr7MbFCmo+VO/FEqnev4UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JFMnzvmaZixzgV2b7eHxxhAfk1ezt3XbiwF7IAwovhoe32yDkRTq5sFehoa0IZD8/s0BLXkv0pXWPfQlRTRsTkVTf4HaDefy2wGRmAkgZ/CRmUZ1FYZO9rk7p5XyHeneiRXjiLzujTiQyluTjscs5uqiSnaU/HL0vjSH5Psgb3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yH1xqL5r; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2fabfc06de3so9385441fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2024 05:56:05 -0700 (PDT)
+	s=arc-20240116; t=1728566863; c=relaxed/simple;
+	bh=NXkZRUIGoEd0olQWUmLw5rekLqUos8cOEeufBmEImYA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rjEq/5OtjEI3rDtAU/C3GxFAtWE5m+HnAyv47EPUE65nLRlVGy591c8pDfQw2bDE84VuQfgiNTXC/1L10GH+hKqb2o6O9ImQumcr3C/7x//NN9W29dgswb0v+BPfy0g0rDkfJpViFFxKh4aTI/aJGXEVyHBSj6fqKJf428+1xOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RxxU/pOH; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37d4ac91d97so611259f8f.2;
+        Thu, 10 Oct 2024 06:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728564964; x=1729169764; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BNnUCyPTi+G8LZCplzDQqmQsNRTnEL4ih2dYIBtqKZc=;
-        b=yH1xqL5rxnPIgaJqM/g3sgRVZ0LaPfNjTcxgx/j0ECRgU0bjbLGRiXwDOD4iT8GOyb
-         uSTwRs/JtW+V+aLN2p1YKSTIh0mWlfu9Hi3vbaA497frPC0518fi4LscmYRfKwSpFFiR
-         X4cmrbrAFZKOrVZL5UfaWYVKdWUAwtXVFNsxmwW1hd3SbnuVpoXbkhCEud1UFSGpNxoz
-         IDi3p13fC1BqSmASSyI4nf2BnMcq8ynxktPw1MnXz2z6+S5Lo/6SFTfPgXgyy+hOcN7g
-         hPykDLuhu4koeHCeTFnCKKT+S6BS/V2klokan7SRrsYaH2j1SO9ghB0gT+Io0Omxr+8J
-         53sg==
+        d=gmail.com; s=20230601; t=1728566860; x=1729171660; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qLlvMIrxiw/4KPPfQMbsJ7jnLI+Y6UsBkrPR7mihz0s=;
+        b=RxxU/pOHByaDerOSr7It/4rFVMOOS7VinAeUo12qor5bvSX1JeIh/OCXIlzR0qMcjE
+         5SWtNTD8dup1mMCRphu93/iX1myMnyN74/c/cH2OFKI7yBX7r7ugXIdIdef5bducuQUZ
+         6eErPnFInmF1pWX0NkLIUYkXJRY3YJf/pGPaZS/fKrDY4XzuCo3usWOMB8G63jLUTa5k
+         siGavwOLSSlLeGzDQTRIm8TuGPugOLHEdJXGsshCT5+dCRY95cG4IGvQjjre3ExtJMkk
+         8Jb6XWcomoXONNawLQBTtRMJgz7ZqK2rN31YzAfpvAvV7z0JG7g+yaQG9ELlQmXsB5an
+         ZoeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728564964; x=1729169764;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BNnUCyPTi+G8LZCplzDQqmQsNRTnEL4ih2dYIBtqKZc=;
-        b=j9OZPpIEy0HXHatgPRjKrje73a9C51av/YStevpLEDA1BOyg01ZUa3C4CQuwdwLo+x
-         T1f1GYfToPpIX3bWdkH1hnu5shbYCyJ2kSs8yEpF9VJ8zAPBNK7aT4zAk3dA0HNHuMU/
-         c8+WqRXZzRrpLmDxSg8bK7suSyKOOfdqz3hGzneGbSuPbQK0AS6hmkWIWLI1P3XSouEq
-         jxx6cHiCFrPVHUa1T053jnFLlVox3u/4bJINUE4U0eiZExa/heoyhHvgoZxELWNiKMfL
-         1XWbLXHWx5mcn4I2wZYoDkrqjbdUW7BSilq1X1MmPnaPypNPJhB9W1WQcesB3v/HrDOK
-         2Lug==
-X-Forwarded-Encrypted: i=1; AJvYcCWJmxVtjzE+Lst6ylHkNEB/51NhKcELLUNaGI9feNtNXSjDHdkDjDiqh1FDKEvIgBUIjOSl+zXDjJ1F@vger.kernel.org
-X-Gm-Message-State: AOJu0YytzHw/aSjUcoIum/sDjsq1HoU1/N3k+1Gnd9YqazOCpGzHi27s
-	d0uOs/MgChnWeajN2JloGH50/LM40DxoJWo47Ssl/rnmkDQtLxozshmVX9KVhQQ=
-X-Google-Smtp-Source: AGHT+IE3OVGS1otAXhVnWrTDRmy9pILODy/3R4ocjn+v7nJ3EHEAHwBirvcqYOXxLoGkanEri2+Jaw==
-X-Received: by 2002:a05:651c:505:b0:2fa:c519:6e66 with SMTP id 38308e7fff4ca-2fb187d1e4dmr33465261fa.40.1728564963861;
-        Thu, 10 Oct 2024 05:56:03 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2fb245b16cbsm1902981fa.62.2024.10.10.05.56.01
+        d=1e100.net; s=20230601; t=1728566860; x=1729171660;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qLlvMIrxiw/4KPPfQMbsJ7jnLI+Y6UsBkrPR7mihz0s=;
+        b=Xp27Ton+v2LuJNWxJ2/SRlTPd2U8z181zmoJNUPMlLfdRBH9BeDv69JluYArm9upSY
+         kNWIVilN84JIVQRA4BFzaKoa2HaxaR2nahCFLctTdkdPxR90DlEwdbWsPCqGS61oDZ5X
+         63KGw7QGd+mvRWBlShYLpkMY48U3jycXLH1hvg6xG/9CR7i5Rdym/QCS384tW4dBmgP6
+         cnMVuJoNU5cwpCwrzE8r25G8/p4kSAADubd3NYgGIFrIt77/zox2V/slRW+pDgWhlu2L
+         K4qJRheCQK3SfelWMvbOcC8ijGy1iemKSTtyD5JXIc45Z+VSPLJ/hF3zKmlMLZ8GB4fN
+         7+8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUyC1yyC1eAOSQ7Sb1TPq2/iiwTugrrVEW4ZGzRAaYISoy1UrSOhoI3JLeTtkB721XGpblQwaCzsMj722wgkDUJvDU=@vger.kernel.org, AJvYcCWgPrVc1hXGxclxfIQnbIwCPWU5zR7/SQeOJl9tjTs+/7QIhR6zEDS/n4dT1JOQEnu4shWOdw9SWqiLVLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPly7tDPfCoCmQ1EDKGu99q31MCZiL2Oke8qPzws/jqO6SoN7X
+	Ku/DgPwqzgaBkIxZZBtY8wQKtoSr6PuD7IX94FN1syGJF+aY7NbT
+X-Google-Smtp-Source: AGHT+IHAc1RfKHbA+LkEqOb+uPvrC/i4EHGoWDOkb230AGYqsdC5tie9wmX9PwZg6eVCH3HDmU4W/g==
+X-Received: by 2002:a05:6000:12c4:b0:37d:4c40:699 with SMTP id ffacd0b85a97d-37d4c40098amr1756508f8f.5.1728566859773;
+        Thu, 10 Oct 2024 06:27:39 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8671sm1577183f8f.18.2024.10.10.06.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 05:56:02 -0700 (PDT)
-Date: Thu, 10 Oct 2024 15:56:00 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jingyi Wang <quic_jingyw@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, quic_tengfan@quicinc.com, quic_tingweiz@quicinc.com, 
-	quic_aiquny@quicinc.com, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: add the tlmm driver for QCS8300
- platforms
-Message-ID: <yh5qzohy42r226a4e7yupimfdl6xccpntuffot7dnhrftagtae@4ruw5vmcknfq>
-References: <20241009-qcs8300_tlmm-v2-0-9e40dee5e4f1@quicinc.com>
- <20241009-qcs8300_tlmm-v2-2-9e40dee5e4f1@quicinc.com>
+        Thu, 10 Oct 2024 06:27:39 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: Select PINCTRL_RZG2L for RZ/V2H(P) SoC
+Date: Thu, 10 Oct 2024 14:27:26 +0100
+Message-ID: <20241010132726.702658-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241009-qcs8300_tlmm-v2-2-9e40dee5e4f1@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 09, 2024 at 03:13:34PM GMT, Jingyi Wang wrote:
-> Add support for QCS8300 TLMM configuration and control via the
-> pinctrl framework.
-> 
-> Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
-> ---
->  drivers/pinctrl/qcom/Kconfig.msm       |    7 +
->  drivers/pinctrl/qcom/Makefile          |    1 +
->  drivers/pinctrl/qcom/pinctrl-qcs8300.c | 1246 ++++++++++++++++++++++++++++++++
->  3 files changed, 1254 insertions(+)
-> 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-[...]
+Add explicit selection of the PINCTRL_RZG2L config option for the
+RZ/V2H(P) (R9A09G057) SoC, ensuring pin control driver is enabled
+for this SoC.
 
-> +	[125] = PINGROUP(125, phase_flag, _, _, _, _, _, _, _, _, _, egpio),
-> +	[126] = PINGROUP(126, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[127] = PINGROUP(127, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[128] = PINGROUP(128, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[129] = PINGROUP(129, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[130] = PINGROUP(130, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[131] = PINGROUP(131, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[132] = PINGROUP(132, _, _, _, _, _, _, _, _, _, _, egpio),
-> +	[133] = UFS_RESET(ufs_reset, 0x92000),
-> +	[134] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x89000, 15, 0),
-> +	[135] = SDC_QDSD_PINGROUP(sdc1_clk, 0x89000, 13, 6),
-> +	[136] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x89000, 11, 3),
-> +	[137] = SDC_QDSD_PINGROUP(sdc1_data, 0x89000, 9, 0),
-> +};
-> +
+Fixes: 9bd95ac86e70 ("pinctrl: renesas: rzg2l: Add support for RZ/V2H SoC")
+Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-[...]
-
-> +
-> +static const struct msm_pinctrl_soc_data qcs8300_pinctrl = {
-> +	.pins = qcs8300_pins,
-> +	.npins = ARRAY_SIZE(qcs8300_pins),
-> +	.functions = qcs8300_functions,
-> +	.nfunctions = ARRAY_SIZE(qcs8300_functions),
-> +	.groups = qcs8300_groups,
-> +	.ngroups = ARRAY_SIZE(qcs8300_groups),
-> +	.ngpios = 134,
-
-I believe this should be 133.
-
-> +	.wakeirq_map = qcs8300_pdc_map,
-> +	.nwakeirq_map = ARRAY_SIZE(qcs8300_pdc_map),
-> +	.egpio_func = 11,
-> +};
-> +
-
+diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
+index 14bd55d64731..7f3f41c7fe54 100644
+--- a/drivers/pinctrl/renesas/Kconfig
++++ b/drivers/pinctrl/renesas/Kconfig
+@@ -41,6 +41,7 @@ config PINCTRL_RENESAS
+ 	select PINCTRL_PFC_R8A779H0 if ARCH_R8A779H0
+ 	select PINCTRL_RZG2L if ARCH_RZG2L
+ 	select PINCTRL_RZV2M if ARCH_R9A09G011
++	select PINCTRL_RZG2L if ARCH_R9A09G057
+ 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+ 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+ 	select PINCTRL_PFC_SH7269 if CPU_SUBTYPE_SH7269
 -- 
-With best wishes
-Dmitry
+2.43.0
+
 
