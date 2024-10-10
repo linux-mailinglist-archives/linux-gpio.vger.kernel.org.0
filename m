@@ -1,252 +1,121 @@
-Return-Path: <linux-gpio+bounces-11142-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11143-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F23199840B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 12:42:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AD309984EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 13:25:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BF3A28289E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 10:42:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A36D1C20EB0
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 11:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F851C1ACF;
-	Thu, 10 Oct 2024 10:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F2B1C2DC8;
+	Thu, 10 Oct 2024 11:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnP+7Ut6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lJU3XipM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787F81C1AB3;
-	Thu, 10 Oct 2024 10:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4408EF9CB;
+	Thu, 10 Oct 2024 11:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728556911; cv=none; b=Dz98qDXMafYfXDyVvhJBBesBEjLqaHkfuRc9JrZ4Ff9pIyEqXmwRaVH3qNVBTtG8CPlxRmMANTjYd5GDv39KEuXgkcc053Q/K6hKb2cVmYt4I+FyVZZKrpLGgwpmhZG8bttn85hYsfJJ8ktSuIsxYvc1WK+3VB+NhGWFFAKOTVU=
+	t=1728559498; cv=none; b=InQCUQURrZJXy2KopfSLwNiiMGblaTDM2DJRM0l0CyqwgCNx3NwGn5Q2bb6+oQP1HiqSQZfHabSclAK/4fyQ4lt7NHQfHthsiNVM1rjTSnfJ451Ce/aOm+WhTGwwWAf+3Bd/G1B+fWGQLjEO7Tc3sYVLdTpbXhucqxnw+KfcU/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728556911; c=relaxed/simple;
-	bh=36igFE6ds31Mh4PJf0bvgQdaJ0lnLaEOp7UNETeWus0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qU1xpClXdNJI2QpPo/CCywWNpN+DiK6WsUSmfboZ9lCcoAfH8hMTp2pmK9G60WfHQk5QGtD+i6iwrQNTiJvYc9OQ99V4el12cJGsmjZNz5deQA5veLc4gTjFTR2ApPEhV5mCyVinWMyI8aFJRVkD3OwuFSarV0S+ZcOuzgw9p5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnP+7Ut6; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37d325beee2so418484f8f.2;
-        Thu, 10 Oct 2024 03:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728556908; x=1729161708; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICu3VsZKvL2eXNq4nP6eMLyiBCYNXniiqJTCYSiqQoM=;
-        b=nnP+7Ut6T5n2sTqOmJ3WsbYmqe3kZbioEAqPbi19e7EXCyDdLpZ7Ge2vXJfsLJdM1d
-         0aYHWf/ZNFAL1bX+FWuWmt9Fl3XF5z9hMxTpp9e5kjGfDxkIguh/dxfaQrTf92JRsJNi
-         5T76XsC4gzLwDtLpTM7TPs462pqpZ86ns7KXKqX9zS24bOrCGI/Uix98IT6w0MyYyZbe
-         26QkCKyvC6zus7FC3KXm+tbtRCDSRtzkyNZvGWG3vGZHLCBahsiPGQW3rD0NfhlOdT3I
-         M0CmRI+9EkHK6mxcdOUyugWO26Dw4lvKN+PVxCr/HYgWqHSsFIxANDW38rHcMSvEYYFP
-         MGNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728556908; x=1729161708;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICu3VsZKvL2eXNq4nP6eMLyiBCYNXniiqJTCYSiqQoM=;
-        b=fbKMGg3xNd9WUcRk4B3Xu4PLime/WBRLjXY5znH4KLwqibtVgGG1T1D0lGLs0dR8Dv
-         nafU2Y0PHgWWlTeP5mSJkN291ay6t+LfewCF47w7+mlMdQMwMQ2/bDrAqwIGMYTkzW0y
-         K+O6M49XWowGz+EeyG73qnDR0s7qxUo/7xiXAp6M4VDqX4BXnqhpIwoF6MdW7nu+mkB/
-         d9k6PDJwxCnfOpa4UHY3nkjPf65XgqoBIc9aUY7KW6ED+KVZr7F8SsA3bAwvvs5XwEHv
-         fJK01CrfvheBp24hbhenxFklpE9dHDIpUmMa+LhVCBeitU+Upma5dZ2KSdhObmSdLPV8
-         sYrw==
-X-Forwarded-Encrypted: i=1; AJvYcCU32pSk5CjMksm60W0r8gw7uFoz/4Zn+akopNA4YjatwKuw7R4ViwrKA2sM0Qn312B/aJ8s9f1fnP2w@vger.kernel.org, AJvYcCV3CSJTTQeLX7zKyKXPx1/Ctby3fQW0CDBx5d3xtEvNFEXvbK20j6h0+fDQ5Ff5nrKHHfgNrcCVzuT0@vger.kernel.org, AJvYcCXbCrUqnQiTOVhJqpiCueoSqIHHNiKOp2pnQb7TmNiOhcACoQ/NtfSE1dw/PVCyKCi8Y4JwwmGCY+LBPg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxerh/TrP6mPFdi0PlMbOHCCspLuD9G877AXknukxbyQYXBj4E3
-	PPw/yGe3CACBGOdIsb5n8kJ5+6nJpxemUfo/CSahb5WsHHDvMmU0KzDkNQ==
-X-Google-Smtp-Source: AGHT+IEcIdI8ebXVd8j3aFJ8Y9FMkMiCv44M+O5iKAgT+bUxjjTjVdQBz77Q5o/nX3gB7U6b/V4r4g==
-X-Received: by 2002:a5d:4bd0:0:b0:364:6c08:b9b2 with SMTP id ffacd0b85a97d-37d3ab004aemr3042815f8f.45.1728556907439;
-        Thu, 10 Oct 2024 03:41:47 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b79f679sm1181969f8f.73.2024.10.10.03.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 03:41:47 -0700 (PDT)
-Message-ID: <6707af6b.df0a0220.cf486.2f75@mx.google.com>
-X-Google-Original-Message-ID: <ZwevaOHK9FAtyzyg@Ansuel-XPS.>
-Date: Thu, 10 Oct 2024 12:41:44 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
-References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
- <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
- <20241002132518.GD7504@google.com>
- <ZwWscWk5axQI9H1t@lore-desk>
- <20241009104821.GF276481@google.com>
- <20241009105550.GG276481@google.com>
- <6707a8ec.df0a0220.376450.293e@mx.google.com>
+	s=arc-20240116; t=1728559498; c=relaxed/simple;
+	bh=ywceDmzYQKH28KRgkOB9nGjXZGaXYWHDTS1DHsIk3Xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IUuLrkdglHhx44mApQ+EQFXIKRBLA8kVLdD9+H5nnVY0EFblvRJ+e40vmW4us2EYqIwLbufF7EWcvY70Bo4saly8+aC8AfZUQPLYZFWK7z33uesqXuj+3/ij+uB959dIg9EAQBlcEhGa+vndDrh1DE+o647jvVIS4gMPjnChG+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lJU3XipM; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49ABMduX002819;
+	Thu, 10 Oct 2024 11:24:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=+Lt5TvzGhT9DI465dwqRMgLKs/FyG
+	03acJyUMNDMqLk=; b=lJU3XipMDhMxFK5PrptopagRJT+BsXO2p/dV/UFKndEuX
+	4UN88zW7V9u3npraMwVgr7ngRDdoX7al+rFEUbdlZ4hTz6U7l3sdhItAL6OxHtrc
+	ITAXFxGohb+5jqMV6l895TwZVnd7l2SZyuI3TyTUHOmuIYyv75s9u/smTWyaz3N0
+	qV+LFe/BgNeFzitlHwMmY3R/90rXnqUTX7hqMV3A726aXu88A1cbV8Yjqsn2IfpA
+	DsG9qFw76Vw39ryyf6E7xFeFMZ1gYeHTn26xAZ6F7AvnYaw3gDHNHOLVUqfALiQ/
+	kjFXlI8Fuw35sLzxPDPFTYv9LKUUMMBQV/i59v6SA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42306ejh49-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Oct 2024 11:24:49 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49ABCS2V011625;
+	Thu, 10 Oct 2024 11:24:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 422uwg6x7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Oct 2024 11:24:48 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 49ABOl9C031014;
+	Thu, 10 Oct 2024 11:24:47 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 422uwg6x6y-1;
+	Thu, 10 Oct 2024 11:24:47 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Chen Wang <unicorn_wang@outlook.com>,
+        Inochi Amaoto <inochiama@outlook.com>,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
+        error27@gmail.com
+Subject: [PATCH] pinctrl: sophgo: fix double free in cv1800_pctrl_dt_node_to_map()
+Date: Thu, 10 Oct 2024 04:18:18 -0700
+Message-ID: <20241010111830.3474719-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6707a8ec.df0a0220.376450.293e@mx.google.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-10_08,2024-10-09_02,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2410100075
+X-Proofpoint-GUID: sbJPztGdrITMqyNO9QML_0_1Qb3O_iJw
+X-Proofpoint-ORIG-GUID: sbJPztGdrITMqyNO9QML_0_1Qb3O_iJw
 
-On Thu, Oct 10, 2024 at 12:14:01PM +0200, Christian Marangi wrote:
-> On Wed, Oct 09, 2024 at 11:55:50AM +0100, Lee Jones wrote:
-> > On Wed, 09 Oct 2024, Lee Jones wrote:
-> > 
-> > > On Wed, 09 Oct 2024, Lorenzo Bianconi wrote:
-> > > 
-> > > > On Oct 02, Lee Jones wrote:
-> > > > > On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
-> > > > > 
-> > > > > > From: Christian Marangi <ansuelsmth@gmail.com>
-> > > > > > 
-> > > > > > Support for Airoha EN7581 Multi Function Device that
-> > > > > > expose PINCTRL functionality and PWM functionality.
-> > > > > 
-> > > > > The device is a jumble of pinctrl registers, some of which can oscillate.
-> > > > > 
-> > > > > This is *still* not an MFD.
-> > > > > 
-> > > > > If you wish to spread this functionality over 2 drivers, use syscon to
-> > > > > obtain the registers and simple-mfd to automatically probe the drivers.
-> > > > 
-> > > > Hi Lee,
-> > > > 
-> > > > IIUC you are suggesting two possible approaches here:
-> > > > 
-> > > > 1- have a single driver implementing both pinctrl and pwm functionalities.
-> > > >    This approach will not let us reuse the code for future devices that
-> > > >    have just one of them in common, like pwm (but we can live with that).
-> > > 
-> > > If you can have one without the other, then they are separate devices.
-> > > 
-> > > > 2- use a device node like the one below (something similar to [0])
-> > > > 
-> > > > system-controller@1fbf0200 {
-> > > > 	compatible = "syscon", "simple-mfd";
-> > > > 	reg = <0x0 0x1fbf0200 0x0 0xc0>;
-> > > > 
-> > > > 	interrupt-parent = <&gic>;
-> > > > 	interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > > > 
-> > > > 	gpio-controller;
-> > > > 	#gpio-cells = <2>;
-> > > > 
-> > > > 	interrupt-controller;
-> > > > 	#interrupt-cells = <2>;
-> > > > 
-> > > > 	pio: pinctrl {
-> > > > 		compatible = "airoha,en7581-pinctrl";
-> > > > 
-> > > > 		[ some pinctrl properties here ]
-> > > > 	};
-> > > > 
-> > > > 	#pwm-cells = <3>;
-> > > > 
-> > > > 	pwm {
-> > > > 		compatible = "airoha,en7581-pwm";
-> > > > 	};
-> > > > };
-> > > > 
-> > > > Please correct me if I am wrong, but using syscon/simple-mfd as compatible
-> > > > string for the 'parent' device, will require to introduce the compatible strings
-> > > > even for the child devices in order to probe them, correct? 
-> > > > If so, as pointed out by Christian, this is something nacked by Rob/Krzysztof/Conor
-> > > > (this is the main reason why we introduced a full mfd driver here).
-> > > > 
-> > > > @Rob, Krzysztof, Conor: am I right?
-> > > 
-> > > I don't see why separate functionality shouldn't have separate
-> > > compatible strings, even if the registers are together.  Register layout
-> > > and functionality separation are not related.
-> > 
-> > We've been happy to support both pinctrl and pwm devices before:
-> > 
-> >   git grep "\-pinctrl\|\-pwm" -- drivers/mfd
-> >   git grep "\-pinctrl\|\-pwm" -- arch/*/boot/dts
-> > 
-> >   git grep "\-pinctrl" -- arch/*/boot/dts | wc -l
-> >   602
-> >   git grep "\-pwm" -- arch/*/boot/dts | wc -l
-> >   856
-> > 
-> > What makes this particular device different to all of the others?
-> >
-> 
-> Hi Lee,
-> 
-> this would be the final DTS following the "simple-mfd" pattern.
-> 
-> Can you confirm it's correct?
-> 
-> mfd: system-controller@1fbf0200 {
-> 	compatible = "syscon", "simple-mfd";
-> 	reg = <0x0 0x1fbf0200 0x0 0xc0>;
->  
-> 	interrupt-parent = <&gic>;
-> 	interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->  
-> 	gpio-controller;
-> 	#gpio-cells = <2>;
->  
-> 	interrupt-controller;
-> 	#interrupt-cells = <2>;
-> 
-> 	gpio-ranges = <&mfd 0 13 47>;
-> 
-> 	#pwm-cells = <3>;
->  
-> 	pio: pinctrl {
-> 		compatible = "airoha,en7581-pinctrl";
->  
-> 		mdio_pins: mdio-pins {
-> 			mux {
-> 				function = "mdio";
-> 				groups = "mdio";
-> 			};
->  
-> 			conf {
-> 				pins = "gpio2";
-> 				output-high;
-> 			};
-> 		};
->  
-> 		pcie0_rst_pins: pcie0-rst-pins {
-> 			conf {
-> 				pins = "pcie_reset0";
-> 				drive-open-drain = <1>;
-> 			};
-> 		};
->  
-> 		pcie1_rst_pins: pcie1-rst-pins {
-> 			conf {
-> 				pins = "pcie_reset1";
-> 				drive-open-drain = <1>;
-> 			};
-> 		};
-> 	};
->  
-> 	pwm {
-> 		compatible = "airoha,en7581-pwm";
-> 	};
-> };
->
+'map' is allocated using devm_* which takes care of freeing the allocated
+data, but in error paths there is a call to pinctrl_utils_free_map()
+which also does kfree(map) which leads to a double free.
 
-Also asking to Rob, Krzysztof and Conor.
+Use kcalloc() instead of devm_kcalloc() as freeing is manually handled.
 
-Is this DTS OK for you?
+Fixes: a29d8e93e710 ("pinctrl: sophgo: add support for CV1800B SoC")
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+---
+This is based on static analysis with smatch, only compile tested.
+---
+ drivers/pinctrl/sophgo/pinctrl-cv18xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+index d18fc5aa84f7..57f2674e75d6 100644
+--- a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
++++ b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+@@ -221,7 +221,7 @@ static int cv1800_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	if (!grpnames)
+ 		return -ENOMEM;
+ 
+-	map = devm_kcalloc(dev, ngroups * 2, sizeof(*map), GFP_KERNEL);
++	map = kcalloc(ngroups * 2, sizeof(*map), GFP_KERNEL);
+ 	if (!map)
+ 		return -ENOMEM;
+ 
 -- 
-	Ansuel
+2.39.3
+
 
