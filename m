@@ -1,224 +1,171 @@
-Return-Path: <linux-gpio+bounces-11164-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11165-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B76D99948A
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 23:41:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 043C0999532
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 00:27:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B9C41C22764
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 21:41:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A29851F28730
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 22:27:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40041E231B;
-	Thu, 10 Oct 2024 21:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 669B41E573C;
+	Thu, 10 Oct 2024 22:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ff4smxCo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k/hq9Y3R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98B28F6A;
-	Thu, 10 Oct 2024 21:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36111E490B
+	for <linux-gpio@vger.kernel.org>; Thu, 10 Oct 2024 22:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728596498; cv=none; b=L6NttK9c2bBcXtjhDHRGk9cPoXHIahkXUywDt+Pnzw3hRu8sTFWrNGQPzAAQkDoX6FNaJ9zzf+pTC/eoqnduMbZwA+HAklLDATLvlWiDjRc4ZC5eHuuet+pOKSApjDTLm98BClqoUcmp/PIAKVkmAk55TVAZKSVwJoApm6S7KpY=
+	t=1728599260; cv=none; b=XZnQXL8cMJX1LRiWPGzdjVIAf+q3Kqw+jfdAOhrL/qUoNtY9jp7F5fEpRYvnrl5FNb9SAhEKn4HHjkyA3bGdbQoLfdqUSjVwi1ocGFDzWLGqmVMopwre+m8HED3HMJ4MT9OsqWPYzJS9QHNji0hDrDQ0VsnIjrOIqdbrufT2DL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728596498; c=relaxed/simple;
-	bh=Q3NSqYisG8WYYrz9LbzVCsdGWId+yQgVgrE9CldSbWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZjtOXljznDDAG6tj+AsWIgQMseEPX0HBIBcLNeeBUmmeEyppNFoUgFLIprAUH4Vqf4TEa/tgAgagtAufgJk898JX8/X4BTjbabrnqry7CCc1qUNoHwJy0qbSpvR3+2F3Ox5qnZvUIXf+USQkKxyfpXWx5IUIEnIPv+upqHqMa3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ff4smxCo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A19DC4CEC5;
-	Thu, 10 Oct 2024 21:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728596498;
-	bh=Q3NSqYisG8WYYrz9LbzVCsdGWId+yQgVgrE9CldSbWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ff4smxCowyQsOzSZBcDuIyVWqWv/61X1uavBKz8DJUX8cXkv5+Mx3jGn8sbcG38EP
-	 4fRAu7327zqxPs02gP0WqVovMYHXhL4/1XG3ck/E2sXzoWygvrJLe4pJxdskmMmggb
-	 OcR53YMM6BpHNp5pgxfil2lMD8PpEcKDVI/zvObcCJrfrHZIKhwpk2SDazat7jCQ4m
-	 uuaUReEE9U3KB1VxljIDS2k2i2iZu2Q0XV4+eJAUbI5SO1sDG73k6bDyl4bUSBQkyq
-	 s6TlXLpKUc9wiG2DPyyVafAuPndNXHQorowMctwTQ+9B2igTSUjmoo2xTB210y1KYJ
-	 n6/47pTrMCMoA==
-Date: Thu, 10 Oct 2024 23:41:36 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Christian Marangi <ansuelsmth@gmail.com>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
-Message-ID: <ZwhKECIpL7g7ZGEC@lore-desk>
-References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
- <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
- <20241002132518.GD7504@google.com>
- <ZwWscWk5axQI9H1t@lore-desk>
- <20241009104821.GF276481@google.com>
- <20241009105550.GG276481@google.com>
- <6707a8ec.df0a0220.376450.293e@mx.google.com>
- <CACRpkdanpA-wq0sYv9HRF=uVeAX_mW4LaKhE8i6TgC9+0d7bCg@mail.gmail.com>
+	s=arc-20240116; t=1728599260; c=relaxed/simple;
+	bh=R9C5VehgfPy+C53L9KUJjsrQ+iII5wh4TP4tr9fRgs8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GE5m9EgNuMDjbnT18mwzFxk8SREKBd/n2nUPGvfg9ao4GELClCToPK6FTfCkeo0hBXkN/tJ8khSa20e5mOPKi+PTD8zZI/HLU8b9f56mXCRHinxPxZFFGF0DXzEvIsxNb9lauhZUPogbAHH8ipWrMCh14vE0GsaAF7bzqP37g28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k/hq9Y3R; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728599259; x=1760135259;
+  h=date:from:to:cc:subject:message-id;
+  bh=R9C5VehgfPy+C53L9KUJjsrQ+iII5wh4TP4tr9fRgs8=;
+  b=k/hq9Y3RwLD4uK0twgdFtEMKrwPdNV1r71MpVutRLjEF76LfZt9Tn46n
+   Nbq1dy41X8WvPq1RgYEgoZb+nBfVZgZnydOnSHURE7vi2/+ACVTEg/wpl
+   7tu8QTQHPv+VUelya7/s11SzhCmJTgFeAmlLstBW3HS1oX2PqZteGkhd3
+   Lk6Pv5Cxe9vQ8ie2bTvELg2t85Z0x+VZlwfixBlZUVaRCB1rrPGlObWE6
+   chvI1KRQvD+0mY7N/GSHXMgkMGF2IfpEm/Ov8EiAm/lMAdy37WfA1Qhmk
+   v5wriUSzCxiCekHy09CRZTZahvzU7T9QIfI0qk25/95Zr1Xl+ZjUR1asV
+   Q==;
+X-CSE-ConnectionGUID: GihUf12pSwqPtAJKIUPWhg==
+X-CSE-MsgGUID: lGcXJpABQOKE6cqYAdWzAg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="39117102"
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="39117102"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 15:27:38 -0700
+X-CSE-ConnectionGUID: 98lSnI11SeKM351XaWhSmw==
+X-CSE-MsgGUID: 3/rsnWEIRaWLcTxQlwHKRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="76645494"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 10 Oct 2024 15:27:37 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sz1d8-000BML-2s;
+	Thu, 10 Oct 2024 22:27:34 +0000
+Date: Fri, 11 Oct 2024 06:26:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ ea7f2dfd13e096dce3198e5ffdb00d21bf7c8fe5
+Message-ID: <202410110643.4i05itpP-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3Fg0vtOBpPK/9AuB"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdanpA-wq0sYv9HRF=uVeAX_mW4LaKhE8i6TgC9+0d7bCg@mail.gmail.com>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: ea7f2dfd13e096dce3198e5ffdb00d21bf7c8fe5  Merge tag 'ib-mfd-gpio-i2c-watchdog-v6.13' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd into gpio/for-next
 
---3Fg0vtOBpPK/9AuB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 739m
 
-> On Thu, Oct 10, 2024 at 12:14=E2=80=AFPM Christian Marangi <ansuelsmth@gm=
-ail.com> wrote:
->=20
-> > mfd: system-controller@1fbf0200 {
->=20
-> Drop the mfd: thing, you probably don't want to reference the syscon
-> node directly
-> in the device tree. If you still give it a label just say
-> en7581_syscon: system-controller...
+configs tested: 78
+configs skipped: 1
 
-ack, I am fine with it.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->=20
-> >         compatible =3D "syscon", "simple-mfd";
-> >         reg =3D <0x0 0x1fbf0200 0x0 0xc0>;
-> >
-> >         interrupt-parent =3D <&gic>;
-> >         interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> >
-> >         gpio-controller;
-> >         #gpio-cells =3D <2>;
-> >
-> >         interrupt-controller;
-> >         #interrupt-cells =3D <2>;
-> >
-> >         gpio-ranges =3D <&mfd 0 13 47>;
->=20
-> I think you want a separate GPIO node inside the system controller:
->=20
->   en7581_gpio: gpio {
->          compatible =3D "airhoa,en7581-gpio";
->          interrupt-parent =3D <&gic>;
->          interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->=20
->          gpio-controller;
->          #gpio-cells =3D <2>;
->=20
->          interrupt-controller;
->          #interrupt-cells =3D <2>;
->=20
->          gpio-ranges =3D <&en7581_pinctrl 0 13 47>;
-> };
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386                                defconfig    clang-18
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+nios2                             allnoconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64      buildonly-randconfig-001-20241011    gcc-12
+x86_64      buildonly-randconfig-002-20241011    gcc-12
+x86_64      buildonly-randconfig-003-20241011    gcc-12
+x86_64      buildonly-randconfig-004-20241011    gcc-12
+x86_64      buildonly-randconfig-005-20241011    gcc-12
+x86_64      buildonly-randconfig-006-20241011    gcc-12
+x86_64                              defconfig    clang-18
+x86_64                randconfig-001-20241011    gcc-12
+x86_64                randconfig-002-20241011    gcc-12
+x86_64                randconfig-003-20241011    gcc-12
+x86_64                randconfig-004-20241011    gcc-12
+x86_64                randconfig-005-20241011    gcc-12
+x86_64                randconfig-006-20241011    gcc-12
+x86_64                randconfig-011-20241011    gcc-12
+x86_64                randconfig-012-20241011    gcc-12
+x86_64                randconfig-013-20241011    gcc-12
+x86_64                randconfig-014-20241011    gcc-12
+x86_64                randconfig-015-20241011    gcc-12
+x86_64                randconfig-016-20241011    gcc-12
+x86_64                randconfig-071-20241011    gcc-12
+x86_64                randconfig-072-20241011    gcc-12
+x86_64                randconfig-073-20241011    gcc-12
+x86_64                randconfig-074-20241011    gcc-12
+x86_64                randconfig-075-20241011    gcc-12
+x86_64                randconfig-076-20241011    gcc-12
+x86_64                          rhel-8.3-rust    clang-18
+xtensa                            allnoconfig    gcc-14.1.0
 
-So far I implemented the gpio functionalities in the en7581 pinctrl driver
-(as it is done for other mtk pinctrl drivers) but I am fine to reuse the
-gpio-en7523 driver for it. Do you prefer this second approach?
-
->=20
-> So users pick GPIOs:
->=20
-> foo-gpios =3D <&en7581_gpio ...>;
->=20
-> Notice that the gpio-ranges should refer to the pin controller
-> node.
->=20
-> >
-> >         #pwm-cells =3D <3>;
->=20
-> Shouldn't this be inside the pwm node?
->=20
->          en7581_pwm: pwm {
->                  compatible =3D "airoha,en7581-pwm";
->                  #pwm-cells =3D <3>;
->          };
->=20
-> So PWM users can pick a PWM with pwms =3D <&en7581_pwm ...>;
-
-ack, I am fine with it.
-
->=20
-> >         pio: pinctrl {
->=20
-> I would use the label en7581_pinctrl:
-
-ack, I am fine with it.
-
->=20
-> >                 compatible =3D "airoha,en7581-pinctrl";
-> >
-> >                 mdio_pins: mdio-pins {
-> >                         mux {
-> >                                 function =3D "mdio";
-> >                                 groups =3D "mdio";
-> >                         };
-> >
-> >                         conf {
-> >                                 pins =3D "gpio2";
-> >                                 output-high;
-> >                         };
-> >                 };
-> >
-> >                 pcie0_rst_pins: pcie0-rst-pins {
-> >                         conf {
-> >                                 pins =3D "pcie_reset0";
-> >                                 drive-open-drain =3D <1>;
-> >                         };
-> >                 };
-> >
-> >                 pcie1_rst_pins: pcie1-rst-pins {
-> >                         conf {
-> >                                 pins =3D "pcie_reset1";
-> >                                 drive-open-drain =3D <1>;
-> >                         };
-> >                 };
-> >         };
-> >
-> >         pwm {
-> >                 compatible =3D "airoha,en7581-pwm";
-> >         };
-> > };
->=20
-> This will make subdevices probe and you can put the pure GPIO
-> driver in drivers/gpio/gpio-en7581.c
-
-We could actually reuse gpio-en7523 driver (removing the gpio part from en7=
-581
-pinctrl driver) and extend it to support irq_chip. I do not have a strong
-opinion about it.
-
-Regards,
-Lorenzo
-
->=20
-> Yours,
-> Linus Walleij
-
---3Fg0vtOBpPK/9AuB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZwhKDwAKCRA6cBh0uS2t
-rImsAP9+SEsCTPYOJYMr4ud8qWMHenJk1t0UVS3lUEut+um/GAD+NxbBrcxxZ9S+
-X5f21EFnXDysNRmyWuVjeQzkIJdZ6A0=
-=CX97
------END PGP SIGNATURE-----
-
---3Fg0vtOBpPK/9AuB--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
