@@ -1,260 +1,247 @@
-Return-Path: <linux-gpio+bounces-11140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADCF6998299
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 11:42:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E795699834D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 12:14:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68E2A287152
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 09:42:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A19AB213C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Oct 2024 10:14:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6559BE6F;
-	Thu, 10 Oct 2024 09:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F521BE857;
+	Thu, 10 Oct 2024 10:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H63Qc4Ou"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+G+Bv0Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755B21BC061;
-	Thu, 10 Oct 2024 09:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB56A18C03D;
+	Thu, 10 Oct 2024 10:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728553333; cv=none; b=U5HvSqzlUuj1yQo3WvnB2ehTewrsQbwkckkJRmA49qZmQZsjV9wiczLvD84DDcAajf5YXEMDQowiuEyRKTNSAOpcnXmEfBy/Rlv1OPnPKtsAIUFMkZTmytjZSXoKkMcmPcgnFSjCeZNyaLBPNSkC0Hjsoif28Ld0ZNrB6sHc3h4=
+	t=1728555248; cv=none; b=iF+vnNkSD483pq0iR58G2Wbk11KJTY7xj9exIFIH68HFxaarbMVMc+VkF1Mz3g6OzlmWkJPd3ngN4LOmn9oghRoS8hqw03pWZTRt81INpRXxYVhQu065KIEfJLBRGSKXSTWD8XXt+N4OLAhk3tCstlpo1Bzu44OBoWLGAWOg26o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728553333; c=relaxed/simple;
-	bh=8lRmGtzpKCSbPzQOWXLMKG/S0oTwOaaGGVrYaPtPoSM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XpQepd89AEFuRM5bjFOfSFfbDNY1RiLQgLyIEs5JNbRHIvAidYIC9NeEoKGKVKQ/QO7hIYl8VVZJJDBSaKfS8Vr0EGP2YkZ6Ki+A8oOhE3B0oT98HApvLZjRPAxqLePkgehNWu/DrAbdP+feICe8MGc7mfK+fFsM2pRBK3U+lqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H63Qc4Ou; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1728553329;
-	bh=8lRmGtzpKCSbPzQOWXLMKG/S0oTwOaaGGVrYaPtPoSM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H63Qc4OuDKzaagf/6BEAZRRH+6/bh9qoTk5fwBELyvN7HuZ1N426BHSVDHjrMboVA
-	 jpQ6ynBGIqwoFtXp+/juLmnYn4gF+lYD3bljIxs7YAeAeSY2WEpPjUPPCkrI/vOs8K
-	 dARCVpxi71vTHCKJzHOxI4UcXUR4WkJNy0VAKHR+kRVJ0moftd2gNYGDvyTS5pWi8u
-	 MpsAO5QLTlZOGySic6Adqj46+cFkAl1alipi28pfxJzZT/a1OGQufUCiXuIwLuU4V4
-	 DdJUvuMMxakPt838tOflXlfXT5IYkksCYSSVaU1PG9pHXGPVXNYmYEB3C7LdKCSJMr
-	 tw5jTJUTHc0oQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E458717E120F;
-	Thu, 10 Oct 2024 11:42:08 +0200 (CEST)
-Message-ID: <ce926e0c-74f3-4c7b-987f-3dc50b81a3aa@collabora.com>
-Date: Thu, 10 Oct 2024 11:42:08 +0200
+	s=arc-20240116; t=1728555248; c=relaxed/simple;
+	bh=0KAiACrjjJ72TxGhBqwhkMqSGcqCFRpLzWvue9NX8Ik=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KAJO8Rn8EnKVfjI9GfapulVQfv4tngwY455PfC4TvsgwVJ1lVEU56keCvaccswvotWnAjOwqC4sbkccoZamKBzeKWifrRHNu2+4RVph2gC9g0z5bqZizjp/tcxBOAzDf3ndgewVx6CCC/UGTO4yzZ+mSUdPLDzhjOFtFQmmEJ1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m+G+Bv0Q; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43111cff9d3so5409705e9.1;
+        Thu, 10 Oct 2024 03:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728555245; x=1729160045; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=NEBHPmIBUM6VSOI3jWXFPmWe5D+zUJl1ezE/xec47aQ=;
+        b=m+G+Bv0QBFoXAJsmsy8eym2F4eSbjA5hhDVpmonX6QwBtrSlzR9ozpdba1xcIZXoZf
+         ibcgut80lJSqsejGTRixgKFzMP8oCFtPXtSKpfdBlXt6l/f8Q2jWbjT8saUbxn2s0zQ/
+         cflLKz9QM1snWunmfvrf/A29dpp94NaQy/WUjBON3GUF4hHjEWVMmq7rLu/bzNfn9oWV
+         GgcJQKz4TgSg6g6ypQogWMAuKhypCSf3JyNt+j+ktAwc0X86MO/rRB7yGz5k4hzpnX+F
+         qvYyU3Mb8ZQMPrgPncBYIY54A/0oegegL4VmyAXcNOqDSl86PII3nTAuJrpsLi97xaF0
+         5lqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728555245; x=1729160045;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NEBHPmIBUM6VSOI3jWXFPmWe5D+zUJl1ezE/xec47aQ=;
+        b=wyb5ccH61G/59e3+QD0OX+ORaqbpfyKbyzRX9S5/wPCQTPzfuFDog0pox+ytdQlLs4
+         5jE99g4OjmKkctqJOV434pfw/Opji3V+HrtfxPZt3IknrLKH20ybwrvQd8ssyZ9JJqTW
+         t2e8ykx1FungljZGjRaunkBJp5QSVALInbdsCvnlVqV4dbzHUTOyZlUetmWRP7t3fotX
+         yARxqINfAPTOM4j8ubJA/mpZuuDCJv01rMC3Nfyqq0WHnA80f0SdkAplODUmcSCnjwpt
+         VsL8JPegIeFuFm/al8vsBz8j5meFyiyLSa30ItHszCf/farnkPSsNqUMx+wVpXTEfmHn
+         JE0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVwLAgJKlRz6dSJQhKqcXph+K3Kz0HRqdPXWHOsTc57VGrm5qrEnYAo42uWMEqxaQ0gPHoXp9gzF86TVA==@vger.kernel.org, AJvYcCX7fM2Pm7Ah7FEb2wtZ7XyCzaXs5f8e6DzZjbuebF4iIfcCba0XHaVEXdunQzcgaOd0rc335ZhWy/5V@vger.kernel.org, AJvYcCXHSgCdpbAPoINhB0iTk9SpRgTyV705DTSa3qovX8mE9+QAf8cNDBx5ns3d2t3bG6PCrmOmMW9fec7o@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN2npupRjT0M86AHY0YH2BMAIZaPOMjSywSgslnSt1G1Z5WhEp
+	ibXS19QSnhI3I2t5c6te5Uw4yDyClZUded4rFi+q01vKB1f9A5CI
+X-Google-Smtp-Source: AGHT+IGDPGThMhthTE4710yoRanga/BmvaFtKZR6ry5ge58zkraATJT3E+r426UaY8y7XNd+9NOQAQ==
+X-Received: by 2002:a05:600c:47d7:b0:431:12d0:746b with SMTP id 5b1f17b1804b1-43112d0755emr31012825e9.35.1728555244842;
+        Thu, 10 Oct 2024 03:14:04 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6a8940sm1117058f8f.6.2024.10.10.03.14.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2024 03:14:04 -0700 (PDT)
+Message-ID: <6707a8ec.df0a0220.376450.293e@mx.google.com>
+X-Google-Original-Message-ID: <Zweo6cusuf9_tnnt@Ansuel-XPS.>
+Date: Thu, 10 Oct 2024 12:14:01 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
+ <20241002132518.GD7504@google.com>
+ <ZwWscWk5axQI9H1t@lore-desk>
+ <20241009104821.GF276481@google.com>
+ <20241009105550.GG276481@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] pinctrl: mediatek: add support for
- MTK_PULL_PD_TYPE
-To: Frank Wunderlich <linux@fw-web.de>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Sean Wang <sean.wang@kernel.org>
-Cc: Frank Wunderlich <frank-w@public-files.de>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- daniel@makrotopia.org, john@phrozen.org, ansuelsmth@gmail.com,
- eladwf@gmail.com
-References: <20241009165222.5670-1-linux@fw-web.de>
- <20241009165222.5670-2-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20241009165222.5670-2-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241009105550.GG276481@google.com>
 
-Il 09/10/24 18:52, Frank Wunderlich ha scritto:
-> From: Daniel Golle <daniel@makrotopia.org>
+On Wed, Oct 09, 2024 at 11:55:50AM +0100, Lee Jones wrote:
+> On Wed, 09 Oct 2024, Lee Jones wrote:
 > 
-> The MediaTek MT7988 SoC got some pins which only got configurable
-> pull-down but unlike previous designs there is no pull-up option.
-> Add new type MTK_PULL_PD_TYPE to support configuring such pins.
+> > On Wed, 09 Oct 2024, Lorenzo Bianconi wrote:
+> > 
+> > > On Oct 02, Lee Jones wrote:
+> > > > On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
+> > > > 
+> > > > > From: Christian Marangi <ansuelsmth@gmail.com>
+> > > > > 
+> > > > > Support for Airoha EN7581 Multi Function Device that
+> > > > > expose PINCTRL functionality and PWM functionality.
+> > > > 
+> > > > The device is a jumble of pinctrl registers, some of which can oscillate.
+> > > > 
+> > > > This is *still* not an MFD.
+> > > > 
+> > > > If you wish to spread this functionality over 2 drivers, use syscon to
+> > > > obtain the registers and simple-mfd to automatically probe the drivers.
+> > > 
+> > > Hi Lee,
+> > > 
+> > > IIUC you are suggesting two possible approaches here:
+> > > 
+> > > 1- have a single driver implementing both pinctrl and pwm functionalities.
+> > >    This approach will not let us reuse the code for future devices that
+> > >    have just one of them in common, like pwm (but we can live with that).
+> > 
+> > If you can have one without the other, then they are separate devices.
+> > 
+> > > 2- use a device node like the one below (something similar to [0])
+> > > 
+> > > system-controller@1fbf0200 {
+> > > 	compatible = "syscon", "simple-mfd";
+> > > 	reg = <0x0 0x1fbf0200 0x0 0xc0>;
+> > > 
+> > > 	interrupt-parent = <&gic>;
+> > > 	interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> > > 
+> > > 	gpio-controller;
+> > > 	#gpio-cells = <2>;
+> > > 
+> > > 	interrupt-controller;
+> > > 	#interrupt-cells = <2>;
+> > > 
+> > > 	pio: pinctrl {
+> > > 		compatible = "airoha,en7581-pinctrl";
+> > > 
+> > > 		[ some pinctrl properties here ]
+> > > 	};
+> > > 
+> > > 	#pwm-cells = <3>;
+> > > 
+> > > 	pwm {
+> > > 		compatible = "airoha,en7581-pwm";
+> > > 	};
+> > > };
+> > > 
+> > > Please correct me if I am wrong, but using syscon/simple-mfd as compatible
+> > > string for the 'parent' device, will require to introduce the compatible strings
+> > > even for the child devices in order to probe them, correct? 
+> > > If so, as pointed out by Christian, this is something nacked by Rob/Krzysztof/Conor
+> > > (this is the main reason why we introduced a full mfd driver here).
+> > > 
+> > > @Rob, Krzysztof, Conor: am I right?
+> > 
+> > I don't see why separate functionality shouldn't have separate
+> > compatible strings, even if the registers are together.  Register layout
+> > and functionality separation are not related.
 > 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->   .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 59 +++++++++++++++++++
->   .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
->   2 files changed, 60 insertions(+)
+> We've been happy to support both pinctrl and pwm devices before:
 > 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 54301fbba524..eff2aecd31dd 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -601,6 +601,30 @@ static int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
->   	return err;
->   }
->   
-> +static int mtk_pinconf_bias_set_pd(struct mtk_pinctrl *hw,
-> +				const struct mtk_pin_desc *desc,
-> +				u32 pullup, u32 arg)
-> +{
-> +	int err, pd;
-> +
-> +	if (arg == MTK_DISABLE)
+>   git grep "\-pinctrl\|\-pwm" -- drivers/mfd
+>   git grep "\-pinctrl\|\-pwm" -- arch/*/boot/dts
+> 
+>   git grep "\-pinctrl" -- arch/*/boot/dts | wc -l
+>   602
+>   git grep "\-pwm" -- arch/*/boot/dts | wc -l
+>   856
+> 
+> What makes this particular device different to all of the others?
+>
 
-if (arg != MTK_DISABLE && arg != MTK_ENABLE)
-	return -EINVAL
+Hi Lee,
 
-/* Either this */
-if (arg == MTK_DISABLE || pullup)
-	pd = 0;
-else if (!pullup)
-	pd = 1
+this would be the final DTS following the "simple-mfd" pattern.
 
-/* Or this (but it's probably a bit too cryptic) */
-pd = !(arg == MTK_DISABLE || pullup);
+Can you confirm it's correct?
 
-return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
+mfd: system-controller@1fbf0200 {
+	compatible = "syscon", "simple-mfd";
+	reg = <0x0 0x1fbf0200 0x0 0xc0>;
+ 
+	interrupt-parent = <&gic>;
+	interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 
+	gpio-controller;
+	#gpio-cells = <2>;
+ 
+	interrupt-controller;
+	#interrupt-cells = <2>;
 
+	gpio-ranges = <&mfd 0 13 47>;
 
+	#pwm-cells = <3>;
+ 
+	pio: pinctrl {
+		compatible = "airoha,en7581-pinctrl";
+ 
+		mdio_pins: mdio-pins {
+			mux {
+				function = "mdio";
+				groups = "mdio";
+			};
+ 
+			conf {
+				pins = "gpio2";
+				output-high;
+			};
+		};
+ 
+		pcie0_rst_pins: pcie0-rst-pins {
+			conf {
+				pins = "pcie_reset0";
+				drive-open-drain = <1>;
+			};
+		};
+ 
+		pcie1_rst_pins: pcie1-rst-pins {
+			conf {
+				pins = "pcie_reset1";
+				drive-open-drain = <1>;
+			};
+		};
+	};
+ 
+	pwm {
+		compatible = "airoha,en7581-pwm";
+	};
+};
 
-...but then, you could otherwise modify mtk_pinconf_bias_set_pu_pd(), so that
-
-static int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
-				const struct mtk_pin_desc *desc,
-				u32 pullup, u32 arg, bool pd_only)
-{
-	int err, pu, pd;
-
-	if (arg == MTK_DISABLE) {
-		pu = 0;
-		pd = 0;
-	} else if ((arg == MTK_ENABLE) && pullup) {
-		pu = 1;
-		pd = 0;
-	} else if ((arg == MTK_ENABLE) && !pullup) {
-		pu = 0;
-		pd = 1;
-	} else {
-		return -EINVAL;
-	}
-
-	if (!pd_only) {
-		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PU, pu);
-		if (err)
-			return err;
-	}
-
-	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
-}
-
-> +		pd = 0;
-> +	else if ((arg == MTK_ENABLE) && pullup)
-> +		pd = 0;
-> +	else if ((arg == MTK_ENABLE) && !pullup)
-> +		pd = 1;
-> +	else {
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
-> +
-> +out:
-> +	return err;
-> +
-> +}
-> +
->   static int mtk_pinconf_bias_set_pullsel_pullen(struct mtk_pinctrl *hw,
->   				const struct mtk_pin_desc *desc,
->   				u32 pullup, u32 arg)
-> @@ -758,6 +782,12 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
->   			return 0;
->   	}
->   
-> +	if (try_all_type & MTK_PULL_PD_TYPE) {
-> +		err = mtk_pinconf_bias_set_pd(hw, desc, pullup, arg);
-
-so if it is PD_TYPE, mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg, true);
-
-> +		if (!err)
-> +			return err;
-> +	}
-> +
->   	if (try_all_type & MTK_PULL_PU_PD_TYPE) {
->   		err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg);
-
-mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg, false);
-
->   		if (!err)
-> @@ -878,6 +908,29 @@ static int mtk_pinconf_bias_get_pu_pd(struct mtk_pinctrl *hw,
->   	return err;
->   }
->   
-> +static int mtk_pinconf_bias_get_pd(struct mtk_pinctrl *hw,
-> +				const struct mtk_pin_desc *desc,
-> +				u32 *pullup, u32 *enable)
-> +{
-
-this one you can keep it as it is, because I don't think that you can get
-the get_pu_pd function to work with pd_only without making it .. well, messy.
-
-> +	int err, pd;
-> +
-> +	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PD, &pd);
-> +	if (err)
-> +		goto out;
-> +
-> +	if (pd == 0) {
-> +		*pullup = 0;
-> +		*enable = MTK_DISABLE;
-> +	} else if (pd == 1) {
-> +		*pullup = 0;
-> +		*enable = MTK_ENABLE;
-> +	} else
-> +		err = -EINVAL;
-> +
-> +out:
-> +	return err;
-> +}
-> +
->   static int mtk_pinconf_bias_get_pullsel_pullen(struct mtk_pinctrl *hw,
->   				const struct mtk_pin_desc *desc,
->   				u32 *pullup, u32 *enable)
-> @@ -947,6 +1000,12 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->   			return 0;
->   	}
->   
-> +	if (try_all_type & MTK_PULL_PD_TYPE) {
-> +		err = mtk_pinconf_bias_get_pd(hw, desc, pullup, enable);
-> +		if (!err)
-> +			return err;
-> +	}
-> +
->   	if (try_all_type & MTK_PULL_PU_PD_TYPE) {
->   		err = mtk_pinconf_bias_get_pu_pd(hw, desc, pullup, enable);
->   		if (!err)
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 23688ca6d04e..9c271dc2b521 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -24,6 +24,7 @@
->    * turned on/off itself. But it can't be selected pull up/down
->    */
->   #define MTK_PULL_RSEL_TYPE		BIT(3)
-> +#define MTK_PULL_PD_TYPE        BIT(4)
->   /* MTK_PULL_PU_PD_RSEL_TYPE is a type which is controlled by
->    * MTK_PULL_PU_PD_TYPE and MTK_PULL_RSEL_TYPE.
->    */
-
-
-Cheers,
-Angelo
-
-
+-- 
+	Ansuel
 
