@@ -1,221 +1,113 @@
-Return-Path: <linux-gpio+bounces-11188-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11189-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0946099A438
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 14:54:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 279E899A550
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 15:45:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8890F1F23AB3
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 12:54:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C30941F23C29
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 13:45:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 435112178FF;
-	Fri, 11 Oct 2024 12:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="VbVHhWG9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65F1218D98;
+	Fri, 11 Oct 2024 13:45:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA732141B5;
-	Fri, 11 Oct 2024 12:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FD8215F78;
+	Fri, 11 Oct 2024 13:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728651250; cv=none; b=irnQLVS28giAFBl/F7n/OxN1zFp5ROKbT+a3m7EKDZc3DouAUVpLoiIuM5KQFEWRwhlriaq9A426mJsGuqUB+NyjvJUhqyZnZDp4MULlyQ2cMM684UQGZsDWJ6w9YaoCkXEFHWxzDZBYG3qit/s0R940H28Rlg3FH9Z3ucfVg34=
+	t=1728654309; cv=none; b=FFmmk8AV3fwy4rlXrNdG4+XzRH4wvM3kl4H/2cQLvtWNBbUg7ucoL+LaMEoQNpRHR6JwjubgWniLXe2/zYE2DLsYWs7f4MXvWwvOdghZc6MMUPXwylRVM1oTmyhmjRtjFR13Z0TeQXEMJYQmnPhRyrYsNZKEup7zxvtA4p0BOR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728651250; c=relaxed/simple;
-	bh=MPJGN4wESKD2gf1aeyittLoAkXe9uQPgjXC70LtSMww=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=WUObPLlbpEqO8aVLQyki08//B6G/q0frOifja9YOPZ3X1RoonWemzatYexkcWwIV6cp5/2BXz+aeiXBTqgEjGASgr8ma+5PDdUwkf8KxeOjDdnMvNOcpB+LKAW0wju9HSs60Vo0lRX9O4DeRZeeYjoTITbhA3GAhNkysfxo4gb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=VbVHhWG9; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1728651225; x=1729256025; i=frank-w@public-files.de;
-	bh=pqvc/oNdc0PsTL4Mg/npxkx7wLb4cU550Stv88W38fY=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=VbVHhWG9+1LYA64yWGRqSuFuTZcKnbTMJ8xHVIzVFCVSSBgU8c5IbpTHIYrSD4GX
-	 Hqlm9X/rRBn+uLYkMrqNjShSMMM1HnGIQRBqmmqMAofMqkuuh6POzQeV6L5nbVwQE
-	 gKOctFEK9wQshGuL4ryAWGjN0cMdN3oiBg+64TAvkfKU6kE356/v+Hbyj18U28pXu
-	 lQQFQMeX3lgMl/wLgCkBZ2Q1J8kYy9YAnr0Ns+hURU+ncsibAaGlYDS6Kh2Mc0vdm
-	 WhVqLV5iCMv/CZHSUQA3S3nhRq1yC2aqDdEH7sO55EUsPgzmX/2nsIehssqTN61yz
-	 vTOR00LqC6/TosoGYg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [217.61.153.152] ([217.61.153.152]) by web-mail.gmx.net
- (3c-app-gmx-bs32.server.lan [172.19.170.84]) (via HTTP); Fri, 11 Oct 2024
- 14:53:45 +0200
+	s=arc-20240116; t=1728654309; c=relaxed/simple;
+	bh=XRloh0YdR1F+oj3RMXyKeTDAWB5+0WV7BckTR8Fyyu4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OEiTSmZy6OaV/0m0DjqyTcCDKT+5nk3TWlRNnI3CyHC0WuK6+JYc6SBhAdUQtJopcuBWCXX9b4EQmjdNtinugVGe/BvP1V4YoO1jNXBcthC1Vupz2VNK8hJ+xRU4BAwCag7xeB7DccwHrrY1r3n4eQRZGl1+SdAi4ZdLJ4ozao4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6e232e260c2so18808657b3.0;
+        Fri, 11 Oct 2024 06:45:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728654306; x=1729259106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a9rv2uTZbpfulvFnPEK/huLdd2uWYJjM+4u6GaXf6VM=;
+        b=q7rHhDqpTaO3j0srmBTGj3JOhiRxFFdy91NFarPQ6fIcFwlw/Ay4cYP4aWzqDL3v2t
+         4mQsTkgksoFTNDkcU8PcnuVrWMZzSwQXen5cWZt9v1DIhZtTqOYzY3uE1Q2HDNhnGWnu
+         yhyB1LEIYzofLOIVGe5GdNXxpZ57hYl+ROQn9jg/+kT4TsnErOontpU810+tLOhipz8o
+         5YP9OIahsMVGIgbePWg7u4bjwVxhlYgrUD6yN4ZMGH8O/jFFT20EtMxz9f8w17E2+XLE
+         ZkTpLuupk80ohSEVhxW1B/T47L9sVckCPehmjGC9Ys8L0DF4vixvLUC+9ArvWSr8Y7Ui
+         YvHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUElxWNZoRwkOJN0tFcuMdAy0yRryKnHC1ion6sPufPZWF8FV5QaZA76djd2BqMU90U6s3PHbB3kMB2WL/V@vger.kernel.org, AJvYcCUV32W2pUXMb8o5xl821S3Tmu18WkaXAfxz34l3oke+S7OM0brTgm8PbAuZfp0w5LUNCy0yg5G2P1lI9m3MPRR+bbc=@vger.kernel.org, AJvYcCVURXsfGu13r/T4BpM3uRCZsfMDd2bdnpa0hpzpmacKlCs3hjjoUePh7SjWsVl7g/vfAMwjaiScQEoU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLaY18t/A3078B/5t8H+K6cH8WEOftwyJGB8Z4smpePMG5H1Rq
+	ITR/I5kFXhHVDHMGhqFcVP3PQ/AXY2Zm4ITc7tsfcjp0h40aNHA2dxSvNi86eA8=
+X-Google-Smtp-Source: AGHT+IGqxYgkRoYxhP4532KDTMxeJ7UDYZz42JasWqC89x3vKvt3gnKfbG+BQ03Gb0+2eFkmnaVVhQ==
+X-Received: by 2002:a05:690c:7:b0:6e3:3227:ec64 with SMTP id 00721157ae682-6e347c4e532mr19004477b3.35.1728654306004;
+        Fri, 11 Oct 2024 06:45:06 -0700 (PDT)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e332b89c71sm6018757b3.44.2024.10.11.06.45.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2024 06:45:05 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6e31413a196so17939507b3.3;
+        Fri, 11 Oct 2024 06:45:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2xl0A77EI6g5sxeqvUIX6i0xoR6gTFRIxNo61sTLwJmnnDW+BGpXu4EOZiT1Kurrlr0HT6uIkbZJz@vger.kernel.org, AJvYcCUV5NzDnSU9/VACnJtLMOLMB+LWAMQ0vlcM2MCc1+BE1b/BC/ILP65uvjCOmyRMOF4AZzuAHTQq4+AfAqxT@vger.kernel.org, AJvYcCWDpUDnETTVjcbygOqQHVJS+RaS4gH4vW8A1/MKC2Nxkr4xrjjEzXkq66Q/NlIwvwT5wnvkj51+utdjl+UkDHPAzAE=@vger.kernel.org
+X-Received: by 2002:a05:690c:4e01:b0:6e3:39ed:f029 with SMTP id
+ 00721157ae682-6e347c84073mr13905837b3.44.1728654305204; Fri, 11 Oct 2024
+ 06:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-090e30b8-45a9-4a2b-98f1-e34904616b2d-1728651225070@3c-app-gmx-bs32>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <linux@fw-web.de>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang
- <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- daniel@makrotopia.org, john@phrozen.org, ansuelsmth@gmail.com,
- eladwf@gmail.com
-Subject: Aw: Re: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl
- support
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 11 Oct 2024 14:53:45 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <4ac4c8ab-4180-4fcc-9e48-6dede7448dee@collabora.com>
-References: <20241009165222.5670-1-linux@fw-web.de>
- <20241009165222.5670-5-linux@fw-web.de>
- <4ac4c8ab-4180-4fcc-9e48-6dede7448dee@collabora.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:VxR+ZCvzqrITMlxMKyyrVv8NDsGfVlHJ/2Z23LevYUCc5uV8UGtaX6lN/ACVGdM03ILKp
- bOgLorgQbXbzYxD2pyvuSfOyfquZSDSHGu91cK0Njkk8EoGf5++nrgQyLSGy/8H0J8IZ/X5DnJGw
- wg0W4NB8dwPR5ewIk7yABHDMYo38Jm4Icwru1ycLZ7yB/qC4B8P5faVOmeyCwtfNKVo3roSH6B9m
- weglWLqYNQDRScUgpPT/FYUzVRIQ5SvLlUpzjLaKDbMa5BPjszG6r6znArn2a+pb9pPX4eI5Xnn5
- 2I=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HIN9WLpnYPY=;Jq8RJJfCG9pX1doLo0aeI2OltCi
- 32OT7k4Bii7ka3FBvIrwHGBuuKkkt8EDbnrTzTfoY/3cPtm51HIu6OGD2DO1JU7I6N5Uw+6wr
- 0y8J8x4A3Nxq8909Rqh2MosGf/qmWMM2cK+ToFU34s3tnAzKVGaL1HNYmms9AKX3cFyj4gM48
- qi5eWI4Li46x6mRJj90UETSmoidoTVwnJdvQTVtUwx9hNS99fylk+j1bkn3Slgyo/ajqPfFZM
- 8EgB0UWZLzbjnPKneDkccEpTuaYDLP4KW/7aKuod3rTlha7TPs9PSGaeI99wwATa7oW3mlCtW
- h/pE7eOOWkmA87oJjDU5tkmwsk0gkUyTDmH6a8HqC3EVKCWeLxlMLKPRqLHGLbsGzkscw02uc
- ZOih3uPLU9VVVSPY+0fIZrcth87O2F4buyZKyMaCmH2eZ0eK7P3HJVMamLdiIGOfqYS+JMf1G
- h3QK3qoMzggDSIiN2/CRq+dEDHssQZuTc0ncM65Y8OdfAylj6deNIyXVYBaYjfj839QcAn1xR
- hfTeVsAYs38ciejWOIfqUGAMJhzk0tB/1ZJjen8sGD8d3Wt2qJHH8K/yz+YwFA0VnMzRbp+8W
- tDS4IFgmNMllbGvgOu11VPJHO1Ctjj4wOQbY7181TdCKrlnyjkLuRB+RsB7KVNAJkT8Z/1IFD
- nHNQLNudg3oqNFLd+aK/hjDQp6S230E+dmwCHOg0rw==
+References: <20241010132726.702658-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20241010132726.702658-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 11 Oct 2024 15:44:53 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXGG0+J_SP4=bs_Q1PTfWCq4DuefiuQpoVRRF+hD0RW0w@mail.gmail.com>
+Message-ID: <CAMuHMdXGG0+J_SP4=bs_Q1PTfWCq4DuefiuQpoVRRF+hD0RW0w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: Select PINCTRL_RZG2L for RZ/V2H(P) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-> Gesendet: Donnerstag, 10. Oktober 2024 um 14:36 Uhr
-> Von: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.c=
-om>
-> Betreff: Re: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl su=
-pport
+On Thu, Oct 10, 2024 at 3:27=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Il 09/10/24 18:52, Frank Wunderlich ha scritto:
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >
-> > Add mt7988a pinctrl node.
-> >
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> > v2:
-> > - fix wrong alignment of reg values
-> > ---
-> >   arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 241 ++++++++++++++++++++=
-++
-> >   1 file changed, 241 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/bo=
-ot/dts/mediatek/mt7988a.dtsi
-> > index c9649b815276..7e15934efe0b 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-> > @@ -3,6 +3,7 @@
-> >   #include <dt-bindings/clock/mediatek,mt7988-clk.h>
-> >   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >   #include <dt-bindings/phy/phy.h>
-> > +#include <dt-bindings/pinctrl/mt65xx.h>
-> >
-> >   / {
-> >   	compatible =3D "mediatek,mt7988a";
-> > @@ -105,6 +106,246 @@ clock-controller@1001e000 {
-> >   			#clock-cells =3D <1>;
-> >   		};
-> >
-> > +		pio: pinctrl@1001f000 {
-> > +			compatible =3D "mediatek,mt7988-pinctrl";
-> > +			reg =3D <0 0x1001f000 0 0x1000>,
-> > +			      <0 0x11c10000 0 0x1000>,
-> > +			      <0 0x11d00000 0 0x1000>,
-> > +			      <0 0x11d20000 0 0x1000>,
-> > +			      <0 0x11e00000 0 0x1000>,
-> > +			      <0 0x11f00000 0 0x1000>,
-> > +			      <0 0x1000b000 0 0x1000>;
-> > +			reg-names =3D "gpio", "iocfg_tr",
-> > +				    "iocfg_br", "iocfg_rb",
-> > +				    "iocfg_lb", "iocfg_tl", "eint";
-> > +			gpio-controller;
-> > +			#gpio-cells =3D <2>;
-> > +			gpio-ranges =3D <&pio 0 0 84>;
-> > +			interrupt-controller;
-> > +			interrupts =3D <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-parent =3D <&gic>;
-> > +			#interrupt-cells =3D <2>;
-> > +
-> > +			mdio0_pins: mdio0-pins {
-> > +				mux {
-> > +					function =3D "eth";
-> > +					groups =3D "mdc_mdio0";
-> > +				};
-> > +
-> > +				conf {
-> > +					pins =3D "SMI_0_MDC", "SMI_0_MDIO";
-> > +					drive-strength =3D <MTK_DRIVE_8mA>;
+> Add explicit selection of the PINCTRL_RZG2L config option for the
+> RZ/V2H(P) (R9A09G057) SoC, ensuring pin control driver is enabled
+> for this SoC.
 >
-> Please do *not* use the MTK_DRIVE_(x)mA definitions anymore.
->
-> Here it is `drive-strength =3D <8>`.
+> Fixes: 9bd95ac86e70 ("pinctrl: renesas: rzg2l: Add support for RZ/V2H SoC=
+")
+> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-OK
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.13.
 
-> > +				};
-> > +			};
-> > +
-> > +			i2c0_pins: i2c0-g0-pins {
-> > +				mux {
-> > +					function =3D "i2c";
-> > +					groups =3D "i2c0_1";
-> > +				};
-> > +			};
-> > +
-> > +			i2c1_pins: i2c1-g0-pins {
-> > +				mux {
-> > +					function =3D "i2c";
-> > +					groups =3D "i2c1_0";
-> > +				};
-> > +			};
->
-> Whatever pin can be configured with one or multiple groups that can be d=
-ifferent
-> must *not* be in the SoC dtsi, but rather in the *board* dts(i) file, as=
- the wanted
-> configuration of those pins is *not* soc-specific but board-specific.
->
->  From a fast look, I can see that at least the I2C pins can be assigned =
-to different
-> functions: for example, pins 15+16 can be either of i2c0_1, *or* u30_phy=
-_i2c0, *or*
-> u32_phy_i2c0, *or* xfi_phy0_i2c1 ... or others, even.
->
-> Finally - I think that *most* of the muxing that you're declaring here m=
-ust instead
-> go to your board specific devicetree and not in mt7988a.dtsi.
+Gr{oetje,eeting}s,
 
-As far as i see also mdio and uart0 sharing pins with other pin definition=
-s.
-It looks for me that nearly all (except pcie) needs to go in board(s) dts =
-then...
-imho this creates duplicates of same nodes, if 2 boards using the same pin=
-conf.
-But if it is the way to go, i drop all subnodes except the pcie-pins.
+                        Geert
 
-> Cheers,
-> Angelo
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-regards Frank
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
