@@ -1,72 +1,73 @@
-Return-Path: <linux-gpio+bounces-11198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9B0F99A8AD
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 18:15:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B66AB99A8EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 18:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFD1E1F22B07
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 16:15:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A05251C23192
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 16:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CB4199231;
-	Fri, 11 Oct 2024 16:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2E4B19AA46;
+	Fri, 11 Oct 2024 16:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="crhQ5nkE"
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="SQKDUqxH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556FB1990C5
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 16:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97391990C7
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 16:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728663305; cv=none; b=Bs088PFudbzdNCdZisdq88TnzgMVHW2rpCxrva/T5FQQp7gatvFZKbaL8OZbFmDHUBmY68TU6MIy+QVhUQHgl0YRDrH8HFp0oGF3z6yinOOxyH9fTIZ69XZvID5ZCY7hZDKDyMBPCH3/QHWDjZxY6c7EjqaFfI8wSBH6FitAvSw=
+	t=1728664277; cv=none; b=YOQAdQ+6osMzCOYIdQSsTWZdZUcx1uWIMa6VAOM4wn0VKdTUlrl8DUoQB/0GmnsFiI6MHzKUsg8ojM4zDvl99i1RbFA8LiHacE9ux0ME3Gqa41Ly3bmpP3Bq+Ksi9PHcL59MY8ndVITHG3bXB9qad09EIrKiN1sTwATt4x/NDvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728663305; c=relaxed/simple;
-	bh=gn2zJ+ebSzEzA9tLwZLGJpSONvEA/ifmwQ7Oc6MF1/M=;
+	s=arc-20240116; t=1728664277; c=relaxed/simple;
+	bh=32Mjcd2dJsumm+btTsVmfBP+NbjBoMPuUy6307MRM+A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZ8AbTbPvB/6vXcw1nspsHheVNU/8H4AkdeD8tZJQ7ghUYa85hFp5iHDkGve/pNrr+0Unk6IPRGwNG95dhALsSANgW+kuOkEjSfvi23XudaKVCNsWtZgRfIemEbtzeuPf7mzzJIzd1WmSuan9xJAHotB8TMuTSs5V3CvVb7qhgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=crhQ5nkE; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBb0rt+s0j/YgzYdeI0dR2LfEzQHaPjBaWyK/l3cgaATTzWGOj4NGGziux8R5lojN561FeuAep4RYoZSoRZ4oHQ72pVxNer0ZezW6Ie1w6zHA9WFyu+DpKgXjSKueeO+02QJ0MHAXUguP1D5PtYaW67v3OdTErvAEPIneNp1r9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=SQKDUqxH; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e053cf1f3so2033336b3a.2
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 09:15:04 -0700 (PDT)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7db54269325so1929929a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 09:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1728663303; x=1729268103; darn=vger.kernel.org;
+        d=tenstorrent.com; s=google; t=1728664274; x=1729269074; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9wXNrkmIi/YQObyo/IyUy/irrJHMOY3CT8kXuXephfo=;
-        b=crhQ5nkEGszbGLlyOBSGE4czsdfglUooHPAMey/hp8wJdaM6rv3fJCFZJMnVzxG6LC
-         D/dngUIXMfqhJVkiJTmc8BEdlRoN8MYP40CWKFC1PlumL5CZFe/srQxRjIZgs8zDYm+d
-         0PCLN8RQ6j9VUiiGtt/oOLGc1gSvbb3o2rTSKQjvJbsqXgnxD4bEsjm1I+6eTNeybVDa
-         le+8I2JcxT4RWBkbE4QpRwefl13TrjgXTfVCRMZ9wZPHOIyMI4GEsqfuOUYE3/CfdcNn
-         W3YWZZWmJtyR70oov6CkorfFuOykXccjEbF7M3BbgfyqyU2h7KxHOlN90WovgTgeuxBV
-         xrAQ==
+        bh=ymJ/qex09j4ioztSVDBbfNAos9AY+mRR2jHbKLcRzPg=;
+        b=SQKDUqxH/+TpHnQVGvczsZAfr/bmo6dc9a1J+jx7Vv8N+0qhwQn40uVobe0ySs+rCq
+         mSdJgShmtBPF4I/7whVApyOshP0s/FfeLECl7GtujkcLWSeHeFnRvX8aunvCLWKllMqs
+         y8m3yw0rw6xSjKEafA3YTF7SqBuW6Z+xHTzjxnVmsC4JHI0q55RpxcyMuzqDbKjuxBJb
+         eEOM5MtGNy9hSFkqeuUxYy60Jk+9Aayk5je3HjSJNPkuir/2OogSDt5V/G4qO8kmDKKy
+         ol6Nrcngo/XVN1ccWsdmZp7Jb8vcpRp8cG2JB+o6UeYOFaGGGCG+9nWPdHBIOHpacsF/
+         9fpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728663303; x=1729268103;
+        d=1e100.net; s=20230601; t=1728664274; x=1729269074;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9wXNrkmIi/YQObyo/IyUy/irrJHMOY3CT8kXuXephfo=;
-        b=PF8xiAenebB540nwMEmZIqP5Axj2n6eWRVihf0+vOJylnXnRqFeRUx5fwb02YVSlTH
-         LhHecgWkUfFG4u7sj8BSms5ahcPW9ST8ePObzF+DzWXJmetQVEksJMrRcYwRQVUJCq2t
-         mw9eGc/pmZgi8hefGLSmn9Xh3lDAWjfF9rkZCjYxiLqnUSd8DpcJ9PduWBRVmRTHOap3
-         rLevy839TjNtRC5qlY47tdnVdvornstnkrYvCZBdV144RufJ1Lu8jfNotkkQr0rmc7ui
-         7El/poFIkiwqAJ6i8ICZbsy4W4Viz1yYYyh5Xup7cQFlxXqymKi22Ii/igJpF+Flnmgk
-         wP+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVFe8JOvpIlX6BqKFFlAShGIkTD5zhurA78PhfwcFXBSECySlpqgm3NWzzdC9T4sSXe28ilmmWHB1bn@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhid8qshCGXsrvpsXJ6Bj9qgr4kxZaGck/SNsxfVNyOwaZjSoc
-	gVoVIJ0xDbLtMo3IRpybReet7ueSovrQwJKioUuJX9qGDGrDmHCHdApfqgmJhSQ=
-X-Google-Smtp-Source: AGHT+IGvkNkvub3vSjul9cHLNp86zogPqdkI+zsKo8/knPvD0t1400lP6okGXqYs+UwbCewenEv0oQ==
-X-Received: by 2002:a05:6a00:10c5:b0:71e:4bfb:a1f9 with SMTP id d2e1a72fcca58-71e4bfba31bmr136932b3a.22.1728663303614;
-        Fri, 11 Oct 2024 09:15:03 -0700 (PDT)
+        bh=ymJ/qex09j4ioztSVDBbfNAos9AY+mRR2jHbKLcRzPg=;
+        b=EAxALROkJJOrSaKZXCbK0J72XRQv90E8SNvAclScbthWpVMFHXwEiEXKmqxiebJ83F
+         3/lO9dDIv4lVmkZUJHA91QIfUIE4z+fdjUlpxh8ttSkOQ3jaKOGadyQsDgzBklFXl/de
+         Nx3ov/dWbGLV8phgWTeV6c2ajVvOiJuhyDLL9gZCVjumGCbgCrw1vcsJxbJn4Zqb2g3f
+         AdogY+fFgTjmdHfA8KPDPvS7DcP0liNrYcLZrQmkrO4pU6ag4hkboLLruuJoZkdrht72
+         a00CnU50s478/z+CyDaP0Sl4rpzP41rFZ1X2whleXlYI9vu9NlFj60F8VS+pu/aYHCs8
+         v/Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWttfPSNOux02El9esqg5UX1pnMsoLsunBzPXnwDpgRrwiMc1KODZp/O4r3oa3VvuBv0RLNqYTji/xQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2pc2er6vQi6JYX83JwLq79Z6c+JUs6eP5cF3f9rODa0v5+UU7
+	SZQNqwL63wNrHTCmXJJI/lKmO1nuTStFmYaubX8cxc5Q6fc3BDkvlCVvJfapjDTvVLv+q9kqmYk
+	H
+X-Google-Smtp-Source: AGHT+IFZHNKSdlUtyflW/oAl3271oyzHBL3EezDm4ZEZS8ioT4B/wsLs4jMN4bfjeIMRhEIYEroxww==
+X-Received: by 2002:a17:90a:4b0f:b0:2e2:bfba:18d4 with SMTP id 98e67ed59e1d1-2e2f0b3b53bmr4317697a91.17.1728664274280;
+        Fri, 11 Oct 2024 09:31:14 -0700 (PDT)
 Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2a9f5403sm2739854b3a.58.2024.10.11.09.15.03
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2ea9d4145sm2092573a91.18.2024.10.11.09.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 09:15:03 -0700 (PDT)
-Date: Fri, 11 Oct 2024 09:15:01 -0700
+        Fri, 11 Oct 2024 09:31:14 -0700 (PDT)
+Date: Fri, 11 Oct 2024 09:31:12 -0700
 From: Drew Fustini <dfustini@tenstorrent.com>
 To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -76,9 +77,10 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
 	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Subject: Re: [PATCH v1 0/3] pinctrl: th1520: Unbreak the driver
-Message-ID: <ZwlPBXfCyPxxYGkR@x1>
+Subject: Re: [PATCH v1 2/3] pinctrl: th1520: Update pinmux tables
+Message-ID: <ZwlS0FiKfiPjhNSf@x1>
 References: <20241011144826.381104-1-emil.renner.berthing@canonical.com>
+ <20241011144826.381104-3-emil.renner.berthing@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,41 +89,69 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241011144826.381104-1-emil.renner.berthing@canonical.com>
+In-Reply-To: <20241011144826.381104-3-emil.renner.berthing@canonical.com>
 
-On Fri, Oct 11, 2024 at 04:48:22PM +0200, Emil Renner Berthing wrote:
-> Hi,
+On Fri, Oct 11, 2024 at 04:48:24PM +0200, Emil Renner Berthing wrote:
+> When Drew took over the pinctrl driver it seems like he didn't use the
+> git tree I pointed him at and thus missed some important fixes to the
+> tables describing valid pinmux settings.
 > 
-> Here are 2 important fixes and a code improvement to the T-Head TH1520
-> pinctrl driver that was either introduced or missed when Drew took over
-> upstreaming it.
+> The documentation has a nice overview table of these settings but
+> unfortunately it doesn't fully match the register descriptions, which
+> seem to be the correct version.
 > 
-> It is based on Linus' pinctrl/for-next:
+> Fixes: bed5cd6f8a98 ("pinctrl: Add driver for the T-Head TH1520 SoC")
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> ---
+>  drivers/pinctrl/pinctrl-th1520.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
->   6dbd1577b7dc ("Merge branch 'devel' into for-next")
-> 
-> Emil Renner Berthing (3):
->   pinctrl: th1520: Fix pinconf return values
->   pinctrl: th1520: Update pinmux tables
->   pinctrl: th1520: Factor out casts
-> 
->  drivers/pinctrl/pinctrl-th1520.c | 52 ++++++++++++++++++++------------
->  1 file changed, 32 insertions(+), 20 deletions(-)
-> 
+> diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+> index 03326df69668..8bd40cb2f013 100644
+> --- a/drivers/pinctrl/pinctrl-th1520.c
+> +++ b/drivers/pinctrl/pinctrl-th1520.c
+> @@ -221,9 +221,9 @@ static const struct pinctrl_pin_desc th1520_group2_pins[] = {
+>  	TH1520_PAD(15, UART4_RTSN,    UART, ____, ____, GPIO, ____, ____, 0),
+>  	TH1520_PAD(16, UART3_TXD,     DBG,  UART, ____, GPIO, ____, ____, 0),
+>  	TH1520_PAD(17, UART3_RXD,     DBG,  UART, ____, GPIO, ____, ____, 0),
+> -	TH1520_PAD(18, GPIO0_18,      GPIO, I2C,  ____, ____, ____, ____, 0),
+> -	TH1520_PAD(19, GPIO0_19,      GPIO, I2C,  ____, ____, ____, ____, 0),
+> -	TH1520_PAD(20, GPIO0_20,      GPIO, UART, IR,   ____, ____, ____, 0),
+> +	TH1520_PAD(18, GPIO0_18,      GPIO, I2C,  ____, ____, DPU0, DPU1, 0),
+> +	TH1520_PAD(19, GPIO0_19,      GPIO, I2C,  ____, ____, DPU0, DPU1, 0),
+> +	TH1520_PAD(20, GPIO0_20,      GPIO, UART, IR,   ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(21, GPIO0_21,      GPIO, UART, IR,   ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(22, GPIO0_22,      GPIO, JTAG, I2C,  ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(23, GPIO0_23,      GPIO, JTAG, I2C,  ____, DPU0, DPU1, 0),
+> @@ -241,7 +241,7 @@ static const struct pinctrl_pin_desc th1520_group2_pins[] = {
+>  	TH1520_PAD(35, GPIO1_3,       GPIO, JTAG, ____, ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(36, GPIO1_4,       GPIO, JTAG, ____, ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(37, GPIO1_5,       GPIO, ____, ____, ____, DPU0, DPU1, 0),
+> -	TH1520_PAD(38, GPIO1_6,       GPIO, ____, ____, ____, DPU0, DPU1, 0),
+> +	TH1520_PAD(38, GPIO1_6,       GPIO, QSPI, ____, ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(39, GPIO1_7,       GPIO, QSPI, ____, ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(40, GPIO1_8,       GPIO, QSPI, ____, ____, DPU0, DPU1, 0),
+>  	TH1520_PAD(41, GPIO1_9,       GPIO, QSPI, ____, ____, DPU0, DPU1, 0),
+> @@ -256,11 +256,11 @@ static const struct pinctrl_pin_desc th1520_group2_pins[] = {
+>  	TH1520_PAD(50, CLK_OUT_1,     BSEL, CLK,  ____, GPIO, ____, ____, 0),
+>  	TH1520_PAD(51, CLK_OUT_2,     BSEL, CLK,  ____, GPIO, ____, ____, 0),
+>  	TH1520_PAD(52, CLK_OUT_3,     BSEL, CLK,  ____, GPIO, ____, ____, 0),
+> -	TH1520_PAD(53, GPIO1_21,      GPIO, ____, ISP,  ____, ____, ____, 0),
+> -	TH1520_PAD(54, GPIO1_22,      GPIO, ____, ISP,  ____, ____, ____, 0),
+> -	TH1520_PAD(55, GPIO1_23,      GPIO, ____, ISP,  ____, ____, ____, 0),
+> -	TH1520_PAD(56, GPIO1_24,      GPIO, ____, ISP,  ____, ____, ____, 0),
+> -	TH1520_PAD(57, GPIO1_25,      GPIO, ____, ISP,  ____, ____, ____, 0),
+> +	TH1520_PAD(53, GPIO1_21,      JTAG, ____, ISP,  GPIO, ____, ____, 0),
+> +	TH1520_PAD(54, GPIO1_22,      JTAG, ____, ISP,  GPIO, ____, ____, 0),
+> +	TH1520_PAD(55, GPIO1_23,      JTAG, ____, ISP,  GPIO, ____, ____, 0),
+> +	TH1520_PAD(56, GPIO1_24,      JTAG, ____, ISP,  GPIO, ____, ____, 0),
+> +	TH1520_PAD(57, GPIO1_25,      JTAG, ____, ISP,  GPIO, ____, ____, 0),
+>  	TH1520_PAD(58, GPIO1_26,      GPIO, ____, ISP,  ____, ____, ____, 0),
+>  	TH1520_PAD(59, GPIO1_27,      GPIO, ____, ISP,  ____, ____, ____, 0),
+>  	TH1520_PAD(60, GPIO1_28,      GPIO, ____, ISP,  ____, ____, ____, 0),
 > -- 
 > 2.43.0
+> 
 
-Emil informed me that the out-of-tree USB driver is broken when trying
-to use the pinctrl-th1520 driver that I submitted. This is because I
-had changed -ENOTSUPP to -EOPNOTSUPP to silence a checkpatch warning
-without realizing the implication. I've just been working on the
-dwmac etherenet series [1] on top of mainline and I didn't realize there
-was a problem with gpio.
-
-I've just rebuilt and booted okay on lpi4a and beaglev ahead with this
-series. For the whole series:
-
-Tested-by: Drew Fustini <dfustini@tenstorrent.com>
-
-[1] https://lore.kernel.org/linux-riscv/20240930-th1520-dwmac-v3-0-ae3e03c225ab@tenstorrent.com/
+Reviewed-by: Drew Fustini <dfustini@tenstorrent.com>
 
