@@ -1,96 +1,79 @@
-Return-Path: <linux-gpio+bounces-11224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11225-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C466299AEE2
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 00:53:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7424C99AF53
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 01:24:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BFD1B22712
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 22:53:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A44F31C26D65
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 23:24:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 693F11E1335;
-	Fri, 11 Oct 2024 22:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1413E1D1745;
+	Fri, 11 Oct 2024 23:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6aSQOta"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABA71E0B8D
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 22:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD01CFED4;
+	Fri, 11 Oct 2024 23:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728687177; cv=none; b=sjlcdTekyjfH4BFA+xaU2zU53eZEr091ndGxQ29S3UKeHarOMevr1pW7E13lkAhZa+NSZIz0jj/LTW89V2nU1rkV4vyrtfqMAA2rSdyCZn/tFaEOq6eBdW2vzlkusd6M8yh6/tEEUp4/tn+eg5wIvIiDaJaS1iMsKLfHG/HH69M=
+	t=1728689093; cv=none; b=nFGuvyjvoVz5g8qoW2OzgLqvMeEPqZyzdKpm45+fyRenzc7+M6LZCj3f1zs0O+WlzJCfDu3IupogPu1UVJwHyw7o8KljjoCdk/WeVAY21AavrQulAlBPAX/6OBJjgx9O2rkta7yWcVhth5Xp18Vjj/7L9/4+A6XBzUM7Uy0po3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728687177; c=relaxed/simple;
-	bh=QHnSVJgKPC4Nvh2tA4kTrfCxlBBghkUgALPOqLtV+38=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uH5jWpNPP6FNf59eV89mKYMkr0jj/q+ddgiN2POIDj9B8TzJuYsdlpZQkRiJkgb4ufA9WGaaDJadJF22sVnvNWIzNCtFv0eshypCCs+cQVDqZfRQHS9nF2/2tzz11BXqiPxrQpt+nVbhVDILwG0Dy1nwbylEc7dtoFFAnxbSrws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71df8585a42so1975587b3a.3
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 15:52:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728687175; x=1729291975;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QHnSVJgKPC4Nvh2tA4kTrfCxlBBghkUgALPOqLtV+38=;
-        b=fCxzE/G6omvldiyHrXLq6M9bHB3ViBd8vBMysHXVzQb5V2UvU6IBmrvD5XFFqFxbhW
-         H0r2h1yvY1cL5o4MzY3LiK0+Fheq6SjBWbQXky8O0SCytMOeYc3hlJqrr+RQmBWAZr4J
-         QmaKMwDEzEd504u14icQJ2IXGChLh0xN58CJs5m9wTUYOm3/JwWgn0p1bxe8pf8pTkCe
-         eaqCjg7sAprwMFTFt0N2xSg9O1saXQcOSkh82Hcr2KjZuQRUGzVtmdcftzwliFoSGNl0
-         wjW5idZipgZWqzMGqDydWPc8FMP223TDC/5Kt1LjX1vboqwhzKlRsoCcU7N8BgWe1EL8
-         pqDw==
-X-Forwarded-Encrypted: i=1; AJvYcCURioy6d9j6P6B/pMvivxJpaQMMZe0+xv94k9qUAjPM+59U89i3mKCBhN77Mc1QnhBsVTkt+u4iJnW7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRW/8liFrupqRiFE1hkZXoGc2K2dkZPo9aJroGdPG6A90IhbMJ
-	1TZA6LV3ITJZW3tmbvt74JjOM14i4/ckn7Wggk5TJ5digznIoKaXT/8A4CYSjmg=
-X-Google-Smtp-Source: AGHT+IHaDDeBN7leSygl7Dodvs7/8OMvmcN+zyvTXC30J47HSWRnFCUDXl22hQJ4K5zbR934STm+cQ==
-X-Received: by 2002:a05:6a00:9a1:b0:71e:1498:9ed8 with SMTP id d2e1a72fcca58-71e37ec22e2mr7297495b3a.7.1728687174894;
-        Fri, 11 Oct 2024 15:52:54 -0700 (PDT)
-Received: from localhost ([71.212.170.185])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e4d0760c7sm254472b3a.174.2024.10.11.15.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 15:52:53 -0700 (PDT)
-From: Kevin Hilman <khilman@kernel.org>
-To: Judith Mendez <jm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>
-Cc: linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bin Liu <b-liu@ti.com>,
- linux-serial@vger.kernel.org, Judith Mendez <jm@ti.com>
-Subject: Re: [PATCH RESEND 0/2] Misc OMAP GPIO/UART fixes
-In-Reply-To: <20241011173356.870883-1-jm@ti.com>
-References: <20241011173356.870883-1-jm@ti.com>
-Date: Fri, 11 Oct 2024 15:52:52 -0700
-Message-ID: <7hr08mw8u3.fsf@baylibre.com>
+	s=arc-20240116; t=1728689093; c=relaxed/simple;
+	bh=BJ4VgQcngCd3nHGs6rVWb7ekZ7OxD6KipVC+gNyN1As=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VjaucnKrMkAR68F6MwX+Ik/IJ0Km8byc9p2rDah1nHG/ViCCL/82w5dbnxr0NH4O/dqpPnQb5p3YPRkKfbVRPS8E25zIJuB60ZbEdBFDObbVVEbLoKA3nVAVy66dfo3NenGTjC6Z++CBwZCTj0r19nF6pgn7feCguIyl37SRfgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6aSQOta; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C095C4CEC3;
+	Fri, 11 Oct 2024 23:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728689093;
+	bh=BJ4VgQcngCd3nHGs6rVWb7ekZ7OxD6KipVC+gNyN1As=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Q6aSQOtaJocq4P/guQ42Foja2S1LpWw52m1xEtWdIxMp+WZd8k4nSzneQ73MoVEdh
+	 pQ2Zn2yLU8FH0PXJcWSjK7p1XpSw27CudA1ba/BVIoODn+andh+/V+SSdLQPsVnEf7
+	 6Wg4jvTzAeCL1eJvqzYDtc7m5DnI0UbHi4JuhmWykvzp4xSjWsG5dJUCusHszGjWQz
+	 3NRk7QhWIuzD09LuLU2c/y9fZhwkvdGFillMdSYa+opuN0Nakr1KfNT1kzN7ycHzwu
+	 IfAzqjz41cXVD2dGbA3SU7+MRFS9znLw5rqurCYAEuARXO2gg2BN9QtOb6FPWof2uC
+	 amtBCaIHRsh/g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34CA138363CB;
+	Fri, 11 Oct 2024 23:24:59 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.12-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20241011193201.4443-1-brgl@bgdev.pl>
+References: <20241011193201.4443-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20241011193201.4443-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc3
+X-PR-Tracked-Commit-Id: a6191a3d18119184237f4ee600039081ad992320
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 547fc3225a4187c25e296240a3371115821c5850
+Message-Id: <172868909784.3026331.12254130904478249195.pr-tracker-bot@kernel.org>
+Date: Fri, 11 Oct 2024 23:24:57 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-Judith Mendez <jm@ti.com> writes:
+The pull request you sent on Fri, 11 Oct 2024 21:32:01 +0200:
 
-> This patch series carries some miscellaneous
-> OMAP driver fixes for GPIO and UART drivers.
->
-> For GPIO, add gpio_enable and gpio_disable calls
-> to gpio-omap which fixes an issue where if there
-> is an irq storm, serial console is unresponsive.
->
-> For UART, move pm_runtime_get_sync since the
-> current order of omap_8250_rx_dma_flush and
-> pm_runtime_get_sync calls are set in a way that
-> when omap_8250_shutdown returns, dma->rx_running
-> is set and this causes issues next time the UART
-> is re-opened.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc3
 
-Could you summarize which OMAP platforms this was tested on?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/547fc3225a4187c25e296240a3371115821c5850
 
-Thanks,
+Thank you!
 
-Kevin
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
