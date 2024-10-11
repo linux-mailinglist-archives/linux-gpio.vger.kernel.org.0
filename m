@@ -1,112 +1,119 @@
-Return-Path: <linux-gpio+bounces-11173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11174-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA990999D96
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 09:13:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18802999FB6
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 11:04:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFDE81C22037
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 07:13:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 486741C24001
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 09:04:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03742209F50;
-	Fri, 11 Oct 2024 07:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7248F20C46F;
+	Fri, 11 Oct 2024 09:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YUDnsuGB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UjlKepA4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384C2209F55
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 07:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B88A20C471
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 09:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728630778; cv=none; b=BwPJ6VJv2p+AByJ2SLSfeHk9DxTsU9rL2vWpeMntLaWhaBgZj1ClQxA4KlV4v73zW7LOHibux0LwEwvXsxbQLNgi53Udj17UuMa3RXugMGGKrtJ+pGtyPJduXEZcpDFLCaYn+OW8cZ/JbhOmsKQR1q98Wso7vlhPloPhu0vJXIA=
+	t=1728637442; cv=none; b=FIcrBAykjczdwiw9gIQZ6PgynXNN2hmGLQ3GmmoOy7CZvZCcD0X8EpNLqCsnpAOt6XJer+pR7kQBQEJnePYPkDfvTEnah2Be1ptiJ/mnZjqzfPtZiyTph8HOHXDU2fGu0ogwaO5k4uMFLaldutpIktZiipdelQ6ItVaWn2kr+HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728630778; c=relaxed/simple;
-	bh=1CDFQ+4yDEcEQM5+7/TmIfK4WyHlkWsOLf+wxAIOSNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Za0e+VHSpGa3EVIekXAaIKxMDqK+uB2rUpPJr4oD7gLhNP1+a2RB60N2FDXRaXztlMAZNXL9EVtzO+N0lZPPiyGLG3KxLeef/t6R8/phNn1VNrfhVYwgM8DaFIFgbyz6S0+zgsER05bYFvOx01QZvB1x+Egp2gMcl2DT0h2Kq7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YUDnsuGB; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=1CDF
-	Q+4yDEcEQM5+7/TmIfK4WyHlkWsOLf+wxAIOSNM=; b=YUDnsuGBdykYYK8tC07+
-	v+pNcCTXhx2LOe2N+OASZpaSrmOwwUFcXEvnNdiy8RIKQfGfz4EjOd4GMmkZIMH1
-	2/GG7eW++hqHVOd7SrkjbCshCX4agVWoPMQrtcwsDVafgPCmiFj1LSNEu9N6oPv8
-	SCuLiUseESwTTtrBloQRKwJxw2wmzZIVHDOW8LRnWdr4h76Kbco4i6QlKCoGFaTd
-	na1fyWqcJRmwbuovOaUMMisVtQgcSnEEQVXjdm7e/dfPJ4f2IrElqMF1QPUK2VZy
-	ERuhpYPw6r3Dif0TOi8/P3PQefYbHy+50FE1RENxmL7RFsm6/JUz9AuPUf86LYI3
-	fg==
-Received: (qmail 1422641 invoked from network); 11 Oct 2024 09:12:46 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Oct 2024 09:12:46 +0200
-X-UD-Smtp-Session: l3s3148p1@U5zANi4kPq0ujnvF
-Date: Fri, 11 Oct 2024 09:12:45 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-usb@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wentong Wu <wentong.wu@intel.com>, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add an entry for the LJCA drivers
-Message-ID: <ZwjP7d-mnLqnGGzW@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-usb@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wentong Wu <wentong.wu@intel.com>, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20241011070414.3124-1-sakari.ailus@linux.intel.com>
+	s=arc-20240116; t=1728637442; c=relaxed/simple;
+	bh=8d4yjmVwCnaXxPXrZ2Bik8WHksaHIVN+6JB2kOkIujY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f0kRlsVpqb3onCHEudRk43YN7/JRb8LV3BkrFZwXvtedFBXx4fjT4Sf9ymjuW3BbPxJa5Oy9nEfgt9LoyK+t7eu/foDnRWlDlnGfa2CMoy+Z4GFzkvheTJj/1/gG2zN+ENBuCl3kjP80ivGN4/hxl8SyW1iYLWzeJICi0lBuDoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UjlKepA4; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2facaa16826so16354831fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 02:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728637439; x=1729242239; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8d4yjmVwCnaXxPXrZ2Bik8WHksaHIVN+6JB2kOkIujY=;
+        b=UjlKepA4hAD++SNdy4LOvTtOw5ntAamFNtOgJrl7dvwC8IUPOa7K/0XYwrqZLD31ru
+         4FHGjztNtOMH2pb/w3YjJ3ikFns0urYSNzSahMYApTk0E7HQVGG/Maz1ccLZTYOAdZEJ
+         wRxypVtkF30WHz4P7W9FdDRG2/gGZN/8j5TXxip8iAYo+SnIxf8xguNAJJ/S6El28LrX
+         SuUv5Bwt9sIvdScFo4EIhNU4Qvhfgxk9/9PSe8irDOFwlPNV+MEpIaAk9aq+xIJYKaRm
+         eEhF16Un5/CcK3UIixNmVn33BhtnM9CBj4/CpzdUPA9hiIwdFHpTC/pTG3GiIK2C+BQg
+         qIQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728637439; x=1729242239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8d4yjmVwCnaXxPXrZ2Bik8WHksaHIVN+6JB2kOkIujY=;
+        b=TgpZNcrNZve5V9SiKmuiSXaCYPMLqA7fPg6Da+WCWG2mQxT1zo7rwNfkZ73DQqJPMJ
+         Llh7JwwKr6qoyQqMGnri1RiMvYz+fTyymOSsfimxBRqme5Un/tQO5UZAkWFW99dGQ5eg
+         Bj0N9uQhOT6bEJ08SY9+muP0ANToerne2O02ng7ANEUlVhLkvVIcAbTAcTeTm8MQuX+s
+         ILRXLOH9ruVLKOWA4VvpbgLm9Qkz8wM9qvubQp0+Qizu/XB77pCWQ+zXzrPhsGailjoZ
+         MQpWrgezCOjhlFJjd3sYWMM5OozKTaiClp7LJFb/n2xZfN+MuajUnFI1EvRLR0bkjafQ
+         a+Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMmAj3Wxib0yjv25W5uG03qUM4/jeZxN4S8zP9jxyzOudMUJInfgcJhCHW+tXsF8wd3Gq7cdah1cG8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTC/jZ7EY8IdqBcXP8rT+xex6kyLUOgJsbXWFq5q4utS4WFrU0
+	4vrtR1lB3la2hnqBH9WpN+Otjc8OvKNxatvyMo8ODMgSTK6aYT7Wn52QmiAerLwp5oDRp7VZu4f
+	72GIeeP8qp0JWzEhNHmIK6vAUbaLF5pupVQazVA==
+X-Google-Smtp-Source: AGHT+IE5OeNgFUzqHYTpHS7727BD0udgza39pHKdVWlcHOHz9ZIbGL1mxOhjbFQg5l0MRwkHUObjvdE6hjbd88hX09I=
+X-Received: by 2002:a2e:f1a:0:b0:2fb:3a92:d1a7 with SMTP id
+ 38308e7fff4ca-2fb3a92d591mr3422661fa.33.1728637438600; Fri, 11 Oct 2024
+ 02:03:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2EqYX9+itaK4CePP"
-Content-Disposition: inline
-In-Reply-To: <20241011070414.3124-1-sakari.ailus@linux.intel.com>
-
-
---2EqYX9+itaK4CePP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1728300189.git.andrea.porta@suse.com> <199a4994312b120c73c95fa368954ad5a2a8aee6.1728300190.git.andrea.porta@suse.com>
+In-Reply-To: <199a4994312b120c73c95fa368954ad5a2a8aee6.1728300190.git.andrea.porta@suse.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Oct 2024 11:03:47 +0200
+Message-ID: <CACRpkdb1muovPmKoUw=Q5sNXj3bsCt84LcKVDSLY09_5_1rXZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 10:04:14AM +0300, Sakari Ailus wrote:
-> Add a MAINTAINERS entry for the Intel La Jolla Cove Adapter (LJCA) set of
-> drivers.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On Mon, Oct 7, 2024 at 2:39=E2=80=AFPM Andrea della Porta <andrea.porta@sus=
+e.com> wrote:
 
-Cool, thank you!
+> The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
+> Add minimum support for the gpio only portion. The driver is in
+> pinctrl folder since upcoming patches will add the pinmux/pinctrl
+> support where the gpio part can be seen as an addition.
+>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+This is a nice driver and I find no issues with it, what causes
+an issue is gpiochip_set_names() as pointed out by Bartosz.
+If you can live without the names you can remove that part for
+now and we can merge the driver, then you can add the names
+later when we sorted out how to share that function.
 
-
---2EqYX9+itaK4CePP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmcIz+oACgkQFA3kzBSg
-KbZNXA/9FNyBvS6d+apUu6Cz84782t8SJtd3F7RE3fp3jvP1oDurjRh6+27IZm36
-PqihjdeVgkexmpqPMN6UDI0ib2ihg8jF91qZ5ZeM7tRLv+vs5l6zW7iafSN2rqyZ
-UGrca3dy68DPFrKiSmUxklSL0NKbQMZP1yxDVFMRjP4AjfUIJLrRL9dtfjN6csue
-roZgRnp/OC97APENS5GPmU8whGG89JkZbXf2UZt1pyA4SMHYw1tR7umUzLigiebC
-nAcfEE/I2UpOTlx8u9YzuirHL8HJKXQy624Ja1wFs9uISAU5uu5MJnQLJWMfLNEk
-SpA6vij1dYc3kOQB4iKveIwrwLZiKFht4nYD9AcYtG+7W4AuMUPzy/pPeGFZ4EK3
-nRsYSx0Q2CouKOspoCHhCJA547JlqrewrM3PF3asEaSx0Y++XfNk0mh2qb6IywRj
-ss2B+HRo6CJmYflwDjDRkTCvuuh+0+MatsfPpmvp8h/2X1JrYOc1G90KRdTHLFAt
-gYHPhfxuPj96G59feSaLBUz0p4fGABzTKqbNbT3qFi1bIqITSDT4e5hM9Q4lx0Vm
-ikUAt8MQg2ev1huHN83wkccmcJJGDRFtxOKrcORw4D6V6VDNweUp9acjFC3EWMys
-r0Yw1Z8cSSXXDjZpMbi//pndlX0RQhz6KrL7MPvuygQqeqic0lI=
-=pgj3
------END PGP SIGNATURE-----
-
---2EqYX9+itaK4CePP--
+Yours,
+Linus Walleij
 
