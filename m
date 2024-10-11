@@ -1,130 +1,113 @@
-Return-Path: <linux-gpio+bounces-11204-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11206-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADF8899A9D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 19:22:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E226C99AA6D
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 19:38:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54D2A1F230AD
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 17:22:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F32C28D3FF
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 17:38:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C059C1A08BC;
-	Fri, 11 Oct 2024 17:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84DAE1C8FAE;
+	Fri, 11 Oct 2024 17:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="Ezwi5EUg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LQsb1Fcf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FA619F11B
-	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 17:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D701C68AC;
+	Fri, 11 Oct 2024 17:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728667347; cv=none; b=B2nBXWz6K59HOt23mXZqvf9Ar6C4IR7pbDmjEmKZ5sOFEAf3bR2c//UCKcHYTcYeShADIMxfBIgBR03it4kCxOnJmiG4lWlSu35NlTC+SP+wkgnnbBCIHVaKUi/mVMD0mAE1rMO81kRVabTbTVSC+vLGPujINn3yTYXFTYwvr6k=
+	t=1728668063; cv=none; b=RZrx23jv9qaBSPJkhHnhpoOgdn0wy/v0SRm1rc2fIXCEiHZDVTIhZOeqCXw0EuHyABl/Ro69F3o2YKllrInJ1firgH9XLWd4VNyXWIBeikrCj1cgjE3M2Yt7ae+IMzCfCgh2MXo2Epb7fn8oBIs9i33E7dV1Sw4FiPZqwQfPRAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728667347; c=relaxed/simple;
-	bh=YEyVmkAzBO9qAgH5AgLJiUyq4QQZwdK2WOHvpX7uVV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qytNSOooiJSIsih1TMVnCfVmoGoeuQU2dA4bcjKhPUuHfELqM5mgB9XioO54IReFMnKLD1OJRX8CQmvzy3YX3+P7Z1oN45dzxeOT4vMgeMM2Elx1U3I/vEca3xHxsNx+K2trJSAimXYe2s9YoPsDN8IcfZHsjgQbPEIn2C+9cZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=Ezwi5EUg; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20c803787abso15889665ad.0
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 10:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1728667345; x=1729272145; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5aZ52jmXTRU0WDuKnL6qTle0VwGKZCWaBSs2okeMFkY=;
-        b=Ezwi5EUgw5q/c5POjBTxem+a1i+pdvjSHjhXo71Gk+tkkBj1InoHV5qECqCohm6yuG
-         9vPIpBrCOUb5mSYBpYdf9TVnckMEk7f7gvn2W5UcMreyE1draptgbllDtgftuoNUUGIE
-         hZtQuwC4CQx0Y0RYq1Yf9Tj40caq2eAU6cgpxpYfncTErhWwfAdmOf4JtYmpBvMJ7ruQ
-         ja5o9hc8KiiUyZiPXU5cHXPMT0cf3Qp9TCxiui2l4eHiLqhpkouGtrwV1dIsdt1f0K8K
-         NXrOcrJLzDjHMYkQ92ztxx6ukwt2BmpGh/6sItnStLLMrgJd7etbVZ2TiPiaJMsrOeLq
-         ouMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728667345; x=1729272145;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5aZ52jmXTRU0WDuKnL6qTle0VwGKZCWaBSs2okeMFkY=;
-        b=OLLJj7umYxZmyWYIljxapgCoZ+FEldnkgd0c0YuLn7JhiFc7s0CFEC5MVQ0f3FsoYP
-         ClNdvelaLAlNAwjDPGCXIiLr8LVtIr3UjG33IRvzbKlBVocaZ2OkQuPY55sQXq7DSVBN
-         il/VVGH2up7FnSx7IlPpxxa+DFo8lU/Gn98djVYVaJ8vBgKOJx/UW/1oAe9ixhvTioDO
-         9l2t0QoFZQv11BRB8FeBggZqqEpw7W1YQzP0g+oaklbUVgFYDgzb2+3Ig6jTQbrNF/Io
-         cKgOZh3AX/PEhlXsuSHGGhQMGfzk3j8f5mZcW9FZ4pcuEH8CPXz1f4VJXPraZHWpHrrf
-         bXwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXV9dDQg+WB/6Zgs2c0vncUZ6eMjTZ2g2PDt46DxlYcQt7Y71wG5//8MS3IGE4v8pcm/yVA7V2KvPpw@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGMDxgSFkDK2ZI2PF5Hc023swUeED9KEODq7YSqMmH8XEee4e+
-	SXqQ7PGoL+i6yhvezoqdZSyQuiDD1T5TFoKYBLJkideVRAiaMMDjxcTS9owtW6E=
-X-Google-Smtp-Source: AGHT+IGMU8kfRZQZdp7FUTBbkcU5ohX16bkO/daQ28hOFX/Z7i9mjCLTsIvmEcg9GdJ8EEGI7Ao9Tw==
-X-Received: by 2002:a17:902:da89:b0:20c:ad30:c891 with SMTP id d9443c01a7336-20cad30cbe2mr31776005ad.10.1728667345287;
-        Fri, 11 Oct 2024 10:22:25 -0700 (PDT)
-Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c0e751fsm25622875ad.139.2024.10.11.10.22.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 10:22:24 -0700 (PDT)
-Date: Fri, 11 Oct 2024 10:22:22 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Drew Fustini <dfustini@tenstorrent.com>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] pinctrl: Add T-Head TH1520 SoC pin controllers
-Message-ID: <Zwlezn9V75hiLtPw@x1>
-References: <20240930-th1520-pinctrl-v3-0-32cea2bdbecb@tenstorrent.com>
+	s=arc-20240116; t=1728668063; c=relaxed/simple;
+	bh=HzrVIZl8RqgVZlKFjmQ6wI+xqTFoDz8yAlOYT/QWKl8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PQi8hxtq2EfAyD3YpyEq60oeub+LKRW5DABBNnrAoYDn9A1oGmvV7GikWx8r949KJIl1c5S3zVkiQL9RTdi1+uGsMoCrGqehr0Qog0ullaMEKJ3lpUODg1JDuw7wnHEun8iomiDoqym9TsQ2SQVYDj7j4RKkVDpyApcA/EF1qRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LQsb1Fcf; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49BHY5uX030160;
+	Fri, 11 Oct 2024 12:34:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1728668045;
+	bh=MH212cpsBrz27V6CekiJ3grsULY4GcITqBn4H8Ov+5M=;
+	h=From:To:CC:Subject:Date;
+	b=LQsb1FcfhirJWxnLymMhAVtB22myzuw9Al8IpDqNL5DqTCg0lNQytNaLTe3deNfRW
+	 4AY6Lyndw559EmSwEUKBAoRxkii3ksw3qhpE6x4K6uTayRdc/pRj8nclxOAzquRq8B
+	 DAqWlsqKfC4+M2gny6JYLrPzOg+j7TsejQpYqulA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 49BHY5PT067551
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 11 Oct 2024 12:34:05 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 11
+ Oct 2024 12:34:05 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 11 Oct 2024 12:34:05 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49BHY47C025973;
+	Fri, 11 Oct 2024 12:34:04 -0500
+From: Judith Mendez <jm@ti.com>
+To: Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman
+	<khilman@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz
+ Golaszewski <brgl@bgdev.pl>
+CC: <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Bin Liu <b-liu@ti.com>,
+        <linux-serial@vger.kernel.org>, Judith Mendez <jm@ti.com>
+Subject: [PATCH RESEND 0/2] Misc OMAP GPIO/UART fixes
+Date: Fri, 11 Oct 2024 12:33:54 -0500
+Message-ID: <20241011173356.870883-1-jm@ti.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240930-th1520-pinctrl-v3-0-32cea2bdbecb@tenstorrent.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Sep 30, 2024 at 12:50:50PM -0700, Drew Fustini wrote:
-> This adds a pin control driver created by Emil for the T-Head TH1520
-> RISC-V SoC used on the Lichee Pi 4A and BeagleV Ahead boards and updates
-> the device trees to make use of it.
-> 
-> Changes in v3:
->  - Add Rb from Rob for the binding
->  - Rebase on 6.12-rc1 which enables AP_SUBSYS clock controller in dts
->  - Update dts to use AP_SUBSYS clock controller instead of fixed clocks
->  - Remove unneeded defines from the driver for dt unit addresses
->  - Link to v2: https://lore.kernel.org/linux-riscv/20240914-th1520-pinctrl-v2-0-3ba67dde882c@tenstorrent.com/
->
-> [...]
+This patch series carries some miscellaneous
+OMAP driver fixes for GPIO and UART drivers.
 
-I've applied the dts patches to my thead-dt-for-next [1]
+For GPIO, add gpio_enable and gpio_disable calls
+to gpio-omap which fixes an issue where if there
+is an irq storm, serial console is unresponsive.
 
-[3/8] riscv: dts: thead: Add TH1520 pin control nodes
-      commit: ad36d24e4fac83a6cf916fbf7eb458ed5179758b
-[4/8] riscv: dts: thead: Add TH1520 GPIO ranges
-      commit: 5c0a6b845d1670c7a10d8016cb352c21b0133935
-[5/8] riscv: dts: thead: Adjust TH1520 GPIO labels
-      commit: 2a3aaf5fd062e9a820c420b02795acf6e031c855
-[6/8] riscv: dts: thead: Add Lichee Pi 4M GPIO line names
-      commit: 753c9640121235b3ea26137f3a2dcbb301fa8556
-[7/8] riscv: dts: thead: Add TH1520 pinctrl settings for UART0
-      commit: 5aa0a71414f1e4fcacd64146d40e78ecdfc26374
-[8/8] riscv: dtb: thead: Add BeagleV Ahead LEDs
-      commit: ddc5ab7259a525670fbea6e9bda5334022aae050
+For UART, move pm_runtime_get_sync since the
+current order of omap_8250_rx_dma_flush and
+pm_runtime_get_sync calls are set in a way that
+when omap_8250_shutdown returns, dma->rx_running
+is set and this causes issues next time the UART
+is re-opened.
 
-Thanks,
-Drew
+Changes since v1:
+- Fix CC list
+- Drop Fixes tag
 
-[1] https://github.com/pdp7/linux/commits/thead-dt-for-next/
+Judith Mendez (2):
+  gpio: omap: Add omap_gpio_disable/enable_irq calls
+  serial: 8250: omap: Move pm_runtime_get_sync
+
+ drivers/gpio/gpio-omap.c            | 29 +++++++++++++++++++++++++++++
+ drivers/tty/serial/8250/8250_omap.c |  4 ++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+
+base-commit: f45840d172a06d07a1a408b38bdb0be9ab3fd8cb
+-- 
+2.47.0
+
 
