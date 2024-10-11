@@ -1,85 +1,84 @@
-Return-Path: <linux-gpio+bounces-11197-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11198-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 481FD99A807
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 17:40:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9B0F99A8AD
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 18:15:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 776EF1C2296A
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 15:40:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFD1E1F22B07
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Oct 2024 16:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 648F0195FE8;
-	Fri, 11 Oct 2024 15:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CB4199231;
+	Fri, 11 Oct 2024 16:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dASfOhcj"
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="crhQ5nkE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9169D188CB1;
-	Fri, 11 Oct 2024 15:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556FB1990C5
+	for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 16:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728661244; cv=none; b=YpPfSNEvnXoW6wU1TsErGUBegBO/TYUIL01C+GdiVwWXTuBir8JTLh6ZPcnGloxBp5hGN3N6Ygu9hO7VBsjxhNNaMvnSha9Rda8QT0ZYLQ9rDgFxs1QTqWaL100hNw4fR8p9v7u0oe6sXTEbxKDvboxrOrSfJFdyLH4A6T0aJrM=
+	t=1728663305; cv=none; b=Bs088PFudbzdNCdZisdq88TnzgMVHW2rpCxrva/T5FQQp7gatvFZKbaL8OZbFmDHUBmY68TU6MIy+QVhUQHgl0YRDrH8HFp0oGF3z6yinOOxyH9fTIZ69XZvID5ZCY7hZDKDyMBPCH3/QHWDjZxY6c7EjqaFfI8wSBH6FitAvSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728661244; c=relaxed/simple;
-	bh=txzseXvjE2O+sLlURQCWNSGk2j8iSYWpIn/M93xrnvI=;
+	s=arc-20240116; t=1728663305; c=relaxed/simple;
+	bh=gn2zJ+ebSzEzA9tLwZLGJpSONvEA/ifmwQ7Oc6MF1/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AcQERrxtlKFSPfbvq4WU2EWTDsuJWn+PBzgTswjOHOb0EazUcuP405o4fJgRkX0phPbtaYJZDaXfvi4VP/hRcwvo6MRJHGYMqiIErjfvFRHFla+/+Wfj0z0xb4NM5OYG93ehvSyzk2HIpAXF9XUUf18svUsjVqbDdmznSy6bc18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dASfOhcj; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2facaa16826so19888211fa.0;
-        Fri, 11 Oct 2024 08:40:42 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZ8AbTbPvB/6vXcw1nspsHheVNU/8H4AkdeD8tZJQ7ghUYa85hFp5iHDkGve/pNrr+0Unk6IPRGwNG95dhALsSANgW+kuOkEjSfvi23XudaKVCNsWtZgRfIemEbtzeuPf7mzzJIzd1WmSuan9xJAHotB8TMuTSs5V3CvVb7qhgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=crhQ5nkE; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e053cf1f3so2033336b3a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Oct 2024 09:15:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728661241; x=1729266041; darn=vger.kernel.org;
+        d=tenstorrent.com; s=google; t=1728663303; x=1729268103; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=khBtE4bfekeyDh6IrhDJxWXSph73WxxA+3qlzAGlTrQ=;
-        b=dASfOhcjPvBwde/DBl0KJAZ4qlU8PRzrie75rD4bphcY2dPkrQyLc0oW2T+x/rCrW5
-         Ji/4Cl2IDjlAT9eScaLTzNTMdyla2e1b0ULtRbXQ6eSFkw8uVgYv8AWlTc8Ael0kPvNp
-         HStVJeYz64u/rSd9GAUxWV50bXcqqY5AydkZGZOMjCXMJzxugYC8Ry2TPbKFmwKpafVG
-         zxFkCNKa2Hy+U+5p1WUffHVlNK3K1u5GM38tCWaoWmT2cqRbMClWBJWq0Z2e493TzEpT
-         FShvrjpDSa9E6ROd0sAESO9Tb5Bu8HnwEHKdCxuEzoS5oMzxIFzw4eQuJVPet4Og4pVq
-         sIfA==
+        bh=9wXNrkmIi/YQObyo/IyUy/irrJHMOY3CT8kXuXephfo=;
+        b=crhQ5nkEGszbGLlyOBSGE4czsdfglUooHPAMey/hp8wJdaM6rv3fJCFZJMnVzxG6LC
+         D/dngUIXMfqhJVkiJTmc8BEdlRoN8MYP40CWKFC1PlumL5CZFe/srQxRjIZgs8zDYm+d
+         0PCLN8RQ6j9VUiiGtt/oOLGc1gSvbb3o2rTSKQjvJbsqXgnxD4bEsjm1I+6eTNeybVDa
+         le+8I2JcxT4RWBkbE4QpRwefl13TrjgXTfVCRMZ9wZPHOIyMI4GEsqfuOUYE3/CfdcNn
+         W3YWZZWmJtyR70oov6CkorfFuOykXccjEbF7M3BbgfyqyU2h7KxHOlN90WovgTgeuxBV
+         xrAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728661241; x=1729266041;
+        d=1e100.net; s=20230601; t=1728663303; x=1729268103;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=khBtE4bfekeyDh6IrhDJxWXSph73WxxA+3qlzAGlTrQ=;
-        b=FJDp0qKGn4IyMo5lzDhVm0MdbVBzFL0It/qkesHY+0yWqVrtyFrPN83mQHI29SetqB
-         0qjxJz2c1HGMLR0+P963huLBrhAnR+Scppt27N43kV3L+o0SKGsVlsyBLJJC4QMJaGFp
-         Jffm7RgQMuZ0HnUy2rPP7iCQFPkA7Qw6KjpaFFeY/+bI4ULJqBPpAHDdVVgbRlJGMnLj
-         VEhyvQgOCHa0uU0iwrIYoOHfQ3mS2ZC4P+dnwoEyS6kO+r0oTkqD6R/CV/2FfBxFH6uc
-         Zeq2fKHlXJEgESLE/unjRyQIFmQGettVS4XKxOJS4N5Iq+cIDaj6PCWnjEqM1DkDy6OS
-         rZJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwJg/Yp0QXtbc8xu4IIe94evWpUB+5x8xYu5m/8UTm9myLX83XpviMz5uR5d8qPeNKjdcaLHJffDB3O0rr@vger.kernel.org, AJvYcCVffHSZOsX4/gOD/r/iHxbIyUgjqWp47ZF3CuHxM9kjq4wWqRNNGeDJe92yr5pR6Tc5fG5u3CmbFaGV@vger.kernel.org, AJvYcCWG4SHiPNS1S5QgAFotTYVE+xLekuJfz5nNqYb9XV4XuolXmxSqcwfj+JmdJCZlVGxOEZZBeAD943UnlA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8fgsnNxwAPdcZMz2ZSuUXqVxZLIwJT8DI/2E6jhoKiR1X0E+M
-	Oz8LdLQHDKf6aCs4+zbU2hlZZzHWM9UK4CvJ0OHiIuEaBRGPtti8JD1qrQtF
-X-Google-Smtp-Source: AGHT+IHep9OrMoxi7CVDlu+vi5Q0yCuyEnYZKWCtJ8HitXCyhFhaycpIEJ/UUfG2VXmQImYcI0ahMw==
-X-Received: by 2002:a05:651c:1548:b0:2f9:cc40:6afe with SMTP id 38308e7fff4ca-2fb3270b3b4mr15435211fa.14.1728661240359;
-        Fri, 11 Oct 2024 08:40:40 -0700 (PDT)
-Received: from KILLINGMACHINE ([46.188.27.115])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2fb245799fcsm5281791fa.7.2024.10.11.08.40.37
+        bh=9wXNrkmIi/YQObyo/IyUy/irrJHMOY3CT8kXuXephfo=;
+        b=PF8xiAenebB540nwMEmZIqP5Axj2n6eWRVihf0+vOJylnXnRqFeRUx5fwb02YVSlTH
+         LhHecgWkUfFG4u7sj8BSms5ahcPW9ST8ePObzF+DzWXJmetQVEksJMrRcYwRQVUJCq2t
+         mw9eGc/pmZgi8hefGLSmn9Xh3lDAWjfF9rkZCjYxiLqnUSd8DpcJ9PduWBRVmRTHOap3
+         rLevy839TjNtRC5qlY47tdnVdvornstnkrYvCZBdV144RufJ1Lu8jfNotkkQr0rmc7ui
+         7El/poFIkiwqAJ6i8ICZbsy4W4Viz1yYYyh5Xup7cQFlxXqymKi22Ii/igJpF+Flnmgk
+         wP+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVFe8JOvpIlX6BqKFFlAShGIkTD5zhurA78PhfwcFXBSECySlpqgm3NWzzdC9T4sSXe28ilmmWHB1bn@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhid8qshCGXsrvpsXJ6Bj9qgr4kxZaGck/SNsxfVNyOwaZjSoc
+	gVoVIJ0xDbLtMo3IRpybReet7ueSovrQwJKioUuJX9qGDGrDmHCHdApfqgmJhSQ=
+X-Google-Smtp-Source: AGHT+IGvkNkvub3vSjul9cHLNp86zogPqdkI+zsKo8/knPvD0t1400lP6okGXqYs+UwbCewenEv0oQ==
+X-Received: by 2002:a05:6a00:10c5:b0:71e:4bfb:a1f9 with SMTP id d2e1a72fcca58-71e4bfba31bmr136932b3a.22.1728663303614;
+        Fri, 11 Oct 2024 09:15:03 -0700 (PDT)
+Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2a9f5403sm2739854b3a.58.2024.10.11.09.15.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 08:40:38 -0700 (PDT)
-Date: Fri, 11 Oct 2024 18:40:36 +0300
-From: Sergey Matsievskiy <matsievskiysv@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: alexandre.belloni@bootlin.com, quentin.schulz@bootlin.com,
-	lars.povlsen@microchip.com, horatiu.vultur@microchip.com,
-	andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH 1/1] pinctrl: ocelot: fix system hang on level based
- interrupts
-Message-ID: <ZwlG9AKToZFFPAvi@KILLINGMACHINE>
-References: <20241006181310.181309-1-matsievskiysv@gmail.com>
- <20241006181310.181309-2-matsievskiysv@gmail.com>
- <CACRpkdbJ7xh1qOYaZOh+s+Tj_GgE4LXMFuOgL1zpxBRqJQVx6w@mail.gmail.com>
+        Fri, 11 Oct 2024 09:15:03 -0700 (PDT)
+Date: Fri, 11 Oct 2024 09:15:01 -0700
+From: Drew Fustini <dfustini@tenstorrent.com>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Subject: Re: [PATCH v1 0/3] pinctrl: th1520: Unbreak the driver
+Message-ID: <ZwlPBXfCyPxxYGkR@x1>
+References: <20241011144826.381104-1-emil.renner.berthing@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,44 +87,41 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbJ7xh1qOYaZOh+s+Tj_GgE4LXMFuOgL1zpxBRqJQVx6w@mail.gmail.com>
+In-Reply-To: <20241011144826.381104-1-emil.renner.berthing@canonical.com>
 
-On Fri, Oct 11, 2024 at 11:18:55AM +0200, Linus Walleij wrote:
-> I'm a bit puzzled by the patch because I don't understand it.
+On Fri, Oct 11, 2024 at 04:48:22PM +0200, Emil Renner Berthing wrote:
+> Hi,
+> 
+> Here are 2 important fixes and a code improvement to the T-Head TH1520
+> pinctrl driver that was either introduced or missed when Drew took over
+> upstreaming it.
+> 
+> It is based on Linus' pinctrl/for-next:
+> 
+>   6dbd1577b7dc ("Merge branch 'devel' into for-next")
+> 
+> Emil Renner Berthing (3):
+>   pinctrl: th1520: Fix pinconf return values
+>   pinctrl: th1520: Update pinmux tables
+>   pinctrl: th1520: Factor out casts
+> 
+>  drivers/pinctrl/pinctrl-th1520.c | 52 ++++++++++++++++++++------------
+>  1 file changed, 32 insertions(+), 20 deletions(-)
+> 
+> -- 
+> 2.43.0
 
-The current implementation only calls chained_irq_enter() and chained_irq_exit()
-if it detects pending interrupts.
+Emil informed me that the out-of-tree USB driver is broken when trying
+to use the pinctrl-th1520 driver that I submitted. This is because I
+had changed -ENOTSUPP to -EOPNOTSUPP to silence a checkpatch warning
+without realizing the implication. I've just been working on the
+dwmac etherenet series [1] on top of mainline and I didn't realize there
+was a problem with gpio.
 
-```
-for (i = 0; i < info->stride; i++) {
-	uregmap_read(info->map, id_reg + 4 * i, &reg);
-	if (!reg)
-		continue;
+I've just rebuilt and booted okay on lpi4a and beaglev ahead with this
+series. For the whole series:
 
-	chained_irq_enter(parent_chip, desc);
-```
+Tested-by: Drew Fustini <dfustini@tenstorrent.com>
 
-However, in case of GPIO pin configured in level mode and the parent controller
-configured in edge mode, GPIO interrupt might be lowered by the hardware. In the
-result,if the interrupt is short enough, the parent interrupt is still pending
-while the GPIO interrupt is cleared; chained_irq_enter() never gets called and
-the system hangs trying to service the parent interrupt.
-
-Moving chained_irq_enter() and chained_irq_exit() outside the for loop ensures
-that they are called even when GPIO interrupt is lowered by the hardware.
-
-The similar code with chained_irq_enter() / chained_irq_exit() functions
-wrapping interrupt checking loop may be found in many other drivers:
-```
-grep -r -A 10 chained_irq_enter drivers/pinctrl
-```
-
-> This needs to describe how moving the chained irq calls achieves
-> this effect.
-
-If the explanation above satisfies you, I'll elaborate the commit message and
-resend the patch.
-
---
-Sergey Matsievskiy
+[1] https://lore.kernel.org/linux-riscv/20240930-th1520-dwmac-v3-0-ae3e03c225ab@tenstorrent.com/
 
