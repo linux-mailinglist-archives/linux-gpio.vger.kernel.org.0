@@ -1,212 +1,129 @@
-Return-Path: <linux-gpio+bounces-11238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F03D99B59D
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 16:42:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEDD199B6E3
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 22:04:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1F1B1F2189B
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 14:42:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C1EF1C20CF8
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 20:04:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E7B41990C7;
-	Sat, 12 Oct 2024 14:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCAEB199936;
+	Sat, 12 Oct 2024 20:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="YJCBOV1F"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJVFxTt9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACC8155CBF
-	for <linux-gpio@vger.kernel.org>; Sat, 12 Oct 2024 14:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBD281AC6
+	for <linux-gpio@vger.kernel.org>; Sat, 12 Oct 2024 20:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728744077; cv=none; b=jZkaYBapk9EHOs70oBgEaEf8XEH22vXatNaU8dTSHC2rDOj/BVktTI3HbBUrWPXfoBLd/dg7SAAgHNihzFHFkOpitcra3BlyMXKX7+dIUWEWBSpO+VdbBUqBX6sbrzwXoRDwx1j75b12jV8dJU0l+CMrVXB9ZauuERu1DwTzpkQ=
+	t=1728763486; cv=none; b=s0Gorjjvo2lD8BIiSbDA9ES+E8OTXas0+O/tBKR51crmpVoRvNYj0YSt6vPuj8IqSU3tvJSbcejt+BcSbgyXbv17Ac/5Pym84c4ALMiuMDO5ivKqi2FJLs4BFAIiq0lemKMedebT0TYARftG+CVW32tLdzsdq3gNgDRfOe6kGDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728744077; c=relaxed/simple;
-	bh=Vxeb0uTE3RuyRK8PqHtAQnI2FGYg0a4hdjYOoPxRhKk=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kEx+B4KWYzqMPSnev8iPETioIlCsMTNw5mMNH3lKz8zjrS1xb/bRQs4L8bkhbcPDIby2QdC/QlElO7ZXwBZvjDtqcIhb547gUePKe7HAnv2E90LfOTypY2vm41/WIv+vF7h08rS3kW49GdPMc3DkYqqI0oIdAVr6rJ+QayukVxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=YJCBOV1F; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com [209.85.160.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4AB4C3F17E
-	for <linux-gpio@vger.kernel.org>; Sat, 12 Oct 2024 14:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1728744072;
-	bh=u14OejdbWcG0velVojMwkvgHAoWWwEN6ANeyU44dL4U=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=YJCBOV1FxLgxMQxpF8Y1iSsfyYfccXfjAHyotS01tv0QxuWTTmaTWivkL+zwZ05EB
-	 EA4z6Oy7YA6MlcJQhRivWBZFYKuaoVkKEYAp9ETB8cwIxMj7oNMkRoSN5hXM/91MLC
-	 uNxwWqahK2iaSzny33oWWXT959jAKsISqK62MqL7vzvFP9xBiUWccM0YMKDeUFtpu/
-	 9ymJX349XKG4ThIObs7e6lfPazv+uc49nP7QoTwpZJpnZD74DxgzuSYnbVoF1n0MRG
-	 UJwFV5U7NRICI0zZU1Pe7v4aF8psQa0mecV2fBixEh/RPvo8yZN3cVytGLD6jJo65Q
-	 hFhjOt9T8i2FQ==
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-28704639b6aso1801742fac.0
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Oct 2024 07:41:12 -0700 (PDT)
+	s=arc-20240116; t=1728763486; c=relaxed/simple;
+	bh=+hwDZaE3yuZt9vzeZthmLQI6V9yR8jL9Lanqpbf5zyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BCMokRYiStdFDczImkQghvafPZ9VUcNKxtIPBh8Uq0kqPiefQV1lBYsmlHL/nXa0jlP+yZmCKRCw0BrrL6MhbOoc38KkhHCOWEeGrxJsf0vEQrP2CpZzvMogfb6knrGV8wl7UZZ66yLyXxFQ7i+eg0q/IBWIUGEUGMszk/3rqng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mJVFxTt9; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539e7e73740so454290e87.3
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Oct 2024 13:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1728763482; x=1729368282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7ciER1RAhj6UxGN+QOMhjY+VHtJCV5IkRQu/ipXf70g=;
+        b=mJVFxTt9ypcfY/K1geBC6yYKPzjTSzU9bxjxUkH9cn4FhA3xUGqjtyPydgZw5OUK7X
+         UzqMYF1/LXgPlvpPmV/eJt3VYR7Bqlx908YDAPRj3OTx11LGkZ6WzB0mTqRZmQ3BC5Sv
+         iLRNrYVhxyOUjOWVEN2pgdREpGHf1FFocDNe1SLQrfG34rX2VIlt37zfKSfipbB3WtlJ
+         NapzrvLymW2ealCBLSCqds3xOr7Q29QeXGhI0VePrK7UJKCf2TUyeVdMGcVp0w/MIh2h
+         NwZNo+t0Y0UaMV+l3sAKzplUwnTkxDysLX6d+odIQETGkuZ8W8sffGJKo7RAKdya6kDU
+         GoaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728744071; x=1729348871;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u14OejdbWcG0velVojMwkvgHAoWWwEN6ANeyU44dL4U=;
-        b=HzZfB6mW4t70AJQZXEKJRSJt19pQFbO6bIgaEo1EBptLVC8Zt4/NxFeAqlGVEgh3n+
-         NrI3QWE8e13Kq1VFpwMWq4haMLWSwXCXoT+FueXqmRdUEhF4k6DefC5qFcE0r1DxXD12
-         4s0eEus5zTTN5SiKkY9MhwTcxTD0QyhT1SIma3KS7s95CJ/U66eF1q/+yLEYhZipyuM6
-         yKJwEWLhc+75NA34hpSHpjEg1P0DJpF3i80ikQ7DIN1OPNMPodsvUAgVafZBYM7CPfmT
-         G7Yly+Xr+08BasVWOsg2b4hS88LstcIzAbWPvU+eljJ41DmLYHgJdXdsbGs6kuZl/4Yb
-         og+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUb9Mu1hkWnEfIHRJ2bZEuSVlPFOOM0iYD8nMmrMwMLMAxByCMztkjlj9OoDi1dkVuwjedyD6eQsyJy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgUq6P7l8xqprAGwbWlwndHL1Pd3xVZ7VHjwnpFa23usLYnvo2
-	gfnIkYhPyN9emPz6n8n/Qo2JCPVI+zYiO9oqmIkzMi9t2M/U8mQu003cGNJaqn0jVAYJbYE47xM
-	CB9LcVoex+WCkBAMp6FFCxhxae2NSKJjCy93OsUnPvzohFBFv8TDGxYEU/ATRXgjjG8B9bXmB6k
-	gzWPc0FQCy945fGR2gq4JYu/d1GpwcROXjEB9O0KxyBFdi6HmwDg==
-X-Received: by 2002:a05:6870:b514:b0:261:1046:66fc with SMTP id 586e51a60fabf-2886dd3fac0mr3280055fac.4.1728744070952;
-        Sat, 12 Oct 2024 07:41:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXUlMb3PnnEigp7yJsQv44SPpz2ujpyO0GZEe1m7y1otwwP5hPxCneu5J0+02C3ypjxxd7ArzHX3GpPmZvsRE=
-X-Received: by 2002:a05:6870:b514:b0:261:1046:66fc with SMTP id
- 586e51a60fabf-2886dd3fac0mr3280035fac.4.1728744070551; Sat, 12 Oct 2024
- 07:41:10 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 12 Oct 2024 10:41:09 -0400
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20240930-th1520-pinctrl-v3-8-32cea2bdbecb@tenstorrent.com>
-References: <20240930-th1520-pinctrl-v3-0-32cea2bdbecb@tenstorrent.com> <20240930-th1520-pinctrl-v3-8-32cea2bdbecb@tenstorrent.com>
+        d=1e100.net; s=20230601; t=1728763482; x=1729368282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ciER1RAhj6UxGN+QOMhjY+VHtJCV5IkRQu/ipXf70g=;
+        b=WilN8xAtGbwDwqZjUh2UALShzLRk2YBkFGND95XEfXuCSNIY+V+MmDY6sG50HiT1HY
+         1aUnzbqGJj+o93F+EHPRzBtZFqrbk/9saiIspkx9k/Jf0ze8aURYXV0mxZ50fsbGtXdb
+         jOxpC0RFB0j1h1KUP9EjsfrFXA87ssp4Z0qv9LFydaJr6c01F19+A5abQTd5VOLn4DiQ
+         O36HCGcPbba3iaGHKQ4DjaEuH3fuxt1EPmfAMXN5MMmadCBTLY9BFvjebcd1OG4qojAt
+         xp10QRhOOSQjiNySkM9d8J0tV9w2d2mRVIW5NVze2Y294e1Y7qwfOpZDTkmqVftHazo3
+         1YFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUL413Gkm3IXHiGxvOJ0DHxOuDnHbWNis0QL7Y3xR5UGw4+HlZz9GvjPEEK3cw9h88kb8gTVVgGmjFT@vger.kernel.org
+X-Gm-Message-State: AOJu0YysseuwEwn8spVl6AixHJ41isfCyPwNXuwYxg27akZ8VXV4we16
+	33dICe2Fr7vDsReh4yLVpZVMdVzHax5PGdyr5weGRPYAv8HoTJ8uzJ60KLz/RZuwX7Bdw77Z148
+	M96rZPB5T0dmH/5sT8YyBNGg4agCTlZVTjKT0Ow==
+X-Google-Smtp-Source: AGHT+IG/ELgjIgEx+R/BAXvPNIpE0fvyJmngo/5bMIK8gL9M1DCkIU3s9GUQNTn52WN5JfUcGc1E7sPXQ4NdxPfSNRU=
+X-Received: by 2002:a05:6512:3da4:b0:539:a3eb:cfff with SMTP id
+ 2adb3069b0e04-539da5ab2e6mr2914165e87.49.1728763481918; Sat, 12 Oct 2024
+ 13:04:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Sat, 12 Oct 2024 10:41:09 -0400
-Message-ID: <CAJM55Z8rv587qAtiMoc5i4+ZkQk6DwQJQVmDP=3gG+wVe7h0EA@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] riscv: dtb: thead: Add BeagleV Ahead LEDs
-To: Drew Fustini <dfustini@tenstorrent.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20241012105743.12450-1-matsievskiysv@gmail.com> <20241012105743.12450-2-matsievskiysv@gmail.com>
+In-Reply-To: <20241012105743.12450-2-matsievskiysv@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 12 Oct 2024 22:04:30 +0200
+Message-ID: <CACRpkdbCVFEgP3ZchLtM8KgDVVbCiK7ZgGha=iVfTBveRstDkA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] pinctrl: ocelot: fix system hang on level based interrupts
+To: Sergey Matsievskiy <matsievskiysv@gmail.com>
+Cc: alexandre.belloni@bootlin.com, quentin.schulz@bootlin.com, 
+	lars.povlsen@microchip.com, horatiu.vultur@microchip.com, 
+	andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	UNGLinuxDriver@microchip.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Drew Fustini wrote:
-> From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
->
-> Add nodes for the 5 user controllable LEDs on the BeagleV Ahead board.
->
-> Tested-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
-> ---
->  arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> index 6c0b768e8d17..5a5888f4eda6 100644
-> --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> @@ -7,6 +7,8 @@
->  /dts-v1/;
->
->  #include "th1520.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
->
->  / {
->  	model = "BeagleV Ahead";
-> @@ -35,7 +37,42 @@ chosen {
->  	memory@0 {
->  		device_type = "memory";
->  		reg = <0x0  0x00000000  0x1 0x00000000>;
-> +	};
-> +
-> +	leds {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pins>;
-> +		compatible = "gpio-leds";
-> +
-> +		led-1 {
-> +			gpios = <&gpio4 8 GPIO_ACTIVE_LOW>;
+On Sat, Oct 12, 2024 at 12:58=E2=80=AFPM Sergey Matsievskiy
+<matsievskiysv@gmail.com> wrote:
 
-Here you're also missing important changes from the tree I told you to use.
-These should be GPIO_ACTIVE_HIGH otherwise the LEDs will be on when they should
-be off.
-
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			label = "led1";
-> +		};
-> +
-> +		led-2 {
-> +			gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			label = "led2";
-> +		};
-> +
-> +		led-3 {
-> +			gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			label = "led3";
-> +		};
-> +
-> +		led-4 {
-> +			gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			label = "led4";
-> +		};
+> The current implementation only calls chained_irq_enter() and
+> chained_irq_exit() if it detects pending interrupts.
 >
-> +		led-5 {
-> +			gpios = <&gpio4 12 GPIO_ACTIVE_LOW>;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +			label = "led5";
-> +		};
->  	};
->  };
+> ```
+> for (i =3D 0; i < info->stride; i++) {
+>         uregmap_read(info->map, id_reg + 4 * i, &reg);
+>         if (!reg)
+>                 continue;
 >
-> @@ -71,6 +108,24 @@ &sdio0 {
->  	status = "okay";
->  };
+>         chained_irq_enter(parent_chip, desc);
+> ```
 >
-> +&padctrl_aosys {
-> +	led_pins: led-0 {
-> +		led-pins {
-> +			pins = "AUDIO_PA8",  /* GPIO4_8 */
-> +			       "AUDIO_PA9",  /* GPIO4_9 */
-> +			       "AUDIO_PA10", /* GPIO4_10 */
-> +			       "AUDIO_PA11", /* GPIO4_11 */
-> +			       "AUDIO_PA12"; /* GPIO4_12 */
-> +			function = "gpio";
-
-You've also added this line which results in an error like this:
-
-  pinctrl-th1520 fffff4a000.pinctrl: pin AUDIO_PA8 already requested
-by leds; cannot claim for fffff52000.gpio:536
-
-Did you run this on your BeagleV Ahead?
-
-/Emil
-
-> +			bias-disable;
-> +			drive-strength = <3>;
-> +			input-disable;
-> +			input-schmitt-disable;
-> +			slew-rate = <0>;
-> +		};
-> +	};
-> +};
-> +
->  &padctrl0_apsys {
->  	uart0_pins: uart0-0 {
->  		tx-pins {
+> However, in case of GPIO pin configured in level mode and the parent
+> controller configured in edge mode, GPIO interrupt might be lowered by th=
+e
+> hardware. In the result, if the interrupt is short enough, the parent
+> interrupt is still pending while the GPIO interrupt is cleared;
+> chained_irq_enter() never gets called and the system hangs trying to
+> service the parent interrupt.
 >
-> --
-> 2.34.1
+> Moving chained_irq_enter() and chained_irq_exit() outside the for loop
+> ensures that they are called even when GPIO interrupt is lowered by the
+> hardware.
 >
+> The similar code with chained_irq_enter() / chained_irq_exit() functions
+> wrapping interrupt checking loop may be found in many other drivers:
+> ```
+> grep -r -A 10 chained_irq_enter drivers/pinctrl
+> ```
+>
+> Signed-off-by: Sergey Matsievskiy <matsievskiysv@gmail.com>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+Patch applied and tagged for stable!
+
+Yours,
+Linus Walleij
 
