@@ -1,136 +1,112 @@
-Return-Path: <linux-gpio+bounces-11231-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11232-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B37E99B1FF
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 10:09:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB32B99B337
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 12:58:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAC261C21313
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 08:09:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CBFF1F2415A
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Oct 2024 10:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2DCB1448F2;
-	Sat, 12 Oct 2024 08:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA4981552FD;
+	Sat, 12 Oct 2024 10:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErbrKG65"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Obw11DBe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D534C137742;
-	Sat, 12 Oct 2024 08:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC951547D8;
+	Sat, 12 Oct 2024 10:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728720590; cv=none; b=Fr1QJkTvfSTcPOnbedKrI+UrdILjBtRcA7RvsMTIsCHOD2V4TZ13MwVzYMxXySeuxePUQ2zHtoNbzkmyWgpHAjbbP6qRfDTRuQ4k8yVKF+cnVLK4nAHw1zMbEd++wSNJEX3cNrzRtQbm6QV7xnBk/LNA+fqT1F0ZX46wHWuIUy8=
+	t=1728730694; cv=none; b=XRWtuXkaW3WzMz4Hyafwd2Xfk9auullUghVF6VIThrSQN0IDiWVWhYJiSG8P4zXO1U/0PI4c4KuBwaYzG1i7mKPOpVB/hid/Dawey3ClO2ULdzhWW7AsVy3XqlbBg5h29lzXp54ZS3l36vjDr/Mh2FxLKVLjqakq3etz1vO+v8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728720590; c=relaxed/simple;
-	bh=atlYT20eAYnrOZCXwA/5ugj05VCYMtuJkD5KY6xNtiw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DwkfH1d4QYDc6ordY2pc78Un2cU6hYlVgAoji+Oenwa6d1OV5vLcJhfUZsE3VBb1hKc7GkOp0xBHr6GyvfAfHdIuauC71OU0yc9BsbzS4ejTSvZGrh1oGPBe3vdAbHkF/rGvVgMo6Zwrphnp2q5dnaijh0vyPY3cGkLLNh6Orp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErbrKG65; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1728730694; c=relaxed/simple;
+	bh=cixX5jej+mgJt4Ts6jAxWhgvwdwkd3AU9ACP+3MD6N4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mKog4nIgcxra6MyQpVjr0bwPEHyzNWcMzH0GH07Y0VRZuFO6Bpj4mtYNSarCq0nKgdzjNg7llQnJp39JuZV1Bxk/p8YutPlw2+qcg6CLTwYo/nP2yXfIU6cAxGK2ylWfA3D86qHaM9cTfPDKeXK3nU82+VZ8qq2i7aYp3kvw1Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Obw11DBe; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c9362c26d8so4419954a12.1;
-        Sat, 12 Oct 2024 01:09:48 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539908f238fso3279447e87.2;
+        Sat, 12 Oct 2024 03:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728720587; x=1729325387; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y47osbZEpig2j8Dhtrtaq13j7HQ7OuMMaZaPMSflYZQ=;
-        b=ErbrKG65wGz2ZUMwaHjKbTeuThy2ec+p7RGNquzu/xlv6PpqjJxQ2p/dtntZIshuTm
-         NDC5u6JwU4zy+0CzEbIfneHB/6NtTXCl/wxDanRcmVS7gRVnLU4Mz54LingHroPCdH79
-         gTqcJkLHc38rd31M3JIJQqWY6hNtOnG9AvhmMvUM4dKjl8VYKKOHXdIz7R7seW35pN8E
-         jYfN8JVe96oipby6K1uTnHi+sH3cjDH+q3HOP/BW18AuMwFSy/ULAuBq1VLCxY7p3esE
-         7kuG6jj6YUcKnKwoHnTbZBT3sZogLZOW8i0s+uSJCAxjbBNCxar4v8zbkGHGkToZ3E55
-         Tgsg==
+        d=gmail.com; s=20230601; t=1728730691; x=1729335491; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YbXRgUrM1uKKdmbDc8VsEAxWIIskmgP+K6DDuK5uacM=;
+        b=Obw11DBeEq6wb4YHg/pbi7grAAvFh6SvRyK9863os9RbPU+m1N/TcZkKFDxm7Qo8DF
+         EJX9wqXRe/BznCzoCT98W8+aVJj2j7SeBr9xOUnpAkvRhEut4nD+/YKVO4a62r4se9eU
+         +3fsFDZ1cvtGImGEgdQ7BhZXCkCO+vD9iH3CQCrcHEeFqlcauWIISOQWE1bcRcwWJYL2
+         83jj5alOb9HFUSi3AY4KL14FpMFWR5TGDPjM7CtsMpKadlgWUIJo58zEXecHcnax0bCN
+         Aga1jDJbZULbJGuB4PBHAjFobDqwd3sHDNZuO1RUrd7yfJ86/Vlnn7ifKw7GhngxCfah
+         xlbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728720587; x=1729325387;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y47osbZEpig2j8Dhtrtaq13j7HQ7OuMMaZaPMSflYZQ=;
-        b=JCLVTDjM/lg1oyFPwBdFihjiGPdTH1/gux1+x+h1sec4Ao/ySFQWSBv3yrGSRZ3YFJ
-         ZuvDAx88qkeMogkSQx3tZdyigZOLUMdo4K6JAJd32O3xqIjxL7YG7maLdRmlOalWfK/X
-         tk7K9pHOLH6xN1TIpz7xuuM1nIIEDfepe0rxfqkzzp9RafaCa+CCV9FLjQO3njsfmRHR
-         G/ndx9zsGu898/Y+m9POmzHEUzmV704C6BIPun4Ju5aR/xnpHvPqlic3mnclQ6z1zNEP
-         wxEbw7ZTLbHhT5g0FaEuhe5UEQbD0kRX6YatQObMRn7mub+wSSSbvOrvwI3zVFUaeGiX
-         kLzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIirbDM/RwK0fHdRwg3AnhGo9ZDRePPAxaU3gKMMjNLCvII2+FFb1OWLnjElhoOy/Cc6PLh5UXFdn02+Mz@vger.kernel.org, AJvYcCXBg4m1troLWQ6T/6MvZFiYDHLy24n667dI1WVmMfq18Z0hreryWRxAdRbcXv08pLzMl8S3mTzYsyAw@vger.kernel.org, AJvYcCXxvjW0fRjRvgpIly0Z0VhOWUtuEMkj8LuudwaGmAd+AcF2Rtxg41cMVLroYoucN6Aq/jQdBdrsnY4Xgw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsf6QcLY06zvusVy/mnR05Exdhl57Oj+6fYQuhZIW0TflFrxk3
-	JmyuJ5P6H3JfarW6U3b1Nm0MdTFOz5MkPR0n1jSiErcd0sNY5qob
-X-Google-Smtp-Source: AGHT+IHwDQt+BavVrp0xAiwiPItwadb7l4mpS1tMpCHTp3qUc1XcuRjeOZD/fRmRhAPcaznsqWGOHw==
-X-Received: by 2002:a17:907:3f07:b0:a99:5587:2a1f with SMTP id a640c23a62f3a-a99a11087b9mr980459766b.15.1728720586881;
-        Sat, 12 Oct 2024 01:09:46 -0700 (PDT)
-Received: from [10.50.4.74] ([95.183.227.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99ef5f3128sm35734166b.42.2024.10.12.01.09.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Oct 2024 01:09:46 -0700 (PDT)
-Message-ID: <e410cdb6-84a7-482b-9234-3f61077b8151@gmail.com>
-Date: Sat, 12 Oct 2024 11:09:47 +0300
+        d=1e100.net; s=20230601; t=1728730691; x=1729335491;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YbXRgUrM1uKKdmbDc8VsEAxWIIskmgP+K6DDuK5uacM=;
+        b=B+dnDN6Qh69E7Zza5Rio8HuwmGPQFd0C1M2x4c28uJdtWKVZ2eGAYTo0RzzH5t3ieN
+         ZJw+2Z2Pw4uZw4Uh6Iu6wAExMepugYpzpKKx7fCzK1BHYFvC3yB2sPslBCZWBeyz9P8u
+         EmU/pDiOzFW9pnGio7yT0paxGzdqzWVTU4LjPPPcfmVH74Xe5DEPuUQeDGITR6Z9YM+K
+         N4BtQDOIqnL/jqgd9DIVnI/XDr7YwHZ4b837OeqEU+PjNmHlgRFkrSYLsf/FTuzMHNj7
+         nu44XuvDq/LlSJx3BRDr0Iby0RpWJlziRIXVYOHw/RqV23wlO6RiFa55GMoGNhFT/zev
+         ugEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ul6LyXoV8MQB3ZqRHjYk4oTwBacnOBEgsDINLiH8OcBLWKKdWIOMXMAV9RhATJqDomhqtDJjfCBahw==@vger.kernel.org, AJvYcCUB0o4rxTHlcTA4TheT6e5n3zDcuiIEVNiDUE/979okvcg8qBV7C3HnVHmnRFtJp/b2QJkR1OsWgRY7yxot@vger.kernel.org, AJvYcCWgSUvXjvCCOzbn0gYtJsshkxJxB07d/y4dWjoS1jDZEi+idLHVM1gkE0lfiw1pu9QqwPqWwKAY0R8R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/OMjxeUCU44/z0+KI27Pa7x5o2UiJqMU+DSy1hs2A/AgM+hNh
+	hs6W2UPoelI/SzYZd0dHsI3V5mF0+ijMLzXgN51BKqTAtCyJ/fHD
+X-Google-Smtp-Source: AGHT+IFv74CjuViB4RF6imvDAxTAD/a4rCICKd0Oh54c2jJYfDT1WoeBeh5BhnHOE7dvkU9weXdP/Q==
+X-Received: by 2002:a05:6512:3402:b0:536:a68e:86f0 with SMTP id 2adb3069b0e04-539e55142c8mr924346e87.27.1728730690661;
+        Sat, 12 Oct 2024 03:58:10 -0700 (PDT)
+Received: from KILLINGMACHINE.itotolink.net ([46.188.27.115])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539e2a59408sm396944e87.206.2024.10.12.03.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Oct 2024 03:58:10 -0700 (PDT)
+From: Sergey Matsievskiy <matsievskiysv@gmail.com>
+To: linus.walleij@linaro.org
+Cc: alexandre.belloni@bootlin.com,
+	quentin.schulz@bootlin.com,
+	lars.povlsen@microchip.com,
+	horatiu.vultur@microchip.com,
+	andriy.shevchenko@linux.intel.com,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Sergey Matsievskiy <matsievskiysv@gmail.com>
+Subject: [PATCH v2 0/1] pinctrl: ocelot: fix system hang on level based interrupts
+Date: Sat, 12 Oct 2024 13:57:42 +0300
+Message-Id: <20241012105743.12450-1-matsievskiysv@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Pull pinctrl node changes from MT6795 document
-To: Rob Herring <robh@kernel.org>
-Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Yassine Oudjana <y.oudjana@protonmail.com>,
- Andy Teng <andy.teng@mediatek.com>, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20241011120520.140318-1-y.oudjana@protonmail.com>
- <20241011120520.140318-2-y.oudjana@protonmail.com>
- <20241011165640.GA2475122-robh@kernel.org>
-Content-Language: en-US
-From: Yassine Oudjana <yassine.oudjana@gmail.com>
-In-Reply-To: <20241011165640.GA2475122-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Fix system hang in case of GPIO pin interrupt configured in level mode
+and the parent controller configured in edge mode.
+Observed on Jaguar2 VSC7448 connected to MAX3421.
 
-On 11/10/2024 7:56 pm, Rob Herring wrote:
-> On Fri, Oct 11, 2024 at 03:03:46PM +0300, Yassine Oudjana wrote:
->> From: Yassine Oudjana <y.oudjana@protonmail.com>
->>
->> mediatek,pinctrl-mt6795.yaml has different node name patterns which match
->> bindings of other MediaTek pin controllers, ref for pinmux-node.yaml which
->> has a description of the pinmux property, as well as some additional
->> descriptions for some pin configuration properties. Pull those changes
->> into mediatek,mt6779-pinctrl.yaml and adjust the example DTS to match in
->> preparation to combine the MT6795 document into it.
->>
->> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
->> ---
->>   .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 38 ++++++++++++++-----
->>   1 file changed, 28 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->> index 3bbc00df5548d..352a88d7b135e 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->> @@ -111,12 +111,12 @@ allOf:
->>           - "#interrupt-cells"
->>   
->>   patternProperties:
->> -  '-[0-9]*$':
->> +  '-pins$':
-> 
-> Worst case, this could be an ABI break. Best case, it's churn for
-> mt6779. Is it worth unifying?
+v2:
+ - Change commit description
+ - Add Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-It's better than keeping different patterns, isn't it? We wouldn't have 
-ended up here if they were made as one in the beginning as it was ought 
-to be considering how similar the hardware is. It's easier to change now 
-since nothing is using it yet.
+v1:
+Link: https://lore.kernel.org/linux-mips/20241006181310.181309-1-matsievskiysv@gmail.com/
+
+Sergey Matsievskiy (1):
+  pinctrl: ocelot: fix system hang on level based interrupts
+
+ drivers/pinctrl/pinctrl-ocelot.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+-- 
+2.39.5
 
 
