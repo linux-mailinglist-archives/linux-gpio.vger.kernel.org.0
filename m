@@ -1,51 +1,80 @@
-Return-Path: <linux-gpio+bounces-11247-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11248-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 053DB99B9CD
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 16:52:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA48D99BB34
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 21:07:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE68F1F2186A
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 14:52:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 702EC2819FD
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 19:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BE3E14658D;
-	Sun, 13 Oct 2024 14:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06706148FE5;
+	Sun, 13 Oct 2024 19:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rR8tzdWj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AvLUGWza"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D298A1DFFC;
-	Sun, 13 Oct 2024 14:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0D318E20;
+	Sun, 13 Oct 2024 19:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728831153; cv=none; b=ijSCMKetdDLgsPY5VjqkfvIvI52EjOb9lpEvXZccYJkR35HmHmpK3oVv2c88Xmr9lCPHUoa5x7RB2JI7V+CPBql/TlT828KYQ18aozIEHF0WnhSnvlWLS1gL28nmvF5BekyWMmBCNX428OdKiK09A1BHBowNW4Pi747aDC18vzQ=
+	t=1728846431; cv=none; b=gM3odIz+t1euYaKzsBhmWDZcQ3w57m1apKPpTJFrLgaLC2OccWPs/NOJmTOTZH3iaVqYVERbYlal8Zj2VfW2xoB+NkeyKEDguzeg04tC+BFwTrJW0N8WWeQV4F5M3YA18mKMeH3rCBUx08iJ/ijrPj5YFNY2xIByGvcu3p9gYvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728831153; c=relaxed/simple;
-	bh=Vv22ND+4yRoaCLfzGOgDrs+5UvZfPQ9Zbq75RAoYprk=;
+	s=arc-20240116; t=1728846431; c=relaxed/simple;
+	bh=WGChKk/v2bPtQT9tEv5O167MmakFHiIXP3SY1CjcKp4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saP+/aMMoQOB9q3P0y2DZV0jpTPU+pdn404RR/qVe+ADT2UAPs0+1ejiWqlQV+PG7wrMJXPGPLexolx7GFjsAndvpcHqUeAvo67Z/CUueH/c4/Xa1M8VrF5W/89BWuNy9tFYLm4HfqK1SViSclWWwuK6AhUpTs3RSkeKihnwzC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rR8tzdWj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9E2C4CEC5;
-	Sun, 13 Oct 2024 14:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1728831152;
-	bh=Vv22ND+4yRoaCLfzGOgDrs+5UvZfPQ9Zbq75RAoYprk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rR8tzdWjwk2ObQt9pO9oTN9AbRph+fmInHi++ev8Cnv8oU4FlcLYuiva0kW+g2/4E
-	 K9b9uEKCXAl/exAH5a4CTM8uajvnkOIRWg8d4WVuCfY06i8Nakj9TP/vhNHpYbHlea
-	 RXTprgSdSo7qRZhjXtmyZtNDckn1ub4NERxH+GOo=
-Date: Sun, 13 Oct 2024 16:52:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mary Strodl <mstrodl@csh.rit.edu>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: add support for FTDI's MPSSE as GPIO
-Message-ID: <2024101314-rephrase-lark-c93a@gregkh>
-References: <20241009131131.1618329-1-mstrodl@csh.rit.edu>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jiltFl8tKG2q6/xN/kRVYe5lcirzlRj3TOPInahZTqphEe4J8ljEo+jmXduUkNVj5y1Fj7Z85AtJhH6Yi+h42hpgOdWRi+GyNjNsxHJvSvUpM7K5vBD83xcgRyqyvLNgVtejVEXFymc3kofOUcblBu2DAegfMjpJTrFI5qjKUZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AvLUGWza; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728846431; x=1760382431;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WGChKk/v2bPtQT9tEv5O167MmakFHiIXP3SY1CjcKp4=;
+  b=AvLUGWzaBS8bn76fGcDtKxUB26QJj5VcfIkXE7QXKuTKKBbp/0RCAIEp
+   zwtBZeUDdvTkB0cKQqaUVI+L9n5nbuWcRuK5JlygUoQ2OT5ry0GB5zSg/
+   pZWV4kS+BDFObytYkuBQHzxTpKwcMADW6+02Hqiis2YF9kWFPDaQkEebp
+   4w7ovol9NcFUC5BxrImdbThei+xBQGrdg3+A6Dm/WyIws6X/1FSR9ykaq
+   Ka671gCH54xIEX1kBDuhaubHREhjo5Z6wedt3w4QKSTogwGcgIdnGj2Og
+   yCjESzn0FwkdWEX5PP4NXmRK2AZeumVtqOzxduas4NcKEtC0/ayLo+qEb
+   A==;
+X-CSE-ConnectionGUID: y/muvMTORo+pnykSNHhA5A==
+X-CSE-MsgGUID: GmMTZspwT9udFIqSAD0I9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28284787"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28284787"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2024 12:07:10 -0700
+X-CSE-ConnectionGUID: rvoJPcVARkW8LU9GiA/URw==
+X-CSE-MsgGUID: /QRixkdfQrOwfc40emSk8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="82167393"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2024 12:07:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t03vk-00000002eal-22tz;
+	Sun, 13 Oct 2024 22:07:04 +0300
+Date: Sun, 13 Oct 2024 22:07:04 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sergey Matsievskiy <matsievskiysv@gmail.com>
+Cc: linus.walleij@linaro.org, alexandre.belloni@bootlin.com,
+	quentin.schulz@bootlin.com, lars.povlsen@microchip.com,
+	horatiu.vultur@microchip.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH v2 1/1] pinctrl: ocelot: fix system hang on level based
+ interrupts
+Message-ID: <ZwwaWLT_A8LoVsbl@smile.fi.intel.com>
+References: <20241012105743.12450-1-matsievskiysv@gmail.com>
+ <20241012105743.12450-2-matsievskiysv@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,26 +83,24 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241009131131.1618329-1-mstrodl@csh.rit.edu>
+In-Reply-To: <20241012105743.12450-2-matsievskiysv@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Oct 09, 2024 at 09:11:31AM -0400, Mary Strodl wrote:
-> FTDI FT2232H is a USB to GPIO chip. Sealevel produces some devices
-> with this chip. FT2232H presents itself as a composite device with two
-> interfaces (each is an "MPSSE"). Each MPSSE has two banks (high and low)
-> of 8 GPIO each. I believe some MPSSE's have only one bank, but I don't
-> know how to identify them (I don't have any for testing) and as a result
-> are unsupported for the time being.
-> 
-> Additionally, this driver provides software polling-based interrupts for
-> edge detection. For the Sealevel device I have to test with, this works
-> well because there is hardware debouncing. From talking to Sealevel's
-> people, this is their preferred way to do edge detection.
-> 
-> Signed-off-by: Mary Strodl <mstrodl@csh.rit.edu>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> 
-> (Resent because I forgot to cc gregkh last time)
+On Sat, Oct 12, 2024 at 01:57:43PM +0300, Sergey Matsievskiy wrote:
 
-USB stuff looks sane, no objection from me there.
+...
+
+> The similar code with chained_irq_enter() / chained_irq_exit() functions
+> wrapping interrupt checking loop may be found in many other drivers:
+> ```
+> grep -r -A 10 chained_irq_enter drivers/pinctrl
+> ```
+
+Side note: `git grep ...` is much much faster if you have a Git tree at hand.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
