@@ -1,189 +1,113 @@
-Return-Path: <linux-gpio+bounces-11306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AE3499CAD8
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 14:59:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 018F499CE7C
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 16:44:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82D341F22C7C
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 12:59:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A149F1F23DDC
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 14:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC341A76D0;
-	Mon, 14 Oct 2024 12:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3F11AB52F;
+	Mon, 14 Oct 2024 14:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kz0VmlzO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MY9/7u4N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097101E4A6
-	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 12:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEFF1ABEB8
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 14:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728910766; cv=none; b=s82csdOGT649kbRuBt+euoV+8AyDzl+kISE/ZQj3Qk1ZTR0ChzCrbQW5yj7N51B37UV8S70E+/3Nq8khxG1o45aD8To7sT1aOfWXKf4SpW5jPnUWHodDpBEKsLv/I2xFPwinQQjy6sdLppAQHboxg2xM1QwrYBxL/GJlAbcX3ZU=
+	t=1728917054; cv=none; b=TkpCLW/NJ+o/FwuBF4okmR+Vr3Xc5H8Xu5dtgMcSDsM8qFH3WSOoHlAhJ3Mn9jSP3zJhP8djr2OIEyWO8LWUAdW47h9r4FfC5OkS4cWWTAZ4lq5Jb3CzPEfPGATwK9OQozwwoeAhEE70glsa4LO/LSBF3Ugo6y6oiv1VsIPVvxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728910766; c=relaxed/simple;
-	bh=Jg6pGOYiv5OzHtrcu0KE602yPfdGSrud2Mdl8UCB5Ug=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SxgUnuk2b3j8akCzVeaGJa9K/DhKm8ejsFnkO01htqqMxWjK7prwIHRjNzfmeAP5JKDwGvLIAKykPxNKHPyWUrXG+BMUgP23Z2iZKlzowxdtwAX2lOSR/o9vZEjZOMkRV61M4pKtY7SKayNhxO7jGWCCfgHkaSbhE6od7ed6qHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kz0VmlzO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728910764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kbvknu1cOjZZ0csG9pJAkO2ZJHMWQOgShZkt8KNqc3E=;
-	b=Kz0VmlzONiTjcrwWu6GlZfK/I587H2XSsq6yRHuHsuoFSGC1WfURtl9nQtVndgoztw0ItQ
-	3gnZkXZGAhpJ8RvYJHNgHP5YAjP79irjAxX2/rp2a9+xoyCEvoMRWW6/QyeC9E4Y2BlY1n
-	m8PTjBISXpIjsUPkFzaxCRZySVmztt4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-TcNdxl_GN9uquticIF6FJg-1; Mon, 14 Oct 2024 08:59:22 -0400
-X-MC-Unique: TcNdxl_GN9uquticIF6FJg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5c9362c26a9so2990939a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 05:59:22 -0700 (PDT)
+	s=arc-20240116; t=1728917054; c=relaxed/simple;
+	bh=Z1UkT5rQZ61nqgLhZYvisQf6CH7JWbYFDgpAap2KA3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dI4oKHe6AF4kDkLrKrdmPyVcS4SWrj+UglO5P0D2fvQxW/paratVesedHp/YlfJ1GF/scn8UNMjAg7ogNFNutS8IfOeoRkWsoKTEhiBHiIJ/ni1oaDdN0Hvf3RwIzzJ92BBOWW1NUM7FuV971RUgWthJUQR8YRgM49+pyVHzB6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MY9/7u4N; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43055b43604so42372675e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 07:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728917049; x=1729521849; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wV+gEMonGyvknPgJBbcDSXVuq2Rpvb7UAdZkSivPrnc=;
+        b=MY9/7u4N6LTvkFNcosHw9H2f+7aNxVtblZgKH78VBjWAtJqZ5MDUin361IRLzw9Khz
+         Z4Bgkf4n/hrJumm9uqKEPWmqfUcn0NldInPmPnamwfQZf+YDsrETGZuTAnp/A1HLoVZi
+         UhY1uHlQ9hnj2MTq7FP4AYyqL8309Svw75MQNrXi/l6STg0F+nd9JkQq4zq2L11pwB8i
+         5y5PGyR8P34UhcQ7bxKAeOZ2h3DitNPnM5Zmeuw+5GTDtSx1GBgjLqbUF+hatiJskJ2t
+         fOJqOFJArnYaRW4BLYwa1XYoeVmBzI+uxK7E3I/9FTtORBvb7RtrjLc1/fLxtX3ASFNN
+         kPvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728910762; x=1729515562;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kbvknu1cOjZZ0csG9pJAkO2ZJHMWQOgShZkt8KNqc3E=;
-        b=uHXxdzKAggOJ8+UBqHSa+C9ZtucUjSXSI8gp1H4RzrIk/XF3QmxBfmbAZl9mPcfCAd
-         NESt2ZTjMmKA0orNyLJu1jOcOuQFx3cPuqC/oBcg0xbc4hk3jBS+qxIT7U4T9UlnPySp
-         t7kSNezeIGj4lYTPVoZZrWOW4u45UaQxphMVA2vz5DCl5st6Tyjoah9E3eBRwojSuTRh
-         bR7rex/L90rjzXYVee2C4ckhxKYe7wfgX03qIbu7VJmXksAioXPrQC6f39XsfA/FFJ35
-         VTjDmRvL8vZaEulmu7cN8X+xyBwsFGr+UUHMmhRbrTBdyqqQ1y8OTNnopLJF7q5WKkfj
-         PFkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrduQulnzLhBxP2MhaKiQLxz3YVnwLqF6ZbgtheKLx4jz6rskKLI0JMVGKxCwYx+4VfAWTfEQynzM9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg2+sl0XQdRYSs2ZcC6aItJyvP90LJ45kpoWIgjQ81IUiV9/78
-	Sbr5yPHnkbuAZlv36LR9DhNbIxuPNUDmcuoptimxroXbPV4Hcwg7hx6wIWZveSLVc8GAYf+8zXP
-	7MzmY3pm/myr6WpXRrM4zD481hrQ24h5ZBFY7uFUkJ7uEdYTJ7vdBUIhJcl0=
-X-Received: by 2002:a05:6402:2114:b0:5c9:6b7f:2f16 with SMTP id 4fb4d7f45d1cf-5c96b7f3145mr4416884a12.18.1728910761578;
-        Mon, 14 Oct 2024 05:59:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFF+8Ta6ohQ9/nfR6Qe62tH/JkmiX/F4n9q/mR7oEx4wYYvRcjJ5zg08dI/qWotLZ1mqCX6w==
-X-Received: by 2002:a05:6402:2114:b0:5c9:6b7f:2f16 with SMTP id 4fb4d7f45d1cf-5c96b7f3145mr4416852a12.18.1728910761078;
-        Mon, 14 Oct 2024 05:59:21 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3? (200116b82d3798001d5778cfc1aeb0b3.dip.versatel-1u1.de. [2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c937267272sm4966512a12.75.2024.10.14.05.59.19
+        d=1e100.net; s=20230601; t=1728917049; x=1729521849;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wV+gEMonGyvknPgJBbcDSXVuq2Rpvb7UAdZkSivPrnc=;
+        b=ZgOjADn7/FgfMcnFZZkbq/0t5dQFq0t0var3EwxyJXn9wnfoUd1Lfx4lD1SfGJ6zTq
+         YkgFRVw2EbvLh0mnxBR6+YroeBrYx4jMa2nA2mTYTLJWJXpP+L6oCDybYiB9uwh05tUy
+         tikKWhCTRl8Pvz+DKSiBADDtaFnBDMngY6OXc+e8CTDfUQIT549GgQWPx9gICjfDCLGN
+         PNNe07yVRIy+XZ78kMWxpEi8XPTOdE6Ukqu3hjoE2jhoXvRRhORK9KMAbwJXgVUbDlaD
+         ao5J15FdfEVfhj4OUC1USqzPy9g5P5Gpy3cCTjEokzYEDdeRWoG6dkcSebqptNc8tTr4
+         0J8w==
+X-Gm-Message-State: AOJu0Ywk4//8H4dpuPRoIsGVCI3zoNiGPZ3Mbke3IGpLNz4SM9uC6E1X
+	RE0zzcV/zdwKWrkEanjB1HPNaLbRPOedDOhljWU9DP8JcUBhsvcINgjLojXLmLHNL+gFKuaa2Pe
+	L
+X-Google-Smtp-Source: AGHT+IFn/iUpI2+CVb13bl0Eri+5McgDBoa4KOAC3KEK/zYeBVTH46Zfe8IgVgSOVx5FkQGN+egvsg==
+X-Received: by 2002:a05:600c:4e8e:b0:42c:b4f2:7c30 with SMTP id 5b1f17b1804b1-4311df420c8mr103517815e9.23.1728917049361;
+        Mon, 14 Oct 2024 07:44:09 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:de54:ebb2:31be:53a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430d70b4331sm156425465e9.36.2024.10.14.07.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 05:59:20 -0700 (PDT)
-Message-ID: <ae39d2783db4ecadd69a7e85d92ebe45c626bd62.camel@redhat.com>
-Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
- <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>,  Andy Shevchenko <andy@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Richard Cochran <richardcochran@gmail.com>, Damien
- Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Al Viro
- <viro@zeniv.linux.org.uk>,  Keith Busch <kbusch@kernel.org>, Li Zetao
- <lizetao1@huawei.com>, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, 
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org,  Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Mon, 14 Oct 2024 14:59:17 +0200
-In-Reply-To: <20241014121324.GT77519@kernel.org>
-References: <20241014075329.10400-1-pstanner@redhat.com>
-	 <20241014075329.10400-5-pstanner@redhat.com>
-	 <20241014121324.GT77519@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        Mon, 14 Oct 2024 07:44:06 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Vincent Fazio <vfazio@xes-inc.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	vfazio@gmail.com
+Subject: Re: [libgpiod][PATCH v2] bindings: python: import gpiod attributes in external module
+Date: Mon, 14 Oct 2024 16:44:05 +0200
+Message-ID: <172891704160.127525.4600553915822259466.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241008175139.1198980-1-vfazio@xes-inc.com>
+References: <20241008175139.1198980-1-vfazio@xes-inc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-10-14 at 13:13 +0100, Simon Horman wrote:
-> On Mon, Oct 14, 2024 at 09:53:25AM +0200, Philipp Stanner wrote:
-> > pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-> > the
-> > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> > pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> >=20
-> > Replace those functions with calls to pcim_iomap_region().
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> > =C2=A0drivers/gpio/gpio-merrifield.c | 14 +++++++-------
-> > =C2=A01 file changed, 7 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-
-> > merrifield.c
-> > index 421d7e3a6c66..274afcba31e6 100644
-> > --- a/drivers/gpio/gpio-merrifield.c
-> > +++ b/drivers/gpio/gpio-merrifield.c
-> > @@ -78,24 +78,24 @@ static int mrfld_gpio_probe(struct pci_dev
-> > *pdev, const struct pci_device_id *id
-> > =C2=A0	if (retval)
-> > =C2=A0		return retval;
-> > =C2=A0
-> > -	retval =3D pcim_iomap_regions(pdev, BIT(1) | BIT(0),
-> > pci_name(pdev));
-> > -	if (retval)
-> > -		return dev_err_probe(dev, retval, "I/O memory
-> > mapping error\n");
-> > -
-> > -	base =3D pcim_iomap_table(pdev)[1];
-> > +	base =3D pcim_iomap_region(pdev, 1, pci_name(pdev));
-> > +	if (IS_ERR(base))
-> > +		return dev_err_probe(dev, PTR_ERR(base), "I/O
-> > memory mapping error\n");
-> > =C2=A0
-> > =C2=A0	irq_base =3D readl(base + 0 * sizeof(u32));
-> > =C2=A0	gpio_base =3D readl(base + 1 * sizeof(u32));
-> > =C2=A0
-> > =C2=A0	/* Release the IO mapping, since we already get the info
-> > from BAR1 */
-> > -	pcim_iounmap_regions(pdev, BIT(1));
-> > +	pcim_iounmap_region(pdev, 1);
-> > =C2=A0
-> > =C2=A0	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > =C2=A0	if (!priv)
-> > =C2=A0		return -ENOMEM;
-> > =C2=A0
-> > =C2=A0	priv->dev =3D dev;
-> > -	priv->reg_base =3D pcim_iomap_table(pdev)[0];
-> > +	priv->reg_base =3D pcim_iomap_region(pdev, 0,
-> > pci_name(pdev));
-> > +	if (IS_ERR(priv->reg_base))
-> > +		return dev_err_probe(dev, PTR_ERR(base), "I/O
-> > memory mapping error\n");
->=20
-> Hi Philipp,
->=20
-> There seems to be a mismatch in the use of priv->reg_base and base
-> above.
-> Should the above use PTR_ERR(priv->reg_base) instead of
-> PTR_ERR(base)?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-uff, yes, good catch!
-Will fix, thx
 
-P.
+On Tue, 08 Oct 2024 12:51:39 -0500, Vincent Fazio wrote:
+> Previously, the external module relied on gpiod attributes being present
+> within `globals()` to construct return values back to the caller.
+> 
+> This assumption required callers of the external module to have imported
+> the attributes to populate `globals()` for the interface to work.
+> 
+> Having this implicit contract is opaque and prone to causing issues if
+> imports within gpiod modules ever get reworked.
+> 
+> [...]
 
->=20
-> > =C2=A0
-> > =C2=A0	priv->pin_info.pin_ranges =3D mrfld_gpio_ranges;
-> > =C2=A0	priv->pin_info.nranges =3D ARRAY_SIZE(mrfld_gpio_ranges);
-> > --=20
-> > 2.46.2
-> >=20
-> >=20
->=20
+Applied, thanks!
 
+[1/1] bindings: python: import gpiod attributes in external module
+      commit: 035ad74fdd69bc3cc3650d3db113ec2563805104
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
