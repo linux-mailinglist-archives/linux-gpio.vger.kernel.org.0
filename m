@@ -1,194 +1,132 @@
-Return-Path: <linux-gpio+bounces-11276-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B50E999C2C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:15:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 454D899C2CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:16:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44B1E1F23A4B
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:15:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9282DB24913
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:16:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED09514B946;
-	Mon, 14 Oct 2024 08:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF15314D430;
+	Mon, 14 Oct 2024 08:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z2zrdNi+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="p0qNWgk7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA57013D248;
-	Mon, 14 Oct 2024 08:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4314A60F
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 08:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728893743; cv=none; b=BqDLGDCMefDYdsEEDqTkEUa2aOo9K1gCKhcZjze+hME9YBF/8u2i+oLd72ZH+TR5v/gIN5laMILukmPjdInL13yg61EqErNx1AZEWRiV2eBsPqZuAkYSi37yMCaASL5hsfL6ZYhzTR5fNpwzNAt1BRQ1jYsFxoxZMCeBEmip2/4=
+	t=1728893763; cv=none; b=ZiykpK9LQXWk57596/wedge0pQVsDClMONxIoAaB6LD69QrmMRAa/pkFqbnX120kORY80O/FC8hKol7qgcGdVgxeAkMwNZvcTUJDP7R1Cax6YbRYKrkK1LPI3OMOpKr8yPlhlV7H8us4SWwag0qlzwV7Rch7wCXVDtx1WO8A5EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728893743; c=relaxed/simple;
-	bh=hqm06D9eWGblvveI9zm2J4bl6WWp02aKGJ6XS2bRRbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l7/IVL7G/B69uiPt0CHiE1tcgEFtcZkKDTwxCeoCfjYDQZBgUP1SKzlXyLnYiSjVyJrbJBykvT1uSLKVhmLb7cBll4Svgc7BoTygrUJJqu4l4KPp5voKODBpZyDkAjlqDMixA7hq65gCE3n0FI5zdQO6IHrSgN0ztBJSZzikPYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z2zrdNi+; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1728893739;
-	bh=hqm06D9eWGblvveI9zm2J4bl6WWp02aKGJ6XS2bRRbg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z2zrdNi+b5qul89n6xkjWIl7RRPJGVIqBlD/0HtlokH79y++2WMLYd9XQZEYaUAvl
-	 RahwrQ3GNipIMFdN9l8xzw3Su1v9MxRlH3dyIqxLQKVuiot0tvpA9dLDYj4t0UrTPL
-	 7G8A6lKT7sLQ2F4liT8MQqLEfwjf/rZZTd52lCGH57+GIrCLZZv85vSfTio3yYAF2J
-	 N+tMDHfqG4h8/SkDaO33OROB8ySXK4IDyMiZ9M2j8FPYCfKbgUaXm7eXkXZfOVNdEe
-	 /zNyupfByz8Xkv+4dxOVM/LssZFKVkyTzIO8VprtUkcQGP17VeWd0dLpS8aXNzz6CJ
-	 dZMAUocV/uUZA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4613317E10D3;
-	Mon, 14 Oct 2024 10:15:39 +0200 (CEST)
-Message-ID: <2e6157fc-10e6-47a0-8270-4e51b873049c@collabora.com>
-Date: Mon, 14 Oct 2024 10:15:38 +0200
+	s=arc-20240116; t=1728893763; c=relaxed/simple;
+	bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=id/Wqy/50R8BPRACbkqI0wCSVwa64AlP0hohkdWWqyOVhW+MWhxoXNQgkvTy2H01Do7wMb70yzdqq1gv97HQ1ykjLa3oq72V7QviN3eP03lvW1BtD9tdzEsfivWY5wYx6UOZGlO2lFeWNnU2AW3tmzaAQWZRRi3T9Hl8X92Br24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=p0qNWgk7; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539f53973fdso594410e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 01:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728893760; x=1729498560; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
+        b=p0qNWgk7lgNR73CDmbKNCe8carjDxZi5xf7N5xFzH/WMMVlLSUad0tKT9vbRpGgrsk
+         fK8g/NCV+Ewiq8Ax+HaeaRtSqErxlSJXzqCDz9i5XSFO3po2Q52HsuKbwjx8sGmTYMt1
+         nH1K8Y4OlmzNA9OE7/2r3CFiXSvo9JfE/ThDXDZBw/6GF/+yTJWyN87w85pqTL0A89Mj
+         1+fcgL5kStWyCjlHDZOiauonOZ0xlxafbmCsZAvnktDvHAN8kgi4tPwur68F0YWSz+HN
+         TWSZq7iKZBsBQFatlhV079Dkw3CH0E+DR3x4Uc8Bm+B7dDKfBDZtFGMurW/rJkvmO9h/
+         zaTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728893760; x=1729498560;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZgDKMVeLxznmFf5ZCrSGz0IvyrvooVbXTGlKGwkLa+s=;
+        b=HsVtQemEnvlMFd+bWHXYqfPqdlxZXvY78LT6NzemD8I2WvfFmfSADt5f5Enj2GauVf
+         HybaDD66gHcAlmk37iVOWtTI4lkEtddiOZmiW/lo76aZDRaPN0I0ZtcsF9fBXmNinqgX
+         fa1h8rcQgmMhyfupXY9MWyFphj4JZ99trzAgDdlBrMepRO9lAdjlZDP1wYMDmgq1avsI
+         NBQ2VAo/4sNtvwBsR7Oar5bEoUrWPclUU+fToNjN0rm7rhowdJL8AEbDxCz9fMnWNn7+
+         LWKafsZWVo68Bqo6wSye449sc7FIuBOXtK5ImYTgdl7OThAvI+oLfxHmXG+Su+eIoCdf
+         Yxeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdiuse6JXgK7p6wTzviGKUVUzG3E0gVJLYKydfULKDEbF0y4tVTlofuimi/58visp8I3+OVHRqS/JT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8ZwwvdNno9HYpn9XSTLAWj9fSMfM8vKUgCrLkxZILvi70VjnR
+	XWOMU7TMkNBZsDBdhsGRImsrv7pGXrXnHDEptzOpT1s2P2V0SZ/INQdXxdmRB5sFFuevdDH/OoT
+	JSQHCbKq50L3FkYpdo5QKV9b0f8xmA0XoqsahRg==
+X-Google-Smtp-Source: AGHT+IHdDAIjXYd2S69FLZv9SLr0zTg0livk5nl6SwOydMcHkiUKTf2/hmy4fWdIKBPYwmr/c88DMXlSKUPi9UaNRr0=
+X-Received: by 2002:a05:6512:3d1e:b0:539:9f5f:efd5 with SMTP id
+ 2adb3069b0e04-539c98b923dmr4809047e87.26.1728893760273; Mon, 14 Oct 2024
+ 01:16:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Aw: Re: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl
- support
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Frank Wunderlich <linux@fw-web.de>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- daniel@makrotopia.org, john@phrozen.org, ansuelsmth@gmail.com,
- eladwf@gmail.com
-References: <20241009165222.5670-1-linux@fw-web.de>
- <20241009165222.5670-5-linux@fw-web.de>
- <4ac4c8ab-4180-4fcc-9e48-6dede7448dee@collabora.com>
- <trinity-090e30b8-45a9-4a2b-98f1-e34904616b2d-1728651225070@3c-app-gmx-bs32>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <trinity-090e30b8-45a9-4a2b-98f1-e34904616b2d-1728651225070@3c-app-gmx-bs32>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241014075329.10400-1-pstanner@redhat.com> <20241014075329.10400-5-pstanner@redhat.com>
+ <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com> <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
+In-Reply-To: <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 14 Oct 2024 10:15:49 +0200
+Message-ID: <CAMRc=Me8U+7EwNDEh2RJJD8+FTPqO-CbwG_fiDmHLpjxh33o5w@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Keith Busch <kbusch@kernel.org>, Li Zetao <lizetao1@huawei.com>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 11/10/24 14:53, Frank Wunderlich ha scritto:
-> Hi
-> 
->> Gesendet: Donnerstag, 10. Oktober 2024 um 14:36 Uhr
->> Von: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>
->> Betreff: Re: [PATCH v4 4/4] arm64: dts: mediatek: mt7988: add pinctrl support
->>
->> Il 09/10/24 18:52, Frank Wunderlich ha scritto:
->>> From: Frank Wunderlich <frank-w@public-files.de>
->>>
->>> Add mt7988a pinctrl node.
->>>
->>> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->>> ---
->>> v2:
->>> - fix wrong alignment of reg values
->>> ---
->>>    arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 241 ++++++++++++++++++++++
->>>    1 file changed, 241 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->>> index c9649b815276..7e15934efe0b 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->>> @@ -3,6 +3,7 @@
->>>    #include <dt-bindings/clock/mediatek,mt7988-clk.h>
->>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>    #include <dt-bindings/phy/phy.h>
->>> +#include <dt-bindings/pinctrl/mt65xx.h>
->>>
->>>    / {
->>>    	compatible = "mediatek,mt7988a";
->>> @@ -105,6 +106,246 @@ clock-controller@1001e000 {
->>>    			#clock-cells = <1>;
->>>    		};
->>>
->>> +		pio: pinctrl@1001f000 {
->>> +			compatible = "mediatek,mt7988-pinctrl";
->>> +			reg = <0 0x1001f000 0 0x1000>,
->>> +			      <0 0x11c10000 0 0x1000>,
->>> +			      <0 0x11d00000 0 0x1000>,
->>> +			      <0 0x11d20000 0 0x1000>,
->>> +			      <0 0x11e00000 0 0x1000>,
->>> +			      <0 0x11f00000 0 0x1000>,
->>> +			      <0 0x1000b000 0 0x1000>;
->>> +			reg-names = "gpio", "iocfg_tr",
->>> +				    "iocfg_br", "iocfg_rb",
->>> +				    "iocfg_lb", "iocfg_tl", "eint";
->>> +			gpio-controller;
->>> +			#gpio-cells = <2>;
->>> +			gpio-ranges = <&pio 0 0 84>;
->>> +			interrupt-controller;
->>> +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
->>> +			interrupt-parent = <&gic>;
->>> +			#interrupt-cells = <2>;
->>> +
->>> +			mdio0_pins: mdio0-pins {
->>> +				mux {
->>> +					function = "eth";
->>> +					groups = "mdc_mdio0";
->>> +				};
->>> +
->>> +				conf {
->>> +					pins = "SMI_0_MDC", "SMI_0_MDIO";
->>> +					drive-strength = <MTK_DRIVE_8mA>;
->>
->> Please do *not* use the MTK_DRIVE_(x)mA definitions anymore.
->>
->> Here it is `drive-strength = <8>`.
-> 
-> OK
-> 
->>> +				};
->>> +			};
->>> +
->>> +			i2c0_pins: i2c0-g0-pins {
->>> +				mux {
->>> +					function = "i2c";
->>> +					groups = "i2c0_1";
->>> +				};
->>> +			};
->>> +
->>> +			i2c1_pins: i2c1-g0-pins {
->>> +				mux {
->>> +					function = "i2c";
->>> +					groups = "i2c1_0";
->>> +				};
->>> +			};
->>
->> Whatever pin can be configured with one or multiple groups that can be different
->> must *not* be in the SoC dtsi, but rather in the *board* dts(i) file, as the wanted
->> configuration of those pins is *not* soc-specific but board-specific.
->>
->>   From a fast look, I can see that at least the I2C pins can be assigned to different
->> functions: for example, pins 15+16 can be either of i2c0_1, *or* u30_phy_i2c0, *or*
->> u32_phy_i2c0, *or* xfi_phy0_i2c1 ... or others, even.
->>
->> Finally - I think that *most* of the muxing that you're declaring here must instead
->> go to your board specific devicetree and not in mt7988a.dtsi.
-> 
-> As far as i see also mdio and uart0 sharing pins with other pin definitions.
-> It looks for me that nearly all (except pcie) needs to go in board(s) dts then...
-> imho this creates duplicates of same nodes, if 2 boards using the same pinconf.
-> But if it is the way to go, i drop all subnodes except the pcie-pins.
-> 
+On Mon, Oct 14, 2024 at 10:08=E2=80=AFAM Philipp Stanner <pstanner@redhat.c=
+om> wrote:
+>
+> On Mon, 2024-10-14 at 09:59 +0200, Bartosz Golaszewski wrote:
+> > On Mon, Oct 14, 2024 at 9:53=E2=80=AFAM Philipp Stanner <pstanner@redha=
+t.com>
+> > wrote:
+> > >
+> > > pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
+> > > the
+> > > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> > > pcim_iomap_table(), pcim_iomap_regions_request_all()").
+> > >
+> > > Replace those functions with calls to pcim_iomap_region().
+> > >
+> > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> >
+> > This is part of a larger series so I acked it previously but at
+> > second
+> > glance it doesn't look like it depends on anything that comes before?
+> > Should it have been sent separately to the GPIO tree? Should I pick
+> > it
+> > up independently?
+>
+> Thx for the offer, but it depends on pcim_iounmap_region(), which only
+> becomes a public symbol through patch No.1 of this series :)
+>
 
-That's the way to go. Please drop all subnodes from this one except pcie-pins.
+Then a hint: to make it more obvious to maintainers, I'd change the
+commit title for patch 1 to say explicitly it makes this function
+public. In fact: I'd split it and the deprecation into two separate
+patches.
 
-Cheers,
-Angelo
-
-
+Bart
 
