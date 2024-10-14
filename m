@@ -1,137 +1,114 @@
-Return-Path: <linux-gpio+bounces-11269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A10299C254
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 09:59:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8501499C25E
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:00:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3EA228112B
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 07:59:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AC74281065
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58828154439;
-	Mon, 14 Oct 2024 07:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBDC155757;
+	Mon, 14 Oct 2024 07:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="J1CbHuoa"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yW7oWpZA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5042E14B946;
-	Mon, 14 Oct 2024 07:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F7A14F126
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 07:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728892750; cv=none; b=k1IXL3Kvy7ngtMURh8O/i1ZBsyX+PSjFqMCIq4pSsqs4ZRTeS5Vp4TRBMEDXGuAFO88CR5lpdawYgrrEmWPrh9Na67ykOQXV8HMMihLdgP/HxsBtPWy7TNDKDZOKRUjLBS87NedwmuKPNhsEpUue1ThEdqPE3JWJm/3iaLsysHg=
+	t=1728892762; cv=none; b=s8ASvjCCaYMI4utrKeUnXYB0f1r8kgCOrYpYUTrXBiITdLnDQtO3x5Dv3TorYLPeha7g+J8JWqcy3AbbaIxvtfb/45QlEwEKD/yyEdzrkXmapSICNWHsZ4qweTke1UlOA/qN8uuv53IxuLAT0tR4QlZuzRhwH+f6dJppghgVccs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728892750; c=relaxed/simple;
-	bh=W+cHl7IlQoiGhHQv9LKkyFt5GXD/dU8V71qLOXnRP/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxAx61DYpV20SDrYxCgsErxYQOlk9mQ8zwlqMXk4CklyR502LCRqoiz9HbAW1YSb3AwSCQifJgGvZ1jFD/nsJWztR/HV0aShSty//R77ZT3sD/kQWf6ra0TScYUDW/t376bY/bicsgN06wcQylTG29DfjREvXNM7N2XHEROU37o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=J1CbHuoa; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1728892746;
-	bh=W+cHl7IlQoiGhHQv9LKkyFt5GXD/dU8V71qLOXnRP/U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J1CbHuoa5+YDRoE0wlR5ZqbuEVKI6pMJOiObf3nRtXrcnFHIeJtFsAjayselWHdXU
-	 EoMxmYpXs3JcGk8s60E5PdahN9TRnl8mdDzqXwmBMmxJTIlReV6i3Y1r6I72RHi4oJ
-	 Lg45Tp+7FUc4Evr81rkWSnjxWxeWuoxzzLjrUe5hZb3cIb4mIlYtClB1GMlQnkpP23
-	 MSVfiD/yCIhuZM9D8E+EMc/fs0AUMVIqphcVvdOaRpemD/pV0KRNn8tcmY3pJl/q62
-	 7kSqXCR/h5SXM4yQJv9/0IDLHjVYm/GojExllNa9yjWXKMB+AMsLU1atDPENJb8gnj
-	 DIRiUovB1n1MQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E3E7C17E10C2;
-	Mon, 14 Oct 2024 09:59:05 +0200 (CEST)
-Message-ID: <66ad5cd6-cac2-400a-95c2-f72d68b2a706@collabora.com>
-Date: Mon, 14 Oct 2024 09:59:05 +0200
+	s=arc-20240116; t=1728892762; c=relaxed/simple;
+	bh=6tVaK1PwUlL+I4aBVzPDvZNVDH6jBwylHdHPE0Qiet8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i3oTLrFNwCxIMgMZSk0IA3OOA21K9ZlebxWH6WlaUAPbxV0kxQ6I19iV1YiEfLBVsikunLgzy2dWSCRVk+6+1kE793vA3nrFXkmhwsPzG8Ml91bLIZ7XSROM+K6VaZL5FsJB7+T/7B6gtb1JTVpleUABlEduzgGxRo1TAxHFRCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yW7oWpZA; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539e59dadebso2131538e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 00:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728892759; x=1729497559; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6tVaK1PwUlL+I4aBVzPDvZNVDH6jBwylHdHPE0Qiet8=;
+        b=yW7oWpZA3BTF2qLluR9yNKl8wmcaBX1Ca0r0VcsJjz8TMfs1Q9ltSdkFdoGa0n0gZg
+         9vz175ulwvN72ljFMjlXE8Bda7Aq4wDL9T7c5J6rwm35psM+brYjcdbDnERepfTa76V/
+         F8QGNrShmfHd4tak/31zRJl7xsCjwl4y3Zm4TS1tLYK5lyLqTAUNRDf29LzLQ/kP1lJv
+         D6n53Zv3bAKKSjwrY7AQoH1R6r7ofISZ17sdk8Gux7jvb+M57yd5zH/SeWjbaierGyFG
+         DHSpZWXtskUg2d9ZgVE2Atis6F/5bFru7s31ew8AijdX0+ATXXx2TaYS41AhF39aNNjE
+         sWXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728892759; x=1729497559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6tVaK1PwUlL+I4aBVzPDvZNVDH6jBwylHdHPE0Qiet8=;
+        b=CMLsYIE/+Zs63nD/mOvCGwf7OzixjW3Yv9Lx4/Bqh+nWB4AFCKbeBLI+V+7rxe12kj
+         lt4o9SsybwFdl0FCafK2EapDg7cRy5bLJXblsZcjDodWk8R6J8yM7vrD7DfVlOCj3Kqv
+         RAGM//bmETZbk4kszhmnR3W965l2JhtUS0DRKFu8KfTjSDI38ba3vl5o2cwabgWiEWtx
+         K1/Hgp+TSYVn3p3JtMsq+dtrPevroDVtDtg5SNJXr9OTicOO5I9jhSo4lxFMOsvgkG3H
+         NS85Ks0b3Yz1M+eNfP5QRFFOda8xutU6Zaezzir6TpqD5h+EIgC7NwifuqRgrw7Wjrjr
+         BeHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvg3UZ7ywXR5WoeDliG5r9+ahxu3Fs067vD5bmSQlB+hZfAwP+8bdWtk1WGRcm1VSO3/bzejDkKtZd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7NQUN5Vi8w8RvoQSoPLLo5iVAYJpgUAFb/FzoEuhBkriIBy3V
+	yqElYulOlHBcwmlm+TAboj8iYgKA+Z9s4pXz327Bizy1mJ3CpOOupLOmk8vM64o0BQTrq+1xRxU
+	wxXRVwGs17W11tiLGzX8VsFlrGCCMaQcTI6I5+g==
+X-Google-Smtp-Source: AGHT+IEpWHvzePip2AbpOZrDDoOTlWCLBCnZZjhQ7Blogjf+ZP6Ifrw41m8GkUv9NHZszflLIk7m6dG7ATFP47hYxNQ=
+X-Received: by 2002:a05:6512:3a8d:b0:52e:76d5:9504 with SMTP id
+ 2adb3069b0e04-539da3be550mr5304615e87.3.1728892759031; Mon, 14 Oct 2024
+ 00:59:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/8] dt-bindings: pinctrl: mediatek: Add bindings for
- MT6735 pin controller
-To: Yassine Oudjana <yassine.oudjana@gmail.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Yassine Oudjana <y.oudjana@protonmail.com>,
- Andy Teng <andy.teng@mediatek.com>, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20241011120520.140318-1-y.oudjana@protonmail.com>
- <20241011120520.140318-7-y.oudjana@protonmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20241011120520.140318-7-y.oudjana@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241014075329.10400-1-pstanner@redhat.com> <20241014075329.10400-5-pstanner@redhat.com>
+In-Reply-To: <20241014075329.10400-5-pstanner@redhat.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 14 Oct 2024 09:59:08 +0200
+Message-ID: <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Keith Busch <kbusch@kernel.org>, Li Zetao <lizetao1@huawei.com>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 11/10/24 14:03, Yassine Oudjana ha scritto:
-> From: Yassine Oudjana <y.oudjana@protonmail.com>
-> 
-> Add DT bindings for the MT6735 pin controller, which consist of macros
-> to be used as values for the pinmux property. Each macro corresponds
-> to a unique possible pin-function combination.
-> 
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+On Mon, Oct 14, 2024 at 9:53=E2=80=AFAM Philipp Stanner <pstanner@redhat.co=
+m> wrote:
+>
+> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by the
+> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
+> pcim_iomap_table(), pcim_iomap_regions_request_all()").
+>
+> Replace those functions with calls to pcim_iomap_region().
+>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->   MAINTAINERS                                   |    6 +
->   .../pinctrl/mediatek,mt6735-pinctrl.h         | 1148 +++++++++++++++++
->   2 files changed, 1154 insertions(+)
->   create mode 100644 include/dt-bindings/pinctrl/mediatek,mt6735-pinctrl.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e336dab6fdd1a..f95ae886f9fd8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18311,6 +18311,12 @@ F:	drivers/pinctrl/mediatek/pinctrl-rt2880.c
->   F:	drivers/pinctrl/mediatek/pinctrl-rt305x.c
->   F:	drivers/pinctrl/mediatek/pinctrl-rt3883.c
->   
-> +PIN CONTROLLER - MEDIATEK MT6735
-> +M:	Yassine Oudjana <y.oudjana@protonmail.com>
-> +L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	include/dt-bindings/pinctrl/mediatek,mt6735-pinctrl.h
-> +
->   PIN CONTROLLER - MICROCHIP AT91
->   M:	Ludovic Desroches <ludovic.desroches@microchip.com>
->   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> diff --git a/include/dt-bindings/pinctrl/mediatek,mt6735-pinctrl.h b/include/dt-bindings/pinctrl/mediatek,mt6735-pinctrl.h
-> new file mode 100644
-> index 0000000000000..1134caf9022c5
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/mediatek,mt6735-pinctrl.h
 
-They're all called "pinfunc", even the newest mt8188 one, so please:
+This is part of a larger series so I acked it previously but at second
+glance it doesn't look like it depends on anything that comes before?
+Should it have been sent separately to the GPIO tree? Should I pick it
+up independently?
 
-mediatek,mt6735-pinfunc.h
-
-just for consistency and nothing else
-
-> @@ -0,0 +1,1148 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright (C) 2022 Yassine Oudjana <y.oudjana@protonmail.com>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_PINCTRL_MEDIATEK_MT6735_PINFUNC_H__
-> +#define __DT_BINDINGS_PINCTRL_MEDIATEK_MT6735_PINFUNC_H__
-
-#ifndef _DT_BINDINGS_PINCTRL_MEDIATEK_MT6735_PINFUNC_H
-#define _DT_BINDINGS_PINCTRL_MEDIATEK_MT6735_PINFUNC_H
-
-#endif /* _DT_BINDINGS_PINCTRL_MEDIATEK_MT6735_PINFUNC_H */
-
-Cheers,
-Angelo
+Bart
 
