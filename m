@@ -1,151 +1,169 @@
-Return-Path: <linux-gpio+bounces-11250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C829999BBF8
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 23:12:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6030199BD85
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 03:58:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83C2E1F21305
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Oct 2024 21:12:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 845381C2203A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 01:58:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A311537AA;
-	Sun, 13 Oct 2024 21:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B4F1BC58;
+	Mon, 14 Oct 2024 01:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="imWwclgL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJTY5v6x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8031465BE
-	for <linux-gpio@vger.kernel.org>; Sun, 13 Oct 2024 21:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B6D3A1B6;
+	Mon, 14 Oct 2024 01:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728853941; cv=none; b=AR3ni8GP0Xc3+VC1EBe5XgoZ5EKziuID9a7M3BE9yS8FrVfEJGdZppxRDLTUhKI/kEM6DZTta/1dGUSRKNcBs8KPR70NqN3hcUOW7BExwb0GRU0uzhft7yGewKmkLJlF6Hbk/kwjfc19ij7C/WJPb/lZnFxcOq/XDs5oRm9W4Cc=
+	t=1728871104; cv=none; b=pkBTWVkFbv6Am1PW1c0pcj3FtsrUTvZCdPGT/tX7R7DVrz10SSPKHo2lh1TGqa94e+urgJzXKCraTi/JfLPr5aJOwO/1nOwpf51N9wlmHhZvd8tbFLJYLaTxxVjE7NpUq1Xmq1ASWzpFe21F62jyj3qDmDoCC6KdMc4Jwv+hBMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728853941; c=relaxed/simple;
-	bh=JpAsQjdO8xDgz+DjNBuDcK+8eQNAm/nQvmxK2hx0Obk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aguHAKlBGPZ6eCPQrIbepOOTPLQ6lDScw9zBEkTbuJsNonR1RxKqwTJm35Gr5QhbO8TWkNX24+cfnyytl7cOIFajYkl5ZXweP7SSKZDYGNb+H4AlQXIb+V+fiPfuBRVYKqLWSfbJGAVhg8Ak+59zYXoKSGmqNqebZemeHET57hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=imWwclgL; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539f1292a9bso599065e87.2
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Oct 2024 14:12:18 -0700 (PDT)
+	s=arc-20240116; t=1728871104; c=relaxed/simple;
+	bh=47gZKqvgx0nAqb33qbsE6DkX2b4H5WDShawomZ7RvGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYLWZdj+7a2sTru/NyNAFvGLFjpB1RpveWwxUvGtRIt4MUms7M4+MAt3sy1O+TqqwprtXvE2+6Lmik3p+wpy6gOBn/8D9AwerYQMEGkeNqYz9Tp7zPP/GBcic4m40YhW07TA3kjATaRLZO7bi5SdhonAaQKiEa3WKSzGctfj30Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UJTY5v6x; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e2bb1efe78so2526973a91.1;
+        Sun, 13 Oct 2024 18:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728853937; x=1729458737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pwQ+0QBqpruUrAoix4rKJMBSmDvfPtsp4gDbiv475pg=;
-        b=imWwclgLmB1f33vAaYTs6COSLkFQRzbULOw6bmbLGIGroYsr4RrIVw1nMMcNsL12Bj
-         2bT2ae735QKR5hs8oI22iVYc3cvKcsat6IDzmmKLcl21Ev8wxM2cftrVQX3d6pBYmwdl
-         5BCEzAMRylWPc1sWfi41WXg9U7mZdLZNSP316fLtguQMr4iADRdDpPHgyZwMpMcELJgR
-         rra5Q5Ud8KrP4Cj8jsZy4S+zv7RafFAs1/VytOBhO+Rr3Lq+oBxzZxBDFaGPlHje6BoX
-         dq3r97aZIaspDXqwemmkyuvCMU+F77MAASCPGZbtPtBTx7GH6TwWkyQDcQg2rTndTLbD
-         +KxA==
+        d=gmail.com; s=20230601; t=1728871102; x=1729475902; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4GFpJjv4Nk17l7P9yGLT2zIxctvhL0J8NnyJmHG1haY=;
+        b=UJTY5v6x4h3BPBFi8cy0jtVJROLaDqVd7wdB1Z9hU0WS70UH7Uq62oaQKKn3rw0Ilp
+         sD6OW1bh7Da5qdKB55ZyvDfD4xVedWSKWyHOY79BqlimpHeeR2Mpbdeeo3OzVO+Q2V4y
+         qUlYsyZKTtnh8rdBkfJZQ5hKEKNwbKSJ0BzL+PCgEZdd92TaVMf8ld/SkQy0WQ8ukHyV
+         495TWiAbbHRxhm0JzkzsyAIi7KoVYFY6JA7o9kLkwiX1o13cK69+gIleEDHn193gOsRT
+         vXwtfdGYDTNQ/4NVshjuvx9tKTF5hq+iOUCAewB96u/dpopceV2HGPQPBcvCs1km2nZF
+         dv2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728853937; x=1729458737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pwQ+0QBqpruUrAoix4rKJMBSmDvfPtsp4gDbiv475pg=;
-        b=wWgFrwz7uF6mBg/n9BkSTCBrxX822uKS4u9+ujuy981+g+9Yxjn55vIZMELTP/dTAH
-         qLqR9sd8PswJ/Lt3T0dlQhTj1RF1R3aaNkteK5NVO+GpnvylHaL0M669SbZStEHSAyyN
-         V+w9kkMBkxkhjES4eFiTSMl1YxXLZlJ1d5AODI3TR3fU5QRRmYdTFBjG8g+bnVuU0ANW
-         PtOL3ycax1PCRq2BOaNMu04vKBUNmZIWeUJSUZTF4XTynskbEQUQVLhtsyoUCDW2n/eb
-         TDH6Wppbdt+jx9qKWA+Pl1XHAOIvvNDkoYKgPWHjUBOXrmiDQtLkr3YK3WfNImMiATy2
-         LBpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhX4wh+wNwLa1GmQsDrNH8Tb6UGGwswpQ6Emkf0d5LZsDs5RFaYvVYolHuynkJN28dlSptFgKwN1Xh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCxqu/zWov/q3qOff7cdtROfVV1x4naqsK1cvKOuPz0pBlScK2
-	PPwljjG1tsgk1OUqJOpPMAS0uz2432hZNuXb1xyzJhiQdi4twwdi71iZJNU/AER5LPaL/1hzEUv
-	0lZddS0kZnFI+78lT8lACDXqS/vD9SsYzL0w1Kg==
-X-Google-Smtp-Source: AGHT+IG22JRYupZ1fLsDed6hOclviXUZ6gkDKTz/1J3tmXWEWFDaDkSBlGmH4CesWUEdr/RrovlO1A4TEXMMoyRsCbs=
-X-Received: by 2002:ac2:4e16:0:b0:536:554a:24c2 with SMTP id
- 2adb3069b0e04-539da3c5ee1mr4707787e87.13.1728853937291; Sun, 13 Oct 2024
- 14:12:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728871102; x=1729475902;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4GFpJjv4Nk17l7P9yGLT2zIxctvhL0J8NnyJmHG1haY=;
+        b=r9B84xnMW/Rn0Idx+j4PugDcicv/BclvRi3Do836PblWnBrL7IJV52fIIlSRwpNAKG
+         6zxlIs2q10XfSSEIpilCJw1wxlgQgX9iovV5toiAuSTkScMiKsDOMZKn0Qx6aE/bezLq
+         WPbh2OoxutfNMF+qtxKsMexlqeI1woqxItwCNmILpM3i9Z4FdD0N+2Mswl6EDBNxBaY1
+         QRpsVIE+02W1Pgk5SHVeUISkvmZd3iDRMfPZnyIklErtdz1aKi4PiVOVLSOrEjnAVsr0
+         +ebxYS5XomSaiBdDCZqmirTeGLdCxoUHj81+1bgLxSInE0CFIoJZ1HPYhwzDoMONHUaj
+         eMug==
+X-Forwarded-Encrypted: i=1; AJvYcCXjh8teC/8kGB7Fo4wigMXM1p9hBVgMZ6SXmu70ryeF6QIx2QcRarCHC8RK453nPsHEnvSCS3iU/746@vger.kernel.org, AJvYcCXswCAqYxRF6O7bN1h1YSyPhTJ3unGQ0D+Ir2GqiXHNXpCzr7G6XMRyt0Pv6DoUJCmibN47yy7ic0n16OZi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4jDw6JcAODAIb6Yhyf6BRF4yZ4GyHazqzTQAtVYCaADrDUJGD
+	7oV0oZtkhO1vwez2spYeDMFbRxu/CqP7gX2cLC3DiQaqcVS0+cGM7UjO/xUq
+X-Google-Smtp-Source: AGHT+IGcT5iG2KPIKLBcE6tvDiBjeW2Z/j7R/r89gZotMS4G9h6wdYZsPZkFxLLHF7QMpISxi/OV4g==
+X-Received: by 2002:a17:90a:e613:b0:2d8:9fbe:6727 with SMTP id 98e67ed59e1d1-2e2f0a49381mr14399663a91.4.1728871101984;
+        Sun, 13 Oct 2024 18:58:21 -0700 (PDT)
+Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2a55fd43asm9816761a91.14.2024.10.13.18.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Oct 2024 18:58:21 -0700 (PDT)
+Date: Mon, 14 Oct 2024 09:58:17 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 2/6] gpio: cdev: prepare gpio_desc_to_lineinfo() for
+ being called from atomic
+Message-ID: <20241014015817.GA20620@rigel>
+References: <20241010-gpio-notify-in-kernel-events-v2-0-b560411f7c59@linaro.org>
+ <20241010-gpio-notify-in-kernel-events-v2-2-b560411f7c59@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org> <20241013-en7581-pinctrl-v6-5-2048e2d099c2@kernel.org>
-In-Reply-To: <20241013-en7581-pinctrl-v6-5-2048e2d099c2@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 13 Oct 2024 23:12:06 +0200
-Message-ID: <CACRpkdZKkv=CKkA1WS4ZwSj8vXzzZFM-uv6eiMeij+fL_cvTzQ@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] pinctrl: airoha: Add support for EN7581 SoC
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
-	linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241010-gpio-notify-in-kernel-events-v2-2-b560411f7c59@linaro.org>
 
-On Sun, Oct 13, 2024 at 12:08=E2=80=AFAM Lorenzo Bianconi <lorenzo@kernel.o=
-rg> wrote:
-
-> Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> supports the following functionalities:
-> - pin multiplexing
-> - pin pull-up, pull-down, open-drain, current strength,
->   {input,output}_enable, output_{low,high}
-> - gpio controller
-> - irq controller
+On Thu, Oct 10, 2024 at 11:10:23AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> In order to prepare gpio_desc_to_lineinfo() to being called from atomic
+> context, add a new argument - bool atomic - which, if set, indicates
+> that no sleeping functions must be called (currently: only
+> pinctrl_gpio_can_use_line()).
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index b0050250ac3a..8c48a53b4fa8 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2361,7 +2361,7 @@ static void gpio_v2_line_info_changed_to_v1(
+>  #endif /* CONFIG_GPIO_CDEV_V1 */
+>
+>  static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+> -				  struct gpio_v2_line_info *info)
+> +				  struct gpio_v2_line_info *info, bool atomic)
+>  {
+>  	unsigned long dflags;
+>  	const char *label;
+> @@ -2402,9 +2402,13 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>  	    test_bit(FLAG_USED_AS_IRQ, &dflags) ||
+>  	    test_bit(FLAG_EXPORT, &dflags) ||
+>  	    test_bit(FLAG_SYSFS, &dflags) ||
+> -	    !gpiochip_line_is_valid(guard.gc, info->offset) ||
+> -	    !pinctrl_gpio_can_use_line(guard.gc, info->offset))
+> +	    !gpiochip_line_is_valid(guard.gc, info->offset))
+>  		info->flags |= GPIO_V2_LINE_FLAG_USED;
+> +
+> +	if (!atomic) {
+> +		if (!pinctrl_gpio_can_use_line(guard.gc, info->offset))
+> +			info->flags |= GPIO_V2_LINE_FLAG_USED;
+> +	}
+>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Should be else if.
 
-Nitpicks follow:
+Cheers,
+Kent.
 
-I would have changed the below:
-
-+       pinctrl->gpiochip.data =3D gpio_data_regs;
-+       pinctrl->gpiochip.dir =3D gpio_dir_regs;
-+       pinctrl->gpiochip.out =3D gpio_out_regs;
-+       pinctrl->gpiochip.status =3D irq_status_regs;
-+       pinctrl->gpiochip.level =3D irq_level_regs;
-+       pinctrl->gpiochip.edge =3D irq_edge_regs;
-
-Can't you just use e.g.
-
-chip->data =3D ... etc in the top section?
-
-+       chip->parent =3D dev;
-+       chip->label =3D dev_name(dev);
-+       chip->request =3D gpiochip_generic_request;
-+       chip->free =3D gpiochip_generic_free;
-+       chip->direction_input =3D pinctrl_gpio_direction_input;
-+       chip->direction_output =3D airoha_gpio_direction_output;
-+       chip->set =3D airoha_gpio_set;
-+       chip->get =3D airoha_gpio_get;
-+       chip->base =3D -1;
-+       chip->ngpio =3D AIROHA_NUM_PINS;
-
-I always call that varible "gc" rather than chip, but no big deal.
-
-+       chip->irq.default_type =3D IRQ_TYPE_NONE;
-+       chip->irq.handler =3D handle_simple_irq;
-+       gpio_irq_chip_set_chip(&chip->irq, &airoha_gpio_irq_chip);
-
-I usually declare a local variable
-struct gpio_irq_chip *girq;
-
-girq =3D &chip->irq;
-girq->default_type =3D...
-
-Yours,
-Linus Walleij
+>  	if (test_bit(FLAG_IS_OUT, &dflags))
+>  		info->flags |= GPIO_V2_LINE_FLAG_OUTPUT;
+> @@ -2502,7 +2506,7 @@ static int lineinfo_get_v1(struct gpio_chardev_data *cdev, void __user *ip,
+>  			return -EBUSY;
+>  	}
+>
+> -	gpio_desc_to_lineinfo(desc, &lineinfo_v2);
+> +	gpio_desc_to_lineinfo(desc, &lineinfo_v2, false);
+>  	gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
+>
+>  	if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
+> @@ -2539,7 +2543,7 @@ static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
+>  		if (test_and_set_bit(lineinfo.offset, cdev->watched_lines))
+>  			return -EBUSY;
+>  	}
+> -	gpio_desc_to_lineinfo(desc, &lineinfo);
+> +	gpio_desc_to_lineinfo(desc, &lineinfo, false);
+>  	supinfo_to_lineinfo(desc, &lineinfo);
+>
+>  	if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
+> @@ -2632,7 +2636,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+>  	memset(&chg, 0, sizeof(chg));
+>  	chg.event_type = action;
+>  	chg.timestamp_ns = ktime_get_ns();
+> -	gpio_desc_to_lineinfo(desc, &chg.info);
+> +	gpio_desc_to_lineinfo(desc, &chg.info, false);
+>  	supinfo_to_lineinfo(desc, &chg.info);
+>
+>  	ret = kfifo_in_spinlocked(&cdev->events, &chg, 1, &cdev->wait.lock);
+>
+> --
+> 2.43.0
+>
 
