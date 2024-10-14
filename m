@@ -1,141 +1,115 @@
-Return-Path: <linux-gpio+bounces-11289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67DA899C3C2
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:43:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8D0E99C55D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 11:20:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13AB51F23F0A
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:43:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 883B8B2BDED
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 09:06:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B0A154439;
-	Mon, 14 Oct 2024 08:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F70B155CBF;
+	Mon, 14 Oct 2024 09:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MggKFUaA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8uQ0OXB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B3D1494C3;
-	Mon, 14 Oct 2024 08:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B779414B08E;
+	Mon, 14 Oct 2024 09:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728895379; cv=none; b=k7enWInHSJSBot9ruPAe8Om23j/xQ1og+yAASw8qBHBgrnNtzpQN739lil8NdVn+CbSTNH0pvAffOlZeba9YlVhUyZXbOJVj7JSf3dU0kxC3O/XLJxjBJPLm2Y+L0pgU36fTqMi0eg7jRzj99u0qbO0LzR3IO1Afo+lxrROmSas=
+	t=1728896764; cv=none; b=TAMpDTZyCAbnaWcqJm7SGSwn5trtDKX8jtpO1vFkfd+Z01p3B/QidC2VTgHH6l3YhAxzLUTacdUeeB9Rq/4KE1YZ2TVKvtaOBxEujEmydbaUfi7Aez5AUcv5Ms0gYPSieR8Fk+pevLdoEQTPlmxkATINKnKmwIytpflSgyseGL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728895379; c=relaxed/simple;
-	bh=WSkDReICKC6VPCPeO8dqT5Tl8DyyIkXcdPtQIt9xG/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mPGHGyfklQ7lu+oz+0khw0loGk0Eqbxu1Jiu76bfsqwqbgWU8xysbMUkSSA//nv9p6QDEM0WK7zZAwIxySTUVMdV0/5gvhB79qIHZBrOCxpfJKPItrF0bjbbRx4XdS74dd3T4+Js13Papu+PDaI66uX6hlVkivYuhWskpnUMjHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MggKFUaA; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-20c70abba48so25289255ad.0;
-        Mon, 14 Oct 2024 01:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728895378; x=1729500178; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Mc1xjH8jda9+Ou+CdWyvRTeIYF2yxLMZaS+DypzEeCo=;
-        b=MggKFUaAryFPNz7YqHXdtibC0oeQ8nUtsV1GsKmA3GbH+XsO7QMxWc9+IKj1oiijqO
-         VJhureF+6MHLQpyr7YpLhsVNRYXnr5sle6VH1DQQ0GF3WAwgp5Q0dmxfTTwmBuB9bawd
-         U3TcEbMBFEi9sC15WvbKzNOUZ79+UAQxALvpeGNcxxVyK0qbnRbONl2aAGgdx8UV5+Vy
-         zoRE7z+h5QNCzFJexHFn6OB880CAu3+IRWg7DwB5IJ0MEhfsnzgGPjt0X597hJIE3OPj
-         fN3Vsyp2Vx85ciGgXZKMligxDtkcPURhNxUi2UbTAi6A7DnQzpiGURX/h9bTj08CpdrS
-         dvPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728895378; x=1729500178;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mc1xjH8jda9+Ou+CdWyvRTeIYF2yxLMZaS+DypzEeCo=;
-        b=F1c9D9hg4OMRTqpk+kWtd73q4V5Br7fxeLqQxXejHRViLq8EdHkVMe0HS4DRrs2C89
-         CGRlgpORtM+ij0k79rmo4njbpB8WOxTprhg+eiZPhkJThp76jJCCqDtOgfP+8/FANLMr
-         y41dn5AzS3KNIeYEjAUr2R2UnIIPtRcKk5HC5gn1h5hHGGpragzAmE6gLJul0MGuelOo
-         U6J5Osmr0TN7t1AHebW4NDO49TCnPFGI3Qo/wGrobTID+JlgktBjdsNM74UbwInxfkq7
-         om1TynRx3WeQVcw81PGN3I+Dh6tUhQ7OG7b1sUrD/Cx05RsAMqC5avtDdSb3TRXlxc4U
-         yRHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQh2rMrX139cTcOwyxLF5x/b2mIm7vI00BML6bLLuhNf6jNplRq0Qa7CwM71TiR1MSY1hF803bIAgrVO76@vger.kernel.org, AJvYcCWMIkNrqtfTEAyefGV5fQLlxpLPfQlyOON94WhdDfqui7O8Ck7kYUGW48kgiTCjCl00o5/Ka20EXoFu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfz+CDX2W71RFo2li6apdiVExgB5CeO0vJMTYJEucm6gGx7TNf
-	wG/20JMbqSISMCmTo+8dUVaLFpDRJm5g2cz9dhmAut5U8kAqPtypgEhBRxix
-X-Google-Smtp-Source: AGHT+IEW8nQM4PJ5E89ft0mnASqcYSQQN+ouyaTKQTd0sWtCeSmz+wWGOeBnSPq+WZEBZjg1QXhe4A==
-X-Received: by 2002:a17:902:f552:b0:20c:8c51:f9f with SMTP id d9443c01a7336-20cbb24087emr123645205ad.44.1728895377051;
-        Mon, 14 Oct 2024 01:42:57 -0700 (PDT)
-Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c0e74d6sm61771355ad.166.2024.10.14.01.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 01:42:56 -0700 (PDT)
-Date: Mon, 14 Oct 2024 16:42:52 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 6/6] gpiolib: notify user-space about in-kernel line
- state changes
-Message-ID: <20241014084252.GB76995@rigel>
-References: <20241010-gpio-notify-in-kernel-events-v2-0-b560411f7c59@linaro.org>
- <20241010-gpio-notify-in-kernel-events-v2-6-b560411f7c59@linaro.org>
- <20241014022433.GD20620@rigel>
- <CAMRc=MddUUx-iDUWY53nStzt9nutRzB=EkGyaHa+e37Wm+10+A@mail.gmail.com>
+	s=arc-20240116; t=1728896764; c=relaxed/simple;
+	bh=rXMah+J87oYT3vd/VshwC8Oh5TzIdt2Y9rGblinQcgc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WtR6lWdKzIKi3E+/F9TcPU6s74x76zac0zq3LDiEzKI8s1eO4HxShjjrmhAJO6f53oxEh0NT1oznSog/mrhEuxaHvCuW3jRF3bxoG/OnDPYS8Y9E+tSp29fX1SWyv5aBL9VUu2Zo3ROxS+KA9+D7rQji3CcAQOSwvRrVE52O290=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8uQ0OXB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 44284C4CEC3;
+	Mon, 14 Oct 2024 09:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728896764;
+	bh=rXMah+J87oYT3vd/VshwC8Oh5TzIdt2Y9rGblinQcgc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=k8uQ0OXB7Kv8+1JDjTKonGSl/O73Q7rvYr3unxfB7J96UmedyS1blqe1UNzCjtMJn
+	 2MN13XSh30iY6q42vEZWynwbA8dqub53NO6ILCDlG4p0fcVFyw5ohvob54xZItvc1q
+	 xVjslnxZIg8Mfp6TecsEhYGpGQY+oT+L0yw6I9dEsH+LfoqtLWseec06YNO1woYb+C
+	 XvKLBiqj0dyf6hDW6FztRUCUZZxvY63mDIsTK0cOpaadX4RwMo0hIL9EyyUApOYzIN
+	 Em1i8Dfw58afco+EK6YxCBmtg3NKReCHveOil2IkBwmPT0oUo6ng0Z7arSRHa2h0LY
+	 Y8zPHNCSJlZQw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B05ECFC51B;
+	Mon, 14 Oct 2024 09:06:04 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v2 0/3] Pinctrl: A4: Add pinctrl driver
+Date: Mon, 14 Oct 2024 17:05:50 +0800
+Message-Id: <20241014-a4_pinctrl-v2-0-3e74a65c285e@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MddUUx-iDUWY53nStzt9nutRzB=EkGyaHa+e37Wm+10+A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO7eDGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDIxNDA0Mj3UST+ILMvOSSohxdA8sUwySjREPzVBNzJaCGgqLUtMwKsGHRsbW
+ 1ANHff0ZcAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1728896762; l=1092;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=rXMah+J87oYT3vd/VshwC8Oh5TzIdt2Y9rGblinQcgc=;
+ b=zE3a0ATHwkt0UPDkqLiAfcZlwI7i+KGHXLiqYxVGuW8pgGCunXwkYetcGBd+Uwi7VDAZiZr7K
+ 8jbTkxDvx04AbcAAIUD1Yb07ySmA03pn6T4ZJs0hKuvniT23uDLnTJd
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-On Mon, Oct 14, 2024 at 10:13:59AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Oct 14, 2024 at 4:24 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Thu, Oct 10, 2024 at 11:10:27AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > We currently only notify user-space about line config changes that are
-> > > made from user-space. Any kernel config changes are not signalled.
-> > >
-> > > Let's improve the situation by emitting the events closer to the source.
-> > > To that end let's call the relevant notifier chain from the functions
-> > > setting direction, gpiod_set_config(), gpiod_set_consumer_name() and
-> > > gpiod_toggle_active_low(). This covers all the options that we can
-> > > inform the user-space about. We ignore events which don't have
-> > > corresponding flags exported to user-space on purpose - otherwise the
-> > > user would see a config-changed event but the associated line-info would
-> > > remain unchanged.
-> > >
-> > > gpiod_direction_output/input() can be called from any context.
-> > > Fortunately, we now emit line state events using an atomic notifier
-> > > chain, so it's no longer an issue.
-> > >
-> > > Let's also add non-notifying wrappers around the direction setters in
-> > > order to not emit superfluous reconfigure events when requesting the
-> > > lines as the initial config should be part of the request notification.
-> > >
-> >
-> > So lines requested from kernel space will result in a LINE_REQUESTED and
-> > then a series of LINE_CHANGED_CONFIG?  Whereas for lines requested from
-> > userspace those will be collapsed into the one LINE_REQUESTED event?
->
-> No, why? I added the notification about the request to
-> gpiod_find_and_request() which is called by all the kernel getters and
-> it already configures all the flags without emitting events and calls
-> the non-notify variant of the direction setter. When a kernel driver
-> requests a GPIO, I only see a single event UNLESS after the
-> gpiod_get() call returns, it sets direction or changes config - just
-> like user-space.
->
+Add pinctrl driver support for Amloigc A4 SoC
 
-Oh, ok, I was assuming there could be others using gpiolib the same way
-cdev does.  So cdev is the only one that takes the gpiod_request(),
-gpiod_direction_output() etc path?  All good then.
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v2:
+- Use one marco instead of all pin define.
+- Add unit name for dts node.
+- Link to v1: https://lore.kernel.org/all/20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com/
 
-Cheers,
-Kent.
+---
+Xianwei Zhao (3):
+      dt-bindings: pinctrl: Add support for Amlogic A4 SoCs
+      pinctrl: meson: Add driver support for Amlogic A4 SoCs
+      arm64: dts: amlogic: a4: add pinctrl node
+
+ .../bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml |    2 +
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |   36 +
+ drivers/pinctrl/meson/Kconfig                      |    6 +
+ drivers/pinctrl/meson/Makefile                     |    1 +
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1176 ++++++++++++++++++++
+ include/dt-bindings/gpio/amlogic-a4-gpio.h         |   38 +
+ 6 files changed, 1259 insertions(+)
+---
+base-commit: 58e2d28ed28e5bc8836f8c14df1f94c27c1f9e2f
+change-id: 20241012-a4_pinctrl-09d1b2a17e47
+
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
 
