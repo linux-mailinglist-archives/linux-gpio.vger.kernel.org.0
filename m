@@ -1,141 +1,139 @@
-Return-Path: <linux-gpio+bounces-11274-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11275-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B459799C296
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:08:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FC6B99C2BD
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 10:14:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7FB5283C1E
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:08:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D939B2447E
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 08:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA12314C5AE;
-	Mon, 14 Oct 2024 08:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B194814C5AE;
+	Mon, 14 Oct 2024 08:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZWliKcou"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vWDEEk7O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA34C13DDD3
-	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 08:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF491531F9
+	for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 08:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728893321; cv=none; b=VqNx1zFGygoF04UsY7kUa6AYjAmj9YmZNywPv1a9OvlHrEaashsqVqaUaQy1RxFWbV+jI04gh3yZiDVozKjP2nywr8wU3ED8+elsqRzyJd2uOWHMRtv9rzJ9BB2I3gQ/pSghGr4DcH6Tgo9rzWkiVp9Q7S7Wl9iLjCFRtBE5kjc=
+	t=1728893654; cv=none; b=jtRPIW2at8zGozOawtwWIOFUFf4bdQVO31I6zwhz8fPW7Bp0rxuYB4OjHt8nEpqaM/ozVaACLE6LJq0AdFxypE2Wk3q+gSfR2lVuVbidVLFU+cFvsuJl/gRw7yGQ+BZmnr9J1X8oKX/F6VhyR2BnVq0vC+Bzlubqqpq7NE3Hmvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728893321; c=relaxed/simple;
-	bh=TaWs/ibx85c0CtG18bNpX/cgoj6kclzeopbcQX6fQ8s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bWE4fyU/2Fkh0obJ8uwLUG5qikEyujm0jM1BW1/a+WmZiH7ZGuqjNZLHDYgdJbRiYm8SKsolc7tr/JEBwKV7q2LAk7vWLuShR9SDs+L5jUyJnO0ZvrPligvr0NwXjk8WfP2OzvXPfUuHqMDZPg1ygD80DEXPuXoR+3LAIb3PUvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZWliKcou; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728893318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TaWs/ibx85c0CtG18bNpX/cgoj6kclzeopbcQX6fQ8s=;
-	b=ZWliKcouNboReFKGABjYoVl7Z4Xo8l8SQajXzl/OPVvU7qPkWPT76GFoWBJA6Gy+4P+mlH
-	stY6wFQq+UEvnwKkbZhYRH16oRpl/JT1KAG1+Fu97ahcjY+aLSvZRGsgcvm9ZCLc/Hfn0H
-	6prm893J6aeUZAXYOe4Bu+qXmt6jyhU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-317-CdhLO9BdO5SUoNwVAUfp-w-1; Mon, 14 Oct 2024 04:08:36 -0400
-X-MC-Unique: CdhLO9BdO5SUoNwVAUfp-w-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a7d2d414949so266509466b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 01:08:36 -0700 (PDT)
+	s=arc-20240116; t=1728893654; c=relaxed/simple;
+	bh=kDeKtA48vlIstldhcaMnAGLV9wwoJYEqb8JMCFUeUoY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bFjmNdDXIp2Em4QxVZFIB+mv1bh1Ccri9k2xn6iZCmSd66WPnFoujVtG/7dxXOeoyK7a7885oh5dsBWUtTD83DoJs2Qm4v46U4aHJEHeeD1Li4uwUqkGGVDDYQo0ENkCVCVOe1MKZymQhMmIALu/dri8aMnqqkM9v4VHhQ8nzOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vWDEEk7O; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-539e13375d3so2545831e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Oct 2024 01:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728893650; x=1729498450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KwU602zOXCbu4j31YwMdMD6lR63QBoFZv++MYJ4Nm8M=;
+        b=vWDEEk7OuWuLnSosLKjVZvj9GCX5rhI3jNUAVhEXVVxGZzfdF0o4IzFnX47fjNafy7
+         x4RW41ynlxtHRmbBNZ0CEZYclRcNXTyOfSbzfyUmi/R49qXowSDW2rOb3NXcGyF6UY71
+         9OoJu5IlWyzPoiJg86TadHHD5F+QDmMa3Jm4PUp5zO/w7G/Dz1peJHm+VZm846RJWVhT
+         BUZHqxiUumKbT5NYwdFeX1M48bsuZ8oVZHq1IB1HoL8S855z6HIEjR3P4HEG/AStkuKL
+         SRcgbpahSDCqZxt2/K3xhMVJRgUCFaEb1joTERj18+h+d1yAPFuQfjm+UE8Dq4MPdSnZ
+         7QEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728893315; x=1729498115;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TaWs/ibx85c0CtG18bNpX/cgoj6kclzeopbcQX6fQ8s=;
-        b=h/zwZWAN2DkxVBbtNUFkZ+8QJ9d0YmTR0Ve+QU10zTyARlBUzRXJfg9y1eZ7gYeUCT
-         YA+rySpf803/TjMTTCFo4TNN/bki3LHLT/wzd8OPOcIoW6Zm5jJWFS8xDffWNe04/ZRs
-         vdJIUuXcMaeUCkIYBUAawoTHtMIiFdY/XZ3BU3ztzDdwPk1ZV+aczJD8RPkQVYYNEoSI
-         63QqT1Fz1Rs5Be2UFqlNihyUIyE6wHtORT/cnX0KBX7EzTw2iDNrnnnOkEcxhlPKrHSE
-         hwXTcVO767tqpgmIcsMnU23AETkeQec2Kf0W84zXW1/0fiZC49TxZC2GP5WMEAMyqwBA
-         qOLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjtCyRopLQCyhAHQE1PJkDr5xYT4QWRPCGHhyOF3NFdngcZAIgCmOHx0khT4B09HZ6FY76X4DamRkv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy36sEqz7Qt1x12+RnkCTBab0mKGD8k7LiNmnzkzOtk5OXqJAGB
-	dPYFiRQoLsJMr/8KK3MVjU0IJ+mKAWZgF1/JaXifuWuDmoGlbJ5s/8uT4LyvFctGe4oEEmiM/NK
-	msXYjl7T9z6q6tjLgKPMWpnoOgFNyrQT/xZZvgxVUjTjkc3QNVzqOH39E56I=
-X-Received: by 2002:a17:907:944b:b0:a9a:296:b501 with SMTP id a640c23a62f3a-a9a0296b7f7mr310401866b.26.1728893315344;
-        Mon, 14 Oct 2024 01:08:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1q2sRlNJ7gBIJ0qtGA/4lKRT5VNcFbD+svupkTpAqykus1uvSFx9KVJU4QLRIETgW7hI7mw==
-X-Received: by 2002:a17:907:944b:b0:a9a:296:b501 with SMTP id a640c23a62f3a-a9a0296b7f7mr310398866b.26.1728893314974;
-        Mon, 14 Oct 2024 01:08:34 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3? (200116b82d3798001d5778cfc1aeb0b3.dip.versatel-1u1.de. [2001:16b8:2d37:9800:1d57:78cf:c1ae:b0b3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99e3e338e5sm325954766b.209.2024.10.14.01.08.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 01:08:34 -0700 (PDT)
-Message-ID: <dc9d7bd817e5c8bc88b0b8dfffcf83b2676cc225.camel@redhat.com>
-Subject: Re: [PATCH v7 4/5] gpio: Replace deprecated PCI functions
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>, Tom Rix
- <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>,  Andy Shevchenko <andy@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard
- Cochran <richardcochran@gmail.com>, Damien Le Moal <dlemoal@kernel.org>,
- Hannes Reinecke <hare@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,  Keith
- Busch <kbusch@kernel.org>, Li Zetao <lizetao1@huawei.com>,
- linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,  Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Date: Mon, 14 Oct 2024 10:08:32 +0200
-In-Reply-To: <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com>
-References: <20241014075329.10400-1-pstanner@redhat.com>
-	 <20241014075329.10400-5-pstanner@redhat.com>
-	 <CAMRc=McAfEPM0b0m6oYUO9_RC=qTd1vsg4wMn1Hb4jYQbx4irA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        d=1e100.net; s=20230601; t=1728893650; x=1729498450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KwU602zOXCbu4j31YwMdMD6lR63QBoFZv++MYJ4Nm8M=;
+        b=Far7DWi1PhazLI8zqh5AunowOvw9ehTwGT8M0orZ/mKL3Umh1JAtOX7dSu1fnm4+Ei
+         aDi0ady4C8MR6HebTdqBtAwiPU6Ufzm/dO4ejy4aEwPtOkwRDTZdW4srbtu6a4pkAk6n
+         PVCBlBMZJqB3llLNh1iA0TzAa/RD8eGFH6n2aqMHB+lpZOjtz3sD1S8m5B8XVvzjGgBn
+         vRCqz+aYx2ncWHKp8UHfQN0yhruqIAk7xCKYxOcG3ORxAA0+dWSfJAlgA0Bn1gNPmTMl
+         oNlPN8zclJaVMYujqdY2fDookglnlBCveSh8Mxmeejzts5Ike9Okr4g+kh4sMyJDZ9Nd
+         R64A==
+X-Forwarded-Encrypted: i=1; AJvYcCW/EczIsEaMqDJodiliHAqNqmtLXcgdW3ViFtrigDK7plbsA89E7t4DL6J3tsvJvsmj5egaIQ67HQfh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1TzL+XMhjfCeQi3c2Jfwk9ZXxrBzZZNC5gQzXKxwTtx34WZg
+	jI7LMgVoZYF7A32LhzO402Tsf1awea8iBbTMWrgL3OBHhqea6uPwVvqymWjPmYfwKVFlfsHXLU3
+	3MKpcVPu7XcBRjt7Ies1BekogW4roRqU+AKLC8Q==
+X-Google-Smtp-Source: AGHT+IGvqtA7VIzCWrsC1qte6LpHBfjaHr3QOEo5IRja8a19prdnTOQ6bMD+Sa5w163pTMP2XSnG/50il0qtDLS8Bik=
+X-Received: by 2002:a05:6512:3d23:b0:533:4689:973c with SMTP id
+ 2adb3069b0e04-539da4e0b49mr3981750e87.23.1728893650339; Mon, 14 Oct 2024
+ 01:14:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20241010-gpio-notify-in-kernel-events-v2-0-b560411f7c59@linaro.org>
+ <20241010-gpio-notify-in-kernel-events-v2-6-b560411f7c59@linaro.org> <20241014022433.GD20620@rigel>
+In-Reply-To: <20241014022433.GD20620@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 14 Oct 2024 10:13:59 +0200
+Message-ID: <CAMRc=MddUUx-iDUWY53nStzt9nutRzB=EkGyaHa+e37Wm+10+A@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] gpiolib: notify user-space about in-kernel line
+ state changes
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-10-14 at 09:59 +0200, Bartosz Golaszewski wrote:
-> On Mon, Oct 14, 2024 at 9:53=E2=80=AFAM Philipp Stanner <pstanner@redhat.=
-com>
-> wrote:
-> >=20
-> > pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-> > the
-> > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> > pcim_iomap_table(), pcim_iomap_regions_request_all()").
-> >=20
-> > Replace those functions with calls to pcim_iomap_region().
-> >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
->=20
-> This is part of a larger series so I acked it previously but at
-> second
-> glance it doesn't look like it depends on anything that comes before?
-> Should it have been sent separately to the GPIO tree? Should I pick
-> it
-> up independently?
+On Mon, Oct 14, 2024 at 4:24=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Thu, Oct 10, 2024 at 11:10:27AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > We currently only notify user-space about line config changes that are
+> > made from user-space. Any kernel config changes are not signalled.
+> >
+> > Let's improve the situation by emitting the events closer to the source=
+.
+> > To that end let's call the relevant notifier chain from the functions
+> > setting direction, gpiod_set_config(), gpiod_set_consumer_name() and
+> > gpiod_toggle_active_low(). This covers all the options that we can
+> > inform the user-space about. We ignore events which don't have
+> > corresponding flags exported to user-space on purpose - otherwise the
+> > user would see a config-changed event but the associated line-info woul=
+d
+> > remain unchanged.
+> >
+> > gpiod_direction_output/input() can be called from any context.
+> > Fortunately, we now emit line state events using an atomic notifier
+> > chain, so it's no longer an issue.
+> >
+> > Let's also add non-notifying wrappers around the direction setters in
+> > order to not emit superfluous reconfigure events when requesting the
+> > lines as the initial config should be part of the request notification.
+> >
+>
+> So lines requested from kernel space will result in a LINE_REQUESTED and
+> then a series of LINE_CHANGED_CONFIG?  Whereas for lines requested from
+> userspace those will be collapsed into the one LINE_REQUESTED event?
 
-Thx for the offer, but it depends on pcim_iounmap_region(), which only
-becomes a public symbol through patch No.1 of this series :)
+No, why? I added the notification about the request to
+gpiod_find_and_request() which is called by all the kernel getters and
+it already configures all the flags without emitting events and calls
+the non-notify variant of the direction setter. When a kernel driver
+requests a GPIO, I only see a single event UNLESS after the
+gpiod_get() call returns, it sets direction or changes config - just
+like user-space.
 
-P.
+Bart
 
->=20
-> Bart
->=20
-
+> That's not ideal, but I realise making the rest of the kernel behave as
+> per cdev would be non-trivial, so ok - it all comes out in the wash.
+> And it is clearly better than nothing.
+>
+> Cheers,
+> Kent.
+>
 
