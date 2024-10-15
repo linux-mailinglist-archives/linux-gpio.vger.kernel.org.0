@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-11333-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11334-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ED6C99DEFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:02:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CA3799DF09
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:04:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 178971F2180B
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 07:02:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF921B21657
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 07:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D9B189BB4;
-	Tue, 15 Oct 2024 07:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E4E18A6DB;
+	Tue, 15 Oct 2024 07:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCaU+Hmu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpi73S7K"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94104137930;
-	Tue, 15 Oct 2024 07:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5120F137930;
+	Tue, 15 Oct 2024 07:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728975748; cv=none; b=IVXkroCDSwvpJnch8w97xlU7DZDtF8orjp0b84DuZtKXyAJO8wU1yoavboL/falggPMmmnQKethxaj26C5voUxIHo03hO294t/A1Six+SrXqBYsnUq1fVCmrA04BKgFObXZ6f2Cg+gRjji/A8HvFtN+PSPqQyQLlhe+/Ej68vqA=
+	t=1728975834; cv=none; b=DJqAOdjwoKbxAPWY94GZNnnIQfNKgfsqdPJOJLohnguyfW2SevSs4JgDZng8AWG+yjOfdyAoMLX9YL0hY/dTHwyU2mltAKYXyE+ZfSmgIOF03EDscCNEXkbZgPdyczwOV4nPcu36kUEGLXfMfuICWPiiXbQs59sB7OcqjrJddIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728975748; c=relaxed/simple;
-	bh=s4T8/jTVUn1rYhBlAL29+WbFoChCUfqqhBQWqGCSLJk=;
+	s=arc-20240116; t=1728975834; c=relaxed/simple;
+	bh=QO4NMjC2wozHcV6ZyuyuXOsL0Tv4CXT07K6LUqAlgDs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=huR0Q/X7VAfkC4n1mSU8VB8jPv1pIWodjSxwD668kxSAlyo6KdgTWCYeUtzfJHiIayZCHqpsZ0XV+J0w+T7U4wiHUZJ9VUkUcpxdop30gtUngOZYCUu+32ERCf230C5zx8HbY0xLZFS5ZhD80srNRK9eB3/ls5y+vIZ+tjiXUr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCaU+Hmu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433B0C4CEC7;
-	Tue, 15 Oct 2024 07:02:21 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=JNicFvwBEauUJ58IIvuoNNpEbngymRyIgHjH/jn7aHKstTkHGkw/O0/piFbX1fAdMUvk1a8KUZdeIcHSKmq4oDnw+oklBHhloPvWAX7AdGD29G44493kIU1XSGF/aYTnYnyaMY9pd0iq3KbkZTWflz3mK3g6aFxyFxKGbJ7++lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpi73S7K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD84C4CEC7;
+	Tue, 15 Oct 2024 07:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728975747;
-	bh=s4T8/jTVUn1rYhBlAL29+WbFoChCUfqqhBQWqGCSLJk=;
+	s=k20201202; t=1728975833;
+	bh=QO4NMjC2wozHcV6ZyuyuXOsL0Tv4CXT07K6LUqAlgDs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aCaU+Hmuc0t9ltne6NYfLFP8tYu+c6t++i7X2olSmlxHwNdBH23O+WAcwWO6OBMdd
-	 ATDFjE4wi4gAYGMFQqiKQO0K/3CuxJI28/br93Yl2fwdVwn/8x5G1/aqY9woltLGAi
-	 G+/J8gEls0pc5BG0+HQGzsbVop0yGykxbve0HUiLcOlDYHstg1ACIGzEhFCdfJwEtr
-	 xxbDfSMCTU9mbj/4Ftczqabbogk6qGv2FLGCj+HYmY1dnEyV1k9sXRB02l2gfkwUBf
-	 qqOA4BrZSo2SWetAGEFlQuHdGyGWcs2Paav9Prr2p/ivVOtrtbLWZunvIrM9ILKtAI
-	 XIsdTDxPxYuug==
-Message-ID: <2edf63cd-66e2-4050-80dd-800ed77ef5e1@kernel.org>
-Date: Tue, 15 Oct 2024 09:02:19 +0200
+	b=kpi73S7Kp/Acv8ERbbtjJJ1bD9gw/Tyr2FESk/h0TKwe/kXgCA/lxkfXl/nx9X+yT
+	 sHmQptI5F5+obUAKDNKrHEfOfoyeh9jUI8U6QU6Ni1xbO0WTXl44wQZhw/a9CJVt6l
+	 UyXq1HAS6kPWGaG6Eqvz/vk08Pa85H/NpWnwdp4JTEbL99EJ1B3Wo/k7iML35g9R47
+	 xa/Fan5n9JHdkK8TA3B73acnmx1vDPcp5pRshBmZi5kmUp/V3I3pKIAE9u2R1czn+V
+	 YW4P5dpOFCgNM0JAmx9XYSLwX64j8lHtZ1wbv3El97zXjgXJ1yza/oXC1RmADCfQpx
+	 TpDH1BncWXiqQ==
+Message-ID: <a83f7c01-2375-4fe5-a74c-fe7b644fd949@kernel.org>
+Date: Tue, 15 Oct 2024 09:03:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 6/7] arm64: dts: exynos: Add initial support for the
- Exynos 990 SoC
+Subject: Re: [PATCH v1 7/7] arm64: boot: dts: Add initial support for Samsung
+ Galaxy Note20 5G (c1s)
 To: Igor Belwon <igor.belwon@mentallysanemainliners.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
@@ -61,7 +61,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-gpio@vger.kernel.org, david@mainlining.org
 References: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
- <20241015062746.713245-7-igor.belwon@mentallysanemainliners.org>
+ <20241015062746.713245-8-igor.belwon@mentallysanemainliners.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,233 +107,146 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241015062746.713245-7-igor.belwon@mentallysanemainliners.org>
+In-Reply-To: <20241015062746.713245-8-igor.belwon@mentallysanemainliners.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/10/2024 08:27, Igor Belwon wrote:
-> The Exynos 990 SoC is an ARMv8 mobile SoC found in Samsung Galaxy N/S20
-> series phones (x1sxxx, c1sxxx). Add minimal support for this SoC,
-> including:
+> Add initial support for the Samsung Galaxy Note20 5G (c1s/SM-N981B)
+> phone. It was launched in 2020, and it's based on the Exynos 990 SoC. It
+> has only one configuration with 8GB of RAM, albeit storage options may
+> differ.
 > 
+> This device tree adds support for the following:
+> 
+> - SimpleFB
+> - 8GB RAM
+> - Buttons
+> 
+> Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+> ---
+>  arch/arm64/boot/dts/exynos/Makefile          |   1 +
+>  arch/arm64/boot/dts/exynos/exynos990-c1s.dts | 111 +++++++++++++++++++
 
-...
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-> +	/* There's no PMU model for cluster2, which are the Mongoose cores. */
+>  2 files changed, 112 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos990-c1s.dts
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
+> index 18f5a3eed523..7a934499b235 100644
+> --- a/arch/arm64/boot/dts/exynos/Makefile
+> +++ b/arch/arm64/boot/dts/exynos/Makefile
+> @@ -8,5 +8,6 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
+>  	exynos7885-jackpotlte.dtb	\
+>  	exynos850-e850-96.dtb		\
+>  	exynos8895-dreamlte.dtb		\
+> +	exynos990-c1s.dtb		\
+>  	exynosautov9-sadk.dtb		\
+>  	exynosautov920-sadk.dtb
+> diff --git a/arch/arm64/boot/dts/exynos/exynos990-c1s.dts b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
+> new file mode 100644
+> index 000000000000..7bff098d7982
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/*
+> + * Samsung Galaxy Note20 5G (c1s/SM-N981B) device tree source
+> + *
+> + * Copyright (c) 2024, Igor Belwon <igor.belwon@mentallysanemainliners.org>
+> + */
 > +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +/dts-v1/;
+> +#include "exynos990.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
 > +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
+> +/ {
+> +	model = "Samsung Galaxy Note20";
+> +	compatible = "samsung,c1s", "samsung,exynos990";
 > +
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
+> +	chosen {
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +				core2 {
-> +					cpu = <&cpu2>;
-> +				};
+> +		framebuffer0: framebuffer@f1000000 {
+> +			compatible = "simple-framebuffer";
+> +			reg = <0 0xf1000000 (1080 * 2400 * 4)>;
+> +			width = <1080>;
+> +			height = <2400>;
+> +			stride = <(1080 * 4)>;
+> +			format = "a8r8g8b8";
+> +		};
+> +	};
 > +
-> +				core3 {
-> +					cpu = <&cpu3>;
-> +				};
-> +			};
+> +	memory@80001000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000 0x3ab00000>,
+> +		      /* Memory hole */
+> +		      <0x0 0xc1200000 0x1ed80000>,
+> +		      /* Memory hole */
+> +		      <0x0 0xe1900000 0x1a8e9800>;
+> +	};
 > +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu4>;
-> +				};
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +				core1 {
-> +					cpu = <&cpu5>;
-> +				};
-> +			};
-> +
-> +			cluster2 {
-> +				core0 {
-> +					cpu = <&cpu6>;
-> +				};
-> +
-> +				core1 {
-> +					cpu = <&cpu7>;
-> +				};
-> +			};
+> +		cont_splash_mem: framebuffer@f1000000 {
+> +			reg = <0 0xf1000000 0x13c6800>;
+> +			no-map;
 > +		};
 > +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
+> +		abox_reserved: audio@f7fb0000 {
+> +			reg = <0 0xf7fb0000 0x2a50000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		pinctrl-0 = <&key_power &key_voldown &key_volup>;
+> +		pinctrl-names = "default";
+> +
+> +		power-key {
+> +			label = "Power";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
+> +			wakeup-source;
 > +		};
 > +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x1>;
-> +			enable-method = "psci";
+> +		voldown-key {
+> +			label = "Volume Down";
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
 > +		};
 > +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x2>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x3>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu4: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a76";
-> +			reg = <0x4>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu5: cpu@101 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a76";
-> +			reg = <0x5>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu6: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "samsung,mongoose-m5";
-> +			reg = <0x6>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu7: cpu@201 {
-> +			device_type = "cpu";
-> +			compatible = "samsung,mongoose-m5";
-> +			reg = <0x7>;
-> +			enable-method = "psci";
+> +		volup-key {
+> +			label = "Volume Up";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
 > +		};
 > +
 
 Stray blank line
 
 > +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "hvc";
-> +	};
-> +
-> +	oscclk: osc-clock {
-
-clock-osc and keep order by node name
-
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "oscclk";
-> +	};
-> +
-> +	soc: soc@0 {
-> +		compatible = "simple-bus";
-> +		ranges = <0x0 0x0 0x0 0x20000000>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		chipid@10000000 {
-> +			compatible = "samsung,exynos990-chipid",
-> +				     "samsung,exynos850-chipid";
-> +			reg = <0x10000000 0x100>;
-> +		};
-> +
-> +		gic: interrupt-controller@10101000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x10101000 0x1000>,
-> +			      <0x10102000 0x1000>,
-> +			      <0x10104000 0x2000>,
-> +			      <0x10106000 0x2000>;
-
-reg is the second property
-
-> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) |
-> +						 IRQ_TYPE_LEVEL_HIGH)>;
-> +			#address-cells = <0>;
-> +			#size-cells = <1>;
-> +		};
-> +
-> +		pinctrl_cmgp: pinctrl@15c30000 {
-
-Keep order by unit address.
-
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x15c30000 0x1000>;
-> +		};
-> +
-> +		pinctrl_hsi1: pinctrl@13040000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x13040000 0x1000>;
-> +			interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_hsi2: pinctrl@13c30000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x13c30000 0x1000>;
-> +			interrupts = <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_peric0: pinctrl@10430000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x10430000 0x1000>;
-> +			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_peric1: pinctrl@10730000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x10730000 0x1000>;
-> +			interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_vts: pinctrl@15580000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x15580000 0x1000>;
-> +		};
-> +
-> +		pinctrl_alive: pinctrl@15850000 {
-> +			compatible = "samsung,exynos990-pinctrl";
-> +			reg = <0x15850000 0x1000>;
-> +
-> +			wakeup-interrupt-controller {
-> +				compatible = "samsung,exynos990-wakeup-eint",
-> +					     "samsung,exynos7-wakeup-eint";
-> +			};
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +
-> +		/*
-> +		 * Non-updatable, broken stock Samsung bootloader does not
-> +		 * configure CNTFRQ_EL0
-> +		 */
-> +		clock-frequency = <26000000>;
-> +	};
 > +};
 > +
-> +#include "exynos990-pinctrl.dtsi"
+> +&oscclk {
+> +	clock-frequency = <26000000>;
+> +};
+> +
+
 
 Best regards,
 Krzysztof
