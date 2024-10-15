@@ -1,200 +1,104 @@
-Return-Path: <linux-gpio+bounces-11313-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11314-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B2E799D7B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 21:48:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B8899DC2D
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 04:20:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F3861C226AC
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Oct 2024 19:48:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E66B31F21E96
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 02:20:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 102C61CEAC4;
-	Mon, 14 Oct 2024 19:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0845C166F14;
+	Tue, 15 Oct 2024 02:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qtfi9rn1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itaC/tq9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FD31C877E;
-	Mon, 14 Oct 2024 19:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B81157A6B;
+	Tue, 15 Oct 2024 02:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728935263; cv=none; b=at1hM4YkqFfONwMwgXgXsUBCbK7VGmm50oRUi+RRnNWVqaT/9WAcemNegOAiAomfY3t3jDZKZdID8hrOv+Pe+1DV4K7ez6/ReXv9SBeVfSkotJ2LkHTqPVu1VfqmNx5gxdA93g/z3Fetn72kVNbB0PdY/AYtvsfZHcI+EBUamwA=
+	t=1728958811; cv=none; b=Px8RNzmd1xyjPFBPFGks1iWyGIkf1u+eQkzYujmeMzMToo/0zmQH7Wqeml58pgIKZUL1egCRL/Dp7zLg405ZIVgbwfIWyd6e5O75AEM/dcvXcN51h2XP8AqFmkekCn4Jhn4FKHOztjIJUu8XUENcDSjzmovuwCb5p7fkLrhn7aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728935263; c=relaxed/simple;
-	bh=BmeazclAOWGBXpv6W51J/lnVKM4suOylLnvlvJPSWFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tHuw9VQz3hRuMk1mZBqDxWbBTABr+cYr65DgOBBN89HAXagim0vmaJXnBIrtWSRphW5QZVZtSoDwzTjc1JRmCaTUYJhL9XP663hGV1vvimUrwrS7iJmRekG6iEOsVPnT2hERcpGczXrvL+2Lf41xdZ5JCK+sfOCez7h7o1UBpbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qtfi9rn1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A787C4CEC3;
-	Mon, 14 Oct 2024 19:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728935263;
-	bh=BmeazclAOWGBXpv6W51J/lnVKM4suOylLnvlvJPSWFI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qtfi9rn10vjFc4wmjkonxMOvOlBMcep0XH06igeF//Ho9YkQ0hkNsLeIcgpXp49cC
-	 tq9nyBjQ970ruTiIxS0fVy8w44Uc/Zb/r7Z0IUa6hloZ/zXRUiRuYU1irC/5jRpumk
-	 kEC5xiXLKgg7cxQgWcPHCeLR5XH+NSBY6kBpXApvyolHjp7Qdxc5/TDoIhUmgS1LcT
-	 5MhhcPJXpx1I10VXMR2RklXm5CGYkrYJxf1Bp84VJrvVDidHN3g6bDsfiy9d3C6dqx
-	 W7ZWPjVuWwPt7kNCal91yl2GkBEnAR8Box8f4JtJVAlS11wLwUlLZ1B1TSJE6NcVbW
-	 effcf43agOYBQ==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-539f4d8ef84so1776893e87.0;
-        Mon, 14 Oct 2024 12:47:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4NpvaRammqSVDoEbdLoN7URMXpwVyHRQwm7/wgH3pn8qzYGcd/bec+2gQC5Dnx0J4R1HGRr+yKyqQEA==@vger.kernel.org, AJvYcCV5WfAalif1MEgm4fI46yuxL60ryT3omqoEnRpu9P0faJb9yYUmVd8o+M+Aefe2htdieNgrlMq915mg@vger.kernel.org, AJvYcCX7HaR0Eipf8LVIKoYH4qFQqQW4z770jQpA4TyusGFR/wiKWTSzPS2L1ZnSKv6QMUVkmBxFH0tpWQfelQp5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ27ffYJ1RmbQ0UU88ROOq2GXWqjd7xonTM5SKCsWiVy/R5sfl
-	yqKH0t2VgvcKeuZISn2WrpDJ6mdNqAyx8PyyNrTIVOD1mVgX4yWsm7fLirn1PgoDQGbb9e6VMDQ
-	Zx+qzZIO2puKIbTiLMyZBw1uAeQ==
-X-Google-Smtp-Source: AGHT+IGWKpdEglFpIlk6kIsyRnfEB8zZoqKphERJa0sPyVBgZGiKBn/mqvbmmqVRsK8iGBHs2hU9kQhmNKsc6ZcqYbE=
-X-Received: by 2002:a05:6512:b88:b0:539:e98c:c33b with SMTP id
- 2adb3069b0e04-539e98cc3c1mr3113634e87.41.1728935261639; Mon, 14 Oct 2024
- 12:47:41 -0700 (PDT)
+	s=arc-20240116; t=1728958811; c=relaxed/simple;
+	bh=HS2thc/vvNiAP7WYGVy//vM2M7+3/EAEcq+ADqWi2wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kG034mtkkl30GUErT2TwToRNFTsicHpxuYlBcvZ1rganuEjP6swKOzIfWr8KdCvxMCWF3j9vpgJl9cINwIdyMKfJpbWv5Z5EodKDVfiudM8P+aaHb1KuoeLaMulQz3STfhVzrVw1W3h4i33G+eDlHw4ymNDS1eXFQK/e4qp/iPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itaC/tq9; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20b5affde14so28726975ad.3;
+        Mon, 14 Oct 2024 19:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728958810; x=1729563610; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HS2thc/vvNiAP7WYGVy//vM2M7+3/EAEcq+ADqWi2wc=;
+        b=itaC/tq9574Ij/NN3ZARQRgd9K/1T5TudGXw7M+vfQ4uy1Y/Qn24Q7GE999Vgxb52R
+         SWnrdcGagjUxN56mm9cnhK7Lk78lfrvcd3bUVbUWTPMahlFXxk1f2PzAueSEVItC6fkJ
+         e3KSG27BDW5W1QiQ1ehOFzOwj4X9++WXVISEVskEEp2UFr1WjuPzRFnh3/cxRe4MxLHO
+         yBSkl2TGMfD7XlkcYn2ENcE+kagVRyYZ/RwK9dHkdEwiVeAGroN0L4MoNYdivA4gQdB2
+         N1r3fuA414U64a7z1qUjFuxzWUkLAIYxpt+fOaT0WXuIVCLwWT0ps8XlEAV0ucTGn/ZE
+         s1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728958810; x=1729563610;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HS2thc/vvNiAP7WYGVy//vM2M7+3/EAEcq+ADqWi2wc=;
+        b=YnbL1CKM2/FudQG3pU0mi680FZpScFlCknL0bYJuGaKk/cqvCdTdDekP87Kgvi67UE
+         ElCM3U/P751OkZthyFNwQYXeqmZnstpndBzJPPJfXBIC7sCzd9W2a0KFZxyu7Gk7UJw4
+         Xdxy7RvMSnbKHJ0sxe7r7Ne+7xs/RCzhwelqLmlRhdXq0ow5xzjiY+PGqLZyONK0tAV0
+         1uIEPcDfKnNm9cuu0DAES6VZcN6XPS1UgXhDcPhNgR0aJwBX/rbdAh2bfxKhOb5KXHUO
+         8kpK7zS4Q3wVd1M2CW16uPnXZf4BUu5F5ZA0gELxyp+WZgAj8xApyIjcGotPdtk2ZyTr
+         FuPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViyUydl668AAS32tOcpKh3t/0j9of718lu/EETAKjHpQk5HCU/2PC1xAnx1I87JGQn0MF2GMhaeboi@vger.kernel.org, AJvYcCVuJNlk5957pmZIV9dUtd6t5dsXhQDujmUxzLO7OGBug9pOG2lFZfBBxX/wRgXUl644q2M5AzAchyKRIxwz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZR0HICChNcVyXJnEW9pfoyeqb12Are2TkwJAD+sG+ntrlh/G0
+	e6yNP7EnhW0FVpJHpKmqVaXMsGIcChIrMRoBapxn1bVtrrT3WJwj
+X-Google-Smtp-Source: AGHT+IGaKnw5lCo2Cleg0RPJQEGqdhSS+nxpd5GlbGADLOn+8UHhAFJbAoIilQZgcKT2Re/a9Z/bxw==
+X-Received: by 2002:a17:902:fc8f:b0:20b:cae5:dec4 with SMTP id d9443c01a7336-20ca146699emr195294395ad.24.1728958809744;
+        Mon, 14 Oct 2024 19:20:09 -0700 (PDT)
+Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20d17f9d932sm2168495ad.90.2024.10.14.19.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 19:20:09 -0700 (PDT)
+Date: Tue, 15 Oct 2024 10:20:04 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: create empty /sys/class/gpio with SYSFS disabled
+Message-ID: <20241015022004.GA10899@rigel>
+References: <20241014121047.103179-1-brgl@bgdev.pl>
+ <CAMRc=McG9a9CKXAdyAwQ=65SUOg32ExgY-YGyCs7Rxb_XjEqDg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011120520.140318-1-y.oudjana@protonmail.com>
- <20241011120520.140318-2-y.oudjana@protonmail.com> <20241011165640.GA2475122-robh@kernel.org>
- <2608306c-da19-4160-b0c7-dbb8935abc42@collabora.com> <CAL_JsqJ864ZM8qgqfuyKsS5H=gsVm=nOrikQ4cuObEVBJX75JQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ864ZM8qgqfuyKsS5H=gsVm=nOrikQ4cuObEVBJX75JQ@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 14 Oct 2024 14:47:28 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL8s1SmbLuO1saByQ+GWNSAFFqdxFpYFsEaibX3sMMkNg@mail.gmail.com>
-Message-ID: <CAL_JsqL8s1SmbLuO1saByQ+GWNSAFFqdxFpYFsEaibX3sMMkNg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Pull pinctrl node changes from MT6795 document
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Yassine Oudjana <yassine.oudjana@gmail.com>, Sean Wang <sean.wang@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Yassine Oudjana <y.oudjana@protonmail.com>, Andy Teng <andy.teng@mediatek.com>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McG9a9CKXAdyAwQ=65SUOg32ExgY-YGyCs7Rxb_XjEqDg@mail.gmail.com>
 
-On Mon, Oct 14, 2024 at 2:02=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Mon, Oct 14, 2024 at 3:27=E2=80=AFAM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
+On Mon, Oct 14, 2024 at 04:50:09PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Oct 14, 2024 at 2:10 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 > >
-> > Il 11/10/24 18:56, Rob Herring ha scritto:
-> > > On Fri, Oct 11, 2024 at 03:03:46PM +0300, Yassine Oudjana wrote:
-> > >> From: Yassine Oudjana <y.oudjana@protonmail.com>
-> > >>
-> > >> mediatek,pinctrl-mt6795.yaml has different node name patterns which =
-match
-> > >> bindings of other MediaTek pin controllers, ref for pinmux-node.yaml=
- which
-> > >> has a description of the pinmux property, as well as some additional
-> > >> descriptions for some pin configuration properties. Pull those chang=
-es
-> > >> into mediatek,mt6779-pinctrl.yaml and adjust the example DTS to matc=
-h in
-> > >> preparation to combine the MT6795 document into it.
-> > >>
-> > >> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> > >> ---
-> > >>   .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 38 ++++++++++++++-=
-----
-> > >>   1 file changed, 28 insertions(+), 10 deletions(-)
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt67=
-79-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779=
--pinctrl.yaml
-> > >> index 3bbc00df5548d..352a88d7b135e 100644
-> > >> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinc=
-trl.yaml
-> > >> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinc=
-trl.yaml
-> > >> @@ -111,12 +111,12 @@ allOf:
-> > >>           - "#interrupt-cells"
-> > >>
-> > >>   patternProperties:
-> > >> -  '-[0-9]*$':
-> > >> +  '-pins$':
-> > >
-> > > Worst case, this could be an ABI break. Best case, it's churn for
-> > > mt6779. Is it worth unifying?
-> > >
-> > All those MediaTek pinctrl bindings are mostly the same, where only the=
- pin
-> > definitions in the binding header does actually change.
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > I think that it's worth unifying them, not only to get rid of the dupli=
-cation
-> > but mostly for consistency between all of those subnode names which are=
- wildly
-> > differing for no real reason... and consistency is a long time issue wi=
-th
-> > MediaTek bindings/dts in general (which is way way way better now, but =
-still)...
-> >
-> > Besides - just for context and nothing else: the driver doesn't care ab=
-out
-> > the names of the subnodes, anyway... so while this is technically an AB=
-I break
-> > it's not really creating any functionality issue, and then, actually, Y=
-assine
-> > is also modifying the devicetrees to comply with his consistency change=
-s, so,
-> > in my own perspective, it's still acceptable.
 >
-> Wait, I thought there were no users?
+> In any case: please let me know what you think about this change in general.
 >
-> We generally only consider node names ABI when/if something or someone
-> cares. Most of the time it doesn't matter. For the pinctrl nodes, it's
-> really just a question of churn renaming a lot of nodes.
->
-> Ultimately, it's up to you. I only care that the implications of the
-> changes are clear in the commit msg.
 
-FWIW, these are the top occuring warnings on arm64 mediatek pinctrl nodes:
+I've got no strong opinions either way.
 
-     27 mediatek: pinctrl@10005000: panel-pins-default: 'panel-reset'
-does not match any of the regexes: '^pins', 'pinctrl-[0-9]+'
-     27 mediatek: pinctrl@10005000:
-mmc1-pins-uhs:pins-cmd-dat:mediatek,pull-up-adv: 10 is not one of [0,
-1, 2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc1-pins-uhs:pins-clk:mediatek,pull-down-adv: 10 is not one of [0, 1,
-2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc1-pins-default:pins-cmd-dat:mediatek,pull-up-adv: 10 is not one of
-[0, 1, 2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc1-pins-default:pins-clk:mediatek,pull-down-adv: 10 is not one of
-[0, 1, 2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc0-pins-uhs:pins-ds:mediatek,pull-down-adv: 10 is not one of [0, 1,
-2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc0-pins-uhs:pins-clk:mediatek,pull-down-adv: 10 is not one of [0, 1,
-2, 3]
-     27 mediatek: pinctrl@10005000:
-mmc0-pins-default:pins-clk:mediatek,pull-down-adv: 10 is not one of
-[0, 1, 2, 3]
-     17 mediatek: pinctrl@10005000: volume-button-pins:
-'voldn-btn-odl', 'volup-btn-odl' do not match any of the regexes:
-'^pins', 'pinctrl-[0-9]+'
-     17 mediatek: pinctrl@10005000: trackpad-pins: 'trackpad-int' does
-not match any of the regexes: '^pins', 'pinctrl-[0-9]+'
-     17 mediatek: pinctrl@10005000: touchscreen-pins: 'touch-int-odl',
-'touch-rst-l' do not match any of the regexes: '^pins',
-'pinctrl-[0-9]+'
-     17 mediatek: pinctrl@10005000: pp3300-panel-pins:
-'panel-3v3-enable' does not match any of the regexes: '^pins',
-'pinctrl-[0-9]+'
-
-Not sure what SoC because I strip the dtb names to deduplicate the
-warnings which get amplified by number of boards for an SoC. The first
-number is the number of times the warning occurs.
-
-Rob
+Cheers,
+Kent.
 
