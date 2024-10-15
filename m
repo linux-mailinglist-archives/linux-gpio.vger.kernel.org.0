@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-11334-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CA3799DF09
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:04:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE0999DF0F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:05:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF921B21657
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 07:03:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CBF1282672
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 07:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E4E18A6DB;
-	Tue, 15 Oct 2024 07:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B32A18B497;
+	Tue, 15 Oct 2024 07:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpi73S7K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKhuCiWe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5120F137930;
-	Tue, 15 Oct 2024 07:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6D518A6C8;
+	Tue, 15 Oct 2024 07:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728975834; cv=none; b=DJqAOdjwoKbxAPWY94GZNnnIQfNKgfsqdPJOJLohnguyfW2SevSs4JgDZng8AWG+yjOfdyAoMLX9YL0hY/dTHwyU2mltAKYXyE+ZfSmgIOF03EDscCNEXkbZgPdyczwOV4nPcu36kUEGLXfMfuICWPiiXbQs59sB7OcqjrJddIU=
+	t=1728975907; cv=none; b=rPIC6oRixj7RaH4QcJdXHtCzwcEI8xZB3oLvgYUXpx5gDsbefN7nOhUfexyEXFcRH/Z6d5R9jo1qsfDZnSBDy3P220XIkbuWsOLUmpekliGVvdcBfnxjQ36DXQP87KwdP6wOAgeCOQrlnsD0x3RC70fG5VTxuIsvLhYr9HyEd48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728975834; c=relaxed/simple;
-	bh=QO4NMjC2wozHcV6ZyuyuXOsL0Tv4CXT07K6LUqAlgDs=;
+	s=arc-20240116; t=1728975907; c=relaxed/simple;
+	bh=BfyGbB5QFkl3gj48BMwAkx+bbZdUF09NcgSDrmlh5B8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JNicFvwBEauUJ58IIvuoNNpEbngymRyIgHjH/jn7aHKstTkHGkw/O0/piFbX1fAdMUvk1a8KUZdeIcHSKmq4oDnw+oklBHhloPvWAX7AdGD29G44493kIU1XSGF/aYTnYnyaMY9pd0iq3KbkZTWflz3mK3g6aFxyFxKGbJ7++lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpi73S7K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD84C4CEC7;
-	Tue, 15 Oct 2024 07:03:48 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=MrmvJhiLGYaMzP2U/is6t2WY0xcjytgnDlK+7PcSlgrKN07px5cfjCOQEqGQb9DM3Q1G1lVr19w/MQ6U3dW4BYWp0FrYgMsTJ3XdXgHaTqYZHsLMf8u7kQFABIZTOXL3T//nllOebgGilb6OLl9BBA8I4Vq9quCuONKDfNooe/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKhuCiWe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3423C4CEC7;
+	Tue, 15 Oct 2024 07:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728975833;
-	bh=QO4NMjC2wozHcV6ZyuyuXOsL0Tv4CXT07K6LUqAlgDs=;
+	s=k20201202; t=1728975906;
+	bh=BfyGbB5QFkl3gj48BMwAkx+bbZdUF09NcgSDrmlh5B8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kpi73S7Kp/Acv8ERbbtjJJ1bD9gw/Tyr2FESk/h0TKwe/kXgCA/lxkfXl/nx9X+yT
-	 sHmQptI5F5+obUAKDNKrHEfOfoyeh9jUI8U6QU6Ni1xbO0WTXl44wQZhw/a9CJVt6l
-	 UyXq1HAS6kPWGaG6Eqvz/vk08Pa85H/NpWnwdp4JTEbL99EJ1B3Wo/k7iML35g9R47
-	 xa/Fan5n9JHdkK8TA3B73acnmx1vDPcp5pRshBmZi5kmUp/V3I3pKIAE9u2R1czn+V
-	 YW4P5dpOFCgNM0JAmx9XYSLwX64j8lHtZ1wbv3El97zXjgXJ1yza/oXC1RmADCfQpx
-	 TpDH1BncWXiqQ==
-Message-ID: <a83f7c01-2375-4fe5-a74c-fe7b644fd949@kernel.org>
-Date: Tue, 15 Oct 2024 09:03:45 +0200
+	b=UKhuCiWe86ypuPhPRiDxcS2BtYD+JKslqKQnVMwXBWeDAyR2OEJHzD4p0ciDQRCjt
+	 3fzDBu5nCYg5J7iAbB31R3ct5dPH8oR4potLtAdZ7oYpyaicPV6QtXPVJ/7dJ3zySE
+	 J/jgCVtsG32aznKYodNCc6SJE5oRkZMU0r9XBr6h4VTufwCQ1I09Q5BL6CmO11gzuf
+	 L5ShD6Pnx8XCZ93er6US472E7LNMFnPR2uzgQsZWxAN9p+x1zgPhkYr+hUVggxvg25
+	 gWAio0uFhXcLiLpUVgZrsXegHf9MgBTbfauCwF+3xY4dwNSGzh0gs67KOolqEjICJU
+	 wjtv1HcF1DFmg==
+Message-ID: <3774f3f0-7a69-4a55-a9a4-b2686bc06753@kernel.org>
+Date: Tue, 15 Oct 2024 09:05:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,18 +50,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/7] arm64: boot: dts: Add initial support for Samsung
- Galaxy Note20 5G (c1s)
+Subject: Re: [PATCH v1 0/2] Add Exynos990 pinctrl and chipid drivers
 To: Igor Belwon <igor.belwon@mentallysanemainliners.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
  Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, david@mainlining.org
-References: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
- <20241015062746.713245-8-igor.belwon@mentallysanemainliners.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241015063010.713407-1-igor.belwon@mentallysanemainliners.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,146 +103,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241015062746.713245-8-igor.belwon@mentallysanemainliners.org>
+In-Reply-To: <20241015063010.713407-1-igor.belwon@mentallysanemainliners.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15/10/2024 08:27, Igor Belwon wrote:
-> Add initial support for the Samsung Galaxy Note20 5G (c1s/SM-N981B)
-> phone. It was launched in 2020, and it's based on the Exynos 990 SoC. It
-> has only one configuration with 8GB of RAM, albeit storage options may
-> differ.
+On 15/10/2024 08:30, Igor Belwon wrote:
+> Hi folks,
 > 
-> This device tree adds support for the following:
-> 
-> - SimpleFB
-> - 8GB RAM
-> - Buttons
-> 
-> Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-> ---
->  arch/arm64/boot/dts/exynos/Makefile          |   1 +
->  arch/arm64/boot/dts/exynos/exynos990-c1s.dts | 111 +++++++++++++++++++
+> This series adds support for the drivers for the Exynos 990 SoC. It
+> consists of the pinctrl driver and the chipid driver. The product ID
+> of this chip for chipid is 0xe9830000. The pinctrl bank types are the
+> same as in the Exynos 850 chip.
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+You split your patchsets in odd way. Bindings always go with driver.
 
->  2 files changed, 112 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-> index 18f5a3eed523..7a934499b235 100644
-> --- a/arch/arm64/boot/dts/exynos/Makefile
-> +++ b/arch/arm64/boot/dts/exynos/Makefile
-> @@ -8,5 +8,6 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
->  	exynos7885-jackpotlte.dtb	\
->  	exynos850-e850-96.dtb		\
->  	exynos8895-dreamlte.dtb		\
-> +	exynos990-c1s.dtb		\
->  	exynosautov9-sadk.dtb		\
->  	exynosautov920-sadk.dtb
-> diff --git a/arch/arm64/boot/dts/exynos/exynos990-c1s.dts b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-> new file mode 100644
-> index 000000000000..7bff098d7982
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-> @@ -0,0 +1,111 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/*
-> + * Samsung Galaxy Note20 5G (c1s/SM-N981B) device tree source
-> + *
-> + * Copyright (c) 2024, Igor Belwon <igor.belwon@mentallysanemainliners.org>
-> + */
-> +
-> +/dts-v1/;
-> +#include "exynos990.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	model = "Samsung Galaxy Note20";
-> +	compatible = "samsung,c1s", "samsung,exynos990";
-> +
-> +	chosen {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		framebuffer0: framebuffer@f1000000 {
-> +			compatible = "simple-framebuffer";
-> +			reg = <0 0xf1000000 (1080 * 2400 * 4)>;
-> +			width = <1080>;
-> +			height = <2400>;
-> +			stride = <(1080 * 4)>;
-> +			format = "a8r8g8b8";
-> +		};
-> +	};
-> +
-> +	memory@80001000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x3ab00000>,
-> +		      /* Memory hole */
-> +		      <0x0 0xc1200000 0x1ed80000>,
-> +		      /* Memory hole */
-> +		      <0x0 0xe1900000 0x1a8e9800>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		cont_splash_mem: framebuffer@f1000000 {
-> +			reg = <0 0xf1000000 0x13c6800>;
-> +			no-map;
-> +		};
-> +
-> +		abox_reserved: audio@f7fb0000 {
-> +			reg = <0 0xf7fb0000 0x2a50000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		pinctrl-0 = <&key_power &key_voldown &key_volup>;
-> +		pinctrl-names = "default";
-> +
-> +		power-key {
-> +			label = "Power";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
-> +			wakeup-source;
-> +		};
-> +
-> +		voldown-key {
-> +			label = "Volume Down";
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		volup-key {
-> +			label = "Volume Up";
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
-> +		};
-> +
+Anyway, organize it per subsystem. Subsystem is:
+1. SoC
+2. pinctrl
 
-Stray blank line
-
-> +	};
-> +};
-> +
-> +&oscclk {
-> +	clock-frequency = <26000000>;
-> +};
-> +
-
+So two patchsets targeting two subsystems.
 
 Best regards,
 Krzysztof
