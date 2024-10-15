@@ -1,142 +1,110 @@
-Return-Path: <linux-gpio+bounces-11361-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3838F99EA38
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 14:46:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A047F99ECD1
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 15:23:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F165428847F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 12:46:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A4121F244CB
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 13:23:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996E51C07CD;
-	Tue, 15 Oct 2024 12:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FCE1C4A23;
+	Tue, 15 Oct 2024 13:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qkPKAipe"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SkCCZ1M5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4684B1C07C2;
-	Tue, 15 Oct 2024 12:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39A31C07CC
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 13:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728996405; cv=none; b=HRdzqmMchjtab/tP13qtUVHPUCiWnZbSvipYIeH1H79923HMPg3vmnazUoBM3+hJK53MsjaLiLTpb6KPXiRzf2sWFmCylGx7lEb3lEsh/HUslSEGpZbubYMaq6MHmj3D0fRy/ulA0AAF/xgcUe35hHepaLb97DFSYonoZSfUXWA=
+	t=1728998319; cv=none; b=mrofgVCgj/MjCdfruifVOlzAfAi6oudc6NDesefuTmGzxdjwlJmGySSDPqSFvjODjKjI6GFoKnlKnnJFj2CGRbs013ctfC+bUMm5hyCWheThm33Ucr05XYllK8HMU1XkiyPAkL6Nll3DCVWz3T4Wpw43qFmwWgK7uQvhyaCDcwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728996405; c=relaxed/simple;
-	bh=SMWNDmBPfxChXtubJAJT+Pmtjs2xoVjbkxziJvEEtjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bc/qSR9Rr0jT9O6FQizuNx4matKIiqKcO4o6lbfNXTvHulw6iXJBNpNIhaYhgiXWGLUEpWAXc3VB3rJBp+307AeEd8uD3VPhJONlGXwfnHTcpYZMrZTIHrILXzvVEQnJjZxzupNggJvgdK+ds/0io1qSAoOQcCVWHP9Th51oBIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qkPKAipe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 566DAC4CECF;
-	Tue, 15 Oct 2024 12:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1728996403;
-	bh=SMWNDmBPfxChXtubJAJT+Pmtjs2xoVjbkxziJvEEtjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qkPKAipewn7fmU0jFluCtKq1OcK37BhyoYFgXBh9V/ZwiM/6YYlhjj0oFGskIcaNt
-	 rdBdXnG23cfCAbc9gNW0WLwmBpVmDo9AUXBDn1iZ7yMvYGv3aBXZPKIAUcn3F0NnW0
-	 8fayhjcBbs++0VSj3w+NtQxBrspnp+vFFZm1tpSg=
-Date: Tue, 15 Oct 2024 14:46:40 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1728998319; c=relaxed/simple;
+	bh=GWE7IKCk7X4Vk66iIVqj9exPS89ESzElV0HbrMOUxRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HUhbG4qTqlM+5UL8ieWs1d2edS7fuWbx9XyWlW7BKUbs58G+hk1ThcCF8Z5J54yzZmEkFnNNp96ez7M2ud8gpyUADOgBTAiQJwkLLIp/bFU/nne4KlqdZiLc3gSNPij3xv2GEF7y4FXjRDt97MQjLVyO/nbrSG8MLR7/L1KJPp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SkCCZ1M5; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43057f4a16eso46852825e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 06:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728998315; x=1729603115; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YtIz2qp9a7gBi4mP10l9nFI0kYJy4Vh55NDXHglG/3Q=;
+        b=SkCCZ1M5zlffMHk31mTgxprIXq/6wbW9c5egzAs3pQE2ct8sdsuBaVWiMxogXtevHl
+         fd0Jtd6qvD4gcGiMl0oKz8pzqjo2rV+XoH47qrXndrZoWauoi1V0a9D45QvfIVXED7vh
+         BDbl+XURN0dzHlThy9f/jz9wY6nyCB0Nu9DBUr7RiPif6ShwrCVC+Mgi2Ckc2Qn37O7h
+         JjE7eZAUaaoBWQQUsBnDCKe1uPEvmh9PjThGFIPIX6yJsRRJBmcXMHsDN17GAxmLc5Bm
+         M5Z6/j1dT6BpF1icNWNyyw76ajx1/xL8iIXlAut89IxdS9Tk27qKlYm5X78bOG5/qxZ3
+         SWeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728998315; x=1729603115;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YtIz2qp9a7gBi4mP10l9nFI0kYJy4Vh55NDXHglG/3Q=;
+        b=uhDnlGAAbYSJ5wG42URBYLVMNYDG0qjf56WOaQboFOfNUy1BfScXZynWsfyTl/F6Fr
+         22JGXa9a5M0JxVy0iLUH+DRoocLKjgJdy5kGETCgh1T8iGrE18+5z/puX3nB5Q8wby+1
+         a/npONEfbwbRXzjUBAV9Q+LmEl/v50x2fYZgPVMqxvmjpqg4ZFX4CzAM8CHflmw2W/FO
+         q3JvKOCgeYqMBotG4fViXiG2ykxfgkaR7hX6/yQzDGQpUvopi938y68l2BEgdcyiGQ+v
+         KDjQSJrClatMLis3QEpWgEspFo6eKkoboUPsK4kNpnsWpsUxntgxmfXZiMT4QKWlk0aB
+         2BWg==
+X-Gm-Message-State: AOJu0YweSJJxvRNbUWEwkRnI2TvMnwikdwabWJ7WL4t2+cZ30kKDYORx
+	9e0FUKN7mISO4WaZZxdgThUp1EdFvhTmfBBwHqDZyGj+k0Eoxf+TSFzVQFRLskoMBrRstHGFM+I
+	9
+X-Google-Smtp-Source: AGHT+IEshOBUy0buJ/axJY+T/Itpy8gp+/ue1Lw8d1z6JIgCEpBspfjLYSVxq+GuZGDtJPjl/hfoJA==
+X-Received: by 2002:a05:600c:1c29:b0:42f:75e0:7829 with SMTP id 5b1f17b1804b1-4311df56494mr126042095e9.30.1728998314873;
+        Tue, 15 Oct 2024 06:18:34 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d382:b11b:c441:d747])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f6c5524sm17676405e9.44.2024.10.15.06.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2024 06:18:34 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/2] gpio: create the /sys/class/gpio mount point with
- GPIO_SYSFS disabled
-Message-ID: <2024101535-wrangle-reoccupy-5ece@gregkh>
-References: <20241015-gpio-class-mountpoint-v2-0-7709301876ef@linaro.org>
- <2024101531-lazy-recollect-6cbe@gregkh>
- <CAMRc=Mea=W-1UoHMew3Si=baW3ayERrHjxjG0NPdmkCfp9dUHw@mail.gmail.com>
+Subject: [PATCH 1/4] gpio: grgpio: drop Kconfig dependency on OF_GPIO
+Date: Tue, 15 Oct 2024 15:18:29 +0200
+Message-ID: <20241015131832.44678-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mea=W-1UoHMew3Si=baW3ayERrHjxjG0NPdmkCfp9dUHw@mail.gmail.com>
 
-On Tue, Oct 15, 2024 at 02:11:45PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Oct 15, 2024 at 11:30 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > >
-> > > Despite providing a number of user-space tools making using the GPIO
-> > > character device easier, it's become clear that some users just prefer
-> > > how the sysfs interface works and want to keep using it. Unless we can
-> > > provide a drop-in replacement, they will protest any attempts at
-> > > removing it from the kernel. As the GPIO sysfs module is the main user
-> > > of the global GPIO numberspace, we will not be able to remove it from
-> > > the kernel either.
-> >
-> > They should protest it's removal, and you should support it for forever,
-> > as that's the api that they rely on and you need to handle.  That's the
-> > joy of kernel development, you can't drop support for stuff people rely
-> > on, sorry.
-> >
-> 
-> Yet every now and then some clearly bad decisions from the past are
-> amended by removing support for older interfaces. I'm not trying to
-> deprive people of something they rely on, I'm trying to provide a
-> drop-in replacement in user-space using an existing, better kernel
-> interface, so that we can get rid of the old one and - in the process
-> - improve the entire in-kernel GPIO support.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-How is emulating the existing sysfs api anything "better"?  It's still
-the same api.
+This driver has no build-time dependency on gpiolib-of so remove the
+Kconfig switch.
 
-> > > I am working on a FUSE-based libgpiod-to-sysfs compatibility layer that
-> > > could replace the in-kernel sysfs and keep all the user-space programs
-> > > running but in order to keep it fully compatible, we need to be able to
-> > > mount it at /sys/class/gpio. We can't create directories in sysfs from
-> > > user-space and with GPIO_SYSFS disabled, the directory is simply not
-> > > there.
-> >
-> > Ick, no, just keep the kernel stuff please.
-> >
-> 
-> Ick? I'm not sure how to take it but are you criticising the idea
-> itself of using the better kernel interface to provide a thin
-> compatibility layer in user-space to the bad one that people are just
-> too used to to spend time converting? Or just the mounting at the old
-> mount-point part?
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-I'm saying "Ick" for a userspace mounted filesystem on top of sysfs to
-emulate a sysfs api that the kernel provides today.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index efddc6455315..2e91e02510f7 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -341,7 +341,6 @@ config GPIO_GRANITERAPIDS
+ 
+ config GPIO_GRGPIO
+ 	tristate "Aeroflex Gaisler GRGPIO support"
+-	depends on OF_GPIO
+ 	select GPIO_GENERIC
+ 	select IRQ_DOMAIN
+ 	help
+-- 
+2.43.0
 
-> > > I would like to do what we already do for /sys/kernel/debug,
-> > > /sys/kernel/config, etc. and create an always-empty mount point at
-> > > /sys/class/gpio. To that end, I need the address of the /sys/class
-> > > kobject and the first patch in this series exports it.
-> >
-> > No, debug and config are different, they are not "fake" subsystems, they
-> > are totally different interfaces and as such, can use those locations as
-> > mount points for their in-kernel filesystem interfaces.  You are wanting
-> > a random userspace mount point, that's totally different.
-> >
-> > Sorry, just live with the kernel code please.  Work to get all userspace
-> > moved off of it if you feel it is so bad, and only then can you remove
-> > it.
-> >
-> 
-> What if we just add a Kconfig option allowing to disable the sysfs
-> attributes inside /sys/class/gpio but keep the directory? It's not
-> like it's a new one, it's already there as a baked in interface.
-
-That's up to you, but again, please do not mount a filesystem there,
-that's going to cause nothing but problems in the end (like debugfs and
-tracefs and configfs do all the time when people get confused and start
-poking around in sysfs code looking for the logic involved in other
-places.)
-
-thanks,
-
-greg k-h
 
