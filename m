@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-11350-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E3DB99E2C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 11:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0871299E2CC
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 11:30:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FACB1C21A97
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:27:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39CDC1C21B3E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 09:30:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD8E1DD55A;
-	Tue, 15 Oct 2024 09:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901791DD880;
+	Tue, 15 Oct 2024 09:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VJ25AqOi"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tP61n0UC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FEE1BE854;
-	Tue, 15 Oct 2024 09:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443E61B0137;
+	Tue, 15 Oct 2024 09:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728984442; cv=none; b=Q1Y6TRi6GvGTQKt7ynsR1oX3otBEd+BDhJHoPC6E030DckyucwTxomSlIaXXyBnE7FyZqK35U3g5NuNkeloMQevC6E6sMnXnf3miq8kJ4i3oPvAFy3y8kXu3odu/W+kB1qJhgOjCxMAKY92NetNtqdUGHbTUghSEwuqAi59S2o8=
+	t=1728984600; cv=none; b=J/AvSVAioGyStJ4Xn81FtsFra199S+UW9ozMuy2J7Qzdk1XcBMKpvYIjt6kYsaU3jTpCzL5I27mRKIddpK0iSysZhGbDljTyhiAvJ1gQ8GVgUtCAqfzFSAHgtP51w37CFVz0l3nsR5y8gUF/Y7+1Sz8cpdpSnVEvOBvSSYBV2ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728984442; c=relaxed/simple;
-	bh=sUyNLwgvdyHnZjnJWQfiCuf+BL42Uc3XJFAl7cruPN8=;
+	s=arc-20240116; t=1728984600; c=relaxed/simple;
+	bh=W/TkYHxrVnIc6my5zXTtl1l07XVKWx/k+ZOyI6nY7JU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fr72Y7gNctucuOIaqVJO2epJAE7ADNtXcraiRhR1uU2kDIe645jDfz/2BLFD4a9BTrixV0Y7DJkninJDNbKdXn6GKwS47stQcCLzGTGVvIlrg1bjXhl5STaoUIWhN6VmW5Z8gbhrXStKnFkOUEoJP2usK/KWIxEIq9pl+toSbAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VJ25AqOi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296C8C4CEC6;
-	Tue, 15 Oct 2024 09:27:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=G9AkPaIEmgy4qXmvePpEuDDSs4bm4XCGggqfuFRKH6ZwWT6CUkWG64kDDQcGY6QJXczLTHzQSpyivdKJYcxrYSsm1NQ0KzlDrtBGHZ0G2ov4Rcx85xJHua8wDunfmlGwKL180rdhrvL54408hNO1xKe/9YMzpIt53IX4QJMC8mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tP61n0UC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3216AC4CEC6;
+	Tue, 15 Oct 2024 09:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1728984441;
-	bh=sUyNLwgvdyHnZjnJWQfiCuf+BL42Uc3XJFAl7cruPN8=;
+	s=korg; t=1728984599;
+	bh=W/TkYHxrVnIc6my5zXTtl1l07XVKWx/k+ZOyI6nY7JU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VJ25AqOiDE0QjNFKL5wK+Bhf81LORAA+oOT4+xHtugKBpF2VZhMvIGJxM8XBPqvYW
-	 6K3r6edYD14b5c0oFFne5a3zpVTJV469BNm1sFVezo444pvFwCPvsj11reNHlpcHnT
-	 KSmsLF1rCTDDWON1bOeH2kWvqYW51418mEAzl4zA=
-Date: Tue, 15 Oct 2024 11:27:18 +0200
+	b=tP61n0UCmDvkDYr88ehg2yHhb8z5YuWi8lRKMrQoG/5yLX2NWtd3oXF+0z5rW/1Fq
+	 oARGcPqNojD6bG47UcuKJ2HltfSxOe1J3jZC4PlPjCMQTe4HPGvCqMd7UDwZA48f1r
+	 E+Dv0g3Y6okAhs2z/Sa+Sv3LxpAmqzJHAAcT4tyU=
+Date: Tue, 15 Oct 2024 11:29:56 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -46,11 +46,10 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 2/2] gpio: create the /sys/class/gpio mount point with
+Subject: Re: [PATCH v2 0/2] gpio: create the /sys/class/gpio mount point with
  GPIO_SYSFS disabled
-Message-ID: <2024101510-shifter-pursuable-ded5@gregkh>
+Message-ID: <2024101531-lazy-recollect-6cbe@gregkh>
 References: <20241015-gpio-class-mountpoint-v2-0-7709301876ef@linaro.org>
- <20241015-gpio-class-mountpoint-v2-2-7709301876ef@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,98 +58,60 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241015-gpio-class-mountpoint-v2-2-7709301876ef@linaro.org>
+In-Reply-To: <20241015-gpio-class-mountpoint-v2-0-7709301876ef@linaro.org>
 
-On Tue, Oct 15, 2024 at 10:00:24AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Oct 15, 2024 at 10:00:22AM +0200, Bartosz Golaszewski wrote:
+> Greg, Rafael,
 > 
-> User-space may want to use some kind of a compatibility layer for the
-> deprecated GPIO sysfs ABI. This would typically involve mounting
-> a fuse-based filesystem using the GPIO character device to emulate the
-> sysfs behavior and layout.
+> The first patch in this series is small but may be seen as controversial
+> so here's a little backstory.
 
-Ick, no, don't mount a filesystem in /sys/class/ that's crazy, and
-wrong.  See my other response for why.
+Ah, now I see the 0/2 email...
 
-> With GPIO_SYSFS disabled, the /sys/class/gpio directory doesn't exist
-> and user-space cannot create it.
-
-userspace should NOT be creating it.
-
-> In order to facilitate moving away from
-> the sysfs, add a new Kconfig option that indicates to GPIOLIB that is
-> should create an always-empty directory where the GPIO class interface
-> would exist and enable this option by default if GPIO_SYSFS is not
-> selected.
-
-No, either support a real sysfs api here, or don't.  Don't paper over
-the api change by allowing this type of fake interface to live here,
-that is just going to be a maintance nightmare.  Attempting to push the
-"we don't support this user/kernel api anymore" off to a userspace
-developer is not how to do kernel development.
-
+> We have two sets of GPIO APIs currently in the kernel: the legacy one
+> based on numbers and the modern one using descriptors. Our goal is to
+> remove the old one from the kernel to which there are two obstacles: the
+> first one is easier and consists of converting all remaining in-kernel
+> users to the preferred API. This is tedious but it's all within our
+> control, just demands a lot of effort. The second obstacle is much harder
+> as it involves removing an existing kernel uABI that is the GPIO sysfs
+> interface at /sys/class/gpio.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/Kconfig   | 18 ++++++++++++++++++
->  drivers/gpio/gpiolib.c |  6 ++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index efddc6455315..1a3535bda779 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -69,6 +69,24 @@ config GPIO_SYSFS
->  	  use the character device /dev/gpiochipN with the appropriate
->  	  ioctl() operations instead.
->  
-> +config GPIO_SYSFS_CLASS_MOUNT_POINT
-> +	bool "Create empty /sys/class/gpio directory" if EXPERT
-> +	depends on !GPIO_SYSFS
-> +	default y
+> Despite providing a number of user-space tools making using the GPIO
+> character device easier, it's become clear that some users just prefer
+> how the sysfs interface works and want to keep using it. Unless we can
+> provide a drop-in replacement, they will protest any attempts at
+> removing it from the kernel. As the GPIO sysfs module is the main user
+> of the global GPIO numberspace, we will not be able to remove it from
+> the kernel either.
 
-Only "default y" if you can not boot without this enabled.  I doubt
-that's the case here.  If it is the case here, then don't remove the
-sysfs api in the first place.
+They should protest it's removal, and you should support it for forever,
+as that's the api that they rely on and you need to handle.  That's the
+joy of kernel development, you can't drop support for stuff people rely
+on, sorry.
 
-And why is it being removed?  Who relies on it that can't live with it
-being gone?
+> I am working on a FUSE-based libgpiod-to-sysfs compatibility layer that
+> could replace the in-kernel sysfs and keep all the user-space programs
+> running but in order to keep it fully compatible, we need to be able to
+> mount it at /sys/class/gpio. We can't create directories in sysfs from
+> user-space and with GPIO_SYSFS disabled, the directory is simply not
+> there.
 
+Ick, no, just keep the kernel stuff please.
 
-> +	help
-> +	  Say Y here to create an empty /sys/class/gpio directory.
-> +
-> +	  User-space may want to use some kind of a compatibility layer for the
-> +	  deprecated GPIO sysfs ABI. This would typically involve mounting
-> +	  a fuse-based filesystem using the GPIO character device to emulate
-> +	  the sysfs behavior and layout.
-> +
-> +	  This option makes GPIOLIB create an empty directory at /sys/class/gpio
-> +	  where user-space can mount the sysfs replacement and avoid having to
-> +	  change existing programs to adjust to different filesystem paths.
-> +
-> +	  If unsure, say Y.
-> +
->  config GPIO_CDEV
->  	bool
->  	prompt "Character device (/dev/gpiochipN) support" if EXPERT
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 97346b746ef5..1c8bd765d8e1 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4899,6 +4899,12 @@ static int __init gpiolib_dev_init(void)
->  		return ret;
->  	}
->  
-> +#if IS_ENABLED(CONFIG_GPIO_SYSFS_CLASS_MOUNT_POINT)
-> +	ret = sysfs_create_mount_point(class_kobj, "gpio");
-> +	if (ret)
-> +		pr_err("gpiolib: failed to create the GPIO class mountpoint\n");
-> +#endif /* CONFIG_GPIO_SYSFS_CLASS_MOUNT_POINT */
+> I would like to do what we already do for /sys/kernel/debug,
+> /sys/kernel/config, etc. and create an always-empty mount point at
+> /sys/class/gpio. To that end, I need the address of the /sys/class
+> kobject and the first patch in this series exports it.
 
-Nit, I think we know what the #endif is for, it was only 3 lines above :)
+No, debug and config are different, they are not "fake" subsystems, they
+are totally different interfaces and as such, can use those locations as
+mount points for their in-kernel filesystem interfaces.  You are wanting
+a random userspace mount point, that's totally different.
 
-thanks,
+Sorry, just live with the kernel code please.  Work to get all userspace
+moved off of it if you feel it is so bad, and only then can you remove
+it.
 
 greg k-h
 
