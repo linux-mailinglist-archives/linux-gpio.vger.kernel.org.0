@@ -1,153 +1,111 @@
-Return-Path: <linux-gpio+bounces-11382-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AA7499F8A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 23:06:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9621199FA71
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 23:47:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5E541F236EA
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 21:06:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 524B5282CCA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 21:47:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0514D1FBF7C;
-	Tue, 15 Oct 2024 21:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D9C20F5DF;
+	Tue, 15 Oct 2024 21:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="Ezo3bc8y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVztYQXJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-02.smtp.spacemail.com (out-02.smtp.spacemail.com [63.250.43.87])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BD61FF04C;
-	Tue, 15 Oct 2024 21:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFCA20F5D6
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 21:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729026321; cv=none; b=R7BPitCDpIjCnJhEpA5u4vH1wnMMhRznC0tH4+d1IFR6iCmG1cnDCzBT/PWjUYB7jD6T0nqKBm/Cf7lF1APwSDwgxl2xU37fQyplu/PwkctpXFYhq7M4PEephVCinCbKQM7VvT7fTbjN6TEBvz22il0FDssFTIBurQWHOgmx1+w=
+	t=1729028376; cv=none; b=f/vgYbMF5FrsODfrZOvu6E7jcxVIoOExPcYKi01sHZ0th+ffuRjU64aUb6lPgibYIiXDDp0s9lAMkPZSE/w2Rr/HsPfY4VXKZknNNGCbwc7b58mYd3QENptUkAq8QbqyTYDasvQx4o3fszUuofNNq2y7y+yofEthi/Z5eJHcVAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729026321; c=relaxed/simple;
-	bh=YscXqSr7g4C+sT65nIZWuK+o+u4BsXRQprc7EXuU42M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ki7HLR1a74EjKVV3hqlH5Oj8JauGPW0WkMKl3IMTOqw3kKS2jPy4ad9+AY/v/AcBFGk8gvfy0hLg4azxcU/YotQg9rojXrFGC+odU47yD9/iwLXolrhd7SNJFVMDJyHtDq7ByD8M9gX5ecGODKvdVKoR+10aegxkQblgyJMN1mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=Ezo3bc8y; arc=none smtp.client-ip=63.250.43.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
-Received: from prod-lbout-phx.jellyfish.systems (unknown [198.177.122.3])
-	by smtp.spacemail.com (Postfix) with ESMTPA id 4XSmp70VxNz4wK0;
-	Tue, 15 Oct 2024 21:05:19 +0000 (UTC)
-Received: from igor-systemproductname.lan (83.8.240.202.ipv4.supernova.orange.pl [83.8.240.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.spacemail.com (Postfix) with ESMTPSA id 4XSmnz2HWQz8sWQ;
-	Tue, 15 Oct 2024 21:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=mentallysanemainliners.org; s=spacemail; t=1729026313;
-	bh=YscXqSr7g4C+sT65nIZWuK+o+u4BsXRQprc7EXuU42M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ezo3bc8ym01UpzdOoDEQyfJ//SsxyF8EBGooaGqj0eT3dipKXE2Dt8QvjpRsKqGsS
-	 e8JfnwdR/QjALgPpqjlQd2do5N7QRsUjtEe6GsTC7uMWM/JPFiBdy+jWcGEorxeTqe
-	 cpNIxOi3ULHcXOtqTRlm46DPWur8+KnEpGTMk/wPKdH3KqwV8vyvwZOTzhUxrTygTG
-	 g+Uv8lY3fFB8LjQgWGqv4EMRZC5SVCtU5eaQBavWVbByaTgHfYsd6TY4ARSOfrZUf3
-	 GcSk12ygxNjwgFTz/jJbw2sD6WtBA4jeRXdZ9KH97Y0KI4mMbwz3Hycb3PENwPFbPT
-	 fVUPQOuJtMnrQ==
-From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] arm64: dts: exynos: Add button support for c1s
-Date: Tue, 15 Oct 2024 23:04:50 +0200
-Message-ID: <20241015210450.964093-6-igor.belwon@mentallysanemainliners.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241015210450.964093-1-igor.belwon@mentallysanemainliners.org>
-References: <20241015210450.964093-1-igor.belwon@mentallysanemainliners.org>
+	s=arc-20240116; t=1729028376; c=relaxed/simple;
+	bh=NY5tsDG+TepaBzQoeKpnr+oeJW9vQFfX1a5J87FfW34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lnRaBqOuqF3bIxKsUva0VntQrDHOLa+s7bPQvRU+o1awcZl/WaTggMrBucSSD0d60kQsytnvyzj7/b8VBwzqePH4DXmYxjWkQwr9c+9XLQm6TNIIR/hNRgf9DzOEsWBHEvAY7AGbpwTbMeXDJJFVdVzlTMvtBHbaT/qAThNDwC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bVztYQXJ; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2fb4fa17044so25822911fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 14:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729028372; x=1729633172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mt1uVRncBKO3P0OnuzsWJGZJCb1Wq0MWXLMHVEHZjFk=;
+        b=bVztYQXJ30hYLQ+Qy7++h3B3ZwpKaf0H1eyIPEWW3ZAFwDJm5owoR6jO4IGclK0LDB
+         Awx9gc7A+/n/D7hKW/duBwHIbX6qCFomfBhnUV12jFkinf0HOJ/TPl0vV4hq40jdz0vZ
+         oxQmfUffmixFc6CbSkNkiMhR1Lz0Yz7Jcco7UNZalHvjiQi3VcHFGHExhnEkubgHAGYp
+         pnsOn0P/MMLFwQ3bjFg0sSWsj0CGpoee79yewNpvH416/jf+c96uYPT1VuJ9aBgeKWEy
+         gujDPHln2njgnWt+w4exBRru6Q5RNDsrwYpQ9bVfGG0zzv+QEVAvb73MvtzQeTicZvtj
+         mUdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729028372; x=1729633172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mt1uVRncBKO3P0OnuzsWJGZJCb1Wq0MWXLMHVEHZjFk=;
+        b=p9ybScm7RkpzMsr1O0buSWXSp3V3VIaKOHaBr39UnK5w7l5CUDxZh0KbqWKIji9QQY
+         5gnl4EDtQ1qlLWuw+GZa/z31LAI4AQsi9oJtoZA2BLuDoIU+6bKy/l1GgArdwOWXK/pg
+         mEk9MrB0yF4FyObE7xBJ9ciPVGIU6XW64WQuZzjgdes9/TThQNOZ9mFS6AyPAkmKr5cs
+         7lYV133FUXdkcRwtX30FPC4lYMI6OW1Y2VbU14vXURhuxy6jacbVBiIrtIUxQUO9jgCU
+         L8GdfOhys0E1i3U7syMBixKXLUFhoB+ubGnWNcvU4f9pESZKhszN2GTp/mLloR0A8ebz
+         dfLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXH77WnLnXaSkg6Gc4iq2cQQUmIwiymZhTWCNVCZ/8ZtHKncUCveSktLWFVaVTBwAjfLMohYaPxUnGG@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeODzrknRyDfxjXOHj+Kx6za6b3oQ4bclflKnCL7OMdNLa04S4
+	MqCoUnNvFy0rV/ZOtZ3ryOSyJla1T7OCnw1wOK3C65KZ9YFD52xyJXAvi+yZO9S42WoEHqc7jDS
+	cnu/7ZoIhKVJHmQk9wn9CLX4HmFvWDRYHRtYlXA==
+X-Google-Smtp-Source: AGHT+IHa2frolcu/goJFwMBAu6bA/ZWorjW/fjQ26j0X/sDgzZ923uAKQjIodHfeTUJpoVqJmFqouNcmF7KCP+Bru7g=
+X-Received: by 2002:a2e:b8c6:0:b0:2fb:565a:d918 with SMTP id
+ 38308e7fff4ca-2fb565adc3bmr43605611fa.12.1729028372533; Tue, 15 Oct 2024
+ 14:39:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241015151126.2401855-1-arnd@kernel.org>
+In-Reply-To: <20241015151126.2401855-1-arnd@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Oct 2024 23:39:21 +0200
+Message-ID: <CACRpkdZwG0Qgxjy-tmh34Pjd5YzMmNXM=PktKMgd+rwbfPRSPg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: th1520: add a CONFIG_OF dependency
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+	Drew Fustini <dfustini@tenstorrent.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add button (gpio-keys) support for c1s (SM-N981B).
-Added are all hardware buttons (vol-, vol+ and power).
+On Tue, Oct 15, 2024 at 5:11=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 
-Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
----
- arch/arm64/boot/dts/exynos/exynos990-c1s.dts | 49 ++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+> When compile-testing without CONfIG_OF:
+>
+> drivers/pinctrl/pinctrl-th1520.c: In function 'th1520_pinctrl_dt_node_to_=
+map':
+> drivers/pinctrl/pinctrl-th1520.c:455:23: error: implicit declaration of f=
+unction 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_du=
+mp_config'? [-Wimplicit-function-declaration]
+>   455 |                 ret =3D pinconf_generic_parse_dt_config(child, pc=
+tldev, &configs, &nconfigs);
+>       |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |                       pinconf_generic_dump_config
+>
+> Enforce this using Kconig dependencies.
+>
+> Fixes: bed5cd6f8a98 ("pinctrl: Add driver for the T-Head TH1520 SoC")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos990-c1s.dts b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-index e57339357dc6..36a6f1377e92 100644
---- a/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos990-c1s.dts
-@@ -59,8 +59,57 @@ abox_reserved: audio@f7fb0000 {
- 			no-map;
- 		};
- 	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&key_power &key_voldown &key_volup>;
-+		pinctrl-names = "default";
-+
-+		power-key {
-+			label = "Power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+		};
-+
-+		voldown-key {
-+			label = "Volume Down";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		volup-key {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &oscclk {
- 	clock-frequency = <26000000>;
- };
-+
-+&pinctrl_alive {
-+	key_power: key-power-pins {
-+		samsung,pins = "gpa2-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+
-+	key_voldown: key-voldown-pins {
-+		samsung,pins = "gpa0-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+
-+	key_volup: key-volup-pins {
-+		samsung,pins = "gpa0-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+};
--- 
-2.45.2
+Patch applied!
 
+Yours,
+Linus Walleij
 
