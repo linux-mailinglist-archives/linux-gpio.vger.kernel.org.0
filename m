@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-11329-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11328-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23DC699DE83
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:35:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73FF099DE7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:35:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE8F5283143
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 06:35:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A8B3281D81
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 06:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD51818A6CF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B62189F56;
 	Tue, 15 Oct 2024 06:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="DcR9lsnH"
+	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="L0QFYw6m"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-03.smtp.spacemail.com (out-03.smtp.spacemail.com [63.250.43.88])
+Received: from out-02.smtp.spacemail.com (out-02.smtp.spacemail.com [63.250.43.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE31189F30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD667189BBF;
 	Tue, 15 Oct 2024 06:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.88
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728974102; cv=none; b=torHOYD2VIqLpezMvzbCmKahTWTZSNWk90F4ATAi58J/8n54+m2uE57L8UCGGRnuVXXsqWUyocb5xA9bclHvz/EOLubOrhXzvo16xEJ6pqK5QdYKCqBiaRES30VweEOUR9SRU0KxcfxOozkg9KQYttW38ueQGz4haXFlJQbzuzk=
+	t=1728974102; cv=none; b=HDnyZZXV5w7hc+9oojLzr8gnAfER4Y2HhH7rGVmP6o3YiGCMXyrks6ZQJRSrKhuQWjdJDASX9Mx96wUKgcsNNF5F37Ep3VMqZyyD5WKSw0h+NtIJQNghQ6ujB5EGDd5VeqQ5xmb9BRcRrHp//kj76pxdiaYepNsEn6EpUl4yyvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1728974102; c=relaxed/simple;
-	bh=gaLEZ2d4+Gi0QtC+bneHdGHQJ2El3KoJZBMz6bRlRjg=;
+	bh=N1tK/Gf1hqrbHvTeOFOJ9O1O9vrudZVyOkpSwb3tzr4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tdcG4YiJHlA7Kpdee8ocOgxITtG06iryeRmaNyo48rTjl4pxC3udkxywnstudhlCZuFR+HyIU48FYmIiIf9WR0vgE8WcXU2gqZhjIKqGfWkcbFdTyE62dNumC+iN06xIHGNXCX58d4/cZhMzb18vS5QkbWLakV7GYfRKeiIdlbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=DcR9lsnH; arc=none smtp.client-ip=63.250.43.88
+	 MIME-Version; b=c9B2+/M13irlvjx1x04GYcw/GxAUeK/RhQPaHu05SOXCWgj8mMhq6YKpHJBlxlxSdjBDBLuRcdYDlGMmP57lvEilC3mSDenedKZp/U5kpd2c5YQvdl2Cc0M/T2zzJ9RqMrL/fQzeCvneTeCa3RsDzmD97DyFYLUrmdIy3KapMoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=L0QFYw6m; arc=none smtp.client-ip=63.250.43.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
 Received: from prod-lbout-phx.jellyfish.systems (unknown [198.177.122.3])
-	by smtp.spacemail.com (Postfix) with ESMTPA id 4XSPLQ214xzGpTM;
-	Tue, 15 Oct 2024 06:28:30 +0000 (UTC)
+	by smtp.spacemail.com (Postfix) with ESMTPA id 4XSPLT2mNJz4wYS;
+	Tue, 15 Oct 2024 06:28:33 +0000 (UTC)
 Received: from igor-systemproductname.lan (83.8.240.202.ipv4.supernova.orange.pl [83.8.240.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.spacemail.com (Postfix) with ESMTPSA id 4XSPLG2Rygz2x9F;
-	Tue, 15 Oct 2024 06:28:22 +0000 (UTC)
+	by mail.spacemail.com (Postfix) with ESMTPSA id 4XSPLK3dS9z2x99;
+	Tue, 15 Oct 2024 06:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=mentallysanemainliners.org; s=spacemail; t=1728973705;
-	bh=gaLEZ2d4+Gi0QtC+bneHdGHQJ2El3KoJZBMz6bRlRjg=;
+	d=mentallysanemainliners.org; s=spacemail; t=1728973708;
+	bh=N1tK/Gf1hqrbHvTeOFOJ9O1O9vrudZVyOkpSwb3tzr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DcR9lsnH8W7SyiEYfbf3yNQDDoPVfFilFIzFqwdvVbQTPdkr2TBHVnhZYxzuXonSy
-	 wbZtiDT3ouVmxGnXzM0/emw7SQWtcrMzedL5ra9T2qtHIsrbeN3woP3Yf2NOaCJq+1
-	 O5EhxwVPmn4vMazsZIIjo8CYCRNlLzHiAoreIGBffDUhgOvZaRvo5kfQ3AWh4Zn60w
-	 W1BriBxr4tjrMKQ6uGFoJm6TxByQMpW3BuaCpOLwQ0g2NRDqVyNF8i5NxqRs6ORCX7
-	 uwnjskHFapW5/c2NFGTuUherMgBb4bd8//ziAHC11uskubcd8zPcvGUFgxYTKMr2Sn
-	 45Rkbed5O5M8A==
+	b=L0QFYw6m5XAau/bTCVXv/UpOZcJkK5AmADVGVM8hyUA4wCZtaJGd25rxru9eLgHDJ
+	 yAUYOlpNWFV9AhsHZQbD2GItIE4wwan4lqWAtgw6TYdTdx3ceGYbu4pgQ47u8scHga
+	 7A8E1P/VO+vIQLE7mWIZM593bx4BJ5c/DwXDin1wNJmqhi239y8YDHnv7G+ohfv7SK
+	 ml88pFZ1gNLBQSLdCcCbhaXkEPZNKQyeU0o2o3uCqy7ZO32uizXI/LjUjYvEUKs7Cq
+	 srHznZIIhr0qtjQ9R4M2fW33OlyFA+gVOyuiJj3E0DmFzVlRuFahiuBf83UUUkO09/
+	 W8wthRMbfySZA==
 From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -63,9 +63,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-samsung-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	david@mainlining.org
-Subject: [PATCH v1 1/7] dt-bindings: arm: cpus: Add Samsung Mongoose M5
-Date: Tue, 15 Oct 2024 08:27:40 +0200
-Message-ID: <20241015062746.713245-2-igor.belwon@mentallysanemainliners.org>
+Subject: [PATCH v1 2/7] dt-bindings: hwinfo: exynos-chipid: Add compatible for Exynos 990 chipid
+Date: Tue, 15 Oct 2024 08:27:41 +0200
+Message-ID: <20241015062746.713245-3-igor.belwon@mentallysanemainliners.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
 References: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
@@ -77,26 +77,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a compatible for the Samsung Mongoose M5 cores, found in
-the Exynos 990.
+Add a compatible for the exynos990-chipid node, used by
+Exynos 990 platforms.
 
 Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 ---
- Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ .../devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml        | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index e41a8aec6066..c54d20dd9d7e 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -207,6 +207,7 @@ properties:
-       - qcom,oryon
-       - qcom,scorpion
-       - samsung,mongoose-m2
-+      - samsung,mongoose-m5
- 
-   enable-method:
-     $ref: /schemas/types.yaml#/definitions/string
+diff --git a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
+index c50ee587dc1e..47a8d98346eb 100644
+--- a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
++++ b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
+@@ -24,6 +24,7 @@ properties:
+           - enum:
+               - samsung,exynos7885-chipid
+               - samsung,exynos8895-chipid
++              - samsung,exynos990-chipid
+               - samsung,exynosautov9-chipid
+               - samsung,exynosautov920-chipid
+           - const: samsung,exynos850-chipid
 -- 
 2.45.2
 
