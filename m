@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-11319-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11320-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BD9499DE4D
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:29:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B15899DE52
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:29:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 236F91F215C6
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 06:29:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93B18B22606
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 06:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AF1A18A6D7;
-	Tue, 15 Oct 2024 06:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF11B18B486;
+	Tue, 15 Oct 2024 06:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="h7/ozqdj"
+	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="BJgG3ZCv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-03.smtp.spacemail.com (out-03.smtp.spacemail.com [63.250.43.88])
+Received: from out-02.smtp.spacemail.com (out-02.smtp.spacemail.com [63.250.43.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D95E18A6A1;
-	Tue, 15 Oct 2024 06:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB5018B460;
+	Tue, 15 Oct 2024 06:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728973722; cv=none; b=HtQUrE4oklwwMTaNiOCnzIeB5Q/zS+GT1tRVRYK69zRl74gymfFktufQ6XbXgUlu5BkX4LDmJmL/1BgJCfW1bvnbpWXJhi+gCYJz3FVbIwAmFkaE0qWTWmmP4B6zJImQ9lpdfaEpnsTUIS4sM8QdEAW6c4vlab4WbJqFankpEVE=
+	t=1728973725; cv=none; b=Tx6Cr0wvf1jzLzfND7ZlLasa9ER1j844UK8kuyCuyFn77cwzlGHi9VXxKFPq4MdXLTaTOkUwYXNXgkrgpBhQ0uZ7R1Cnytj59fVR0AZYuqN00nGPDJ6q8HG6xmqvZwAIbG0KspgBdl4UWG2xjD947fyEGUv4cyuJnJpNfOOT+rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728973722; c=relaxed/simple;
-	bh=gUlS1i8qx/2ojHqYIjPj+RLbxOrGmJfLGOal1pufpCw=;
+	s=arc-20240116; t=1728973725; c=relaxed/simple;
+	bh=6iXJqsdkRbgn8i16UO7+hM+1BnZy9Hn3hwGkDSII/hw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mGrPdkyXgbpHqUcd1Cie/z8YUE3hSllrN1ik3rd33TesxaWquKgm3kyiJotFPCpeWIaWaRJg5EiWRmZ2K4DwZnEtJdKwL+HlpuVsjwC9Z9Tf70dPs3DDa/c2PpISznNdD4BR/SOoCMb9CFgimSstGG7fm6NXcKbLEhqSauduqxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=h7/ozqdj; arc=none smtp.client-ip=63.250.43.88
+	 MIME-Version; b=W5T6gwNJi0I1k03bYlWbKhpiFxrI5f6HBzlmRquoU6tD5dbzXKnCED+3Zfnda9ldJCvQOO6qhy7GXf9EGFnW7ENcnYd99FnIQNiLXSI1oJAG5xh5xHewzdH0JOWlwkANMHg3KVZL/2rIHt+A1vUBUV2cZ1FM4OY2d3FPnBHu19o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=BJgG3ZCv; arc=none smtp.client-ip=63.250.43.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
 Received: from prod-lbout-phx.jellyfish.systems (unknown [198.177.122.3])
-	by smtp.spacemail.com (Postfix) with ESMTPA id 4XSPLb4p6tzGpTQ;
-	Tue, 15 Oct 2024 06:28:39 +0000 (UTC)
+	by smtp.spacemail.com (Postfix) with ESMTPA id 4XSPLf5rRqz4wYs;
+	Tue, 15 Oct 2024 06:28:42 +0000 (UTC)
 Received: from igor-systemproductname.lan (83.8.240.202.ipv4.supernova.orange.pl [83.8.240.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.spacemail.com (Postfix) with ESMTPSA id 4XSPLR5Wl5z2x9F;
-	Tue, 15 Oct 2024 06:28:31 +0000 (UTC)
+	by mail.spacemail.com (Postfix) with ESMTPSA id 4XSPLV6jj2z2x99;
+	Tue, 15 Oct 2024 06:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=mentallysanemainliners.org; s=spacemail; t=1728973714;
-	bh=gUlS1i8qx/2ojHqYIjPj+RLbxOrGmJfLGOal1pufpCw=;
+	d=mentallysanemainliners.org; s=spacemail; t=1728973717;
+	bh=6iXJqsdkRbgn8i16UO7+hM+1BnZy9Hn3hwGkDSII/hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h7/ozqdjvIst0wenYXXPEQCqLVYXWnd8loL47VLt/5O65olsZGl4pJgib6zGium3+
-	 UpyuN4Uz6TjI61wkdr29JdVm7fr5l6H6I5K16A7Hox8bl9zXixji8ngKoH6RjBIAZI
-	 CkxELZov8QMuSzjFzV+aLphIjj9w1YeJggTjF10knzrTb7WfIhBGvTSU/mMS5jhv84
-	 bLnQ/KWhsN6IBsiJh7XIOr+W+lmaeoi3BLkRgSbL7uqow1Cfl/llRQYMcfx3vaXXhT
-	 qh287O82vFZrSJ6tnRa8AkYbzzqVLmF9mmpQuJ1J1UYHRH/utkpUxIIVRwALeJlW3S
-	 EwByDzv9dVmbw==
+	b=BJgG3ZCvtdIO/MW34lg1+c87yW5k+HuIAo8y2DdW/RZLQZ4BhtP1W48jVrgOjzCKx
+	 fRFl4+15H8obI9wO4rwqxLgImS73R6UaYIMZJbxuAvjjq1jD7kqRjWtC7l3DDuZUTm
+	 uBp4a+7bHgJ3cVXWbsuGvIrcM/Pg6PGl5gGrcnQ+DKhuE06aJNmxInu947leBRxzZx
+	 Ulg5k2BT3xI6tY/jtnGOL3yVQZDa2pDCFeO0DbbcV7YFVJbNr5gApRrhWCxUTd7qdr
+	 +jeXs3ome929eLNCwXNa/FUvcjqzf40bG22U72Au/hDvej9JO8EkjASe0S6CURzoec
+	 hX5JRUF+Hbv3Q==
 From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -63,9 +63,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-samsung-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	david@mainlining.org
-Subject: [PATCH v1 4/7] dt-bindings: pinctrl: samsung: Add exynos990-pinctrl compatible
-Date: Tue, 15 Oct 2024 08:27:43 +0200
-Message-ID: <20241015062746.713245-5-igor.belwon@mentallysanemainliners.org>
+Subject: [PATCH v1 5/7] dt-bindings: pinctrl: samsung: add exynos990-wakeup-eint compatible
+Date: Tue, 15 Oct 2024 08:27:44 +0200
+Message-ID: <20241015062746.713245-6-igor.belwon@mentallysanemainliners.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
 References: <20241015062746.713245-1-igor.belwon@mentallysanemainliners.org>
@@ -77,25 +77,25 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a dedicated compatible for the exynos990-pinctrl node.
+Add a dedicated compatible for the exynos990-wakeup-eint node.
 
 Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 ---
- Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
+ .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml       | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-index a2af2c88a331..7e6ef8249de6 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-@@ -54,6 +54,7 @@ properties:
-       - samsung,exynos7885-pinctrl
-       - samsung,exynos850-pinctrl
-       - samsung,exynos8895-pinctrl
-+      - samsung,exynos990-pinctrl
-       - samsung,exynosautov9-pinctrl
-       - samsung,exynosautov920-pinctrl
-       - tesla,fsd-pinctrl
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+index 91516fedc872..cda5bf4cee4a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+@@ -43,6 +43,7 @@ properties:
+               - samsung,exynos7885-wakeup-eint
+               - samsung,exynos850-wakeup-eint
+               - samsung,exynos8895-wakeup-eint
++              - samsung,exynos990-wakeup-eint
+           - const: samsung,exynos7-wakeup-eint
+       - items:
+           - enum:
 -- 
 2.45.2
 
