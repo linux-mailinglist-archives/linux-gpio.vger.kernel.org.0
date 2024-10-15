@@ -1,210 +1,205 @@
-Return-Path: <linux-gpio+bounces-11346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11347-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A3B99E082
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 10:12:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 854FC99E0F3
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 10:24:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94310282BE0
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:12:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46584282E7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Oct 2024 08:24:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E9E1C3046;
-	Tue, 15 Oct 2024 08:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400BA1C7B99;
+	Tue, 15 Oct 2024 08:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHXcpaKr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpRJMXPm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB591B4F0A;
-	Tue, 15 Oct 2024 08:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CBA18A6A5
+	for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 08:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728979926; cv=none; b=JZ5vsoEbmMbp/9vqKcrqFqhjKBNoYP5w+QLMws3FcviixzHEupI0L2Wj1qtRdTXEi60o7I+tvYQf2w2cqFqx7YV0yzfOVY58LED6T0aTFOlWee2KkRJtGYV76VGWs0lFTUmmNRU1PO43hcaqaVvkdtYs7nkAy6/CMR1IHFiOlQE=
+	t=1728980682; cv=none; b=hl/HdnJaACLXJPFueXBLJE5TlwvBIsSVh9fxegOcWtLBvvaNJ9z/Ke5AE1frTwuwxzROlRcN5bcyL7mPgMzYWFnk6hEgYrF42GideMuX+kA+tmvlFwlFn5GqE+44MDHCU6jguAO3KKGBJ71pkjzICDAkhYN6V6kY/YPaWs4LAfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728979926; c=relaxed/simple;
-	bh=YKZVkzYXS0uSyFZXdKd/pqercB3r2WXi4jqpBrkhMjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U2rB5qTFieDc4n5QKP1+Gz5mCCFmlj4bw5fs+kt8jr9JaxUugzJhRq7Abrdlv6PtajxUez1nFkx/UrjOnISqkHqOsZFzKKqzdJoMHjJ92CkUmROIUH4cs0EV7rFBMRX6BR31pe3W6QS0XVzgLsZE+WbPyNG1SaDPP+/b3FLHUYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHXcpaKr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DFEC4CECD;
-	Tue, 15 Oct 2024 08:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728979925;
-	bh=YKZVkzYXS0uSyFZXdKd/pqercB3r2WXi4jqpBrkhMjg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lHXcpaKrsOni6D4LKCyEP1nKmKLagR0ZbOQcquOdMCYn5IZWNfFbind+SzaX0Jnn9
-	 L3gqnDciJlpzRoASecIPfMDKNKq2qBjLp8N5W3o4DRZHSWrIlyoecEuEFsJh3AJUDd
-	 CrICl+j+TKq7Fj9L9d9h2mcbyz1A5eH5GJqK0FoV2rGal3QI2BShREGjJQqHJwuexk
-	 lFXCxbC14BhE26CHnE1AaMj9aU8Zvk46nKh6iSdoXaziPXNR3A7QHhd+C54XURBUvz
-	 Z5UrfEZDtZc1fbLhk48jtKgSFedD+fuuuCTAvJ3Y7MI9TgErZ5h3vN6QZumopYrbo0
-	 kgxr2cdop99Zg==
-Message-ID: <823f7e19-4815-44f7-aa7c-818c29892bfa@kernel.org>
-Date: Tue, 15 Oct 2024 10:11:56 +0200
+	s=arc-20240116; t=1728980682; c=relaxed/simple;
+	bh=nbB7/2WIrUNwER+4sckkYPVcyv21cQaLGvUkQqAfZIM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=APNDe0A17VWxfrhwXQAQYVUb4Ggxz7dd71X29wThv+GCEJuK3cPHD2aruECx8qFWKO3YrYKst06BkV8j/mooaUY2eFx6vtqKCzdcsOl8k0aHQOKvEMZD4Znw76hB86yLi5ToMWi0tZU70tDR7CWIuazFILfcz8DAoNzh251FDlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpRJMXPm; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728980680; x=1760516680;
+  h=date:from:to:cc:subject:message-id;
+  bh=nbB7/2WIrUNwER+4sckkYPVcyv21cQaLGvUkQqAfZIM=;
+  b=kpRJMXPm84lHuqHlhEP7GDwdsIz1TGQ3PgyCUMpJgcQD9jFnpoT57q4c
+   D3LgvOOddm2/+kAf6K9n2Kk+I3PZpEaz7qya6hEx2XoDPdEybqu4e9zg0
+   zmQ5qvoUPR5onUTnJK3ibGbCQfM8Qyvo6otCFlbdGq/X5Pqe298lR/tXz
+   sv97HNufvy6/ejk3dZs1N3Gf8klImmvP0tfQIa7vFHUl0lY4NKs2dKn9M
+   OJMQkofvWftIj9UVHeYRkES2UF/sQ+gC79bn918+uGJ/T9TFSz6uDPeIo
+   jAzgYzDksieyCgaC6o2OIb8uI14aQ1T7LAtIUVBeQEOIuyJ2TN1ykv6dx
+   A==;
+X-CSE-ConnectionGUID: mMJOqNE4RRGqJrlt4lZYAA==
+X-CSE-MsgGUID: wbZr09qWSR6RZTdmIQQo1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28311505"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="28311505"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 01:24:39 -0700
+X-CSE-ConnectionGUID: r6+4tPsWQb+Sl1i+rw8Aww==
+X-CSE-MsgGUID: a11sD68AT5CzYNHej9wC4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
+   d="scan'208";a="108551555"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 15 Oct 2024 01:24:38 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t0cr6-000HoZ-01;
+	Tue, 15 Oct 2024 08:24:36 +0000
+Date: Tue, 15 Oct 2024 16:24:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 476f18c0895df7b281eb84b3e687e6101c844338
+Message-ID: <202410151609.Z2kgnGTw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] pinctrl: meson: Add driver support for Amlogic A4
- SoCs
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20241014-a4_pinctrl-v2-0-3e74a65c285e@amlogic.com>
- <20241014-a4_pinctrl-v2-2-3e74a65c285e@amlogic.com>
- <aju3dgugbmj52i74j7csyuwejczsvk4sxtsdzuq62jutq7jxbe@wbc7fveloxv2>
- <1c054eb4-9ac1-4965-8847-d851b9fb1131@amlogic.com>
- <9c7f0c20-aafe-45b2-aa3e-c2c21e3a5b71@kernel.org>
- <6ef6bd97-571e-4243-951f-c6704cdb2b57@amlogic.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <6ef6bd97-571e-4243-951f-c6704cdb2b57@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 15/10/2024 10:08, Xianwei Zhao wrote:
-> Hi Krzysztof,
->      Thanks for your quick reply.
-> 
-> On 2024/10/15 15:59, Krzysztof Kozlowski wrote:
->> [ EXTERNAL EMAIL ]
->>
->> On 15/10/2024 09:54, Xianwei Zhao wrote:
->>> Hi Krzysztof,
->>>       Thanks for your reply.
->>>
->>> On 2024/10/15 14:01, Krzysztof Kozlowski wrote:
->>>> [ EXTERNAL EMAIL ]
->>>>
->>>> On Mon, Oct 14, 2024 at 05:05:52PM +0800, Xianwei Zhao wrote:
->>>>> Add a new pinctrl driver for Amlogic A4 SoCs which share
->>>>> the same register layout as the previous Amlogic S4.
->>>>>
->>>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>> ---
->>>>>    drivers/pinctrl/meson/Kconfig              |    6 +
->>>>>    drivers/pinctrl/meson/Makefile             |    1 +
->>>>>    drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 1176 ++++++++++++++++++++++++++++
->>>>>    3 files changed, 1183 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pinctrl/meson/Kconfig b/drivers/pinctrl/meson/Kconfig
->>>>> index cc397896762c..3e90bb5ec442 100644
->>>>> --- a/drivers/pinctrl/meson/Kconfig
->>>>> +++ b/drivers/pinctrl/meson/Kconfig
->>>>> @@ -67,6 +67,12 @@ config PINCTRL_MESON_S4
->>>>>         select PINCTRL_MESON_AXG_PMX
->>>>>         default y
->>>>>
->>>>> +config PINCTRL_AMLOGIC_A4
->>>>> +     tristate "Amlogic A4 SoC pinctrl driver"
->>>>> +     depends on ARM64
->>>>> +     select PINCTRL_MESON_AXG_PMX
->>>>> +     default y
->>>>> +
->>>>>    config PINCTRL_AMLOGIC_C3
->>>>>         tristate "Amlogic C3 SoC pinctrl driver"
->>>>>         depends on ARM64
->>>>> diff --git a/drivers/pinctrl/meson/Makefile b/drivers/pinctrl/meson/Makefile
->>>>> index 9e538b9ffb9b..c92a65a83344 100644
->>>>> --- a/drivers/pinctrl/meson/Makefile
->>>>> +++ b/drivers/pinctrl/meson/Makefile
->>>>> @@ -10,5 +10,6 @@ obj-$(CONFIG_PINCTRL_MESON_AXG) += pinctrl-meson-axg.o
->>>>>    obj-$(CONFIG_PINCTRL_MESON_G12A) += pinctrl-meson-g12a.o
->>>>>    obj-$(CONFIG_PINCTRL_MESON_A1) += pinctrl-meson-a1.o
->>>>>    obj-$(CONFIG_PINCTRL_MESON_S4) += pinctrl-meson-s4.o
->>>>> +obj-$(CONFIG_PINCTRL_AMLOGIC_A4) += pinctrl-amlogic-a4.o
->>>>>    obj-$(CONFIG_PINCTRL_AMLOGIC_C3) += pinctrl-amlogic-c3.o
->>>>>    obj-$(CONFIG_PINCTRL_AMLOGIC_T7) += pinctrl-amlogic-t7.o
->>>>> diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
->>>>> new file mode 100644
->>>>> index 000000000000..dee1ae43edb5
->>>>> --- /dev/null
->>>>> +++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
->>>>> @@ -0,0 +1,1176 @@
->>>>> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
->>>>> +/*
->>>>> + * Pin controller and GPIO driver for Amlogic A4 SoC.
->>>>> + *
->>>>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
->>>>> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>> + *         Huqiang Qin <huqiang.qin@amlogic.com>
->>>>> + */
->>>>> +
->>>>> +#include <dt-bindings/gpio/amlogic-a4-gpio.h>
->>>>
->>>> I do not see any usage of it.
->>>>
->>>
->>> The header file "amlogic-a4-gpio.h"  is used by AMLOGIC_PIN and
->>> GPIO_GROUP_V2, The code used  is  AMLOGIC_GPIO().
->>> This is binding definition.
->>
->> Then all other defines are not used. AMLOGIC_GPIO is not used by DTS, so
->> how is that a binding? Don't stuff random defines into the bindings.
->>
-> 
-> The AMlOGIC_GPIO definition depends on other definitions to be used.
-> It is not currently used by DTS, but will be used by other modules in 
-> the future.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 476f18c0895df7b281eb84b3e687e6101c844338  gpio: ljca: use devm_mutex_init() to simplify the error path and remove()
 
-You keep disagreeing, addressing only some parts and ignoring the rest.
-Explain me what do you bind here that you call it a "binding"?
+elapsed time: 1428m
 
-Best regards,
-Krzysztof
+configs tested: 112
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                 nsimosci_hs_smp_defconfig    gcc-14.1.0
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                                 defconfig    gcc-14.1.0
+arm                          moxart_defconfig    gcc-14.1.0
+arm                        mvebu_v5_defconfig    gcc-14.1.0
+arm                           spitz_defconfig    gcc-14.1.0
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386                                defconfig    clang-18
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                          ath25_defconfig    gcc-14.1.0
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                         allyesconfig    gcc-14.1.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.1.0
+parisc                            allnoconfig    clang-20
+parisc                           allyesconfig    gcc-14.1.0
+parisc                              defconfig    gcc-12
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                          allyesconfig    gcc-14.1.0
+powerpc                        fsp2_defconfig    gcc-14.1.0
+powerpc                   lite5200b_defconfig    gcc-14.1.0
+powerpc                 mpc836x_rdk_defconfig    gcc-14.1.0
+powerpc                      ppc64e_defconfig    gcc-14.1.0
+powerpc64                        alldefconfig    gcc-14.1.0
+riscv                            allmodconfig    gcc-14.1.0
+riscv                             allnoconfig    clang-20
+riscv                            allyesconfig    gcc-14.1.0
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                          sdk7780_defconfig    gcc-14.1.0
+sh                             sh03_defconfig    gcc-14.1.0
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-14.1.0
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64      buildonly-randconfig-001-20241015    clang-18
+x86_64      buildonly-randconfig-002-20241015    clang-18
+x86_64      buildonly-randconfig-003-20241015    clang-18
+x86_64      buildonly-randconfig-004-20241015    clang-18
+x86_64      buildonly-randconfig-005-20241015    clang-18
+x86_64      buildonly-randconfig-006-20241015    clang-18
+x86_64                              defconfig    clang-18
+x86_64                                  kexec    gcc-12
+x86_64                randconfig-001-20241015    clang-18
+x86_64                randconfig-002-20241015    clang-18
+x86_64                randconfig-003-20241015    clang-18
+x86_64                randconfig-004-20241015    clang-18
+x86_64                randconfig-005-20241015    clang-18
+x86_64                randconfig-006-20241015    clang-18
+x86_64                randconfig-011-20241015    clang-18
+x86_64                randconfig-012-20241015    clang-18
+x86_64                randconfig-013-20241015    clang-18
+x86_64                randconfig-014-20241015    clang-18
+x86_64                randconfig-015-20241015    clang-18
+x86_64                randconfig-016-20241015    clang-18
+x86_64                randconfig-071-20241015    clang-18
+x86_64                randconfig-072-20241015    clang-18
+x86_64                randconfig-073-20241015    clang-18
+x86_64                randconfig-074-20241015    clang-18
+x86_64                randconfig-075-20241015    clang-18
+x86_64                randconfig-076-20241015    clang-18
+x86_64                               rhel-8.3    gcc-12
+xtensa                            allnoconfig    gcc-14.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
