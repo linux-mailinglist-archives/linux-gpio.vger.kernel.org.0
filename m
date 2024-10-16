@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-11403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCADB9A024A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:20:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D410E9A024C
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:20:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69C221F2662B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 07:20:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89BCA1F2252A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 07:20:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF2CD1B6CF5;
-	Wed, 16 Oct 2024 07:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A19C1B392F;
+	Wed, 16 Oct 2024 07:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGvfHaqY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzV/3oHu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E46E189B91;
-	Wed, 16 Oct 2024 07:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475BC1B0F23;
+	Wed, 16 Oct 2024 07:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729063204; cv=none; b=FVN63v0hWrcVDOaIrHmtiYO+t+Q7anSBT1XoRQrM5ISFeEDoE0up8k/UiRHmn4J+tORC8/hiX4ILuyTWpEizXUvKDJMG6jx8koRJJkx6gJVxuOiIrxz9pVbAugR1AJO1vZElXEGpXDPJHQI/2dLIwnPptnueAN0N1tkPvbeMORo=
+	t=1729063236; cv=none; b=awg16LvZZlXhp4fwniostrP6vIHH7X5uvzW0wxB8eJvOuIvNgVlOss5beJ/YEhw8JLT21wAQzSlePUPmIXSlqJimmp+U70JsKwBlsZVkmBVN+RnThJx5Y0bnFhMaICOGG6sCmKPitYYU74LRjQ2zTstAs5q2AlRi4Xqf6DZCIdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729063204; c=relaxed/simple;
-	bh=Ujc+2yc2jMeZ/VzNCOM2ysZvhm+BmdYsXS5Mdc72pUs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dQeB0YLD/1wGl3E26nNOCSiztUB4zTcP4onsJcM2IX4orus8Kpu1leLRJB22VcRnqnd3pxTVIK6jFcngJ9xT3SdkH73IU9djrJ2hN1cys4fsZHFiIuROkOSyjpbtmMHfeEbYtj6KWXTesafrU4t1zGTZwDZnLvSp0yYc1Ljn+3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGvfHaqY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D534C4CEC5;
-	Wed, 16 Oct 2024 07:20:00 +0000 (UTC)
+	s=arc-20240116; t=1729063236; c=relaxed/simple;
+	bh=gsO3zWgs1hgag3fS5iDs280d1qhEO3+hKJhvrHYTRgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fG6JuDwBXiAxtmUnpaVp+rHAoTcP2VjSB1tbxOuoR64mzJwjSrrnHzNy2Ao9n0J3LuBOzwhCnHlbZkyb/P5NURJGyi2lUxcbYNbOeFs5ILTfA5a811MuDZ8EbzEtUUxK4LBsgDCHRj2UUeCOsoP8VqH7UP41rN0NySiEvvu9Dio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzV/3oHu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EE3C4CEC5;
+	Wed, 16 Oct 2024 07:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729063203;
-	bh=Ujc+2yc2jMeZ/VzNCOM2ysZvhm+BmdYsXS5Mdc72pUs=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=QGvfHaqYE1IPmCYN2J1T+qJYcsg8wDSEX1LYaClNfxY9O3dYPe73zos5OET+ESPeD
-	 ody3dNaDhb0wpr1R6YOXGZE0+VcVM5qy9/xmugZHjcHTsNCkVw8XcJxLWKFp8BVany
-	 GY4E5D8tKLIHWkkg/oWo+MD4uVeTbrIOSxrFu4mknFA06aN/7MIqh/1Y196FtKDP67
-	 KdtRYWF0JM7+Xa20bGpqkIIUedd0Iu85ESD3CO9b+jAa0clxBBFEoloT6Vd2xT5ZEb
-	 1a06UtmJ4899+L1Pz3nxYRoToAhDPsR7gtsvTZ0RTZkdM5QMVOIamQCSvJFfCC/Iux
-	 qESwPyraJY/7Q==
-Message-ID: <795657e1-5232-494c-9ac5-a62455b0f6f9@kernel.org>
-Date: Wed, 16 Oct 2024 09:19:58 +0200
+	s=k20201202; t=1729063236;
+	bh=gsO3zWgs1hgag3fS5iDs280d1qhEO3+hKJhvrHYTRgI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bzV/3oHulXfoPGQKxypVRK9VWosD90rAG3iopYa6PSxzzWuNQIo7VbWcUJH+HcXET
+	 ro5lo5K0+d6+VG2TajkN9obVFCc4SmTnhnXRvNg48+MCh3rLgjdLaPPFIYyqMrp4G9
+	 qZ/TxqqykB9tAk53fwBn7I6vhH+3sJYeKyTHn8Shbbd4ZLfBFL++O/8UwgBTbRnYM5
+	 MAXECOahrdCM4W4Y4ETFm3zF7FZAeln51w7EXw8b4XZnoW3AyUgZWNlZCZb23x85Ez
+	 mPAkaC6HZgzuTxzpPiABm9hwxBisBTc3DhSYDaonS+Kexe9h+vNMJ8vS20D/2wBElX
+	 jO2H4uPj4+04A==
+Message-ID: <7dc638fe-2bee-4693-9bca-2732eb502724@kernel.org>
+Date: Wed, 16 Oct 2024 09:20:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,18 +50,19 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Add Exynos990 pinctrl and chipid drivers
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>,
+Subject: Re: [PATCH v2 2/5] dt-bindings: pinctrl: samsung: add
+ exynos990-wakeup-eint compatible
+To: Igor Belwon <igor.belwon@mentallysanemainliners.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Alim Akhtar <alim.akhtar@samsung.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20241015210450.964093-1-igor.belwon@mentallysanemainliners.org>
- <m7sxqsmaczjufn2jqjmo5xribsihwy4s4w7nsybub2ji62klrm@ecwv57qogd73>
+ <20241015210450.964093-3-igor.belwon@mentallysanemainliners.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -106,30 +107,15 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <m7sxqsmaczjufn2jqjmo5xribsihwy4s4w7nsybub2ji62klrm@ecwv57qogd73>
+In-Reply-To: <20241015210450.964093-3-igor.belwon@mentallysanemainliners.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/10/2024 09:06, Krzysztof Kozlowski wrote:
-> On Tue, Oct 15, 2024 at 11:04:45PM +0200, Igor Belwon wrote:
->> Hi folks,
->>
->> This series adds support for the drivers for the Exynos 990 SoC. It
->> consists of the pinctrl driver and the chipid driver. The product ID
->> of this chip for chipid is 0xe9830000. The pinctrl bank types are the
->> same as in the Exynos 850 chip.
->>
->> Changes in v2:
->>  - Moved bindings from SoC bringup commit
->>  - Moved device tree changes from SoC bringup commit
->>  - Ordered pinctrl nodes by unit address in SoC DT
->>  - Moved the exynos990-wakeup-eint binding to the correct if.
-> 
-> Moved? That's not what I asked for. Are you sure you have this warning
-> free? That's a requirement for Samsung (see maintainer profile).
+On 15/10/2024 23:04, Igor Belwon wrote:
+> Add a dedicated compatible for the exynos990-wakeup-eint node.
 
-Ah, I see now what you did - you removed the interrupt. That's
-surprising. I don't understand why.
+This we see from the diff. Explain the hardware, why suddenly it became
+compatible with exynos850, even though it was not.
 
 Best regards,
 Krzysztof
