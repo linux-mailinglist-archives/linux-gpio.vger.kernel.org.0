@@ -1,63 +1,83 @@
-Return-Path: <linux-gpio+bounces-11457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AEA99A1093
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 19:26:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 073519A115B
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 20:15:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5A941F21F37
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 17:26:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B02991F25872
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 18:15:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F88A20FAA7;
-	Wed, 16 Oct 2024 17:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 198C72139DF;
+	Wed, 16 Oct 2024 18:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXKGxwga"
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="INR2+jAJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58F318732A;
-	Wed, 16 Oct 2024 17:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F084F18C90E
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 18:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729099604; cv=none; b=T8Rt8bdhF34CTYVvkEmdY3mBYls3MgGCRqW/N6PRQziAK10DARza/jc5vhPrEYeW/Shb7A80LyfyDGLryv2rSmuBIzaOVJJ1HqYnJsSGqQ4U0mbcRGQu037kJeD5HM1KFDXx2ARkr9tKJ47enyGAUj70RCG16cAQno0qLBJneM4=
+	t=1729102515; cv=none; b=JWgbufH54uUbduQEzNjmxDK5ois8Z7CdZrCvI3Ya/trlzqMu50h4Vxs2NrRT/XQsdUNvX+94ounnDAkH92q1lPzAuaGg44rx97WnuEvG6kJT+/9AZEHoP0LY7LmtWI4iQLEMkPF+M7LfghZEdBLJtjjPqXUEM7P/IZYDb+Uyd2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729099604; c=relaxed/simple;
-	bh=hVlu1hU3ASIiy3+g6KLNJAuWniSogilK3Nzm74AlCoE=;
+	s=arc-20240116; t=1729102515; c=relaxed/simple;
+	bh=mAq4AoMlxKysGb+Itk7iEnVK5aXThmWxihuz2MsOgLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUmr78Se3oh83OGjEvrcC6/jKr5SViq0qS1rSLeMeZ+jBeW4WQe15amFqtoScJCkSHR7sDXM0qD1kocfF9QpBtwhw7SgE0Vdt4rDfLJ+ct4DdJI+148IkbEv2vNDeEsybRCgMErMPFoil6IZ9VXRSomg4qz7qTnv5KKmEWbRrAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXKGxwga; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E384C4CEC5;
-	Wed, 16 Oct 2024 17:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729099603;
-	bh=hVlu1hU3ASIiy3+g6KLNJAuWniSogilK3Nzm74AlCoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pXKGxwgah5bwH0E7RiU/V1xffhKnQabV9zZ5cSasYKnygfFLqWf0q0crRw8N1EwAr
-	 yM5F/+zzdmq4YIqfMASGO/QBFMSoiRelopd0vrZgodEMzhfVp/qtT9aT+1Y/+TulJJ
-	 KyQ/IDhCNSk7xy/dw5VF7o/RnMeVAeKyCxEUxpE74Z89d1WLZaneeu8cmombhLK5Cq
-	 +2Ey0DBWr4xLp3DQ/IRSC8NDIbXHeVQhAZveYptNeq3X8DTd8UvjMq2+B29xNlACr8
-	 W1EJkKJITRZM9HtourFnwdvTbsyRms+Q6VOgoBml+9ORgcrIs/jKRg6WhTbYfLkk9F
-	 0FehuVNr9fhTQ==
-Date: Wed, 16 Oct 2024 12:26:42 -0500
-From: Rob Herring <robh@kernel.org>
-To: Marek Vasut <marex@denx.de>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, imx@lists.linux.dev,
-	kernel@dh-electronics.com, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: fsl,imx6ul-pinctrl: Convert
- i.MX35/5x/6 to YAML
-Message-ID: <20241016172642.GA1991636-robh@kernel.org>
-References: <20241015232107.100771-1-marex@denx.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhGTztYvaY/hMm4yncDmjyNbKsCcw8C+wQTVuwl+Z3AAUs6dx8nW4HTCIwoE8POi9jk40UXvMhUWY+qw35FN4XVRV38WOpNuBhXbZVJaY1bnbdyOXGS3+rpTcRJObEwZ1zwZy6eL6SudDa7GmXUx1iRgdW8TW9K+d5tL8Nt9MHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=INR2+jAJ; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7db637d1e4eso95019a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 11:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tenstorrent.com; s=google; t=1729102512; x=1729707312; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fkgg/XiYmuwxuU0YWtVe0AMhNojrUfbhQVkInOv4lBU=;
+        b=INR2+jAJbEwk/lqh9HxvjvDKHVEst9SoQW9s8r6q1l9gNdRlwMt7lB0U8Rv4Ce/VKh
+         bbMUgunkwVNGIuPffvvG272pEFNuHhPcY2xNY1KAyh2z+IzA3n/iK01CoE2BZlZdfMve
+         OWDJtiEJAV2GyvgZKIqV7xV3uMfVH7xM8S9QOrGGHK7feucyBKHpQRG/GhZvBoVSra1N
+         pHNXqM+J8oI4q1sd8rZ0hEZVxgulCT/WSk7QI9oPfHs35nM8hk/0BmolQETnjpZklpA5
+         zkTVRe0I5IsUI+Hh7d2jGcdWzaKkv+aYI7Fl/oMFXaxzTj4shtYW9IePVYaOp8d6y4ex
+         qhZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729102512; x=1729707312;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fkgg/XiYmuwxuU0YWtVe0AMhNojrUfbhQVkInOv4lBU=;
+        b=Sbj5D6NdfMP6BdyHJKVgzRBnhWS2o7lRlqx9ZyXe2nBnELNCMRRynH3pc/vdX7s+YU
+         zHKalOSLcJDcIhx97SuxomKtdEj8Jq/EjIBE+RWZtAWXjcHMvK+KQySCy6pV9kG3GCKT
+         9ZWp8ufo2QO44CZHcVXIWXCfLtJDVGvRGaTjoQIR92nFM0WXIaAHr19r7/0VmGY5io9M
+         wuOBN1bXRvWJGL2z2Y5IoeSYiXqm2Nr7WmV4xxkoz+CSk4+F6u7dQGpW4pDkfS5GgdBj
+         PDGbsPk6O0gdpycFWrY0Yce5I0x78tXSPQysa+IkB2DA7GMfSNca2mfHPsSWL+bnBVZp
+         3PYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUW9hQYK3EkMiZtov4qXCOVZuUV2rPuJHmf5Voxs1Y1tHfAHn/WkQqPvEG1ewu/3uBrbE/LPT3jgWH1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcoJfZZGWy62DLGuNBbouX5ljD8/rTKHoZXRSKOQEee6GFf31t
+	TpsEPw3wBCQ1Q14+gp3mrdSi2dAv1beU/SR88IsR1ThciNb0Ah5DhDKs55d3ewg=
+X-Google-Smtp-Source: AGHT+IFPs/1VOYlgs8ynT/CESZBXXAGDk0R6M8OaJ6CAurUUdtWENPzhZVi9D9E3OSJvDP5dBev+bQ==
+X-Received: by 2002:a17:90a:5647:b0:2e1:682b:361a with SMTP id 98e67ed59e1d1-2e3ab8bb22bmr5177503a91.28.1729102512217;
+        Wed, 16 Oct 2024 11:15:12 -0700 (PDT)
+Received: from x1 (71-34-69-82.ptld.qwest.net. [71.34.69.82])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e3e08d082dsm79600a91.23.2024.10.16.11.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 11:15:11 -0700 (PDT)
+Date: Wed, 16 Oct 2024 11:15:10 -0700
+From: Drew Fustini <dfustini@tenstorrent.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] pinctrl: th1520: Fix potential null pointer
+ dereference on func
+Message-ID: <ZxACrl/0hUE62eGN@x1>
+References: <20241016155655.334518-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,26 +86,47 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241015232107.100771-1-marex@denx.de>
+In-Reply-To: <20241016155655.334518-1-colin.i.king@gmail.com>
 
-On Wed, Oct 16, 2024 at 01:20:51AM +0200, Marek Vasut wrote:
-> The IOMUXC controller description is almost identical on i.MX35/5x/6 SoCs,
-> except for the configuration bits which differ across SoCs. Rename the
-> fsl,imx6ul-pinctrl.yaml to fsl,imx35-pinctrl.yaml, fill in compatible
-> strings for the other SoCs and fill in the various bits into desciption.
-> This way, i.MX35/5x/6 series SoCs can all be converted to YAML DT. Remove
-> the old text DT bindings description.
+On Wed, Oct 16, 2024 at 04:56:55PM +0100, Colin Ian King wrote:
+> The initialization of muxtype deferences pointer func before func
+> is sanity checked with a null pointer check, hence we have a null
+> pointer deference issue. Fix this by only deferencing func with
+> the assignment to muxtype after func has been null pointer checked.
+> 
+> Fixes: 1fc30cd92770 ("pinctrl: th1520: Factor out casts")
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/pinctrl/pinctrl-th1520.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+> index 7474d8da32f9..e641bad6728c 100644
+> --- a/drivers/pinctrl/pinctrl-th1520.c
+> +++ b/drivers/pinctrl/pinctrl-th1520.c
+> @@ -803,11 +803,12 @@ static int th1520_pinmux_set_mux(struct pinctrl_dev *pctldev,
+>  {
+>  	struct th1520_pinctrl *thp = pinctrl_dev_get_drvdata(pctldev);
+>  	const struct function_desc *func = pinmux_generic_get_function(pctldev, fsel);
+> -	enum th1520_muxtype muxtype = (uintptr_t)func->data;
+> +	enum th1520_muxtype muxtype;
+>  
+>  	if (!func)
+>  		return -EINVAL;
+>  
+> +	muxtype = (uintptr_t)func->data;
+>  	return th1520_pinmux_set(thp, thp->desc.pins[gsel].number,
+>  				 th1520_pad_muxdata(thp->desc.pins[gsel].drv_data),
+>  				 muxtype);
+> -- 
+> 2.39.5
+> 
 
-Just a nit, but I prefer 'DT schema' over using 'YAML DT' or just 
-'YAML'. YAML is just the file format we use and YAML is a lot of things 
-that's not DT schema including other uses/attempts with DT. 
+Acked-by: Drew Fustini <dfustini@tenstorrent.com>
 
-This generates lots of warnings (patchwork has the output) for pincfg 
-nodes which don't match 'grp$' node name convention. Do we really want 
-to "fix" all of those? We could allow anything, but then we don't 
-enforce anything on new stuff. Or this could be split between new and 
-old platforms. If we decide to fix any old ones, then just have to move 
-them to the "new" schema.
+I've tested this on top of next-20241016 on the BeagleV Ahead and
+LicheePi 4A.
 
-Rob
+thanks,
+drew
 
