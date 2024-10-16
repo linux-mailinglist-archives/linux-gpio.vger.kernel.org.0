@@ -1,110 +1,112 @@
-Return-Path: <linux-gpio+bounces-11468-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11469-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A832A9A129A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 21:33:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C4169A12CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 21:43:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE3A41C2153A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 19:33:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C54C8286803
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 19:43:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39E612144CC;
-	Wed, 16 Oct 2024 19:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD9F2144C5;
+	Wed, 16 Oct 2024 19:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fto4zm8j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4iLvASZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850BD2141C3
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 19:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27F1885BB;
+	Wed, 16 Oct 2024 19:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729107190; cv=none; b=EfA5KEWkQ7vsQ37ZdMiwRAFwVIFqwbo3cmIU8AC1Uf2uRTG/qtFCPLhXQmKPWarUj9/Es6Y2Al0ijQJ7xP+Bjwgq2SPM5Z/UNj8yyZJcUwQlfjim3FzKoLG1gnle1IGBgUMK6z8ETO0KmgIEd6eVJPXqaSv4HRFd9gUsL7kJgtg=
+	t=1729107777; cv=none; b=boMAqebTJtni7RoMfiFaSEls1UZ/fmtW68SDpBkabNgGdqFCRML9sGdQrwBuLC61UCSABM2Ay5wD7yzJ1roRUHhTiyFTS1fwUMdGU6mPI/fx49r12Vth0NkIZVegtLUuVjzib5UxqHuX9ihPPNNWONEJwXsTksqcD3Rx3aHHviI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729107190; c=relaxed/simple;
-	bh=A0/ojgL2fvBi172Wbp3BrgprcWdWI/pifihLOrfrqFU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s2A3SL5LaANGK/w8cBZZi2JiPflRSEAF7vArujUxEVNQdWMIXDxr2sctxn66Mw61vXayvJVgePnPsdkATBLo4gQrKQ9z0ZpZjzmxLzA7hoi1RRoeaeUQ9PkP7VfFYgnh96GYIsATc432V2fKZ+qiQVIfFz00y1+6gqRbO9i/O5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fto4zm8j; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6e38ebcc0abso3451207b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 12:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729107187; x=1729711987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A0/ojgL2fvBi172Wbp3BrgprcWdWI/pifihLOrfrqFU=;
-        b=fto4zm8jEXnrZwyrpLSk5wFdsLKwuNQ/MKYiEiwgJu3nGAyxURoDzpcc6WuvQ5EPlG
-         TreAAUM8XekH1LN01v64Yz2d7TQO+rZtNRKQTKCPT07zskLzxDeoViqpLEfgaRSdv2S9
-         lugKzScVhNtzA3qj4wIDd82kJYoWmapBCb2k7mVTe6Py9AcN6Ncem8iDFH33q5bQMj/9
-         DNshxbxJJ4pTbjPG0mg0AKDBXA3O79cstPamh4zVOpO0SLMbmVvyUCc1rqbGS3p/vgh0
-         YX4sXDk3T7Ul1BYZ9wIsDq6UumjJMPGw+N3/rOraIYe7t9vhK/3wAtCSWmUwm4oNMZ8g
-         bKvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729107187; x=1729711987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A0/ojgL2fvBi172Wbp3BrgprcWdWI/pifihLOrfrqFU=;
-        b=H/H6V8OD9ATnX9ksAi/8Qi5lKiuCQGatO4/ou7E3B63H10agnWmjiMMf8RdGnLVHqI
-         J0miJXppIcGCe5JzI+Bjhs2JdnMcAgOE4tOnNIvO7s7TgK0f31DpUBmJKMIGWO+Ik+y+
-         T9Ba5hd4+HdGH0nZ0MR6CiTcYcelNKYULVBCwYEcF1e+EdszWon154wMNIqaKs0rCq/Y
-         SsTHN3rGUryjDr/ayvAMiE7DvYLIqCWj8zZE2ygqDMRXK6hA9aidZh1SWchSRL6mtbQO
-         ZE3RGOlk9RObiKvT9pDJbgY1aCWsG//1PA+kOKLElIoZKj5N/qlCPqotVVJFLEpz2NFW
-         rwEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUX2l45ONwo5k9b8J4inRMsZMSddwaHBOQfNoB7ISWFGwmbrONxwDZpBXj2XEDwg+DjYvn1G0vBz5Dm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrXGBynbBSdNXJUPq1vJi7T85b01Lh3dQU4WF7XNzmCPmKJ/L4
-	cHa1Ncym2bvU3tiZuADgAL+okwbkZTxUKDxp9jKpQezooYoflEqvnDFcYjHahjmOVnTFmvTENwZ
-	HaKO5lkOEzbkO/JntXVP0ze7A1VuhAMzWA1i+KA==
-X-Google-Smtp-Source: AGHT+IGX07jif9j6w8MTv7ARHJ9/+lXGQIE504CDxiXkTKXqPtoikEAqB670DW1Rp7uFgjkSTFhaEJvJ5+tdTlNVD8w=
-X-Received: by 2002:a05:690c:388:b0:6e2:e22:12d9 with SMTP id
- 00721157ae682-6e3d41d08c3mr58083187b3.35.1729107187330; Wed, 16 Oct 2024
- 12:33:07 -0700 (PDT)
+	s=arc-20240116; t=1729107777; c=relaxed/simple;
+	bh=mZzMcn9MbCczzX11J8+TKZRX7Uh7hjxyr0xf7rLHKQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NVWkqe/rZHsIkdaFM4dndtgyI8uaskqHIQerA8Bcdb0GzeKTHESOSKx+tk8nskm9IKeJ2o79Y6BFr1eT7UbR7jdNaN/iWTvoiosoEOrRxF/ItDSj+YTH8pxCEUrErJvj2dBxZv3tWHRC0y3Hc0NW3i4NWgiO6AVAiUsuWhOgnm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4iLvASZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91584C4CEC5;
+	Wed, 16 Oct 2024 19:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729107776;
+	bh=mZzMcn9MbCczzX11J8+TKZRX7Uh7hjxyr0xf7rLHKQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I4iLvASZXoBveFjv8+9epyZ3FYoC2LL6NapNNmpAOzXB1KJ3kRDc54jMETDXw5YHS
+	 cmetoNHDqC83Ujklx02sR7d6YPdtEsJX5sMGdATx+U3+cDPwfgAc1gvl+PuSAe9njh
+	 ELlGAyeUVVU/xGLXeFmsssQFPdtGat14Jmru1f4Orr/1vhi/vSCXXIo6Zr8SS2d000
+	 Mva4ajJUqiYHsHTXMc1ZpThEAbr50ZKVBF+yNXLzB7rlofSfQFnRQf6CGVPcw7AKWK
+	 NKj+a23iHPnKFXmQU5SZoI1K1zw+scRrPeY6seTsFfRxCbuLA35vvQJe6Q1R7Ma1ls
+	 gen+M4eGWLaaQ==
+Date: Wed, 16 Oct 2024 20:42:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Lewis Hanly <lewis.hanly@microchip.com>
+Subject: Re: [RFC v7 4/6] gpio: mpfs: add polarfire soc gpio support
+Message-ID: <20241016-cobbler-connector-9b17ec158e3a@spud>
+References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
+ <20240723-underage-wheat-7dd65c2158e7@wendy>
+ <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
+ <20241016-shallot-nerd-51eeba039ba0@spud>
+ <20241016-dandelion-hypnosis-9d989bb2fdd1@spud>
+ <CACRpkdbJKWcjBG5ejwsNEgnnGWj69TAtKbgaHP3NiPM5GbiGQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241016155655.334518-1-colin.i.king@gmail.com> <CACRpkdYhsnRSOgdrDKp7BNqE4TpY3r--cPByFMsq0VRRjW-sAA@mail.gmail.com>
-In-Reply-To: <CACRpkdYhsnRSOgdrDKp7BNqE4TpY3r--cPByFMsq0VRRjW-sAA@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Oct 2024 21:32:55 +0200
-Message-ID: <CACRpkdYxsGC5Yay0dOaQEegrLKKkLrcivX7_GVpfQsEa=psdDA@mail.gmail.com>
-Subject: Re: [PATCH][next] pinctrl: th1520: Fix potential null pointer
- dereference on func
-To: Colin Ian King <colin.i.king@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Kees Bakker <kees@ijzerbout.nl>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, linux-riscv@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="A7dnOTkzHLL/fEWQ"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbJKWcjBG5ejwsNEgnnGWj69TAtKbgaHP3NiPM5GbiGQw@mail.gmail.com>
+
+
+--A7dnOTkzHLL/fEWQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 9:31=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Wed, Oct 16, 2024 at 5:56=E2=80=AFPM Colin Ian King <colin.i.king@gmai=
-l.com> wrote:
->
-> > The initialization of muxtype deferences pointer func before func
-> > is sanity checked with a null pointer check, hence we have a null
-> > pointer deference issue. Fix this by only deferencing func with
-> > the assignment to muxtype after func has been null pointer checked.
-> >
-> > Fixes: 1fc30cd92770 ("pinctrl: th1520: Factor out casts")
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
->
-> Patch applied, added Reported-by Kees since he mailed about this too.
+On Wed, Oct 16, 2024 at 09:26:13PM +0200, Linus Walleij wrote:
+> On Wed, Oct 16, 2024 at 12:29=E2=80=AFPM Conor Dooley <conor@kernel.org> =
+wrote:
+>=20
+> > What does bring a nice simplification though, IMO, is regmap. I am
+> > pretty sure that using it was one of the suggestions made last time
+> > Lewis submitted this - so I think I'm going to do that instead.
+>=20
+> If you have the time. Using GPIO_REGMAP for MMIO is not that
+> common and I think the driver is pretty neat as it stands.
 
-...which was actually the "other Kees" (Bakker), not the one the mailer
-suggested.
+As with using the common MMIO stuff, I don't think GPIO_REGMAP provides
+that much value as I cannot use the direction stuff from it. I was
+thinking of using regmap directly, like:
+https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/commit/?h=
+=3Dgpio-no-irq&id=3Dc8933e1e3600e3fa29efe28fbb2e343e133f9d67
+which I think reduces how ugly the two direction functions look.
 
-Yours,
-Linus Walleij
+--A7dnOTkzHLL/fEWQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZxAXOwAKCRB4tDGHoIJi
+0nzLAP97X5rdMU9SMZrBe1Wh3xgBP+5nGo+g7+4bYyVhUFNghQD9HYvVX4AGihOk
+4WFF1ruWtm4KhgoJOTAXVyYdsz6M4Ak=
+=uvpR
+-----END PGP SIGNATURE-----
+
+--A7dnOTkzHLL/fEWQ--
 
