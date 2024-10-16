@@ -1,123 +1,306 @@
-Return-Path: <linux-gpio+bounces-11398-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11399-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA4B9A0147
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 08:20:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0A929A0201
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:00:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC16A1F2133B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 06:20:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D264A1C20A65
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 07:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B69518D62D;
-	Wed, 16 Oct 2024 06:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E62F1C07F7;
+	Wed, 16 Oct 2024 06:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oh7Y6kSD"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="iODSIOfr";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="i1p38VoJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3088E18CC11
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 06:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D26C193408;
+	Wed, 16 Oct 2024 06:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729059621; cv=none; b=FtedNxnLIzPkOF4vjLS9sNSbykr89xZFPCykN4MPNckNsm0nSymHhkGS31RtTc9wZUKBfXwlxUvCtgpVEPm3AekWYvhfNpI+5TX3QaC8YBjZe+nvXOHn03Edec5hDFqzQP1W5pCqnPbpV+IkjeEawku/LbIcszATkijALv9rvME=
+	t=1729061945; cv=none; b=edfqySMaUEvJGBoBc2/PxNXt+DOgWYIDyKrdJeqzZe20skqlWQS2LW9DgKrJpS7+gFTWe1wq3C9caUZ3Kt2XJAB/6bvhNwEZQxdqbiLgQeoKKFb1x9+dun7N5IyP+RkzTJjFsEZ9GX/cUsun9TwHr/RXiSa4u01WAAejYauw5vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729059621; c=relaxed/simple;
-	bh=7JSgjt/5W2tCjzP18X4ou6+lz5nVznQreebmKWAODzU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gHQbrw4DgMZX9fQQgqtSTKm8EgGcSDVxhGy/UQHp3V7q/KlockHFt/0jasZukhmQcIWMd6tvvHXHE/H0hE9BQuB8a+4EqwNfho2JeBG1T+xgad7hf2R4z3Z6B4BpLspHw21liIJGXiCYz+KpJMnAOUy77omNT7+9ToHgvFSoO/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oh7Y6kSD; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43111bdd54cso9623455e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Oct 2024 23:20:19 -0700 (PDT)
+	s=arc-20240116; t=1729061945; c=relaxed/simple;
+	bh=5tTt0CYVrlFoN/zPjxeeLXJTuGrDNok35bzaWO14+Cw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CYCm/6LtHLCSwg/HgKKpVgFXqbob+WBr5gWNLQOi4/Df2Efgmb+TSBS7Eu/G1qcFvrjWkTca833osHXCJwTkIiYOhjjGKgWG1LTiKUts4+Q4yn0eMZFPEUvqUslZhAKpkX5T8yGK4vRanixwiATCuBCq1yKlXfANoww8pmxsHG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=iODSIOfr; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=i1p38VoJ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729059618; x=1729664418; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ytXbiH0qYtsul/qCW7PQjPX4CH9pWPDn7uLBaZcZ8e8=;
-        b=oh7Y6kSDfL5xUViTRqZExZYHSSkHzzuMa5qOo0bn7UbwwNiEqt0erX7pb9ZqNYQ8UZ
-         TJIMPqaef8ZzPoRk8rpbtpvmIwwmMYX2TaqcFslFSDk+xqj8z/gVPPXt7g9enExUWT1f
-         CgG1fgbUxFcC+j3/aRwwOspwr7kOVwsE8zPpnLweNgrI8Y1p7EkB+dh/BhnwWTXynsTM
-         UFnGKYlCS0TmFWK5/a8lT/fZ73CsIiUQGWOFwFP3wgCI8HPEUkBOy8UCWEVW6Yn3gUh5
-         MJd89I1bUIoyC/qZ4F+cFIsCtMH81kvnR3vmB9WAjeBTWcZ6RNI53N9OKiZ7SGnpxVO0
-         v+Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729059618; x=1729664418;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ytXbiH0qYtsul/qCW7PQjPX4CH9pWPDn7uLBaZcZ8e8=;
-        b=qIc8hcXTOkspA7tVNZBtnAYTT5ql0MoGWsqb4n0VxS4c7D0aJ9QDCi4S6Im0mH4GW2
-         TE0027QEuInB4x5UH7hiat7hTGifPVyADLpWvcs/fWUtIGqi6RInKut6J0iN9g2syr05
-         J72uIF99tNeI8itlx7I/UQu0DsIxMEifMG/80WVqAEnX7eLb4OzRTe3l6TEFJc4EfxZW
-         w5ZankbxHccNi17hxFBSiB5y4TCq67NjaIJ9+QNqa8T6cjfdqDxgPLZkkQmM0ERDZqkz
-         vYrISY2+4rw1CU3DnlfGBeMnnblXHB7Qnx89AjLIArGV8w3Ld6yHsSgYhF7/OzQL9QOB
-         FR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiCVQ/kI3BPoOiNX/cAZYAsdr8kcFWCwBfeVMDJdshgC2FghxG0TP9vTRCCWZK9yTZIymf/3G/kxg3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7Sp0IYHEg64nR20RrxKEUSaSOr8X8XtldepeqWZUFPuxpnEBj
-	Nuq7BxL5PVTbmCZ9YjCbGRn45qGC2z8vw67qav40eF7G0MZcEOeXOXbBS66UK14=
-X-Google-Smtp-Source: AGHT+IE+UoOQRJOTLHySardR6ldHyh0e9elEwxt//vmMPx6P7kv7VSPMQ2O80HK+68vbi8nkoz8Kdw==
-X-Received: by 2002:a5d:5886:0:b0:37d:54d0:1f18 with SMTP id ffacd0b85a97d-37d552a66edmr5968237f8f.6.1729059618378;
-        Tue, 15 Oct 2024 23:20:18 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.211.167])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa9050csm3398580f8f.48.2024.10.15.23.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 23:20:16 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
- Jaewon Kim <jaewon02.kim@samsung.com>, 
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: stable@vger.kernel.org, 
- Igor Belwon <igor.belwon@mentallysanemainliners.org>
-In-Reply-To: <20241015065848.29429-1-krzysztof.kozlowski@linaro.org>
-References: <20241015065848.29429-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: samsung: Fix interrupt
- constraint for variants with fallbacks
-Message-Id: <172905961565.5996.4588460479278512095.b4-ty@linaro.org>
-Date: Wed, 16 Oct 2024 08:20:15 +0200
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1729061940; x=1760597940;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=h3FiAS2c8YizfFhld4Gkb8iu9XdO1cCizUpi3AL9Jj0=;
+  b=iODSIOfr/swbEOI9u8XBgd8wtWEdkpExgVsXzAeB1AxLguKH0PB793zp
+   N3goVK4Xdx/2XlLtGItnuq6VKDr1LXXLRojsNBQOMLvDAHX8L/Jnqoeie
+   IhWu68+SqhcnPQcQK599o0xs1D+WiTuM40yaojBXLfTGWB1Mi1OG8S8Jj
+   VXYLem3LMEpdVppuKq2rI/XtuRMczpRVtssU5gHTfSmFhdb9KzD2En/PC
+   1jbs4Q0m3q1HsshfJOmXjtl99mY7fmknbUEuMy7JBceWFsl6FpOQX0o2Y
+   zJ5lDqp8Ix8ZafBWq6ihvT/hsMKbH8n3yclWdK0TrM1rxJpGfsf00I4mU
+   g==;
+X-CSE-ConnectionGUID: Rg86gjIzTH+50giFFivXVQ==
+X-CSE-MsgGUID: H1giANbDTES1H3Icy75oUQ==
+X-IronPort-AV: E=Sophos;i="6.11,207,1725314400"; 
+   d="scan'208";a="39483479"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 16 Oct 2024 08:58:58 +0200
+X-CheckPoint: {670F6431-33-BD84CFBF-E7C15A70}
+X-MAIL-CPID: 170C6D7412C83B37F70B93F383F63A79_3
+X-Control-Analysis: str=0001.0A682F19.670F6432.0044,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B2EB216FAFC;
+	Wed, 16 Oct 2024 08:58:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1729061933;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=h3FiAS2c8YizfFhld4Gkb8iu9XdO1cCizUpi3AL9Jj0=;
+	b=i1p38VoJ/6fn8+qB2vEr6ZIOwxGUKXApLYF2RNUVZSGTiT2GVUSIKjakXaa6InFGcTpyrF
+	CbXoU3KO6mLiYl2vy6k6OjrIzPheOE565QltyIRibok8Gx+DGGm5+ovFik/qMXAvZjWAlN
+	OOJVVfIL5+hV7vpgxubsUFCTanKL7FI+yBlM1EtJviR7aFJpYNUjTUJFDxD8gCnE65MEis
+	OjI3mGFAGIBYYSNzP94Z0IZtXygviXpZgvhg6aeLzlsuC6xo2i4xA0SaaLZ0Av8Y0pyyg6
+	op9R30679lpT+cu8Hxtcv7Bdnsfoy283dmZlYKCs6p+n1BDJUuh+4U0oeSS+qA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: devicetree@vger.kernel.org, Marek Vasut <marex@denx.de>
+Cc: Marek Vasut <marex@denx.de>, Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, imx@lists.linux.dev, kernel@dh-electronics.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: fsl, imx6ul-pinctrl: Convert i.MX35/5x/6 to YAML
+Date: Wed, 16 Oct 2024 08:58:51 +0200
+Message-ID: <2205972.irdbgypaU6@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20241015232107.100771-1-marex@denx.de>
+References: <20241015232107.100771-1-marex@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
+Hi Marek,
 
-On Tue, 15 Oct 2024 08:58:47 +0200, Krzysztof Kozlowski wrote:
-> Commit 904140fa4553 ("dt-bindings: pinctrl: samsung: use Exynos7
-> fallbacks for newer wake-up controllers") added
-> samsung,exynos7-wakeup-eint fallback to some compatibles, so the
-> intention in the if:then: conditions was to handle the cases:
-> 
-> 1. Single Exynos7 compatible or Exynos5433+Exynos7 or
->    Exynos7885+Exynos7: only one interrupt
-> 
-> [...]
+thanks for the conversion.
 
-Applied, thanks!
+Am Mittwoch, 16. Oktober 2024, 01:20:51 CEST schrieb Marek Vasut:
+> The IOMUXC controller description is almost identical on i.MX35/5x/6 SoCs,
+> except for the configuration bits which differ across SoCs. Rename the
+> fsl,imx6ul-pinctrl.yaml to fsl,imx35-pinctrl.yaml, fill in compatible
+> strings for the other SoCs and fill in the various bits into desciption.
+> This way, i.MX35/5x/6 series SoCs can all be converted to YAML DT. Remove
+> the old text DT bindings description.
+>=20
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> ---
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Dong Aisheng <aisheng.dong@nxp.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Jacky Bai <ping.bai@nxp.com>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: imx@lists.linux.dev
+> Cc: kernel@dh-electronics.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-gpio@vger.kernel.org
+> ---
+>  .../bindings/pinctrl/fsl,imx35-pinctrl.txt    | 33 --------
+>  ...ul-pinctrl.yaml =3D> fsl,imx35-pinctrl.yaml} | 79 +++++++++++++++++--
+>  .../bindings/pinctrl/fsl,imx50-pinctrl.txt    | 32 --------
+>  .../bindings/pinctrl/fsl,imx51-pinctrl.txt    | 32 --------
+>  .../bindings/pinctrl/fsl,imx53-pinctrl.txt    | 32 --------
+>  .../bindings/pinctrl/fsl,imx6dl-pinctrl.txt   | 38 ---------
+>  .../bindings/pinctrl/fsl,imx6q-pinctrl.txt    | 38 ---------
+>  .../bindings/pinctrl/fsl,imx6sl-pinctrl.txt   | 39 ---------
+>  .../bindings/pinctrl/fsl,imx6sll-pinctrl.txt  | 40 ----------
+>  .../bindings/pinctrl/fsl,imx6sx-pinctrl.txt   | 36 ---------
+>  10 files changed, 72 insertions(+), 327 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx35-p=
+inctrl.txt
+>  rename Documentation/devicetree/bindings/pinctrl/{fsl,imx6ul-pinctrl.yam=
+l =3D> fsl,imx35-pinctrl.yaml} (51%)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx50-p=
+inctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx51-p=
+inctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx53-p=
+inctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6dl-=
+pinctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6q-p=
+inctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sl-=
+pinctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sll=
+=2Dpinctrl.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sx-=
+pinctrl.txt
+>=20
+> [snip]
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl=
+=2Eyaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.yaml
+> similarity index 51%
+> rename from Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.=
+yaml
+> rename to Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.yaml
+> index 906b264a9e3cd..780d5fe0137e5 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.yaml
+> @@ -1,10 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/pinctrl/fsl,imx6ul-pinctrl.yaml#
+> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: Freescale IMX6UL IOMUX Controller
+> +title: Freescale IMX35/IMX5x/IMX6 IOMUX Controller
+> =20
+>  maintainers:
+>    - Dong Aisheng <aisheng.dong@nxp.com>
+> @@ -19,6 +19,15 @@ allOf:
+>  properties:
+>    compatible:
+>      enum:
+> +      - fsl,imx35-iomuxc
+> +      - fsl,imx50-iomuxc
+> +      - fsl,imx51-iomuxc
+> +      - fsl,imx53-iomuxc
 
-[1/2] dt-bindings: pinctrl: samsung: Fix interrupt constraint for variants with fallbacks
-      https://git.kernel.org/pinctrl/samsung/c/ffb30875172eabff727e2896f097ccd4bb68723f
-[2/2] dt-bindings: pinctrl: samsung: Add missing constraint for Exynos8895 interrupts
-      https://git.kernel.org/pinctrl/samsung/c/e0f89ba1e04307a0060b354c40d29d008a3fef6e
+imx50.dtsi is using
+> "fsl,imx50-iomuxc", "fsl,imx53-iomuxc";
 
+So either the .dtsi or this schema needs to be adjusted.
+
+> +      - fsl,imx6dl-iomuxc
+> +      - fsl,imx6q-iomuxc
+> +      - fsl,imx6sl-iomuxc
+> +      - fsl,imx6sll-iomuxc
+> +      - fsl,imx6sx-iomuxc
+>        - fsl,imx6ul-iomuxc
+>        - fsl,imx6ull-iomuxc-snvs
+> =20
+> @@ -39,9 +48,9 @@ patternProperties:
+>            each entry consists of 6 integers and represents the mux and c=
+onfig
+>            setting for one pin. The first 5 integers <mux_reg conf_reg in=
+put_reg
+>            mux_val input_val> are specified using a PIN_FUNC_ID macro, wh=
+ich can
+> -          be found in <arch/arm/boot/dts/imx6ul-pinfunc.h>. The last int=
+eger
+> +          be found in <arch/arm/boot/dts/nxp/imx/imx*-pinfunc.h>. The la=
+st integer
+>            CONFIG is the pad setting value like pull-up on this pin. Plea=
+se
+> -          refer to i.MX6UL Reference Manual for detailed CONFIG settings.
+> +          refer to matching i.MX Reference Manual for detailed CONFIG se=
+ttings.
+>          $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>          items:
+>            items:
+> @@ -56,7 +65,41 @@ patternProperties:
+>              - description: |
+>                  "input_val" indicates the select input value to be appli=
+ed.
+>              - description: |
+> -                "pad_setting" indicates the pad configuration value to b=
+e applied:
+> +                "pad_setting" indicates the pad configuration value to b=
+e applied.
+> +                Common i.MX35
+> +                  PAD_CTL_DRIVE_VOLAGAGE_18       (1 << 13)
+> +                  PAD_CTL_DRIVE_VOLAGAGE_33       (0 << 13)
+> +                  PAD_CTL_HYS                     (1 << 8)
+> +                  PAD_CTL_PKE                     (1 << 7)
+> +                  PAD_CTL_PUE                     (1 << 6)
+> +                  PAD_CTL_PUS_100K_DOWN           (0 << 4)
+> +                  PAD_CTL_PUS_47K_UP              (1 << 4)
+> +                  PAD_CTL_PUS_100K_UP             (2 << 4)
+> +                  PAD_CTL_PUS_22K_UP              (3 << 4)
+> +                  PAD_CTL_ODE_CMOS                (0 << 3)
+> +                  PAD_CTL_ODE_OPENDRAIN           (1 << 3)
+> +                  PAD_CTL_DSE_NOMINAL             (0 << 1)
+> +                  PAD_CTL_DSE_HIGH                (1 << 1)
+> +                  PAD_CTL_DSE_MAX                 (2 << 1)
+> +                  PAD_CTL_SRE_FAST                (1 << 0)
+> +                  PAD_CTL_SRE_SLOW                (0 << 0)
+> +                Common i.MX50/i.MX51/i.MX53 bits
+> +                  PAD_CTL_HVE                     (1 << 13)
+> +                  PAD_CTL_HYS                     (1 << 8)
+> +                  PAD_CTL_PKE                     (1 << 7)
+> +                  PAD_CTL_PUE                     (1 << 6)
+> +                  PAD_CTL_PUS_100K_DOWN           (0 << 4)
+> +                  PAD_CTL_PUS_47K_UP              (1 << 4)
+> +                  PAD_CTL_PUS_100K_UP             (2 << 4)
+> +                  PAD_CTL_PUS_22K_UP              (3 << 4)
+> +                  PAD_CTL_ODE                     (1 << 3)
+> +                  PAD_CTL_DSE_LOW                 (0 << 1)
+> +                  PAD_CTL_DSE_MED                 (1 << 1)
+> +                  PAD_CTL_DSE_HIGH                (2 << 1)
+> +                  PAD_CTL_DSE_MAX                 (3 << 1)
+> +                  PAD_CTL_SRE_FAST                (1 << 0)
+> +                  PAD_CTL_SRE_SLOW                (0 << 0)
+> +                Common i.MX6 bits
+>                    PAD_CTL_HYS                     (1 << 16)
+>                    PAD_CTL_PUS_100K_DOWN           (0 << 14)
+>                    PAD_CTL_PUS_47K_UP              (1 << 14)
+> @@ -69,6 +112,11 @@ patternProperties:
+>                    PAD_CTL_SPEED_MED               (1 << 6)
+>                    PAD_CTL_SPEED_HIGH              (3 << 6)
+>                    PAD_CTL_DSE_DISABLE             (0 << 3)
+> +                  PAD_CTL_SRE_FAST                (1 << 0)
+> +                  PAD_CTL_SRE_SLOW                (0 << 0)
+> +                i.MX6SL/MX6SLL specific bits
+> +                  PAD_CTL_LVE                     (1 << 22) (MX6SL/SLL o=
+nly)
+
+Is this comment 'MX6SL/SLL only' really needed? This bit is already in the
+i.MX6SL/MX6SLL only section.
+
+Despite that, this looks good.
 Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Alexander
+
+> +                i.MX6SLL/i.MX6SX/i.MX6UL/i.MX6ULL specific bits
+>                    PAD_CTL_DSE_260ohm              (1 << 3)
+>                    PAD_CTL_DSE_130ohm              (2 << 3)
+>                    PAD_CTL_DSE_87ohm               (3 << 3)
+> @@ -76,8 +124,14 @@ patternProperties:
+>                    PAD_CTL_DSE_52ohm               (5 << 3)
+>                    PAD_CTL_DSE_43ohm               (6 << 3)
+>                    PAD_CTL_DSE_37ohm               (7 << 3)
+> -                  PAD_CTL_SRE_FAST                (1 << 0)
+> -                  PAD_CTL_SRE_SLOW                (0 << 0)
+> +                i.MX6DL/i.MX6Q/i.MX6SL specific bits
+> +                  PAD_CTL_DSE_240ohm              (1 << 3)
+> +                  PAD_CTL_DSE_120ohm              (2 << 3)
+> +                  PAD_CTL_DSE_80ohm               (3 << 3)
+> +                  PAD_CTL_DSE_60ohm               (4 << 3)
+> +                  PAD_CTL_DSE_48ohm               (5 << 3)
+> +                  PAD_CTL_DSE_40ohm               (6 << 3)
+> +                  PAD_CTL_DSE_34ohm               (7 << 3)
+> =20
+>      required:
+>        - fsl,pins
+> [snip]
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
 
