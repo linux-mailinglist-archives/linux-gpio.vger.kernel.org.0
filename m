@@ -1,151 +1,175 @@
-Return-Path: <linux-gpio+bounces-11408-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11409-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 885F39A028B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:27:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D6DD9A0313
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:51:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA9811C22894
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 07:27:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B872D1F21D95
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 07:51:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47A6E1C07EA;
-	Wed, 16 Oct 2024 07:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF6E1C4A29;
+	Wed, 16 Oct 2024 07:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfSxyeiS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ps750OQo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77971BE871;
-	Wed, 16 Oct 2024 07:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1F81C32E4
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 07:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729063658; cv=none; b=umsujrSk9B44IA38CXQZGvxdKPBauIUMUsWbVzCUzXqzLS0Kdd3MysNA0MUQ+LwK6M0N/J5EPQW9cuxD7juADWpaDafOUiQ7kkGCD3877RjeeErWMHGmdVhcmiMPELfXR5zd3ENRzI13mCHtEGg0mrFfHsmv+5BJI8CV9HsFpfA=
+	t=1729065074; cv=none; b=GQd2EHowpCkhqqvp0lavKtt7SrifRZo9kbee5diGCBYTSnM14/XabDkqLkcD6ppqrZjD8r77PiTQGkx3NQO9q30nrC6+icbqHBwx7f8e8qfZoLQuOq7LdSGrsBX83iV22OZ2l2dSDa17PkffpMjyvGmc0jRhCxRjiF+1v2yMgUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729063658; c=relaxed/simple;
-	bh=uap422286zWiWxsuCiR+KJeq/XyEPEi3vxi+T69rpoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ee1biMfNNsFz9KD+m+TYmqIuNrX3q3GczqkLffnvkvY8H21eSOiSgtT+5nPpSYQOfG4S70arQROYHvXIRNZ3/fKhRfkgxCemJ1u8kcYatTqgqOucyytpVqDaNUguA90EqWsqSROa+fkjgm4eOYdXw9U/pBoyVDxJRmrFP7VNDp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfSxyeiS; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20ceb8bd22fso24036135ad.3;
-        Wed, 16 Oct 2024 00:27:36 -0700 (PDT)
+	s=arc-20240116; t=1729065074; c=relaxed/simple;
+	bh=CX55jp38yfgiJKr7PEViU8B6zkCbH0ptnSEPA/hqHOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FAWHlkF2ymd1CwmJqvlPptzKXJhz0F4D1Z7N2s9zm4EW2F6OrO0S1B/NT3M7+Yk6xfPBW5Ge0MSMX8g0JqeKJqBZKeCC23Nxy3FY+YtDSxsDhMbm0Iq2fhyz6WtmpCrj/FgzQlnsvVmG+Y8IzzhdOjnxOzv/AxPgbDCzBZ11CrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ps750OQo; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2fb3c3d5513so39916041fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 00:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729063656; x=1729668456; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qvcMjb9zqr+vpqKpHdzOOkiE8tGgp7Jw24G/OJ0HAoM=;
-        b=FfSxyeiSWnGjwAbip2FyAaVJKB8Wa1grs2lGFWPnSaWsXHuvrbmTF0M7FuV3O/4EOz
-         LZDqnx6zkAAFxXWQLvPp2OB/hkU2QblVWmgXOVXg6Z5I/bR7I7SaVzG2B8dOO8H3HUYH
-         nFDo4saePHt1S5FhGWDc59ptVRoF7Wz/W0EMgHZ8kaE7P7oX13ltkpFaKZi0x8mGwiIj
-         rGg75NZwf6y9V9s9odTn9C617CV7zFoS8aDwIW2PPyLaaTVd3aYjub1Hlg7nVKKd9E4z
-         KKzsgZBXFtttJsT/CkuiwB7K5IJ7pGsq/VSCGfChfh3cqCNiylRtVgxj1nWQGjbf8870
-         LPlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729063656; x=1729668456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729065070; x=1729669870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qvcMjb9zqr+vpqKpHdzOOkiE8tGgp7Jw24G/OJ0HAoM=;
-        b=wjZEQly0hd7ywb9ta1KfGkbBlJD1CSIkpiP4P6aNeyBNrdsFprvmCy/MS2OBzL1dLs
-         0e369pNBIPGSeYMdlI6LmZ3wwowhHt0FTK0AD+HFzBu2T9mdqBdgBZsW4Rr7eZSlVRpp
-         fhLpojIG1BctmfHuPTsYc4ONVmNfbaHacXzdtPy7ju+/jHDB7s2vOjAYqJ/w2Hmv2Fxp
-         Z7LEyEJpYB0JkVo7mMqAeLek3BlQxXiHWb6o6MApUo2ie+e1aDTV8Qd8kCv9VnagGiV+
-         UYbNWfL2eFUCy3yESPf5pY+js66OtcAsJFPYZL9b3JDVhwTA9nYy2+pO0KaOnPOdjTG4
-         hSYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLdd4HBQiDz7GfdWRX9J6qPbtA4pUZnRA1P89dUhoMv8RZg4dJ6+Q7lW1+U23DE3eqZbLyYGD0PmHiWs0l@vger.kernel.org, AJvYcCWSR38PufX82hx+oupk8zvzM52Jc2wmShrecIQc1q2Fnq3dTitMgFFB4qMdLvHauFzYdu2qDVxXeVM0@vger.kernel.org
-X-Gm-Message-State: AOJu0YygO5ImZD7pcjJxcp1kETIGet+irqxmtSFy7wJhkfolI0sX7QBQ
-	yiIVYos7Uy8oGU6ZR8giZhxo4cWlnbVQTeIDysDVaB5n9rRhrOhS
-X-Google-Smtp-Source: AGHT+IFZQw+oq2nxz6UOhRjoj1bBBlnAw4t4aNpfcGoPbiQvLWHmNh3AsVMoQqVcMoEkNGOIWuvVpA==
-X-Received: by 2002:a17:90b:314a:b0:2e2:8bce:3d02 with SMTP id 98e67ed59e1d1-2e31536e4dfmr18374001a91.30.1729063655943;
-        Wed, 16 Oct 2024 00:27:35 -0700 (PDT)
-Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e392f039b7sm3344168a91.31.2024.10.16.00.27.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 00:27:35 -0700 (PDT)
-Date: Wed, 16 Oct 2024 15:27:30 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 6/6] gpiolib: notify user-space about in-kernel line
- state changes
-Message-ID: <20241016072730.GA120095@rigel>
-References: <20241015-gpio-notify-in-kernel-events-v3-0-9edf05802271@linaro.org>
- <20241015-gpio-notify-in-kernel-events-v3-6-9edf05802271@linaro.org>
- <20241016051944.GA42100@rigel>
+        bh=RKOecBDxA7R7ooyejGQiOrpnacbKGU17iQZ2JMHiXgA=;
+        b=Ps750OQoShuQFEFIqXDUxpcUDZ7UC2DYW4igmY8byHdT4K+CUVxw6hPLmBluH2Dg54
+         KTCY277H43mkvkZJlz75k//tKsYoeG9ezI74Gr+H++h1WIgWslf1mQ403I7cT8tCqs13
+         TG7deBU8B35jPTEu/CHQUlIV+ECCT88ig9t5mWrME0HVUrfr8V6xDlqAImmJggQJIwW/
+         avJX/McuUGzFOY9JqfDhDsQt0gJQ+v2H/LW+GzffTYK3tNE73Hh4ivVvqHQRKOzU/MAc
+         t0yul8NK4EBbwGCZiltP9yEHHPKBWljrqLdXSQ++liTc/0MAKaVDyF5eCiP0+VuuRXpr
+         mYlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729065070; x=1729669870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RKOecBDxA7R7ooyejGQiOrpnacbKGU17iQZ2JMHiXgA=;
+        b=R9x+PKIFKBIf6RxUYWHl1CPCjKAQrBA+X/1n6y8e7K35x793FgfZSItJJKUr6Xlok6
+         D9bMFxsz6tW7dciSqZuF0e68jtHKRnhbyo3jtun2yS7hy6lrzXy10VLcGFWqx9vTj4jm
+         5tBdqqAVqTBL4eVkaSiQvptEe2BSjneuoW2/8kouMwEcRwX/1dvvN09MOXCcxOnYkwAW
+         BY9ADdhRwS48qVUhbAxegaTwDGOvO5VDZnYg9mnJfm7WbXs+BMo7gMiZGr35shSePUsQ
+         MyWzacTpvzUpcaI7yBRvTDyIWylLnADU1bWwuXWUo3JOkafQbEBJ/pGGAg4D6mJVbjW/
+         GI8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXV1rRC33F0uJ1YWB0oKEYbZB0o6djnxVXNnQ+Cb4TCxp44fDeq50AyZpSV54D0EWwPy/16NTNmCnYq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSaIZVSI1oE6kUJITebB5db3LglF1K7rywfC74S28E9zElh1EW
+	heeh/xZlFA5uTKmeyJInz31hr864rbQRXnCN3ZFl4m5d1MVSAKGC5D07qNzOzY2gL7EWndNNEk8
+	9E5pUHyrKQNR5QqbsMxq+HBuwKQ/qaMOaUHJqUQ==
+X-Google-Smtp-Source: AGHT+IHyG9D2npkBCRGka0dVdATtnJvCOeazTrlR/QpCwLkD5hlTvCka/gqxC6UMfWoYnBuBjKG5yIB3fAAr0mZv6WY=
+X-Received: by 2002:a2e:bc24:0:b0:2fb:51e0:951 with SMTP id
+ 38308e7fff4ca-2fb51e00cd9mr45796831fa.7.1729065070248; Wed, 16 Oct 2024
+ 00:51:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241016051944.GA42100@rigel>
+References: <20241015-gpio-notify-in-kernel-events-v3-0-9edf05802271@linaro.org>
+ <20241015-gpio-notify-in-kernel-events-v3-6-9edf05802271@linaro.org>
+ <20241016051944.GA42100@rigel> <20241016072730.GA120095@rigel>
+In-Reply-To: <20241016072730.GA120095@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 16 Oct 2024 09:50:58 +0200
+Message-ID: <CAMRc=MeAfuObBodQu24yUnDbYVd7bFQAeimF5U75chcAK69r6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] gpiolib: notify user-space about in-kernel line
+ state changes
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 01:19:44PM +0800, Kent Gibson wrote:
-> On Tue, Oct 15, 2024 at 12:56:18PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Oct 16, 2024 at 9:27=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Wed, Oct 16, 2024 at 01:19:44PM +0800, Kent Gibson wrote:
+> > On Tue, Oct 15, 2024 at 12:56:18PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > -   return gpio_do_set_config(guard.gc, gpio_chip_hwgpio(desc), confi=
+g);
+> > > +   ret =3D gpio_do_set_config(guard.gc, gpio_chip_hwgpio(desc), conf=
+ig);
+> > > +   if (ret =3D=3D 0) {
+> > > +           /* These are the only options we notify the userspace abo=
+ut. */
+> > > +           switch (pinconf_to_config_param(config)) {
+> > > +           case PIN_CONFIG_BIAS_DISABLE:
+> > > +           case PIN_CONFIG_BIAS_PULL_DOWN:
+> > > +           case PIN_CONFIG_BIAS_PULL_UP:
+> > > +           case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > > +           case PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> > > +           case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > > +           case PIN_CONFIG_INPUT_DEBOUNCE:
+> > > +                   gpiod_line_state_notify(desc,
+> > > +                                           GPIO_V2_LINE_CHANGED_CONF=
+IG);
+> > > +                   break;
+> > > +           default:
+> > > +                   break;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   return ret;
+> > >  }
 > >
-> > -	return gpio_do_set_config(guard.gc, gpio_chip_hwgpio(desc), config);
-> > +	ret = gpio_do_set_config(guard.gc, gpio_chip_hwgpio(desc), config);
-> > +	if (ret == 0) {
-> > +		/* These are the only options we notify the userspace about. */
-> > +		switch (pinconf_to_config_param(config)) {
-> > +		case PIN_CONFIG_BIAS_DISABLE:
-> > +		case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +		case PIN_CONFIG_BIAS_PULL_UP:
-> > +		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		case PIN_CONFIG_DRIVE_OPEN_SOURCE:
-> > +		case PIN_CONFIG_DRIVE_PUSH_PULL:
-> > +		case PIN_CONFIG_INPUT_DEBOUNCE:
-> > +			gpiod_line_state_notify(desc,
-> > +						GPIO_V2_LINE_CHANGED_CONFIG);
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> >  }
+> > Ah, the debounce - I forgot about that, and other features that cdev
+> > might emulate.
+> >
+> > What happens if userspace requests a line with debounce that is
+> > supported by hardware?  Seems to me we'll see both a LINE_REQUESTED and=
+ a
+> > LINE_CONFIG_CHANGED when the line is requested.
+> >
 >
-> Ah, the debounce - I forgot about that, and other features that cdev
-> might emulate.
+> This is problematic for me to test at the moment, as gpiosim doesn't supp=
+ort
+> debounce. Any chance we could make that configurable?  Similarly drive.
 >
-> What happens if userspace requests a line with debounce that is
-> supported by hardware?  Seems to me we'll see both a LINE_REQUESTED and a
-> LINE_CONFIG_CHANGED when the line is requested.
+> > Conversely, what if a config change impacts features that don't result =
+in a
+> > notification from gpiod_set_config(), like active low, or emulated
+> > drive or debounce?
+> >
 >
-
-This is problematic for me to test at the moment, as gpiosim doesn't support
-debounce. Any chance we could make that configurable?  Similarly drive.
-
-> Conversely, what if a config change impacts features that don't result in a
-> notification from gpiod_set_config(), like active low, or emulated
-> drive or debounce?
+> Bah, drive is emulated in gpiolib itself, so that should be fine.
 >
+> When changing config cdev always calls gpiod_direction_input/output(), so=
+ I
+> think that covers the active low case.
+>
+> But I have a test taking a line from input to output|open_drain and I
+> get two change events.  The first is the most interesting as it reports
+> input|open_drain, the second then reports output|open_drain.
+> That is due to gpiod_direction_output() calling gpiod_set_config() to
 
-Bah, drive is emulated in gpiolib itself, so that should be fine.
+No, it never calls gpiod_set_config() but gpio_set_config() which
+never emits an event.
 
-When changing config cdev always calls gpiod_direction_input/output(), so I
-think that covers the active low case.
+> set the drive, and later to set the direction, in that order.
+> Given it will be setting the direction, it should inhibit the event from
+> the drive setting?
 
-But I have a test taking a line from input to output|open_drain and I
-get two change events.  The first is the most interesting as it reports
-input|open_drain, the second then reports output|open_drain.
-That is due to gpiod_direction_output() calling gpiod_set_config() to
-set the drive, and later to set the direction, in that order.
-Given it will be setting the direction, it should inhibit the event from
-the drive setting?
+I think you're really hitting this:
+https://github.com/brgl/linux/blob/b4/gpio-notify-in-kernel-events/drivers/=
+gpio/gpiolib.c#L2863
 
-Still haven't tested any debounce changes...
+These should be changed to nonotify variants too. Would you mind confirming=
+?
 
-Cheers,
-Kent.
+Bart
+
+>
+> Still haven't tested any debounce changes...
+>
+> Cheers,
+> Kent.
 
