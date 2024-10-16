@@ -1,86 +1,74 @@
-Return-Path: <linux-gpio+bounces-11446-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11447-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 873599A0BCC
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 15:44:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D1219A0D03
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 16:42:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C02B2856E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 13:44:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E00A5B28755
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 14:42:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E2F20ADDE;
-	Wed, 16 Oct 2024 13:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 928CF20E014;
+	Wed, 16 Oct 2024 14:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=everestkc-com-np.20230601.gappssmtp.com header.i=@everestkc-com-np.20230601.gappssmtp.com header.b="VefHAbya"
+	dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b="JPu0z5jO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from out-03.smtp.spacemail.com (out-03.smtp.spacemail.com [63.250.43.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776771D8E1D
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 13:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE01120C015;
+	Wed, 16 Oct 2024 14:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729086231; cv=none; b=k2vfjKFD3dD2KJwwP9iApqSSGkJcDIO0Duvh91p0kFUTXAEsEPXToVZLdSzaJWi6DvXFl+Q2n47yf8mcM5CqYzGaRq9h4UGpRmkbb1duVTdVNr1FIoci4qaXv9wS27Qfck8gNRBKMjNBwVvHcb9OMIBQ9bQbt5HUIVR30njadIc=
+	t=1729089714; cv=none; b=j42a+bV0w3fzuZHlB75GCDyaKksoALuuKmKqjZsd4kWO+Yf1uTcbmfXpFFJj82LASrSNpzzgcAKqIxzSslTPpcSxxwScZmfp+u2VafRZWgJYNO4QxjBM3KQrCae6L0HdLwrcJKYTZAAHrJuNrhFnDtuICxNPVINDYuuWptJ88LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729086231; c=relaxed/simple;
-	bh=KWcWN0Jm2eUdhtHlZSZFOhv8Zx+tr8YDUBPTLQTMBgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c77lEagMXSYFGuCGBovJTG7pqRFQ9orGjdD8nocfezDHHBb0YypYcoE2KEBHxzMRmdY4wqoND0E9ZE28B/6Dfv3Z/tVCl8tNwny3WKuq2mf9Kv2wPpxQ16+91GklZS5ru9u451U8QScEdVnncUuwZqyiEMN+8/lMmMb1f+6EsC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=everestkc.com.np; spf=pass smtp.mailfrom=everestkc.com.np; dkim=pass (2048-bit key) header.d=everestkc-com-np.20230601.gappssmtp.com header.i=@everestkc-com-np.20230601.gappssmtp.com header.b=VefHAbya; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=everestkc.com.np
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everestkc.com.np
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-71e592d7f6eso2636633b3a.3
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 06:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=everestkc-com-np.20230601.gappssmtp.com; s=20230601; t=1729086228; x=1729691028; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hPSkU20Itc6yAh+bZBbT2R0RT9oB/wml9mSdgooTOww=;
-        b=VefHAbyajJ+EibY++LZu5yyNn8ulR6BdY4Xor9w+0ufoTXHxwawvH65ukuEch2Gmgs
-         D4giuT05u9kSpUZ9VzhhX5V0nNeKJlYoU7YwZ0KMgYPYb34NR/LcuYtvESYJykH2cqDh
-         yWu0zAMjnSJJsSO1+v8Ejr7/XR73n09RrvRyXPYTWx+DMA8/ischIZlALM3fMo6wTi07
-         kmJlIPaOhBZLq5G5a47+tk8TQFm7/H9I0BunCss/tJR+1SRHEy3jxITB2d+UJBTlMnjR
-         RULfdPFnO36GW0u7qDhNWewOC8akmqPiEt33zkobuFE7bmA0++KXjO4A0GmhgOdZOsAe
-         QMvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729086228; x=1729691028;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hPSkU20Itc6yAh+bZBbT2R0RT9oB/wml9mSdgooTOww=;
-        b=Eb9a6GCsqybo32sjlqy1bEQH7IUrCmdrg+7A8hwhizGnIOgS2jNP/kZIlmuoaaB6ul
-         GjDmV3uEm2b48tclRcRbqtWNWcq3Tl4VgNyR9V1l8AhL0KvmPUhNmE/9fl/avf8hk+La
-         5nnIlSfTvO8vU7bo0g0zQVAwNYvsETPxZoecyvup4tsnu5T0g1LJvn+rh3TCdy5XdOhv
-         kOqzSz7vv8a1oA2pgqKDcEc1EmT/+dy8gWrjxPbgLO4FgvcXXy9XOhjfYixi0wFoHj22
-         oKD7QbkpAqjfwUDElZNFRCacCSbPPTriFwkZWR5BZGJO104dSgUXSNFn74UwDlnahTyr
-         jr6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWehuYm4/CTDjsri12rG1J6WLrLJXcvUcbqJTKxE4VzfN4XpxB0fTmz08vhfQAeFUUOO/6EmLeXsDiJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB/9qBlFkFP2Nw0FTFZo3CVK94x0KMgvdkeww68Y3Vfb4D95GX
-	LL+1m4R0J2yHUd90hUsG4zQQ/cn2T89qdanPsyaE4U8XqeILJlAiJj8tT1k1F8oRdiP3u8/cNDR
-	8YLkAAM9m
-X-Google-Smtp-Source: AGHT+IE1Q+vPA30KNlMFxGEt9h2r7Mf4JtaF8VKYh5yzDNUyMZMQT+8Yyx33/wO8c5gt6uUjOIGAxw==
-X-Received: by 2002:a05:6a20:d49b:b0:1d7:cc6:53d0 with SMTP id adf61e73a8af0-1d8c9576f83mr22762980637.5.1729086227779;
-        Wed, 16 Oct 2024 06:43:47 -0700 (PDT)
-Received: from localhost.localdomain ([132.178.238.27])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-20d17f84e9bsm28977495ad.19.2024.10.16.06.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 06:43:47 -0700 (PDT)
-From: "Everest K.C." <everestkc@everestkc.com.np>
-To: drew@pdp7.com,
-	guoren@kernel.org,
-	wefu@redhat.com,
-	linus.walleij@linaro.org
-Cc: "Everest K.C." <everestkc@everestkc.com.np>,
-	skhan@linuxfoundation.org,
-	linux-riscv@lists.infradead.org,
+	s=arc-20240116; t=1729089714; c=relaxed/simple;
+	bh=5pqAUeM+sCAUVEmtTmEbLzJQvE1ZOR58MpVxFnbuY4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dDydktcIvOeoYz8o6WwHq4hKffxgFVQiQCujcU/k6VZO64FLEL8SrkTqcEvYfuuwM1fKSMwh9hCpQ2aQj2WDYwZKkNXUzey3uYbRkvNGKhLbSdSnWmz4aqZ2KfsSotsfroukPIgeLTMdPSIm1fWDhaadd/AYXx3jnJvpj0BpTk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=mentallysanemainliners.org header.i=@mentallysanemainliners.org header.b=JPu0z5jO; arc=none smtp.client-ip=63.250.43.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+Received: from prod-lbout-phx.jellyfish.systems (unknown [198.177.122.3])
+	by smtp.spacemail.com (Postfix) with ESMTPA id 4XTDF50qn7zGpSN;
+	Wed, 16 Oct 2024 14:41:45 +0000 (UTC)
+Received: from igor-systemproductname.lan (83.8.245.91.ipv4.supernova.orange.pl [83.8.245.91])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.spacemail.com (Postfix) with ESMTPSA id 4XTDDx2QSDz2x99;
+	Wed, 16 Oct 2024 14:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=mentallysanemainliners.org; s=spacemail; t=1729089699;
+	bh=5pqAUeM+sCAUVEmtTmEbLzJQvE1ZOR58MpVxFnbuY4I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JPu0z5jOyc/Ys3kRKdHWOR+JUgtpBOWjHE6M+6/FXoWoXxR+HTnRaNBMUOnjlr32o
+	 r6vmMO2U7ckI8nObdiX5oYsg/gtVxs5BYULyfjK/UQptkwiF/JH0OsdL81wC/bqCpI
+	 o++eeonoymx5eJs6hnhOALhcRL3bIGZQhGZWb0ZW1bCJjgs4csUyjK+gYFNnLXOrBc
+	 6jQ2D3cdjsFpFnZczI8gLw5S7c0ZqqeavELfMGSkjTUF7ChpVH3D1dJVJPs9Ls1YwR
+	 FFkkH26RQc7Vq3PkBMxPJdpsvLhEpeimifWdhzi8jaqKk89EoBblJHVFoH/vi6VRy1
+	 DLdq7m2cyPRMA==
+From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+To: krzk@kernel.org
+Cc: alim.akhtar@samsung.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] pinctrl: th1520: Dereference pointer only after NULL check
-Date: Wed, 16 Oct 2024 07:42:21 -0600
-Message-ID: <20241016134223.4079-1-everestkc@everestkc.com.np>
-X-Mailer: git-send-email 2.43.0
+	linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	robh@kernel.org,
+	s.nawrocki@samsung.com,
+	tomasz.figa@gmail.com
+Subject: Re: Re: [PATCH v2 0/5] Add Exynos990 pinctrl and chipid drivers
+Date: Wed, 16 Oct 2024 16:41:12 +0200
+Message-ID: <20241016144112.17588-1-igor.belwon@mentallysanemainliners.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <795657e1-5232-494c-9ac5-a62455b0f6f9@kernel.org>
+References: <795657e1-5232-494c-9ac5-a62455b0f6f9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,43 +77,35 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pointer `func` is dereferenced before NULL check.
-Move the dereference after the NULL check.
+On Wed, 16 Oct 2024 09:19:58 +0200, Krzysztof Kozlowski wrote:
+> On 16/10/2024 09:06, Krzysztof Kozlowski wrote:
+>> On Tue, Oct 15, 2024 at 11:04:45PM +0200, Igor Belwon wrote:
+>>> Hi folks,
+>>>
+>>> This series adds support for the drivers for the Exynos 990 SoC. It
+>>> consists of the pinctrl driver and the chipid driver. The product ID
+>>> of this chip for chipid is 0xe9830000. The pinctrl bank types are the
+>>> same as in the Exynos 850 chip.
+>>>
+>>> Changes in v2:
+>>>  - Moved bindings from SoC bringup commit
+>>>  - Moved device tree changes from SoC bringup commit
+>>>  - Ordered pinctrl nodes by unit address in SoC DT
+>>>  - Moved the exynos990-wakeup-eint binding to the correct if.
+>> 
+> Moved? That's not what I asked for. Are you sure you have this warning
+> free? That's a requirement for Samsung (see maintainer profile).
+>
+> Ah, I see now what you did - you removed the interrupt. That's
+> surprising. I don't understand why.
 
-This issue was reported by Coverity Scan.
-Report:
-CID 1600802: (#1 of 1): Dereference before null check
-(REVERSE_INULL)
-check_after_deref: Null-checking func suggests that it
-may be null, but it has already been dereferenced on all
-paths leading to the check.
+Hi Krzysztof,
 
-Fixes: 1fc30cd92770 ("pinctrl: th1520: Factor out casts")
-Signed-off-by: Everest K.C. <everestkc@everestkc.com.np>
----
- drivers/pinctrl/pinctrl-th1520.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thank you for the review.
+The interrupt was actually my oversight. This SoCs pin controller does
+not mux interrupts (much like E850 and Tensor). It's still compatible
+with the Exynos7 model as a fallback though.
 
-diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
-index 7474d8da32f9..07f8b51fb294 100644
---- a/drivers/pinctrl/pinctrl-th1520.c
-+++ b/drivers/pinctrl/pinctrl-th1520.c
-@@ -803,11 +803,13 @@ static int th1520_pinmux_set_mux(struct pinctrl_dev *pctldev,
- {
- 	struct th1520_pinctrl *thp = pinctrl_dev_get_drvdata(pctldev);
- 	const struct function_desc *func = pinmux_generic_get_function(pctldev, fsel);
--	enum th1520_muxtype muxtype = (uintptr_t)func->data;
-+	enum th1520_muxtype muxtype;
- 
- 	if (!func)
- 		return -EINVAL;
- 
-+	muxtype = (uintptr_t)func->data;
-+
- 	return th1520_pinmux_set(thp, thp->desc.pins[gsel].number,
- 				 th1520_pad_muxdata(thp->desc.pins[gsel].drv_data),
- 				 muxtype);
--- 
-2.43.0
-
+Best regards,
+Igor
 
