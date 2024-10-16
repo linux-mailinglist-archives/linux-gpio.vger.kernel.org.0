@@ -1,186 +1,124 @@
-Return-Path: <linux-gpio+bounces-11459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59D349A1188
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 20:27:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13C4D9A119C
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 20:32:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D00FD1F25177
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 18:27:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 907DD1F2540C
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 18:32:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9E8212EF5;
-	Wed, 16 Oct 2024 18:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BC6212F10;
+	Wed, 16 Oct 2024 18:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkJGrIiv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MnS5GF3A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B647C290F
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 18:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF6E19993F
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 18:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729103261; cv=none; b=cSuDwdYIPw6PnIDRM7xllHSV4ZCi/0gnvaHisIA6N3v4pGjARMCMJHyR+O1NGo34cK+FO+EPLBhDUEKAEHRtzsVyBkptg5MDxNrXFtcaJG9DBmSQTJL5RsI30J+UYDO7EROedFhpf3+56JLwAz/wGhoKXaMCR8T48RrPdQw3HxQ=
+	t=1729103533; cv=none; b=REtT/j8UqNZgkO1wfILdnU+X0aSnmjiT5VoYGSW878cebtS0sAxO4UwH4T4Nh1ncyBK20a5q+Y/hpFU4LnpW9uoQeJR5ayBIJ6AXd+rJ7WnljnlGskTp0Ge5mSWlyeFz4pvJeLClEI/ghNwXkpHb4z0oqyL5SrnyDXe/00RtV90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729103261; c=relaxed/simple;
-	bh=VlGQuUZ6YyQ9geVAWjmeP8ZC+i6mZshW8tH8tOWI0OM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Iepr6xTMbDrwnrlIkbMn2Yncbg9MvZuP6BsD57YTtvZEbmbnqe248zHe5QXwtGFkXvLDv9hGLBNl7xw4rJCFnuSp57zGZdKEppbZschx5KLFPa3IPZgOVSLj4yD4R9OQjhyKTmOZy6i536TXdoI94u1bjsWsx9quUkpSSMBtlDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkJGrIiv; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729103260; x=1760639260;
-  h=date:from:to:cc:subject:message-id;
-  bh=VlGQuUZ6YyQ9geVAWjmeP8ZC+i6mZshW8tH8tOWI0OM=;
-  b=nkJGrIiv7J4NXCs8m5WqJaEev7qgUUHMQJr6k5+N+NAc/TIVtbtM04HZ
-   Qd6Y2AGaOIUNjwzjfMz2VrB94dSFLA1WM5bCNkPM0NBn/Dvd4O9Qp0PeG
-   oEcOr05QNJ9oH03SpT2QL9MGpFMzgipRTkEdaAvjXOSAebyOjKmaxwYRW
-   fAdmozhspEbfyO39LmS0yDzOJqf5J7uRzdq6mj7DbCm+9ppeEuc73JH32
-   0tRuU1iHxsWvGQ3jHrg3TONCEaVH46YaKi+/Eifzbx9w2Svws0w35nFnu
-   Li5uUfGADfutZ4uXeeHIYbkghQU9kf3mtNf1jfF6CdDzFpDU7JYHO6THT
-   A==;
-X-CSE-ConnectionGUID: TUTa97aqTPCECUQrpXDNjw==
-X-CSE-MsgGUID: bjlNjd+iSHefkHMYVwYUcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="28036516"
-X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
-   d="scan'208";a="28036516"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 11:27:39 -0700
-X-CSE-ConnectionGUID: ZeJy1p1+SsumVOxLlrcbJg==
-X-CSE-MsgGUID: hTszERwfRnqG9SZsSVm9gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,208,1725346800"; 
-   d="scan'208";a="78201497"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 16 Oct 2024 11:27:38 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t18kB-000LG5-2g;
-	Wed, 16 Oct 2024 18:27:35 +0000
-Date: Thu, 17 Oct 2024 02:27:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 93b8ddc54507a227087c60a0013ed833b6ae7d3c
-Message-ID: <202410170259.zzDL4TaO-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1729103533; c=relaxed/simple;
+	bh=zLO6aZwyUl+3LfycLrqZXToqmieLhN3tIxuDQ8INOFU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LecT23+1oPayJfqeZPaPZRxqw6UX04ZJx7TvNldds+0oAUtQtvL3Z8eR1dR4uihnwWyx/+29dqKxVq0yxEisiJskMaH7DoLVYJhZLl5CZbwuUwdQIm3sAwwpmuiILTjI1gIpWE1yDHeKOHvdiO81OEtFKiGRzgBIto3c+fF2DwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MnS5GF3A; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2fb51e00c05so2659831fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 11:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729103530; x=1729708330; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zLO6aZwyUl+3LfycLrqZXToqmieLhN3tIxuDQ8INOFU=;
+        b=MnS5GF3AOVtkeqhyOUF58roJxmRo2C1LWSeb3GfYEHRs1hRF64Ovsuk1ky+yQsOM8W
+         hOYLASn+bUMTXQNUmBeQtzqaWtrmCxR5wJ7umrB7rt4RUBUo7LOVL9QBrt6wstsLcKrV
+         zr7PadkX17k4zqLlpLpaBT38+rxwrEa/gB4TBLZp+Lnp+LBlNZoC/j/18qK/kpkvNE8W
+         vw6PMSREUHhntyT3WGSsPd2KjeSFc8nBaytHgMI9LiWhtEJZJ7bzXS3WWkHpXk7liLRV
+         dVsNkoMPx388J7jlp/ulyCPKgj9hrDmtb7pv39czD4Lo+51YvQ2/B2mVyiq7TqMz/nJg
+         fiFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729103530; x=1729708330;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zLO6aZwyUl+3LfycLrqZXToqmieLhN3tIxuDQ8INOFU=;
+        b=O2FnkMW9TwLZ9EdSbWP/iZhcTZLNCmvOVeQVyQYl0ALIfLMoUEOGClGXQyzSXcSld0
+         KUmJTh9t19YbANT/F94HR5rkbbwqdgpvrnQtl/c1wWopeP7fGqFhDs5Y83hdasm72iqB
+         eG67qCPsl8S5bhmkvHio5Np3lCGW03FAumDAN74zI/rkjoK1PoikAfxHGSm+JT4pTFcN
+         1BHX0F1lJTrA8f0XfoEojQYUIM5N5HTstDOLliV+G/cZ40+7RLxVCnnydINt9bQvmABT
+         8jZT80eHdRjzENugwUtY1HnOvJpJeXGYxay4RRXbu6l1LNfFt2yugar8PsYnvFPb11KS
+         5GEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIwMbbipt4lj3spsvGFtvVwmFz3AP9N1Tja6fr3Ygmz7Z1D+0uX6FRUN/nVPQYsvXBe0zl4GQp/2zX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzWyANdRc/6KIJYl4Ub4ajvOKIrRA6A8yGUP8UA6D/KgEf0ZF0
+	UyZIe1U7fLE8gf8ms07c+zCLcIyMSV78ISCS4hL5e/wy1KACLI9wS5HD0VBnaAtVq8gfUjnTsIN
+	a1g7eFQ3VcPQ/2mHad/oawp3YtuhKHJ5M2glf/w==
+X-Google-Smtp-Source: AGHT+IHpAeDWCA8i/8V+jXTEhlCjTBpvAe50DUbf+6GO3QbkdbjrySiEqxkK4J1c1Y+WN39i8NFPotc1h2p87Pt9UM4=
+X-Received: by 2002:a2e:be9c:0:b0:2fa:c5d9:105b with SMTP id
+ 38308e7fff4ca-2fb3f16fabcmr118616141fa.2.1729103530208; Wed, 16 Oct 2024
+ 11:32:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20241016-gpio-ngpios-v1-0-f16cf154f715@linaro.org>
+ <20241016-gpio-ngpios-v1-1-f16cf154f715@linaro.org> <CAL_JsqK-Nd6izk6RFf4NyoOCkobDwye+QPsRKHBDwovxO9NTDQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqK-Nd6izk6RFf4NyoOCkobDwye+QPsRKHBDwovxO9NTDQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Oct 2024 20:31:58 +0200
+Message-ID: <CACRpkdYipbtgW1odod288fEV33SqoJo8vcN7=c+tSRUsR4dE6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio-mmio: Add ngpios property
+To: Rob Herring <robh@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 93b8ddc54507a227087c60a0013ed833b6ae7d3c  pinctrl: ocelot: fix system hang on level based interrupts
+On Wed, Oct 16, 2024 at 5:47=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+> On Wed, Oct 16, 2024 at 2:21=E2=80=AFAM Linus Walleij <linus.walleij@lina=
+ro.org> wrote:
+> >
+> > This adds the ngpios property to MMIO GPIO. We restrict the
+> > property to 1..63 since there is no point in 0 GPIO lines and
+> > we support up to 64bits wide registers for now.
+>
+> Why does it need to be restricted? Is something bad going to happen if
+> for some reason someone tries to control a non-existent GPIO?
 
-elapsed time: 1177m
+Unlikely. But the biggest inconvenience is that non-existing GPIO lines
+gets exposed to userspace which causes confusion. It's a bit like
+saying you have 32 harddisks on your system just because the register
+has 32 bits.
 
-configs tested: 93
-configs skipped: 3
+> If there
+> is, maybe there should be a specific compatible as the h/w is not so
+> generic.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The gpio-mmio is quite generic, it's the most generic GPIO
+driver we have.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241016    gcc-11
-i386        buildonly-randconfig-002-20241016    gcc-11
-i386        buildonly-randconfig-003-20241016    gcc-11
-i386        buildonly-randconfig-004-20241016    gcc-11
-i386        buildonly-randconfig-005-20241016    gcc-11
-i386        buildonly-randconfig-006-20241016    gcc-11
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241016    gcc-11
-i386                  randconfig-002-20241016    gcc-11
-i386                  randconfig-003-20241016    gcc-11
-i386                  randconfig-004-20241016    gcc-11
-i386                  randconfig-005-20241016    gcc-11
-i386                  randconfig-006-20241016    gcc-11
-i386                  randconfig-011-20241016    gcc-11
-i386                  randconfig-012-20241016    gcc-11
-i386                  randconfig-013-20241016    gcc-11
-i386                  randconfig-014-20241016    gcc-11
-i386                  randconfig-015-20241016    gcc-11
-i386                  randconfig-016-20241016    gcc-11
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
+The ngpios property is also generic, it is in:
+Documentation/devicetree/bindings/gpio/gpio.txt
+(commit aacaffd1d9a6f8e2c7369d83c21d41c3b53e2edc)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+At the time (2015) I just documented the already widespread use
+of this property.
+
+It is also reflected in several of the new yaml bindings, a git grep
+ngpios will show you.
+
+Yours,
+Linus Walleij
 
