@@ -1,96 +1,174 @@
-Return-Path: <linux-gpio+bounces-11443-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11444-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B100B9A0762
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 12:30:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 018969A0768
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 12:30:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DFFF1F274E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 10:30:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2224C1C261CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 10:30:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492732071EA;
-	Wed, 16 Oct 2024 10:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91C82076B2;
+	Wed, 16 Oct 2024 10:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JsWfXgOW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2yf4lTx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D6020695C;
-	Wed, 16 Oct 2024 10:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6802076AB;
+	Wed, 16 Oct 2024 10:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729074461; cv=none; b=thSTrPAoUs1r9iI7hNZJyGCn5v9aTPNlamr3IoYEOpkxQpuSukdNFnxlfdL05iptZRtEqI3KOiQJ+K165sLr7oRruOIg0z9ySIf0CcZjgV4ALqI4ShoIHuQDbAgOc/Ks6KiuvtQa0ZlnC7SR/i07tS0eqTMnJwUeZheEvpFL3uE=
+	t=1729074548; cv=none; b=JMXRpb8QJvXZCUDqhOgbCKHLx7wwOoO2i1bGK3OgT/4vKHwPHinWGG1gSgstQbmgdv+oDft3CTHfICmVublXzXym2PGASBSIPF9NQm3Wn0oNhnCe9/v9HTwTR0kvicRjko6Jy5sLSeoxfJWhukAyQVsH2ALKvaMhuSR/SPuboMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729074461; c=relaxed/simple;
-	bh=md6N/XQGzlUgrB8oUbFlx4cVulC8rjoqYcCGd7LBoRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aat7ZwSbYXuUaz9PlcVtkAaXDRHW0jrlLsFjQJ7eyQvjcaahHx9Cc5D+YgnNzi+YOTj3PLLS7Lvc8jZNu40Cw1MD8yaVux5aG2Je0vKKD7JgxOVlBGDOCe9JFUIhcZGgkRxHEu9MYtQYZBJKOXUmRYrSyq75yvMy3h5O9fjqqgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JsWfXgOW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1729074457;
-	bh=md6N/XQGzlUgrB8oUbFlx4cVulC8rjoqYcCGd7LBoRQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JsWfXgOWmZ0+VTUeT9qZFbbnRMZv3r/mQcpNmMgwaKcb7xmhFovuvwtz+hl2psPNm
-	 tAbwaDwCxEwkGNqS6zc8/xPA8oZd7frUmiebwXJBD+N2YDznuE0zW1yeSjot0JF5AH
-	 x5m4UA5ui8ttORQAdhM2zKU2q7R9AWDVR4UoMcQ0e14e3+HacsvL8M+w4I5lB03GFa
-	 Y6C7yr5ILsAx0CRk4QE+WOOLGAg58rtWBMX1zqrv03CsTamvRuS3WPIUpyw1KRCIne
-	 BstHvKZoHDWww7mKJSR8/LEHQE0GZlZ2Vb9yT6gTg+1Nw117mNGS9IXc4rCMxxZs3O
-	 x8OPNyKQZdAkg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0878F17E1003;
-	Wed, 16 Oct 2024 12:27:36 +0200 (CEST)
-Message-ID: <3a70c755-3a33-48ff-842b-c24a6a37bbd0@collabora.com>
-Date: Wed, 16 Oct 2024 12:27:36 +0200
+	s=arc-20240116; t=1729074548; c=relaxed/simple;
+	bh=pg7UYaMPx4mTb52bLj7hgV55+1gGge6GzAJdln6ov9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CTSJfT4oOCeoOzrpu9Hyl8DogxEKgYiXVuHEl7VFHu3KIf3nVflypmOWCJybCHSTHBq9qzfbryyDe+QQZt7adlxvleS8qvXG4qROcQobFFECCu3QYx7mALFmaNSTCiN1JPAfX17B8500O9HfuV+AVy7fE4lHR0qMgJqzKfOyXDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2yf4lTx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD37C4CECF;
+	Wed, 16 Oct 2024 10:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729074548;
+	bh=pg7UYaMPx4mTb52bLj7hgV55+1gGge6GzAJdln6ov9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b2yf4lTx8ojmaCj5oBgFI44qnJKC5wieTTwoGMja4nTY6AiQoxiYgyEUvOgdFEM7q
+	 bXxyuRZ/LirXoOcJSfOKuO8+KWJJo/qIgTxUlehM2AUjxKpu2XHwOdcC/BVXLQ8wUM
+	 ZYIXRSxoPONaAsPDvg/FoiVNVK8MSHr+kXzcMp3rlG+VAtFApYOKOcA5o7/RkB/cuW
+	 eOOmjf7chYKDaPRIEHIz+pfla4DE4cDTrxOZSaehnHPCVibyBHK1Qp6fssXWEAQ8XV
+	 kTC5ggwOXEh6heECxbBz8/BZyo7eXll3sjtb1LBudmPZ/2wx67n1g22dYaMpcK9AZl
+	 lCTcoL2gr+GwA==
+Date: Wed, 16 Oct 2024 11:29:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Lewis Hanly <lewis.hanly@microchip.com>
+Subject: Re: [RFC v7 4/6] gpio: mpfs: add polarfire soc gpio support
+Message-ID: <20241016-dandelion-hypnosis-9d989bb2fdd1@spud>
+References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
+ <20240723-underage-wheat-7dd65c2158e7@wendy>
+ <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
+ <20241016-shallot-nerd-51eeba039ba0@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] pinctrl: airoha: Add support for EN7581 SoC
-To: Lorenzo Bianconi <lorenzo@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com,
- linux-pwm@vger.kernel.org
-References: <20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org>
- <20241016-en7581-pinctrl-v7-5-4ff611f263a7@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20241016-en7581-pinctrl-v7-5-4ff611f263a7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CmBUU6+EmCtmkoM0"
+Content-Disposition: inline
+In-Reply-To: <20241016-shallot-nerd-51eeba039ba0@spud>
 
-Il 16/10/24 12:07, Lorenzo Bianconi ha scritto:
-> Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> supports the following functionalities:
-> - pin multiplexing
-> - pin pull-up, pull-down, open-drain, current strength,
->    {input,output}_enable, output_{low,high}
-> - gpio controller
-> - irq controller
-> 
-> Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+--CmBUU6+EmCtmkoM0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Oct 16, 2024 at 10:56:32AM +0100, Conor Dooley wrote:
+> On Mon, Aug 05, 2024 at 10:04:53AM +0200, Linus Walleij wrote:
+> > On Tue, Jul 23, 2024 at 1:28=E2=80=AFPM Conor Dooley <conor.dooley@micr=
+ochip.com> wrote:
+> >=20
+> >=20
+> > > From: Lewis Hanly <lewis.hanly@microchip.com>
+> > >
+> > > Add a driver to support the Polarfire SoC gpio controller
+> > >
+> > > Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
+> > > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > Just a comment on second thought:
+> >=20
+> > > +config GPIO_POLARFIRE_SOC
+> > > +       bool "Microchip FPGA GPIO support"
+> > > +       depends on OF_GPIO
+> > > +       select GPIOLIB_IRQCHIP
+> >=20
+> > select GPIO_GENERIC?
+> >=20
+> > > +static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned =
+int gpio_index)
+> > > +{
+> > > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
+> > > +       u32 gpio_cfg;
+> > > +       unsigned long flags;
+> > > +
+> > > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
+> > > +
+> > > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_inde=
+x));
+> > > +       gpio_cfg |=3D MPFS_GPIO_EN_IN;
+> > > +       gpio_cfg &=3D ~(MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF);
+> >=20
+> > OK this part is unique...
+> >=20
+> > > +static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned=
+ int gpio_index, int value)
+> > > +{
+> > > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
+> > > +       u32 gpio_cfg;
+> > > +       unsigned long flags;
+> > > +
+> > > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
+> > > +
+> > > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_inde=
+x));
+> > > +       gpio_cfg |=3D MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF;
+> >=20
+> > Also here
+> >=20
+> > > +static int mpfs_gpio_get_direction(struct gpio_chip *gc,
+> > > +                                  unsigned int gpio_index)
+> > > +static int mpfs_gpio_get(struct gpio_chip *gc,
+> > > +                        unsigned int gpio_index)
+> > > +static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_in=
+dex, int value)
+> >=20
+> > But these are just MMIO functions.
+> >=20
+> > Is it possible to use augmented generic MMIO, i.e just override these
+> > two functions that
+> > need special handling?
+>=20
+> So, I've been looking into this again (finally), with an eye to stripping
+> the interrupt handling bits out, and trying to upstream this in pieces.
+> I dunno if I'm making a mistake here, but I don't know if there's much
+> value in implementing this suggestion - as far as I can tell only the
+> get()/set() functions can be replaced by what's provided by gpio-mmio.c.
+> There are no controller wide registers that control direction and so
+> bgpio_get_dir() can't be used - direction is read from the same
+> mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index) registers that it is set
+> using. Adding bgpio stuff, to just go ahead and overwrite it, to save on
+> trivial get()/set() implementations seems to me like adding complication
+> rather than removing it. What am I missing here?
+
+What does bring a nice simplification though, IMO, is regmap. I am
+pretty sure that using it was one of the suggestions made last time
+Lewis submitted this - so I think I'm going to do that instead.
+
+--CmBUU6+EmCtmkoM0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZw+VbgAKCRB4tDGHoIJi
+0lJSAP4z+obM5BYOKqwKB2PbdE1VqVeBD3ETy6L0njmh6AlwGwD+Py5sBR753oNR
+tRfAkzrBjAI+sykx7zgTzwgeYg8adQg=
+=wRDg
+-----END PGP SIGNATURE-----
+
+--CmBUU6+EmCtmkoM0--
 
