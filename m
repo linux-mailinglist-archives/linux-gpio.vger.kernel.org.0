@@ -1,132 +1,212 @@
-Return-Path: <linux-gpio+bounces-11420-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11421-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 759C99A05DB
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 11:43:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE5D89A05EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 11:49:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A72001C20FC2
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:43:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6781528219E
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DFDB205E35;
-	Wed, 16 Oct 2024 09:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A644205E34;
+	Wed, 16 Oct 2024 09:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MI14WF+a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Thz9a3qJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6896205E11;
-	Wed, 16 Oct 2024 09:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F941AF0DF
+	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 09:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729071798; cv=none; b=M8zUUCaLf5VQ2oFjpVGDlWo0pBDQvVJshh7KR48ohQi/nmP9hSjCI8Iq1yLk1xXVG5O7yB0Lj9Gkfb0O0SvNxK/jQdUlr0p3dpUZZSnhzbS0aFicfHRhXIZR0ZViOlWPQH4TQc9oTmpLgQdtGdddZWMewH5Rr1b2vm4J/27z0k8=
+	t=1729072163; cv=none; b=t7BLo/EFo/kMOD9R0C36tFOhJyTlzoYbtDaotlexfEuIVO5hLKK0PlV/NC2oi17FqqnlSf/nJl0u4A/DvhhCHW8YLVLsyKOjKAcxWYrnyv8f9NwxRe8eIBsuAsuQG5CPS9z/b/w59nDmdswoDJIfiIlhVUpfnVpXjuBmlAdPTns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729071798; c=relaxed/simple;
-	bh=vm6c5zTe3ogCN7P2aIvkVQuXo2ZwDpuNn2J6zMnLtq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pINIPIcupKSQ1d9BNo2a6mb2hnpnbEvCBy7JgfFkL8/N9e/NzUp6+0AN2PqyOxygloyWvEn1OIRm9UEp8+HzLyfXl7tLnpkIlum0AVzlgqLgYJRNWHh61TtcFYHkCmRxvAttQkpmwuZcidBZSXv6gPzVRMtQDP5gvVIQX2dE8Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MI14WF+a; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-207115e3056so51441635ad.2;
-        Wed, 16 Oct 2024 02:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729071796; x=1729676596; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4JdPb6dggiDddx2mZKy5AeVivyxS2f7SnBQhHfVM6F0=;
-        b=MI14WF+an5m7V57uTUT9Q+yr5LHxb16yWDF3jh6c7n6NGbjrQtciy9h6zA9XQh5d79
-         +7I43otP4LkQiPAfezqyshEMlMn9nUJMmqebo7bNUKVs5Odo/Q2V6LU7dvCkNfjNy+Y/
-         dxl1CIRksEL4pT89DnnF6QcFARvSUYPXeTAQFafpaF4udyukr0fdmtlmBefQk9Vx3Nrr
-         eBNU5DzmnH/x6mnmrzkUfL0AAcBjsQngp59yt87vbE3r+g2ICtodO5IRDe1wyu+vb/UL
-         BL7VNNfabuAvwWfUtVanRCY85QHxxmnYOpwRMQ/EozmjiEf7/eOGG2fg481WDuwUFUGq
-         +VEQ==
+	s=arc-20240116; t=1729072163; c=relaxed/simple;
+	bh=qU40uDWAXxj3oH037Z58Iia9dcS55Em7zzZb741ZWMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QPJi5+wCbGkRI9/8GhQvp/rtADlhPC38U8wavz+CjqevjyrRdfE0c+j94rlmW1Dh4hSw2uPQTwXgyO6kEyWfEkRQBW5pU7D772luMqCaJwCAsnNtm4OBzOQF+3gEiD92kZnZjR+y3tBVdF8LVpE0KWRtJ1lfCuHZxRqDbD2jH1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Thz9a3qJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729072160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8WNVMc8LDTYNGH+SAKpTHVIymq5YjMjs8ZEPHmIVyE0=;
+	b=Thz9a3qJmmKxZdOFlX2Ro+W/J2m6YiRClxpf4d5u6mMOpswWVJaF4h2yBkHusteRdAqTSm
+	fvzzpwj1ZRn8bj08T2Tu723IlgoGUaGnfGyg8aHP3N6ZgwN6B4Jc74WuwTpnbT89qThROn
+	vpTr8jsjidzUX1401jt5o2Up69WGzMY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-UbauqJbdOxqIHD8RKsk7nQ-1; Wed, 16 Oct 2024 05:49:19 -0400
+X-MC-Unique: UbauqJbdOxqIHD8RKsk7nQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4312731c7bfso22757715e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 02:49:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729071796; x=1729676596;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JdPb6dggiDddx2mZKy5AeVivyxS2f7SnBQhHfVM6F0=;
-        b=TnybExtJyvBcObQUcBExINRSR38Dfg+LW/uBLtJXCQUiKy6bVHxQ/ZiK1XYoRrm8y5
-         ItbAPGHfIU1mCz3pcUfYpksHX/ogdS3nkrAYZWeAyJE2tQt46kkS/PhGXnwmgSiyljtr
-         O7y+aaOARWbGiPWEnFzP+xeKujn+ZU2B3/Pnw0rhDspP8wO0jf/cnmwpBoFiSp679khd
-         pMr8ATWeAvOEuy5QJkVGQiDu06t1clm4f8GPlrhWKCdkyo2RBbHYOMgE604ilis68g6Y
-         BjuUK/seJ4GK7JrjfObd/ykftXx8oh+C4BGeAxumZLx7pe/izpygKYMyS/BPsuNKpTx7
-         it+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWigAnJQ4rhjJPspFqIb8gdmoZ/zI7GpozYwclDMbQHQyX14js6BiuwqmTZQ3Hh5X566sz8Y0A1kM1Uwmhj@vger.kernel.org, AJvYcCXL5rx1J2gnaz91viJjKuUiQIzV/AUaXDHpu1AehK/d7yoiA/vmTbuc3WoL24pnmogTl7R2QZkJGzYO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyzyPJfAQnDV3HFLX2F6B20jephpUoTlRgFFH+6INzs9x7EK1S
-	16TH8gmaqKAQogmAgskPMarsR1XQpJgxvBoiTcBz4appRlwf77h+tKUm5A==
-X-Google-Smtp-Source: AGHT+IFFFhMerPMQrKtmTWnNhpLODC7igg1EoEmBu86qH1UAkTyoc9u0bHxw6TAfW1VuhYm/oz2Wvw==
-X-Received: by 2002:a17:90a:e7d2:b0:2e2:d16e:8769 with SMTP id 98e67ed59e1d1-2e3ab7fb55fmr3546365a91.15.1729071795918;
-        Wed, 16 Oct 2024 02:43:15 -0700 (PDT)
-Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e392eff82dsm3638770a91.26.2024.10.16.02.43.13
+        d=1e100.net; s=20230601; t=1729072158; x=1729676958;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8WNVMc8LDTYNGH+SAKpTHVIymq5YjMjs8ZEPHmIVyE0=;
+        b=gRNONOdSfAmA6c3o7uOIl/FQyBNudbs0+FwDouAhaCbQuRDX0LIT8uXlL7bxSJU5S0
+         YeeHX8PRo53gh7r52znmywsupRu7uenyk6N9Wq+JODaPp427UVn68pd0N6LG5Py5a49Y
+         E00tDiVjacz5ZWayBydTv4/qTNpv0eEh6zaxhUN+tEXDpkD2Rtk3U8Ko9pEr23F9EAXl
+         Kd5YhcXNLMQWtPS2eNA0dQLXldQCJ+66p3T2NMb6MFSuhPxh4P37MyMBNFnrRYStSky4
+         br6MRWEjlrm2Acdk7F8UmUx47XMcp6aF5tkYvqErNV2HAV/kHvgqrLe4W4sEfLZesBOJ
+         VBNw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+9+ep/PfwznRYOdKaZCmh2StSjV8JK4f4JbGWx6wGajSLslKzN8xcdVSuu7/AdXj5GPjobUAbJpcb@vger.kernel.org
+X-Gm-Message-State: AOJu0YymTjPiSftCRSqna5Zpjk3VToGgQMwnfv8ixf8PbGB1kYT73OIa
+	6L5pNdrgDV9ap6YbUIZq8bb6z7Mz2Yw+c93jTuyFHbLPKjcbbb5JV8uWzhvIuMujxmWi/7gWy4r
+	Kt97eBbu8jpvNjfp+lxqFmVjPGU+a58q+5xjXdjHo6DWLumpa/Cu2MqYFXAM=
+X-Received: by 2002:a05:600c:4688:b0:42f:80f4:ab31 with SMTP id 5b1f17b1804b1-4314a2ff46amr26025635e9.18.1729072158272;
+        Wed, 16 Oct 2024 02:49:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKUDE9oBG3DV9ivNP2q5cTc+CFmH4d6PSgSwWQMyk1ILj67QUdUX0ghs5JR6pQgtk/njtCOw==
+X-Received: by 2002:a05:600c:4688:b0:42f:80f4:ab31 with SMTP id 5b1f17b1804b1-4314a2ff46amr26025305e9.18.1729072157791;
+        Wed, 16 Oct 2024 02:49:17 -0700 (PDT)
+Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4314b32e487sm28190235e9.25.2024.10.16.02.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 02:43:15 -0700 (PDT)
-Date: Wed, 16 Oct 2024 17:43:11 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+        Wed, 16 Oct 2024 02:49:17 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Zetao <lizetao1@huawei.com>
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 6/6] gpiolib: notify user-space about in-kernel line
- state changes
-Message-ID: <20241016094311.GA210746@rigel>
-References: <20241015-gpio-notify-in-kernel-events-v3-0-9edf05802271@linaro.org>
- <20241015-gpio-notify-in-kernel-events-v3-6-9edf05802271@linaro.org>
- <20241016051944.GA42100@rigel>
- <20241016072730.GA120095@rigel>
- <20241016083747.GB120095@rigel>
- <CAMRc=McR_eMizF6r30NqbgK4mE5ErzR=wbkD4O-Czn=+Oj4AXQ@mail.gmail.com>
- <20241016091714.GA207325@rigel>
- <CAMRc=MdoeyXwKuLmrmJ8zRCtVDNzEd34zgZ5Autye0TNv_OLhg@mail.gmail.com>
+	linux-fpga@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v8 0/6] PCI: Remove most pcim_iounmap_regions() users
+Date: Wed, 16 Oct 2024 11:49:03 +0200
+Message-ID: <20241016094911.24818-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdoeyXwKuLmrmJ8zRCtVDNzEd34zgZ5Autye0TNv_OLhg@mail.gmail.com>
 
-On Wed, Oct 16, 2024 at 11:22:07AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Oct 16, 2024 at 11:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > >
-> > >
-> > > You mean, you get a CHANGED_CONFIG event but the debounce value is not
-> > > in the associated line info?
-> > >
-> >
-> > Correct.
-> >
->
-> Ok, let me see.
->
+Merge plan for this is the PCI-Tree.
 
-When setting from userspace the issue is that linereq_set_config() setting the
-direction will emit, quite possibly before the debounce has been set.  The
-edge_detector_setup() that does set it can also emit, though only if the
-hardware supports debounce.  And then there could be a race between the
-notifier being called and the period being set in the supinfo.
-(the set will probably win that one)
+After this series, only two users (net/ethernet/stmicro and
+vdpa/solidrun) will remain to be ported in the subsequent merge window.
+Doing them right now proved very difficult because of various conflicts
+as they are currently also being reworked.
 
-Debounce set from the kernel side is going to be an issue as cdev
-catches and stores the value from userspace to report in the supinfo - that
-isn't the case for kernel calls to gpiod_set_config().
+Changes in v8:
+  - Patch "gpio: ..": Fix a bug: don't print the wrong error code. (Simon)
+  - Split patch 1 into two patches to make adding of the new public API
+    obvious (Bartosz)
+  - Patch "ethernet: cavium: ...": Remove outdated sentences from the
+    commit message.
 
-Seems moving the debounce value out of the desc and into cdev, which seemed a
-good idea at the time, might come back and bite now if it is no longer
-restricted to being cdev specific.  Now there is an actual reason to
-store it in the desc :(.
+Changes in v7:
+  - Add Paolo's Acked-by.
+  - Rebase on current master; drop patch No.1 which made
+    pcim_request_region() public.
 
-Cheers,
-Kent.
+Changes in v6:
+  - Remove the patches for "vdpa: solidrun" since the maintainer seems
+    unwilling to review and discuss, not to mention approve, anything
+    that is part of a wider patch series across other subsystems.
+  - Change series's name to highlight that not all callers are removed
+    by it.
+
+Changes in v5:
+  - Patch "ethernet: cavium": Re-add accidentally removed
+    pcim_iounmap_region(). (Me)
+  - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
+
+Changes in v4:
+  - Drop the "ethernet: stmicro: [...] patch since it doesn't apply to
+    net-next, and making it apply to that prevents it from being
+    applyable to PCI ._. (Serge, me)
+  - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
+    stimicro" as the last user for now.
+  - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
+  - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet" instead of
+    "snet"). (Christophe)
+  - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
+  - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
+  - Apply Reviewed-by's from Andy and Xu Yilun.
+
+Changes in v3:
+  - fpga/dfl-pci.c: remove now surplus wrapper around
+    pcim_iomap_region(). (Andy)
+  - block: mtip32xx: remove now surplus label. (Andy)
+  - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
+    occurs. (Andy, Christophe)
+  - Some minor wording improvements in commit messages. (Me)
+
+Changes in v2:
+  - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
+    patch, put stable kernel on CC. (Christophe, Andy).
+  - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
+  - Consequently, drop patch "PCI: Make pcim_release_region() a public
+    function", since there's no user anymore. (obsoletes the squash
+    requested by Damien).
+  - vdap/solidrun:
+    • make 'i' an 'unsigned short' (Andy, me)
+    • Use 'continue' to simplify loop (Andy)
+    • Remove leftover blank line
+  - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
+
+
+Important things first:
+This series is based on [1] and [2] which Bjorn Helgaas has currently
+queued for v6.12 in the PCI tree.
+
+This series shall remove pcim_iounmap_regions() in order to make way to
+remove its brother, pcim_iomap_regions().
+
+Regards,
+P.
+
+[1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
+[2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
+
+Philipp Stanner (6):
+  PCI: Make pcim_iounmap_region() a public function
+  PCI: Deprecate pcim_iounmap_regions()
+  fpga/dfl-pci.c: Replace deprecated PCI functions
+  block: mtip32xx: Replace deprecated PCI functions
+  gpio: Replace deprecated PCI functions
+  ethernet: cavium: Replace deprecated PCI functions
+
+ drivers/block/mtip32xx/mtip32xx.c              | 18 ++++++++----------
+ drivers/fpga/dfl-pci.c                         | 16 ++++------------
+ drivers/gpio/gpio-merrifield.c                 | 15 ++++++++-------
+ .../net/ethernet/cavium/common/cavium_ptp.c    |  7 +++----
+ drivers/pci/devres.c                           |  8 ++++++--
+ include/linux/pci.h                            |  1 +
+ 6 files changed, 30 insertions(+), 35 deletions(-)
+
+-- 
+2.47.0
 
 
