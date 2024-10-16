@@ -1,171 +1,188 @@
-Return-Path: <linux-gpio+bounces-11428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43D149A0634
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 11:56:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9AD79A069C
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 12:08:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72E3C1C2311A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:56:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5826D284E21
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 10:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF418206954;
-	Wed, 16 Oct 2024 09:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62CA4206066;
+	Wed, 16 Oct 2024 10:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMGuS0Z8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGJ0TjDj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D9420607B;
-	Wed, 16 Oct 2024 09:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2121E3DC;
+	Wed, 16 Oct 2024 10:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729072597; cv=none; b=nXKFneqRxaW2gjob5B7cu3VjyHZ3/rFWkQ3ncYzM0yEfjg1Oes5gc29+zhvZHS8dXlB3SFLybAxQ7YyE/5Kiz3DZHzCv+FrXAceMFAamIztnVFU0NwkWW1lmHlHT2AQbKmjeFRuUCg0yvCqeYx1mgyvfbuYGHxMNw85wFZShR0k=
+	t=1729073295; cv=none; b=udaiXwraEq3WqU56k3rUayRO2bP12cT8fSYlLK0DfIELlOC1ldOeyU+nEjb9xbzWMoUf7ypsmJTnnXLxiZY1SRryNk3TLhudhOlgFLYdCntOYaYM/8y+M9UwMSUhMabsDhY/6G3bb97I0Z1y8E59K1zHZyYxEduLFqzt80WkESI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729072597; c=relaxed/simple;
-	bh=uHq88diJm1dWVxmjE2s3IC5aG27pU9tVf1Cdl6SO7SA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QITh9j1RVajNwbmnpMOonWjTcu/AlEyMOU1XVoFQOU302QZpmFHUTeavBzmEKADrd2EJk/ez/YrRhaIvBMRHJjzV0l0htwGj3d40qAhUy1Yt0Jq6ZGvexgkWdYe8baPnPqqXoJJ4uSjRbwhOWjMrtYMCytcUAn/2NNu3ERNYxJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMGuS0Z8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43752C4CECD;
-	Wed, 16 Oct 2024 09:56:34 +0000 (UTC)
+	s=arc-20240116; t=1729073295; c=relaxed/simple;
+	bh=ppSqprCoVy6EZxQ2UTOyXlYhZrip5nkfhWtYtxhn7pw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=U/qBfyl3/k9/KfUcOb6h8C/C0Hqx2j7t+0qzHwR9ZD7qMjFA5R5ugV6AOMJ5wNAKcEU/W26yuNySu3pfUG5Cg2yoLEJWhZnNLF323zyExeR299kdrGIelJM6C7yCBy6BtBJitzPEphXYqDQ/QrTxfbTGBgg4/Bv27BufYCSyFYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGJ0TjDj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16BF8C4CEC5;
+	Wed, 16 Oct 2024 10:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729072597;
-	bh=uHq88diJm1dWVxmjE2s3IC5aG27pU9tVf1Cdl6SO7SA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZMGuS0Z82CFjZ/mSuxpZsQ4WNn5OYkcC/UShO3npG9FAWIjCi9p3dpvGhvFMN16N0
-	 LA/IJiRA6dpp40RyTJ2ZypXwstUzmOzwR3W061jldmzlNkQhZpmBrG7Fh62PCGgU4o
-	 C/X4VmlaFpel8ZKOWznCKTyDskr4ACAnMSBa1KGRHJsfLufx1mWgIv12U/6KhNarh1
-	 rGNBHEayWjBNZcB2v/ruk9BJ+f7bYDU+Xu3J8XeB2owI0salOZ32epGLEWGJnUhXTM
-	 DLcflSfzpGBH5qHgZO0ah4D3AQGfMOIQOIlIMCwAjt8/pKSJSGBEmfrbIb8IWuODKq
-	 HYC/cFR4OO0dw==
-Date: Wed, 16 Oct 2024 10:56:32 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, Lewis Hanly <lewis.hanly@microchip.com>
-Subject: Re: [RFC v7 4/6] gpio: mpfs: add polarfire soc gpio support
-Message-ID: <20241016-shallot-nerd-51eeba039ba0@spud>
-References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
- <20240723-underage-wheat-7dd65c2158e7@wendy>
- <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
+	s=k20201202; t=1729073294;
+	bh=ppSqprCoVy6EZxQ2UTOyXlYhZrip5nkfhWtYtxhn7pw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=oGJ0TjDjPcnHyqO5YR6Tqhl8EStz53SwKc75Q7JsX+Va0BTZNHBYgSVXCV1BVzDIO
+	 4sg6Vuj2ue5kXgnuJ2vAB4DWP7UlaZitfL0UJneq/GEU9bfesGfdjSDPDKcwgc2wm9
+	 lGeN6iGasqbk+Ss2q6YW491q3S+A+t+ONAGcQSw6qGoVHcmp4fRmvAWbwtBDgmlctC
+	 MQFCmfhiS+QPCVzxRif9NuJudpAQXKRVZLVmmNCPSQSKXOl6eDCyBdVpctEeXgjT/L
+	 ONBJeNB+tnRZ0nNMANPm9ZwOLalBEFJ1KfqmO0nbvFN57DCooFe1B8Q5s6zq663VWn
+	 GQWoCjb7mUbtQ==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH v7 0/6] Add mfd, pinctrl and pwm support to EN7581 SoC
+Date: Wed, 16 Oct 2024 12:07:28 +0200
+Message-Id: <20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8DGd6hZF1FungGf/"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGCQD2cC/2XQTU7DMBAF4KtUWePIHo//uuIeiEVsj1uLkhQnR
+ EDVu+OmiBayHEvfmzc+NSOVTGOz3ZyaQnMe89DXwTxsmrDv+h2xHOvcAAfkVlhGvVFWsGPuw1Q
+ OTPgkgAuFnnhT0bFQyh9L4NNznVMZXtm0L9QtMTwqachar9Gi8QEJnVHaAzoPlGJIaJ130AoDU
+ jpAxHaXp/YwFOq/hscXKj0d2qHsfpYVenuvpafrxlvn7WZpbLhiaShMMyGYPybWSXSUArcx2e0
+ MzaXjPo/TUD6XP6hPl5zruQD/z52BceY7oZQTRnYm3Te6ZM3yzkux8rJ6Z4l88hg7rVceb96Jt
+ cfqNe+Ck9Fo7v3Kq18vOF97VX0MIpBC8Dqs9+s7L+TK6+qBoyWI3LkAf/z5fP4GW0UlLFECAAA
+ =
+X-Change-ID: 20240818-en7581-pinctrl-1bf120154be0
+To: Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+ linux-pwm@vger.kernel.org
+X-Mailer: b4 0.14.2
 
+Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+needs to access the same memory block (gpio memory region) to configure
+{gio,irq}_chip and pwm functionalities respectively, so model them as
+childs of a parent mfd driver.
+Current EN7581 pinctrl driver supports the following functionalities:
+- pin multiplexing via chip_scu syscon
+- pin pull-up, pull-down, open-drain, current strength,
+  {input,output}_enable, output_{low,high} via chip_scu syscon
+- gpio controller
+- irq controller
 
---8DGd6hZF1FungGf/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+---
+Changes in v7:
+- pinctrl: cosmetics
+- pinctrl: fix compilation warning
+- Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
 
-On Mon, Aug 05, 2024 at 10:04:53AM +0200, Linus Walleij wrote:
-> On Tue, Jul 23, 2024 at 1:28=E2=80=AFPM Conor Dooley <conor.dooley@microc=
-hip.com> wrote:
->=20
->=20
-> > From: Lewis Hanly <lewis.hanly@microchip.com>
-> >
-> > Add a driver to support the Polarfire SoC gpio controller
-> >
-> > Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
-> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->=20
-> Just a comment on second thought:
->=20
-> > +config GPIO_POLARFIRE_SOC
-> > +       bool "Microchip FPGA GPIO support"
-> > +       depends on OF_GPIO
-> > +       select GPIOLIB_IRQCHIP
->=20
-> select GPIO_GENERIC?
->=20
-> > +static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned in=
-t gpio_index)
-> > +{
-> > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
-> > +       u32 gpio_cfg;
-> > +       unsigned long flags;
-> > +
-> > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> > +
-> > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index)=
-);
-> > +       gpio_cfg |=3D MPFS_GPIO_EN_IN;
-> > +       gpio_cfg &=3D ~(MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF);
->=20
-> OK this part is unique...
->=20
-> > +static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned i=
-nt gpio_index, int value)
-> > +{
-> > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
-> > +       u32 gpio_cfg;
-> > +       unsigned long flags;
-> > +
-> > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
-> > +
-> > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index)=
-);
-> > +       gpio_cfg |=3D MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF;
->=20
-> Also here
->=20
-> > +static int mpfs_gpio_get_direction(struct gpio_chip *gc,
-> > +                                  unsigned int gpio_index)
-> > +static int mpfs_gpio_get(struct gpio_chip *gc,
-> > +                        unsigned int gpio_index)
-> > +static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_inde=
-x, int value)
->=20
-> But these are just MMIO functions.
->=20
-> Is it possible to use augmented generic MMIO, i.e just override these
-> two functions that
-> need special handling?
+Changes in v6:
+- pwm: rely on regmap APIs
+- pwm: introduce compatible string
+- pinctrl: introduce compatible string
+- remove airoha-mfd driver
+- add airoha,en7581-pinctrl binding
+- add airoha,en7581-pwm binding
+- update airoha,en7581-gpio-sysctl binding
+- Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
 
-So, I've been looking into this again (finally), with an eye to stripping
-the interrupt handling bits out, and trying to upstream this in pieces.
-I dunno if I'm making a mistake here, but I don't know if there's much
-value in implementing this suggestion - as far as I can tell only the
-get()/set() functions can be replaced by what's provided by gpio-mmio.c.
-There are no controller wide registers that control direction and so
-bgpio_get_dir() can't be used - direction is read from the same
-mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index) registers that it is set
-using. Adding bgpio stuff, to just go ahead and overwrite it, to save on
-trivial get()/set() implementations seems to me like adding complication
-rather than removing it. What am I missing here?
+Changes in v5:
+- use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
+  in interrupt context
+- remove unused includes in pinctrl driver
+- since the irq_chip is immutable, allocate the gpio_irq_chip struct
+  statically in pinctrl driver
+- rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
+  driver
+- rely on guard/guard_scope APIs in pinctrl driver
+- improve naming convention pinctrl driver
+- introduce airoha_pinconf_set_pin_value utility routine
+- Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
 
-Cheers,
-Conor.
+Changes in v4:
+- add 'Limitation' description in pwm driver
+- fix comments in pwm driver
+- rely on mfd->base __iomem pointer in pwm driver, modify register
+  offsets according to it and get rid of sgpio_cfg, flash_cfg and
+  cycle_cfg pointers
+- simplify register utility routines in pwm driver
+- use 'generator' instead of 'waveform' suffix for pwm routines
+- fix possible overflow calculating duty cycle in pwm driver
+- do not modify pwm state in free callback in pwm driver
+- cap the maximum period in pwm driver
+- do not allow inverse polarity in pwm driver
+- do not set of_xlate callback in the pwm driver and allow the stack to
+  do it
+- fix MAINTAINERS file for airoha pinctrl driver
+- fix undefined reference to __ffsdi2 in pinctrl driver
+- simplify airoha,en7581-gpio-sysctl.yam binding
+- Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
 
---8DGd6hZF1FungGf/
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v3:
+- introduce airoha-mfd driver
+- add pwm driver to the same series
+- model pinctrl and pwm drivers as childs of a parent mfd driver.
+- access chip-scu memory region in pinctrl driver via syscon
+- introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
+  of dedicated bindings for pinctrl and pwm
+- add airoha,en7581-chip-scu.yaml binding do the series
+- Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
 
------BEGIN PGP SIGNATURE-----
+Changes in v2:
+- Fix compilation errors
+- Collapse some register mappings for gpio and irq controllers
+- update dt-bindings according to new register mapping
+- fix some dt-bindings errors
+- Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZw+N0AAKCRB4tDGHoIJi
-0ky/AQDkGqoBAGYEZCFxxWUyqZ4vmPR3ldX2O9Zq2lny2GgGNQD/bK8MIRUqZSos
-inSPCxcBYpf1M6iVGSB5AkOOp0NPcQs=
-=EK75
------END PGP SIGNATURE-----
+---
+Benjamin Larsson (1):
+      pwm: airoha: Add support for EN7581 SoC
 
---8DGd6hZF1FungGf/--
+Christian Marangi (1):
+      dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
+
+Lorenzo Bianconi (4):
+      dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
+      dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+      dt-bindings: pwm: airoha: Add EN7581 pwm
+      pinctrl: airoha: Add support for EN7581 SoC
+
+ .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
+ .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |   90 +
+ .../bindings/pinctrl/airoha,en7581-pinctrl.yaml    |  400 +++
+ .../devicetree/bindings/pwm/airoha,en7581-pwm.yaml |   34 +
+ MAINTAINERS                                        |    7 +
+ drivers/pinctrl/mediatek/Kconfig                   |   17 +-
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2970 ++++++++++++++++++++
+ drivers/pwm/Kconfig                                |   11 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-airoha.c                           |  408 +++
+ 11 files changed, 3980 insertions(+), 1 deletion(-)
+---
+base-commit: e4188772459fec428bf85ce6711a0147387c1455
+change-id: 20240818-en7581-pinctrl-1bf120154be0
+prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
+
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
+
 
