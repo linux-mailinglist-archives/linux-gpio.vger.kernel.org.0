@@ -1,89 +1,107 @@
-Return-Path: <linux-gpio+bounces-11438-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11445-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71E6B9A06E0
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 12:18:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF1B39A0791
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 12:38:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D0061F2229B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 10:18:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E57301C26734
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 10:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431CF206069;
-	Wed, 16 Oct 2024 10:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64DC9206E66;
+	Wed, 16 Oct 2024 10:38:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BE221E3CB;
-	Wed, 16 Oct 2024 10:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939421DE3C9;
+	Wed, 16 Oct 2024 10:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729073895; cv=none; b=g8G0os3LTyPhyMRliJt2x1+QzDJwyD25icDkbJqDf9ZcIn8nPkJESyl5YnrFI+hTgPzQkky0QBSuTpx8cY8EgKllQ5jai/eo0+ltxFyiS83YHB8bUoLMdAN0RGXsfxwpM8k46WWM+jDD5Xwrz21iobTI6CbFN++p/qsJ7LWKELo=
+	t=1729075099; cv=none; b=RD8ADKSLQxntoMwjlHVBlJu+stFHvR0KFTxq0lDy32/TpbrJzqFGkbOO9mzRT2nPVKMvKtvwLng5w6XuTeauX8oSTk3eNI6+DrXzGNVK1auldAi8m/H5MhuHrrU+CvJTPfndDp1sxaQ0XBBybwlj1AMWTKGjRgDlZI4+4T1BwoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729073895; c=relaxed/simple;
-	bh=e01MAog32dNCK03hUVw31ADUZmVfPeprGcllcGIs4wM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Au8Jpc/C38COESu82WDkDVRpQoqiznjFi9nFAazCFhlq3Wz7sc/W0hP6jSoNQjdgcruhS3V1Qo24YUJMf1+TLO9exWmzIIbMKP8v9xISuA9lWOV+KRMUvr7MRP7JYDODcCmpk2POIYBx6EXt9OHUdM20FoZHl5/6RcRYyRRFSbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XT6Lg55fGz10N33;
-	Wed, 16 Oct 2024 18:16:11 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 75CBA180106;
-	Wed, 16 Oct 2024 18:18:04 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 16 Oct
- 2024 18:18:03 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <avifishman70@gmail.com>, <tmaimon77@gmail.com>, <tali.perry1@gmail.com>,
-	<venture@google.com>, <yuenn@google.com>, <benjaminfair@google.com>,
-	<linus.walleij@linaro.org>
-CC: <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <yuehaibing@huawei.com>
-Subject: [PATCH] pinctrl: nuvoton: npcm8xx: Fix error handling in npcm8xx_gpio_fw()
-Date: Wed, 16 Oct 2024 18:35:18 +0800
-Message-ID: <20241016103518.3499455-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1729075099; c=relaxed/simple;
+	bh=0KzIclti6ghVRdDUnJmtsgvuMFVRjttfAfgAqkgstVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vxxv4BpEIUqxUYJJbtwkaWYSqEB4nKGyW6cR+fyNWRn1GQGr8gmP9CeaBFwOaES5yWIzE31/8eRVPOrClLGMCF0Zx/DAX/pmBFKocFTnHyWaGOrKGFR/wifKoBVCtOpbZLJBAoE4Yqs0v31S1jkPlvDfxObL5nw3AkW/kXCKTiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: UUk5fotKSROtlfsojQ/+RA==
+X-CSE-MsgGUID: 3WHW+dFuT9WXzXGt0luxYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="31380903"
+X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
+   d="scan'208";a="31380903"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 03:38:17 -0700
+X-CSE-ConnectionGUID: TPK2QQGoTzCKrKULTJkyPQ==
+X-CSE-MsgGUID: Mr+ZtVIFT7WZBCYpV/jgYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,207,1725346800"; 
+   d="scan'208";a="82150795"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 03:38:11 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1t11Ps-00000003iuL-1qo4;
+	Wed, 16 Oct 2024 13:38:08 +0300
+Date: Wed, 16 Oct 2024 13:38:08 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v8 2/6] PCI: Deprecate pcim_iounmap_regions()
+Message-ID: <Zw-XkFcaXjlF5az0@smile.fi.intel.com>
+References: <20241016094911.24818-2-pstanner@redhat.com>
+ <20241016094911.24818-4-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+In-Reply-To: <20241016094911.24818-4-pstanner@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-fwnode_irq_get() was changed to not return 0, fix this by checking
-for negative error, also update the error log.
+On Wed, Oct 16, 2024 at 11:49:05AM +0200, Philipp Stanner wrote:
+> pcim_ionumap_region() has recently been made a public function and does
+> not have the disadvantage of having to deal with the legacy iomap table,
+> as pcim_iounmap_regions() does.
+> 
+> Deprecate pcim_iounmap_regions().
 
-Fixes: acf4884a5717 ("pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-index 471f644c5eef..70e6966049e4 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-@@ -2361,8 +2361,8 @@ static int npcm8xx_gpio_fw(struct npcm8xx_pinctrl *pctrl)
- 			return dev_err_probe(dev, ret, "gpio-ranges fail for GPIO bank %u\n", id);
- 
- 		ret = fwnode_irq_get(child, 0);
--		if (!ret)
--			return dev_err_probe(dev, ret, "No IRQ for GPIO bank %u\n", id);
-+		if (ret < 0)
-+			return dev_err_probe(dev, ret, "Failed to retrieve IRQ for bank %u\n", id);
- 
- 		pctrl->gpio_bank[id].irq = ret;
- 		pctrl->gpio_bank[id].irq_chip = npcmgpio_irqchip;
+> + * This function is DEPRECATED. Do not use it in new code.
+
+Interestingly that the syntax of the DEPRECATED is not documented (yet?),
+however the sphinx parser hints us about **DEPRECATED** format — see
+Documentation/sphinx/parse-headers.pl:251. In any case the above seems
+like second used (in a form of the full sentence) and will be updated
+in accordance with the above mentioned script.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
 
