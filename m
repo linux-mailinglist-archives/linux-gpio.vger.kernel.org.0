@@ -1,160 +1,171 @@
-Return-Path: <linux-gpio+bounces-11426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11428-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7B879A060E
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 11:51:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43D149A0634
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 11:56:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 260E21C22626
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:51:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72E3C1C2311A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Oct 2024 09:56:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C04B2076CE;
-	Wed, 16 Oct 2024 09:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF418206954;
+	Wed, 16 Oct 2024 09:56:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PAMsMcQv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMGuS0Z8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4246207200
-	for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 09:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D9420607B;
+	Wed, 16 Oct 2024 09:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729072172; cv=none; b=IB68P+nALRjtaO5RoZjUYP8WqHK95OlPOLs37SHYNydM+NywW2m6Tw/e5o0s9WR64yqajGUeR2EckFCVf2HXY9leMc85+nj66V0mwo7AfSAlY+9ToZbqjHKpeDmxMfDnU01snuZR5AckBr7BeQQKsNzq4d9KGy8HgoUMyPK8K14=
+	t=1729072597; cv=none; b=nXKFneqRxaW2gjob5B7cu3VjyHZ3/rFWkQ3ncYzM0yEfjg1Oes5gc29+zhvZHS8dXlB3SFLybAxQ7YyE/5Kiz3DZHzCv+FrXAceMFAamIztnVFU0NwkWW1lmHlHT2AQbKmjeFRuUCg0yvCqeYx1mgyvfbuYGHxMNw85wFZShR0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729072172; c=relaxed/simple;
-	bh=htHW4nC4bbnEa+ZM/uajB/3THIEyeC3KtURYUab+gk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rLEG+Olixe/z1FVtjMBut/lVcOYI13bOsZiNxVTyH2sS4TztHF3lCzlg5jZ1hGH6VeETdrcSj338fYVqOxMMpHTkJhPEC9LL8iOWU/gRhH+jFLvKd3TkRFAnIpXEjSovn2bRPFtNQgj+ae5wBFXkdzH9FrG9vfUA3MptU3Jm2w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PAMsMcQv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729072170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eAXbZXITqmfuNpuSA5zLMkRUqa2IYxNYDUv+NC55td4=;
-	b=PAMsMcQvkUYrWUKsVAKMR6MQTkZoyqnVv3r/aJF9G3c9NXErptBNerPWDIO8MpT5T+C14g
-	s3MMgb/IQ0vLPSwRSjbfQHE2FbYmrNR9gSjJhKwrJfUm7O44rAvmDi8+BaE/IpVhBhRgvB
-	pMy8cY0iutaIIM0J5TMdA/LV7i380Cs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-q85A8bruNluFxLB09su4Lg-1; Wed, 16 Oct 2024 05:49:28 -0400
-X-MC-Unique: q85A8bruNluFxLB09su4Lg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4311db0f3f1so34234165e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 02:49:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729072167; x=1729676967;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eAXbZXITqmfuNpuSA5zLMkRUqa2IYxNYDUv+NC55td4=;
-        b=UHUpWC0BS0vYEr8ygdlzxRWjPpq5Tnp1pXB0CVsGvdfBK57GDz8Ud6sWsiJzReI8UC
-         zwh05fcXs+jpZv4Mmelbet4iH/XdPXXtvIXx25DM1O7sSZAYqkXNiLjcUyRPQLpdilLC
-         pzhBBMIaCfIrT+/tyaU47ZsUfG2aoxPctWUTlQFZ+5Qs09REh7LsZNSuzKZSfxn2p9rh
-         zhfnneTukN3hrd3UH6bwRdcrZnOm1bkgwVo7kQIIf9zo+Nb1rQadHz9BDeK70/sdD1ba
-         ExfuhhOrSI/VDMUJgLW1DnpF2otyLwgmAVYG49MtNZlZ8GDJLfm+LxZKWX0fRJ6N2DzK
-         HR6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXLl6FGMuyA6aJu2XqeaYFZrgV5c13yl3oRR+PWe97ieOeKD3rXExrEwDp1IogOkILfIaTkmgxeKeCo@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqAjpdXgyvRSYuXavx/00o3q4s+GMKVTTZ+VgssyuH0ZsEPZcq
-	zbmNfsydd/Lrn3eKFlsMdXig575DxId9e5DBGBkjshOskhnhTsJZmc0G9R7pyRMrs+pkpKwwLyE
-	74JjL/IwUTLxE/+G5jf76SZo6/ERXYhG9eRW5om96EnqyqnFZbH/fuRec6+U=
-X-Received: by 2002:a05:600c:1f8c:b0:42c:b220:4778 with SMTP id 5b1f17b1804b1-4311df5c639mr160032775e9.33.1729072167203;
-        Wed, 16 Oct 2024 02:49:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEmQuyn8hv0hBqxE0+BXi1ZnR8824mqMCiYlhK9JU94GmSaFPjJpOmCYUVQWoBnqBXMHnWe8Q==
-X-Received: by 2002:a05:600c:1f8c:b0:42c:b220:4778 with SMTP id 5b1f17b1804b1-4311df5c639mr160032565e9.33.1729072166725;
-        Wed, 16 Oct 2024 02:49:26 -0700 (PDT)
-Received: from eisenberg.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4314b32e487sm28190235e9.25.2024.10.16.02.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Oct 2024 02:49:26 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Li Zetao <lizetao1@huawei.com>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fpga@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v8 6/6] ethernet: cavium: Replace deprecated PCI functions
-Date: Wed, 16 Oct 2024 11:49:09 +0200
-Message-ID: <20241016094911.24818-8-pstanner@redhat.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241016094911.24818-2-pstanner@redhat.com>
-References: <20241016094911.24818-2-pstanner@redhat.com>
+	s=arc-20240116; t=1729072597; c=relaxed/simple;
+	bh=uHq88diJm1dWVxmjE2s3IC5aG27pU9tVf1Cdl6SO7SA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QITh9j1RVajNwbmnpMOonWjTcu/AlEyMOU1XVoFQOU302QZpmFHUTeavBzmEKADrd2EJk/ez/YrRhaIvBMRHJjzV0l0htwGj3d40qAhUy1Yt0Jq6ZGvexgkWdYe8baPnPqqXoJJ4uSjRbwhOWjMrtYMCytcUAn/2NNu3ERNYxJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMGuS0Z8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43752C4CECD;
+	Wed, 16 Oct 2024 09:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729072597;
+	bh=uHq88diJm1dWVxmjE2s3IC5aG27pU9tVf1Cdl6SO7SA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZMGuS0Z82CFjZ/mSuxpZsQ4WNn5OYkcC/UShO3npG9FAWIjCi9p3dpvGhvFMN16N0
+	 LA/IJiRA6dpp40RyTJ2ZypXwstUzmOzwR3W061jldmzlNkQhZpmBrG7Fh62PCGgU4o
+	 C/X4VmlaFpel8ZKOWznCKTyDskr4ACAnMSBa1KGRHJsfLufx1mWgIv12U/6KhNarh1
+	 rGNBHEayWjBNZcB2v/ruk9BJ+f7bYDU+Xu3J8XeB2owI0salOZ32epGLEWGJnUhXTM
+	 DLcflSfzpGBH5qHgZO0ah4D3AQGfMOIQOIlIMCwAjt8/pKSJSGBEmfrbIb8IWuODKq
+	 HYC/cFR4OO0dw==
+Date: Wed, 16 Oct 2024 10:56:32 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, Lewis Hanly <lewis.hanly@microchip.com>
+Subject: Re: [RFC v7 4/6] gpio: mpfs: add polarfire soc gpio support
+Message-ID: <20241016-shallot-nerd-51eeba039ba0@spud>
+References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
+ <20240723-underage-wheat-7dd65c2158e7@wendy>
+ <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8DGd6hZF1FungGf/"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbRE695f-+do1HYpOZ6e4qxgUBWJzEPO2hTCuZ3xxYHQg@mail.gmail.com>
 
-pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
-the PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-pcim_iomap_table(), pcim_iomap_regions_request_all()").
 
-Replace the deprecated PCI functions with their successors.
+--8DGd6hZF1FungGf/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
----
- drivers/net/ethernet/cavium/common/cavium_ptp.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On Mon, Aug 05, 2024 at 10:04:53AM +0200, Linus Walleij wrote:
+> On Tue, Jul 23, 2024 at 1:28=E2=80=AFPM Conor Dooley <conor.dooley@microc=
+hip.com> wrote:
+>=20
+>=20
+> > From: Lewis Hanly <lewis.hanly@microchip.com>
+> >
+> > Add a driver to support the Polarfire SoC gpio controller
+> >
+> > Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Just a comment on second thought:
+>=20
+> > +config GPIO_POLARFIRE_SOC
+> > +       bool "Microchip FPGA GPIO support"
+> > +       depends on OF_GPIO
+> > +       select GPIOLIB_IRQCHIP
+>=20
+> select GPIO_GENERIC?
+>=20
+> > +static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned in=
+t gpio_index)
+> > +{
+> > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
+> > +       u32 gpio_cfg;
+> > +       unsigned long flags;
+> > +
+> > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
+> > +
+> > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index)=
+);
+> > +       gpio_cfg |=3D MPFS_GPIO_EN_IN;
+> > +       gpio_cfg &=3D ~(MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF);
+>=20
+> OK this part is unique...
+>=20
+> > +static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned i=
+nt gpio_index, int value)
+> > +{
+> > +       struct mpfs_gpio_chip *mpfs_gpio =3D gpiochip_get_data(gc);
+> > +       u32 gpio_cfg;
+> > +       unsigned long flags;
+> > +
+> > +       raw_spin_lock_irqsave(&mpfs_gpio->lock, flags);
+> > +
+> > +       gpio_cfg =3D readl(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index)=
+);
+> > +       gpio_cfg |=3D MPFS_GPIO_EN_OUT | MPFS_GPIO_EN_OUT_BUF;
+>=20
+> Also here
+>=20
+> > +static int mpfs_gpio_get_direction(struct gpio_chip *gc,
+> > +                                  unsigned int gpio_index)
+> > +static int mpfs_gpio_get(struct gpio_chip *gc,
+> > +                        unsigned int gpio_index)
+> > +static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_inde=
+x, int value)
+>=20
+> But these are just MMIO functions.
+>=20
+> Is it possible to use augmented generic MMIO, i.e just override these
+> two functions that
+> need special handling?
 
-diff --git a/drivers/net/ethernet/cavium/common/cavium_ptp.c b/drivers/net/ethernet/cavium/common/cavium_ptp.c
-index 9fd717b9cf69..984f0dd7b62e 100644
---- a/drivers/net/ethernet/cavium/common/cavium_ptp.c
-+++ b/drivers/net/ethernet/cavium/common/cavium_ptp.c
-@@ -239,12 +239,11 @@ static int cavium_ptp_probe(struct pci_dev *pdev,
- 	if (err)
- 		goto error_free;
- 
--	err = pcim_iomap_regions(pdev, 1 << PCI_PTP_BAR_NO, pci_name(pdev));
-+	clock->reg_base = pcim_iomap_region(pdev, PCI_PTP_BAR_NO, pci_name(pdev));
-+	err = PTR_ERR_OR_ZERO(clock->reg_base);
- 	if (err)
- 		goto error_free;
- 
--	clock->reg_base = pcim_iomap_table(pdev)[PCI_PTP_BAR_NO];
--
- 	spin_lock_init(&clock->spin_lock);
- 
- 	cc = &clock->cycle_counter;
-@@ -292,7 +291,7 @@ static int cavium_ptp_probe(struct pci_dev *pdev,
- 	clock_cfg = readq(clock->reg_base + PTP_CLOCK_CFG);
- 	clock_cfg &= ~PTP_CLOCK_CFG_PTP_EN;
- 	writeq(clock_cfg, clock->reg_base + PTP_CLOCK_CFG);
--	pcim_iounmap_regions(pdev, 1 << PCI_PTP_BAR_NO);
-+	pcim_iounmap_region(pdev, PCI_PTP_BAR_NO);
- 
- error_free:
- 	devm_kfree(dev, clock);
--- 
-2.47.0
+So, I've been looking into this again (finally), with an eye to stripping
+the interrupt handling bits out, and trying to upstream this in pieces.
+I dunno if I'm making a mistake here, but I don't know if there's much
+value in implementing this suggestion - as far as I can tell only the
+get()/set() functions can be replaced by what's provided by gpio-mmio.c.
+There are no controller wide registers that control direction and so
+bgpio_get_dir() can't be used - direction is read from the same
+mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index) registers that it is set
+using. Adding bgpio stuff, to just go ahead and overwrite it, to save on
+trivial get()/set() implementations seems to me like adding complication
+rather than removing it. What am I missing here?
 
+Cheers,
+Conor.
+
+--8DGd6hZF1FungGf/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZw+N0AAKCRB4tDGHoIJi
+0ky/AQDkGqoBAGYEZCFxxWUyqZ4vmPR3ldX2O9Zq2lny2GgGNQD/bK8MIRUqZSos
+inSPCxcBYpf1M6iVGSB5AkOOp0NPcQs=
+=EK75
+-----END PGP SIGNATURE-----
+
+--8DGd6hZF1FungGf/--
 
