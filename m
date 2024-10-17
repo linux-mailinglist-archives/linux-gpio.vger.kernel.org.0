@@ -1,139 +1,108 @@
-Return-Path: <linux-gpio+bounces-11494-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B49F9A1B1A
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 08:55:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 120619A1B25
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 08:58:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAD8A1F239EB
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 06:55:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBD4C289E71
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 06:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 216381B2189;
-	Thu, 17 Oct 2024 06:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA8321C1739;
+	Thu, 17 Oct 2024 06:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="VCOiX7s+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="SSQdTJ+r"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w0pDHzmL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCC919409C;
-	Thu, 17 Oct 2024 06:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B911917E5
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 06:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729148129; cv=none; b=BrkgmXXlorp/Llsn0vsaMqkn4DeiGDLyya82MmSM2/z7l9BO1+DCF/Kq8wkeX1QEYcEX9J56nU/pEJaFINggqGc5aVhG+xAKf3Q7Jo+HRKHgsQVsm61DSrlyZ+nBTXlhTCUOLUv0lLmaU/kENO1ZuB0cNjaERUvj+dNf0Ze0ZXg=
+	t=1729148281; cv=none; b=nrclKXdqt2NxNWanGdVzcaofyFLM3w1L1TSMIhtxyxjC97yehbgKEJJWu3F78sljoZadvoZ+onNYcb3kkexB0bP5psfGVIbYXW+NFwmwFOU5ikGZ/tpXSukeOCaglwEWj9iU3cgk7wv1JxXws8aN0BPEe95Z6lOXUkW3UUTgjpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729148129; c=relaxed/simple;
-	bh=6YD5Cpi+w5UzlJe8jXh9Eokm8yqHtO7+XpX7JpvbRrc=;
+	s=arc-20240116; t=1729148281; c=relaxed/simple;
+	bh=r8HBRYigN/+XvbW+oTD8AXO0DQD1lVTQq5dKYuD+x6c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CQeDMm5X1fMeRmpI5P23qs87gTcizYMQzHBBqdR5EbkgfU4NT7Z+78GKCbnadvM55h8KmB+p/1bLytuxaxeqkRg6MJc96Y0Y52SVsohWnCpVL5exBHAO381BsRLpDht4nkvu5eeyNWVRRD2RgO8GTwv4HmPUkEdxvOYlHhoYHvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=VCOiX7s+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=SSQdTJ+r reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	 MIME-Version:Content-Type; b=I87lxVROelHDkDPWzGJOVG7MmSL251W6ctzI0FDiCVpfmAWyoSUSBVLdOuvOSXSSkqlSTER1wpnKxgdIw+tfDDkk5gYhhr6yOZXReGMztErmQ+g/yj20sho/2yHp0bQ/lLAAcDy772p962i8xvxIn+X/SZGyEkh6EFRTHZqFPHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w0pDHzmL; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37d5689eea8so392757f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 23:57:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1729148125; x=1760684125;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gvM3ylQqJpV87mr3f63xQKKWoegM6/qRcERu3MpW1Rk=;
-  b=VCOiX7s+CAZIxTXdwP+1hgpB6O7BMtoYLNA9kXmt6FDrsQBlPg7JSjFz
-   X60KAvTJdKLE9BH/mUkdSai7Yh9FRkslK9whlXrCwfqr7T8y86WMBvYC7
-   H1XxmuWXBevFyNjWoVJYBHQGXnpkP644B7ve6ERP4BztJlMiOTmgYFVHn
-   juyw7VEISNV92ccHexU2J7uGJ3Dah0zMJVy2jQZZHrT7m/CkoFIq3A96O
-   x8H0HNiq0wOiuJx6Sx6pncjOLRwnV2a78lzJ1W0ilZCDoN438DKlR5de0
-   blJXS7S2YXuT/L0yItUMF6n/e75X8dK6kndZT7cUgJ3KuKo+VPE3cVBMn
-   Q==;
-X-CSE-ConnectionGUID: Ymo5EWPfRfS0qgAvOdrI9w==
-X-CSE-MsgGUID: PIfOfzyLRiedtZbMLCiKKA==
-X-IronPort-AV: E=Sophos;i="6.11,210,1725314400"; 
-   d="scan'208";a="39509098"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 17 Oct 2024 08:55:21 +0200
-X-CheckPoint: {6710B4D9-27-21611FC3-DAD22B0C}
-X-MAIL-CPID: 9CBEAB64C40454D6C197246A96EC91C0_4
-X-Control-Analysis: str=0001.0A682F1A.6710B4D8.007E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9072A167B0B;
-	Thu, 17 Oct 2024 08:55:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1729148117;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=gvM3ylQqJpV87mr3f63xQKKWoegM6/qRcERu3MpW1Rk=;
-	b=SSQdTJ+rAYW1U9hBi0ygz/AEsbS/rgh/gaUBxWc/bdQZb7J5JwvIHf36JH4WHcgrYuu50l
-	WOOCzipZg0OU8992x85QtsNVENnlM4YLGL2zq4UVTBNpT/tWDfSGSyqO6lPNuMUi7tNt87
-	OWamhhixbPeRTkVO+ky3iTcVs02LJSG9h7zlNKPh+yyhCHUPyUr4k4VgWRjLch6gjz+7HN
-	nbnGjnENnc5krzrJOzZFOm3CBsFe3yC3ZqDweYtHeYVg+abDPcxmrYk/Q/FGLt3U9g1Dlz
-	U0xTOdby7KPXPqj1QH2/M9QpVy4o1XUX9ka9uRF666jZinu2Gvc3pvOWwlBnQw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>
-Cc: Marek Vasut <marex@denx.de>, Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, kernel@dh-electronics.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 07/12] ARM: dts: imx6q: Align pin config nodes with bindings
-Date: Thu, 17 Oct 2024 08:55:15 +0200
-Message-ID: <23695903.6Emhk5qWAg@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20241017000801.149276-7-marex@denx.de>
-References: <20241017000801.149276-1-marex@denx.de> <20241017000801.149276-7-marex@denx.de>
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729148276; x=1729753076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ckFKos3k1VltrSwOBak8XGHIDoRaTtfm66p0HKqbknM=;
+        b=w0pDHzmLtASL72aoQrXmSDbofOQScT5C+9d6nUL+PNQYbUTDfWknsHaSZhicjtd60Y
+         N+JGiEPlU9/0RIskBheWFfU1DFAb7CKZYZvR8ggfEtpQK7QJR5lapFn0Ikw9tFz9OUQx
+         iU4bDhK8aKO2mL5/6OxcS+CH0zOSmilLEbPNNnOENjGH7/pME+3vI4WrXhXMY4ZqOcEs
+         aoO1+D5q7Kq/+QoKV/QOWGfJONTpgPEPtw/NXZ0bSwRX8uM0/hYWg5GA9wcAoxPSo8Oh
+         q3f3BJM91O2OgH8MXhJ9ObsLleegSH4lQ/Z01nB5ZUNbxsA0Z4Rb9dl58qNmy6Ek4fo2
+         KmTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729148276; x=1729753076;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ckFKos3k1VltrSwOBak8XGHIDoRaTtfm66p0HKqbknM=;
+        b=rXFySYwV9Bf6UX9XCxkNKcAYEaQt7f4jMEKMr+2eivD3neYD3gTpp8AeMaLispM0lg
+         3SCtluTxvd071Qm6iRYp0Xz3zrNWsTwTGAUFvZu+MmNdYBA3qjYbOPBCUGzvgvqryeF5
+         b41xFXCQIkOZa40oUDd2G18tciIXIulZe2BBOlr8W5nC2z07D+nE1NPdSEr2syEDX5Eb
+         KHBy2UnzvSMmcStkUIwQUeQSZimKniv2vWcFrpZTwkBFeV0fngHz9jLAHrxQcZwkein5
+         qNS/inFaVkAzHW0LZ9MvQSuxupVPsX2PqiKhPeBZzAo8qXjzKFKuVj6+RGyNXMHYZs8z
+         /Wkg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6W/2HUx+rtaGyNICrRMY3IlwKkpl50isaYqQholeu4vfUWFvexuo3PyEHfwLRTfDGh+iKeL92TKTr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMuk5tb0UFR/oqxOZvfmiC9W9mf2KN+Ntj18HCtu5ATS+CkY3P
+	dBclKumq49rS1/bSEy1S584Kgnjm8c+Jcs7cld4B6lplqiZPyMLHX6JsGndOrpA=
+X-Google-Smtp-Source: AGHT+IF5smZC8b0wY4inas9AaPOtU7Yrj9ZRKnkfn7nVxxAqqq11LfJ7fYy7cHx8Px/CGhevjvbWTQ==
+X-Received: by 2002:a5d:4947:0:b0:37d:4afe:8c9b with SMTP id ffacd0b85a97d-37d86d5fec1mr3741945f8f.54.1729148276457;
+        Wed, 16 Oct 2024 23:57:56 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3831:fc61:16eb:d0df])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa87adasm6260026f8f.29.2024.10.16.23.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2024 23:57:56 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: amdpt: remove remove()
+Date: Thu, 17 Oct 2024 08:57:49 +0200
+Message-ID: <172914826142.5858.17899543810767806657.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241014092909.90607-1-brgl@bgdev.pl>
+References: <20241014092909.90607-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Marek,
-
-Am Donnerstag, 17. Oktober 2024, 02:06:53 CEST schrieb Marek Vasut:
-> Bindings expect pin configuration nodes in pinctrl to match certain
-> naming and not be part of another fake node:
->=20
-> pinctrl@30330000: '...' does not match any of the regexes: 'grp$', 'pinct=
-rl-[0-9]+'
->=20
-> Drop the wrapping node and adjust the names to have "grp" prefix.
-> Diff looks big but this should have no functional impact, use e.g.
-> git show -w to view the diff.
->=20
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> ---
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Jacky Bai <ping.bai@nxp.com>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: imx@lists.linux.dev
-> Cc: kernel@dh-electronics.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-gpio@vger.kernel.org
-> ---
-> V2: New patch
-> ---
->  arch/arm/boot/dts/nxp/imx/imx6q-ba16.dtsi     |   2 +-
->  .../boot/dts/nxp/imx/imx6q-dmo-edmqmx6.dts    | 232 +++++++++---------
->  arch/arm/boot/dts/nxp/imx/imx6q-gk802.dts     |  92 ++++---
->  arch/arm/boot/dts/nxp/imx/imx6q-h100.dts      | 200 ++++++++-------
->  arch/arm/boot/dts/nxp/imx/imx6q-logicpd.dts   |   4 +-
->  arch/arm/boot/dts/nxp/imx/imx6q-mba6.dtsi     |   2 +-
-
-Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com> # imx6q-mba6
-
-Thanks and best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
+On Mon, 14 Oct 2024 11:29:09 +0200, Bartosz Golaszewski wrote:
+> Use the managed variant of gpiochip_add_data() and remove the remove()
+> callback.
+> 
+> 
+
+Applied, thanks!
+
+[1/1] gpio: amdpt: remove remove()
+      commit: 9a94580120bff8040e84e2d500f8f462f8704dc5
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
