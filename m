@@ -1,133 +1,152 @@
-Return-Path: <linux-gpio+bounces-11489-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11490-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CC3A9A1899
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 04:25:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2C8C9A18DF
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 04:54:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B14921F21C0C
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:25:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 30A761C225EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44AB54D8D0;
-	Thu, 17 Oct 2024 02:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8A34D9FB;
+	Thu, 17 Oct 2024 02:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o0ez1MOt"
+	dkim=pass (2048-bit key) header.d=everestkc-com-np.20230601.gappssmtp.com header.i=@everestkc-com-np.20230601.gappssmtp.com header.b="o54veFtX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518EE42056;
-	Thu, 17 Oct 2024 02:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED066A33B
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 02:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729131908; cv=none; b=Vv79tuB9ZkIrEyhQlgcBwqKYJZbcN2JoXtFmzRo+h25KrmwOgwkdYaR9AFM4CizmXoaDWVw8EQDShT0BPydOz+hqwiN6edK7cKbkEEPm/f5e7eg5FndaqPZHLcjPLFDNNP8MRPnXmJcS9pmpt+4myeNaHeZTA+SSEcb0x3TYTbI=
+	t=1729133675; cv=none; b=UXqY0jQtn8wCMFwGWLVkmc501v2CdxzgQ+RWvIqjnT4ZmdWQKhcU92HSSts5VzLhUXX8NX8ixSd39D3hzDruvvN+P0q04jJ3Yp4voFtC7reoE6jjpuBLDxEQqc6HXgsHRF0K5xQuC+aP9R5NKa62Tf5wjTqlP+WMOPDoUv0fLgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729131908; c=relaxed/simple;
-	bh=5NMPDhf/E8i+g+gcq6+KuI94K+BxmbwJGEsewTDaCX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ca1+sMWS9ah/LVHl23Shk4paq5Vl3kg1XMJd35/Kj0XRNQgGPkvZndHwRKlF37tjE2UbnHZaH0b+q1L6LAOhEmpXl9ycA5SBlwU8uKEGC8Pnzn+ZZkrTL6Bh/SPePNA48wJRtT/Fe/VzWn8zXmUJ89H6qqOyDsiYrHqPnqF00NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o0ez1MOt; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GIoW8h011837;
-	Thu, 17 Oct 2024 02:25:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	EZXaIrOtNXKt+a6vGxy0OY8kvivjCsBaCy5jFUoU27Y=; b=o0ez1MOtSLAYysmB
-	TSPiullrJZiNksKT1qDMyuX58DQMWv0z0jq9PDvi507j2Q08NXM0gkcXgvvDY2G8
-	0vr0Qa/CKp8t7TpJNMdyMiM+JuKsV/0yKaoIvSqLV6HTv08tFhURhfrcLNbE2pHR
-	IGRXBn+0lU50RLOCLVbVz60K8s1U8+9pz62GsULP5/q2XlHphuiBFPyDIRwvbjpp
-	SahPU1zbBrAvY2oj5fgfw/AP9Dd5z/XrZW0XthJNIV4DNjzfnIssvK6Gzp8rf+Sd
-	7KiOLOqQFSZTN4dHZrKEvcfyZhbpysfniRgGkBdl8dofmKDL5Fcg1M2AhG19Jmt7
-	y/OlZQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42abm5jeup-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 02:25:00 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49H2OxWD031600
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 02:24:59 GMT
-Received: from [10.233.21.53] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Oct
- 2024 19:24:56 -0700
-Message-ID: <abbea1df-4aaa-4012-95f9-ea1419a22414@quicinc.com>
-Date: Thu, 17 Oct 2024 10:24:54 +0800
+	s=arc-20240116; t=1729133675; c=relaxed/simple;
+	bh=QOxGn6HUGUC7agxtcrT7HyZI+wUqBau396XTdEeY4VM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dW/uf4JNr+tcXAv1grP719DZZ37tqTncfjh56I4JVo6N6MP9cZqjfYUZqTdbjpdzVgUPvvNXz1BhFjeTFCI2/jA1OM2wPGfbiL8whSSvi7Ge96s0Qr5fQ66OhzXoSKdffcQgI8lEZylIfF5rdITeorjgQiE/v1j/CjP969eoV4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=everestkc.com.np; spf=pass smtp.mailfrom=everestkc.com.np; dkim=pass (2048-bit key) header.d=everestkc-com-np.20230601.gappssmtp.com header.i=@everestkc-com-np.20230601.gappssmtp.com header.b=o54veFtX; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=everestkc.com.np
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everestkc.com.np
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c9c28c1e63so382358a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Oct 2024 19:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=everestkc-com-np.20230601.gappssmtp.com; s=20230601; t=1729133669; x=1729738469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cLxmOw/KJpTCPuMZfngsa+JDKUmVUuEwD65qtQ7UoWU=;
+        b=o54veFtXNeC2tYD9KaP1Uqs1RfCVyOGJGFwl0Df4MMt9K6nxCilET2f4X3j6QUE1so
+         uirs3k/XbilyLhpTIySYwbFHb4LAxxZA1SUFH3G/A7rx968X24ix4R0cTHnrdZyICFz4
+         8AnnasaGqreBP67KV6Vc8SlA6tTyEh+zU6DwPw5MOaqBHIHYRouz/zv2qQoacLPJqfeA
+         78qalM3LkIAhJ/GUUzzT5l1JYe9F654Qj3siUr65HryxKXN0+63jSmkI8BltBDQYMUJG
+         lqljGEcHhd/fas4eWnSf1mimmwFsSJ8tJA98s21ELC9Wcn+l6ijf7wmjDa3M6BoAB3oG
+         Y0ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729133669; x=1729738469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cLxmOw/KJpTCPuMZfngsa+JDKUmVUuEwD65qtQ7UoWU=;
+        b=UDyL49lKkY8BDoGGxj7j2aoDtAVBaS173Szm9nzKCYQjq0xsiIcvFuRtpdK3MdEyEk
+         kKnUHi8xGx/bXwxje6EXPnBBvR23qaEU+StFS/P9GXJIe2q5Uo2WbNTjOaURTOqu9XNe
+         q0/12aJ+Nj3RWklk6yeDsV7/1i7EEV3ZF6vJ8PJY+D4zVg8hEJG3DEXdsBFK4oM1xfHn
+         6LIQFcefES+s1AzSXPRDTRkZnemke9JDPaiITZa6jQM/w9b3fMJcOWpzKVkFiF0jKx2Z
+         6I7X0PP/Jw2At66B4M98SdZ/CFcbbe4OXXx4fB2TedW3tD6I8E2oAkrTKpeXKFie5D5C
+         f22A==
+X-Forwarded-Encrypted: i=1; AJvYcCXMeonVUPua8W1Dni2y+AHJY1ytgvdR26Z/4M4kLK551B+Zi9WW9YFWb79G7EQtMAXKPYE3XN3Tg9hP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2zbnNRlkcYCRe72O4XkzaWf7hiS2Q4c1qu6nu8cT+jfbwXdbG
+	CoZM85p/N5lSD7wLnuz9/JzBI5DlowvA37mIF3oulFkTQOVonGha/wjy7XighESJFCVOYULGCvN
+	orH1FDO4hG/LQmobMeVI0LoCvgLOCAL8HY5wTTPY8tp3ZBB5sH4kmbVbzw8A=
+X-Google-Smtp-Source: AGHT+IHJr0xtyYJ73R4TB29Xaxtuba8FwbpRz+j+A4yiemcdfoXx5LoOn1+I+zgJ2gBD6GfkFXcv7FUmqsgjZ2m9e3Q=
+X-Received: by 2002:a05:6402:1e8a:b0:5c8:957a:b1e2 with SMTP id
+ 4fb4d7f45d1cf-5c948adff84mr13751317a12.0.1729133669244; Wed, 16 Oct 2024
+ 19:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: add the tlmm driver for QCS8300
- platforms
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Richard
- Cochran" <richardcochran@gmail.com>,
-        <quic_tengfan@quicinc.com>, <quic_tingweiz@quicinc.com>,
-        <quic_aiquny@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20241009-qcs8300_tlmm-v2-0-9e40dee5e4f1@quicinc.com>
- <20241009-qcs8300_tlmm-v2-2-9e40dee5e4f1@quicinc.com>
- <c7ahyrbo3bw6vgfwqaubricap52muhxyhsnb5cfhzvo3n67dsr@gp6vehlfwblo>
-Content-Language: en-US
-From: Jingyi Wang <quic_jingyw@quicinc.com>
-In-Reply-To: <c7ahyrbo3bw6vgfwqaubricap52muhxyhsnb5cfhzvo3n67dsr@gp6vehlfwblo>
+References: <20241016134223.4079-1-everestkc@everestkc.com.np> <2f82fbcb-4a3c-4dfe-8852-7fc0b27c38e4@linuxfoundation.org>
+In-Reply-To: <2f82fbcb-4a3c-4dfe-8852-7fc0b27c38e4@linuxfoundation.org>
+From: "Everest K.C." <everestkc@everestkc.com.np>
+Date: Wed, 16 Oct 2024 20:54:17 -0600
+Message-ID: <CAEO-vhFkT6RwR6h7KRD0YyQphhuqm0d53xj7xp7r3gco+DxwHg@mail.gmail.com>
+Subject: Re: [PATCH][next] pinctrl: th1520: Dereference pointer only after
+ NULL check
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: drew@pdp7.com, guoren@kernel.org, wefu@redhat.com, 
+	linus.walleij@linaro.org, linux-riscv@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: WdVh8HvXjf81gECUHt7qKc0aX9ynZ7nY
-X-Proofpoint-GUID: WdVh8HvXjf81gECUHt7qKc0aX9ynZ7nY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1011 impostorscore=0 mlxscore=0 bulkscore=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
- mlxlogscore=852 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410170016
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 10/16/2024 5:25 PM, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Wed, Oct 09, 2024 at 03:13:34PM +0800, Jingyi Wang wrote:
->> +static struct platform_driver qcs8300_pinctrl_driver = {
->> +	.driver = {
->> +		.name = "qcs8300-tlmm",
->> +		.of_match_table = qcs8300_pinctrl_of_match,
->> +	},
->> +	.probe = qcs8300_pinctrl_probe,
->> +	.remove_new = msm_pinctrl_remove,
->> +};
-> 
-> After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
-> return void") .remove() is (again) the right callback to implement for
-> platform drivers. Please just drop "_new".
-> 
-Will update that, thx!
-> Best regards
-> Uwe
-
+On Wed, Oct 16, 2024 at 3:00=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.o=
+rg> wrote:
+>
+> On 10/16/24 07:42, Everest K.C. wrote:
+> > The pointer `func` is dereferenced before NULL check.
+> > Move the dereference after the NULL check.
+>
+> Change log looks fine.
+>
+> Short log that clearly says it is a fix would be better:
+>
+> Fix potential null pointer defereference
+>
+> >
+> > This issue was reported by Coverity Scan.
+> > Report:
+> > CID 1600802: (#1 of 1): Dereference before null check
+> > (REVERSE_INULL)
+> > check_after_deref: Null-checking func suggests that it
+> > may be null, but it has already been dereferenced on all
+> > paths leading to the check.
+> >
+> > Fixes: 1fc30cd92770 ("pinctrl: th1520: Factor out casts")
+> > Signed-off-by: Everest K.C. <everestkc@everestkc.com.np>
+> > ---
+> >   drivers/pinctrl/pinctrl-th1520.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl=
+-th1520.c
+> > index 7474d8da32f9..07f8b51fb294 100644
+> > --- a/drivers/pinctrl/pinctrl-th1520.c
+> > +++ b/drivers/pinctrl/pinctrl-th1520.c
+> > @@ -803,11 +803,13 @@ static int th1520_pinmux_set_mux(struct pinctrl_d=
+ev *pctldev,
+> >   {
+> >       struct th1520_pinctrl *thp =3D pinctrl_dev_get_drvdata(pctldev);
+> >       const struct function_desc *func =3D pinmux_generic_get_function(=
+pctldev, fsel);
+> > -     enum th1520_muxtype muxtype =3D (uintptr_t)func->data;
+> > +     enum th1520_muxtype muxtype;
+> >
+> >       if (!func)
+> >               return -EINVAL;
+> >
+> > +     muxtype =3D (uintptr_t)func->data;
+> > +
+> >       return th1520_pinmux_set(thp, thp->desc.pins[gsel].number,
+> >                                th1520_pad_muxdata(thp->desc.pins[gsel].=
+drv_data),
+> >                                muxtype);
+>
+> Otherwise looks good to me. With the change to short log:
+>
+> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+The patch sent by another patch submitter has already been
+applied for this issue.
+https://lore.kernel.org/all/20241016155655.334518-1-colin.i.king@gmail.com/
+> thanks,
+> -- Shuah
+>
 Thanks,
-Jingyi
-
+Everest K.C.
 
