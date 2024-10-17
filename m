@@ -1,208 +1,124 @@
-Return-Path: <linux-gpio+bounces-11565-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11566-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 317099A28CF
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 18:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 106B59A2AD7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 19:25:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2686DB27C9B
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 16:26:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9367B2A4EE
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 17:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA171DF963;
-	Thu, 17 Oct 2024 16:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5D71E00A2;
+	Thu, 17 Oct 2024 17:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkOyGRqn"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="XIVu3Fyu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168191DF753;
-	Thu, 17 Oct 2024 16:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CF31DFDA5;
+	Thu, 17 Oct 2024 17:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729182377; cv=none; b=XHqg7SpCYPkDrOYxoNCp9lTPBDum77mST/HdsH+zmkf5+X9eG0hfnBv7yDaj9c5NlxI0XW80kp/II8n4R0v4amWOQf6PzjLGXxgeTj9otXPQZa6djYFqqZD72S40192eh7xptZ1vj8vCOfL3pwmpM2gH+BcNqC6ke91ydZBpfbw=
+	t=1729184671; cv=none; b=Eijw7cNqKzfyNWIcdCPi7/Fr4EXgKKmJsEza/EoLS9KStBVMOTz2Y/l1kUZVGT9LUcPz0SixdNg0Tge9yghNnfzD9wAiNVLjT1cBLXh5t6Sf+vtjQpf/X6UyOLnd1EDMKjMENhQWqV1ui41idnLltkAckuXGAmlRAzfBYVXH+AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729182377; c=relaxed/simple;
-	bh=LJxym/IX46Idqi5/awjEuZbkCGhp1zKVDK4mPBJUVG8=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=XARCG4m+dWAXEaHWluBkyzKofrdnuKlbVYQ4LYoNUK5J5iazIch9tiJ8p7qpDbYtvSW6xjrwpR1Q18J/LobJj29/lGKFCmcwnwcH2H6IZo1LstRHQV612CB0DfZB/UCUKo6HwEKzBXLVn45ddPFZ+WdJnrhXve1b+6EUWSNwe50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkOyGRqn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84112C4CECD;
-	Thu, 17 Oct 2024 16:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729182376;
-	bh=LJxym/IX46Idqi5/awjEuZbkCGhp1zKVDK4mPBJUVG8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=CkOyGRqnng7F3eIIiCuSiZ1PNY1mLhpS+GIq+QCuCnPNF6JDTIFpwW1lc8F6OWGNl
-	 S2xmMYGnJm+8uAKYsqNhVNwx+YEJfuKsp9IZ4mszxEaIM2KoFlSaAqh/tRwAxtpxeq
-	 BX7Wc/axAM8Ra07DHuMTJ8CHbHjEmlsoFuzT9nBoLbBbbT5SsstRbyC0tXRinvOaua
-	 NZteQ0wYOcpBA+KNRGqf0bBnuzvuHyfKkb0z9vsGFiCzDrUgHCX5L8PR9BJ0C+3sSe
-	 kk6IeQPGf3H1wHBPyNujpLgGRuaKmO/pSAbWEaTCAV0hML1cpd9nWF8J254l4v/8Cy
-	 bENxMxRbS3beQ==
-Date: Thu, 17 Oct 2024 11:26:15 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1729184671; c=relaxed/simple;
+	bh=9kF3uG5mtFLIpIxt9J0owzkxQz9OgiM18CV4F8ntZRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JrV/KqGieiZ6KQ513y3Ri0I8OJxJvdxkJSllupsset25NhJnHYQAvgiCfjeH+NtVKW6/n7+02zwLoh08IMciqVU7aPjpkrb9dve1jLNRgKcwlqfvOegv1ZU5oA+05EPvNGEBh1boo3QokIOsckf8wAeJqHK90dXHH0pEfYqhZuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=XIVu3Fyu; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1729184647; x=1729789447; i=wahrenst@gmx.net;
+	bh=9kF3uG5mtFLIpIxt9J0owzkxQz9OgiM18CV4F8ntZRI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=XIVu3FyupPh2j6A6YYBPWHvM6fBfz+mDMrN5rmKDRzx3c9M06U4VgpjVHo04zCGk
+	 SNAIFeYkYHJ1LerCbzc7x9zbDCl8Umm4i9/8hDSHVXHMdaJraipPoH+HDQetzToeZ
+	 kinHl/a4VHJs4Gt6DI9xnqK7xMIPoxIJCBU6tXabGXgSogGS7cZ+X3FH7eKp1o/A6
+	 y/IMjzvxj3fdvKbjROo3P7EryFNt70mPlTkuC1vTfWbYx0jJUcqo13hZd6+OiMHt/
+	 9YQo47zoRL/rAK5qPIGoKONW3pbEymJ7sV+ftxTcoudnnGOjlTxKYoWqIUys9a8XL
+	 PQF1yD/5Qafyh0f2gg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.104] ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEUz4-1t8gnd1MC2-00FySO; Thu, 17
+ Oct 2024 19:04:07 +0200
+Message-ID: <16b45842-1a8e-4425-aca3-d93276e59d5a@gmx.net>
+Date: Thu, 17 Oct 2024 19:04:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Marek Vasut <marex@denx.de>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Shawn Guo <shawnguo@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- devicetree@vger.kernel.org, Jacky Bai <ping.bai@nxp.com>, 
- Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
- kernel@dh-electronics.com, Conor Dooley <conor+dt@kernel.org>, 
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev
-In-Reply-To: <20241017000801.149276-1-marex@denx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/12] ARM: dts: imx6ul: Align pin config nodes with
+ bindings
+To: Marek Vasut <marex@denx.de>, linux-arm-kernel@lists.infradead.org
+Cc: Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>,
+ Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, kernel@dh-electronics.com, linux-gpio@vger.kernel.org
 References: <20241017000801.149276-1-marex@denx.de>
-Message-Id: <172917871107.3590077.2079873873330727395.robh@kernel.org>
-Subject: Re: [PATCH v2 01/12] dt-bindings: pinctrl: fsl,imx6ul-pinctrl:
- Convert i.MX35/5x/6 to YAML
+ <20241017000801.149276-12-marex@denx.de>
+ <aa21db7a-5b05-4529-ba75-e2111e9e6362@gmx.net>
+ <a5026879-48d9-4557-85d9-038ab73deefb@denx.de>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <a5026879-48d9-4557-85d9-038ab73deefb@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:x3xTmGKxtGTyIFc7f4AZpbSe2Gpiz4p7hsrf2f1CY1A6cdUFBDn
+ X/lzot9IQ2mFycJM3/6ksDraTMiV3PKZFSYRQi5fsMiLHEgXZKf7J2/VWYcHX2QnQqvAclq
+ Y5AaMiwIM1BcorVbU/2wNKtzHDSbC4b2PJDdDrfBmUAByahkp+rl5KKfyQcdrELAmHuKkS/
+ 3snPncfha76l2Oo5ysEog==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8YIS1CdQyqU=;4UvcURc/NSs68Qj1h3993yJpusX
+ QdWcUhxFD4UWBAAjNLTQiDBoWuD7vLJyPht5FM0LbUDPLDNIY9BWz/0lqm/q1mf6WKwlmFW9V
+ mS7LF02mW3nVYj+XekT8mPvPplAk52KSxxP/UHA/QGWGEyXetpeAf45hGGabwqkBY9VghQ1eO
+ YefNaETUd1lblMGA/f9a2rgtt/rxuh/8iOh1AMSsHUpRAwxfndgtUOiyHHX2P6edExWmDhEM9
+ QBFA0QZS7UD9bbGjn8YhTyYJnOykzmQEIDecr9Wj21/O4v/aU6nfr6eJd9E7eOcl+lBQhY+xw
+ OIhxDEEUw+rzXpTxr0dGXcloNVWoQ8lWxbaCbZtIlOugr1qbdU8ALYnaNeVcGaAyoQg2aSfRJ
+ 83xitRQxTc8DzmVFk/R9Cc+/PHUJNjeKcyxTSADhtSrfsFpwZ7Sw62lnySvUqSgD7ShVfoI2e
+ AgEFEvCymG63xbv1Kh3nTY9Wx4sCLRFuiRAfPyK0jsJxeWkWVz5/ddLy1c71BQGICY0H2sz1A
+ lOKtRP+GPawq8va6tTexhh3mBBsEfyOsXfWkWLJ12712JSI+bjle/dMR221JAIdY5coaIlrPl
+ M15clrSdEo5TfZRX97sSUK0jxd3TJHOw5OtHoXINpXdOBrKDkM5BvtHuwl5QN1zilQZdnhGvB
+ 0c3/0Umoetz3/ENwXSHS0g0PJHCtGxV2b9cLWQQaVuCnc0nrdI7x/FNmqdAszRlpc4z4lw5sF
+ oR5oFZGV22DzuRi8mHJJ+Om4GHLZDZ47EWxI9F7D1831WTSfC/KIrtP+PqdaB0MiomS23Fp5e
+ 9Dot6nwMyb/rfnwUk0SZNG3w==
 
-
-On Thu, 17 Oct 2024 02:06:47 +0200, Marek Vasut wrote:
-> The IOMUXC controller description is almost identical on i.MX35/5x/6 SoCs,
-> except for the configuration bits which differ across SoCs. Rename the
-> fsl,imx6ul-pinctrl.yaml to fsl,imx35-pinctrl.yaml, fill in compatible
-> strings for the other SoCs and fill in the various bits into desciption.
-> This way, i.MX35/5x/6 series SoCs can all be converted to DT schema.
-> Remove the old text DT bindings description.
-> 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> ---
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Jacky Bai <ping.bai@nxp.com>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: imx@lists.linux.dev
-> Cc: kernel@dh-electronics.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-gpio@vger.kernel.org
-> ---
-> V2: - Use DT schema to refer to the fsl,imx35-pinctrl.yaml file
->     - Special-case the iMX50 compatible string
-> ---
->  .../bindings/pinctrl/fsl,imx35-pinctrl.txt    | 33 -------
->  ...ul-pinctrl.yaml => fsl,imx35-pinctrl.yaml} | 88 ++++++++++++++++---
->  .../bindings/pinctrl/fsl,imx50-pinctrl.txt    | 32 -------
->  .../bindings/pinctrl/fsl,imx51-pinctrl.txt    | 32 -------
->  .../bindings/pinctrl/fsl,imx53-pinctrl.txt    | 32 -------
->  .../bindings/pinctrl/fsl,imx6dl-pinctrl.txt   | 38 --------
->  .../bindings/pinctrl/fsl,imx6q-pinctrl.txt    | 38 --------
->  .../bindings/pinctrl/fsl,imx6sl-pinctrl.txt   | 39 --------
->  .../bindings/pinctrl/fsl,imx6sll-pinctrl.txt  | 40 ---------
->  .../bindings/pinctrl/fsl,imx6sx-pinctrl.txt   | 36 --------
->  10 files changed, 78 insertions(+), 330 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.txt
->  rename Documentation/devicetree/bindings/pinctrl/{fsl,imx6ul-pinctrl.yaml => fsl,imx35-pinctrl.yaml} (50%)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx50-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx51-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx53-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6dl-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sl-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sx-pinctrl.txt
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y nxp/imx/imx35-eukrea-mbimxsd35-baseboard.dtb nxp/imx/imx35-pdk.dtb nxp/imx/imx50-evk.dtb nxp/imx/imx51-apf51.dtb nxp/imx/imx51-apf51dev.dtb nxp/imx/imx51-babbage.dtb nxp/imx/imx51-digi-connectcore-jsk.dtb nxp/imx/imx51-eukrea-mbimxsd51-baseboard.dtb nxp/imx/imx53-ard.dtb nxp/imx/imx53-kp-ddc.dtb nxp/imx/imx53-m53evk.dtb nxp/imx/imx53-m53menlo.dtb nxp/imx/imx53-qsrb.dtb nxp/imx/imx53-smd.dtb nxp/imx/imx53-tx53-x03x.dtb nxp/imx/imx53-tx53-x13x.dtb nxp/imx/imx53-voipac-bsb.dtb nxp/imx/imx6dl-colibri-aster.dtb nxp/imx/imx6dl-eckelmann-ci4x10.dtb nxp/imx/imx6dl-prtmvt.dtb nxp/imx/imx6dl-prtrvt.dtb nxp/imx/imx6dl-prtvt7.dtb nxp/imx/imx6dl-riotboard.dtb nxp/imx/imx6q-dmo-edmqmx6.dtb nxp/imx/imx6q-gk802.dtb nxp/imx/imx6q-h100.dtb nxp/imx/imx6q-logicpd.dtb nxp/imx/imx6q-novena.dtb nxp/imx/imx6q-prti6q.dtb nxp/imx/imx6q-prtwd2.dtb nxp/imx/imx6q-sbc6x.dtb nxp/imx/imx6q-utilite-pro.dtb nxp/imx/imx6qp-prtwd3.dtb nxp/imx/imx6qp-sabreauto.dtb nxp/imx/imx6qp-s
- abresd.dtb nxp/imx/imx6sl-evk.dtb nxp/imx/imx6sl-tolino-shine2hd.dtb nxp/imx/imx6sl-tolino-shine3.dtb nxp/imx/imx6sll-evk.dtb nxp/imx/imx6sll-kobo-clarahd.dtb nxp/imx/imx6sx-sabreauto.dtb nxp/imx/imx6sx-softing-vining-2000.dtb' for 20241017000801.149276-1-marex@denx.de:
-
-arch/arm/boot/dts/nxp/imx/imx35-eukrea-mbimxsd35-baseboard.dtb: iomuxc@43fac000: $nodename:0: 'iomuxc@43fac000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx35-eukrea-mbimxsd35-baseboard.dtb: iomuxc@43fac000: 'imx35-eukrea', 'reg-lcd-3v3' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx50-evk.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-kp-ddc.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-kp-ddc.dtb: iomuxc@53fa8000: 'imx53-kp-common', 'imx53-tqma53' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dtb: iomuxc@73fa8000: $nodename:0: 'iomuxc@73fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-babbage.dtb: iomuxc@73fa8000: $nodename:0: 'iomuxc@73fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-apf51.dtb: iomuxc@73fa8000: $nodename:0: 'iomuxc@73fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-digi-connectcore-jsk.dtb: iomuxc@73fa8000: $nodename:0: 'iomuxc@73fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-digi-connectcore-jsk.dtb: iomuxc@73fa8000: 'imx51-digi-connectcore-som' does not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-ard.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-eukrea-mbimxsd51-baseboard.dtb: iomuxc@73fa8000: $nodename:0: 'iomuxc@73fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx51-eukrea-mbimxsd51-baseboard.dtb: iomuxc@73fa8000: 'backlightgrp-1', 'esdhc1_cd', 'gpiokeysgrp-1', 'gpioledgrp-1', 'imx51-eukrea', 'reg_lcd_3v3' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx35-pdk.dtb: iomuxc@43fac000: $nodename:0: 'iomuxc@43fac000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-m53menlo.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-m53menlo.dtb: iomuxc@53fa8000: 'imx53-m53evk' does not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-m53evk.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-m53evk.dtb: iomuxc@53fa8000: 'imx53-m53evk', 'led_gpio' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-smd.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-qsrb.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-qsrb.dtb: iomuxc@53fa8000: 'led_gpio7_7' does not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-tx53-x03x.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-tx53-x03x.dtb: iomuxc@53fa8000: 'edt-ft5x06grp-1', 'imx53-tx53', 'rgb24-vgagrp1' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-tx53-x13x.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-tx53-x13x.dtb: iomuxc@53fa8000: 'imx53-tx53' does not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-voipac-bsb.dtb: iomuxc@53fa8000: $nodename:0: 'iomuxc@53fa8000' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx53-voipac-bsb.dtb: iomuxc@53fa8000: 'kppgrp-1', 'led_gpio' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx6sl-evk.dtb: pinctrl@20e0000: 'fecgrp-sleep' does not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx6sl-tolino-shine2hd.dtb: pinctrl@20e0000: 'i2c1grp-sleep', 'i2c2grp-sleep', 'usdhc2grp-sleep', 'usdhc3grp-sleep' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx6sl-tolino-shine3.dtb: pinctrl@20e0000: 'i2c1grp-sleep', 'i2c2grp-sleep', 'usdhc2grp-sleep', 'usdhc3grp-sleep' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-arch/arm/boot/dts/nxp/imx/imx6sll-kobo-clarahd.dtb: pinctrl@20e0000: 'i2c1grp-sleep', 'i2c2grp-sleep', 'usdhc2grp-sleep', 'usdhc3grp-sleep' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/fsl,imx35-pinctrl.yaml#
-
-
-
-
+Am 17.10.24 um 14:30 schrieb Marek Vasut:
+> On 10/17/24 2:14 PM, Stefan Wahren wrote:
+>> Hi Marek,
+>>
+>> Am 17.10.24 um 02:06 schrieb Marek Vasut:
+>>> Bindings expect pin configuration nodes in pinctrl to match certain
+>>> naming and not be part of another fake node:
+>>>
+>>> pinctrl@30330000: '...' does not match any of the regexes: 'grp$',
+>>> 'pinctrl-[0-9]+'
+>>>
+>>> Drop the wrapping node and adjust the names to have "grp" prefix.
+>>> Diff looks big but this should have no functional impact, use e.g.
+>>> git show -w to view the diff.
+>> thanks for addressing the YAML conversion, but this specific commit
+>> message doesn't seems to match the change?
+> Uh, right, commit message replaced in V3 (or shall I send this patch
+> separately?)
+I don't have a strong opinion about that. Luckily this is the last
+patch, so in theory the rest could by applied if there are no other
+findings.
+>
+> Thanks!
 
 
