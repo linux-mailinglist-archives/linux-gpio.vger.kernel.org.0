@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-11482-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11479-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB9469A1692
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:09:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 155929A168F
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:09:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABF2628574B
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 00:09:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A55CB2152C
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 00:09:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D1417580;
-	Thu, 17 Oct 2024 00:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ECAD111AD;
+	Thu, 17 Oct 2024 00:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="meKG3RGy"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Na78Rte+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0241AD24;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC0D184D;
 	Thu, 17 Oct 2024 00:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729123721; cv=none; b=P1hYA8DiDGAZ7sV92NQIh2ft/VAKs2es8wOqS7fiANbmCVjVRF0paR+gelpv202i8FczaG6G/K1NoRG8jEXZwENYRff2Uh2Nc8QiC+J3iKHWA5DOL3da48GK87kRyFOEKYbxpwo13BKd7Uik3CzNAGbfTBgasM+mQizYS5EgJRU=
+	t=1729123720; cv=none; b=hV2lMXtZFjT66xUwGL2auYXQtd8s/02tvRb/7Titnb3ZGz8P8L8F55a3D7wRHYBNdMp6GG0Rz9OBWoeaLfeJuYjoaoqPPccM023YSJp3LRAF68NE9y8OZvNDTswyFXO1JBoYYd5cgca4fY9eupaLGBgqFqVt4MUmlhT5YHGICoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729123721; c=relaxed/simple;
-	bh=shkbfnVhwzlB70iDDmDOPfHQGec6CObzvUz9G7F4k44=;
+	s=arc-20240116; t=1729123720; c=relaxed/simple;
+	bh=MeweiKooJ6uVvq0NEWrZYqTFp5OOCPxHXRqsXdmpDVs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A4Rrfb0K5/znAStncVA5OrFrmfUm0505d2Enl2JmcmQq/YMhlgFtq1OrdW0kwDfl5ma7lj6wmXYMeCQ0fy7A+jXHp65kEFmthkTUKSbkSHK0SXJqcOhJcy5gLPOZ045SagPU/kl4d3AbFbtI4KEDMZozhMYmewLJ8SUt7Y5LTmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=meKG3RGy; arc=none smtp.client-ip=85.214.62.61
+	 MIME-Version; b=mYOk7zxhzfOUzlyRMsYOA79J+BDxg/B8A9BMeeZnMy633V5Vtdsu88WCQNi5nOcX7AxeoT8mSUUU/Q1Y+VyQ1WdL2vaaSkdMc1iOK2nF0/Enr3in3DBNuP1zWsicwVreV/jk6AuyaLJg2pbwwjqKlzP2Imz5UY7AgCz1udiNtl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Na78Rte+; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 2990C88E5C;
+	by phobos.denx.de (Postfix) with ESMTPSA id 9E8EE88E5F;
 	Thu, 17 Oct 2024 02:08:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1729123715;
-	bh=aQNVGtXpHn7H1ucbuQZMSEX43rrjQ0rsRGZaTPdph5k=;
+	s=phobos-20191101; t=1729123716;
+	bh=rVUNiDsl8qiK0QNZu4GKqjxmkuTSCEzw2w+x4jgqAgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=meKG3RGy8/A9o7VVSSdLdT6ijkiBggDIWcADFm/mBNVO6jwdyfiiKzFtFw1nAAviG
-	 BTly8HIo8aD9qIx5UwpyO1WbVNCwruyOIWFwGFgsqj7nqrMpvIt0V1hxbWXpuwndCe
-	 VQvn/pFIEZ01v1rpIL5Axqpw27b/EhtlMwad2elUudhzeejowy5Tj9omfFxiUobXl1
-	 jqzaP95VImCS6A5ojP1iXF8aVZoGOmEqVs8mfPZRe+rk5BkD9v6si3chs9Q3KIf9Wl
-	 bJJdHFI0tCplyZvtIt+R6ALQZ9I77VLqgvsrfmgAtcxeHszEPtSl25fpKorQZYuJst
-	 UvB9u9vUXLK9Q==
+	b=Na78Rte+rPHgt7jkp3bneJ5c5MwN3879XhdYtBX04FXkHRf0w8B7zLlYb+v3QRa6S
+	 ENQIHPBtrcDB078GagQnyIU9dDfo+toztNybT88hcWiFi+h+0l1PzYRyGG5JTVRPCZ
+	 mIjz2bTJnBW/CJQDOjysPVCVqWP7UhCkBbgGjBqSIjN4GjzqaRGRdhsM7erO+Pfk/S
+	 rRFlbVKi6tzWHA+swYTqd93tu6QHr5Dj34XXwOlb6SPz1eqOqC4bPIeIEKUdYhyWRM
+	 2+oN59Lv0QzexK20tpAduIYt3ExNNpyXdxfgLPx10+6QY08+gZxkNhvWMXLVWltiyG
+	 cuY4wDXv7aRNg==
 From: Marek Vasut <marex@denx.de>
 To: linux-arm-kernel@lists.infradead.org
 Cc: Marek Vasut <marex@denx.de>,
@@ -64,9 +64,9 @@ Cc: Marek Vasut <marex@denx.de>,
 	imx@lists.linux.dev,
 	kernel@dh-electronics.com,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v2 11/12] ARM: dts: imx6sx: Align pin config nodes with bindings
-Date: Thu, 17 Oct 2024 02:06:57 +0200
-Message-ID: <20241017000801.149276-11-marex@denx.de>
+Subject: [PATCH v2 12/12] ARM: dts: imx6ul: Align pin config nodes with bindings
+Date: Thu, 17 Oct 2024 02:06:58 +0200
+Message-ID: <20241017000801.149276-12-marex@denx.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241017000801.149276-1-marex@denx.de>
 References: <20241017000801.149276-1-marex@denx.de>
@@ -109,729 +109,22 @@ Cc: linux-gpio@vger.kernel.org
 ---
 V2: New patch
 ---
- .../arm/boot/dts/nxp/imx/imx6sx-sabreauto.dts |   4 +-
- arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi     | 572 +++++++++---------
- .../nxp/imx/imx6sx-softing-vining-2000.dts    |  18 +-
- 3 files changed, 296 insertions(+), 298 deletions(-)
+ arch/arm/boot/dts/nxp/imx/imx6ul-isiot.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx-sabreauto.dts b/arch/arm/boot/dts/nxp/imx/imx6sx-sabreauto.dts
-index dfbfb8119bf3b..033700e052b36 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx-sabreauto.dts
-@@ -333,7 +333,7 @@ MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-isiot.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-isiot.dtsi
+index 118df2a457c95..4c09bb3126966 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-isiot.dtsi
+@@ -322,7 +322,7 @@ MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x120b0
  		>;
  	};
  
--	pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
-+	pinctrl_usdhc3_100mhz: usdhc3-100mhzgrp {
+-	pinctrl_stmpe: stmpegrp  {
++	pinctrl_stmpe: stmpegrp {
  		fsl,pins = <
- 			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
- 			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
-@@ -348,7 +348,7 @@ MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
+ 			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18 0x1b0b0
  		>;
- 	};
- 
--	pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
-+	pinctrl_usdhc3_200mhz: usdhc3-200mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
- 			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-index 277a6e039045b..1beac42c1a273 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-@@ -399,323 +399,321 @@ &wdog1 {
- };
- 
- &iomuxc {
--	imx6x-sdb {
--		pinctrl_audmux: audmuxgrp {
--			fsl,pins = <
--				MX6SX_PAD_CSI_DATA00__AUDMUX_AUD6_TXC	0x130b0
--				MX6SX_PAD_CSI_DATA01__AUDMUX_AUD6_TXFS	0x130b0
--				MX6SX_PAD_CSI_HSYNC__AUDMUX_AUD6_TXD	0x120b0
--				MX6SX_PAD_CSI_VSYNC__AUDMUX_AUD6_RXD	0x130b0
--				MX6SX_PAD_CSI_PIXCLK__AUDMUX_MCLK	0x130b0
--			>;
--		};
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_CSI_DATA00__AUDMUX_AUD6_TXC	0x130b0
-+			MX6SX_PAD_CSI_DATA01__AUDMUX_AUD6_TXFS	0x130b0
-+			MX6SX_PAD_CSI_HSYNC__AUDMUX_AUD6_TXD	0x120b0
-+			MX6SX_PAD_CSI_VSYNC__AUDMUX_AUD6_RXD	0x130b0
-+			MX6SX_PAD_CSI_PIXCLK__AUDMUX_MCLK	0x130b0
-+		>;
-+	};
- 
--		pinctrl_enet1: enet1grp {
--			fsl,pins = <
--				MX6SX_PAD_ENET1_MDIO__ENET1_MDIO	0xa0b1
--				MX6SX_PAD_ENET1_MDC__ENET1_MDC		0xa0b1
--				MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC	0xa0b1
--				MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0	0xa0b1
--				MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1	0xa0b1
--				MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2	0xa0b1
--				MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3	0xa0b1
--				MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN	0xa0b1
--				MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK	0x3081
--				MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0	0x3081
--				MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1	0x3081
--				MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2	0x3081
--				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
--				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
--				MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
--				/* phy reset */
--				MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
--			>;
--		};
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET1_MDIO__ENET1_MDIO	0xa0b1
-+			MX6SX_PAD_ENET1_MDC__ENET1_MDC		0xa0b1
-+			MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC	0xa0b1
-+			MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0	0xa0b1
-+			MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1	0xa0b1
-+			MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2	0xa0b1
-+			MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3	0xa0b1
-+			MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN	0xa0b1
-+			MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK	0x3081
-+			MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
-+			MX6SX_PAD_ENET2_RX_CLK__ENET2_REF_CLK_25M	0x91
-+			/* phy reset */
-+			MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0x10b0
-+		>;
-+	};
- 
--		pinctrl_enet_3v3: enet3v3grp {
--			fsl,pins = <
--				MX6SX_PAD_ENET2_COL__GPIO2_IO_6		0x80000000
--			>;
--		};
-+	pinctrl_enet_3v3: enet3v3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET2_COL__GPIO2_IO_6		0x80000000
-+		>;
-+	};
- 
--		pinctrl_enet2: enet2grp {
--			fsl,pins = <
--				MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC	0xa0b9
--				MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0	0xa0b1
--				MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1	0xa0b1
--				MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2	0xa0b1
--				MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3	0xa0b1
--				MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN	0xa0b1
--				MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK	0x3081
--				MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0	0x3081
--				MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1	0x3081
--				MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2	0x3081
--				MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3	0x3081
--				MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN	0x3081
--			>;
--		};
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC	0xa0b9
-+			MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0	0xa0b1
-+			MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1	0xa0b1
-+			MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2	0xa0b1
-+			MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3	0xa0b1
-+			MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN	0xa0b1
-+			MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK	0x3081
-+			MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN	0x3081
-+		>;
-+	};
- 
--		pinctrl_flexcan1: flexcan1grp {
--			fsl,pins = <
--				MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b020
--				MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b020
--			>;
--		};
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b020
-+			MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b020
-+		>;
-+	};
- 
--		pinctrl_flexcan2: flexcan2grp {
--			fsl,pins = <
--				MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b020
--				MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b020
--			>;
--		};
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b020
-+			MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b020
-+		>;
-+	};
- 
--		pinctrl_gpio_keys: gpio_keysgrp {
--			fsl,pins = <
--				MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
--				MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
--			>;
--		};
-+	pinctrl_gpio_keys: gpio_keysgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
-+			MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
-+		>;
-+	};
- 
--		pinctrl_hp: hpgrp {
--			fsl,pins = <
--				MX6SX_PAD_CSI_DATA03__GPIO1_IO_17 0x17059
--			>;
--		};
-+	pinctrl_hp: hpgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_CSI_DATA03__GPIO1_IO_17 0x17059
-+		>;
-+	};
- 
--		pinctrl_i2c1: i2c1grp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
--				MX6SX_PAD_GPIO1_IO00__I2C1_SCL		0x4001b8b1
--			>;
--		};
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO00__I2C1_SCL		0x4001b8b1
-+		>;
-+	};
- 
--		pinctrl_i2c3: i2c3grp {
--			fsl,pins = <
--				MX6SX_PAD_KEY_ROW4__I2C3_SDA		0x4001b8b1
--				MX6SX_PAD_KEY_COL4__I2C3_SCL		0x4001b8b1
--			>;
--		};
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_ROW4__I2C3_SDA		0x4001b8b1
-+			MX6SX_PAD_KEY_COL4__I2C3_SCL		0x4001b8b1
-+		>;
-+	};
- 
--		pinctrl_i2c4: i2c4grp {
--			fsl,pins = <
--				MX6SX_PAD_CSI_DATA07__I2C4_SDA		0x4001b8b1
--				MX6SX_PAD_CSI_DATA06__I2C4_SCL		0x4001b8b1
--			>;
--		};
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX6SX_PAD_CSI_DATA07__I2C4_SDA		0x4001b8b1
-+			MX6SX_PAD_CSI_DATA06__I2C4_SCL		0x4001b8b1
-+		>;
-+	};
- 
--		pinctrl_lcd: lcdgrp {
--			fsl,pins = <
--				MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22 0x4001b0b0
--				MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23 0x4001b0b0
--				MX6SX_PAD_LCD1_CLK__LCDIF1_CLK	0x4001b0b0
--				MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE 0x4001b0b0
--				MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC 0x4001b0b0
--				MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC 0x4001b0b0
--				MX6SX_PAD_LCD1_RESET__GPIO3_IO_27 0x4001b0b0
--			>;
--		};
-+	pinctrl_lcd: lcdgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22 0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23 0x4001b0b0
-+			MX6SX_PAD_LCD1_CLK__LCDIF1_CLK	0x4001b0b0
-+			MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE 0x4001b0b0
-+			MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC 0x4001b0b0
-+			MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC 0x4001b0b0
-+			MX6SX_PAD_LCD1_RESET__GPIO3_IO_27 0x4001b0b0
-+		>;
-+	};
- 
--		pinctrl_mqs: mqsgrp {
--			fsl,pins = <
--				MX6SX_PAD_SD2_CLK__MQS_RIGHT 0x120b0
--				MX6SX_PAD_SD2_CMD__MQS_LEFT  0x120b0
--			>;
--		};
-+	pinctrl_mqs: mqsgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD2_CLK__MQS_RIGHT 0x120b0
-+			MX6SX_PAD_SD2_CMD__MQS_LEFT  0x120b0
-+		>;
-+	};
- 
--		pinctrl_pcie: pciegrp {
--			fsl,pins = <
--				MX6SX_PAD_ENET1_COL__GPIO2_IO_0 0x10b0
--			>;
--		};
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET1_COL__GPIO2_IO_0 0x10b0
-+		>;
-+	};
- 
--		pinctrl_pcie_reg: pciereggrp {
--			fsl,pins = <
--				MX6SX_PAD_ENET1_CRS__GPIO2_IO_1	0x10b0
--			>;
--		};
-+	pinctrl_pcie_reg: pciereggrp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET1_CRS__GPIO2_IO_1	0x10b0
-+		>;
-+	};
- 
--		pinctrl_peri_3v3: peri3v3grp {
--			fsl,pins = <
--				MX6SX_PAD_QSPI1A_DATA0__GPIO4_IO_16	0x80000000
--			>;
--		};
-+	pinctrl_peri_3v3: peri3v3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1A_DATA0__GPIO4_IO_16	0x80000000
-+		>;
-+	};
- 
--		pinctrl_pwm3: pwm3grp-1 {
--			fsl,pins = <
--				MX6SX_PAD_SD1_DATA2__PWM3_OUT 0x110b0
--			>;
--		};
-+	pinctrl_pwm3: pwm3-1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD1_DATA2__PWM3_OUT 0x110b0
-+		>;
-+	};
- 
--		pinctrl_qspi2: qspi2grp {
--			fsl,pins = <
--				MX6SX_PAD_NAND_WP_B__QSPI2_A_DATA_0     0x70f1
--				MX6SX_PAD_NAND_READY_B__QSPI2_A_DATA_1  0x70f1
--				MX6SX_PAD_NAND_CE0_B__QSPI2_A_DATA_2    0x70f1
--				MX6SX_PAD_NAND_CE1_B__QSPI2_A_DATA_3    0x70f1
--				MX6SX_PAD_NAND_CLE__QSPI2_A_SCLK        0x70f1
--				MX6SX_PAD_NAND_ALE__QSPI2_A_SS0_B       0x70f1
--				MX6SX_PAD_NAND_DATA01__QSPI2_B_DATA_0   0x70f1
--				MX6SX_PAD_NAND_DATA00__QSPI2_B_DATA_1   0x70f1
--				MX6SX_PAD_NAND_WE_B__QSPI2_B_DATA_2     0x70f1
--				MX6SX_PAD_NAND_RE_B__QSPI2_B_DATA_3     0x70f1
--				MX6SX_PAD_NAND_DATA02__QSPI2_B_SCLK     0x70f1
--				MX6SX_PAD_NAND_DATA03__QSPI2_B_SS0_B    0x70f1
--			>;
--		};
-+	pinctrl_qspi2: qspi2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_NAND_WP_B__QSPI2_A_DATA_0     0x70f1
-+			MX6SX_PAD_NAND_READY_B__QSPI2_A_DATA_1  0x70f1
-+			MX6SX_PAD_NAND_CE0_B__QSPI2_A_DATA_2    0x70f1
-+			MX6SX_PAD_NAND_CE1_B__QSPI2_A_DATA_3    0x70f1
-+			MX6SX_PAD_NAND_CLE__QSPI2_A_SCLK        0x70f1
-+			MX6SX_PAD_NAND_ALE__QSPI2_A_SS0_B       0x70f1
-+			MX6SX_PAD_NAND_DATA01__QSPI2_B_DATA_0   0x70f1
-+			MX6SX_PAD_NAND_DATA00__QSPI2_B_DATA_1   0x70f1
-+			MX6SX_PAD_NAND_WE_B__QSPI2_B_DATA_2     0x70f1
-+			MX6SX_PAD_NAND_RE_B__QSPI2_B_DATA_3     0x70f1
-+			MX6SX_PAD_NAND_DATA02__QSPI2_B_SCLK     0x70f1
-+			MX6SX_PAD_NAND_DATA03__QSPI2_B_SS0_B    0x70f1
-+		>;
-+	};
- 
--		pinctrl_vcc_sd3: vccsd3grp {
--			fsl,pins = <
--				MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
--			>;
--		};
-+	pinctrl_vcc_sd3: vccsd3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
-+		>;
-+	};
- 
--		pinctrl_sai1: sai1grp {
--			fsl,pins = <
--				MX6SX_PAD_CSI_DATA00__SAI1_TX_BCLK	0x130b0
--				MX6SX_PAD_CSI_DATA01__SAI1_TX_SYNC	0x130b0
--				MX6SX_PAD_CSI_HSYNC__SAI1_TX_DATA_0	0x120b0
--				MX6SX_PAD_CSI_VSYNC__SAI1_RX_DATA_0	0x130b0
--				MX6SX_PAD_CSI_PIXCLK__AUDMUX_MCLK	0x130b0
--			>;
--		};
-+	pinctrl_sai1: sai1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_CSI_DATA00__SAI1_TX_BCLK	0x130b0
-+			MX6SX_PAD_CSI_DATA01__SAI1_TX_SYNC	0x130b0
-+			MX6SX_PAD_CSI_HSYNC__SAI1_TX_DATA_0	0x120b0
-+			MX6SX_PAD_CSI_VSYNC__SAI1_RX_DATA_0	0x130b0
-+			MX6SX_PAD_CSI_PIXCLK__AUDMUX_MCLK	0x130b0
-+		>;
-+	};
- 
--		pinctrl_spdif: spdifgrp {
--			fsl,pins = <
--				MX6SX_PAD_SD4_DATA4__SPDIF_OUT          0x1b0b0
--			>;
--		};
-+	pinctrl_spdif: spdifgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_DATA4__SPDIF_OUT          0x1b0b0
-+		>;
-+	};
- 
--		pinctrl_uart1: uart1grp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX	0x1b0b1
--				MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX	0x1b0b1
--			>;
--		};
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX	0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
- 
--		pinctrl_uart5: uart5grp {
--			fsl,pins = <
--				MX6SX_PAD_KEY_ROW3__UART5_DCE_RX	0x1b0b1
--				MX6SX_PAD_KEY_COL3__UART5_DCE_TX	0x1b0b1
--				MX6SX_PAD_KEY_ROW2__UART5_DCE_CTS	0x1b0b1
--				MX6SX_PAD_KEY_COL2__UART5_DCE_RTS	0x1b0b1
--			>;
--		};
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_ROW3__UART5_DCE_RX	0x1b0b1
-+			MX6SX_PAD_KEY_COL3__UART5_DCE_TX	0x1b0b1
-+			MX6SX_PAD_KEY_ROW2__UART5_DCE_CTS	0x1b0b1
-+			MX6SX_PAD_KEY_COL2__UART5_DCE_RTS	0x1b0b1
-+		>;
-+	};
- 
--		pinctrl_usb_otg1: usbotg1grp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO09__GPIO1_IO_9	0x10b0
--			>;
--		};
-+	pinctrl_usb_otg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO09__GPIO1_IO_9	0x10b0
-+		>;
-+	};
- 
--		pinctrl_usb_otg1_id: usbotg1idgrp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO10__ANATOP_OTG1_ID	0x17059
--			>;
--		};
-+	pinctrl_usb_otg1_id: usbotg1idgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO10__ANATOP_OTG1_ID	0x17059
-+		>;
-+	};
- 
--		pinctrl_usb_otg2: usbot2ggrp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO12__GPIO1_IO_12	0x10b0
--			>;
--		};
-+	pinctrl_usb_otg2: usbot2ggrp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO12__GPIO1_IO_12	0x10b0
-+		>;
-+	};
- 
--		pinctrl_usdhc2: usdhc2grp {
--			fsl,pins = <
--				MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059
--				MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059
--				MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059
--				MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059
--				MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059
--				MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059
--			>;
--		};
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059
-+			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059
-+			MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059
-+			MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059
-+			MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059
-+			MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059
-+		>;
-+	};
- 
--		pinctrl_usdhc3: usdhc3grp {
--			fsl,pins = <
--				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17059
--				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10059
--				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17059
--				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17059
--				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17059
--				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17059
--				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x17059
--				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x17059
--				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x17059
--				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x17059
--				MX6SX_PAD_KEY_COL0__GPIO2_IO_10		0x17059 /* CD */
--				MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
--			>;
--		};
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17059
-+			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10059
-+			MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17059
-+			MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17059
-+			MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17059
-+			MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17059
-+			MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x17059
-+			MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x17059
-+			MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x17059
-+			MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x17059
-+			MX6SX_PAD_KEY_COL0__GPIO2_IO_10		0x17059 /* CD */
-+			MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
-+		>;
-+	};
- 
--		pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
--			fsl,pins = <
--				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
--				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
--				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170b9
--				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170b9
--				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170b9
--				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170b9
--				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170b9
--				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170b9
--				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170b9
--				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
--			>;
--		};
-+	pinctrl_usdhc3_100mhz: usdhc3-100mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
-+			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
-+			MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170b9
-+			MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170b9
-+			MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170b9
-+			MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170b9
-+			MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170b9
-+			MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170b9
-+			MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170b9
-+			MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
-+		>;
-+	};
- 
--		pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
--			fsl,pins = <
--				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
--				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
--				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170f9
--				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170f9
--				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170f9
--				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170f9
--				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170f9
--				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170f9
--				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170f9
--				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170f9
--			>;
--		};
-+	pinctrl_usdhc3_200mhz: usdhc3-200mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
-+			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
-+			MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170f9
-+			MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170f9
-+			MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170f9
-+			MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170f9
-+			MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170f9
-+			MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170f9
-+			MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170f9
-+			MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170f9
-+		>;
-+	};
- 
--		pinctrl_usdhc4: usdhc4grp {
--			fsl,pins = <
--				MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
--				MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
--				MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17059
--				MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17059
--				MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17059
--				MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17059
--				MX6SX_PAD_SD4_DATA7__GPIO6_IO_21	0x17059 /* CD */
--				MX6SX_PAD_SD4_DATA6__GPIO6_IO_20	0x17059 /* WP */
--			>;
--		};
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17059
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17059
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17059
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17059
-+			MX6SX_PAD_SD4_DATA7__GPIO6_IO_21	0x17059 /* CD */
-+			MX6SX_PAD_SD4_DATA6__GPIO6_IO_20	0x17059 /* WP */
-+		>;
-+	};
- 
--		pinctrl_wdog: wdoggrp {
--			fsl,pins = <
--				MX6SX_PAD_GPIO1_IO13__WDOG1_WDOG_ANY 0x30b0
--			>;
--		};
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO13__WDOG1_WDOG_ANY 0x30b0
-+		>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx-softing-vining-2000.dts b/arch/arm/boot/dts/nxp/imx/imx6sx-softing-vining-2000.dts
-index f999eb2443739..2ffbe2df4776c 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx-softing-vining-2000.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx-softing-vining-2000.dts
-@@ -358,21 +358,21 @@ MX6SX_PAD_NAND_DATA02__GPIO4_IO_6	0x10b0
- 		>;
- 	};
- 
--	pinctrl_pwm1: pwm1grp-1 {
-+	pinctrl_pwm1: pwm1-1grp {
- 		fsl,pins = <
- 			/* blue LED */
- 			MX6SX_PAD_RGMII2_RD3__PWM1_OUT		0x1b0b1
- 		>;
- 	};
- 
--	pinctrl_pwm2: pwm2grp-1 {
-+	pinctrl_pwm2: pwm2-1grp {
- 		fsl,pins = <
- 			/* green LED */
- 			MX6SX_PAD_RGMII2_RD2__PWM2_OUT		0x1b0b1
- 		>;
- 	};
- 
--	pinctrl_pwm6: pwm6grp-1 {
-+	pinctrl_pwm6: pwm6-1grp {
- 		fsl,pins = <
- 			/* red LED */
- 			MX6SX_PAD_RGMII2_TD2__PWM6_OUT		0x1b0b1
-@@ -414,7 +414,7 @@ MX6SX_PAD_GPIO1_IO10__ANATOP_OTG1_ID	0x17059
- 		>;
- 	};
- 
--	pinctrl_usdhc2_50mhz: usdhc2grp-50mhz {
-+	pinctrl_usdhc2_50mhz: usdhc2-50mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059
- 			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059
-@@ -427,7 +427,7 @@ MX6SX_PAD_LCD1_HSYNC__GPIO3_IO_26	0x10b0
- 		>;
- 	};
- 
--	pinctrl_usdhc2_100mhz: usdhc2grp-100mhz {
-+	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x100b9
- 			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x170b9
-@@ -438,7 +438,7 @@ MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x170b9
- 		>;
- 	};
- 
--	pinctrl_usdhc2_200mhz: usdhc2grp-200mhz {
-+	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x100f9
- 			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x170f9
-@@ -449,7 +449,7 @@ MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x170f9
- 		>;
- 	};
- 
--	pinctrl_usdhc4_50mhz: usdhc4grp-50mhz {
-+	pinctrl_usdhc4_50mhz: usdhc4-50mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
- 			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
-@@ -465,7 +465,7 @@ MX6SX_PAD_SD4_RESET_B__USDHC4_RESET_B	0x17068
- 		>;
- 	};
- 
--	pinctrl_usdhc4_100mhz: usdhc4-100mhz {
-+	pinctrl_usdhc4_100mhz: usdhc4-100mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100b9
- 			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170b9
-@@ -480,7 +480,7 @@ MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x170b9
- 		>;
- 	};
- 
--	pinctrl_usdhc4_200mhz: usdhc4-200mhz {
-+	pinctrl_usdhc4_200mhz: usdhc4-200mhzgrp {
- 		fsl,pins = <
- 			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100f9
- 			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170f9
 -- 
 2.45.2
 
