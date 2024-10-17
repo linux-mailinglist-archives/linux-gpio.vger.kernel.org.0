@@ -1,59 +1,61 @@
-Return-Path: <linux-gpio+bounces-11534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11535-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CBD59A2256
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 14:37:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E9ED9A225D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 14:37:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C976B1C23806
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 12:37:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43852283070
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 12:37:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FE081DD861;
-	Thu, 17 Oct 2024 12:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2A8C1DDA31;
+	Thu, 17 Oct 2024 12:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ANeo6lLC"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dvrEc4Ms"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6C5770E2;
-	Thu, 17 Oct 2024 12:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711551D31A8;
+	Thu, 17 Oct 2024 12:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729168641; cv=none; b=Gz2xBT0BkWYGZ2U+BBxb8Qgbn3W0IeEA3LrRGDi8YDBtrb69Vs86XM92NLnQaZn4G/0NmZi6kV/H/uaMtoyMF3G3EFc8BxMxQ4jUiqmQ/UCAjuS5SMOsou+bPX7lxNTF4FOse7Q2+1rjPD5R3xi4Tg5xvPNdAouDIQDX2ODZ7gw=
+	t=1729168644; cv=none; b=OABSWlz37e3dWmPm72FVeCCNl8SiweN08D+25rdv8ZRQcdKKDg3p7E54ASdlsW4ecxx248qsE2o2Qaq08LaeKIICS8GFDAqNtwzeCE+xvtyoRAg22Z8OZFLM7iwpx2zgZLKOmNx0qnLhqSg/rjYeY3IQggUp5wMe6tbtMKC2B68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729168641; c=relaxed/simple;
-	bh=P43vvQY7QwRBYdVwY9ZYKdcL19CO/phnKdn/2s2DWkk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uo2IOFMzhHx7w4w4Few7p/Yv9aI9PcHK44FY71cZ4qsJtE9fuC5h6rmQSg9P+CvovRH+rErEx+8yn/J+D8GhMV7lhPitpvAHRbo3rXTLRUAQeP+SmCrOPG9VOcTYebh66eZdF9gWz6I54kVKHVgzZmmgHD2ut45j3XPVotM6nkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ANeo6lLC; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1729168644; c=relaxed/simple;
+	bh=jzjeKPGUgkVnwT8LhBfogvdd8TwWlQJsKK71HXbhQJw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nAR2h8YO2lOMWV9TL3VhmJkAhL66zGu3C4JejuChUeh6I6uW3FuKNY9uSo0ZWiFjSIdBF9krDkO23FbIiS2ceDI+mgTDMx/MoeOqnjpNMuVU2fcCXXMD5BBgbkL66UXIlgOUJxs2+3XRo0jF+GTj4xLo6THqdE/VDX5wxI6HJ70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dvrEc4Ms; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49H7fQrs001755;
-	Thu, 17 Oct 2024 12:36:55 GMT
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49HAMgPe019917;
+	Thu, 17 Oct 2024 12:36:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ya+Bougvk+y8vWeqZgeUhx
-	wz/Goy6iuGevzYINz6usg=; b=ANeo6lLCSeLLnwfpYnpIPwXbCVkpEbql5lo8BH
-	uQvu6GknI2YAKYXX/M4D5q1RmrMaZaowGZT/u2JAmNjjlrE0ws3iChtr+HQ/B5Zg
-	pyaKS9nAlNBLLRUAFvow4A6inMfqImK3v9rZWJreqYJ8IuzbOCLRgElOQVmReQWJ
-	kJGsvtHCPR0U4W0HGPLnA+seVhKI5Ar0imFQLj9mAWuzv9vgYskUwPzwJr5oAPJF
-	NW+Mn2gECpvET4L+jO9m7wXqQfsG6Wj+cf5GnTbFiQJnCi/h3TtUafqo82DN6nrv
-	p/L5nlSpwWI1wIqYS72iLOaTkiQc4GLYXsce5xIYIKG6WoMQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42ajm5ahcv-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PidFdh55ZUglKpIupY+B422IqeLJWIWfJSfPi2r5bXU=; b=dvrEc4MsByALemmQ
+	XGOZp9iUy9ceTMtJGX9ugL4XqnQvLYTDWyWztGNKRmbXi+G6EZvpTxkEqa2kJVcK
+	0OlEqcT+PStvC9x8Tr0/o6u+MwN3eCfKRgK2op4EzjqU51nLBYNcpPM8aLAGcZhx
+	rolBwTdGunp+7czMJ1KKxLwZ9VSO8SEUTkLRKGZCYpQJW4ximd2JU0p7vvVg/Bke
+	8VJZQxdH0/UszwtmtyMUjcOfe6jlztpPuHAy2zuRgPJG+calg2HJEWujCJv7brow
+	U/7QxMajBW7G+2YsZLPO1RiqUneADNDD4PuH3Rm2noh+TTNarHrRqv2m4BGAHpJd
+	pxF/aQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42b0rx0bx5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 12:36:55 +0000 (GMT)
+	Thu, 17 Oct 2024 12:36:59 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49HCaqsJ021975
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49HCawE1013059
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 17 Oct 2024 12:36:52 GMT
+	Thu, 17 Oct 2024 12:36:58 GMT
 Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 17 Oct 2024 05:36:46 -0700
+ 15.2.1544.9; Thu, 17 Oct 2024 05:36:52 -0700
 From: Sricharan R <quic_srichara@quicinc.com>
 To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
@@ -66,10 +68,12 @@ To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
         <linux-mmc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
 CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
-Subject: [PATCH V4 0/6] Add minimal boot support for IPQ5424
-Date: Thu, 17 Oct 2024 18:06:20 +0530
-Message-ID: <20241017123626.204421-1-quic_srichara@quicinc.com>
+Subject: [PATCH V4 1/6] clk: qcom: clk-alpha-pll: Add NSS HUAYRA ALPHA PLL support for ipq9574
+Date: Thu, 17 Oct 2024 18:06:21 +0530
+Message-ID: <20241017123626.204421-2-quic_srichara@quicinc.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241017123626.204421-1-quic_srichara@quicinc.com>
+References: <20241017123626.204421-1-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,74 +86,64 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: M8thuauK12XX8lSuWlzqFatioqJ7UvMw
-X-Proofpoint-ORIG-GUID: M8thuauK12XX8lSuWlzqFatioqJ7UvMw
+X-Proofpoint-GUID: pnP6KdM_yr8jkP_oXQxgAK4eyQnhd7qF
+X-Proofpoint-ORIG-GUID: pnP6KdM_yr8jkP_oXQxgAK4eyQnhd7qF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=845
- mlxscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 suspectscore=0 clxscore=1015 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
+ mlxscore=0 priorityscore=1501 spamscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=929 malwarescore=0 lowpriorityscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2409260000 definitions=main-2410170086
 
-The IPQ5424 is Qualcomm's 802.11be SoC for Routers, Gateways and
-Access Points.
+From: Devi Priya <quic_devipriy@quicinc.com>
 
-This series adds minimal board boot support for ipq5424-rdp466 board.
+Add support for NSS Huayra alpha pll found on ipq9574 SoCs.
+Programming sequence is the same as that of Huayra type Alpha PLL,
+so we can re-use the same.
 
-Picked up patch [1] from previous post, this is a dependency for this
-series.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+---
+ drivers/clk/qcom/clk-alpha-pll.c | 11 +++++++++++
+ drivers/clk/qcom/clk-alpha-pll.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-[1] https://patchwork.kernel.org/project/linux-clk/patch/20240626143302.810632-2-quic_devipriy@quicinc.com/
-
-[V4] Only change in patch #2 to fix adding 2 new clk bindings to end of list.
-     Dropped patch #3 from [V3], since it is applied now.
-     No change in other patches.
-
-[V3]
-    Fixed patch#2 as per Krzysztof Kozlowski comments
-    Added Reviewed tag for patch #5
-    Dropped patch #3 and #5 , pinctrl --> Already merged
-
-[v2]
-   Fixed all review comments from Dmitry Baryshkov, Krzysztof Kozlowski,
-   Varadarajan Narayanan.
-   Added Rob Herring acked-by for patch #3.
-   Added Krzysztof Kozlowski reviewed-by and acked-by for patch #2,
-   and patch #6 respectively.
-   Added detailed description about change in respective patch.
-
-Devi Priya (1):
-  clk: qcom: clk-alpha-pll: Add NSS HUAYRA ALPHA PLL support for ipq9574
-
-Sricharan Ramabadhran (5):
-  dt-bindings: clock: Add Qualcomm IPQ5424 GCC binding
-  clk: qcom: add Global Clock controller (GCC) driver for IPQ5424 SoC
-  dt-bindings: qcom: Add ipq5424 boards
-  arm64: dts: qcom: add IPQ5424 SoC and rdp466 board support
-  arm64: defconfig: Enable IPQ5424 RDP466 base configs
-
- .../devicetree/bindings/arm/qcom.yaml         |    6 +
- .../bindings/clock/qcom,ipq5332-gcc.yaml      |   40 +-
- arch/arm64/boot/dts/qcom/Makefile             |    1 +
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts   |   59 +
- arch/arm64/boot/dts/qcom/ipq5424.dtsi         |  291 ++
- arch/arm64/configs/defconfig                  |    2 +
- drivers/clk/qcom/Kconfig                      |    8 +
- drivers/clk/qcom/Makefile                     |    1 +
- drivers/clk/qcom/clk-alpha-pll.c              |   11 +
- drivers/clk/qcom/clk-alpha-pll.h              |    1 +
- drivers/clk/qcom/gcc-ipq5424.c                | 3309 +++++++++++++++++
- include/dt-bindings/clock/qcom,ipq5424-gcc.h  |  156 +
- include/dt-bindings/reset/qcom,ipq5424-gcc.h  |  310 ++
- 13 files changed, 4188 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq5424.dtsi
- create mode 100644 drivers/clk/qcom/gcc-ipq5424.c
- create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
- create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
-
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index f9105443d7db..c2e56e9403ff 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -267,6 +267,17 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
+ 		[PLL_OFF_OPMODE] = 0x30,
+ 		[PLL_OFF_STATUS] = 0x3c,
+ 	},
++	[CLK_ALPHA_PLL_TYPE_NSS_HUAYRA] =  {
++		[PLL_OFF_L_VAL] = 0x04,
++		[PLL_OFF_ALPHA_VAL] = 0x08,
++		[PLL_OFF_TEST_CTL] = 0x0c,
++		[PLL_OFF_TEST_CTL_U] = 0x10,
++		[PLL_OFF_USER_CTL] = 0x14,
++		[PLL_OFF_CONFIG_CTL] = 0x18,
++		[PLL_OFF_CONFIG_CTL_U] = 0x1c,
++		[PLL_OFF_STATUS] = 0x20,
++	},
++
+ };
+ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
+ 
+diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+index 55eca04b23a1..c6d1b8429f95 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.h
++++ b/drivers/clk/qcom/clk-alpha-pll.h
+@@ -32,6 +32,7 @@ enum {
+ 	CLK_ALPHA_PLL_TYPE_BRAMMO_EVO,
+ 	CLK_ALPHA_PLL_TYPE_STROMER,
+ 	CLK_ALPHA_PLL_TYPE_STROMER_PLUS,
++	CLK_ALPHA_PLL_TYPE_NSS_HUAYRA,
+ 	CLK_ALPHA_PLL_TYPE_MAX,
+ };
+ 
 -- 
 2.34.1
 
