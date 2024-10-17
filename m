@@ -1,189 +1,141 @@
-Return-Path: <linux-gpio+bounces-11558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04FB59A260C
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 17:05:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB7C19A2619
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 17:08:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65603B21164
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 15:05:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9166E2818F2
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 15:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 823041DED44;
-	Thu, 17 Oct 2024 15:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806951DE4D3;
+	Thu, 17 Oct 2024 15:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Iudt4riY"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IDkS9FkW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157B11DED6C
-	for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 15:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383661DB956
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 15:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729177472; cv=none; b=kZmscHAVVkYCzlR2yKP5Fl8KdhLLwRN/Wmh7b2qFIjzTFboP3heID1AzuEEYsAsIeKfblM/xAQAjnRBo7jwpFr6RWmY5WdB452U2uuhUO3h2j1IXyGCdrfEGmzeHaAY2FZldtfWMADHxKo4WsuM0PuBroKLWY3vaosauNIvCZi0=
+	t=1729177724; cv=none; b=jsOAxPA7VnmGk1gM1aRWJssWbQc1OMTcVUKslSNKFH+eA6nt70nsJcE4mPO0ykGy/L4w054xDc97G+OT16J0AtYEuELp0jFl57EiZnlNp8e92a6GmlFDuXSSIK1T8qs2sTmhjzrlTvMydB6UxCpWAElQdpotMQ7LxCwpi5obtYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729177472; c=relaxed/simple;
-	bh=NimLuERWylPqAXvl0dwiOCWjt1QGcd90XtVIcwNsoCM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V4l4q6Hz+ahUsXDwTL7z4c2IEyU25edPaLYmQs5X8Ixylxoyqs1+FCKeoTen68jEu+RLf7PW+kMTpXx6lu/xn7wDpk1mqRcA2/dneeD0ltuezT7tL/McZ67p6k64RKQP/EJFKdGfSwgsJuQiPE7Dgtr6xnvo5oko49uFqLYQd3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Iudt4riY; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1729177724; c=relaxed/simple;
+	bh=bYxrg/kZoAAa+n7YrhEXhQrh2GUR3qqKt0lQD9KKWFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bDc7S6gTwKK4TAXb5AjWdYdW6UeWi2L352FcIDYnf3rYgWhUpg619pbpDZjpmO1xnx6ECO+yU218qbWbTtIjH3oCIQFAE0U4REvZgGaVF3iUENZx5I5G/ieAQ13evwe1JEjh1ePOWa5mJu6Cj2hGGjM94HqbSKErCntBBJRFUCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IDkS9FkW; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539e1543ab8so1898569e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 08:04:26 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d5038c653so746818f8f.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 08:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729177465; x=1729782265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5KgNrYXm59wIWB+byMXzs81/O0sXcasv5NodDfSq758=;
-        b=Iudt4riYdYzQpazffRYNrDlfrmjUbVeWWVniF54Pzj3FKrdL/AXxgRNxJm/m6iUgTe
-         E6nNSnY3fkgjnmjK5aZatRK28vLl0wAMWAR3yh2MNU8m58l6tRCEabA5K8aLDOH5UxVq
-         /bgRgxUCDS+Wj0bdN3ngGkeQV61aNMNcQFPclWditdu79Q5FoSR0euVjY9OVQFstoWE/
-         bvD2qQ/TjdDWFOHpl3IvIKc6BcNOOhE3jhaxL3AjNQpVROrBR1qNzGuHtoYJxMMnJ40d
-         /qIdOce5I9VdUSlFR/NmaCX00F7vX/9X4HL8kQOQM3bJgF1nj/x/0SH3N+k3xKmRt9tl
-         Gz3A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729177717; x=1729782517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5Rzm2SctSx8M+Aj5G3T9Np9fOCdYF6YWUNZMHc53Mc=;
+        b=IDkS9FkWI+o11ZJMLyOYr2zKoPSqmwjILvWju+rmqa3tEsDUvlXzW1qre8leX272FE
+         jRzV96vMW8ZJynx7G9HsyUjE2VwNj+DtCFceboddYe9VDvl8t5d4ml7NgOPDhqbEbh4U
+         53O/CXMZ7fACyuMpvK2H+FLO1Ykld7uIkj6e43vyH9Wh6zzZxb+JwWqUyKq44duWHwhd
+         +TBXwd3lbo8KiozI7gtASTSq5xM33lo3iIb419JoiZTLPCMCbWCKVDazOfLaVk98mnjx
+         Mm4s5GCkFRRf1zlBg0OWFJCvU7hheaCJjvbMHA4JGudnFFigpmuFmaXSt+EFG6DoVRsy
+         LPLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729177465; x=1729782265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5KgNrYXm59wIWB+byMXzs81/O0sXcasv5NodDfSq758=;
-        b=sXHCQM7g5AhSrRL4YDef8hqf7bbJgrtS6RF7oSfhTxbT25LN6TKYjn2AOsIfNFUew5
-         t5PHVCH82xptu01BWlbtL9/4ig1LoUInNAxJ/xTjk1ghSVTFDi2Ir2hK4z/r6pex8XhD
-         1kltVyS+GCrzgV39NUU6aPryWvgte/fsqW8o2wkEeSP5/aNPqrkJ4VJPjA/6WU+QIJK5
-         IGxC7E2zXJW/LQmw++yV+5M82wyz7gdK7I2OKK1dyWvwEPScrzSMQjIHQNN0rIiFxc6j
-         SHn9kcnkucYhnxFmj+X2QeTlXLxJC+y81T+GOf5/o8ztParOxJdA5pMGZrvAljmOpRh4
-         o1IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHjfIK43VtFVT8+5BWaAHndy8Oo0C83QN3LZW9I9I9SV9dVFvDrCBtyvgPFyG7uwbPhTdTRhjerezi@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWpTrwfhb6r9WdXWwggMMgnnqhqAebW6qCnZ9NtZKjfKeKfBb6
-	cE6808YNo1PDsHPGA/PQkxlrSFo+o4TyIRloM1UCu0qCh64xjT6gNTXidqpC4/fejmHx5WbKbkE
-	3jKZwm7BKPZV66fRPy2Oq+KICeD6A6HV3rtVoYQ==
-X-Google-Smtp-Source: AGHT+IGkMNySHQnzTWrbGekJSSvGZUrHMmKLOVrS8ARAwf7u76Zq1k0891I6rnsuLp55iiTG/mC7nT+aLp8rMUbps30=
-X-Received: by 2002:a05:6512:3083:b0:535:6951:9e1c with SMTP id
- 2adb3069b0e04-539e54e7122mr14031673e87.15.1729177464738; Thu, 17 Oct 2024
- 08:04:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729177717; x=1729782517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D5Rzm2SctSx8M+Aj5G3T9Np9fOCdYF6YWUNZMHc53Mc=;
+        b=OI33Q4m6X1F9ryyNtVo5o4zuKjxMKfPRrSiuau2stQN/K5G7RF/3XHvNHTpoDjKGyV
+         ToClGGo0eoMII8Qhbcr1vMFx3FSZTlTFst/sAMc2uUZTvexPQu6dbQ9TOZhxXER5hYVP
+         h5RgzNyRTPaEjPHvlyfkCE7EPWQyNQQFZXYCqQPbFIMZDaSBN7PHU+IYCIF3qI39hCjN
+         7mmqIfkbl94tm9UJqXLpRsep4uMToOTl8XBBXrJgM1vEzQ0Dd6u0ieLv6ktWC2rZGicH
+         Q/3oFPYdTWKw3bg+R2bObIcyLg2crehPMemuEYC/JRJXcWq2XdiTi0ciFkFJ0ZP0AuYe
+         q77g==
+X-Gm-Message-State: AOJu0YzwUVGkLCmQ9r1GaqFEYDlQqAf4BvZQAbVXtw0u1AJ61mrQGqgq
+	5xgl1iK9qO4xi2hUoZjGYiChpW0BLixdzxNh+5QRz5qmPv5/p4RAfemmgzarMUc=
+X-Google-Smtp-Source: AGHT+IH+q4HZLHosS8VQN8UfaYGSyuRYVzKPyzy0hkDMdVbG1ZXKGA7oDI6nkH6TRh0oO5d6oloNZA==
+X-Received: by 2002:adf:e44c:0:b0:37d:4f1b:361 with SMTP id ffacd0b85a97d-37d551fabc4mr13795169f8f.25.1729177717395;
+        Thu, 17 Oct 2024 08:08:37 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3831:fc61:16eb:d0df])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa882acsm7516635f8f.38.2024.10.17.08.08.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 08:08:37 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: 74x164: shrink code
+Date: Thu, 17 Oct 2024 17:08:35 +0200
+Message-ID: <20241017150835.105676-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017-gpio-notify-in-kernel-events-v4-0-64bc05f3be0c@linaro.org>
- <20241017-gpio-notify-in-kernel-events-v4-8-64bc05f3be0c@linaro.org>
- <20241017125349.GB221864@rigel> <CAMRc=McjCinBEFNoHSTyFH7zU=JuyRfu1cfrOxkq=OjciKQkvQ@mail.gmail.com>
- <20241017142053.GB242458@rigel> <CAMRc=MeXe2XE_PEJm7iu1K7M=Tv0cWs2wd9pNzJk87dTyqGzeQ@mail.gmail.com>
- <20241017150217.GA262603@rigel>
-In-Reply-To: <20241017150217.GA262603@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 17 Oct 2024 17:04:13 +0200
-Message-ID: <CAMRc=MfrGynY0J6ozG0B9GiPJgqLJywaT-Fw0_O3zZNKrsALAA@mail.gmail.com>
-Subject: Re: [PATCH v4 8/8] gpiolib: notify user-space about in-kernel line
- state changes
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 17, 2024 at 5:02=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Thu, Oct 17, 2024 at 04:59:46PM +0200, Bartosz Golaszewski wrote:
-> > On Thu, Oct 17, 2024 at 4:20=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Thu, Oct 17, 2024 at 04:14:24PM +0200, Bartosz Golaszewski wrote:
-> > > > On Thu, Oct 17, 2024 at 2:53=E2=80=AFPM Kent Gibson <warthog618@gma=
-il.com> wrote:
-> > > > >
-> > > > > On Thu, Oct 17, 2024 at 10:14:16AM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > > >
-> > > > > > @@ -1447,8 +1450,6 @@ static long linereq_set_config(struct lin=
-ereq *lr, void __user *ip)
-> > > > > >               }
-> > > > > >
-> > > > > >               WRITE_ONCE(line->edflags, edflags);
-> > > > > > -
-> > > > > > -             gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGE=
-D_CONFIG);
-> > > > > >       }
-> > > > > >       return 0;
-> > > > > >  }
-> > > > >
-> > > > > I still get errors from this when reconfiguring lines with deboun=
-ce.
-> > > > > You should leave this notify in place and use _nonotify when sett=
-ing the
-> > > > > direction.
-> > > > > i.e.
-> > > > >
-> > > > > @@ -1436,11 +1432,11 @@ static long linereq_set_config(struct lin=
-ereq *lr, void __user *ip)
-> > > > >                         int val =3D gpio_v2_line_config_output_va=
-lue(&lc, i);
-> > > > >
-> > > > >                         edge_detector_stop(line);
-> > > > > -                       ret =3D gpiod_direction_output(desc, val)=
-;
-> > > > > +                       ret =3D gpiod_direction_output_nonotify(d=
-esc, val);
-> > > > >                         if (ret)
-> > > > >                                 return ret;
-> > > > >                 } else {
-> > > > > -                       ret =3D gpiod_direction_input(desc);
-> > > > > +                       ret =3D gpiod_direction_input_nonotify(de=
-sc);
-> > > > >                         if (ret)
-> > > > >                                 return ret;
-> > > > >
-> > > > > @@ -1450,6 +1446,8 @@ static long linereq_set_config(struct liner=
-eq *lr, void __user *ip)
-> > > > >                 }
-> > > > >
-> > > > >                 WRITE_ONCE(line->edflags, edflags);
-> > > > > +
-> > > > > +               gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGE=
-D_CONFIG);
-> > > > >         }
-> > > > >         return 0;
-> > > > >  }
-> > > > >
-> > > > > Given that, all my current tests are passing.
-> > > > >
-> > > >
-> > > > That looks good - after all we no longer notify from any place in
-> > > > gpiolib-cdev.c anymore - but I'd like to learn what's wrong exactly=
-.
-> > > > Are you getting more events with debounce? Are you not getting any?
-> > > >
-> > >
-> > > In linereq_set_config(), the notify comes from the gpiod_direction_in=
-put() -
-> > > before the edge_detector_setup() is called (not visible in the patch)=
- and that
-> > > sets the debounce value in the desc.
-> > > So you get an event without the debounce set, or with a stale value.
-> > > Keeping the gpiod_line_state_notify() and using the _nonotify()
-> > > functions means the notify comes after the debounce has been set.
-> > >
-> >
-> > I see. I guess I should do the same both for linehandle_set_config()
-> > and linereq_set_config()?
-> >
->
-> linehandles don't support debounce, so it's good as is.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Right, but I'm wondering if it isn't better for consistency.
-Otherwise, someone may ask themselves why there's no event being
-emitted if they're not familiar with the gpiod_direction_*()
-internals.
+Use managed helpers to drop the goto label from probe() and shrink the
+remove() callback.
 
-Bart
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-74x164.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index 753e7be039e4..fca6cd2eb1dd 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -143,24 +143,17 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 	chip->gpio_chip.parent = &spi->dev;
+ 	chip->gpio_chip.owner = THIS_MODULE;
+ 
+-	mutex_init(&chip->lock);
++	ret = devm_mutex_init(&spi->dev, &chip->lock);
++	if (ret)
++		return ret;
+ 
+ 	ret = __gen_74x164_write_config(chip);
+-	if (ret) {
+-		dev_err(&spi->dev, "Failed writing: %d\n", ret);
+-		goto exit_destroy;
+-	}
++	if (ret)
++		return dev_err_probe(&spi->dev, ret, "Config write failed\n");
+ 
+ 	gpiod_set_value_cansleep(chip->gpiod_oe, 1);
+ 
+-	ret = gpiochip_add_data(&chip->gpio_chip, chip);
+-	if (!ret)
+-		return 0;
+-
+-exit_destroy:
+-	mutex_destroy(&chip->lock);
+-
+-	return ret;
++	return devm_gpiochip_add_data(&spi->dev, &chip->gpio_chip, chip);
+ }
+ 
+ static void gen_74x164_remove(struct spi_device *spi)
+@@ -168,8 +161,6 @@ static void gen_74x164_remove(struct spi_device *spi)
+ 	struct gen_74x164_chip *chip = spi_get_drvdata(spi);
+ 
+ 	gpiod_set_value_cansleep(chip->gpiod_oe, 0);
+-	gpiochip_remove(&chip->gpio_chip);
+-	mutex_destroy(&chip->lock);
+ }
+ 
+ static const struct spi_device_id gen_74x164_spi_ids[] = {
+-- 
+2.43.0
+
 
