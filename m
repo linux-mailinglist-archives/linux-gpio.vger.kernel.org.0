@@ -1,56 +1,62 @@
-Return-Path: <linux-gpio+bounces-11566-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11567-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 106B59A2AD7
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 19:25:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 131569A2C4E
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 20:39:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9367B2A4EE
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 17:08:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 372BF1C20F18
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 18:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5D71E00A2;
-	Thu, 17 Oct 2024 17:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41E411F9EB3;
+	Thu, 17 Oct 2024 18:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="XIVu3Fyu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BC0M9aL7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CF31DFDA5;
-	Thu, 17 Oct 2024 17:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C401F9437;
+	Thu, 17 Oct 2024 18:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729184671; cv=none; b=Eijw7cNqKzfyNWIcdCPi7/Fr4EXgKKmJsEza/EoLS9KStBVMOTz2Y/l1kUZVGT9LUcPz0SixdNg0Tge9yghNnfzD9wAiNVLjT1cBLXh5t6Sf+vtjQpf/X6UyOLnd1EDMKjMENhQWqV1ui41idnLltkAckuXGAmlRAzfBYVXH+AA=
+	t=1729190340; cv=none; b=lqKvT1mV+6Dvwfv8nt8WgCuT2KpHs23j86B+LbdBuRMOMkP6buv6/GkQOAjXNJTANmjSgmCG+PgcGWJj2sDH+2mCsTzD0akCI1JRzyON1RY9HhfDd1DvWPDdRMhZagXPyWVz87Ve1Z0PJYOYg4jL5l0hWgS7ZkSh+dt0l11VqRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729184671; c=relaxed/simple;
-	bh=9kF3uG5mtFLIpIxt9J0owzkxQz9OgiM18CV4F8ntZRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JrV/KqGieiZ6KQ513y3Ri0I8OJxJvdxkJSllupsset25NhJnHYQAvgiCfjeH+NtVKW6/n7+02zwLoh08IMciqVU7aPjpkrb9dve1jLNRgKcwlqfvOegv1ZU5oA+05EPvNGEBh1boo3QokIOsckf8wAeJqHK90dXHH0pEfYqhZuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=XIVu3Fyu; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1729184647; x=1729789447; i=wahrenst@gmx.net;
-	bh=9kF3uG5mtFLIpIxt9J0owzkxQz9OgiM18CV4F8ntZRI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=XIVu3FyupPh2j6A6YYBPWHvM6fBfz+mDMrN5rmKDRzx3c9M06U4VgpjVHo04zCGk
-	 SNAIFeYkYHJ1LerCbzc7x9zbDCl8Umm4i9/8hDSHVXHMdaJraipPoH+HDQetzToeZ
-	 kinHl/a4VHJs4Gt6DI9xnqK7xMIPoxIJCBU6tXabGXgSogGS7cZ+X3FH7eKp1o/A6
-	 y/IMjzvxj3fdvKbjROo3P7EryFNt70mPlTkuC1vTfWbYx0jJUcqo13hZd6+OiMHt/
-	 9YQo47zoRL/rAK5qPIGoKONW3pbEymJ7sV+ftxTcoudnnGOjlTxKYoWqIUys9a8XL
-	 PQF1yD/5Qafyh0f2gg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.104] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEUz4-1t8gnd1MC2-00FySO; Thu, 17
- Oct 2024 19:04:07 +0200
-Message-ID: <16b45842-1a8e-4425-aca3-d93276e59d5a@gmx.net>
-Date: Thu, 17 Oct 2024 19:04:06 +0200
+	s=arc-20240116; t=1729190340; c=relaxed/simple;
+	bh=S4eVTtnVClCRlSR/KXv134cWAToD9EOj3njuGsmO7y0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mmctRRdGepWIGTkQ9/7BWBYsib2/nRS41ZqM9/zwkBqRfqpIY3XSJjfQ/zrmfDZNx6JG24Qc2cKWxNfY/EQu+cyDYwqQzBCgWYgOOzExbiP8ZDBFtbyrtM81pY8MbU9Klov695EjQKx0q9fSNDS64mggysOZEe3FAf4VITtKRBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BC0M9aL7; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49HIcl3f092734;
+	Thu, 17 Oct 2024 13:38:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1729190327;
+	bh=QUPRWlSJCMr94gHz5yh8kxX5CDhtzNHWQ/fPn8iI5eY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=BC0M9aL75uRaHnkLTUVJv9M5ZVkP0fTUHT4LA3sZMSih659fzRD9OcA89TTs10p0C
+	 ZxpGm/DVA6nnR8xNY8b37WgHBiGwncG8ABn52z0H87nAlKexiGIup1UFdrh1bKbM3k
+	 pwmdBMVPI+X5TXHCKgaJjxuX3a2XEOH2PjeY9Xfo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49HIclZ5015867;
+	Thu, 17 Oct 2024 13:38:47 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
+ Oct 2024 13:38:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 17 Oct 2024 13:38:46 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49HIck2N023002;
+	Thu, 17 Oct 2024 13:38:46 -0500
+Message-ID: <53d989ec-06b6-4337-aef7-81e651fab3e1@ti.com>
+Date: Thu, 17 Oct 2024 13:38:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,67 +64,111 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/12] ARM: dts: imx6ul: Align pin config nodes with
- bindings
-To: Marek Vasut <marex@denx.de>, linux-arm-kernel@lists.infradead.org
-Cc: Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>,
- Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, kernel@dh-electronics.com, linux-gpio@vger.kernel.org
-References: <20241017000801.149276-1-marex@denx.de>
- <20241017000801.149276-12-marex@denx.de>
- <aa21db7a-5b05-4529-ba75-e2111e9e6362@gmx.net>
- <a5026879-48d9-4557-85d9-038ab73deefb@denx.de>
+Subject: Re: [PATCH RESEND 1/2] gpio: omap: Add omap_gpio_disable/enable_irq
+ calls
+To: Andrew Davis <afd@ti.com>
+CC: <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Bin Liu <b-liu@ti.com>,
+        <linux-serial@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20241011173356.870883-1-jm@ti.com>
+ <20241011173356.870883-2-jm@ti.com>
+ <89091165-74d1-442a-ab34-8e70f1a2d65b@ti.com>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <a5026879-48d9-4557-85d9-038ab73deefb@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:x3xTmGKxtGTyIFc7f4AZpbSe2Gpiz4p7hsrf2f1CY1A6cdUFBDn
- X/lzot9IQ2mFycJM3/6ksDraTMiV3PKZFSYRQi5fsMiLHEgXZKf7J2/VWYcHX2QnQqvAclq
- Y5AaMiwIM1BcorVbU/2wNKtzHDSbC4b2PJDdDrfBmUAByahkp+rl5KKfyQcdrELAmHuKkS/
- 3snPncfha76l2Oo5ysEog==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8YIS1CdQyqU=;4UvcURc/NSs68Qj1h3993yJpusX
- QdWcUhxFD4UWBAAjNLTQiDBoWuD7vLJyPht5FM0LbUDPLDNIY9BWz/0lqm/q1mf6WKwlmFW9V
- mS7LF02mW3nVYj+XekT8mPvPplAk52KSxxP/UHA/QGWGEyXetpeAf45hGGabwqkBY9VghQ1eO
- YefNaETUd1lblMGA/f9a2rgtt/rxuh/8iOh1AMSsHUpRAwxfndgtUOiyHHX2P6edExWmDhEM9
- QBFA0QZS7UD9bbGjn8YhTyYJnOykzmQEIDecr9Wj21/O4v/aU6nfr6eJd9E7eOcl+lBQhY+xw
- OIhxDEEUw+rzXpTxr0dGXcloNVWoQ8lWxbaCbZtIlOugr1qbdU8ALYnaNeVcGaAyoQg2aSfRJ
- 83xitRQxTc8DzmVFk/R9Cc+/PHUJNjeKcyxTSADhtSrfsFpwZ7Sw62lnySvUqSgD7ShVfoI2e
- AgEFEvCymG63xbv1Kh3nTY9Wx4sCLRFuiRAfPyK0jsJxeWkWVz5/ddLy1c71BQGICY0H2sz1A
- lOKtRP+GPawq8va6tTexhh3mBBsEfyOsXfWkWLJ12712JSI+bjle/dMR221JAIdY5coaIlrPl
- M15clrSdEo5TfZRX97sSUK0jxd3TJHOw5OtHoXINpXdOBrKDkM5BvtHuwl5QN1zilQZdnhGvB
- 0c3/0Umoetz3/ENwXSHS0g0PJHCtGxV2b9cLWQQaVuCnc0nrdI7x/FNmqdAszRlpc4z4lw5sF
- oR5oFZGV22DzuRi8mHJJ+Om4GHLZDZ47EWxI9F7D1831WTSfC/KIrtP+PqdaB0MiomS23Fp5e
- 9Dot6nwMyb/rfnwUk0SZNG3w==
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <89091165-74d1-442a-ab34-8e70f1a2d65b@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Am 17.10.24 um 14:30 schrieb Marek Vasut:
-> On 10/17/24 2:14 PM, Stefan Wahren wrote:
->> Hi Marek,
+Hi Andrew,
+
+On 10/11/24 2:07 PM, Andrew Davis wrote:
+> On 10/11/24 12:33 PM, Judith Mendez wrote:
+>> Add omap_gpio_disable_irq and omap_gpio_enable_irq
+>> calls in gpio-omap.
 >>
->> Am 17.10.24 um 02:06 schrieb Marek Vasut:
->>> Bindings expect pin configuration nodes in pinctrl to match certain
->>> naming and not be part of another fake node:
->>>
->>> pinctrl@30330000: '...' does not match any of the regexes: 'grp$',
->>> 'pinctrl-[0-9]+'
->>>
->>> Drop the wrapping node and adjust the names to have "grp" prefix.
->>> Diff looks big but this should have no functional impact, use e.g.
->>> git show -w to view the diff.
->> thanks for addressing the YAML conversion, but this specific commit
->> message doesn't seems to match the change?
-> Uh, right, commit message replaced in V3 (or shall I send this patch
-> separately?)
-I don't have a strong opinion about that. Luckily this is the last
-patch, so in theory the rest could by applied if there are no other
-findings.
->
-> Thanks!
+>> Currently, kernel cannot disable gpio interrupts in
+>> case of a irq storm, so add omap_gpio_disable_irq
+>> so that interrupts can be disabled/enabled.
+>>
+>> Signed-off-by: Bin Liu <b-liu@ti.com>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+>> ---
+>>   drivers/gpio/gpio-omap.c | 29 +++++++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+>> index 76d5d87e9681..913e6ece1238 100644
+>> --- a/drivers/gpio/gpio-omap.c
+>> +++ b/drivers/gpio/gpio-omap.c
+>> @@ -711,6 +711,31 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+>>       raw_spin_unlock_irqrestore(&bank->lock, flags);
+>>   }
+>> +static void omap_gpio_set_irq(struct irq_data *d, bool enable)
+>> +{
+>> +    struct gpio_bank *bank = omap_irq_data_get_bank(d);
+>> +    unsigned int offset = d->hwirq;
+>> +    unsigned long flags;
+>> +
+>> +    raw_spin_lock_irqsave(&bank->lock, flags);
+>> +    omap_set_gpio_irqenable(bank, offset, enable);
+>> +    raw_spin_unlock_irqrestore(&bank->lock, flags);
+>> +}
+>> +
+>> +static void omap_gpio_disable_irq(struct irq_data *d)
+>> +{
+>> +    bool enable = 1;
+>> +
+>> +    omap_gpio_set_irq(d, !enable);
+> 
+> Seems like an odd way to make "false", why not:
+> 
+> omap_gpio_set_irq(d, false);
+
+Thanks for your review, you are right, but I will
+be reverting to the original patch format. Where we do
+not used wrappers function around omap_gpio_set_irq().
+
+~ Judith
+
+> 
+> Andrew
+> 
+>> +}
+>> +
+>> +static void omap_gpio_enable_irq(struct irq_data *d)
+>> +{
+>> +    bool enable = 1;
+>> +
+>> +    omap_gpio_set_irq(d, enable);
+>> +}
+>> +
+>>   static void omap_gpio_irq_print_chip(struct irq_data *d, struct 
+>> seq_file *p)
+>>   {
+>>       struct gpio_bank *bank = omap_irq_data_get_bank(d);
+>> @@ -723,6 +748,8 @@ static const struct irq_chip omap_gpio_irq_chip = {
+>>       .irq_shutdown = omap_gpio_irq_shutdown,
+>>       .irq_mask = omap_gpio_mask_irq,
+>>       .irq_unmask = omap_gpio_unmask_irq,
+>> +    .irq_disable = omap_gpio_disable_irq,
+>> +    .irq_enable = omap_gpio_enable_irq,
+>>       .irq_set_type = omap_gpio_irq_type,
+>>       .irq_set_wake = omap_gpio_wake_enable,
+>>       .irq_bus_lock = omap_gpio_irq_bus_lock,
+>> @@ -737,6 +764,8 @@ static const struct irq_chip 
+>> omap_gpio_irq_chip_nowake = {
+>>       .irq_shutdown = omap_gpio_irq_shutdown,
+>>       .irq_mask = omap_gpio_mask_irq,
+>>       .irq_unmask = omap_gpio_unmask_irq,
+>> +    .irq_disable = omap_gpio_disable_irq,
+>> +    .irq_enable = omap_gpio_enable_irq,
+>>       .irq_set_type = omap_gpio_irq_type,
+>>       .irq_bus_lock = omap_gpio_irq_bus_lock,
+>>       .irq_bus_sync_unlock = gpio_irq_bus_sync_unlock,
 
 
