@@ -1,175 +1,116 @@
-Return-Path: <linux-gpio+bounces-11516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C65A9A1DF2
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 11:14:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EEEE9A1E3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 11:26:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25EC81C21B33
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 09:14:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC8B32860CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 09:26:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED401D88C2;
-	Thu, 17 Oct 2024 09:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 812621D8E0F;
+	Thu, 17 Oct 2024 09:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="buisB53u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lFbfvjzu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BC01442F6;
-	Thu, 17 Oct 2024 09:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501AB1D6DB6
+	for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 09:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729156468; cv=none; b=eauyrFOlgBueWCUKJGWMxcyifm5sIf/WD5Le+UKJ6ULMaHnsZWU0ZJW8V2PSrJeVtpJ+X/A9qjPY1P0gCNoC2p2Ezfkp99DuE/Zq1aE0vkKvTUKdsw+TMy+tiXj1Quq2tjIHoilIwjO9xBfQgKMCYs15geLvKGLntuMDVPTvD+s=
+	t=1729157177; cv=none; b=syqOHuGrcdHmSlrXnvENE4s10KAtxsfV5aZ1TMNoV6bnYUWE9GM0gVCDmMBxR8G3f0OdwkY1sJQxApGCpXUq79xokQnchs9nesKJNEjmp9TNdHB75Mipq5e36mLYSIayaZTEq2kTO8HJV+o9Bxu2Q5DqtauiEWNByDynVbrAY2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729156468; c=relaxed/simple;
-	bh=kk13r6qCmNinZekKxvWUEEgek1VIRJknqF3Oq7+hfpM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P2vAiJZQIeaNoNRN4YiDi2wRFkQyQMwwzJJmgJJZ6g3cGDJscx1eMiFu1xnvl8tiElW3k+MWUkHL3nzruvkNLTivL48Xy3kdroEbiPDxhU4ffUWRw0yriazXfglhM3/+7VSOhdoiDWkiEU1UEciuYATOLCuvbDGyuyzTFtiNOqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=buisB53u; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 2fb98af68c6811efb88477ffae1fc7a5-20241017
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mh9+gxbI0a2SUdKDoNPUGs5qDkayXH7hjsv/TJG1FDk=;
-	b=buisB53uZxrO1zJ3trUY0t4r/LTpwDNH+JyifRlRRKRr0H6gHFzkZt9pxisIbjsnobO91dJ/OKg/+UYhO1r42X01pKY00X5WFxKXijXxa2niX4nVaIHk9bpc82iFFil0zSWrqv2qQC4IABwDd5MlAAMUM0S0uGxseVN9olqptxo=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.42,REQID:17a965bd-957c-48c1-923e-30a296ddcaad,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:b0fcdc3,CLOUDID:13b56565-444a-4b47-a99a-591ade3b04b2,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 2fb98af68c6811efb88477ffae1fc7a5-20241017
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <bo.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1038899658; Thu, 17 Oct 2024 17:14:17 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 17 Oct 2024 17:14:16 +0800
-Received: from mcddlt001.gcn.mediatek.inc (10.19.240.15) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 17 Oct 2024 17:14:15 +0800
-From: Bo Ye <bo.ye@mediatek.com>
-To: Sean Wang <sean.wang@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Chen-Yu
- Tsai <wenst@chromium.org>
-CC: Yongdong Zhang <yongdong.zhang@mediatek.com>, Xiujuan Tan
-	<xiujuan.tan@mediatek.com>, Browse Zhang <browse.zhang@mediatek.com>, Bo Ye
-	<bo.ye@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>, Evan Cao
-	<ot_evan.cao@mediatek.com>, <linux-mediatek@lists.infradead.org>,
-	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [RESEND. PATCH v1] pinctrl: mediatek: paris: Revert "Rework support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE"
-Date: Thu, 17 Oct 2024 17:14:09 +0800
-Message-ID: <20241017091410.181093-1-bo.ye@mediatek.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20241017091238.180920-1-bo.ye@mediatek.com>
-References: <20241017091238.180920-1-bo.ye@mediatek.com>
+	s=arc-20240116; t=1729157177; c=relaxed/simple;
+	bh=3LziUkpGNIhFW55U6jvI4l+L7hcBt5ps7U1v7+ZnWE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ntHR08Empl7GqWOwpLHOw75JN4dXzvCN3zLym2CkVQwHbI/WW4h11o73aaLLPK1ChGPRyErYE8R30vHB30LKnPaJSB6jRPUllGNwe2v4PODt9Ww1pKRJrzjDBIBtHBkJVIj2ihSzvOYqR7SB/iI2fyd5kSapia4tDRNFo/kPTw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lFbfvjzu; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-37d4dbb4a89so83064f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 02:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729157171; x=1729761971; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WKRTLaQgO/TM93Yyvkgu4VGnv97Xsi7IUB1bI/d1ppA=;
+        b=lFbfvjzud7AeNEtMf07QbfItFsdr2hictm+jwqLUD/roLUfLzqsKH54d35ZcZFW7jm
+         SugSo2+I7PpSc/6YAR/CojrFHGyc9uARbvFH1h7HzYXPZX4jAGhKvYgfPqdkrSxIDNDi
+         UItMhZYmGrBsZo0N7oBa1WpB8SrEC5guZjHcCG2d2DXHH0yB/OJBnlrQ1M+XE28yc5/r
+         7t4gp6Fpy7r55KeZmxP9joHQk8hUTT/hDwmh3tFYSZWOqt7YeYYyRXBGvIicrY0/dAAz
+         mtQEO/F8X7AVGTIk4Tu8OEbQ7wwjkeoOr8PQilwtDCV0TeAsjllHuPd1xKHC6Iz8QAhc
+         a7FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729157171; x=1729761971;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WKRTLaQgO/TM93Yyvkgu4VGnv97Xsi7IUB1bI/d1ppA=;
+        b=UgmPTRTt0RSArd4+9SCTlCraaufDH5wDbE2l9EWL67znRm7qgpYOWCGJCRieFxzUy1
+         N5k7/mhOzTGMod06I4/ZMqZ9kk2kBndqHNOmrfvI2xGsNmfiVI75UXe6z4OkOipTHsFd
+         2Dk/EKpe2fQRb1OD+YbTC8JGgM3AyCYZFdmtZnBSoE1PoqziXWRRGL+08I84J+QUc3Cg
+         m0nsdl097RLiw6pFC6IQT5K8ng/K/t/6wOt+70UTCNZc5N6+XQbYvpksp4cJOmJjAi1s
+         zXjF9lrK3pO1kV4he11t4HQDzT6bQvvCd6YJZb/5otArs3Vb7vQCoEc8K0vKrQLlrXA7
+         ObWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXz5lah/vGQOhwemgxJj97Jfkl3jX28D7dKZsNt+6BRoLf5lVjhPVyLQxsqyOtCkRslYxyMtYlkrkge@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI1mfuBHS90HfpSVqz0pGz+r/ItJh6AQ1cGvNcUX4V5mfsYq1+
+	bO6PQlGQ3SBsvVT6n2ePgW8HN4kp1ETnmv0HsK6SksfReu0Y98dGfWMgcjvG+50=
+X-Google-Smtp-Source: AGHT+IH+1FFMQXSkaxdSxuGBb7V+JV0JImK9YzOxutCNXeTuZ9qFf9RlGrNqx2QrK3J03IFumUdDeg==
+X-Received: by 2002:a05:6000:4024:b0:37d:50a3:f34d with SMTP id ffacd0b85a97d-37d9322e239mr801272f8f.0.1729157171549;
+        Thu, 17 Oct 2024 02:26:11 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.211.167])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa7a173sm6612920f8f.15.2024.10.17.02.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 02:26:11 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 2/3] dt-bindings: pinctrl: samsung: add exynos990-wakeup-eint compatible
+Date: Thu, 17 Oct 2024 11:26:08 +0200
+Message-ID: <172915712848.42336.1934974031781144072.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241016154838.64515-3-igor.belwon@mentallysanemainliners.org>
+References: <20241016154838.64515-1-igor.belwon@mentallysanemainliners.org> <20241016154838.64515-3-igor.belwon@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-[This reverts commit c5d3b64c568a344e998830e0e94a7c04e372f89b.]
 
-For MTK HW,
-1. to enable GPIO input direction: set DIR=0, IES=1
-2. to enable GPIO output direction: set DIR=1, and set DO=1 to output high, set DO=0 to out low
+On Wed, 16 Oct 2024 17:48:37 +0200, Igor Belwon wrote:
+> Add a dedicated compatible for the exynos990-wakeup-eint node.
+> This SoC pin controller does not mux interrupts. It's compatible with
+> Exynos 850's node, while also being compatible with the Exynos7
+> fallback.
+> 
+> 
 
-The PIN_CONFIG_INPUT/PIN_CONFIG_OUTPUT/PIN_CONFIG_INPUT_ENABLE/PIN_CONFIG_OUTPUT_ENABLE shall
-be implemented according to view of its purpose - set GPIO direction and output value (for
-output only) according to specific HW design.
+Applied, thanks!
 
-However, the reverted patch implement according to author's own explanation of IES without
-understanding of MTK's HW. Such patch does not correctly set DIR/IES bit to control GPIO
-direction on MTK's HW.
+[2/3] dt-bindings: pinctrl: samsung: add exynos990-wakeup-eint compatible
+      https://git.kernel.org/pinctrl/samsung/c/e690012f4f924f4ef4e105427b04ea3d496c6a38
 
-Fixes: c5d3b64c568 ("pinctrl: mediatek: paris: Rework support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE")
-Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
-Signed-off-by: Evan Cao <ot_evan.cao@mediatek.com>
-Signed-off-by: Bo Ye <bo.ye@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 38 +++++++++++++++++-------
- 1 file changed, 27 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 87e958d827bf..a8af62e6f8ca 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -165,21 +165,20 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
- 		break;
- 	case PIN_CONFIG_INPUT_ENABLE:
--		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_IES, &ret);
--		if (!ret)
--			err = -EINVAL;
--		break;
--	case PIN_CONFIG_OUTPUT:
-+	case PIN_CONFIG_OUTPUT_ENABLE:
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
- 		if (err)
- 			break;
-+		/*     CONFIG     Current direction return value
-+		 * -------------  ----------------- ----------------------
-+		 * OUTPUT_ENABLE       output       1 (= HW value)
-+		 *                     input        0 (= HW value)
-+		 * INPUT_ENABLE        output       0 (= reverse HW value)
-+		 *                     input        1 (= reverse HW value)
-+		 */
-+		if (param == PIN_CONFIG_INPUT_ENABLE)
-+			ret = !ret;
- 
--		if (!ret) {
--			err = -EINVAL;
--			break;
--		}
--
--		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DO, &ret);
- 		break;
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
-@@ -284,9 +283,26 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 		err = hw->soc->bias_set_combo(hw, desc, 0, arg);
- 		break;
-+	case PIN_CONFIG_OUTPUT_ENABLE:
-+		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT,
-+				       MTK_DISABLE);
-+		/* Keep set direction to consider the case that a GPIO pin
-+		 *  does not have SMT control
-+		 */
-+		if (err != -ENOTSUPP)
-+			break;
-+
-+		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
-+				       MTK_OUTPUT);
-+		break;
- 	case PIN_CONFIG_INPUT_ENABLE:
- 		/* regard all non-zero value as enable */
- 		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_IES, !!arg);
-+		if (err)
-+			break;
-+
-+		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
-+				       MTK_INPUT);
- 		break;
- 	case PIN_CONFIG_SLEW_RATE:
- 		/* regard all non-zero value as enable */
+Best regards,
 -- 
-2.17.0
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
