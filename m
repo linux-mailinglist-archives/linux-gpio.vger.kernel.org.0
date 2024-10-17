@@ -1,162 +1,158 @@
-Return-Path: <linux-gpio+bounces-11553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 515CD9A24F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 16:25:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E6969A24F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 16:28:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8CB6B25095
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 14:25:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B01101C22667
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 14:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91A731DE3CB;
-	Thu, 17 Oct 2024 14:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5071DE4D6;
+	Thu, 17 Oct 2024 14:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9VbtxVo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozDrKY+x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC051DE3AC;
-	Thu, 17 Oct 2024 14:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A21DE3DA;
+	Thu, 17 Oct 2024 14:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729175118; cv=none; b=B34IkA76MThdDEBIW57iZTJSgQ1Rz71ib+btbDfof2mDb0Y3vFjf2ulQReN0IqIlbajXbEiYvb663aP0K2M92dESjYO6ltxwfvHEcUhM+PdA2EKcAhdLXXoBgVs37BLtYjqeIzYq8zb++VXNnGldmkznoClk5zhF+AlJEEziunU=
+	t=1729175289; cv=none; b=p1GhdCaxGEK9cUtbUTPLFjcq25rQ6Ssd4fwiiS6XKqWE1nMhpdkfQFyxe/Ysi0B3i+zT6YCG7Ue9xL/87qDT+8XnF4kjcmQNfKnryYMzPV26hAndEv8Lfevh0w81s9U6WGTM3sgRbF+PUZeOTWuYyqHBXk8Ol9WIL1/6XVa+3nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729175118; c=relaxed/simple;
-	bh=COGNHAe7lodcFPyYT18oj6HIzA5I3YsAW3eM8hHWXTs=;
+	s=arc-20240116; t=1729175289; c=relaxed/simple;
+	bh=cG1ujo3dHNKa9WqVdQiAckTISmwm/fCx/SWHY+8ljuQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vyrn0vI4hX4pjQEOqTOqC9sVXWec+R0T6e3n70RYnPR0uOLwfbehoC+FMsBqEyPk5oDLUlgn1WNrtmTStFDNK4DPs07EeCB8kWjvXNOnuQ+y7i0OFrFGGEkKc9EQHXtoaU+o94UI8v4+emitwsW2JHzN0OFqCMt09D+m20CTp0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9VbtxVo; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3a3bb6a020dso3971475ab.2;
-        Thu, 17 Oct 2024 07:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729175112; x=1729779912; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KOtiT9HVH6rqSS6Gsqti/X1HA3JpMBABi60k7f393as=;
-        b=X9VbtxVodfM5lYQzCZ+YjgAtXDu4Fd+sKUBn94HS6CwxtbItXmoflfkpeWdPzdQOQs
-         JBMIksaC3bixhMZISMwMai9NPc/zQln/Gmq56+4ybu7Ssyuc3Mp7KucoGvLqrrzTW3T9
-         Kjw2KL0/yq9QTh4K3R841l191Z90kh8fswLJdchy9F34RfG1HA34klzLyVh8XvFqrCum
-         4IQlfyPvDCq11O09yjKVfQxYhOY7+pStat04yXgsWwGPdIiraPxq+/gcFhnYLmRVcfZ5
-         dwfPHCGxJ/O4YiL4IT2hx1Ybfxz0koZYGz9yUlegfBbqtXwBk02pxvKXRlQYEVjipWcM
-         yJFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729175112; x=1729779912;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KOtiT9HVH6rqSS6Gsqti/X1HA3JpMBABi60k7f393as=;
-        b=JuBAoTa24mw32aBP+NP15mlK+Ksd0z87pEIhKDulLPQl/p44Yiof+hcoDadYPsNsK1
-         PfvWUhmwoTCoL8L1z9Iq07ShBfFAM762mtnTXcxoraI493w/smCPcYjarp3ofqgCp5RO
-         nPUDpo3l3uxvyEt9qJq/HE70daR1b+aLchigspEJv+gIZYLuU7fcjl9hypjuYJfWKea9
-         dBNvGUGKhqGb1Z8Q1S0niSyIPzkg4Xzq0BXCgQ17Wwr3Era+YdX3o1YD2hPq0y++yqmw
-         8EyWmo1w6issu8dqUdP74Y6u0Y4YKqXfed/rijbvsHojgLLHqzVd6ur/mbja4bat8edm
-         5ePQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlxnUwVVM+ue8pZHWAhZq2mjfxfQCfz9s7AtDfgmfFKqOXNW4fiCO5KVyJoyb7oEMF44L+bnKrnm8e@vger.kernel.org, AJvYcCV2ISOk4tBBKRQ2Xwg/HHmlFmV6I7jDqD/+rx1maTX3sha7Zttc1y7rH3aBa5fspROM9Sspq0r0Y3Kl6Wmx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyssPe9b2Ig2I7ZkdK+u3YRBqjxH3+j8LWP2DnnhPNcgPJrNB/g
-	nX0tf3A/59adcAJQR7ZbPVC0HuGUM9WzZ3OYAhhjs55a5q3U0iIoRLLH0A==
-X-Google-Smtp-Source: AGHT+IFQy6XuSUqGxOu0tqgyRW0RqxHIjLS7p8ncuS58xfOJUQT76Tr1A+O/qS1tR1Mh+o22lsptgg==
-X-Received: by 2002:a05:6e02:1a0b:b0:3a3:b4dd:4db with SMTP id e9e14a558f8ab-3a3b5c73b7fmr243339385ab.0.1729175112313;
-        Thu, 17 Oct 2024 07:25:12 -0700 (PDT)
-Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7ea9c6c10aesm5062982a12.21.2024.10.17.07.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 07:25:11 -0700 (PDT)
-Date: Thu, 17 Oct 2024 22:25:07 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 8/8] gpiolib: notify user-space about in-kernel line
- state changes
-Message-ID: <20241017142507.GA247028@rigel>
-References: <20241017-gpio-notify-in-kernel-events-v4-0-64bc05f3be0c@linaro.org>
- <20241017-gpio-notify-in-kernel-events-v4-8-64bc05f3be0c@linaro.org>
- <20241017125349.GB221864@rigel>
- <CAMRc=McjCinBEFNoHSTyFH7zU=JuyRfu1cfrOxkq=OjciKQkvQ@mail.gmail.com>
- <20241017142053.GB242458@rigel>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PhPrhTLaGYpqqBvryFKYFwWv+/u+ilVKhfoGjsaYnm0ltthCmH9Wc5jFO9EJAub1baUpMHygdHa/MdPzIyJrf3chSheaT4ijxvOBBC5i6M9T/Ozja/tvZiGCrjXJTk7sVb6SYQxlNHQwC5582q0Trq9YJll4/fzSip56glRgYcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozDrKY+x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E54DC4CEC7;
+	Thu, 17 Oct 2024 14:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729175288;
+	bh=cG1ujo3dHNKa9WqVdQiAckTISmwm/fCx/SWHY+8ljuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ozDrKY+xx8pM3y0YaTW/FDyLDweOtlQ19ddNuFDlkNz1Cl5bNZWmVXDpdCOs7ji4l
+	 iXdT2PD4s0LoC+ptlSSi+qblh2Bz6k0cfhaKYsMkk5HHNJcN76yZSAP5Rtzl/ormwl
+	 cPFPs+Mff5tgW3bbx1HyHM+4hNEvPTrsp8EThQzhhba/2HwNzMSSLvp3i1tkV5cen8
+	 xyC7iAN7IM7VeOJ9GJipIMzggmx15Si3H+hnYrD1476SMa4P6iBXBtxGH/CHKO/8Xw
+	 vtblIOnKuCZK8BwvDm2IUv47V5HIPjhEjEEiK8XBrSCCireYX/DbJkjsKU1h2nzudP
+	 i6WQBcP1iJ9Cg==
+Date: Thu, 17 Oct 2024 16:28:06 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Lee Jones <lee@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v7 3/6] dt-bindings: pwm: airoha: Add EN7581 pwm
+Message-ID: <ZxEe9gGd1qW4ksEo@lore-desk>
+References: <20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org>
+ <20241016-en7581-pinctrl-v7-3-4ff611f263a7@kernel.org>
+ <834bfc12-4ce7-4ce1-a0c7-5bc8be3587b7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uoePblPqdHNb3UAq"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241017142053.GB242458@rigel>
+In-Reply-To: <834bfc12-4ce7-4ce1-a0c7-5bc8be3587b7@collabora.com>
 
-On Thu, Oct 17, 2024 at 10:20:53PM +0800, Kent Gibson wrote:
-> On Thu, Oct 17, 2024 at 04:14:24PM +0200, Bartosz Golaszewski wrote:
-> > On Thu, Oct 17, 2024 at 2:53 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Thu, Oct 17, 2024 at 10:14:16AM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > @@ -1447,8 +1450,6 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
-> > > >               }
-> > > >
-> > > >               WRITE_ONCE(line->edflags, edflags);
-> > > > -
-> > > > -             gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-> > > >       }
-> > > >       return 0;
-> > > >  }
-> > >
-> > > I still get errors from this when reconfiguring lines with debounce.
-> > > You should leave this notify in place and use _nonotify when setting the
-> > > direction.
-> > > i.e.
-> > >
-> > > @@ -1436,11 +1432,11 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
-> > >                         int val = gpio_v2_line_config_output_value(&lc, i);
-> > >
-> > >                         edge_detector_stop(line);
-> > > -                       ret = gpiod_direction_output(desc, val);
-> > > +                       ret = gpiod_direction_output_nonotify(desc, val);
-> > >                         if (ret)
-> > >                                 return ret;
-> > >                 } else {
-> > > -                       ret = gpiod_direction_input(desc);
-> > > +                       ret = gpiod_direction_input_nonotify(desc);
-> > >                         if (ret)
-> > >                                 return ret;
-> > >
-> > > @@ -1450,6 +1446,8 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
-> > >                 }
-> > >
-> > >                 WRITE_ONCE(line->edflags, edflags);
-> > > +
-> > > +               gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-> > >         }
-> > >         return 0;
-> > >  }
-> > >
-> > > Given that, all my current tests are passing.
-> > >
-> >
-> > That looks good - after all we no longer notify from any place in
-> > gpiolib-cdev.c anymore - but I'd like to learn what's wrong exactly.
-> > Are you getting more events with debounce? Are you not getting any?
-> >
->
-> In linereq_set_config(), the notify comes from the gpiod_direction_input() -
-> before the edge_detector_setup() is called (not visible in the patch) and that
-> sets the debounce value in the desc.
 
-That should be edge_detector_update().
+--uoePblPqdHNb3UAq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So you get an event without the debounce set, or with a stale value.
-> Keeping the gpiod_line_state_notify() and using the _nonotify()
-> functions means the notify comes after the debounce has been set.
->
-> Cheers,
-> Kent.
->
+> Il 16/10/24 12:07, Lorenzo Bianconi ha scritto:
+> > Introduce device-tree binding documentation for Airoha EN7581 pwm
+> > controller.
+> >=20
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >   .../devicetree/bindings/pwm/airoha,en7581-pwm.yaml | 34 +++++++++++++=
++++++++++
+> >   1 file changed, 34 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.ya=
+ml b/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..f36387572a9781636aeacdb=
+cc8947017c7ca75a0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.yaml
+> > @@ -0,0 +1,34 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/airoha,en7581-pwm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Airoha EN7581 PWM Controller
+> > +
+> > +maintainers:
+> > +  - Lorenzo Bianconi <lorenzo@kernel.org>
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: airoha,en7581-pwm
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#pwm-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    pwm {
+> > +      compatible =3D "airoha,en7581-pwm";
+> > +
+> > +      #pwm-cells =3D <3>;
+> > +    };
+> >=20
+>=20
+> There are undocumented properties that the driver tries to parse. Please =
+fix.
+>=20
+> Regards,
+> Angelo
+
+ack, I will fix them.
+
+Regards,
+Lorenzo
+
+--uoePblPqdHNb3UAq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZxEe9gAKCRA6cBh0uS2t
+rDpoAQC2ELyAKCz2bRRpe2BaRF6RYKIf0qfZ6xsbD9FbUklpFAD/Yy963j4FOSpU
+JxqA9L3uYDf/UeDg2nJTj3ZUokwBQQg=
+=HeFD
+-----END PGP SIGNATURE-----
+
+--uoePblPqdHNb3UAq--
 
