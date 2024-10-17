@@ -1,151 +1,133 @@
-Return-Path: <linux-gpio+bounces-11488-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11489-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B80B79A185E
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 04:06:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CC3A9A1899
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 04:25:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D21D285DD9
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:06:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B14921F21C0C
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Oct 2024 02:25:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B8D03B182;
-	Thu, 17 Oct 2024 02:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44AB54D8D0;
+	Thu, 17 Oct 2024 02:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwnGJy9O"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o0ez1MOt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D0034CF5;
-	Thu, 17 Oct 2024 02:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518EE42056;
+	Thu, 17 Oct 2024 02:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729130761; cv=none; b=QofT1U0IOIx7ejRPToWS+bbvCnbxoZ5NZYSSpYlhnWSFSeQaR5mngT7RqnqhxbMYcHPx+ddlnoiOiYBZ6wnciK5EC4BK2Gd7B0nj7+P7SgNO0HzWjFiEMI+TirF/+wrO/8wvjMZKHShFMbD/iVRrQtj0ewwY2qkmsQgOj48VbWE=
+	t=1729131908; cv=none; b=Vv79tuB9ZkIrEyhQlgcBwqKYJZbcN2JoXtFmzRo+h25KrmwOgwkdYaR9AFM4CizmXoaDWVw8EQDShT0BPydOz+hqwiN6edK7cKbkEEPm/f5e7eg5FndaqPZHLcjPLFDNNP8MRPnXmJcS9pmpt+4myeNaHeZTA+SSEcb0x3TYTbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729130761; c=relaxed/simple;
-	bh=4Mna6OEjLgG7GmlUcMbQtaxe3lvjAF5M+fby7Mt+Mko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P+QVWwS4h9T5rtF/aojbJHJT3+i6EmqHKIUULjPRwery/FcP8t4itnDx0znK03ILNp/zw02EoQ8OJUFI9YO3+ODqThDEgEdO1Zqpj1j7NuSgw8qDGONW303a0e3Ld+QGBP5HjEJ6OIE31HI3rEBe7mpm8Mm+gZh0pA22xwlsSSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwnGJy9O; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729130759; x=1760666759;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4Mna6OEjLgG7GmlUcMbQtaxe3lvjAF5M+fby7Mt+Mko=;
-  b=SwnGJy9OjdnaUpPyP/h10gc124a4ZxWnw4aSn2qOS7nbv9rqnSTmSHnd
-   N0az709togEuwvGSQDgjmFZJ0s9BV95rUvSN4ajjsTF+FuMQMVGvJpnu/
-   2tsLhe41qEOoxVNYEeDU0+/0aW+GG4T/bFqKKY5gHF3ltQeE6XTqy01Rb
-   eMiWVz/T3Ly5M0vb0CfscraQhOudZ8coKpf48Td8Uwsc/ONaFGEKK+W1U
-   OZJnA0IF36xYbjToWGMMB63osDn31zYjS2zMNNfKUdwr+7WWyPDonHwbQ
-   YARNBNkFW3P9wE7ylG1SRCHr0QlxjWYSyqXrNIiq5tCCpg3kmw+JJ5eCE
-   Q==;
-X-CSE-ConnectionGUID: 7MIL0nJeQim+B/OvsC9rSg==
-X-CSE-MsgGUID: LrN0D3QsThCRdwfrk1dTPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11226"; a="28693154"
-X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
-   d="scan'208";a="28693154"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2024 19:05:55 -0700
-X-CSE-ConnectionGUID: Qz4+fddATlaBGIyE7WftZQ==
-X-CSE-MsgGUID: e+J3TUu6RUWTNk454YxnEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,209,1725346800"; 
-   d="scan'208";a="83467937"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 16 Oct 2024 19:05:52 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t1Ftd-000Lcd-2N;
-	Thu, 17 Oct 2024 02:05:49 +0000
-Date: Thu, 17 Oct 2024 10:05:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: mmio: Parse ngpios property
-Message-ID: <202410170940.KyJaAkpF-lkp@intel.com>
-References: <20241016-gpio-ngpios-v1-2-f16cf154f715@linaro.org>
+	s=arc-20240116; t=1729131908; c=relaxed/simple;
+	bh=5NMPDhf/E8i+g+gcq6+KuI94K+BxmbwJGEsewTDaCX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ca1+sMWS9ah/LVHl23Shk4paq5Vl3kg1XMJd35/Kj0XRNQgGPkvZndHwRKlF37tjE2UbnHZaH0b+q1L6LAOhEmpXl9ycA5SBlwU8uKEGC8Pnzn+ZZkrTL6Bh/SPePNA48wJRtT/Fe/VzWn8zXmUJ89H6qqOyDsiYrHqPnqF00NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o0ez1MOt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GIoW8h011837;
+	Thu, 17 Oct 2024 02:25:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EZXaIrOtNXKt+a6vGxy0OY8kvivjCsBaCy5jFUoU27Y=; b=o0ez1MOtSLAYysmB
+	TSPiullrJZiNksKT1qDMyuX58DQMWv0z0jq9PDvi507j2Q08NXM0gkcXgvvDY2G8
+	0vr0Qa/CKp8t7TpJNMdyMiM+JuKsV/0yKaoIvSqLV6HTv08tFhURhfrcLNbE2pHR
+	IGRXBn+0lU50RLOCLVbVz60K8s1U8+9pz62GsULP5/q2XlHphuiBFPyDIRwvbjpp
+	SahPU1zbBrAvY2oj5fgfw/AP9Dd5z/XrZW0XthJNIV4DNjzfnIssvK6Gzp8rf+Sd
+	7KiOLOqQFSZTN4dHZrKEvcfyZhbpysfniRgGkBdl8dofmKDL5Fcg1M2AhG19Jmt7
+	y/OlZQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42abm5jeup-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 02:25:00 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49H2OxWD031600
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Oct 2024 02:24:59 GMT
+Received: from [10.233.21.53] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Oct
+ 2024 19:24:56 -0700
+Message-ID: <abbea1df-4aaa-4012-95f9-ea1419a22414@quicinc.com>
+Date: Thu, 17 Oct 2024 10:24:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241016-gpio-ngpios-v1-2-f16cf154f715@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: add the tlmm driver for QCS8300
+ platforms
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Richard
+ Cochran" <richardcochran@gmail.com>,
+        <quic_tengfan@quicinc.com>, <quic_tingweiz@quicinc.com>,
+        <quic_aiquny@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20241009-qcs8300_tlmm-v2-0-9e40dee5e4f1@quicinc.com>
+ <20241009-qcs8300_tlmm-v2-2-9e40dee5e4f1@quicinc.com>
+ <c7ahyrbo3bw6vgfwqaubricap52muhxyhsnb5cfhzvo3n67dsr@gp6vehlfwblo>
+Content-Language: en-US
+From: Jingyi Wang <quic_jingyw@quicinc.com>
+In-Reply-To: <c7ahyrbo3bw6vgfwqaubricap52muhxyhsnb5cfhzvo3n67dsr@gp6vehlfwblo>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: WdVh8HvXjf81gECUHt7qKc0aX9ynZ7nY
+X-Proofpoint-GUID: WdVh8HvXjf81gECUHt7qKc0aX9ynZ7nY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ clxscore=1011 impostorscore=0 mlxscore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=852 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410170016
 
-Hi Linus,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 9852d85ec9d492ebef56dc5f229416c925758edc]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Linus-Walleij/dt-bindings-gpio-mmio-Add-ngpios-property/20241016-152354
-base:   9852d85ec9d492ebef56dc5f229416c925758edc
-patch link:    https://lore.kernel.org/r/20241016-gpio-ngpios-v1-2-f16cf154f715%40linaro.org
-patch subject: [PATCH 2/2] gpio: mmio: Parse ngpios property
-config: i386-buildonly-randconfig-003-20241017 (https://download.01.org/0day-ci/archive/20241017/202410170940.KyJaAkpF-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241017/202410170940.KyJaAkpF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410170940.KyJaAkpF-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-mmio.c:709:10: error: no member named 'ngpios' in 'struct bgpio_pdata'; did you mean 'ngpio'?
-     709 |                 pdata->ngpios = ngpios;
-         |                        ^~~~~~
-         |                        ngpio
-   include/linux/gpio/driver.h:688:6: note: 'ngpio' declared here
-     688 |         int ngpio;
-         |             ^
-   1 error generated.
 
 
-vim +709 drivers/gpio/gpio-mmio.c
+On 10/16/2024 5:25 PM, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Wed, Oct 09, 2024 at 03:13:34PM +0800, Jingyi Wang wrote:
+>> +static struct platform_driver qcs8300_pinctrl_driver = {
+>> +	.driver = {
+>> +		.name = "qcs8300-tlmm",
+>> +		.of_match_table = qcs8300_pinctrl_of_match,
+>> +	},
+>> +	.probe = qcs8300_pinctrl_probe,
+>> +	.remove_new = msm_pinctrl_remove,
+>> +};
+> 
+> After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
+> return void") .remove() is (again) the right callback to implement for
+> platform drivers. Please just drop "_new".
+> 
+Will update that, thx!
+> Best regards
+> Uwe
 
-   693	
-   694	static struct bgpio_pdata *bgpio_parse_fw(struct device *dev, unsigned long *flags)
-   695	{
-   696		struct bgpio_pdata *pdata;
-   697		u32 ngpios;
-   698	
-   699		if (!dev_fwnode(dev))
-   700			return NULL;
-   701	
-   702		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-   703		if (!pdata)
-   704			return ERR_PTR(-ENOMEM);
-   705	
-   706		pdata->base = -1;
-   707	
-   708		if (!device_property_read_u32(dev, "ngpios", &ngpios))
- > 709			pdata->ngpios = ngpios;
-   710	
-   711		if (device_is_big_endian(dev))
-   712			*flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
-   713	
-   714		if (device_property_read_bool(dev, "no-output"))
-   715			*flags |= BGPIOF_NO_OUTPUT;
-   716	
-   717		return pdata;
-   718	}
-   719	
+Thanks,
+Jingyi
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
