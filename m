@@ -1,104 +1,96 @@
-Return-Path: <linux-gpio+bounces-11640-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1308D9A4047
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 15:45:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C86A59A4054
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 15:46:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF22A1F2668D
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 13:45:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03D861C24320
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 13:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3FFB667;
-	Fri, 18 Oct 2024 13:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B821FCF6A;
+	Fri, 18 Oct 2024 13:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ew2iD+gs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fb1BPupq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E31E1D95B5;
-	Fri, 18 Oct 2024 13:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F921F4262;
+	Fri, 18 Oct 2024 13:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729259074; cv=none; b=Q2Bhag+TxZpPCNYJYJJFH37Y55cxOysuS9ZZdBeqA9Ph0wZ4Lbxl9cnULbWz4ISi9s+sVMLeMBYVCTHDc65sVqWQbHwpdg1KpFRIn3lO5HnzmxXWV1ThUUnUZL2V0gYRYcOCVouaes9iHnc1fdUB561qZJu8YZ9nXlJ5P/jsfeA=
+	t=1729259164; cv=none; b=IT6NZc7JGaBuU2zOsXGjU9XvJD9l6sJDLcOPC08C13tlrNdoc6LYI41AgwqHyFdKedkjLC2BjFXSQs/s5nvsXx4CEl6CNVMPRsz97sNOf518UksVP98JpAQbNVTipWt19Hlkkk7Tuen4YViXnkipfQ5vV94xU0QtLu5fH9Dswb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729259074; c=relaxed/simple;
-	bh=7FJz9go6NmDrdGqWGJYOcGvUN9zYPmW5q3YnQ1vjR/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JIgxxzC4guAWgIIuD4ablMd1KNkcrjjMicam4aHM4E1/6R1RXs+ZVwvorYnXn5W1iTrWvb1JR6chWzKD9RnhLTRE+Ku+Q7q2wg1EEAVGA2y4AEFHJty1yJ+TVjZZjiGmRwVn0PsHJwZRdIoOt0DVMFAzmAvi5qk0iallJu8gU7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ew2iD+gs; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1729259164; c=relaxed/simple;
+	bh=DqOo2Nqfjf87YcuweyRKL0DbnsLGp9GXgI6Z2nqwyJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LD8GGQ1krsCkDJ12n8Z4QchleEovGHxe+DYiUL32XjDbd6MIKLL5puZivhLBVV5aKoEkQccCAn+gWIv+j47NxRlVSmreXeiNBSNgJhcRVMPdkYTaIo3qS5l6pmwlYtktOA40Ixs1e4VM51bSlfoxU/mMkfIoD2Sl7vJwatcphU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fb1BPupq; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729259072; x=1760795072;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7FJz9go6NmDrdGqWGJYOcGvUN9zYPmW5q3YnQ1vjR/I=;
-  b=ew2iD+gsR6BRwhIKjI24eInZ4EZsPd74o5KCrQikYgOyWCQmGG4Z019A
-   LI8EIrOK8nJk05wl5vW0s1kpQDk4OO/PlfctXvIP8qdrXIHhOmyCCtRhs
-   qVrL4YeUKKoBACP2O6le1210sLxv8+xz7gVgv9kZ5mWiz8AFw/tE4LW7T
-   txjxxLzWO91xD3pzPvmbeuJ9cs9m2H+EXJFaT6SPIMeE+7HzA2PctZPAG
-   +trhbefZzKEZ9KFTVU5smaiq2N2KVVjJnpbVBeyDdf9ZQnCeLFWXxkb9F
-   fAqj3hDfm85agUEPAhYVcrW7FJ+AY1RIu/DmVivGJxUr6eVChSfAYlcQp
+  t=1729259162; x=1760795162;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DqOo2Nqfjf87YcuweyRKL0DbnsLGp9GXgI6Z2nqwyJo=;
+  b=Fb1BPupqwAkO15tu9hF2mD4Kh1Gocp/HGYTVGopkezC7ukaPGYCkN0tQ
+   AdNOkueKiipex77KOAduGlJ+3+ChfQO+S9NbZdCAKp9G1NuvXRo77dt34
+   8S6aUEkgoKsJABP6NP+Xl+Dy5F6p1vQ9YplDdaGXur+XfcSwI9ZHoNGll
+   ARaMUcVr5Q0/UzyWZKSADgRtwcEhb8z+Shcq4dXMJzxtZHNKl3drjwlwE
+   lw4y7Sod9ZBbARctIeC7VWnJQhI4xQSDCfkyDH7lLTSC3I/NwEypOU5Cc
+   kotd7GSDdUQBiNrTqJDaQBEBqSDRDt/v6kZT3tA3KdF9hmmeYIWPzltkM
    A==;
-X-CSE-ConnectionGUID: eeUYQLuYRkS+S7iosTa4Fw==
-X-CSE-MsgGUID: SA5/MpiNSpKjTCKK1B4lsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="28668869"
+X-CSE-ConnectionGUID: P4mAdKWNT5iMawLZ8z2qDw==
+X-CSE-MsgGUID: gv0HBbUAQ6OZiSdLmXxIpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="28251824"
 X-IronPort-AV: E=Sophos;i="6.11,213,1725346800"; 
-   d="scan'208";a="28668869"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 06:44:32 -0700
-X-CSE-ConnectionGUID: YjqSYosrTx+AFDfZaWoROw==
-X-CSE-MsgGUID: X/4xZGt5SKegZ3VIVbIstg==
+   d="scan'208";a="28251824"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 06:45:57 -0700
+X-CSE-ConnectionGUID: a6C7ihkiRyiyTKYM6q5nOA==
+X-CSE-MsgGUID: dXAvx4mpSamaL5xrGOZwnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,213,1725346800"; 
-   d="scan'208";a="109698128"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 06:44:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1t1nHH-00000004Tvm-0gsm;
-	Fri, 18 Oct 2024 16:44:27 +0300
-Date: Fri, 18 Oct 2024 16:44:26 +0300
+   d="scan'208";a="116330957"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 18 Oct 2024 06:45:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A5986343; Fri, 18 Oct 2024 16:45:54 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 0/4] gpio: xgene-sb: Improve ACPI and property related
- code
-Message-ID: <ZxJmOjvQAKUc0_4A@smile.fi.intel.com>
-References: <20241018134129.2058068-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 0/4] gpio: xgene-sb: Improve ACPI and property related code
+Date: Fri, 18 Oct 2024 16:44:59 +0300
+Message-ID: <20241018134550.2071101-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241018134129.2058068-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 18, 2024 at 04:32:31PM +0300, Andy Shevchenko wrote:
-> Improve ACPI and property related code in the driver.
-> 
-> Andy Shevchenko (4):
->   gpio: xgene-sb: Remove unneeded definitions for properties
+Improve ACPI and property related code in the driver.
 
->   gpio: xgene-sb: don't use "proxy" headers
+v2: reorder the patchs so we want be sure ACPI_PTR() is defined.
 
-Ah, patch order is wrong (we will see CIs are not being happy),
-the above should be the last one.
+Andy Shevchenko (4):
+  gpio: xgene-sb: Remove unneeded definitions for properties
+  gpio: xgene-sb: Drop ACPI_PTR() and CONFIG_ACPI guards
+  gpio: xgene-sb: Tidy up ACPI and OF ID tables
+  gpio: xgene-sb: don't use "proxy" headers
 
->   gpio: xgene-sb: Drop ACPI_PTR() and CONFIG_ACPI guards
->   gpio: xgene-sb: Tidy up ACPI and OF ID tables
+ drivers/gpio/gpio-xgene-sb.c | 37 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 19 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0.rc1.1336.g36b5255a03ac
 
 
