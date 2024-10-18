@@ -1,202 +1,147 @@
-Return-Path: <linux-gpio+bounces-11584-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11585-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82C2D9A32EE
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 04:35:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E81539A3341
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 05:20:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 466F9285D38
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 02:35:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 162211C233CB
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 03:20:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50796143748;
-	Fri, 18 Oct 2024 02:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA12152196;
+	Fri, 18 Oct 2024 03:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ne2+rlwh"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T/Aj9Dqp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D06F558BA
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 02:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB8B3FB3B;
+	Fri, 18 Oct 2024 03:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729218902; cv=none; b=A79pV2f0L6RUW7QwSjQKOv+UPSyI3RCaj4bQpjbOexBvgJeXwJ8O6NDcRVSA0uQzsm9nHuXcQ+dPhkpjUiM0rsKj2c6SSbf0uZkKuchpjZp+BWZabgxDgxBp+Awb2rj8nWBpYkA/K3jhE46UPcYl6QAKgZtoCTSSEheeB398RvQ=
+	t=1729221613; cv=none; b=t3FNzQPXV8nOw5Aai+w6jXZF1DOEU0eLirzgGBiFvc0PM2PZDD4hXfW71ge0SIuHMMBJ6ztJ4sCPnHuhONqKV5oxWYFoNcOEjPc/oFEiX7Yo6nMnGx/NFqAHZDlrnjy1OmO6je/jnOokuQaSWrCIpM8cvpotkTLJv3QAx3+UuxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729218902; c=relaxed/simple;
-	bh=T9+EMLy5WF+lbUaGIFrIFUxI4uzQcfGNRfd7T9FZYsU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=OVJ5l3ixRmGcp3V/RPfjXyHZqj4JsIg0fufWRWn+Qc46KT0EE+Hy8v8/MuOovWDLBb2tyLyZvtuK/iBMcgPGhOyqe1EaK/4JmVwO38wraiPYhnyU6qfB7BdaPnVwQRkbzhYSM0oLCu3cnAs8dr1ATLrBEputzovFOUOfF9a6l2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ne2+rlwh; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729218900; x=1760754900;
-  h=date:from:to:cc:subject:message-id;
-  bh=T9+EMLy5WF+lbUaGIFrIFUxI4uzQcfGNRfd7T9FZYsU=;
-  b=Ne2+rlwhoUBO2zK0LJmU4daCC2j1RteKj0O5StmZCy9TbQEdem0PPC/Y
-   0Az1Xh/dH8+1SDhesAjgQ8ZLcaBp6JNwwXrGmSaV1MrrsxidKFT4Kx1h3
-   8G8CAkvv6K52xSvFZBpoBSuXrNau8TsPcrsyImpZaNDEfY//GJaV+7DaE
-   Hu+55HJ8FjZJuhu8kh1xNTzrTbvdqVTdXnryPjTsP4rQUQddNd9UVwwoZ
-   qAVYKQQq55Eg41WrBq59QxOIdVNhFlk1Dc+Y75pdoovLUb52CGZQ+YmgE
-   MEQCt2N+JD2maOPE5W1T/MxcDDc1nhEUxxDDqTAwdTQ8Hqxn5yN5yNGSM
-   g==;
-X-CSE-ConnectionGUID: vEaZ9Td0Tra1/4Tt516E1w==
-X-CSE-MsgGUID: hcLzYi69QR+bXMXz3dhDbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28616337"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="28616337"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2024 19:35:00 -0700
-X-CSE-ConnectionGUID: Zfl3ZdLqRIafhRKYuXs6Lw==
-X-CSE-MsgGUID: /Nu6o1yySgafu4RSzaS1OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,212,1725346800"; 
-   d="scan'208";a="79537191"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 17 Oct 2024 19:34:59 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t1cpM-000NBB-26;
-	Fri, 18 Oct 2024 02:34:56 +0000
-Date: Fri, 18 Oct 2024 10:33:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 678eefc1ca5f2b061951abe8ffdf290ce104dd8f
-Message-ID: <202410181048.qVw9yclB-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1729221613; c=relaxed/simple;
+	bh=Rk9USwdOWg29jTWE77KnBJYWuHxNmqgbnOH+Z5wN2A4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=tVHmPrntEQckJt/zbpDuJgBWwIhTVhfP9qE3yvgEjZHhLMOa4/QPBOGi2G5ZkihFppRBcqMkQJ4TKxwvasdmVppiay/UaIY2eoq7ahDIkKVK26G511kIRJehBs9a0JGalXmg+uS6qhhFh4keHbeiOxFarUbNu7lRFqf914zlr5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T/Aj9Dqp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49HIW9AF027187;
+	Fri, 18 Oct 2024 03:20:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3hvRkaM0lRFgY47USwgjre
+	+8pCBEMuvYF6GQOWIEpLA=; b=T/Aj9DqpoazPdrypl533Oty2CFWVEtCjtZHtPQ
+	IV1ZWXMWTGWg83rukN+CHJPSSJm0pp8qHhzyJovR5/1CElEnwxCc1jShrQH4ZddW
+	e/td+XVJBKjAnciOtofcuHyKntfZqT4wVxwwvx8NqH0tJDJqKsZEi0Ug9nZ/fMro
+	43JDaml4+S6OjxAPW/x3F7O6Fps46Y9uxhVd+ew3CuH2e/2BmGaEAW+Xl3FIIKm4
+	ub6jofUVWAmqBpgU6os++mbtsJ6nW1PRc6Rv7HELQ4EHc6nSjPINNeStdz0pEH42
+	3iiqzhr+jhMKu6RDVyWXBRnlq0NjomU83HUCWmHU5vCVGB3g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42ay8jar8t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Oct 2024 03:20:05 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49I3K4H4013945
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Oct 2024 03:20:04 GMT
+Received: from jingyw-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 17 Oct 2024 20:20:00 -0700
+From: Jingyi Wang <quic_jingyw@quicinc.com>
+Subject: [PATCH v3 0/2] pinctrl: qcom: Introduce Pinctrl for QCS8300
+Date: Fri, 18 Oct 2024 11:19:30 +0800
+Message-ID: <20241018-qcs8300_tlmm-v3-0-8b8d3957cf1a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMLTEWcC/1WOzQ6CMBAGX8X0bMn2B2g9+R7GEC0LrBGQFlFCe
+ HeBgwm3nS+ZyU4soCcM7HSYmMeBArXNAup4YK66NSVyyhdmEqQWIAzvXDAKIOufdc1NEUsrIcH
+ 8nrJFeXks6LvlLteFKwp968etPoh13UJghIVEW6UikaZGguaCd29y2YOacvyc15saF7m2Zmtnk
+ H9XANj9E4PkwC1qyBFj1IXY6/M8/wAfNeP25gAAAA==
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Richard
+ Cochran" <richardcochran@gmail.com>
+CC: <quic_tengfan@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        Jingyi Wang
+	<quic_jingyw@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729221600; l=1182;
+ i=quic_jingyw@quicinc.com; s=20240910; h=from:subject:message-id;
+ bh=Rk9USwdOWg29jTWE77KnBJYWuHxNmqgbnOH+Z5wN2A4=;
+ b=NERBjJbQ2KwajGCAjJnRa+Z27mK1KAYksHMsRQqApEICPy9TZeK/6hRGu0rtAYKQhgunfiPpg
+ nnHhtbCcASBDtRvOmR2IMwdJuRJf+qzr73S8MPANo3OIv/J1BP4pcIt
+X-Developer-Key: i=quic_jingyw@quicinc.com; a=ed25519;
+ pk=ZRP1KgWMhlXXWlSYLoO7TSfwKgt6ke8hw5xWcSY+wLQ=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Ctgvk8xVLX4cv9sKqKWcFLR2zrmxfEuS
+X-Proofpoint-ORIG-GUID: Ctgvk8xVLX4cv9sKqKWcFLR2zrmxfEuS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 bulkscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=743 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410180018
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 678eefc1ca5f2b061951abe8ffdf290ce104dd8f  gpio: Switch back to struct platform_driver::remove()
+Introduce Top Level Mode Multiplexer dt-binding and driver for Qualcomm
+QCS8300 SoC.
 
-elapsed time: 1131m
+Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
+---
+Changes in v3:
+- fix ngpios num in tlmm driver
+- change the name of callback from "remove_new" to "remove"
+- Link to v2: https://lore.kernel.org/r/20241009-qcs8300_tlmm-v2-0-9e40dee5e4f1@quicinc.com
 
-configs tested: 109
-configs skipped: 4
+Changes in v2:
+- Add Reviewed-by tag for binding change
+- Patch rebased on new tag to avoid conflict
+- codestyle fixup
+- Link to v1: https://lore.kernel.org/r/20240819064933.1778204-1-quic_jingyw@quicinc.com
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+---
+Jingyi Wang (2):
+      dt-bindings: pinctrl: describe qcs8300-tlmm
+      pinctrl: qcom: add the tlmm driver for QCS8300 platforms
 
-tested configs:
-alpha                             allnoconfig    gcc-14.1.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.1.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.1.0
-arc                              allyesconfig    clang-20
-arc                                 defconfig    gcc-14.1.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.1.0
-arm                              allyesconfig    clang-20
-arm                                 defconfig    gcc-14.1.0
-arm                          gemini_defconfig    gcc-14.1.0
-arm                          ixp4xx_defconfig    gcc-14.1.0
-arm                        keystone_defconfig    gcc-14.1.0
-arm                        multi_v7_defconfig    gcc-14.1.0
-arm                             rpc_defconfig    gcc-14.1.0
-arm                         s5pv210_defconfig    gcc-14.1.0
-arm                           tegra_defconfig    gcc-14.1.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.1.0
-arm64                               defconfig    gcc-14.1.0
-csky                              allnoconfig    gcc-14.1.0
-csky                                defconfig    gcc-14.1.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.1.0
-hexagon                          allyesconfig    clang-20
-hexagon                             defconfig    gcc-14.1.0
-i386                             allmodconfig    clang-18
-i386                              allnoconfig    clang-18
-i386                             allyesconfig    clang-18
-i386        buildonly-randconfig-001-20241018    gcc-11
-i386        buildonly-randconfig-002-20241018    gcc-11
-i386        buildonly-randconfig-003-20241018    gcc-11
-i386        buildonly-randconfig-004-20241018    gcc-11
-i386        buildonly-randconfig-005-20241018    gcc-11
-i386        buildonly-randconfig-006-20241018    gcc-11
-i386                                defconfig    clang-18
-i386                  randconfig-001-20241018    gcc-11
-i386                  randconfig-002-20241018    gcc-11
-i386                  randconfig-003-20241018    gcc-11
-i386                  randconfig-004-20241018    gcc-11
-i386                  randconfig-005-20241018    gcc-11
-i386                  randconfig-006-20241018    gcc-11
-i386                  randconfig-011-20241018    gcc-11
-i386                  randconfig-012-20241018    gcc-11
-i386                  randconfig-013-20241018    gcc-11
-i386                  randconfig-014-20241018    gcc-11
-i386                  randconfig-015-20241018    gcc-11
-i386                  randconfig-016-20241018    gcc-11
-loongarch                        allmodconfig    gcc-14.1.0
-loongarch                         allnoconfig    gcc-14.1.0
-loongarch                           defconfig    gcc-14.1.0
-m68k                             allmodconfig    gcc-14.1.0
-m68k                              allnoconfig    gcc-14.1.0
-m68k                             allyesconfig    gcc-14.1.0
-m68k                                defconfig    gcc-14.1.0
-m68k                        stmark2_defconfig    gcc-14.1.0
-microblaze                       allmodconfig    gcc-14.1.0
-microblaze                        allnoconfig    gcc-14.1.0
-microblaze                       allyesconfig    gcc-14.1.0
-microblaze                          defconfig    gcc-14.1.0
-mips                              allnoconfig    gcc-14.1.0
-nios2                             allnoconfig    gcc-14.1.0
-nios2                               defconfig    gcc-14.1.0
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.1.0
-openrisc                            defconfig    gcc-12
-openrisc                    or1ksim_defconfig    gcc-14.1.0
-parisc                           allmodconfig    gcc-14.1.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.1.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.1.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    gcc-14.1.0
-powerpc                     skiroot_defconfig    gcc-14.1.0
-powerpc                      tqm8xx_defconfig    gcc-14.1.0
-riscv                            allmodconfig    gcc-14.1.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    gcc-14.1.0
-riscv                               defconfig    gcc-12
-riscv             nommu_k210_sdcard_defconfig    gcc-14.1.0
-riscv                    nommu_virt_defconfig    gcc-14.1.0
-s390                             allmodconfig    gcc-14.1.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.1.0
-s390                                defconfig    gcc-12
-sh                               allmodconfig    gcc-14.1.0
-sh                                allnoconfig    gcc-14.1.0
-sh                               allyesconfig    gcc-14.1.0
-sh                                  defconfig    gcc-12
-sh                           se7705_defconfig    gcc-14.1.0
-sh                           se7751_defconfig    gcc-14.1.0
-sparc                            allmodconfig    gcc-14.1.0
-sparc64                             defconfig    gcc-12
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-18
-x86_64                           allyesconfig    clang-18
-x86_64                              defconfig    clang-18
-x86_64                                  kexec    gcc-12
-x86_64                               rhel-8.3    gcc-12
-xtensa                            allnoconfig    gcc-14.1.0
-xtensa                       common_defconfig    gcc-14.1.0
+ .../bindings/pinctrl/qcom,qcs8300-tlmm.yaml        |  118 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    7 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c             | 1246 ++++++++++++++++++++
+ 4 files changed, 1372 insertions(+)
+---
+base-commit: 7df1e7189cecb6965ce672e820a5ec6cf499b65b
+change-id: 20241018-qcs8300_tlmm-8f529206edb7
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+-- 
+Jingyi Wang <quic_jingyw@quicinc.com>
+
 
