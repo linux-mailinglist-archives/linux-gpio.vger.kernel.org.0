@@ -1,211 +1,163 @@
-Return-Path: <linux-gpio+bounces-11589-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11590-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A487F9A341B
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 07:17:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 720319A3526
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 08:13:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 359FB1F24298
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 05:17:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED89FB2217E
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 06:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539E517837F;
-	Fri, 18 Oct 2024 05:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 692E1186294;
+	Fri, 18 Oct 2024 06:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mWxzyO2L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgD3ztGf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE3817332C
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 05:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09B2184539;
+	Fri, 18 Oct 2024 06:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729228675; cv=none; b=YNUXVIghLFE0KHCU6mME5viHMPn8nGjCJIn6dDWgjG4OR6TUzy7UMbA24YuiG8Bi48R+rzv0l6/WNH1xUuAiyQd41nfar3zE6vSS8OzT8p753M8MB1C2/MLdheqmCTfqkRSzr61YIGSAJVN/OZo3+OMmykU6TCuTqyhzw2u4nrQ=
+	t=1729231988; cv=none; b=myAAXMOd6Bfz8TKUPGgwZD5VZ/mRjb6xsNejKnOBDHD4ZlAjc7SZPn7vBPfLwzg6deqfM+pbTKqyfh4GpWOEe3Ns+HuKUZ4y4Nlmx13S52zXDO8g1lkE5t+tWGtT0BxRRM3LaaiJKRwobuUg9f5NI18vmvtTBEYh/rCJ5v08zyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729228675; c=relaxed/simple;
-	bh=Ho77DWHTdyRsuxsI6uPuILsTlNEgmwNqA2rOsdSxdZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ABQv5NwseJS5eKyQOTQllrHQ2N6qRAY6RyvvW90GEfH2O0kD6dLiv6vMF1JOr4ckXpz92nk3RX6VhPFCY0EyYKGaQHCg1CpAwg3DMx8xLATaZvbmlDdZsfcvlop8fqai2JblBy7FnPIItqihJ/AM/t5Ulc0soxwADXXV11x9X4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mWxzyO2L; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539f58c68c5so2752535e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Oct 2024 22:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1729228671; x=1729833471; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fb5KpeBreuXFeJ6C2dlxdkF/AtWXYD7eWJb+jZNVASw=;
-        b=mWxzyO2L0iKrU+M7qgs+jId5Juyu4kbkk8MfWKFM8uC7G40UWvVEzIl+/gyrQvKsKH
-         ZXCDIdY3Kz/aCIxLObN15K+jlkQwgiL4N2gV1FRETwcp81jAnCdTFc/akwl/Hb18yydT
-         rrfXc+V/MCQdoUTWmgnxUqUAaO+9OhR+C0FX0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729228671; x=1729833471;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fb5KpeBreuXFeJ6C2dlxdkF/AtWXYD7eWJb+jZNVASw=;
-        b=oLsK6yhryOaWC6eXZX4JXUUFohRlHs8uqF64ZAOzTHaq/8/r4i+HQBRfxTMXxalBt+
-         Zp3Q8h4cxtzIZV6dbAN8SEvPLLlb5rki9GE2xSlU8vZtPt9zD0yeuXynzWuGk0RAzMIW
-         Nh28aTBKn3xILMquB4uYw/Zzu9zVFhMNshuA8cMMIMSgxkiC2CvFubBf2WwiCJO3zcuH
-         UkyX+Hdd0oB9RP+vcuOMBdR/mUR3HHO8RnGtnTVSVgjcqvxUDWzCu3qHG8IB0xWoBz+K
-         6BIfqG6wLUK8W790PGd4faamxA3WK6VNaEzRI11VSOONmrq2ej7EkQKiMORceQKGyB6R
-         G7Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpbM897GB+EangLEfpyyVQMihv04lmzC5K7ktsFdphYjA/LwpF2G3j1hvjdi35YF05fkFHTQ5xEWI+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxezIPWW6M6Mjh3IT+a7x4kdZB18wrnugGqZFeYfwGhNFQ21AGQ
-	sTA7W9WaB3IUXgeTsttMzHEu1tY4tE9eayrakHIt2b9ctMoTSFEeQyUUdkXKXp1vGEYs5+FdDbe
-	YPAcrnU7p6+Bt2pCHLEW87E5KgIq5UX7yv+2a
-X-Google-Smtp-Source: AGHT+IEMrNDmylr1CfjI1xQ5P74wl/iIOo4f+1YA243FTpzmnuRjnMreynnJtzQcXTFfSx2gj46cObeu9tjEebZJfM4=
-X-Received: by 2002:a05:6512:104f:b0:533:4497:9f29 with SMTP id
- 2adb3069b0e04-53a154704d2mr806562e87.31.1729228671134; Thu, 17 Oct 2024
- 22:17:51 -0700 (PDT)
+	s=arc-20240116; t=1729231988; c=relaxed/simple;
+	bh=f/5yZzyoQwcXgVSm7jfxqmgjDko+M5Tsgn35ebfSdh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHZtOqG42I/GXfTpncNkqzQnhYH/XC+6xWBVK24yjjUQe56SSaHS67eOx+3aKaRfktNdmq3WcJ7HsBCouGHPtr9uNRA/hpaxdDfosIvibW288VuOs5DnPHF8LSWcXgpaX6pGvFmz/H54qjfvcjA/IDLFr4r36GDuofsyRLMkA7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgD3ztGf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1977C4CEC3;
+	Fri, 18 Oct 2024 06:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729231987;
+	bh=f/5yZzyoQwcXgVSm7jfxqmgjDko+M5Tsgn35ebfSdh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PgD3ztGfIGwfMqkBDBwYC3jy3OY5KeqWLnH2DU9dfF9d1yDCQA9SJ3ZSwK8aZ6s7X
+	 +mIOl/53ycEQ8Kzy8hGOiO9rsfgOdg3kDmgi93f7wQ9jupAu5LyghEU+bor7cI6JPw
+	 wo8PHmoa7boLcDA+kekKemlcyS5i2Da3gupL/CIkg5tN8cJlN3IAn1t0MNApxPlvUl
+	 w6kT0fOk6Wh8DBWzC0d6/cvW+j5HCz69+GCgJUrMsszUSKGNLqqlXN2aRJPWUPXeUq
+	 BD9pN7OtgqHJtX8qmsEauO+X9wk26DiWpC4xMWP2ENkUOLpyfIZ3FC32WKilYOl+7K
+	 P23vMu2+iDHwQ==
+Date: Fri, 18 Oct 2024 08:13:03 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sricharan R <quic_srichara@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	ulf.hansson@linaro.org, linus.walleij@linaro.org, catalin.marinas@arm.com, 
+	p.zabel@pengutronix.de, geert+renesas@glider.be, dmitry.baryshkov@linaro.org, 
+	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, quic_varada@quicinc.com
+Subject: Re: [PATCH V4 2/6] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
+ binding
+Message-ID: <nznisr4aqpe65fovvk3q3r6capmqj4jm4xsqufjib2b7vax4xx@6r3tzaar2w3p>
+References: <20241017123626.204421-1-quic_srichara@quicinc.com>
+ <20241017123626.204421-3-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241017091238.180920-1-bo.ye@mediatek.com> <20241017091410.181093-1-bo.ye@mediatek.com>
-In-Reply-To: <20241017091410.181093-1-bo.ye@mediatek.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Fri, 18 Oct 2024 13:17:40 +0800
-Message-ID: <CAGXv+5ESMm3t_kJckubDf4jMLYehz66o8B42sTTM=vEF1WMpCA@mail.gmail.com>
-Subject: Re: [RESEND. PATCH v1] pinctrl: mediatek: paris: Revert "Rework
- support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE"
-To: Bo Ye <bo.ye@mediatek.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Yongdong Zhang <yongdong.zhang@mediatek.com>, Xiujuan Tan <xiujuan.tan@mediatek.com>, 
-	Browse Zhang <browse.zhang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>, 
-	Evan Cao <ot_evan.cao@mediatek.com>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241017123626.204421-3-quic_srichara@quicinc.com>
 
-On Thu, Oct 17, 2024 at 5:14=E2=80=AFPM Bo Ye <bo.ye@mediatek.com> wrote:
-
-Please avoid sending more than one version per day. Most people in
-the community are not in the Asian time zones. Give people time
-to respond.
-
-> [This reverts commit c5d3b64c568a344e998830e0e94a7c04e372f89b.]
->
-> For MTK HW,
-> 1. to enable GPIO input direction: set DIR=3D0, IES=3D1
-> 2. to enable GPIO output direction: set DIR=3D1, and set DO=3D1 to output=
- high, set DO=3D0 to out low
->
-> The PIN_CONFIG_INPUT/PIN_CONFIG_OUTPUT/PIN_CONFIG_INPUT_ENABLE/PIN_CONFIG=
-_OUTPUT_ENABLE shall
-> be implemented according to view of its purpose - set GPIO direction and =
-output value (for
-> output only) according to specific HW design.
->
-> However, the reverted patch implement according to author's own explanati=
-on of IES without
-> understanding of MTK's HW. Such patch does not correctly set DIR/IES bit =
-to control GPIO
-> direction on MTK's HW.
->
-> Fixes: c5d3b64c568 ("pinctrl: mediatek: paris: Rework support for PIN_CON=
-FIG_{INPUT,OUTPUT}_ENABLE")
-
-As Macpaul mentioned, you changed the commit message by adding a tag, and
-thus this patch should be marked "v2". Please also provide a changelog
-on what changed in this version in the footer, i.e. under the "---" line
-but before the actual patch context.
-
-ChenYu
-
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
-> Signed-off-by: Evan Cao <ot_evan.cao@mediatek.com>
-> Signed-off-by: Bo Ye <bo.ye@mediatek.com>
+On Thu, Oct 17, 2024 at 06:06:22PM +0530, Sricharan R wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> Add binding for the Qualcomm IPQ5424 Global Clock Controller
+> 
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-paris.c | 38 +++++++++++++++++-------
->  1 file changed, 27 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/m=
-ediatek/pinctrl-paris.c
-> index 87e958d827bf..a8af62e6f8ca 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -165,21 +165,20 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctl=
-dev,
->                 err =3D mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &r=
-et);
->                 break;
->         case PIN_CONFIG_INPUT_ENABLE:
-> -               err =3D mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_IES, &=
-ret);
-> -               if (!ret)
-> -                       err =3D -EINVAL;
-> -               break;
-> -       case PIN_CONFIG_OUTPUT:
-> +       case PIN_CONFIG_OUTPUT_ENABLE:
->                 err =3D mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &=
-ret);
->                 if (err)
->                         break;
-> +               /*     CONFIG     Current direction return value
-> +                * -------------  ----------------- ---------------------=
--
-> +                * OUTPUT_ENABLE       output       1 (=3D HW value)
-> +                *                     input        0 (=3D HW value)
-> +                * INPUT_ENABLE        output       0 (=3D reverse HW val=
-ue)
-> +                *                     input        1 (=3D reverse HW val=
-ue)
-> +                */
-> +               if (param =3D=3D PIN_CONFIG_INPUT_ENABLE)
-> +                       ret =3D !ret;
->
-> -               if (!ret) {
-> -                       err =3D -EINVAL;
-> -                       break;
-> -               }
+>  [V4] Added 2 new PCIE clks to end of the list, preserving default order
+> 
+>  .../bindings/clock/qcom,ipq5332-gcc.yaml      |  40 ++-
+>  include/dt-bindings/clock/qcom,ipq5424-gcc.h  | 156 +++++++++
+>  include/dt-bindings/reset/qcom,ipq5424-gcc.h  | 310 ++++++++++++++++++
+>  3 files changed, 499 insertions(+), 7 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
+>  create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+> index 9193de681de2..ef1fd9d9f8da 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+> @@ -4,31 +4,35 @@
+>  $id: http://devicetree.org/schemas/clock/qcom,ipq5332-gcc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Qualcomm Global Clock & Reset Controller on IPQ5332
+> +title: Qualcomm Global Clock & Reset Controller on IPQ5332 and IPQ5424
+>  
+>  maintainers:
+>    - Bjorn Andersson <andersson@kernel.org>
+>  
+>  description: |
+>    Qualcomm global clock control module provides the clocks, resets and power
+> -  domains on IPQ5332.
+> +  domains on IPQ5332 and IPQ5424.
+>  
+> -  See also:: include/dt-bindings/clock/qcom,gcc-ipq5332.h
 > -
-> -               err =3D mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DO, &r=
-et);
->                 break;
->         case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
->                 err =3D mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &=
-ret);
-> @@ -284,9 +283,26 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctld=
-ev, unsigned int pin,
->                         break;
->                 err =3D hw->soc->bias_set_combo(hw, desc, 0, arg);
->                 break;
-> +       case PIN_CONFIG_OUTPUT_ENABLE:
-> +               err =3D mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT,
-> +                                      MTK_DISABLE);
-> +               /* Keep set direction to consider the case that a GPIO pi=
-n
-> +                *  does not have SMT control
-> +                */
-> +               if (err !=3D -ENOTSUPP)
-> +                       break;
+> -allOf:
+> -  - $ref: qcom,gcc.yaml#
+> +  See also:
+> +    include/dt-bindings/clock/qcom,gcc-ipq5332.h
+> +    include/dt-bindings/clock/qcom,gcc-ipq5424.h
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,ipq5332-gcc
+> +    enum:
+> +      - qcom,ipq5332-gcc
+> +      - qcom,ipq5424-gcc
+>  
+>    clocks:
+> +    minItems: 5
+>      items:
+>        - description: Board XO clock source
+>        - description: Sleep clock source
+>        - description: PCIE 2lane PHY pipe clock source
+>        - description: PCIE 2lane x1 PHY pipe clock source (For second lane)
+>        - description: USB PCIE wrapper pipe clock source
+> +      - description: PCIE 2-lane PHY2 pipe clock source
+> +      - description: PCIE 2-lane PHY3 pipe clock source
+>  
+>    '#power-domain-cells': false
+>    '#interconnect-cells':
+> @@ -38,6 +42,28 @@ required:
+>    - compatible
+>    - clocks
+>  
+> +allOf:
+> +  - $ref: qcom,gcc.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,ipq5332-gcc
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 5
 > +
-> +               err =3D mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
-> +                                      MTK_OUTPUT);
-> +               break;
->         case PIN_CONFIG_INPUT_ENABLE:
->                 /* regard all non-zero value as enable */
->                 err =3D mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_IES, !=
-!arg);
-> +               if (err)
-> +                       break;
-> +
-> +               err =3D mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
-> +                                      MTK_INPUT);
->                 break;
->         case PIN_CONFIG_SLEW_RATE:
->                 /* regard all non-zero value as enable */
-> --
-> 2.17.0
->
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,ipq5424-gcc
+> +    then:
+> +      properties:
+> +        clocks:
+
+This needs minItems: 7, unless clocks are really optional (but they
+shouldn't be optional). I think I missed this part last time.
+
+Best regards,
+Krzysztof
+
 
