@@ -1,337 +1,175 @@
-Return-Path: <linux-gpio+bounces-11616-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11617-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A69AB9A39F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 11:27:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 769ED9A3B10
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 12:13:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 299411F24ECB
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 09:27:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBAE5B210FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 10:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27FAE1EF0B2;
-	Fri, 18 Oct 2024 09:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C93F12010E0;
+	Fri, 18 Oct 2024 10:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n1oPafcG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="C1dhIlKz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p6tcA5o6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="j81yMhi9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9r/RHX0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE69188A3A;
-	Fri, 18 Oct 2024 09:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80683188A18;
+	Fri, 18 Oct 2024 10:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729243619; cv=none; b=AJ6mUANeattQ/8hpbhjm7v2GaBezBdm0uJm/ue6UE8uolTOjcj7VUnlb5iBN/Sntr7a6Rv3GxY5XDyb1/WR1zXSdw9RlDwnTue2IIngPOu+njwrIjBD7MnbRniE/U57Jt0iNIeCkZIw9VGN3TeLYVq6mQG1i1TUkVmiWTBsq/DI=
+	t=1729246401; cv=none; b=gPdl3GziQAGrOI+uCm+GY4q/V8ml1lGI9CIDwOvRcvYF2lBkCJznYqUcSmUYkYmOjxgrBtIAB02vpJy/rOe/NdsNE8wu3qajXZxLWu1JzD/au+TP+hXjNMGoHXnnVmZVre9lHCoHy6qq3/oSsUuJRWSnzqy2AbcmbhS2CvueCyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729243619; c=relaxed/simple;
-	bh=a+l7LqTjNStCYRU1Ke2SlxyitvjH+BQFbbtr4rTOhh0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZlV9J25badklmkmEWs5mEJE0o6rNnJnM4AzC9cAPArEkA4kDG/5tGOzRQV8k86FKkcpBEovMMqcFuEsv5ZJi02KMcJbxpS4NAXreIu9h4gyXxMg9HmYhJzIDZN0Doz3hmZ+kG0r49YScECbPFMWuIlaE5SY0bpFLiuaxK2pFk2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n1oPafcG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=C1dhIlKz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p6tcA5o6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=j81yMhi9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E796921B86;
-	Fri, 18 Oct 2024 09:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729243616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gn4T7Q3MYCDcGqsQPBuUlct/sQ506bt+TTnlOzbfbHk=;
-	b=n1oPafcGamgIC2tDVZftjzKbR2+YPK0U0fYnL7SKgpBjxkNshYll4ca1X8kAV4PUMu5uce
-	8Cc0zqoFZXHlkdoasbjRxwLJwF9hNt19kfnLHPPwN0k6ssOE7GUy+r0Rnjbd9Ymhco8Dz9
-	YN510rdgr14+a6qcEmZgz9F2hK01RM8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729243616;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gn4T7Q3MYCDcGqsQPBuUlct/sQ506bt+TTnlOzbfbHk=;
-	b=C1dhIlKzjVIlDj/lcomFQ/zVBN7qLAulHHrDkgPFfF7oICH6cd5u4LVgQ0/Bh/0KXf7kz2
-	cLcq9RL2mJycpeBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=p6tcA5o6;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=j81yMhi9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729243615; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gn4T7Q3MYCDcGqsQPBuUlct/sQ506bt+TTnlOzbfbHk=;
-	b=p6tcA5o6b/Gqim0G6+51hK4hO+QHnAmjnz14+Ye5EDzrWWMliZ9X/4eLWxbpCkF3ByexU4
-	K9A+gmMbOjmAA8PrKwisL0P5AmrFXjS8GH8P4qxCZUeUbQO0786vb2dWOsM36icRT4VFxW
-	KWpsvtBr68YaxIDpCCarfMkhSO15pFQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729243615;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gn4T7Q3MYCDcGqsQPBuUlct/sQ506bt+TTnlOzbfbHk=;
-	b=j81yMhi9cBWW4C30TbB0Fb6eMNVFGyHdJPb2QMah3ke60bwp3yrLi0oJs1R0CujroO7jog
-	6HoKT2YuXCTEYaDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A26EF13680;
-	Fri, 18 Oct 2024 09:26:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iraRJd8pEmeGWgAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Fri, 18 Oct 2024 09:26:55 +0000
-Message-ID: <4f8b6f2d57abc5ea4ba1e755bac31d3fa3dc2e55.camel@suse.de>
-Subject: Re: [PATCH] gpio: pca953x: fix pca953x_irq_bus_sync_unlock race
-From: Jean Delvare <jdelvare@suse.de>
-To: Ian Ray <ian.ray@gehealthcare.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-	 <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 18 Oct 2024 11:26:54 +0200
-In-Reply-To: <ZwTK5Jip2YJrSd8L@f642ec5a18a7>
-References: <20240620042915.2173-1-ian.ray@gehealthcare.com>
-	 <ce0ac1bfe2fb54feb10dc06827091caea57b7a19.camel@suse.de>
-	 <ZwTK5Jip2YJrSd8L@f642ec5a18a7>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1729246401; c=relaxed/simple;
+	bh=St3nCfOjo9jtJL76E2mLjOhnIbBX+u/MPwBXbF0HZLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TCNepciawkFzUI4lEoAsa1ERLsAgJ/3/QttseIWSsHke2nB1uTj9KsSKQ67zfflVUNvW7OgkuUgLy0viXQ2UeU139PmslVrvlDxfaHDCrXycdWKLsH0QOj7xT4RqGmPKGTBGrIME/25CSB+Xybg6HMYEbBcPD/V7AhyUU44cXa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9r/RHX0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E8DC4CEC3;
+	Fri, 18 Oct 2024 10:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729246401;
+	bh=St3nCfOjo9jtJL76E2mLjOhnIbBX+u/MPwBXbF0HZLM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X9r/RHX0qi8BE1fqxoMkS2TuMVA83B/qRPvDT4OkEGmjhs1v3yQoI5wymx2IqadD9
+	 fYTx90O4Z5dt6MHXdoTcp477mLOyOI7QUwVlQaQkwI9EuSv6bgg0dRo/dURBkGA7yZ
+	 Ebcv0rQFJCp3GHmuTZDOd2nUEuoqrg8/stKz/2cakxX4JcQTfkLZVzSqK0zmMA3YWp
+	 acth2n2+30/h6uyz2WsW08W2/ICivoTGWh9tp4YsKRmidlxrrpoYhM6/bg8Ha+chHR
+	 mX/kVjWByXZqxgRTx4MdVikyKT24tzMgPPKYQ1dhS8wV4iISfAID0yYTaU/lbCrbxc
+	 S2V4+rXgnAHAQ==
+Message-ID: <d654d2b2-977b-44c0-8b01-b26f5eb0a3fe@kernel.org>
+Date: Fri, 18 Oct 2024 12:13:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E796921B86
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
+ SoCs
+To: Jerome Brunet <jbrunet@baylibre.com>,
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
+ <20241018-a4_pinctrl-v3-1-e76fd1cf01d7@amlogic.com>
+ <4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org>
+ <1jttd9rein.fsf@starbuckisacylon.baylibre.com>
+ <4127b448-a914-4c69-b938-29512995326f@amlogic.com>
+ <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Ray,
-
-Sorry for the delay.
-
-On Tue, 2024-10-08 at 09:02 +0300, Ian Ray wrote:
-> On Mon, Oct 07, 2024 at 11:16:51PM +0200, Jean Delvare wrote:
-> > On Thu, 2024-06-20 at 07:29 +0300, Ian Ray wrote:
-> > > Ensure that `i2c_lock' is held when setting interrupt latch and mask in
-> > > pca953x_irq_bus_sync_unlock() in order to avoid races.
-> > > 
-> > > The other (non-probe) call site pca953x_gpio_set_multiple() ensures the
-> > > lock is held before calling pca953x_write_regs().
-> > > 
-> > > The problem occurred when a request raced against irq_bus_sync_unlock()
-> > > approximately once per thousand reboots on an i.MX8MP based system.
-> > > 
-> > >  * Normal case
-> > > 
-> > >    0-0022: write register AI|3a {03,02,00,00,01} Input latch P0
-> > >    0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
-> > >    0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-> > >    0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-> > > 
-> > >  * Race case
-> > > 
-> > >    0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-> > >    0-0022: write register AI|08 {03,02,00,00,01} *** Wrong register ***
-> > >    0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-> > >    0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
-> > > 
-> > 
-> > I have more questions on this. Where does the above log come from?
-> > Specifically, at which layer (bus driver, regmap, gpio device drier)?
+On 18/10/2024 11:20, Jerome Brunet wrote:
+> On Fri 18 Oct 2024 at 17:01, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
 > 
-> Additional debug, with manually added commentary (sorry for not being
-> clearer).  The debug was added to drivers/base/regmap/regmap-i2c.c while
-> investigating the issue.
-
-FWIW, I think regmap includes a tracing facility which may have served
-you. Specifically, I see calls to trace_regmap_hw_write_start() and
-trace_regmap_hw_write_done() in _regmap_raw_write_impl(). But I must
-confess I couldn't find where these functions are defined nor how to
-enable tracing...
-
-> > What do these values represent exactly? Which GPIO chip was used on
-> > your system? Which i2c bus driver is being used on that system? What
-> > are the "requests" you mention in the description above?
+>> Hi Jerome,
+>>    Thanks for your reply.
+>>
+>> On 2024/10/18 16:39, Jerome Brunet wrote:
+>>> [ EXTERNAL EMAIL ]
+>>> On Fri 18 Oct 2024 at 10:28, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>
+>>>> On 18/10/2024 10:10, Xianwei Zhao via B4 Relay wrote:
+>>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>>
+>>>>> Add the new compatible name for Amlogic A4 pin controller, and add
+>>>>> a new dt-binding header file which document the detail pin names.
+>>> the change does not do what is described here. At least the description
+>>> needs updating.
+>>>
+>>
+>> Will do.
+>>
+>>> So if the pin definition is now in the driver, does it mean that pins have
+>>> to be referenced in DT directly using the made up numbers that are
+>>> created in pinctrl-amlogic-a4.c at the beginning of patch #2 ?
+>>>
+>>
+>> Yes.
+>>
+>>> If that's case, it does not look very easy a read.
+>>>
+>>
+>> It does happen. The pin definition does not fall under the category of
+>> binding.
+>>
+>> https://lore.kernel.org/all/106f4321-59e8-49b9-bad3-eeb57627c921@amlogic.com/
 > 
-> GPIO expander pi4ioe5v6534q at I2C address 0-0022.
-
-This device model doesn't seem to be explicitly supported by driver
-gpio-pca953x. I see it listed as compatible in
-Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml but not in the
-driver's pca953x_dt_ids. Out of curiosity, did you have to add it
-manually? I admit I'm not familiar with these device tree node
-declarations.
-
-> # grep . {name,uevent}
-> name:30a20000.i2c
-> uevent:OF_NAME=i2c
-> uevent:OF_FULLNAME=/soc@0/bus@30800000/i2c@30a20000
-> uevent:OF_COMPATIBLE_0=fsl,imx8mp-i2c
-> uevent:OF_COMPATIBLE_1=fsl,imx21-i2c
-> uevent:OF_COMPATIBLE_N=2
-> uevent:OF_ALIAS_0=i2c0
-
-OK, so the underlying I2C master is capable of writing to multiple
-registers at once. This helped me follow the code flow while trying to
-figure out where the race was.
-
-> > I'm asking because I do not understand how writing to the wrong
-> > register can happen, even without holding i2c_lock in
-> > pca953x_irq_bus_sync_unlock(). The i2c layer has a per-i2c_adapter lock
+> So the expectation is that people will write something like:
 > 
-> Given that pca953x_irq_bus_sync_unlock is part of an interrupt handler,
-> IMHO this explains very well why locking is needed (but I did not dig
-> deeper than that).
-
-I took the time to dig deeper, my conclusions are below.
-
-> > which is taken before any bus transfer, so it isn't possible that two
-> > transfers collide at the bus level. So the lack of locking at the
-> > device driver level could lead to data corruption (for example read-
-> > modify-write cycles overlapping), but not to data being written to the
-> > wrong register.
+>  reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
 > 
-> Based on the observed data, the hypothesis was that pca953x_write_regs
-> (called via pca953x_gpio_set_multiple) and pca953x_irq_bus_sync_unlock
-> can race.
+> And others will go in the driver to see that is maps to GPIOX_10 ? the number
+> being completly made up, with no link to anything HW/Datasheet
+> whatsoever ?
 > 
-> The missing guard neatly explained and fixed the issue (disclaimer: on
-> my hardware for my scenario).
-> 
-> > As a side note, I dug through the history of the gpio-pca953x driver
-> > and found that i2c_lock was introduced before the driver was converted
-> > to regmap by:
-> > 
-> > commit 6e20fb18054c179d7e64c0af43d855b9310a3394
-> > Author: Roland Stigge
-> > Date:   Thu Feb 10 15:01:23 2011 -0800
-> > 
-> >     drivers/gpio/pca953x.c: add a mutex to fix race condition
-> > 
-> > The fix added locking around read-modify-write cycles (which was indeed
-> > needed) and also around simple register reads (which I don't think was
-> > needed).
-> > 
-> > It turns out that regmap has its own protection around read-modify-
-> > write cycles (see regmap_update_bits_base) so I think several uses of
-> > i2c_lock should have been removed from the gpio-pca953x driver when it
-> > was converted to regmap as they became redundant then.
+> This is how things should be done now ?
 
-I have to correct myself here. The regmap layer implements its own,
-configurable and *optional* protection lock. It turns out that the
-gpio-pca953x driver has it disabled:
+Why would you need to do this? Why it cannot be <&gpio 10
+GPIO_ACTIVE_LOW>, assuming it is GPIO 10?
 
-static const struct regmap_config pca953x_i2c_regmap = {
-	(...)
-	.disable_locking = true,
-	(...)
-};
+Bindings have absolutely nothing to do with it. You have GPIO 10, not
+42, right?
 
-So it is expected and very needed that the gpio-pca953x driver
-implements its own lock to protect against races whenever the hardware
-is accessed.
+Best regards,
+Krzysztof
 
-> > This driver-side
-> > lock is still needed in a number of functions though, where the read-
-> > modify-write is handled outside of regmap (for example in
-> > pca953x_gpio_set_multiple).
-
-After reading the regmap code (which took me some time as I wasn't
-familiar at all with it, I didn't know what I was looking for exactly
-and I wanted to make sure I wasn't missing something along the way), I
-think I understand what was racing exactly.
-
-The gpio-pca953x driver uses regmap_bulk_write() which is implemented
-by _regmap_raw_write_impl(). The register map uses an internal buffer
-to prepare the actual hardware transfers:
-
-struct regmap *__regmap_init(...) {
-	(...)
-	map->work_buf = kzalloc(map->format.buf_size, GFP_KERNEL);
-	(...)
-}
-
-This work buffer has space for both the register address and the values
-to be written to or read from the device:
-
-	map->format.buf_size = DIV_ROUND_UP(config->reg_bits +
-			config->val_bits + config->pad_bits, 8);
-
-During a regmap raw write, the register address is written to the first
-byte of the work buffer:
-
-	map->format.format_reg(map->work_buf, reg, map->reg_shift);
-
-where map->format.format_reg() is regmap_format_8() for the gpio-
-pca953x driver:
-
-static void regmap_format_8(void *buf, unsigned int val, unsigned int shift)
-{
-	u8 *b = buf;
-
-	b[0] = val << shift;
-}
-
-If _regmap_raw_write_impl() is called concurrently without proper
-locking then the contents of the work buffer may be overwritten by the
-second caller before the first caller had a chance to use it. I think
-this matches your debug log of the race case pretty well.
-
-I checked the regmap implementation for other use cases of map-
->format.format_reg(map->work_buf, ...) and found it is being used in
-_regmap_raw_read(), so I had to investigate further, because
-pca953x_irq_bus_sync_unlock() also calls pca953x_read_regs(..., chip-
->regs->direction, ...) which in turn calls regmap_bulk_read().
-
-For volatile registers, this function will call regmap_raw_read() which
-reads the values from the hardware most of the time. However, for non-
-volatile registers, _regmap_bulk_read() is being called instead, which
-is implemented by _regmap_read() which reads from the regmap cache. As
-it turns out that the direction registers are not volatile and are read
-first as part of pca953x_irq_setup(), the values will always be
-available from the cache when read from pca953x_irq_bus_sync_unlock(),
-so no hardware access will happen and the internal work buffer won't be
-used.
-
-Therefore my conclusion is that your fix was needed, is correct and is
-sufficient. My initial concern about the unprotected
-pca953x_read_regs() call in pca953x_irq_bus_sync_unlock() was
-incorrect. Sorry for the noise.
-
--- 
-Jean Delvare
-SUSE L3 Support
 
