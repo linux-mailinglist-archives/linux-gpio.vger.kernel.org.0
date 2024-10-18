@@ -1,155 +1,122 @@
-Return-Path: <linux-gpio+bounces-11599-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11600-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8DB29A38B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 10:38:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F126A9A38BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 10:39:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51A84B21237
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 08:38:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93566280EC5
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 08:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1E218EFF1;
-	Fri, 18 Oct 2024 08:38:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEEF18EFDC;
+	Fri, 18 Oct 2024 08:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VS6B8UE2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RJh21MkO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1128618EFD4
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 08:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5139D2EB1F
+	for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 08:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729240720; cv=none; b=XG3FAWhbNEOOC/LgjRJhNTBmqcvL0Rf9GA/T48oNXMT710Fy5WAuVrdLUugUDplnRGKWhZmHXlAZdLujBx14VyVErOiz//wSgTTx52fLDnT9KnsihgpAmIebarTnZlGXBFsZ4YAYdZ3Ayd/Lb4u+ttZ6Y9JlKJYk4VK/wdvDqRo=
+	t=1729240773; cv=none; b=S/LZ+fPPw9SCb3ReKooPfMpvYYalkHKvb2a5YQMuDxqkbKMldAqokUfvEgCPREQj/U6hejPoMDv/iryXkSTFvRjim+ekiCEjGryMtTa9jG0WzLJuuFuKtqzV9WDdyJWhINNmAKcLjE0s2EW0Czs/tzXQ2HKCC7DLx+JNpZA5l/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729240720; c=relaxed/simple;
-	bh=wB6rJgDXWyQmAI2cPIO2Bs8AyLymaUBqEb0titk5ToI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ldJ13FlC65j+Zj3QsngALTCOP3TGVT8lGkI/NmYgG0rboZ53mlpQoD0ebG5mm4OWs1Q/Xwh0DuQ7Fxj+LELwXFQQMROxANDq8kvts9YOIiZzz8UFzm4iHF+4SMQ9ykYyjMmO8wfIQXDJP/3J5yr2EdmkRIV7zU06im8D4CTRqpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VS6B8UE2; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-539983beb19so2095570e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 01:38:38 -0700 (PDT)
+	s=arc-20240116; t=1729240773; c=relaxed/simple;
+	bh=mc6L5X0DUWLJW/OkuS9ePuMADpz3zlh4zv/WCAV31FM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bawivEbgBPlbTlm83zwnkhDyzPxCyF7vxesiFuCf1e5h0lDaUpIu8aVQabgh/SbcMuufLTWF6ayVFcud/zDsmWCYWiFbyNKn1yJENS6VQTKH6EbYRzYwjhT/BfanJL4/DfLtRad1w4rvYQTbNFKHX4+EiLMRbjrPLWp3tiHDXM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RJh21MkO; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4314f38d274so24120285e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 01:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729240717; x=1729845517; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9UrD9uUISUicyV77FCZtIHadfgQC6lKYurkwJjq1HNE=;
-        b=VS6B8UE2yJQB/j770cxZNF3J9A0Rijdbo55TMaEzF9kjxOzRL2fJB5dkyjv41n63v8
-         yehFP+wA3UWXqKbqQBeg2n5i2HN9fOPSNmF5qia3CH7EOdotkgs92v15zctn9vV1RicM
-         dDK/H5V3ZQk1bWeTLZnw9ji6FFaGglcx1kzF+pEinf/HDeItXGmZeiMQUEsAE2EzCjpA
-         gUOp6+09GrkAUUaWr9P7w68WYWz0fVvXfSunMTDQJXquI4juCpWZTN8uZo5kblSd5pli
-         Q7swVZpItnfTv+uJiKBGyIUDSrtwpRZKJcG1VYsIAzEp/yI42KJFCu9/EogprbTfbhC5
-         usLg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729240770; x=1729845570; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HrncWdVx0bleY/RhYi61o0nRl8Zpr6NCNC/up3U4baE=;
+        b=RJh21MkOuPaNjAw+3zN8rsI9EKXWte9YZ5uck6aCoPB4it2ioUXE+mSSbSrBHNGVZP
+         auaqKWone7EmTMnx3GuVWjsrqWuShVVBerE40bbKvGGuwIO0IpKaXh9XNK+HDTQy4hNR
+         h5yJF1e3otUZ5WSRY4JTwlfjE2kmRExDc29UzPk4iZkFyRlZ+9ajDIVAP6JcWcUJ3gxk
+         IQ3WNpr4So9joz4WtS8GO5f85H//zuCY981qQYlNDnUAI1Q8Tlb/oUxAAMAyLJq7a70K
+         3zOElhQ07n2EVCstbWBXRe5xzyScR98RMrxo7ydd2UBidVy76nlEjIUbIodViiyG+/ka
+         XJ/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729240717; x=1729845517;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9UrD9uUISUicyV77FCZtIHadfgQC6lKYurkwJjq1HNE=;
-        b=gxeRXR2wbnlJBErLqRqPC2qIUyVMjR5XdrdU51+2HChRhljd9yKagKNuUER9Y1Uyu8
-         8w6Et84yW6WASaLgMQUKeAuGgium1EKW8FPRL+xB4mbiAfWSdFujOAibBXnnmMZ7C61K
-         SoOIECQtFZC3Eq55lQwEQpKirbkofteXuCkGWbjC2CN35eAb9xfQE5p9RlxUHxvUt9Vz
-         +IF2K0DOMVM7O57xxjsu8KKe+yJIJnynxC36+5+g5I2C2w0SzKtdKVnpI2wcvTqDj6J9
-         ZRNDwLVzJsZE0vAC80/vUQP0xnkvDH8fwqf6J+3Kp40a2gXZyrcOygfU5GLJ3oUmpTbq
-         v7pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcSMt94p2XYmoCikBOENnG46i+TzNnm+uOYEiCncv3KQvi1S9kMm7aZo/8LlZeKEVajFg8DoLxCkzl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx9Wh5YoLLMAq62Jex5Ta4AgFaWLnpUMx5GSB5N1VWR+BmTRiU
-	F3tjXMEo0AkIGNTqOcy1HoEhgdB9M02SbWU4Mz4+aL5nkYSEzb/+RjyFdFq6Kh0=
-X-Google-Smtp-Source: AGHT+IGmgQ9MMDeNrBBU/z3b8S19gtWOFXt5jhyrSbyAR1fhQxWW9GPqe1/RawVBBM8MqhrGoQEi4A==
-X-Received: by 2002:a05:6512:12d6:b0:53a:aea:a9e1 with SMTP id 2adb3069b0e04-53a154f9c46mr819940e87.54.1729240717149;
-        Fri, 18 Oct 2024 01:38:37 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53a151f0c7csm158587e87.173.2024.10.18.01.38.35
+        d=1e100.net; s=20230601; t=1729240770; x=1729845570;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HrncWdVx0bleY/RhYi61o0nRl8Zpr6NCNC/up3U4baE=;
+        b=nKA8y+2d6Lc4QhAWMC49BFOm2hTRFHWGmrOclWIQg5ZGOuKFRqV+sM62rDaByz3Svu
+         EFDcSouVXQ7GV4bKZHZ6w4eB/5xJ97v8/jL3tDoTPp8IjcI3Hl6T/3q5ZSHAlEz3yf80
+         e56CilllFauVQPWhqKNUsi2ycDYPJ2k3qm6JDADXP8TXTMxspXwdl2JXtcO8SPHEwlz9
+         ypNrF9l3ME9A+pxvYocLfZT7h+BtFAEBLw8SnEl8GPTgF3eTTwNQu2o0wDaPmsEJG8ZY
+         9VtLnmADmK20B+mGOD3E/QcH+4F82pTr+PnhJ8rbQC53WvQLnDMQmUXDct66BknIJRFv
+         eayg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHouBv4JoIzUAVjBEQZKFA0ASMbzR0xHUciAGlYEhb8R8Z0tK4QYsgHJpMp+5M/IUMomKdY1ukO1OJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQrCmUJoCUkeru8CgBYRkEQXGGj3B1+VPzNhby71d2L3Dz6Lzh
+	rq3HBOqAVVJ6xemMjCr967u644saZY5NFdgunaJDgTJmimZKB8EvezYxKHDhy8o=
+X-Google-Smtp-Source: AGHT+IEtT0VrGwMXWD3f3PNN6+mMk8Niqje0hsKtwQA0iMPfyIkaGazeJqRT2ugGAgBVN1yXC2tZog==
+X-Received: by 2002:a05:600c:4e8b:b0:431:5c3d:1700 with SMTP id 5b1f17b1804b1-43161642386mr15793305e9.21.1729240769641;
+        Fri, 18 Oct 2024 01:39:29 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:6e2b:4562:2d66:575e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43160e4fd55sm17360595e9.45.2024.10.18.01.39.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 01:38:36 -0700 (PDT)
-Date: Fri, 18 Oct 2024 11:38:34 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+        Fri, 18 Oct 2024 01:39:29 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl : qcom: document SAR2130P TLMM
-Message-ID: <ecdp4bkbpkdprzfvrve4jlpirc63ruejr5cfm5tkqkq736p7wh@ibqjbq22nvve>
-References: <20241017-sar2130p-tlmm-v1-0-8d8f0bd6f19a@linaro.org>
- <20241017-sar2130p-tlmm-v1-1-8d8f0bd6f19a@linaro.org>
- <u2yel7ych7esqlr732x6x424rxcolb22k6fgw5t6yyuurgneyf@5hnqyc3iqdvv>
+Cc: xianwei.zhao@amlogic.com,  Linus Walleij <linus.walleij@linaro.org>,
+  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,  Neil Armstrong
+ <neil.armstrong@linaro.org>,  Kevin Hilman <khilman@baylibre.com>,  Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,  Bartosz Golaszewski
+ <brgl@bgdev.pl>,  linux-gpio@vger.kernel.org,  devicetree@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-amlogic@lists.infradead.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
+ SoCs
+In-Reply-To: <4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org> (Krzysztof
+	Kozlowski's message of "Fri, 18 Oct 2024 10:28:51 +0200")
+References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
+	<20241018-a4_pinctrl-v3-1-e76fd1cf01d7@amlogic.com>
+	<4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org>
+Date: Fri, 18 Oct 2024 10:39:28 +0200
+Message-ID: <1jttd9rein.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <u2yel7ych7esqlr732x6x424rxcolb22k6fgw5t6yyuurgneyf@5hnqyc3iqdvv>
+Content-Type: text/plain
 
-On Fri, Oct 18, 2024 at 08:49:09AM +0200, Krzysztof Kozlowski wrote:
-> On Thu, Oct 17, 2024 at 07:15:45PM +0300, Dmitry Baryshkov wrote:
-> > Add bindings for the pin controller (TLMM) present on the
-> > Qualcomm SAR2130P platform.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  .../bindings/pinctrl/qcom,sar2130p-tlmm.yaml       | 138 +++++++++++++++++++++
-> >  1 file changed, 138 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sar2130p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sar2130p-tlmm.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..a8daa96936599e459c801b6685a42659271604ee
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sar2130p-tlmm.yaml
-> > @@ -0,0 +1,138 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/qcom,sar2130p-tlmm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Technologies, Inc. SAR2130P TLMM block
-> > +
-> > +maintainers:
-> > +  - Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > +
-> > +description:
-> > +  Top Level Mode Multiplexer pin controller in Qualcomm SAR2130P SoC.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,sar2130p-tlmm
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  gpio-reserved-ranges:
-> > +    minItems: 1
-> > +    maxItems: 105
-> > +
-> > +  gpio-line-names:
-> > +    maxItems: 156
-> 
-> Don't you have 210 GPIOs? At least reserved-ranges and pins pattern
-> suggest it.
+On Fri 18 Oct 2024 at 10:28, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-No. I will fix the pins pattern.
+> On 18/10/2024 10:10, Xianwei Zhao via B4 Relay wrote:
+>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> 
+>> Add the new compatible name for Amlogic A4 pin controller, and add
+>> a new dt-binding header file which document the detail pin names.
 
-> 
+the change does not do what is described here. At least the description
+needs updating.
+
+So if the pin definition is now in the driver, does it mean that pins have
+to be referenced in DT directly using the made up numbers that are
+created in pinctrl-amlogic-a4.c at the beginning of patch #2 ?
+
+If that's case, it does not look very easy a read.
+
+>> 
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
 > Best regards,
 > Krzysztof
-> 
 
 -- 
-With best wishes
-Dmitry
+Jerome
 
