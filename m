@@ -1,253 +1,198 @@
-Return-Path: <linux-gpio+bounces-11646-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11647-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C952B9A4239
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 17:22:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F05E9A425F
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 17:32:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE8571C209AD
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 15:22:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9AF91F24C74
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 15:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA78A200C89;
-	Fri, 18 Oct 2024 15:22:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 328682010F9;
+	Fri, 18 Oct 2024 15:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="AIZnqn0c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmloXEX6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567581D7989;
-	Fri, 18 Oct 2024 15:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75701D5AC7;
+	Fri, 18 Oct 2024 15:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729264962; cv=none; b=bh2Icj4EGlLfs3JVUDzc34f9j/pJ1SK3QwfFDA/JOHmU/ISC4/+1uK6YJLWja+a2gRr17yx9jrvT8SzV+P7ZtfBR0d7oYmAA0mkYaSdX3L4H7KArtSVrLpCgp3sYWtKzXvOapfHZYrB9sb2oI8o5aybt/DdjoEQVFoHOoU21Qbo=
+	t=1729265513; cv=none; b=QGC4WIM6MmPfJWvX1+AsGsmHZBpLohivPfiTyYjfCslR4NqESxCib/Ia8bbzNjxz7GezDTq6uCUBAJ8/GmGD0Y1n3ktLCpeY0/eLKTwnK7GVvlIZaH14Pt26tABQHB1L7+ojNJnecyBEX/TH1fI3Zt1jM5jpX4OKxaNOwe74054=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729264962; c=relaxed/simple;
-	bh=SSpKaVaCX27nL5SxgyzizMtsMVImkADVzoBCLGb09Mk=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=CYZ83zziAZhGG6eI/nCyNpIdeosSbVn+5UNBNUgcl3hiF2lP37g/kDk3RDc8R1xndcf9GJSv9YQ8erIUBGPtShPeKsvP5wr1qGLsBkdRWsfe+lJkJFfCmcVCPqLsnL7hVDJZUq+k24bv+pcCQ21NHUKWttzob+oiA5lrdnuHRnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=AIZnqn0c; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1729264937; x=1729869737; i=frank-w@public-files.de;
-	bh=nYO/ZWwzw37Yw09J81DGKU8898+LB3M5uGlP4gdXjqU=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=AIZnqn0cRCQTHsnWPwGY1EisV+fQDC0WkiPE76y2Ze3JfwdCfNLWcV1UeGe0dkSx
-	 MCFIYCdol7BqAj4jPprgIaHdwu5oXu9zorbcIdKWWB4oQCHwKjmf51gPGVc7uBWh2
-	 G6p9cqAImrD0P8jQEB0MyvIhuNgtv0eUjn4d9mBftkyYojyrAehCA8VveUcFSb1+y
-	 SbTeeTLGoUin0QcjgXIk407gBmz0uOo00yRxVE9T8SBui4ihHAuPI9wQF8fCQThb2
-	 CiL9chUWVUaUZNeEHz5EIvzbFwOZ+FX2KGy37DfsBC7qhmBG9NVDF2MRSU2eVHe0h
-	 m42Bc5iH+KM/Bp0JMA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [217.61.156.70] ([217.61.156.70]) by web-mail.gmx.net
- (3c-app-gmx-bs21.server.lan [172.19.170.73]) (via HTTP); Fri, 18 Oct 2024
- 17:22:17 +0200
+	s=arc-20240116; t=1729265513; c=relaxed/simple;
+	bh=IdmLrmq9YvegyhJcScfze8kc18IhbrRoMhwMjSgkHdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Htcz5yukqDNRQt46HXNmP3MwzHNghIf2U6kKX1GGy20BUbF4Q/U+WmfDaQha+nECsAa8TkSnaU+N5KVZ40OvZIM6ZOTVqdlWorStSxtAt4OwJlTFm2ilQ24YsavVVoixAiSxlwIXj2NmRfFmvafs8wEsu44/Zq5yKEWdN+AjI5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmloXEX6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD44C4CEC3;
+	Fri, 18 Oct 2024 15:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729265513;
+	bh=IdmLrmq9YvegyhJcScfze8kc18IhbrRoMhwMjSgkHdg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HmloXEX6XQGmwMYXkxJqY6mVDxqipivufVv0adnktuaqNsbD8rcc6W1NrbmCS1Szs
+	 Qy2FsdDoFUhhFrgbyOu8ILtQ46gAvMgJzKIU/6qAeTZA7wMIwa48utXZGwzmUrhy28
+	 n4hmD0Qxx3UmUIrBEwv2FtIu3rT+7rGmfICd/axDDQqBmuj6D45Kf65HCo8+EaRIB8
+	 qLWFQVsIXmbAD1NCA/x8Oh4YSlt0QZ1fyP5IBxUw3xRDEgyuN9YyN5rVxtPuj8Pbu6
+	 cZNEZcOZAN2glQmsz9dfFAJGiru6RV6VxY2DYO25P0JnQb6eRSBkuFGHHqeMPsqV+l
+	 zXYrwkAxW+6oQ==
+Message-ID: <e6cd13b5-2f7a-4ab1-899c-5867bc0ea64f@kernel.org>
+Date: Fri, 18 Oct 2024 17:31:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-c4ba2a12-a350-4681-b2f5-e04c27bb3630-1729264937213@3c-app-gmx-bs21>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <linux@fw-web.de>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang
- <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- daniel@makrotopia.org, john@phrozen.org, ansuelsmth@gmail.com,
- eladwf@gmail.com, Sam Shih <sam.shih@mediatek.com>,
- =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Subject: Aw: Re: [PATCH v4 2/4] pinctrl: mediatek: add MT7988 pinctrl driver
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
+ SoCs
+To: neil.armstrong@linaro.org, Jerome Brunet <jbrunet@baylibre.com>,
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
+ <20241018-a4_pinctrl-v3-1-e76fd1cf01d7@amlogic.com>
+ <4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org>
+ <1jttd9rein.fsf@starbuckisacylon.baylibre.com>
+ <4127b448-a914-4c69-b938-29512995326f@amlogic.com>
+ <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
+ <d654d2b2-977b-44c0-8b01-b26f5eb0a3fe@kernel.org>
+ <5ad8f396-84a5-486d-b90d-98fbf8882d1b@linaro.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <5ad8f396-84a5-486d-b90d-98fbf8882d1b@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 18 Oct 2024 17:22:17 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <d1a9f533-3a9e-47c2-9476-c54653b56e68@collabora.com>
-References: <20241009165222.5670-1-linux@fw-web.de>
- <20241009165222.5670-3-linux@fw-web.de>
- <d1a9f533-3a9e-47c2-9476-c54653b56e68@collabora.com>
-Content-Transfer-Encoding: quoted-printable
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:LhGHiJlaXI887Ob46HR55sDLtu+gghtsz7L1HjmF/g2v//30/Su9ziz6UJFD51KjA2b8h
- MOOtaYbkh3YWrl752DWj6BWxAFq8n1ffWe1cBnFDAM2BYoGsqLUQyjEYDoiBYeNeS0j0L2FoycJP
- NI/giYUHQ3RXj8LSSzb6KrhJCW/iUCcqWXxgODtLaVcAW4+hxlfNa/vG0afkmt+P5mIP3PRwigvR
- zhFWPV0jluHR8dOWX31a0QHdq+bE01ldfDW47Xqhu6RA91qmFb2Ky/I2cdb4hrWXKQLY4aUPH0gU
- BI=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:L2sIoFh25S4=;5fTiyybGU9Ehmit0sEVxGFXQvqP
- y3IlCKOyyZpabjtj9f2QPKH7uH46/p3Q2cOdcnaDaXt93hhjnT7hCIiFFvF5DDxovcPxna20w
- JgH1Ejg+BpzEzY7GnLwT56LNVS29KJ1oF4pC5n2wd2Nr9NvOHMbIE5BwlWdKUXWX6OKw/PbBF
- t2hvXCuWnXpVdvYFCmGSP4p4fWXQVl5RWVlxRJ1rJUYockZ9EppNPTz0pe3t/VillfznQ3tfV
- yG9GdhNneph7U5oY27kRZ83dgQjasFTgAQu5faRdqphxWft65wA/bK5zsNFgH8FPXM7RrOs+v
- b5GQLZUjerUHE+JjGP86/Yhqdc+yjoum7L8tCiPFu0c3F2kT1ZiQXhb9ULlfpg2vSbZqa1Gnh
- CDRp+66GtUcfnh8nqSBEyUdy4u1jI5JuBEYUtq1l8a0KA+Bp15Y9/2SiOuWvB9acDtLwgeWwz
- 4kCEqW2MtCoBKGur2B0nOe3j776xlyRyiUPn6auPo26XvN1sStqZP6NA0Za2hC/tlGUSOG/Fk
- kRNwTyovrIkm9I9vs+aGlw9Ee8ThP4Rg1WCTU5qHc2WzgLA5R/Oxzq2iZINTX7SSvINivfMJP
- /wDVN2dfnem44VLEq5dV81w9aiDIaalEHThdfkGRymqNDFGMsFzkB4R+vTM7V3Y6T8/aitspT
- fZog3nDkTZ5e6nPCxMmhS0wSo/pj1AhqPgGV3T3V0g==
+Content-Transfer-Encoding: 7bit
 
-Hi Angelo
+On 18/10/2024 14:31, Neil Armstrong wrote:
+> On 18/10/2024 12:13, Krzysztof Kozlowski wrote:
+>> On 18/10/2024 11:20, Jerome Brunet wrote:
+>>> On Fri 18 Oct 2024 at 17:01, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
+>>>
+>>>> Hi Jerome,
+>>>>     Thanks for your reply.
+>>>>
+>>>> On 2024/10/18 16:39, Jerome Brunet wrote:
+>>>>> [ EXTERNAL EMAIL ]
+>>>>> On Fri 18 Oct 2024 at 10:28, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>
+>>>>>> On 18/10/2024 10:10, Xianwei Zhao via B4 Relay wrote:
+>>>>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>>>>
+>>>>>>> Add the new compatible name for Amlogic A4 pin controller, and add
+>>>>>>> a new dt-binding header file which document the detail pin names.
+>>>>> the change does not do what is described here. At least the description
+>>>>> needs updating.
+>>>>>
+>>>>
+>>>> Will do.
+>>>>
+>>>>> So if the pin definition is now in the driver, does it mean that pins have
+>>>>> to be referenced in DT directly using the made up numbers that are
+>>>>> created in pinctrl-amlogic-a4.c at the beginning of patch #2 ?
+>>>>>
+>>>>
+>>>> Yes.
+>>>>
+>>>>> If that's case, it does not look very easy a read.
+>>>>>
+>>>>
+>>>> It does happen. The pin definition does not fall under the category of
+>>>> binding.
+>>>>
+>>>> https://lore.kernel.org/all/106f4321-59e8-49b9-bad3-eeb57627c921@amlogic.com/
+>>>
+>>> So the expectation is that people will write something like:
+>>>
+>>>   reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
+>>>
+>>> And others will go in the driver to see that is maps to GPIOX_10 ? the number
+>>> being completly made up, with no link to anything HW/Datasheet
+>>> whatsoever ?
+>>>
+>>> This is how things should be done now ?
+>>
+>> Why would you need to do this? Why it cannot be <&gpio 10
+>> GPIO_ACTIVE_LOW>, assuming it is GPIO 10?
+>>
+>> Bindings have absolutely nothing to do with it. You have GPIO 10, not
+>> 42, right?
+> 
+> There's no 1:1 mapping between the number and the pin on Amlogic platforms,
+> so either a supplementary gpio phandle cell is needed to encode the gpio pin
+> group or some bindings header is needed to map those to well known identifiers.
 
-> Gesendet: Donnerstag, 10=2E Oktober 2024 um 14:28 Uhr
-> Betreff: Re: [PATCH v4 2/4] pinctrl: mediatek: add MT7988 pinctrl driver
->
-> Il 09/10/24 18:52, Frank Wunderlich ha scritto:
-> > From: Daniel Golle <daniel@makrotopia=2Eorg>
-> >=20
-> > Add pinctrl driver for the MediaTek MT7988 SoC=2E
-> >=20
-> > Signed-off-by: Sam Shih <sam=2Eshih@mediatek=2Ecom>
-> > Signed-off-by: Daniel Golle <daniel@makrotopia=2Eorg>
-> > [correctly initialise for the function_desc structure]
-> > Signed-off-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc=2Eunal@arinc9=2Ecom>
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
-> > ---
-> >   drivers/pinctrl/mediatek/Kconfig          |    7 +
-> >   drivers/pinctrl/mediatek/Makefile         |    1 +
-> >   drivers/pinctrl/mediatek/pinctrl-mt7988=2Ec | 1526 +++++++++++++++++=
-++++
-> >   3 files changed, 1534 insertions(+)
-> >   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7988=2Ec
-> >=20
-> > diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediat=
-ek/Kconfig
-> > index 7af287252834=2E=2E952110c783d4 100644
-> > --- a/drivers/pinctrl/mediatek/Kconfig
-> > +++ b/drivers/pinctrl/mediatek/Kconfig
-> > @@ -187,6 +187,13 @@ config PINCTRL_MT7986
-> >   	default ARM64 && ARCH_MEDIATEK
-> >   	select PINCTRL_MTK_MOORE
-> >  =20
-> > +config PINCTRL_MT7988
-> > +	bool "Mediatek MT7988 pin control"
-> > +	depends on OF
-> > +	depends on ARM64 || COMPILE_TEST
-> > +	default ARM64 && ARCH_MEDIATEK
-> > +	select PINCTRL_MTK_MOORE
-> > +
-> >   config PINCTRL_MT8167
-> >   	bool "MediaTek MT8167 pin control"
-> >   	depends on OF
-> > diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/media=
-tek/Makefile
-> > index 680f7e8526e0=2E=2E2b47ce030b54 100644
-> > --- a/drivers/pinctrl/mediatek/Makefile
-> > +++ b/drivers/pinctrl/mediatek/Makefile
-> > @@ -27,6 +27,7 @@ obj-$(CONFIG_PINCTRL_MT7623)		+=3D pinctrl-mt7623=2E=
-o
-> >   obj-$(CONFIG_PINCTRL_MT7629)		+=3D pinctrl-mt7629=2Eo
-> >   obj-$(CONFIG_PINCTRL_MT7981)		+=3D pinctrl-mt7981=2Eo
-> >   obj-$(CONFIG_PINCTRL_MT7986)		+=3D pinctrl-mt7986=2Eo
-> > +obj-$(CONFIG_PINCTRL_MT7988)		+=3D pinctrl-mt7988=2Eo
-> >   obj-$(CONFIG_PINCTRL_MT8167)		+=3D pinctrl-mt8167=2Eo
-> >   obj-$(CONFIG_PINCTRL_MT8173)		+=3D pinctrl-mt8173=2Eo
-> >   obj-$(CONFIG_PINCTRL_MT8183)		+=3D pinctrl-mt8183=2Eo
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7988=2Ec b/drivers/pin=
-ctrl/mediatek/pinctrl-mt7988=2Ec
-> > new file mode 100644
-> > index 000000000000=2E=2E5479f4fa47a7
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mt7988=2Ec
-> > @@ -0,0 +1,1526 @@
-> > +// SPDX-License-Identifier: GPL-2=2E0
-> > +/*
-> > + * The MT7988 driver based on Linux generic pinctrl binding=2E
-> > + *
-> > + * Copyright (C) 2020 MediaTek Inc=2E
-> > + * Author: Sam Shih <sam=2Eshih@mediatek=2Ecom>
-> > + */
-> > +
-> > +#include "pinctrl-moore=2Eh"
-> > +
-> > +enum MT7988_PINCTRL_REG_PAGE {
->=20
-> Lowercase name for the enumeration, please=2E
+So I assume this is not linear mapping (simple offset)? If so, this fits
+the binding header with identifiers, but I have impression these were
+not really used in earlier versions of this patchset. Instead some offsets:
+https://lore.kernel.org/all/20241014-a4_pinctrl-v2-1-3e74a65c285e@amlogic.com/
 
-will do in next version
+and pre-proccessor.
 
-> > +	GPIO_BASE,
-> > +	IOCFG_TR_BASE,
-> > +	IOCFG_BR_BASE,
-> > +	IOCFG_RB_BASE,
-> > +	IOCFG_LB_BASE,
-> > +	IOCFG_TL_BASE,
-> > +};
-> > +
->=20
-> =2E=2Esnip=2E=2E
->=20
-> > +static const struct mtk_eint_hw mt7988_eint_hw =3D {
-> > +	=2Eport_mask =3D 7,
-> > +	=2Eports =3D 7,
-> > +	=2Eap_num =3D ARRAY_SIZE(mt7988_pins),
-> > +	=2Edb_cnt =3D 16,
->=20
-> Are you sure that the EINT controller in this SoC doesn't have the
-> DBNC_SET and DBNC_CLR registers?
->=20
-> Another way of asking the same thing: are you sure that this SoC does
-> not support interrupt debounce?
+These looked almost good:
+https://lore.kernel.org/all/20240613170816.GA2020944-robh@kernel.org/
 
-Got information from MTK, that hw debounce is only available for pins 0 to=
- 15,
-and does not support pins with numbers 16 or higher and definition here is=
- correct=2E
+but then 0 -> 0
+1 -> 1
+so where is this need for IDs?
 
-> > +};
-> > +
-> > +static const char * const mt7988_pinctrl_register_base_names[] =3D {
-> > +	"gpio",	 "iocfg_tr", "iocfg_br",
-> > +	"iocfg_rb", "iocfg_lb", "iocfg_tl",
-> > +};
-> > +
-> > +static struct mtk_pin_soc mt7988_data =3D {
-> > +	=2Ereg_cal =3D mt7988_reg_cals,
-> > +	=2Epins =3D mt7988_pins,
-> > +	=2Enpins =3D ARRAY_SIZE(mt7988_pins),
-> > +	=2Egrps =3D mt7988_groups,
-> > +	=2Engrps =3D ARRAY_SIZE(mt7988_groups),
-> > +	=2Efuncs =3D mt7988_functions,
-> > +	=2Enfuncs =3D ARRAY_SIZE(mt7988_functions),
-> > +	=2Eeint_hw =3D &mt7988_eint_hw,
-> > +	=2Egpio_m =3D 0,
-> > +	=2Eies_present =3D false,
-> > +	=2Ebase_names =3D mt7988_pinctrl_register_base_names,
-> > +	=2Enbase_names =3D ARRAY_SIZE(mt7988_pinctrl_register_base_names),
-> > +	=2Ebias_disable_set =3D mtk_pinconf_bias_disable_set,
-> > +	=2Ebias_disable_get =3D mtk_pinconf_bias_disable_get,
-> > +	=2Ebias_set =3D mtk_pinconf_bias_set,
-> > +	=2Ebias_get =3D mtk_pinconf_bias_get,
-> > +	=2Epull_type =3D mt7988_pull_type,
-> > +	=2Ebias_set_combo =3D mtk_pinconf_bias_set_combo,
-> > +	=2Ebias_get_combo =3D mtk_pinconf_bias_get_combo,
-> > +	=2Edrive_set =3D mtk_pinconf_drive_set_rev1,
-> > +	=2Edrive_get =3D mtk_pinconf_drive_get_rev1,
-> > +	=2Eadv_pull_get =3D mtk_pinconf_adv_pull_get,
-> > +	=2Eadv_pull_set =3D mtk_pinconf_adv_pull_set,
-> > +};
-> > +
-> > +static const struct of_device_id mt7988_pinctrl_of_match[] =3D {
->=20
-> Please compress that to a single line=2E
->=20
-> { =2Ecompatible =3D "mediatek,mt7988-pinctrl" },
+See also last comment from Rob in above email.
 
-will do in next version
+Best regards,
+Krzysztof
 
-> Cheers,
-> Angelo
-
-regards Frank
 
