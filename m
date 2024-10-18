@@ -1,269 +1,192 @@
-Return-Path: <linux-gpio+bounces-11627-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11628-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E5BD9A3E9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 14:41:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E2DC9A3F56
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 15:19:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BAA9B2166E
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 12:41:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6DF61F21724
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 13:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07F943AB0;
-	Fri, 18 Oct 2024 12:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06B3918C34C;
+	Fri, 18 Oct 2024 13:19:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UBsdd+Ac"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXLqJwXe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DF9F9DF
-	for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 12:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A667B1E49F;
+	Fri, 18 Oct 2024 13:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729255256; cv=none; b=P0aEs45B4HXGQNGRBJlltPIl0T0MaWXgqI6XA9/NZMNQQDJjFg2dCfE7vD3JorvLOAxdfbhs5hH48KDTvo4SYeV35f2u73CFK0iect57lpS0SzJ3YeT/YKTlIelLQptxmyTLVFfepQ4Qz8tv3CfSojDzFb+zGnT2vIZWlwHMhDk=
+	t=1729257572; cv=none; b=odIOnoAm54CSLPnFKJxf5O+6tC3H1ulbFK7EuxtPUlB01bbkyUqelrrSIPLvMrzUSMglGi20HGnoXvFpi+ZryYLDuiniwYvf4t6Ny+IdYJzXBoblmPuw76M4x5qYOhOgvS3nquBFByoVkcELnVTxKym0adIGGPzA+9YBG1VqZuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729255256; c=relaxed/simple;
-	bh=NepPP9+EUJkQE6AAFekh9hvZnrPeDE2ASN5F2g/sxaQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChB6RO9MKfzhHJAncjXJkGO4o9J3d6fkjA2XofpxDQ8lZF7fezoX/pSYJysIgZF11lBEuGM8Rs5JbHaUOBZiQxMHm5+PY+4c46eg7mR3mWZeXiNd8WBZz0qT37hcAMTi7WFgT1oUPPDZf4ZRnITKoas0Pdryu7B6fpKo4oIqKRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UBsdd+Ac; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a5b2f2026so204711366b.2
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Oct 2024 05:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1729255252; x=1729860052; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9DykL4kRhQMn7Cbt8yrjSApwATRDvV4AIHohgrmqOh0=;
-        b=UBsdd+AcJeTPSj7VbDDbVayFFlXZEceFq+/3BzPSGVEd/vqIQ1Xo7f24O8TX9JYYJX
-         2uKOpn2wggd9+3uwrDa1FdqY+j/MdsZjlY4KKebecfW2xuNJnp5NjaaFczFrBFKmpXA2
-         5V/L0TI4GwuDTbdpHutCyoSnArESUECp8EBEYEx5FdUYa/OpdlfTi5UaWYAzURH22Toj
-         glP0mVzYNvaDNBTOuVqKcQmd/JluRvWygUycKTa+wvCFrqCUsbNq9ImkRQmK+iFXZwKP
-         snrH8Lho4I7A5slljx30zdGrTO+4JnlRHtI1/7ZukalCy6atc5M+U3943fiUh9M1hMP/
-         QhhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729255252; x=1729860052;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9DykL4kRhQMn7Cbt8yrjSApwATRDvV4AIHohgrmqOh0=;
-        b=GTUW4PSyvPnmPzUvwANZeHirXpRwDw/p6l0K0FriIxABUCTzd50sUoBuoCPlsQZVhl
-         9ew2dBeJhUnTlnjgDp2m9eiyzbx33vlwQ4FnEMcBasR7jRCxge+nsrZ3Rqq8EYobaF/1
-         LnHgqlLz4Fhg12mQ5VK2RxCin4Di2E3vzZTTNHTxWfqJhJMwn9V5JZresMewEVBF746/
-         pR0KKCDMfGAy6eC5qWFvp2hX7m7p5yIzHSVkUq251rUEBJd/zocMvlunYY34MzxXNTAG
-         ypPr9vTYmWBI6hGP1xxi17VMaBg3lOp9aXqs7Bc6PxGPG4cwlKQye0kze9bUVqYWzvMP
-         5Lvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsPxZIp+fBd6+GEextVMZ0RuML68coIcPXn+iWCJiyhYADnLQD+ZwDhmq22MrJdoB5FxQNPmL4zR90@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrOGdW/DbRubwVeqSQ2x+qy8gvG/6IJfyP0h4ELhHbj98Mq3ZF
-	0wypDw+i0SkzHYiOWc8u/9wX4/61ZTGDAXqQeqEWWQF0BmgRW+5mJGvqFTaDK+I=
-X-Google-Smtp-Source: AGHT+IGKGlI5U6acm0UPw/vtEqZLZZNRs4tL7ATU0Wt6GltRPSfjPzSBXo/n0wxDoTzpCi5atrc0Sw==
-X-Received: by 2002:a17:907:94d2:b0:a99:ec3c:15cd with SMTP id a640c23a62f3a-a9a69ccf8a4mr209343466b.54.1729255251547;
-        Fri, 18 Oct 2024 05:40:51 -0700 (PDT)
-Received: from localhost (host-95-234-228-50.retail.telecomitalia.it. [95.234.228.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a68bf5f4asm91053466b.157.2024.10.18.05.40.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 05:40:51 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 18 Oct 2024 14:41:11 +0200
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <ZxJXZ9R-Qp9CNmJk@apocalypse>
-References: <ZwJyk9XouLfd24VG@apocalypse>
- <20241008010808.GA455773@bhelgaas>
+	s=arc-20240116; t=1729257572; c=relaxed/simple;
+	bh=dNESMw4yGXRuQCex6utRMbGLz39CnUHW11KM6eIz4dA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BtxuzW68V1SaJov0yJ1FQQzPszr3MhoyLm7n1KY0lAUz0Y88NV7hJAvTDraqIhROrSi9pQDK9KupqAogL+pPglGGpWhMwaOOms5tz/r2yHPltzdkxDC5ALJtD79rUBiTfUYo3E9MVO0Vx+rwzLwO1wb92D8WTU2XRSzdl3bEYBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXLqJwXe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E214C4CEC3;
+	Fri, 18 Oct 2024 13:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729257572;
+	bh=dNESMw4yGXRuQCex6utRMbGLz39CnUHW11KM6eIz4dA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tXLqJwXetwyMcmYjpkE0Orho2ns7gz5n9BaOj5a///6clyC3sz5sNQpGIfdDZrTm8
+	 4v1c6DTcdwOgnSGuHKAGnYLubM/u0cCoTQof6hcCZBrypQbM3bqdrPL/PJsymhezCs
+	 +4cgOSw4ZHxi38FQQciS+HBvMsVXI0e6ynqqHL2YhFMVze6TrTPE87zQ87qMx8k46U
+	 tYiPHhqHSZcY3bkk3+zrEG1nvLl+ULeNBPCx+AHq9IxPJyJ01y1hzczigMDsPir/1M
+	 y5lLTxRPf6xuwZ8XSgea5/mfVJPZUKIOcE1INv/ufMZfm3LXZuUGvFcdibwrDq8tiK
+	 S19Urfdwn/xJQ==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH v8 0/6] Add mfd, pinctrl and pwm support to EN7581 SoC
+Date: Fri, 18 Oct 2024 15:19:01 +0200
+Message-Id: <20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241008010808.GA455773@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEVgEmcC/2XQTU7DMBAF4KtUWePIMx7/dcU9EIvYGbcRJSluq
+ ICqd8dtEQ14OZa+N89zag6cBz4069WpyXwcDsM0lsE9rJq47cYNi6Evc4MSSTpwgkerHYj9MMY
+ 57wSEBChBU2DZFLTPnIaPa+DTc5lTnl7FvM3cXWNkr5Vl54IhRzZEYvJWm4DkA3LqYyLng8cWL
+ CrlkYjazTC3uynz+DU9vnAeeddOefOzLPPbeyk93zbeO69X18ZWapGmLIwAEGGfRKfIc4rS9cm
+ tj9hcOm6Hwzzlz+sNytMl5/ZdxP/fPaKQInSgtQerOpuWjS5ZR7XwCiqviveOOaRAfWdM5enuP
+ dSeijeyi1711sgQKq9/PUhZe118HyGyJgwm1vvNwoOqvCkeJTnGXnofsfJ26U3lbfGUkgFIaMo
+ B//jz+fwNz+6Hg5ECAAA=
+X-Change-ID: 20240818-en7581-pinctrl-1bf120154be0
+To: Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+ linux-pwm@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-Hi Bjorn,
+Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+needs to access the same memory block (gpio memory region) to configure
+{gio,irq}_chip and pwm functionalities respectively, so model them as
+childs of a parent mfd driver.
+Current EN7581 pinctrl driver supports the following functionalities:
+- pin multiplexing via chip_scu syscon
+- pin pull-up, pull-down, open-drain, current strength,
+  {input,output}_enable, output_{low,high} via chip_scu syscon
+- gpio controller
+- irq controller
 
-On 20:08 Mon 07 Oct     , Bjorn Helgaas wrote:
-... 
-> It's common that PCI bus addresses are identical to CPU physical
-> addresses, but by no means universal.  More details in
-> Documentation/core-api/dma-api-howto.rst
-> 
-> > [2] I still think that the of_pci_set_address() function should be amended
-> > to avoid generating invalid 64 address when 32 bit flag is set.
-> > 
-> > As you noted, fixing [2] will incidentally also let [1] work: I think
-> > we can try to solve [1] the proper way and maybe defer [2] for a separate
-> > patch.
-> > To solve [1] I've dropped this patch and tried to solve it from devicetree,
-> > modifying the following mapping:
-> > 
-> > pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> > 
-> > so we now have a 1:1 64 bit mapping from 0x1f_00000000 to 0x1f_00000000.
-> 
-> That's the wrong thing to change.  pcie@120000 is fine; it's pci@0
-> that's incorrect.
-> 
-> pcie@120000 is the host bridge, and its "ranges" must describe the
-> address translation it performs between the primary (CPU) side and the
-> secondary (PCI) side.  Either this offset is built into the hardware
-> and can't be changed, or the offset is configured by firmware and the
-> DT has to match.
-> 
-> So I think this description is correct:
-> 
->   pcie@120000: <0x2000000 0x0 0x00000000 0x1f 0x00000000 0x0 0xfffffffc>;
-> 
-> which means we have an aperture from CPU physical addresses to PCI bus
-> addresses like this:
-> 
->   Host bridge: [mem 0x1f_00000000-0x1f_fffffffb window] (bus address 0x00000000-0xfffffffb)
-> 
-> > I thought it would result in something like this:
-> > 
-> > pcie@120000: <0x3000000 0x1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
-> > pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
-> > dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
-> > rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
-> > 
-> > but it fails instead (err: "can't assign; no space") in pci_assign_resource()
-> > function trying to match the size using pci_clip_resource_to_region(). It turned
-> > out that the clipping is done against 32 bit memory region 'pci_32_bit',and
-> > this is failing because the original region addresses to be clipped wxxiereas 64
-> > bit wide. The 'culprit' seems to be the function devm_of_pci_get_host_bridge_resources()
-> > dropping IORESOURCE_MEM_64 on any memory resource, which seems to be a change
-> > somewhat specific to a RK3399 case (see commit 3bd6b8271ee66), but I'm not sure
-> > whether it can be considered generic.
-> 
-> I think the problem is that we're building the pci@0 (Root Port)
-> "ranges" incorrectly.  pci@0 is a PCI-PCI bridge, which cannot do any
-> address translation, so its parent and child address spaces must both
-> be inside the pcie@120000 *child* address space.
-> 
-> > Also, while taking a look at the resulting devicetree, I'm a bit confused by the
-> > fact that the parent address generated by of_pci_prop_ranges() for the pci@0,0
-> > bridge seems to be taken from the parent address of the pcie@120000 node. Shouldn't
-> > it be taken from the child address of pcie@120000, instead?
-> 
-> Yes, this is exactly the problem.  The pci@0 parent and child
-> addresses in "ranges" are both in the PCI address space.  But we
-> start with pdev->resource[N], which is a CPU address.  To get the PCI
-> address, we need to apply pci_bus_address().  If the host bridge
-> windows are set up correctly, the window->offset used in
-> pcibios_resource_to_bus() should yield the PCI bus address.
+---
+Changes in v8:
+- pwm: add missing properties documentation
+- Link to v7: https://lore.kernel.org/r/20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org
 
-You mean something like this, I think:
+Changes in v7:
+- pinctrl: cosmetics
+- pinctrl: fix compilation warning
+- Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
 
-@@ -129,7 +129,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
-                if (of_pci_get_addr_flags(&res[j], &flags))
-                        continue;
- 
--               val64 = res[j].start;
-+               val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
-                of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
-                                   false);
-                if (pci_is_bridge(pdev)) {
+Changes in v6:
+- pwm: rely on regmap APIs
+- pwm: introduce compatible string
+- pinctrl: introduce compatible string
+- remove airoha-mfd driver
+- add airoha,en7581-pinctrl binding
+- add airoha,en7581-pwm binding
+- update airoha,en7581-gpio-sysctl binding
+- Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
 
-> 
-> I think it should look like this:
-> 
->   pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
+Changes in v5:
+- use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
+  in interrupt context
+- remove unused includes in pinctrl driver
+- since the irq_chip is immutable, allocate the gpio_irq_chip struct
+  statically in pinctrl driver
+- rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
+  driver
+- rely on guard/guard_scope APIs in pinctrl driver
+- improve naming convention pinctrl driver
+- introduce airoha_pinconf_set_pin_value utility routine
+- Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
 
-indeed, with the above patch applied, the result is exactly as you expected.
+Changes in v4:
+- add 'Limitation' description in pwm driver
+- fix comments in pwm driver
+- rely on mfd->base __iomem pointer in pwm driver, modify register
+  offsets according to it and get rid of sgpio_cfg, flash_cfg and
+  cycle_cfg pointers
+- simplify register utility routines in pwm driver
+- use 'generator' instead of 'waveform' suffix for pwm routines
+- fix possible overflow calculating duty cycle in pwm driver
+- do not modify pwm state in free callback in pwm driver
+- cap the maximum period in pwm driver
+- do not allow inverse polarity in pwm driver
+- do not set of_xlate callback in the pwm driver and allow the stack to
+  do it
+- fix MAINTAINERS file for airoha pinctrl driver
+- fix undefined reference to __ffsdi2 in pinctrl driver
+- simplify airoha,en7581-gpio-sysctl.yam binding
+- Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
 
-> 
-> By default lspci shows you the CPU addresses for BARs, so you should
-> see something like this:
-> 
->   00:02.0 PCI bridge
->     Memory behind bridge: 1f00000000-1ffffffffb
->     Capabilities: [40] Express Root Port
-> 
-> If you run "lspci -b", it will show you PCI bus addresses instead,
-> which should look like this:
-> 
->   00:02.0 PCI bridge
->     Memory behind bridge: 00000000-fffffffb
->     Capabilities: [40] Express Root Port
-> 
-> > > But I don't think it works in general because there's no requirement
-> > > that the host bridge address translation be that simple.  For example,
-> > > if we have two host bridges, and we want each to have 2GB of 32-bit
-> > > PCI address space starting at 0x0, it might look like this:
-> > > 
-> > >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
-> > >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
-> > > 
-> > > In this case simply ignoring the high 32 bits of the CPU address isn't
-> > > the correct translation for the second host bridge.  I think we should
-> > > look at each host bridge's "ranges", find the difference between its
-> > > parent and child addresses, and apply the same difference to
-> > > everything below that bridge.
-> > 
-> > Not sure I've got this scenario straight: can you please provide the topology
-> > and the bit setting (32/64 bit) for those ranges? Also, is this scenario coming
-> > from a real use case or is it hypothetical?
-> 
-> This scenario is purely hypothetical, but it's a legal topology that
-> we should handle correctly.  It's two host bridges, with independent
-> PCI hierarchies below them:
-> 
->   Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
->   Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
-> 
-> Bridge A has an MMIO aperture at CPU addresses
-> 0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
-> its secondary side, the PCI address is CPU_addr - 0x2_00000000.
-> 
-> Similarly, bridge B has an MMIO aperture at CPU addresses 
-> 0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
-> its secondary side, the PCI address is CPU_addr - 0x2_80000000.
-> 
-> Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
-> range.  In a topology like this, you can't convert a bus address back
-> to a CPU address unless you know which hierarchy it's in.
-> pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
-> which hierarchy (and which host bridge address translation) to use.
+Changes in v3:
+- introduce airoha-mfd driver
+- add pwm driver to the same series
+- model pinctrl and pwm drivers as childs of a parent mfd driver.
+- access chip-scu memory region in pinctrl driver via syscon
+- introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
+  of dedicated bindings for pinctrl and pwm
+- add airoha,en7581-chip-scu.yaml binding do the series
+- Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
 
-Agreed. While I think about how to adjust that specific patch,i let's drop it from
-this patchset since the aforementioned change is properly fixing the translation
-issue.
+Changes in v2:
+- Fix compilation errors
+- Collapse some register mappings for gpio and irq controllers
+- update dt-bindings according to new register mapping
+- fix some dt-bindings errors
+- Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
 
-> 
-> Bjora
+---
+Benjamin Larsson (1):
+      pwm: airoha: Add support for EN7581 SoC
 
-Many thanks,
-Andrea
+Christian Marangi (1):
+      dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
+
+Lorenzo Bianconi (4):
+      dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
+      dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+      dt-bindings: pwm: airoha: Add EN7581 pwm
+      pinctrl: airoha: Add support for EN7581 SoC
+
+ .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
+ .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |   90 +
+ .../bindings/pinctrl/airoha,en7581-pinctrl.yaml    |  400 +++
+ .../devicetree/bindings/pwm/airoha,en7581-pwm.yaml |   61 +
+ MAINTAINERS                                        |    7 +
+ drivers/pinctrl/mediatek/Kconfig                   |   17 +-
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2970 ++++++++++++++++++++
+ drivers/pwm/Kconfig                                |   11 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-airoha.c                           |  421 +++
+ 11 files changed, 4020 insertions(+), 1 deletion(-)
+---
+base-commit: e4188772459fec428bf85ce6711a0147387c1455
+change-id: 20240818-en7581-pinctrl-1bf120154be0
+prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
+
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
+
 
