@@ -1,169 +1,122 @@
-Return-Path: <linux-gpio+bounces-11652-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11653-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC26C9A49A7
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 00:29:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DD809A4B28
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 06:03:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99911285320
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Oct 2024 22:29:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E38501F2281B
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 04:03:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7507B190671;
-	Fri, 18 Oct 2024 22:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5644D1990AD;
+	Sat, 19 Oct 2024 04:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgTGP/U7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=strongrootsfitness.com header.i=@strongrootsfitness.com header.b="WzuUz26b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from seashell.cherry.relay.mailchannels.net (seashell.cherry.relay.mailchannels.net [23.83.223.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1218CBF5;
-	Fri, 18 Oct 2024 22:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729290533; cv=none; b=XbVA/gzCiXgedhg0uV8PkR0WG2Y+5fYGb/k674ud9qpG6K9RPJLUQnG47F59tDKR8n9ZRDrOqV/yezC99bGfgoeGA0sLQX99xCVLVyBoZ1ge7qGNQvbdrvETjTJdDnmwSqAS7mram8+EGUnkBwe06V86TQiWHHsOsdcN6zN9Yc4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729290533; c=relaxed/simple;
-	bh=G7Ash0PGoqdQ1AiafmIA65zN/S2zqb3jjZ3jwkABAmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=J/h+5MnbWEJ2cEmbXFbc3MLoVuAJGfvQaja0GbOUfVHWmChsxkTb6lBwQeg9g9URq6yLOliakZKlllA2ivEY1IecO7MZjWa06ylCPhkwVfxv7yM8WpIAJY54uaga++uU+JVotcw1FyN2snqnmrXNnW6CspTGOI8qvKfthIavcFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgTGP/U7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83466C4CEC3;
-	Fri, 18 Oct 2024 22:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729290532;
-	bh=G7Ash0PGoqdQ1AiafmIA65zN/S2zqb3jjZ3jwkABAmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TgTGP/U7RKKcvPPDH/bduN4P+U9gnrm0Owu3NhDvqbrFzpKYGJofveh67iMhF47gx
-	 DxVHWjcKgwrn0iaN76NwGiQWk7/xxcY4rQ+L7pp1Nd2Kkk8TtzJo0YFYXbvIMxdEF0
-	 J98vlhBXDMn0lJZ7WllGBfhRVDNosEI0FDeDXB/ThdbS9hWCIKjA2foUu2K9he0EGJ
-	 S+NQxiL+7x4VLYidgjOMEj9kW0pDFYr1mO2ilHgqV71iwnLywxOWjlcAupEJSfjrS9
-	 2j1cm0fzRHFBQBJ78vHz0A0bjwC5hD5OBpJSPRFaKgLnRJcC4ltNXYLLZf1cuA+LuL
-	 BJ2cjkBNl6jwg==
-Date: Fri, 18 Oct 2024 17:28:50 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <20241018222850.GA766393@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBBE2F2F
+	for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 04:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.162
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729310627; cv=pass; b=tDTKMG0uCSufqrF3akaFq/wtv82sCH9zOYmd+KOBEoE9GvIGfUIwtCu6E5fG3710EJq5E7/E5Pg0jf2wxLkvULRNagAkFRxdV232Xb56hQi9q2ldksJr1vWn6BBQZU+xAcuoG0qfzVm3DWkEb3z+lhX/gNLvZOFggBOIR6snV4o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729310627; c=relaxed/simple;
+	bh=hA6wYHEZKzuTw5dbik0mh+mYyHqkiNGEn/o6h4wHxw0=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=oeU4ueMWAn9j1oD/v8V2twGzu2XCmO78yN2Nw2SqXjKgR9oNsHVqWwoE2du6nRhESl/b/s1luV6BLoHC3TMe2Vh5DUJ5FnaMh4B8+CUYZzxbidXeI1vYANUwXwmxIChEScSJOGQMPZfXj+p/QNbEGGZAZ0D4y92OnYvhLu/K+38=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strongrootsfitness.com; spf=none smtp.mailfrom=rs8-nyc.serverhostgroup.com; dkim=pass (2048-bit key) header.d=strongrootsfitness.com header.i=@strongrootsfitness.com header.b=WzuUz26b; arc=pass smtp.client-ip=23.83.223.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strongrootsfitness.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rs8-nyc.serverhostgroup.com
+X-Sender-Id: 8xbl3cp958|x-authuser|strongro@rs8-nyc.serverhostgroup.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0726F8C58CD
+	for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 00:37:09 +0000 (UTC)
+Received: from rs8-nyc.serverhostgroup.com (100-99-209-111.trex-nlb.outbound.svc.cluster.local [100.99.209.111])
+	(Authenticated sender: 8xbl3cp958)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 6C5548C5992
+	for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 00:37:08 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1729298228; a=rsa-sha256;
+	cv=none;
+	b=xkzv8ER6F9SpUod3FYs/SKY6xJM4NoQlkSIwM+Ekzv4csTlVsjRdBbhSkuriOZR2ITZQ8R
+	LgMRHSpecmJp+lRWU4rvjzAk5qDWruQ8LWA5piZsseVyWXO2Uw7BeOoE++hyUFPjOITVis
+	4B3+Xwn7iZaQEOH3r6O9QqRpNsK+CEtsrq5VhY0HSnYHQpAInu+5oS9h3WFKJa38vDPMqT
+	au0XQJAjF96zQvPDo63id6VaA4WNyfZfrMjTubO2AZAytU2rsGRLlaHxtHeZsJnVFFCHKG
+	f+ZlbRNVQGe7nICdNpQk9PfopcJ2sglIQBUJY9vn6VmoEfADPwwvR5viIBi3ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1729298228;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:dkim-signature;
+	bh=nC94GJL6MkfCTMHo3VTLQw6AH1h4xFoW2UTud3diDUg=;
+	b=aKMQGz6Yqj38xJ+PmsKHr16kZck4Yq8/wVnmTYMMUWrYzXUFg43BAxhCNeTRO74zeCfW6O
+	w9APmf69grUb5j1GUZjB1Sp3bmgAjfEfVSi/nzyqVLyx9M2S3DmXnP5/U9TnlkUGy2JGZT
+	G2fwvyLvociXuVe+jPL6WE3HyiIaZYUWwwrVb4wXTskVrgMOIpNMsn64hY4WFWwznqIoS0
+	f/H0ANtxFLoAKKWfwQfPfcw8/YXhPksN2qLkspmoVLeaO2/o2yWcWpe/jyzV/IN+OOjKDv
+	45pwWrFOU/Z+ym2yc4Ic5tcCWD+Zb6JTyjvWeyxLrBWn7xUhRdABfw0vuG9Qxw==
+ARC-Authentication-Results: i=1;
+	rspamd-75d86777c9-tmxs8;
+	auth=pass smtp.auth=8xbl3cp958
+ smtp.mailfrom=strongro@rs8-nyc.serverhostgroup.com
+X-Sender-Id: 8xbl3cp958|x-authuser|strongro@rs8-nyc.serverhostgroup.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId:
+ 8xbl3cp958|x-authuser|strongro@rs8-nyc.serverhostgroup.com
+X-MailChannels-Auth-Id: 8xbl3cp958
+X-Cooing-Army: 341f128752c5f515_1729298228916_1957228305
+X-MC-Loop-Signature: 1729298228916:195092546
+X-MC-Ingress-Time: 1729298228916
+Received: from rs8-nyc.serverhostgroup.com (rs8-nyc.serverhostgroup.com
+ [23.239.10.243])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.209.111 (trex/7.0.2);
+	Sat, 19 Oct 2024 00:37:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=strongrootsfitness.com; s=default; h=Content-Type:MIME-Version:Message-ID:
+	Reply-To:From:Date:Subject:To:Sender:Cc:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nC94GJL6MkfCTMHo3VTLQw6AH1h4xFoW2UTud3diDUg=; b=WzuUz26bqV4t8OO5IzX8AcuNpB
+	QpA6H5A57DMWE3Bk7BWAHAE6bFLpnnfi4d+mhjmHNlzAyUNglFPQLBA8mI7gp73uhQ560xFEhZj3t
+	Ru5rVqV4k8U2EbzZ9bA7LrDWa1YcxSKhvR2LdnlVZb4fBRSu5U9OqTWBVSLXmoK3mHpvYXjcUZsa0
+	ewDLXQbLGIUpMaLPCwoOc3SSFnqPJtSX/lEIb8O6xMEQoT2OhFt4h+V+oYuTG6Aruvsc4wS79HYLA
+	7TO01hWVyvW9Rxzzxx+4UlGAc1YFmrKKwK6Cb7hWDOunbt100ysnmmTfPnF4z/vBO/i2TE6/1BYh8
+	nEuqj3zA==;
+Received: from strongro by rs8-nyc.serverhostgroup.com with local (Exim 4.97.1)
+	(envelope-from <strongro@rs8-nyc.serverhostgroup.com>)
+	id 1t1xSt-00000000H5B-2Wx8
+	for linux-gpio@vger.kernel.org;
+	Fri, 18 Oct 2024 20:37:07 -0400
+To: linux-gpio@vger.kernel.org
+Subject: Strong Roots Fitness - Thank You!
+Date: Sat, 19 Oct 2024 00:37:07 +0000
+From: Strong Roots Fitness <sales@strongrootsfitness.com>
+Reply-To: sales@strongrootsfitness.com
+Message-ID: <4PYHX6oJZ1ZdB2lL2oGuz0aoxy20M9a33T3yq4PHb4M@strongrootsfitness.com>
+X-Mailer: PHPMailer 6.8.1 (https://github.com/PHPMailer/PHPMailer)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZxJXZ9R-Qp9CNmJk@apocalypse>
+Content-Type: text/plain; charset=UTF-8
+X-AuthUser: strongro@rs8-nyc.serverhostgroup.com
 
-On Fri, Oct 18, 2024 at 02:41:11PM +0200, Andrea della Porta wrote:
-> On 20:08 Mon 07 Oct     , Bjorn Helgaas wrote:
-> ... 
+Message you sent:
+From: Your account has been inactive for 364 days. To avoid deletion and claim your balance, please sign in and initiate a withdrawal within 24 hours. For assistance, visit our Telegram group: https://t.me/+21H-sSkFOfUxYzhl <linux-gpio@vger.kernel.org>
+Subject: Your account has been inactive for 364 days. To avoid deletion and claim your balance, please sign in and initiate a withdrawal within 24 hours. For assistance, visit our Telegram group: https://t.me/+21H-sSkFOfUxYzhl
+Name: Your account has been inactive for 364 days. To avoid deletion and claim your balance, please sign in and initiate a withdrawal within 24 hours. For assistance, visit our Telegram group: https://t.me/+21H-sSkFOfUxYzhl 
+Email: linux-gpio@vger.kernel.org
+Phone Number:86416482791 
+Message:
+dfb9psj CSiJ thgDDvZ UfZ6svl o7j0 rom0FWp
 
-> > Yes, this is exactly the problem.  The pci@0 parent and child
-> > addresses in "ranges" are both in the PCI address space.  But we
-> > start with pdev->resource[N], which is a CPU address.  To get the PCI
-> > address, we need to apply pci_bus_address().  If the host bridge
-> > windows are set up correctly, the window->offset used in
-> > pcibios_resource_to_bus() should yield the PCI bus address.
-> 
-> You mean something like this, I think:
-> 
-> @@ -129,7 +129,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
->                 if (of_pci_get_addr_flags(&res[j], &flags))
->                         continue;
->  
-> -               val64 = res[j].start;
-> +               val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
->                 of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
->                                    false);
->                 if (pci_is_bridge(pdev)) {
+-- 
+This e-mail was sent from a contact form on https://www.strongrootsfitness.com/
 
-Yes.
-
-> > I think it should look like this:
-> > 
-> >   pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
-> 
-> indeed, with the above patch applied, the result is exactly as you expected.
-> ...
-
-> > > > But I don't think it works in general because there's no
-> > > > requirement that the host bridge address translation be that
-> > > > simple.  For example, if we have two host bridges, and we want
-> > > > each to have 2GB of 32-bit PCI address space starting at 0x0,
-> > > > it might look like this:
-> > > > 
-> > > >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
-> > > >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
-> > > > 
-> > > > In this case simply ignoring the high 32 bits of the CPU
-> > > > address isn't the correct translation for the second host
-> > > > bridge.  I think we should look at each host bridge's
-> > > > "ranges", find the difference between its parent and child
-> > > > addresses, and apply the same difference to everything below
-> > > > that bridge.
-> > > 
-> > > Not sure I've got this scenario straight: can you please provide
-> > > the topology and the bit setting (32/64 bit) for those ranges?
-> > > Also, is this scenario coming from a real use case or is it
-> > > hypothetical?
-> > 
-> > This scenario is purely hypothetical, but it's a legal topology
-> > that we should handle correctly.  It's two host bridges, with
-> > independent PCI hierarchies below them:
-> > 
-> >   Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
-> >   Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
-> > 
-> > Bridge A has an MMIO aperture at CPU addresses
-> > 0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
-> > its secondary side, the PCI address is CPU_addr - 0x2_00000000.
-> > 
-> > Similarly, bridge B has an MMIO aperture at CPU addresses 
-> > 0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
-> > its secondary side, the PCI address is CPU_addr - 0x2_80000000.
-> > 
-> > Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
-> > range.  In a topology like this, you can't convert a bus address back
-> > to a CPU address unless you know which hierarchy it's in.
-> > pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
-> > which hierarchy (and which host bridge address translation) to use.
-> 
-> Agreed. While I think about how to adjust that specific patch,i
-> let's drop it from this patchset since the aforementioned change is
-> properly fixing the translation issue.
-
-OK.  I assume you mean to drop the "PCI: of_property: Sanitize 32 bit
-PCI address parsed from DT" patch?  Or replace it with the
-pci_bus_address() addition above?
-
-Bjorn
 
