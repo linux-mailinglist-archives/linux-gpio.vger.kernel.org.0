@@ -1,210 +1,143 @@
-Return-Path: <linux-gpio+bounces-11654-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11655-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD41A9A4C22
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 10:47:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72A759A4D39
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 13:51:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5ACDCB22C9A
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 08:47:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CE992834CE
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 11:50:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B286B1DDC26;
-	Sat, 19 Oct 2024 08:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8611E00A9;
+	Sat, 19 Oct 2024 11:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CfZ/vSMV"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="qgmcqSq5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542161DDC22
-	for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 08:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817821BDAB3;
+	Sat, 19 Oct 2024 11:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729327604; cv=none; b=GlE+spGgqZpEhUb8Wg5JISq9kkXdcup0SoUJeLYxngRAdeZ1Zj0u1sMGiCxtl9eB+N2bmFZkTZQOyL3nCWpC6hjLs9fL3GEa0RBdc3/QRfn7A75vAGKgYN9mGM09QVqHNrolHOxQGytC6L5xo6PITtuX/rPCck+ojRF5bk/Q2Q4=
+	t=1729338650; cv=none; b=s34caBVWmf/3r4I1PqwRAnhMvAE756FeD8d22q86mX8bU/Shz+714X1Xz0dAk3eGXiMnKVqNaj9tcLiwoEtZu9XLOKoZp7uQ1k5OgkI/KD8k3SwCsB7r6QHX4Ssn37e+e6bZtaKXuoQeupxUEUc4K3vzRAw8S+nFqKnnvW8C/mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729327604; c=relaxed/simple;
-	bh=gNbr23i1Y7tru0e0VyGj6/FwF2Lx5ttC9gneh6Z0QG0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBi7my5881Ywgl8TCTG+Res4kQRlHow8fD9/WuzS9ZenT2AClJIXKnspjzPZyw2X2elC0IWajzkJ7NTI8IAiU+d5p5kexnAwAFgD0nJgO0Gr7zw8NfdpTn1klqkyhtNs4vK5mVPDAKvMVVvn/WrXnEBq2shsXD5qUZenQ+k9gzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CfZ/vSMV; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a0c40849cso421392466b.3
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 01:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1729327598; x=1729932398; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=goIM8l9m337Jc/qmGgmMN6cGaQgYnCJzJED4V8yFMUM=;
-        b=CfZ/vSMVPZo5AOU7tR2WJsdndqZveDhhHDl8Sp3gAcT3KjLdU3NAGex8ZSl+j9E1ZW
-         eNw3cpBh6HGxBM9O5oFJTvLWdG8C5D4sZEqpE9gZOtyAGvjTTNg5xwsXa07fhOxM1r5C
-         NRW2EGJjiony3JqOHYSe0kazfJu4Jh3kdV3QRswniXXZB6F5j61hwixdpZcAwyXyI6D7
-         cyDZt/A5L/mEqB3bqd+XBI1OvpYDIA+yfBV5qbxlxTzx3ixEYn/jP54tn8TU+0pGnTBQ
-         GyTlnoY/veeg2tiSnUZYHMP7zuZRZs9c8U+QM4lElzJ5QHGHkQ0Zw+WZQajLOtlOWzQ6
-         HWgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729327598; x=1729932398;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=goIM8l9m337Jc/qmGgmMN6cGaQgYnCJzJED4V8yFMUM=;
-        b=p36iLn1qid4FkbFjMsjYXa/8lPaCjJpqQ1gBqyFcmVzJdaSoqsJ9rWlxskxNOkjdsQ
-         jnnj7KYXnDDiszapieh69HxfH5aC6r9YOKv7CsSZHibgsL4IOz/yRF8jXURYh6iQK1rH
-         98QQTDPEhruyRFjtBND9DJ7nKs3kkRbifg5wMdyyJOU+S+L/z3DOopp6TBmE/8364VjX
-         JacFBRkQQqZeBTnjs8RYFa2jTtLDUPpgfziNVvmZsbKVoZLq2kPH7zwRTSUeOw0St2wx
-         rhidJG4f6OXvsAUkS+f6I5398dgZyWQXVa017gguVEhdjDcc4wgHSQQkB/P6WJeEIdHN
-         JlHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqs/u+B2HedI3dhUC65m9IRLk+X+CpRebhP7vp0OCgOvpH69E8s1mUYJXWozex/YF08xjjUMk4cTqE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI8FslNyqhx0tQkO1o9SYt2Zyyqnuxu6CfjzTUbj4tDfJ57OW0
-	YKMuWdtB1Mdr1Pk60VaSek65XLO3TFGjTQ653SJAslW+0gz+HBZZg0BbAo//4j4=
-X-Google-Smtp-Source: AGHT+IE6LjBSGzuHopccP4572hv/igYqTjW1d9uem80OwOh8YbiNrdYIuLnJQku+pZ2TZlmLJ4YdEQ==
-X-Received: by 2002:a17:907:705:b0:a99:36ab:d843 with SMTP id a640c23a62f3a-a9a69baadbbmr400539166b.38.1729327598506;
-        Sat, 19 Oct 2024 01:46:38 -0700 (PDT)
-Received: from localhost (host-95-234-228-50.retail.telecomitalia.it. [95.234.228.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a68bf7a19sm190806966b.168.2024.10.19.01.46.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2024 01:46:37 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Sat, 19 Oct 2024 10:46:58 +0200
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <ZxNyAuaOy6DE8sH-@apocalypse>
-References: <ZxJXZ9R-Qp9CNmJk@apocalypse>
- <20241018222850.GA766393@bhelgaas>
+	s=arc-20240116; t=1729338650; c=relaxed/simple;
+	bh=ALf1wUJN+0Fpqn4qKACsZmuH0gCwBAlL/6YKtoXClYM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T5XAsswTJP/53kAwQKS3rNICnlIcsHOcAW/xzYSN1hXSG4QhH5/l20/Kr+I/xn+XSAQ9K9vqdRNZ8yJJwD1XJT9Pzfuz5tTtwMngjvE6JsbAxry2lOSZpMvAgECIavBKgGw+qbinUCsrnsVYIJ5Ttw2eZMSnSL2XVgb/yc/Qy7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=qgmcqSq5; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.1.130] (51B6DD9D.dsl.pool.telekom.hu [81.182.221.157])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 8A16CE4205;
+	Sat, 19 Oct 2024 11:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1729338641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w5/Ny1lSvVpnnZjsjk77MC94wGjYZgVT23cJY+JO8UE=;
+	b=qgmcqSq5Xj804Q6kJVeqDFLbV2owDZQFILwAoWxkpX8O07AdxeLX+NZIh14802cQ3UIYMz
+	tevodF2arg8Gbw4JJc9xQLhUXUH21ROZuG255M/MWFzqEaTXbTdEeo2LqFSddg4KrSYDEX
+	M5JSClxYShOteVa7Vnws4ZxE2WL0+9Eb9ia7HrnqXLh6g0NF8p4xhVJwjz4XIK2LpMnXUc
+	ZSCV2AhMZdbTC+uzBXIxg03KwYqFdaTNh7AJRCZKodzGxicpSQspNQfJt9TNDH0z+E/GoO
+	pfbrkRAYSetQQ5kDF5P3jsyvRaIgzI1LCribvu7/H8SEz5zIsivc0jACVSQQjg==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH RFC 00/14] Add MSM8917/PM8937/Redmi 5A
+Date: Sat, 19 Oct 2024 13:50:37 +0200
+Message-Id: <20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241018222850.GA766393@bhelgaas>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAA2dE2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxNDA0NL3dziXAtLQ3NdQ/Nk4xSDtDSTRFMjJaDqgqLUtMwKsEnRSkFuzkq
+ xtbUAZhhrRl4AAAA=
+X-Change-ID: 20241019-msm8917-17c3d0ff4a52
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Dang Huynh <danct12@riseup.net>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729338640; l=2491;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=ALf1wUJN+0Fpqn4qKACsZmuH0gCwBAlL/6YKtoXClYM=;
+ b=//sMc2I0RKJ4/BL5T24JEig0g4tJgPwPviUpFku/VIpxRCbYlfRs9Kf7YA4Gtfc7uqHS8gBG1
+ 2a53R/G22z5Bog8X97Aer/qVcSS5rD2E3dgYmwseZmXvUI4V5zSHjCW
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Hi Bjorn,
+This patch series add support for MSM8917 soc with PM8937 and
+Xiaomi Redmi 5A (riva).
 
-On 17:28 Fri 18 Oct     , Bjorn Helgaas wrote:
-> On Fri, Oct 18, 2024 at 02:41:11PM +0200, Andrea della Porta wrote:
-> > On 20:08 Mon 07 Oct     , Bjorn Helgaas wrote:
-> > ... 
-> 
-> > > Yes, this is exactly the problem.  The pci@0 parent and child
-> > > addresses in "ranges" are both in the PCI address space.  But we
-> > > start with pdev->resource[N], which is a CPU address.  To get the PCI
-> > > address, we need to apply pci_bus_address().  If the host bridge
-> > > windows are set up correctly, the window->offset used in
-> > > pcibios_resource_to_bus() should yield the PCI bus address.
-> > 
-> > You mean something like this, I think:
-> > 
-> > @@ -129,7 +129,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
-> >                 if (of_pci_get_addr_flags(&res[j], &flags))
-> >                         continue;
-> >  
-> > -               val64 = res[j].start;
-> > +               val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
-> >                 of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
-> >                                    false);
-> >                 if (pci_is_bridge(pdev)) {
-> 
-> Yes.
-> 
-> > > I think it should look like this:
-> > > 
-> > >   pci@0: <0x82000000 0x0 0x00000000 0x82000000 0x0 0x00000000 0x0 0x600000>;
-> > 
-> > indeed, with the above patch applied, the result is exactly as you expected.
-> > ...
-> 
-> > > > > But I don't think it works in general because there's no
-> > > > > requirement that the host bridge address translation be that
-> > > > > simple.  For example, if we have two host bridges, and we want
-> > > > > each to have 2GB of 32-bit PCI address space starting at 0x0,
-> > > > > it might look like this:
-> > > > > 
-> > > > >   0x00000002_00000000 -> PCI 0x00000000 (subtract 0x00000002_00000000)
-> > > > >   0x00000002_80000000 -> PCI 0x00000000 (subtract 0x00000002_80000000)
-> > > > > 
-> > > > > In this case simply ignoring the high 32 bits of the CPU
-> > > > > address isn't the correct translation for the second host
-> > > > > bridge.  I think we should look at each host bridge's
-> > > > > "ranges", find the difference between its parent and child
-> > > > > addresses, and apply the same difference to everything below
-> > > > > that bridge.
-> > > > 
-> > > > Not sure I've got this scenario straight: can you please provide
-> > > > the topology and the bit setting (32/64 bit) for those ranges?
-> > > > Also, is this scenario coming from a real use case or is it
-> > > > hypothetical?
-> > > 
-> > > This scenario is purely hypothetical, but it's a legal topology
-> > > that we should handle correctly.  It's two host bridges, with
-> > > independent PCI hierarchies below them:
-> > > 
-> > >   Host bridge A: [mem 0x2_00000000-0x2_7fffffff window] (bus address 0x00000000-0x7fffffff)
-> > >   Host bridge B: [mem 0x2_80000000-0x2_ffffffff window] (bus address 0x00000000-0x7fffffff)
-> > > 
-> > > Bridge A has an MMIO aperture at CPU addresses
-> > > 0x2_00000000-0x2_7fffffff, and when it initiates PCI transactions on
-> > > its secondary side, the PCI address is CPU_addr - 0x2_00000000.
-> > > 
-> > > Similarly, bridge B has an MMIO aperture at CPU addresses 
-> > > 0x2_80000000-0x2_ffffffff, and when it initiates PCI transactions on 
-> > > its secondary side, the PCI address is CPU_addr - 0x2_80000000.
-> > > 
-> > > Both hierarchies use PCI bus addresses in the 0x00000000-0x7fffffff
-> > > range.  In a topology like this, you can't convert a bus address back
-> > > to a CPU address unless you know which hierarchy it's in.
-> > > pcibios_bus_to_resource() takes a pci_bus pointer, which tells you
-> > > which hierarchy (and which host bridge address translation) to use.
-> > 
-> > Agreed. While I think about how to adjust that specific patch,i
-> > let's drop it from this patchset since the aforementioned change is
-> > properly fixing the translation issue.
-> 
-> OK.  I assume you mean to drop the "PCI: of_property: Sanitize 32 bit
-> PCI address parsed from DT" patch?  Or replace it with the
-> pci_bus_address() addition above?
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Barnabás Czémán (11):
+      dt-bindings: pinctrl: qcom,pmic-gpio: add PM8937
+      pinctrl: qcom-pmic-gpio: add support for PM8937
+      dt-bindings: pinctrl: qcom,pmic-mpp: Document PM8937 compatible
+      pinctrl: qcom: spmi-mpp: Add PM8937 compatible
+      dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl bindings
+      dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8917
+      dt-bindings: thermal: tsens: Add MSM8917 compatible
+      dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+      dt-bindings: nvmem: Add compatible for MS8917
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      arm64: dts: qcom: Add Xiaomi Redmi 5A
 
-I'm planning to replace that patch with the above mentioned pci_bus_address()
-addition. However, I think the 32 bit sanitization is still useful to prevent
-wrongly encoded address to linger around, but I defer it to a subsequent standalone
-patch, after figuring out the dual bridge scenario that you proposed.
+Dang Huynh (1):
+      arm64: dts: qcom: Add PM8937 PMIC
 
-> 
-> Bjorn
+Otto Pflüger (2):
+      pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+      arm64: dts: qcom: Add initial support for MSM8917
 
-Many thanks,
-Andrea
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml         |    1 +
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+ .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  155 ++
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |    3 +
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |    2 +
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8917-pins.dtsi         |  344 +++++
+ arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  295 ++++
+ arch/arm64/boot/dts/qcom/msm8917.dtsi              | 1557 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8916.dtsi               |    9 +-
+ arch/arm64/boot/dts/qcom/pm8937.dtsi               |  216 +++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1622 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    1 +
+ 19 files changed, 4224 insertions(+), 1 deletion(-)
+---
+base-commit: f2493655d2d3d5c6958ed996b043c821c23ae8d3
+change-id: 20241019-msm8917-17c3d0ff4a52
+
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
+
 
