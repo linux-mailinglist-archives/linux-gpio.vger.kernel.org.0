@@ -1,150 +1,194 @@
-Return-Path: <linux-gpio+bounces-11685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11687-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3A719A4EBE
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 16:40:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20F979A4F93
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 18:06:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8EAE1F2715A
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 14:40:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86D53B25C2C
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Oct 2024 16:06:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9571154BF0;
-	Sat, 19 Oct 2024 14:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40109155747;
+	Sat, 19 Oct 2024 16:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="T2bU+FCR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xyf8NHyc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7037C2E3;
-	Sat, 19 Oct 2024 14:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3B02F3E
+	for <linux-gpio@vger.kernel.org>; Sat, 19 Oct 2024 16:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729348838; cv=none; b=Op6wvePMvclMbRYHmRnpPh5unfCiP+PLBTzRD7KVw43gtlq6BJyvhU4dMo7MdPPpoyz+zz2zr4WrxGb2ewNqW/PlsQ+PQYln+hsJJJbEtagLo41h3H9yZNb9MJu4bilVWAA0MWS1/WgCz//g3EyYHtbH7Cmc+HbLkNyiJluazXc=
+	t=1729353942; cv=none; b=u4pNW7T4c4KcVBjmoUqr4V1SKiZUls+uf/s8nKroM7wf6/INTDsAjFBKVy4xE0fCpE31Lk6gtg4+AzimziegCkDFwwGJbAvPnhgoh3sgL9k3uyzL+qY9SgKgZH83vqv8K4OOg8WBGOvpKb7zsZXkpUWR0pB9HtbaMc5GdZ6wMYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729348838; c=relaxed/simple;
-	bh=pkgwufm+bq8k6WekP/FLv0/EPjklZE3HX5XQ5xReyWg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Xdi+CqauHG2okYmbRhANy/OGtyww4p2ghi1Fb50syPXg8BaZntklLV1s/zxbp4akUbg2LOnDFrF/nRja70bOd3lHJMjG0P0q7D9icV8QIl3hkx9AAa6hX8BOiQPviAZ+xboOi2PlgsqaqzUnNLpdaygRDNlx4aFAAQI+yzFJ1M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=T2bU+FCR; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 79FECE459F;
-	Sat, 19 Oct 2024 14:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1729348834;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1EZ0o3avbZ9UgAo2nPmXkLtdwekuw0WM/Mf7T+3Ys1k=;
-	b=T2bU+FCRFyKGaxMlZXvxwhZf/FHRJPk9dBBdMB1UrkI8g1aPy3YwXm11G1FcATi5m77a4+
-	GcjqkQ0wMy4MaMSfZ9lMXNH+mANNM5Xv4oK8m3bodjnVMWoxdueKjLJYsypPJgWW5ZxEmg
-	jfHWSOqCiVzoxsNp5n/cqXW8ZrlDp5KAyIZeFaWgOZDukNuqqGkH1RPstqr4iWzja4BIlu
-	U5+TGygcbaJ82mwMP2oG7jrIccZpHtca3ZD9jYRuOcjG8VPRiwF8fGBR6U/RYyfyPuy7Gd
-	ZceC7KQxoybbNKIUSdZatvPlLGg2HJogceaiYb/R8HJCG0SjQvszDjxJ1g65uQ==
+	s=arc-20240116; t=1729353942; c=relaxed/simple;
+	bh=mJe338VpTjnbfGKvyCyttdRwe5W2tJfUJ6vivqMCmgU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gwU7ynCuOi4+NjazHOgVFIsjZ56gabSNvqdkpZiVxrQE4OIwUqsF6R1UAEUg7MdjKmu80wfOgKGKbvLiPDM36vPCTadCk9BLr9scnUdjt31AoU0R1nkJZ2GFB4hrWODFGEoKtFEiYq5XGiiarFwo55zGrNqFSy++4SzbfG5/TRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xyf8NHyc; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729353939; x=1760889939;
+  h=date:from:to:cc:subject:message-id;
+  bh=mJe338VpTjnbfGKvyCyttdRwe5W2tJfUJ6vivqMCmgU=;
+  b=Xyf8NHyceEkMuanWDFhDWDCa6mWyFuZ+NP7yuRj+L/QV1JVdSiUgx9+0
+   j15GOz+je5qW60fXnbZXrcFIusRQT4S1/EtLkKL6L+O0YK5sc+RnGTxkp
+   r0DE9DAyN5gmVucMqi/ScgZFQHRuc3Wi1m5JJvbr/wSvxg2jrcdpNyJkG
+   Gj79fG80+Daj9Vl/1WmRD+rNXG8mBUNP93il035IuxGRxb+C6/ni5ZlL6
+   Fow58WgWWj9wq1IK4QFLJR7desOT+SrsbDYfYw9pAFtNCfmXRswjfEiOM
+   Sl3XWg3HDvV0EKm33gmQIb1TOe8v86bp+o2dBTR670wMBK7LCWawnJlx9
+   A==;
+X-CSE-ConnectionGUID: tqbNhXLqTTKUM/VHuu2/Ug==
+X-CSE-MsgGUID: k1wEYqL/Rzi0kUEUBDVtCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="32558389"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="32558389"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2024 09:05:39 -0700
+X-CSE-ConnectionGUID: TyTMGP7JQAe0/3hBjvpyzg==
+X-CSE-MsgGUID: en5fNfmvRQa8swerhg21Bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,216,1725346800"; 
+   d="scan'208";a="79150123"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 19 Oct 2024 09:05:39 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t2BxQ-000P8L-0A;
+	Sat, 19 Oct 2024 16:05:36 +0000
+Date: Sun, 20 Oct 2024 00:04:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ b4c69d471b72aa70766d94a11c31bc4c13f29eac
+Message-ID: <202410200050.40A7rDlJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Date: Sat, 19 Oct 2024 16:40:34 +0200
-From: barnabas.czeman@mainlining.org
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad
- Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria
- <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Joerg
- Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- iommu@lists.linux.dev
-Subject: Re: [PATCH RFC 14/14] arm64: dts: qcom: Add Xiaomi Redmi 5A
-In-Reply-To: <jj4ky6uuidv3rdjl7q4ehe7cdgcjxtnmtcufmy462gznkjiex2@pptv6aufsudj>
-References: <20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org>
- <20241019-msm8917-v1-14-f1f3ca1d88e5@mainlining.org>
- <pyr3t3kcpjj5zor226fwembjsbpp5zh7mpe2a3bqmwnbqccj7h@a55efscym3s7>
- <46f7b167220a7d54242e9457d00d67e2@mainlining.org>
- <jj4ky6uuidv3rdjl7q4ehe7cdgcjxtnmtcufmy462gznkjiex2@pptv6aufsudj>
-Message-ID: <d55a8f5d7f9b371fd2b51ec079adbf8d@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2024-10-19 16:38, Dmitry Baryshkov wrote:
-> On Sat, Oct 19, 2024 at 03:57:54PM +0200, 
-> barnabas.czeman@mainlining.org wrote:
->> On 2024-10-19 15:48, Dmitry Baryshkov wrote:
->> > On Sat, Oct 19, 2024 at 01:50:51PM +0200, Barnabás Czémán wrote:
->> > > Add initial support for Xiaomi Redmi 5A (riva).
->> > >
->> > > Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->> > > ---
->> > >  arch/arm64/boot/dts/qcom/Makefile                |   1 +
->> > >  arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts | 295
->> > > +++++++++++++++++++++++
->> > >  2 files changed, 296 insertions(+)
->> > >
->> > > diff --git a/arch/arm64/boot/dts/qcom/Makefile
->> > > b/arch/arm64/boot/dts/qcom/Makefile
->> > > index 065bb19481c16db2affd291826d420c83a89c52a..79add0e07d8a5f3362d70b0aaaaa9b8c48e31239
->> > > 100644
->> > > --- a/arch/arm64/boot/dts/qcom/Makefile
->> > > +++ b/arch/arm64/boot/dts/qcom/Makefile
->> > > @@ -59,6 +59,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+=
->> > > msm8916-wingtech-wt86518.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt86528.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-yiming-uz801v3.dtb
->> > > +dtb-$(CONFIG_ARCH_QCOM)	+= msm8917-xiaomi-riva.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8929-wingtech-wt82918hd.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
->> > >  dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
->> > > diff --git a/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
->> > > b/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
->> > > new file mode 100644
->> > > index 0000000000000000000000000000000000000000..7553f73603fc87797b0d424a2af6f2da65c90f5f
->> > > --- /dev/null
->> > > +++ b/arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts
->> > > @@ -0,0 +1,295 @@
->> > > +// SPDX-License-Identifier: BSD-3-Clause
->> > > +/*
->> > > + * Copyright (c) 2023, Barnabas Czeman
->> > > + */
->> > > +
->> > > +/dts-v1/;
->> > > +
->> > > +#include <dt-bindings/arm/qcom,ids.h>
->> > > +#include <dt-bindings/gpio/gpio.h>
->> > > +#include <dt-bindings/input/linux-event-codes.h>
->> > > +#include <dt-bindings/leds/common.h>
->> > > +#include "msm8917.dtsi"
->> > > +#include "pm8937.dtsi"
->> > > +
->> > > +/ {
->> > > +	model = "Xiaomi Redmi 5A (riva)";
->> > > +	compatible = "xiaomi,riva", "qcom,msm8917";
->> > > +	chassis-type = "handset";
->> > > +
->> > > +	qcom,msm-id = <QCOM_ID_MSM8917 0>;
->> > > +	qcom,board-id = <0x1000b 2>, <0x2000b 2>;
->> >
->> > Is this required to boot?
->> Yes
-> 
-> Hmm, did you verify the dts against DT bindings? I think you need to 
-> fix
-> them.
-I have checked with this `make CHECK_DTBS=1 
-qcom/msm8917-xiaomi-riva.dtb`
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: b4c69d471b72aa70766d94a11c31bc4c13f29eac  dt-bindings: gpio-mmio: Add ngpios property
+
+elapsed time: 1639m
+
+configs tested: 101
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.1.0
+alpha                            allyesconfig    clang-20
+alpha                               defconfig    gcc-14.1.0
+arc                              allmodconfig    clang-20
+arc                               allnoconfig    gcc-14.1.0
+arc                              allyesconfig    clang-20
+arc                                 defconfig    gcc-14.1.0
+arc                        vdk_hs38_defconfig    clang-20
+arm                              allmodconfig    clang-20
+arm                               allnoconfig    gcc-14.1.0
+arm                              allyesconfig    clang-20
+arm                                 defconfig    gcc-14.1.0
+arm                         nhk8815_defconfig    clang-20
+arm                       omap2plus_defconfig    clang-20
+arm64                            allmodconfig    clang-20
+arm64                             allnoconfig    gcc-14.1.0
+arm64                               defconfig    gcc-14.1.0
+csky                              allnoconfig    gcc-14.1.0
+csky                                defconfig    gcc-14.1.0
+hexagon                          alldefconfig    clang-20
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    gcc-14.1.0
+hexagon                          allyesconfig    clang-20
+hexagon                             defconfig    gcc-14.1.0
+i386                             allmodconfig    clang-18
+i386                              allnoconfig    clang-18
+i386                             allyesconfig    clang-18
+i386        buildonly-randconfig-001-20241019    clang-18
+i386        buildonly-randconfig-002-20241019    clang-18
+i386        buildonly-randconfig-003-20241019    clang-18
+i386        buildonly-randconfig-004-20241019    clang-18
+i386        buildonly-randconfig-005-20241019    clang-18
+i386        buildonly-randconfig-006-20241019    clang-18
+i386                                defconfig    clang-18
+i386                  randconfig-001-20241019    clang-18
+i386                  randconfig-002-20241019    clang-18
+i386                  randconfig-003-20241019    clang-18
+i386                  randconfig-004-20241019    clang-18
+i386                  randconfig-005-20241019    clang-18
+i386                  randconfig-006-20241019    clang-18
+i386                  randconfig-011-20241019    clang-18
+i386                  randconfig-012-20241019    clang-18
+i386                  randconfig-013-20241019    clang-18
+i386                  randconfig-014-20241019    clang-18
+i386                  randconfig-015-20241019    clang-18
+i386                  randconfig-016-20241019    clang-18
+loongarch                        allmodconfig    gcc-14.1.0
+loongarch                         allnoconfig    gcc-14.1.0
+loongarch                           defconfig    gcc-14.1.0
+m68k                             allmodconfig    gcc-14.1.0
+m68k                              allnoconfig    gcc-14.1.0
+m68k                             allyesconfig    gcc-14.1.0
+m68k                                defconfig    gcc-14.1.0
+m68k                        m5307c3_defconfig    clang-20
+m68k                          sun3x_defconfig    clang-20
+microblaze                       allmodconfig    gcc-14.1.0
+microblaze                        allnoconfig    gcc-14.1.0
+microblaze                       allyesconfig    gcc-14.1.0
+microblaze                          defconfig    gcc-14.1.0
+mips                              allnoconfig    gcc-14.1.0
+mips                          eyeq5_defconfig    clang-20
+mips                         rt305x_defconfig    clang-20
+nios2                             allnoconfig    gcc-14.1.0
+nios2                               defconfig    gcc-14.1.0
+openrisc                          allnoconfig    clang-20
+openrisc                            defconfig    gcc-12
+parisc                            allnoconfig    clang-20
+parisc                              defconfig    gcc-12
+parisc                generic-32bit_defconfig    clang-20
+parisc64                            defconfig    gcc-14.1.0
+powerpc                           allnoconfig    clang-20
+powerpc                   currituck_defconfig    clang-20
+powerpc                       holly_defconfig    clang-20
+powerpc                    mvme5100_defconfig    clang-20
+powerpc                     tqm8541_defconfig    clang-20
+riscv                             allnoconfig    clang-20
+riscv                               defconfig    gcc-12
+s390                             allmodconfig    gcc-14.1.0
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.1.0
+s390                                defconfig    gcc-12
+sh                               allmodconfig    gcc-14.1.0
+sh                                allnoconfig    gcc-14.1.0
+sh                               allyesconfig    gcc-14.1.0
+sh                                  defconfig    gcc-12
+sh                      rts7751r2d1_defconfig    clang-20
+sparc                            allmodconfig    gcc-14.1.0
+sparc64                             defconfig    gcc-12
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-20
+um                               allyesconfig    clang-20
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-18
+x86_64                           allyesconfig    clang-18
+x86_64                              defconfig    clang-18
+x86_64                                  kexec    gcc-12
+x86_64                               rhel-8.3    gcc-12
+xtensa                            allnoconfig    gcc-14.1.0
+xtensa                  cadence_csp_defconfig    clang-20
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
