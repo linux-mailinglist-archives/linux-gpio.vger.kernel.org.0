@@ -1,88 +1,115 @@
-Return-Path: <linux-gpio+bounces-11705-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11706-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A9339A5BC2
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 08:55:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F09009A5C31
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 09:14:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 587A22825CD
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 06:55:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A89661F228AF
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 07:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C290B1D0E1A;
-	Mon, 21 Oct 2024 06:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BFA1D0F68;
+	Mon, 21 Oct 2024 07:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAq8B577"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DAvK2dOn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F471D0B98;
-	Mon, 21 Oct 2024 06:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB27B1D0E3F
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 07:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729493713; cv=none; b=ujQJKAV6CoBlGyI/Q5Ftz5zrgS+lGdnYAtLzpPo7s78UdcTlvgEeI21Ve/K/ESwCkxbEHVxxo060auEexcEo87bmLo0it3TCTU+iewI50nMoe5xMD5QjIv7ZeD7m+U/hfd2GfxpAe8ViiiI20wm79QRgtgAykRp9H3/dQjhDWJY=
+	t=1729494882; cv=none; b=seekaugXJ3koVVaYoISph/+ERV/nXnAyoq2j+k7Zg2XZ0l6QA04kfX2YS2QWqa1zKY9VUnzVSYtVc8nyezsTi4RqiJI5USOuNAweoxu44b9V+ye1oYCx3OYzKnZ2njgQea8lua0zCUBol4NhN2gJPXSsXTP7bmPbRs0/zOcVGTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729493713; c=relaxed/simple;
-	bh=8PCol88A2ncEPIJmEoeILZX16B39Y6hAq9nQ5qaD65Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKUWSWNzdM1JCMtKKoOAeyMF6v5qC5M8erivHAzzq/h1EPc6cKS3WwOc+ZH/UGjBtMZBjWBRnLJpmSJBf9xlod4GW/XAY6nCQoG/SgVu4MJrWZnytz7X00ARP/+gRALLb+qKR0Vm3eXD3R0sFldyW+Htdv6VO6Fxw7g3rLcouWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAq8B577; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155EBC4CEC3;
-	Mon, 21 Oct 2024 06:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729493712;
-	bh=8PCol88A2ncEPIJmEoeILZX16B39Y6hAq9nQ5qaD65Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dAq8B577+0ECrnl1hxg57JvaIAERfsMygM1RTe73txDgtUVOofRuD9unBnx4hmSeZ
-	 EIQ5qQQPxBsulq9iTwBntYRm/SUYdCu6/HxYgi+lK9WjTb7A+Ls0aRl5aSPmMotDwt
-	 N3T/9ZHy09RxzzPqnDa95Hr/vjirO4UDi0ghvjFN8diNiDnFtTcLhqgkCCl0rX6x93
-	 wdBRWkuYTfAr3C81FnS3swCEYFUtATB4ivCt6mYDhSSl8TSAI0ZdFS8O1xFMZmAxY8
-	 KrIi4Edm8wGXgrUXAP/ZgLI5X6A/bHmLP9XCRQnDOerrdfgsZC2W/acdwYH+nvrpU6
-	 rn7KqZeh9D7Eg==
-Date: Mon, 21 Oct 2024 08:55:09 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
-	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
-	Dang Huynh <danct12@riseup.net>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Otto =?utf-8?Q?Pfl=C3=BCger?= <otto.pflueger@abscue.de>
-Subject: Re: [PATCH RFC 00/14] Add MSM8917/PM8937/Redmi 5A
-Message-ID: <gh55k7a3b6rmkloq45mkfcms5g3x6stelzoikag3uo7idvkb7g@ncslfa5tzsnf>
-References: <20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org>
+	s=arc-20240116; t=1729494882; c=relaxed/simple;
+	bh=B/kiukLnjmLkwZ+94r2toJOSjF2D/tL5XVrmGqc1MPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N89GcBg+tBS8cQcu0S6XEaw7Db5EWMTcSBx7wk3IWeIPxiGnBI+kMz6f9EM2KY1zDoJGLS/5bz51mk43xKxxyUv07Rjc7chmwzh5aUExwJScvYMkh9mi9kaso22dFhbzTsC3KBDz/jrbGh0WPJlKB9miKLvu4WZZyHJP5pmr6Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DAvK2dOn; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37d4fd00574so2773951f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 00:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729494879; x=1730099679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yf+ojeeNe2s2EnjRYvZ3se/a+vEw/qUmLYKHSRFy53w=;
+        b=DAvK2dOnwcsqPpCaooEwW41R8LlZI5HR+W+8pXzCDpTxIBcETnx98S3WCksW1bg+/k
+         QKNrz14SlW9cJ7irfMgj1vmS7l8/rrEi6R4KTsexdfMagNR6T83lTWYjgy4tRf3CR0pf
+         QEN/c24UzOnNGwHevcGo2kvyDxObN/0Rpcm0+e4V0Qz7s25Mnf6Rl8FZkcLpN8ytXl8B
+         Rltc04Sg1twaSRtOI6LGIc/31KU45JxfBkoembbrc4I0iXzfRPsDXxioyqXZDjgXvvec
+         Woe8L0Rd34oMZjTdmkHkzbZuIW3fMF/xNePUlj0UchNImtUYMyNHE4UbM6LyMPc6sahq
+         vFRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729494879; x=1730099679;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yf+ojeeNe2s2EnjRYvZ3se/a+vEw/qUmLYKHSRFy53w=;
+        b=InOhhQeMsCwn4UuH+hGTcJG9x1I9lzTR7OtPXtqf+KFpxgYR9KCe78Nee1c1E2kHcA
+         Pe5l7d0/qL9QnrgyhQw1EZJZQluDwyivM87lhiX3Smz6lWRLfW1rKDAvIAx3ioEJhi39
+         3dbJFjE9bIgxxYZhbMzuESbIOtOJ2BXChI1bPVJ+9piCyD+Z/6VFRdFPHmp0wzrS9jFg
+         QSh7S2awfBS5hW6+suUzQ0aAIoelnVEBfpOmzLsp8aSFbPNlx4Mmx75q/ZuzQBe6qIjx
+         dBALbqfA7eXDC5J6vtN4dkfApg6RhRUc9sCPnXLlCzRpS3O3sHOyq/E6/pI1i7H0V3sv
+         fQig==
+X-Forwarded-Encrypted: i=1; AJvYcCUVZUKsDlsk8RFZpMiQRnLjo3k/I5Sbybyv02hBi3Cw+Dy61qv4ZVfU6fU3erqwFcQeM5UNq15E0h9W@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTqQTZZf91XTh0QRf9hFgBHwr5jnD8zs6hjI/btP6y16QcOROH
+	HcT7JVs8uChz0a+Yfvvbw4hwSjl3jKC4ko17Eh+gxRouTG1OrdLB7Os2WUYTNV0=
+X-Google-Smtp-Source: AGHT+IEPnNFxpsQ6/0LGtCAUXpArXCe+i1x1xSkSu3b8PKwSHkfh/ReWZyvmXlCiQ3qXBkcty/eYLw==
+X-Received: by 2002:a5d:5392:0:b0:374:c6b6:c656 with SMTP id ffacd0b85a97d-37ecf066385mr6551876f8f.21.1729494878922;
+        Mon, 21 Oct 2024 00:14:38 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b40b:61e8:fa25:f97b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0b94066sm3525366f8f.71.2024.10.21.00.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 00:14:38 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kent Gibson <warthog618@gmail.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Srikar Dronamraju <srikar@linux.ibm.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: Fix remaining rcu_momentary_dyntick_idle() references
+Date: Mon, 21 Oct 2024 09:14:37 +0200
+Message-ID: <172949485237.6376.15649815993285480384.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240925054619.568209-1-srikar@linux.ibm.com>
+References: <20240925054619.568209-1-srikar@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 19, 2024 at 01:50:37PM +0200, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wr=
-ote:
-> This patch series add support for MSM8917 soc with PM8937 and
-> Xiaomi Redmi 5A (riva).
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Please always give some hint why this is not suitable for merging (you
-tagged this as RFC). Every patch is for "comments", so if you mark it as
-RFC means it is not ready.
 
-Some maintainers ignore RFC patches because of that. There is a lot of
-stuff here, so it's also easier for me to skip it, if this is not ready.
+On Wed, 25 Sep 2024 11:16:18 +0530, Srikar Dronamraju wrote:
+> There is one last reference to rcu_momentary_dyntick_idle() after
+> Commit 32a9f26e5e26 ("rcu: Rename rcu_momentary_dyntick_idle() into rcu_momentary_eqs()")
+> 
+> Rename the same so that we are uniform.
+> 
+> 
+
+I applied it but changed the subject as it targets the GPIO tree and not
+RCU.
+
+[1/1] rcu: Fix remaining rcu_momentary_dyntick_idle() references
+      commit: a0b6594e411dcae0cc563f5157cf062e93603388
 
 Best regards,
-Krzysztof
-
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
