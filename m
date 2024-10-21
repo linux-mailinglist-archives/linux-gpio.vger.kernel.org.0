@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-11703-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11704-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DF769A5A60
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 08:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A458D9A5A66
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 08:32:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B43801F213B3
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 06:31:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E0301F2128A
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 06:32:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D77E195385;
-	Mon, 21 Oct 2024 06:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F7091CF7C1;
+	Mon, 21 Oct 2024 06:32:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZukqSlv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwOAlGvI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C5DDA8;
-	Mon, 21 Oct 2024 06:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA41DDA8;
+	Mon, 21 Oct 2024 06:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729492292; cv=none; b=l61VXGcG2qgkmU+cPkyJfn3tkUcBmG3uq/tO+JeF3LA9j99ZJ5pmLQomr9c6GdLCzXSk4aZc7M0IHGwWLdn8mTY3K9aiPqI+wlbZG2xKTmOVOKmVczbX+fGYh2uTLTaZ0Qky48XJeIVtJeaY2rp9tuvbTC54mCLJdiLAxMB9SNQ=
+	t=1729492367; cv=none; b=L6f4GmhV5qpJeehwE4EM1lbvaohqeVLeIEonj8tpXeX3EMayntjQvCZGr0fwk7LT6SBhTmJWgAvUswyvdrT5NMOUMT/Xga+wNEzXc//wA/H95ViRPLHdHKXmAmwlFV9x9y7s+wWwb+BOM4K9QcUaLT5fThOyItTl9U+ASx6e5bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729492292; c=relaxed/simple;
-	bh=WhSHnMsUMuuz6aBN+4q6e1xLL5CV8bctPFFrYJZFMVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VzICEudMjbt0lb9WQD/U0jLdNqmphEk7iQ/VhtTIbD/21w9uSxvMeW7v02r5rMCktga7ngfzpm2893nRxrUtYr3YrFZJHGwl9RvEYWHGh7B2J7EROFvae4SQ0dbCzcdxV5FUqQCp7lqNXwX+Cmvn1xmgF/tsYPsBl1M6wVw747U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZukqSlv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71EB7C4CEC3;
-	Mon, 21 Oct 2024 06:31:26 +0000 (UTC)
+	s=arc-20240116; t=1729492367; c=relaxed/simple;
+	bh=zpa4Fatg54DYqfk5OKylbowe0195Hg2MiUo5EvTyIxU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AfA6bkPjc5O0eT9XGzAKmxqufgpIzyM/EtXZV/flaUGJPhJoZsPoz9bbdM7UnQ1c8mWHzTc3dzfGz/27KGDQVHkGQdf4qBD7RDrtT+2T0XTX4wSM/P9ZCNUlgBqK+PVyfchzUJQuwrUoAmyYjlJnP/Ksmc21zGEcMlLjg0g4rKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwOAlGvI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21DAC4CEC3;
+	Mon, 21 Oct 2024 06:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729492291;
-	bh=WhSHnMsUMuuz6aBN+4q6e1xLL5CV8bctPFFrYJZFMVA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eZukqSlv2DxN+4ie17Ri7yvctbzM61UVj2Kzwz+aRuqk8sIqQ4308kPxgDgDk8PT9
-	 PNiNWniiAbvOqTKztxwrXzolsyKfw4OAAJu8Wt7bX/c9NDJkgiCV9l+vDwouD02uRH
-	 3VHaiXZxboXKvZ4gHbSRoJ3aMEBinqtzKk2O/nQ9+ybAEILC8uom3Snxe2uh6QSkZB
-	 jdvU2KB4ZzCp755RRVOf+bktFOshHobJbdxtYuW2Q02+x81IGOGatdGQCzdsrw5pf5
-	 ykTFZ//xQ1E5/SRANTfVtRJ/uX95OqYkrbcQ6RWhyQxJE3FM0XZ5T6/714+dzwjbDY
-	 RJGtHswEg86YA==
-Message-ID: <8cb615cf-1b4e-49ba-91fc-6e1f5f57cd3c@kernel.org>
-Date: Mon, 21 Oct 2024 08:31:23 +0200
+	s=k20201202; t=1729492367;
+	bh=zpa4Fatg54DYqfk5OKylbowe0195Hg2MiUo5EvTyIxU=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=TwOAlGvIimmLdmkiDg5An7a7QN2gYBWQlH7uQ4T4SYgv0YNzvllK6AFyh2ShcFSuL
+	 D6kmQ5cncjwb0XIeVeONMgieydjPXjnQOwz8LTZB6efQycibaJ9EtLpSDifaAJMKCs
+	 DKbaPauZLfevKN8FrlE9HBj3FsvSrjcujGqPl2TgLwrRPwNkjF0V3Pd0Ssqy3dPdpP
+	 eVocuS52+J6pgmOscGh0QBH/QhAvdw/xMO4uTKF1O3YjsHmnaxuRYWRfHPmew0eUcR
+	 C9ugl0PgbhXvvubwTsGAFv8XqaNT+x8AY/CteGS02v/nhk327dyQPjvrGi5k8qhNAE
+	 i/SFtJKrcJDMw==
+Message-ID: <119e86e4-acb4-455d-9b0b-ee851b621c91@kernel.org>
+Date: Mon, 21 Oct 2024 08:32:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,6 +52,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
  SoCs
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -70,7 +71,7 @@ References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
  <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
  <d654d2b2-977b-44c0-8b01-b26f5eb0a3fe@kernel.org>
  <1jiktpr40d.fsf@starbuckisacylon.baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <8cb615cf-1b4e-49ba-91fc-6e1f5f57cd3c@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -115,96 +116,60 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <1jiktpr40d.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <8cb615cf-1b4e-49ba-91fc-6e1f5f57cd3c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/10/2024 14:26, Jerome Brunet wrote:
-> On Fri 18 Oct 2024 at 12:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
->> On 18/10/2024 11:20, Jerome Brunet wrote:
->>> On Fri 18 Oct 2024 at 17:01, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
+On 21/10/2024 08:31, Krzysztof Kozlowski wrote:
+>>>>
+>>>>  reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
+>>>>
+>>>> And others will go in the driver to see that is maps to GPIOX_10 ? the number
+>>>> being completly made up, with no link to anything HW/Datasheet
+>>>> whatsoever ?
+>>>>
+>>>> This is how things should be done now ?
 >>>
->>>> Hi Jerome,
->>>>    Thanks for your reply.
->>>>
->>>> On 2024/10/18 16:39, Jerome Brunet wrote:
->>>>> [ EXTERNAL EMAIL ]
->>>>> On Fri 18 Oct 2024 at 10:28, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>
->>>>>> On 18/10/2024 10:10, Xianwei Zhao via B4 Relay wrote:
->>>>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>>>>>>
->>>>>>> Add the new compatible name for Amlogic A4 pin controller, and add
->>>>>>> a new dt-binding header file which document the detail pin names.
->>>>> the change does not do what is described here. At least the description
->>>>> needs updating.
->>>>>
->>>>
->>>> Will do.
->>>>
->>>>> So if the pin definition is now in the driver, does it mean that pins have
->>>>> to be referenced in DT directly using the made up numbers that are
->>>>> created in pinctrl-amlogic-a4.c at the beginning of patch #2 ?
->>>>>
->>>>
->>>> Yes.
->>>>
->>>>> If that's case, it does not look very easy a read.
->>>>>
->>>>
->>>> It does happen. The pin definition does not fall under the category of
->>>> binding.
->>>>
->>>> https://lore.kernel.org/all/106f4321-59e8-49b9-bad3-eeb57627c921@amlogic.com/
+>>> Why would you need to do this? Why it cannot be <&gpio 10
+>>> GPIO_ACTIVE_LOW>, assuming it is GPIO 10?
 >>>
->>> So the expectation is that people will write something like:
->>>
->>>  reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
->>>
->>> And others will go in the driver to see that is maps to GPIOX_10 ? the number
->>> being completly made up, with no link to anything HW/Datasheet
->>> whatsoever ?
->>>
->>> This is how things should be done now ?
+>>> Bindings have absolutely nothing to do with it. You have GPIO 10, not
+>>> 42, right?
 >>
->> Why would you need to do this? Why it cannot be <&gpio 10
->> GPIO_ACTIVE_LOW>, assuming it is GPIO 10?
+>> That's what being proposed here, as far as I can see.
 >>
->> Bindings have absolutely nothing to do with it. You have GPIO 10, not
->> 42, right?
+>> GPIOX_10 (not GPIO 10) maps to 42. If this goes through, for DTs to be
+>> valid in any OS, all need to share the same definition. That looks like
+>> a binding to me.
+>>
+>> On these SOC, gpios in each controller are organized in bank with
+>> different number of pins. So far, this was represented as single linear
+>> array and that was not a problem since the mapping was part of the binding.
+>>
+>> Are you suggesting 2 params instead of one ? something like this maybe ?
+>>
+>> reset-gpios = <&gpio BANK_X 10 GPIO_ACTIVE_LOW>;
 > 
-> That's what being proposed here, as far as I can see.
+> No, I propose the same as you wrote:
+> <&gpio 10 GPIO_ACTIVE_LOW>
 > 
-> GPIOX_10 (not GPIO 10) maps to 42. If this goes through, for DTs to be
-> valid in any OS, all need to share the same definition. That looks like
-> a binding to me.
+> but I don't mind putting bank there.
 > 
-> On these SOC, gpios in each controller are organized in bank with
-> different number of pins. So far, this was represented as single linear
-> array and that was not a problem since the mapping was part of the binding.
+>>
+>> This means this A4 controller will be software incompatible with the
+>> previous generation. It will need to handled differently eventhough the
+>> HW is exactly the same.
+>>
+>> Note that some form of binding would still be required to define the
+>> banks which are referenced by arbitrary letter in doc, not numbers.
 > 
-> Are you suggesting 2 params instead of one ? something like this maybe ?
+> Usually banks are considered separate gpio controllers, so numbering
+> always start from 0 because phandle encodes the bank.
 > 
-> reset-gpios = <&gpio BANK_X 10 GPIO_ACTIVE_LOW>;
+> And this is exactly what Rob already asked in v1 review.
 
-No, I propose the same as you wrote:
-<&gpio 10 GPIO_ACTIVE_LOW>
-
-but I don't mind putting bank there.
-
-> 
-> This means this A4 controller will be software incompatible with the
-> previous generation. It will need to handled differently eventhough the
-> HW is exactly the same.
-> 
-> Note that some form of binding would still be required to define the
-> banks which are referenced by arbitrary letter in doc, not numbers.
-
-Usually banks are considered separate gpio controllers, so numbering
-always start from 0 because phandle encodes the bank.
-
-And this is exactly what Rob already asked in v1 review.
+Ha, actually I misread his reply, I think he proposed your syntax:
+<&gpio BANK_X 10 GPIO_ACTIVE_LOW>
 
 Best regards,
 Krzysztof
