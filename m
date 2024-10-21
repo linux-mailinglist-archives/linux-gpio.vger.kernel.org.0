@@ -1,88 +1,84 @@
-Return-Path: <linux-gpio+bounces-11706-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11707-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F09009A5C31
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 09:14:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B85B9A5CCF
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 09:24:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A89661F228AF
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 07:14:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B2501C20D0A
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 07:24:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BFA1D0F68;
-	Mon, 21 Oct 2024 07:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C0CD1D1741;
+	Mon, 21 Oct 2024 07:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DAvK2dOn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vvXqehF2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB27B1D0E3F
-	for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 07:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7059194A75
+	for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 07:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729494882; cv=none; b=seekaugXJ3koVVaYoISph/+ERV/nXnAyoq2j+k7Zg2XZ0l6QA04kfX2YS2QWqa1zKY9VUnzVSYtVc8nyezsTi4RqiJI5USOuNAweoxu44b9V+ye1oYCx3OYzKnZ2njgQea8lua0zCUBol4NhN2gJPXSsXTP7bmPbRs0/zOcVGTA=
+	t=1729495450; cv=none; b=MU9gNMkAOkE3a3qo9qbek/iiL1eZieJf/fcPaYhBYeGRIn9yg5jFB8qYOiMzC2xLMMcXbnS2IOxTGaofMemK0hNxO5NC7sq+Crj5UcydlBRDQpPj2IieWn/nYaMWz5R7ZfZpGMi9TOfPhpBmAWTHdRrGwFj4hE1QUzKa9slK588=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729494882; c=relaxed/simple;
-	bh=B/kiukLnjmLkwZ+94r2toJOSjF2D/tL5XVrmGqc1MPM=;
+	s=arc-20240116; t=1729495450; c=relaxed/simple;
+	bh=ygHe1yo5X739Z2i0Ht+sxKKseZPcO8V+yuvdzl79y7I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N89GcBg+tBS8cQcu0S6XEaw7Db5EWMTcSBx7wk3IWeIPxiGnBI+kMz6f9EM2KY1zDoJGLS/5bz51mk43xKxxyUv07Rjc7chmwzh5aUExwJScvYMkh9mi9kaso22dFhbzTsC3KBDz/jrbGh0WPJlKB9miKLvu4WZZyHJP5pmr6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DAvK2dOn; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version:Content-Type; b=BeDoNC1kNDFGxvRDY7+OzUj3HoKEvCMAh/7gyhYLvAxqCQTmBY1yph+e9Ttet3D/MXINnQoG3Hk7lgnEoKMwASGL1ukxeX0LtXv2hXtV7XHlkGZCuhn0znTor3oZXj1KuRxpHua0M7d13nIWh9Ysi7irGRAOMtyCo1v8dE9VxyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vvXqehF2; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-37d4fd00574so2773951f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 00:14:40 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d808ae924so2829102f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Oct 2024 00:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729494879; x=1730099679; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729495447; x=1730100247; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Yf+ojeeNe2s2EnjRYvZ3se/a+vEw/qUmLYKHSRFy53w=;
-        b=DAvK2dOnwcsqPpCaooEwW41R8LlZI5HR+W+8pXzCDpTxIBcETnx98S3WCksW1bg+/k
-         QKNrz14SlW9cJ7irfMgj1vmS7l8/rrEi6R4KTsexdfMagNR6T83lTWYjgy4tRf3CR0pf
-         QEN/c24UzOnNGwHevcGo2kvyDxObN/0Rpcm0+e4V0Qz7s25Mnf6Rl8FZkcLpN8ytXl8B
-         Rltc04Sg1twaSRtOI6LGIc/31KU45JxfBkoembbrc4I0iXzfRPsDXxioyqXZDjgXvvec
-         Woe8L0Rd34oMZjTdmkHkzbZuIW3fMF/xNePUlj0UchNImtUYMyNHE4UbM6LyMPc6sahq
-         vFRQ==
+        bh=5salKsabN8xZGbaO2w6FXXUjXajRUy3N4MSiiDUzaYU=;
+        b=vvXqehF2p80+65CeYCy5ITrcyXSbrYtFaIXFQMBysKbtCwDsEWpEysRiJJoDRI3jJS
+         j56G3NrXt4UvHjxJC5TvdcsioPmm7GIWsReKH6wrcPIAuG6VCc/pAk6QuEutjvfhgpaU
+         4U+fqI6oF/kHP7v3Pcy/Py2P1ZJDGruTk7MOV2t8oVWP3n3VwM5SISv5RuKDt4O4qeka
+         6EQGaSZcvQ6lZpWORSeJXo8M2qxXK2XjEIbILn8Z0ObtSfV2ipjcn9FYID5vM9xqO2rf
+         THG4/RVHV9PATihCKGIOy26xNNZ+cD9ZSy7ZiBoHsFgcPXXVrbBwHujv6pS06dcUqXrc
+         uUOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729494879; x=1730099679;
+        d=1e100.net; s=20230601; t=1729495447; x=1730100247;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yf+ojeeNe2s2EnjRYvZ3se/a+vEw/qUmLYKHSRFy53w=;
-        b=InOhhQeMsCwn4UuH+hGTcJG9x1I9lzTR7OtPXtqf+KFpxgYR9KCe78Nee1c1E2kHcA
-         Pe5l7d0/qL9QnrgyhQw1EZJZQluDwyivM87lhiX3Smz6lWRLfW1rKDAvIAx3ioEJhi39
-         3dbJFjE9bIgxxYZhbMzuESbIOtOJ2BXChI1bPVJ+9piCyD+Z/6VFRdFPHmp0wzrS9jFg
-         QSh7S2awfBS5hW6+suUzQ0aAIoelnVEBfpOmzLsp8aSFbPNlx4Mmx75q/ZuzQBe6qIjx
-         dBALbqfA7eXDC5J6vtN4dkfApg6RhRUc9sCPnXLlCzRpS3O3sHOyq/E6/pI1i7H0V3sv
-         fQig==
-X-Forwarded-Encrypted: i=1; AJvYcCUVZUKsDlsk8RFZpMiQRnLjo3k/I5Sbybyv02hBi3Cw+Dy61qv4ZVfU6fU3erqwFcQeM5UNq15E0h9W@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTqQTZZf91XTh0QRf9hFgBHwr5jnD8zs6hjI/btP6y16QcOROH
-	HcT7JVs8uChz0a+Yfvvbw4hwSjl3jKC4ko17Eh+gxRouTG1OrdLB7Os2WUYTNV0=
-X-Google-Smtp-Source: AGHT+IEPnNFxpsQ6/0LGtCAUXpArXCe+i1x1xSkSu3b8PKwSHkfh/ReWZyvmXlCiQ3qXBkcty/eYLw==
-X-Received: by 2002:a5d:5392:0:b0:374:c6b6:c656 with SMTP id ffacd0b85a97d-37ecf066385mr6551876f8f.21.1729494878922;
-        Mon, 21 Oct 2024 00:14:38 -0700 (PDT)
+        bh=5salKsabN8xZGbaO2w6FXXUjXajRUy3N4MSiiDUzaYU=;
+        b=l3Rse2/VDdyavrkjAJm8syGBuIjehyuMT+14rfXdn97MqKX8IKwEPPosvLzt9tiBpw
+         8A0N/hZMAb0bAvRlXOoFpb9aVIC/V9P3unI8YP7nsqn7T22GoPegr5yL7zqGxhLfTcZA
+         AoVYcSNJjPjlcJICuWV5rHKwhBWc4leRVMO5tERzrlbS3nJhCdPYG/kOJj9O3cT6OUMU
+         chzD6Xwpjh+8dLXdx9BdR+ZDCg9Hyuah1rwfPqk51LFQMdwVi2IVAYyEI7R/sGi+JF9p
+         idBiWzijahel1vjRuxki4+DalCL/qjgLyeDJZ5XMlhKwUgdqgxCWlSn0Qs4wcCuOFt7q
+         r+mA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvWLE8VZzgP8cHHaUX9MI+zlPkBhpI1BctqQLI9eM+L2CM7blMb+Cb8kla/Iz2Nt5RTQG1LlifjPoN@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqqo8EuzPhtE2M8mcocxjRU0ZcqBa7lCRGeH0TNPilJoUilCzD
+	lot5oUpFC2zEJ3ZnaU5qF6JZToVq2syGztgc18dvro+jMm0HFCZMwHZXy1IQNsI=
+X-Google-Smtp-Source: AGHT+IG++WeipqGBQQNCcEKr5JN6eLYexT/EEKA4ma7iNQ3SGDigtEokdh0sGBQw23WeSwQDhh6aLQ==
+X-Received: by 2002:a5d:4150:0:b0:37d:481e:fca with SMTP id ffacd0b85a97d-37eab709614mr5918091f8f.27.1729495447127;
+        Mon, 21 Oct 2024 00:24:07 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b40b:61e8:fa25:f97b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0b94066sm3525366f8f.71.2024.10.21.00.14.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0b9baa7sm3517954f8f.96.2024.10.21.00.24.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 00:14:38 -0700 (PDT)
+        Mon, 21 Oct 2024 00:24:06 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kent Gibson <warthog618@gmail.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Srikar Dronamraju <srikar@linux.ibm.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu: Fix remaining rcu_momentary_dyntick_idle() references
-Date: Mon, 21 Oct 2024 09:14:37 +0200
-Message-ID: <172949485237.6376.15649815993285480384.b4-ty@linaro.org>
+Subject: Re: [PATCH] gpio: 74x164: shrink code
+Date: Mon, 21 Oct 2024 09:24:03 +0200
+Message-ID: <172949543974.8769.15579843866127795628.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240925054619.568209-1-srikar@linux.ibm.com>
-References: <20240925054619.568209-1-srikar@linux.ibm.com>
+In-Reply-To: <20241017150835.105676-1-brgl@bgdev.pl>
+References: <20241017150835.105676-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,19 +91,16 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 25 Sep 2024 11:16:18 +0530, Srikar Dronamraju wrote:
-> There is one last reference to rcu_momentary_dyntick_idle() after
-> Commit 32a9f26e5e26 ("rcu: Rename rcu_momentary_dyntick_idle() into rcu_momentary_eqs()")
-> 
-> Rename the same so that we are uniform.
+On Thu, 17 Oct 2024 17:08:35 +0200, Bartosz Golaszewski wrote:
+> Use managed helpers to drop the goto label from probe() and shrink the
+> remove() callback.
 > 
 > 
 
-I applied it but changed the subject as it targets the GPIO tree and not
-RCU.
+Applied, thanks!
 
-[1/1] rcu: Fix remaining rcu_momentary_dyntick_idle() references
-      commit: a0b6594e411dcae0cc563f5157cf062e93603388
+[1/1] gpio: 74x164: shrink code
+      commit: dacd8ed24c01e26c9b1f76189222cac8982fb75f
 
 Best regards,
 -- 
