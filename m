@@ -1,63 +1,48 @@
-Return-Path: <linux-gpio+bounces-11702-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11703-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DF3C9A59D1
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 07:41:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DF769A5A60
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 08:31:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A45F281F9C
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 05:41:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B43801F213B3
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Oct 2024 06:31:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C9D81990D0;
-	Mon, 21 Oct 2024 05:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D77E195385;
+	Mon, 21 Oct 2024 06:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b7Ovei4D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZukqSlv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED65634;
-	Mon, 21 Oct 2024 05:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C5DDA8;
+	Mon, 21 Oct 2024 06:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729489302; cv=none; b=tv92V0n5sbe0h30GXeR1jpnfvJVpCzuY8SAsD6DQD3X/yYE8w5cYaqxLhJYD8H1HV3l+JPxmHQG9IkBIoqf4/wH56sSQm5QgP1O/vgVWvEBJreK+LKDtP0BZpozEV6UdWH/0l++0CAjIEwaCVO4jNQDSm2n5/ngOMgxKdB1x3pM=
+	t=1729492292; cv=none; b=l61VXGcG2qgkmU+cPkyJfn3tkUcBmG3uq/tO+JeF3LA9j99ZJ5pmLQomr9c6GdLCzXSk4aZc7M0IHGwWLdn8mTY3K9aiPqI+wlbZG2xKTmOVOKmVczbX+fGYh2uTLTaZ0Qky48XJeIVtJeaY2rp9tuvbTC54mCLJdiLAxMB9SNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729489302; c=relaxed/simple;
-	bh=x15yRLhgy42+yizJ86mU28DoOslmxHJB5vdr0m9Jm+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CdicnGy1g3R3rY/OdSzLqCR4nvGIUsVoq7KbICP+rc/xh1+v9bI858hVUXrj8RLwb9htfRirzlH+5R3WAAn8QpdBEWjlYm+TdVMasKyDa33AQXpOjnGOhKpsQlw5xUXvqq74Kd7DIeZufAMYYVqtmWxGv/Vy6+w9vOq5DIvlJ6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b7Ovei4D; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49KNHeBB014302;
-	Mon, 21 Oct 2024 05:41:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OI+g/PDRqVZ95UWxsvAz05m79blc6jc1PXoXbNyQswA=; b=b7Ovei4DFeFWBJ0Z
-	wC+yHk5XzuTgof4wrQkk7Mwnyh3mc0DLyZEDo0rvIex9U90w7eqSyqbCpf0VVhF9
-	O+UaWCU17fV8k69zKZhE3eSo/cu3+dszW1lHxqJu1/jCZo9fv4L/PeWJcyJFTwn4
-	zxWw2wrKLHAaRxkxsknJUHOAUSIOdLhxiCKOpzGjC5eBRLE2UaQwBcEBu4GSJ1Vr
-	Rv7bJhKcbho2QrvIgZez5UYNnz93WZ6vW1WE0aGOObN3MzhDYN4DbD79SmwVRWBD
-	nsvp2+BYnQX4H6vUDH3A39g/zf8NA2bjUdjGAVf11xiOEjXAZxqrdQMbD8W7cG4l
-	m3p0lQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42c6vuua0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Oct 2024 05:41:22 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49L5fLt2005526
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Oct 2024 05:41:21 GMT
-Received: from [10.151.37.100] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 20 Oct
- 2024 22:41:14 -0700
-Message-ID: <01cbb389-1966-4501-a22d-7227765d1eb9@quicinc.com>
-Date: Mon, 21 Oct 2024 11:11:13 +0530
+	s=arc-20240116; t=1729492292; c=relaxed/simple;
+	bh=WhSHnMsUMuuz6aBN+4q6e1xLL5CV8bctPFFrYJZFMVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VzICEudMjbt0lb9WQD/U0jLdNqmphEk7iQ/VhtTIbD/21w9uSxvMeW7v02r5rMCktga7ngfzpm2893nRxrUtYr3YrFZJHGwl9RvEYWHGh7B2J7EROFvae4SQ0dbCzcdxV5FUqQCp7lqNXwX+Cmvn1xmgF/tsYPsBl1M6wVw747U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZukqSlv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71EB7C4CEC3;
+	Mon, 21 Oct 2024 06:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729492291;
+	bh=WhSHnMsUMuuz6aBN+4q6e1xLL5CV8bctPFFrYJZFMVA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eZukqSlv2DxN+4ie17Ri7yvctbzM61UVj2Kzwz+aRuqk8sIqQ4308kPxgDgDk8PT9
+	 PNiNWniiAbvOqTKztxwrXzolsyKfw4OAAJu8Wt7bX/c9NDJkgiCV9l+vDwouD02uRH
+	 3VHaiXZxboXKvZ4gHbSRoJ3aMEBinqtzKk2O/nQ9+ybAEILC8uom3Snxe2uh6QSkZB
+	 jdvU2KB4ZzCp755RRVOf+bktFOshHobJbdxtYuW2Q02+x81IGOGatdGQCzdsrw5pf5
+	 ykTFZ//xQ1E5/SRANTfVtRJ/uX95OqYkrbcQ6RWhyQxJE3FM0XZ5T6/714+dzwjbDY
+	 RJGtHswEg86YA==
+Message-ID: <8cb615cf-1b4e-49ba-91fc-6e1f5f57cd3c@kernel.org>
+Date: Mon, 21 Oct 2024 08:31:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,141 +50,163 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 2/6] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
- binding
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
-        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_varada@quicinc.com>
-References: <20241017123626.204421-1-quic_srichara@quicinc.com>
- <20241017123626.204421-3-quic_srichara@quicinc.com>
- <nznisr4aqpe65fovvk3q3r6capmqj4jm4xsqufjib2b7vax4xx@6r3tzaar2w3p>
+Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
+ SoCs
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
+ <20241018-a4_pinctrl-v3-1-e76fd1cf01d7@amlogic.com>
+ <4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org>
+ <1jttd9rein.fsf@starbuckisacylon.baylibre.com>
+ <4127b448-a914-4c69-b938-29512995326f@amlogic.com>
+ <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
+ <d654d2b2-977b-44c0-8b01-b26f5eb0a3fe@kernel.org>
+ <1jiktpr40d.fsf@starbuckisacylon.baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <nznisr4aqpe65fovvk3q3r6capmqj4jm4xsqufjib2b7vax4xx@6r3tzaar2w3p>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1jiktpr40d.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BvccQ3eEA3DBohRrCELpz3wod20lmi_E
-X-Proofpoint-GUID: BvccQ3eEA3DBohRrCELpz3wod20lmi_E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410210038
 
-
-
-On 10/18/2024 11:43 AM, Krzysztof Kozlowski wrote:
-> On Thu, Oct 17, 2024 at 06:06:22PM +0530, Sricharan R wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> Add binding for the Qualcomm IPQ5424 Global Clock Controller
->>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> ---
->>   [V4] Added 2 new PCIE clks to end of the list, preserving default order
->>
->>   .../bindings/clock/qcom,ipq5332-gcc.yaml      |  40 ++-
->>   include/dt-bindings/clock/qcom,ipq5424-gcc.h  | 156 +++++++++
->>   include/dt-bindings/reset/qcom,ipq5424-gcc.h  | 310 ++++++++++++++++++
->>   3 files changed, 499 insertions(+), 7 deletions(-)
->>   create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
->>   create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
->> index 9193de681de2..ef1fd9d9f8da 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
->> @@ -4,31 +4,35 @@
->>   $id: http://devicetree.org/schemas/clock/qcom,ipq5332-gcc.yaml#
->>   $schema: http://devicetree.org/meta-schemas/core.yaml#
->>   
->> -title: Qualcomm Global Clock & Reset Controller on IPQ5332
->> +title: Qualcomm Global Clock & Reset Controller on IPQ5332 and IPQ5424
->>   
->>   maintainers:
->>     - Bjorn Andersson <andersson@kernel.org>
->>   
->>   description: |
->>     Qualcomm global clock control module provides the clocks, resets and power
->> -  domains on IPQ5332.
->> +  domains on IPQ5332 and IPQ5424.
->>   
->> -  See also:: include/dt-bindings/clock/qcom,gcc-ipq5332.h
->> -
->> -allOf:
->> -  - $ref: qcom,gcc.yaml#
->> +  See also:
->> +    include/dt-bindings/clock/qcom,gcc-ipq5332.h
->> +    include/dt-bindings/clock/qcom,gcc-ipq5424.h
->>   
->>   properties:
->>     compatible:
->> -    const: qcom,ipq5332-gcc
->> +    enum:
->> +      - qcom,ipq5332-gcc
->> +      - qcom,ipq5424-gcc
->>   
->>     clocks:
->> +    minItems: 5
->>       items:
->>         - description: Board XO clock source
->>         - description: Sleep clock source
->>         - description: PCIE 2lane PHY pipe clock source
->>         - description: PCIE 2lane x1 PHY pipe clock source (For second lane)
->>         - description: USB PCIE wrapper pipe clock source
->> +      - description: PCIE 2-lane PHY2 pipe clock source
->> +      - description: PCIE 2-lane PHY3 pipe clock source
->>   
->>     '#power-domain-cells': false
->>     '#interconnect-cells':
->> @@ -38,6 +42,28 @@ required:
->>     - compatible
->>     - clocks
->>   
->> +allOf:
->> +  - $ref: qcom,gcc.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: qcom,ipq5332-gcc
->> +    then:
->> +      properties:
->> +        clocks:
->> +          maxItems: 5
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: qcom,ipq5424-gcc
->> +    then:
->> +      properties:
->> +        clocks:
+On 18/10/2024 14:26, Jerome Brunet wrote:
+> On Fri 18 Oct 2024 at 12:13, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > 
-> This needs minItems: 7, unless clocks are really optional (but they
-> shouldn't be optional). I think I missed this part last time.
+>> On 18/10/2024 11:20, Jerome Brunet wrote:
+>>> On Fri 18 Oct 2024 at 17:01, Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
+>>>
+>>>> Hi Jerome,
+>>>>    Thanks for your reply.
+>>>>
+>>>> On 2024/10/18 16:39, Jerome Brunet wrote:
+>>>>> [ EXTERNAL EMAIL ]
+>>>>> On Fri 18 Oct 2024 at 10:28, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>>
+>>>>>> On 18/10/2024 10:10, Xianwei Zhao via B4 Relay wrote:
+>>>>>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>>>>>
+>>>>>>> Add the new compatible name for Amlogic A4 pin controller, and add
+>>>>>>> a new dt-binding header file which document the detail pin names.
+>>>>> the change does not do what is described here. At least the description
+>>>>> needs updating.
+>>>>>
+>>>>
+>>>> Will do.
+>>>>
+>>>>> So if the pin definition is now in the driver, does it mean that pins have
+>>>>> to be referenced in DT directly using the made up numbers that are
+>>>>> created in pinctrl-amlogic-a4.c at the beginning of patch #2 ?
+>>>>>
+>>>>
+>>>> Yes.
+>>>>
+>>>>> If that's case, it does not look very easy a read.
+>>>>>
+>>>>
+>>>> It does happen. The pin definition does not fall under the category of
+>>>> binding.
+>>>>
+>>>> https://lore.kernel.org/all/106f4321-59e8-49b9-bad3-eeb57627c921@amlogic.com/
+>>>
+>>> So the expectation is that people will write something like:
+>>>
+>>>  reset-gpios = <&gpio 42 GPIO_ACTIVE_LOW>;
+>>>
+>>> And others will go in the driver to see that is maps to GPIOX_10 ? the number
+>>> being completly made up, with no link to anything HW/Datasheet
+>>> whatsoever ?
+>>>
+>>> This is how things should be done now ?
+>>
+>> Why would you need to do this? Why it cannot be <&gpio 10
+>> GPIO_ACTIVE_LOW>, assuming it is GPIO 10?
+>>
+>> Bindings have absolutely nothing to do with it. You have GPIO 10, not
+>> 42, right?
+> 
+> That's what being proposed here, as far as I can see.
+> 
+> GPIOX_10 (not GPIO 10) maps to 42. If this goes through, for DTs to be
+> valid in any OS, all need to share the same definition. That looks like
+> a binding to me.
+> 
+> On these SOC, gpios in each controller are organized in bank with
+> different number of pins. So far, this was represented as single linear
+> array and that was not a problem since the mapping was part of the binding.
+> 
+> Are you suggesting 2 params instead of one ? something like this maybe ?
+> 
+> reset-gpios = <&gpio BANK_X 10 GPIO_ACTIVE_LOW>;
 
-ok, got it, will update and send V5.
+No, I propose the same as you wrote:
+<&gpio 10 GPIO_ACTIVE_LOW>
 
-Regards,
-  Sricharan
+but I don't mind putting bank there.
 
+> 
+> This means this A4 controller will be software incompatible with the
+> previous generation. It will need to handled differently eventhough the
+> HW is exactly the same.
+> 
+> Note that some form of binding would still be required to define the
+> banks which are referenced by arbitrary letter in doc, not numbers.
 
+Usually banks are considered separate gpio controllers, so numbering
+always start from 0 because phandle encodes the bank.
+
+And this is exactly what Rob already asked in v1 review.
+
+Best regards,
+Krzysztof
 
 
