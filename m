@@ -1,107 +1,95 @@
-Return-Path: <linux-gpio+bounces-11757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11756-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 205929AB124
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 16:44:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 249AE9AB083
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 16:12:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C6A41C223BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 14:44:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E750B284342
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 14:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219711A265B;
-	Tue, 22 Oct 2024 14:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 622A51A00D1;
+	Tue, 22 Oct 2024 14:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="zPsfDhy5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7s1WI6/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0701A0737;
-	Tue, 22 Oct 2024 14:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16167126BF2;
+	Tue, 22 Oct 2024 14:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729608271; cv=none; b=Wff4wQ3hBKaEF+G5C5Kg0SbtwVYA5/ksIwQo9/sX6yVOaZ1Qgz90Yhhuk1h5nWtdA2vJqqCWm0mbvpc38TT7UUMEhQGQHZIitEeagl5eGV4awvHfEj/Jy8PnTIghTOGCkyegDQc315v//R6nWUW93VHM9Tf9oYWtjGoGSVlmCBQ=
+	t=1729606356; cv=none; b=EVOhfWX93AxXAaPF4pJ6kpf7gJbOt8P6Pdx7CJtfJEEXcyakNPzd59lNL1LuDq3X41WF8mloOL/QUiX2qiLKWbIvfB6Rr5aj18mlZambgJnY2zlTk5kY9Cx5IMSX8i7mneTmset/6i9k/AzjKWBCEAeO9rlJ5QGpzdU6ZnTmRmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729608271; c=relaxed/simple;
-	bh=eURP4ar4+HITlep6dZUO0eNRMf3wwVBadmodatCMtSs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UaJ0GkPtPCMhGmAoXcjGCRyhluikSeN0UN6pxPOGh7RNYMmgNU/0msgK/S117npCsEAVKrVrVnAYaGsNt4u4dWx2E1+o+IoWTqyA56aEiL7tMGPK6/5xXrgwnhP8JgCKrwG1JKeFqtWzhdLDLctzLaBf4JiGHgxG4hsKXipvvq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=zPsfDhy5; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 7F5CE88EBA;
-	Tue, 22 Oct 2024 16:44:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1729608268;
-	bh=8JCWEFiVxTgldvfx2ew36UU69vLDsIQ+wcH6mkzO9Is=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=zPsfDhy5oryqqBV+Ic3xo10tNvaLLB1ttADNgufC5PYpGS1vKw5xSsP1Q8HXF5oLa
-	 LTASKwtUNO/uKlpy588coRiqHVZQUJXbwZlu6sj4F6spD+DsmDTKV/UOxdmItG8ETJ
-	 ZJshR9NtvCyyBMLy1J9ky5IPFJk/vMmOvzj5nMn6atIN2RbDPJ3QOvuqFpxcVJ+KGc
-	 qSmus+JL2H+lD7oOYbTXEZytYFzruUZ/iVVaD0ZKkF7gqcZLWDWHXEU6rKqo9xZXPt
-	 pmt9oYK79A0k1wu7g7zM5domLaPESR9MOwT1vTAe7VbIA/BshvuE0A15CNjTjBTPrc
-	 UHMSI1BK0027w==
-Message-ID: <b382b08a-4ce9-4070-adbf-45ef5e91ce1d@denx.de>
-Date: Tue, 22 Oct 2024 15:56:12 +0200
+	s=arc-20240116; t=1729606356; c=relaxed/simple;
+	bh=aJ/CtBVx6FFfVFXY/A0bO7mFfyBTFpF5st9zugN4EtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qawRNf+CAzhux745/03p7PpOxNrul/ZfVT6OR774zSPeY5rsgw/kGtZH/MIJR6ypdLuLxUMCq2djnYDIy6ua0hhRczlqwny4+EGzJXKh1GyqApZtAmbUYn7p+AJQQuZ8D3VE+BQIImLsQ8O9Fe9Q+A1cdrFSAm0NhtLZmuMuRPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7s1WI6/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A687C4CEC3;
+	Tue, 22 Oct 2024 14:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729606355;
+	bh=aJ/CtBVx6FFfVFXY/A0bO7mFfyBTFpF5st9zugN4EtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O7s1WI6/WFEJgromr3RO8VlD+oxUWVWahu3qcL0mvBft3iY3ZekXK2wia2xjrprNV
+	 +m3vQJzJElv7nUU9Wjz5Z8CMSfXCBL5sjIzOcgMFS8Dk09l9Nkkbb795fh+h4rc0HG
+	 l+SbicRYLgcehwSt2FCKYz5Lw4SQ/gJ6Vx2O6mq3ev7r8w6qz00/y1BADtOxtbN5yi
+	 l2UY5CmE1dxaLFrPqyLyy78UD6Vo7fwWITRtFOsHFNokG6kf/VeznBBUFWQsfGAm8z
+	 SGfFbOVfSqnOgAsL2TsrfGtv/6x9YIzoaDnTjNcotiRA4XVI6HhCXN8x/XIBE//uRD
+	 1hdoAz1WxAg3A==
+Date: Tue, 22 Oct 2024 09:12:34 -0500
+From: Rob Herring <robh@kernel.org>
+To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
+ yaml format
+Message-ID: <20241022141234.GA450009-robh@kernel.org>
+References: <20241022060157.36372-1-himanshu.bhavani@siliconsignals.io>
+ <172958190288.3294457.18338479078694309889.robh@kernel.org>
+ <PN0P287MB201901C383FDC879CA7A61A89A4C2@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/12] dt-bindings: pinctrl: fsl,imx6ul-pinctrl:
- Convert i.MX35/5x/6 to YAML
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>,
- Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, kernel@dh-electronics.com, linux-gpio@vger.kernel.org
-References: <20241017211241.170861-1-marex@denx.de>
- <CACRpkdYvMWABqw1tC5YSh+RXcHiCwUGsbOGAfkysThYQZTPWzg@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CACRpkdYvMWABqw1tC5YSh+RXcHiCwUGsbOGAfkysThYQZTPWzg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PN0P287MB201901C383FDC879CA7A61A89A4C2@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
 
-On 10/22/24 2:55 PM, Linus Walleij wrote:
-> Hi Marek,
-
-Hi,
-
-> thanks for your hard work on this!
+On Tue, Oct 22, 2024 at 09:22:52AM +0000, Himanshu Bhavani wrote:
+> Hi Rob,
 > 
-> On Thu, Oct 17, 2024 at 11:13 PM Marek Vasut <marex@denx.de> wrote:
-> 
->> The IOMUXC controller description is almost identical on i.MX35/5x/6 SoCs,
->> except for the configuration bits which differ across SoCs. Rename the
->> fsl,imx6ul-pinctrl.yaml to fsl,imx35-pinctrl.yaml, fill in compatible
->> strings for the other SoCs and fill in the various bits into desciption.
->> This way, i.MX35/5x/6 series SoCs can all be converted to DT schema.
->> Remove the old text DT bindings description.
->>
->> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
->> Signed-off-by: Marek Vasut <marex@denx.de>
-> 
-> Is this v5 patch 1/12 something I can just apply to the pinctrl
-> tree or do you want it on some immutable branch or so to be able
-> to pull it into the SoC tree for dependencies?
-I do not have a preference, really. If Shawn maybe has one, then I will 
-defer to Shawn's preference.
+> Command  :  
+>                  make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.yaml
+>  
+> Output : 
+>                  DTEX    Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.example.dts
+>                  DTC [C] Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.example.dtb
+>  
+> I am not getting any error or warnings 
 
-I'm sorry I cannot be of more help.
+Try applying the patch you sent. The applied patch truncates the file. 
+It looks to me like the line count in the diff chunk is wrong. It says 
+153 which is the length of the truncated file.
+
+>  
+> I checked dtschema is up to date 
+> dtschema Version: 2024.5
+
+Not the latest version, but that doesn't matter here.
+
+> yamllint 1.33.0
+> 
+> Regards,
+> Himanshu
 
