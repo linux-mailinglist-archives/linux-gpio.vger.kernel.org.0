@@ -1,166 +1,97 @@
-Return-Path: <linux-gpio+bounces-11751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B6209AA142
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 13:40:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD599AA280
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 14:52:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B977CB231FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 11:40:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2F001C22233
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 12:52:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD37E19B3EC;
-	Tue, 22 Oct 2024 11:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09D719D8A3;
+	Tue, 22 Oct 2024 12:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="01nK882K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eMP+3OCs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="01nK882K";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eMP+3OCs"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="zNeRSXLn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28978199EBB
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2024 11:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AF819CD01;
+	Tue, 22 Oct 2024 12:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729597222; cv=none; b=Wc+qVUO2Wg8BcPg47FACMEFu4sLt3ZkRCm2l3P2BIGlJHR9tyYNssFO382E09VZNGIK6wPjdoQhThfPlx9wxHKXqgd86/sjgeItLCCHIhvAWNp7Jgvlqt5Tz1n7psOZUM5gc5JimVTYB5Bd+tOEL/W7GzrFVj6KKp7kMVA1c6SU=
+	t=1729601542; cv=none; b=S1bOfPdWqUnac5hYWEKvenxdG9zj2KmHfnW+Jhkai953Zy90U+5ZzfxaPXEgezNMD8jESc8PzOzzLf8kz6eBYqvr2evjQ5DKf13dbVRstdgJW4DASsZpW/CAyfFDTdNBBy88gObbI3ObikubLgjZZv5Db7Zjfa1GZZNZjhlTS4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729597222; c=relaxed/simple;
-	bh=XR1E+NZ8/b7dsub/geA6i2XnOrNbJxDqVVEAiq9qP/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LMGbwiXyhu5HWQzJ6O6P2JpBSdJefouLI9vs910tQy7Zbpc8NFu0CuRbfSw4f4rqYqYoVnhBkls89t7lWFyigf7jkJO5+6qnG7zTyn/L5haC4QhWFhl3fehpcHmq2biHUpSWMl1z8dVATCSyCn0GWU1k4sHNAjytMUQ3kmBXbQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=01nK882K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eMP+3OCs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=01nK882K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eMP+3OCs; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1729601542; c=relaxed/simple;
+	bh=5BJzw8OeL5RxI2XBz1iZG7KaTvXSK/izAGyBEdyk8sc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJv+Gc6o+4pXpHn3u4pZmzxHs3t10ZxMValSDMS3aWWxIYQ+jkBet2oD0wN6uAGvIeUUU6Jh4kC5OM74qchLhemTtqo3QpZ6hjS+l5XBrdZDf91q4dps3kqTTS7orwJ1hFNPe/xcPeA+OTTe28pLqNAxs77jimO3WulXzbVNqgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=zNeRSXLn; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EDDE1FD14;
-	Tue, 22 Oct 2024 11:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729597219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
-	b=01nK882KpTHVYu0o8lVC7zfY+vmSCC1RRLUXQ4filMflBzkWSGq+JYd+PH+9f/UQlnhV86
-	ww4GabdXiM5tR8JCgSpEuNLLXgcruKdAsouAD9ylkOkf9VobzLlZst1L92EdFfbZwDnXl/
-	NVqHiHuMYXnZG2kwpkQQA6Yfvg9gkpU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729597219;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
-	b=eMP+3OCs7Hw+SAOmVBEN6lXpzljx64I4F8YOCmlEy4pacqlRGVlCXkhDvfrx9t3QX6bSkh
-	GXSq492fN4k0YsDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=01nK882K;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eMP+3OCs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729597219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
-	b=01nK882KpTHVYu0o8lVC7zfY+vmSCC1RRLUXQ4filMflBzkWSGq+JYd+PH+9f/UQlnhV86
-	ww4GabdXiM5tR8JCgSpEuNLLXgcruKdAsouAD9ylkOkf9VobzLlZst1L92EdFfbZwDnXl/
-	NVqHiHuMYXnZG2kwpkQQA6Yfvg9gkpU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729597219;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
-	b=eMP+3OCs7Hw+SAOmVBEN6lXpzljx64I4F8YOCmlEy4pacqlRGVlCXkhDvfrx9t3QX6bSkh
-	GXSq492fN4k0YsDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 00C4113AC9;
-	Tue, 22 Oct 2024 11:40:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UmXKOSKPF2fTOgAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Tue, 22 Oct 2024 11:40:18 +0000
-Date: Tue, 22 Oct 2024 13:40:17 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: linux-gpio@vger.kernel.org
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Dong Aisheng
- <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo
- <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Linus Walleij
- <linus.walleij@linaro.org>
-Subject: [PATCH] pinctrl: imx-scmi: Drop obsolete dependency on COMPILE_TEST
-Message-ID: <20241022134017.172411db@endymion.delvare>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 3D3FD88EBA;
+	Tue, 22 Oct 2024 14:52:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1729601539;
+	bh=9DOx6O2cK3IrTdgG8pysn1acDSlZP8m21uO78nQpmWQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=zNeRSXLn9Z1iLHCgLS+g2i9ljpqBvKT9QR28j/93614sc+VbjIBfCXCZFSttbM1cb
+	 QatBSjzxmomh8OhXkOOP2CxuykCxJt2eQE88/sHM3aeoRDdmDXXEds9l/R2qkFjC8x
+	 cYJyLPMelL9Z2ahnz3U0ngtuS06Io741MMy8e0OepApq+M+Aik0B5LnV2v5wFsq71u
+	 UP1mKxQOfcTJni6lsk3WwogVOVMdDbyyd/o/fyHqClvhC12Oi0YPEe3F+VDUngzR2j
+	 l9WSGvzhx15+tw92NUi0PVr3ZESj5knYTy1FiCA9e7hIHVnkxn1+zGdt5G4FnqRS4z
+	 dqCFpLR6A0FJg==
+Message-ID: <d985668f-9e53-449a-9785-5cbb9b14a8fc@denx.de>
+Date: Tue, 22 Oct 2024 13:23:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/12] dt-bindings: pinctrl: fsl,imx6ul-pinctrl:
+ Convert i.MX35/5x/6 to YAML
+To: Shawn Guo <shawnguo2@yeah.net>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>,
+ Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, kernel@dh-electronics.com, linux-gpio@vger.kernel.org
+References: <20241017211241.170861-1-marex@denx.de> <ZxcbHb5v05+XhFnM@dragon>
+ <6eb23f6c-fe0c-4ee1-8f99-568041524073@denx.de> <ZxdDPSI4i/nRawlw@dragon>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <ZxdDPSI4i/nRawlw@dragon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4EDDE1FD14
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[pengutronix.de,nxp.com,gmail.com,kernel.org,linaro.org];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), OF
-can be enabled on all architectures. Therefore depending on
-COMPILE_TEST as an alternative is no longer needed.
+On 10/22/24 8:16 AM, Shawn Guo wrote:
+> On Tue, Oct 22, 2024 at 05:52:08AM +0200, Marek Vasut wrote:
+>> On 10/22/24 5:25 AM, Shawn Guo wrote:
+> ...
+>>> I'm not sure it makes a lot sense to have "fsl,imx6ul-pinctrl: " in the
+>>> subject prefix.
+>> I can change it to imx-pinctrl or something and send V4 , or can you tweak
+>> it while applying since the series is somewhat large ? Which do you prefer ?
+> 
+> I expect this binding change go via pinctrl tree, so it's up to Linus.
+Oh ok, so just let me know. And ideally let me know what kind of prefix 
+do you expect there, imx- or imx35- or ... ?
 
-As ARM_SCMI_PROTOCOL already depends on COMPILE_TEST, we also don't
-need to add COMPILE_TEST as an alternative dependency for it.
-
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
----
- drivers/pinctrl/freescale/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-6.12-rc4.orig/drivers/pinctrl/freescale/Kconfig
-+++ linux-6.12-rc4/drivers/pinctrl/freescale/Kconfig
-@@ -9,7 +9,7 @@ config PINCTRL_IMX
- 
- config PINCTRL_IMX_SCMI
- 	tristate "i.MX95 pinctrl driver using SCMI protocol interface"
--	depends on ARM_SCMI_PROTOCOL && OF || COMPILE_TEST
-+	depends on ARM_SCMI_PROTOCOL && OF
- 	select PINMUX
- 	select GENERIC_PINCONF
- 	select GENERIC_PINCTRL_GROUPS
-
-
--- 
-Jean Delvare
-SUSE L3 Support
+Also, what about the DT changes, do you plan to pick those or shall I 
+send them separately ?
 
