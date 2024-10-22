@@ -1,88 +1,275 @@
-Return-Path: <linux-gpio+bounces-11733-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11734-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AF1F9A99B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 08:17:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F28A9A99E3
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 08:33:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F15EF1F2198D
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 06:17:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 300011C20327
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 06:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F812136E0E;
-	Tue, 22 Oct 2024 06:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A678013E03E;
+	Tue, 22 Oct 2024 06:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="SuwUto3i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXYGtbKZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34AC21E495;
-	Tue, 22 Oct 2024 06:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579901474A2;
+	Tue, 22 Oct 2024 06:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729577848; cv=none; b=cN6Ws5vfd4XtvppqeNwmWJeKclI1EpBW3txhGpCKpZ2caOwtHqMHunSKOtIz+aLjro1/HeDxAFlI2H8Xr92Xn+2/QumqHYhiBWepduSZXrgp2grdlUdLFrUImMoa4J1CcAJ1y9/GvUydfbHzgqHnhfRGqJQl8hHV7oGshA7RFQ0=
+	t=1729578815; cv=none; b=h7SWZuUj/tx5pbAmCSkH4wdIXINUtobHSemJN/Y3gPzTW44siooGm1xb7y8xD9M4VsvZJMdjXmdb48UD0wQ1p1UObjKnqszBUdGVTKv3XOPHPqfOeJaoiKRoHvXDWYcR2U/yeG1DnJl1peyPH6Yk0r0i1BfVRkHzps6wm91Lm9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729577848; c=relaxed/simple;
-	bh=h3InVI4qFK55P4L7wHq1injg5MD9zqKZJYcTogdFIeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lGH1Uarm5wVPBdU4TYrlNrydq63jLcD+zsSyqfhx9//mBMBqaegwOyZciTgZCweGdZMqTlsvncH5lvO7pVf4RxWeACnsVR10Ao8ZyaQ/C4WUtdv/OX/51Nryc+2UPr6pORnOWEx273SC0oSBcBBlAQhMf5qdBVP8lLqg3icD+bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=SuwUto3i; arc=none smtp.client-ip=220.197.32.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=h3InVI4qFK55P4L7wHq1injg5MD9zqKZJYcTogdFIeE=;
-	b=SuwUto3i8XkFrXD8TDh9txIufyXu31OxY6FIqdnP6b57TkWqZ1Emx5lo/gXQfw
-	E0f8WQaEhCbRZI4f31GUaq44kTkUbKtnfIDP9lTXdmtOEgl55l7zEE2k/v8eWfDX
-	OUSGHK+ve8P6IXhh8ML1CFg0S8H7+2jHIhOJOAFdBxHTo=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD3H6w9QxdncfWVAA--.5441S3;
-	Tue, 22 Oct 2024 14:16:31 +0800 (CST)
-Date: Tue, 22 Oct 2024 14:16:29 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Marek Vasut <marex@denx.de>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	kernel@dh-electronics.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 01/12] dt-bindings: pinctrl: fsl,imx6ul-pinctrl:
- Convert i.MX35/5x/6 to YAML
-Message-ID: <ZxdDPSI4i/nRawlw@dragon>
-References: <20241017211241.170861-1-marex@denx.de>
- <ZxcbHb5v05+XhFnM@dragon>
- <6eb23f6c-fe0c-4ee1-8f99-568041524073@denx.de>
+	s=arc-20240116; t=1729578815; c=relaxed/simple;
+	bh=HrnHqBL7EvmvAJrYnsFb27wYebBRHgRQrYL+r2LPjhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nlhSxQKztxna3i1uB/Mptt2zrGuiOGZ3d8zcMR9/xHNQSbPr388I3SbABL0KGKDFRu4CWOwdwJ83u4ASELH15eiJphn+J/yAxl9ISKEDGy2JiBPfgVK0YrQe9qMjzqE89eDl1PMTi+lsTq4aW7ft6BKpDZog6/TJVIrtVHtqVTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXYGtbKZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F0FC4CEC3;
+	Tue, 22 Oct 2024 06:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729578814;
+	bh=HrnHqBL7EvmvAJrYnsFb27wYebBRHgRQrYL+r2LPjhw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KXYGtbKZlgNGl57P6JT2yW0NlkWWpeVUN/m8AAVIpoQC7ituZgdqZuVXulxCX6GIY
+	 Y35NhE67ctOWFCWvgJPpnBO8alNzwroT2bHv/BR2AoxxGNGV+chHKiIxsbMFcOUd8q
+	 ojGR+fgaBjuPfHDkLB5B0YpC+no2ZPwpiDmcxmYrLkHhn76hmOfxwdHwb0swC6bigi
+	 YfcSvT3gF5sd7xw7xBcO9LUAr86X/D1JKjn9u6fVKnFbvbd5R6hyKHruN10ajmDmDm
+	 Ci4awoYL/9+dGNJFG5rlUykjWmbi0QvIAqSQ5dSqqAFBMvV/WH17nz6/lSETzZYpG7
+	 wcOSqzNkxv5JA==
+Message-ID: <b69251f7-7827-4f0e-b4fe-184a5cb54ee7@kernel.org>
+Date: Tue, 22 Oct 2024 08:33:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6eb23f6c-fe0c-4ee1-8f99-568041524073@denx.de>
-X-CM-TRANSID:M88vCgD3H6w9QxdncfWVAA--.5441S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU3J5rUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQGAZWcXARTPXwAAsA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
+ yaml format
+To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
+ linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241022060157.36372-1-himanshu.bhavani@siliconsignals.io>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241022060157.36372-1-himanshu.bhavani@siliconsignals.io>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 22, 2024 at 05:52:08AM +0200, Marek Vasut wrote:
-> On 10/22/24 5:25 AM, Shawn Guo wrote:
+On 22/10/2024 08:01, Himanshu Bhavani wrote:
+> Convert the text bindings of pinctrl-mcp23s08 to YAML so it could be used to
+> validate the DTS.
+> 
+
+You silently dropped several compatibles. Document clearly what and why
+you changed from original binding during conversion.
+
+> Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+> ---
+>  .../bindings/pinctrl/pinctrl-mcp23s08.txt     | 148 -----------------
+>  .../bindings/pinctrl/pinctrl-mcp23s08.yaml    | 153 ++++++++++++++++++
+
+Filename based on compatible, so microchip,mcp23s08.yaml.
+
+
+>  2 files changed, 153 insertions(+), 148 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.yaml
+
 ...
-> > I'm not sure it makes a lot sense to have "fsl,imx6ul-pinctrl: " in the
-> > subject prefix.
-> I can change it to imx-pinctrl or something and send V4 , or can you tweak
-> it while applying since the series is somewhat large ? Which do you prefer ?
 
-I expect this binding change go via pinctrl tree, so it's up to Linus.
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.yaml
+> new file mode 100644
+> index 000000000000..3904b8adba44
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.yaml
+> @@ -0,0 +1,153 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Copyright 2024 Silicon Signals Pvt. Ltd.
 
-Shawn
+I don't see how Silicon signals contributed to original binding in
+a157789b78f4e95f5d66f8b564356e396716f67e and I feel above suggests it is
+a new work, not derivative. And if you claim this is not derivative
+work, then why not licensed as checkpatch asks? IOW, I suggest dropping
+copyright statement.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-mcp23s08.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip I/O expander with serial interface (I2C/SPI)
+> +
+> +maintainers:
+> +  - Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  Microchip MCP23008, MCP23017, MCP23S08, MCP23S17, MCP23S18 GPIO expander
+> +  chips.These chips provide 8 or 16 GPIO pins with either I2C or SPI interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,mcp23s08
+> +      - microchip,mcp23s17
+> +      - microchip,mcp23s18
+> +      - microchip,mcp23008
+> +      - microchip,mcp23017
+> +      - microchip,mcp23018
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO specifier for active-low reset pin.
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    description: Maximum frequency for SPI devices.
+
+Drop, not needed. Is this a device on SPI bus? Then you miss ref to
+spi-peripheral-props.
+
+
+> +
+> +  microchip,spi-present-mask:
+> +    description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +      SPI present mask. Specifies which chips are present on the shared SPI
+> +      chipselect. Each bit in the mask represents one SPI address.
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+
+Where is the entire description from old binding?
+
+> +
+> +  microchip,irq-mirror:
+> +    type: boolean
+> +    description: |
+> +      Sets the mirror flag in the IOCON register. Devices with two interrupt
+> +      outputs (these are the devices ending with 17 and those that have 16 IOs)
+> +      have two IO banks IO 0-7 form bank 1 and IO 8-15 are bank 2. These chips
+> +      have two different interrupt outputs One for bank 1 and another for
+> +      bank 2. If irq-mirror is set, both interrupts are generated regardless of
+> +      the bank that an input change occurred on. If it is not set,the interrupt
+> +      are only generated for the bank they belong to.
+> +
+> +  microchip,irq-active-high:
+> +    type: boolean
+> +    description: |
+> +      Sets the INTPOL flag in the IOCON register.This configures the IRQ output
+> +      polarity as active high.
+> +
+> +  drive-open-drain:
+> +    type: boolean
+> +    description: |
+> +      Sets the ODR flag in the IOCON register. This configures the IRQ output as
+> +      open drain active low.
+> +
+> +  pinmux:
+> +    type: object
+> +    properties:
+> +      pins:  
+> +        description: |
+> +          The list of GPIO pins controlled by this node. Each pin name corresponds
+> +          to a physical pin on the GPIO expander.
+> +        items:
+> +          pattern: "^gpio([0-9]|[1][0-5])$"
+> +        maxItems: 16
+> +
+> +      bias-pull-up:
+> +        type: boolean
+> +        description: Configures pull-up resistors for the GPIO pins.
+> +
+> +    required:
+> +      - pins
+> +      - bias-pull-up
+
+This does not make much sense, why pull up is always required?
+
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +
+> +additionalProperties: false
+
+
+
+Best regards,
+Krzysztof
 
 
