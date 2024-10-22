@@ -1,95 +1,166 @@
-Return-Path: <linux-gpio+bounces-11750-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2BD29AA0F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 13:16:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B6209AA142
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 13:40:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DA111F2168A
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 11:16:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B977CB231FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Oct 2024 11:40:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC328199EA2;
-	Tue, 22 Oct 2024 11:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD37E19B3EC;
+	Tue, 22 Oct 2024 11:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OxOnpiJc"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="01nK882K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eMP+3OCs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="01nK882K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eMP+3OCs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E9A140E38
-	for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2024 11:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28978199EBB
+	for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2024 11:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729595792; cv=none; b=g7qY8Mq7uBaAYmOetJVaEMLqNK5j9RTaiALh7VwHxpMyEloZpbXIr9gWfAgz6SLTvsRjLx1VQkuvgE6OCmGpEjYWCB7LjuMqbmYiRm6SWDnA9RP5LLrWvGxbyvUYXFDkcvNFTK+oapYJ3wtcmA6cNrJ+7FPXBhLPVTF/X9Gnttw=
+	t=1729597222; cv=none; b=Wc+qVUO2Wg8BcPg47FACMEFu4sLt3ZkRCm2l3P2BIGlJHR9tyYNssFO382E09VZNGIK6wPjdoQhThfPlx9wxHKXqgd86/sjgeItLCCHIhvAWNp7Jgvlqt5Tz1n7psOZUM5gc5JimVTYB5Bd+tOEL/W7GzrFVj6KKp7kMVA1c6SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729595792; c=relaxed/simple;
-	bh=C97vOVXgIZVUdertuvDxti28lwShTmqvfP02dyperGY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ueP7Z9c/bySxpQl0bTpGOMbejsvqXJkc81BMTrjTO09i7CW7IJaZlfeFGOg3dfZ3mxRXPGZhplQzBF4Xr0DQOVgkldPxPMh6ZfhR1OtK5AHxb9VScW/shoNpRY+idhGDYinkioPA9+jgbPdb3+FVhAnO9p5+5ENNFsbPq74YuCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OxOnpiJc; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53a007743e7so6640316e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Oct 2024 04:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729595788; x=1730200588; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=C97vOVXgIZVUdertuvDxti28lwShTmqvfP02dyperGY=;
-        b=OxOnpiJc+vv3F8ZYIFXw9mfv4QufbO950FTbncuxcwrnG+Zc//bIZaHtNlSJKcL9MM
-         K3gqQlqUtyy8VrYEu5mXrQcGWUoaUtnAMSEg4xB/x2+bGadlLwYngq/U6r2JqiuPEDiK
-         tXnGBRWln4fjNibUVhELGyzbkrRQtdOKzqEmbw/d/3DhcjPbVtEPJPkjkR07w4W+s3cY
-         JaJv8lSA739Ilcak0t0BDkPLzfPn8XGqPGAlTmhR/BsYU1EW5hCCUO/LGwT2qieyAavb
-         kX22oSY+Gsn1BHPgJDQSHtG6zPRJAPsHlviR9LBuhBMMdb2xbkMlJy4NaEzVU80XXx9A
-         iMsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729595788; x=1730200588;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C97vOVXgIZVUdertuvDxti28lwShTmqvfP02dyperGY=;
-        b=ZvZXpVFlRy9vKX8Obp4fKrKtyFvPj8HXj9Og2dxf3dLm+GB6++W6y8Zu6ITR1dIzL9
-         mVVhGEvv+SnCqCOKQuapTpUbO3mzqOzi/ExzNuVY4WKcR86TjIKAh6sSYQverdD6bPgK
-         QQREXv++gdUuk+Ro71RkGru6Rkaj60DUoAtmgHjLlmEp8jSY5wvggmZqyvtm9aC9V3OK
-         M+OjGV2eXVsEt9Iaj6H3hh/SDyzBhtH4Xt3lTIS3jj/NuNDeAyBQrgGFDA70yjYoAycn
-         /T7QF1q6s83XvzizxsF0/5rjzpFeuXy36g/gjKPoeCWN8yuc8KoHu5JmHCGSkW0zouHQ
-         4HbA==
-X-Gm-Message-State: AOJu0Yw2GCItN6CXLZcyFKp7nMhQ+bHp4pme+9+Q1bLW+mgBsCiSUej+
-	VYxL3yZf/2zfkceXuyGlvmQ9F7xnKYn6hiG6NrVPqo/vf0Quy+uSGY8DGZ28pup6XOl1YGJPk0w
-	z+UGj4J0B64ZFwNtwRANE47tL4aI5p2JDebsQL2W2HPudytXquh8=
-X-Google-Smtp-Source: AGHT+IEImrxE+HQ2qK+pS8vLfi27EofmDiSjmODcmYAAoXUSlX9NufXEzW8KLcE2pHKOejh9nmuqtpCw9/68eqOz4eU=
-X-Received: by 2002:a05:6512:398c:b0:539:fbd4:9c9a with SMTP id
- 2adb3069b0e04-53b139f4f26mr1185690e87.35.1729595788298; Tue, 22 Oct 2024
- 04:16:28 -0700 (PDT)
+	s=arc-20240116; t=1729597222; c=relaxed/simple;
+	bh=XR1E+NZ8/b7dsub/geA6i2XnOrNbJxDqVVEAiq9qP/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LMGbwiXyhu5HWQzJ6O6P2JpBSdJefouLI9vs910tQy7Zbpc8NFu0CuRbfSw4f4rqYqYoVnhBkls89t7lWFyigf7jkJO5+6qnG7zTyn/L5haC4QhWFhl3fehpcHmq2biHUpSWMl1z8dVATCSyCn0GWU1k4sHNAjytMUQ3kmBXbQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=01nK882K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eMP+3OCs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=01nK882K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eMP+3OCs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EDDE1FD14;
+	Tue, 22 Oct 2024 11:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729597219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
+	b=01nK882KpTHVYu0o8lVC7zfY+vmSCC1RRLUXQ4filMflBzkWSGq+JYd+PH+9f/UQlnhV86
+	ww4GabdXiM5tR8JCgSpEuNLLXgcruKdAsouAD9ylkOkf9VobzLlZst1L92EdFfbZwDnXl/
+	NVqHiHuMYXnZG2kwpkQQA6Yfvg9gkpU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729597219;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
+	b=eMP+3OCs7Hw+SAOmVBEN6lXpzljx64I4F8YOCmlEy4pacqlRGVlCXkhDvfrx9t3QX6bSkh
+	GXSq492fN4k0YsDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=01nK882K;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eMP+3OCs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1729597219; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
+	b=01nK882KpTHVYu0o8lVC7zfY+vmSCC1RRLUXQ4filMflBzkWSGq+JYd+PH+9f/UQlnhV86
+	ww4GabdXiM5tR8JCgSpEuNLLXgcruKdAsouAD9ylkOkf9VobzLlZst1L92EdFfbZwDnXl/
+	NVqHiHuMYXnZG2kwpkQQA6Yfvg9gkpU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1729597219;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K+7MKnN4K++evGoFE6gZpaYOJjqEnBBRSY0tr/2wSXA=;
+	b=eMP+3OCs7Hw+SAOmVBEN6lXpzljx64I4F8YOCmlEy4pacqlRGVlCXkhDvfrx9t3QX6bSkh
+	GXSq492fN4k0YsDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 00C4113AC9;
+	Tue, 22 Oct 2024 11:40:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UmXKOSKPF2fTOgAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Tue, 22 Oct 2024 11:40:18 +0000
+Date: Tue, 22 Oct 2024 13:40:17 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: linux-gpio@vger.kernel.org
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Dong Aisheng
+ <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo
+ <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Linus Walleij
+ <linus.walleij@linaro.org>
+Subject: [PATCH] pinctrl: imx-scmi: Drop obsolete dependency on COMPILE_TEST
+Message-ID: <20241022134017.172411db@endymion.delvare>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 22 Oct 2024 13:16:17 +0200
-Message-ID: <CAMRc=McbWNANVLGSFe6aXjcjMoekUwjov8vM1dSMy03Vp4nXzg@mail.gmail.com>
-Subject: [ANNOUNCE] libgpiod v2.2
-To: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4EDDE1FD14
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[pengutronix.de,nxp.com,gmail.com,kernel.org,linaro.org];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-I'm announcing the release of libgpiod v2.2.
+Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), OF
+can be enabled on all architectures. Therefore depending on
+COMPILE_TEST as an alternative is no longer needed.
 
-This is a big update for libgpiod bringing in the D-Bus daemon and its
-command-line client, GLib bindings with GObject-introspection and a
-slew of other updates and improvements. The detailed changelog can be
-found in the NEWS file.
+As ARM_SCMI_PROTOCOL already depends on COMPILE_TEST, we also don't
+need to add COMPILE_TEST as an alternative dependency for it.
 
-The goal of the D-Bus API is to address the concerns about the lack of
-persistence of GPIO state when the process that requested it exits.
-Now the state can be stored inside the GPIO manager with which clients
-can interact using a well known protocol.
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+---
+ drivers/pinctrl/freescale/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The release tarball and the git tree can be found over at kernel.org[1][2].
+--- linux-6.12-rc4.orig/drivers/pinctrl/freescale/Kconfig
++++ linux-6.12-rc4/drivers/pinctrl/freescale/Kconfig
+@@ -9,7 +9,7 @@ config PINCTRL_IMX
+ 
+ config PINCTRL_IMX_SCMI
+ 	tristate "i.MX95 pinctrl driver using SCMI protocol interface"
+-	depends on ARM_SCMI_PROTOCOL && OF || COMPILE_TEST
++	depends on ARM_SCMI_PROTOCOL && OF
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+ 	select GENERIC_PINCTRL_GROUPS
 
-Bartosz
 
-[1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-[2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+-- 
+Jean Delvare
+SUSE L3 Support
 
