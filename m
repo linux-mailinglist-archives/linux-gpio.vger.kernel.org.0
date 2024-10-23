@@ -1,206 +1,128 @@
-Return-Path: <linux-gpio+bounces-11848-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11850-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 955629AC776
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:10:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 084C99AC77F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:11:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F85C283185
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:10:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4B36283490
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B4019F438;
-	Wed, 23 Oct 2024 10:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408F419F438;
+	Wed, 23 Oct 2024 10:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Umr0psrm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OeqQ9+qM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1480319E99E;
-	Wed, 23 Oct 2024 10:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A64E19F131
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 10:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729678231; cv=none; b=Q1T5+wMUKuVxz4c9YeqcbEfgXsOl1bc3fR690nqMtWYgVb1a2IQ8ZYiLUaU7eeL3scFUbZbOQ/piKxPlvNKawJaKwF2WtX1t6lz68G5E5k7TMMsbtGwg4BVyAR+npPSmq6HPlhoC2YTUlbsJtj9Zl65YgZjwHgGUZ3lnOhas/LQ=
+	t=1729678270; cv=none; b=g/JcyI1+wTkQYLyaxo/smIjAmZWHIe6ayXNw4zUXRCkizgoRfA3QBmJsUbXJaq2C8eWNXIXKvnyPlnKhSyWa5omkplZCNTpiIZpgphxMG3VdQxHh2o2QgOwkXSn8j5tsCKyoWt3M0G6E04/pjMcc7u/rvGDtbjpyLbv8vTScPcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729678231; c=relaxed/simple;
-	bh=k3SnHG7oA3l5HZSfi1tB7TiZdo9WbfAs0mivdJqWgUA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ClprA59Dm1ZXxkrQs5niJ6O8VPNoYP7rWjihtgazvzI7U0o20z0rq6jWyflUEzO8nSwnAVxB0ZYyJk+1oDWQKAoVH7gyf8hIxKibxV1nY5GUwPTlVgnHZshFMsuECqF7KP1/Ep29HPC9Z4ZKKYBqpSLG07BIEH1BlzBLFlhZAOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Umr0psrm; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5BD4F20056;
-	Wed, 23 Oct 2024 10:10:27 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 4D9932031B;
-	Wed, 23 Oct 2024 10:10:17 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 50CB940071;
-	Wed, 23 Oct 2024 10:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1729678215; bh=k3SnHG7oA3l5HZSfi1tB7TiZdo9WbfAs0mivdJqWgUA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Umr0psrmam/LzPClkicD6UONSbNtPFt2zd+HnRZ33WMqljjb/ERG1gQxqLuL/UALX
-	 zG1oHfQPfJpGIvCVJirzaft9phPUwh2VWYIbowP8RGXfcifTkvUpdgW1qijU76cBPO
-	 SNrwEqnmTJd/9tabIqPFGhObkbafmG+vYJZEA7po=
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id AAADC411E7;
-	Wed, 23 Oct 2024 10:10:14 +0000 (UTC)
+	s=arc-20240116; t=1729678270; c=relaxed/simple;
+	bh=5OOvHNGAVgHImRA4rtLY0Acms6nJmTWGumvJk2gBIAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J0qKeNKAs7MzOl3mHK0Fxd1BIUNJS/j6kPHYR9ULsC0ikIbhwXLC8YU492HuoiO9mgsgHEMCVbQuOl+25AxFczmlC6wJNRgZSD8evukZVqmEypgFeyYcSjSXXmjBa/VdL0ryIpGTfHC8r9eOChk1sS6LtMEfVPImMTDDjcIbWZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OeqQ9+qM; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5366fd6fdf1so8683065e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 03:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729678266; x=1730283066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OOvHNGAVgHImRA4rtLY0Acms6nJmTWGumvJk2gBIAw=;
+        b=OeqQ9+qMCYtymPuyjpdaeRRMaaY+/apAS5h7MWxznHYIcjoEGqt0KskN2I85Lm6QEA
+         KVse3nAg6vlCHWe52o8IcidcKEOM85yh5WTRYAYTy9MngCZJ8up5wAYpWpklD7GilJ9C
+         qi3tke/qctp+QV71mbLnc+AqR/a3jIsrMGP/5gVqpPQfjptIKzkJ39f1pYiM3zDO8izX
+         aJ5rQg0Gc7LlwN5IMk4+hLcU5QrWtR4vUuhQyUgj0Bsh7LtWVb1JS/SYcQ/rkNQw5TIH
+         +1axe90Mk2ysXnlluHABAe2jwMHfkcYv9/G3aNHlGh7hxVYlcdom/U5KPpvKa1Log8WU
+         /uHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729678266; x=1730283066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5OOvHNGAVgHImRA4rtLY0Acms6nJmTWGumvJk2gBIAw=;
+        b=FQRqpgMlIOXwvvoHEx+KcjrudlBEHfAVW7vHgz28CYyBhULVsuC+P9X/eIipnX9+yy
+         dDnQqatu0yP0mgjFaBRy1OymJMvHOGAseIpz+4yQ7mOk63ULrvB9/YImlkMxTsDILf5m
+         +5tKKjRxKAuPKKv6tdJFeBRfDGBfA+1wvPSEfTxqr2VKp6TsKVhtogGAVVKtge8/MsHv
+         xA2J1wWRiaYTTEm7ykKatEVncSQJdcU/8it4ibyCW6sybuPuFtPn42MdVSkXesSMMIEK
+         JfpVmosGmLESMCSb8j851dAN/ikfZNgRFR/tnPNCfssTaXcrSiMgvhKbNOq+YTtbxWXJ
+         58Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWw4YPpWSP8yRHyLRr+UIgF8bObosIuLD3XsAEuLeXdY2+cHN1sNoXgogfOUQMtXjXIZRk3Gt+2hbro@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEQ75pz+7/z+oQvBf0FZ7uM1JKPy+M6zGkqM+m3FBTe9TLfr4A
+	wKvh0z/c8fgPBo4b7iUGbHndiA5+pdVe+AQQ3lu4SljUL1jSev+ndu9/lPuWrY/NSwTdblkxlFM
+	SkFmwqDtZgrQTfUElYdQVCo5Gxe4QRpCLUYLSVg==
+X-Google-Smtp-Source: AGHT+IE089tWVwoXd/8Hysqc4S/uDg7EGVHjVvwgua3xypehCFmJa3XmQQ+EwelSROlylF6cOjc2uO3oYJn05SS9GVs=
+X-Received: by 2002:a05:6512:1114:b0:539:fde9:4bbe with SMTP id
+ 2adb3069b0e04-53b1a30512fmr994214e87.20.1729678266366; Wed, 23 Oct 2024
+ 03:11:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 23 Oct 2024 18:10:14 +0800
-From: Mingcong Bai <jeffbai@aosc.io>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: WangYuli <wangyuli@uniontech.com>, gregkh@linuxfoundation.org,
- patches@lists.linux.dev, nikita@trvn.ru, ink@jurassic.park.msu.ru,
- shc_work@mail.ru, richard.henderson@linaro.org, mattst88@gmail.com,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- fancer.lancer@gmail.com, linux-hwmon@vger.kernel.org,
- dmaengine@vger.kernel.org, xeb@mail.ru, netdev@vger.kernel.org,
- s.shtylyov@omp.ru, linux-ide@vger.kernel.org, serjk@netup.ru,
- aospan@netup.ru, linux-media@vger.kernel.org, ddrokosov@sberdevices.ru,
- linux-iio@vger.kernel.org, v.georgiev@metrotek.ru,
- linux-mips@vger.kernel.org, ntb@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-spi@vger.kernel.org, dushistov@mail.ru,
- manivannan.sadhasivam@linaro.org, conor.dooley@microchip.com,
- linux-fpga@vger.kernel.org, tsbogend@alpha.franken.de,
- hoan@os.amperecomputing.com, geert@linux-m68k.org,
- wsa+renesas@sang-engineering.com
-Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various
- compliance requirements.
-In-Reply-To: <418359de-e084-47f9-9090-7980e41661e0@flygoat.com>
-References: <2024101835-tiptop-blip-09ed@gregkh>
- <A74519B4332040FA+20241023063058.223139-1-wangyuli@uniontech.com>
- <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <444fa53bdfdee75522a1af41655a99b0@aosc.io>
- <418359de-e084-47f9-9090-7980e41661e0@flygoat.com>
-Message-ID: <5d8614084599ff1b7f70aa1b427bdfb3@aosc.io>
-X-Sender: jeffbai@aosc.io
-Organization: Anthon Open Source Community
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Rspamd-Queue-Id: 50CB940071
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.40 / 10.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[37];
-	TAGGED_RCPT(0.00)[renesas];
-	MID_RHS_MATCH_FROM(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,mail.ru];
-	FREEMAIL_CC(0.00)[uniontech.com,linuxfoundation.org,lists.linux.dev,trvn.ru,jurassic.park.msu.ru,mail.ru,linaro.org,gmail.com,vger.kernel.org,lists.infradead.org,omp.ru,netup.ru,sberdevices.ru,metrotek.ru,microchip.com,alpha.franken.de,os.amperecomputing.com,linux-m68k.org,sang-engineering.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[]
+References: <20241023044423.18294-1-towinchenmi@gmail.com> <CACRpkdZP9oDd+fRKKagFtGbfLx=Rk5LJ7bvaKimw5-t25XZAfQ@mail.gmail.com>
+ <5e1b807f-82ac-4ab8-867c-32b2bf2a91ce@gmail.com>
+In-Reply-To: <5e1b807f-82ac-4ab8-867c-32b2bf2a91ce@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Oct 2024 12:10:55 +0200
+Message-ID: <CACRpkdYjmwHaHPTmjOKR8E9kYQBZAx04Ydby7HKZzE3KhbNh2A@mail.gmail.com>
+Subject: Re: [PATCH v6 RESEND 00/20] Initial device trees for A7-A11 based
+ Apple devices
+To: Nick Chan <towinchenmi@gmail.com>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Greetings again (oops),
+On Wed, Oct 23, 2024 at 11:37=E2=80=AFAM Nick Chan <towinchenmi@gmail.com> =
+wrote:
+> On 23/10/2024 17:05, Linus Walleij wrote:
+> > On Wed, Oct 23, 2024 at 6:44=E2=80=AFAM Nick Chan <towinchenmi@gmail.co=
+m> wrote:
+> >
+> >> This series adds device trees for all A7-A11 SoC based iPhones, iPads,
+> >> iPod touches and Apple TVs.
+> >
+> > This is a good and important series. FWIW:
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Are patches not getting applied since you resend them?
+>
+> This series along with the watchdog reset delay series mentioned in the
+> cover letter have not been applied.
 
-I messed up the reference levels when I sent my disclosure. Jiaxun got 
-most of the references right but the last sentence.
+It seems to me that the watchdog series is only a runtime dependency
+and these binding+DTS patches are well ripe for merge.
 
-在 2024-10-23 17:53，Jiaxun Yang 写道：
-> On 2024/10/23 09:26, Mingcong Bai wrote:
->> No, no, no. Nuh, uh.
->> 
->> Greg has unfortunately decided to respond in private over a matter 
->> that by no means should be glossed over. Here below is our 
->> conversation:
-> 
-> I can't believe a senior maintainer is breaking our agreed netiquette 
-> [1], but that's happening.
-> 
->> 在 2024-10-23 15:55，Greg KH 写道：
-> [...]
->> 
->> Request declined. Your response is now public knowledge (and hey, if 
->> this is not by your will, my apologies). Again, this matter requires 
->> public response.
->> 
->>> 在 2024-10-23 14:30，WangYuli 写道： Although this commit has been merged, 
->>> it's still important to know the
->>> specific reason (or even an example) that triggered this change for
->>> everyone here, right?
->>> 
->>> And those maintainers who have been removed should be notified.
->>> Seconded.
->> 
->> Sorry, but that's not how this is allowed to work.  Please contact 
->> your
->> company lawyers if you have any questions about this.  And this only
->> affects maintainers, as you aren't listed in the MAINTAINERS file, 
->> there
->> should not be any issue, but again, contact your company if you have 
->> any
->> questions as they know what is going on.
-> 
-> I think there are no regulations on earth preventing itself from being 
-> referenced.
-> Even if the regulation prevents further communication with affected 
-> bodies,
-> the wider community still deserves an explanation.
-> 
-> As a person with M entries I found this behavior appalling. It shakes 
-> mutual
-> trust between maintainers, as we all assumed that patches being applied 
-> are
-> well scrutinized.
-> 
-> Besides, many of us are working on kernel as hobbyist  in a personal 
-> capacity.
-> That means we don't have access to lawyers, especially US one. While I 
-> understand
-> corporate participants may be the majority of the community, please 
-> don't leave
-> hobbyists behind!
-> 
-> I've had some interactions with some of people being removed here, and 
-> I would
-> say they are all brilliant individuals. It's  really sad to see them 
-> being turned away :-(
-> 
->> 
->> Just *wink* if you were compelled into this.
-> ^ It sounds unprofessional to me.
+I suspect the three Asahi-affiliated maintainers are too busy with their
+own stuff (like M3 support...) to respond or queue patches as they haven't
+responded to the patch set for the two months it's been floating. (OK
+Sven Peter did respond to some v1 patches.)
 
-For the record, I wrote that unprofessional sentence ("Just *wink*"), 
-since it was private.
+If nothing happens in a week or so, I suggest you just send a pull request
+to the SoC tree (soc@kernel.org) yourself. Perhaps you should even be added=
+ as
+comaintainer for the ARM/APPLE machine support so things do not
+stack up like this?
 
-Best Regards,
-Mingcong Bai
-
-> 
-> Thanks
-> - Jiaxun
-> 
-> [1]: https://people.kernel.org/tglx/notes-about-netiquette-qw89
->> 
->>> thanks,
->>> 
->>> greg k-h
->> 
->> Best Regards,
->> Mingcong Bai
->> 
+Yours,
+Linus Walleij
 
