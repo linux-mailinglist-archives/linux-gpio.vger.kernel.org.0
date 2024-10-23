@@ -1,143 +1,145 @@
-Return-Path: <linux-gpio+bounces-11870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 351D59AD3C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 20:18:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 229E49AD3CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 20:18:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 631C81C20D72
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 18:17:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7C272851B1
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 18:18:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E3491D0946;
-	Wed, 23 Oct 2024 18:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4581D0B82;
+	Wed, 23 Oct 2024 18:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yMWIWMUY"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ppU+qTX2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375441E51D
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 18:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E91E51D;
+	Wed, 23 Oct 2024 18:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729707476; cv=none; b=Q5+jruMai1XwFnGgG8SjJO0rZw2oufaAWNLrHay8Wh9KxlPk8XykTsNWnTVICY8NcdOuVCmxXELBPcqMwoFmE4xEYSGiYGBhQAiKQ6aXkg7aspRdUAYP9s3vJkgKl045t3aZ4Jed87XQcA3PwePJMI29D0TGrDPBJhn+LLlyfEM=
+	t=1729707493; cv=none; b=MM+ns60OfdIU4R6uApuGNxDJoXuy5LMhTOaVi4rm9E2csKecYBbwkTOaHIxCJiIHl2XXXI3tRZN0bGF9MzTAc+3XLvINHRbWnWDFCZ9y3DOxiHjZY8fQgV/YusLxzwR+DWEYM3dcVHBGtVui+9oVrxGW6+xFOuwlSCK/LFTeivk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729707476; c=relaxed/simple;
-	bh=pZWtl2EpHSew7lMjBCtML8kpzjhx9aaa2qe8M2I9MKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qOwebI20VawirIGyu8oemJqND2Lgajvpnn70cOatc/SYEv8exkDXmKzF9lykn2VZnnMnFUfgbazmOZ8Qzp8I+Kw2JemOCL0+Ne7pz7nxmLbPmnlJMszMN0NsckjD4abWTE+9MgWb/uLRRB9lQS+0HaaUvz8dJkpfiX7+fVLHVIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yMWIWMUY; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53b1fbb8be5so516377e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 11:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729707472; x=1730312272; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pZWtl2EpHSew7lMjBCtML8kpzjhx9aaa2qe8M2I9MKg=;
-        b=yMWIWMUYM+f4smWAEZU18sanTjLQEWua9Rg+7q+9GC2G2JCVb8BkQiQaoQzXri/vZN
-         ZshZXkmEmQVGBZp2CJQVmN4AzySbIfvkvVGKUPQq9jmQTEODNhGn6jgtb2urSPjcwhZ7
-         48+NWDfHr8TVe7HP5Dfjs63i6ECSq/DuZtCavVU72FkGXU3rw0FUXrOLVPZlRFEcbT0A
-         ck8sPm+9m1UNzCH7Km/LQC5CLuVFCRh12OAjBFtscEOyWVCsW9aAsy1mj/n1kcDElRGw
-         hQjxno2A3JsvJ38kwgcZhhkaNDa5o0IzqCrRwfRHGooZ9dGgoVPet5E4SznVR0p9lKHW
-         0BNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729707472; x=1730312272;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pZWtl2EpHSew7lMjBCtML8kpzjhx9aaa2qe8M2I9MKg=;
-        b=neIS8z96aPivONja9ZuknrD7O5+CudaSQmiumqolczaqeWmDTqjT+IuFCzb8E5OcUG
-         LATCIDyTFNPUaXhGc/EN5nIZHQguEmkcVGRvL/0WAd00HLnjhILbfc7FzqsXVGORerx5
-         iAWwrDGw7EuIFNJ01ifJRWEYep9tNHTYOnMoF1TB2/pnO7vgF2qU/EBlAHDDGomHnKAt
-         SS+S13ze8iIsSH7kFKBCheC3bKp5ReGs2dyCL6AVgDKWSDB+ADsHc1ZGX+5F2tSg9kXt
-         5XlEkm1/QyjDrLfFh52aX7i0H2CmVDM6fz6vzKMTflXFfqzOULfVL/r3r4LODNeY3V2N
-         9oRg==
-X-Gm-Message-State: AOJu0Ywhd3GSXZdRlON2b1tDnLJ3zc1zWuytt69XmfP6Qqx76889Hkm5
-	hLfPcU51aMM2Fau7xOMgSGJzeS4Uks6dQWjHYBRKyP3bdbS5Rf8Wdpn1i76nI/PpEf3hLvh4G/I
-	GeWY7oj3DzsqybuctxfmdH0W1f6B/8qVD8R1qMKq4ejSBE2IfBDs=
-X-Google-Smtp-Source: AGHT+IF+3D6OW3LIw1+tG4+78Bq2ooF8etU+cGiQzQk+PNgApmHeyhNNknAKUv6HdclEJjGrfA64kvwZIU388XCs6LQ=
-X-Received: by 2002:a05:6512:2397:b0:539:f6e1:f28 with SMTP id
- 2adb3069b0e04-53b131aec59mr2097383e87.30.1729707472083; Wed, 23 Oct 2024
- 11:17:52 -0700 (PDT)
+	s=arc-20240116; t=1729707493; c=relaxed/simple;
+	bh=M/kSmOeA39YpTXR+8DZw+uVHpJe47fw1SucUPYxDGSo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VeJeSw+VYVqiVlzHNPjyIrob6uVEMxnCP2ScRFBNgQx7PqRKfZIvDp5ghlEzUonom2ReuDxwubwhRcxVfP0CFCsRVMx2LKHbDSI3Co+v5f3F8iVsmhhSVFwjSzohTq0ECkbpt6Pjj8J5xxXz/I2Fiq1T1TWt5xK67Xhsy5KsmEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ppU+qTX2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49N9UAmc015999;
+	Wed, 23 Oct 2024 18:18:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YxWbVvgf9huYpnZJ7nW479CnES31sQmwldJhyMs1CSs=; b=ppU+qTX2XE/eZ8ag
+	dGo/lprhzmNQGEyDIcPOt4dOYJbVHtMdDj7ldsczrT+RWQl20IuuJKgl3NKdvAgx
+	AeYUEfgXqNwJA/QUCZXz7D4M/K4IJZIUWDoKXVnGGXNKiWyDWsLOgZSF/dLMbTub
+	nUQRt6bTkzYHytwKwaIyUVQ9DIa/L7NjJltNB95nnYFdCA8aPzYFo9rSAPET0xmC
+	9iBL2jkY+I9bj3xPVjHaJlvUY010bAi7wGxBhsONHpHpz5SyYWQFtBHiGoz7Z+2u
+	nvG/hk1gKPrUuVkImlBYvgUrdW1xHqO2rCwtQg2iy+KpWsADgkXif6ibKcSG5wbT
+	dgJ75A==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42em3xk5g3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Oct 2024 18:18:08 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49NII7Wi019932
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Oct 2024 18:18:07 GMT
+Received: from [10.71.108.63] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Oct
+ 2024 11:18:07 -0700
+Message-ID: <d21b259a-1f04-4108-a201-254b44f07529@quicinc.com>
+Date: Wed, 23 Oct 2024 11:18:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McbWNANVLGSFe6aXjcjMoekUwjov8vM1dSMy03Vp4nXzg@mail.gmail.com>
- <12535751.O9o76ZdvQC@g550jk>
-In-Reply-To: <12535751.O9o76ZdvQC@g550jk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Oct 2024 20:17:40 +0200
-Message-ID: <CAMRc=Md6j-xizVcYJoC7U03gDspfM6UR_h-1EBHAWhMEo=bRRQ@mail.gmail.com>
-Subject: Re: [ANNOUNCE] libgpiod v2.2
-To: Luca Weiss <luca@lucaweiss.eu>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add sm8750 pinctrl driver
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241021230414.2632428-1-quic_molvera@quicinc.com>
+ <20241021230414.2632428-3-quic_molvera@quicinc.com>
+ <dnri3nqq2una3atjwl437ujzrl2txl2zdyb2ima5qeeudqotxn@5zdxizip6mhb>
+Content-Language: en-US
+From: Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <dnri3nqq2una3atjwl437ujzrl2txl2zdyb2ima5qeeudqotxn@5zdxizip6mhb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4UTRpji6gaMT4pBI_pBbKaKyIuLgQ2eU
+X-Proofpoint-ORIG-GUID: 4UTRpji6gaMT4pBI_pBbKaKyIuLgQ2eU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410230116
 
-On Wed, Oct 23, 2024 at 6:25=E2=80=AFPM Luca Weiss <luca@lucaweiss.eu> wrot=
-e:
+
+
+On 10/22/2024 8:27 PM, Bjorn Andersson wrote:
+> On Mon, Oct 21, 2024 at 04:04:14PM GMT, Melody Olvera wrote:
+>> Add initial pinctrl driver to support pin configuration with pinctrl
+> I think you should drop the word "initial", and perhaps insert "TLMM" in
+> its place.
+
+Ack.
+
 >
-> On Dienstag, 22. Oktober 2024 13:16:17 Mitteleurop=C3=A4ische Sommerzeit =
-Bartosz
-> Golaszewski wrote:
-> > I'm announcing the release of libgpiod v2.2.
-> >
-> > This is a big update for libgpiod bringing in the D-Bus daemon and its
-> > command-line client, GLib bindings with GObject-introspection and a
-> > slew of other updates and improvements. The detailed changelog can be
-> > found in the NEWS file.
-> >
-> > The goal of the D-Bus API is to address the concerns about the lack of
-> > persistence of GPIO state when the process that requested it exits.
-> > Now the state can be stored inside the GPIO manager with which clients
-> > can interact using a well known protocol.
-> >
-> > The release tarball and the git tree can be found over at kernel.org[1]=
-[2].
-> >
-> > Bartosz
-> >
-> > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-> > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-> >
-> >
+>> framework for sm8750 SoC.
+>>
+> [..]
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8750.c b/drivers/pinctrl/qcom/pinctrl-sm8750.c
+> [..]
+>> +static const struct msm_pingroup sm8750_groups[] = {
+> [..]
+>> +	[215] = UFS_RESET(ufs_reset, 0xE2004, 0xE3000),
+> It would be nice if these digits where lower case...
+
+Ack.
+
 >
-> Hi Bartosz!
->
-> I'm noticing while packaging for Alpine that the file name of the install=
-ed
-> lib changed from libgpiod.so.3.1.2 in v2.1.3 to libgpiod.so.3.1.1 in v2.2=
- - so
-> essentially it jumped back.
->
-> I'm guessing this is not on purpose and while I don't think it should cau=
-se
-> issues in the distro, I wanted to make you aware.
+>> +	[216] = SDC_QDSD_PINGROUP(sdc2_clk, 0xDB000, 14, 6),
+>> +	[217] = SDC_QDSD_PINGROUP(sdc2_cmd, 0xDB000, 11, 3),
+>> +	[218] = SDC_QDSD_PINGROUP(sdc2_data, 0xDB000, 9, 0),
+>> +};
+>> +
+> [..]
+>> +static const int sm8750_reserved_gpios[] = {
+>> +	36, 37, 38, 39, 74, -1
+> Any particular reason why these are not gpio-reserved-ranges in
+> DeviceTree?
 >
 
-Everytime I do a release, I bump the libtool ABI numbers as suggested
-here[1] depending on how the code evolved between the versions.
+Not particularly; I wasn't sure whether or not to include in the initial 
+dt patch.
+Will add.
 
-I guess I bumped the revision everytime new fixes landed and were
-released in v2.1.x stable branch but for master I only did it once
-when releasing v2.2.
+>
+>> +};
+>> +
 
-I'm not sure what exactly should be done with that. I can of course
-set the libgpiod ABI to v2.1.4 in v2.2.1 bugfix release if that
-doesn't cause any issues but it doesn't really feel right.
-
-Any suggestions?
-
-Bart
-
-[1] https://www.gnu.org/software/libtool/manual/html_node/Updating-version-=
-info.html
 
