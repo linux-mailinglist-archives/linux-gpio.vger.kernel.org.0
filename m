@@ -1,128 +1,149 @@
-Return-Path: <linux-gpio+bounces-11868-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11869-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EA6C9AD326
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 19:46:31 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 498F49AD3C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 20:16:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 106D02841A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 17:46:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AAF2FB222FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 18:16:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466091CFEC7;
-	Wed, 23 Oct 2024 17:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7136B1D0949;
+	Wed, 23 Oct 2024 18:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PfNRqMVd"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j9TDRImf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4EE1CFEBC
-	for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 17:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35021CF7A8;
+	Wed, 23 Oct 2024 18:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729705568; cv=none; b=NqoI9SM6NDIIT6Xt5H12t83iIHINPzno8fO7THlSNEAI8dD087lc+aQotncK9LU8rnwH+BVRQasoSvQfDpXZRecvyJN0S94w5wLF0RysWPtIN+M2cPBBLyuknoGVzLH+/xclZ6m1/E8sV/y/OaWBudL8u1pU4FduL6akxNow95o=
+	t=1729707386; cv=none; b=susZZGcw5adC8eKNo0RqpSPTcZ061ASngDcZnMT+7sh69vMoZUrwxGOE/1v5SlsNfCBKQz/O5uTAZSRSWxef3issu3ovBdjEw+FTdL9X6oF2P7v0qlTZlZ/N3TF0bRS/YTK6gUhsaPTOdPtLYaQiH14gCGZFwyZDTRFKkPhhGvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729705568; c=relaxed/simple;
-	bh=HhCRM8LXsD648EezB/Ag71ruZTVUBPWIrjPd9FGl4yA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NRMOzhwOFKD4/TMeoF/voli6sFin84D8btIlGyHQ4JBDzdXRoE048reSJQZhXWKaajipaA+VAwSexo32if62OOEeyIU80XcFvKGVKtCCUtxxq6oro92TequHJhLC1GgcRb2tPAwKc4SJ/cti49D86rNwHkQgi92yw94H0TuA0jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PfNRqMVd; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a9a0f198d38so983212866b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 10:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1729705564; x=1730310364; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FLwni55Q0o3LkpPoGPWHU+nZClL0F1PcEd+W91uMukA=;
-        b=PfNRqMVdmHs1fU+LK8FFyPDvmOvLnYzZ2a46Zh6rulUgi2z7zoX7LspJvHR2aT8rAV
-         WNvChqPrimTnEzqOWz3OebW+0acLVmqfqwZMu9z9heLbB7uZXox+VZRCUxbVAJ+4Vwn2
-         fxMdAr+VP1DH3MzbvvvIKxCOvS82QFFjkGhaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729705564; x=1730310364;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FLwni55Q0o3LkpPoGPWHU+nZClL0F1PcEd+W91uMukA=;
-        b=BSR5cthi4v2LzsOUADQOaj0PKSmbemiivjhcb5eeLB1IJ2T/Z7x94J2qafu9Q4jCMe
-         AzzjFPOC5mZpEHIuNkBZj+4rXhWpO5qPrLAOQD/YS/RudjZkp8yZDWIoD7SRnRgPs4bu
-         TcV3h2polFicToNvK8CYQbcS+WghsOePNDlSjh+AKCznJxKxOJFtfr3wnqVybmlKD+b9
-         aT0zhJ/u8oWe1KR2hcQPXQ7Ez/GvrqS1sYcSikSVRb8wZAbusl/c4jyd3AktMIzfeP3l
-         YSv8w4DuwUP+d5apWOmtUH5zlIgu3DDFwEYq9eS2DhO1HVwoA8xqggAZ+cOHubVUer2x
-         O6Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzBFtcLLsNpKIhF3iBoEMNdo0I8P/oLHwiI9jrXU6VZKGKqBYS3h0RFBqOhbqe+VfZpHasrLEHQGei@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw/ZzRjXhJiZOByA8NajJEgIohYHAt42VN4qpDJkMtt3g5+PKy
-	IXSB24T92zn7B9gBkj6sonrVOGVvWrN6abbEEoLej3nyJa2SNxBS43ZVeDShoEEvV9IzzBnfFN1
-	IDNw=
-X-Google-Smtp-Source: AGHT+IFRU4ZY55rmDtWLE1K8vxDBfYrj7WxrgFFTtiOZ0vN4cIMh8R0wQ+186wFmML37HIxy/u2cBg==
-X-Received: by 2002:a17:907:3f9e:b0:a99:4c68:a03c with SMTP id a640c23a62f3a-a9abf87fc33mr332929566b.22.1729705564472;
-        Wed, 23 Oct 2024 10:46:04 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a912f660dsm503720066b.80.2024.10.23.10.46.04
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2024 10:46:04 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9a0f198d38so983211066b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 10:46:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/t/ASYGjrap6Zl0DUbtRcima/2tr9ulOapdeqEzeF7OA0TNiNZgvLRyS90FwkPRvZKzUAfCZPRnDk@vger.kernel.org
-X-Received: by 2002:a17:907:94c3:b0:a9a:8042:bbb8 with SMTP id
- a640c23a62f3a-a9abf94d4b2mr369489566b.47.1729705563762; Wed, 23 Oct 2024
- 10:46:03 -0700 (PDT)
+	s=arc-20240116; t=1729707386; c=relaxed/simple;
+	bh=KQX8dw7pK8Jea/E9TPeB3j1+6XTYeyNVoSLpd/A6AG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WI+VjUh3o5Z9EHbmB5M6JpSe4BjnsL3wWjIhe7toFPVLHbmo/paYT2vrjLzBoufGyyYMRj46ocNDtzArEx7YItf+T3xqSC+yK4s+1xPiL+hP2TFA/3hYLmxfDFsg1V07uwEHZNobGJBe8HGJNJRPA0DA52cxQ7JkKJRy4S5C6x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j9TDRImf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49N9hVS5031330;
+	Wed, 23 Oct 2024 18:16:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RueU0ksXDKW2wUdMExIXR88SrgYbVYySvuzFQj1eBSc=; b=j9TDRImfvG6TxVr6
+	UggR/pa4Ro16guIDapNes9e/FIPJXj8cJXbHNpgcaAYH7u5qPt0oPD7VTZJ7IrXn
+	3S3q3IKNii2ZNlIFIyKeB0ITOvB/StFvlnZVMM5LEHR1ZU1KZ5zgOSH+9n1RmUW6
+	H0xFZ93Ogw3GqODKM12whbjgfVE1MEl3J32W5U/+RCkRMrVxoxN1hD+uV/kCS3sa
+	d/Qy8QppMUN1qet3rLemdzGJWHmqPQymd9A90OoOY0O83J6q5briy3rwQLFw+sta
+	Rrfl8KOpzsmPke1Qh/ksjYIWFDUrFBVVbx5A6YhLYCk5haJDcb1Ls2luKuuQeRc4
+	9TD6Tw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42em3vu71g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Oct 2024 18:16:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49NIGK2j019671
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Oct 2024 18:16:20 GMT
+Received: from [10.71.108.63] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Oct
+ 2024 11:16:19 -0700
+Message-ID: <5c7c9cc4-a1f5-4014-8b16-829a70231374@quicinc.com>
+Date: Wed, 23 Oct 2024 11:16:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a08dc31ab773604d8f206ba005dc4c7a@aosc.io> <20241023080935.2945-2-kexybiscuit@aosc.io>
- <124c1b03-24c9-4f19-99a9-6eb2241406c2@mailbox.org>
-In-Reply-To: <124c1b03-24c9-4f19-99a9-6eb2241406c2@mailbox.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 23 Oct 2024 10:45:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-Message-ID: <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various
- compliance requirements."
-To: Tor Vic <torvic9@mailbox.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io, gregkh@linuxfoundation.org, 
-	wangyuli@uniontech.com, aospan@netup.ru, conor.dooley@microchip.com, 
-	ddrokosov@sberdevices.ru, dmaengine@vger.kernel.org, dushistov@mail.ru, 
-	fancer.lancer@gmail.com, geert@linux-m68k.org, hoan@os.amperecomputing.com, 
-	ink@jurassic.park.msu.ru, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-ide@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, 
-	manivannan.sadhasivam@linaro.org, mattst88@gmail.com, netdev@vger.kernel.org, 
-	nikita@trvn.ru, ntb@lists.linux.dev, patches@lists.linux.dev, 
-	richard.henderson@linaro.org, s.shtylyov@omp.ru, serjk@netup.ru, 
-	shc_work@mail.ru, tsbogend@alpha.franken.de, v.georgiev@metrotek.ru, 
-	wsa+renesas@sang-engineering.com, xeb@mail.ru
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8750 pinctrl
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20241021230414.2632428-1-quic_molvera@quicinc.com>
+ <20241021230414.2632428-2-quic_molvera@quicinc.com>
+ <5k3kfyx43d6r2hchlbjpplhxkm4xfuu6xefbhydqrhnd3zievw@oftxc2ub5l6m>
+Content-Language: en-US
+From: Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <5k3kfyx43d6r2hchlbjpplhxkm4xfuu6xefbhydqrhnd3zievw@oftxc2ub5l6m>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BmxxvsqkMtpZRbVrEWSG1R5mA2qKTn1q
+X-Proofpoint-ORIG-GUID: BmxxvsqkMtpZRbVrEWSG1R5mA2qKTn1q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=732 priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410230115
 
-Ok, lots of Russian trolls out and about.
 
-It's entirely clear why the change was done, it's not getting
-reverted, and using multiple random anonymous accounts to try to
-"grass root" it by Russian troll factories isn't going to change
-anything.
 
-And FYI for the actual innocent bystanders who aren't troll farm
-accounts - the "various compliance requirements" are not just a US
-thing.
+On 10/22/2024 8:22 PM, Bjorn Andersson wrote:
+> On Mon, Oct 21, 2024 at 04:04:13PM GMT, Melody Olvera wrote:
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8750-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8750-tlmm.yaml
+> [..]
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    tlmm: pinctrl@f100000 {
+>> +        compatible = "qcom,sm8750-tlmm";
+>> +        reg = <0x0f100000 0x300000>;
+>> +        gpio-controller;
+>> +        #gpio-cells = <2>;
+>> +        gpio-ranges = <&tlmm 0 0 211>;
+> I know it's just an example, but I think this number should be 216.
+> Please also correct it in the dtsi, where you made it 220.
 
-If you haven't heard of Russian sanctions yet, you should try to read
-the news some day.  And by "news", I don't mean Russian
-state-sponsored spam.
+Will do.
 
-As to sending me a revert patch - please use whatever mush you call
-brains. I'm Finnish. Did you think I'd be *supporting* Russian
-aggression? Apparently it's not just lack of real news, it's lack of
-history knowledge too.
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +        gpio-wo-state {
+>> +            pins = "gpio1";
+>> +            function = "gpio";
+>> +        };
+>> +
+>> +        uart-w-state {
+>> +            rx-pins {
+>> +                pins = "gpio60";
+>> +                function = "qup1_se7";
+>> +                bias-pull-up;
+>> +            };
+>> +
+>> +            tx-pins {
+>> +                pins = "gpio61";
+>> +                function = "qup1_se7";
+>> +                bias-disable;
+>> +            };
+>> +        };
+>> +    };
+>> +...
+>> -- 
+>> 2.46.1
+>>
 
-                      Linus
 
