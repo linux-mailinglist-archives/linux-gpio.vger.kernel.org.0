@@ -1,112 +1,102 @@
-Return-Path: <linux-gpio+bounces-11842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DCF99AC6FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 11:51:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F3EA9AC701
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 11:53:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09E7F1F2208D
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 09:51:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35E1D1F2158B
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 09:53:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAFE71A01BD;
-	Wed, 23 Oct 2024 09:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56142194136;
+	Wed, 23 Oct 2024 09:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUtm3nJ6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x80SZbLu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED0015CD52;
-	Wed, 23 Oct 2024 09:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5880A15AAC1
+	for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 09:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729677031; cv=none; b=fq3hFqNdKAkppMG2ycxv/MxikqeZUFTHJForIQuDzNoYJm1DBqxIT6QqruxlYXIwTV1SlIMFtUjSnPEClIOuS9MJBUzIAwSuYJPDNCOv6ispAOvjRl0KjHXaUAo0XYekxp6dzK5hgsrT7nPxODolsrpYYWuYavBwjql8zNcCadI=
+	t=1729677190; cv=none; b=kdr9u/BnmI2L7Q5JWOjJHKV//aXeKEvVnwu7i9547ABGyLgb6NP+geeTzjRO02UvGziKt9y2igri0y5T3ciW9rGSvbKkFq/8N5Jy5buMSdzsWTgr7bLU6Ny75eWpcP7wqXyo6w+j+x9dyjlHT8q8JwDScTgU/2CNNyNJOTUnWD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729677031; c=relaxed/simple;
-	bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pcQjGX3nmh8ZEMiYZ1ACRWQClUMNhSZKRtaPNVMXgDVdzq0tF0UvUs09DK+NFyUQ2HDEOXE032lr2a5+7AmOxsBmPPWEFiYKMCMRYmRaSOWprZ2AlHXZFbUxrfk9LftGo4cApOP6BzKct8k0lN5ZtR/m13JdV+SqxIAHDpLSxYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QUtm3nJ6; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb587d0436so64094931fa.2;
-        Wed, 23 Oct 2024 02:50:29 -0700 (PDT)
+	s=arc-20240116; t=1729677190; c=relaxed/simple;
+	bh=Sbwdw7QfKSYkbtalP6/ul01s0Qm4MRjTQ/csaN6ZT/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RRXYcKn8gjLav6N4kkGYEaLeBaDrKJ3ZBkaHq2sfhgVv2IypyRPo0pG5/Xp39RO/zSpXX6TZIRWULrDIHrHsN2ljsm34dS3x8d93CYLstjOEKR87nuL2ED/WCNNR1y6RtIWi0OkJ01VfPMp1Qa3bCHRbZgc+3DmXDwO/tbqQzAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x80SZbLu; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-539f4d8ef84so7178396e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Oct 2024 02:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729677028; x=1730281828; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
-        b=QUtm3nJ6hpTKalj3aby8q5FemqhoXU+1beXggms+TkNTCMsWtScxw0eV9BhW1CLT8t
-         m4AWCUZphwFTHWuwfop3vV8JZyQ98J9R0moJY6uCYZXAndbuYxNDzmoPsaIoqNnURciE
-         oUaaKreAA8LMq+7+iRchIh2W+0W4MR4ueEfLAbfCW5llPWavuPpDFZqcYUFahvClxT+i
-         10t3oi1+29gqCwSoQbW5bdCvdfa2lF9/VThB4o03WwBWSN9CHs8G6yRZAUdadyctD+EF
-         dUD5MEFyaYv5qpvBAiwQuuMrCXqqDR/WntOpr/bev+6crQjqSr0Nue8VYR3mQOwwYz/P
-         7cHw==
+        d=linaro.org; s=google; t=1729677186; x=1730281986; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sbwdw7QfKSYkbtalP6/ul01s0Qm4MRjTQ/csaN6ZT/s=;
+        b=x80SZbLuUEA625WC5jXGWdvT4vUGTwovj5wgSyRngXh9vU1ed4OzQjkCz3gTFd72fi
+         oAlIgvqHyFK9rmWeFegV2K0N0z4dzjCo+xqIbFHJFmDqF21zt5E0/cUbWOeF+O4dKhv5
+         x/lNgfZNa+rV4PCJWFVtUa75b0mvOEXMw4LiNNZbswrvLsXD/N0z+u9mMyLjircd2vT3
+         JneQAsRXsNluBWXZKXAwNrDCbAiQydB5MZPBUESwQKIJzlzXDBrLQlQ4LydOgPeRKiae
+         ENApYyI8Org32WjKOqZpMCo7wlxXbdcjn+Fi6xxr2V/+hKNMWUAiPbGuA5QJr3OtJUwS
+         rH5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729677028; x=1730281828;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nALBb1S+YRbc8EW/CONgUpvGQ1smNeFejUFFKudXFE0=;
-        b=Bg32cN/zKuSRuSSjEdmG8wOo0ovc8aWwpm8PzLGpvSt4QAKMyVVtlvKVTHtYHVtoV/
-         Vk8Sc1mXyAbX5tWmtJ9tjmffCzXZxMsyEVCHZVn8KTMcsDEBvW8yF9C1rOs4wJHoixYu
-         TZTHmkUl7jBsR0bTqyiDqy0woi5KloNvxA0D5hqmqlrpnnJ5Nn1lLaohuMNYmIpKstMB
-         5z/3vzFOdgOzz84GoNMLVacZsaMWgnKoSHJG/zP3JBdJvBKv4pVgMi9AxoEPsKm5dqrR
-         G9Zwi74WVUktDH2sUppZafkJ6ERE+LxfV4QEqc/y8pfcCDG9l/bnGhQ5f9sbugK6oqZ3
-         PHoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXRoeN2+ehzE7q5SI4pxQA6nRQ9z6zbrFmJFZthdsJwjVcklRTUYTrqQTAESyQ6DH80lnooKF7tu8lqQ==@vger.kernel.org, AJvYcCUadxWcNqdQi5EXGzv0bZauTudrhX9sAV+R4olxD2zlidw4OJOcyiAeb63iAj/vPbktf27cBsTXg1bWIUs=@vger.kernel.org, AJvYcCUsU31fobyL8WdzCWQAfXcRuMGm2lDQrY7Mz2qamFnr1blSsdZy3lXZ+n7Zdb9xVl/MBJ87NQ1ZI8WJYw==@vger.kernel.org, AJvYcCVA10D5BfaJyHRaFnCQHZIvZERsGjUcVX4jT/h8+4WKYcidF0qsZ8DcgmggV/FEqFwpzZ+jjOO8yrz71A==@vger.kernel.org, AJvYcCVS7cONRSha40RB7nyyBt8uDSEpnGJFAfxLncUSrRDePPNcJ4CpqyYS9ie+8rJ6w7S2YFh7fmDpqIRM@vger.kernel.org, AJvYcCVZvrcIHyTelXrgZ545k4KTf9+pXgRwEQhS0mIDRwP7qkjxU924XlrKgAsZ/Zf0bh7qomB9ih7clc/x@vger.kernel.org, AJvYcCVfcLT8Op3m5XJkKylkVtMkmJpUj+VndG/HBap2o3NIN1lcP2Q5SFOf/B0YKLqUDzM9WSTWMQMVY5cQ@vger.kernel.org, AJvYcCVogkVwGgOpj/uIbP7F7+8UJqgwIBVEuJ7E7zzy8GzDpi2fSjlZZBEhox5FZz8BXrpAq/5H3R/zeonumxI=@vger.kernel.org, AJvYcCVqhNkiJ+0HjsoBNHP3kGhj6h6MJM7Zhc4YGtV3QW8poDGl64A9PFlxI4XOlb2rlMhbkrmEcnR/@vger.kernel.org, AJvYcCWZWgCJ6TVY+h785yzUeJ31j1vHQJkr
- VZ6Q8baZZc8+TWAqpEMuzSK6hrg75yoWWo/ui14ziQdYNM4=@vger.kernel.org, AJvYcCXHnSr8MA3EbSx9j7WcS0T8r5k3xFuNMPuKCD0Z7086MExlngN5qY7ozVm6tj7ToMAS98J82+3yyk1WYXIiTuwWt5U=@vger.kernel.org, AJvYcCXSOKs/OXD6sEQps8/xkdKWZ9SXiP0EyEQnIWjBM2992AbXJ70QgVHg3Tr1O/ZxOVZD0xyHJlm0d/4Ji3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdAQ66m+AKSgi9jlhbJlUihHAIcJ2xCloDvueyL2rRD1VBWc7G
-	K8dnCZuNHZOkkrVC+B9JCoZcWI3W3iZ19TOU0Y+squ6wzF92s4sAf62tZ49SoecWKeGeBSKk/w1
-	ob6uNTYTU/wrqAg13VpqBN7kZkLM=
-X-Google-Smtp-Source: AGHT+IHNhDNmIBEoWNfMDJkh8nwS8VXu0N87NYNLSWFW58MV9yZik6opYGCLTnx0VgKlf8IbL1v8MSDrZvR16S8jqgo=
-X-Received: by 2002:a2e:9010:0:b0:2fb:3e01:b2bd with SMTP id
- 38308e7fff4ca-2fc9d35a589mr7818271fa.21.1729677027463; Wed, 23 Oct 2024
- 02:50:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729677186; x=1730281986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sbwdw7QfKSYkbtalP6/ul01s0Qm4MRjTQ/csaN6ZT/s=;
+        b=L+OcXgR/1A+IldUIRcGzEz4LENtWOIoqIvMJViBClwDETZRr6HQvXVgFyxfELc0ej7
+         UGAv6N9KW9Dr++jBYbvGYEikbOgIWL4ud8Tv/JdrYNhLS553e5LV0lypXdjxxBvpWjW9
+         NzAzknhLnqyBfLWlxYDTlz9a7tVCTra3BhuRDriJN5RtKF9Zjruykc4MTZt1t1Xsb8r9
+         k9MA/ZLUko6ozuHgdxOqE00VKffHwZZo8dBf5GQFgqwLWjVOFu5z075gpIBNOlFNgOSy
+         /N9KL7lUGaVkqJaY7mjwU8oFYBPXBHCRX+8gMluIqivXGNKc6lgx6+wU8s1jdEGSmJyf
+         OHxQ==
+X-Gm-Message-State: AOJu0YwnLCznRYensL3HcqMxamHZ3DnejcBIsGO/8/Nak7f9bJyVW+Od
+	UglkFLYv7yEegm5LaNGsBiOrwbHFX74b/pCUrmS8qoxrSgCTMm/zjhYqOZ6GH5Aq5QkRkP9Lh3o
+	XrQHrMvjbdlrm1N84sd9ugqaVodZa7MRAKBfYag==
+X-Google-Smtp-Source: AGHT+IGZduyXFNO9R8Y5p/tCT3UJ93G3+m8DNutUjBphxaW4ZYITXSGKYXlEk/e7Zp2Lf8bCHSPgekfi0Jy6q1vJeno=
+X-Received: by 2002:a05:6512:308d:b0:539:8fcd:524 with SMTP id
+ 2adb3069b0e04-53b1a346ed4mr949796e87.30.1729677186473; Wed, 23 Oct 2024
+ 02:53:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Anna Antonenko <portasynthinca3@gmail.com>
-Date: Wed, 23 Oct 2024 12:50:16 +0300
-Message-ID: <CAG72VMfSwMitWSyBYHF7a3DCJtc_awO4fw=rJkuvcxh-qeqqNQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various
- compliance requirements.
-To: jeffbai@aosc.io
-Cc: aospan@netup.ru, conor.dooley@microchip.com, ddrokosov@sberdevices.ru, 
-	dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com, 
-	geert@linux-m68k.org, gregkh@linuxfoundation.org, hoan@os.amperecomputing.com, 
-	ink@jurassic.park.msu.ru, linux-alpha@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-ide@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, 
-	manivannan.sadhasivam@linaro.org, Matt Turner <mattst88@gmail.com>, 
-	netdev@vger.kernel.org, nikita@trvn.ru, ntb@lists.linux.dev, 
-	patches@lists.linux.dev, richard.henderson@linaro.org, s.shtylyov@omp.ru, 
-	serjk@netup.ru, shc_work@mail.ru, tsbogend@alpha.franken.de, 
-	v.georgiev@metrotek.ru, wangyuli@uniontech.com, 
-	wsa+renesas@sang-engineering.com, xeb@mail.ru
+References: <20241022134017.172411db@endymion.delvare>
+In-Reply-To: <20241022134017.172411db@endymion.delvare>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Oct 2024 11:52:54 +0200
+Message-ID: <CACRpkdaS9pXpZ_rfyim01en-mYH5_KhmjY1ASu5MkZ0iM6yTSA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: imx-scmi: Drop obsolete dependency on COMPILE_TEST
+To: Jean Delvare <jdelvare@suse.de>
+Cc: linux-gpio@vger.kernel.org, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > Although this commit has been merged, it's still important to know the
-> > specific reason (or even an example) that triggered this change for
-> > everyone here, right?
-> >
-> > And those maintainers who have been removed should be notified.
->
-> Seconded
->
-> <...omitted...>
->
-> So I repeat - call the decision-makers out and ask for their
-> explanation.
+On Tue, Oct 22, 2024 at 1:40=E2=80=AFPM Jean Delvare <jdelvare@suse.de> wro=
+te:
 
-Seconded. I'm no Linux kernel developer, but as a user, I would still like
-to know the reason behind a bunch of maintainers getting erased. I wouldn't
-go as far as to claim that I sense malice, but there's definitely something
-fishy. I would like a proper, public statement about what happened and why.
+> Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), OF
+> can be enabled on all architectures. Therefore depending on
+> COMPILE_TEST as an alternative is no longer needed.
+>
+> As ARM_SCMI_PROTOCOL already depends on COMPILE_TEST, we also don't
+> need to add COMPILE_TEST as an alternative dependency for it.
+>
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+
+Patch applied, thanks Jean!
+
+Yours,
+Linus Walleij
 
