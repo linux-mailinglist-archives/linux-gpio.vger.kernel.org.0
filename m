@@ -1,90 +1,102 @@
-Return-Path: <linux-gpio+bounces-11854-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11855-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7E3A9AC855
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A149ACC5F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 16:31:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9A7D282CE6
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:56:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B69F2283348
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 14:31:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 500D91A76C4;
-	Wed, 23 Oct 2024 10:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15191CACDD;
+	Wed, 23 Oct 2024 14:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nU7UGMDK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uq7T524t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-40140.protonmail.ch (mail-40140.protonmail.ch [185.70.40.140])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226DC1A2C19;
-	Wed, 23 Oct 2024 10:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970AC1C9ED6;
+	Wed, 23 Oct 2024 14:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729680966; cv=none; b=gZc+S4v/eUzZpVeQGYXIjCk0wk75yPTEbomtKbRp/De7GOeserd7H/T4Fe2Le0QJN/n6ve2+hstzYcLn2TcM+zD9T8otlDVhKzK5EwLWpdLA6LCFIBGkw4ubr+rLaocAtDHmceaZl2A3qxlaUErrMS4/wAnxy4KESTsxIT01F00=
+	t=1729693823; cv=none; b=JAAWrSoM0DAaR0LsODuBN+x4//cVmOxUNSiym/iPtO/IphmNsrwzeyWa8MYcyzbx0iPyzp+DrO6kKt6YDfcTK7gWmiUKPnWiswPIalBppJycJ+yQLvUdRlSs5cE47Jj+tvIgN3tl6XV/Q40a/M8cfWe6Kv7FqbBm+nHSYtRqVSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729680966; c=relaxed/simple;
-	bh=2uZmCdan2XO0Cl6IjNWW2Vbysd7BOfysAd/eGyKtjho=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RYnzOOkL0B3xf6czTm9BcMBiSUvOzWvRLUvmrNSirSxgtrZBAHyqVndMmG/MuflA3BA+tRvupQpKgkfdR/I3ES4ZjZy/nRC/amGXwsuWTSv+gwQo9EQjt+gPFXT2QxTlvtfY5UBIqAHG81tFsZNL6ss5XHYBT+dAGLVdIksgp5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nU7UGMDK; arc=none smtp.client-ip=185.70.40.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1729680956; x=1729940156;
-	bh=2uZmCdan2XO0Cl6IjNWW2Vbysd7BOfysAd/eGyKtjho=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=nU7UGMDK8WFIn/KVA5W9N1NEqSwT8UQE0fS8bECjDpD2ZiPAzyyljte+fEi4gpSeP
-	 MnGDOCFdknAj583jHSX7ECsALTfg66OszSBNofUJpIsZYnJleMB2UhPiz0fh/hN1Gg
-	 t9UQCpjJv+3WmXZTYUKzsNwZU++PSa/pdsuU92YQbbk+YNmprbZQ5ORoIl89u1y1Fv
-	 tA+09hbvn4vMvOsPCG+oDWCAxwiQ/fwwYYlrmQfFKs/7bbxnvek/Vo91SXoeMEkPuG
-	 xM1psDgryCSiA474uepaqdbzVyWeBaXpXhxEjg0SlqU14v/WvQHco5bRMaBHD/gEHJ
-	 Mjp/mmDmcMg2Q==
-Date: Wed, 23 Oct 2024 10:55:51 +0000
-To: "patches@lists.linux.dev" <patches@lists.linux.dev>
-From: jisralbasha <jisralbasha@proton.me>
-Cc: "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "ntb@lists.linux.dev" <ntb@lists.linux.dev>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "wangyuli@uniontech.com" <wangyuli@uniontech.com>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various compliance requirements
-Message-ID: <CpPiTF0xZwq_zhrYVO2pCA9TxAmJi_zwVBmyl9Z1RHKCjgf332fcmsc86C_1CMaZPNLlIDcvqOIWa1vR2lr2qMaZpcyIisxLqL1IVvq9ZNQ=@proton.me>
-Feedback-ID: 94463129:user:proton
-X-Pm-Message-ID: 5a8ecfa1aba099d9d2341478826b3c35ab4c778b
+	s=arc-20240116; t=1729693823; c=relaxed/simple;
+	bh=Q9hqRoQ4qEHP2CU6+WUPGiEkJgRQ1LIR8djjGXuPW14=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O4QXyIUs86iQvVitr6mZyw7Z9LqpFvy4QvipyZkpoOeme8yWHRa9fRHG+1Q9nKLyABEVlvhQnlz9f0R3ihc3LFzCe/hM1ufYx04X9IVRs7YXp05aZxNofa2w2d9CaUG+xB2zx1jWD5ibKCVZ26gebLmNXSg7Q36/X13QVeq/MC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uq7T524t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFA7C4CEE4;
+	Wed, 23 Oct 2024 14:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729693823;
+	bh=Q9hqRoQ4qEHP2CU6+WUPGiEkJgRQ1LIR8djjGXuPW14=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uq7T524tN/mBmd16+WFn6m/8nq0rOl7XauZCsySnWfoCD2ONdYf90ttMH3UyA1BzA
+	 KnjRHaDjWRYdBVswhq1rjf6cZ8ZjkDoZkNB4LncSbwtGYAM+Cna4qUP8jRBcr0vMk+
+	 4uTn1q/efpSdh6LiIyrWAcloGXWWq3EdkBGygY82rA3/QKE+bvAN4vB2MmFKRHIzdf
+	 lOnb0/JkxFM0tW2U7l55MS4eXwbbTkwLhSdNncE/XqM7V/XKqrX4n0YpnsN1nVD3xy
+	 hzhbYVg7HC6+DhMSpE6vgFwqhaPtEpbH8YfUg772CLC84EWESDcksJzplKHhxEpUDD
+	 b1HlXL8HWkpyQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Rosen Penev <rosenp@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.11 06/30] pinctrl: aw9523: add missing mutex_destroy
+Date: Wed, 23 Oct 2024 10:29:31 -0400
+Message-ID: <20241023143012.2980728-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241023143012.2980728-1-sashal@kernel.org>
+References: <20241023143012.2980728-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.11.5
+Content-Transfer-Encoding: 8bit
 
-Dear Greg and other LF members,
+From: Rosen Penev <rosenp@gmail.com>
 
-I'm writing to express my serious concerns about the recent removal of entr=
-ies from the MAINTAINERS file without proper explanation. While I understan=
-d the statement cited "various compliance requirements," this vague justifi=
-cation is deeply troubling.
+[ Upstream commit 393c554093c0c4cbc8e2f178d36df169016384da ]
 
-Blindly complying with demands for obscure changes sets a dangerous precede=
-nt. What happens next time? Will we see further removals, modifications, or=
- even additions driven by external pressures rather than the best interests=
- of the project and its community?
+Otherwise the mutex remains after a failed kzalloc.
 
-This incident raises fundamental questions about the autonomy and integrity=
- of our open-source project. =C2=A0Should we be at the mercy of unspecified=
- "compliance requirements" that could potentially lead to harmful actions, =
-such as:
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Link: https://lore.kernel.org/20241001212724.309320-1-rosenp@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/pinctrl-aw9523.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-"Update some entries due to various compliance requirements." (and explode =
-some Russian laptops like pagers in Lebanon, or disable all intel processor=
-s in sanctioned countries).
+diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
+index b5e1c467625ba..1374f30166bc3 100644
+--- a/drivers/pinctrl/pinctrl-aw9523.c
++++ b/drivers/pinctrl/pinctrl-aw9523.c
+@@ -987,8 +987,10 @@ static int aw9523_probe(struct i2c_client *client)
+ 	lockdep_set_subclass(&awi->i2c_lock, i2c_adapter_depth(client->adapter));
+ 
+ 	pdesc = devm_kzalloc(dev, sizeof(*pdesc), GFP_KERNEL);
+-	if (!pdesc)
+-		return -ENOMEM;
++	if (!pdesc) {
++		ret = -ENOMEM;
++		goto err_disable_vregs;
++	}
+ 
+ 	ret = aw9523_hw_init(awi);
+ 	if (ret)
+-- 
+2.43.0
 
-I strongly urge the LF to reconsider this approach and prioritize transpare=
-ncy and community engagement in all decision-making processes. This include=
-s providing detailed explanations for any future changes to critical projec=
-t files like MAINTAINERS. Additionally, we should explore strategies to mit=
-igate external pressures and ensure the long-term health and independence o=
-f our project.
-
-P.S. Keep communications public
 
