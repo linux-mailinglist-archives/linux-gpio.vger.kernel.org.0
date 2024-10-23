@@ -1,187 +1,206 @@
-Return-Path: <linux-gpio+bounces-11849-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E5789AC77D
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:11:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 955629AC776
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:10:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E912B215BF
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:11:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F85C283185
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:10:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A143B19F118;
-	Wed, 23 Oct 2024 10:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B4019F438;
+	Wed, 23 Oct 2024 10:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="E/rc47sl"
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Umr0psrm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627E219E961;
-	Wed, 23 Oct 2024 10:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1480319E99E;
+	Wed, 23 Oct 2024 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729678255; cv=none; b=qrmOXoTkU9bWC8DIIMuWuHNKWrE5jiNmgZPEZOANhWX3knv4Jg6kqUHW5ybPQIf+7l94RFlwIeD/6GvvWVEBeDaT3k/wEPKq70Gfe1aow2/YyR7F/2dRVNOeJMwvmTdWtg7c+FAPwJOrQFM2Ydf+c/l4FE+Mr7pwK9+YvXZm+N8=
+	t=1729678231; cv=none; b=Q1T5+wMUKuVxz4c9YeqcbEfgXsOl1bc3fR690nqMtWYgVb1a2IQ8ZYiLUaU7eeL3scFUbZbOQ/piKxPlvNKawJaKwF2WtX1t6lz68G5E5k7TMMsbtGwg4BVyAR+npPSmq6HPlhoC2YTUlbsJtj9Zl65YgZjwHgGUZ3lnOhas/LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729678255; c=relaxed/simple;
-	bh=Xo1eeiTgVZYq4ByM4vw+H1JV/QTd+caClf5hFYE3Uik=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gjWyvtXuV9+yN0zT+jLGKAeMJfxmemzkp+mRn0so9YOMmgaPCs9/0yt4vWmZ+saDl6EaRE2OkwNhUL6NI74D0SFJ1xKP+u9Pk/Zt4HKTfwM0BK5KDJL1Vgs5AoVKaRgVSCUQNYXhj4IFkVfgrPzQETvfJPy24gczmAJFTICQ/Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=E/rc47sl; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49N81PNq031369;
-	Wed, 23 Oct 2024 12:10:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Xo1eeiTgVZYq4ByM4vw+H1JV/QTd+caClf5hFYE3Uik=; b=E/rc47slUUGkV4Qb
-	X7SV5eUil6zyjtO4R3GKzIPDzBE3qYYbm8Tr95nRH8qxltKNVCfXtJriYD8XDt+S
-	XBXFEmbXp/hKilUlVUd1bshlMF/qO/aKh1JmxmCrO5tkoEYGBTthrL4xBwgrW3Nv
-	Pvwenlc9Ib8gh1+1o1qIlyHKciFTY2DKub3Vj1f6qxaEQvlONyvYnAEwXQwmxYwD
-	2r/Q9MZV1/I27hg9JzvVaL/ZNhcKnd61OZv2lbmWnf1ShO1MRWeazfbaPZgY8ZQ7
-	Wj3x2aRoWMAQMDDjpWB9g97pHBiAo+Bh1gwK2+JGHMk4gZ2dRIxlSm/ovNgzv5I4
-	3pIsIg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42em4djq8m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Oct 2024 12:10:32 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 34AC640050;
-	Wed, 23 Oct 2024 12:09:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D04E82699F1;
-	Wed, 23 Oct 2024 12:09:01 +0200 (CEST)
-Received: from [192.168.8.15] (10.48.87.33) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 23 Oct
- 2024 12:09:00 +0200
-Message-ID: <334845caee45ed72ef08867f23f69b5333be57c5.camel@foss.st.com>
-Subject: Re: [PATCH 11/14] dt-bindings: pinctrl: stm32: support for
- stm32mp215 and additional packages
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        =?ISO-8859-1?Q?Cl=E9ment?= Le Goffic
-	<clement.legoffic@foss.st.com>,
-        Stephane Danieau
-	<stephane.danieau@foss.st.com>,
-        Amelie Delaunay
-	<amelie.delaunay@foss.st.com>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Valentin Caron <valentin.caron@foss.st.com>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Cheick Traore <cheick.traore@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Date: Wed, 23 Oct 2024 12:08:59 +0200
-In-Reply-To: <2g65375shtjq4udjfarfspqtpg5q27oeerqskt2uzwj44pvnbb@rderpevnrzxs>
-References: <20241022155658.1647350-1-antonio.borneo@foss.st.com>
-	 <20241022155658.1647350-12-antonio.borneo@foss.st.com>
-	 <2g65375shtjq4udjfarfspqtpg5q27oeerqskt2uzwj44pvnbb@rderpevnrzxs>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1729678231; c=relaxed/simple;
+	bh=k3SnHG7oA3l5HZSfi1tB7TiZdo9WbfAs0mivdJqWgUA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ClprA59Dm1ZXxkrQs5niJ6O8VPNoYP7rWjihtgazvzI7U0o20z0rq6jWyflUEzO8nSwnAVxB0ZYyJk+1oDWQKAoVH7gyf8hIxKibxV1nY5GUwPTlVgnHZshFMsuECqF7KP1/Ep29HPC9Z4ZKKYBqpSLG07BIEH1BlzBLFlhZAOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Umr0psrm; arc=none smtp.client-ip=159.100.241.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5BD4F20056;
+	Wed, 23 Oct 2024 10:10:27 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id 4D9932031B;
+	Wed, 23 Oct 2024 10:10:17 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 50CB940071;
+	Wed, 23 Oct 2024 10:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1729678215; bh=k3SnHG7oA3l5HZSfi1tB7TiZdo9WbfAs0mivdJqWgUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Umr0psrmam/LzPClkicD6UONSbNtPFt2zd+HnRZ33WMqljjb/ERG1gQxqLuL/UALX
+	 zG1oHfQPfJpGIvCVJirzaft9phPUwh2VWYIbowP8RGXfcifTkvUpdgW1qijU76cBPO
+	 SNrwEqnmTJd/9tabIqPFGhObkbafmG+vYJZEA7po=
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id AAADC411E7;
+	Wed, 23 Oct 2024 10:10:14 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+Date: Wed, 23 Oct 2024 18:10:14 +0800
+From: Mingcong Bai <jeffbai@aosc.io>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: WangYuli <wangyuli@uniontech.com>, gregkh@linuxfoundation.org,
+ patches@lists.linux.dev, nikita@trvn.ru, ink@jurassic.park.msu.ru,
+ shc_work@mail.ru, richard.henderson@linaro.org, mattst88@gmail.com,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ fancer.lancer@gmail.com, linux-hwmon@vger.kernel.org,
+ dmaengine@vger.kernel.org, xeb@mail.ru, netdev@vger.kernel.org,
+ s.shtylyov@omp.ru, linux-ide@vger.kernel.org, serjk@netup.ru,
+ aospan@netup.ru, linux-media@vger.kernel.org, ddrokosov@sberdevices.ru,
+ linux-iio@vger.kernel.org, v.georgiev@metrotek.ru,
+ linux-mips@vger.kernel.org, ntb@lists.linux.dev,
+ linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-spi@vger.kernel.org, dushistov@mail.ru,
+ manivannan.sadhasivam@linaro.org, conor.dooley@microchip.com,
+ linux-fpga@vger.kernel.org, tsbogend@alpha.franken.de,
+ hoan@os.amperecomputing.com, geert@linux-m68k.org,
+ wsa+renesas@sang-engineering.com
+Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various
+ compliance requirements.
+In-Reply-To: <418359de-e084-47f9-9090-7980e41661e0@flygoat.com>
+References: <2024101835-tiptop-blip-09ed@gregkh>
+ <A74519B4332040FA+20241023063058.223139-1-wangyuli@uniontech.com>
+ <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
+ <444fa53bdfdee75522a1af41655a99b0@aosc.io>
+ <418359de-e084-47f9-9090-7980e41661e0@flygoat.com>
+Message-ID: <5d8614084599ff1b7f70aa1b427bdfb3@aosc.io>
+X-Sender: jeffbai@aosc.io
+Organization: Anthon Open Source Community
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Rspamd-Queue-Id: 50CB940071
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [1.40 / 10.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[37];
+	TAGGED_RCPT(0.00)[renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,mail.ru];
+	FREEMAIL_CC(0.00)[uniontech.com,linuxfoundation.org,lists.linux.dev,trvn.ru,jurassic.park.msu.ru,mail.ru,linaro.org,gmail.com,vger.kernel.org,lists.infradead.org,omp.ru,netup.ru,sberdevices.ru,metrotek.ru,microchip.com,alpha.franken.de,os.amperecomputing.com,linux-m68k.org,sang-engineering.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[]
 
-On Wed, 2024-10-23 at 10:51 +0200, Krzysztof Kozlowski wrote:
-> On Tue, Oct 22, 2024 at 05:56:55PM +0200, Antonio Borneo wrote:
-> > From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> >=20
-> > Add support for st,stm32mp215-pinctrl and st,stm32mp215-z-pinctrl.
->=20
-> So all previous patches are for this? Then they are supposed to be here.
+Greetings again (oops),
 
-Hi Krzysztof,
+I messed up the reference levels when I sent my disclosure. Jiaxun got 
+most of the references right but the last sentence.
 
-I'm not sure I fully get your point here.
-The previous patches in this series add the new features to the already ups=
-treamed STM32MP257.
-The same features are also needed here by STM32MP215 and in next patches 12=
-/14 and 13/14 by STM32MP235.
+在 2024-10-23 17:53，Jiaxun Yang 写道：
+> On 2024/10/23 09:26, Mingcong Bai wrote:
+>> No, no, no. Nuh, uh.
+>> 
+>> Greg has unfortunately decided to respond in private over a matter 
+>> that by no means should be glossed over. Here below is our 
+>> conversation:
+> 
+> I can't believe a senior maintainer is breaking our agreed netiquette 
+> [1], but that's happening.
+> 
+>> 在 2024-10-23 15:55，Greg KH 写道：
+> [...]
+>> 
+>> Request declined. Your response is now public knowledge (and hey, if 
+>> this is not by your will, my apologies). Again, this matter requires 
+>> public response.
+>> 
+>>> 在 2024-10-23 14:30，WangYuli 写道： Although this commit has been merged, 
+>>> it's still important to know the
+>>> specific reason (or even an example) that triggered this change for
+>>> everyone here, right?
+>>> 
+>>> And those maintainers who have been removed should be notified.
+>>> Seconded.
+>> 
+>> Sorry, but that's not how this is allowed to work.  Please contact 
+>> your
+>> company lawyers if you have any questions about this.  And this only
+>> affects maintainers, as you aren't listed in the MAINTAINERS file, 
+>> there
+>> should not be any issue, but again, contact your company if you have 
+>> any
+>> questions as they know what is going on.
+> 
+> I think there are no regulations on earth preventing itself from being 
+> referenced.
+> Even if the regulation prevents further communication with affected 
+> bodies,
+> the wider community still deserves an explanation.
+> 
+> As a person with M entries I found this behavior appalling. It shakes 
+> mutual
+> trust between maintainers, as we all assumed that patches being applied 
+> are
+> well scrutinized.
+> 
+> Besides, many of us are working on kernel as hobbyist  in a personal 
+> capacity.
+> That means we don't have access to lawyers, especially US one. While I 
+> understand
+> corporate participants may be the majority of the community, please 
+> don't leave
+> hobbyists behind!
+> 
+> I've had some interactions with some of people being removed here, and 
+> I would
+> say they are all brilliant individuals. It's  really sad to see them 
+> being turned away :-(
+> 
+>> 
+>> Just *wink* if you were compelled into this.
+> ^ It sounds unprofessional to me.
 
->=20
-> > Add packages AM, AN and AO (values : 0x1000, 0x2000 and 0x8000)
-> >=20
-> > Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
-> > ---
-> > =C2=A0.../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +++-
-> > =C2=A0include/dt-bindings/pinctrl/stm32-pinfunc.h=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 3 +++
-> > =C2=A02 files changed, 6 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl=
-.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-> > index 9a7ecfea6eb5b..0a2d644dbece3 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-> > @@ -27,6 +27,8 @@ properties:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp135-pinctrl
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp157-pinctrl
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp157-z-pinctrl
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp215-pinctrl
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp215-z-pinctrl
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp257-pinctrl
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - st,stm32mp257-z-pinctrl
-> > =C2=A0
-> > @@ -59,7 +61,7 @@ properties:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Indicates the SOC package used.
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 More details in include/dt-binding=
-s/pinctrl/stm32-pinfunc.h
-> > =C2=A0=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32
-> > -=C2=A0=C2=A0=C2=A0 enum: [0x1, 0x2, 0x4, 0x8, 0x100, 0x400, 0x800]
-> > +=C2=A0=C2=A0=C2=A0 enum: [0x1, 0x2, 0x4, 0x8, 0x100, 0x400, 0x800, 0x1=
-000, 0x2000, 0x4000]
-> > =C2=A0
-> > =C2=A0patternProperties:
-> > =C2=A0=C2=A0 '^gpio@[0-9a-f]*$':
-> > diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-b=
-indings/pinctrl/stm32-pinfunc.h
-> > index af3fd388329a0..01bc8be78ef72 100644
-> > --- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
-> > +++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
-> > @@ -41,6 +41,9 @@
-> > =C2=A0#define STM32MP_PKG_AI=C2=A00x100
-> > =C2=A0#define STM32MP_PKG_AK=C2=A00x400
-> > =C2=A0#define STM32MP_PKG_AL=C2=A00x800
-> > +#define STM32MP_PKG_AM=C2=A00x1000
-> > +#define STM32MP_PKG_AN=C2=A00x2000
-> > +#define STM32MP_PKG_AO=C2=A00x4000
->=20
-> Why these are some random hex values but not for example 0x801, 0x802
-> and 0x803? That's an enum, so bitmask does not make sense here.
+For the record, I wrote that unprofessional sentence ("Just *wink*"), 
+since it was private.
 
-The are bitmask. You can check in patch 14/14 that adds a new package to th=
-e existing code of STM32MP257.
-Do you prefer I rewrite them all as, e.g.
-#define STM32MP_PKG_AO (1 << 14)
-?
+Best Regards,
+Mingcong Bai
 
-Thanks for the review!
-Regards,
-Antonio
+> 
+> Thanks
+> - Jiaxun
+> 
+> [1]: https://people.kernel.org/tglx/notes-about-netiquette-qw89
+>> 
+>>> thanks,
+>>> 
+>>> greg k-h
+>> 
+>> Best Regards,
+>> Mingcong Bai
+>> 
 
