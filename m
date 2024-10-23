@@ -1,89 +1,90 @@
-Return-Path: <linux-gpio+bounces-11830-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11831-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 528779AC212
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 032879AC217
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:47:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7783B2448D
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 08:46:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86CECB253C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 08:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF53B158A33;
-	Wed, 23 Oct 2024 08:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrGTwzfl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A02D158D8B;
+	Wed, 23 Oct 2024 08:47:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8664436E;
-	Wed, 23 Oct 2024 08:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2D515C15B;
+	Wed, 23 Oct 2024 08:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729673190; cv=none; b=dYXMxj2GNG7z3ZFB4/0EK3+PiJUSUyGFQQYTfMLL7veBSao+5eC5js2blZgJXU+SNKToXgZCy32QW+wmE9GCBZZGGjS9zc9hksM2f6pihHZ4v4u+QOHwY3jhGteWWSxNChMj1dIXPPIfeEpYRx6MBiCwN1P4ih7b5XDhfSKZHzw=
+	t=1729673227; cv=none; b=Dn/U3NhiBnyRwCO2iseGu7x7HGDILPzvwcEpxyMIt0tCQqc3oKeZtrkNw4ezVmHE9YFGPKob4zE+29BzNdR1ih3x4UlIG4Y2PQBKwAEVlNGqXnb9LwVanRigQhKQrZDJa02Cxyx5sWII7w6uJDGVZzDf3i6wn2Wo7EfBR+NBb/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729673190; c=relaxed/simple;
-	bh=EyZ4QiVXvPEbdDEY9GYHE0FBEpWxqBjav2KP4V+fZmo=;
+	s=arc-20240116; t=1729673227; c=relaxed/simple;
+	bh=OdPjY1A0HouuTYfnhS52CJs8YfuOZ3R3ZFVGysA5xnE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KClwmaTslhz8vww7ts5B+y2VAM7XVDyZbZgY7s/Nk4KQAlXOAPY8CNNUZ5+7Ie+QTX1nZ0Uv9ouNhSdKjZ/cIjpQi4+xInJERAhnCYvfLL9NuN6zQfj+C41r3LYaRlCWBdulx4Wo+DMreKDv86STKX+lLIh8wUZE2GKGWKet33w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrGTwzfl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4126C4CEC6;
-	Wed, 23 Oct 2024 08:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729673190;
-	bh=EyZ4QiVXvPEbdDEY9GYHE0FBEpWxqBjav2KP4V+fZmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FrGTwzflVTlJdLIYjkTXefJWDQspCdNwO9KK8hrcJ8ViG8MqtrEAXscjMMkwEYP+A
-	 T+wzl7dpb9x4hhedL38JuarGMqJjqWsjoRxeEFLJl4DDo5fm311snn7nopIYzbaqfp
-	 dVPRLzJsNyAN6twwq2zRatp/Y/rrZzqK/8ZFMkojCjJ9n379WOiFBUwyWpGBr1Fa3k
-	 dc+bgfJCa2ZVFEZyQZGkQhA2Rdo+ThVHyFj721UoR9Gh4kZJDHwhSLHYPU8CIGmQj4
-	 NdtMkoyp8RHC5ID7k06/gbWk+wybN0bw40moyYK7E52Nt4drdkwyY3IERFdGyQA1k/
-	 R07zGMfUYWV+w==
-Date: Wed, 23 Oct 2024 10:46:27 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	=?utf-8?Q?Cl=C3=A9ment?= Le Goffic <clement.legoffic@foss.st.com>, Stephane Danieau <stephane.danieau@foss.st.com>, 
-	Amelie Delaunay <amelie.delaunay@foss.st.com>, Fabien Dessenne <fabien.dessenne@foss.st.com>, 
-	Valentin Caron <valentin.caron@foss.st.com>, Gatien Chevallier <gatien.chevallier@foss.st.com>, 
-	Cheick Traore <cheick.traore@foss.st.com>, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 04/14] dt-bindings: pinctrl: stm32: add RSVD mux function
-Message-ID: <vvmrfkpzs4ns2bhvcx2k2fdvacxqjdx5p2oyygzgr7zjrbdl6h@cvfo6623oxl6>
-References: <20241022155658.1647350-1-antonio.borneo@foss.st.com>
- <20241022155658.1647350-5-antonio.borneo@foss.st.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mjrg4qFErc1XwYRD+Icsv5wEqH+GBB2MIplWoDm2yEDleAljLEI6qG/LD22AoztlR8VXwhP0dfwJMQ1N+PmqrYya/bMIIolbZ0Mzo3I2IUduVtXevKPXdLFZ0nLPrC+4EXLFvveh3HNRii9xkBn8Nkd/Ra66WZ2Gktsw9/ZCwVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Wed, 23 Oct 2024 16:47:00 +0800
+From: Yixun Lan <dlan@gentoo.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Subject: Re: [PATCH next] pinctrl: spacemit: fix double free of map
+Message-ID: <20241023084700-GYB1187993@gentoo>
+References: <4b5f1306-dc01-4edc-96d3-b232b930ddf2@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241022155658.1647350-5-antonio.borneo@foss.st.com>
+In-Reply-To: <4b5f1306-dc01-4edc-96d3-b232b930ddf2@stanley.mountain>
 
-On Tue, Oct 22, 2024 at 05:56:48PM +0200, Antonio Borneo wrote:
-> From: Fabien Dessenne <fabien.dessenne@foss.st.com>
+On 11:39 Wed 23 Oct     , Dan Carpenter wrote:
+> The map pointer is freed by pinctrl_utils_free_map().  It must not be a
+> devm_ pointer or it leads to a double free when the device is unloaded.
 > 
-> Document the RSVD (Reserved) mux function, used to reserve pins
-> for a coprocessor not running Linux.
+> This is similar to a couple bugs Harshit Mogalapalli fixed earlier in
+> commits 3fd976afe974 ("pinctrl: nuvoton: fix a double free in
+> ma35_pinctrl_dt_node_to_map_func()") and 4575962aeed6 ("pinctrl: sophgo:
+> fix double free in cv1800_pctrl_dt_node_to_map()").
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
-> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Acked-by: Yixun Lan <dlan@gentoo.org>
+
+thanks,
+
 > ---
->  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml     | 8 ++++++++
->  include/dt-bindings/pinctrl/stm32-pinfunc.h               | 1 +
->  2 files changed, 9 insertions(+)
+>  drivers/pinctrl/spacemit/pinctrl-k1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> index c75ea27b2344..a32579d73613 100644
+> --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
+> +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> @@ -314,7 +314,7 @@ static int spacemit_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+>  	if (!grpnames)
+>  		return -ENOMEM;
+>  
+> -	map = devm_kcalloc(dev, ngroups * 2, sizeof(*map), GFP_KERNEL);
+> +	map = kcalloc(ngroups * 2, sizeof(*map), GFP_KERNEL);
+>  	if (!map)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.45.2
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
