@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-11810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5770D9ABD5A
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 06:47:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2752E9ABD5E
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 06:47:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11D5D2851D4
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 04:47:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71CE5B23AE8
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 04:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE19146D6F;
-	Wed, 23 Oct 2024 04:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660E1154BE0;
+	Wed, 23 Oct 2024 04:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EK3QkHrL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWrb0zHc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9AB153573;
-	Wed, 23 Oct 2024 04:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62338154457;
+	Wed, 23 Oct 2024 04:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729658752; cv=none; b=QQD3Hrw1NyXNd5zLVINnGfRWiCfBE6iIlSZuVQKgniIZrGjj3JY64YzLkLcaa0UStddNSydTlmpsoG6iiPeqknF91w8Sd/+ur42spCXYQ06elQRr+uN8mvAzLrlNl8HjdCSeEazuL7mcziDOCNvXlUJrbooAevMts6faifyPqRQ=
+	t=1729658757; cv=none; b=BS0HoHs3MCg/cumskKoLKs+Y14kVX16QubhPv+zXh2skIEKbKVK20dGVYB7t0JvkH9dObB9YmHdwk+BjL8+CPKERjwe3IHL5JMLLIJvS6g66r1tbixhS4YaO7VpYjcq35w2mhZqf4o93nMknkDNWi1+8l5qQIfH8JWA+4XCIPqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729658752; c=relaxed/simple;
-	bh=ZGZge3Dacc4g8jmVbaXLshrxsJoEkmaXrKF4fgcTgN4=;
+	s=arc-20240116; t=1729658757; c=relaxed/simple;
+	bh=SiMVBX7W7hhoJAL/qCc3A3gub3f9fWHwN4g5NCcNwHg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FQBUwJU1qfxruTq6/bDOBdQPhKW6WQCKqcvgEEVt1HJIk+pvkjTXzhvjANnOmvafR5PGHl5Z+ckjXeDLzGolzVI6+21Xi5w1LTda+oRqMRoaBrUAud7ZtyhDctIZDEOCsbL+N96h0gpQsvYbh7qOIMIpnm1FJDZZD5XSoARwu2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EK3QkHrL; arc=none smtp.client-ip=209.85.215.175
+	 MIME-Version; b=p7z2Ygj33W1OAM2KfPkaU+1mk9l+xk5/E4Tnp65i+od3+f7rz08eaNZtsD0GtzOT/MIU8OCg3ueWgCAuR4eDboXNrvQEAcZTt/9Kje/qRGqrb4yMu+9hZEt1DcVghSuukQrJ05Dkl2YIzOm4VxL0jxYb/saBx54m4l8m7ZUnhCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWrb0zHc; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7eb0bc007edso736446a12.3;
-        Tue, 22 Oct 2024 21:45:50 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20cceb8d8b4so3339245ad.1;
+        Tue, 22 Oct 2024 21:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729658749; x=1730263549; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729658755; x=1730263555; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8gnjfOf+haBHSmwr0qBV6ooJDIIH4PDk5HIKdQUDv6o=;
-        b=EK3QkHrLiJnvohdKlP/ZqRvgrpfdMMFCGIjwopTKZ//1ozqOXYAA83tJ6LkdInCINX
-         UoHMvRsBP1Z2uzm8X9CPk/y5wweTYoffR3XYua75RBHDqeRLnkpFbnID6j5jFKTm98Fh
-         cokhw7PozCcvn0/3OeOJWpkbv+A7uvyBkxsbtvycIyor/GYLiDS3r3ChNSOTkrPgErGD
-         v+c2NupmjD3sb9McsFJkSwQAyjKmvfoM+iJ96WQuyggFG+Usw493HmS6WR8+FL7oEwEB
-         P4n8yK+8xu8tTweFhL3/FblLVJTVoiXcSmfyzhrupCnZGvQuWat3Dxnz7cUv0WwMb+lA
-         ljJA==
+        bh=xse42JPMlb18tBEtSRtGxVxHCq0YAkMVANvrwDCLO5g=;
+        b=OWrb0zHcd72xVHKmzNF8EAjCtZAWoiMj3N/wlu7YdmSy3ntJerUpM+b4ZBXEK5jNrH
+         PUKHyOUWG/l4cpOdu37dBQEapDu2HLluYOYEHFdOZqOfNt5CRC9TNQ6uyMfxW/jxrd9E
+         ylXCDvDZ5YtRSDwnhfIH5kw0IU8h6XO+7bn8mvx9WgaiWCPickwoxYI8U6T0bY/47crw
+         1fAe0BnycLGwY0FC2jHUWPNq6tV92jdwkv6Nj/p3gGnXYTpzxD3yW0Fj3b0+g1LPsAKI
+         ec3LcDNk2qXaQCt6upV0Ym2Pw6/4luz3oVCs01cH/AZ90d7h5s0pHktRQHQCQMAUzG/2
+         wVbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729658749; x=1730263549;
+        d=1e100.net; s=20230601; t=1729658755; x=1730263555;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8gnjfOf+haBHSmwr0qBV6ooJDIIH4PDk5HIKdQUDv6o=;
-        b=O4uA7Q8kdxXg2Bb6iYV4hwNw201i3/rPf7GhSBNd1y/0zDfv20jdwvFO2tc2TfDZ4M
-         HXwk/NXykR7+sbRI5ziVZ0/xLvL/iuHqQ+pJBKDCqwFyJcaPqvz1VTNEJ7F4601Fxhky
-         zda7coVhu8i7QjKx+5oqAs0kGcw69ZVS6GazYWS6sMnbyFBs7hljyexpOhUwcreJob9D
-         IIpMyOleQfbDLC7yzBiyyL4mXzMzPRU7JU2EtmPrzyNtekxN0xF27vK0DASBd1Twnfqv
-         ctGWQGPiMEGCWMH1WxKz2I46t+QYTsLblk1RCGGTZNHHRC6kQ/HQ95gOriCgTzyRU5vo
-         Srgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJXwTej6bABSNEfaSXckgePmy4Qvos5/d6cufz8JTX6MYH+GGHNKBmVHMW6SLHr4GYR2DNbBnwDu2S67IgkRc=@vger.kernel.org, AJvYcCWnAgYS6Of9p8bMe3deTnfIzY5FAEZlDpXzxIg9AN9znf4hkXqLAFd2oIqk796QAnuQnV/Tm2ap0vUxFA==@vger.kernel.org, AJvYcCX4FuIA/dmzpU/e6rQoIWfrq/taglAdfvixY9OtjRekaM7PsafDKoJSeSewKSjmzoZXlxljdysaNqqVtldM@vger.kernel.org, AJvYcCXdQwYB1mzQhVa/N4jZ7lHxZIp1Crk+fj2DnIYtoQIgSY0QUtJwF4dZYjOHNZ/b3G2sGHY/nO1jKk3t@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7766sKhyG8oehT15KWicl2BkDZ7aGosMABOZcPpuO67F624rz
-	U9khCcGpiImLZaXJpWTDfxLhssfUYQQLRj4cVeJB06NbpchHDy5b
-X-Google-Smtp-Source: AGHT+IEaSi1bCgwSK4UNQvD5wJxLBDOch0R3luq1Q12dfPOfjuOhey4H9WOi3T4GHc/8mgH5YPpwYA==
-X-Received: by 2002:a05:6a20:e196:b0:1d9:3456:b6f4 with SMTP id adf61e73a8af0-1d978b13b89mr1429824637.11.1729658749429;
-        Tue, 22 Oct 2024 21:45:49 -0700 (PDT)
+        bh=xse42JPMlb18tBEtSRtGxVxHCq0YAkMVANvrwDCLO5g=;
+        b=csKW/VDVvJ+7zFD7Wj2DXmuYo2G6Kjok6wEJacv2+wZ6rYIOlpGjXWKBE2qN6oXYFL
+         GUGAsrU257k6A/G1d2ph9GLfemMYL1AMHA7NSMai179z/O3tFEXwH9dfOUtN3UOjis4Z
+         4yLkvRwIYjdbnriw3WDWoT0oqXvzj5MmV4vajKNjo/35YOzNJhjqmjkykZGUKwHyZ1cb
+         ru5eAvN87CNot0KRDdwfA4QwUEWLtAk79OiJwjmXbAVtcmRWpD8/Ks6pHjQm8zRoAONz
+         WcVDtWsUUEVxGN5oPv85Pv3Bvvzlons+BQMSmhqZTZAxpr301juQSeMH+p420ASYXnZu
+         CHgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTLwTw9DZ4Yi77rPPN9vC2mLTQ7pvFd8VqWy0d8qsNEpzU6fqtBxCc0SrbP0fbkNS+QGYQf59cU1ggiKv/@vger.kernel.org, AJvYcCWEyGJSIpak0ZWIFkZKgGwo3yDMtTQzJ1UGJM+KjeLkJ+obblZOcxIrcq4JgPmkY9n3NX3PranVrN1niEx8Q2U=@vger.kernel.org, AJvYcCWuxyy6wCbNvYA0LZm4mC+2kDkm+l1h6ELZKEmyS+zSc/8kK8PiehHyIlGrQ+ANWudyqoL4Egad+xOnsQ==@vger.kernel.org, AJvYcCXeu1gJtRD0OUTDtdeF0hdb3JYJ+Rh0qPvbQAmI7EVk9wiTOVB/1HkfSo5aH7mqI2mcWWsvwoeZOM7K@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTbFoDuXDVnpunzcpxYe//yVPzz5UoqXPP3h/1DKQHXd47x0so
+	EtppDkBnZ6G0lX3BEEmvv5Zguq+B+JURQ2zzOx+UyQPy+j7XNNUB
+X-Google-Smtp-Source: AGHT+IFrW760imja2ufBc09zoWb6edLpgsry9SDkkTqlmYzglUTtXXBRp6nj6R5lNsnbXpIftk/Mhg==
+X-Received: by 2002:a17:902:f686:b0:20c:d71d:69c5 with SMTP id d9443c01a7336-20fa9e96600mr20023365ad.4.1729658754667;
+        Tue, 22 Oct 2024 21:45:54 -0700 (PDT)
 Received: from nick-mbp.ust.hk ([182.153.135.7])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-20e7f0de3c3sm49983125ad.207.2024.10.22.21.45.44
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-20e7f0de3c3sm49983125ad.207.2024.10.22.21.45.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 21:45:49 -0700 (PDT)
+        Tue, 22 Oct 2024 21:45:54 -0700 (PDT)
 From: Nick Chan <towinchenmi@gmail.com>
 To: Hector Martin <marcan@marcan.st>,
 	Sven Peter <sven@svenpeter.dev>,
@@ -88,11 +88,11 @@ To: Hector Martin <marcan@marcan.st>,
 	linux-gpio@vger.kernel.org,
 	linux-watchdog@vger.kernel.org
 Cc: Konrad Dybcio <konradybcio@kernel.org>,
-	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+	Markuss Broks <markuss.broks@gmail.com>,
 	Nick Chan <towinchenmi@gmail.com>
-Subject: [PATCH v6 RESEND 13/20] arm64: dts: apple: Add A8 devices
-Date: Wed, 23 Oct 2024 12:40:48 +0800
-Message-ID: <20241023044423.18294-14-towinchenmi@gmail.com>
+Subject: [PATCH v6 RESEND 14/20] arm64: dts: apple: Add A8X devices
+Date: Wed, 23 Oct 2024 12:40:49 +0800
+Message-ID: <20241023044423.18294-15-towinchenmi@gmail.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241023044423.18294-1-towinchenmi@gmail.com>
 References: <20241023044423.18294-1-towinchenmi@gmail.com>
@@ -106,149 +106,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Konrad Dybcio <konradybcio@kernel.org>
 
-Add DTS files for the A8 SoC and the following devices based on it:
-
- - iPhone 6
- - iPhone 6 Plus
- - iPad mini 4
- - iPod touch 6
- - Apple TV HD
-
-The remaining HomePod is not supported as part of this patch.
+Add DTS files for the A8X SoC and the only device based on it, the iPad
+Air 2.
 
 Signed-off-by: Konrad Dybcio <konradybcio@kernel.org>
-[Ivalyo: system memory bits, iPhone 6 gpio-keys, pinctrl]
-Co-developed-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-[Nick: SMP and m1n1 support, gpio-keys additions]
+[Markuss: System memory bits]
+Co-developed-by: Markuss Broks <markuss.broks@gmail.com>
+Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
+[Nick: SMP, m1n1 and gpio-keys support, pinctrl fixes]
 Co-developed-by: Nick Chan <towinchenmi@gmail.com>
 Signed-off-by: Nick Chan <towinchenmi@gmail.com>
 ---
- arch/arm64/boot/dts/apple/Makefile            |   6 +
- arch/arm64/boot/dts/apple/t7000-6.dtsi        |  50 +++++++
- arch/arm64/boot/dts/apple/t7000-common.dtsi   |  36 +++++
- arch/arm64/boot/dts/apple/t7000-handheld.dtsi |  27 ++++
- arch/arm64/boot/dts/apple/t7000-j42d.dts      |  31 +++++
- arch/arm64/boot/dts/apple/t7000-j96.dts       |  14 ++
- arch/arm64/boot/dts/apple/t7000-j97.dts       |  14 ++
- arch/arm64/boot/dts/apple/t7000-mini4.dtsi    |  51 +++++++
- arch/arm64/boot/dts/apple/t7000-n102.dts      |  48 +++++++
- arch/arm64/boot/dts/apple/t7000-n56.dts       |  14 ++
- arch/arm64/boot/dts/apple/t7000-n61.dts       |  14 ++
- arch/arm64/boot/dts/apple/t7000.dtsi          | 125 ++++++++++++++++++
- 12 files changed, 430 insertions(+)
- create mode 100644 arch/arm64/boot/dts/apple/t7000-6.dtsi
- create mode 100644 arch/arm64/boot/dts/apple/t7000-common.dtsi
- create mode 100644 arch/arm64/boot/dts/apple/t7000-handheld.dtsi
- create mode 100644 arch/arm64/boot/dts/apple/t7000-j42d.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000-j96.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000-j97.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000-mini4.dtsi
- create mode 100644 arch/arm64/boot/dts/apple/t7000-n102.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000-n56.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000-n61.dts
- create mode 100644 arch/arm64/boot/dts/apple/t7000.dtsi
+ arch/arm64/boot/dts/apple/Makefile        |   2 +
+ arch/arm64/boot/dts/apple/t7001-air2.dtsi |  74 +++++++++++++
+ arch/arm64/boot/dts/apple/t7001-j81.dts   |  14 +++
+ arch/arm64/boot/dts/apple/t7001-j82.dts   |  14 +++
+ arch/arm64/boot/dts/apple/t7001.dtsi      | 123 ++++++++++++++++++++++
+ 5 files changed, 227 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/apple/t7001-air2.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t7001-j81.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t7001-j82.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t7001.dtsi
 
 diff --git a/arch/arm64/boot/dts/apple/Makefile b/arch/arm64/boot/dts/apple/Makefile
-index e1ee803f72a7..d5dd1e2e4f4c 100644
+index d5dd1e2e4f4c..adda522ea490 100644
 --- a/arch/arm64/boot/dts/apple/Makefile
 +++ b/arch/arm64/boot/dts/apple/Makefile
-@@ -10,6 +10,12 @@ dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j85.dtb
- dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j86.dtb
- dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j87.dtb
- dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-n51.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-j42d.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-j96.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-j97.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-n102.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-n56.dtb
-+dtb-$(CONFIG_ARCH_APPLE) += t7000-n61.dtb
+@@ -16,6 +16,8 @@ dtb-$(CONFIG_ARCH_APPLE) += t7000-j97.dtb
+ dtb-$(CONFIG_ARCH_APPLE) += t7000-n102.dtb
+ dtb-$(CONFIG_ARCH_APPLE) += t7000-n56.dtb
+ dtb-$(CONFIG_ARCH_APPLE) += t7000-n61.dtb
++dtb-$(CONFIG_ARCH_APPLE) += t7001-j81.dtb
++dtb-$(CONFIG_ARCH_APPLE) += t7001-j82.dtb
  dtb-$(CONFIG_ARCH_APPLE) += t8103-j274.dtb
  dtb-$(CONFIG_ARCH_APPLE) += t8103-j293.dtb
  dtb-$(CONFIG_ARCH_APPLE) += t8103-j313.dtb
-diff --git a/arch/arm64/boot/dts/apple/t7000-6.dtsi b/arch/arm64/boot/dts/apple/t7000-6.dtsi
+diff --git a/arch/arm64/boot/dts/apple/t7001-air2.dtsi b/arch/arm64/boot/dts/apple/t7001-air2.dtsi
 new file mode 100644
-index 000000000000..f60ea4a4a387
+index 000000000000..19fabd425c52
 --- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-6.dtsi
-@@ -0,0 +1,50 @@
++++ b/arch/arm64/boot/dts/apple/t7001-air2.dtsi
+@@ -0,0 +1,74 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR MIT
 +/*
-+ * Apple iPhone 6 / 6 Plus common device tree
++ * Apple iPad Air 2 common device tree
 + * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
 + */
 +
++#include "t7001.dtsi"
 +#include <dt-bindings/input/input.h>
-+#include "t7000.dtsi"
-+#include "t7000-common.dtsi"
-+#include "t7000-handheld.dtsi"
 +
 +/ {
-+	chassis-type = "handset";
++	chassis-type = "tablet";
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		stdout-path = "serial0";
++
++		framebuffer0: framebuffer@0 {
++			compatible = "apple,simple-framebuffer", "simple-framebuffer";
++			reg = <0 0 0 0>; /* To be filled by loader */
++			/* Format properties will be added by loader */
++			status = "disabled";
++		};
++	};
 +
 +	gpio-keys {
 +		compatible = "gpio-keys";
 +
 +		button-home {
 +			label = "Home Button";
-+			gpios = <&pinctrl 32 GPIO_ACTIVE_LOW>;
++			gpios = <&pinctrl 0 GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_HOMEPAGE>;
 +			wakeup-source;
 +		};
 +
 +		button-power {
 +			label = "Power Button";
-+			gpios = <&pinctrl 33 GPIO_ACTIVE_LOW>;
++			gpios = <&pinctrl 1 GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_POWER>;
 +			wakeup-source;
 +		};
 +
 +		button-volup {
 +			label = "Volume Up";
-+			gpios = <&pinctrl 45 GPIO_ACTIVE_LOW>;
++			gpios = <&pinctrl 92 GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_VOLUMEUP>;
 +		};
 +
 +		button-voldown {
 +			label = "Volume Down";
-+			gpios = <&pinctrl 46 GPIO_ACTIVE_LOW>;
++			gpios = <&pinctrl 93 GPIO_ACTIVE_LOW>;
 +			linux,code = <KEY_VOLUMEDOWN>;
 +		};
-+
-+		switch-mute {
-+			label = "Mute Switch";
-+			gpios = <&pinctrl 131 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_MUTE>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000-common.dtsi b/arch/arm64/boot/dts/apple/t7000-common.dtsi
-new file mode 100644
-index 000000000000..87146e6daae7
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-common.dtsi
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple TV HD, iPhone 6, iPhone 6 Plus, iPad mini 4, iPod touch 6
-+ *
-+ * This file contains parts common to all Apple A8 devices.
-+ *
-+ * target-type: J42d, J96, J97, N56, N61, N102
-+ *
-+ * Copyright (c) 2024, Nick Chan <towinchenmi@gmail.com>
-+ */
-+
-+/ {
-+	aliases {
-+		serial0 = &serial0;
-+		serial6 = &serial6;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
 +	};
 +
 +	memory@800000000 {
@@ -264,278 +217,59 @@ index 000000000000..87146e6daae7
 +		/* To be filled by loader */
 +	};
 +};
-diff --git a/arch/arm64/boot/dts/apple/t7000-handheld.dtsi b/arch/arm64/boot/dts/apple/t7000-handheld.dtsi
-new file mode 100644
-index 000000000000..8984c9ec6cc8
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-handheld.dtsi
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple iPhone 6, iPhone 6 Plus, iPad mini 4, iPod touch 6
-+ *
-+ * This file contains the parts common to handheld devices with t7000
-+ *
-+ * target-type: J96, J97, N56, N61, N102
-+ *
-+ * Copyright (c) 2024, Nick Chan <towinchenmi@gmail.com>
-+ */
-+
-+/ {
-+	chosen {
-+		stdout-path = "serial0";
-+
-+		framebuffer0: framebuffer@0 {
-+			compatible = "apple,simple-framebuffer", "simple-framebuffer";
-+			reg = <0 0 0 0>; /* To be filled by loader */
-+			/* Format properties will be added by loader */
-+			status = "disabled";
-+		};
-+	};
-+};
 +
 +&serial0 {
 +	status = "okay";
 +};
-diff --git a/arch/arm64/boot/dts/apple/t7000-j42d.dts b/arch/arm64/boot/dts/apple/t7000-j42d.dts
+diff --git a/arch/arm64/boot/dts/apple/t7001-j81.dts b/arch/arm64/boot/dts/apple/t7001-j81.dts
 new file mode 100644
-index 000000000000..2231db6a739d
+index 000000000000..ca90dc0c872c
 --- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-j42d.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple TV HD, J42d, AppleTV5,3 (A1625)
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "t7000.dtsi"
-+#include "t7000-common.dtsi"
-+
-+/ {
-+	compatible = "apple,j42d", "apple,t7000", "apple,arm-platform";
-+	model = "Apple TV HD";
-+	chassis-type = "television";
-+
-+	chosen {
-+		stdout-path = "serial6";
-+
-+		framebuffer0: framebuffer@0 {
-+			compatible = "apple,simple-framebuffer", "simple-framebuffer";
-+			reg = <0 0 0 0>; /* To be filled by loader */
-+			/* Format properties will be added by loader */
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&serial6 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000-j96.dts b/arch/arm64/boot/dts/apple/t7000-j96.dts
-new file mode 100644
-index 000000000000..8a32a50cc2df
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-j96.dts
++++ b/arch/arm64/boot/dts/apple/t7001-j81.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR MIT
 +/*
-+ * Apple iPad mini 4 (Wi-Fi), J96, iPad5,1 (A1538)
++ * Apple iPad Air 2 (Wi-Fi), J81, iPad5,3 (A1566)
 + * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
 + */
 +
 +/dts-v1/;
 +
-+#include "t7000-mini4.dtsi"
++#include "t7001-air2.dtsi"
 +
 +/ {
-+	compatible = "apple,j96", "apple,t7000", "apple,arm-platform";
-+	model = "Apple iPad mini 4 (Wi-Fi)";
++	compatible = "apple,j81", "apple,t7001", "apple,arm-platform";
++	model = "Apple iPad Air 2 (Wi-Fi)";
 +};
-diff --git a/arch/arm64/boot/dts/apple/t7000-j97.dts b/arch/arm64/boot/dts/apple/t7000-j97.dts
+diff --git a/arch/arm64/boot/dts/apple/t7001-j82.dts b/arch/arm64/boot/dts/apple/t7001-j82.dts
 new file mode 100644
-index 000000000000..ac7d501f88d2
+index 000000000000..d9fd16f48db7
 --- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-j97.dts
++++ b/arch/arm64/boot/dts/apple/t7001-j82.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR MIT
 +/*
-+ * Apple iPad mini 4 (Cellular), J97, iPad5,2 (A1550)
++ * Apple iPad Air 2 (Cellular), J82, iPad5,4 (A1567)
 + * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
 + */
 +
 +/dts-v1/;
 +
-+#include "t7000-mini4.dtsi"
++#include "t7001-air2.dtsi"
 +
 +/ {
-+	compatible = "apple,j97", "apple,t7000", "apple,arm-platform";
-+	model = "Apple iPad mini 4 (Cellular)";
++	compatible = "apple,j82", "apple,t7001", "apple,arm-platform";
++	model = "Apple iPad Air 2 (Cellular)";
 +};
-diff --git a/arch/arm64/boot/dts/apple/t7000-mini4.dtsi b/arch/arm64/boot/dts/apple/t7000-mini4.dtsi
+diff --git a/arch/arm64/boot/dts/apple/t7001.dtsi b/arch/arm64/boot/dts/apple/t7001.dtsi
 new file mode 100644
-index 000000000000..c64ddc402fda
+index 000000000000..a76e034c85e3
 --- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-mini4.dtsi
-@@ -0,0 +1,51 @@
++++ b/arch/arm64/boot/dts/apple/t7001.dtsi
+@@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR MIT
 +/*
-+ * Apple iPad mini 4 common device tree
-+ *
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+#include "t7000.dtsi"
-+#include "t7000-common.dtsi"
-+#include "t7000-handheld.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	chassis-type = "tablet";
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-home {
-+			label = "Home Button";
-+			gpios = <&pinctrl 32 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_HOMEPAGE>;
-+			wakeup-source;
-+		};
-+
-+		button-power {
-+			label = "Power Button";
-+			gpios = <&pinctrl 33 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+
-+		button-volup {
-+			label = "Volume Up";
-+			gpios = <&pinctrl 45 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+
-+		button-voldown {
-+			label = "Volume Down";
-+			gpios = <&pinctrl 46 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		switch-mute {
-+			label = "Mute Switch";
-+			gpios = <&pinctrl 36 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_MUTE>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000-n102.dts b/arch/arm64/boot/dts/apple/t7000-n102.dts
-new file mode 100644
-index 000000000000..9c55d339ba4e
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-n102.dts
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple iPod touch 6, N102, iPod7,1 (A1574)
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "t7000.dtsi"
-+#include "t7000-common.dtsi"
-+#include "t7000-handheld.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	compatible = "apple,n102", "apple,t7000", "apple,arm-platform";
-+	model = "Apple iPod touch 6";
-+	chassis-type = "handset";
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-home {
-+			label = "Home Button";
-+			gpios = <&pinctrl 32 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_HOMEPAGE>;
-+			wakeup-source;
-+		};
-+
-+		button-power {
-+			label = "Power Button";
-+			gpios = <&pinctrl 33 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+
-+		button-voldown {
-+			label = "Volume Down";
-+			gpios = <&pinctrl 46 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		button-volup {
-+			label = "Volume Up";
-+			gpios = <&pinctrl 45 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000-n56.dts b/arch/arm64/boot/dts/apple/t7000-n56.dts
-new file mode 100644
-index 000000000000..2c358df14458
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-n56.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple iPhone 6 Plus, N56, iPhone7,2 (A1549/A1586/A1589)
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "t7000-6.dtsi"
-+
-+/ {
-+	compatible = "apple,n56", "apple,t7000", "apple,arm-platform";
-+	model = "Apple iPhone 6 Plus";
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000-n61.dts b/arch/arm64/boot/dts/apple/t7000-n61.dts
-new file mode 100644
-index 000000000000..10b4ca8babf7
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000-n61.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple iPhone 6, N61, iPhone7,2 (A1549/A1586/A1589)
-+ * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "t7000-6.dtsi"
-+
-+/ {
-+	compatible = "apple,n61", "apple,t7000", "apple,arm-platform";
-+	model = "Apple iPhone 6";
-+};
-diff --git a/arch/arm64/boot/dts/apple/t7000.dtsi b/arch/arm64/boot/dts/apple/t7000.dtsi
-new file mode 100644
-index 000000000000..a7cc29e84c84
---- /dev/null
-+++ b/arch/arm64/boot/dts/apple/t7000.dtsi
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Apple T7000 "A8" SoC
-+ *
-+ * Other names: H7P, "Fiji"
++ * Apple T7001 "A8X" SoC
 + *
 + * Copyright (c) 2022, Konrad Dybcio <konradybcio@kernel.org>
 + * Based on Asahi Linux's M1 (t8103.dtsi) and Corellium's A10 efforts.
@@ -550,6 +284,10 @@ index 000000000000..a7cc29e84c84
 +	interrupt-parent = <&aic>;
 +	#address-cells = <2>;
 +	#size-cells = <2>;
++
++	aliases {
++		serial0 = &serial0;
++	};
 +
 +	clkref: clock-ref {
 +		compatible = "fixed-clock";
@@ -577,6 +315,14 @@ index 000000000000..a7cc29e84c84
 +			enable-method = "spin-table";
 +			device_type = "cpu";
 +		};
++
++		cpu2: cpu@2 {
++			compatible = "apple,typhoon";
++			reg = <0x0 0x2>;
++			cpu-release-addr = <0 0>; /* To be filled by loader */
++			enable-method = "spin-table";
++			device_type = "cpu";
++		};
 +	};
 +
 +	soc {
@@ -592,18 +338,6 @@ index 000000000000..a7cc29e84c84
 +			reg-io-width = <4>;
 +			interrupt-parent = <&aic>;
 +			interrupts = <AIC_IRQ 158 IRQ_TYPE_LEVEL_HIGH>;
-+			/* Use the bootloader-enabled clocks for now. */
-+			clocks = <&clkref>, <&clkref>;
-+			clock-names = "uart", "clk_uart_baud0";
-+			status = "disabled";
-+		};
-+
-+		serial6: serial@20a0d8000 {
-+			compatible = "apple,s5l-uart";
-+			reg = <0x2 0x0a0d8000 0x0 0x4000>;
-+			reg-io-width = <4>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 164 IRQ_TYPE_LEVEL_HIGH>;
 +			/* Use the bootloader-enabled clocks for now. */
 +			clocks = <&clkref>, <&clkref>;
 +			clock-names = "uart", "clk_uart_baud0";
@@ -631,8 +365,8 @@ index 000000000000..a7cc29e84c84
 +
 +			gpio-controller;
 +			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 208>;
-+			apple,npins = <208>;
++			gpio-ranges = <&pinctrl 0 0 184>;
++			apple,npins = <184>;
 +
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
@@ -651,7 +385,7 @@ index 000000000000..a7cc29e84c84
 +		compatible = "arm,armv8-timer";
 +		interrupt-parent = <&aic>;
 +		interrupt-names = "phys", "virt";
-+		/* Note that A8 doesn't actually have a hypervisor (EL2 is not implemented). */
++		/* Note that A8X doesn't actually have a hypervisor (EL2 is not implemented). */
 +		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
 +			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
 +	};
