@@ -1,81 +1,90 @@
-Return-Path: <linux-gpio+bounces-11853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11854-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DB479AC81A
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:44:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7E3A9AC855
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 12:56:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C7A91C21D9C
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:44:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9A7D282CE6
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 10:56:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2192A1A0BD8;
-	Wed, 23 Oct 2024 10:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 500D91A76C4;
+	Wed, 23 Oct 2024 10:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nU7UGMDK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from mail-40140.protonmail.ch (mail-40140.protonmail.ch [185.70.40.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31495159209;
-	Wed, 23 Oct 2024 10:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226DC1A2C19;
+	Wed, 23 Oct 2024 10:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729680251; cv=none; b=NyTrKKSdJaHeN5gSnUUUEgs880KtXKrw1WEQKcj8qACaDBDsH7bdXBbLg9lUo3XZsKMGo1ceex1WGOGR0tgDAotBiwrZ3VgKGidqbL4VGIMUSvAqYTezy4H6DakAe0nOuLQSKTL13D21mvIRnwhtT7ndA6w/FyB6q08WLzgBGH4=
+	t=1729680966; cv=none; b=gZc+S4v/eUzZpVeQGYXIjCk0wk75yPTEbomtKbRp/De7GOeserd7H/T4Fe2Le0QJN/n6ve2+hstzYcLn2TcM+zD9T8otlDVhKzK5EwLWpdLA6LCFIBGkw4ubr+rLaocAtDHmceaZl2A3qxlaUErrMS4/wAnxy4KESTsxIT01F00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729680251; c=relaxed/simple;
-	bh=FopyA5E0P0f61g8AtorronCudVPXzSX/6+0/eLKII7A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eFWr6w57GFOe0roTy5Xcklm8/Kv4q6uDK+NOO5j6roZ05GRO+uU8hHhlazTYGWpx9CIcYs33QsDVd4jYZIw3oDthS/rMJrwqrbQrPGdF3Sui+G1NEvOk6GFtaOZIrG7lTAqq3cxnGZbIRN71MPJy/rjo1N7tS/VUTUl/vyzDWo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 23 Oct
- 2024 18:44:06 +0800
-Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Wed, 23 Oct 2024 18:44:06 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <andrew@codeconstruct.com.au>, <linus.walleij@linaro.org>,
-	<joel@jms.id.au>, <linux-aspeed@lists.ozlabs.org>,
-	<openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pinctrl: aspeed-g6: Support drive-strength for GPIOF/G
-Date: Wed, 23 Oct 2024 18:44:06 +0800
-Message-ID: <20241023104406.4083460-1-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1729680966; c=relaxed/simple;
+	bh=2uZmCdan2XO0Cl6IjNWW2Vbysd7BOfysAd/eGyKtjho=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RYnzOOkL0B3xf6czTm9BcMBiSUvOzWvRLUvmrNSirSxgtrZBAHyqVndMmG/MuflA3BA+tRvupQpKgkfdR/I3ES4ZjZy/nRC/amGXwsuWTSv+gwQo9EQjt+gPFXT2QxTlvtfY5UBIqAHG81tFsZNL6ss5XHYBT+dAGLVdIksgp5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nU7UGMDK; arc=none smtp.client-ip=185.70.40.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1729680956; x=1729940156;
+	bh=2uZmCdan2XO0Cl6IjNWW2Vbysd7BOfysAd/eGyKtjho=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=nU7UGMDK8WFIn/KVA5W9N1NEqSwT8UQE0fS8bECjDpD2ZiPAzyyljte+fEi4gpSeP
+	 MnGDOCFdknAj583jHSX7ECsALTfg66OszSBNofUJpIsZYnJleMB2UhPiz0fh/hN1Gg
+	 t9UQCpjJv+3WmXZTYUKzsNwZU++PSa/pdsuU92YQbbk+YNmprbZQ5ORoIl89u1y1Fv
+	 tA+09hbvn4vMvOsPCG+oDWCAxwiQ/fwwYYlrmQfFKs/7bbxnvek/Vo91SXoeMEkPuG
+	 xM1psDgryCSiA474uepaqdbzVyWeBaXpXhxEjg0SlqU14v/WvQHco5bRMaBHD/gEHJ
+	 Mjp/mmDmcMg2Q==
+Date: Wed, 23 Oct 2024 10:55:51 +0000
+To: "patches@lists.linux.dev" <patches@lists.linux.dev>
+From: jisralbasha <jisralbasha@proton.me>
+Cc: "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "ntb@lists.linux.dev" <ntb@lists.linux.dev>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "wangyuli@uniontech.com" <wangyuli@uniontech.com>, "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various compliance requirements
+Message-ID: <CpPiTF0xZwq_zhrYVO2pCA9TxAmJi_zwVBmyl9Z1RHKCjgf332fcmsc86C_1CMaZPNLlIDcvqOIWa1vR2lr2qMaZpcyIisxLqL1IVvq9ZNQ=@proton.me>
+Feedback-ID: 94463129:user:proton
+X-Pm-Message-ID: 5a8ecfa1aba099d9d2341478826b3c35ab4c778b
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add drive strength configuration support for GPIO F and G groups.
+Dear Greg and other LF members,
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I'm writing to express my serious concerns about the recent removal of entr=
+ies from the MAINTAINERS file without proper explanation. While I understan=
+d the statement cited "various compliance requirements," this vague justifi=
+cation is deeply troubling.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 6ecc656abc44..5a7cd0a88687 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -2607,6 +2607,10 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
- 	{ PIN_CONFIG_DRIVE_STRENGTH, { AB8, AB8 }, SCU454, GENMASK(27, 26)},
- 	/* LAD0 */
- 	{ PIN_CONFIG_DRIVE_STRENGTH, { AB7, AB7 }, SCU454, GENMASK(25, 24)},
-+	/* GPIOF */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { D22, A23 }, SCU458, GENMASK(9, 8)},
-+	/* GPIOG */
-+	{ PIN_CONFIG_DRIVE_STRENGTH, { E21, B21 }, SCU458, GENMASK(11, 10)},
- 
- 	/* MAC3 */
- 	{ PIN_CONFIG_POWER_SOURCE,   { H24, E26 }, SCU458, BIT_MASK(4)},
--- 
-2.25.1
+Blindly complying with demands for obscure changes sets a dangerous precede=
+nt. What happens next time? Will we see further removals, modifications, or=
+ even additions driven by external pressures rather than the best interests=
+ of the project and its community?
 
+This incident raises fundamental questions about the autonomy and integrity=
+ of our open-source project. =C2=A0Should we be at the mercy of unspecified=
+ "compliance requirements" that could potentially lead to harmful actions, =
+such as:
+
+"Update some entries due to various compliance requirements." (and explode =
+some Russian laptops like pagers in Lebanon, or disable all intel processor=
+s in sanctioned countries).
+
+I strongly urge the LF to reconsider this approach and prioritize transpare=
+ncy and community engagement in all decision-making processes. This include=
+s providing detailed explanations for any future changes to critical projec=
+t files like MAINTAINERS. Additionally, we should explore strategies to mit=
+igate external pressures and ensure the long-term health and independence o=
+f our project.
+
+P.S. Keep communications public
 
