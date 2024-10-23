@@ -1,76 +1,76 @@
-Return-Path: <linux-gpio+bounces-11888-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11889-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AA359AD7CE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 00:39:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E0FC9AD7D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 00:39:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DBFB2847B2
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 22:39:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D0A81F25CDC
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Oct 2024 22:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D67C1FE100;
-	Wed, 23 Oct 2024 22:37:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 294BD1FF5FD;
+	Wed, 23 Oct 2024 22:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/B/d6Me"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NADfjKs2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0001FF03F;
-	Wed, 23 Oct 2024 22:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D821B20400A;
+	Wed, 23 Oct 2024 22:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729723048; cv=none; b=dFVK4RalWOVyP4Ia+4gDC+73SBrGc4C7w2BwQfQ3TTIJSdMaAH1Xor44JyVTrmaRHEfBLK9/CkcK1VnzfUbIAcbwdWXTM73QNqiflHF7ywaZxeBSnkSK4Tirsv6grNwMUnSgckk3pyEV3uV3XBCH+EgatjUhk7djpXht3J/+7iM=
+	t=1729723049; cv=none; b=XTgrZPu/MATZF4IYKoMToybdZSDkdeQq/L/ad8fz3sf6p9wOzNIPQqhRQTyZ/asfYlLyXOffAtrVpiGFfheU2jKan1Z6V2fDWIuAcBCUCdXNiyne0dhSjQ9mvCBnHsg1i1h9cAM0QorBASwAnvVM/DRs5SK4ibzxg/7Px5R5rbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729723048; c=relaxed/simple;
-	bh=nQQbu4onLgjxpUEL6v69QQSst4e5z7h+LcPxyX3sihU=;
+	s=arc-20240116; t=1729723049; c=relaxed/simple;
+	bh=PUZweYcqklViBmb8uZ/IJuwwHuTmJtgh5ndkO4UYJyg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DfTv6uqQjr4e96TS0Z3hl0iBdgJ+YkNEuOslQjnBBxpROxyF0bF8q+n6qTz1uh3v1Hexv/MDh/WwSDRYSqRrvoVOCGoFpnBQgM3cqB9ztMW+d251TyOSK2VoMvkgBwpg6qkSQUqIv8n3PPK9XfH+26tKL2+r1RtC/cAZn0EDwL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/B/d6Me; arc=none smtp.client-ip=209.85.208.54
+	 In-Reply-To:To:Cc; b=NbS04LmKXC7dApEEvLEYj6O7vivBB5hZL005GFeuD797aJaFdkW0lahozCHdhF/YaPAsaLU0WkJy3btGJHlDrjOUC9NrJILln233YHThWv+2+7squKq3tD+B08oCsXxTkp1Ba5II9pJQPth8gWu838GYTH5ChkeNQmih5JM/WY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NADfjKs2; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c935d99dc5so310066a12.1;
-        Wed, 23 Oct 2024 15:37:25 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5c9552d02e6so342590a12.2;
+        Wed, 23 Oct 2024 15:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729723044; x=1730327844; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729723046; x=1730327846; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k2XM3Jplq8/EbJJC1OO1W3bzQVXel65Gy7KIsJ85dgQ=;
-        b=G/B/d6MeLZkqXvwWtZPZYZzHBxmSQDyeHDuu29n4AgDlDHFtlHqSXRrzXDuFwfhWPU
-         DgKGGiAmfHFIhh4AAz+0IjLX8aPNxZY3buJ9Xqf9EkCscRk6Tv7KIvOVXjfIHnHiRl38
-         6rscrlkBzHvnS9HWiM1WP2fnvafJyv3cPlWCDzn/V2dwW8SUXI8/gwm4sV5mKy9jFvun
-         yEEy3d/YkFu61yEtnKFDZXCwl/z9JpT7kk2ShLNllgH6e4oKz0lSCUi6dDGXc78PGka9
-         pxO9XbLKpyZS9m4/3XIYPCUsl/V5RJTOkH/yzoBVwrF93uBEF7N2vlc6i/giB5Xjy+Dk
-         UN2A==
+        bh=Jy3J14myK2azS2Bw+TGbV6O6B2X8yTfWnYRpx0z+kQI=;
+        b=NADfjKs2vHe/4vkiwKKBb8m9mwHtIsU+3jTMK0WZR5Mcq3EGTQ/WDYJ1mIjbhHL8M+
+         TI1dwjlfb/GP2RmvN92JDWDUpQaVL2qqarrzYdcoP0IKYMneVdC0zwDZiqQbubcXwBgH
+         7WvcmL0/NfX+cYIuhHO3ksI1tbXVP4G4otkWhm8GSrkC0kCbVhg2Fbj8Ai7WnKGV5cpI
+         tNtN/vtciaFDWLkwNuF/TvxE3ruu3jBFrnnyDKmWoM3JFIcD5O4FWFP3swsf3biIdMuO
+         fyKctrVQiHO7oKi0jJ09YTRdbxDHIA4P3hN8RLI7d0rZ7D51tcC0ADyVvNcXrSdWNdQJ
+         JBeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729723044; x=1730327844;
+        d=1e100.net; s=20230601; t=1729723046; x=1730327846;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k2XM3Jplq8/EbJJC1OO1W3bzQVXel65Gy7KIsJ85dgQ=;
-        b=kDW9gbBxZEfQN60J7S/9PkUXbJAgpZjJE/D5+QUrh+tIxN2rMxA1J1bAiijxzFdT/0
-         Ekm0Efu7UnxrPtXe9xxxAblNB9KPZnHokbAZcKae5gVE/LfDOr8v7IOdX0s6MldbZeQ+
-         15jkHzNxMqCpVFyQxODcWeLNEcDqn5LWGpX9xv5o5UQwzVsXp5f2H/hINg99WkrB9uQ6
-         KkbC4bBizDLu+7zHMGAgqoFrEct019Y0Ehu60MsKsKVMxhibBvZch3mxTaNoa6hflnPm
-         svv+xHzNsou2P5FUV92XM6KzXqNhmrnHofJaNkfk4w70GTLAOGfuVQuDQblzZdbECWTo
-         mk0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVDLEnSsy/SlSxzHPt4FA9rEi384Kl1v8U0lFffSmmJYMPklvNBLyVxYvYAh5CFvZB+SLtBZQPP7BZn@vger.kernel.org, AJvYcCX0nbCeC9k+tSbhosFpTbtxV2C5097VlI+cTes3re6vONC6+9pFXQoSRu/YL/g70Rh/iaA19suJ/0yJ7V/w@vger.kernel.org, AJvYcCXG3sW9PV7Fr1bM5hU06zfJKmWTZ1h9cakR5APfILyTYh5DoRkoXXTvM7DP277W6xoY4MhNoLxhJw0ngpszcrX6oHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz62Y6t+OoSqX31sXs08H4svI8Kc4ck59lUZOKAEDlTOsZTt2yA
-	8nQMtESZLRYGv7SjbwHm+YQLhCrzDHwlv7UWzsdr+NQBRuquoqfo
-X-Google-Smtp-Source: AGHT+IGGOKlIqWKq/XzZ1d3yP1+cqdDO1i0NcdTYIW30vhzrfZLkX8Xf2wVVNdiDv/YUTtBY0MXIHw==
-X-Received: by 2002:a05:6402:1ec8:b0:5cb:9968:b4de with SMTP id 4fb4d7f45d1cf-5cb9968b667mr889645a12.22.1729723044407;
-        Wed, 23 Oct 2024 15:37:24 -0700 (PDT)
+        bh=Jy3J14myK2azS2Bw+TGbV6O6B2X8yTfWnYRpx0z+kQI=;
+        b=pCOzBIkftP8WDsW7AF24eGo0PcK7kqHcoSYLJoPtgLclgdTqiSWXNlJb8ov3gD0pYE
+         GxDPL+VjemGfUxzew4PZaLb+JKYaGTxIaICe54p3+UL7d7hFeIbuQpBPfk7HpEo+XZDw
+         H2jOxAEuPQapohZ8gGXCe7s1idHJOVLe6BpjB06zD7n64vWBahoHKnQKdLj05pAa+mLn
+         gdYVIJ+ZOIwmC8sVZoJYnnD4A9AQ2GPxm6HJzDG4f5QB4foMiFR43h7f6+6ytKVUalsn
+         4OcDTQg5uOQnPkNl68EzlUABRLv+Be5rVtJBdfb+0E8EdE2RhGNYUkVakvN0mALP7rMI
+         JYTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWFzo4JTmT9Sn4gLkdjTG8UlE4hjK4rFE5An2OGrSnRpWaj6pUDfsgHQXbIxXVu8sGW3mTUx+YwO05yfMGQIIt02c=@vger.kernel.org, AJvYcCUkXradsck1Z6Hv7e5fOmkxDMMV7F1x1ms1/BxGNQ6WtkeChwLVUX+XEslpSt3oEVHc6XOmjIhu0eJAKRvf@vger.kernel.org, AJvYcCXfcCw3YSbl/2EmQ1IlZ3lXWRgDyszQCQ9A1v5M96KULAVCHONYSjOuf4vMjNVAEQSlq0a4h+HZ9a9F@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEEKOxeqC6tFalOB1XBIDtH1Ad7dlt7oV3wpOYngJ3wL92Bn/0
+	h/0IFuhlEQQrVKREkolKkQJLqb03j5U1uXtav8sFB2Vgo40nETWi
+X-Google-Smtp-Source: AGHT+IGBz17FxrPN/rCHV/WwziIBuQiIF5Ruh+1l6Pbr+Er47DLsPPDKhznyybTHabaFp3fkM6oRVw==
+X-Received: by 2002:a05:6402:2086:b0:5cb:674f:b0fc with SMTP id 4fb4d7f45d1cf-5cb8af74aa6mr3518069a12.23.1729723046065;
+        Wed, 23 Oct 2024 15:37:26 -0700 (PDT)
 Received: from [192.168.122.1] (93-190-140-122.hosted-by-worldstream.net. [93.190.140.122])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cb6696b4easm4907816a12.12.2024.10.23.15.37.23
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cb6696b4easm4907816a12.12.2024.10.23.15.37.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 15:37:24 -0700 (PDT)
+        Wed, 23 Oct 2024 15:37:25 -0700 (PDT)
 From: Markuss Broks <markuss.broks@gmail.com>
-Date: Thu, 24 Oct 2024 01:36:39 +0300
-Subject: [PATCH 08/12] perf: arm_pmuv3: Add support for Samsung Mongoose
- PMU
+Date: Thu, 24 Oct 2024 01:36:40 +0300
+Subject: [PATCH 09/12] soc: samsung: exynos-chipid: Add support for
+ Exynos9810 SoC
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +79,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241024-exynos9810-v1-8-ed14d0d60d08@gmail.com>
+Message-Id: <20241024-exynos9810-v1-9-ed14d0d60d08@gmail.com>
 References: <20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com>
 In-Reply-To: <20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -97,45 +97,35 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Markuss Broks <markuss.broks@gmail.com>, 
  Maksym Holovach <nergzd@nergzd723.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1729723025; l=1343;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729723025; l=882;
  i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
- bh=nQQbu4onLgjxpUEL6v69QQSst4e5z7h+LcPxyX3sihU=;
- b=sg4+SVEsg+HRJRfFMRpU/sHqKpBVGugHB3ed5T9oUx8+nJ0XJggdevDa4myRkuSz1SfL+yGP6
- WR8EB+pYycNBDNOjXtsYSb3DW4MUeJ2XsnRkiExliTJTmN5cEUBU2xc
+ bh=PUZweYcqklViBmb8uZ/IJuwwHuTmJtgh5ndkO4UYJyg=;
+ b=aA65zLsbn/4MPOMDsOlrN9HRxwQ62r9xMLoPkCXZlYFt12trsIitbpJJEy9YAUBoQHqpYyUog
+ +MZ9ldEdyVkCIZ/kDvOl6e9ll/aKott3kKtcXOIRwAbErCVivTpWmAP
 X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
  pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-Add support for the Samsung Mongoose CPU core PMU.
-
-This just adds the names and links to DT compatible strings.
+Exynos 9810 has the product ID of "0xE9810000". Add this ID to
+the IDs together with the name of the SoC.
 
 Co-authored-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 ---
- drivers/perf/arm_pmuv3.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/samsung/exynos-chipid.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 0afe02f879b45a8600b9cea1bfd88e6a68096a67..9eb5603e1dda18c4bdd2745304737932a27fde8a 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -1364,6 +1364,8 @@ PMUV3_INIT_SIMPLE(armv8_neoverse_v3ae)
- PMUV3_INIT_SIMPLE(armv8_nvidia_carmel)
- PMUV3_INIT_SIMPLE(armv8_nvidia_denver)
- 
-+PMUV3_INIT_SIMPLE(armv8_samsung_mongoose)
-+
- PMUV3_INIT_MAP_EVENT(armv8_cortex_a35, armv8_a53_map_event)
- PMUV3_INIT_MAP_EVENT(armv8_cortex_a53, armv8_a53_map_event)
- PMUV3_INIT_MAP_EVENT(armv8_cortex_a57, armv8_a57_map_event)
-@@ -1409,6 +1411,7 @@ static const struct of_device_id armv8_pmu_of_device_ids[] = {
- 	{.compatible = "brcm,vulcan-pmu",	.data = armv8_brcm_vulcan_pmu_init},
- 	{.compatible = "nvidia,carmel-pmu",	.data = armv8_nvidia_carmel_pmu_init},
- 	{.compatible = "nvidia,denver-pmu",	.data = armv8_nvidia_denver_pmu_init},
-+	{.compatible = "samsung,mongoose-pmu",	.data = armv8_samsung_mongoose_pmu_init},
- 	{},
- };
- 
+diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+index 94c7cc0d11e4c6f151336dc6e25495a31cbec02d..23cc20896b85a2da02f36703225a4f62e7538a62 100644
+--- a/drivers/soc/samsung/exynos-chipid.c
++++ b/drivers/soc/samsung/exynos-chipid.c
+@@ -59,6 +59,7 @@ static const struct exynos_soc_id {
+ 	{ "EXYNOS7885", 0xE7885000 },
+ 	{ "EXYNOS850", 0xE3830000 },
+ 	{ "EXYNOS8895", 0xE8895000 },
++	{ "EXYNOS9810", 0xE9810000 },
+ 	{ "EXYNOS990", 0xE9830000 },
+ 	{ "EXYNOSAUTOV9", 0xAAA80000 },
+ 	{ "EXYNOSAUTOV920", 0x0A920000 },
 
 -- 
 2.46.2
