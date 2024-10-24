@@ -1,91 +1,140 @@
-Return-Path: <linux-gpio+bounces-11935-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D727E9AE39D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:17:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55FD59AE3EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:33:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8ABA71F238BE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:17:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85BB71C2211A
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:33:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31F3F1CBA1C;
-	Thu, 24 Oct 2024 11:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFE41CFEA9;
+	Thu, 24 Oct 2024 11:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="leYyrihi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BCF51B6D0A;
-	Thu, 24 Oct 2024 11:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798511B392E
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 11:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729768649; cv=none; b=osYG/XFbPkgduyydPphH3ovI/mqi6e3zEtcx7yEyTvfagZTGtN92nwvLZKsPIfVxSdmmNEawIWtftPYGIPToQ6x833fWY6T7f6CRfI0+8n0doC4HHLrCQmV0/wsgzvIFPQXupjeoTMYUiHI1YKZHhTxjTNBxJr6jZ1mGQ/7yfSQ=
+	t=1729769580; cv=none; b=Sc3cfX3Fc1oZ1/uPpwHetr+GulQ5YAEQ6JCG/rz9SwEfux/hIPW7uBuieA3zp3zIdefyk3Q7mL9aLRd6NDg7PLZJFbm2pk7mm4g9r8jyYQtFHXfmMcg9bR/mGYEDoTFf9FBlVxNv2KOBoFZ3UhT+UnJ6kdUQpssxmPyJHoYPpkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729768649; c=relaxed/simple;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KPeWAJ7UP82oMrCCYLLfMmtuafrhEI5F/JR+NcosqvorXuK1rqBgUljctYd5dQ+A9ZGkZaIfAft5Cvm9mA0bGfx6RXjlyGt3e8cCvT7BRt712uRccW1QNh7B2GpIimInmMNLBw2G2E4MGHC0t9Gbs0D5xmgiOLJsWedtH8bb/Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.10])
-	by gateway (Coremail) with SMTP id _____8DxG+LCLBpnkZoKAA--.24431S3;
-	Thu, 24 Oct 2024 19:17:22 +0800 (CST)
-Received: from localhost (unknown [10.20.42.10])
-	by front1 (Coremail) with SMTP id qMiowMAxbODALBpnS2UPAA--.19609S2;
-	Thu, 24 Oct 2024 19:17:21 +0800 (CST)
-Date: Thu, 24 Oct 2024 19:17:44 +0800
-From: Wanglei <wanglei@loongson.cn>
-To: mike@altlinux.ru
-Cc: aospan@netup.ru, conor.dooley@microchip.com, ddrokosov@sberdevices.ru,
-	dmaengine@vger.kernel.org, dushistov@mail.ru,
-	fancer.lancer@gmail.com, geert@linux-m68k.org,
-	gregkh@linuxfoundation.org, hoan@os.amperecomputing.com,
-	ink@jurassic.park.msu.ru, jeffbai@aosc.io, kexybiscuit@aosc.io,
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-ide@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-spi@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	mattst88@gmail.com, netdev@vger.kernel.org, nikita@trvn.ru,
-	ntb@lists.linux.dev, patches@lists.linux.dev,
-	richard.henderson@linaro.org, s.shtylyov@omp.ru, serjk@netup.ru,
-	shc_work@mail.ru, torvalds@linux-foundation.org,
-	torvic9@mailbox.org, tsbogend@alpha.franken.de,
-	v.georgiev@metrotek.ru, wangyuli@uniontech.com,
-	wsa+renesas@sang-engineering.com, xeb@mail.ru
-Subject: Re: what about CoC? (was: [PATCH] Revert "MAINTAINERS: Remove some
- entries due to various compliance requirements.")
-Message-ID: <20241024111744.GA22673@loongson-pc>
-Reply-To: Wanglei <wanglei@loongson.cn>
+	s=arc-20240116; t=1729769580; c=relaxed/simple;
+	bh=2ukGcetbJ073X0kVtfmH5NRy1q5c9OPJynatresKxrw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sJSAK4d/sslMwcB9QG6XsESdRTvEOMWrBxeO3XjzQHnCrQfx+QmDL9vFFFQjuVIWp8ZyRe0W1N95sXv4ourxT7kkk+mp+ZgoRrNyXihbZ4YYd76NvvkIQ756VtsjogkkymNwwuKIj2fz11hyyusjmGyzQ5kBbKhXesWorRIiJLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=leYyrihi; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43155abaf0bso8376135e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 04:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729769574; x=1730374374; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2MgD7S88uo9sxVvvM9wYy+rEyYTBG9VG2cJ5wlIWLfY=;
+        b=leYyrihiCIPnCmPkzSgUZZ50mxO6FG0lbjFqMXMi8FxMqj1qUAeHOSk+bqJb/AhZGg
+         jb1/8YW05xG8j+ZX2fmY7WRyib8DkS0ySIFL8XO80h69FFcYh7O21BJcQVNmsgaHrY/N
+         5klBEx2S8FcDZey7tScnhPhNnS+k/8A/3Dsi4Cqp9PwEDOGIp+UGX59w1MVHeBZa9Yfo
+         wX6OV7qgPTjf2NS7evtABB9KEJhyBboOdOjeHp3bnDFOV7G1FT20Alcf8O9KFwJ6ojM5
+         P9GWilIDAO9+N7ikhIRgU/9TOXQ23t9wPmIIGkiXF+MdXoW7gQeH9KPhjygzuFvS6e8m
+         YQVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729769574; x=1730374374;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2MgD7S88uo9sxVvvM9wYy+rEyYTBG9VG2cJ5wlIWLfY=;
+        b=CDDgXZOgkeaHpRtCEzK5aCsuECaSxFkoH/Z0+Rcl9iT9nGPnWq71+zuNTS5cUMIuM1
+         NMFo52jPHZ/AaitXOAW5VKLiBT9y/AUZq6gRmGtWrUysXkIpnFXj0GaT8Qiwqo5T6+Mu
+         L1aAPRhbEFzzLHsJg1ePcwLtU4OczQX/vKNzKe5n10hLN89BadmBTB9/sghjbsxtHD/p
+         LIQvwrn/tqcPfMSxK14vTcKOuYHtXW0A7oZnbW1n36sDOpAtjoUXgJCNaN5qFjqw0MRe
+         EaH2Fp+9EeHP9XihGVm7iJ2ZmP3fg+bMRzaaTeWjbWQhGCgKxkg/67jLxzuLINFrzB2J
+         9SpQ==
+X-Gm-Message-State: AOJu0Yz+Iwdyn+3+RD9EqlVikvZ1OALvyFaNo+6r2mUaqmRQK7kLC4TD
+	bMq/YDOoPks9EbOatz1K2RVtYM/ziYUJJqdrSO364Ku90+B70M3oUUqUaYwPNycSOoxzxw7qYi8
+	e
+X-Google-Smtp-Source: AGHT+IGGbwM/wC/uvUgJAQYmtUs21huVciYy7jFw7cYJ95pfBma3Y0EzjxjA95ATZvJ/Szy1slJRog==
+X-Received: by 2002:a05:6000:1210:b0:374:b6f4:d8d1 with SMTP id ffacd0b85a97d-37efcf0b548mr3779635f8f.13.1729769574441;
+        Thu, 24 Oct 2024 04:32:54 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:17a2:e679:56a4:a25a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b55f484sm14592705e9.13.2024.10.24.04.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 04:32:54 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/5] gpio: sysfs: send character device notifications for
+ sysfs class events
+Date: Thu, 24 Oct 2024 13:32:43 +0200
+Message-Id: <20241024-gpio-notify-sysfs-v1-0-981f2773e785@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024095339.GA32487@imap.altlinux.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CM-TRANSID:qMiowMAxbODALBpnS2UPAA--.19609S2
-X-CM-SenderInfo: pzdqwzthl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUmjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7Cj
-	xVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487M2AExVAIFx02aVAFz4v204
-	v7Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IY
-	x2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4
-	x0Y48IcVAKI48JM4IIrI8v6xkF7I0E4cxCY480cwAKzVC20s0267AEwI8IwI0ExsIj0wCF
-	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWrXVW3Aw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r1j6r18MI8E67AF67kF1VAF
-	wI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7IU035r7UUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFswGmcC/x3MMQqAMAxA0atIZgO1utSriIO2iWZppRFRpHe3O
+ L7h/xeUspDC2LyQ6RKVFCu6tgG/L3EjlFAN1tihM9bidkjCmE7hB/VRVuzXENiR94tjqN2RieX
+ +n9Ncygf0liMyYwAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1440;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=2ukGcetbJ073X0kVtfmH5NRy1q5c9OPJynatresKxrw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnGjBkSTkm2puOnNpzhe6QEjw1a37sxckcPMdRA
+ TJj4dmLOTaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZxowZAAKCRARpy6gFHHX
+ csmFD/4mt3GUCKb0pbe/hBugOPx7qAbeAVjQt3ke4froV5sa5pmiv7XNHKMaBrGlAtS/wehzMYs
+ bNdQNXC27nK5OSbFml7LTl9VmnPSYyIklgux8XtXIsT7Nmqu1A5IfLD91uU56yuFOEqaTn/BCyL
+ Kh0e8SMaJdmAp41Bg1/XpCJ/SbG+hSASFrq6OiezeghjF4GMgMQDj4XWulufqiG+lfkEudgaQTu
+ xRLvg8UgP7ez1FZhovxmd2fzfYZOORlyiIuLd4KkSlAgZQnz5wl3pT12z0VmHU5iBIOrghx84q1
+ VGbNBg0As14O88OOqeSo4p8kzlcQOt0UR6Ip0wztnJHmyE/WY9+JR1Q8eHjwm1QyQUDBRf4Yn1g
+ ZrwOqPi4Mj/Z8nF0SIWAxB16oqkPfso2X70vUPe2/EHQmMTqItUj1xve+n2gcYrZ+s1XqHPEm5+
+ 9nPb8s4k0d3dshrb6k59GXAFxDYDeGNBfQn10bbR0P+/Zv/jKqrRjpSfS7jug2LzAsgZNpItzgq
+ sMOVoW97I6OawIZx2rX9UnByUejv9pWzRv1eGm80Jh35Y82+xaYqU31GqoOfr2SO6bpgtfKVd8b
+ OvvnGQ4mbM6Bj94yH0uHy8ryhpTYWwsyLcIH/krmZdgY5T14dBEyniuUwbwzV+ffrw7WtUTfixW
+ Dvu30HRZfFbsdwA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+This may be a total corner-case but for consistency and completeness I
+think it makes sense to also send out line state change events on actions
+triggered from the GPIO sysfs class.
+
+The first two patches use cleanup helpers in sysfs code. The next three
+change the code to emit notifications on line export (unexport is
+already handled) and active_low & edge changes.
+
+One last thing I considered was also notifying user-space whenever
+gpiochip_un/lock_as_irq() is called but that doesn't make much sense as
+it's largely independent from the GPIO core and can be called for both
+requested and available lines whenever someone requests an interrupt
+from a GPIO controller.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (5):
+      gpio: sysfs: use cleanup guards for gpiod_data::mutex
+      gpio: sysfs: use cleanup guards for the sysfs_lock mutex
+      gpio: sysfs: emit chardev line-state events on GPIO export
+      gpio: sysfs: emit chardev line-state events on active-low changes
+      gpio: sysfs: emit chardev line-state events on edge store
+
+ drivers/gpio/gpiolib-sysfs.c | 143 +++++++++++++++++++------------------------
+ 1 file changed, 62 insertions(+), 81 deletions(-)
+---
+base-commit: fd21fa4a912ebbf8a6a341c31d8456f61e7d4170
+change-id: 20241022-gpio-notify-sysfs-3bddf9ecca9f
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
