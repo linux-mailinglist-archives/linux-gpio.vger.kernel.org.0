@@ -1,571 +1,679 @@
-Return-Path: <linux-gpio+bounces-11967-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11968-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12F7E9AEA41
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 17:22:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 506939AEA4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 17:22:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13CE51C21E1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:21:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 107192837FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3501E7C33;
-	Thu, 24 Oct 2024 15:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 556B31EB9E9;
+	Thu, 24 Oct 2024 15:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="S+uNyVkd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D791EC013
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 15:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0FD1DE2C0
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 15:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729783306; cv=none; b=a9aknKNAj7mDX55lX1RCz6pn+O3g7p7HCe6xChZwIlngydVduFTuNx/tAG7trmT+iO1C85Nf9V6tMrHjCvZuIjkG2fqrC1xZjME87mWNAbjLzwVBPuS2sWNX+Wv7AaaSjXdDyc3I+wkpzrFEI+54R5qQ+xjw820FI0pw+N6kvqA=
+	t=1729783328; cv=none; b=GCy8fY76FMCn2QBbRzXkZEbykhPyjlTizReHe4OT4A0rA8sj4/xFviBoEBcUt7AgOtVqGSCCg54P6P0ekVMxMA6HHq85K53auW2c2AaanATW7j5njqNEl/LgckQpvFdhGWrxBSPSxXD6C7v1umftpPoIPmvvmB3Iu6mugL823iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729783306; c=relaxed/simple;
-	bh=xmURvGsSQUZFxfZ+RAjNnOSjIMdY2fZuT7tiMlghng8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nbxglvbfv4DZqowk5NIJn4c+JHE38JOOIMFpGbxL0yTh8/gCr8F8MaITTwtKXqq+f9xMidI/pg48ZQ/KZW8z8RGBiYd67rtfbv+B+3Qgus4Tn4zVO6ZS25RR/VkHhJDJYjBsIfNb6tp7wYCoVZPbcfG+1P9HnZEJRiAQ6/N6UJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3ze0-0004OZ-Mt; Thu, 24 Oct 2024 17:21:00 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3zdy-000Dj9-12;
-	Thu, 24 Oct 2024 17:20:58 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id D3F2235DE43;
-	Thu, 24 Oct 2024 15:20:57 +0000 (UTC)
-Date: Thu, 24 Oct 2024 17:20:57 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-2-tmyu0@nuvoton.com>
+	s=arc-20240116; t=1729783328; c=relaxed/simple;
+	bh=XocVbR1dDRuZlBCmo72di28ETlVvLHfmRCP/TVb8cvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=puHs0ImZWox8t62qx8IP4neTGyDArqqSucTWLSh5m7SyIDdg92ygyTdMXuf4fUDAiUHNBp8DkLrymL/15Nm6mHl7F34fDJAsfjmHPZszbYzjzlGaq1fadkjRTz95qV8+x/wMrcNcBfK/Ocdx+qr8kuCZyeGT3x/PTXA3aFXycFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=S+uNyVkd; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e2e3179b224so1223449276.1
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 08:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1729783322; x=1730388122; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ZslJuvb+R+D3hqqInl+Fp2NtOHuMudVWO0vmTv/PdQ=;
+        b=S+uNyVkdF5o9hCWuccLGo12mfVUa43GbRDW5Ak2DmkyCzIjaUhRX2AtsGBL1esmM1T
+         /5xRU1l35rH9zqwcjhHAE4IyZrn/M8a7LU5tPcqAsQdmNkndHXeRolCLAgCCz0rgM3mi
+         qG0hm6lKQeZQEz71mCiDMx5qRHxOEUrFfxeoxEDumUOiTxtDj237mzOfpvAwmVBe1+7C
+         MVL5gLbfYiXD25LdvGYi59/2bXPEQ1o0a4jnH5n0c8tKN1z9gQi7drk85ymuwqKqNZTl
+         PDXNvPg7XOzcBFBGBIY0Ju+nWm/Qilmxeabeir/zio+/i6GrZECe8afARXAYlevNdofb
+         yWWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729783322; x=1730388122;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9ZslJuvb+R+D3hqqInl+Fp2NtOHuMudVWO0vmTv/PdQ=;
+        b=UsK8EHpZs+OgpsqOqiBOVfgt+X+iMN4zZt8I4wrMkRbBYOvDEhzRaoR+CFehfshS34
+         DaZXsj26vOJMyV1GNqyFUbCjbk4XnQXnJ1/UYCpXwjXI01yfE66Z+cGR2sGuj/xg7Y9l
+         L++GRUKK1TMOtbpyGdf0oyqovLYZRNaPKy1w7Gg1pzwTs1CWl/L0/FkCI3HCWR64WQYw
+         lVI3AgwjKHcYY2oL4pNgOUoDrBZAYuIbuiDiyy+jNKFXOYrQqxksTtHMwwQyVj3uECMQ
+         50YlThD1xCZer15TNKyjDZxR/LON/L79PIYc8emfRIqDUk/PmuOmgQCDAPzhfhRsahid
+         afGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFe1ZVtJ9CPgW860y6oFW29sNdjGCcqAkMHe9D3wJLyBIglH2TWTeR8pTBF0mK4qpRKKweqrAWxQKK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM1XSCh6BIxYum0nG6vn5YR/B91kVRJXvz1tWgtpcsODhowIMu
+	JaILDAoDrzvhg6fmVfrk1jaFB+O99kvT8QExYQt68Ixl4PoEq0aw/y14d9nDaoc4bh3zZyCZ4ez
+	1k+Z54E3A90Wab/9X06lI0hTSB92g9Pic6d1MGQ==
+X-Google-Smtp-Source: AGHT+IGwL+oDyt9AiqU8vRnCAfR1pHe5h5kqQWEB+rUAizTZZV2tYZZJwpQjdyjZy0CycLEd//ANCOcPXsLPXTGu7mI=
+X-Received: by 2002:a05:690c:708a:b0:6e2:7dd:af66 with SMTP id
+ 00721157ae682-6e7f0e72ea7mr77409107b3.19.1729783322369; Thu, 24 Oct 2024
+ 08:22:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bc6t2hauttfjlfk7"
-Content-Disposition: inline
-In-Reply-To: <20241024085922.133071-2-tmyu0@nuvoton.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <cover.1728300189.git.andrea.porta@suse.com> <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
+In-Reply-To: <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Thu, 24 Oct 2024 16:21:46 +0100
+Message-ID: <CAPY8ntC0B0RdNmvGMaDcp-p9gZOcWBbeC6BjbcihrijRXjRVkA@mail.gmail.com>
+Subject: Re: [PATCH v2 11/14] misc: rp1: RaspberryPi RP1 misc driver
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Andrea
 
---bc6t2hauttfjlfk7
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
-
-On 24.10.2024 16:59:14, Ming Yu wrote:
-> The Nuvoton NCT6694 is a peripheral expander with 16 GPIO chips,
-> 6 I2C controllers, 2 CANfd controllers, 2 Watchdog timers, ADC,
-> PWM, and RTC.
->=20
-> This driver implements USB device functionality and shares the
-> chip's peripherals as a child device.
->=20
-> Each child device can use the USB functions nct6694_read_msg()
-> and nct6694_write_msg() to issue a command. They can also register
-> a handler function that will be called when the USB device receives
-> its interrupt pipe.
-
-[...]
-
-> diff --git a/drivers/mfd/nct6694.c b/drivers/mfd/nct6694.c
+On Mon, 7 Oct 2024 at 14:07, Andrea della Porta <andrea.porta@suse.com> wrote:
+>
+> The RaspberryPi RP1 is a PCI multi function device containing
+> peripherals ranging from Ethernet to USB controller, I2C, SPI
+> and others.
+>
+> Implement a bare minimum driver to operate the RP1, leveraging
+> actual OF based driver implementations for the on-board peripherals
+> by loading a devicetree overlay during driver probe.
+>
+> The peripherals are accessed by mapping MMIO registers starting
+> from PCI BAR1 region.
+>
+> With the overlay approach we can achieve more generic and agnostic
+> approach to managing this chipset, being that it is a PCI endpoint
+> and could possibly be reused in other hw implementations. The
+> presented approach is also used by Bootlin's Microchip LAN966x
+> patchset (see link) as well, for a similar chipset.
+>
+> Since the gpio line names should be provided by the user, there
+> is an interface through configfs that allows the userspace to
+> load a DT overlay that will provide gpio-line-names property.
+> The interface can be invoked like this:
+>
+> cat rpi-rp1-gpios-5-b.dtbo > /sys/kernel/config/rp1-cfg/gpio_set_names
+>
+> and is designed to be similar to what users are already used to
+> from distro with downstream kernel.
+>
+> For reasons why this driver is contained in drivers/misc, please
+> check the links.
+>
+> This driver is heavily based on downstream code from RaspberryPi
+> Foundation, and the original author is Phil Elwell.
+>
+> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
+>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  MAINTAINERS                   |   1 +
+>  drivers/misc/Kconfig          |   1 +
+>  drivers/misc/Makefile         |   1 +
+>  drivers/misc/rp1/Kconfig      |  24 +++
+>  drivers/misc/rp1/Makefile     |   5 +
+>  drivers/misc/rp1/rp1-pci.dtso |   8 +
+>  drivers/misc/rp1/rp1_pci.c    | 365 ++++++++++++++++++++++++++++++++++
+>  drivers/misc/rp1/rp1_pci.h    |  14 ++
+>  drivers/pci/quirks.c          |   1 +
+>  include/linux/pci_ids.h       |   3 +
+>  10 files changed, 423 insertions(+)
+>  create mode 100644 drivers/misc/rp1/Kconfig
+>  create mode 100644 drivers/misc/rp1/Makefile
+>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+>  create mode 100644 drivers/misc/rp1/rp1_pci.c
+>  create mode 100644 drivers/misc/rp1/rp1_pci.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 510a071ede78..032678fb2470 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19389,6 +19389,7 @@ F:      Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+>  F:     Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>  F:     Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+>  F:     drivers/clk/clk-rp1.c
+> +F:     drivers/misc/rp1/
+>  F:     drivers/pinctrl/pinctrl-rp1.c
+>  F:     include/dt-bindings/clock/rp1.h
+>  F:     include/dt-bindings/misc/rp1.h
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 3fe7e2a9bd29..ac85cb154100 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -628,4 +628,5 @@ source "drivers/misc/uacce/Kconfig"
+>  source "drivers/misc/pvpanic/Kconfig"
+>  source "drivers/misc/mchp_pci1xxxx/Kconfig"
+>  source "drivers/misc/keba/Kconfig"
+> +source "drivers/misc/rp1/Kconfig"
+>  endmenu
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index a9f94525e181..ae86d69997b4 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -72,3 +72,4 @@ obj-$(CONFIG_TPS6594_PFSM)    += tps6594-pfsm.o
+>  obj-$(CONFIG_NSM)              += nsm.o
+>  obj-$(CONFIG_MARVELL_CN10K_DPI)        += mrvl_cn10k_dpi.o
+>  obj-y                          += keba/
+> +obj-$(CONFIG_MISC_RP1)         += rp1/
+> diff --git a/drivers/misc/rp1/Kconfig b/drivers/misc/rp1/Kconfig
 > new file mode 100644
-> index 000000000000..9838c7be0b98
+> index 000000000000..29b1fc2fc4af
 > --- /dev/null
-> +++ b/drivers/mfd/nct6694.c
-
-[...]
-
-> +int nct6694_read_msg(struct nct6694 *nct6694, u8 mod, u16 offset, u16 le=
-ngth,
-> +		     u8 rd_idx, u8 rd_len, unsigned char *buf)
-
-why not make buf a void *?
-
-> +{
-> +	struct usb_device *udev =3D nct6694->udev;
-> +	unsigned char err_status;
-> +	int len, packet_len, tx_len, rx_len;
-> +	int i, ret;
+> +++ b/drivers/misc/rp1/Kconfig
+> @@ -0,0 +1,24 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# RaspberryPi RP1 misc device
+> +#
 > +
-> +	mutex_lock(&nct6694->access_lock);
+> +config MISC_RP1
+> +        tristate "RaspberryPi RP1 PCIe support"
+> +        depends on PCI && PCI_QUIRKS
+> +        select OF
+> +        select OF_IRQ
+> +        select OF_OVERLAY
+> +        select IRQ_DOMAIN
+> +        select PCI_DYNAMIC_OF_NODES
+> +        help
+> +          Support the RP1 peripheral chip found on Raspberry Pi 5 board.
 > +
-> +	/* Send command packet to USB device */
-> +	nct6694->cmd_buffer[REQUEST_MOD_IDX] =3D mod;
-> +	nct6694->cmd_buffer[REQUEST_CMD_IDX] =3D offset & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_SEL_IDX] =3D (offset >> 8) & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_HCTRL_IDX] =3D HCTRL_GET;
-> +	nct6694->cmd_buffer[REQUEST_LEN_L_IDX] =3D length & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_LEN_H_IDX] =3D (length >> 8) & 0xFF;
+> +          This device supports several sub-devices including e.g. Ethernet
+> +         controller, USB controller, I2C, SPI and UART.
 > +
-> +	ret =3D usb_bulk_msg(udev, usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT),
-> +			   nct6694->cmd_buffer, CMD_PACKET_SZ, &tx_len,
-> +			   nct6694->timeout);
-> +	if (ret)
-> +		goto err;
+> +          The driver is responsible for enabling the DT node once the PCIe
+> +         endpoint has been configured, and handling interrupts.
 > +
-> +	/* Receive response packet from USB device */
-> +	ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BULK_IN_ENDPOINT),
-> +			   nct6694->rx_buffer, CMD_PACKET_SZ, &rx_len,
-> +			   nct6694->timeout);
-> +	if (ret)
-> +		goto err;
+> +          This driver uses an overlay to load other drivers to support for
+> +         RP1 internal sub-devices.
+> diff --git a/drivers/misc/rp1/Makefile b/drivers/misc/rp1/Makefile
+> new file mode 100644
+> index 000000000000..70384f5a7d7d
+> --- /dev/null
+> +++ b/drivers/misc/rp1/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_MISC_RP1)         += rp1-pci.o
+> +rp1-pci-objs                   := rp1_pci.o rp1-pci.dtbo.o
 > +
-> +	err_status =3D nct6694->rx_buffer[RESPONSE_STS_IDX];
+> +DTC_FLAGS_rp1-pci += -@
+> diff --git a/drivers/misc/rp1/rp1-pci.dtso b/drivers/misc/rp1/rp1-pci.dtso
+> new file mode 100644
+> index 000000000000..0bf2f4bb18e6
+> --- /dev/null
+> +++ b/drivers/misc/rp1/rp1-pci.dtso
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 > +
-> +	/*
-> +	 * Segmented reception of messages that exceed the size of USB bulk
-> +	 * pipe packets.
-> +	 */
-
-The Linux USB stack can receive bulk messages longer than the max packet si=
-ze.
-
-> +	for (i =3D 0, len =3D length; len > 0; i++, len -=3D packet_len) {
-> +		if (len > nct6694->maxp)
-> +			packet_len =3D nct6694->maxp;
-> +		else
-> +			packet_len =3D len;
+> +/* the dts overlay is included from the dts directory so
+> + * it can be possible to check it with CHECK_DTBS while
+> + * also compile it from the driver source directory.
+> + */
 > +
-> +		ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BULK_IN_ENDPOINT),
-> +				   nct6694->rx_buffer + nct6694->maxp * i,
-> +				   packet_len, &rx_len, nct6694->timeout);
-> +		if (ret)
-> +			goto err;
-> +	}
+> +#include "arm64/broadcom/rp1.dtso"
+> diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
+> new file mode 100644
+> index 000000000000..a1f7bf1804c0
+> --- /dev/null
+> +++ b/drivers/misc/rp1/rp1_pci.c
+> @@ -0,0 +1,365 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> + * All rights reserved.
+> + */
 > +
-> +	for (i =3D 0; i < rd_len; i++)
-> +		buf[i] =3D nct6694->rx_buffer[i + rd_idx];
-
-memcpy()?
-
-Or why don't you directly receive data into the provided buffer? Copying
-of the data doesn't make it faster.
-
-On the other hand, receiving directly into the target buffer means the
-target buffer must not live on the stack.
-
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
 > +
-> +	if (err_status) {
-> +		pr_debug("%s: MSG CH status =3D %2Xh\n", __func__, err_status);
-> +		ret =3D -EIO;
-> +	}
+> +#include "rp1_pci.h"
 > +
-> +err:
-> +	mutex_unlock(&nct6694->access_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(nct6694_read_msg);
+> +#define RP1_DRIVER_NAME                "rp1"
 > +
-> +int nct6694_write_msg(struct nct6694 *nct6694, u8 mod, u16 offset,
-> +		      u16 length, unsigned char *buf)
-> +{
-> +	struct usb_device *udev =3D nct6694->udev;
-> +	unsigned char err_status;
-> +	int len, packet_len, tx_len, rx_len;
-> +	int i, ret;
+> +#define RP1_HW_IRQ_MASK                GENMASK(5, 0)
 > +
-> +	mutex_lock(&nct6694->access_lock);
+> +#define REG_SET                        0x800
+> +#define REG_CLR                        0xc00
 > +
-> +	/* Send command packet to USB device  */
-> +	nct6694->cmd_buffer[REQUEST_MOD_IDX] =3D mod;
-> +	nct6694->cmd_buffer[REQUEST_CMD_IDX] =3D offset & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_SEL_IDX] =3D (offset >> 8) & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_HCTRL_IDX] =3D HCTRL_SET;
-> +	nct6694->cmd_buffer[REQUEST_LEN_L_IDX] =3D length & 0xFF;
-> +	nct6694->cmd_buffer[REQUEST_LEN_H_IDX] =3D (length >> 8) & 0xFF;
-
-What about creating a struct that describes the cmd_buffer layout?
-
+> +/* MSI-X CFG registers start at 0x8 */
+> +#define MSIX_CFG(x) (0x8 + (4 * (x)))
 > +
-> +	ret =3D usb_bulk_msg(udev, usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT),
-> +			   nct6694->cmd_buffer, CMD_PACKET_SZ, &tx_len,
-> +			   nct6694->timeout);
-> +	if (ret)
-> +		goto err;
+> +#define MSIX_CFG_IACK_EN        BIT(3)
+> +#define MSIX_CFG_IACK           BIT(2)
+> +#define MSIX_CFG_ENABLE         BIT(0)
 > +
-> +	/*
-> +	 * Segmented transmission of messages that exceed the size of USB bulk
-> +	 * pipe packets.
-> +	 */
-
-same as above
-
-> +	for (i =3D 0, len =3D length; len > 0; i++, len -=3D packet_len) {
-> +		if (len > nct6694->maxp)
-> +			packet_len =3D nct6694->maxp;
-> +		else
-> +			packet_len =3D len;
+> +/* Address map */
+> +#define RP1_PCIE_APBS_BASE     0x108000
 > +
-> +		memcpy(nct6694->tx_buffer + nct6694->maxp * i,
-> +		       buf + nct6694->maxp * i, packet_len);
+> +/* Interrupts */
+> +#define RP1_INT_IO_BANK0       0
+> +#define RP1_INT_IO_BANK1       1
+> +#define RP1_INT_IO_BANK2       2
+> +#define RP1_INT_AUDIO_IN       3
+> +#define RP1_INT_AUDIO_OUT      4
+> +#define RP1_INT_PWM0           5
+> +#define RP1_INT_ETH            6
+> +#define RP1_INT_I2C0           7
+> +#define RP1_INT_I2C1           8
+> +#define RP1_INT_I2C2           9
+> +#define RP1_INT_I2C3           10
+> +#define RP1_INT_I2C4           11
+> +#define RP1_INT_I2C5           12
+> +#define RP1_INT_I2C6           13
+> +#define RP1_INT_I2S0           14
+> +#define RP1_INT_I2S1           15
+> +#define RP1_INT_I2S2           16
+> +#define RP1_INT_SDIO0          17
+> +#define RP1_INT_SDIO1          18
+> +#define RP1_INT_SPI0           19
+> +#define RP1_INT_SPI1           20
+> +#define RP1_INT_SPI2           21
+> +#define RP1_INT_SPI3           22
+> +#define RP1_INT_SPI4           23
+> +#define RP1_INT_SPI5           24
+> +#define RP1_INT_UART0          25
+> +#define RP1_INT_TIMER_0                26
+> +#define RP1_INT_TIMER_1                27
+> +#define RP1_INT_TIMER_2                28
+> +#define RP1_INT_TIMER_3                29
+> +#define RP1_INT_USBHOST0       30
+> +#define RP1_INT_USBHOST0_0     31
+> +#define RP1_INT_USBHOST0_1     32
+> +#define RP1_INT_USBHOST0_2     33
+> +#define RP1_INT_USBHOST0_3     34
+> +#define RP1_INT_USBHOST1       35
+> +#define RP1_INT_USBHOST1_0     36
+> +#define RP1_INT_USBHOST1_1     37
+> +#define RP1_INT_USBHOST1_2     38
+> +#define RP1_INT_USBHOST1_3     39
+> +#define RP1_INT_DMA            40
+> +#define RP1_INT_PWM1           41
+> +#define RP1_INT_UART1          42
+> +#define RP1_INT_UART2          43
+> +#define RP1_INT_UART3          44
+> +#define RP1_INT_UART4          45
+> +#define RP1_INT_UART5          46
+> +#define RP1_INT_MIPI0          47
+> +#define RP1_INT_MIPI1          48
+> +#define RP1_INT_VIDEO_OUT      49
+> +#define RP1_INT_PIO_0          50
+> +#define RP1_INT_PIO_1          51
+> +#define RP1_INT_ADC_FIFO       52
+> +#define RP1_INT_PCIE_OUT       53
+> +#define RP1_INT_SPI6           54
+> +#define RP1_INT_SPI7           55
+> +#define RP1_INT_SPI8           56
+> +#define RP1_INT_SYSCFG         58
+> +#define RP1_INT_CLOCKS_DEFAULT 59
+> +#define RP1_INT_VBUSCTRL       60
+> +#define RP1_INT_PROC_MISC      57
+> +#define RP1_INT_END            61
 > +
-> +		ret =3D usb_bulk_msg(udev, usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT),
-> +				   nct6694->tx_buffer + nct6694->maxp * i,
-> +				   packet_len, &tx_len, nct6694->timeout);
-> +		if (ret)
-> +			goto err;
-> +	}
-> +
-> +	/* Receive response packet from USB device */
-> +	ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BULK_IN_ENDPOINT),
-> +			   nct6694->rx_buffer, CMD_PACKET_SZ, &rx_len,
-> +			   nct6694->timeout);
-> +	if (ret)
-> +		goto err;
-> +
-> +	err_status =3D nct6694->rx_buffer[RESPONSE_STS_IDX];
-> +
-> +	/*
-> +	 * Segmented reception of messages that exceed the size of USB bulk
-> +	 * pipe packets.
-> +	 */
-
-same as above
-
-> +	for (i =3D 0, len =3D length; len > 0; i++, len -=3D packet_len) {
-> +		if (len > nct6694->maxp)
-> +			packet_len =3D nct6694->maxp;
-> +		else
-> +			packet_len =3D len;
-> +
-> +		ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BULK_IN_ENDPOINT),
-> +				   nct6694->rx_buffer + nct6694->maxp * i,
-> +				   packet_len, &rx_len, nct6694->timeout);
-> +		if (ret)
-> +			goto err;
-> +	}
-> +
-> +	memcpy(buf, nct6694->rx_buffer, length);
-
-why not rx into the destination buffer directly?
-
-> +
-> +	if (err_status) {
-> +		pr_debug("%s: MSG CH status =3D %2Xh\n", __func__, err_status);
-> +		ret =3D -EIO;
-> +	}
-> +
-> +err:
-> +	mutex_unlock(&nct6694->access_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(nct6694_write_msg);
-
-[...]
-
-> +static int nct6694_usb_probe(struct usb_interface *iface,
-> +			     const struct usb_device_id *id)
-> +{
-> +	struct usb_device *udev =3D interface_to_usbdev(iface);
-> +	struct device *dev =3D &udev->dev;
-> +	struct usb_host_interface *interface;
-> +	struct usb_endpoint_descriptor *int_endpoint;
-> +	struct nct6694 *nct6694;
-> +	int pipe, maxp, bulk_pipe;
-> +	int ret =3D EINVAL;
-> +
-> +	interface =3D iface->cur_altsetting;
-> +	/* Binding interface class : 0xFF */
-> +	if (interface->desc.bInterfaceClass !=3D USB_CLASS_VENDOR_SPEC ||
-> +	    interface->desc.bInterfaceSubClass !=3D 0x00 ||
-> +	    interface->desc.bInterfaceProtocol !=3D 0x00)
-> +		return -ENODEV;
-> +
-> +	int_endpoint =3D &interface->endpoint[0].desc;
-> +	if (!usb_endpoint_is_int_in(int_endpoint))
-> +		return -ENODEV;
-> +
-> +	nct6694 =3D devm_kzalloc(&udev->dev, sizeof(*nct6694), GFP_KERNEL);
-> +	if (!nct6694)
-> +		return -ENOMEM;
-> +
-> +	pipe =3D usb_rcvintpipe(udev, INT_IN_ENDPOINT);
-> +	maxp =3D usb_maxpacket(udev, pipe);
-
-better move these 2 down to the usb_fill_int_urb().
-
-> +
-> +	nct6694->cmd_buffer =3D devm_kcalloc(dev, CMD_PACKET_SZ,
-> +					   sizeof(unsigned char), GFP_KERNEL);
-> +	if (!nct6694->cmd_buffer)
-> +		return -ENOMEM;
-> +	nct6694->rx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> +					  sizeof(unsigned char), GFP_KERNEL);
-> +	if (!nct6694->rx_buffer)
-> +		return -ENOMEM;
-> +	nct6694->tx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> +					  sizeof(unsigned char), GFP_KERNEL);
-> +	if (!nct6694->tx_buffer)
-> +		return -ENOMEM;
-> +	nct6694->int_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> +					   sizeof(unsigned char), GFP_KERNEL);
-> +	if (!nct6694->int_buffer)
-> +		return -ENOMEM;
-> +
-> +	nct6694->int_in_urb =3D usb_alloc_urb(0, GFP_KERNEL);
-> +	if (!nct6694->int_in_urb) {
-> +		dev_err(&udev->dev, "Failed to allocate INT-in urb!\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Bulk pipe maximum packet for each transaction */
-> +	bulk_pipe =3D usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT);
-> +	nct6694->maxp =3D usb_maxpacket(udev, bulk_pipe);
-> +
-> +	mutex_init(&nct6694->access_lock);
-> +	nct6694->udev =3D udev;
-> +	nct6694->timeout =3D URB_TIMEOUT;	/* Wait until urb complete */
-> +
-> +	INIT_LIST_HEAD(&nct6694->handler_list);
-> +	spin_lock_init(&nct6694->lock);
-> +
-> +	usb_fill_int_urb(nct6694->int_in_urb, udev, pipe,
-> +			 nct6694->int_buffer, maxp, usb_int_callback,
-> +			 nct6694, int_endpoint->bInterval);
-> +	ret =3D usb_submit_urb(nct6694->int_in_urb, GFP_KERNEL);
-> +	if (ret)
-> +		goto err_urb;
-> +
-> +	dev_set_drvdata(&udev->dev, nct6694);
-> +	usb_set_intfdata(iface, nct6694);
-> +
-> +	ret =3D mfd_add_hotplug_devices(&udev->dev, nct6694_dev,
-> +				      ARRAY_SIZE(nct6694_dev));
-> +	if (ret) {
-> +		dev_err(&udev->dev, "Failed to add mfd's child device\n");
-> +		goto err_mfd;
-> +	}
-> +
-> +	nct6694->async_workqueue =3D alloc_ordered_workqueue("asyn_workqueue", =
-0);
-
-Where is the async_workqueue used?
-
-> +
-> +	dev_info(&udev->dev, "Probed device: (%04X:%04X)\n",
-> +		 id->idVendor, id->idProduct);
-> +	return 0;
-> +
-> +err_mfd:
-> +	usb_kill_urb(nct6694->int_in_urb);
-> +err_urb:
-> +	usb_free_urb(nct6694->int_in_urb);
-> +	return ret;
-> +}
-> +
-> +static void nct6694_usb_disconnect(struct usb_interface *iface)
-> +{
-> +	struct usb_device *udev =3D interface_to_usbdev(iface);
-> +	struct nct6694 *nct6694 =3D usb_get_intfdata(iface);
-> +
-> +	mfd_remove_devices(&udev->dev);
-> +	flush_workqueue(nct6694->async_workqueue);
-> +	destroy_workqueue(nct6694->async_workqueue);
-> +	usb_set_intfdata(iface, NULL);
-
-I think this is not needed.
-
-> +	usb_kill_urb(nct6694->int_in_urb);
-> +	usb_free_urb(nct6694->int_in_urb);
-> +}
-> +
-> +static const struct usb_device_id nct6694_ids[] =3D {
-> +	{ USB_DEVICE(NCT6694_VENDOR_ID, NCT6694_PRODUCT_ID)},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(usb, nct6694_ids);
-> +
-> +static struct usb_driver nct6694_usb_driver =3D {
-> +	.name	=3D DRVNAME,
-> +	.id_table =3D nct6694_ids,
-> +	.probe =3D nct6694_usb_probe,
-> +	.disconnect =3D nct6694_usb_disconnect,
+> +struct rp1_dev {
+> +       struct pci_dev *pdev;
+> +       struct device *dev;
+> +       struct clk *sys_clk;
+> +       struct irq_domain *domain;
+> +       struct irq_data *pcie_irqds[64];
+> +       void __iomem *bar1;
+> +       int ovcs_id;
+> +       bool level_triggered_irq[RP1_INT_END];
 > +};
 > +
-> +module_usb_driver(nct6694_usb_driver);
+> +static void dump_bar(struct pci_dev *pdev, unsigned int bar)
+> +{
+> +       dev_info(&pdev->dev,
+> +                "bar%d %pR\n",
+> +                bar,
+> +                pci_resource_n(pdev, bar));
+> +}
 > +
-> +MODULE_DESCRIPTION("USB-MFD driver for NCT6694");
-> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
+> +{
+> +       iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_SET + MSIX_CFG(hwirq));
+> +}
+> +
+> +static void msix_cfg_clr(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
+> +{
+> +       iowrite32(value, rp1->bar1 + RP1_PCIE_APBS_BASE + REG_CLR + MSIX_CFG(hwirq));
+> +}
+> +
+> +static void rp1_mask_irq(struct irq_data *irqd)
+> +{
+> +       struct rp1_dev *rp1 = irqd->domain->host_data;
+> +       struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+> +
+> +       pci_msi_mask_irq(pcie_irqd);
+> +}
+> +
+> +static void rp1_unmask_irq(struct irq_data *irqd)
+> +{
+> +       struct rp1_dev *rp1 = irqd->domain->host_data;
+> +       struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+> +
+> +       pci_msi_unmask_irq(pcie_irqd);
+> +}
+> +
+> +static int rp1_irq_set_type(struct irq_data *irqd, unsigned int type)
+> +{
+> +       struct rp1_dev *rp1 = irqd->domain->host_data;
+> +       unsigned int hwirq = (unsigned int)irqd->hwirq;
+> +
+> +       switch (type) {
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               dev_dbg(rp1->dev, "MSIX IACK EN for irq %d\n", hwirq);
+> +               msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
+> +               rp1->level_triggered_irq[hwirq] = true;
+> +       break;
+> +       case IRQ_TYPE_EDGE_RISING:
+> +               msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
+> +               rp1->level_triggered_irq[hwirq] = false;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct irq_chip rp1_irq_chip = {
+> +       .name            = "rp1_irq_chip",
+> +       .irq_mask        = rp1_mask_irq,
+> +       .irq_unmask      = rp1_unmask_irq,
+> +       .irq_set_type    = rp1_irq_set_type,
+> +};
+> +
+> +static void rp1_chained_handle_irq(struct irq_desc *desc)
+> +{
+> +       unsigned int hwirq = desc->irq_data.hwirq & RP1_HW_IRQ_MASK;
+> +       struct rp1_dev *rp1 = irq_desc_get_handler_data(desc);
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       int virq;
+> +
+> +       chained_irq_enter(chip, desc);
+> +
+> +       virq = irq_find_mapping(rp1->domain, hwirq);
+> +       generic_handle_irq(virq);
+> +       if (rp1->level_triggered_irq[hwirq])
+> +               msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK);
+> +
+> +       chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int rp1_irq_xlate(struct irq_domain *d, struct device_node *node,
+> +                        const u32 *intspec, unsigned int intsize,
+> +                        unsigned long *out_hwirq, unsigned int *out_type)
+> +{
+> +       struct rp1_dev *rp1 = d->host_data;
+> +       struct irq_data *pcie_irqd;
+> +       unsigned long hwirq;
+> +       int pcie_irq;
+> +       int ret;
+> +
+> +       ret = irq_domain_xlate_twocell(d, node, intspec, intsize,
+> +                                      &hwirq, out_type);
+> +       if (ret)
+> +               return ret;
+> +
+> +       pcie_irq = pci_irq_vector(rp1->pdev, hwirq);
+> +       pcie_irqd = irq_get_irq_data(pcie_irq);
+> +       rp1->pcie_irqds[hwirq] = pcie_irqd;
+> +       *out_hwirq = hwirq;
+> +
+> +       return 0;
+> +}
+> +
+> +static int rp1_irq_activate(struct irq_domain *d, struct irq_data *irqd,
+> +                           bool reserve)
+> +{
+> +       struct rp1_dev *rp1 = d->host_data;
+> +
+> +       msix_cfg_set(rp1, (unsigned int)irqd->hwirq, MSIX_CFG_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static void rp1_irq_deactivate(struct irq_domain *d, struct irq_data *irqd)
+> +{
+> +       struct rp1_dev *rp1 = d->host_data;
+> +
+> +       msix_cfg_clr(rp1, (unsigned int)irqd->hwirq, MSIX_CFG_ENABLE);
+> +}
+> +
+> +static const struct irq_domain_ops rp1_domain_ops = {
+> +       .xlate      = rp1_irq_xlate,
+> +       .activate   = rp1_irq_activate,
+> +       .deactivate = rp1_irq_deactivate,
+> +};
+> +
+> +static int rp1_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *rp1_node;
+> +       struct reset_control *reset;
+> +       struct rp1_dev *rp1;
+> +       int err  = 0;
+> +       int i;
+> +
+> +       rp1_node = dev_of_node(dev);
+> +       if (!rp1_node) {
+> +               dev_err(dev, "Missing of_node for device\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       rp1 = devm_kzalloc(&pdev->dev, sizeof(*rp1), GFP_KERNEL);
+> +       if (!rp1)
+> +               return -ENOMEM;
+> +
+> +       rp1->pdev = pdev;
+> +       rp1->dev = &pdev->dev;
+> +
+> +       reset = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
+> +       if (IS_ERR(reset))
+> +               return PTR_ERR(reset);
+> +       reset_control_reset(reset);
+> +
+> +       dump_bar(pdev, 0);
+> +       dump_bar(pdev, 1);
+> +
+> +       if (pci_resource_len(pdev, 1) <= 0x10000) {
+> +               dev_err(&pdev->dev,
+> +                       "Not initialised - is the firmware running?\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       err = pcim_enable_device(pdev);
+> +       if (err < 0) {
+> +               dev_err(&pdev->dev, "Enabling PCI device has failed: %d",
+> +                       err);
+> +               return err;
+> +       }
+> +
+> +       rp1->bar1 = pcim_iomap(pdev, 1, 0);
+> +       if (!rp1->bar1) {
+> +               dev_err(&pdev->dev, "Cannot map PCI BAR\n");
+> +               return -EIO;
+> +       }
+> +
+> +       u32 dtbo_size = __dtbo_rp1_pci_end - __dtbo_rp1_pci_begin;
+> +       void *dtbo_start = __dtbo_rp1_pci_begin;
+> +
+> +       err = of_overlay_fdt_apply(dtbo_start, dtbo_size, &rp1->ovcs_id, rp1_node);
+> +       if (err)
+> +               return err;
+> +
+> +       pci_set_master(pdev);
+> +
+> +       err = pci_alloc_irq_vectors(pdev, RP1_INT_END, RP1_INT_END,
+> +                                   PCI_IRQ_MSIX);
+> +       if (err != RP1_INT_END) {
+> +               dev_err(&pdev->dev, "pci_alloc_irq_vectors failed - %d\n", err);
+> +               goto err_unload_overlay;
+> +       }
+> +
+> +       pci_set_drvdata(pdev, rp1);
+> +       rp1->domain = irq_domain_add_linear(of_find_node_by_name(NULL, "pci-ep-bus"), RP1_INT_END,
+> +                                           &rp1_domain_ops, rp1);
+> +
+> +       for (i = 0; i < RP1_INT_END; i++) {
+> +               int irq = irq_create_mapping(rp1->domain, i);
+> +
+> +               if (irq < 0) {
+> +                       dev_err(&pdev->dev, "failed to create irq mapping\n");
+> +                       err = irq;
+> +                       goto err_unload_overlay;
+> +               }
+> +               irq_set_chip_and_handler(irq, &rp1_irq_chip, handle_level_irq);
+> +               irq_set_probe(irq);
+> +               irq_set_chained_handler_and_data(pci_irq_vector(pdev, i),
+> +                                                rp1_chained_handle_irq, rp1);
+> +       }
+> +
+> +       err = of_platform_default_populate(rp1_node, NULL, dev);
+> +       if (err)
+> +               goto err_unload_overlay;
+> +
+> +       return 0;
+> +
+> +err_unload_overlay:
+> +       of_overlay_remove(&rp1->ovcs_id);
+> +
+> +       return err;
+> +}
+> +
+> +static void rp1_remove(struct pci_dev *pdev)
+> +{
+> +       struct rp1_dev *rp1 = pci_get_drvdata(pdev);
+> +       struct device *dev = &pdev->dev;
+> +
+> +       of_platform_depopulate(dev);
+> +       of_overlay_remove(&rp1->ovcs_id);
+> +
+> +       clk_unregister(rp1->sys_clk);
+> +}
+> +
+> +static const struct pci_device_id dev_id_table[] = {
+> +       { PCI_DEVICE(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0), },
+> +       { 0, }
+> +};
+
+You need a
+
+MODULE_DEVICE_TABLE(pci, dev_id_table);
+
+here in order to load the module for the cases where it isn't
+built-in. Otherwise you have to manually modprobe the module.
+
+Cheers.
+  Dave
+
+> +
+> +static struct pci_driver rp1_driver = {
+> +       .name           = RP1_DRIVER_NAME,
+> +       .id_table       = dev_id_table,
+> +       .probe          = rp1_probe,
+> +       .remove         = rp1_remove,
+> +};
+> +
+> +module_pci_driver(rp1_driver);
+> +
+> +MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.com>");
+> +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
+> +MODULE_DESCRIPTION("RP1 wrapper");
 > +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/nct6694.h b/include/linux/mfd/nct6694.h
+> diff --git a/drivers/misc/rp1/rp1_pci.h b/drivers/misc/rp1/rp1_pci.h
 > new file mode 100644
-> index 000000000000..0797564363be
+> index 000000000000..7982f13bad9b
 > --- /dev/null
-> +++ b/include/linux/mfd/nct6694.h
-> @@ -0,0 +1,168 @@
+> +++ b/drivers/misc/rp1/rp1_pci.h
+> @@ -0,0 +1,14 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Nuvoton NCT6694 USB transaction and data structure.
-> + *
-> + * Copyright (C) 2024 Nuvoton Technology Corp.
-> + */
-> +
-> +#ifndef __MFD_NCT6694_H
-> +#define __MFD_NCT6694_H
-> +
-> +#define NCT6694_DEV_GPIO		"nct6694-gpio"
-> +#define NCT6694_DEV_I2C			"nct6694-i2c"
-> +#define NCT6694_DEV_CAN			"nct6694-can"
-> +#define NCT6694_DEV_WDT			"nct6694-wdt"
-> +#define NCT6694_DEV_IIO			"nct6694-iio"
-> +#define NCT6694_DEV_HWMON		"nct6694-hwmon"
-> +#define NCT6694_DEV_PWM			"nct6694-pwm"
-> +#define NCT6694_DEV_RTC			"nct6694-rtc"
-> +
-> +#define NCT6694_VENDOR_ID		0x0416
-> +#define NCT6694_PRODUCT_ID		0x200B
-> +#define INT_IN_ENDPOINT			0x81
-> +#define BULK_IN_ENDPOINT		0x82
-
-In Linux we don't add the 0x80 for IN endpoint, the framework does this
-for you.
-
-> +#define BULK_OUT_ENDPOINT		0x03
-> +#define MAX_PACKET_SZ			0x100
-> +
-> +#define CMD_PACKET_SZ			0x8
-> +#define HCTRL_SET			0x40
-> +#define HCTRL_GET			0x80
-> +
-> +#define REQUEST_MOD_IDX			0x01
-> +#define REQUEST_CMD_IDX			0x02
-> +#define REQUEST_SEL_IDX			0x03
-> +#define REQUEST_HCTRL_IDX		0x04
-> +#define REQUEST_LEN_L_IDX		0x06
-> +#define REQUEST_LEN_H_IDX		0x07
-> +
-> +#define RESPONSE_STS_IDX		0x01
-> +
-> +#define INT_IN_IRQ_IDX			0x00
-> +#define GPIO_IRQ_STATUS			BIT(0)
-> +#define CAN_IRQ_STATUS			BIT(2)
-> +#define RTC_IRQ_STATUS			BIT(3)
-> +
-> +#define URB_TIMEOUT			1000
 > +
 > +/*
-> + * struct nct6694 - Nuvoton NCT6694 structure
-> + *
-> + * @udev: Pointer to the USB device
-> + * @int_in_urb: Interrupt pipe urb
-> + * @access_lock: USB transaction lock
-> + * @handler_list: List of registered handlers
-> + * @async_workqueue: Workqueue of processing asynchronous work
-> + * @tx_buffer: USB write message buffer
-> + * @rx_buffer: USB read message buffer
-> + * @cmd_buffer: USB send command message buffer
-> + * @int_buffer: USB receive interrupt message buffer
-> + * @lock: Handlers lock
-> + * @timeout: URB timeout
-> + * @maxp: Maximum packet of bulk pipe
+> + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> + * All rights reserved.
 > + */
-> +struct nct6694 {
-> +	struct usb_device *udev;
-> +	struct urb *int_in_urb;
-> +	struct list_head handler_list;
-> +	struct workqueue_struct *async_workqueue;
 > +
-> +	/* Make sure that every USB transaction is not interrupted */
-> +	struct mutex access_lock;
+> +#ifndef _RP1_EXTERN_H_
+> +#define _RP1_EXTERN_H_
 > +
-> +	unsigned char *tx_buffer;
-> +	unsigned char *rx_buffer;
-> +	unsigned char *cmd_buffer;
-> +	unsigned char *int_buffer;
+> +extern char __dtbo_rp1_pci_begin[];
+> +extern char __dtbo_rp1_pci_end[];
 > +
-> +	/* Prevent races within handlers */
-> +	spinlock_t lock;
+> +#endif
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index dccb60c1d9cc..41e77d94ff73 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6266,6 +6266,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0, of_pci_make_dev_node);
+>
+>  /*
+>   * Devices known to require a longer delay before first config space access
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 4cf6aaed5f35..c7e6cd10ac52 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2611,6 +2611,9 @@
+>  #define PCI_VENDOR_ID_TEKRAM           0x1de1
+>  #define PCI_DEVICE_ID_TEKRAM_DC290     0xdc29
+>
+> +#define PCI_VENDOR_ID_RPI              0x1de4
+> +#define PCI_DEVICE_ID_RPI_RP1_C0       0x0001
 > +
-> +	/* time in msec to wait for the urb to the complete */
-> +	long timeout;
-> +
-> +	/* Bulk pipe maximum packet for each transaction */
-> +	int maxp;
-> +};
-> +
-> +/*
-> + * struct nct6694_handler_entry - Stores the interrupt handling informat=
-ion
-> + * for each registered peripheral
-> + *
-> + * @irq_bit: The bit in irq_status[INT_IN_IRQ_IDX] representing interrupt
-                    ^^^
-
-I think this comment could be more precise, you can emphasize, that it's
-not the bit number but the bit mask.=20
-
-> + * @handler: Function pointer to the interrupt handler of the peripheral
-> + * @private_data: Private data specific to the peripheral driver
-> + * @list: Node used to link to the handler_list
-> + */
-> +struct nct6694_handler_entry {
-> +	int irq_bit;
-
-the int_status you compare against in the IRQ callback ist a unsigned
-char. Better make all a u8.
-
-> +	void (*handler)(void *private_data);
-> +	void *private_data;
-> +	struct list_head list;
-> +};
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---bc6t2hauttfjlfk7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaZdYACgkQKDiiPnot
-vG8hTQf9GGzEvj1IT8hi7Dc2LklLz1DRfZZtySo3heWjBKwZGfg8OeS8aD4Xamc+
-UZ+Nv9UCpXYl9wnt0c8VBzKNz1Y495JYia9N3BcKurHsqhKHVxXcg2MlTkIT6b95
-+gZDXceiP2tOtc7nPhC+h625Qcpiz92AZvChQzmxMuJqqEvlYx95yZ/+xXbeWRdy
-8Kad8joA0KJ2wNWS9DgGRJFiOKbTzw0KqSeCE8xH0k1kSWQJ3QRk5qqvcEuz/v9z
-QVBYRhqVCudi6Kyt2baqPuHUTSL/Qgqyxr52VjwzppW5kWJsVXHXb88xkYBiormM
-RqiOLe/MKN0fDDG2vvLZTB9ERYqXyw==
-=f7L1
------END PGP SIGNATURE-----
-
---bc6t2hauttfjlfk7--
+>  #define PCI_VENDOR_ID_ALIBABA          0x1ded
+>
+>  #define PCI_VENDOR_ID_CXL              0x1e98
+> --
+> 2.35.3
+>
+>
 
