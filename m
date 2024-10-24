@@ -1,117 +1,99 @@
-Return-Path: <linux-gpio+bounces-11987-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11988-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43C3B9AEE7F
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 19:47:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F7479AEF47
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 20:11:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E32E31F22F8A
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 17:47:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E2801C215D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 18:11:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D7DA1FF60D;
-	Thu, 24 Oct 2024 17:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A0252003BD;
+	Thu, 24 Oct 2024 18:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="pGdBVc4A"
+	dkim=pass (2048-bit key) header.d=notyourfox.coffee header.i=@notyourfox.coffee header.b="JHSUzjKl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.notyourfox.coffee (mail.notyourfox.coffee [92.63.193.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB27F1FE0ED;
-	Thu, 24 Oct 2024 17:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68331FC7F6;
+	Thu, 24 Oct 2024 18:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.63.193.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729792007; cv=none; b=Ii26WpN6+QbwS6SuBxBLkT//cCBWxe/Rkz/QyA4qgnSx2BmVDE9eKbrb6D3fVOyYuL35url6LpnDtvtrRnWHr6JXaFtlPClcbV4nJmdvapOsutlLIgWekVEODLg0RwrsmxSJUGA4ihtxAuWOOFcOUmblLJRCdd41S1+gLUq1IRQ=
+	t=1729793454; cv=none; b=jvbsQZLXfGJUShLlZpRBJplMyAnli7Pn1xPZzLSddIz9qtwwAFVv5/5jXyCeH7WCWcp8GsYv0sG4VQCIvyo/LKiAcG5ikNKThq2ypSf0UmC5gh2CWQ9W+wmzujJgbvD8NLtyWx3oN44nBJlayLB7muNC0KlzFFOxuePzDOFKRfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729792007; c=relaxed/simple;
-	bh=W3VllNwtqRwVtIeBKaJd3C2VVqpPgbov///WpOSkPlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6Wz/E8A2ZXLf0luQHkyXv/dOvcWE7mQn1EAb77X0MoxnkBWFuN7TUy+jQln5yLZ/BvT+sHtrzzBriDUJGIh9FK4Q2EHx5YzZK+RWvhFH1X5t81ELPq3ipiNlEd//JVr4PR34MuGoh+tYPRClUpWhmr6R6vYHvUfSBbnxteqnRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=pGdBVc4A; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1729792002;
-	bh=W3VllNwtqRwVtIeBKaJd3C2VVqpPgbov///WpOSkPlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pGdBVc4ASaPLaghvUgQ0DFhiGKTEDqIoVFn1+HyNer1j93XXc5Cz5BjgV87wgH0CQ
-	 B6nsj1eITJ7aMAWhWuAC9FR3zsdafizu1HIG9qFgRpaqxZbx9bzt4byAUFw5Z2MyGQ
-	 BbQxFkD3lxxVK9S1FqDJkKWKfCkVuL2nfVUjbNeCIS/bI5w3FVpYYMmV5+XbERHprI
-	 DeTa7IdFS/rJb7Kz76JJ/ZL0wYH2NE/1/QvvYzshXNOe0vtqNyDyo2X3dFX1p8mH9D
-	 de8N5I/jXKxhNl8NwmS3DALC8CeQif3oOJygSYXrzZs4IJ2uKPB9aRmPcdKHpF/3T8
-	 u2h8mOoubrz6g==
-Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 00C2F17E36B5;
-	Thu, 24 Oct 2024 19:46:40 +0200 (CEST)
-Date: Thu, 24 Oct 2024 13:46:38 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, kernel@collabora.com,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
-Subject: Re: [PATCH RFC 1/3] pinctrl: mediatek: paris: Expose more
- configurations to GPIO set_config
-Message-ID: <a3d6b2b9-1379-4bab-a584-651ca66677ee@notapiano>
-References: <20240909-kselftest-gpio-set-get-config-v1-0-16a065afc3c1@collabora.com>
- <20240909-kselftest-gpio-set-get-config-v1-1-16a065afc3c1@collabora.com>
- <01020191e0901d10-d427a5dd-af4e-4ecf-99e1-4bb051ad1475-000000@eu-west-1.amazonses.com>
- <8fdeec5c-5de7-44ae-9086-7930d02d610e@collabora.com>
+	s=arc-20240116; t=1729793454; c=relaxed/simple;
+	bh=4HaM2tprLpARFSOFiAD1IewWveAq50xA4izcD+Ol1hg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=F/19doZ4IYXXulnHQ4taEYkLYGFE63YNrEi2RX0OKR72gmYEnSQVs+p2GJ8QkwGLlYRR0C2iF02XxpMyqge8fU+SkvG7afPqCQTm94mrIGc1+forNCtUer098veSHlzfPHEZlbtNZyJvQb61kjdbFKiHO8hTuZm4xQzhtgT9dxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=notyourfox.coffee; spf=pass smtp.mailfrom=notyourfox.coffee; dkim=pass (2048-bit key) header.d=notyourfox.coffee header.i=@notyourfox.coffee header.b=JHSUzjKl; arc=none smtp.client-ip=92.63.193.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=notyourfox.coffee
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=notyourfox.coffee
+DKIM-Signature: a=rsa-sha256; bh=zD/MvoTUjjchDlHO31PqaPi5FVCTTnWec43Dr2sc5uE=;
+ c=relaxed/relaxed; d=notyourfox.coffee;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@notyourfox.coffee; s=mail; t=1729793394; v=1; x=1730225394;
+ b=JHSUzjKls5Wm839qvhA6nxJdgjfFHYyuIMcFJC4py2Th5/lRpBJL87itZiTg0D7g72byla2/
+ RGt9j0YQZcrrSnTMUigTkonLFjKQ1wty2LN+88I2MCPC3PFacLmQ6qZhW6CFbZFxlrquYkL2uWA
+ 8n/E59Ut+LmSKvFcVYkl9wkkdRh8MLTO73De9KCAPILQIWuDQToZmui76W//DdF1v3lfmvIwrLC
+ 00BhABRp1gebdHeZoI70ehEYTqlEw8KiEoYc1vSAp1tKTck0QShQZ9gBb/1Ia55r4kKsUVkpN30
+ gJICGzIIOhLel8x+rFvTjeBr9jYMQEnr6fmrnHA+6Rz6Q==
+Received: by mail.notyourfox.coffee (envelope-sender
+ <contact@notyourfox.coffee>) with ESMTPS id 1345da47; Thu, 24 Oct 2024
+ 18:09:54 +0000
+Message-ID: <c58172db-e3cc-488d-baa6-f095588a8771@notyourfox.coffee>
+Date: Thu, 24 Oct 2024 21:09:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+To: vladimir_putin_rus@kremlin.ru
+Cc: aospan@netup.ru, conor.dooley@microchip.com, ddrokosov@sberdevices.ru,
+ dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com,
+ geert@linux-m68k.org, gregkh@linuxfoundation.org,
+ hoan@os.amperecomputing.com, ink@jurassic.park.msu.ru, jeffbai@aosc.io,
+ kexybiscuit@aosc.io, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-spi@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+ mattst88@gmail.com, netdev@vger.kernel.org, nikita@trvn.ru,
+ ntb@lists.linux.dev, patches@lists.linux.dev, richard.henderson@linaro.org,
+ s.shtylyov@omp.ru, serjk@netup.ru, shc_work@mail.ru,
+ torvalds@linux-foundation.org, torvic9@mailbox.org,
+ tsbogend@alpha.franken.de, v.georgiev@metrotek.ru, wangyuli@uniontech.com,
+ wsa+renesas@sang-engineering.com, xeb@mail.ru
+References: <20241024140353.384881-1-vladimir_putin_rus@kremlin.ru>
+Subject: Re: [PATCH 0/2] MAINTAINERS: Remove few Chinese Entries
+Content-Language: en-US
+From: NotYourFox <contact@notyourfox.coffee>
+In-Reply-To: <20241024140353.384881-1-vladimir_putin_rus@kremlin.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8fdeec5c-5de7-44ae-9086-7930d02d610e@collabora.com>
 
-On Thu, Oct 24, 2024 at 05:17:05PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 11/09/24 12:10, AngeloGioacchino Del Regno ha scritto:
-> > Il 09/09/24 20:37, N�colas F. R. A. Prado ha scritto:
-> > > Currently the set_config callback in the gpio_chip registered by the
-> > > pinctrl_paris driver only supports PIN_CONFIG_INPUT_DEBOUNCE, despite
-> > 
-> > [...] only supports operations configuring the input debounce parameter
-> > of the EINT controller and denies configuring params on the other AP GPIOs [...]
-> > 
-> > (reword as needed)
-> > 
-> > > many other configurations already being implemented and available
-> > > through the pinctrl API for configuration of pins by the Devicetree and
-> > > other drivers.
-> > > 
-> > > Expose all configurations currently implemented through the GPIO API so
-> > > they can also be set from userspace, which is particularly useful to
-> > > allow testing them from userspace.
-> > > 
-> > > Signed-off-by: N�colas F. R. A. Prado <nfraprado@collabora.com>
-> > > ---
-> > > � drivers/pinctrl/mediatek/pinctrl-paris.c | 20 ++++++++++----------
-> > 
-> > You can do the same for pinctrl-moore too, it's trivial.
-> > 
-> > Other than that, I agree about performing this change, as this may be useful
-> > for more than just testing.
-> > 
-> 
-> Nicolas, please don't forget to respin this patch.
+And what were you trying to accomplish?
 
-I was hoping to get some feedback on the test itself as well, particularly from
-Linus as the pinctrl maintainer, but it's also been a while so I'll send a v2
-with the feedback here addressed.
+On 10/23/24 1:45 PM, Linus Torvalds wrote:
+ > Ok, lots of Russian trolls out and about.
 
-Thanks,
-N�colas
+You just made his statement valid by showing yourself off. Thanks for no 
+help at all.
+
+---
+
+И что вы пытались этим сделать?
+
+On 10/23/24 1:45 PM, Linus Torvalds wrote:
+ > Ok, lots of Russian trolls out and about.
+
+Вы только сделали его высказывание верным, решив выставить это напоказ. 
+Спасибо за абсолютный ноль помощи.
+
 
