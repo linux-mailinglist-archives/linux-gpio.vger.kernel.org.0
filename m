@@ -1,91 +1,207 @@
-Return-Path: <linux-gpio+bounces-11969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 060719AEA61
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 17:28:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C2E99AEA72
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 17:29:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFC78283C2A
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:28:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0F80B21F86
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:29:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB95E1EC011;
-	Thu, 24 Oct 2024 15:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ko00MJ/3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C0741EF958;
+	Thu, 24 Oct 2024 15:28:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2034D8DA;
-	Thu, 24 Oct 2024 15:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0972D1EF928
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 15:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729783687; cv=none; b=uQAh+GC6rGPWEe5yWtY74LGoroOGL4T8TMf+nPfdO0a8zauStvrVvNNJKgXSEsPAmAcWeM7aHwaf0+mZ0WpQZlWed8aOnII538to98PKSfeaglZ82m/0PggHAMPffbwLM9VIi3ich+ueWX2jCRXwPnyVvc79lMILU1nxeXaFyD0=
+	t=1729783721; cv=none; b=KqjMQh3HMIMby3zBwXCnjYP0iK6kdpCOmd6vZV+JkL/OC1VQeoGUve7SyKWiegDri04beSTd/erF29QaGB7G9YrsM8/5bKEdbKJ6oo7Wh1YTzxU/LfAzFGWVkOYIonBduwH+WH33Vo0Il/KLeLPGsStjSGZYV6X/T3hGLE0bjnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729783687; c=relaxed/simple;
-	bh=3mb8sshLEJZq24kO6iMNOmdA+98XdBHa/+zEyNXnwtg=;
+	s=arc-20240116; t=1729783721; c=relaxed/simple;
+	bh=LKBaP9w6Uf0ZW0ufuHdlIFhtJcqlyUWbO2EgFOCBNPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G8nHlmCyRMa7np2w96p3y2UjjSFqiS4FPO+KvL8WARXo7y52rXY91Cm8cad5fjkon8FMLgQmod4d1RLbKIq+hNERl89WPlysK9/lAXyCT7H/7R6xtwyPP11YrDLshZpZRF6bdStBLgvAt2O8i3y0aVSM63HsVxJs5lVZmsNG1k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ko00MJ/3; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729783686; x=1761319686;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3mb8sshLEJZq24kO6iMNOmdA+98XdBHa/+zEyNXnwtg=;
-  b=ko00MJ/3KZJnJdW7vbkPB6nsxSHcRxnE+3tDjMS9flsVv3pYE+0S2haS
-   gcJ2jMzHdSGTedp7OkZ9etjgGT5XFF59cn0eOUfScYtWag+v2ohgvn4kb
-   e0CziX4hzGsppAJIeezoTv8gl4P40pXBwPOFgERHIG1T/PkUfaeYBzwd1
-   NM/2od30s+Jj4pOSbfxwKMMsUYGLhNoOj3yfuAyudkI4gYlSjfM+1BqVp
-   wzdDoEB7WuBcHRA2jC9jtRxv+0dMdxZfYwR+Lnt5WjxOGMftyzPmO0v5r
-   uRvoAe85gNKkMCe47lBVxAJSf2fw27HcwC7pxplaELu8vvRY2fH95Ne7i
-   A==;
-X-CSE-ConnectionGUID: eQQl+SSMSlSDlYQGBBNDSQ==
-X-CSE-MsgGUID: GdMv7Is6SoaAFzGeBEt2Vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11235"; a="40009729"
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="40009729"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2024 08:28:05 -0700
-X-CSE-ConnectionGUID: XpFA3v5JRyuXK2Awn9o/Ig==
-X-CSE-MsgGUID: FgP7jK0lRNyDDtMJF2GPMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,229,1725346800"; 
-   d="scan'208";a="118079822"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 24 Oct 2024 08:28:03 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 385EF252; Thu, 24 Oct 2024 18:28:02 +0300 (EEST)
-Date: Thu, 24 Oct 2024 18:28:02 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Add a human readable decoder for
- pull bias values
-Message-ID: <20241024152802.GJ275077@black.fi.intel.com>
-References: <20241024151044.4038250-1-andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkX5n8pe/r3dR7VNN2j8U3Y/5HChBPAl9n2aBnh/gaMjdAMoS2mqrfA5XEbllReKN09Gxu8CegerKQN0jYHIDuWMqIczXEAclopPLzuc63Nx6Vsf73CiHJH6AkpCYLOaOhkHeGIIxB9FLECUpqr+yVqkkzTomrTJbf+VEJ1SZ+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t3zl3-0005Dr-DK; Thu, 24 Oct 2024 17:28:17 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t3zl2-000Djr-2N;
+	Thu, 24 Oct 2024 17:28:16 +0200
+Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 488FC35DE79;
+	Thu, 24 Oct 2024 15:28:16 +0000 (UTC)
+Date: Thu, 24 Oct 2024 17:28:15 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
+Message-ID: <20241024-marvellous-brainy-anteater-f61302-mkl@pengutronix.de>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
+ <20241024085922.133071-5-tmyu0@nuvoton.com>
+ <20241024-majestic-chowchow-from-wonderland-096eb4-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h6dfqpkeuoasgop3"
 Content-Disposition: inline
-In-Reply-To: <20241024151044.4038250-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20241024-majestic-chowchow-from-wonderland-096eb4-mkl@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Thu, Oct 24, 2024 at 06:10:44PM +0300, Andy Shevchenko wrote:
-> Add a human readable decoder for pull bias values in the comment.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This is nice!
+--h6dfqpkeuoasgop3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
+MIME-Version: 1.0
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On 24.10.2024 14:12:44, Marc Kleine-Budde wrote:
+> Hello,
+>=20
+> thanks for your contribution. It seems to me that there is no proper
+> TX-flow control and I have some questions.
+>=20
+> On 24.10.2024 16:59:17, Ming Yu wrote:
+>=20
+> [...]
+>=20
+> > +static netdev_tx_t nct6694_canfd_start_xmit(struct sk_buff *skb,
+> > +					    struct net_device *ndev)
+> > +{
+> > +	struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
+> > +	struct nct6694 *nct6694 =3D priv->nct6694;
+> > +	struct canfd_frame *cf =3D (struct canfd_frame *)skb->data;
+> > +	struct net_device_stats *stats =3D &ndev->stats;
+> > +	int can_idx =3D priv->can_idx;
+> > +	u32 txid =3D 0;
+> > +	int i;
+> > +	unsigned int echo_byte;
+> > +	u8 data_buf[REQUEST_CAN_CMD10_LEN] =3D {0};
+> > +
+> > +	if (can_dropped_invalid_skb(ndev, skb))
+> > +		return NETDEV_TX_OK;
+> > +
+> > +	/*
+> > +	 * No check for NCT66794 because the TX bit is read-clear
+> > +	 * and may be read-cleared by other function
+> > +	 * Just check the result of tx command.
+> > +	 */
+>=20
+> Where do you check the result of the TX command?
+>=20
+> > +	/* Check if the TX buffer is full */
+>=20
+> Where's the check if the TX buffer is full?
+>=20
+> > +	netif_stop_queue(ndev);
+> > +
+> > +	if (can_idx =3D=3D 0)
+> > +		data_buf[CAN_TAG_IDX] =3D CAN_TAG_CAN0;
+> > +	else
+> > +		data_buf[CAN_TAG_IDX] =3D CAN_TAG_CAN1;
+> > +
+> > +	if (cf->can_id & CAN_EFF_FLAG) {
+> > +		txid =3D cf->can_id & CAN_EFF_MASK;
+> > +		/*
+> > +		 * In case the Extended ID frame is transmitted, the
+> > +		 * standard and extended part of the ID are swapped
+> > +		 * in the register, so swap them back to send the
+> > +		 * correct ID.
+> > +		 */
+> > +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_EFF;
+> > +	} else {
+> > +		txid =3D cf->can_id & CAN_SFF_MASK;
+> > +	}
+> > +
+> > +	set_buf32(&data_buf[CAN_ID_IDX], txid);
+> > +
+> > +	data_buf[CAN_DLC_IDX] =3D cf->len;
+> > +
+> > +	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) && can_is_canfd_skb(skb)) {
+> > +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_FD;
+> > +		if (cf->flags & CANFD_BRS)
+> > +			data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_BRS;
+> > +	}
+> > +
+> > +	if (cf->can_id & CAN_RTR_FLAG)
+> > +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_RTR;
+> > +
+> > +	/* set data to buf */
+> > +	for (i =3D 0; i < cf->len; i++)
+> > +		data_buf[CAN_DATA_IDX + i] =3D *(u8 *)(cf->data + i);
+> > +
+> > +	can_put_echo_skb(skb, ndev, 0, 0);
+> > +
+> > +	memcpy(priv->data_buf, data_buf, REQUEST_CAN_CMD10_LEN);
+> > +	queue_work(nct6694->async_workqueue, &priv->tx_work);
+> > +
+> > +	stats->tx_bytes +=3D cf->len;
+> > +	stats->tx_packets++;
+> > +	echo_byte =3D can_get_echo_skb(ndev, 0, NULL);
+> > +
+> > +	netif_wake_queue(ndev);
+>=20
+> How do you make sure that the tx_work has finished?
+> Once you wake the queue, the xmit function can be called again. If your
+> tx_work has not finished, you'll overwrite the priv->data_buf.
+
+Do you get a CAN TX complete message/IRQ from your device?
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--h6dfqpkeuoasgop3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaZ4kACgkQKDiiPnot
+vG974Qf+LEKGXgXPxMXrYiiOQHJWjs4Mt5jzVCCkFhLgwCl8AQstWmg8VVtGrhlR
+8MQ//KYGUjpOgf2HMBzm8tVduk1AlHw4qUpDfn94AzF2bs+r16LSuUK6Kr1xYM6Q
+P+XQuSaK3J7/zuPGu9z0zk2i77GN88LCBecdUKHVEbNAIa0LlYHKng/ixeIYFdGY
+mpOHQYFkT9kJIzHxFmjd8IqfFWsVUStEvamVz7/ilHigCKo2SseU674xN2MDKIFE
++2YwADjK1B4X4Mjpga9S5Ckf/t6h3kgh5m8K4zGGYjX7jxNcbgMeD0FD0jyIar9l
+moJeeldIOCwdGU3wR1vGneNUjJEhlg==
+=Ce8N
+-----END PGP SIGNATURE-----
+
+--h6dfqpkeuoasgop3--
 
