@@ -1,146 +1,131 @@
-Return-Path: <linux-gpio+bounces-11928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11930-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EA519AE1BE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:58:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8A1A9AE226
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 12:10:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E72E1C22587
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 09:58:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 808B62822CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 10:10:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 210861B6D1A;
-	Thu, 24 Oct 2024 09:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC531C07CD;
+	Thu, 24 Oct 2024 10:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEqrXrDB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B221D18A6A8
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 09:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7117B51A;
+	Thu, 24 Oct 2024 10:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729763877; cv=none; b=jNQjEYvKpr+Ec92j+Tdyp53T/J5Dln3Mq7IhSW5u82ZyK94YrctwO8BOSBrgoLZqmlvEb1ev2flJN/h24C4OeN4QOPKGbqvQn2Jcr8zL3B73qzM8cN5pS+xKQMJIwf+gyA1UWZeB/DLLKEcBGV9D9N0g++MMw4Hd7azppsaHJKY=
+	t=1729764601; cv=none; b=a5B3K+GmuIHdEPXnml/hEThfWWOeThCyfoeQiH9r0Uq+Nj5X5W9ck9manmnv3+p2NBlRm9WnFHM+NbMP4L2BiyX6DzBRRf4LrpBHVGv93mwLtJZdpZNVOt8M3zKrI2Fs2yWTX9yVLF5KgpM5DDFj1+0CWygkb5rG5hU5Cyl2s2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729763877; c=relaxed/simple;
-	bh=hmNoUJOm+bj8veyYXhIGwnX5DtxzL9QZIj2btrckT60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ab94ygDHZSBSOwb0kyCSKLqvMEeqAQKoe28YGNJmBGZp6JhYVRgZKc7CaapXM+TyP8/xOUNBVz6WGRhouxuYVWcMr9fjuHZMUEHl76wdv0LlE29yD/lng4vRi03kVyn6dspche2EW2pW8v909LwYSg1tnMHJT2n1k+Hqp7SNCLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3uax-0007SO-SI; Thu, 24 Oct 2024 11:57:31 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3uaw-000B1Z-1s;
-	Thu, 24 Oct 2024 11:57:30 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 2999E35D971;
-	Thu, 24 Oct 2024 09:57:30 +0000 (UTC)
-Date: Thu, 24 Oct 2024 11:57:29 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241024-ladybug-of-silent-holiness-498562-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-2-tmyu0@nuvoton.com>
+	s=arc-20240116; t=1729764601; c=relaxed/simple;
+	bh=engmJwWWarFhbbbGk2yuL/t2q2JrqeyZFQ90uq8h+4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oi4+hPf3rBtwrxJeXzPqWY5k/vuQ0uRkK3uneL8rqhCoI08b90lhVklwdoqVV42O+KMJj/5q4xHx6/GrQ8XHaL+yOUYFLJxWJDDgRXNqq34WblNrb56TiUXRkGOaR0Pb2ey1ANn4KqbLmMZO3+LaaS0U2nlumanMqwAe6QPvFE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEqrXrDB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66CE0C4CEC7;
+	Thu, 24 Oct 2024 10:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729764601;
+	bh=engmJwWWarFhbbbGk2yuL/t2q2JrqeyZFQ90uq8h+4Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YEqrXrDBrtGgH0/gCx20QY05rgXJq9N2GRIFF6U7sVVmeONYDJioTR80LWhssYJkb
+	 wDZn8oxxamMFa2ZiYzDLBIP70hfSsxhLUf2OHhiJaMj9Aw8+XQF6Xhd15h9lmGnX8y
+	 XjF/X8COxXVWuBmMc3C/xkw4gSOQ6IL6u8ONWo5RINVfbgm1kVxqYgLK18HBka3sXX
+	 ppVZcHK/18CHYlZ2YcIw5h2byTcWCDFzVrD7l+6tM+KclekSqab6pfbb4KCUJ88i2a
+	 Qm3Q8aT085Q0VaOuyc74F2oB4JTWfFvWyKjGIF/MHcgSZbvTHdXfUdWaSGOfnmKGHE
+	 VDnq7Y8jwdWbA==
+Message-ID: <4c071100-f49c-4dcb-add8-99427fda268a@kernel.org>
+Date: Thu, 24 Oct 2024 12:09:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mngoatx2xdrr45s4"
-Content-Disposition: inline
-In-Reply-To: <20241024085922.133071-2-tmyu0@nuvoton.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/12] dt-bindings: arm: cpus: Add Samsung Mongoose M3
+To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
+ <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Maksym Holovach <nergzd@nergzd723.xyz>
+References: <20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com>
+ <20241024-exynos9810-v1-1-ed14d0d60d08@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20241024-exynos9810-v1-1-ed14d0d60d08@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 24/10/2024 00:36, Markuss Broks wrote:
+> Add the compatible for Samsung Mongoose M3 CPU core to the schema.
+> 
+> Co-authored-by: Maksym Holovach <nergzd@nergzd723.xyz>
 
---mngoatx2xdrr45s4
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
+There is no such tag. Maybe you wanted Co-developed-by? But then missing
+SoB - see submitting patches.
 
-On 24.10.2024 16:59:14, Ming Yu wrote:
-> +static int nct6694_usb_probe(struct usb_interface *iface,
-> +			     const struct usb_device_id *id)
-> +{
-> +	struct usb_device *udev =3D interface_to_usbdev(iface);
-> +	struct device *dev =3D &udev->dev;
-> +	struct usb_host_interface *interface;
-> +	struct usb_endpoint_descriptor *int_endpoint;
-> +	struct nct6694 *nct6694;
-> +	int pipe, maxp, bulk_pipe;
-> +	int ret =3D EINVAL;
-> +
-> +	interface =3D iface->cur_altsetting;
-> +	/* Binding interface class : 0xFF */
-> +	if (interface->desc.bInterfaceClass !=3D USB_CLASS_VENDOR_SPEC ||
-> +	    interface->desc.bInterfaceSubClass !=3D 0x00 ||
-> +	    interface->desc.bInterfaceProtocol !=3D 0x00)
-> +		return -ENODEV;
+> Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
+> ---
 
-I think you can use USB_DEVICE_INFO() and remove this manual check
+Best regards,
+Krzysztof
 
-https://elixir.bootlin.com/linux/v6.11.5/source/include/linux/usb.h#L1056
-
-[...]
-
-> +
-> +static const struct usb_device_id nct6694_ids[] =3D {
-> +	{ USB_DEVICE(NCT6694_VENDOR_ID, NCT6694_PRODUCT_ID)},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(usb, nct6694_ids);
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---mngoatx2xdrr45s4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaGgcACgkQKDiiPnot
-vG8YiQf/bRkt59QCQTqv2A9MhX1wIK2oTcc9JJY7HruR3mItUAqf1X0TEFMjA+Qw
-M9K/3KtK3rWW4F9fE3yLNYHqiP/fnv20U5Cn027fKzg9YOvSlkgOdScDLashOG2k
-RQ/SG5iSXjlZ/1JYnx8HIOmUgsU29jFm7vdcyeeI1hUO2qrE0QBVqMLp/hG4DsTa
-kjqf/x0Hj57Vfgx08DRC+XNBrjhy6CCdvzr0be8DktMRz/uZVX5FFYrI0b240gWQ
-a3JvsvFdG19vPQGXj5eo4Oc03Y5lNmQuj3e0v0dwu2y5prM51p9lwd7MjiL3o9nn
-MuVo6YfRtzv/4M/EZCeqs+ocjpOSlA==
-=5R+0
------END PGP SIGNATURE-----
-
---mngoatx2xdrr45s4--
 
