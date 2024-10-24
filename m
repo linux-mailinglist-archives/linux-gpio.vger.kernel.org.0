@@ -1,202 +1,153 @@
-Return-Path: <linux-gpio+bounces-11953-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11954-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D6C99AE677
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:31:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 065AC9AE6DF
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 15:39:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5C1A28AC0D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36CBE1C23AAD
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29F241F4FBB;
-	Thu, 24 Oct 2024 13:25:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C801E2830;
+	Thu, 24 Oct 2024 13:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKCWqs/a"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ce6xcWvZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D332E1E00BE;
-	Thu, 24 Oct 2024 13:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842C9189914
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 13:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729776349; cv=none; b=EpbPc5xv0EOEFLLtSpyNGY/uGtk1SuR2LMa6basnv2GhJrV/ScsDFNiie/grwy0PbpLeFZXg168SZo+aW/WDPyeOUnkS5ds9NWcEmY8dnpkLFDI1objq6IEEwaAIJL7oiI2PLZYD5fwZZpPoJ9zeRih2pRo4XyJFI4Ei1WeOmKk=
+	t=1729777129; cv=none; b=vEfnbatgPk2JShLUVatqliqx87zZJm0pEm3qZjgzAl2lPdAYNI2Po/tVar8yBQT/86t1f2Vcw4X2uIVGkD3o1U2MSnYJWcb3mKjh9yut4+K32SQgxrQgevPSmN1EtsC3IEiTgLj8e2f91ly1yPvUWbFVv/tNRUU/hHtEwHTYfj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729776349; c=relaxed/simple;
-	bh=/bCUgKsOIY9L86GlFHL9HXtDC1qqaWN9FN+5Tsyd+x4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hz+/YOc0L/9PP5uBUkWvHhLw19OrRwK9jOMOUbxNLVrOvJaXHE2+il9iuwN2PQuqtdJEtv0uCER6f8c1WragP8rpvByCOVgwWf3YJEINazQcPgFZ+3+xF0L0mROiuORidJg2yTQ0pCxYAWbkmGf6yru/TzgXJHoXqIcgUcnwSHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKCWqs/a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AF6C4CEC7;
-	Thu, 24 Oct 2024 13:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729776349;
-	bh=/bCUgKsOIY9L86GlFHL9HXtDC1qqaWN9FN+5Tsyd+x4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PKCWqs/a86q4KST0J+KvzF0T62MLxDhhkDHhA8wtIml5AyBV7Aglnii9Cb2Uw9Z4M
-	 nL8tfDh7APEr5uUvY2vunEBYxwnI7d9mUiQ5RffzJIMDHUAT4/WyFK0oh9VXyVvGAb
-	 d5P9VFwJJKpsjpdhfx7OVlK9jXETA6TFj++Hxh8vnQN3lgrArM38vhwQqARtSv+RtK
-	 ch7pTQENHJAl/Fum+JrPlmbnZvBzCpNyZ48BzoOvFLSe0hNsb1yj0YpoPHJ0FDmKCu
-	 ruNY26ePL2BSZ/dxNlxi97//r2avf7xd69nHlPjzSWru2O7aKKprnFS6fHsMnCsTXo
-	 aCwd9Kboj7QPw==
-Message-ID: <6d8015dd-f656-4c33-b906-09104cc366b5@kernel.org>
-Date: Thu, 24 Oct 2024 15:25:40 +0200
+	s=arc-20240116; t=1729777129; c=relaxed/simple;
+	bh=SW1fi0zPzsrX7wBn7XqIVLiCaXQT0Ie9gmaWh01Q8KY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rZ8Mz5SVjSg6yNyM60GfKEUVonaOW12r6UCer+FZmCdelLYQq1B2rs7OOcGNEFDVtFcQM9Lc3B8HfE03CkcTvult7UtH2V/ds/doANU0adU7DRuOf7wXiHKQ+BMnMtGLOa0bO2zqBUcghBRnndNC789AgIEN0+Lh/BAyUNG+I9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ce6xcWvZ; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4315baec69eso9571085e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 06:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729777123; x=1730381923; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=auaN7esoCNV7hPW26ChTvANi+7IUZrlI0bB99Qwk3fQ=;
+        b=Ce6xcWvZi/eEUn6uqWO+Nx24oSQDGzK0deHVuLZ5XyThSd1IPDBwK+wWY5HMu+ARc9
+         HIdbod1TGQfa+Dv+EI1ggPNnA1rB0zcB67ixFyLvg7WlAf2o2ZCG/wSvpOpqm+tsObsx
+         nvzfUFQiCcIcEGh/64LwwR8yUjCP92ip3fAYyky1klNvUXo1BL2PpBMgoPMCjnY7kFUz
+         BPbgg1Bxdxppc9qyl8nUas9aJCtv3M0Uj2Ra5O74ED2l9I65iCyUvCkAddDM9/Q1Mjd1
+         5ur5DrCN86gIDm8U+DZSIUs66vt8JPSTcptRFccCewznTnbHHQwsz/EuvuZ0TWrfNfVZ
+         gvsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729777123; x=1730381923;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=auaN7esoCNV7hPW26ChTvANi+7IUZrlI0bB99Qwk3fQ=;
+        b=kOwxDNwZ37VOQIXTxqHS/JB5EBX8s6HbLby1q2UvfaMo01BWTS3SkIDFhplu3jsqh/
+         +oGAdUf3h2oICBKFuliuWDdV90oAwapBbvYVX1uIgcmlQEuuWgM4AqWOerKjzUTqHWcD
+         qimnrTrFUK+v5Q08ibS9TolBYCft8N3Dfgo8wgKsFhh8kuhPONGbb5ycW8jtMqLpyjFB
+         cIpu/8r0xo76LQX2frltSRbJr4m4TCO9ak38me300W0PmL7GmDJrX8Jwc1rV0NFmR46F
+         LHydBroeyag0NS1IwGuGTknikiJJayfLRsr5Dqz5IVR/NGvfTsoaYnKh0ot7RTA/weIR
+         7jvQ==
+X-Gm-Message-State: AOJu0YwUr4iXxmF8/DcTp5p//zt7FKcw/ty1yMivxFR3eVgdsTbOhDTO
+	LT7fIeIQ6SfxbtPrFZRsSdVNeH+gk44gjYs5EA/utxs5C0MFZWVKhFOlbtvRcuY=
+X-Google-Smtp-Source: AGHT+IHA4JS23b4eGAVOFWQtM+YFE3KGH+FrzTUSVDLqZq0gB8XnlQPMK1Tn+LtXgceofq8NkA0fpg==
+X-Received: by 2002:a05:600c:3b13:b0:431:1575:2e83 with SMTP id 5b1f17b1804b1-4318a918061mr23931035e9.10.1729777123382;
+        Thu, 24 Oct 2024 06:38:43 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:17a2:e679:56a4:a25a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b54308bsm18609645e9.4.2024.10.24.06.38.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 06:38:43 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Klara Modin <klarasmodin@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpiolib: fix a NULL-pointer dereference when setting direction
+Date: Thu, 24 Oct 2024 15:38:34 +0200
+Message-ID: <20241024133834.47395-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/14] dt-bindings: pinctrl: stm32: support for stm32mp215
- and additional packages
-To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
- Stephane Danieau <stephane.danieau@foss.st.com>,
- Amelie Delaunay <amelie.delaunay@foss.st.com>,
- Fabien Dessenne <fabien.dessenne@foss.st.com>,
- Valentin Caron <valentin.caron@foss.st.com>,
- Gatien Chevallier <gatien.chevallier@foss.st.com>,
- Cheick Traore <cheick.traore@foss.st.com>,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20241022155658.1647350-1-antonio.borneo@foss.st.com>
- <20241022155658.1647350-12-antonio.borneo@foss.st.com>
- <2g65375shtjq4udjfarfspqtpg5q27oeerqskt2uzwj44pvnbb@rderpevnrzxs>
- <334845caee45ed72ef08867f23f69b5333be57c5.camel@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <334845caee45ed72ef08867f23f69b5333be57c5.camel@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 23/10/2024 12:08, Antonio Borneo wrote:
-> On Wed, 2024-10-23 at 10:51 +0200, Krzysztof Kozlowski wrote:
->> On Tue, Oct 22, 2024 at 05:56:55PM +0200, Antonio Borneo wrote:
->>> From: Amelie Delaunay <amelie.delaunay@foss.st.com>
->>>
->>> Add support for st,stm32mp215-pinctrl and st,stm32mp215-z-pinctrl.
->>
->> So all previous patches are for this? Then they are supposed to be here.
-> 
-> Hi Krzysztof,
-> 
-> I'm not sure I fully get your point here.
-> The previous patches in this series add the new features to the already upstreamed STM32MP257.
-> The same features are also needed here by STM32MP215 and in next patches 12/14 and 13/14 by STM32MP235.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-commit msgs could be improved here, sorry, I have no clue for what
-devices are you bringing this for. Putting here new SoC clearly suggests
-that it is for new Soc, so entire split is incorrect.
+For optional GPIOs we may pass NULL to gpiod_direction_(input|output)().
+With the call to the notifier chain added by commit 07c61d4da43f
+("gpiolib: notify user-space about in-kernel line state changes") we
+will now dereference a NULL pointer in this case. The reason for that is
+the fact that the expansion of the VALIDATE_DESC() macro (which returns
+0 for NULL descriptors) was moved into the nonotify variants of the
+direction setters.
 
-> 
->>
->>> Add packages AM, AN and AO (values : 0x1000, 0x2000 and 0x8000)
->>>
->>> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
->>> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
->>> ---
->>>  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml         | 4 +++-
->>>  include/dt-bindings/pinctrl/stm32-pinfunc.h                   | 3 +++
->>>  2 files changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> index 9a7ecfea6eb5b..0a2d644dbece3 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> @@ -27,6 +27,8 @@ properties:
->>>        - st,stm32mp135-pinctrl
->>>        - st,stm32mp157-pinctrl
->>>        - st,stm32mp157-z-pinctrl
->>> +      - st,stm32mp215-pinctrl
->>> +      - st,stm32mp215-z-pinctrl
->>>        - st,stm32mp257-pinctrl
->>>        - st,stm32mp257-z-pinctrl
->>>  
->>> @@ -59,7 +61,7 @@ properties:
->>>        Indicates the SOC package used.
->>>        More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
->>>      $ref: /schemas/types.yaml#/definitions/uint32
->>> -    enum: [0x1, 0x2, 0x4, 0x8, 0x100, 0x400, 0x800]
->>> +    enum: [0x1, 0x2, 0x4, 0x8, 0x100, 0x400, 0x800, 0x1000, 0x2000, 0x4000]
->>>  
->>>  patternProperties:
->>>    '^gpio@[0-9a-f]*$':
->>> diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
->>> index af3fd388329a0..01bc8be78ef72 100644
->>> --- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
->>> +++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
->>> @@ -41,6 +41,9 @@
->>>  #define STM32MP_PKG_AI 0x100
->>>  #define STM32MP_PKG_AK 0x400
->>>  #define STM32MP_PKG_AL 0x800
->>> +#define STM32MP_PKG_AM 0x1000
->>> +#define STM32MP_PKG_AN 0x2000
->>> +#define STM32MP_PKG_AO 0x4000
->>
->> Why these are some random hex values but not for example 0x801, 0x802
->> and 0x803? That's an enum, so bitmask does not make sense here.
-> 
-> The are bitmask. You can check in patch 14/14 that adds a new package to the existing code of STM32MP257.
-> Do you prefer I rewrite them all as, e.g.
-> #define STM32MP_PKG_AO (1 << 14)
-> ?
+Move them back to the top-level interfaces as the nonotify ones are only
+ever called from inside the GPIO core and are always passed valid GPIO
+descriptors. This way we'll never call the line_state notifier chain
+with non-valid descs.
 
-OK, so where is this bitmask used in DTS? These are bindings, not some
-random defines for driver.
+Fixes: 07c61d4da43f ("gpiolib: notify user-space about in-kernel line state changes")
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/d6601a31-7685-4b21-9271-1b76116cc483@sirena.org.uk/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ae758ba6dc3d1..6001ec96693c5 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2695,6 +2695,8 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ {
+ 	int ret;
+ 
++	VALIDATE_DESC(desc);
++
+ 	ret = gpiod_direction_input_nonotify(desc);
+ 	if (ret == 0)
+ 		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+@@ -2707,8 +2709,6 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
+ {
+ 	int ret = 0;
+ 
+-	VALIDATE_DESC(desc);
+-
+ 	CLASS(gpio_chip_guard, guard)(desc);
+ 	if (!guard.gc)
+ 		return -ENODEV;
+@@ -2841,6 +2841,8 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
+ {
+ 	int ret;
+ 
++	VALIDATE_DESC(desc);
++
+ 	ret = gpiod_direction_output_nonotify(desc, value);
+ 	if (ret == 0)
+ 		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+@@ -2854,8 +2856,6 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	VALIDATE_DESC(desc);
+-
+ 	flags = READ_ONCE(desc->flags);
+ 
+ 	if (test_bit(FLAG_ACTIVE_LOW, &flags))
+-- 
+2.30.2
 
 
