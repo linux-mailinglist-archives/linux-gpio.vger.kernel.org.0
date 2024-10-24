@@ -1,308 +1,365 @@
-Return-Path: <linux-gpio+bounces-11923-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C6B69AE078
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:21:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BCC69AE15C
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:48:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F16D21F24112
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 09:21:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 227112844E3
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 09:48:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611B01B392E;
-	Thu, 24 Oct 2024 09:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C241741D9;
+	Thu, 24 Oct 2024 09:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tp63lQjx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Dz30bllZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAB11B219E
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 09:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930C61B21AD
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 09:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729761672; cv=none; b=U0cImPuOlPVoln1DF1yyc5RTsvbK3Gr5JDw0BbDLS+STKrBQj0gpvwJiOYV6DR4EQ1TRZVxqUOfQRrQTcoQQ+1BbjrsWB9Ic4MenkcrMEd0H1l46IRlHsi5zEdsI+e0SB2j+KlQXuuzFtDS+ufAO8n5Wbdxie2kU2+zbgWyhjHk=
+	t=1729763272; cv=none; b=HyYquzxvRRbXF4MEmA2Q/zZFQSpu8wN+DN+JtYb0B2J3Q2l4PeKlfMTh3aDHXDsvRMO6UMiE6X3ZdetNo3DEQaJdh85xljN7CqXlK+K6NZPye5WnXgdDZvfiRPihuZ/zi8ng5B8Sh1PQdGFBLie0VBoGMGTkyjFF//Ozl8LYKZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729761672; c=relaxed/simple;
-	bh=zPR2TeYyimdSUnjvaeqC0R1IRabUqpTFGVI2/hoVWxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fywRyP1AW3wYWpiRmFKmegbSUPtL4xdc9MG3tDVGuG0TPeqBRk8v6KohNmG7ic3429YbW1Y2pktm2odx//QfWumsC8dzAUwVa9Hr0ssVXjTECeaRh9vc1k7RXHrBR2dTBmkgcne8bXv0QUpMNLJoVvSPK2QFH49HIXVAEkjDnPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tp63lQjx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B57BC4CEC7;
-	Thu, 24 Oct 2024 09:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729761671;
-	bh=zPR2TeYyimdSUnjvaeqC0R1IRabUqpTFGVI2/hoVWxw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tp63lQjxQikm4bWH65zWo5H9FkamI2EZ8Cp6ctaGAnoIS93T9tXpglJ9gvR7yqx12
-	 VUeE9aT/LZaVf809xQ5hlQ5dZCXNDmfzisn2uISsqqRT97UJWWwUYyKMK3jYbBTFIm
-	 RrH4JqQp+yORsG7IUc6tzs5WmJ2r5669x1eahCWPRJV5po+Dv2kGxEzkFvvhCT63X1
-	 FpQ2LY70K5vUE2wY503exeZ+DLlC+f/1BPmiQYqljS+6A4CgFKqFH82rIHfB4qe/+y
-	 q4f9TdvCAeLyVlKjyeStTBzwKjDuFEhg8siQRN69+pFizUq5b7GLQr7mylg323Mrvo
-	 IaHlrYv5iN+cw==
-From: Conor Dooley <conor@kernel.org>
-To: linux-gpio@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	valentina.fernandezalanis@microchip.com,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Lewis Hanly <lewis.hanly@microchip.com>
-Subject: [PATCH v8 1/1] gpio: mpfs: add polarfire soc gpio support
-Date: Thu, 24 Oct 2024 10:20:32 +0100
-Message-ID: <20241024-dragster-research-0713e1733600@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241024-tipping-browse-c0d582b16a47@spud>
-References: <20241024-tipping-browse-c0d582b16a47@spud>
+	s=arc-20240116; t=1729763272; c=relaxed/simple;
+	bh=6oZISG8zyOtWCv3Xk/jvqSSwQW1cfD2LoGxyXi6vTwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQ1HJETnZ16P2XiEJMaVLj30HIXjRuMfjzn2rvKEejX0mW2HTcJsyX7rFbNZ2KsxmtBq6b99gW0Gj5alEExwpWBnfJrC6chQj560Z5wHT+mUpGuJP5IJyASvmMFvqgh08x+cQQ/Qzg9/GWABL6Xb1aUlqiQcTM8LzKiberuAfeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Dz30bllZ; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539f8490856so605341e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 02:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729763267; x=1730368067; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vfv6ibufZ+CwrpcqLdBrsrQ/W9gQaceAobDNplXh7i0=;
+        b=Dz30bllZ46xfmjHsyBnRQ/Hsj0atcO52eIbyzx2rrsTKJPRdTg+Ec+LbVfUZVNxdmo
+         yXQeVX18Y6wTCQKdpJdZY9szhhliTd5XPJYVzEn4at4qSeRiFNDhY8qncfpaUhIt5kk0
+         o4/0D2kYj+qLEZeFFFkEJRiADyXhJRJI7cr9egDEZW4FagwzO97yIrIyDcIvSxXMUuHO
+         NNfdUfpyuyTSa+sRUrB9HHMWWrUx1XgQGr3wg3XgwCsXnD2c5RGVpu0OOFUonzqfr4lP
+         5+MJA7IEr6GJA3e3M+y90KCqPu6HA38iOtfOtQ1pkqAK0cCp9LG0zjI2N8/ss4x9CAIw
+         i6Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729763267; x=1730368067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vfv6ibufZ+CwrpcqLdBrsrQ/W9gQaceAobDNplXh7i0=;
+        b=dC0JI2TN5x2OeNXeeENQkUkgvsCk0eZb7yRVprgsYNcaH2dezjuaJG8bSQPaKJy9bT
+         fNXyuM8Cz6IISwxWx74adDAtpgv5r7icsqznNfHwiO0pCRFCYjhnV/XmLMoB3u59inTn
+         hOr7a9XcD0pHSNYiRGiEuoIg1kEgh0xTUI6bCp2UILJxXiz3w2XGEog8TdiHT8RUbLs1
+         rqODmHgBpYkJl90vf8mR7uQX1L6jeV2RSlRmvfohF8sa2DwSXtcNwjg5McvnI1nBW8R8
+         nxo81zVQYyrEyvXYYwbQiKnKKzpGVrO5BO/Uu5tvtsguFTaHXEuHYMJ+EBm2TJ0Y1RzG
+         1TmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCmNo3jLKBIBMLsa5trlidF+KMe8amOGGoPkqay84038Os3IzLNZzrPJyRldWt0wV69HYmPkK39NmM@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn7A+hmy4v1v+A64fRzIsjhGkPptgbhmfFqBzNbSa+CX3MxsPI
+	Nt9j986H2nRJ8qr5Ff5wNN9XOaQo1Uru4Es+CkdDEe/WmHbm6iAd9Jih2NvOESGgBPfndtgVk89
+	QqwzbM0OOORGsz4rPA/wXB6YxCBgUo9YEAL1MXQ==
+X-Google-Smtp-Source: AGHT+IEWBEehWTnq4Rbixjghfb8o2yvBF/xxe7NK2SwSHJgjYLywf14gzBfaH+tfcPlaC6bw5yJWICqXJ+gwpbBN2SY=
+X-Received: by 2002:a05:6512:2810:b0:539:f763:789d with SMTP id
+ 2adb3069b0e04-53b1a36c638mr3298988e87.43.1729763266315; Thu, 24 Oct 2024
+ 02:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7396; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=L4iERC+5MpReXu/uO6lX7e6HlVYz6t3yTG4ID800XfY=; b=kA0DAAgWeLQxh6CCYtIByyZiAGcaEV/I/laHhp7wPIpmnKSgTQm9T7KG3KV/lbrs2c/4NPZAb Ih1BAAWCAAdFiEEYduOhBqv/ES4Q4zteLQxh6CCYtIFAmcaEV8ACgkQeLQxh6CCYtLp7AEArJXn +KJci0YnxfYVIptGaMiS99jvFrzn6z3lQT5hCNoA/1Qof+b3fU30BlONLpN3Z+LpdyQ4osDOKnN 54LGX9YoF
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-3-tmyu0@nuvoton.com>
+In-Reply-To: <20241024085922.133071-3-tmyu0@nuvoton.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 24 Oct 2024 11:47:34 +0200
+Message-ID: <CAMRc=Mc+SZN=EytxY=qA-qBEAY_F17GP-7FRE9oLojLbdUoPaQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/9] gpio: Add Nuvoton NCT6694 GPIO support
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, 
+	ukleinek@kernel.org, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lewis Hanly <lewis.hanly@microchip.com>
+On Thu, Oct 24, 2024 at 10:59=E2=80=AFAM Ming Yu <a0282524688@gmail.com> wr=
+ote:
+>
+> This driver supports GPIO and IRQ functionality for NCT6694 MFD
+> device based on USB interface.
+>
+> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> ---
+>  MAINTAINERS                 |   1 +
+>  drivers/gpio/Kconfig        |  12 +
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-nct6694.c | 489 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 503 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-nct6694.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 30157ca95cf3..2c86d5dab3f1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16438,6 +16438,7 @@ NUVOTON NCT6694 MFD DRIVER
+>  M:     Ming Yu <tmyu0@nuvoton.com>
+>  L:     linux-kernel@vger.kernel.org
+>  S:     Supported
+> +F:     drivers/gpio/gpio-nct6694.c
+>  F:     drivers/mfd/nct6694.c
+>  F:     include/linux/mfd/nct6694.h
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index d93cd4f722b4..aa78ad9ff4ac 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1450,6 +1450,18 @@ config GPIO_MAX77650
+>           GPIO driver for MAX77650/77651 PMIC from Maxim Semiconductor.
+>           These chips have a single pin that can be configured as GPIO.
+>
+> +config GPIO_NCT6694
+> +       tristate "Nuvoton NCT6694 GPIO controller support"
+> +       depends on MFD_NCT6694
+> +       select GENERIC_IRQ_CHIP
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         This driver supports 8 GPIO pins per bank that can all be inter=
+rupt
+> +         sources.
+> +
+> +         This driver can also be built as a module. If so, the module wi=
+ll be
+> +         called gpio-nct6694.
+> +
+>  config GPIO_PALMAS
+>         bool "TI PALMAS series PMICs GPIO"
+>         depends on MFD_PALMAS
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 1429e8c0229b..02c94aa28017 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -121,6 +121,7 @@ obj-$(CONFIG_GPIO_MXC)                      +=3D gpio=
+-mxc.o
+>  obj-$(CONFIG_GPIO_MXS)                 +=3D gpio-mxs.o
+>  obj-$(CONFIG_GPIO_NOMADIK)             +=3D gpio-nomadik.o
+>  obj-$(CONFIG_GPIO_NPCM_SGPIO)          +=3D gpio-npcm-sgpio.o
+> +obj-$(CONFIG_GPIO_NCT6694)             +=3D gpio-nct6694.o
+>  obj-$(CONFIG_GPIO_OCTEON)              +=3D gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        +=3D gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              +=3D gpio-palmas.o
+> diff --git a/drivers/gpio/gpio-nct6694.c b/drivers/gpio/gpio-nct6694.c
+> new file mode 100644
+> index 000000000000..42c0e6e76730
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-nct6694.c
+> @@ -0,0 +1,489 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Nuvoton NCT6694 GPIO controller driver based on USB interface.
+> + *
+> + * Copyright (C) 2024 Nuvoton Technology Corp.
+> + */
+> +
+> +#include <linux/gpio.h>
 
-Add a driver to support the Polarfire SoC gpio controller. Interrupt
-controller support is unavailable for now and will be added at a later
-date.
+Don't include this header. It's documented as obsolete.
 
-Signed-off-by: Lewis Hanly <lewis.hanly@microchip.com>
-Co-developed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-v8:
-- drop interrupt support
-- replace regular mmio acesses with regmap (nice complexity reduction)
-- change mpfs_gpio_get() so that it can report non-zero when the line
-  direction is output.
----
- drivers/gpio/Kconfig     |   7 ++
- drivers/gpio/Makefile    |   1 +
- drivers/gpio/gpio-mpfs.c | 178 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/gpio/gpio-mpfs.c
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/nct6694.h>
+> +
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d93cd4f722b40..fab9c4f73f62b 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -549,6 +549,13 @@ config GPIO_PL061
- 	help
- 	  Say yes here to support the PrimeCell PL061 GPIO device.
- 
-+config GPIO_POLARFIRE_SOC
-+	bool "Microchip FPGA GPIO support"
-+	depends on OF_GPIO
-+	select REGMAP_MMIO
-+	help
-+	  Say yes here to support the GPIO controllers on Microchip FPGAs.
-+
- config GPIO_PXA
- 	bool "PXA GPIO support"
- 	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1429e8c0229b9..fc66e6388c76c 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -133,6 +133,7 @@ obj-$(CONFIG_GPIO_PCI_IDIO_16)		+= gpio-pci-idio-16.o
- obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
- obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
- obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
-+obj-$(CONFIG_GPIO_POLARFIRE_SOC)	+= gpio-mpfs.o
- obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
- obj-$(CONFIG_GPIO_RC5T583)		+= gpio-rc5t583.o
-diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
-new file mode 100644
-index 0000000000000..eaf65ddb6ad73
---- /dev/null
-+++ b/drivers/gpio/gpio-mpfs.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Microchip PolarFire SoC (MPFS) GPIO controller driver
-+ *
-+ * Copyright (c) 2018-2024 Microchip Technology Inc. and its subsidiaries
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+
-+#define MPFS_GPIO_CTRL(i)		(0x4 * (i))
-+#define MAX_NUM_GPIO			32
-+#define MPFS_GPIO_EN_INT		3
-+#define MPFS_GPIO_EN_OUT_BUF		BIT(2)
-+#define MPFS_GPIO_EN_IN			BIT(1)
-+#define MPFS_GPIO_EN_OUT		BIT(0)
-+#define MPFS_GPIO_DIR_MASK		GENMASK(2, 0)
-+
-+#define MPFS_GPIO_TYPE_INT_EDGE_BOTH	0x80
-+#define MPFS_GPIO_TYPE_INT_EDGE_NEG	0x60
-+#define MPFS_GPIO_TYPE_INT_EDGE_POS	0x40
-+#define MPFS_GPIO_TYPE_INT_LEVEL_LOW	0x20
-+#define MPFS_GPIO_TYPE_INT_LEVEL_HIGH	0x00
-+#define MPFS_GPIO_TYPE_INT_MASK		GENMASK(7, 5)
-+#define MPFS_IRQ_REG			0x80
-+#define MPFS_INP_REG			0x84
-+#define MPFS_OUTP_REG			0x88
-+
-+struct mpfs_gpio_chip {
-+	struct clk *clk;
-+	struct regmap *regs;
-+	struct gpio_chip gc;
-+};
-+
-+static const struct regmap_config mpfs_gpio_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio_index)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-+
-+	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
-+			   MPFS_GPIO_DIR_MASK, MPFS_GPIO_EN_IN);
-+
-+	return 0;
-+}
-+
-+static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio_index, int value)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-+
-+	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
-+			   MPFS_GPIO_DIR_MASK, MPFS_GPIO_EN_IN);
-+	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+			   value << gpio_index);
-+
-+	return 0;
-+}
-+
-+static int mpfs_gpio_get_direction(struct gpio_chip *gc,
-+				   unsigned int gpio_index)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-+	unsigned int gpio_cfg;
-+
-+	regmap_read(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index), &gpio_cfg);
-+	if (gpio_cfg & MPFS_GPIO_EN_IN)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int mpfs_gpio_get(struct gpio_chip *gc, unsigned int gpio_index)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-+
-+	if (mpfs_gpio_get_direction(gc, gpio_index) == GPIO_LINE_DIRECTION_OUT)
-+		return regmap_test_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index));
-+	else
-+		return regmap_test_bits(mpfs_gpio->regs, MPFS_INP_REG, BIT(gpio_index));
-+}
-+
-+static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int value)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
-+
-+	mpfs_gpio_get(gc, gpio_index);
-+
-+	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+			   value << gpio_index);
-+
-+	mpfs_gpio_get(gc, gpio_index);
-+}
-+
-+static int mpfs_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mpfs_gpio_chip *mpfs_gpio;
-+	struct clk *clk;
-+	void __iomem *base;
-+	int ret, ngpios;
-+
-+	mpfs_gpio = devm_kzalloc(dev, sizeof(*mpfs_gpio), GFP_KERNEL);
-+	if (!mpfs_gpio)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return dev_err_probe(dev, PTR_ERR(base), "failed to ioremap memory resource\n");
-+
-+	mpfs_gpio->regs = devm_regmap_init_mmio(dev, base, &mpfs_gpio_regmap_config);
-+	if (IS_ERR(mpfs_gpio->regs))
-+		return dev_err_probe(dev, PTR_ERR(mpfs_gpio->regs),
-+				     "failed to initialise regmap\n");
-+
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get and enable clock\n");
-+
-+	mpfs_gpio->clk = clk;
-+
-+	ngpios = MAX_NUM_GPIO;
-+	device_property_read_u32(dev, "ngpios", &ngpios);
-+	if (ngpios > MAX_NUM_GPIO)
-+		ngpios = MAX_NUM_GPIO;
-+
-+	mpfs_gpio->gc.direction_input = mpfs_gpio_direction_input;
-+	mpfs_gpio->gc.direction_output = mpfs_gpio_direction_output;
-+	mpfs_gpio->gc.get_direction = mpfs_gpio_get_direction;
-+	mpfs_gpio->gc.get = mpfs_gpio_get;
-+	mpfs_gpio->gc.set = mpfs_gpio_set;
-+	mpfs_gpio->gc.base = -1;
-+	mpfs_gpio->gc.ngpio = ngpios;
-+	mpfs_gpio->gc.label = dev_name(dev);
-+	mpfs_gpio->gc.parent = dev;
-+	mpfs_gpio->gc.owner = THIS_MODULE;
-+
-+	ret = gpiochip_add_data(&mpfs_gpio->gc, mpfs_gpio);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, mpfs_gpio);
-+
-+	return 0;
-+}
-+
-+static void mpfs_gpio_remove(struct platform_device *pdev)
-+{
-+	struct mpfs_gpio_chip *mpfs_gpio = platform_get_drvdata(pdev);
-+
-+	gpiochip_remove(&mpfs_gpio->gc);
-+}
-+
-+static const struct of_device_id mpfs_gpio_of_ids[] = {
-+	{ .compatible = "microchip,mpfs-gpio", },
-+	{ /* end of list */ }
-+};
-+
-+static struct platform_driver mpfs_gpio_driver = {
-+	.probe = mpfs_gpio_probe,
-+	.driver = {
-+		.name = "microchip,mpfs-gpio",
-+		.of_match_table = mpfs_gpio_of_ids,
-+	},
-+	.remove = mpfs_gpio_remove,
-+};
-+builtin_platform_driver(mpfs_gpio_driver);
--- 
-2.45.2
+You only use it once, drop it.
 
+> +#define DRVNAME "nct6694-gpio"
+> +
+> +/* Host interface */
+> +#define REQUEST_GPIO_MOD               0xFF
+> +#define REQUEST_GPIO_LEN               0x01
+> +
+> +/* Report Channel */
+> +#define GPIO_VER_REG                   0x90
+> +#define GPIO_VALID_REG                 0x110
+> +#define GPI_DATA_REG                   0x120
+> +#define GPO_DIR_REG                    0x170
+> +#define GPO_TYPE_REG                   0x180
+> +#define GPO_DATA_REG                   0x190
+> +
+> +#define GPI_STS_REG                    0x130
+> +#define GPI_CLR_REG                    0x140
+> +#define GPI_FALLING_REG                        0x150
+> +#define GPI_RISING_REG                 0x160
+> +
+
+Please use the NCT6694 prefix for these defines, otherwise it's not
+clear whether they come from the driver or from GPIO core.
+
+[]
+
+> +
+> +static const char * const nct6694_gpio_name[] =3D {
+> +       "NCT6694-GPIO0",
+> +       "NCT6694-GPIO1",
+> +       "NCT6694-GPIO2",
+> +       "NCT6694-GPIO3",
+> +       "NCT6694-GPIO4",
+> +       "NCT6694-GPIO5",
+> +       "NCT6694-GPIO6",
+> +       "NCT6694-GPIO7",
+> +       "NCT6694-GPIO8",
+> +       "NCT6694-GPIO9",
+> +       "NCT6694-GPIOA",
+> +       "NCT6694-GPIOB",
+> +       "NCT6694-GPIOC",
+> +       "NCT6694-GPIOD",
+> +       "NCT6694-GPIOE",
+> +       "NCT6694-GPIOF",
+> +};
+
+This looks like it corresponds with the MFD cells and makes me wonder:
+am I getting that wrong or do you want to register 0xf GPIO chips? Or
+a single GPIO chip with 0xf lines? What is the topology?
+
+> +
+> +static int nct6694_gpio_probe(struct platform_device *pdev)
+> +{
+> +       const struct mfd_cell *cell =3D mfd_get_cell(pdev);
+> +       struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.parent);
+> +       struct nct6694_gpio_data *data;
+> +       struct gpio_irq_chip *girq;
+> +       int ret;
+> +
+> +       data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       data->nct6694 =3D nct6694;
+> +       data->group =3D cell->id;
+> +
+> +       data->gpio.label                =3D nct6694_gpio_name[cell->id];
+> +       data->gpio.direction_input      =3D nct6694_direction_input;
+> +       data->gpio.get                  =3D nct6694_get_value;
+> +       data->gpio.direction_output     =3D nct6694_direction_output;
+> +       data->gpio.set                  =3D nct6694_set_value;
+> +       data->gpio.get_direction        =3D nct6694_get_direction;
+> +       data->gpio.set_config           =3D nct6694_set_config;
+> +       data->gpio.init_valid_mask      =3D nct6694_init_valid_mask;
+> +       data->gpio.base                 =3D -1;
+> +       data->gpio.can_sleep            =3D false;
+> +       data->gpio.owner                =3D THIS_MODULE;
+> +       data->gpio.ngpio                =3D 8;
+> +
+> +       INIT_WORK(&data->irq_work, nct6694_irq);
+> +       INIT_WORK(&data->irq_trig_work, nct6694_irq_trig);
+> +       mutex_init(&data->irq_lock);
+> +
+> +       ret =3D nct6694_register_handler(nct6694, GPIO_IRQ_STATUS,
+> +                                      nct6694_gpio_handler, data);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s:  Failed to register handler: %pe=
+\n",
+> +                       __func__, ERR_PTR(ret));
+> +               return ret;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, data);
+> +
+> +       ret =3D nct6694_get_irq_trig(data);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Register gpio chip to GPIO framework */
+> +       girq =3D &data->gpio.irq;
+> +       gpio_irq_chip_set_chip(girq, &nct6694_irq_chip);
+> +       girq->parent_handler =3D NULL;
+> +       girq->num_parents =3D 0;
+> +       girq->parents =3D NULL;
+> +       girq->default_type =3D IRQ_TYPE_NONE;
+> +       girq->handler =3D handle_level_irq;
+> +       girq->threaded =3D true;
+> +
+> +       ret =3D gpiochip_add_data(&data->gpio, data);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: Failed to register GPIO chip: %p=
+e",
+> +                       __func__, ERR_PTR(ret));
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void nct6694_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct nct6694_gpio_data *data =3D platform_get_drvdata(pdev);
+> +
+> +       gpiochip_remove(&data->gpio);
+
+This should be dropped in favor of using devm_gpiochip_add_data().
+Especially since you probably want to cancel the irq_work before
+removing the chip.
+
+> +       cancel_work(&data->irq_work);
+> +       cancel_work(&data->irq_trig_work);
+> +}
+> +
+> +static struct platform_driver nct6694_gpio_driver =3D {
+> +       .driver =3D {
+> +               .name   =3D DRVNAME,
+> +       },
+> +       .probe          =3D nct6694_gpio_probe,
+> +       .remove         =3D nct6694_gpio_remove,
+> +};
+> +
+> +static int __init nct6694_init(void)
+> +{
+> +       int err;
+> +
+> +       err =3D platform_driver_register(&nct6694_gpio_driver);
+> +       if (!err) {
+> +               if (err)
+
+If err is equal to 0, check if it's not equal to zero?
+
+> +                       platform_driver_unregister(&nct6694_gpio_driver);
+
+If platform_driver_register() failed, then the device was never registered.
+
+> +       }
+> +
+> +       return err;
+> +}
+> +subsys_initcall(nct6694_init);
+
+Any reason why this must be initialized earlier? It's a USB driver after al=
+l.
+
+> +
+> +static void __exit nct6694_exit(void)
+> +{
+> +       platform_driver_unregister(&nct6694_gpio_driver);
+> +}
+> +module_exit(nct6694_exit);
+> +
+> +MODULE_DESCRIPTION("USB-GPIO controller driver for NCT6694");
+> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+>
+
+Bart
 
