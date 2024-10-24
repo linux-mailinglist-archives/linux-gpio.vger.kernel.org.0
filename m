@@ -1,129 +1,108 @@
-Return-Path: <linux-gpio+bounces-11949-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11950-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81BEB9AE4E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 14:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FEC19AE52C
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 14:40:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D4F1283CCE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 12:34:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD502283E6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 12:40:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713441D63D9;
-	Thu, 24 Oct 2024 12:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF3441D966E;
+	Thu, 24 Oct 2024 12:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QY5nFZuD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGyz5NUC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f66.google.com (mail-oa1-f66.google.com [209.85.160.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D911D173E;
-	Thu, 24 Oct 2024 12:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F5E1D2207;
+	Thu, 24 Oct 2024 12:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729773278; cv=none; b=ofj3/KFHwOwb+B8IxQqJAXH6wO9t32aYBE3psdMxfuLnAhX9ha3nr4ML3VcCv6wmB5HIPZfi0tPHr5GvSsQ8vBV1EM6kIclr2U4OZWvfog9gwYaMiPqB2qyI/bgQ9a0tVARiCqsYCDYDBUUOxqjhk0sKj4YCkP/RbT0OER98HdU=
+	t=1729773611; cv=none; b=LxddlS+PEhxUZYcrvitRpTaskxCCjBicwtNRQg8/4DfDuYPt8oIi+JY50+e+JZvrU/tap2+dmQ05aGI7EcKkDp1+9y3RJNpOEliARQIfUgScG06ZNNcTBxJjTxU8J8bmvsMbWNTV+v9v+Nh7nY9qQdVLFvPsjcNn02dK0yqpzXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729773278; c=relaxed/simple;
-	bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AfFby7ktPfaM8Je8ZJnyk8skBpp7XZRTCl0OqQC88l6642lhOF7FcfDcgJd+zNUZQ4rB4108yO0VyGZYa3CXHToQZTItxSK0bg1D3Ns8W0bPHGykElhta433X8w+U3+LcLnK5c7UnAkc7FMM5uLjQqkkZ8uIj86y+CtQTwkIUPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QY5nFZuD; arc=none smtp.client-ip=209.85.160.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f66.google.com with SMTP id 586e51a60fabf-288d4da7221so473930fac.1;
-        Thu, 24 Oct 2024 05:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729773275; x=1730378075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
-        b=QY5nFZuDXaIz7hz38L7u08qLHJU9QTkiHyR4KBf6myTWmCmHp27MKIhJecgns2o+4V
-         4p4Nh6WlL+7dPV+cor4kUZf/tz9KonupNS9HApE8oeYnBpxR4aCnHZMtz9ocPaZmToG1
-         iPR0aRPRA5Uoao8soXfnmCQotbfG3008Y4YhjhCn4TNW9TG4zuGCAZpCmnucgTKms2qQ
-         RekgoDPsB2rCltMDzuo/5YQqvkIQv+olENuHTCpkkXryQGKu3KHLQU0aJUkQlQ2Y1XjZ
-         4SLGPgeP+ce4YflOV5yjLxVo6xE+cXGe3RdLDd3qzy1d7pHauEowpkeyCx6/lZdQPcTE
-         AvaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729773275; x=1730378075;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WqKO+VQufYnnSQGNsjJoV9pHpcM4NLycUTcWyfMcgg8=;
-        b=qTiGzFVrMt1EyMsjVxDe4G6XcIKZiDN2rXhI4tpF9MZaLPkuv9FI542kmZAIZPk0Zb
-         jmrdSdlLgmS2W6BV8iGiWcF8Nv6od4eQ5lHPL95OdHT46dPUWsUZfsOJ6bMzJZVLs+Jl
-         HpZrjW7XS1pW/Gd5MlP3raddszk/0SHshJaL6ctTeMe3F6DyMxs5hIqTNL2mkNBCCufv
-         OtrGcxhzYx3J/a6VaJrHsTI41msitnrcSBq2pfEA3gZ7XTN8R6IhUIVDB4dHwNQHJQbR
-         Var78HkJSF30nIIMExYAhjlUB9KMS6msvLH7DnW9FGzDl1A5LewYy3cTpg1vKoUalS0G
-         UkDA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2vvn5noWPlY4iJCBdY9lxNNnYJLqu/IM8Kcd13tGz8snuXTzQFjYhV+9zmYUa8Rl+i2rmkagw@vger.kernel.org, AJvYcCUZsUwqSRJp8CS0WbEEM5aG+2xmLL2xcqFXmR6BH0puZxe9JnnY05HCgAkpDqJZL6A5NUf2HxfpxM0YsA==@vger.kernel.org, AJvYcCUbRy9XuQJFui5oX48VThIyGx4Km9w+KzajCAPMTgzA2JF6ISU7c5B4bn7v7NG0chT9RKV/PDorlmYANw==@vger.kernel.org, AJvYcCV6L293Bp2qTrY+a86NaOdNRC3SGt9y6jeL+9CggvQATYPPGYR5X5yEWF5qvNdo/iLilJObNG1zLPGM@vger.kernel.org, AJvYcCVNAwFpNXUtlp58uCjGEorQWmXFUTf9ezrQRW5AzzVxXS8IPN1W2sV/cHQYwIovHf3KxQ8aq2xpsFo=@vger.kernel.org, AJvYcCVe0wHAc9zlluGKuixl3o0a+io5bdY/JyIaQA8TTRk7u/rIuD85cfznqglOulVb6FmF9v2EiPYHpZNUSw==@vger.kernel.org, AJvYcCVhBRQ/qFqZQz+XhQJXwRWCjrq4YW44Rklq/Yto5cxD7v59BKnrjgjSOe8+SW7uXncDBA6/J5MOZgYU@vger.kernel.org, AJvYcCVuE0txY9BBBIkJgJbv1bcnq/8Ir+eZTNzATDiGHnKB2lXyEMV3cCLJrqUVxnh53Ls0R5i3Sero6qx9rbI=@vger.kernel.org, AJvYcCW27sOniGN1zgpb4M9bDiUYEFc6n8VqBFteaFnAXhmgkvFeHzdLqZzlqjEvW09aR8VRb2bfw30UZUZ1itUc/ZKCkEg=@vger.kernel.org, AJvYcCXCJZv/W+xQ0nGI+Ghuf6oP
- o+pjp6yfzM5+3PYbZcRzbMJtIsKhav+JFtVJdOiIhTfjjxv+GtIuib187QE=@vger.kernel.org, AJvYcCXtXgWsXO4huUUJqnOP4ex9X/XOFIMAfYNpfUYg7FUKFnNXn5c3kshqwaON/OdiwV7N7er/rABDxT6viS0=@vger.kernel.org, AJvYcCXuF1n7iMtbLMswFc+x39qg3hS6vTaTzhPnR9GvDD35bX9zF+2XZg2OhU79Lbdpf/xs0IpZFr54zaqF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMSe76u5tzX4N+ZthQZ0PmmSB32k0KFWPzwBqERw+TJKiPP/bv
-	I5wZQzuUvK4oWfLPSe9dm7/fNYXm0onruHPVbc3HOO7Pd4hwnhNo
-X-Google-Smtp-Source: AGHT+IGNbdDr4bWOuekBU0ohovYD+u0SLmOKefBPtfh2fzqlR42/5wZYBu+ZqeJfv789Y4nUSEsYRQ==
-X-Received: by 2002:a05:6870:218a:b0:277:fb59:b74c with SMTP id 586e51a60fabf-28ced48efd0mr1364818fac.40.1729773275318;
-        Thu, 24 Oct 2024 05:34:35 -0700 (PDT)
-Received: from localhost.localdomain ([114.246.193.69])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eaeab48f62sm8534093a12.42.2024.10.24.05.34.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 05:34:34 -0700 (PDT)
-From: =?UTF-8?q?=E9=99=88=E5=AF=92=E5=BD=A4?= <cxwdyx620@gmail.com>
-To: jensenhuangnvdia@gmail.com
-Cc: aospan@netup.ru,
-	conor.dooley@microchip.com,
-	ddrokosov@sberdevices.ru,
-	dmaengine@vger.kernel.org,
-	dushistov@mail.ru,
-	fancer.lancer@gmail.com,
-	geert@linux-m68k.org,
-	gregkh@linuxfoundation.org,
-	hoan@os.amperecomputing.com,
-	ink@jurassic.park.msu.ru,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-fpga@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mattst88@gmail.com,
-	netdev@vger.kernel.org,
-	nikita@trvn.ru,
-	ntb@lists.linux.dev,
-	patches@lists.linux.dev,
-	richard.henderson@linaro.org,
-	s.shtylyov@omp.ru,
-	serjk@netup.ru,
-	shc_work@mail.ru,
-	torvalds@linux-foundation.org,
-	torvic9@mailbox.org,
-	tsbogend@alpha.franken.de,
-	v.georgiev@metrotek.ru,
-	wangyuli@uniontech.com,
-	wsa+renesas@sang-engineering.com,
-	xeb@mail.ru
-Subject: Re: [PATCH] MAINTAINERS: Remove some entries due to various compliance requirements.
-Date: Thu, 24 Oct 2024 20:34:03 +0800
-Message-ID: <20241024123403.154-1-cxwdyx620@gmail.com>
-X-Mailer: git-send-email 2.47.0.windows.1
-In-Reply-To: <20241024113246.22901-1-JensenHuangNVDIA@gmail.com>
-References: <20241024113246.22901-1-JensenHuangNVDIA@gmail.com>
+	s=arc-20240116; t=1729773611; c=relaxed/simple;
+	bh=YrCb/mhgDJB269wiz1IB8jtnqMuRua4t7v/e15WwlH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=II6SbCpNZBhmajhaxFphwDNIsNz6SHVhjNyUcnypbi0lAGfxU/OfGEb4DtulR8MsOxi7fuzb0ejyQ49kxN+0yr4t1BEj30xOuwjNNAXGdH/NXvCuaFyXyAJG1cVL+nh1eyoxXVR/2u7iyRf7Dy/3WbPEXBS0PZCuCzZgwS+2EQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGyz5NUC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F49C4CEC7;
+	Thu, 24 Oct 2024 12:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729773611;
+	bh=YrCb/mhgDJB269wiz1IB8jtnqMuRua4t7v/e15WwlH4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pGyz5NUCk+nC2ylIRx+oMRdFs05jcNmisi1bPlD+0Jwst/J0y5lzPH31hVS+SXI5w
+	 99k2CbFOevUjQZS2aI/8M9SEEN0s/RJT//p+s3n7lF/ZSP1Y/hT7B+z8oVuU4ttv+b
+	 UXLc8vH0Jh/Fx1hhzbh07HqZ/iFT88szxfKmskAIrDs7fyRfexSNIh1UpAGE6/BggY
+	 vq1NObvzg2/DBoRrobabsur48c4hPysH900VGjFoqwjuLvzDSvfe1srsJJQ1sgCq4q
+	 zBnZbpwalO8dD/8H0n/gYSCffTy/xbGtwpuIqVd43vwDD9PNwv3kmCd5/B6LxFtdwG
+	 u/4omlQXX9cWA==
+Date: Thu, 24 Oct 2024 13:40:04 +0100
+From: Will Deacon <will@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: =?iso-8859-1?B?QmFybmFi4XMgQ3rpbeFu?= <barnabas.czeman@mainlining.org>,
+	iommu@lists.linux.dev, Zhang Rui <rui.zhang@intel.com>,
+	Lee Jones <lee@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pm@vger.kernel.org,
+	Amit Kucheria <amitk@kernel.org>
+Subject: Re: [PATCH RFC 10/14] dt-bindings: iommu: qcom,iommu: Add MSM8917
+ IOMMU to SMMUv1 compatibles
+Message-ID: <20241024124002.GC30704@willie-the-truck>
+References: <20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org>
+ <20241019-msm8917-v1-10-f1f3ca1d88e5@mainlining.org>
+ <172934406753.3231809.282041778335117501.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <172934406753.3231809.282041778335117501.robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Well, the fact is that Linus Torvalds, our leader of Linux, is not **Palest=
-inian** but **Finnish**.=0D
+On Sat, Oct 19, 2024 at 08:21:16AM -0500, Rob Herring (Arm) wrote:
+> 
+> On Sat, 19 Oct 2024 13:50:47 +0200, Barnabás Czémán wrote:
+> > Add MSM8917 compatible string with "qcom,msm-iommu-v1" as fallback
+> > for the MSM8917 IOMMU which is compatible with Qualcomm's secure
+> > fw "SMMU v1" implementation.
+> > 
+> > Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> > ---
+> >  Documentation/devicetree/bindings/iommu/qcom,iommu.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> 
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241019-msm8917-v1-10-f1f3ca1d88e5@mainlining.org
+
+I don't see any errors in the logs...
+
+Will
 
