@@ -1,176 +1,188 @@
-Return-Path: <linux-gpio+bounces-11909-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11910-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 119B89ADF80
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 10:52:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10F949ADFA0
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:00:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 332981C216FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 08:52:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE8DE2829C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 09:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396E91B21A2;
-	Thu, 24 Oct 2024 08:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 058571B3937;
+	Thu, 24 Oct 2024 08:59:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TCviJEoR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBPPVemd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF361B0F37
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 08:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12151B0F19;
+	Thu, 24 Oct 2024 08:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729759928; cv=none; b=Dygeced29JDKrJTOacECW0ywnOj4UFv4ujpPqYfbpVrguJQTou4ZRSHgXsLoGo+Xijz27ETogA3WutWTY+TXHldLuPVf0RVP/m4EVgslp0H+lZhQlZg/ThMPEAxpev1VO2emsZ39C3bxjlFOR06y+WTGQQTGtIH0MieJqSyocw4=
+	t=1729760384; cv=none; b=LGjn80SqkZSelJz8/LVpgWg2mO4VvgKW19v3bJ0zr/5RcN3Yq5XooVDHudFSvnGoCe5ngf4xiHYsTFGBZ0RvAnQgTgc0QGq9lCE7ivs/9kdScC7eD55ADiy+fGT7CX+ySKIMLuQshCuKCiE70d0Kmyfzwl0UDJ9+cG6RCMTmG8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729759928; c=relaxed/simple;
-	bh=uMvHJKa4mEROjJG2PAs1j+egAUpFeUv3XPkFaUQSNZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f0GmH+5xnfd/Rjw0nzTYfRSQnm+rjRnnKu4FuDrEH/tLRnf74JdfTS029TTThiwJPO5Jul2mzt+RaH/2x4tBIl+MX91J+jolDo+ZY9bl1PJF5GrV67ehsy5Jfh++1bEqWZdORXLNlAsjpWhPA3MX0zQpRmBlZy5aWScMQZSUyPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TCviJEoR; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-539f72c8fc1so796374e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 01:52:05 -0700 (PDT)
+	s=arc-20240116; t=1729760384; c=relaxed/simple;
+	bh=fWZRKKDMjH6AV4L2EpcN1Z+Dw912vE6hGK1NZIhh4cs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BMwhJTOGQrgKAcsap72WnPzHNtCV3yydqvdtzD0vjRbMMOKkA2Q73CB/QvfSdozXvhvLQie0Enr44kk8IrNr90wRRFJYS1Ys639KvmClLDczEe5JF6e7yqMaP4Or0HNOxuQxVnmi56N0FXjC5OTS6PLZlJDmTcGpbcBZEIWbCDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBPPVemd; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20cbca51687so5384395ad.1;
+        Thu, 24 Oct 2024 01:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729759924; x=1730364724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dIjZ4idjUa4SXQOLvOuypbc09gBZQhFpkeYfTwgOcw4=;
-        b=TCviJEoRcoT2Z2CRDrDRgx0kbCO6sOWo0bsOzLbSZz23ROmjztwSemQR3W+CVkmWxJ
-         lFayzuVFm9EXXcO9Qd6sCzvIZm15c2p6GUDOQrgA3u6hzMV4d8PuzabC8XUWecCa24CO
-         PkSzySGYRh/cIdFhSLi/7FMWqhr/44g7QTk3P64g4/dE1cgQhin9u/TQ+RTC70D+m9S5
-         Uxi/P1aap075x0n7LPb4pJxQS7dOa+nqD00ClhPFOXbd5NXi6imG+dZnJeRcc6GO4QzJ
-         eGZ8BHD0q6zgNQ031apLFGmYOvLma6emFaTf8kiE8untglEEJn4BAWXGinqJWdI/7mCJ
-         6ZZA==
+        d=gmail.com; s=20230601; t=1729760382; x=1730365182; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M0Y48yxp1xFIkBVIBLGxo7k5thlINaCSsNpWdPdeLiA=;
+        b=XBPPVemdcCZ6JXXDHrwJfyDRfjIJ4NtrlHhncJVteYaH8otcHa/tyqQMmvqiVNK1eO
+         bf0wadbdmE03/hAez0/5+GiKVT5Hw51t7vZzNgMhn4B6J7e8AcFLZ7U2tjsK7ZRWtNDd
+         6GurXdL6q8ciK2Psty3smiB/wp+NIlAEb9m3rmWVM83dmUfOGzz7TCdDjVYstA5XykIa
+         rvG2XAFQsBHiBWxQLJegm35fMIm2B5c7AAx1JlYscI0R/OanV00EgMsACxGSHAC24uqt
+         JDqmkIP0F1Uaq3SFuztA3KPRFPBzPA09+KQxLyiSxBCkcJQ43hg/CtrE8AP4vHmUM3MJ
+         yaWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729759924; x=1730364724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dIjZ4idjUa4SXQOLvOuypbc09gBZQhFpkeYfTwgOcw4=;
-        b=hvdUAZzCTiJoluymDQxzF4tHifNW87VZog0oJ66DpyLi2RT0uEr4BXlZ2iFv7OqDPg
-         yIw/PImS4EmqmFiolQ849uOk5hyb5F0OXOEqk4hmmhi7ERJ5cvbjtEoBizZl24QbAaDA
-         VtqzS8NsYX7E+UpqGGR2cRQpUeWCIuInxpjXMmDAMkxvHPZFSevKtW9bfKyqrdCmGKa1
-         qPOCJgUXfxYNJtY8ASmVy/dfggwvd6b5pEvSpgzGozflOdRnyNp7xKhVBPPRc57ankXo
-         f3MyYm5eF9/RXftiX9mgl+ydI65zheIcONl7QYNDU4wYwheJUAUSSzf63EqrUm00XFbm
-         rdUw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7eE1KuxDEYutXxE7+drjBZIBsSebaYSl4FPlKl7XRjpxUd4NumBNGh4yjCuzyHoOBMRjNXe2B4aPe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8ScR5jpu8Rfi4hPot2muBXGxiX4I4LthEWDtM3GWT6umoEdiD
-	TIRoq/wF9yMk1v782fNydyjWKCQeG6YuI74tOmTNRoD5j9oHeLytH6XX4ITWH99u3diOOH9Ke8c
-	vRm485HNP8UP6ROhkFbglUpPLsgbAxLfwGPIst/dHaa8HLZAe
-X-Google-Smtp-Source: AGHT+IGzdLGTXcGnAjrFOelLXbwgCPuJARxl0ZBITGikXjJUNbjRsY6GoYtnMLW8inEb7xE2Fg0hSiFhO4zbT6i//+w=
-X-Received: by 2002:a05:6512:b85:b0:531:4c6d:b8ef with SMTP id
- 2adb3069b0e04-53b1a2fe298mr3188494e87.6.1729759923705; Thu, 24 Oct 2024
- 01:52:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729760382; x=1730365182;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M0Y48yxp1xFIkBVIBLGxo7k5thlINaCSsNpWdPdeLiA=;
+        b=P8Q7y2NMC8YPMoH6XUdtw3IeJC/CTNC3b48m7jofCO/lKfwHieCYIsPxy79Bfpqn9B
+         j/cNsCe7hJOREuL0K4XB92wJta6spDupe341eq1Mum8BBgcscuckuNdvARD/E5lUyLHM
+         U7ZU5obA9CB6GkJEoydsb8u4Kgwn14ivtN3uND1Mk/32a58jPWlxlps34e8AZmKeQThq
+         ijv07jRETqBb45lrbzotAdPB0TFMq86Kzc8eeHh33kwVu6kiWcgGFXQXCessWVJ8Eu+C
+         ONE+/lnHeIKpxvyUrcTOp18EimVPCeQyxgnDVIULF0Jx4qQ2wUxxL4nqt3fnFWQ4fMOP
+         TVgg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5q7zbIxMwV0vHLnMY0MVMn0s2gTs9TSu3ePcZ7tj2a+rp56qH5ogVOKeZhjD+EAs0r54DMVpbuc0Q@vger.kernel.org, AJvYcCUqsQV4miPOct+eW5McMrOy5ZpaHD96gBA9X9LSGnoTfHZ0N1Ke3bHXnIMjJfoZaUuiFWI74BcprIzy@vger.kernel.org, AJvYcCVKTKgTov2kcO8GScamM3u4n3136b3y07CbteI4/QGdBpunAXSLnLmQ8etKwQ/BIsF9e1Fywl7h@vger.kernel.org, AJvYcCW56tQ+M/Mfw0Ek8mFsiu7zm3FWx7D+wGoiOCzhBqkdGmf/v4g3dvqiee2SmRjHXCKDWoER56197Jc=@vger.kernel.org, AJvYcCWFYHB56j7nNxyggej1S8dQEFI3qCZLtc+wpPkB31S7QpOCGrRNs/NI/zIIQuEapG8PUDJZAvpLZAzg0mT5W+Q=@vger.kernel.org, AJvYcCXBl6a7K7vxQckXIT7eUA8mz1zxOfzqUEFlZGO32MAbp644fXaLXAS7uqtgyHTCs81xCyBaCTeDQ/tzw+o=@vger.kernel.org, AJvYcCXI4KgNVj0k0lmT8C8uq3Iy53H1aE47blRHIWL5hpA95RCGaRhQQqR7cd5jln8QFlkXUZj7u6SLfXf7@vger.kernel.org, AJvYcCXI6dVfI0pAuZuOV0bz8fWnzBqGErMfeNVhfLjWw2FgIb9J3EUsb8YMqxTTQlbkw7YCjrV/nk9+iSqE4A==@vger.kernel.org, AJvYcCXLHBB2xR0gSpcPEyiujFZg3xRlUNY/2hDUSel8hc3YwXN1Bvo1OKIIN/huuCD8qb99K/h1ZtFEUJli@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3MZN3RJLM6JMQlurq0KzxmPwmf3peyowlVtvBSbPXfBe3Wvcx
+	Zt/57HgZmcDNRCWp4tfrxgEjRaC9aMpCNPMVmYs3IMUexCcmlj8C
+X-Google-Smtp-Source: AGHT+IFwOHTmv7xybBTY9E1hOrVStUF7eEvo0pWRQYLqNOIKdK0keUMlla+cJjiazlWheUoWCc8y9w==
+X-Received: by 2002:a17:903:1cd:b0:205:6a9b:7e3e with SMTP id d9443c01a7336-20fab2da04dmr74934675ad.56.1729760381872;
+        Thu, 24 Oct 2024 01:59:41 -0700 (PDT)
+Received: from hcdev-d520mt2.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f6e89sm68503615ad.277.2024.10.24.01.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 01:59:41 -0700 (PDT)
+From: Ming Yu <a0282524688@gmail.com>
+X-Google-Original-From: Ming Yu <tmyu0@nuvoton.com>
+To: tmyu0@nuvoton.com,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	ukleinek@kernel.org,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-rtc@vger.kernel.org
+Subject: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+Date: Thu, 24 Oct 2024 16:59:13 +0800
+Message-Id: <20241024085922.133071-1-tmyu0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McbWNANVLGSFe6aXjcjMoekUwjov8vM1dSMy03Vp4nXzg@mail.gmail.com>
- <12535751.O9o76ZdvQC@g550jk> <CAMRc=Md6j-xizVcYJoC7U03gDspfM6UR_h-1EBHAWhMEo=bRRQ@mail.gmail.com>
- <20241023235424.GA4180@rigel>
-In-Reply-To: <20241023235424.GA4180@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 24 Oct 2024 10:51:52 +0200
-Message-ID: <CAMRc=Mc49inFF57dL933txgcs9u4_WT9eutpbW9xw11rCd_PRg@mail.gmail.com>
-Subject: Re: [ANNOUNCE] libgpiod v2.2
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Luca Weiss <luca@lucaweiss.eu>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 24, 2024 at 1:54=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Wed, Oct 23, 2024 at 08:17:40PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Oct 23, 2024 at 6:25=E2=80=AFPM Luca Weiss <luca@lucaweiss.eu> =
-wrote:
-> > >
-> > > On Dienstag, 22. Oktober 2024 13:16:17 Mitteleurop=C3=A4ische Sommerz=
-eit Bartosz
-> > > Golaszewski wrote:
-> > > > I'm announcing the release of libgpiod v2.2.
-> > > >
-> > > > This is a big update for libgpiod bringing in the D-Bus daemon and =
-its
-> > > > command-line client, GLib bindings with GObject-introspection and a
-> > > > slew of other updates and improvements. The detailed changelog can =
-be
-> > > > found in the NEWS file.
-> > > >
-> > > > The goal of the D-Bus API is to address the concerns about the lack=
- of
-> > > > persistence of GPIO state when the process that requested it exits.
-> > > > Now the state can be stored inside the GPIO manager with which clie=
-nts
-> > > > can interact using a well known protocol.
-> > > >
-> > > > The release tarball and the git tree can be found over at kernel.or=
-g[1][2].
-> > > >
-> > > > Bartosz
-> > > >
-> > > > [1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-> > > > [2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-> > > >
-> > > >
-> > >
-> > > Hi Bartosz!
-> > >
-> > > I'm noticing while packaging for Alpine that the file name of the ins=
-talled
-> > > lib changed from libgpiod.so.3.1.2 in v2.1.3 to libgpiod.so.3.1.1 in =
-v2.2 - so
-> > > essentially it jumped back.
-> > >
-> > > I'm guessing this is not on purpose and while I don't think it should=
- cause
-> > > issues in the distro, I wanted to make you aware.
-> > >
-> >
-> > Everytime I do a release, I bump the libtool ABI numbers as suggested
-> > here[1] depending on how the code evolved between the versions.
-> >
-> > I guess I bumped the revision everytime new fixes landed and were
-> > released in v2.1.x stable branch but for master I only did it once
-> > when releasing v2.2.
-> >
->
-> If the 2.1.x branch is to continue to be supported then the 2.2 branch
-> should've gone with ABI v3.2.0 to provide space for subsequent 2.1.x
-> releases.
-> If 2.1.x is finalised and merged into 2.2 then it needed to be bumped pas=
-t
-> the last 2.1.x, so v3.1.3.
->
-> > I'm not sure what exactly should be done with that. I can of course
-> > set the libgpiod ABI to v2.1.4 in v2.2.1 bugfix release if that
-> > doesn't cause any issues but it doesn't really feel right.
-> >
->
-> You mean v3.1.4 for the ABI, right??  Otherwise it definitely doesn't
-> feel right ;-).
->
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/9), GPIO driver(2/9), I2C Adapter driver(3/9), CANfd driver(4/9),
+WDT driver(5/9), HWMON driver(6/9), IIO driver(7/9), PWM driver(8/9),
+and RTC driver(9/9).
 
-Yes, of course!
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also register a handler function that will be called
+when the USB device receives its interrupt pipe.
 
-> There is no need to skip over v3.1.3 since you haven't used it yet.
-> As I see it, your options are v3.1.3 or v3.2.0, depdending on whether
-> 2.1.x is considered a dead branch.
->
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
 
-I'd go with v3.1.3 as this reflects what happened in the libgpiod
-shared object - there are no new interfaces so it makes no sense to
-bump the age. I also don't plan on supporting the v2.1.x branch
-anymore so v3.1.3 makes the most sense.
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+                            Receive bulk-in pipe to read response packet
+                            Receive bulk-in pipe to read data packet
 
-I'll address it in git for the inevitable v2.2.1 release.
+Ming Yu (9):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CAN support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  iio: adc: Add Nuvoton NCT6694 IIO support
+  pwm: Add Nuvoton NCT6694 PWM support
+  rtc: Add Nuvoton NCT6694 RTC support
 
-Bart
+ MAINTAINERS                      |  15 +
+ drivers/gpio/Kconfig             |  12 +
+ drivers/gpio/Makefile            |   1 +
+ drivers/gpio/gpio-nct6694.c      | 489 ++++++++++++++++++
+ drivers/hwmon/Kconfig            |  10 +
+ drivers/hwmon/Makefile           |   1 +
+ drivers/hwmon/nct6694-hwmon.c    | 407 +++++++++++++++
+ drivers/i2c/busses/Kconfig       |  10 +
+ drivers/i2c/busses/Makefile      |   1 +
+ drivers/i2c/busses/i2c-nct6694.c | 166 ++++++
+ drivers/iio/adc/Kconfig          |  10 +
+ drivers/iio/adc/Makefile         |   1 +
+ drivers/iio/adc/nct6694_adc.c    | 616 ++++++++++++++++++++++
+ drivers/mfd/Kconfig              |  10 +
+ drivers/mfd/Makefile             |   2 +
+ drivers/mfd/nct6694.c            | 394 +++++++++++++++
+ drivers/net/can/Kconfig          |  10 +
+ drivers/net/can/Makefile         |   1 +
+ drivers/net/can/nct6694_canfd.c  | 843 +++++++++++++++++++++++++++++++
+ drivers/pwm/Kconfig              |  10 +
+ drivers/pwm/Makefile             |   1 +
+ drivers/pwm/pwm-nct6694.c        | 245 +++++++++
+ drivers/rtc/Kconfig              |  10 +
+ drivers/rtc/Makefile             |   1 +
+ drivers/rtc/rtc-nct6694.c        | 276 ++++++++++
+ drivers/watchdog/Kconfig         |  11 +
+ drivers/watchdog/Makefile        |   1 +
+ drivers/watchdog/nct6694_wdt.c   | 329 ++++++++++++
+ include/linux/mfd/nct6694.h      | 168 ++++++
+ 29 files changed, 4051 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/iio/adc/nct6694_adc.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/nct6694_canfd.c
+ create mode 100644 drivers/pwm/pwm-nct6694.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
+
+-- 
+2.34.1
+
 
