@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-11930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A1A9AE226
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 12:10:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9A1E9AE240
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 12:15:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 808B62822CE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 10:10:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E981B1C21D5D
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 10:15:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC531C07CD;
-	Thu, 24 Oct 2024 10:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCC271C07CE;
+	Thu, 24 Oct 2024 10:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEqrXrDB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Chvd5Azu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C7117B51A;
-	Thu, 24 Oct 2024 10:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5E31B219E;
+	Thu, 24 Oct 2024 10:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729764601; cv=none; b=a5B3K+GmuIHdEPXnml/hEThfWWOeThCyfoeQiH9r0Uq+Nj5X5W9ck9manmnv3+p2NBlRm9WnFHM+NbMP4L2BiyX6DzBRRf4LrpBHVGv93mwLtJZdpZNVOt8M3zKrI2Fs2yWTX9yVLF5KgpM5DDFj1+0CWygkb5rG5hU5Cyl2s2E=
+	t=1729764928; cv=none; b=JcoUsVQgMFZsKG9xGoD/KfNaxBGUXxZNt5koE/n1fapKbOvhZGLTgB9Pb3M7V7E3RqKNFTRdMMEYO7tmXnJL5UHqXACopOOgN91nTLYoNegRrkcr8sbG+Y2TbfKiRwHLq4hY8ltkKi4j1ymw1TiJdekLdbTs5XF2ohwDu97zdN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729764601; c=relaxed/simple;
-	bh=engmJwWWarFhbbbGk2yuL/t2q2JrqeyZFQ90uq8h+4Q=;
+	s=arc-20240116; t=1729764928; c=relaxed/simple;
+	bh=pM1PKZp1R+TXlQ8+p/PynYznWUaRhv+bSuOtAgtk/VY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oi4+hPf3rBtwrxJeXzPqWY5k/vuQ0uRkK3uneL8rqhCoI08b90lhVklwdoqVV42O+KMJj/5q4xHx6/GrQ8XHaL+yOUYFLJxWJDDgRXNqq34WblNrb56TiUXRkGOaR0Pb2ey1ANn4KqbLmMZO3+LaaS0U2nlumanMqwAe6QPvFE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEqrXrDB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66CE0C4CEC7;
-	Thu, 24 Oct 2024 10:09:56 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=YiUr40LzyFwbubkQVoupyems5+YvnuPd6os6TNouLQEaBjNqyyakn+pgkLChum4n/5ypxv30NNG1B5zmoH99phpWlqXH1yc55Gtr/FLm/Wd4/Jaa0GhTEQ9Ko+A3Nmk7qdHUvY6/YEbpQidJngWJjjH36Ot61/tePKzBggsWUMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Chvd5Azu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBDBBC4CEC7;
+	Thu, 24 Oct 2024 10:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729764601;
-	bh=engmJwWWarFhbbbGk2yuL/t2q2JrqeyZFQ90uq8h+4Q=;
+	s=k20201202; t=1729764927;
+	bh=pM1PKZp1R+TXlQ8+p/PynYznWUaRhv+bSuOtAgtk/VY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YEqrXrDBrtGgH0/gCx20QY05rgXJq9N2GRIFF6U7sVVmeONYDJioTR80LWhssYJkb
-	 wDZn8oxxamMFa2ZiYzDLBIP70hfSsxhLUf2OHhiJaMj9Aw8+XQF6Xhd15h9lmGnX8y
-	 XjF/X8COxXVWuBmMc3C/xkw4gSOQ6IL6u8ONWo5RINVfbgm1kVxqYgLK18HBka3sXX
-	 ppVZcHK/18CHYlZ2YcIw5h2byTcWCDFzVrD7l+6tM+KclekSqab6pfbb4KCUJ88i2a
-	 Qm3Q8aT085Q0VaOuyc74F2oB4JTWfFvWyKjGIF/MHcgSZbvTHdXfUdWaSGOfnmKGHE
-	 VDnq7Y8jwdWbA==
-Message-ID: <4c071100-f49c-4dcb-add8-99427fda268a@kernel.org>
-Date: Thu, 24 Oct 2024 12:09:53 +0200
+	b=Chvd5AzujH23BqSpFBvAXQ86/I+tuZKyoPw+paf+IR/Pa5xpWtcej2n9DV6/FB24L
+	 tmYXsmV1UKPqeZX94yiR6xazvIwJXpTf1VpPQUubsfoQJwQMbZqClDBjjFj/iXRIFv
+	 h34dO1TVF60x/IC+LJOBWn3Xbofk2BJSHInO58TARYCwQu/EZYhhJf57wDJo+spZ8s
+	 /Tl5/zMzPmm/GFLGf40XuP2QXvC0kIQ2BjH/OOP84xTlDPYGC+hmzVsXhUS2fl5hBC
+	 vTlL3o7swFQenAqQgNR9OFPDBIRkNCyYpa9hCG6K+09+5eOg8fPKgkwIbIJrlzRNb6
+	 JPQfjFZwaW6YA==
+Message-ID: <94757582-92db-4b5a-86e0-75d5f74c52e6@kernel.org>
+Date: Thu, 24 Oct 2024 12:15:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/12] dt-bindings: arm: cpus: Add Samsung Mongoose M3
+Subject: Re: [PATCH 11/12] arm64: dts: exynos: Add Exynos9810 SoC support
 To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -64,7 +64,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Maksym Holovach <nergzd@nergzd723.xyz>
 References: <20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com>
- <20241024-exynos9810-v1-1-ed14d0d60d08@gmail.com>
+ <20241024-exynos9810-v1-11-ed14d0d60d08@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,20 +110,181 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241024-exynos9810-v1-1-ed14d0d60d08@gmail.com>
+In-Reply-To: <20241024-exynos9810-v1-11-ed14d0d60d08@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 24/10/2024 00:36, Markuss Broks wrote:
-> Add the compatible for Samsung Mongoose M3 CPU core to the schema.
+> Exynos 9810 is an ARMv8 mobile SoC found in various Samsung devices,
+> such as Samsung Galaxy S9 (starlte), S9 Plus (star2lte),
+> Note 9 (crownlte) and perhaps others.
+> 
+> Add minimal support for this SoC, including basic stuff like:
+> - PSCI for bringing up secondary cores
+> - ARMv8 generic timer
+> - GPIO and pinctrl.
+> 
+> The firmware coming with the devices based on this SoC is buggy
+> and doesn't configure CNTFRQ_EL0, as required by spec, so it's
+> needed to hardcode the frequency in the timer node.
 > 
 > Co-authored-by: Maksym Holovach <nergzd@nergzd723.xyz>
-
-There is no such tag. Maybe you wanted Co-developed-by? But then missing
-SoB - see submitting patches.
-
 > Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 > ---
+>  arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi | 525 +++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos9810.dtsi         | 256 ++++++++++
+>  2 files changed, 781 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..4b2ee59dc7241b0ec31c99fd909d1c5e25aa77e0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi
+> @@ -0,0 +1,525 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/*
+> + * Samsung's Exynos 9810 SoC pin-mux and pin-config device tree source
+> + *
+> + * Copyright (c) 2024 Markuss Broks <markuss.broks@gmail.com>
+> + * Copyright (c) 2024 Maksym Holovach <nergzd@nergzd723.xyz>
+> + */
+> +
+> +#include "exynos-pinctrl.h"
+> +
+> +&pinctrl_alive {
+> +	wakeup-interrupt-controller {
+
+This is part of SoC DTSI.
+
+> +		compatible = "samsung,exynos9810-wakeup-eint",
+> +			     "samsung,exynos850-wakeup-eint",
+> +			     "samsung,exynos7-wakeup-eint";
+> +	};
+> +
+> +	etc1: etc1-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpa0: gpa0-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpa1: gpa1-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpa2: gpa2-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpa3: gpa3-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpa4: gpa4-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpq0: gpq0-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +};
+> +
+> +&pinctrl_aud {
+> +	gpb0: gpb0-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpb1: gpb1-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	gpb2: gpb2-gpio-bank {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +};
+> +
+> +&pinctrl_chub {
+> +	interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+
+Please do not introduce different style than all other files.
+
 
 Best regards,
 Krzysztof
