@@ -1,148 +1,127 @@
-Return-Path: <linux-gpio+bounces-11944-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-11945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7162F9AE416
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:45:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9F599AE439
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 13:57:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F5E51F2386C
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:45:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FD7A1C219F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Oct 2024 11:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370A51CFEA2;
-	Thu, 24 Oct 2024 11:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fuGNBr8N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2751E1D0498;
+	Thu, 24 Oct 2024 11:57:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEED1AC8B8
-	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 11:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C151D0171
+	for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 11:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729770323; cv=none; b=aUrHEk4gknmDkD4HcQtmz01N62uV1dfSGgsDGUKxp9DM0wJBYL9rjvJhpoORyuCXRVJyXJonNj/cMvR1A404AlmhTOoYzIi3hbJPAtIdfi51wIoPJ9suMwUfHt2hVsUrzGzAYlC3wZwqRUKQ0UhqkrfS5JM/KuoIRihlNjCbxc8=
+	t=1729771058; cv=none; b=qo1J7mLCxU7ZU54934H8fpvHhDcvFEbiMWpi5oV/479/vVSj82J7uEFobNCYUl8+lhRkVdFpFu62pkdVMWoT0zG305WeCHlkmXu+S7nNP9VEGq6vd31TmxVx6tavQgJBaKklfGNzuCSZPsUYzI9m8Is1zJMnGbkASw/zRRz1Kh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729770323; c=relaxed/simple;
-	bh=q3Im/x9816GQZIgTnDjRdF+oBg90Pj/N/S23Rklropk=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BIm0MecDEg8/G2qvYsUvE7ssy2kwuxhBEJReux4iQL/j45knDf4Cxhgk0/K3T3nf/2+WdEUKWJ6dgGWPUdiEfixobEAwkU//4wRVwhjgFh9Wm5gwa6qzuKW7VVI1sYu1vxqc0zjKNE1yZPjZbnVFlZxHZL+AXuSaGBxgZIMlTdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fuGNBr8N; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539fbbadf83so1117749e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Oct 2024 04:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729770319; x=1730375119; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eqMwQS9Wvwm9V5Q3IwKqnZIPpc6vrtzT0nsbOwiorlg=;
-        b=fuGNBr8N/wBRvRQOkNjJRE9fv68R0b49HJHTZSMfLn8jtLWymW5uiKHafupIMc9tkz
-         GUxPJEYrthmsJA8j/0x77wevkzvWidRDSMJJ8t89DQULcroKybE6aMKCBFiNYhb7LjUb
-         MJY1QfTB+iqtBsvcERjfvt9LahIO98SXagQATItUp73OUVJJL7OfJ4iGvuYfbSNWLLnR
-         aQ0oBGg3pOG4+TII+hJcGX/6BWXZeLQCAk6Hjhk8rX7HFQjylXTrcMtJKQesLxnH0d41
-         QvsnA3WHvrE/2fwdTbW/K6Pnm6X9qXG645/AClfjx0tPsuIlb8vgPIWrRb7I4In24mX4
-         ZE9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729770319; x=1730375119;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eqMwQS9Wvwm9V5Q3IwKqnZIPpc6vrtzT0nsbOwiorlg=;
-        b=gp0SnW35H29rSnf3OZ2IYvqfxFjBnNZzBK0YiLRtYZXGtDFglam7Oags28EiG2NcfP
-         CA7JzNO5e5tSfb1kfCcVgJ4bT5Ajyjbjfv8bFNc+WQqHk57/vG2wUFDT0TWwr4Qdh6Tz
-         DeeWQ/fygsPXHYsmHuawn35gvhp5uSC1LJFnb11rXIy1m5+mxkP08jbZeq/PKdplAYSn
-         nKgfuNHV5SqNMN9kndKkuzAkN3781MbYua1+BRy3X4w5jvOf1iF9YDpkyWyptRTXUYTm
-         Lq3e30oVcSjD+P2DDl19WjoxG+hp/8V6PHNbq3zFgo+2ZlG3G0erDrjairlViHibVxQ2
-         0YcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXemIyf4WaDh81Z938aMRDrq+nxiiRDb3c45JIrAMAyNwFBuSKqSOYSKDQA0vWGIYyoDj0LQuff3KoA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4StMQymvLdY8W8+WX/Yr5pmtZPA0rgG0cKvQBqK0mw+iDSNlR
-	1DiOxLvIe+LQxfQQn4hcnGuDMmgC08V7+BMAXflmm2OulwwRWTFrSaUr+XC3t42KseYGlkUfFUx
-	1ffONNck/jDe/EPDmVwRFzpY5zm2N0AjSiideDA==
-X-Google-Smtp-Source: AGHT+IFJmvrvkGYF0E5vgP08XJoYOlSg7NtoiwbFsYyNOk80nltuHDkj2KW3wXbU+k71zAFNjZc2Bmo9SZI+XtVWC94=
-X-Received: by 2002:a05:6512:1293:b0:536:55a9:4b6c with SMTP id
- 2adb3069b0e04-53b1a307d85mr3808241e87.13.1729770318940; Thu, 24 Oct 2024
- 04:45:18 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 24 Oct 2024 04:45:18 -0700
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <bf16af3b-d00e-4084-aa29-6e4c1955ed88@gmail.com>
+	s=arc-20240116; t=1729771058; c=relaxed/simple;
+	bh=xQYxe7sjyZTc37ZPzLZnD6uz/KCg9q/JpxCVwCz3ijM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h9mNE6dM8ouam56xBiVnSFkoBe6MK5+LCKvAVFDpprRo+QIFhqAteujBktfMEl58NnVKnuEmAQ2UNq8ggOTzG/yIdg/jyYxUB2XVUmPRjE30VV6Nkwnmdxm0O5/VhUktpZXi2KefI/xQq1ft9gbIgxFGRg6OXYj40Y/pHiCo5fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t3wSl-0003oy-3Z; Thu, 24 Oct 2024 13:57:11 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t3wSi-000BqW-1C;
+	Thu, 24 Oct 2024 13:57:08 +0200
+Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id E7B1635DAA6;
+	Thu, 24 Oct 2024 11:57:07 +0000 (UTC)
+Date: Thu, 24 Oct 2024 13:57:07 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+Message-ID: <20241024-eminent-dancing-narwhal-8f25dd-mkl@pengutronix.de>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241018-gpio-notify-in-kernel-events-v5-0-c79135e58a1c@linaro.org>
- <20241018-gpio-notify-in-kernel-events-v5-8-c79135e58a1c@linaro.org>
- <d6601a31-7685-4b21-9271-1b76116cc483@sirena.org.uk> <CAMRc=MfW9n+y8Dehe_g9b8_=he1YuFr3CEGG3iQEfjYwFiWA_g@mail.gmail.com>
- <CAMRc=MdER_JNcvPMRuzbDFpAUqarC9K8KRP+i5SFTW3H7Mkg=w@mail.gmail.com> <bf16af3b-d00e-4084-aa29-6e4c1955ed88@gmail.com>
-Date: Thu, 24 Oct 2024 04:45:18 -0700
-Message-ID: <CAMRc=McUpRJ=EN3DB7gsgsNKZHhJym6vfURmX9+mXnYuXjNwMA@mail.gmail.com>
-Subject: Re: [PATCH v5 8/8] gpiolib: notify user-space about in-kernel line
- state changes
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="blu56gx3jhnaziml"
+Content-Disposition: inline
+In-Reply-To: <20241024085922.133071-1-tmyu0@nuvoton.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Thu, 24 Oct 2024 13:34:11 +0200, Klara Modin <klarasmodin@gmail.com> said:
->
-> I think I hit the same, or a similar bug, on my Edgerouter 6P (Cavium
-> Octeon III):
->
-> CPU 3 Unable to handle kernel paging request at virtual address
-> 0000000000000000, epc == ffffffff817a40c8, ra == ffffffff817a40a4
-> Oops[#1]:
-> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted
-> 6.12.0-rc4-next-20241023-00032-g01c8e35f8d89 #84
-> ...
-> Call Trace:
-> gpiod_direction_output (drivers/gpio/gpiolib.c:4164
-> drivers/gpio/gpiolib.c:2700 drivers/gpio/gpiolib.c:2694)
-> i2c_register_adapter (drivers/i2c/i2c-core-base.c:396
-> drivers/i2c/i2c-core-base.c:422 drivers/i2c/i2c-core-base.c:434
-> drivers/i2c/i2c-core-base.c:1574)
-> octeon_i2c_probe (drivers/i2c/busses/i2c-octeon-platdrv.c:247)
->
-> (the complete log is attached)
->
-> Unfortunately the oops remains after applying the diff and the call
-> trace looks to be the same.
->
-> Please let me know if there's anything else you need.
->
 
-Hmm so it's desc->gdev that is NULL... Could you try the following:
+--blu56gx3jhnaziml
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+MIME-Version: 1.0
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ae758ba6dc3d..c95c79ea2b49 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1026,6 +1026,9 @@ int gpiochip_add_data_with_key(struct gpio_chip
-*gc, void *data,
- 		}
- 	}
+On 24.10.2024 16:59:13, Ming Yu wrote:
+> This patch series introduces support for Nuvoton NCT6694, a peripheral
+> expander based on USB interface. It models the chip as an MFD driver
+> (1/9), GPIO driver(2/9), I2C Adapter driver(3/9), CANfd driver(4/9),
+> WDT driver(5/9), HWMON driver(6/9), IIO driver(7/9), PWM driver(8/9),
+> and RTC driver(9/9).
+>=20
+> The MFD driver implements USB device functionality to issue
+> custom-define USB bulk pipe packets for NCT6694. Each child device can
+> use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+> a command. They can also register a handler function that will be called
+> when the USB device receives its interrupt pipe.
 
-+	for (desc_index = 0; desc_index < gc->ngpio; desc_index++)
-+		gdev->descs[desc_index].gdev = gdev;
-+
- 	ATOMIC_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+What about implementing a proper IRQ demux handler instead?
 
-@@ -1055,8 +1058,6 @@ int gpiochip_add_data_with_key(struct gpio_chip
-*gc, void *data,
- 	for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
- 		struct gpio_desc *desc = &gdev->descs[desc_index];
+Marc
 
--		desc->gdev = gdev;
--
- 		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
- 			assign_bit(FLAG_IS_OUT,
- 				   &desc->flags, !gc->get_direction(gc, desc_index));
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-I'm wondering if this is not an earlier commit.
+--blu56gx3jhnaziml
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Bart
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaNhAACgkQKDiiPnot
+vG87/wf9FJMF3SXXDzY25O6vuNVJyis/VDnwW4GtX0mAzuSYUFfRD/6oWOr7tJbT
+C7JyM5vxh7TVTcs1oLrKz4ufgFBzB9UtRZxOZ8WezObY5mrL51ZMVGKnACPeVwSL
+S76wiGoGTk82k+K7kH7i1mKJ4vfo9X9W6buVqbALyeVxwmkAKG3tZV6s0e7vh26E
+NFaYMTOQ9APdNH5s8UNA5xLkkJ7YzbEfPvaXPj7fobf7wRtrO1LnP7LoQQ83f1M1
+zCEbqXF8onDNWc2EIheF91B0zIQMdLoYwEY/LOr5hvPedIKHv/9o5LjJ3F1KRG8u
+omjKBgvpX105+g3z8BZzSRTe7PPBVg==
+=Qdfl
+-----END PGP SIGNATURE-----
+
+--blu56gx3jhnaziml--
 
