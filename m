@@ -1,251 +1,131 @@
-Return-Path: <linux-gpio+bounces-12096-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12097-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 188FF9B023F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:24:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9213B9B0294
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:38:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DE7CB22860
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:24:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11501B22AFD
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:38:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 056C92003BC;
-	Fri, 25 Oct 2024 12:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A87231CBA;
+	Fri, 25 Oct 2024 12:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DabUAD8C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9B1E1A39
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 12:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E556C1F757B;
+	Fri, 25 Oct 2024 12:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729859071; cv=none; b=e/BdKtllrH3E/dAuTTy/i24KXPUEzpgwycJucU+7xxGEzyhaqT/5454Xdrx1qWRF9N5Vz7KyHjHaVYQqLQmVJe8mgbDpLKlW2G+/d0cCRSfVHtTcgcKRdMmbicXg7FtPieX8RXJuE6AK9XFV5BdXT3Vu4+JXlVGAEtti4acF92k=
+	t=1729859816; cv=none; b=TH0fymlCvOzJFeeA9yHu2ALWj/yQO0jJ733tOMOnd4IgbVh6BNMglPNzTbUFF/QpLMeg8IUyi6Rr5QGV64BLK4PQvVjJOTtgwleuvhUt1rSZSWWxmaeSjngZZyIwGXL5seohH0j6a4fGWONnlJ8nHL+zjA1dLWy7xp5K5/1op1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729859071; c=relaxed/simple;
-	bh=RotsDzwV65vdcegbc+IWs4ohE9v9gVi2rfCJNN0Lg0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jw+HzgICWqAUkF59w5AUNhn8sCoSNC6FuzI8c2OTRqLZftaA2nJmAbBuKYZVCWi+wILN8MFJle84LyAn5lhrAn4hTPexE0wUR5vXnEtNYVkIBG8UyILovzDzDsSbh5er9uh9QEGRjDT2CbY3fYp3A0CzEjlguuGrhSXj17ca01E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t4JMG-0002fY-8D; Fri, 25 Oct 2024 14:24:00 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t4JMC-000MW9-0p;
-	Fri, 25 Oct 2024 14:23:56 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id CAFC235EA1D;
-	Fri, 25 Oct 2024 12:23:55 +0000 (UTC)
-Date: Fri, 25 Oct 2024 14:23:55 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241025-spirited-nocturnal-antelope-ce93dd-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-2-tmyu0@nuvoton.com>
- <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
- <CAOoeyxUhnyYG3p+DQJG-tvU5vc5WYQZLLqCXW=uPcXTjq2gVfw@mail.gmail.com>
- <20241025-truthful-honest-newt-c371c8-mkl@pengutronix.de>
- <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
+	s=arc-20240116; t=1729859816; c=relaxed/simple;
+	bh=AviaUlBZZ7+hKNoYNAUPRHtZzUriK4vdXQg7T26UsIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fapZbP/jbn+gpTL3PJ4PjaH2/aJTTJxkDkOglVqHBHnB9S2vyrPfwX+qOaB7JhA5WasghDEURr1yTBXRBc6cSJFw4MLJC/Q6qIubzDrD1UM+GagwRnsn6VAl9ozpYM2L4jKBq87Vouw+lbL5Jt1evRW/CJTgPrre7WFxauiOb/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DabUAD8C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CA8C4CEE4;
+	Fri, 25 Oct 2024 12:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729859815;
+	bh=AviaUlBZZ7+hKNoYNAUPRHtZzUriK4vdXQg7T26UsIk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DabUAD8CBTJ/fcvc3I1PcvD64SdtCoiNU47bU5xiPJeACTlIzbRn5vNKsHOiDI/EM
+	 tNcOkxxaPIky8mtODB/szRydZXQ7VZtdhfglH3jKQGDb1NvuFTcO/8hjLQbxq2Cuc4
+	 R/VnmOKyEfIb7ciRw+eOUYgIM//mzezvT+6nxzz4BbPdn8ZofI2OaUZdWT+DHgOlp7
+	 MM5B6gEdo/3CVg2/E6qa5SRczQBNKSLIfxWcRWNYvIk5DxRp2d/EBIButbVpyvx5Jg
+	 ZWwhSouYaKL9kYf7p9osSKg8BSwSc0useKgER3gVWX2Cavsm8zqMC1ssopUx8jD6lZ
+	 Gggw8yUW7X+pQ==
+Message-ID: <2dae341e-2784-40ec-9a06-620c467e62bd@kernel.org>
+Date: Fri, 25 Oct 2024 14:36:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z3j4brfwrbwtq3fy"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/12] dt-bindings: arm: cpus: Add Samsung Mongoose M3
+To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
+ <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Maksym Holovach <nergzd@nergzd723.xyz>
+References: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
+ <20241025-exynos9810-v2-1-99ca3f316e21@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241025-exynos9810-v2-1-99ca3f316e21@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 25/10/2024 13:24, Markuss Broks wrote:
+> Add the compatible for Samsung Mongoose M3 CPU core to the schema.
+> 
+> Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
+> Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
+> 
+> Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 
---z3j4brfwrbwtq3fy
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
+There is never a blank line between tags. Use git log to see how people
+were doing it, if you ever have questions.
 
-On 25.10.2024 19:03:55, Ming Yu wrote:
-> Oh! I'm sorry about that I confused the packet size.
-> The NCT6694 bulk maximum packet size is 256 bytes,
-> and USB High speed bulk maximum packet size is 512 bytes.
->=20
-> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=88=
-25=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:08=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> >
-> > On 25.10.2024 16:08:10, Ming Yu wrote:
-> > > > > +int nct6694_read_msg(struct nct6694 *nct6694, u8 mod, u16 offset=
-, u16 length,
-> > > > > +                  u8 rd_idx, u8 rd_len, unsigned char *buf)
-> > > >
-> > > > why not make buf a void *?
-> > >
-> > > [Ming] I'll change the type in the next patch.
-> > >
-> > > >
-> > > > > +{
-> > > > > +     struct usb_device *udev =3D nct6694->udev;
-> > > > > +     unsigned char err_status;
-> > > > > +     int len, packet_len, tx_len, rx_len;
-> > > > > +     int i, ret;
-> > > > > +
-> > > > > +     mutex_lock(&nct6694->access_lock);
-> > > > > +
-> > > > > +     /* Send command packet to USB device */
-> > > > > +     nct6694->cmd_buffer[REQUEST_MOD_IDX] =3D mod;
-> > > > > +     nct6694->cmd_buffer[REQUEST_CMD_IDX] =3D offset & 0xFF;
-> > > > > +     nct6694->cmd_buffer[REQUEST_SEL_IDX] =3D (offset >> 8) & 0x=
-FF;
-> > > > > +     nct6694->cmd_buffer[REQUEST_HCTRL_IDX] =3D HCTRL_GET;
-> > > > > +     nct6694->cmd_buffer[REQUEST_LEN_L_IDX] =3D length & 0xFF;
-> > > > > +     nct6694->cmd_buffer[REQUEST_LEN_H_IDX] =3D (length >> 8) & =
-0xFF;
-> > > > > +
-> > > > > +     ret =3D usb_bulk_msg(udev, usb_sndbulkpipe(udev, BULK_OUT_E=
-NDPOINT),
-> > > > > +                        nct6694->cmd_buffer, CMD_PACKET_SZ, &tx_=
-len,
-> > > > > +                        nct6694->timeout);
-> > > > > +     if (ret)
-> > > > > +             goto err;
-> > > > > +
-> > > > > +     /* Receive response packet from USB device */
-> > > > > +     ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BULK_IN_EN=
-DPOINT),
-> > > > > +                        nct6694->rx_buffer, CMD_PACKET_SZ, &rx_l=
-en,
-> > > > > +                        nct6694->timeout);
-> > > > > +     if (ret)
-> > > > > +             goto err;
-> > > > > +
-> > > > > +     err_status =3D nct6694->rx_buffer[RESPONSE_STS_IDX];
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Segmented reception of messages that exceed the size of =
-USB bulk
-> > > > > +      * pipe packets.
-> > > > > +      */
-> > > >
-> > > > The Linux USB stack can receive bulk messages longer than the max p=
-acket size.
-> > >
-> > > [Ming] Since NCT6694's bulk pipe endpoint size is 128 bytes for this =
-MFD device.
-> > > The core will divide packet 256 bytes for high speed USB device, but
-> > > it is exceeds
-> > > the hardware limitation, so I am dividing it manually.
-> >
-> > You say the endpoint descriptor is correctly reporting it's max packet
-> > size of 128, but the Linux USB will send packets of 256 bytes?
->=20
-> [Ming] The endpoint descriptor is correctly reporting it's max packet
-> size of 256, but the Linux USB may send more than 256 (max is 512)
-> https://elixir.bootlin.com/linux/v6.11.5/source/drivers/usb/host/xhci-mem=
-=2Ec#L1446
+Best regards,
+Krzysztof
 
-AFAIK according to the USB-2.0 spec the maximum packet size for
-high-speed bulk transfers is fixed set to 512 bytes. Does this mean that
-your device is a non-compliant USB device?
-
-> > > > > +     for (i =3D 0, len =3D length; len > 0; i++, len -=3D packet=
-_len) {
-> > > > > +             if (len > nct6694->maxp)
-> > > > > +                     packet_len =3D nct6694->maxp;
-> > > > > +             else
-> > > > > +                     packet_len =3D len;
-> > > > > +
-> > > > > +             ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(udev, BU=
-LK_IN_ENDPOINT),
-> > > > > +                                nct6694->rx_buffer + nct6694->ma=
-xp * i,
-> > > > > +                                packet_len, &rx_len, nct6694->ti=
-meout);
-> > > > > +             if (ret)
-> > > > > +                     goto err;
-> > > > > +     }
-> > > > > +
-> > > > > +     for (i =3D 0; i < rd_len; i++)
-> > > > > +             buf[i] =3D nct6694->rx_buffer[i + rd_idx];
-> > > >
-> > > > memcpy()?
-> > > >
-> > > > Or why don't you directly receive data into the provided buffer? Co=
-pying
-> > > > of the data doesn't make it faster.
-> > > >
-> > > > On the other hand, receiving directly into the target buffer means =
-the
-> > > > target buffer must not live on the stack.
-> > >
-> > > [Ming] Okay! I'll change it to memcpy().
-> >
-> > fine!
-> >
-> > > This is my perspective: the data is uniformly received by the rx_bffe=
-r held
-> > > by the MFD device. does it need to be changed?
-> >
-> > My question is: Why do you first receive into the nct6694->rx_buffer and
-> > then memcpy() to the buffer provided by the caller, why don't you
-> > directly receive into the memory provided by the caller?
->=20
-> [Ming] Due to the bulk pipe maximum packet size limitation, I think consi=
-stently
-> using the MFD'd dynamically allocated buffer to submit URBs will better
-> manage USB-related operations
-
-The non-compliant max packet size limitation is unrelated to the
-question which RX or TX buffer to use.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---z3j4brfwrbwtq3fy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcbjdgACgkQKDiiPnot
-vG95/AgAiPNi/vMS9nchDZVXjokoV01fOqux/uWYm+s/lk7YtmY8A44YW4qnCziW
-AOtNeirWbJkwxb2gXSJoK7kvmkzC0+AKgJgksEaV9w8iu36UwdncI9DddyFBqp94
-PtK+pw4tDYIMbCv4kfBwZYfd3jLkhd2gUpSCy5ILk8kYXOt3okVldhS+fRVP7HvV
-lz0bdF8a+MHgpnYI8ird2jHHUkaCMDqmkwQ5ZNaqwxRUGOuoGLiHcsrsijM6y0N7
-eVkF1YBCJDx9GB/uBAF0ySqoCk43czk3hGNRxImH5oN8Z1vaFj8ojSHQKSRrDqS2
-eFNtgifkiNOayvdYTjHVPmq2TfsYHA==
-=aegl
------END PGP SIGNATURE-----
-
---z3j4brfwrbwtq3fy--
 
