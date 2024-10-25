@@ -1,124 +1,191 @@
-Return-Path: <linux-gpio+bounces-12067-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12068-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E2049B010C
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:19:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F07269B011F
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:25:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0493D1F224BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:19:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AE1C284241
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:25:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 174AE1FE0E3;
-	Fri, 25 Oct 2024 11:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE73E201016;
+	Fri, 25 Oct 2024 11:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WEcU7ct/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nn8/gwV2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100191C0DF0;
-	Fri, 25 Oct 2024 11:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3C71FDF87;
+	Fri, 25 Oct 2024 11:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729855156; cv=none; b=s8TcqKkio1Z9JEXLS4x8hHxMj93axLIx2V/h1nayGM54SRNtGqG1kqKaCAkcxuOHQFBkYEiybp4OfD6+KnCFBrXX6s8QZYMeRy9EybzBdiUq9DC4E6/o1Smg13qQ0KVqOMOTfu8OB2CXKGswyiLQ9VcvuFFXBQ57/UE8nvPsbXE=
+	t=1729855513; cv=none; b=nBIFt3AVzOvWRngbyNgKZ8ndUjJnqI7tj6iUhMr3gWhr0aLrg7Rq+bcO5I39a5AgFBPPxe1C/kYPBOwvD8rRZaYzDd6rgRSm5q+b4uNAZYbU6v2MknT0l7IiH8a1iibUoGWFp6C+3/g7RVxQSnjOx7SoDcAfe5HHrqw6aH4c53s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729855156; c=relaxed/simple;
-	bh=vCGAignBD2aACKDs7S5GJuHf9mCuUXHCpGJFImU69cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gd58L8PE2MbBanuUSwUat+OcxQmBQK4bKN7BhI0oCDey796XUmldK7D1lRE0x0zqarfQniCfiPssEJTi8Cd0c972SP5EltS/pO0pIFK0flJvLE4sWZfFzED4AJn0bEJOJLQ5JbYrtdJlLIrybDvd7HnnERkd+s5wJo4whLISlcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WEcU7ct/; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729855154; x=1761391154;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vCGAignBD2aACKDs7S5GJuHf9mCuUXHCpGJFImU69cA=;
-  b=WEcU7ct/FIg9kA2Y7FyQYiVPdqMiOqfozi+oge87XYMl0zhUUXzOvUy6
-   a0Clyod5Ig+C+c3prbNPG+ldJ/jz+76GBUEhaFjRjCIUl1y8wCbSB+H3j
-   t8RV4E5saBsFSdWvBc1z9kmj9rblSMxDGqr0G9wy2it1AErvsRMWziBOe
-   SFIm7hTD77dKzB9GNN0Bn36485+T4/tE1YKdGKesXa0L/p8JYJdvBX7NF
-   GeN8ALVG6PGI+OzoFV32BaegtD3eQ4kRZox5XO6VEVOLmZaHjowx1IZxg
-   vz3M623lPehupCJdSxkHNpoKiv5tKzThIHH6UhIDvKOQIhpw92A5BRDdE
-   A==;
-X-CSE-ConnectionGUID: GUgupysyTuyekhI78fhiHA==
-X-CSE-MsgGUID: +AmmUj8eQYCNdsrkaBy4lw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29381352"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29381352"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 04:19:12 -0700
-X-CSE-ConnectionGUID: Nq9Fh6YPQYKn0TJAHVXvOg==
-X-CSE-MsgGUID: 8G3UHRYvS4SIIxB3oCH72Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,231,1725346800"; 
-   d="scan'208";a="80803511"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 25 Oct 2024 04:19:00 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t4ILJ-000Y8A-2O;
-	Fri, 25 Oct 2024 11:18:57 +0000
-Date: Fri, 25 Oct 2024 19:18:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com, jic23@kernel.org,
-	lars@metafoo.de, ukleinek@kernel.org, alexandre.belloni@bootlin.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-Message-ID: <202410251825.ZVzMFUSc-lkp@intel.com>
-References: <20241024085922.133071-5-tmyu0@nuvoton.com>
+	s=arc-20240116; t=1729855513; c=relaxed/simple;
+	bh=54KeIELGN5UoU7VoTMqUmaFmxCb6rTL4TU17Be6imWM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Qt//AEON6PICcy5+/ws/xQR7lbA+zcgygXHycoAuXhtGgVdtmdt5nzw5TdiYoOQGlHib2ipgsAAprEbyKwVZzyJwhVPVrbiIaPaQ6e18RDsFggvOdA/KIJhlMOCCHV9g53FgN7OtwORWFdtFbZAgC8tXACVg84xUVe5qhlYqTm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nn8/gwV2; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-539d9fffea1so1785643e87.2;
+        Fri, 25 Oct 2024 04:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729855509; x=1730460309; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGDxFbsJCpgRnwwlevb7m4c9bmH+TBe47/8+WZp8fvI=;
+        b=Nn8/gwV2suADXxQvm+Ageo9jYzgWrFylGFEjRQPrTTelyhDu0KJK8KsYVv/1PAMqXk
+         S/JytJepcaN5OwHSURvNySQy9m2fojGMhfCtoKyNQyLGGmSXn/j7jioSheJx+AYi7L0s
+         SMLyelyaAkVa3PXNM4NlCzJzwUC9u8i6HwGd5JdebCzzHLYKrABikjpWP+7dwpTKNUXw
+         SexMCVKGmfnRvOuLeKhIjU/RVEYyb783jEKD3Nzr9ZV7UqPa0DAFbjTUVCJHsp6gAics
+         tSJHjEcQXP9S1mdiyyJl24p/hMGh66aU5yJhax+8vwJGe/kauJLcCpP1gTH9RJSpC/W4
+         X/rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729855509; x=1730460309;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LGDxFbsJCpgRnwwlevb7m4c9bmH+TBe47/8+WZp8fvI=;
+        b=PQ8W/+YjVgbBdzO8Mzs/zv9CxMIQ6sBLbpspya2HU0i8OEG0I3a13bCm3SrSP6zH5y
+         UDmCmabxvOnPAI1puP4GYBYEqahU+K5R8QewjCr+TNf/yd+aO1UDq8HP1KxjtTeSANmU
+         TiKhmWfd6I7L/vXPyqjJKdFoKl7r2yrfAl/D7Diq0JjlggE4BdxaM+ZPTZGs/QIQI/Ok
+         yF/JdtVk8qExRV2EHqgd/LEmS4qWWDnKZTTHGIxuD6a+IbeqHaSSyltz/HwFEiLfqF53
+         WJis182ArGo2di/ZwcTtMdvTnfspiv0OIIrIXbhAgFPOugheuLoTBCrGJ/JzAqBaRi0p
+         O8IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAZlT8EXtguZyJYuTLCHGynAXnn53TgSrxgi8l7cPbQ5TWQv0B1qkPkaNUP2Y5N1Ko/KYNKokXA332@vger.kernel.org, AJvYcCVgsefpZsBUzyclgIuzkwowNQ1ckyytS9sC/t02f7U8bb/uvuASDeNEXtr6jA9Ayaby1yBMsAayUVrOQuJy7CjbGgQ=@vger.kernel.org, AJvYcCXUrG7oHazLqcMr+Pu6UrLuly9ZaQGY5TLqxG37Tmr0977TP8qEeVKtef1e/SZOnduNWiVN0I70YXCIvMdu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCD/oi0A7uIV9CMc4LO4gkT5+hUr/ay463aw8n5MmHWG24Q26r
+	z8Def9m2iUcG5+7LCvT1JevSAE7Q2L3w9dft0HwGp9/RWNiNnliuunoSFg==
+X-Google-Smtp-Source: AGHT+IGLZ+DwA6Tv+psqxv1iXTbBvh4nLKYcWHwMvOU0NZepTzQtBH2heZMmyHzsdO30dYav8AWDTA==
+X-Received: by 2002:a05:6512:692:b0:539:da76:c77e with SMTP id 2adb3069b0e04-53b23ddcf22mr3404001e87.5.1729855508445;
+        Fri, 25 Oct 2024 04:25:08 -0700 (PDT)
+Received: from [192.168.1.105] ([178.136.36.129])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1c90c0sm144028e87.189.2024.10.25.04.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 04:25:08 -0700 (PDT)
+From: Markuss Broks <markuss.broks@gmail.com>
+Subject: [PATCH v2 00/12] Add support for Exynos9810 SoC and Samsung Galaxy
+ S9 (SM-G960F)
+Date: Fri, 25 Oct 2024 14:24:47 +0300
+Message-Id: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024085922.133071-5-tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP9/G2cC/22MQQ6CMBBFr0Jmbc20oqGuvIdhQZkRJhFKWtNAS
+ O9uZe3iL95P3tshchCOcK92CJwkip8LmFMF/djNAyuhwmDQ1LpM8brNPtpGo3IXZrL26tBZKMI
+ S+CXrEXu2hUeJHx+2o5307/2bSVqhYtI1Id2QsHkMUyfvc+8naHPOX/PxgvOkAAAA
+X-Change-ID: 20241024-exynos9810-b3eed995b0b9
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Tomasz Figa <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Markuss Broks <markuss.broks@gmail.com>, 
+ Maksym Holovach <nergzd@nergzd723.xyz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729855507; l=3840;
+ i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
+ bh=54KeIELGN5UoU7VoTMqUmaFmxCb6rTL4TU17Be6imWM=;
+ b=aFoIQjX4s33D+HoI0XHlci/aW6O5Iloyc1/DSx9Q7I4F7SnEG1WTOSJvqq2kcGnSIDGXDPyz9
+ S7TvTxv4posB5BR3Egq4IG5rt1QLJcAB096BsSCEVtJjEBTym4LTI/n
+X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
+ pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-Hi Ming,
+Hello,
 
-kernel test robot noticed the following build errors:
+This series adds initial SoC support for the Samsung Exynos 9810
+SoC and initial board support for Samsung Galaxy S9 phone (SM-G960F),
+codenamed starlte.
 
-[auto build test ERROR on lee-mfd/for-mfd-next]
-[also build test ERROR on brgl/gpio/for-next andi-shyti/i2c/i2c-host mkl-can-next/testing groeck-staging/hwmon-next jic23-iio/togreg abelloni/rtc-next linus/master lee-mfd/for-mfd-fixes v6.12-rc4 next-20241024]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The Exynos 9810 SoC is also used in S9 Plus (star2lte), Note 9 (crownlte),
+and perhaps more devices. Currently only Galaxy S9 DTS file is added but it
+should be fairly simple to add support for other devices based on this SoC,
+considering they're quite similar.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Yu/mfd-Add-core-driver-for-Nuvoton-NCT6694/20241024-170528
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20241024085922.133071-5-tmyu0%40nuvoton.com
-patch subject: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20241025/202410251825.ZVzMFUSc-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241025/202410251825.ZVzMFUSc-lkp@intel.com/reproduce)
+The support added in this series includes:
+- cpus
+- pinctrl and gpio
+- simple-framebuffer
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410251825.ZVzMFUSc-lkp@intel.com/
+This is enough to boot to a minimal initramfs shell.
 
-All errors (new ones prefixed by >>):
+The preferred way to boot this device is by using a small shim bl called
+uniLoader [1], which packages the mainline kernel and DT and jumps to
+the kernel. This is done in order to work around some issues caused by
+the stock, and non-replacable Samsung S-Boot bootloader. For example,
+S-Boot leaves the decon trigger control unset, which causes the framebuffer
+to not refresh, so simple-framebuffer wouldn't work without a secondary loader.
+Ideally, there'll be a kernel driver for the display subsystem some day to
+resolve this issue.
 
->> make[6]: *** No rule to make target 'drivers/net/can/nct6604_canfd.o', needed by 'drivers/net/can/built-in.a'.
-   make[6]: Target 'drivers/net/can/' not remade because of errors.
+[1] https://github.com/ivoszbg/uniLoader
 
+Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
+---
+Changes in v2:
+- sort the pinctrl nodes alphabetically (ivo)
+- move the interrupts from pinctrl file to SoC dtsi (krzk)
+- move the wakeup-eint from pinctrl file to SoC dtsi (krzk)
+- sort gpio-keys pinctrl-0 and pinctrl-names (ivo)
+- rename the bixby key node to "wink" (ivo)
+- sort gpio-keys subnodes (ivo)
+- sort pinctrl_alive gpio-keys pin descriptions (ivo)
+- fix the Co-developed-by tags and add a signoff (krzk)
+
+- Link to v1: https://lore.kernel.org/r/20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com
+
+---
+Markuss Broks (12):
+      dt-bindings: arm: cpus: Add Samsung Mongoose M3
+      dt-bindings: hwinfo: samsung,exynos-chipid: Add Samsung exynos9810 compatible
+      dt-bindings: pinctrl: samsung: Add compatible for Exynos9810 SoC
+      dt-bindings: pinctrl: samsung: Add compatible for exynos9810-wakeup-eint
+      dt-bindings: soc: samsung: exynos-pmu: Add exynos9810 compatible
+      dt-bindings: arm: samsung: Document Exynos9810 and starlte board binding
+      dt-bindings: arm: pmu: Add Samsung Mongoose core compatible
+      perf: arm_pmuv3: Add support for Samsung Mongoose PMU
+      soc: samsung: exynos-chipid: Add support for Exynos9810 SoC
+      pinctrl: samsung: Add Exynos9810 SoC specific data
+      arm64: dts: exynos: Add Exynos9810 SoC support
+      arm64: dts: exynos: Add initial support for Samsung Galaxy S9 (SM-G960F)
+
+ Documentation/devicetree/bindings/arm/cpus.yaml    |   1 +
+ Documentation/devicetree/bindings/arm/pmu.yaml     |   1 +
+ .../bindings/arm/samsung/samsung-boards.yaml       |   6 +
+ .../bindings/hwinfo/samsung,exynos-chipid.yaml     |   1 +
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |   1 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |   1 +
+ .../bindings/soc/samsung/exynos-pmu.yaml           |   1 +
+ arch/arm64/boot/dts/exynos/Makefile                |   1 +
+ arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi | 503 +++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos9810-starlte.dts  | 120 +++++
+ arch/arm64/boot/dts/exynos/exynos9810.dtsi         | 273 +++++++++++
+ drivers/perf/arm_pmuv3.c                           |   3 +
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 154 +++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
+ drivers/soc/samsung/exynos-chipid.c                |   1 +
+ 16 files changed, 1070 insertions(+)
+---
+base-commit: f2493655d2d3d5c6958ed996b043c821c23ae8d3
+change-id: 20241024-exynos9810-b3eed995b0b9
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Markuss Broks <markuss.broks@gmail.com>
+
 
