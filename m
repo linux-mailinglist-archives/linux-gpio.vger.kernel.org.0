@@ -1,201 +1,115 @@
-Return-Path: <linux-gpio+bounces-12059-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12060-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 334719AFCAD
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 10:36:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC6519AFCD9
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 10:43:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73A34B227EF
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 08:36:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D00B51C2177A
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 08:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126F8192592;
-	Fri, 25 Oct 2024 08:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 241261D318C;
+	Fri, 25 Oct 2024 08:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OhwjyihS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0297118C029
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 08:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEAB1D2232
+	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 08:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729845360; cv=none; b=Hq4xzU9PCCqmK++DeUVYW9/39LcOTVPbrlINTEkzdzL4+CtNvlup5o65dTvQ+Mux4p4UWAGtRevA2LCK/BCszpo4W1EGTsxPh4L7p3VAbfBAIMnhGBxU9p6ijkfysaE72Gj5FMnR2vgkGD/ZFe0SHLzsR0tNHu737GMx+9S3VTE=
+	t=1729845799; cv=none; b=IbiqvaK1oDKcrY5E5mzhsu7mKOnutW97Cm9pKf5hFsI7A5WL6IbZQtnIhVeK6I65HX592QMG3eg2l80Gkhs1qtPLTuuTvGuCZAPkmnhNL7zTlmb7jBKSMD/4O2hKMa/IJ+xzwyOwmV8vyFYDE7zuSTF8NMHIP0fFNRsk4AyxtLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729845360; c=relaxed/simple;
-	bh=rDNzoAVAQ7d9KvhiOmytKGL5nTR62o+4UNsL3k6X9+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qsEMP4xagz9K1UsJ+QekEme9ZCsymFVJ9tTKS7s81OCXiR001EdSnZm9OjASch0Cz+SVhPEfw7O7hsgUWmLDg5116nuy650/0C2W7DUE0Ezv1ChNJhAUksG5qrtf+AFxHBceQJo8wXjkSRZArtS0DLKWO8p2aLiCTgZZdbNz6Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t4FnF-0007rX-1Y; Fri, 25 Oct 2024 10:35:37 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t4FnE-000Kpw-1k;
-	Fri, 25 Oct 2024 10:35:36 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1313335E80B;
-	Fri, 25 Oct 2024 08:35:36 +0000 (UTC)
-Date: Fri, 25 Oct 2024 10:35:35 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241025-sexy-fanatic-snail-a1d2e7-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-2-tmyu0@nuvoton.com>
- <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
- <20241024-pumpkin-parrot-of-excellence-299c57-mkl@pengutronix.de>
- <CAOoeyxXX2fpHVJ8urLmy+pBjH1aRdYu6qrtwOmwUxTUyQq30DA@mail.gmail.com>
+	s=arc-20240116; t=1729845799; c=relaxed/simple;
+	bh=Is6fCU7r2O627z6txt09DGR3k7pJC1u2UpNlPdCrthw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VrSkh3GPRleRirvxji2cNMMBnWC6R482HlySIDwU0d38f7899l19y1AJh92aWo2holj4P7zeDfabnBPd9t3Qlgq2DPy4yYRz1Gcqk0XIpatodktL4FDi4SIkh5TzhnQyDgMnTb1zIQAjmW0DkxHOGnPr2xWBnEoZLONpscGy6FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OhwjyihS; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2fb59652cb9so18218241fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 01:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1729845796; x=1730450596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5bnGk2OAtXC2qhYzxaIFFCqNFOv/GnSjD450ML+33Ug=;
+        b=OhwjyihS7PDKATuISukhE/gTsFO0++MeLlAa4En2haUcxfoxt/FJjEfQcp6tpHsPRG
+         7+brU8WGJT7nut5a0zitfFNknM3sUwmDLULfkYXkBA5wTlrelX9pgeTYrs7ToABHZH5M
+         6dsfINdkySTMkU6LiMGov08QwJwNVo1a4Q72NnSZOw/H+qZbtFVcsv0YFlRc81cw4fgp
+         31wf/OR48ES74u5wVKj/ls4itIHZioPXdsl7PAR2c/msYwhpGdN6YbiJlXGgvVn2xkiU
+         QpccuriUEQGqLqEMrjr1fXK+sA8CuRjHlJgirow0Q8tzNWNyF1kHorx9ZPy4aRaE9ymp
+         2Tcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729845796; x=1730450596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5bnGk2OAtXC2qhYzxaIFFCqNFOv/GnSjD450ML+33Ug=;
+        b=XXppcws94gfPAU/tzYMs8KsvdB0PLC3g/jw7QeZHTh2jDX/t65qnSAte3pisghRwiL
+         0cdX71SZhoECK0EFRZZ58A4cwFuoA1WAV5wg/XN3BaNdxuSMGmES8cORmBVDlR2B4q4m
+         YfDLbdAeAvWARNll1xoGFumjmrHgHJqjb5d6j8cYyzRRDggeB4RYdEpkY4SUjjIRwFRK
+         7/7nqjPqe6hSoumscjk1tcWtQDF2w2waJl0gmFfAV/HE384xLiMDOfTPSbIwyN6NiWfo
+         I+rgAjTe89hKKmERNOpB6cBVYfKKRg/s6P7Sx7X//1kKkXMSukyf0NmseueWM0NfkTno
+         Uy0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUrbyGOXik3J+M0y/SC8PLW9gRIw8sXgdOEtx+izl8qNIS02W1radBcdXlzNZNVC+o+2k2EEa0xxGWl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8XilTMrc4fz5rXxu/xV0DkO7q7MbQWvlV+THNCBSXcZIBXvfH
+	VXNiLxozpxi3ffr9iKbQn2t7VEn1FXMxLke4hCrkroU/NckPLCD+ya/ytJZAHAI5O2aKMpAJMk5
+	E1oWWuohxiHkA8kTEqRFoxatlg2yA+hV8g74WqGBygP9PHttC
+X-Google-Smtp-Source: AGHT+IFTV81QGcolch/8VXee4TeMVNEV9PtzSPTWGGsHdEXX8yJwrIRqHsjgTqxOKepxlFwseluy+FDPbbQYHwW5Z4c=
+X-Received: by 2002:a2e:602:0:b0:2fb:4982:daea with SMTP id
+ 38308e7fff4ca-2fc9d5a992emr39283951fa.32.1729845795871; Fri, 25 Oct 2024
+ 01:43:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7vgtm2p2hvbpfjse"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxXX2fpHVJ8urLmy+pBjH1aRdYu6qrtwOmwUxTUyQq30DA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---7vgtm2p2hvbpfjse
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20241021230414.2632428-1-quic_molvera@quicinc.com>
+ <20241021230414.2632428-3-quic_molvera@quicinc.com> <dnri3nqq2una3atjwl437ujzrl2txl2zdyb2ima5qeeudqotxn@5zdxizip6mhb>
+ <d21b259a-1f04-4108-a201-254b44f07529@quicinc.com>
+In-Reply-To: <d21b259a-1f04-4108-a201-254b44f07529@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 25 Oct 2024 10:43:04 +0200
+Message-ID: <CACRpkdZX1qrMDR-6LuUtc0nqLK3MwrUYQm9bsRZL376Qj6x8XQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add sm8750 pinctrl driver
+To: Melody Olvera <quic_molvera@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, 
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
 
-On 25.10.2024 16:14:03, Ming Yu wrote:
-> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=88=
-24=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:34=E5=AF=AB=E9=81=93=EF=
-=BC=9A
+On Wed, Oct 23, 2024 at 8:18=E2=80=AFPM Melody Olvera <quic_molvera@quicinc=
+.com> wrote:
+> On 10/22/2024 8:27 PM, Bjorn Andersson wrote:
+> > On Mon, Oct 21, 2024 at 04:04:14PM GMT, Melody Olvera wrote:
+
+> > [..]
+> >> +static const int sm8750_reserved_gpios[] =3D {
+> >> +    36, 37, 38, 39, 74, -1
+> > Any particular reason why these are not gpio-reserved-ranges in
+> > DeviceTree?
 > >
-> > On 24.10.2024 17:20:57, Marc Kleine-Budde wrote:
-> >
-> > [...]
-> >
-> > > > +   nct6694->cmd_buffer =3D devm_kcalloc(dev, CMD_PACKET_SZ,
-> > > > +                                      sizeof(unsigned char), GFP_K=
-ERNEL);
-> > > > +   if (!nct6694->cmd_buffer)
-> > > > +           return -ENOMEM;
-> > > > +   nct6694->rx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > > > +                                     sizeof(unsigned char), GFP_KE=
-RNEL);
-> > > > +   if (!nct6694->rx_buffer)
-> > > > +           return -ENOMEM;
-> > > > +   nct6694->tx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > > > +                                     sizeof(unsigned char), GFP_KE=
-RNEL);
-> > > > +   if (!nct6694->tx_buffer)
-> > > > +           return -ENOMEM;
-> > > > +   nct6694->int_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > > > +                                      sizeof(unsigned char), GFP_K=
-ERNEL);
-> > > > +   if (!nct6694->int_buffer)
-> > > > +           return -ENOMEM;
-> > > > +
-> > > > +   nct6694->int_in_urb =3D usb_alloc_urb(0, GFP_KERNEL);
-> > > > +   if (!nct6694->int_in_urb) {
-> > > > +           dev_err(&udev->dev, "Failed to allocate INT-in urb!\n");
-> > > > +           return -ENOMEM;
-> > > > +   }
-> > > > +
-> > > > +   /* Bulk pipe maximum packet for each transaction */
-> > > > +   bulk_pipe =3D usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT);
-> > > > +   nct6694->maxp =3D usb_maxpacket(udev, bulk_pipe);
-> > > > +
-> > > > +   mutex_init(&nct6694->access_lock);
-> > > > +   nct6694->udev =3D udev;
-> > > > +   nct6694->timeout =3D URB_TIMEOUT; /* Wait until urb complete */
-> > > > +
-> > > > +   INIT_LIST_HEAD(&nct6694->handler_list);
-> > > > +   spin_lock_init(&nct6694->lock);
-> > > > +
-> > > > +   usb_fill_int_urb(nct6694->int_in_urb, udev, pipe,
-> > > > +                    nct6694->int_buffer, maxp, usb_int_callback,
-> > > > +                    nct6694, int_endpoint->bInterval);
-> > > > +   ret =3D usb_submit_urb(nct6694->int_in_urb, GFP_KERNEL);
-> > > > +   if (ret)
-> > > > +           goto err_urb;
-> > > > +
-> > > > +   dev_set_drvdata(&udev->dev, nct6694);
-> > > > +   usb_set_intfdata(iface, nct6694);
-> > > > +
-> > > > +   ret =3D mfd_add_hotplug_devices(&udev->dev, nct6694_dev,
-> > > > +                                 ARRAY_SIZE(nct6694_dev));
-> > > > +   if (ret) {
-> > > > +           dev_err(&udev->dev, "Failed to add mfd's child device\n=
-");
-> > > > +           goto err_mfd;
-> > > > +   }
-> > > > +
-> > > > +   nct6694->async_workqueue =3D alloc_ordered_workqueue("asyn_work=
-queue", 0);
-> > >
-> > > Where is the async_workqueue used?
-> >
-> > Sorry - it's used in the driver, which live in separate directories -
-> > you can ignore this comment.
-> >
-> > But then the question comes up, it looks racy to _first_ add the devices
-> > and _then_ the workqueue.
+>
+> Not particularly; I wasn't sure whether or not to include in the initial
+> dt patch.
+> Will add.
 
-> Excuse me, I'm a bit confused. Is there anything I need to
-> improve on?
+Can we also write (as a comment in the device tree) *why* they
+are reserved? Such as "used by BIOS/ACPI/secure world"?
+Just a minor nit but it's very helpful for newcomers reading the
+DTS.
 
-It looks racy to _first_ add the devices and _then_ the workqueue.
-
-So the obvious solution is to allocate the worklist first and then add
-the devices.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---7vgtm2p2hvbpfjse
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcbWFQACgkQKDiiPnot
-vG8m/Qf+LrYDKh2wc2OiqqbICoYJhzy3dfrepHuhn4A2ce4XC6Go2FCD3qi85XhM
-j4ekvJKYU8XLtLWOHSxPp0nmsWXXHZnIc5sYSon9aTFaAdwmhxtUhsF32XYK71iz
-OlLLWNUHqPXhjzU5SBvALysRP7Hmz1wIe+mqTDX3wHS/P51Xxr4h/hEbHs0OeBUa
-EttXTFIg9Lkn69Jg9EReMhgXZOhotZ5GpBx/ZXVt89nDUKczGH8ywHy3wX6a4TFD
-fHTDr0qHcO/2x9ZzMKwGo8M4vxtp7yoTY9zlD4X+sMBXcYb7/OL7Hdpz/wCBzP+r
-GrgqFlm+xuN9eH3oha9j8maht2HgDg==
-=1/zE
------END PGP SIGNATURE-----
-
---7vgtm2p2hvbpfjse--
+Yours,
+Linus Walleij
 
