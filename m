@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-12099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12100-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90C889B029F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:41:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC4149B02B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:43:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0018328380D
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:41:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BD3E1C20F8F
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:43:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BECE51F7566;
-	Fri, 25 Oct 2024 12:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85CA61F756C;
+	Fri, 25 Oct 2024 12:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPodhBf0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UD0NIhWg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711D21F755B;
-	Fri, 25 Oct 2024 12:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A3B1F754B;
+	Fri, 25 Oct 2024 12:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729860048; cv=none; b=SRYLrgvJngsShHj2cfLrhowewYPQaC2liQHADSqMbYnEheMZ8n0aXtyCXTfXrUTYinwM267S9gpuNgoK5+lUo+TkTRvch+sWvGo/rDdfaErogn9lZBXl66rw8JrgCVRgSVIgA5WltsRaf/ae/VCucTFO6hTuuSEsyFdJDDwTgzk=
+	t=1729860224; cv=none; b=mSu4iXU2UKV+8eViPWB1kebiuyiNCBKX3ASOx1r1urXk1ndPn20txpX6OcRptomIaD2/F27saxoIVoRr6catj+20r1TDQFVRqu1dtU5VaJX7gRJT82cN8IrRoTNZlLFL9T79Ws3PnX02ER97uraP9OZclRfzIOk/IzbWDrymklY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729860048; c=relaxed/simple;
-	bh=MfzjeI/yBGp3Rtb2zAkHIkJXsiLoANAebAwmlMXBm9k=;
+	s=arc-20240116; t=1729860224; c=relaxed/simple;
+	bh=2dYWqDmmBPa9DDJIKW5qj/EqY3KAlAbc/CxFqzwxOMY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLWO0XA7vciIZmNYfc7/HKPEz+/TZ0vbH2HC7JYP64HYfvGsdA8A9BMY5P1iBY+w3muaSD1fpt5vtDc9CpWrVdMtxluGbRm7Q+unrY/wjZIboQ6cAAGhg9OcF+IGNDSD3DoJGWLwOUQldEz1fbHRPyamAWovtHIKztzIoS7jJ9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPodhBf0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A35C4CEC3;
-	Fri, 25 Oct 2024 12:40:40 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=oVB87qvRtrMkG373qpX7Npi8BjL+oNYJWH98eLJCCCe1/g1s8bVasQ2PLsWmHjx2wHUrWyWGv6YGsObNLc553wLHmUGZxL+bgEqe2mIyA4obS9gJVpqaSIaIpqrmhS5dn4dRetenNF02bLoLp0pCgVoAgvSOULxFuSEpSBJOfIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UD0NIhWg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B01C4CEC3;
+	Fri, 25 Oct 2024 12:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729860047;
-	bh=MfzjeI/yBGp3Rtb2zAkHIkJXsiLoANAebAwmlMXBm9k=;
+	s=k20201202; t=1729860223;
+	bh=2dYWqDmmBPa9DDJIKW5qj/EqY3KAlAbc/CxFqzwxOMY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GPodhBf0+9qCaSELggrpq4ty0CH8zK7wLhXiPLNVI/H+cB6JQQ37bfqTTs8rLIe2/
-	 mChZtb+vWAX0KuOiPNIE3XLOjWFaJe3uLgtgDaSucrZzJ+F3Ft/7U7B0+N3dgQ7Li6
-	 0mzbYEAL2/TrnS5+EAKW9iYLrFB12qHFSifMwkl/ov/1mfJb+RgMbQBZ/Cmw21a0+V
-	 j6HAb5UHChFpRo6gwED+Am/zUErOCn0H4hDte2IFMdqp8ZhnaTIc2UiW8ZTawRrZ3P
-	 S9N3bnjajO1PhnBlS/InBzLAjbgeaDkCioYbSoMyzhdxYHSbhwXLMUxdqn9UZyJjVV
-	 7N0fnRwkWE+uw==
-Message-ID: <6e346bf5-4d38-49bd-9a3b-78c98b3a2205@kernel.org>
-Date: Fri, 25 Oct 2024 14:40:38 +0200
+	b=UD0NIhWg6JSOLis0tT/fwWf9Jwb9ktzBn4lYkw0QPAtMklZvwGABSub7jWOvFNmsy
+	 0CWrIu9FoI0yE5dvMIayNgZ5zVeyeBToPvNLz3Po5f5FoZPqnREdGKCFbNEzlIW0l3
+	 K4GMsCnb9eGhHD3wykp/KD2eC/pJqJd32gpMQyb60MVkfLZ6vIGdMVcVHTSw8BumDR
+	 zumNKdbIfEMhDGBH/Dq7TncI/Fa0nOOLkxAaeoA+LmxZpcuzIxC6LxeYrL/42PMu50
+	 QmbkvGqNUC//4vpVxgPFVxzMSlwK/GycbwtcBNtbPYet7OKLJJWKOPbUSlBIkNyVv5
+	 FBvBmEbSqqpLw==
+Message-ID: <ddc66610-018d-4c64-9a26-af592094d5d2@kernel.org>
+Date: Fri, 25 Oct 2024 14:43:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/12] perf: arm_pmuv3: Add support for Samsung
- Mongoose PMU
+Subject: Re: [PATCH v2 11/12] arm64: dts: exynos: Add Exynos9810 SoC support
 To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -65,7 +64,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Maksym Holovach <nergzd@nergzd723.xyz>
 References: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
- <20241025-exynos9810-v2-8-99ca3f316e21@gmail.com>
+ <20241025-exynos9810-v2-11-99ca3f316e21@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,31 +110,50 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241025-exynos9810-v2-8-99ca3f316e21@gmail.com>
+In-Reply-To: <20241025-exynos9810-v2-11-99ca3f316e21@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 25/10/2024 13:24, Markuss Broks wrote:
-> Add support for the Samsung Mongoose CPU core PMU.
-> 
-> This just adds the names and links to DT compatible strings.
-> 
-> Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> 
-> Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
-> ---
->  drivers/perf/arm_pmuv3.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 0afe02f879b45a8600b9cea1bfd88e6a68096a67..9eb5603e1dda18c4bdd2745304737932a27fde8a 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
+> Exynos 9810 is an ARMv8 mobile SoC found in various Samsung devices,
+> such as Samsung Galaxy S9 (starlte), S9 Plus (star2lte),
+> Note 9 (crownlte) and perhaps others.
 
-I believe perf patches are going through perf tree, so please split
-them. Only patches for Samsung SoC and clocks should be included here.
-Samsung pinctrl can stay, although it's also separate tree.
+...
+
+> +
+> +		pinctrl_alive: pinctrl@14050000 {
+> +			compatible = "samsung,exynos9810-pinctrl";
+> +			reg = <0x14050000 0x1000>;
+> +
+> +			wakeup-interrupt-controller {
+> +				compatible = "samsung,exynos9810-wakeup-eint",
+> +						"samsung,exynos850-wakeup-eint",
+> +						"samsung,exynos7-wakeup-eint";
+
+Since I expect new version to fix the tags/SoB, please also align above
+with opening ".
+
+> +			};
+> +		};
+> +
+> +		pmu_system_controller: system-controller@14060000 {
+> +			compatible = "samsung,exynos9810-pmu",
+> +				     "samsung,exynos7-pmu", "syscon";
+> +			reg = <0x14060000 0x10000>;
+> +		};
+> +
+> +		pinctrl_cmgp: pinctrl@14220000 {
+> +			compatible = "samsung,exynos9810-pinctrl";
+> +			reg = <0x14220000 0x1000>;
+> +
+> +			wakeup-interrupt-controller {
+> +				compatible = "samsung,exynos9810-wakeup-eint",
+> +						"samsung,exynos850-wakeup-eint",
+> +						"samsung,exynos7-wakeup-eint";
+
+Ditto here
+
 
 Best regards,
 Krzysztof
