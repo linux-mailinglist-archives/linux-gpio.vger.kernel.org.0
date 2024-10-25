@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-12097-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12098-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9213B9B0294
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:38:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B42809B0298
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:38:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11501B22AFD
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:38:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D1221F235B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 12:38:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A87231CBA;
-	Fri, 25 Oct 2024 12:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191B11F754E;
+	Fri, 25 Oct 2024 12:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DabUAD8C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWobKpLm"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E556C1F757B;
-	Fri, 25 Oct 2024 12:36:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21D11F7541;
+	Fri, 25 Oct 2024 12:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729859816; cv=none; b=TH0fymlCvOzJFeeA9yHu2ALWj/yQO0jJ733tOMOnd4IgbVh6BNMglPNzTbUFF/QpLMeg8IUyi6Rr5QGV64BLK4PQvVjJOTtgwleuvhUt1rSZSWWxmaeSjngZZyIwGXL5seohH0j6a4fGWONnlJ8nHL+zjA1dLWy7xp5K5/1op1E=
+	t=1729859865; cv=none; b=fqCiv0mQS5WUlNc5rdvtpBJXiWoPbQS2FNcLb23z7QR0jlCld3lswJ3V842CzKAfgfchdogqC6io3ptrt+Sw4Kah6CNaWas0r1J7W44mR9gX5fkCPNFPJ1xZnlYIamc+LFS2isaeb1gnzWzVblrOZUcX9t2lH6Ckxkx/jz9QllA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729859816; c=relaxed/simple;
-	bh=AviaUlBZZ7+hKNoYNAUPRHtZzUriK4vdXQg7T26UsIk=;
+	s=arc-20240116; t=1729859865; c=relaxed/simple;
+	bh=hgQTlnijq5jaUtg5DKbI88jHDZ7ahNWU89FCg0/HbmA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fapZbP/jbn+gpTL3PJ4PjaH2/aJTTJxkDkOglVqHBHnB9S2vyrPfwX+qOaB7JhA5WasghDEURr1yTBXRBc6cSJFw4MLJC/Q6qIubzDrD1UM+GagwRnsn6VAl9ozpYM2L4jKBq87Vouw+lbL5Jt1evRW/CJTgPrre7WFxauiOb/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DabUAD8C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CA8C4CEE4;
-	Fri, 25 Oct 2024 12:36:48 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=HVrshaCybpdHeXys6GQGiYFiohJfJHOt+1+ukvOdSiowC+vRJGoIgoGeX6bf8Xe8AYFvS/T/7ykMe8RJVAR80YDTB01aK2QgfWOowYL3Ucj51c9ii4O7r5HJXCm39/OUya3HwMoxwg+qNFHmtNsSRUkc1jUcdC3zD2y+0ZUz3/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWobKpLm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB2DC4CEC3;
+	Fri, 25 Oct 2024 12:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729859815;
-	bh=AviaUlBZZ7+hKNoYNAUPRHtZzUriK4vdXQg7T26UsIk=;
+	s=k20201202; t=1729859865;
+	bh=hgQTlnijq5jaUtg5DKbI88jHDZ7ahNWU89FCg0/HbmA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DabUAD8CBTJ/fcvc3I1PcvD64SdtCoiNU47bU5xiPJeACTlIzbRn5vNKsHOiDI/EM
-	 tNcOkxxaPIky8mtODB/szRydZXQ7VZtdhfglH3jKQGDb1NvuFTcO/8hjLQbxq2Cuc4
-	 R/VnmOKyEfIb7ciRw+eOUYgIM//mzezvT+6nxzz4BbPdn8ZofI2OaUZdWT+DHgOlp7
-	 MM5B6gEdo/3CVg2/E6qa5SRczQBNKSLIfxWcRWNYvIk5DxRp2d/EBIButbVpyvx5Jg
-	 ZWwhSouYaKL9kYf7p9osSKg8BSwSc0useKgER3gVWX2Cavsm8zqMC1ssopUx8jD6lZ
-	 Gggw8yUW7X+pQ==
-Message-ID: <2dae341e-2784-40ec-9a06-620c467e62bd@kernel.org>
-Date: Fri, 25 Oct 2024 14:36:46 +0200
+	b=QWobKpLmWeJ108gJVkqc7zaPe+SwEXsbhnXy4eD0rg7nax8AgLPlhWv+Iy5dsF3/e
+	 oh20P5nksHC5rKylB5Kux/lbIPafUaTJNWgEUPlZZR79DGKj6PwvNJfKe9FIiLv38B
+	 tSMycHSqrzKKD/fsaOqTPZHKbMNBpJFgBk+onJyRSNtultPAZ2Ut/ZNbBuXM0oiy88
+	 LMmw9ZYxdAeCOu5MNxJ8zSUATDuXFQgoaE03Eu+0yLY3F69WXErhkQVuphLhdg+eVM
+	 S4u/v6+0xZr0JXsOdnm2PEoX/vHo+Uqa0W+Th9KPDPHd20AoLgFYJmo4UoigapVlO8
+	 McCo+wBpYkYFg==
+Message-ID: <1b69a2bb-90cc-482f-8107-37be61ea94d6@kernel.org>
+Date: Fri, 25 Oct 2024 14:37:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/12] dt-bindings: arm: cpus: Add Samsung Mongoose M3
+Subject: Re: [PATCH v2 04/12] dt-bindings: pinctrl: samsung: Add compatible
+ for exynos9810-wakeup-eint
 To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -64,7 +65,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Maksym Holovach <nergzd@nergzd723.xyz>
 References: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
- <20241025-exynos9810-v2-1-99ca3f316e21@gmail.com>
+ <20241025-exynos9810-v2-4-99ca3f316e21@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,20 +111,16 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241025-exynos9810-v2-1-99ca3f316e21@gmail.com>
+In-Reply-To: <20241025-exynos9810-v2-4-99ca3f316e21@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 25/10/2024 13:24, Markuss Broks wrote:
-> Add the compatible for Samsung Mongoose M3 CPU core to the schema.
-> 
-> Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> 
-> Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
+> Add the compatible for Samsung Exynos9810 pinctrl eint block to the schema.
 
-There is never a blank line between tags. Use git log to see how people
-were doing it, if you ever have questions.
+All your commit msgs state obvious: duplicate subject and contents of
+the patch. We see this, it's not helpful. Instead rather explain the
+hardware and differences, e.g. no interrupts here?
 
 Best regards,
 Krzysztof
