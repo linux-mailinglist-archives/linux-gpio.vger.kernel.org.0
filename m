@@ -1,162 +1,142 @@
-Return-Path: <linux-gpio+bounces-12110-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12111-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBAA39B0866
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 17:34:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B4B69B088A
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 17:40:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECA621C22BAA
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 15:34:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20E46284016
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 15:40:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596FA1531C8;
-	Fri, 25 Oct 2024 15:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CDC171E70;
+	Fri, 25 Oct 2024 15:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3ieV8W1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TpvGSdcT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D44C7082A;
-	Fri, 25 Oct 2024 15:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08A8165F04
+	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 15:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729870472; cv=none; b=R/ECwzcObC9qSHbilZd1Erp/85YCuiy1VfNKNSpIsx/d03/tRbI3lLptoezZ902D9Kl/uZBIrJDakjqkw7Pcj5PB+DEiaX5BHIbqVML90XJy216u5siov29Yh+b9iUqN+OL2B9ZYdXNzPzrHt/nGY/ZHycBFcy3L2Ro2+D0kNeY=
+	t=1729870795; cv=none; b=FT+0zdcFZaVaWYlWp4FoNF0juYWdOMQFdDSQyhibxKQzLcF9J/RvqPBLF5chjKXl+96CCfJsSlT8pWGudYjJwgVqfclKBVEgX9m9M05GXMuYltquNaCuHqBI99SWrPVTR3uLM7CBrkSaNqvlOMFIqhff1jTm2xgZzxiRmV4AlNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729870472; c=relaxed/simple;
-	bh=tX/A+MoXc61eQzokk+Bri9cnGMxNX2TCKKuyx2BsfKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kHTSpGuR3T9S6tb08LJHfIpQidDutmQ0K1GlEXPrInnqH14Fo8IKecKrL8quYQTTlN13Ajfz1BWhrcdbGPJT75Pl4wDZZkIWUucmdI9H6nJ4WGrEd6f9NYxTtUiFK0a+I/e4CUDi0sOBp3gsFydO7ef7ZtlIktPIKlqwkm6yhcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3ieV8W1; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e4244fdc6so1581681b3a.0;
-        Fri, 25 Oct 2024 08:34:30 -0700 (PDT)
+	s=arc-20240116; t=1729870795; c=relaxed/simple;
+	bh=rQlrpJeMlo0ujThTpOYvcpe79KLo/FclwrwMw4u04eY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I0PG9Q+nsxiEc6iMGgzM5dXmI7C0NRWj5KelHn7elCUuwTvSItSPWItBrH6IDG/NoRuu03Lp0JDFZq0vQ6lqIdlDGEX98pYCW1ZXza5JNNGj6sTQcVhQISlUOvN6I3MkHAprtKWzIdtZLPcqPrQTl7v3lh5UbHwSburAepKNtxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TpvGSdcT; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fb5fa911aaso30971381fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 08:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729870469; x=1730475269; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=h/eitMKDM03Njt51V0eKCffqE5i1StRGLEPU3LTkQ2k=;
-        b=S3ieV8W1rO+qkFf5JFUhjds9sr4yjjpibbpooo3ER++TP6ZEhKb/9PfQdA3trETlhA
-         wuNEbVCxaMVA5hKCGxq3pff0tVPvGDhBn5Kd3kCyd0tHdunSm9klvvq2P/utULBEDoNZ
-         KQTPyiedMFE9JW04HWFCwUBlUcp0GTfSVI8ohAlfEYgPH8ICuaNUtRL7ACQUZ5MHMzMw
-         uL8o0Q+ECQQB0fvPSRW9JIKsHBdTFxM4kIh4VMAh4wHxJB9sUxULsDIa1XZOCo92hyS2
-         OMhCyndmwrfu2VECCKolBuHq97aOnYjUd1yyVQ6JwzeRrc/VPfUxzGixpH7SOXgqxEuJ
-         mgIg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729870791; x=1730475591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xW4PWRSrVVHGdUnyVYJbesCr/e/f0yYNSHSjjDEYDZ0=;
+        b=TpvGSdcTsoSC+31gMfygNXolxGoEyz4eOFZPM8UF2POFA0xcjxvsMAKZBqvo6tNNRt
+         sh9la3jEZWCh/KNkZ8vUYY51TfbcAo1lERu50Rx9uR2loP1kS9cBbbUtgKWh886hjwkA
+         kotmD1XNpbZqUZNO0B8XxoBXa9n9ffXU13+dalMmPy+aKti5uvsVHWEm/H9ACenYmYVS
+         4oKMkgnu2Fd3U8/hYDDWwsoA/skEOt9+jrpvg5g6zbykAm7O0UYtKzAVGRbdDEnRId7e
+         PKclQRFU6/ieiqM3Nig8g30oPUpW6A/P3nqUkBIJ8xhdNJ0Ln3tos2w7doqNC2z23qgI
+         Hh9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729870469; x=1730475269;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h/eitMKDM03Njt51V0eKCffqE5i1StRGLEPU3LTkQ2k=;
-        b=O4PRj+Wdv81vW20g7ynKAOeaQ/90k1v56lefbxDxR4v3lpW7lZJnVhs904NOkAE7J2
-         R1iXKfGY5a70TPqJikZFiS+exlIyZeBM2jQU/Nwok+EDRNG42t6NGYBzKTf+WWggGcV5
-         N4hfX148GKH9jGY8XjK0gAcQ7nDpHJbEs+TgZOEDlgOqGQR+KLS7iT++RRkOiPg0JzFA
-         dSBrZu966NGWqlEdObfXCyuEFl36JrFxyUU7XEyA05NAYKEchY7nYJjykjVAqavbStUK
-         6R7flbt5Q0rJm67Hp4fKZoppWWSovCK6eHZVjlK2+HtklUfb3RSmPFOJj3SzmQK8hPAI
-         wsow==
-X-Forwarded-Encrypted: i=1; AJvYcCVjQwvGXuku0T/upK0/4D1Xw1LOzupubWLKqdMjJiaF+gjzzIBnLtgqsbh7e5pnjPocfGB78NwCDVwJmswd@vger.kernel.org, AJvYcCX/4AkefuXcf2u/Wp39kYNQcYm2vxMJBnJjz7ymD2DLkE6hEdOlxtqhttqZhVFfnPeunRHK9kZ/1DCZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyixPjM/n6U6HaxzCpYndiMsX5IPGiyb3vcc8+gQ7xQjomIm5az
-	8s6ftjvSk+JskbhqaQz/YU2d2l7MmjaK+W2wGdue093HcXlHkxNP
-X-Google-Smtp-Source: AGHT+IHLnRBcM+dFVW4elSQbv3v314RkMNXB9U4Fbfp+Gmk4ZcBKRuWRDF14XRcKm5A1FywQwPxtyQ==
-X-Received: by 2002:a05:6a00:1491:b0:71e:14c:8d31 with SMTP id d2e1a72fcca58-72030c0d886mr12095289b3a.16.1729870469358;
-        Fri, 25 Oct 2024 08:34:29 -0700 (PDT)
-Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a1f1ddsm1235995b3a.149.2024.10.25.08.34.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 08:34:28 -0700 (PDT)
-Date: Fri, 25 Oct 2024 23:34:24 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/5] gpio: sysfs: use cleanup guards for
- gpiod_data::mutex
-Message-ID: <20241025153424.GA182871@rigel>
-References: <20241025-gpio-notify-sysfs-v2-0-5bd1b1b0b3e6@linaro.org>
- <20241025-gpio-notify-sysfs-v2-1-5bd1b1b0b3e6@linaro.org>
- <20241025132420.GA155087@rigel>
- <CAMRc=Mcd8vVCwDvRysMxB00xUD77zmJK1EApFuAEfWpwOhkviw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1729870791; x=1730475591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xW4PWRSrVVHGdUnyVYJbesCr/e/f0yYNSHSjjDEYDZ0=;
+        b=gG1ibrhAp3cDihqDk8IkyajV+pEfDGSOPMbMlglulrCcLPJjB3elLYUw98cjpqke/4
+         vdgLpqEQFUYP4KBVcrUfm5f1dKxNf+sj2xuSS0OF9YMPOwiRikW872Pzfqc4+JlWkEyL
+         euCP9o0qhkAHi6bnmT6UNiT7x0H6w2PtK2Notd+gU4acImOOmpH0mSj2hz2MIksBGqP9
+         boA6TY5CpvqR4LvkK+y4bdDeZ9XepnhsKpUDdkbSFORDx4D1GJ0zj4tVMDAf8mQKTQnc
+         41feXDvzcUr4z2Naj0mHlUGOM2hICDqceishOPYHxStb+wnH5aKnVHbouX8GsJhEmAxf
+         VO8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUYpT54f0JZS8w5rbbi52MLHXeyEEMHKolGctovC1Vcis6vxpTueEG5GpkUTHrcOElOA8qHpApmGMzU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0xb8DPT2ZhYytmnybGMDFGZKbiumodT3qzEWCEp4bHYopVpL2
+	Ik+AxkDvv5M18gOauk3YbYteHE3uxeLCiZ0HtCFRwTYkTRoI9Of/D4PE5Y2TWkZSYDlXltie6zN
+	Eh5IeMbUCgJPaoj0LLVQOm4xmUq9RBgDYsZWguo5z+bJTGkGp
+X-Google-Smtp-Source: AGHT+IEVPJcpNaS8Dh7KXg2L847e2aERI9aZUfHLpTDrx377enJsjmc2WbeZ9cZnIv6gDlcIhu81wtKqRimneYbSjao=
+X-Received: by 2002:a2e:b2c7:0:b0:2fb:36df:3b4 with SMTP id
+ 38308e7fff4ca-2fc9d37ff0emr67856561fa.34.1729870790725; Fri, 25 Oct 2024
+ 08:39:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcd8vVCwDvRysMxB00xUD77zmJK1EApFuAEfWpwOhkviw@mail.gmail.com>
+References: <20241024192758.91748-1-brgl@bgdev.pl> <202410252227.4k7pn2o5-lkp@intel.com>
+In-Reply-To: <202410252227.4k7pn2o5-lkp@intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 25 Oct 2024 17:39:39 +0200
+Message-ID: <CAMRc=MfDKzKOT0Q2zGv2AnnoRDoTQhrDXKqyj1vqWx0jABa41g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in drivers
+To: kernel test robot <lkp@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Paul Gazzillo <paul@pgazz.com>, 
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 25, 2024 at 04:08:00PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Oct 25, 2024 at 3:24 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, Oct 25, 2024 at 02:18:51PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Shrink the code and drop some goto labels by using lock guards around
-> > > gpiod_data::mutex.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> > >  drivers/gpio/gpiolib-sysfs.c | 81 ++++++++++++++++----------------------------
-> > >  1 file changed, 29 insertions(+), 52 deletions(-)
-> > >
-> > > @@ -139,19 +132,17 @@ static ssize_t value_store(struct device *dev,
-> > >       long value;
-> > >
-> > >       status = kstrtol(buf, 0, &value);
-> > > +     if (status)
-> > > +             return status;
-> > >
-> > > -     mutex_lock(&data->mutex);
-> > > +     guard(mutex)(&data->mutex);
-> > >
-> > > -     if (!test_bit(FLAG_IS_OUT, &desc->flags)) {
-> > > -             status = -EPERM;
-> > > -     } else if (status == 0) {
-> > > -             gpiod_set_value_cansleep(desc, value);
-> > > -             status = size;
-> > > -     }
-> > > +     if (!test_bit(FLAG_IS_OUT, &desc->flags))
-> > > +             return -EPERM;
-> > >
-> > > -     mutex_unlock(&data->mutex);
-> > > +     gpiod_set_value_cansleep(desc, value);
-> > >
-> > > -     return status;
-> > > +     return size;
-> > >  }
-> >
-> > This is a behavioural change as you've moved the decode check before the
-> > permission check.  Not sure if that is significant or not, so in my
-> > suggestion I retained the old order.
-> >
-> > Cheers,
-> > Kent.
+On Fri, Oct 25, 2024 at 5:08=E2=80=AFPM kernel test robot <lkp@intel.com> w=
+rote:
 >
-> Yeah, I don't know why it was done. Typically you want to sanitize the
-> input before anything else and this is what's done almost everywhere
-> else. I'd keep it like that.
+> Hi Bartosz,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on brgl/gpio/for-next]
+> [also build test WARNING on linus/master v6.12-rc4 next-20241025]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
+i/gpio-relax-the-Kconfig-dependency-on-OF_GPIO-in-drivers/20241025-032925
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gp=
+io/for-next
+> patch link:    https://lore.kernel.org/r/20241024192758.91748-1-brgl%40bg=
+dev.pl
+> patch subject: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in d=
+rivers
+> config: i386-kismet-CONFIG_GPIO_SYSCON-CONFIG_GPIO_SAMA5D2_PIOBU-0-0 (htt=
+ps://download.01.org/0day-ci/archive/20241025/202410252227.4k7pn2o5-lkp@int=
+el.com/config)
+> reproduce: (https://download.01.org/0day-ci/archive/20241025/202410252227=
+.4k7pn2o5-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202410252227.4k7pn2o5-lkp=
+@intel.com/
+>
+> kismet warnings: (new ones prefixed by >>)
+> >> kismet: WARNING: unmet direct dependencies detected for GPIO_SYSCON wh=
+en selected by GPIO_SAMA5D2_PIOBU
+>    WARNING: unmet direct dependencies detected for GPIO_SYSCON
+>      Depends on [n]: GPIOLIB [=3Dy] && HAS_IOMEM [=3Dy] && MFD_SYSCON [=
+=3Dy] && OF [=3Dn]
+>      Selected by [y]:
+>      - GPIO_SAMA5D2_PIOBU [=3Dy] && GPIOLIB [=3Dy] && HAS_IOMEM [=3Dy] &&=
+ MFD_SYSCON [=3Dy] && (ARCH_AT91 || COMPILE_TEST [=3Dy])
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-Not knowing why it was done was precisely the reason I thought it
-should be left as is.  The fact that the checks are performed in the
-other order elsewhere makes me think this one was done intentionally.
-Conceivably it could be used by userspace to test if a line is output when
-the direction is fixed (so /sys/class/gpio/gpioN/direction does not exist).
-So write a non-integer to the value and see if it returns -EPERM rather
-than -EINVAL.
+Eh, OF_GPIO pulls in the OF and HAS_IOMEM dependency so his must be
+done on a driver-by-driver basis.
 
-Admittedly I'm speculating, but I can't rule it out, so I wouldn't
-change the behaviour just because it is more aesthetically pleasing.
-And if you insist on tidying the behaviour then it should be in a separate
-patch rather than piggy-backing onto the guard change.
+Let's drop this for now.
 
-Anyway, that is my 2c.
-
-Cheers,
-Kent.
+Bartosz
 
