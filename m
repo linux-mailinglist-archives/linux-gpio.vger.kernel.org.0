@@ -1,76 +1,76 @@
-Return-Path: <linux-gpio+bounces-12075-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12076-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 559959B013D
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:27:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6DB9B0141
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:27:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E27CB223D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:27:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FEC92845D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:27:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DB4B205E04;
-	Fri, 25 Oct 2024 11:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B6A206048;
+	Fri, 25 Oct 2024 11:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqGKY5jw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOIYspqH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250F1204F73;
-	Fri, 25 Oct 2024 11:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3AF205158;
+	Fri, 25 Oct 2024 11:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729855522; cv=none; b=WtE3E4mf9KUOR5EyF0cA7mmWUzugZeHjL2BXWenXv3vQNSltUtPHGh5yLElBU94SQ8pE8d12OWUjjxLLvhqJm7pFV+ghtEXTaj9z3TgnKVyaRVDr4sG4Mvic/x6gorB3GIxecw1KIgdrJ33/pRgRr2Vqlf9IpZldUWUK/EMppwg=
+	t=1729855523; cv=none; b=H/DNXN0uK/HhM8KgLnxNTcpegXfLcxhvv4BYKZVwV8DVzMAqM7POGO1VDE7Rj0A5RAMdUjobpNhwTlrJM1i2YcbqTFwToR7r1oyXtt0zzusfihJqhynrmwZ1/rA6xQ0skCjB8j2jUQV2io4CyhfjR6QLa+L8XnTvLtNIDr743qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729855522; c=relaxed/simple;
-	bh=gIFcDF3Nn6a13khPJ7KdJaPJmVQk2lFc9U58rW96C90=;
+	s=arc-20240116; t=1729855523; c=relaxed/simple;
+	bh=kyHAPTKZB5mT8XCJ0jyUMcgti7f6+k1RLiIUUCWE+Oc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mQ/gXX+fyBNMt4NPhl4LtCM8tOw1kJbJ8/tkEWKeICWEeGkVZqx8nealSUGd6tNf/Z29vMHxuB/LczY1A9fA71G/CpuGkCKkYXfOuct32sVKBLunZg98Ql/6qB48YhKTnWdEC1lHM5ed5GTGtLdXahv08Liy3J6rXvAdem+KOTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqGKY5jw; arc=none smtp.client-ip=209.85.208.176
+	 In-Reply-To:To:Cc; b=WVzWZi1R1cQhiFWEArGfaiszJWKlM6HJluQiXFFsAQj/kNsaVz0hmfH2Ux4e+WaQGCXW7t1iWgFHtGb0ij/ss5BXYyfvbQ3OGTt7wRAirJ8sRd3C/hUglcPJ89N2K7c6LLmlymmRKI7FAhKmF8CVEugRNmeZyV2hJy32wY0WFDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOIYspqH; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fb58980711so18590201fa.0;
-        Fri, 25 Oct 2024 04:25:19 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539e5c15fd3so1844942e87.3;
+        Fri, 25 Oct 2024 04:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729855518; x=1730460318; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729855519; x=1730460319; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fvC6tvQpNPhsh9+31TY8jiPxbsRMSiM5T6Ner8SFI7g=;
-        b=cqGKY5jwk/niIjegGHDHFvLDTL9oYfQxtG0OWD8Ql7EdeuzfxGGGNIiFqWX9PlZpxf
-         5IY1rv9i+wCwIAQIx6/hv/uSHcvfVc/+jbjkEit6oHikry4YZM3thq4tVkQUWBcDpUIn
-         2R99tmg7+KoSP0j1lltw4dgqQ7n0W3A31jlFphG3qCZxsF17xbiOY/gpYEPxgqbHe1um
-         nM02v+iMH1BckBGgLTDvyIrmmtaeR78MOXCgn13idthBOufO+KkVIDpScmm1+vpwS3Gd
-         dJUhvJ5g5UC3h3AdmdObIrEDbRFsEHT+LPOV7nLcMwiJRqbfftgt2caFn9jg8CYYjHFL
-         uIpQ==
+        bh=FPEW+StB9yri6/7vzc+p+9fT8+1vMg/ckd/Nh55RyuM=;
+        b=NOIYspqHdGd3nWNlbq0QvOwxCencJjV1FJxPN6/k5/20rSv5zekMBJggeNkfMgHtJ3
+         innA9GgPLyFY8wRcFdbdG65KUjomOqVkb1pMBdTlQL5f2yzyNC+DNs9yt4FHBhbyPDav
+         vf70BELaQBIYIiazqApkOsuSjCafi2BvWDpmPOocBG8TO1AgltTqqcqr7Ygyh0kakBco
+         ZtrmkloKASDaQX5llByus/1u8VM1/E4zqslxwhpjEkwkggENZlqLwSWNVqwcEJ+ZORgs
+         BntGIFo1C5T2M6VrpKRfElwFGcwahPkqHXI3edI0FlebpeL9HyjLowkAxQ7d+aOI/Z/1
+         gNCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729855518; x=1730460318;
+        d=1e100.net; s=20230601; t=1729855519; x=1730460319;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fvC6tvQpNPhsh9+31TY8jiPxbsRMSiM5T6Ner8SFI7g=;
-        b=CAXLaScz59vgxvYX33kj9gVImpnwOhg164sXbnCPbmP65lAXOUSU2UiaI7944K4+u+
-         GHzP4Lejak5XjKq/jiAOM0k8gsDC+IPEvvdBTlC+oXR5Y6ZnDVtjj2n1cDJWe3N+akAs
-         OqsUQ6vdl5Ebmlg4t/oMwoQrFD8oKWcKodyCChzmiE56gy+EA9n2RIzTZXqudDPM2/rJ
-         zXPUCG6yph0hKjabzLi/RxnUqg8raoWFzcLbJvlGqvQ//VFhcR0NVUvYEMOun4HnrwUr
-         m7eeW/oW/0K+7v5qI7ohr1PU5J2w7AY2v+3dYGW0djRE1fv8C8AgG+o1zcLmrOgMdyeY
-         S/2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU8EdVrmbCysKgvkKCx0IqElecXSmXtHHv4plTzGJFl4FQqQ8xHwFcmS/kR0YRLghTq/RqZYW11ibXhypSV@vger.kernel.org, AJvYcCVpFvNfV6hLxItk8MpYKn5etB6t/gZQKMn/yfmj27DhxYWCWEBmuOV0i3HP0AGPRF4zAb2zCDCOi/JXSlg6nVvxHfY=@vger.kernel.org, AJvYcCXp5PXZaESagp75QBAle37rRgcLuHUBhyV6+DfsiMAViT07pT4DvPn/eo6p9msTOtAok0jXGxZk98Ae@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz59hTZBKzeR0rMWCLMIj5WGQjKdunIVezE9v4so87dGJpRO7mw
-	cbYiwlAeU9pD5TCygXX5Xck8JylzuCFWzs+8iDt2jQUMvJx9YJCWKXyo0A==
-X-Google-Smtp-Source: AGHT+IEONmK3EqNWp4ION2KugVO6B1hwdllH6wTUgZsutfMNSrjvSI/avK47fOi+sOs5xNNmozjsLg==
-X-Received: by 2002:a05:6512:b0d:b0:539:e6bf:ca9a with SMTP id 2adb3069b0e04-53b23ddee9amr3249227e87.6.1729855517710;
-        Fri, 25 Oct 2024 04:25:17 -0700 (PDT)
+        bh=FPEW+StB9yri6/7vzc+p+9fT8+1vMg/ckd/Nh55RyuM=;
+        b=LOhdNRXmGEB89NcuqcjEdPu1AVw9Z4m7HnU3AJu/mVVQ6TdVM14hfFBFvrBgWo7Om9
+         CTIq6wbAPv5MUd2QKVDuKwJGfbn35Dy5VneZE0UQ3G3DwQzai5k/kppvfTiInZ6RSMnM
+         N1+AVR/GyM0ungZcOWXY4q+dD1jler+swyo494bx9ZZqxS099dgL9ZQeEiwE+KA48Cj0
+         vYVkzGqsyImoDxoX5aTdRDLscWlp1hCPKoBDU4xZPaCMa6Yiq3jHSn4GQPuTwWvSLfUG
+         apJJSz5XwzIwag+7tZ0xckumQGZhrXdRaZPGIHr+1gxZhmyr/RsSqNyENFqjzLStSJ/Y
+         T3Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+lisilSXECEQscWrHrYSZKxC//9iB6mU1s2T90EW+/W8+wEy43MMloySDwxCCS/dbi0Mg2rkiw00bi9XiV4VcJA8=@vger.kernel.org, AJvYcCX+VgptQlQ/DYflg7D0oa4zRUOF7ii6wJ3psC1jEn4Q3EhT60QvgmBZ32sdnht62cTo5DNDS4VXt+cz@vger.kernel.org, AJvYcCXO+yS+ZY+2W55NYGFTxMjgZCEjCgPVdVTJG2fePRPdekJkWWBlEFLGUS1frX8DYdacLJUDnDDCyvL2n7fE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yynpvhv09+tq+8QuQ6zHGK/ayMX36L/fhKXmPYI5xtDV3EDDk7l
+	wCwjaUJ3w5eUHuEupTfIU542kR+ygckVtnyL3KaChMJk6mznh17/zLod/w==
+X-Google-Smtp-Source: AGHT+IGt1fCquMZ3NNZLwaagu9KRz7cZdz/Me6B7Rco1p8I/pwkT0SJo6jB3OOzEWB3h7ucjl3WGGg==
+X-Received: by 2002:a05:6512:3991:b0:539:e454:942e with SMTP id 2adb3069b0e04-53b23de9aa0mr3452803e87.16.1729855518903;
+        Fri, 25 Oct 2024 04:25:18 -0700 (PDT)
 Received: from [192.168.1.105] ([178.136.36.129])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1c90c0sm144028e87.189.2024.10.25.04.25.16
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1c90c0sm144028e87.189.2024.10.25.04.25.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 04:25:17 -0700 (PDT)
+        Fri, 25 Oct 2024 04:25:18 -0700 (PDT)
 From: Markuss Broks <markuss.broks@gmail.com>
-Date: Fri, 25 Oct 2024 14:24:54 +0300
-Subject: [PATCH v2 07/12] dt-bindings: arm: pmu: Add Samsung Mongoose core
- compatible
+Date: Fri, 25 Oct 2024 14:24:55 +0300
+Subject: [PATCH v2 08/12] perf: arm_pmuv3: Add support for Samsung Mongoose
+ PMU
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +79,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241025-exynos9810-v2-7-99ca3f316e21@gmail.com>
+Message-Id: <20241025-exynos9810-v2-8-99ca3f316e21@gmail.com>
 References: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
 In-Reply-To: <20241025-exynos9810-v2-0-99ca3f316e21@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -97,36 +97,47 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Markuss Broks <markuss.broks@gmail.com>, 
  Maksym Holovach <nergzd@nergzd723.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1729855507; l=909;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729855507; l=1401;
  i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
- bh=gIFcDF3Nn6a13khPJ7KdJaPJmVQk2lFc9U58rW96C90=;
- b=Xzf7ozUZ1q/1szWYfZVgSzhsL4JnYbG8DEq99qnIfLpVmOvmJOCvyh0nKtj1bvGBmRExXcn9E
- YF7V9B58yKTATw5eyOEgWrsP9PyqRpzj2XLIpfup9Co1vU0qKMFygZp
+ bh=kyHAPTKZB5mT8XCJ0jyUMcgti7f6+k1RLiIUUCWE+Oc=;
+ b=e18R1gAgBqNCItvEqiHWKV4mMiyFfaoPBdnl6l/utulFdQNuLswqV9JWRXelc4wgJJy11VQSs
+ f8bgmqNff5wCYbqLk4IMUwUWHV5LEY26+RM8aVSOfPfuRr4WzerOxji
 X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
  pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-Add the compatible for the Samsung Mongoose CPU PMU to the schema.
+Add support for the Samsung Mongoose CPU core PMU.
+
+This just adds the names and links to DT compatible strings.
 
 Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
 
 Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/pmu.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/perf/arm_pmuv3.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
-index 528544d0a1614c9f9bddaafa8dac4782d09ac7e9..a148ff54f2b8a92fa3fcfa78c1bcc525dba1c6dd 100644
---- a/Documentation/devicetree/bindings/arm/pmu.yaml
-+++ b/Documentation/devicetree/bindings/arm/pmu.yaml
-@@ -74,6 +74,7 @@ properties:
-           - qcom,krait-pmu
-           - qcom,scorpion-pmu
-           - qcom,scorpion-mp-pmu
-+          - samsung,mongoose-pmu
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 0afe02f879b45a8600b9cea1bfd88e6a68096a67..9eb5603e1dda18c4bdd2745304737932a27fde8a 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -1364,6 +1364,8 @@ PMUV3_INIT_SIMPLE(armv8_neoverse_v3ae)
+ PMUV3_INIT_SIMPLE(armv8_nvidia_carmel)
+ PMUV3_INIT_SIMPLE(armv8_nvidia_denver)
  
-   interrupts:
-     # Don't know how many CPUs, so no constraints to specify
++PMUV3_INIT_SIMPLE(armv8_samsung_mongoose)
++
+ PMUV3_INIT_MAP_EVENT(armv8_cortex_a35, armv8_a53_map_event)
+ PMUV3_INIT_MAP_EVENT(armv8_cortex_a53, armv8_a53_map_event)
+ PMUV3_INIT_MAP_EVENT(armv8_cortex_a57, armv8_a57_map_event)
+@@ -1409,6 +1411,7 @@ static const struct of_device_id armv8_pmu_of_device_ids[] = {
+ 	{.compatible = "brcm,vulcan-pmu",	.data = armv8_brcm_vulcan_pmu_init},
+ 	{.compatible = "nvidia,carmel-pmu",	.data = armv8_nvidia_carmel_pmu_init},
+ 	{.compatible = "nvidia,denver-pmu",	.data = armv8_nvidia_denver_pmu_init},
++	{.compatible = "samsung,mongoose-pmu",	.data = armv8_samsung_mongoose_pmu_init},
+ 	{},
+ };
+ 
 
 -- 
 2.46.2
