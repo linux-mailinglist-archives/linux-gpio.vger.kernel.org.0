@@ -1,148 +1,146 @@
-Return-Path: <linux-gpio+bounces-12057-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12058-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 675659AFC86
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 10:28:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01AAA9AFC9D
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 10:34:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E9BB7B24F81
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 08:28:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9E55281AC2
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 08:34:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 224741D1E6A;
-	Fri, 25 Oct 2024 08:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MVrd6H/2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB6E1D14EF;
+	Fri, 25 Oct 2024 08:34:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA281C2DA2
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 08:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE1B1C878E
+	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 08:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729844929; cv=none; b=Cr2Bdh11MGr+TDah9kCIc8kYP+9Vf/wpBvaUzZR5mspV/y816VOLyEldnVjnG9/cuL5Cb7lOkANq0L9Z+Yj96f0P+lNXfJydp6XpmOQ9rvAre5LhY8T60i6n1+3ZYk7oMpdq5nVFxbUPzCJ5qDLFyeQTAgEqrLI1zMUJ8fEJquE=
+	t=1729845246; cv=none; b=ZLYl7oBG5VF66V5V4EPDjwsQScu7/dr6SPba9QshXmf41w/mpKv7SpG17ISzUflWw9Pi9OHN69bQdNU1t0UgMs19EU3r47CGVmVE8oN+/qkx74EAnKx9IyqZMK+6xenemPgz1+8wiX7HnkJoekKfnvPZaW9sqyyQp+/h78GLTMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729844929; c=relaxed/simple;
-	bh=jc+y/m1J5iDLVGvo7GE1rUcCJ9JarTubgikr5ubFVBU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/aHde0V+TBh6c0s0Kmhenf9ZWuEIsZksspX0NqONbNmlAv0MhOI5XM5e0/eMIGegiKBYyrYJz2/xwO/L67yuOBPo4uoZbo8TBvUdBozWEpsrNayXSltSjiF+X1AYG9ERGrmEIrf/l2/+CkXxtNrvXzMY/WQ8D2G8SW34FG6eVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MVrd6H/2; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9a0472306cso235996066b.3
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 01:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1729844926; x=1730449726; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKQtKEQ691WB5aL1CY9xzFRryNO/YNcfGDP3okJsWkk=;
-        b=MVrd6H/2/vvwaAm9jZwHrv28+0/70CDDnOI3/SpFsy7l6BsTae8knAuq3Aohm0OOjQ
-         vng/RZGsX8VFvWWE1SDPfkxh72rbksDgB9WpibfFFk9/9M1UAFbPQqywBuq3LUe0UV4B
-         bx/Wp2aUFll0h0VDGkf3v5O0JXkviNBrwGhnqpvWzJQYlaHgPd3Q5ELF50WXZjDQNJND
-         ZdPXD5EiQ8EFeTCKoe+LmoD7eS6WoxZzbsVaUg4d3VdPQAdi5xLTNR0lr559JNzMd5Gi
-         RdO7UAnLa3Ewr8JmgT3AjNh5UBGLuCqajsHYfp5PYO96Bqen4wuaSOnfyL5ik/9ykxkb
-         TA1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729844926; x=1730449726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GKQtKEQ691WB5aL1CY9xzFRryNO/YNcfGDP3okJsWkk=;
-        b=dJtURhgBJJF+XBTgzVyEryrcNfxn0YQhZJxUBaGcKBufWKYBTfGiO7ZVEmwUJtOm6p
-         i3WGRhjhkZ2xsqcdJo8T28IjxtWPGvwMHNoIovzWx3qnEpJYsnT1y6lA2fUKc3e/qbuj
-         dzzXA8ww7miID4lrMu8OOQWRVz30oVMunaIUTG+zUUc6HtGj+/kD12Btsx+NwfVNVpHC
-         JYjulduVK31zUwAUprhO+FBk9w7oOyM7VF08FDj5DPlk99qeOum4pKIZimArGICRsRMQ
-         K/RsXBDFu2gN6WEhSbN/heTYO9wddTgvQegWmAdQTprDtYdxBF/f1kCfHBbaw+Cz1yfh
-         CMnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsUMMhzHCptKFioEvIVzTqzpWdVfU8fruW0/AFjN5ZNaAd+GkaLC6mon9OTzJVgZ0Zp0/fXeOlTVFa@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjTbaJCLVOve37m7zPCk8qzER4I5b2D5zvBgU255ZHojJKzZL1
-	PhrpghWlt2/TF9RYHZ1EOFkeyQUkAHVkHzm8ETMbaVlhvYqxaBQqog6lL00lXZs=
-X-Google-Smtp-Source: AGHT+IEKAsvpP2dybXSJ7Ofjl3bCLXFPuuy1eHgZQTXd9CLcGnC5HYUafi69GsS8vo706m6wGKRfWw==
-X-Received: by 2002:a17:907:9406:b0:a99:e850:deb3 with SMTP id a640c23a62f3a-a9abf890eaamr841444666b.18.1729844925999;
-        Fri, 25 Oct 2024 01:28:45 -0700 (PDT)
-Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cbb62c803asm391336a12.56.2024.10.25.01.28.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 01:28:45 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 25 Oct 2024 10:29:07 +0200
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 11/14] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <ZxtW0z7-JaK3dWdQ@apocalypse>
-References: <cover.1728300189.git.andrea.porta@suse.com>
- <c5b072393d2dc157d34f6dbeff6261d142d4de69.1728300190.git.andrea.porta@suse.com>
- <CAPY8ntC0B0RdNmvGMaDcp-p9gZOcWBbeC6BjbcihrijRXjRVkA@mail.gmail.com>
+	s=arc-20240116; t=1729845246; c=relaxed/simple;
+	bh=N9YSX9KMs4EMi/FGose8Zz5enxtQrn/oOuSKDs2gz0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gj5gQtiFzFtUXwGselzvdb46boMldiJ22Fr3B7vcy1wmriqNU6cKGs4hE1FEdnQ171DubkRWz579WXsdCs+3dvomDRhC5VaVzVb1VL6q/lSnzozPFvtL49IcJK1CvgYgnwbGHo06oxmbHxzIU6Ar4vsXg3P97El2XIGc3z+12G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t4FlK-0007ay-2o; Fri, 25 Oct 2024 10:33:38 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t4FlH-000Km0-0P;
+	Fri, 25 Oct 2024 10:33:35 +0200
+Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 9F4C835E803;
+	Fri, 25 Oct 2024 08:33:34 +0000 (UTC)
+Date: Fri, 25 Oct 2024 10:33:34 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+Message-ID: <20241025-modest-hasty-angelfish-1e9193-mkl@pengutronix.de>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
+ <20241024-eminent-dancing-narwhal-8f25dd-mkl@pengutronix.de>
+ <CAOoeyxV4K=jR+tofeQtsMB7+smuu+Ghas5Tqfx4JvhuVK8dXrA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mwge3767c6xu2iui"
 Content-Disposition: inline
-In-Reply-To: <CAPY8ntC0B0RdNmvGMaDcp-p9gZOcWBbeC6BjbcihrijRXjRVkA@mail.gmail.com>
+In-Reply-To: <CAOoeyxV4K=jR+tofeQtsMB7+smuu+Ghas5Tqfx4JvhuVK8dXrA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Hi Dave,
 
-On 16:21 Thu 24 Oct     , Dave Stevenson wrote:
-> Hi Andrea
-> 
-> On Mon, 7 Oct 2024 at 14:07, Andrea della Porta <andrea.porta@suse.com> wrote:
+--mwge3767c6xu2iui
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+MIME-Version: 1.0
+
+On 25.10.2024 16:22:01, Ming Yu wrote:
+> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=88=
+24=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:57=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > On 24.10.2024 16:59:13, Ming Yu wrote:
+> > > This patch series introduces support for Nuvoton NCT6694, a peripheral
+> > > expander based on USB interface. It models the chip as an MFD driver
+> > > (1/9), GPIO driver(2/9), I2C Adapter driver(3/9), CANfd driver(4/9),
+> > > WDT driver(5/9), HWMON driver(6/9), IIO driver(7/9), PWM driver(8/9),
+> > > and RTC driver(9/9).
+> > >
+> > > The MFD driver implements USB device functionality to issue
+> > > custom-define USB bulk pipe packets for NCT6694. Each child device can
+> > > use the USB functions nct6694_read_msg() and nct6694_write_msg() to i=
+ssue
+> > > a command. They can also register a handler function that will be cal=
+led
+> > > when the USB device receives its interrupt pipe.
 > >
+> > What about implementing a proper IRQ demux handler instead?
 
-...
+> I think the currently planned IRQ process meets expectations.
+> Is there anything that needs improvement?
 
-> > +static const struct pci_device_id dev_id_table[] = {
-> > +       { PCI_DEVICE(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0), },
-> > +       { 0, }
-> > +};
-> 
-> You need a
-> 
-> MODULE_DEVICE_TABLE(pci, dev_id_table);
-> 
-> here in order to load the module for the cases where it isn't
-> built-in. Otherwise you have to manually modprobe the module.
+You can register the IRQs of the MFD device with the Linux kernel. This
+way the devices can request a threaded IRQ handler directly via the
+kernel function, instead of registering the callback.
 
-Sure, thanks for the heads up!
+With a threaded IRQ handler you can directly call the
+nct6694_read_msg(), nct6694_write_msg() without the need to start a
+workqueue from the callback.
 
-Regards,
-Andrea
+Marc
 
-> 
-> Cheers.
->   Dave
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-...
+--mwge3767c6xu2iui
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcbV9oACgkQKDiiPnot
+vG8jyQf7B92f0Ky8Hj3PYj0THmVCD2KKL5jNJPqmaGEYPNCv69g9R0AyA4eLf8X1
+FS6KS/SDR5wAufDLlXM//4HWXyerJa+fCIiBJte2O3qK+KKxsMBkFztu3LFuIBGL
+5MFlo//aAyys6LfYiEJWHreUs/PutGrzaAROk4bsZxC38RoN4Qe5dUOqUeg/6dxn
+Azs1tQzB/MNhtCT7uTIlTAk1tmNfw/qB2t6iEHGmGDlFX6O7QI9gSVR9bNCWW6Z4
+QECCM6/eC2TIAhljxMe+tqrrjZZkDDAuN84cFgDBB51XQuoUcRaRa83ehLnk/Hin
+CTvVqBxAZwY5o0EVGjWXE45BAmjisA==
+=nrcE
+-----END PGP SIGNATURE-----
+
+--mwge3767c6xu2iui--
 
