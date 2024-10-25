@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-12085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6D469B01A9
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:50:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 056A39B01AD
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 13:50:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B1DA284929
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:50:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8B72284635
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 11:50:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60693204920;
-	Fri, 25 Oct 2024 11:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B08D1205125;
+	Fri, 25 Oct 2024 11:49:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjBRUCno"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMgoRo6i"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA498202656;
-	Fri, 25 Oct 2024 11:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4622038A5;
+	Fri, 25 Oct 2024 11:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729856974; cv=none; b=bwr2YsFKlUql7yPGNIqfNNtoaNL7uVXnszH/NenVjpOKylVPjDCda6av0i0Lo4ohSH4EDQ9wKYnVylmtf6tBSnQRoZQNjGAc3yFsI3guVKw3Tfl8igV3nMcxZewxC7jVix4LgZVmzftCZ1JhER0LPqcNE7D3biGFdDxZbWhMr1s=
+	t=1729856975; cv=none; b=r8Pnohkb90ZP5VrIVkhG3DLYQu3ED/kGzf74hXD72cM31RCh1bw+qk90REwSCAQ/oBUo2G3rdf24l/CR7igqA/I/VF+JuPrsc7IcvKpJOixmD4aY2cnrh8IoqQddsOTwvtyzPtv8Gv9qBeGJXdbhwdU/6ODDWM0UW+cSYoeMiSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729856974; c=relaxed/simple;
-	bh=aspKmrgS7DI6+o3FPUtlY+vECrso8UKZIs+nvvoHLyI=;
+	s=arc-20240116; t=1729856975; c=relaxed/simple;
+	bh=3g7b5GOmv692vGg7/3yVQcA9gvqk1+NqU0y8jh1A/KI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NH0hSCrjb1guFXqiTbHmCSrmlHP8sbGXDJU40tdDfVoz1sVf3Kkjq85xYXXoP18FSZ6zBUpgfn0/wZXGzYn+gJgOD2I6EJXH2E4QTyJod0h2ZNCmqxg0aJJ7KEBvQ10xddycc8fNNGWtjv53iwI+H0+wBpzx4j5OE48HX90jSUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FjBRUCno; arc=none smtp.client-ip=209.85.208.180
+	 MIME-Version; b=FFM6ZMcAw0egV/OEGZnrq+KLWDEbiH1aG3hnvR0emXHJ1ddiBW6nKq30af5ufOrwBGr35GgVqJkN+ttN6V2/0zKTtAVp01Zl50ZTEgr59IZBL+eHIqpmslwq3RSXQE6ROub37Frn56RZN9lKRPWq1qmFQkWsnmRZAx65yUnzfpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VMgoRo6i; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fb599aac99so19641331fa.1;
-        Fri, 25 Oct 2024 04:49:31 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fb4fa17044so21195671fa.3;
+        Fri, 25 Oct 2024 04:49:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729856970; x=1730461770; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729856971; x=1730461771; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NQCNfwaBzrVCghcxLAoBZ2ERMZxjDuEt6bNvg8b+FBg=;
-        b=FjBRUCnoKWD1PRSFsscyoJXn1+ycq3m9lcIiXt+SluyDeRwCW2/ytGgTicJBkHZBVo
-         ORb3XcAozzrx2abEN3sZc7zdmPttOKfZEIuVzZ3hN9/K0U0oYsr2xjzB7IhYi9Eq45Ht
-         uDDO/8lRAMo0V+RMJlI9Jzt36J4EGgg6jg68PDAwPA8MW74Cm2qKKUTga3IraCa4kgRR
-         nlFTUcWVDk34UEnoUb5+NyDhK/Zz8zdCdW2kzFKzEq4RO8TUVI8U/T+LE3CuTg7ur/WD
-         IxkJSP6DrJle6zHr3OizsJm3UARd+ff9Kks1jxVEdHeJa3ljyryvZNRUgTLm9mODDCYX
-         aLJQ==
+        bh=Pw6x7l5AuN4o5c97yCezR04TZd3IFBzsNnyyt25aGPo=;
+        b=VMgoRo6iQ7GPeAtOU/CNP3RYNIkrkvUtj/X0euGejCo9pFvSFdNgLvtJEFmqHlKkV/
+         Sel02UjGyUJnNkey/Tw7cBsXaifnFRAqN40kC00JRjP9fWOQoiT5NL4VLd8I79+CekYE
+         Md2W2RodccR2ABaNMRQXiuV6awrgcEBkj/FEjcgaVRB8BH3tpwxwF3eDYV1yJnmty2mL
+         BNMdqv96k8JR4N4sfUYTrfw/jNBSYGqwHyVUvBjGz7CUs14yoSR15XcOPVno7O0mX/V0
+         7Fh0aHtwZdmkkDelkf4hc+L/+BWrogLBKdftxKS8COEVFnCkR/GiOXpMo37SrZtP05fp
+         ihig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729856970; x=1730461770;
+        d=1e100.net; s=20230601; t=1729856971; x=1730461771;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NQCNfwaBzrVCghcxLAoBZ2ERMZxjDuEt6bNvg8b+FBg=;
-        b=D7WpmvHUD4RA/b5BUEk0r7z4qV/2Bg8dLYMArAXvrLiJ3XgWvWZH4y8kThGWKqsRC4
-         TrMNomH1aSrxdYwNvvp5Ru2zLqNO96O4QPmLj9/mm6J5wTWgveWEqKlZgocGmjhKSdvY
-         jrJDKY2UfYDV+J91fAbAe42ivP/aklqwxjaUN7QS/6+y2y80uGLgsFuvl2ZT/60sRhwd
-         HPbuEJuBIBYZVcCGiLvHvBaoGxAWlaj9CtOo/zvMQo79MJDcW65/ESwQSPzHk6lNg1k8
-         OpWutPLshMN8vMHmRBfc0Y3FD/zgq/YmErNYLBtjnJcklL8jXkFtb0Uu+d9WonyVwM1w
-         8Uqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVn5SEBUARzHrtHvJVEjzQbrwr4kOPWAM6VyA6e1oQ0mSuf7wRo2N9cVbUQM+WvHwRDg7IWxXszifTltlAA@vger.kernel.org, AJvYcCW0X50gGugbkZuGnCmW7nUkiNgnNFnFeDZNjKSUlGvtIFBZuibzGzPbej2P1AmaPWeWiGgmdJtn/cI2@vger.kernel.org, AJvYcCX1MFqF0nZ48/N9Wh4O9g2lTHGQRB/cdz35GxN1EevelqiZV02uyRmtcTH2pPcRHpuvjB15b2aTyBtSbA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOyJpqpSLX+m9LLRkFYf4S1+0cbIoj4oYDD8sTc26Wd8rQDUYx
-	PsP+aUVb+fmojEXX5FbXN9IIqB7d1wXDMb/EHUv+iUjNJT4ZB2uH
-X-Google-Smtp-Source: AGHT+IHSlgkWSxFVF7akBafw+6JwTnPk7YZvSdZYN+3jqEsaPy48+WOM8E8zQhqNVbpyg7q0awInng==
-X-Received: by 2002:a05:651c:1256:b0:2fb:5da7:47a7 with SMTP id 38308e7fff4ca-2fc9d375d15mr42867061fa.25.1729856969531;
-        Fri, 25 Oct 2024 04:49:29 -0700 (PDT)
+        bh=Pw6x7l5AuN4o5c97yCezR04TZd3IFBzsNnyyt25aGPo=;
+        b=USwh6TtPZgPEkE1QV5L4QbMYuVy9mxwxDc4gFaAOjnf33gWZXrNyzFd16T3qptaWIE
+         TLlv68kF7P1vBSUUTA1YSGQcpGNKonX51zrZq49x8WA4+3h0KVOS5Em4iKNzAv0yVmRT
+         bOBmEFqEYrJWoMmH5ojcZKiSbenv88OfDCbksJzoY+ARDjBvo6dVaf2YG80U8ONNp4x0
+         sp7DhPXZYwkKx1Dr1GmZ6GK5hNuybt79o/0iqYm4zOCKpavi7TLYbB8d2wAXHaUCTLyP
+         ZoqFgTQ74pE1QKlfzuW4BvTM6hchizW3EJ2lCM+uQjfDgs9ACuTkYC4bo5Xth36VeYVw
+         Yeew==
+X-Forwarded-Encrypted: i=1; AJvYcCUfsDNOUPv9jDpkS3MbRfxMqIbcjcvC0kms38UomPenWCcskJ3nvqSsH23XHhOIpAYgYAG9otZbl5aM8T5i@vger.kernel.org, AJvYcCW++o/+zcu/iZhYZ7Eqvp44Qql8tAzfv7EDGfZObv8BZkHJWvjNdQcOg89Fh0AN/GMw0RVZ+lfHvpZx@vger.kernel.org, AJvYcCXVj0ec3CUP2+6wyfwDyxEhwHZDxDW2OxRnJJMJkpebt6wbPtF8B0+4LurHROytmgo5Jrhqew4lJqLkpA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKyG7ORdy6jM7sbCT2aE4jjJ36hkOUL87zRZkh/EttezohizCi
+	ATSkP92r54CM2ZiGAaBhefGU/sGnZGs1TPvoH93WKnwfwIbpejaF
+X-Google-Smtp-Source: AGHT+IFnU5j1cE09Hk/oUtLcXUwzGhA3hZaRMS9pqo2liLR4Nwl1OGWojpryufo0e+rIKC/CLSJZTQ==
+X-Received: by 2002:a05:651c:210e:b0:2fb:565a:d918 with SMTP id 38308e7fff4ca-2fc9d2f5eabmr50101371fa.12.1729856971121;
+        Fri, 25 Oct 2024 04:49:31 -0700 (PDT)
 Received: from prasmi.Home ([2a06:5906:61b:2d00:1044:9cc9:b89d:54cd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b56741fsm45109785e9.22.2024.10.25.04.49.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b56741fsm45109785e9.22.2024.10.25.04.49.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 04:49:29 -0700 (PDT)
+        Fri, 25 Oct 2024 04:49:30 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -83,9 +83,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 4/6] pinctrl: renesas: rzg2l: Drop calling rzg2l_gpio_request()
-Date: Fri, 25 Oct 2024 12:49:12 +0100
-Message-ID: <20241025114914.714597-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 5/6] pinctrl: pinmux: Introduce API to check if a pin is requested
+Date: Fri, 25 Oct 2024 12:49:13 +0100
+Message-ID: <20241025114914.714597-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241025114914.714597-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20241025114914.714597-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -99,100 +99,81 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Drop calling rzg2l_gpio_request() in rzg2l_gpio_interrupt_input_mode()
-this was added to handle special case of bootloader setting
-the same gpio pin as function.
+Introduce `pin_requested` API to check if a pin is currently requested.
+This API allows pinctrl drivers to verify whether a pin is requested or
+not by checking if the pin is owned by either `gpio_owner` or `mux_owner`.
 
-When GPIO pin is requested as interrupt through `gpios` DT property
-the gpio_request() is called through the code path and when releasing
-GPIO pin it goes through the gpio_free() path, so drop calling
-gpio_request() in rzg2l_gpio_child_to_parent_hwirq() path and also
-drop rzg2l_gpio_free() in rzg2l_gpio_irq_domain_free(). This fixes
-case where rzg2l_gpio_free() was being called twice after the GPIO
-interrupt pin is freed (after unbinding the module).
+GPIO pins used as interrupts through the `interrupts` DT property do not
+follow the usual `gpio_request`/`pin_request` path, unlike GPIO pins used
+as interrupts via the `gpios` property. As a result, such pins were
+reported as `UNCLAIMED` in the `pinmux-pins` sysfs file, even though they
+were in use as interrupts.
 
-When GPIO pin is requested as interrupt through `interrupt` DT property
-this doesn't go through gpio_request()/gpio_free() code path.
+With the newly introduced API, pinctrl drivers can check if a pin is
+already requested by the pinctrl core and ensure that pin is requested
+during when using as irq. This helps to ensure that the `pinmux-pins`
+sysfs file reflects the correct status of the pin.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 v1->v2
-- No change
+- Fixed build warning
+- Collected RB tag
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 33 +++----------------------
- 1 file changed, 3 insertions(+), 30 deletions(-)
+ drivers/pinctrl/pinmux.c | 14 ++++++++++++++
+ drivers/pinctrl/pinmux.h |  6 ++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index d8b942fbf537..b9a8bf43a92a 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2372,26 +2372,6 @@ static const struct irq_chip rzg2l_gpio_irqchip = {
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
--static int rzg2l_gpio_interrupt_input_mode(struct gpio_chip *chip, unsigned int offset)
--{
--	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
--	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[offset];
--	u64 *pin_data = pin_desc->drv_data;
--	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
--	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
--	u8 reg8;
--	int ret;
--
--	reg8 = readb(pctrl->base + PMC(off));
--	if (reg8 & BIT(bit)) {
--		ret = rzg2l_gpio_request(chip, offset);
--		if (ret)
--			return ret;
--	}
--
--	return rzg2l_gpio_direction_input(chip, offset);
--}
--
- static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
- 					    unsigned int child,
- 					    unsigned int child_type,
-@@ -2407,17 +2387,15 @@ static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
- 	if (gpioint < 0)
- 		return gpioint;
- 
--	ret = rzg2l_gpio_interrupt_input_mode(gc, child);
-+	ret = rzg2l_gpio_direction_input(gc, child);
- 	if (ret)
- 		return ret;
- 
- 	spin_lock_irqsave(&pctrl->bitmap_lock, flags);
- 	irq = bitmap_find_free_region(pctrl->tint_slot, RZG2L_TINT_MAX_INTERRUPT, get_order(1));
- 	spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
--	if (irq < 0) {
--		ret = -ENOSPC;
--		goto err;
--	}
-+	if (irq < 0)
-+		return -ENOSPC;
- 
- 	rzg2l_gpio_irq_endisable(pctrl, child, true);
- 	pctrl->hwirq[irq] = child;
-@@ -2427,10 +2405,6 @@ static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
- 	*parent_type = IRQ_TYPE_LEVEL_HIGH;
- 	*parent = RZG2L_PACK_HWIRQ(gpioint, irq);
- 	return 0;
--
--err:
--	rzg2l_gpio_free(gc, child);
--	return ret;
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 02033ea1c643..6c3d18b162ad 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -99,6 +99,20 @@ bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned int pin)
+ 	return !(ops->strict && !!desc->gpio_owner);
  }
  
- static void rzg2l_gpio_irq_restore(struct rzg2l_pinctrl *pctrl)
-@@ -2494,7 +2468,6 @@ static void rzg2l_gpio_irq_domain_free(struct irq_domain *domain, unsigned int v
- 			for (i = 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
- 				if (pctrl->hwirq[i] == hwirq) {
- 					rzg2l_gpio_irq_endisable(pctrl, hwirq, false);
--					rzg2l_gpio_free(gc, hwirq);
- 					spin_lock_irqsave(&pctrl->bitmap_lock, flags);
- 					bitmap_release_region(pctrl->tint_slot, i, get_order(1));
- 					spin_unlock_irqrestore(&pctrl->bitmap_lock, flags);
++bool pin_requested(struct pinctrl_dev *pctldev, int pin)
++{
++	struct pin_desc *desc;
++
++	desc = pin_desc_get(pctldev, pin);
++	if (!desc)
++		return false;
++
++	if (!desc->gpio_owner && !desc->mux_owner)
++		return false;
++
++	return true;
++}
++
+ /**
+  * pin_request() - request a single pin to be muxed in, typically for GPIO
+  * @pctldev: the associated pin controller device
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index 2965ec20b77f..df44dc4c8b84 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -42,6 +42,7 @@ int pinmux_map_to_setting(const struct pinctrl_map *map,
+ void pinmux_free_setting(const struct pinctrl_setting *setting);
+ int pinmux_enable_setting(const struct pinctrl_setting *setting);
+ void pinmux_disable_setting(const struct pinctrl_setting *setting);
++bool pin_requested(struct pinctrl_dev *pctldev, int pin);
+ 
+ #else
+ 
+@@ -100,6 +101,11 @@ static inline void pinmux_disable_setting(const struct pinctrl_setting *setting)
+ {
+ }
+ 
++static inline bool __maybe_unused pin_requested(struct pinctrl_dev *pctldev, int pin)
++{
++	return false;
++}
++
+ #endif
+ 
+ #if defined(CONFIG_PINMUX) && defined(CONFIG_DEBUG_FS)
 -- 
 2.43.0
 
