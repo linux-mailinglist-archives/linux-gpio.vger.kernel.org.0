@@ -1,112 +1,118 @@
-Return-Path: <linux-gpio+bounces-12115-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12116-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C0389B0A11
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 18:37:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 561DE9B0A47
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 18:49:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B016B220C4
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 16:37:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8C36283C3A
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 16:49:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB7117DFE4;
-	Fri, 25 Oct 2024 16:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA861DD0F7;
+	Fri, 25 Oct 2024 16:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FMhOSvhl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3QhoXPF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEED21A4C6
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 16:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD09C170854;
+	Fri, 25 Oct 2024 16:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729874221; cv=none; b=NARFs3RoNOS2ZiAnkfZ1pc3QminptGTLBqcGzPjUsztKqVHElYwX1Vj/IAqzTdM8FVnOSBPeiXlYFoAe2pxvy+7Rzdc3WI3MYz7XPsH4sCewClq4nOjKidZLv5IzDDQVvzgZjPtNaGh/yADoHynvbyn2hvJPj8lZSv+k2lwovUA=
+	t=1729874984; cv=none; b=g3syCE2lwZdwFjevCBLkSp3bzLU0hbL5HgQXB1aOZeRqiICGcU94c1G6dO5jt2sDWmJIVP1I1MvOvXXQDSNrNq0ncG7Wb4Ee97Xe5TWrgQwP1sfJdK8ryooVh6pEdBrc0fQxtBEo9nH0HYQzS7e50rynieFzgRYTaR9qnkg7YYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729874221; c=relaxed/simple;
-	bh=z8ZYUyX3DegatEokaoi93YFQEe8PkLpJaLNX49odOSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nOe8qNVAMxTbXwyudGzEaP34RwIfqMAQdZrDr0uOHd/0SHebLvuWMYo5V4ypIbAjskCZhEG+W7a+TncqfMY0eZVgzo0w+FFwCpD+VbpSP6W0jp3uFpE8GtO9MUWsba47SkyTtXFoLI25e4HTY//Stkar7PD9oEDRhN+mbGk2mjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FMhOSvhl; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43169902057so21690035e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 09:36:55 -0700 (PDT)
+	s=arc-20240116; t=1729874984; c=relaxed/simple;
+	bh=DfJ3hQmZ6k+K93BrEtTXX6xLP3W07BuCdIALQFrMA38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nk7esgihDIeKYjiMGJT4lLyk4mOnUZAMq6IQmQQSpkyk58awabVcLNwGQPcGgcQhJLaF/kIYlJX5G2FtBRBBwXzrFIkrlC7DmfyXc4FMFKMc7xiGnSqk0lw6fqcqm4rZ9jQBeZPgx67U+Z41PdEMT7TvjN0fZBYc0ReSpII6NtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3QhoXPF; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5c9709c9b0cso3088405a12.1;
+        Fri, 25 Oct 2024 09:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729874214; x=1730479014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7lGkP35cJnTIdnyhY5sfY8yz0v3JRW7Q1yvNGRDERrg=;
-        b=FMhOSvhlsLTVhZ/Xst9Vt3tIQ5wAK5a6fJxhe+EIy4Twncc7qW431xKNRbKTwSpOkb
-         GrOfdWjWILmcawnAyBbW6i4NPpoXZH7/unkaHox0jT86HrCJWyRw01E+N1yQ99Omi4Q4
-         UbspEw+E3AH9WujOBYhFqDZ/84btMlhKURSc96tXO2mSsrXZ0cS9fR4sRgxuw2WZ/bzb
-         ibu1okQYdiTmc9xRxFMQZNTOj/gsJZERO9hCofv16isabiCdqNlbg3XUpK74p3ra/9Cm
-         AnCSRS4AvlMgK4bwGCtG/tI2FJXB7QzSi+rzDYJX3pXaLp2A73vwfAogUOtBkmtdwME4
-         o3+g==
+        d=gmail.com; s=20230601; t=1729874981; x=1730479781; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C6NClCe/pCFahIjQkz67tW5BHdRGWDuFmSNfVYTs8HA=;
+        b=E3QhoXPFD6MNXqedY5yr58z9FDqwGoR5DQr4nl1M2bb5botDw8LgV/EwqiSqIYzyWL
+         6IOk6H8wxST5JWDC58XFRjV5FMrBqZUWMwAy0F+2r4F9Hfd6Tfok79Jb7UPGhfOUqN+2
+         vlGG5PBUx70FbcJJpXOqgNxs+M4aR7gsvgv/YH3LnFuNMCNvQdLVwjQ6m092FwzXZvih
+         1vtqprzbIDbXfs2WaGB90LDDqYgqO855TOXAFnix55a4xMu6maGhcrBNc63Fan0GLTrL
+         1wwAuXJY11soyFXOxqhTdhsT3OmpSR2LDksH2dam0h0I4fjxdM9Z2/8w9j8kiTI+nZ0e
+         MOpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729874214; x=1730479014;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7lGkP35cJnTIdnyhY5sfY8yz0v3JRW7Q1yvNGRDERrg=;
-        b=NOqiumvq5aGM621eScxTzaG+T+AmPla+4kQY/Zi82MDVvAi0R057G9O9bO1vU3L1u6
-         JP+OKWbUQvEzk7x36QoDFIx7CQcwbXvdDEGst9bk0GaYQa2WhVAQgtYEwgemjqS4WXDb
-         8Mw1sXGOd+rud7l45p1F5LLwwoNLN9Vy3w5jBo80kQ3NaX3sAcEwdKzp9DbcnOvZAmpP
-         1KDtTujI4ElmQhxefXo5IL0O2zv8E2spoy6kI4LcoDV2Lztm+hIpr4pmIfp4cjD7o8ii
-         ivkPg4rN+T81w6wdyyeIIYsZOvprORApz6QeU5kv0xn71mNwT0HgRO9+MZPD3CtLeDqP
-         aFkA==
-X-Gm-Message-State: AOJu0Yxx7HYVQjoqTisxWymLlxmsvfrdNNllz5krs07g9Lo7975nrOlm
-	Fa5gyqnnBK1NGpcyVXG6vZTr9EtPnQYJFfaZ7XDgwdqgH9sZD/gP++Vn8Npi32k=
-X-Google-Smtp-Source: AGHT+IEVcCSB/+2gFz0T4Is6uvy0Nb64CEXaviScFcm3jz+lgW5p91JQltzJOKFrgHlsa8gdQwDoUQ==
-X-Received: by 2002:a05:600c:3550:b0:42c:b16e:7a22 with SMTP id 5b1f17b1804b1-4318413f0ccmr90291625e9.12.1729874213802;
-        Fri, 25 Oct 2024 09:36:53 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a207:5d17:c81:613b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b92963sm1932967f8f.98.2024.10.25.09.36.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 09:36:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: of: drop dependency on HAS_IOMEM
-Date: Fri, 25 Oct 2024 18:36:51 +0200
-Message-ID: <20241025163651.54566-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1729874981; x=1730479781;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C6NClCe/pCFahIjQkz67tW5BHdRGWDuFmSNfVYTs8HA=;
+        b=e/dVSRsrLGQE5BRPK9byTxgSJc+gJXHwnMBrnNCYI9OYk4DHboapV9ltRnhvydBm8X
+         YX1RVeSNExK7Ibe8Nxp3f7MbdqMonI7S9Ud6UBLA5Dw7SEfzPQbYh6g8Lm3+x2zjETAM
+         EGLRPPvqmh91DbkoYgJdAp6MGgt+RQp6aKDYDkKfb/cD8GmZEncLheAbxIpVBYzoCKDF
+         ehEYIDTDGUoa5+p/RdbmlQ71bd2H1FXkpzPXcilSJQoq30FZF5+dXOt/jaDk0Ih3xmcZ
+         VD2TYxkEUUGe4NGMp7oHzBGoqqL6uVdj1k1siwwJXvcyzi4WFOk4fPvU0BsAqaQ1cdTk
+         fPiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHJpnJlVS/sXSs3RuAJcIEtzah6gBCUceNOWZgK398yxdCU9xphAj28X+DPD7tbeSA6xAGNsWCs55CPg==@vger.kernel.org, AJvYcCVVpPMfRZ4e7D9fJqQqsUqV/6KoiCluOJ2r3LiuiZL0ve8kuTHNNg7h338TRuTtofywSSm2oYLVBlfoxOGX@vger.kernel.org, AJvYcCVxQHNZb0DIpEDcrrDexUhkisKYO258j48D8w290AfmQfD/Zcm9BMI+IRr22tt6dUJKtv0pTSHa@vger.kernel.org, AJvYcCXUPe6fZE/a5bL94cV7N56OSRl0hUt3e9pMLCcKtPFCd4ptiWxqJT3qRUVWkeXfOJKtaQY3melExHfUlkZU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxsPilslVPKac845j7N3lilPxtdJ0EGAgR2adFNm7k6DqFa9jN
+	XykG/JikPKXEqEaNjayveRphG0Z9/EnqB8Skd/qWaKrmPrZD/g1y
+X-Google-Smtp-Source: AGHT+IEplfKRE+FzdIgQzkRri+LLQy1SDGVkqAbCGUQXY94gamrjimYvOVLFEObF5gDcFC6jz/NVsA==
+X-Received: by 2002:a17:907:72cb:b0:a9a:1918:c6c6 with SMTP id a640c23a62f3a-a9abf84ad47mr1057640966b.8.1729874980744;
+        Fri, 25 Oct 2024 09:49:40 -0700 (PDT)
+Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f298b1esm88169266b.107.2024.10.25.09.49.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2024 09:49:40 -0700 (PDT)
+Message-ID: <c153d278-7b61-4feb-a749-43226357acc3@gmail.com>
+Date: Fri, 25 Oct 2024 18:49:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: qcom: spmi: fix debugfs drive strength
+To: Johan Hovold <johan+linaro@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Anjelique Melendez <quic_amelende@quicinc.com>, stable@vger.kernel.org
+References: <20241025121622.1496-1-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@gmail.com>
+In-Reply-To: <20241025121622.1496-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 25.10.2024 2:16 PM, Johan Hovold wrote:
+> Commit 723e8462a4fe ("pinctrl: qcom: spmi-gpio: Fix the GPIO strength
+> mapping") fixed a long-standing issue in the Qualcomm SPMI PMIC gpio
+> driver which had the 'low' and 'high' drive strength settings switched
+> but failed to update the debugfs interface which still gets this wrong.
+> 
+> Fix the debugfs code so that the exported values match the hardware
+> settings.
+> 
+> Note that this probably means that most devicetrees that try to describe
+> the firmware settings got this wrong if the settings were derived from
+> debugfs. Before the above mentioned commit the settings would have
+> actually matched the firmware settings even if they were described
+> incorrectly, but now they are inverted.
+> 
+> Fixes: 723e8462a4fe ("pinctrl: qcom: spmi-gpio: Fix the GPIO strength mapping")
+> Fixes: eadff3024472 ("pinctrl: Qualcomm SPMI PMIC GPIO pin controller driver")
+> Cc: Anjelique Melendez <quic_amelende@quicinc.com>
+> Cc: stable@vger.kernel.org	# 3.19
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
 
-Commit 2527ecc9195e9 ("gpio: Fix OF build problem on UM") added the
-dependency on HAS_IOMEM to OF_GPIO to address a build-issue on UML (User
-Mode Linux). It's no longer needed as now UM defines stubs for
-ioremap() and iounmap() even with !HAS_IOMEM (and its emulation can also
-be enabled on UM now). Let's remove it.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e28efd5f9c17..27c18a1f76b8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -29,7 +29,6 @@ config GPIOLIB_FASTPATH_LIMIT
- config OF_GPIO
- 	def_bool y
- 	depends on OF
--	depends on HAS_IOMEM
- 
- config GPIO_ACPI
- 	def_bool y
--- 
-2.45.2
-
+Konrad
 
