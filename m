@@ -1,216 +1,182 @@
-Return-Path: <linux-gpio+bounces-12118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 661909B0DAB
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 20:46:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFF039B0F52
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 21:46:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE9FE283F0C
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 18:46:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 108B61C21367
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 19:46:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9F920D50B;
-	Fri, 25 Oct 2024 18:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF40220F3D1;
+	Fri, 25 Oct 2024 19:46:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="gdBTGg9q"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BgYrs3ek"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A656107A0;
-	Fri, 25 Oct 2024 18:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F6920BB2E;
+	Fri, 25 Oct 2024 19:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729881950; cv=none; b=qt7qI9WWxkJ7pkgFioFWaH/9wVwv2LDyG0NyFwQvGYaK4vnEup4xiHgmISkGGqXwbNfh1mOGmsToc6kgrCkRoqiEdP1W9B/85qNbvCouB0/uyPdNGPHPB3Jff8u6PFDYyLyNn+J/Votl6GIAICgHnuBYqPX9+DOKJ+H65hPYlP0=
+	t=1729885572; cv=none; b=OfJNuOQ+VyYv2QnHxWdQ2l+ZVeeMnCHtTycM/qjx2EgVeXAdqkFC7jNFJaQu/s2R5dRTYi89vYkgOqMRR+tPLHETgHogZRNbxE4rzOvOGaeLn6lTGR0SoLNdGG4qogb6fLADB5BVd06Jegc90idro5F1NOabTJU7vTVmQJCeH9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729881950; c=relaxed/simple;
-	bh=eoe/fP8YHFbJUGJWPDVWR2pm8bdAzVvuYmLMkOvFUCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s5Ld4AF2zg5xfBatop7nXqenoaZYeXvlebP509Wab0KC1SkTmqDR7J3bmPgMQm0WoYQlN+eSbt33GZ/YckryYrmL5I29wYpm8jeOaq4NHc4txpvZHwmxxT00yAm2FMVNwsgkIeIhuVHIcOsYXGJXtjQydZqOb1ZY6K24mPhlxUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=gdBTGg9q; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	s=arc-20240116; t=1729885572; c=relaxed/simple;
+	bh=a1xD5U+KJRHHHihCSOYqaYazM7sD048UvQTjfIB42Gs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fFjrJbcW5Zq+Z0bXujINIgSYXe01TkdSdP0p4E0blddIQmytZYPbZqS5x2G2SGBw6xaH8gor6npGXQdFHoBmKrOgpo9O9j0jrMDFdA0EmHoMg+vWXOBNbuQA9fI625W7HopV0oUDPcGCT5SM7zIZa3X9FpU6emKZbqa2GQUt2rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BgYrs3ek; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1729885568;
+	bh=a1xD5U+KJRHHHihCSOYqaYazM7sD048UvQTjfIB42Gs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BgYrs3ekdOayxKEFAUcDI91I69Pms2obdaqO60iGnJ+8ccKCq+VqafhPQliizIHv2
+	 4/Om4Yu589ezyURJsJqv4HmTZmRQ0bIRkLyXIhhWdsZvV7fbdVJK7xLUuQ9DnEZlG6
+	 R/ZjygaS8Y0NGtodknIvfvg+Mhfzj4hq3SORioMWnx3ykaCuGIS2ZP2AK93ttOPA5A
+	 wF0Gv6sKFJ+hkGAfHQbzI0xcI5VktsE4SCHngYoRNgToH3lCXZGihUZ/kV/9QUsrdd
+	 T3jufgDRuN2iiogTP0S2o7IqebXyfot3eEEngGO0DIeZbEfA4ZBgCuMeKUEw3xT9Ji
+	 x6O8hHrJY1O6g==
+Received: from [192.168.1.54] (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4XZs5L3sP6z9snx;
-	Fri, 25 Oct 2024 20:39:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1729881574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lSojNFdw8ftg3T7NakOd4AZhT9UMaiDwBHmwcORfhmk=;
-	b=gdBTGg9qaBnIiiH6XUTjeUDIpm/w19h2mJ2NxyWek4JBdbfHEfy1l85WLscQ4teM7X3Y8E
-	SzmAWuY6Tiv8TrbprFm973WyyZ+4RlCRZSgfEyQVNqd0vqp4fkqFnrWEBZthKLrpibPdn8
-	zOUeUEpcyhLgwtmKEbx1GfoJj+wV9qWVvuN6kVStn1ig/Bghe328CY4APIAqqMM1/M6DTp
-	Oi88jdSqZLP4fc+Ctf69KIG1PcmVc9Uqx7eoBdxCRl/yvszGacX3FksxcbsLOSr1RTVZ7U
-	RwAHePsvYqanhR6nADNx5z06lDr7cIO+uU+cHTctUfx45NWDJnFzydXg0RISPg==
-Message-ID: <872c8823-f62b-42f8-8bf3-86342374aa84@mailbox.org>
-Date: Fri, 25 Oct 2024 20:39:19 +0200
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85DC217E3704;
+	Fri, 25 Oct 2024 21:46:06 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH RFC v2 0/5] Verify bias functionality for pinctrl_paris
+ driver through new gpio test
+Date: Fri, 25 Oct 2024 15:45:35 -0400
+Message-Id: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Revert "MAINTAINERS: Remove some entries due to various
- compliance requirements."
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, jeffbai@aosc.io,
- gregkh@linuxfoundation.org, wangyuli@uniontech.com, aospan@netup.ru,
- conor.dooley@microchip.com, ddrokosov@sberdevices.ru,
- dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com,
- geert@linux-m68k.org, hoan@os.amperecomputing.com, ink@jurassic.park.msu.ru,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-ide@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-spi@vger.kernel.org, manivannan.sadhasivam@linaro.org,
- mattst88@gmail.com, netdev@vger.kernel.org, nikita@trvn.ru,
- ntb@lists.linux.dev, patches@lists.linux.dev, richard.henderson@linaro.org,
- s.shtylyov@omp.ru, serjk@netup.ru, shc_work@mail.ru,
- tsbogend@alpha.franken.de, v.georgiev@metrotek.ru,
- wsa+renesas@sang-engineering.com, xeb@mail.ru
-References: <a08dc31ab773604d8f206ba005dc4c7a@aosc.io>
- <20241023080935.2945-2-kexybiscuit@aosc.io>
- <124c1b03-24c9-4f19-99a9-6eb2241406c2@mailbox.org>
- <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-From: Tor Vic <torvic9@mailbox.org>
-In-Reply-To: <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: fcapfso3xo4bfkqbzachb4s163eexrjr
-X-MBO-RS-ID: 80e4fa8c609ea0e1360
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAF/1G2cC/4WNTQrCMBCFr1JmbSSpNlJXguAB3EoX6ThpB9tOS
+ UpRSu9uKO5dPHg/8L0FIgWmCOdsgUAzR5YhhXyXAbZuaEjxM2XIdX7UpbbqFanzE8VJNSOLipR
+ MEsrguVGWirq2J43GFZAYYyDP743/gPvtClUqW46ThM/2OZtt+uHLP/jZKK2MddoWzuMBzQWl6
+ 1wtwe1ReqjWdf0C88Dq29MAAAA=
+X-Change-ID: 20240906-kselftest-gpio-set-get-config-6e5bb670c1a5
+To: Sean Wang <sean.wang@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Bamvor Jian Zhang <bamv2005@gmail.com>, Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+ kernelci@lists.linux.dev, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
+This series was motivated by the regression fixed by 166bf8af9122
+("pinctrl: mediatek: common-v2: Fix broken bias-disable for
+PULL_PU_PD_RSEL_TYPE"). A bug was introduced in the pinctrl_paris driver
+which prevented certain pins from having their bias configured.
 
+Running this test on the mt8195-tomato platform with the test plan
+included below[1] shows the test passing with the fix applied, but failing
+without the fix:
 
-On 10/23/24 19:45, Linus Torvalds wrote:
-> Ok, lots of Russian trolls out and about.
+With fix:
+  $ ./gpio-setget-config.py
+  TAP version 13
+  # Using test plan file: ./google,tomato.yaml
+  1..3
+  ok 1 pinctrl_paris.34.pull-up
+  ok 2 pinctrl_paris.34.pull-down
+  ok 3 pinctrl_paris.34.disabled
+  # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-I was a little bit sick when I wrote my previous comment, but I wanted 
-to elaborate, so here we go:
-> 
-> It's entirely clear why the change was done, it's not getting
-> reverted, and using multiple random anonymous accounts to try to
-> "grass root" it by Russian troll factories isn't going to change
-> anything.
-> 
+Without fix:
+  $ ./gpio-setget-config.py
+  TAP version 13
+  # Using test plan file: ./google,tomato.yaml
+  1..3
+  # Bias doesn't match: Expected pull-up, read pull-down.
+  not ok 1 pinctrl_paris.34.pull-up
+  ok 2 pinctrl_paris.34.pull-down
+  # Bias doesn't match: Expected disabled, read pull-down.
+  not ok 3 pinctrl_paris.34.disabled
+  # Totals: pass:1 fail:2 xfail:0 xpass:0 skip:0 error:0
 
-Of course it's not going to be reverted, and I don't mind.
+In order to achieve this, the first three patches expose bias
+configuration through the GPIO API in the MediaTek pinctrl drivers,
+notably, pinctrl_paris, patch 4 extends the gpio-mockup-cdev utility for
+use by patch 5, and patch 5 introduces a new GPIO kselftest that takes a
+test plan in YAML, which can be tailored per-platform to specify the
+configurations to test, and sets and gets back each pin configuration to
+verify that they match and thus that the driver is behaving as expected.
 
-I do however mind about the fact that you accuse contributors (however 
-minimal their contributions were, like in my case) of being "Russian 
-trolls" using "multiple accounts".
+Since the GPIO uAPI only allows setting the pin configuration, getting
+it back is done through pinconf-pins in the pinctrl debugfs folder.
 
-I would have thought that a man of your stature, knowledge and 
-publicity, wrote a more sensible, neutral comment than that childish 
-gibberish you produced.
-Such comments can be seen in the hundreds on every major news website's 
-comment section.
-Unfortunately, this is now common discussion standard at least in the 
-Western world:
+The test currently only verifies bias but it would be easy to extend to
+verify other pin configurations.
 
-"You don't agree with X? You must be a Y!"
+The test plan YAML file can be customized for each use-case and is
+platform-dependant. For that reason, only an example is included in
+patch 3 and the user is supposed to provide their test plan. That said,
+the aim is to collect test plans for ease of use at [2].
 
-There is no doubt that there are Russian troll factories - but there is 
-equally no doubt that there are Western troll factories. Without them, 
-this "game" wouldn't work.
+[1] This is the test plan used for mt8195-tomato:
 
-You could just have done a simple 'git log --grep="Name"' to find out 
-that most of those people who you accused of being trolls are actually 
-not trolls. Because trolls do not contribute.
+- label: "pinctrl_paris"
+  tests:
+  # Pin 34 has type MTK_PULL_PU_PD_RSEL_TYPE and is unused.
+  # Setting bias to MTK_PULL_PU_PD_RSEL_TYPE pins was fixed by
+  # 166bf8af9122 ("pinctrl: mediatek: common-v2: Fix broken bias-disable for PULL_PU_PD_RSEL_TYPE")
+  - pin: 34
+    bias: "pull-up"
+  - pin: 34
+    bias: "pull-down"
+  - pin: 34
+    bias: "disabled"
 
-> And FYI for the actual innocent bystanders who aren't troll farm
-> accounts - the "various compliance requirements" are not just a US
-> thing.
+[2] https://github.com/kernelci/platform-test-parameters
 
-Of course not. It's a USUKEU thing. Or, dare I say, a thing of the 
-unipolar anglo-american empire. There is no way around a multipolar 
-world order if we as humans want to progress.
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Changes in v2:
+- Added patches 2 and 3 enabling the extra GPIO pin configurations on
+  the other mediatek drivers: pinctrl-moore and pinctrl-mtk-common
+- Tweaked function name in patch 1:
+  mtk_pinconf_set -> mtk_paris_pin_config_set,
+  to make it clear it is not a pinconf_ops
+- Adjusted commit message to make it clear the current support is
+  limited to pins supported by the EINT controller
+- Link to v1: https://lore.kernel.org/r/20240909-kselftest-gpio-set-get-config-v1-0-16a065afc3c1@collabora.com
 
-Why didn't you (or Greg) elaborate on the "various compliance 
-requirements" in the first place?
-You could just have said:
+---
+Nícolas F. R. A. Prado (5):
+      pinctrl: mediatek: paris: Expose more configurations to GPIO set_config
+      pinctrl: mediatek: moore: Expose more configurations to GPIO set_config
+      pinctrl: mediatek: common: Expose more configurations to GPIO set_config
+      selftest: gpio: Add wait flag to gpio-mockup-cdev
+      selftest: gpio: Add a new set-get config test
 
-"Due to the sanctions against Russia, we as a US-based foundation are 
-required to abide and therefore we have to remove some maintainers that 
-are thought to be directly collaborating with the current regime" (I 
-specifically used a "Western" language).
-That, at least, would have been somewhat honest, though still hypocrite.
+ drivers/pinctrl/mediatek/pinctrl-moore.c           | 283 +++++++++++----------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |  48 ++--
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |  26 +-
+ tools/testing/selftests/gpio/Makefile              |   2 +-
+ tools/testing/selftests/gpio/gpio-mockup-cdev.c    |  14 +-
+ .../gpio-set-get-config-example-test-plan.yaml     |  15 ++
+ .../testing/selftests/gpio/gpio-set-get-config.py  | 183 +++++++++++++
+ 7 files changed, 395 insertions(+), 176 deletions(-)
+---
+base-commit: a39230ecf6b3057f5897bc4744a790070cfbe7a8
+change-id: 20240906-kselftest-gpio-set-get-config-6e5bb670c1a5
 
-And I did read through (most of) these EU compliance requirements 
-because of my job (not IT), so I'm not *that* clueless.
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-The sanctions are absurd anyway - I don't remember that the US had been 
-sanctioned because of their illegal invasion of [insert country of your 
-choice]. US athletes excluded from the Olympics?? How dare you?
-
-I also don't remember that France or UK had been sanctioned because they 
-abused their UN mandate to get rid of Gaddafi.
-
-The "country" Kosovo, created by a war, isn't even recognized by all EU 
-member states!
-
-And don't even get me started on that Eastern Mediterranian country that 
-can commit the worst atrocities without ever getting seriously sanctioned.
-
-Meanwhile, we sanction Iran (hasn't started a war in ages), Cuba (hasn't 
-started a war in ages), North Korea (hasn't started a war in ages) etc.
-
-The Western arrogance and decadence is disgusting, and I say that as a 
-born and bred Western European.
-
-> 
-> If you haven't heard of Russian sanctions yet, you should try to read
-> the news some day.  And by "news", I don't mean Russian
-> state-sponsored spam.
-
-I'm already more than fed up with the state-sponsored spam on German TV 
-- and I even have to pay for that BS!
-Now, I don't know how it is in Finland because I don't follow Finnish 
-news due to a total lack of language knowledge.
-
-I wish my country would quit NATO, and then I see that Finland *joined*. 
-Sorry, but I don't understand. No NATO, no war in Ukraine.
-Even as late as 2013, Russia and Ukraine did naval manoevers in the 
-Black Sea - together!
-
-This war is sooo totally unnecessary. Maybe you should ask Vicky "F!ck 
-the EU" Newland why this all happened.
-
-> 
-> As to sending me a revert patch - please use whatever mush you call
-> brains. I'm Finnish. Did you think I'd be *supporting* Russian
-> aggression? Apparently it's not just lack of real news, it's lack of
-> history knowledge too.
-
-Why do you even mention your nationality?
-Just a few weeks ago, I read about the role of Finland in (and before) WW2.
-I don't think there is a big lack of history knowledge on my side.
-
-My country was occupied by Germany twice, in 1914 and in 1940.
-And yet, I have absolutely no bad feelings about either Germany as a 
-country nor Germans as a people. OK, their government is the worst since 
-1945, but that's a different matter.
-
-Wasn't Mannerheim married to a Russian? Eh?
-
-The former German Minister of Foreign Affairs, Guido Westerwelle, once 
-talked about "late Roman decadence", albeit in a different context.
-
-And yet, he was totally right even in other contexts. The Western world 
-is actually in the state of "late Roman decadence".
-And what follows after that decadence? Right, the downfall. And it might 
-be a huge chance to create a better, more equitable world.
-
-> 
->                        Linus
-
-Tor Vic
 
