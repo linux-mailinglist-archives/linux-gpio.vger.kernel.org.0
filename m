@@ -1,120 +1,119 @@
-Return-Path: <linux-gpio+bounces-12104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0479B05B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 16:25:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BAC39B076E
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 17:13:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62005284961
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 14:25:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D527128221F
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Oct 2024 15:13:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46FB61FB8AE;
-	Fri, 25 Oct 2024 14:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7695D1FB895;
+	Fri, 25 Oct 2024 15:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FsmLrS0p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S7rdDo2f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2516B7083A
-	for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 14:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1D41FB899;
+	Fri, 25 Oct 2024 15:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729866311; cv=none; b=FbsZ4HNd2VLf8RP1VKDKlm/hlyYY6F6zaJYygIYZx4uNzQCOMVernA/Ypc0p/TS3ysUm5PvUBoXLs2yXS0Oj9QHU6TCMhLAqtj9Y0OmjbjGAxS762v9i2fkEb2VPx5oSOtI4qHSdSoUTOG4KCcb4kw4oHqk3oNa1w2WzR4YrQVA=
+	t=1729868901; cv=none; b=oBaYjGcxHbA5qfPXT2p+yvXSon/USanoG1LDdYbLLSYn7zHjLPmF2r+V43UInd0l/uBH/8D2Q6Zu2L7IIep0++SPtAOicH3ifpvUuAbGCdbu5n64OMD4gKeq15gspqjmhjbbufPhCzDdEYBLWy11HflybpRhLBgQdeeBDBSdn8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729866311; c=relaxed/simple;
-	bh=7uwT+o57UvM7J/FQzp0V9fqdfYC2UNIOdQJe6Bj47XI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HH+Q2pezq24tfH5U0XHwzOOJ/eOcgFONZ4ks4235hYao6LiMU+ZmI9mE+posBkHBhcU+Kvlv5KAlBicz2ytO3KCnoYmAIuxOeaFp3iGHuWWCJ9UTEl7DLZVEE8bEt07m69C6un8yJJp/RGRAuI6cAXDnDygZwVy29rcQXThbfn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FsmLrS0p; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43161c0068bso20602395e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Oct 2024 07:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729866307; x=1730471107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKxWRQVkB4WdUkX8OjK707c8TKcovo6NqREhGPLhdkM=;
-        b=FsmLrS0pc4A03oRNLGEhnANmPKK3SCwKJwoOqyf+OnTgIpuxZRChwRrlBL71pMKlcn
-         u0kcx6hHayAyky3HZjDxt8CosI3YTQ4GEtE5Uy/fC28xE3Or5MGRpeLbtUNVXcxAYili
-         r/ECNhy45yp2KukjsOTUTmeUyN1G2c3CHa2ftUJuZvgT07bx5jSdaDKOurqBxIXdGlrR
-         LQ73RxpFlbLtXbBKUlMKBjxaJfcxUm/PrBPQIMmFOzk6iElFdOU4WPkEFs5D3xYHX5uL
-         wEdgmBvdTqWlNhW0KJbomVwJm/607+PR5UdzBnmVdb/jZFTw/O+jEI77jn+wJoNqTt1A
-         +wvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729866307; x=1730471107;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IKxWRQVkB4WdUkX8OjK707c8TKcovo6NqREhGPLhdkM=;
-        b=vzgj0h67sIfqsTz4Ie1VtZy/IKFOCjPIGOaXnSLvF6iCO19v67lCo0tm9VFLfKG7Nm
-         38HXO3l/6HIihvHhDZJ4TWwGV5cLzmTXA6056aI79xy9LLzwu67cpMZQNLNhfGxEplm7
-         dV8Hs3xK+ACJBYY+y650+cPMKRhV/yvTmYaQGCd2GTlh8jvY2qXntsMQeeUrAs92aNC3
-         Ti/zevHzM2AYmnIKDxQiS7dt8kQKbNvtai707yfwSAVSlR13TO0ob3ecDGxg586salrf
-         CazZwkNlhZbvoCrr2nkZkv/8C1zTnSxcioxCyMK3hQJjKbJZi1nelfMq493WxlpCgCDJ
-         SjlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8DMqmHpJM5LnPlf7lcKq7rNrgTl7Z+BSrgnI8kyRp6Q+/45v632cDYvsWfOdG1v07fiIgiUDuTV9K@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywyx3JAu2FhMaw2eQxN/fz5vZqOJvh++tQzemVxiWyqkXL64PoN
-	19vEAfYI6bY017SxOakMmyWqAns0hiq1slcgwF28jCfh0pLe+XsRd3o2M+oV2eY=
-X-Google-Smtp-Source: AGHT+IFW/HyHRVy6ctVsiYJPu+tooWLvDcmC1BLHr+e9gfbJhkAvwQ4pQy86lpbSCZbeQ9157khFyg==
-X-Received: by 2002:a05:600c:3b90:b0:431:5ba1:a513 with SMTP id 5b1f17b1804b1-431841fdca7mr92227775e9.10.1729866307323;
-        Fri, 25 Oct 2024 07:25:07 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a207:5d17:c81:613b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4319360ca31sm19121445e9.42.2024.10.25.07.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 07:25:07 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1729868901; c=relaxed/simple;
+	bh=rppvuYDWzvfCkS2KAohnOiip3kS9PjpY9UnZSDutk24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gC5aKGGn6bvZK4Ew37Wrg57rfmpEyg8PtIRmMxV51M6UJUCNrXsCOhEUu1d4szM4VuXIukgQya2nnD8dViXF0vLGcB6oHB9HEbPmM6NcefAvgEd7j6gq7ga5sXX8B0gwd4LCo3H6am6AFf0QWKKKQMhHNXx8bhoRE+2mRrEfv1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S7rdDo2f; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729868899; x=1761404899;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rppvuYDWzvfCkS2KAohnOiip3kS9PjpY9UnZSDutk24=;
+  b=S7rdDo2fI+9AinHMggUHHZKjCPKQcA1DKPjK1ikw7Ijeyf4oatBNEJ2E
+   LRmHtXvERXh16Omt6E9OHeAG5VXHjtCohqDCluYOyFrtC9740QkJbVSru
+   f+a87nbF46jpkzpjoLrVT9EM2E/Z3/jz8E0vmCzFiEUln8Hxsfsu7jEaH
+   LOv/pF91+ql5AhRZrE+zg5yl7hNlhw0PUpa4+1rZ/Bpvft/Poqa/BQ/Wa
+   PR+PAfGDSoNtBXkd+/OAM6kHYyK4VUJTaYo4+0nJPm/KeIYtJOkuY3x3p
+   XGxCvQFGXpc+ELXlcRcaqFgNAGRz/pOx0VLUVb3xPW3HzL9YtcFurFiPI
+   g==;
+X-CSE-ConnectionGUID: U5NhG5qaSF6Su1ohaS1VOA==
+X-CSE-MsgGUID: q6k8nqaTTTKhBEYCywQtPw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="54945783"
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="54945783"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 08:08:19 -0700
+X-CSE-ConnectionGUID: CMV7AipwRCeHZY9W+czBZQ==
+X-CSE-MsgGUID: swJZ+5tEQYOod1/gAaVsTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="85725264"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 25 Oct 2024 08:08:11 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t4Lv5-000YOI-00;
+	Fri, 25 Oct 2024 15:08:07 +0000
+Date: Fri, 25 Oct 2024 23:07:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.12-rc5
-Date: Fri, 25 Oct 2024 16:25:04 +0200
-Message-ID: <20241025142504.44267-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+Subject: Re: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in drivers
+Message-ID: <202410252227.4k7pn2o5-lkp@intel.com>
+References: <20241024192758.91748-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024192758.91748-1-brgl@bgdev.pl>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Bartosz,
 
-Linus,
+kernel test robot noticed the following build warnings:
 
-Please pull the following MAINTAINERS update that adds a keyword pattern
-to the GPIO entry the goal of which is to alert us to anyone trying to
-use the deprecated, legacy API (this happens almost every release).
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on linus/master v6.12-rc4 next-20241025]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Bartosz
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-relax-the-Kconfig-dependency-on-OF_GPIO-in-drivers/20241025-032925
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20241024192758.91748-1-brgl%40bgdev.pl
+patch subject: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in drivers
+config: i386-kismet-CONFIG_GPIO_SYSCON-CONFIG_GPIO_SAMA5D2_PIOBU-0-0 (https://download.01.org/0day-ci/archive/20241025/202410252227.4k7pn2o5-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20241025/202410252227.4k7pn2o5-lkp@intel.com/reproduce)
 
-The following changes since commit 8e929cb546ee42c9a61d24fae60605e9e3192354:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410252227.4k7pn2o5-lkp@intel.com/
 
-  Linux 6.12-rc3 (2024-10-13 14:33:32 -0700)
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for GPIO_SYSCON when selected by GPIO_SAMA5D2_PIOBU
+   WARNING: unmet direct dependencies detected for GPIO_SYSCON
+     Depends on [n]: GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && OF [=n]
+     Selected by [y]:
+     - GPIO_SAMA5D2_PIOBU [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && (ARCH_AT91 || COMPILE_TEST [=y])
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc5
-
-for you to fetch changes up to 7e336a6c15ec7675adc1b376ca176ab013642098:
-
-  MAINTAINERS: add a keyword entry for the GPIO subsystem (2024-10-22 09:13:10 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v6.12-rc5
-
-- update MAINTAINERS with a keyword pattern for legacy GPIO API
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      MAINTAINERS: add a keyword entry for the GPIO subsystem
-
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
