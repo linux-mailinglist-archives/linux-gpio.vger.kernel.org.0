@@ -1,319 +1,738 @@
-Return-Path: <linux-gpio+bounces-12140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F37379B1869
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 15:11:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57AE89B18A5
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 16:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13E981C20EF8
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 13:11:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D0AA2828DF
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 14:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEC61D5CC2;
-	Sat, 26 Oct 2024 13:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871B318654;
+	Sat, 26 Oct 2024 14:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1ta72/t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01on2116.outbound.protection.outlook.com [40.107.239.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD27B641;
-	Sat, 26 Oct 2024 13:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.239.116
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729948295; cv=fail; b=Q80Y1a0CY8ywQp0rnV29hiLgjvEWqFoQTT+T/YUccyHOQNraq4pvirhKWlCYIM0gwnQS6iaxmFIP1fqbCq6GJAZdGaxIX3/2Mqh5JTMdI3aMC9S1MdjwsQRm+f13UsFn1ELSRbDgsKDFZvEyAYgwZ6+5o97jV3x3+A15OKYg1Q4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729948295; c=relaxed/simple;
-	bh=twUwnznaUWAbZboErIya8D564ibpKNwfL1J3zxg2qB4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vq8q/fvW7ZinkgG+l1LmHhAp7HYpvjysu0HIX4kL2bh3LBeGT+JRnVz3NGS33A3s6usGeAhVoTbfnQfLsAqBDCDaHGfcrHVNZFJb49rpJj7+p0jIvoYUeQ5Hf7CQcYRVK31w0XgJL2cMR2Kp/Cavgt+5o5kms9tSWNTX9k7lysg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=40.107.239.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jLDATvBDxR8rseEJ+8zoLaX+hrqd5PDGEMo2tRca87VBJ29K2hCZvacByconjr7vYiFBC+jSlflqx2h1R+bNwSjoJlqODIgcNpUAjsAtPSyZNT1I5szHu67y4K4Qs/yMghBMJTYMrV9yqTD01k20+CrqoXM35ckwi0ST0LOdSswApsiJ4AvzIghiCy3PptK3L2B7QxrAUFwb/WmF4Io7QcrvXcKP/oP/fSeRU7p4FEs64ydRWZxetDH57Pz2Jg+GMO0Rp57crkwFcFU3Tfxq1FbwuNIlyVvq/+ED+oTpOwI8jSSDmb6N5TxR+u+Owf6AVRzaqh18w0twKbWY6GBviw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KMVT8rbO0uC7OeoW9hm7vk56wPS/oXH6HmZr9+Xs+hM=;
- b=odAkP3XjZi3FiRuYHHpAhQdrmjpWfFeZgIq6jaRgxpCcJFhaPvcwOxrHsM4Nhyxd7gbXD2hOe6klEgZM+mDTd4ZcPILUWfzCL1yPzEaGtxZdBtzz6bRDOFs1UUXLE9ylxCoCulFDxsiPh1at9yuXTvu8wR8gVspTMhxqb3dS9RN/QfqBvkvfMUtJ0XnlBCUKgroywFG9SZaaQt55iiFvHK070o3jvylvUJWcBu7IyJ4+05/8NI+HMrEJwP9ALsKrBX2Ot2PdTNE4/avkGA7iW35gF50oMKm4jBcYWsksjbU5TC/hmxBA0puzAfuvlI2co9vkjWJr2HS5O+P4fUTIwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Received: from PN0P287MB2019.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1b8::9)
- by MA0P287MB0878.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:e2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.23; Sat, 26 Oct
- 2024 13:11:28 +0000
-Received: from PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
- ([fe80::368a:445f:b1be:4bd6]) by PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
- ([fe80::368a:445f:b1be:4bd6%6]) with mapi id 15.20.8093.021; Sat, 26 Oct 2024
- 13:11:28 +0000
-From: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh@kernel.org"
-	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, Tarang Raval
-	<tarang.raval@siliconsignals.io>, Conor Dooley <conor+dt@kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
- yaml format
-Thread-Topic: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
- yaml format
-Thread-Index: AQHbJhLZu2EJ4zneH0OiYhxVJJUFarKY9kcAgAANyBc=
-Date: Sat, 26 Oct 2024 13:11:28 +0000
-Message-ID:
- <PN0P287MB20195CAFA249448F66D13B659A482@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
-References: <20241024124654.26775-1-himanshu.bhavani@siliconsignals.io>
- <usqmeunejf44l6wjw67ocv4idyxfpw5ivt5v4hqkputd7d7xsk@3ies2iwutzsz>
-In-Reply-To: <usqmeunejf44l6wjw67ocv4idyxfpw5ivt5v4hqkputd7d7xsk@3ies2iwutzsz>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN0P287MB2019:EE_|MA0P287MB0878:EE_
-x-ms-office365-filtering-correlation-id: b67b9789-2037-4db6-6ccc-08dcf5bfb3a0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?Windows-1252?Q?D8YcCgcX94lgAUTsYcUoTuaDE9UkuTBMQjJXl2yYArA4dr8nvscjp9XU?=
- =?Windows-1252?Q?QVe4L9ScjSrSWdZ2aJ88+yTaiIZBT7AeznortDSU4zjRXy8ZTmfxP7DP?=
- =?Windows-1252?Q?/XParWz5rpoV3WRROYkaDSTg8dloD0/J4a5nqPNZDpNsawUt4x4YXB3M?=
- =?Windows-1252?Q?y+NioyOicmHiGbx8ItALwefKKOhu8cr5BduROOEIrPzusYBHWUIbpR+u?=
- =?Windows-1252?Q?8rPJuDGO+MgVaoxQIG5uU8Pu/3LXHKJ9V4STSf7lCpTCX2TL5Fc5bUG/?=
- =?Windows-1252?Q?EXUBNyiXd8b5VeEwDxgFCOXwPrpvxa4aqrrjPp4xZeKkB8qG1Ib6dblk?=
- =?Windows-1252?Q?d7xm2RuWL5A1ALJNJB1YSnhhs3MlkwnXd5US0VB1ZKMmWZ+nnacUzgQ6?=
- =?Windows-1252?Q?O08rFAIPoveYD/VSxy8abhr5fTwdK+v5008NgGAHjs1YRGgJaDBTd1Yl?=
- =?Windows-1252?Q?GzxseG1SR/E4cZvtNbCMT3v1YDT+LnVufMyW+psLE7fTQ8XB3/Gqk9Be?=
- =?Windows-1252?Q?XwRIIRGL4fgDeM2ki8TqHs855AlBPAoEkqhV7YUzvmtYsipyuONq/xhx?=
- =?Windows-1252?Q?cbS7FacDMwlXrOjbfuLFUB3uroEJXJeLYa3hy97X6mT+0NCbufWBxvXZ?=
- =?Windows-1252?Q?i04TNEeZNgsULKGt/YWysQ43c/Wm1q9YSgYcGKqmAq0ssF3I7oLTqhGV?=
- =?Windows-1252?Q?DuIxXSddIYyNfRz40IWoBuwsRrJLM7r9TPzzXQY3i1WvjJEGr7AZsQXr?=
- =?Windows-1252?Q?BMfufNl+KG9pqguZqliE8VTkz+FiJw8+3PkC8GnFVjqHpGKgmXBmlIZS?=
- =?Windows-1252?Q?GU6O7V2gSb6oUaP4GS2qCi717m+r7UhIzo5zEblvEQcoUpEbV+ua/FMZ?=
- =?Windows-1252?Q?xOQoEZ4/Rx1kDQrGOQl1BvTy/qGRV/JmRQUYNEtDSq+U7W1VccG+yZRw?=
- =?Windows-1252?Q?wpfx8SI2nuK06npDV7imuHoA2rqzn/fdC2MPw1u6QZuHBrBeuGx2wE8i?=
- =?Windows-1252?Q?dZjtA1gKr/pREwAMVggZSd793nszfbVahTuG/uU6hBJAsXPrXKqRQIuV?=
- =?Windows-1252?Q?T+CUUR+lBHZr/wtV6YMaA+WkQRaRcvbdN0adPJe0NI6bnW0PqWS0ICKg?=
- =?Windows-1252?Q?NIv6YSZzUl1uwfY5zv14FSNPOCAyLJPsiJvyahgR4qDbCvGP4brvmoak?=
- =?Windows-1252?Q?37h+X4sMlNKCKws9kf5d6RIUWxXxBMd1EaLvftLlfo48ajdxl+2TND0h?=
- =?Windows-1252?Q?M2XvOlmkQn5iqprwYLMR67GzNppcgAiEXstyLOw18zOUSlcH6sip8cOZ?=
- =?Windows-1252?Q?rH5/CRpGUDvzWS3oqNGEp3T2T5c6HIr2PN0QUMj4BVxETkeMakZSBQVz?=
- =?Windows-1252?Q?T2IqyGsx6VdNzRRxQoJLh/3ZE9pL/HDRcB24p+ZS5zNcmaOd+4Ot6kjP?=
- =?Windows-1252?Q?7JiI3O/DgkAB5et3QhVsa/vZ4WZm4StsiJ9C1ZRsFfk=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN0P287MB2019.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?URIQChkfWVYulnnTMPhN3WExOHKMAN3m4dmJcI7tm7C37ayKVjliv8U7?=
- =?Windows-1252?Q?gMOfzQJXdoBbIN18ZBkcc10nUfKgomzlX3/4zZ4eG59dGNB+wq0L6H2W?=
- =?Windows-1252?Q?HfN+RqWEF8rOij8eTw8q+o7x3vZuJdJuO0rIDT3Jx4H8+11F1ylRXVB0?=
- =?Windows-1252?Q?046W+6BMNEQyoB6Beg6UxO4sQI1jt1E58XdcoPABIgJE9fyrCaak/8zw?=
- =?Windows-1252?Q?xIRTgy41b/PnOteoI88f6FH6awHJWv0Km8UyLe1Umic+THxj+7rHOTc0?=
- =?Windows-1252?Q?rdQU1p6LkF2OHERVAoO79Uhf5iHQwkvAVz1Did+vDk1Hnizw3/0L8lA/?=
- =?Windows-1252?Q?2ugRmRbvE/QzmmBRMVZ4l4fGetdL/Sc9x+JeGIx7N65MlVEgqikO/I+b?=
- =?Windows-1252?Q?PESvQQlElyZs9bbUcAy+Iz7cOYODd8gPcK72+z6jLOeQ1m2AmpNamJo/?=
- =?Windows-1252?Q?rXnpLxoM85Kn1soWkhhXlNkxBMvyhMMGCJNp0aOCnr8Q0tQMmTe9ElnU?=
- =?Windows-1252?Q?IoTdzNHU0OBhQyyGTfDK203dxgVhIXuL10bTOwFhUbbPdiyLFNWX8OCI?=
- =?Windows-1252?Q?G9bfJ2QHTqwrlxZNqooUm/I8TqP2Z0CHz1i+R2ySSJwOkUY29zhl5hGq?=
- =?Windows-1252?Q?BhasIWCyYEYy2beDpmjWt7zrJueBpfVuK+pMjK1fL7AYSJcC+lNRHJw+?=
- =?Windows-1252?Q?WJgYNTwXCmLWuskm/96okq94tfDzZWjR4IuVvVek7XZYWlu5OT58WAuC?=
- =?Windows-1252?Q?YSCiv3tZiZaN6MHKfX/f8w05YEIwg7nSyX0zy6wjfxs03/JjqYdKsRxp?=
- =?Windows-1252?Q?q/59VbSLqyUtbP1d3KpCP7krywcJy9j+06aK8im2i8oR3HkzNg0GR84P?=
- =?Windows-1252?Q?zRRG2IIdrBSlqFhvW5bcVGgMMQRVeufxKCaoSQKvcoyjORDny6Kic4xC?=
- =?Windows-1252?Q?q0VVAR/6Txx+KHHCTEVtPY4zIuSlNiHpZuWEzK2cETSIP2TUpTSklA+E?=
- =?Windows-1252?Q?jygwM4W5Cd65SiNypfSj1yJwlPMk+96LJ7cjVGfx8KoxQfrOR2TbQ0tg?=
- =?Windows-1252?Q?WP5MJuzmDZtjZL7pTJSHElKXbr88Lcvt+ppBfvzRJqJOs0EgtH24xLmG?=
- =?Windows-1252?Q?VWThaYMC4bMHOjxk1Vyi7dzl6Um0OeNLKYaj68SVI1ajQ+tFiFLxnIAd?=
- =?Windows-1252?Q?LHlRtBXku+NCESOLwm6vjCg/DvlcRwIHKNJS6LV0hsDYUa8EiptlbIzc?=
- =?Windows-1252?Q?Hqn7L0IuOonBOPa7sMjz7SA46ZV2Fodqqwy816RxCLJ7nwrDiLQfAO6p?=
- =?Windows-1252?Q?PxlwAnSAyrgZaKt+1wU2uBUMFULQjxlxNHLuxubad/LcRyqJGwgA454A?=
- =?Windows-1252?Q?IFu4RCCm8yiPB29mc3pwFEQFmZJgqhC79paXe0ylrQDCrZV14Y+kjI95?=
- =?Windows-1252?Q?U3lnmEsVmLyWgINCvCED8WgJeiLlJ9cb9vdP4dUgCGXW7x3DKY4PieRN?=
- =?Windows-1252?Q?C62inDIGETV6kWI5Yvq2epafJu7j1aL9K9aRJYt3ftILkSN/paxuRcnh?=
- =?Windows-1252?Q?fUzuzj2mc6NM3Oth9/EeZ0hUP+ddYODWUQP+miDRGbrVCO5061neXh7K?=
- =?Windows-1252?Q?Z+o1NQx0cV992VcyF5OMK8tmC6XbKZJ4vRgiF8LQkx29J/1y0B2Zb4U6?=
- =?Windows-1252?Q?CPtDu2U/cOnlMEtg2LQHy0Ea/o34psvspEKCkzJxbLu/o1X+goTLPw?=
- =?Windows-1252?Q?=3D=3D?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9C28BE7;
+	Sat, 26 Oct 2024 14:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729953742; cv=none; b=NZKj4tX9zKxLr/BoxopXBpZpLyvjEj4IpTV3carZ4ns+OUB/anOH3YN5qAVnvZb0ZOHEbjogihkfI+W/fXzs9ILNbCeLIj0cngUYLfYlrrDBZscA3MNTKRthl195f+MsqwFhKsvfDTQXSK0/bf9BOLxCqg6lf5m/W3v5Gerjr4Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729953742; c=relaxed/simple;
+	bh=kJLb/7qKxg51UDFL7vVw7ZRE/Ii9wbcrd9Hmsz+StWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=urR0VSKr5Nyu2HwzU4X1xCmVaUekKWJd0f38uW0nqE1hoEg1EECnZgQAQpv2+u9sjlHbu8/uQNzNH8R/WAXSDBY+abUXlk6mZ5rf0ggFwH5H+YpS2g/rQsz8YjP16LfA+lNipFXSeUZNYX0h85x6Bw+EuT1hRwBy4vr602lirQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1ta72/t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B35C4CEC6;
+	Sat, 26 Oct 2024 14:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729953741;
+	bh=kJLb/7qKxg51UDFL7vVw7ZRE/Ii9wbcrd9Hmsz+StWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y1ta72/tZ/POjQgIho6jPB6LNm0u1YttInsoLA2qX2IcNo6zmu67ALnovUrrtVK64
+	 SckZuck5DnedZveYtM5+qe8G5uRc6TVPXQ6ClgQRjmrDncUtipUqYcFe+1C5KnyZ4j
+	 doXEdVq9yHKc9slPocqM8tRKOzneOod5FqB7Uq5s33U6N/oSm934W1XJu1hdpagzC+
+	 qhww+VkmJtdp8xI/ZFvUo5gT8PcS4LSDp/XNVKG71C7U1qcGCxqW0md3nZttDDiNyw
+	 DmRIdqavWzZYy7Z0Y1gw5t3VWo8HCC/oQbJeYABdcMMOes5JEgkZOKeZODQlsT3S9P
+	 qkcJG6KI46MwA==
+Date: Sat, 26 Oct 2024 15:41:13 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org,
+ brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
+ mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com,
+ lars@metafoo.de, ukleinek@kernel.org, alexandre.belloni@bootlin.com,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 7/9] iio: adc: Add Nuvoton NCT6694 IIO support
+Message-ID: <20241026154113.66fe0324@jic23-huawei>
+In-Reply-To: <20241024085922.133071-8-tmyu0@nuvoton.com>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
+	<20241024085922.133071-8-tmyu0@nuvoton.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: b67b9789-2037-4db6-6ccc-08dcf5bfb3a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2024 13:11:28.0723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7EUO0kXj/dckv9tc4WiEjziIsO2iFFGgz21k119dqp0WjxPxdAJTTtW0TCccPb4hvR09s3GvHgmRjL+Wty2fNyLJdNCR/3biTyq3VPRjTFj1o0FpF4GvB5BhK2ueiybE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0878
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,=0A=
- =0A=
-Thanks for your suggetions=0A=
- =0A=
->> +          corresponds to a physical pin on the GPIO expander.=0A=
->> +        items:=0A=
->> +          pattern: "^gpio([0-9]|[1][0-5])$"=0A=
->=0A=
->Since I expect resend, correct also quotes - use consistently either '=0A=
->or ".=0A=
- =0A=
-Yes, I will change=0A=
- =0A=
->> +=0A=
->> +    i2c {=0A=
->=0A=
->Keep one complete example for i2c and one for spi. This was not in=0A=
->previous patch and change log does not explain why you need three=0A=
->examples.=0A=
- =0A=
-Okay, I will drop one example of I2C=0A=
- =0A=
->> +        #address-cells =3D <1>;=0A=
->> +        #size-cells =3D <0>;=0A=
->> +=0A=
->> +        mcp23017: gpio@21 {=0A=
->=0A=
->Drop unused label=0A=
- =0A=
-May I know how its unused, AFAIK, Since it's an I/O expanded, it=92s refere=
-nced elsewhere, so keeping it is necessary for functionality.=0A=
- =0A=
-Regards,=0A=
-Himanshu=0A=
-________________________________________=0A=
-From:=A0Krzysztof Kozlowski <krzk@kernel.org>=0A=
-Sent:=A026 October 2024 17:48=0A=
-To:=A0Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>=0A=
-Cc:=A0linus.walleij@linaro.org <linus.walleij@linaro.org>; robh@kernel.org =
-<robh@kernel.org>; krzk+dt@kernel.org <krzk+dt@kernel.org>; Tarang Raval <t=
-arang.raval@siliconsignals.io>; Conor Dooley <conor+dt@kernel.org>; linux-g=
-pio@vger.kernel.org <linux-gpio@vger.kernel.org>; devicetree@vger.kernel.or=
-g <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@=
-vger.kernel.org>=0A=
-Subject:=A0Re: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.tx=
-t to yaml format=0A=
-=A0=0A=
-CAUTION: This email originated from outside the organization. Do not click =
-links or open attachments unless you recognize the sender and know the cont=
-ent is safe.=0A=
-=0A=
-On Thu, Oct 24, 2024 at 06:16:18PM +0530, Himanshu Bhavani wrote:=0A=
-> +=A0 pinmux:=0A=
-> +=A0=A0=A0 type: object=0A=
-> +=A0=A0=A0 properties:=0A=
-> +=A0=A0=A0=A0=A0 pins:=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 description:=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 The list of GPIO pins controlled by this nod=
-e. Each pin name=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 corresponds to a physical pin on the GPIO ex=
-pander.=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 items:=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 pattern: "^gpio([0-9]|[1][0-5])$"=0A=
-=0A=
-Since I expect resend, correct also quotes - use consistently either '=0A=
-or ".=0A=
-=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 maxItems: 16=0A=
-> +=0A=
-> +=A0=A0=A0=A0=A0 bias-pull-up:=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 type: boolean=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 description:=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 Configures pull-up resistors for the GPIO pi=
-ns. Absence of this=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 property will leave the configuration in its=
- default state.=0A=
-> +=0A=
-> +=A0=A0=A0 required:=0A=
-> +=A0=A0=A0=A0=A0 - pins=0A=
-> +=0A=
-> +=A0=A0=A0 additionalProperties: false=0A=
-> +=0A=
-> +required:=0A=
-> +=A0 - compatible=0A=
-> +=A0 - reg=0A=
-> +=A0 - gpio-controller=0A=
-> +=A0 - '#gpio-cells'=0A=
-> +=0A=
-> +unevaluatedProperties: false=0A=
-> +=0A=
-> +examples:=0A=
-> +=A0 - |=0A=
-> +=A0=A0=A0 #include <dt-bindings/interrupt-controller/irq.h>=0A=
-> +=0A=
-> +=A0=A0=A0 i2c {=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #address-cells =3D <1>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D <0>;=0A=
-> +=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 mcp23018: gpio@20 {=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "microchip,mcp23018";=
-=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0x20>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 gpio-controller;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #gpio-cells =3D <2>;=0A=
-> +=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupt-parent =3D <&gpio1>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>=
-;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 interrupt-controller;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #interrupt-cells =3D <2>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 microchip,irq-mirror;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 };=0A=
-> +=A0=A0=A0 };=0A=
-=0A=
-Drop this example.=0A=
-=0A=
-> +=0A=
-> +=A0 - |=0A=
-> +=A0=A0=A0 spi {=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #address-cells =3D <1>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D <0>;=0A=
-> +=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 mcp23s17: gpio@0 {=0A=
-=0A=
-Drop unused label=0A=
-=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 compatible =3D "microchip,mcp23s17";=
-=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg =3D <0>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 gpio-controller;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #gpio-cells =3D <2>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 spi-max-frequency =3D <1000000>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 microchip,spi-present-mask =3D /bits/ =
-8 <0x01>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 };=0A=
-> +=A0=A0=A0 };=0A=
-> +=0A=
-> +=A0 - |=0A=
-> +=A0=A0=A0 #include <dt-bindings/interrupt-controller/irq.h>=0A=
-> +=A0=A0=A0 #include <dt-bindings/gpio/gpio.h>=0A=
-> +=0A=
-> +=A0=A0=A0 i2c {=0A=
-=0A=
-Keep one complete example for i2c and one for spi. This was not in=0A=
-previous patch and changelog does not explain why you need three=0A=
-examples.=0A=
-=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #address-cells =3D <1>;=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D <0>;=0A=
-> +=0A=
-> +=A0=A0=A0=A0=A0=A0=A0 mcp23017: gpio@21 {=0A=
-=0A=
-Drop unused label=0A=
-=0A=
-Best regards,=0A=
-Krzysztof=0A=
+On Thu, 24 Oct 2024 16:59:20 +0800
+Ming Yu <a0282524688@gmail.com> wrote:
+
+> This driver supports IIO functionality for NCT6694 MFD device
+> based on USB interface.
+> 
+> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+Hi Ming Yu,
+
+Welcome to IIO.
+
+Various comments inline.  I'm assuming the stuff commented on in other
+reviews for other parts of the driver will be fixed up in v2 of this
+patch as well so mostly haven't duplicated that.
+
+Jonathan
+
+
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 6c4e74420fd2..302511d166db 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -1018,6 +1018,16 @@ config NPCM_ADC
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called npcm_adc.
+>  
+> +config NCT6694_ADC
+Same comment on ordering.
+
+> +	tristate "Nuvoton NCT6694 ADC driver"
+> +	depends on MFD_NCT6694
+> +	help
+Match formatting of other entries. Help text should be indented.
+
+> +	If you say yes to this option, support will be included for Nuvoton
+> +	NCT6694, a USB device to ADC.
+> +
+> +	This driver can also be built as a module. If so, the module
+> +	will be called nct6694_adc.
+> +
+>  config PAC1921
+>  	tristate "Microchip Technology PAC1921 driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 7b91cd98c0e0..db419f77365c 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -92,6 +92,7 @@ obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
+>  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+>  obj-$(CONFIG_NAU7802) += nau7802.o
+>  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+> +obj-$(CONFIG_NCT6694_ADC) += nct6694_adc.o
+Alphabetical order. So one line up is appropriate.
+
+>  obj-$(CONFIG_PAC1921) += pac1921.o
+>  obj-$(CONFIG_PAC1934) += pac1934.o
+>  obj-$(CONFIG_PALMAS_GPADC) += palmas_gpadc.o
+> diff --git a/drivers/iio/adc/nct6694_adc.c b/drivers/iio/adc/nct6694_adc.c
+> new file mode 100644
+> index 000000000000..de4cddc8addc
+> --- /dev/null
+> +++ b/drivers/iio/adc/nct6694_adc.c
+> @@ -0,0 +1,616 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Nuvoton NCT6694 IIO driver based on USB interface.
+> + *
+> + * Copyright (C) 2024 Nuvoton Technology Corp.
+> + */
+> +
+> +#include <linux/slab.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/nct6694.h>
+> +
+> +#define DRVNAME "nct6694-iio"
+
+Use string directly inline and drop this define. Whilst common this is
+not helpful for code readability or for grepping etc.
+
+({ typeof(x) x_ = x;		\
+> +	   (x_ < 10) ? x_ : x_ + 6; })
+> +
+> +/* Message Channel*/
+> +/* Command 00h */
+> +#define REQUEST_IIO_CMD0_LEN	0x40
+> +#define REQUEST_IIO_CMD0_OFFSET 0x0000	/* OFFSET = SEL|CMD */
+> +#define IIO_VIN_EN(x)		(0x00 + (x))
+> +#define IIO_TMP_EN(x)		(0x02 + (x))
+> +/* Command 02h */
+> +#define REQUEST_IIO_CMD2_LEN	0x90
+> +#define REQUEST_IIO_CMD2_OFFSET 0x0002	/* OFFSET = SEL|CMD */
+> +#define IIO_SMI_CTRL_IDX	0x00
+> +#define IIO_VIN_LIMIT_IDX(x)	(0x10 + ((x) * 2))
+> +#define IIO_TMP_LIMIT_IDX(x)	(0x30 + ((x) * 2))
+> +#define IIO_CMD2_HYST_MASK	0x1F
+> +/* Command 03h */
+> +#define REQUEST_IIO_CMD3_LEN	0x08
+> +#define REQUEST_IIO_CMD3_OFFSET 0x0003	/* OFFSET = SEL|CMD */
+> +
+Namespace for the part,
+	NCT6694_REQUEST_CMD3_LEN etc
+
+the IIO bit isn't particularly useful in an IIO driver.
+
+> +struct nct6694_iio_data {
+> +	struct nct6694 *nct6694;
+> +
+> +	/* Make sure read & write commands are consecutive */
+> +	struct mutex iio_lock;
+Not sure the iio part is useful here. Name it after what is being
+protected or just call it lock
+
+> +};
+> +
+> +static const struct iio_event_spec nct6694_volt_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +				 BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +				 BIT(IIO_EV_INFO_ENABLE),
+> +	}
+> +};
+> +
+> +static const struct iio_event_spec nct6694_temp_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +				 BIT(IIO_EV_INFO_ENABLE),
+> +	}
+> +};
+> +
+> +#define NCT6694_VOLTAGE_CHANNEL(num, addr) {			\
+> +	.type = IIO_VOLTAGE,					\
+> +	.indexed = 1,						\
+> +	.channel = num,						\
+> +	.address = addr,					\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |	\
+
+ADC channels do not normally ENABLE.  Can you not enable on demand
+when the channel is read?
+
+> +			      BIT(IIO_CHAN_INFO_PROCESSED),	\
+It is very rare to have processed channels for an ADC.
+Provide RAW and SCALE instead as the relationship seems to be linear
+and that pushes the maths to the consumer (who may not care).
+The main reason for this design choice in IIO is that the _RAW data
+tends to be easier to back if you add buffered access in future.
+
+
+> +	.event_spec = nct6694_volt_events,			\
+> +	.num_event_specs = ARRAY_SIZE(nct6694_volt_events),	\
+> +}
+> +
+> +#define NCT6694_TEMPERATURE_CHANNEL(num, addr) {		\
+> +	.type = IIO_TEMP,					\
+> +	.indexed = 1,						\
+> +	.channel = num,						\
+> +	.address = addr,					\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE) |	\
+As with ADCs, unusual to see ENABLE for a temperature channel.
+Can we not do this on demand?
+
+> +			      BIT(IIO_CHAN_INFO_PROCESSED) |	\
+As above, provide _RAW and _SCALE (and maybe _OFFSET)
+
+
+> +			      BIT(IIO_CHAN_INFO_HYSTERESIS),	\
+I ask about this below. Not sure what it is.
+
+> +	.event_spec = nct6694_temp_events,			\
+> +	.num_event_specs = ARRAY_SIZE(nct6694_temp_events),	\
+> +}
+> +
+> +static const struct iio_chan_spec nct6694_iio_channels[] = {
+> +	NCT6694_VOLTAGE_CHANNEL(0, 0x0),	/* VIN0 */
+Set datasheet_name.  That is both useful when binding to these channels
+and will make the comments here unnecessary (as that name will be
+in the macro parameters).
+
+> +	NCT6694_VOLTAGE_CHANNEL(1, 0x1),	/* VIN1 */
+> +	NCT6694_VOLTAGE_CHANNEL(2, 0x2),	/* VIN2 */
+> +	NCT6694_VOLTAGE_CHANNEL(3, 0x3),	/* VIN3 */
+> +	NCT6694_VOLTAGE_CHANNEL(4, 0x4),	/* VIN5 */
+> +	NCT6694_VOLTAGE_CHANNEL(5, 0x5),	/* VIN6 */
+> +	NCT6694_VOLTAGE_CHANNEL(6, 0x6),	/* VIN7 */
+> +	NCT6694_VOLTAGE_CHANNEL(7, 0x7),	/* VIN14 */
+> +	NCT6694_VOLTAGE_CHANNEL(8, 0x8),	/* VIN15 */
+> +	NCT6694_VOLTAGE_CHANNEL(9, 0x9),	/* VIN16 */
+> +	NCT6694_VOLTAGE_CHANNEL(10, 0xA),	/* VBAT */
+> +	NCT6694_VOLTAGE_CHANNEL(11, 0xB),	/* VSB */
+> +	NCT6694_VOLTAGE_CHANNEL(12, 0xC),	/* AVSB */
+> +	NCT6694_VOLTAGE_CHANNEL(13, 0xD),	/* VCC */
+> +	NCT6694_VOLTAGE_CHANNEL(14, 0xE),	/* VHIF */
+> +	NCT6694_VOLTAGE_CHANNEL(15, 0xF),	/* VTT */
+> +
+> +	NCT6694_TEMPERATURE_CHANNEL(0, 0x10),	/* THR1 */
+> +	NCT6694_TEMPERATURE_CHANNEL(1, 0x12),	/* THR2 */
+> +	NCT6694_TEMPERATURE_CHANNEL(2, 0x14),	/* THR14 */
+> +	NCT6694_TEMPERATURE_CHANNEL(3, 0x16),	/* THR15 */
+> +	NCT6694_TEMPERATURE_CHANNEL(4, 0x18),	/* THR16 */
+> +	NCT6694_TEMPERATURE_CHANNEL(5, 0x1A),	/* TDP0 */
+> +	NCT6694_TEMPERATURE_CHANNEL(6, 0x1C),	/* TDP1 */
+> +	NCT6694_TEMPERATURE_CHANNEL(7, 0x1E),	/* TDP2 */
+> +	NCT6694_TEMPERATURE_CHANNEL(8, 0x20),	/* TDP3 */
+> +	NCT6694_TEMPERATURE_CHANNEL(9, 0x22),	/* TDP4 */
+> +
+> +	NCT6694_TEMPERATURE_CHANNEL(10, 0x30),	/* DTIN0 */
+> +	NCT6694_TEMPERATURE_CHANNEL(11, 0x32),	/* DTIN1 */
+> +	NCT6694_TEMPERATURE_CHANNEL(12, 0x34),	/* DTIN2 */
+> +	NCT6694_TEMPERATURE_CHANNEL(13, 0x36),	/* DTIN3 */
+> +	NCT6694_TEMPERATURE_CHANNEL(14, 0x38),	/* DTIN4 */
+> +	NCT6694_TEMPERATURE_CHANNEL(15, 0x3A),	/* DTIN5 */
+> +	NCT6694_TEMPERATURE_CHANNEL(16, 0x3C),	/* DTIN6 */
+> +	NCT6694_TEMPERATURE_CHANNEL(17, 0x3E),	/* DTIN7 */
+> +	NCT6694_TEMPERATURE_CHANNEL(18, 0x40),	/* DTIN8 */
+> +	NCT6694_TEMPERATURE_CHANNEL(19, 0x42),	/* DTIN9 */
+> +	NCT6694_TEMPERATURE_CHANNEL(20, 0x44),	/* DTIN10 */
+> +	NCT6694_TEMPERATURE_CHANNEL(21, 0x46),	/* DTIN11 */
+> +	NCT6694_TEMPERATURE_CHANNEL(22, 0x48),	/* DTIN12 */
+> +	NCT6694_TEMPERATURE_CHANNEL(23, 0x4A),	/* DTIN13 */
+> +	NCT6694_TEMPERATURE_CHANNEL(24, 0x4C),	/* DTIN14 */
+> +	NCT6694_TEMPERATURE_CHANNEL(25, 0x4E),	/* DTIN15 */
+> +};
+> +
+> +static int nct6694_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct nct6694_iio_data *data = iio_priv(indio_dev);
+> +	unsigned char buf[2], tmp_hyst, enable_idx;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_VOLTAGE && chan->type != IIO_TEMP)
+> +		return -EOPNOTSUPP;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_ENABLE:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			enable_idx = IIO_VIN_EN(chan->channel / 8);
+> +			break;
+> +
+> +		case IIO_TEMP:
+> +			enable_idx = IIO_TMP_EN(chan->channel / 8);
+> +			break;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +				       REQUEST_IIO_CMD0_OFFSET,
+> +				       REQUEST_IIO_CMD0_LEN, enable_idx,
+> +				       1, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = buf[0] & BIT(chan->channel % 8) ? 1 : 0;
+> +
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_PROCESSED:
+
+Commented on elsewhere - provide _RAW access as processed is only needed
+when there is a nonlinear conversion involved that we cannot easily
+represent to userspace.
+
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
+> +				       chan->address, 2, 0, 2, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:	/* in micro Voltage */
+> +			*val = buf[0] * 16;
+> +
+> +			return IIO_VAL_INT;
+> +
+> +		case IIO_TEMP:	/* in milli degrees Celsius */
+> +			*val = (signed char)buf[0] * 1000;
+> +			*val += buf[1] & 0x80 ? 500 : 0;
+> +			*val += buf[1] & 0x40 ? 250 : 0;
+> +			*val += buf[1] & 0x20 ? 125 : 0;
+As above provide attrs to allow (_RAW + _OFFSET) * _SCALE for
+userspace. 
+
+I'm not sure what this maths is doing but looks like a really
+odd way to encode  *val += 125 * FIELD_GET(buf[1], GENMASK(7, 5))
+or something like that.
+> +
+> +			return IIO_VAL_INT;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	case IIO_CHAN_INFO_HYSTERESIS:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +				       REQUEST_IIO_CMD2_OFFSET,
+> +				       REQUEST_IIO_CMD2_LEN,
+> +				       IIO_TMP_LIMIT_IDX(chan->channel),
+> +				       2, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		switch (chan->type) {
+> +		case IIO_TEMP:	/* in milli degrees Celsius */
+
+Check channel type earlier as no point in reading if it's not temperature.
+
+As mentioned elsewhere I'm a little confused as to what this is.
+
+
+> +			tmp_hyst = buf[0] >> 5;
+> +			*val = (buf[1] - tmp_hyst) * 1000;
+> +
+> +			return IIO_VAL_INT;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int nct6694_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	struct nct6694_iio_data *data = iio_priv(indio_dev);
+> +	unsigned char enable_buf[REQUEST_IIO_CMD0_LEN] = {0};
+> +	unsigned char buf[REQUEST_IIO_CMD2_LEN] = {0};
+> +	unsigned char delta_hyst;
+> +	int ret;
+> +
+> +	if (chan->type != IIO_VOLTAGE && chan->type != IIO_TEMP)
+> +		return -EOPNOTSUPP;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_ENABLE:
+
+This is very unusual for an ADC channel. 
+You should not have explicit enable /disable but rather just do it when
+needed to deliver requested data.
+
+> +		mutex_lock(&data->iio_lock);
+
+Add some scope with { } and use guard(mutex)(...) within it. 
+Then you can just return on error rather than goto.
+
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +				       REQUEST_IIO_CMD0_OFFSET,
+> +				       REQUEST_IIO_CMD0_LEN, 0,
+> +				       REQUEST_IIO_CMD0_LEN,
+> +				       enable_buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			if (val) {
+> +				enable_buf[IIO_VIN_EN(chan->channel / 8)] |=
+> +				BIT(chan->channel % 8);
+
+Indent this line by one more tab. Sam ein other similar cases.
+
+> +			} else {
+> +				enable_buf[IIO_VIN_EN(chan->channel / 8)] &=
+> +				~BIT(chan->channel % 8);
+> +			}
+> +
+> +			break;
+> +
+> +		case IIO_TEMP:
+> +			if (val) {
+> +				enable_buf[IIO_TMP_EN(chan->channel / 8)] |=
+> +				BIT(chan->channel % 8);
+> +			} else {
+> +				enable_buf[IIO_TMP_EN(chan->channel / 8)] &=
+> +				~BIT(chan->channel % 8);
+> +			}
+> +
+> +			break;
+> +
+> +		default:
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +
+> +		ret = nct6694_write_msg(data->nct6694, REQUEST_IIO_MOD,
+> +					REQUEST_IIO_CMD0_OFFSET,
+> +					REQUEST_IIO_CMD0_LEN, enable_buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		break;
+> +
+> +	case IIO_CHAN_INFO_HYSTERESIS:
+
+Hysteresis for an ADC is normally event related as it doesn't have obvious meaning otherwise.
+Perhaps you can give more detail on what this is, and why it isn't IIO_EV_INFO_HYSTERESIS and
+in the event description.
+
+> +		switch (chan->type) {
+> +		case IIO_TEMP:
+> +			mutex_lock(&data->iio_lock);
+> +			ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +					       REQUEST_IIO_CMD2_OFFSET,
+> +					       REQUEST_IIO_CMD2_LEN, 0,
+> +					       REQUEST_IIO_CMD2_LEN, buf);
+> +			if (ret)
+> +				goto err;
+> +
+> +			delta_hyst = buf[IIO_TMP_LIMIT_IDX(chan->channel) + 1] - (u8)val;
+> +			if (delta_hyst > 7) {
+> +				pr_err("%s: The Hysteresis value must be less than 7!\n",
+> +				       __func__);
+> +				ret = -EINVAL;
+> +				goto err;
+> +			}
+> +
+> +			buf[IIO_TMP_LIMIT_IDX(chan->channel)] &= IIO_CMD2_HYST_MASK;
+> +			buf[IIO_TMP_LIMIT_IDX(chan->channel)] |= (delta_hyst << 5);
+> +			break;
+> +
+> +		default:
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +		ret = nct6694_write_msg(data->nct6694, REQUEST_IIO_MOD,
+> +					REQUEST_IIO_CMD2_OFFSET,
+> +					REQUEST_IIO_CMD2_LEN, buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +err:
+> +	mutex_unlock(&data->iio_lock);
+> +	return ret;
+> +}
+
+
+> +
+> +static int nct6694_write_event_value(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir,
+> +				     enum iio_event_info info,
+> +				     int val, int val2)
+> +{
+> +	struct nct6694_iio_data *data = iio_priv(indio_dev);
+> +	unsigned char buf[REQUEST_IIO_CMD2_LEN] = {0};
+> +	int ret;
+> +
+> +	if (chan->type != IIO_VOLTAGE && chan->type != IIO_TEMP)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&data->iio_lock);
+guard(mutex)(&data->iio_lock);
+and direct returns in error paths.
+
+
+> +	ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +			       REQUEST_IIO_CMD2_OFFSET,
+> +			       REQUEST_IIO_CMD2_LEN, 0,
+> +			       REQUEST_IIO_CMD2_LEN, buf);
+> +	if (ret)
+	With guard() as above, can return here instead of goto.
+
+> +		goto err;
+> +
+> +	switch (dir) {
+> +	case IIO_EV_DIR_RISING:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			buf[IIO_VIN_LIMIT_IDX(chan->channel)] = (u8)val;
+
+Check range of val before using it. That goes directly from userspace.
+Also check val2 == 0 as user might have provided a decimal form.
+
+
+> +			break;
+> +
+> +		case IIO_TEMP:
+> +			buf[IIO_TMP_LIMIT_IDX(chan->channel) + 1] = (s8)val;
+> +			break;
+> +
+> +		default:
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +		break;
+> +
+> +	case IIO_EV_DIR_FALLING:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			buf[IIO_VIN_LIMIT_IDX(chan->channel) + 1] = (u8)val;
+> +			break;
+> +
+> +		default:
+> +			ret = -EINVAL;
+> +			goto err;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	ret = nct6694_write_msg(data->nct6694, REQUEST_IIO_MOD,
+> +				REQUEST_IIO_CMD2_OFFSET,
+> +				REQUEST_IIO_CMD2_LEN, buf);
+> +	if (ret)
+> +		goto err;
+> +
+> +err:
+> +	mutex_unlock(&data->iio_lock);
+
+With guard above can drop the explicit lock as it is then managed with the scope.
+
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info nct6694_iio_info = {
+> +	.read_raw = nct6694_read_raw,
+> +	.write_raw = nct6694_write_raw,
+> +	.read_event_config = nct6694_read_event_config,
+
+No ability to disable the event?  That is unusual.
+
+> +	.read_event_value = nct6694_read_event_value,
+> +	.write_event_value = nct6694_write_event_value,
+> +};
+> +
+> +static int nct6694_iio_init(struct nct6694_iio_data *data)
+> +{
+> +	unsigned char buf[REQUEST_IIO_CMD2_LEN] = {0};
+{};
+
+Has the same effect and makes it clear you just want to clear everything.
+
+> +	int ret;
+> +
+> +	/* Set VIN & TMP Real Time alarm mode */
+> +	mutex_lock(&data->iio_lock);
+
+	guard(mutex)(&data->iio_lock);
+
+> +	ret = nct6694_read_msg(data->nct6694, REQUEST_IIO_MOD,
+> +			       REQUEST_IIO_CMD2_OFFSET,
+> +			       REQUEST_IIO_CMD2_LEN, 0,
+> +			       REQUEST_IIO_CMD2_LEN, buf);
+> +	if (ret)
+
+With guard() in use, can return directly instead of the goto.
+
+> +		goto err;
+> +
+> +	buf[IIO_SMI_CTRL_IDX] = 0x02;
+> +	ret = nct6694_write_msg(data->nct6694, REQUEST_IIO_MOD,
+> +				REQUEST_IIO_CMD2_OFFSET,
+> +				REQUEST_IIO_CMD2_LEN, buf);
+> +	if (ret)
+> +		goto err;
+> +
+> +err:
+> +	mutex_unlock(&data->iio_lock);
+> +	return ret;
+> +}
+> +
+> +static int nct6694_iio_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct nct6694_iio_data *data;
+> +	struct nct6694 *nct6694 = dev_get_drvdata(pdev->dev.parent);
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*data));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->nct6694 = nct6694;
+> +	mutex_init(&data->iio_lock);
+> +	platform_set_drvdata(pdev, data);
+Not used, so don't set it.
+
+> +
+> +	ret = nct6694_iio_init(data);
+> +	if (ret)
+> +		return -EIO;
+> +
+> +	indio_dev->name = pdev->name;
+
+Name should be the part number.  Just encode the string here as "nct6694"
+
+> +	indio_dev->channels = nct6694_iio_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(nct6694_iio_channels);
+> +	indio_dev->info = &nct6694_iio_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	/* Register iio device to IIO framework */
+> +	ret = devm_iio_device_register(&pdev->dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register iio device!\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver nct6694_iio_driver = {
+> +	.driver = {
+> +		.name	= DRVNAME,
+Put the string inline.
+
+> +	},
+> +	.probe		= nct6694_iio_probe,
+> +};
+> +
+> +static int __init nct6694_init(void)
+> +{
+> +	int err;
+> +
+> +	err = platform_driver_register(&nct6694_iio_driver);
+> +	if (!err) {
+> +		if (err)
+> +			platform_driver_unregister(&nct6694_iio_driver);
+> +	}
+> +
+> +	return err;
+> +}
+> +subsys_initcall(nct6694_init);
+> +
+> +static void __exit nct6694_exit(void)
+> +{
+> +	platform_driver_unregister(&nct6694_iio_driver);
+> +}
+> +module_exit(nct6694_exit);
+I'll not comment on this handling as it is will covered in other
+parts of the series.
+
+> +
+> +MODULE_DESCRIPTION("USB-IIO driver for NCT6694");
+> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +MODULE_LICENSE("GPL");
+
 
