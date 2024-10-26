@@ -1,242 +1,132 @@
-Return-Path: <linux-gpio+bounces-12145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12146-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD7369B1A0C
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 19:24:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 484249B1A4C
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 20:05:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 516291F21C5A
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 17:24:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40A55B20DF4
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 18:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A921531EA;
-	Sat, 26 Oct 2024 17:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F4819CCF4;
+	Sat, 26 Oct 2024 18:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J4rYhU/J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zku1AU4k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6B013AA3E;
-	Sat, 26 Oct 2024 17:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFF2AD51;
+	Sat, 26 Oct 2024 18:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729963460; cv=none; b=nJkUwLMhebruc6GPEDAea3aJa8M1wDlSNptFR3/TaLfHFo7mvbZMmuJhV0158o4UN7xW24PBl1HoKwIjfvn+9Ms9J1xkbnX9BDVBKn+c5Xk5/YY++yX+HpIF3I8a73jw5H6raOPLuaOtLHgLAu2OWmIC/CMnO4qRPQkJJlMHwok=
+	t=1729965911; cv=none; b=n6d/RJmq/TR4T1Hwi2rzrIaQEjwrMEaeHcV9LEEzUDrESXfA5/I0tCoF5Xp2esvAjXal25RVrcB1nDlIqiwLelf9HM4z8zMkXKJDzVEikEtLy9WtyH1VimG7ydX6vIlBqQT9ccAvbh2Zy2NXoP3rDZoC6TupXH1Ud8zhko3yDRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729963460; c=relaxed/simple;
-	bh=PTmHaILYsAwilqS/hZZgOcih1/Rs6s3SWbbYVTuO7p0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZ9R3d13c03vvXhKvyZrjhJ68o34GHaSgvLT5BqbqCyRgP2rq5ZuS//yVsT9zSt/7BjeNN9JWEoqPP82oXrJOMKBdsIkl2Tav+/DIrww1T4Qe3I2+jbfbSpDnOUOHqIXJPAbsDdXfRkoJBHJej7Zx1St0wcMWwlWeSp40GQj9ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J4rYhU/J; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729963456; x=1761499456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PTmHaILYsAwilqS/hZZgOcih1/Rs6s3SWbbYVTuO7p0=;
-  b=J4rYhU/J07nF1g2iKE4Q/1HKPXV49qBJehmERXo60B2UCIRi7rg/Eamr
-   /26wFoRhwchm/NJ9TvaOPXD/99E5uAP9Tbp+JSaGEItO/juASHI6uu18R
-   o7O1sa91KdfRa5qxP0MC3L+mp3GOJwFlnOXzNtCqfr11fINkMd772yL2M
-   7IyGSM+aKqRZ/GsOyYjGyOqxwkXQfZ9DVvXkhJc0NORiOdIy+ZurArkY7
-   RKMeaTKHRVmJZu04JUfsGhVJZ5rTJBL/1njt2onUue/VwdvaKPG6m6vbk
-   9GMnt4nj8Wamvc3pdgtsvgpTSFbpTEIFqUqI6iiodRPvJykSHyqeGUjqp
-   A==;
-X-CSE-ConnectionGUID: 5q0nQRTORZOEnNa2PwvgGg==
-X-CSE-MsgGUID: hmhuGEOESR2Ea4/ziVkJKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29396768"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29396768"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2024 10:24:16 -0700
-X-CSE-ConnectionGUID: 0uorn6DtSqidOYI8dtQiaw==
-X-CSE-MsgGUID: jjZQgiM/T7qQ526j4KVy/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,235,1725346800"; 
-   d="scan'208";a="85983381"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 26 Oct 2024 10:24:15 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t4kWK-000Zsy-0E;
-	Sat, 26 Oct 2024 17:24:12 +0000
-Date: Sun, 27 Oct 2024 01:23:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in drivers
-Message-ID: <202410270016.f3oIhZ0P-lkp@intel.com>
-References: <20241024192758.91748-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1729965911; c=relaxed/simple;
+	bh=r9g1c89yP8ilE/Uiz5+U/6zqX/S8VlE5Gt4giCtIFJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hj7kzgD7UUsh9b5vghVWKHOHMi4jBy1n8Py4NV7OLdrvGEMLhfDitR5W1vA1sdG9hKCPJ3oYFJ6fbqgKhVxmZb4u7TjEFikHtjPPB79r6tvj4/iUAYSZtIORn70+Ik04nj8V65OfjzvkxCbveHaJot0hROZzlh6FlJ7Lcf9VJ7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zku1AU4k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B695C4CEC6;
+	Sat, 26 Oct 2024 18:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729965910;
+	bh=r9g1c89yP8ilE/Uiz5+U/6zqX/S8VlE5Gt4giCtIFJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zku1AU4kyeHxShC4gfUB88hRXhaAo9V+fjATaJdZqGisegz0tScHjMM9vloonYtFE
+	 QkOkRvSXY7qKBtlfTvmrCL6AdPU8Ghepa3aTrHisvSl3QDo0cJ5P//vamoa575olF7
+	 aWb7fNMKqorq2r+Hp5+qO01ANSc56LcAohizSTgEg3UyRfJ7KLS14NLKgBecWkDRm6
+	 KJc9D98mZlUU777C13DbWBe3GI8oygnRRmHXg5+xZQn/Gz2/J1EW7oxg6upqCXWZve
+	 HUrVQH0RwN3shVSTJmSIrQ/BXhWnpZuLwMEe8ys/Z5r/S0M9kNGiCE8CG/7EEM8oCd
+	 dXnCEM7WK1EZg==
+Message-ID: <65177773-d060-424f-b67c-7fdfba11e84e@kernel.org>
+Date: Sat, 26 Oct 2024 20:05:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024192758.91748-1-brgl@bgdev.pl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
+ yaml format
+To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, Tarang Raval <tarang.raval@siliconsignals.io>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20241024124654.26775-1-himanshu.bhavani@siliconsignals.io>
+ <usqmeunejf44l6wjw67ocv4idyxfpw5ivt5v4hqkputd7d7xsk@3ies2iwutzsz>
+ <PN0P287MB20195CAFA249448F66D13B659A482@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <PN0P287MB20195CAFA249448F66D13B659A482@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+On 26/10/2024 15:11, Himanshu Bhavani wrote:
+>  
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +
+>>> +        mcp23017: gpio@21 {
+>>
+>> Drop unused label
+>  
+> May I know how its unused, AFAIK, Since it's an I/O expanded, it’s referenced elsewhere, so keeping it is necessary for functionality.
 
-kernel test robot noticed the following build errors:
+It's unused because does not appear. Point me to the line where it is
+used in your patch.
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.12-rc4 next-20241025]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Best regards,
+Krzysztof
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-relax-the-Kconfig-dependency-on-OF_GPIO-in-drivers/20241025-032925
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20241024192758.91748-1-brgl%40bgdev.pl
-patch subject: [PATCH] gpio: relax the Kconfig dependency on OF_GPIO in drivers
-config: m68k-randconfig-r051-20241026 (https://download.01.org/0day-ci/archive/20241027/202410270016.f3oIhZ0P-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241027/202410270016.f3oIhZ0P-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410270016.f3oIhZ0P-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/gpio/gpio-brcmstb.c: In function 'brcmstb_gpio_of_xlate':
->> drivers/gpio/gpio-brcmstb.c:406:15: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     406 |         if (gc->of_gpio_n_cells != 2) {
-         |               ^~
-   In file included from arch/m68k/include/asm/bug.h:32,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/m68k/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/irq.h:14,
-                    from include/linux/irqchip/chained_irq.h:10,
-                    from include/linux/gpio/driver.h:8,
-                    from drivers/gpio/gpio-brcmstb.c:5:
-   drivers/gpio/gpio-brcmstb.c:411:46: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     411 |         if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-         |                                              ^~
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   drivers/gpio/gpio-brcmstb.c: In function 'brcmstb_gpio_probe':
-   drivers/gpio/gpio-brcmstb.c:689:19: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     689 |                 gc->of_gpio_n_cells = 2;
-         |                   ^~
->> drivers/gpio/gpio-brcmstb.c:690:19: error: 'struct gpio_chip' has no member named 'of_xlate'
-     690 |                 gc->of_xlate = brcmstb_gpio_of_xlate;
-         |                   ^~
---
-   drivers/gpio/gpio-lpc32xx.c: In function 'lpc32xx_gpio_probe':
->> drivers/gpio/gpio-lpc32xx.c:517:49: error: 'struct gpio_chip' has no member named 'of_xlate'
-     517 |                         lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
-         |                                                 ^
->> drivers/gpio/gpio-lpc32xx.c:518:49: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     518 |                         lpc32xx_gpiochip[i].chip.of_gpio_n_cells = 3;
-         |                                                 ^
---
-   drivers/gpio/gpio-mt7621.c: In function 'mediatek_gpio_bank_probe':
->> drivers/gpio/gpio-mt7621.c:246:17: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     246 |         rg->chip.of_gpio_n_cells = 2;
-         |                 ^
->> drivers/gpio/gpio-mt7621.c:247:17: error: 'struct gpio_chip' has no member named 'of_xlate'
-     247 |         rg->chip.of_xlate = mediatek_gpio_xlate;
-         |                 ^
---
-   In file included from arch/m68k/include/asm/bug.h:32,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/m68k/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/irq.h:14,
-                    from include/linux/irqchip/chained_irq.h:10,
-                    from include/linux/gpio/driver.h:8,
-                    from drivers/gpio/gpio-tegra186.c:9:
-   drivers/gpio/gpio-tegra186.c: In function 'tegra186_gpio_of_xlate':
->> drivers/gpio/gpio-tegra186.c:469:25: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     469 |         if (WARN_ON(chip->of_gpio_n_cells < 2))
-         |                         ^~
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   drivers/gpio/gpio-tegra186.c:472:44: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     472 |         if (WARN_ON(spec->args_count < chip->of_gpio_n_cells))
-         |                                            ^~
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   drivers/gpio/gpio-tegra186.c: In function 'tegra186_gpio_irq_domain_translate':
-   drivers/gpio/gpio-tegra186.c:676:31: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     676 |         if (WARN_ON(gpio->gpio.of_gpio_n_cells < 2))
-         |                               ^
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   drivers/gpio/gpio-tegra186.c:679:53: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
-     679 |         if (WARN_ON(fwspec->param_count < gpio->gpio.of_gpio_n_cells))
-         |                                                     ^
-   include/asm-generic/bug.h:123:32: note: in definition of macro 'WARN_ON'
-     123 |         int __ret_warn_on = !!(condition);                              \
-         |                                ^~~~~~~~~
-   drivers/gpio/gpio-tegra186.c: At top level:
->> drivers/gpio/gpio-tegra186.c:462:12: warning: 'tegra186_gpio_of_xlate' defined but not used [-Wunused-function]
-     462 | static int tegra186_gpio_of_xlate(struct gpio_chip *chip,
-         |            ^~~~~~~~~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [y]:
-   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
-
-
-vim +406 drivers/gpio/gpio-brcmstb.c
-
-3b0213d56eb7f7 Gregory Fong  2015-05-28  398  
-3b0213d56eb7f7 Gregory Fong  2015-05-28  399  static int brcmstb_gpio_of_xlate(struct gpio_chip *gc,
-3b0213d56eb7f7 Gregory Fong  2015-05-28  400  		const struct of_phandle_args *gpiospec, u32 *flags)
-3b0213d56eb7f7 Gregory Fong  2015-05-28  401  {
-3b0213d56eb7f7 Gregory Fong  2015-05-28  402  	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
-0f4630f3720e7e Linus Walleij 2015-12-04  403  	struct brcmstb_gpio_bank *bank = gpiochip_get_data(gc);
-3b0213d56eb7f7 Gregory Fong  2015-05-28  404  	int offset;
-3b0213d56eb7f7 Gregory Fong  2015-05-28  405  
-3b0213d56eb7f7 Gregory Fong  2015-05-28 @406  	if (gc->of_gpio_n_cells != 2) {
-3b0213d56eb7f7 Gregory Fong  2015-05-28  407  		WARN_ON(1);
-3b0213d56eb7f7 Gregory Fong  2015-05-28  408  		return -EINVAL;
-3b0213d56eb7f7 Gregory Fong  2015-05-28  409  	}
-3b0213d56eb7f7 Gregory Fong  2015-05-28  410  
-3b0213d56eb7f7 Gregory Fong  2015-05-28  411  	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-3b0213d56eb7f7 Gregory Fong  2015-05-28  412  		return -EINVAL;
-3b0213d56eb7f7 Gregory Fong  2015-05-28  413  
-ec37529e544c59 Doug Berger   2024-04-23  414  	offset = gpiospec->args[0] - bank->gc.offset;
-19a7b6940b7812 Gregory Fong  2015-07-31  415  	if (offset >= gc->ngpio || offset < 0)
-3b0213d56eb7f7 Gregory Fong  2015-05-28  416  		return -EINVAL;
-3b0213d56eb7f7 Gregory Fong  2015-05-28  417  
-3b0213d56eb7f7 Gregory Fong  2015-05-28  418  	if (unlikely(offset >= bank->width)) {
-3b0213d56eb7f7 Gregory Fong  2015-05-28  419  		dev_warn_ratelimited(&priv->pdev->dev,
-3b0213d56eb7f7 Gregory Fong  2015-05-28  420  			"Received request for invalid GPIO offset %d\n",
-3b0213d56eb7f7 Gregory Fong  2015-05-28  421  			gpiospec->args[0]);
-3b0213d56eb7f7 Gregory Fong  2015-05-28  422  	}
-3b0213d56eb7f7 Gregory Fong  2015-05-28  423  
-3b0213d56eb7f7 Gregory Fong  2015-05-28  424  	if (flags)
-3b0213d56eb7f7 Gregory Fong  2015-05-28  425  		*flags = gpiospec->args[1];
-3b0213d56eb7f7 Gregory Fong  2015-05-28  426  
-3b0213d56eb7f7 Gregory Fong  2015-05-28  427  	return offset;
-3b0213d56eb7f7 Gregory Fong  2015-05-28  428  }
-3b0213d56eb7f7 Gregory Fong  2015-05-28  429  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
