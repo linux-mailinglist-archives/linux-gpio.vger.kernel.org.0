@@ -1,345 +1,219 @@
-Return-Path: <linux-gpio+bounces-12148-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12149-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57E119B1A69
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 20:28:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12CE79B1A92
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 21:25:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 865D81F21DBB
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 18:28:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95D011F21B14
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 19:25:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88ABA1D61B1;
-	Sat, 26 Oct 2024 18:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ryv2s0mp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF481D271D;
+	Sat, 26 Oct 2024 19:25:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01on2122.outbound.protection.outlook.com [40.107.239.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21F11D5CD6;
-	Sat, 26 Oct 2024 18:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729967303; cv=none; b=QALK0RZ7vMmwqJIhuNwE+XilCjqpB5X02XfNd5dHYlZhfBVe4qVSPNeIVCNhw9Wabjvz+Rlp3XS9ntlLdxjtUyR0hppIji6FhQmTSwm1RVwKtNj2tR1Wdp3nt35qNKj2X39990PUo/0O6Y1BuMAy8XfUAiI39QH2emMf7UZ28E4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729967303; c=relaxed/simple;
-	bh=Qn0+EUEBwHw/wS8WVeU9EYrJ/6q9fzV8u+7eXowaNyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ShqPE3mr5hCgtVCkGt5CuwGGBE/6frde77u9Hchbh6nBurfiMZLHcnPaH/7LO2VmQplTDtH173giJlYV5ztqrYFE79P/ApvgumIsnQ5In7S4R0HequFPj2lsUsBuCmEJRn8mn83zvmLN6kg1I50i701m2gO41kPacdlXnVvPfXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ryv2s0mp; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1729967300; x=1761503300;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Qn0+EUEBwHw/wS8WVeU9EYrJ/6q9fzV8u+7eXowaNyU=;
-  b=Ryv2s0mp/gnGJx+k1swmdHCujvlfSSl6BZh3JyLAB8mKbvwYMtjFD/7i
-   BDtDqzMSxYguIBPdm3DcsCftIyn2wTymZ+EP3QerqYnbQfbCzbUn7ZShx
-   hhDTbnAjniGSLpV41Xz9CPvbmDM6sti5/d+ZK/2Muih4Pqf1f3zbW7E+x
-   E5QB8W7U/JJ6VmC4zEskosI+ogwaZRZWmbBT+2QSN9I4kUfbSZmlhEfvV
-   EVRH0fazOUF4BmtJks6ZpVyyPnONXLL+BtadNI3h0QvbP9N6e0/eAMqi9
-   XQZsp7aoPaRfcoROtFgFV6FU+ByVpH+KNtc6JYqTCGcfstaZZgvMzO3qw
-   w==;
-X-CSE-ConnectionGUID: tHSZ5q6tTT2XI7L/YLFcdg==
-X-CSE-MsgGUID: YCokAzHcRyObP10xqSIcXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11237"; a="41006194"
-X-IronPort-AV: E=Sophos;i="6.11,235,1725346800"; 
-   d="scan'208";a="41006194"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2024 11:28:19 -0700
-X-CSE-ConnectionGUID: C1/vY19HRTa7GdJOUmrzQg==
-X-CSE-MsgGUID: SsPm+H7rQMWmsp4BOsyosg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,235,1725346800"; 
-   d="scan'208";a="80806687"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Oct 2024 11:28:16 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t4lWI-000Zvt-0z;
-	Sat, 26 Oct 2024 18:28:14 +0000
-Date: Sun, 27 Oct 2024 02:27:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: chang hao <ot_chhao.chang@mediatek.com>, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, sean.wang@kernel.org,
-	linus.walleij@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Chhao Chang <ot_chhao.chang@mediatek.com>
-Subject: Re: [PATCH] pinctrl: mediatek: add eint new design for mt8196
-Message-ID: <202410270252.vGIAE54G-lkp@intel.com>
-References: <20241025031814.21442-1-ot_chhao.chang@mediatek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC386BE4E;
+	Sat, 26 Oct 2024 19:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.239.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729970739; cv=fail; b=gbIkSZ7bgOajzSpLL7+Jj84PDIQu36d8SZsgbPNY4wINxbQPtfhoJt4Z32ktZKdb3mxgj9Dq5n9PxmZzLX0NQ536WUgWmUAwWmdrdZvrtTBzeBHR0W+zbNZmmkqI9FR4f9KVocu8CyU5Kyx2BpsXWPt5CUkIlWncEzvb/pQkNOg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729970739; c=relaxed/simple;
+	bh=869h5b2Yhom3WSyx0wY94cPsJl4Tlj0yAZ41PCXrUPs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=V+nmrOCmAxXyWAz/xCSAyiFmfE4F5ow6rzPI696OhNCR9nDMF3IUrJWB5MnEenYIU70X9C/F0Y/ioSp4zjOP78m7owWefbUNkQsgp6OnIIfwGGqej1Mc3A6CAR6oXrdUNb8WJbHj7bTZQEpR5cIwPtLewb7st7+MKsUJySmOG+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=40.107.239.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gGhBINTOW6E/bZgI9GMXwzJARgnBiQbEdmvg18Q6gRjunuDrDPaWpId8QSUpffBxglq6LCxcvB82cNCvh6+iKCfNmy6/G+MR3aF7uoxudNYlFo2YkGnc3U1eZjQ+EeEX8q05GFbtMsd5gvR/k4clUFnb09NVFFP5nJzGXFqoJ0NAFvW8qAOUKYkUB+0BO4TMorq6LlzbfPkOBxKfHDC+07ED7R7DlyPdQC8wFDCHqTHWt1Yd9GmAwJZIMIQlGM3fA54YLoM4vrWXUbL+LTBeCtyJzoM+Ih4zYkyq7kER3biBkimo5zKIeAeR+JbiHWU263snmybll7kJu99cF9BZIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=869h5b2Yhom3WSyx0wY94cPsJl4Tlj0yAZ41PCXrUPs=;
+ b=W2zo73/rEGOwoZgtZlQHRY3HXqOG1GGAegi/RDS/hIXIh1/U3dpo9bTj7gKl0tTPxIA+VHae8I7DUixrE2BCTwzX03HPtXFW/fvlq5ZudPvJygoz9ycZRvfYXlO4XBubG38OUJwnS47L2nLy7YLoKUiBDMbLCJlH3q5OFsF5UBJgW4tXKv2GYqXbRisWXvtJyxhBSLxnW5wPXnaQ8olwG+5Wm6jd8b2pNFkDx4uFdzaPfC3hZpgPhzt1N3oiJ2Qmh3B3DzGd6Kgq0I8sWwF3rSKHEUKnNBB2a4PsLKJquzGJII/1BFLr+vBKq/rfUZ+/MvEvN8/6RHd8fHyIVMzLfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by MAYP287MB3597.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:149::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.25; Sat, 26 Oct
+ 2024 19:25:32 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f%5]) with mapi id 15.20.8093.014; Sat, 26 Oct 2024
+ 19:25:32 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Himanshu Bhavani
+	<himanshu.bhavani@siliconsignals.io>
+CC: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
+ yaml format
+Thread-Topic: [PATCH v2] dt-bindings: pinctrl: convert pinctrl-mcp23s08.txt to
+ yaml format
+Thread-Index: AQHbJhLcvG4Vz0BOQ0uMGPkY6V1e9LKY9kcAgAAOtQCAABTl3IAAPZKAgAANxCo=
+Date: Sat, 26 Oct 2024 19:25:32 +0000
+Message-ID:
+ <PN3P287MB1829A71905108200B68353A68B482@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20241024124654.26775-1-himanshu.bhavani@siliconsignals.io>
+ <usqmeunejf44l6wjw67ocv4idyxfpw5ivt5v4hqkputd7d7xsk@3ies2iwutzsz>
+ <PN0P287MB20195CAFA249448F66D13B659A482@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
+ <PN3P287MB1829C2FCE4C56325CD1DC8988B482@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+ <91a8d0ab-a6a6-4dfa-8613-8d4dbafeda40@kernel.org>
+In-Reply-To: <91a8d0ab-a6a6-4dfa-8613-8d4dbafeda40@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1829:EE_|MAYP287MB3597:EE_
+x-ms-office365-filtering-correlation-id: fbccf0cf-124f-4ec5-ec2d-08dcf5f3f580
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|10070799003|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?Windows-1252?Q?iRvAubnMpCSPWCA7FXj0nirj2pzAXzV8TXXmmoi/zFNcM7KY0mRoTXgs?=
+ =?Windows-1252?Q?BUZQXAbcyukx8C5iaM+Y0+GJ5zsSXQdjugNqHqGkU+ni3mPCCkH2tJdW?=
+ =?Windows-1252?Q?szPKNcCm4mQ7gXS2pmJxBUsug5pDmaFfA/v8KjeXTfqn6YruvPs5CH6x?=
+ =?Windows-1252?Q?8VE+YjiltCAcXXWxUtK/Kyn4cKGqLU4+AKRkaJfH/zDKH4BSiV5MulUq?=
+ =?Windows-1252?Q?dgSif3BFgZkPWmmqsRsWXLVFeC9PTlaYZgPUBtsu0AVoGmAATAbvjJhk?=
+ =?Windows-1252?Q?Z6ejlTOoL66CaB7an8esqdSQf9NDPZWf61qcGN5QamRW97BtISt9YEfz?=
+ =?Windows-1252?Q?qGYac+2h5PxVuewt1rxwOQaa7UmmA3YdQWAHSJ/jPpKyb8+fJCEfIESb?=
+ =?Windows-1252?Q?5inlQHYqZ9K2cOqdMkTkuFwkYpA9p/LofsmZmnxp5uzRv+Ivww+iaTzD?=
+ =?Windows-1252?Q?TkLw41j/wSwQs5WF0zpTp17nClhntTzz7/AFGatVRE+j7O9f3VQ17ej7?=
+ =?Windows-1252?Q?4u4+iWDth58WEHe9Ip8pGIe+LakPkkxybj4XF1JoA2IbjViud/CfKOP1?=
+ =?Windows-1252?Q?yDQr+2Sabh43bb2/Ux6bOo1h9D5lDgpYoqmhBZsrMR6Z35KmIFZ8XXOA?=
+ =?Windows-1252?Q?x7RsNsgtf3+7a1pZZWSQrGLmC7cmcgxnX9wajSWOS1wV9exKwspF6Fb4?=
+ =?Windows-1252?Q?ejwd5kuVtss5Q0YN43RU4ORlyN5d0uArxLvmn/r0si+c6tyaZdx5bql2?=
+ =?Windows-1252?Q?yoBl9rICCw14Qpc9+HR31AHt+wmxifW9vHYk0uwkdnydeWd7iIhohT4T?=
+ =?Windows-1252?Q?EXH9/HeuSkKVetdEUecUHkf7Az7SyiNaul3iXC3XW2JXGDgEtOcXr9XB?=
+ =?Windows-1252?Q?Jrm2lwhHkSkFGa07R0o/LJtBJnlRqlDw+zufAYhnE9vWp+Hdj6eO0ZWo?=
+ =?Windows-1252?Q?iknzYqYljI+pwjV3Os22NmnQEDZEnHThDid6abZAY/lHd0iaU7PSTneq?=
+ =?Windows-1252?Q?9/W3aXT4XlVZW761y7ZbGgNW71G0ogjJUJCkQacWGgoWHC8Mgt/+y7n7?=
+ =?Windows-1252?Q?mGJFVDfesZIRdR+TwD2Frcq+gbjk01nlE3zpQFCd2giNFUDsXDrqmHGr?=
+ =?Windows-1252?Q?9tO/2AYw5Fde1UvFyaWKvXre5c9Un3Zdw8g01fQjsFZasHQq98zl9+wn?=
+ =?Windows-1252?Q?DF6BcBD8lwslEOGE9QyETRqJ2VpJcrFij+eNn/LWawIamiyVgn1XaUJD?=
+ =?Windows-1252?Q?0oNn+dGBe3SJNF4tEk1k9NKFwGfLxwdTnITixv5LkuZMUjbcEqHB0cgz?=
+ =?Windows-1252?Q?VR7GDNeh/WfklzBvV/LJ/m+g3e021EsRS7PMxcE2X8O0b7pybth1XfZT?=
+ =?Windows-1252?Q?VJUHuZM7Gl1DeDeoQ1x2oIMtqJE2U3ZY5pjbEVX91hJMpjwJIV059/M0?=
+ =?Windows-1252?Q?XRcpSv71VmwgzqpkCrLOa2PsR8dGDAEItBWCFDahS5E=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?9uNtXo7ZfvSHlW8NCTxAfEdU1A3V6Da4J6IW3K3vh8wqZ5F0LhcoxDSr?=
+ =?Windows-1252?Q?oEArtYhk2sOfi9Sd4YjkRc1H07PcZMTCUQoivt6dSuMST2SwyrTmz2CL?=
+ =?Windows-1252?Q?gHtbUhHVISdyRV498AlVnVMsqM03WIX6Ghawx54cdufvuwzubIPKiTN4?=
+ =?Windows-1252?Q?vbOlPVl5LmUXC0wjczjdlWuFwpBcm25RtHC31z9WWJA6vIq02AJ96gSH?=
+ =?Windows-1252?Q?qKjBXSdbTintzfER4kYvUwuhxto4OtO1LqtKbogwxVOp/BqD57F+bnnv?=
+ =?Windows-1252?Q?Ufm/pex+yeW/C8DjYyUVzKLpugdOQ01Ynj35RPeGKjyi2cb07nY906TA?=
+ =?Windows-1252?Q?n+7c1lNkFEu2U5RYvTkgytdIUkj8agQVmCl+i7sD2jsaRUhgX62xSd7l?=
+ =?Windows-1252?Q?S70yGmYTbMbnTZACEJD5VGFG9RTRT7dp7syVvXM4hdTz/qWEHdb+SCrv?=
+ =?Windows-1252?Q?FVi7WUdnW3nrODxagWDVmWc3u6UeRWW1Q8GRiCbUXPWKoTYyiM6eQX7a?=
+ =?Windows-1252?Q?rwaYAYcvI1DI3M/RPJSk48Ex5AX9l1xhLt/Oupv130l8Dxw4nbMlay5g?=
+ =?Windows-1252?Q?kY5SYsBDgPiQKURbkDhqMCXBD56Mm/SSLeVnmjOyez+JhKDStKTtJz5/?=
+ =?Windows-1252?Q?F+cBAeyfTGzrgbgGK21grQ648Mefbu5e9kEWy5563NqUknvLNoJ9hc2Y?=
+ =?Windows-1252?Q?bg3YaGqEL1ASqBL7AeluwL5LDRkOzC5b6YBUbELpUfwNXUjSp/uRlEwI?=
+ =?Windows-1252?Q?Ga4zZTepGojOS8wy5eBnI4QosB/I/hMCTQ29NYLaJGF6yE1WJa7kI8jZ?=
+ =?Windows-1252?Q?3qiZF05bRm3wHt/NBbYLb6eald6c/J9WUbICwI/biTdVzwvS++h4/MhP?=
+ =?Windows-1252?Q?DKr/m4812KST9DpXhMGMVOGyHlBQQrWtvmTbP4fhtVbS+WGkm9YSMS4f?=
+ =?Windows-1252?Q?O512zpUM3PfMP2MH3xV3qD8KQ/765IDDUhMmPkRFPXSsLePQV1hEY3xz?=
+ =?Windows-1252?Q?YRmFCTkM9P7Mzl3MlgKcWHAtf/DBw4Wxf9m+A2K3sG7XElM6iXK4I4n8?=
+ =?Windows-1252?Q?k1xsNIEUL5fh4Lff0RFrhUIOHwfys9jnyccnqtthgaAnzq8y98KwU90i?=
+ =?Windows-1252?Q?cPzJBJUqCvnxYi9Nim8nvxMlGTnY9Trt0MCymQTK5u5MRLO/qj7Mr75Q?=
+ =?Windows-1252?Q?IZO1QxnhP5nlWSKUguY9Ayy6EpHgngTB21ghqWnv+tcgPbJnu70LZUxU?=
+ =?Windows-1252?Q?vuQEpv1fVnpBBQQX4CFFFK5/oCyusFkVD4VtmKGQVTx+4nneXvBOibeW?=
+ =?Windows-1252?Q?dD7T7JVWNtd/Q+3ggnfBa8UEOew/NSv2PNFup8Q1pu6VQuA5+lf7u/mY?=
+ =?Windows-1252?Q?PMYRozHGZLrmkQw3YvWHgTICQo1L9tptNiXKf2yW+RZUZzd9JzOSwdxp?=
+ =?Windows-1252?Q?ro+yDOLNT6ML4kY4T5OVhXJadp51h14QxoqXLEtjxlQtSikvKhu3Mutv?=
+ =?Windows-1252?Q?739KwPr8B+rcazUI7EC+VLSe0kV1uINmKQmLQ2+5Qv8RGaAz54L0FMv2?=
+ =?Windows-1252?Q?CgJ3+jSAT3jQ5w83q4VEeDtek0ciVdTYq2GYfq+RStr0ubw93yk7e/Ci?=
+ =?Windows-1252?Q?L2xmjRGh/C7WrLHYxg24gv/TH3xhaqzrcEF1LS/BxuAASHfFhAM/YkTR?=
+ =?Windows-1252?Q?sAlsy68MQk2ekZDPp8vMiURUWfBVTNdRIcI/MsRObl5Nf+XDgcdXxlVg?=
+ =?Windows-1252?Q?6mi9WbZ6yRBaCMyO+kpxiZsXQjp913iQOrwbwDQg/WEKyOkimCKmSjF3?=
+ =?Windows-1252?Q?44mJjw=3D=3D?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241025031814.21442-1-ot_chhao.chang@mediatek.com>
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbccf0cf-124f-4ec5-ec2d-08dcf5f3f580
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2024 19:25:32.4465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zczs2O4WRTn0mZCcBf+FxHs7PHOEAXORdgVCDpk2FXlIG9bP0tF51SR6cxGdxKG6sVmz7M167pDyXVRE0pyoNBZzp7eEl8WpKn7N3mQCghQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAYP287MB3597
 
-Hi chang,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next linus/master v6.12-rc4 next-20241025]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/chang-hao/pinctrl-mediatek-add-eint-new-design-for-mt8196/20241025-111952
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20241025031814.21442-1-ot_chhao.chang%40mediatek.com
-patch subject: [PATCH] pinctrl: mediatek: add eint new design for mt8196
-config: arm-randconfig-r122-20241026 (https://download.01.org/0day-ci/archive/20241027/202410270252.vGIAE54G-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20241027/202410270252.vGIAE54G-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410270252.vGIAE54G-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pinctrl/mediatek/mtk-eint.c:686:14: sparse: sparse: symbol 'mtk_eint_get_debounce_en' was not declared. Should it be static?
->> drivers/pinctrl/mediatek/mtk-eint.c:709:14: sparse: sparse: symbol 'mtk_eint_get_debounce_value' was not declared. Should it be static?
->> drivers/pinctrl/mediatek/mtk-eint.c:823:53: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected restricted __be32 const [usertype] *p @@     got unsigned int const [usertype] *[assigned] ph @@
-   drivers/pinctrl/mediatek/mtk-eint.c:823:53: sparse:     expected restricted __be32 const [usertype] *p
-   drivers/pinctrl/mediatek/mtk-eint.c:823:53: sparse:     got unsigned int const [usertype] *[assigned] ph
-
-vim +/mtk_eint_get_debounce_en +686 drivers/pinctrl/mediatek/mtk-eint.c
-
-   685	
- > 686	unsigned int mtk_eint_get_debounce_en(struct mtk_eint *eint,
-   687					      unsigned int eint_num)
-   688	{
-   689		unsigned int instance, index, bit;
-   690		void __iomem *reg;
-   691	
-   692		reg = mtk_eint_get_ofset(eint, eint_num, MTK_EINT_NO_OFSET,
-   693					  &instance, &index);
-   694	
-   695		if (!reg) {
-   696			dev_err(eint->dev, "%s invalid eint_num %d\n",
-   697				__func__, eint_num);
-   698			return 0;
-   699		}
-   700	
-   701		reg = eint->instances[instance].base +
-   702			(index / REG_OFSET) * REG_OFSET + eint->comp->regs->dbnc_ctrl;
-   703	
-   704		bit = MTK_EINT_DBNC_SET_EN << ((index % REG_OFSET) * DB_GROUP);
-   705	
-   706		return (readl(reg) & bit) ? 1 : 0;
-   707	}
-   708	
- > 709	unsigned int mtk_eint_get_debounce_value(struct mtk_eint *eint,
-   710						   unsigned int eint_num)
-   711	{
-   712		unsigned int instance, index, mask, ofset;
-   713		void __iomem *reg;
-   714	
-   715		reg = mtk_eint_get_ofset(eint, eint_num, MTK_EINT_NO_OFSET,
-   716					  &instance, &index);
-   717	
-   718		if (!reg) {
-   719			dev_err(eint->dev, "%s invalid eint_num %d\n",
-   720				__func__, eint_num);
-   721			return 0;
-   722		}
-   723	
-   724		reg = eint->instances[instance].base +
-   725			(index / REG_OFSET) * REG_OFSET + eint->comp->regs->dbnc_ctrl;
-   726	
-   727		ofset = MTK_EINT_DBNC_SET_DBNC_BITS + ((index % REG_OFSET) * DB_GROUP);
-   728		mask = 0xf << ofset;
-   729	
-   730		return ((readl(reg) & mask) >> ofset);
-   731	}
-   732	
-   733	int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
-   734	{
-   735		int irq;
-   736	
-   737		irq = irq_find_mapping(eint->domain, eint_n);
-   738		if (!irq)
-   739			return -EINVAL;
-   740	
-   741		return irq;
-   742	}
-   743	EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
-   744	
-   745	static const struct mtk_eint_compatible default_compat = {
-   746		.regs = &mtk_generic_eint_regs,
-   747	};
-   748	
-   749	static const struct of_device_id eint_compatible_ids[] = {
-   750		{ }
-   751	};
-   752	
-   753	int mtk_eint_do_init(struct mtk_eint *eint)
-   754	{
-   755		int i, virq;
-   756		unsigned int size, inst = 0;
-   757		eint->instance_number = 1;
-   758		eint->total_pin_number = eint->hw->ap_num;
-   759	
-   760		for (i = 0; i < eint->total_pin_number; i++) {
-   761			eint->pins[i].enabled = true;
-   762			eint->pins[i].instance = inst;
-   763			eint->pins[i].index = i;
-   764			eint->pins[i].debounce =  (i < eint->hw->db_cnt) ? 1 : 0;
-   765	
-   766			eint->instances[inst].pin_list[i] = i;
-   767			eint->instances[inst].number++;
-   768		}
-   769	
-   770		for (i = 0; i < eint->instance_number; i++) {
-   771			size = (eint->instances[i].number / MAX_BIT + 1) * sizeof(unsigned int);
-   772			eint->instances[i].wake_mask =
-   773				devm_kzalloc(eint->dev, size, GFP_KERNEL);
-   774			eint->instances[i].cur_mask =
-   775				devm_kzalloc(eint->dev, size, GFP_KERNEL);
-   776	
-   777			if (!eint->instances[i].wake_mask ||
-   778			    !eint->instances[i].cur_mask)
-   779				return -ENOMEM;
-   780		}
-   781	
-   782		eint->comp = &default_compat;
-   783	
-   784		eint->domain = irq_domain_add_linear(eint->dev->of_node,
-   785						     eint->total_pin_number,
-   786						     &irq_domain_simple_ops, NULL);
-   787		if (!eint->domain)
-   788			return -ENOMEM;
-   789	
-   790		mtk_eint_hw_init(eint);
-   791		for (i = 0; i < eint->total_pin_number; i++) {
-   792			virq = irq_create_mapping(eint->domain, i);
-   793	
-   794			irq_set_chip_and_handler(virq, &mtk_eint_irq_chip,
-   795						 handle_level_irq);
-   796			irq_set_chip_data(virq, eint);
-   797		}
-   798	
-   799		irq_set_chained_handler_and_data(eint->irq, mtk_eint_irq_handler,
-   800						 eint);
-   801	
-   802		global_eintc = eint;
-   803	
-   804		return 0;
-   805	}
-   806	EXPORT_SYMBOL_GPL(mtk_eint_do_init);
-   807	
-   808	int mtk_eint_do_init_v2(struct mtk_eint *eint)
-   809	{
-   810		int i, virq, matrix_number = 0;
-   811		struct device_node *node;
-   812		unsigned int ret, size, ofset;
-   813		unsigned int id, inst, idx, support_deb;
-   814	
-   815		const phandle *ph;
-   816	
-   817		ph = of_get_property(eint->dev->of_node, "mediatek,eint", NULL);
-   818		if (!ph) {
-   819			dev_err(eint->dev, "Cannot find EINT phandle in PIO node.\n");
-   820			return -ENODEV;
-   821		}
-   822	
- > 823		node = of_find_node_by_phandle(be32_to_cpup(ph));
-   824		if (!node) {
-   825			dev_err(eint->dev, "Cannot find EINT node by phandle.\n");
-   826			return -ENODEV;
-   827		}
-   828	
-   829		ret = of_property_read_u32(node, "mediatek,total-pin-number",
-   830					   &eint->total_pin_number);
-   831		if (ret) {
-   832			dev_err(eint->dev,
-   833			       "%s cannot read total-pin-number from device node.\n",
-   834			       __func__);
-   835			return -EINVAL;
-   836		}
-   837	
-   838		dev_info(eint->dev, "%s eint total %u pins.\n", __func__,
-   839			eint->total_pin_number);
-   840	
-   841		ret = of_property_read_u32(node, "mediatek,instance-num",
-   842					   &eint->instance_number);
-   843		if (ret)
-   844			eint->instance_number = 1; // only 1 instance in legacy chip
-   845	
-   846		size = eint->instance_number * sizeof(struct mtk_eint_instance);
-   847		eint->instances = devm_kzalloc(eint->dev, size, GFP_KERNEL);
-   848		if (!eint->instances)
-   849			return -ENOMEM;
-   850	
-   851		size = eint->total_pin_number * sizeof(struct mtk_eint_pin);
-   852		eint->pins = devm_kzalloc(eint->dev, size, GFP_KERNEL);
-   853		if (!eint->pins)
-   854			return -ENOMEM;
-   855	
-   856		for (i = 0; i < eint->instance_number; i++) {
-   857			ret = of_property_read_string_index(node, "reg-name", i,
-   858							    &(eint->instances[i].name));
-   859			if (ret) {
-   860				dev_info(eint->dev,
-   861					 "%s cannot read the name of instance %d.\n",
-   862					 __func__, i);
-   863			}
-   864	
-   865			eint->instances[i].base = of_iomap(node, i);
-   866			if (!eint->instances[i].base)
-   867				return -ENOMEM;
-   868		}
-   869	
-   870		matrix_number = of_property_count_u32_elems(node, "mediatek,pins") / ARRAY_0;
-   871		if (matrix_number < 0) {
-   872			matrix_number = eint->total_pin_number;
-   873			dev_info(eint->dev, "%s eint in legacy mode, assign the matrix number to %u.\n",
-   874				 __func__, matrix_number);
-   875		} else
-   876			dev_info(eint->dev, "%s eint in new mode, assign the matrix number to %u.\n",
-   877				 __func__, matrix_number);
-   878	
-   879		for (i = 0; i < matrix_number; i++) {
-   880			ofset = i * REG_OFSET;
-   881	
-   882			ret = of_property_read_u32_index(node, "mediatek,pins",
-   883						   ofset, &id);
-   884			ret |= of_property_read_u32_index(node, "mediatek,pins",
-   885						   ofset+FIRST, &inst);
-   886			ret |= of_property_read_u32_index(node, "mediatek,pins",
-   887						   ofset+SECOND, &idx);
-   888			ret |= of_property_read_u32_index(node, "mediatek,pins",
-   889						   ofset+THIRD, &support_deb);
-   890	
-   891			/* Legacy chip which no need to give coordinate list */
-   892			if (ret) {
-   893				id = i;
-   894				inst = 0;
-   895				idx = i;
-   896				support_deb = (i < MAX_BIT) ? 1 : 0;
-   897			}
-   898	
-   899			eint->pins[id].enabled = true;
-   900			eint->pins[id].instance = inst;
-   901			eint->pins[id].index = idx;
-   902			eint->pins[id].debounce = support_deb;
-   903	
-   904			eint->instances[inst].pin_list[idx] = id;
-   905			eint->instances[inst].number++;
-   906	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Hi Krzysztof ,=0A=
+=0A=
+>On 26/10/2024 17:02, Tarang Raval wrote:=0A=
+>> Hi Krzysztof , Himanshu=0A=
+>>=0A=
+>>>>> +=0A=
+>>>>> +=A0=A0=A0 i2c {=0A=
+>>>>=0A=
+>>>> Keep one complete example for i2c and one for spi. This was not in=0A=
+>>>> previous patch and change log does not explain why you need three=0A=
+>>>> examples.=0A=
+>>>=0A=
+>>> Okay, I will drop one example of I2C=0A=
+>>=0A=
+>> In ex1: use when you only need basic GPIO and interrupt capabilities=0A=
+>> without additional pin control and in ex2: use when you need pull-up=0A=
+>> resistors on specific GPIO pins or a reset line.=0A=
+>>=0A=
+>> Original bindings state that this node can be implemented in two=0A=
+>> different ways, so we should maintain both examples for reference.=0A=
+>=0A=
+>Example is not the binding. If you claim conversion is incomplete, it=0A=
+>must be done through the binding, not example.=0A=
+=0A=
+Understood, thanks for the clarification=0A=
+=0A=
+>> But it's up to you, I trust your expertise on this, Krzysztof=0A=
+>>=0A=
+>>>>> +=A0=A0=A0=A0=A0=A0=A0 #address-cells =3D <1>;=0A=
+>>>>> +=A0=A0=A0=A0=A0=A0=A0 #size-cells =3D <0>;=0A=
+>>>>> +=0A=
+>>>>> +=A0=A0=A0=A0=A0=A0=A0 mcp23017: gpio@21 {=0A=
+>>>>=0A=
+>>>> Drop unused label=0A=
+>>>=0A=
+>>> May I know how its unused, AFAIK, Since it's an I/O expanded, it=92s re=
+ferenced elsewhere, so keeping it is necessary for >functionality.=0A=
+>>=0A=
+>> I agree with Himanshu.=0A=
+>> It's definitely used for reset GPIOs, LED pins, or something similar.=0A=
+>=0A=
+>So point to the specific line in this file. Really, it's no different=0A=
+>than every other binding. If it is different, provide some arguments why=
+=0A=
+>this is different.=0A=
+=0A=
+okay, I get your point=A0=0A=
+=0A=
+Best Regards,=0A=
+Tarang=0A=
 
