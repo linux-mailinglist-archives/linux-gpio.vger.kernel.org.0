@@ -1,76 +1,75 @@
-Return-Path: <linux-gpio+bounces-12158-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12159-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10D789B1AE5
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 22:35:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0DEC9B1AEB
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 22:35:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8847B1F212EA
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 20:35:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 45DC1B21AB0
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Oct 2024 20:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99C341DB95D;
-	Sat, 26 Oct 2024 20:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7ED11DC194;
+	Sat, 26 Oct 2024 20:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZEp/Jew"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/5lEsEB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2741DA634;
-	Sat, 26 Oct 2024 20:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572EE1DB527;
+	Sat, 26 Oct 2024 20:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729974786; cv=none; b=iyvASS+Y/Ak02YSyJ73Dm4g/xIbdDS7L7ocq+k+9C10nlWrmDYjjtwqMMhjkOahL6A3ErMtz8wvFCb1N5Z07CRMZA3DBPqjRK9x1nI61lw4zAJGnl0MAiDB4AY9P213Q4xc3ZNmpZy8dUf9JT2DXuWR0ihQtYvJ2h2Z+ym5R/dU=
+	t=1729974788; cv=none; b=txSPMG/KDx6Nw5B0ffC6ReYcm98uDI+KfFF304tGYeW/jRMFKKn6KU6/aqA0/Jfeb97oGVhyiDdXrGREKr2w4yr5/Xww9zSJVKm2VnPJe1ETJv4rYXUFltU90HHd1CWr+Cx8ID5VIO264OwcYoAWOq91gDumTVJV4Nq62n/bBwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729974786; c=relaxed/simple;
-	bh=772kJCnYOtiOBy++PT2wl3V88OlSm4ef4aJGY+fHLYg=;
+	s=arc-20240116; t=1729974788; c=relaxed/simple;
+	bh=aNgDMHp8chOHRipjYna59OZmYcyh6ZnmD2z7vDTAOHo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ruRP0mlgu4rB8dFDdVmZDpwCz4JFZ624a6VefqrAcskm9n2fXtlLUXEVKdJCkoqE3XB3qfHGlIlQbKtVEKvGmigPvuuTr87eaULXe23+UE5trdaJZmTObv6hVdkqCsZaYbmsfCnYUlcADjFKzt6NbGhG8alnVvaPItc08AI5rCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SZEp/Jew; arc=none smtp.client-ip=209.85.167.54
+	 In-Reply-To:To:Cc; b=KvEezEayQUDO5qNs45VRHftiuPxd7vBRrFRSuR+esGDgo1VfqOq4vlDUkbYP1aaUbVA5HCw1I8gomejwKXMRoKbDZ+VE0iOHoCDDZhGgrFa3BHKS1XKYEq9mxEfBIcngum8ugdSbpvuihID06hWYiV62AniXBffq5VzE52Rw1/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/5lEsEB; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539fbbadf83so4090101e87.0;
-        Sat, 26 Oct 2024 13:33:03 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539f72c8fc1so3757452e87.1;
+        Sat, 26 Oct 2024 13:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729974782; x=1730579582; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729974783; x=1730579583; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JAqXyJ+sd57/HN5TRgePj1d+VaJoxJ/E5Im16zWHmNY=;
-        b=SZEp/JewyF6zVO2XsL1KEbv6/+9RzkiAcpKpf2t0nCJ9GqNdGtU7VanIv37F2Ekbmu
-         7+0bC8E3ZM9rNBKh3sQr9jIZcY44No7PzS5RGVc6NWjTG94LOTnT9kIAitg5UFB09ZCW
-         NQYBxvKjIsD52PcN99NZKZjPXS1QTjRKEdzDVVvDvymzD+TyFtyO5dGZAAqQD6MRQyLj
-         irD6kEYttdSG4BBB6gQmJhilJHY5uecdEUzzYZCc95KcfH2wgzOfnTJ5/S1iKINzK1Ds
-         WRd3gYz/HAOZa3UISG2jfe2soiJVW7alkDGL+67bFSo6BurrX57RqkwadyBymQEgHIGn
-         qzXA==
+        bh=D8ryoCnQa3x+2wA7PkI8xn3q6VJAS1LIktjHe3r9L6c=;
+        b=H/5lEsEBEPeyc1ddY5qb7sGQAcv5+aI9bXWjvVYigImLtkoFw74PC+OjlL7IvnPeB0
+         UKniys29Feq8FTCw0d38jgDEd9RDB9wmlmMzgwZEAmbFveyC1t0AL+2oWv82PDQ4P82S
+         JiO4zUgixS4hUHnAm49/9grf0w2ko+9HuirnCZ+nJ0ipAOczM8Cof0XlCgmn8dXp6+LA
+         K16JUshmpDY1DOZ1I5TYkgsF7YHEO7I8zwV0vwqgENIOzioF/70i35pHtPDh313DtsQH
+         K1jwu6p5kxib13AAXqKIq1XFx0tGZIyXGfalA7MbS9h/nywYO9Epw6X7inuRm4LP83y8
+         QDHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729974782; x=1730579582;
+        d=1e100.net; s=20230601; t=1729974783; x=1730579583;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JAqXyJ+sd57/HN5TRgePj1d+VaJoxJ/E5Im16zWHmNY=;
-        b=ALu95dQyzvu1JYw7ZMZ94IozKdQAbP3WNe3HQUjoe1bhGlqhwKp1D5pepRDhh03gZZ
-         V2tp5e/Gh6kYNY72r0Jm+mCD3GjvovgDRzFGUHCRZ5zokVYIcNcAm/3U/MKcn8myWizW
-         RJL6TCzIk3Y/R8t7Iz4eBULf9eAwO2YXrZOAvFwtBbw6WNSFmqWY6UEnADNDtbqMDJUY
-         k9motj7Q6v7iB5HdmnrX1HBXC80f67LFg++8LWQcjfIdQIB2iqXI8gEg1ruVV+woSTBB
-         uji/50KgJM7tLRft3kd1R6Gyqmon/8HaE9TZaYSUEbDlJ6qbLuk0ee/Dba/ljRFzI0Gz
-         Y4YA==
-X-Forwarded-Encrypted: i=1; AJvYcCV25rN47nvYM7Pg0kzL8pQFdgaQvuTMIP97SxV87HHJDl209+ig4fmoXD1b/v2X+XmLHZ5GpyD5W2zb@vger.kernel.org, AJvYcCWKLzODKfgwAjBTg0yE1AMrectRSvjTxbmicb0O9bPZEkh76L1F74QQzQeNTVWWFYDVCzAMNmUAAYODkmve@vger.kernel.org, AJvYcCWQRuFXmC6x7dJU6ndqrQiMyaQw8iULAg3c1l/5btZdFjwesICicnW6FMg/J+U+axNaVkRtKQfdlXXGncZU7zglPVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeSQtpExMOtVwYPx5TwaAmT67DJsW8tb3MmUP9vZrLFj2lsR/e
-	P8Sq068MMWMpP1uQtoLfSvHhij0paDsRQODV/N9/BLMxQSyYSFI69BbKDw==
-X-Google-Smtp-Source: AGHT+IFPUYrCOBhBYch7XpKYen230Je9Z5xpOKaPCblTTpx9bDmGjGtMDMft0HEPU2hDXiMz8h3IzA==
-X-Received: by 2002:a05:6512:3e0d:b0:53a:bb7:ed77 with SMTP id 2adb3069b0e04-53b348c6cacmr1278783e87.14.1729974781561;
-        Sat, 26 Oct 2024 13:33:01 -0700 (PDT)
+        bh=D8ryoCnQa3x+2wA7PkI8xn3q6VJAS1LIktjHe3r9L6c=;
+        b=dNePmaDY+hfCgG1NGr7W4zfSod39bByJAFsyFx4Q2hhMqTv0SL6rggpmyLKimdhsoB
+         vGIjL6t9jgV8S93VRT6CokEzCeihrhkCNUJz6UC4A4R9ztcL0M32x1v9CpnIFvti6tyz
+         QPwF46mw+TS/Oje6/KGHiOV/FaprMHIcKVcaPFfmmOX8lHjUoIGwr4Y0Sr7eWzZcSuG1
+         NQNH3JZqfoNh9SRbZ8aHt56UFpiq2GGxma8Z452AK4vpSHTMQ5SExRdZseLCxmm+qn/e
+         z1dN9bMWXklAAPSQ/WJILDXPoLEBNZW+K/lF4Q82QXptxOC8ZDmZCOTcU6z+gq+D1BZb
+         er2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUAKrP1vB61EJkWthpINnd9PSA50YcGZpO6S8NerPgzbrjQyGznzwXafAhuTPoi7L0P1eRDMUOvJoOc@vger.kernel.org, AJvYcCUWGjZ4IEa9PMYVBmCBQaByS+4+XrPYmk2dg/+A0c0wVkRG7fP6Az2e3bE5FQ7CAu649ZiRL58UZUXs+yxfoiaFrlo=@vger.kernel.org, AJvYcCUr7ruM9LJV4mTynJuhv8QXa93bI486wCEvDsOUvF3Bcxe/ed3/WmhelR6zDCUjfJ6p4DC0OQbGhjJ2sxJS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKEEwNaxFyA1xjcZEkOmJZcq6Zf+BJ5U+7uhKs7dYjolV26wZZ
+	6ZTrwmFBx2kiktkvVUt3PmvjwBNPJiaG5FU2UGXu186yDt4vDA7PZxwWtg==
+X-Google-Smtp-Source: AGHT+IEtIse4xT8aMVG/eU3OArzG7FPmxGWUYr486cS5w2ZGzwO25wsD0HtF9t8mQTFdSTy1rN1yEQ==
+X-Received: by 2002:a05:6512:4017:b0:539:8f4d:a7dd with SMTP id 2adb3069b0e04-53b3491ccb0mr1230370e87.42.1729974783110;
+        Sat, 26 Oct 2024 13:33:03 -0700 (PDT)
 Received: from [192.168.1.105] ([178.136.36.129])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1c9439sm595872e87.200.2024.10.26.13.33.00
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1c9439sm595872e87.200.2024.10.26.13.33.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2024 13:33:01 -0700 (PDT)
+        Sat, 26 Oct 2024 13:33:02 -0700 (PDT)
 From: Markuss Broks <markuss.broks@gmail.com>
-Date: Sat, 26 Oct 2024 23:32:39 +0300
-Subject: [PATCH v3 08/10] pinctrl: samsung: Add Exynos9810 SoC specific
- data
+Date: Sat, 26 Oct 2024 23:32:40 +0300
+Subject: [PATCH v3 09/10] arm64: dts: exynos: Add Exynos9810 SoC support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241026-exynos9810-v3-8-b89de9441ea8@gmail.com>
+Message-Id: <20241026-exynos9810-v3-9-b89de9441ea8@gmail.com>
 References: <20241026-exynos9810-v3-0-b89de9441ea8@gmail.com>
 In-Reply-To: <20241026-exynos9810-v3-0-b89de9441ea8@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -97,216 +96,823 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Markuss Broks <markuss.broks@gmail.com>, 
  Maksym Holovach <nergzd@nergzd723.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1729974770; l=9499;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1729974770; l=18139;
  i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
- bh=772kJCnYOtiOBy++PT2wl3V88OlSm4ef4aJGY+fHLYg=;
- b=F92Ag5kxO4BZPCtvP7uOevuw+TQi4vq4CN6Sbve8uNXX1Mq7JsgnwphEaH1kF2gpBaUBojaBm
- HfZ0Y4WS4NAAFLEC3xtT+W8l5BOfL1Mw1DYspUFlso00YvjPDz5dmoU
+ bh=aNgDMHp8chOHRipjYna59OZmYcyh6ZnmD2z7vDTAOHo=;
+ b=GBX491z24EfZ8M/hYwp44ZE60dn0hSmftXs+odyLfwIK1PD+LvX2Hfd+IudEdNdbAqi0gxP8m
+ Xp03y0CJx7wDg65W5JRAMRIOk/zGsyH6jkvt23d8UjXcmyFC972eiwy
 X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
  pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-Add Samsung Exynos9810 SoC specific data to enable pinctrl
-support for platforms based on Exynos9810.
+Exynos 9810 is an ARMv8 mobile SoC found in various Samsung devices,
+such as Samsung Galaxy S9 (starlte), S9 Plus (star2lte),
+Note 9 (crownlte) and perhaps others.
+
+Add minimal support for this SoC, including basic stuff like:
+- PSCI for bringing up secondary cores
+- ARMv8 generic timer
+- GPIO and pinctrl.
+
+The firmware coming with the devices based on this SoC is buggy
+and doesn't configure CNTFRQ_EL0, as required by spec, so it's
+needed to hardcode the frequency in the timer node.
 
 Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 ---
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 154 +++++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-samsung.c      |   2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h      |   1 +
- 3 files changed, 157 insertions(+)
+ arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi | 503 +++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos9810.dtsi         | 273 +++++++++++
+ 2 files changed, 776 insertions(+)
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-index f07c26d374425505019447161150929f7677f91d..3ea7106ce5eae3c21f11790b5a40037042c1d407 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-@@ -767,6 +767,160 @@ const struct samsung_pinctrl_of_match_data exynos990_of_data __initconst = {
- 	.num_ctrl	= ARRAY_SIZE(exynos990_pin_ctrl),
- };
- 
-+/* pin banks of exynos9810 pin-controller 0 (ALIVE) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks0[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTN(6, 0x000, "etc1"),
-+	EXYNOS850_PIN_BANK_EINTW(8, 0x020, "gpa0", 0x00),
-+	EXYNOS850_PIN_BANK_EINTW(8, 0x040, "gpa1", 0x04),
-+	EXYNOS850_PIN_BANK_EINTW(8, 0x060, "gpa2", 0x08),
-+	EXYNOS850_PIN_BANK_EINTW(8, 0x080, "gpa3", 0x0c),
-+	EXYNOS850_PIN_BANK_EINTN(6, 0x0A0, "gpq0"),
-+	EXYNOS850_PIN_BANK_EINTW(2, 0x0C0, "gpa4", 0x10),
+diff --git a/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..88091bf09e4e91b05801cafe956283984d564449
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi
+@@ -0,0 +1,503 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ * Samsung's Exynos 9810 SoC pin-mux and pin-config device tree source
++ *
++ * Copyright (c) 2024 Markuss Broks <markuss.broks@gmail.com>
++ * Copyright (c) 2024 Maksym Holovach <nergzd@nergzd723.xyz>
++ */
++
++#include "exynos-pinctrl.h"
++
++&pinctrl_alive {
++	etc1: etc1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpa0: gpa0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <2>;
++	};
++
++	gpa1: gpa1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <2>;
++	};
++
++	gpa2: gpa2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <2>;
++	};
++
++	gpa3: gpa3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <2>;
++	};
++
++	gpa4: gpa4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpq0: gpq0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 1 (AUD) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks1[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(5, 0x000, "gpb0", 0x00),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x020, "gpb1", 0x04),
-+	EXYNOS850_PIN_BANK_EINTG(4, 0x040, "gpb2", 0x08),
++&pinctrl_aud {
++	gpb0: gpb0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpb1: gpb1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpb2: gpb2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 2 (CHUB) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks2[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x000, "gph0", 0x00),
-+	EXYNOS850_PIN_BANK_EINTG(5, 0x020, "gph1", 0x04),
++&pinctrl_chub {
++	gph0: gph0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gph1: gph1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 3 (CMGP) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks3[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x000, "gpm0", 0x00),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x020, "gpm1", 0x04),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x040, "gpm2", 0x08),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x060, "gpm3", 0x0C),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x080, "gpm4", 0x10),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x0A0, "gpm5", 0x14),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x0C0, "gpm6", 0x18),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x0E0, "gpm7", 0x1C),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x100, "gpm10", 0x20),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x120, "gpm11", 0x24),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x140, "gpm12", 0x28),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x160, "gpm13", 0x2C),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x180, "gpm14", 0x30),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x1A0, "gpm15", 0x34),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x1C0, "gpm16", 0x38),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x1E0, "gpm17", 0x3C),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x200, "gpm40", 0x40),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x220, "gpm41", 0x44),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x240, "gpm42", 0x48),
-+	EXYNOS850_PIN_BANK_EINTW(1, 0x260, "gpm43", 0x4C),
++&pinctrl_cmgp {
++	gpm0: gpm0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm1: gpm1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm2: gpm2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm3: gpm3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm4: gpm4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm5: gpm5-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm6: gpm6-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm7: gpm7-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm10: gpm10-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm11: gpm11-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm12: gpm12-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm13: gpm13-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm14: gpm14-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm15: gpm15-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm16: gpm16-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm17: gpm17-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm40: gpm40-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm41: gpm41-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm42: gpm42-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	gpm43: gpm43-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 4 (FSYS0) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks4[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(2, 0x000, "gpf0", 0x00),
++&pinctrl_fsys0 {
++	gpf0: gpf0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 5 (FSYS1) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks5[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(7, 0x000, "gpf1", 0x00),
-+	EXYNOS850_PIN_BANK_EINTG(6, 0x020, "gpf2", 0x04),
++&pinctrl_fsys1 {
++	gpf1: gpf1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf2: gpf2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 6 (PERIC0) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks6[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x000, "gpp0", 0x00),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x020, "gpp1", 0x04),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x040, "gpp2", 0x08),
-+	EXYNOS850_PIN_BANK_EINTG(4, 0x060, "gpp3", 0x0C),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x080, "gpg0", 0x10),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x0A0, "gpg1", 0x14),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x0C0, "gpg2", 0x18),
++&pinctrl_peric0 {
++	gpg0: gpg0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpg1: gpg1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpg2: gpg2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp0: gpp0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp1: gpp1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp2: gpp2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp3: gpp3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 7 (PERIC1) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks7[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x000, "gpp4", 0x00),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x020, "gpp5", 0x04),
-+	EXYNOS850_PIN_BANK_EINTG(4, 0x040, "gpp6", 0x08),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x060, "gpc0", 0x0C),
-+	EXYNOS850_PIN_BANK_EINTG(8, 0x080, "gpc1", 0x10),
-+	EXYNOS850_PIN_BANK_EINTG(4, 0x0A0, "gpd0", 0x14),
-+	EXYNOS850_PIN_BANK_EINTG(7, 0x0C0, "gpg3", 0x18),
++&pinctrl_peric1 {
++	gpc0: gpc0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpc1: gpc1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpd0: gpd0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpg3: gpg3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp4: gpp4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp5: gpp5-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp6: gpp6-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
 +};
 +
-+/* pin banks of exynos9810 pin-controller 8 (VTS) */
-+static const struct samsung_pin_bank_data exynos9810_pin_banks8[] __initconst = {
-+	EXYNOS850_PIN_BANK_EINTG(3, 0x000, "gpt0", 0x00),
++&pinctrl_vts {
++	gpt0: gpt0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/exynos/exynos9810.dtsi b/arch/arm64/boot/dts/exynos/exynos9810.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..70b67b2574d5b66eb5fa421a87dd6f4e49f8f54e
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos9810.dtsi
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/*
++ * Samsung Exynos 9810 SoC device tree source
++ *
++ * Copyright (c) 2024 Markuss Broks <markuss.broks@gmail.com>
++ * Copyright (c) 2024 Maksym Holovach <nergzd@nergzd723.xyz>
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "samsung,exynos9810";
++	#address-cells = <2>;
++	#size-cells = <1>;
++
++	interrupt-parent = <&gic>;
++
++	aliases {
++		pinctrl0 = &pinctrl_alive;
++		pinctrl1 = &pinctrl_aud;
++		pinctrl2 = &pinctrl_chub;
++		pinctrl3 = &pinctrl_cmgp;
++		pinctrl4 = &pinctrl_fsys0;
++		pinctrl5 = &pinctrl_fsys1;
++		pinctrl6 = &pinctrl_peric0;
++		pinctrl7 = &pinctrl_peric1;
++		pinctrl8 = &pinctrl_vts;
++	};
++
++	arm-a55-pmu {
++		compatible = "arm,cortex-a55-pmu";
++		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>,
++				     <&cpu1>,
++				     <&cpu2>,
++				     <&cpu3>;
++	};
++
++	mongoose-m3-pmu {
++		compatible = "samsung,mongoose-pmu";
++		interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu4>,
++				     <&cpu5>,
++				     <&cpu6>,
++				     <&cpu7>;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++				core2 {
++					cpu = <&cpu2>;
++				};
++				core3 {
++					cpu = <&cpu3>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&cpu4>;
++				};
++				core1 {
++					cpu = <&cpu5>;
++				};
++				core2 {
++					cpu = <&cpu6>;
++				};
++				core3 {
++					cpu = <&cpu7>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0>;
++			enable-method = "psci";
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x1>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x2>;
++			enable-method = "psci";
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x3>;
++			enable-method = "psci";
++		};
++
++		cpu4: cpu@100 {
++			device_type = "cpu";
++			compatible = "samsung,mongoose-m3";
++			reg = <0x100>;
++			enable-method = "psci";
++		};
++
++		cpu5: cpu@101 {
++			device_type = "cpu";
++			compatible = "samsung,mongoose-m3";
++			reg = <0x101>;
++			enable-method = "psci";
++		};
++
++		cpu6: cpu@102 {
++			device_type = "cpu";
++			compatible = "samsung,mongoose-m3";
++			reg = <0x102>;
++			enable-method = "psci";
++		};
++
++		cpu7: cpu@103 {
++			device_type = "cpu";
++			compatible = "samsung,mongoose-m3";
++			reg = <0x103>;
++			enable-method = "psci";
++		};
++	};
++
++	oscclk: osc-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-output-names = "oscclk";
++	};
++
++	psci {
++		compatible = "arm,psci";
++		method = "smc";
++		cpu_off = <0x84000002>;
++		cpu_on = <0xc4000003>;
++		cpu_suspend = <0xc4000001>;
++	};
++
++	soc: soc@0 {
++		compatible = "simple-bus";
++		ranges = <0x0 0x0 0x0 0x20000000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		chipid@10000000 {
++			compatible = "samsung,exynos9810-chipid",
++				     "samsung,exynos850-chipid";
++			reg = <0x10000000 0x100>;
++		};
++
++		gic: interrupt-controller@10101000 {
++			compatible = "arm,gic-400";
++			reg = <0x10101000 0x1000>,
++			      <0x10102000 0x1000>,
++			      <0x10104000 0x2000>,
++			      <0x10106000 0x2000>;
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) |
++						 IRQ_TYPE_LEVEL_HIGH)>;
++			#address-cells = <0>;
++			#size-cells = <1>;
++		};
++
++		pinctrl_peric0: pinctrl@10430000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x10430000 0x1000>;
++			interrupts = <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_peric1: pinctrl@10830000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x10830000 0x1000>;
++			interrupts = <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_fsys0: pinctrl@11050000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x11050000 0x1000>;
++			interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_fsys1: pinctrl@11430000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x11430000 0x1000>;
++			interrupts = <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_vts: pinctrl@13880000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x13880000 0x1000>;
++		};
++
++		pinctrl_chub: pinctrl@13a80000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x13a80000 0x1000>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		pinctrl_alive: pinctrl@14050000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x14050000 0x1000>;
++
++			wakeup-interrupt-controller {
++				compatible = "samsung,exynos9810-wakeup-eint",
++					     "samsung,exynos850-wakeup-eint",
++					     "samsung,exynos7-wakeup-eint";
++			};
++		};
++
++		pmu_system_controller: system-controller@14060000 {
++			compatible = "samsung,exynos9810-pmu",
++				     "samsung,exynos7-pmu", "syscon";
++			reg = <0x14060000 0x10000>;
++		};
++
++		pinctrl_cmgp: pinctrl@14220000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x14220000 0x1000>;
++
++			wakeup-interrupt-controller {
++				compatible = "samsung,exynos9810-wakeup-eint",
++					     "samsung,exynos850-wakeup-eint",
++					     "samsung,exynos7-wakeup-eint";
++			};
++		};
++
++		pinctrl_aud: pinctrl@17c60000 {
++			compatible = "samsung,exynos9810-pinctrl";
++			reg = <0x17c60000 0x1000>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		/* Hypervisor Virtual Timer interrupt is not wired to GIC */
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++		/*
++		 * Non-updatable, broken stock Samsung bootloader does not
++		 * configure CNTFRQ_EL0
++		 */
++		clock-frequency = <26000000>;
++	};
 +};
 +
-+static const struct samsung_pin_ctrl exynos9810_pin_ctrl[] __initconst = {
-+	{
-+		/* pin-controller instance 0 ALIVE data */
-+		.pin_banks      = exynos9810_pin_banks0,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks0),
-+		.eint_wkup_init = exynos_eint_wkup_init,
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 1 AUD data */
-+		.pin_banks      = exynos9810_pin_banks1,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks1),
-+	}, {
-+		/* pin-controller instance 2 CHUB data */
-+		.pin_banks      = exynos9810_pin_banks2,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks2),
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 3 CMGP data */
-+		.pin_banks      = exynos9810_pin_banks3,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks3),
-+		.eint_wkup_init = exynos_eint_wkup_init,
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 4 FSYS0 data */
-+		.pin_banks      = exynos9810_pin_banks4,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks4),
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 5 FSYS1 data */
-+		.pin_banks      = exynos9810_pin_banks5,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks5),
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 6 PERIC0 data */
-+		.pin_banks      = exynos9810_pin_banks6,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks6),
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 7 PERIC1 data */
-+		.pin_banks      = exynos9810_pin_banks7,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks7),
-+		.eint_gpio_init = exynos_eint_gpio_init,
-+		.suspend        = exynos_pinctrl_suspend,
-+		.resume         = exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 8 VTS data */
-+		.pin_banks      = exynos9810_pin_banks8,
-+		.nr_banks       = ARRAY_SIZE(exynos9810_pin_banks8),
-+	},
-+};
-+
-+const struct samsung_pinctrl_of_match_data exynos9810_of_data __initconst = {
-+	.ctrl		= exynos9810_pin_ctrl,
-+	.num_ctrl	= ARRAY_SIZE(exynos9810_pin_ctrl),
-+};
-+
- /* pin banks of exynosautov9 pin-controller 0 (ALIVE) */
- static const struct samsung_pin_bank_data exynosautov9_pin_banks0[] __initconst = {
- 	EXYNOS850_PIN_BANK_EINTW(8, 0x000, "gpa0", 0x00),
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index 42e40860841bcc94e3c11bf313df792da10ab00b..bbedd980ec67234aad847b757f40af5002b11ebb 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1479,6 +1479,8 @@ static const struct of_device_id samsung_pinctrl_dt_match[] = {
- 		.data = &exynos850_of_data },
- 	{ .compatible = "samsung,exynos8895-pinctrl",
- 		.data = &exynos8895_of_data },
-+	{ .compatible = "samsung,exynos9810-pinctrl",
-+		.data = &exynos9810_of_data },
- 	{ .compatible = "samsung,exynos990-pinctrl",
- 		.data = &exynos990_of_data },
- 	{ .compatible = "samsung,exynosautov9-pinctrl",
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 615048f945243d4173d40142f1e62c8aeefe5b7e..bb0689d52ea0b4392714fa9bcdcbae8d253c73a1 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -385,6 +385,7 @@ extern const struct samsung_pinctrl_of_match_data exynos7_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos7885_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos850_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos8895_of_data;
-+extern const struct samsung_pinctrl_of_match_data exynos9810_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos990_of_data;
- extern const struct samsung_pinctrl_of_match_data exynosautov9_of_data;
- extern const struct samsung_pinctrl_of_match_data exynosautov920_of_data;
++#include "exynos9810-pinctrl.dtsi"
++#include "arm/samsung/exynos-syscon-restart.dtsi"
 
 -- 
 2.46.2
