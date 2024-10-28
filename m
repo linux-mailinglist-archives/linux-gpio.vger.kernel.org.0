@@ -1,313 +1,189 @@
-Return-Path: <linux-gpio+bounces-12238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 112C59B320B
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:46:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58DD89B3269
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:03:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 341001C21B50
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 13:46:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F738282083
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:02:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 091BA1DD531;
-	Mon, 28 Oct 2024 13:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72351DD559;
+	Mon, 28 Oct 2024 14:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gkLFOp+i"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BPKqAkDE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9AD1DC74E;
-	Mon, 28 Oct 2024 13:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36AA1DC734;
+	Mon, 28 Oct 2024 14:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730123100; cv=none; b=jyjlscsWidwkmA1pskcQR6jI0wW8f27EnAoXGsKTP+Al5475yvAO4L15T+ejPgOsckra/ZXIb7g1dD2BiVda0cNauOczv5BsKoDmvH2exc1cuKgxVp/g9LoLaL0Ab6U7R81c8HGzQxfg38LcIQ7Bn1XMDSXOgAEp4Jgk+lLfV7E=
+	t=1730124172; cv=none; b=VrUByxYpcelf1h9HyAc6hcnxNLSQ+p6/gRfAYd/MiT8plEXTVOnVuIaY9DOQi+oPCnfD12Z5WI69Kfbg2X4e4tZAMkLup74ToRycydmOW/dGb3RDNpoV2yN5hVIbriBkLJArR3YOZ8q6oJ8kW2Dg9+fgHhE20mMhko7IwHsXLXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730123100; c=relaxed/simple;
-	bh=qiCDy8v8JsMqzS/jgUz8QRU58SpXGFn68aaEOJjUDxA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jeFcP9EeRd6MM+w66sOuoZ8Qq+MbGiJlnCVKLzO0k/EsSDMoAIzw1ET2erirupsa+haljNvQ9XnE5X7aBJeWQTIq/kfwEuOBHXHhy5xKPA3LZFohKUSwMaK8VmkOdbO8F6GFetaT6uucGLalMZPPeVuZe9kbCYo2THc0meGMNs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gkLFOp+i; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730123099; x=1761659099;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qiCDy8v8JsMqzS/jgUz8QRU58SpXGFn68aaEOJjUDxA=;
-  b=gkLFOp+ipYJS9PQqArwcdZ+e7Yu3DALkHZIYPNeoyVqfc09mB6l/TtGM
-   dS1f62oCDqbSOJmFWEvSNsLaHbs/Yalmy5YbpRDzcbBgNSHMA7S1Yo1QN
-   4i4NNF9aWkYu8y5b6JZuVelePP6w+8Y0Zshm0G9kDcqlGCR/JETuqCJeh
-   jYo6IEMtn657gy1ts/QNuq2y+usYPLc3og5gdsS6pp+EY4ufQ/SNM2fMY
-   OeG+r572g4jGDgQ8WvyhcsMSXfMyunMEevy0FwShQBoCOshL7OLKFW2tr
-   d1VKEfOEuIVyxXQbcTjtZD9skY/NSk5Zurd3Eij3IF8ZJ4yoWxo2oOsAh
-   Q==;
-X-CSE-ConnectionGUID: 383OAQZ+TLGmbBgLW4uIxw==
-X-CSE-MsgGUID: nrg7ll73S+ujgnuRgwalRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="33414712"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="33414712"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 06:44:58 -0700
-X-CSE-ConnectionGUID: DRvrCLc0SAadFtO0NyhvWQ==
-X-CSE-MsgGUID: knKsqtRvQSevsMmnn2BgFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="85571758"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 28 Oct 2024 06:44:56 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 238972DF; Mon, 28 Oct 2024 15:44:55 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpio: Use traditional pattern when checking error codes
-Date: Mon, 28 Oct 2024 15:43:39 +0200
-Message-ID: <20241028134454.1156852-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1730124172; c=relaxed/simple;
+	bh=GARURTPO3rxpQXzZwj7FF8BdkvH2AjtCyCh0MqYT5vA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfVf2zIj34qUAZkS/kmfP/Q4iVcdk/VFV3vjEj5zxj8728xEp+sjOCunYSBfKiompapja0YgoWBdwjxw/fOtw7Yn6ja+Yl9ZkoIjePZ1Gz5+wyeLyMpxdrcMqon8FDrKHgc/0omXobgA0/CjB3wXfhxdencZf+Jiu7+2pDHCyAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BPKqAkDE; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1730124166;
+	bh=GARURTPO3rxpQXzZwj7FF8BdkvH2AjtCyCh0MqYT5vA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BPKqAkDEwKSvzgI+d7NCdISq1yOm+4PmPcY/g1FvCeseJW1LI6xksrH7ivDzwWxY5
+	 sGqELxzRCfM4QwZcJkbonBxQkoQj/0zgG6NAKf4D5lL0u+4YE4Zr6yPVJkdfC0F3VL
+	 nwDEgq5fKNXFTNu4mJ/ZslyE8VgdhNLc7PcFvjAgUFw94CbWQWUPZRceD9j4Y/mBkt
+	 vfsLrVEOK56FqOR7pbYISoTvp5pHgDj4+zTYPHuwwWsxIRcL4FYFG93xlG0NR4USg7
+	 wV0JoYWq/+kUZY0slHTCCObmYSLpNOygG0WBNM207xU/wdum4dvi5nzqxu21z5TPhL
+	 l/sjPvx8i1Z4g==
+Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 321DF17E3613;
+	Mon, 28 Oct 2024 15:02:44 +0100 (CET)
+Date: Mon, 28 Oct 2024 10:02:41 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
+Subject: Re: [PATCH RFC v2 0/5] Verify bias functionality for pinctrl_paris
+ driver through new gpio test
+Message-ID: <cda91b70-7179-49b5-9207-3fa3a1aaa4d5@notapiano>
+References: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
 
-Instead of 'if (ret == 0)' switch to "check for the error first" rule.
+On Fri, Oct 25, 2024 at 03:45:35PM -0400, Nícolas F. R. A. Prado wrote:
+> This series was motivated by the regression fixed by 166bf8af9122
+> ("pinctrl: mediatek: common-v2: Fix broken bias-disable for
+> PULL_PU_PD_RSEL_TYPE"). A bug was introduced in the pinctrl_paris driver
+> which prevented certain pins from having their bias configured.
+> 
+> Running this test on the mt8195-tomato platform with the test plan
+> included below[1] shows the test passing with the fix applied, but failing
+> without the fix:
+> 
+> With fix:
+>   $ ./gpio-setget-config.py
+>   TAP version 13
+>   # Using test plan file: ./google,tomato.yaml
+>   1..3
+>   ok 1 pinctrl_paris.34.pull-up
+>   ok 2 pinctrl_paris.34.pull-down
+>   ok 3 pinctrl_paris.34.disabled
+>   # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
+> 
+> Without fix:
+>   $ ./gpio-setget-config.py
+>   TAP version 13
+>   # Using test plan file: ./google,tomato.yaml
+>   1..3
+>   # Bias doesn't match: Expected pull-up, read pull-down.
+>   not ok 1 pinctrl_paris.34.pull-up
+>   ok 2 pinctrl_paris.34.pull-down
+>   # Bias doesn't match: Expected disabled, read pull-down.
+>   not ok 3 pinctrl_paris.34.disabled
+>   # Totals: pass:1 fail:2 xfail:0 xpass:0 skip:0 error:0
+> 
+> In order to achieve this, the first three patches expose bias
+> configuration through the GPIO API in the MediaTek pinctrl drivers,
+> notably, pinctrl_paris, patch 4 extends the gpio-mockup-cdev utility for
+> use by patch 5, and patch 5 introduces a new GPIO kselftest that takes a
+> test plan in YAML, which can be tailored per-platform to specify the
+> configurations to test, and sets and gets back each pin configuration to
+> verify that they match and thus that the driver is behaving as expected.
+> 
+> Since the GPIO uAPI only allows setting the pin configuration, getting
+> it back is done through pinconf-pins in the pinctrl debugfs folder.
+> 
+> The test currently only verifies bias but it would be easy to extend to
+> verify other pin configurations.
+> 
+> The test plan YAML file can be customized for each use-case and is
+> platform-dependant. For that reason, only an example is included in
+> patch 3 and the user is supposed to provide their test plan. That said,
+> the aim is to collect test plans for ease of use at [2].
+> 
+> [1] This is the test plan used for mt8195-tomato:
+> 
+> - label: "pinctrl_paris"
+>   tests:
+>   # Pin 34 has type MTK_PULL_PU_PD_RSEL_TYPE and is unused.
+>   # Setting bias to MTK_PULL_PU_PD_RSEL_TYPE pins was fixed by
+>   # 166bf8af9122 ("pinctrl: mediatek: common-v2: Fix broken bias-disable for PULL_PU_PD_RSEL_TYPE")
+>   - pin: 34
+>     bias: "pull-up"
+>   - pin: 34
+>     bias: "pull-down"
+>   - pin: 34
+>     bias: "disabled"
+> 
+> [2] https://github.com/kernelci/platform-test-parameters
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+> Changes in v2:
+> - Added patches 2 and 3 enabling the extra GPIO pin configurations on
+>   the other mediatek drivers: pinctrl-moore and pinctrl-mtk-common
+> - Tweaked function name in patch 1:
+>   mtk_pinconf_set -> mtk_paris_pin_config_set,
+>   to make it clear it is not a pinconf_ops
+> - Adjusted commit message to make it clear the current support is
+>   limited to pins supported by the EINT controller
+> - Link to v1: https://lore.kernel.org/r/20240909-kselftest-gpio-set-get-config-v1-0-16a065afc3c1@collabora.com
+> 
+> ---
+> Nícolas F. R. A. Prado (5):
+>       pinctrl: mediatek: paris: Expose more configurations to GPIO set_config
+>       pinctrl: mediatek: moore: Expose more configurations to GPIO set_config
+>       pinctrl: mediatek: common: Expose more configurations to GPIO set_config
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+I forgot to mention that I don't have hardware that uses the moore or the common
+drivers, so I'm not able to runtime test patches 2 and 3. So help with that is
+appreciated.
 
-While it gives a "+" (plus) statistics it makes the code easier to read
-and maintain (when, e.g., want to add somethning in between touched lines).
+Thanks,
+Nícolas
 
- drivers/gpio/gpiolib.c | 104 ++++++++++++++++++++++-------------------
- 1 file changed, 56 insertions(+), 48 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 5666c462248c..a9a3e032ed5b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2674,10 +2674,11 @@ int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
- 	ret = gpio_set_config_with_argument_optional(desc,
- 						     PIN_CONFIG_INPUT_DEBOUNCE,
- 						     debounce);
--	if (!ret)
--		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	return 0;
- }
- 
- /**
-@@ -2697,16 +2698,17 @@ int gpiod_direction_input(struct gpio_desc *desc)
- 	VALIDATE_DESC(desc);
- 
- 	ret = gpiod_direction_input_nonotify(desc);
--	if (ret == 0)
--		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(gpiod_direction_input);
- 
- int gpiod_direction_input_nonotify(struct gpio_desc *desc)
- {
--	int ret = 0;
-+	int ret;
- 
- 	CLASS(gpio_chip_guard, guard)(desc);
- 	if (!guard.gc)
-@@ -2733,6 +2735,8 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
- 	if (guard.gc->direction_input) {
- 		ret = guard.gc->direction_input(guard.gc,
- 						gpio_chip_hwgpio(desc));
-+		if (ret)
-+			goto out_trace_direction;
- 	} else if (guard.gc->get_direction &&
- 		  (guard.gc->get_direction(guard.gc,
- 					   gpio_chip_hwgpio(desc)) != 1)) {
-@@ -2741,11 +2745,11 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
- 			   __func__);
- 		return -EIO;
- 	}
--	if (ret == 0) {
--		clear_bit(FLAG_IS_OUT, &desc->flags);
--		ret = gpio_set_bias(desc);
--	}
- 
-+	clear_bit(FLAG_IS_OUT, &desc->flags);
-+	ret = gpio_set_bias(desc);
-+
-+out_trace_direction:
- 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
- 
- 	return ret;
-@@ -2774,6 +2778,8 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
- 	if (guard.gc->direction_output) {
- 		ret = guard.gc->direction_output(guard.gc,
- 						 gpio_chip_hwgpio(desc), val);
-+		if (ret)
-+			goto out_trace_value_and_direction;
- 	} else {
- 		/* Check that we are in output mode if we can */
- 		if (guard.gc->get_direction &&
-@@ -2790,8 +2796,9 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
- 		guard.gc->set(guard.gc, gpio_chip_hwgpio(desc), val);
- 	}
- 
--	if (!ret)
--		set_bit(FLAG_IS_OUT, &desc->flags);
-+	set_bit(FLAG_IS_OUT, &desc->flags);
-+
-+out_trace_value_and_direction:
- 	trace_gpio_value(desc_to_gpio(desc), 0, val);
- 	trace_gpio_direction(desc_to_gpio(desc), 0, ret);
- 	return ret;
-@@ -2816,10 +2823,11 @@ int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 	VALIDATE_DESC(desc);
- 
- 	ret = gpiod_direction_output_raw_commit(desc, value);
--	if (ret == 0)
--		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(gpiod_direction_output_raw);
- 
-@@ -2843,10 +2851,11 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 	VALIDATE_DESC(desc);
- 
- 	ret = gpiod_direction_output_nonotify(desc, value);
--	if (ret == 0)
--		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(gpiod_direction_output);
- 
-@@ -2877,19 +2886,15 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open drain by not actively driving the line high */
--		if (value) {
--			ret = gpiod_direction_input_nonotify(desc);
-+		if (value)
- 			goto set_output_flag;
--		}
- 	} else if (test_bit(FLAG_OPEN_SOURCE, &flags)) {
- 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_SOURCE);
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open source by not actively driving the line low */
--		if (!value) {
--			ret = gpiod_direction_input_nonotify(desc);
-+		if (!value)
- 			goto set_output_flag;
--		}
- 	} else {
- 		gpio_set_config(desc, PIN_CONFIG_DRIVE_PUSH_PULL);
- 	}
-@@ -2901,15 +2906,17 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 	return gpiod_direction_output_raw_commit(desc, value);
- 
- set_output_flag:
-+	ret = gpiod_direction_input_nonotify(desc);
-+	if (ret)
-+		return ret;
- 	/*
- 	 * When emulating open-source or open-drain functionalities by not
- 	 * actively driving the line (setting mode to input) we still need to
- 	 * set the IS_OUT flag or otherwise we won't be able to set the line
- 	 * value anymore.
- 	 */
--	if (ret == 0)
--		set_bit(FLAG_IS_OUT, &desc->flags);
--	return ret;
-+	set_bit(FLAG_IS_OUT, &desc->flags);
-+	return 0;
- }
- 
- /**
-@@ -2994,25 +3001,25 @@ int gpiod_set_config(struct gpio_desc *desc, unsigned long config)
- 	VALIDATE_DESC(desc);
- 
- 	ret = gpio_do_set_config(desc, config);
--	if (!ret) {
--		/* These are the only options we notify the userspace about. */
--		switch (pinconf_to_config_param(config)) {
--		case PIN_CONFIG_BIAS_DISABLE:
--		case PIN_CONFIG_BIAS_PULL_DOWN:
--		case PIN_CONFIG_BIAS_PULL_UP:
--		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--		case PIN_CONFIG_DRIVE_OPEN_SOURCE:
--		case PIN_CONFIG_DRIVE_PUSH_PULL:
--		case PIN_CONFIG_INPUT_DEBOUNCE:
--			gpiod_line_state_notify(desc,
--						GPIO_V2_LINE_CHANGED_CONFIG);
--			break;
--		default:
--			break;
--		}
-+	if (ret)
-+		return ret;
-+
-+	/* These are the only options we notify the userspace about */
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+	case PIN_CONFIG_DRIVE_OPEN_SOURCE:
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
-+		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+		break;
-+	default:
-+		break;
- 	}
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(gpiod_set_config);
- 
-@@ -3730,10 +3737,11 @@ int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name)
- 	VALIDATE_DESC(desc);
- 
- 	ret = desc_set_label(desc, name);
--	if (ret == 0)
--		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(gpiod_set_consumer_name);
- 
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+>       selftest: gpio: Add wait flag to gpio-mockup-cdev
+>       selftest: gpio: Add a new set-get config test
+> 
+>  drivers/pinctrl/mediatek/pinctrl-moore.c           | 283 +++++++++++----------
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |  48 ++--
+>  drivers/pinctrl/mediatek/pinctrl-paris.c           |  26 +-
+>  tools/testing/selftests/gpio/Makefile              |   2 +-
+>  tools/testing/selftests/gpio/gpio-mockup-cdev.c    |  14 +-
+>  .../gpio-set-get-config-example-test-plan.yaml     |  15 ++
+>  .../testing/selftests/gpio/gpio-set-get-config.py  | 183 +++++++++++++
+>  7 files changed, 395 insertions(+), 176 deletions(-)
+> ---
+> base-commit: a39230ecf6b3057f5897bc4744a790070cfbe7a8
+> change-id: 20240906-kselftest-gpio-set-get-config-6e5bb670c1a5
+> 
+> Best regards,
+> -- 
+> Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> 
 
