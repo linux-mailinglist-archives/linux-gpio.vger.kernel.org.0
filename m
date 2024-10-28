@@ -1,189 +1,237 @@
-Return-Path: <linux-gpio+bounces-12239-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12240-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58DD89B3269
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:03:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9523E9B3291
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:07:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F738282083
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:02:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08C3CB236E0
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B72351DD559;
-	Mon, 28 Oct 2024 14:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BPKqAkDE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 320631DDA09;
+	Mon, 28 Oct 2024 14:07:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36AA1DC734;
-	Mon, 28 Oct 2024 14:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6BD1DD87D
+	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 14:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730124172; cv=none; b=VrUByxYpcelf1h9HyAc6hcnxNLSQ+p6/gRfAYd/MiT8plEXTVOnVuIaY9DOQi+oPCnfD12Z5WI69Kfbg2X4e4tZAMkLup74ToRycydmOW/dGb3RDNpoV2yN5hVIbriBkLJArR3YOZ8q6oJ8kW2Dg9+fgHhE20mMhko7IwHsXLXc=
+	t=1730124430; cv=none; b=qzr5tHSSoZKJfYrkVze8X62plUWv9QzhVevkD1GnxWnhiXieRcLd9s/HMzL6JRwgOUvbO1u85TbuEGCVM6E+wtXgVWsTlRFkBSZ5rPmPZpcbbPG5sAPye4gkVNnzeZzBr9L6MyyUPJSOQHA4v6JDSmuFgajQicSwcB0OU+sdV8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730124172; c=relaxed/simple;
-	bh=GARURTPO3rxpQXzZwj7FF8BdkvH2AjtCyCh0MqYT5vA=;
+	s=arc-20240116; t=1730124430; c=relaxed/simple;
+	bh=cphWtKkhhPCR0SL0T9ODiGPD3s6cDdHQ8iEsC3GcO3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nfVf2zIj34qUAZkS/kmfP/Q4iVcdk/VFV3vjEj5zxj8728xEp+sjOCunYSBfKiompapja0YgoWBdwjxw/fOtw7Yn6ja+Yl9ZkoIjePZ1Gz5+wyeLyMpxdrcMqon8FDrKHgc/0omXobgA0/CjB3wXfhxdencZf+Jiu7+2pDHCyAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BPKqAkDE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1730124166;
-	bh=GARURTPO3rxpQXzZwj7FF8BdkvH2AjtCyCh0MqYT5vA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BPKqAkDEwKSvzgI+d7NCdISq1yOm+4PmPcY/g1FvCeseJW1LI6xksrH7ivDzwWxY5
-	 sGqELxzRCfM4QwZcJkbonBxQkoQj/0zgG6NAKf4D5lL0u+4YE4Zr6yPVJkdfC0F3VL
-	 nwDEgq5fKNXFTNu4mJ/ZslyE8VgdhNLc7PcFvjAgUFw94CbWQWUPZRceD9j4Y/mBkt
-	 vfsLrVEOK56FqOR7pbYISoTvp5pHgDj4+zTYPHuwwWsxIRcL4FYFG93xlG0NR4USg7
-	 wV0JoYWq/+kUZY0slHTCCObmYSLpNOygG0WBNM207xU/wdum4dvi5nzqxu21z5TPhL
-	 l/sjPvx8i1Z4g==
-Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8McYILdSctyJuivp4w/0ZPaUHtgGi4RdiDU9y9E0mOK41ckjlx378A9ft1SQsKj3pckL2cb077ON3ANUoql5XkUbtIqj+L9y4bbHfEOfqM9iIrILlpgKZv2AKUGLVWdK8/CPb53F9X5dIg8W973Oh0q++zLVmrO3oq9LeCpw+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t5QOJ-0001De-10; Mon, 28 Oct 2024 15:06:43 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1t5QOG-000rfn-1t;
+	Mon, 28 Oct 2024 15:06:40 +0100
+Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 321DF17E3613;
-	Mon, 28 Oct 2024 15:02:44 +0100 (CET)
-Date: Mon, 28 Oct 2024 10:02:41 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
-Subject: Re: [PATCH RFC v2 0/5] Verify bias functionality for pinctrl_paris
- driver through new gpio test
-Message-ID: <cda91b70-7179-49b5-9207-3fa3a1aaa4d5@notapiano>
-References: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 174A6360944;
+	Mon, 28 Oct 2024 14:06:40 +0000 (UTC)
+Date: Mon, 28 Oct 2024 15:06:39 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20241028-observant-gentle-doberman-0a2baa-mkl@pengutronix.de>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
+ <20241024085922.133071-2-tmyu0@nuvoton.com>
+ <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
+ <CAOoeyxUhnyYG3p+DQJG-tvU5vc5WYQZLLqCXW=uPcXTjq2gVfw@mail.gmail.com>
+ <20241025-truthful-honest-newt-c371c8-mkl@pengutronix.de>
+ <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
+ <20241025-spirited-nocturnal-antelope-ce93dd-mkl@pengutronix.de>
+ <CAOoeyxW5QwPMGAYCWhQDtZwJJLG5xj9HXpL3-cduRSgF+4VHhg@mail.gmail.com>
+ <20241028-uptight-modest-puffin-0556e7-mkl@pengutronix.de>
+ <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2vg3oknj3uphvbvf"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
+In-Reply-To: <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Fri, Oct 25, 2024 at 03:45:35PM -0400, Nícolas F. R. A. Prado wrote:
-> This series was motivated by the regression fixed by 166bf8af9122
-> ("pinctrl: mediatek: common-v2: Fix broken bias-disable for
-> PULL_PU_PD_RSEL_TYPE"). A bug was introduced in the pinctrl_paris driver
-> which prevented certain pins from having their bias configured.
-> 
-> Running this test on the mt8195-tomato platform with the test plan
-> included below[1] shows the test passing with the fix applied, but failing
-> without the fix:
-> 
-> With fix:
->   $ ./gpio-setget-config.py
->   TAP version 13
->   # Using test plan file: ./google,tomato.yaml
->   1..3
->   ok 1 pinctrl_paris.34.pull-up
->   ok 2 pinctrl_paris.34.pull-down
->   ok 3 pinctrl_paris.34.disabled
->   # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 
-> Without fix:
->   $ ./gpio-setget-config.py
->   TAP version 13
->   # Using test plan file: ./google,tomato.yaml
->   1..3
->   # Bias doesn't match: Expected pull-up, read pull-down.
->   not ok 1 pinctrl_paris.34.pull-up
->   ok 2 pinctrl_paris.34.pull-down
->   # Bias doesn't match: Expected disabled, read pull-down.
->   not ok 3 pinctrl_paris.34.disabled
->   # Totals: pass:1 fail:2 xfail:0 xpass:0 skip:0 error:0
-> 
-> In order to achieve this, the first three patches expose bias
-> configuration through the GPIO API in the MediaTek pinctrl drivers,
-> notably, pinctrl_paris, patch 4 extends the gpio-mockup-cdev utility for
-> use by patch 5, and patch 5 introduces a new GPIO kselftest that takes a
-> test plan in YAML, which can be tailored per-platform to specify the
-> configurations to test, and sets and gets back each pin configuration to
-> verify that they match and thus that the driver is behaving as expected.
-> 
-> Since the GPIO uAPI only allows setting the pin configuration, getting
-> it back is done through pinconf-pins in the pinctrl debugfs folder.
-> 
-> The test currently only verifies bias but it would be easy to extend to
-> verify other pin configurations.
-> 
-> The test plan YAML file can be customized for each use-case and is
-> platform-dependant. For that reason, only an example is included in
-> patch 3 and the user is supposed to provide their test plan. That said,
-> the aim is to collect test plans for ease of use at [2].
-> 
-> [1] This is the test plan used for mt8195-tomato:
-> 
-> - label: "pinctrl_paris"
->   tests:
->   # Pin 34 has type MTK_PULL_PU_PD_RSEL_TYPE and is unused.
->   # Setting bias to MTK_PULL_PU_PD_RSEL_TYPE pins was fixed by
->   # 166bf8af9122 ("pinctrl: mediatek: common-v2: Fix broken bias-disable for PULL_PU_PD_RSEL_TYPE")
->   - pin: 34
->     bias: "pull-up"
->   - pin: 34
->     bias: "pull-down"
->   - pin: 34
->     bias: "disabled"
-> 
-> [2] https://github.com/kernelci/platform-test-parameters
-> 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-> Changes in v2:
-> - Added patches 2 and 3 enabling the extra GPIO pin configurations on
->   the other mediatek drivers: pinctrl-moore and pinctrl-mtk-common
-> - Tweaked function name in patch 1:
->   mtk_pinconf_set -> mtk_paris_pin_config_set,
->   to make it clear it is not a pinconf_ops
-> - Adjusted commit message to make it clear the current support is
->   limited to pins supported by the EINT controller
-> - Link to v1: https://lore.kernel.org/r/20240909-kselftest-gpio-set-get-config-v1-0-16a065afc3c1@collabora.com
-> 
-> ---
-> Nícolas F. R. A. Prado (5):
->       pinctrl: mediatek: paris: Expose more configurations to GPIO set_config
->       pinctrl: mediatek: moore: Expose more configurations to GPIO set_config
->       pinctrl: mediatek: common: Expose more configurations to GPIO set_config
 
-I forgot to mention that I don't have hardware that uses the moore or the common
-drivers, so I'm not able to runtime test patches 2 and 3. So help with that is
-appreciated.
+--2vg3oknj3uphvbvf
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
+MIME-Version: 1.0
 
-Thanks,
-Nícolas
+On 28.10.2024 16:31:25, Ming Yu wrote:
+> > > > > > > > The Linux USB stack can receive bulk messages longer than t=
+he max packet size.
+> > > > > > >
+> > > > > > > [Ming] Since NCT6694's bulk pipe endpoint size is 128 bytes f=
+or this MFD device.
+> > > > > > > The core will divide packet 256 bytes for high speed USB devi=
+ce, but
+> > > > > > > it is exceeds
+> > > > > > > the hardware limitation, so I am dividing it manually.
+> > > > > >
+> > > > > > You say the endpoint descriptor is correctly reporting it's max=
+ packet
+> > > > > > size of 128, but the Linux USB will send packets of 256 bytes?
+> > > > >
+> > > > > [Ming] The endpoint descriptor is correctly reporting it's max pa=
+cket
+> > > > > size of 256, but the Linux USB may send more than 256 (max is 512)
+> > > > > https://elixir.bootlin.com/linux/v6.11.5/source/drivers/usb/host/=
+xhci-mem.c#L1446
+> > > >
+> > > > AFAIK according to the USB-2.0 spec the maximum packet size for
+> > > > high-speed bulk transfers is fixed set to 512 bytes. Does this mean=
+ that
+> > > > your device is a non-compliant USB device?
+> > >
+> > > We will reduce the endpoint size of other interfaces to ensure that M=
+FD device
+> > > meets the USB2.0 spec. In other words, I will remove the code for man=
+ual
+> > > unpacking in the next patch.
+> >
+> > I was not talking about the driver, but your USB device. According to
+> > the USB2.0 spec, the packet size is fixed to 512 for high-speed bulk
+> > transfers. So your device must be able to handle 512 byte transfers or
+> > it's a non-compliant USB device.
+>=20
+> I understand. Therefore, the USB device's firmware will be modified to su=
+pport
+> bulk pipe size of 512 bytes to comply with the USB 2.0 spec.
 
->       selftest: gpio: Add wait flag to gpio-mockup-cdev
->       selftest: gpio: Add a new set-get config test
-> 
->  drivers/pinctrl/mediatek/pinctrl-moore.c           | 283 +++++++++++----------
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |  48 ++--
->  drivers/pinctrl/mediatek/pinctrl-paris.c           |  26 +-
->  tools/testing/selftests/gpio/Makefile              |   2 +-
->  tools/testing/selftests/gpio/gpio-mockup-cdev.c    |  14 +-
->  .../gpio-set-get-config-example-test-plan.yaml     |  15 ++
->  .../testing/selftests/gpio/gpio-set-get-config.py  | 183 +++++++++++++
->  7 files changed, 395 insertions(+), 176 deletions(-)
-> ---
-> base-commit: a39230ecf6b3057f5897bc4744a790070cfbe7a8
-> change-id: 20240906-kselftest-gpio-set-get-config-6e5bb670c1a5
-> 
-> Best regards,
-> -- 
-> Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> 
+Then you don't need manual segmentation of bulk transfers anymore!
+
+> > > > > > > > > +     for (i =3D 0, len =3D length; len > 0; i++, len -=
+=3D packet_len) {
+> > > > > > > > > +             if (len > nct6694->maxp)
+> > > > > > > > > +                     packet_len =3D nct6694->maxp;
+> > > > > > > > > +             else
+> > > > > > > > > +                     packet_len =3D len;
+> > > > > > > > > +
+> > > > > > > > > +             ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(=
+udev, BULK_IN_ENDPOINT),
+> > > > > > > > > +                                nct6694->rx_buffer + nct=
+6694->maxp * i,
+> > > > > > > > > +                                packet_len, &rx_len, nct=
+6694->timeout);
+> > > > > > > > > +             if (ret)
+> > > > > > > > > +                     goto err;
+> > > > > > > > > +     }
+> > > > > > > > > +
+> > > > > > > > > +     for (i =3D 0; i < rd_len; i++)
+> > > > > > > > > +             buf[i] =3D nct6694->rx_buffer[i + rd_idx];
+> > > > > > > >
+> > > > > > > > memcpy()?
+> > > > > > > >
+> > > > > > > > Or why don't you directly receive data into the provided bu=
+ffer? Copying
+> > > > > > > > of the data doesn't make it faster.
+> > > > > > > >
+> > > > > > > > On the other hand, receiving directly into the target buffe=
+r means the
+> > > > > > > > target buffer must not live on the stack.
+> > > > > > >
+> > > > > > > [Ming] Okay! I'll change it to memcpy().
+> > > > > >
+> > > > > > fine!
+> > > > > >
+> > > > > > > This is my perspective: the data is uniformly received by the=
+ rx_bffer held
+> > > > > > > by the MFD device. does it need to be changed?
+> > > > > >
+> > > > > > My question is: Why do you first receive into the nct6694->rx_b=
+uffer and
+> > > > > > then memcpy() to the buffer provided by the caller, why don't y=
+ou
+> > > > > > directly receive into the memory provided by the caller?
+> > > > >
+> > > > > [Ming] Due to the bulk pipe maximum packet size limitation, I thi=
+nk consistently
+> > > > > using the MFD'd dynamically allocated buffer to submit URBs will =
+better
+> > > > > manage USB-related operations
+> > > >
+> > > > The non-compliant max packet size limitation is unrelated to the
+> > > > question which RX or TX buffer to use.
+> > >
+> > > I think these two USB functions can be easily called using the buffer
+> > > dynamically
+> > > allocated by the MFD. However, if they transfer data directly to the
+> > > target buffer,
+> > > they must ensure that it is not located on the stack.
+> >
+> > You have a high coupling between the MFD driver and the individual
+> > drivers anyways, so why not directly use the dynamically allocated
+> > buffer provided by the caller and get rid of the memcpy()?
+>=20
+> Okay! I will provide a function to request and free buffer for child devi=
+ces,
+> and update the caller's variables to use these two functions in the next =
+patch.
+
+I don't see a need to provide dedicated function to allocate and free
+the buffers. The caller can allocate them as part of their private data,
+or allocate them during probe().
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--2vg3oknj3uphvbvf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcfmm0ACgkQKDiiPnot
+vG/OvQf+OF2IzP8yZ65Ke0Cq9hXkJZCpDCF4vKc3f2pLJQ/RjGNeubOY0v36mFwD
+5tZBs5Y7Md645uvjFh9VNg8YzW45+0dnzgzjGC28wj7hZpAW+yxnjNJ0zdpfBOPF
+pdwcIa8OLdqZ6exM1yGAyzV/en/klaL3oHu6RB8TmEMig/NQljdIF9nyslaqIAa4
+T1f+B7NmyH4nauAdBBhAOheqdJiO+eciscoFtxmOh4U5PQqGqR7VoBhkWrkx3JD1
+CqF6D9sNT+SP91/wuNPin6n85l/YDxSFkiKBG59p2do0l/vcwcWQ0denp4PT0dhk
+ZBpf0j8jPbNWS+ad8NpEyLE42beDRw==
+=o2YF
+-----END PGP SIGNATURE-----
+
+--2vg3oknj3uphvbvf--
 
