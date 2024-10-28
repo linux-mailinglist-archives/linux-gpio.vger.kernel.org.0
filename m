@@ -1,75 +1,76 @@
-Return-Path: <linux-gpio+bounces-12208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12209-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD3079B2B4D
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 10:23:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B90BA9B2B55
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 10:23:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94E711F21917
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 09:23:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBDDE1C218C6
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 09:23:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7BB1C7B7F;
-	Mon, 28 Oct 2024 09:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCBB1D1E96;
+	Mon, 28 Oct 2024 09:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QP5javdL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VukNbakX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C3915E8B;
-	Mon, 28 Oct 2024 09:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901F41B6D09;
+	Mon, 28 Oct 2024 09:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730107376; cv=none; b=f+hy22dylM6qGUOZ6kbXUu9kF8OxuBXWi4bGiTsUMKcdsYEqAGXDRx4huVGIPYy4fk0242I4MSIiD7nwArctwZOLJAnptPsLZnQY7sQvhTApn0mwie/liCX+74Zx5floTz2R2LMXJrQLHn4n4axBiXW4jh45w5q0/+r1Wsfo12I=
+	t=1730107378; cv=none; b=mUrCRkkv0AdMn7hci4mxNxzmzniHVGekA66uADZ/kam0KL8wLvKNQyy8W/u3pwAuBd+nLTFN4X+MsJjXA08YDt/bkc/KJPlGsIPUylrkAn/MUwqTK4WMXRod3JYSdj1WHMa2CFz11I0P19MP5ToH4koiOOmeWFoOXkyO9hvAC+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730107376; c=relaxed/simple;
-	bh=UwXq8/s+/ZWgzHv8GxfRHapMvLu4ujsMuyVEiwqZOGw=;
+	s=arc-20240116; t=1730107378; c=relaxed/simple;
+	bh=L3bYZfWAgZW5JNaWDhl/QF4KE7601D4KEfmVId1ELs0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TouiFjrVTT7v1FTLONVwqqaGUOJ1Qz/XAEaKS8qslAJ9zeUyw0MOhXJ71AmoVG3CsW1lVq/WOwCBxaQqk19MIf0aPMuBq5fxA9Aqx6ukZgdrK6MfKE7i1+y6qHn/7rRG+je5224wQGLsjlsqEW4UWCBRMKIS92WX4A0Gc0vPzXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QP5javdL; arc=none smtp.client-ip=209.85.167.48
+	 In-Reply-To:To:Cc; b=D5sICwu9vAEonyb6f0lYCWFhJssdL2Y5zTPnUf0S9oCYt2FssVG014tRsDlKbGg2Qt5mfApnw12haUkpwomVR6vuzKfAogjtqbbEcinuUxfMp7ZcZ0WZ0R+QTBL34GuxaPjIxIUACA0OQrPR7afn+7nIHyL3cypMeNZ97fTgwDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VukNbakX; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-539e63c8678so3975810e87.0;
-        Mon, 28 Oct 2024 02:22:54 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539e13375d3so4516167e87.3;
+        Mon, 28 Oct 2024 02:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730107373; x=1730712173; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730107375; x=1730712175; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FgC/yWGHmE4AGKMxUzujN8ihPZGQwuq5HhMl1Sf1wCU=;
-        b=QP5javdLBTDENr7mInSkLlcblccY5IUfAjaXnwZ2BhCLquF/1BIIS/6st9+WDiwAPn
-         3L9eK0sfadmvaMeGLb4WSKV10CYlz7WnpT1xv4+g5x0BXO5s1hwEduZheVGfwlD/Cm4b
-         iggNXFKjdnsdD73P7li0NtegW1yvfNQpMS1TOjC4iZz1bYl91KYti8RFvatvn5SV6oAh
-         n8xIc5DlsQC9p1NxvYd814fJk/BcL/EgRuLG+McvsO9eSTIbdBvOocUgpyxu8vHaE2hL
-         lLk6DNkHkIhAYkK7lQYXPxvTnitiUyNqBZDcfKDppSZ9mCTVz0AYFGO0LguR3CmHISVZ
-         Y9IA==
+        bh=5RxyOtzTNaPKWcI+VUBDYXPbW1xC12WwCJqtMGjine0=;
+        b=VukNbakXIgmSheJYC/u7SMMBdfDV+1xoW9dcQrCgFpVHz14ZtBnDY9E7t/mLCYTqyr
+         mWKMTHlImp/h14FaTJhq10Khp5NQ4R5vzo2gV8OuEJgrJN/vpkV9bsqoHcc7lCEK7/Xn
+         za7L1ddCX2WN5QiFFmjRSKse2Qb4GoFsDYH+CGthsmbdKfRphqwN40Bu/ndpA7Z5UWH3
+         sHjPfGc78hcNpcKeVTAKtPPDRwvn1Ru5mrJFFogMaGau7k/CG7ku8ek7zCFCpPEwddiO
+         R4rE6oe5Phx0t2mV7uJuFNFRYYcJBWdwqMp3AGVKv6toisoqN+wYG4UPZEyllMKVGuKf
+         27qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730107373; x=1730712173;
+        d=1e100.net; s=20230601; t=1730107375; x=1730712175;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FgC/yWGHmE4AGKMxUzujN8ihPZGQwuq5HhMl1Sf1wCU=;
-        b=QJ/phsWqkIa90CaJFD7vvtf1jRGjDar8+eafeEkTSq/MhMOXl7Nxx7tI0v6Xa2HX2T
-         JIZUO9NXnqdniwaEUciA5ZqMFDc4BvZKHQubcA6WUjHiKz9SGWxPJmwdRaG8a3lrVNDG
-         XqNyGyIFDzjMvikzHRn/mLkPi+3EZHRbyuCe83EBaxxvlGIMHTl/XmZYcQiudWvar6BS
-         fBsFxNjaWYX6P5xSFp+C0Seifx1/Q9ydoE0tufTADhgNrLCb0FhWlZNbNkAuBGf/JS07
-         5SLkssMl1njMoznXbwgL9ZQmiv0JVVKz/xDr9B/iZTTLYopsR7oVjPpd54nMf50e656o
-         UWzg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1w2fO5ICWK70SaS22BwNW/m1gMLJS6dpD59wO/2Vgmi8F/GHCtJAVXgIKZ+E+9rUflzmcjPx8BA4Q@vger.kernel.org, AJvYcCW444Ii2EqGksYdDMYrvkGtui5AqUlpSS3a3sIGiAdt9p4qxCIByHMEuOxPpkHyiorqm+N7SXzmsrgt+4TJ@vger.kernel.org, AJvYcCXgFDpZrH7eewl1ulUjK3NhOmbtGW92wE0ZFZkLfO7xpN2u65CmOPvnUGuSUChGhcOfOYaDilbvEKqQ4eLghORZsl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0a1C/Sf/E6O0JGKoknvO4KeXpwbv6HQ6h2dVaUtWabdX9coZL
-	tIqFCeEU09rI84Teu1q3WyMCcEGjx3vXphoQkWoZHzf/aBMDmBZZ
-X-Google-Smtp-Source: AGHT+IE+Ev9N1xNlkGTKVpoO2qeGQ9vWoj/Z7Tf2T0auYtqb7BI0SMITAYGyR+Qtz9DG724XXJZWJA==
-X-Received: by 2002:a05:6512:318c:b0:539:918c:5124 with SMTP id 2adb3069b0e04-53b348df188mr2752749e87.31.1730107372891;
-        Mon, 28 Oct 2024 02:22:52 -0700 (PDT)
+        bh=5RxyOtzTNaPKWcI+VUBDYXPbW1xC12WwCJqtMGjine0=;
+        b=bu7t3v6mjnoL2Bj5QmWmu9MUdgGFkCHfJHrH7YjJ4sqBeHXW7IpNZ3a6616lRfDIxX
+         Amx598QY+XAG/s0i6y1L6yoPgP9BWXbHmDAh1uyeCjc6J6pTmO7HQ7vaLEAZlGpf1OAV
+         b8+y+Ov6qSQrjZbHuqQKn01S9UBCuOe++on/HJyI/aTU0ChNSrrTcDO1biLMuu1miCkn
+         S94bJO8QccOMBqD/BjGJAgnhemIrD5zVzPOeeEK04dzQ8AvHwQZXWubZgd3t8RYoAkYj
+         fSr2l2tNkP/fk9Znppi949htWG03yzU1fXLBkiIg0vlc7LliRY7QFLKMOThNoD+VknFJ
+         ur0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVfHOz1nlcJ0vuH9q+4sQmb4E8FJs/5M+M7aFITMHHNcOnF8FCChK/KH9jX0qwzVCE+lRuMU2FqYko9wHq7@vger.kernel.org, AJvYcCVvY/SHDnO8CdzBUWqFtRPWm254IkJlala66XV1py1dw7o/fslz4VpZSaMJ5q+yZQ/Ss55QqAqxXPIF@vger.kernel.org, AJvYcCVypELGMJdbNjaHCF5TsEi8OaoCYfCq1XaT9rV4J4BKDxNKUIzADgYNAewoMonzV3QTmeMc9HxCDOHtrDcKzQLonhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEUJMwXVcKjUJ0P/ieNoxTb50YHAAJsWiQbD/KRQip1+2D2n5J
+	wRld8U09AbPQbLOF1oPv+u4lkEs2aoq45v9K7Ib7v8KfFbBCiBTF
+X-Google-Smtp-Source: AGHT+IFRcgf3ECiwU8IQI519Q27K78Uui6OJ25rmRPH87iV2KN7tLz/GFEpPWHJBQHxdCfMSYb6I4w==
+X-Received: by 2002:a05:6512:3c8f:b0:539:8fcd:524 with SMTP id 2adb3069b0e04-53b348e576amr2787084e87.30.1730107374349;
+        Mon, 28 Oct 2024 02:22:54 -0700 (PDT)
 Received: from [192.168.1.105] ([178.136.36.129])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1af331sm1043785e87.152.2024.10.28.02.22.51
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1af331sm1043785e87.152.2024.10.28.02.22.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 02:22:52 -0700 (PDT)
+        Mon, 28 Oct 2024 02:22:54 -0700 (PDT)
 From: Markuss Broks <markuss.broks@gmail.com>
-Date: Mon, 28 Oct 2024 11:22:29 +0200
-Subject: [PATCH v4 01/10] dt-bindings: arm: cpus: Add Samsung Mongoose M3
+Date: Mon, 28 Oct 2024 11:22:30 +0200
+Subject: [PATCH v4 02/10] dt-bindings: hwinfo: samsung,exynos-chipid: Add
+ Samsung exynos9810 compatible
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +79,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241028-exynos9810-v4-1-6191f9d0c0f1@gmail.com>
+Message-Id: <20241028-exynos9810-v4-2-6191f9d0c0f1@gmail.com>
 References: <20241028-exynos9810-v4-0-6191f9d0c0f1@gmail.com>
 In-Reply-To: <20241028-exynos9810-v4-0-6191f9d0c0f1@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -96,37 +97,38 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Markuss Broks <markuss.broks@gmail.com>, 
  Maksym Holovach <nergzd@nergzd723.xyz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730107370; l=977;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730107370; l=1257;
  i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
- bh=UwXq8/s+/ZWgzHv8GxfRHapMvLu4ujsMuyVEiwqZOGw=;
- b=UEC62CDHdhTaw/gc44/m2/6av2OQGEdphnBwv4+sZ2AFqTkHx3KbF0dwtXTALXrc0rbPEIvPc
- dltazm5zyzQD/XEstuSvL2pbQ2hyrGcl3pK+ymHuyUP2zlh11igxW3O
+ bh=L3bYZfWAgZW5JNaWDhl/QF4KE7601D4KEfmVId1ELs0=;
+ b=fdmZQ/KmML9TiWtD/gFokOgPOpMn4xqVFodJLt1oAD+ah1Y6wFDp03p5Zj/xmIK58ZWzqjqU4
+ iERMTvlu9bGDJ4JT02BbXMbWuCLTcYaowmbeanPM0TnmD7VmQmlOqZL
 X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
  pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-Add the compatible for Samsung Mongoose M3 CPU core to the schema.
-Mongoose M3 (codenamed Meerkat) is the big core in Exynos9810 SoC,
-designed by Samsung. It implements ARMv8.2-A ISA.
+Add the compatible for Samsung Exynos9810 chipid to schema.
+Exynos9810 is a flagship mobile SoC released in 2018 and used in
+various Samsung devices, including Samsung Galaxy S9 (SM-G960F),
+S9 Plus (SM-G965F), and Note 9 (SM-N960F).
 
 Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
 Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index c54d20dd9d7efcbbfe73e5a63fd2f61d1e010d29..2fa7d3513da839ddfb2844628b1249567226a025 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -207,6 +207,7 @@ properties:
-       - qcom,oryon
-       - qcom,scorpion
-       - samsung,mongoose-m2
-+      - samsung,mongoose-m3
-       - samsung,mongoose-m5
- 
-   enable-method:
+diff --git a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
+index 47a8d98346ebb83a7ea4d11e2fc7fc87df6bc5ad..385aac7161a0db9334a92d78a57a125f23ca1920 100644
+--- a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
++++ b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
+@@ -24,6 +24,7 @@ properties:
+           - enum:
+               - samsung,exynos7885-chipid
+               - samsung,exynos8895-chipid
++              - samsung,exynos9810-chipid
+               - samsung,exynos990-chipid
+               - samsung,exynosautov9-chipid
+               - samsung,exynosautov920-chipid
 
 -- 
 2.46.2
