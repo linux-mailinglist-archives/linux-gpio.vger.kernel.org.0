@@ -1,90 +1,120 @@
-Return-Path: <linux-gpio+bounces-12259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12260-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DE029B3492
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 16:17:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF22A9B372C
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 17:57:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 047561F2284E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:17:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AA201F20FF7
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 16:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 549861DE3DE;
-	Mon, 28 Oct 2024 15:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0BB1DF248;
+	Mon, 28 Oct 2024 16:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oH2qWQW2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h32sXUpa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB541DE3AC;
-	Mon, 28 Oct 2024 15:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9B5155A52;
+	Mon, 28 Oct 2024 16:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730128646; cv=none; b=kvpt5aUErOdHitnwbnqBDPeIxMdVXdFmnGPp2IVx3EA2pw3Kvg3WMbX15snbx8p9KmFK67mBZuelqU9NUXpzdYuGqswx0lfCtQAGkD5lclBU5CO1QeGHmEKKvzhEhPHSi74ap2nwq9JxqHoKQQ4n3RwILbKBwELVVmQpg3QULYI=
+	t=1730134649; cv=none; b=kyv4APEPOGGnlKqhxbNsJ1s6XYxKfu3ENBWaBfVwd4b8KMqsphbPKy6pay3Dd9q8m3mad85QVkMExF/jp7JPqvG27g8qmwQeeBAhJlFKYcS09ZPRuhX4skOYQZEh3oEqEeXgqaRZRR4a/xq0QRR7jvFQpcVx+XYSoKNFzdARLQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730128646; c=relaxed/simple;
-	bh=YGXlZ5gnAyYWdYxwnCbFJwbSE3vRvAclYuWmrfxjDQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=udX2A76Nfzh/z+nLza1tAN4iSxMKlVReZBLXqhXt8PZvfiBw2HgzKsMWSmkN8tomSKxr0No/rXpRp/JjKCVsjcA+qfcsHJWy750wHaqXcsj++A/oxYTK9p/S/YmHcjM7wiuIpFNKVkmBn9Pc0fvdsyeW5CE7taMOjzhLjRICA6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oH2qWQW2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730128644; x=1761664644;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YGXlZ5gnAyYWdYxwnCbFJwbSE3vRvAclYuWmrfxjDQE=;
-  b=oH2qWQW2z9bG39vJbJSWinu6C22upQpx8yPSbE4fUtCDXFpwdj+qFyoq
-   0FPX7dRRE4mMjWMPo2USD791w6sDkwtC97fSuiLR6M0gOyQse6NybYsl1
-   v2/GzJarZbZNARZbOoibo3F3PS0KJyRdOU50WDc0qoYKK9NgYiA4wSt9T
-   q+5CQ97H3/DZ1UN/x3lAajbsMY51c18Br22ixmzJtI0S6w5Rmr8NrgPPx
-   WTw2uZuNwRbCWz934vxVS1dCnKZw9BNOP8bMpWuKafn28RXUpM8spiq1e
-   n38FUZfee/ghGxQzufWTYpN9DuxxJNaQyyGS8AV5K65XOXltvDVIxPn9x
-   A==;
-X-CSE-ConnectionGUID: oBolXnIlT6+J+kmk8HDmEA==
-X-CSE-MsgGUID: byIKYWZiTjS9D0ujnODw2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11239"; a="29160481"
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="29160481"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2024 08:17:24 -0700
-X-CSE-ConnectionGUID: kgpxJf7HT/ipJylIE8GXOw==
-X-CSE-MsgGUID: dKDNvMGESbKdvVQ/NWhwbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,239,1725346800"; 
-   d="scan'208";a="81707290"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 28 Oct 2024 08:17:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id DF9E023D; Mon, 28 Oct 2024 17:17:20 +0200 (EET)
-Date: Mon, 28 Oct 2024 17:17:20 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: elkhartlake: Add support for DSW
- community
-Message-ID: <20241028151720.GP275077@black.fi.intel.com>
-References: <20241028134318.1156754-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1730134649; c=relaxed/simple;
+	bh=2KecpOx0TISZK4hZM9Euk6MQyQdvrq36DoUE8N/sBa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A0FdLtj2k9c/FujUgWx+cdZ74RgO5IxXvK+DL4Z4X+ehgRSgwA2hmvFHGqRwBniyyrapqofX/t7WMMBgol+Ufh4fNqB4SuwArQ+wvfSK5VwAC1VU5AmjGjLPVVMTbyaIqEJ/gYF+qHVpdDml9nn+Pvu9VluT/KXeUDdQoONKXnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h32sXUpa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13830C4CEC3;
+	Mon, 28 Oct 2024 16:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730134648;
+	bh=2KecpOx0TISZK4hZM9Euk6MQyQdvrq36DoUE8N/sBa0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=h32sXUpaAnVumDOyku8/9Z8DVogCkQPwAm2biBrs1JAmpJvbPnG+3JG00FuOLC9qf
+	 K2+Wb6dI8G5kHI9GLzJCjIWgGXO/rP3y++vElJlzSjwS/awLaBvhmuHYe3ZGl6lZj6
+	 3YR0psC9Aih1eFll7R/64Qjq0X23cxSr7/jtdjS3Jq9qddATKWZrWaNA8CzwNRrgB7
+	 qv9/PEXHzFs7uRvlOYv7cnbu9OSfwKtyei6r+FQnoYvUhFhzqQU4MpnzTtROZtwBQP
+	 xwUjRM89PN2ZlqEJg8LMH3MRy2Zw36WGt8KpXzEx3UoLCtV6Ye4TlfkFoSWZuqJEfO
+	 4+3uMVhYdbpTg==
+Date: Mon, 28 Oct 2024 11:57:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
+ address to dynamic bridge nodes
+Message-ID: <20241028165725.GA1106415@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241028134318.1156754-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
 
-On Mon, Oct 28, 2024 at 03:43:17PM +0200, Andy Shevchenko wrote:
-> Hardware has a DSW (Deep Sleep Well) community that might be exposed
-> by some BIOSes. Add support for it in the driver.
+On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
+> When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
+> incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
+> bridge, the window should instead be in PCI address space. Call
+> pci_bus_address() on the resource in order to obtain the PCI bus
+> address.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks for working through this!
+
+> ---
+>  drivers/pci/of_property.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> index 5a0b98e69795..886c236e5de6 100644
+> --- a/drivers/pci/of_property.c
+> +++ b/drivers/pci/of_property.c
+> @@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
+>  		if (of_pci_get_addr_flags(&res[j], &flags))
+>  			continue;
+>  
+> -		val64 = res[j].start;
+> +		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
+>  		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
+>  				   false);
+>  		if (pci_is_bridge(pdev)) {
+> -- 
+> 2.35.3
+> 
 
