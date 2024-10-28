@@ -1,105 +1,97 @@
-Return-Path: <linux-gpio+bounces-12233-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12234-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE6BB9B3116
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 13:54:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD2359B312F
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 13:59:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D2AC2824C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 12:54:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFC0B1C20889
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 12:59:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 131501DA2E0;
-	Mon, 28 Oct 2024 12:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D524E1DACAA;
+	Mon, 28 Oct 2024 12:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCgtsLct"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SnCfI7vX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996D01D6DAA
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 12:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDEB1DACB1
+	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 12:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730120081; cv=none; b=GhZK1Ng6q+28GfxcwYTFkOt3PqIdFh/UL10fg8UyvloYtfpOQDZpTVJMgu4i9dwWX7ecSqCvgjgIMikR5iS2JbAM2zcrw7Znq07G9+q7eM0WZGwN1rZlHIqKzGOg8skFFoUwkKqJxPYrj7fI+AzO5Qy/xj6eRzVmyqyA9OGtg5Y=
+	t=1730120360; cv=none; b=mGzEpwSYbkYpdlvYHOWKH5IPAvjCZz4aEkZzpclzfRnj7SeEIWFPJCkpdJRH7XIfwQ5qbw0InLjpvBUcvepP8RGBOXI54thPlyvbk+8BZMjmTTFgIlVzX3K9aAs2aVzQIIAwYeKYj84xScqp7Apa4IlvSq+cyUeUhizjNvao8A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730120081; c=relaxed/simple;
-	bh=seI8UO8liH/MjIwO0BVJ3zPmW5DvN1lsIKmmEv7NXaM=;
+	s=arc-20240116; t=1730120360; c=relaxed/simple;
+	bh=8FPOv073XmotRWP+rOXc9l76Bgjr4K2jU62eaHorWlA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ezbLR1g0DemYZTrYnjy2sHRQwl0JbVe4niBarn0M7QzBNOEFSyW0i1RYwX27WqQYlM9YouqAIdaARiwBlgB4uJEeO2Sq/crt/OCASQ5uoY+POvdEaOgvWk8AjbntKTSaI+IBjKXrDEkhdxwckiwmWncPwG48JntYJRQU7xzb0PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cCgtsLct; arc=none smtp.client-ip=209.85.208.172
+	 To:Cc:Content-Type; b=UthHaXuywwXU5F8q4SE1lqtJDJr9wn06SNwmB+wxf4rOSWFerUi8F1r7sRSjlGKYkj7xLhVzWziuNJpzOQVtLrvJEwguh0dTdyvVgnmbxDrvd4f2B4n3etMyzHkZSwHcYrnT1c6pXctTsIjsUP7pmlF0A45cZbt8tgpItqgAdIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SnCfI7vX; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2fb5111747cso38146981fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 05:54:39 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539ee1acb86so4266592e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 05:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730120078; x=1730724878; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1730120357; x=1730725157; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=umup54zPr/YxS1kzJqH2Mzz16zItuDuoZj7kmVQKCCM=;
-        b=cCgtsLctISLLOVkD2JfHx3DXEAKRHbBvGVz2c3+v4KfWascqOPvaLBpS6DHQ4uWQBB
-         CHNn8/f7SxNrEqCV5zhHdRGrvaiUd6VxT5k8o5hI/kAx0ebEHRud7SorqlMSieIpNfQt
-         VeqZ2oaHDKQM4UojFdMIHlgDwSMmvXYWnczte2kKdZTUVGapjSL5z1LDSqVHBFs0fcj+
-         J4fFuYyp3kVoocZ35CIDJKa6cGuSbnmltDC3Q7Puu8vepXzTHJ4ZDw3L5gHlSAAeguwv
-         f1tqeNoOALR1Dm4jqdG8fehR6Yv4LB2G9Ar9I1UQxIN7ODeXwZvRAa26vzae/xhQGzjD
-         PJNQ==
+        bh=8FPOv073XmotRWP+rOXc9l76Bgjr4K2jU62eaHorWlA=;
+        b=SnCfI7vXHl6HHE7GwLtS7AXDj2CHgM0IAmvoPLalA66p8Na07OBG7mmbD9xBVYfAqs
+         iRzJdHy/hbUFeGXSD/x1iy+GZZj0Xu4vmjCPYWHtH9uYIU6H+JggvMFG84oOBzKXdxz1
+         PDIZBJTGJ3pt4vnRo5taMz6RV5CLooDi9P7PO5Sl9wT1wZBTv4BYw6ZmeiBBTVJyp3Bd
+         N9OpLSDh2ulq3z3Ocp4sLuZerqXW5+NYhqOP3UUxlzCvKYHHSc7nvi8ay+4Vo0NjcAYM
+         8SgLJyfYAOHurMJXqZGGEcLeqoy59/EhN1knvTLScDi/2+RW/Ohv+KXPssUCd0eRR8Fd
+         9qWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730120078; x=1730724878;
+        d=1e100.net; s=20230601; t=1730120357; x=1730725157;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=umup54zPr/YxS1kzJqH2Mzz16zItuDuoZj7kmVQKCCM=;
-        b=T/fXAUEE6C84UalVuZhDjbiRvFTi+AzjEHA3wnkPHM4tiads3GPdDgG1aH3pqUMX1d
-         B852B18uRtoc5l1GmEZ1ASgF5okGXdt7a+3OFcj4LmZ2OYtLxFSoJhVGQRkcAgAk3X1j
-         WIEyC9Ph0u96gd1//dOnHT2E7Cr1dZPwQq5KdL6ol8RMfhe2XQVPUcgwFjyitSlLrdwZ
-         VejDWqS3DpVzcxLTNzlGpJSV0agEl19jhFF6MWRxiMFPgF8Cvn8PTEtHpfqbUdBCNpGT
-         dBISble7CWCl2K8lRaawBcnii37wRCZ8ukaUxch3ZrTzS1zUM6fZDMnbxsAyQ/7whW9I
-         z2RA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJBYw0qr3IhCvQSMTbkB5eXqeR5Vg+5F4XEqO9HH/eE49c9BiG8X7rd1XkdZL9k/J+p3h4m4Ic/5FK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMBuC1qW3XQPPpbADMDfWNnGiMbJ8IiYm3uTM8AlOnDn/DOdCq
-	e/plkhtkfjMCVXRvUMJMVGBgFOQfJNDuav27lV/Y1aDkLDVO2iu0h6b2SWt9+k8KhHC1RYXaf50
-	5+wZCVXmapWWNsgEYiQ2gCtvmZFTA+5Em14EYexVw0W0Gw0Dp
-X-Google-Smtp-Source: AGHT+IE0RFORu2qhCHVTzNL8EmTHxZvAv0CpOPcLoW/ThHRI1Ejo/uY+Ar9l2qfXZiVTY6d//qDHWFdO9TE8RAOq4Ro=
-X-Received: by 2002:a05:6512:3b98:b0:539:f51e:2465 with SMTP id
- 2adb3069b0e04-53b348cad03mr3726018e87.22.1730120077585; Mon, 28 Oct 2024
- 05:54:37 -0700 (PDT)
+        bh=8FPOv073XmotRWP+rOXc9l76Bgjr4K2jU62eaHorWlA=;
+        b=RGpmFYLcECTlLS1IVilE45FUAxHA7wCGv6TylCVUQpjg4ne3bRj17SHk7G5GAEw/2H
+         jVQnmPwg44BPsU1uE82epbq4p+VmQtKAWdc9d74hOOxZwepctyM3bSAGebXwRGVJTwAO
+         HZStW5Ck1izE/WrwkAsAK/wogW42b1L6AGbTETApzU24KVAee0g5NEi/pcYDmUKE2UI4
+         G5FD2yKauE/yMOLkfbABy3gw22PdL6lx6kyak5IzGqcqWihFn+8Ryyl3X8SsVW4VADJV
+         GgDGp9vzU9xAtNWuWqexT+NEHASbCYSmrfPdwfS1gdOBFhjuMMzuq5F9X/wWs6xaKeNl
+         y0mA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpGe2wpfAIPAtY3S1iGebxz61liW0PfJY7MfP8Xo2BqEAc4wNOXPpJgZgVL5ha0jDd1sU5OAEUiAfP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlRPErUTP2y0+BSGJaZjl3ijuZKmYKtiWhaRmMV5/yncgyFJEq
+	LwsovDuhKCZ4hLv647XOXpnUN0tzs4fXMCdCs34f/2jZy9MI5K42xvGUhHkQke/lCNRATQ2ZoOh
+	TAajvYYxBQPU0Ec36UTwicgj6hruBBHfy6xPM6sLZKDc9huEK
+X-Google-Smtp-Source: AGHT+IGx7tfNH0mZRuKTFpu/Lt1lVaJ5wzth2GIk/zrU6MEJ3/k+kc+DMdfavO6Q5ppLTlt1sP5ACchOTuFdcWBszp8=
+X-Received: by 2002:a05:6512:3e11:b0:535:66ff:c681 with SMTP id
+ 2adb3069b0e04-53b34a1b681mr3290500e87.48.1730120356663; Mon, 28 Oct 2024
+ 05:59:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4b5f1306-dc01-4edc-96d3-b232b930ddf2@stanley.mountain>
-In-Reply-To: <4b5f1306-dc01-4edc-96d3-b232b930ddf2@stanley.mountain>
+References: <20241023104406.4083460-1-billy_tsai@aspeedtech.com>
+In-Reply-To: <20241023104406.4083460-1-billy_tsai@aspeedtech.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 28 Oct 2024 13:54:26 +0100
-Message-ID: <CACRpkda=5rSCjoW0ScNg3pFFOjgSQEv8v+0ZkAw-d0pkF5CaZw@mail.gmail.com>
-Subject: Re: [PATCH next] pinctrl: spacemit: fix double free of map
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Yixun Lan <dlan@gentoo.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Date: Mon, 28 Oct 2024 13:59:05 +0100
+Message-ID: <CACRpkdYEbczXUFD-CFpE6SYiqhwTdxS+w5+dDtLF=2BmeiJeVg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aspeed-g6: Support drive-strength for GPIOF/G
+To: Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: andrew@codeconstruct.com.au, joel@jms.id.au, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2024 at 10:39=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
+On Wed, Oct 23, 2024 at 12:44=E2=80=AFPM Billy Tsai <billy_tsai@aspeedtech.=
+com> wrote:
 
-> The map pointer is freed by pinctrl_utils_free_map().  It must not be a
-> devm_ pointer or it leads to a double free when the device is unloaded.
+> Add drive strength configuration support for GPIO F and G groups.
 >
-> This is similar to a couple bugs Harshit Mogalapalli fixed earlier in
-> commits 3fd976afe974 ("pinctrl: nuvoton: fix a double free in
-> ma35_pinctrl_dt_node_to_map_func()") and 4575962aeed6 ("pinctrl: sophgo:
-> fix double free in cv1800_pctrl_dt_node_to_map()").
->
-> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC"=
-)
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 
-Patch applied!
+Patch applied.
 
 Yours,
 Linus Walleij
