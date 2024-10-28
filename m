@@ -1,230 +1,203 @@
-Return-Path: <linux-gpio+bounces-12206-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12207-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C45809B2B07
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 10:10:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D55FB9B2B4A
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 10:23:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA81A1F217F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 09:10:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66C2C1F21F5F
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 09:23:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A34198E84;
-	Mon, 28 Oct 2024 09:09:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5131AB536;
+	Mon, 28 Oct 2024 09:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4+AWkEL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jtMA6nfr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF43D1922CD
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 09:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FAC8472;
+	Mon, 28 Oct 2024 09:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730106593; cv=none; b=O9Pr3f1rTAyVwTaZrmW7byUMMMO7v3oQfjbYyq37OCjlPmKEDsWi8G5YI4mGrz8aijCnk5NhPjZVf7gmd+iJL07rFdyOLe7ILcyEg7aAUfmYrOQ7P0rhXDSPSZx/Cnl9fuPje15SFxwFdRDECx/T54RVSEyxpI1WgGedUyy1kqA=
+	t=1730107376; cv=none; b=hUCKnj14lVH5m3hNSv0qJODmQFc9JRO05I7p029NeUexOyFlwmLWtI9l/5FYO2ZVPpMGDcSGSTLdJyebwbQy7BBUwQzdsQk5aiT6MZ8SENkqeQABrJHyoIoUMH6sZVi1OVfZeAoQubwVhvhb9QSlHVG/1ESwhkKYU/dAGLcATi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730106593; c=relaxed/simple;
-	bh=+FR30plpVuMT0J3GI+z+RTFhwP4FLf/M4kpD0l3LUm0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nuiGcdnr9oXm5rotc+tkF/sjmF46JiKR5fQiHJBtr5y5DfOJuQ1qVxRrjcgVVMMBV1I4EYux/1lCnAL+kk5TqaF5amDYGOoamcavjq7NIKNVZM28L01vgolBchksMJM1ASWwyWWhKPwgcgVVbWNfNu8NTONI47RQFm9XHwGf/oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M4+AWkEL; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43152b79d25so38050835e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 02:09:50 -0700 (PDT)
+	s=arc-20240116; t=1730107376; c=relaxed/simple;
+	bh=LaoIjVefHly8xHuPd7wZXRSEeRjEx9/k2jRv27uNo9o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZL82Sd4c6lH97mOkIlaWDNXPylLaN4qoslPAKzg2oAmHPVJL0uOFSn3txbX2RoUhfgkqG/uibGkL1mX4hqBuCj71Y3eSk9imaD+5ttM+SQc+mi+BOiP4agp1gdkvI0g46eRIathXlGU7ymApArEWz8avb88R/sSTI4YJL/mm0qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jtMA6nfr; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53a0c160b94so4431117e87.2;
+        Mon, 28 Oct 2024 02:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730106589; x=1730711389; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6WSoUlcilR10/7Zye998C2La39OrksNIeUhu2dsusHQ=;
-        b=M4+AWkELN6mtT+WvG9L2KgAJoUpvvjkX+p9sbmaCU90gYTAVKcrRWMsdm2tewa0kOI
-         +6yaiWV77qrXs3RxG9suNL6vRWE1M8qChuX0rl1ntcYCKf13PAnYEbuXHbNcAWSesnGQ
-         2J20NBPfEvYEULWCGx/Y7F35FEiNb+olmgROExeBQojq1NMmVpI1uXYNz9TekOACusIP
-         paVNm6WrG8lxmUIie5OAt5nj6JLwOdnOs2JoOBnARK55bZjlBQZo1GVocyOxQLD2lDKA
-         Xad0p2qrHqvgvUc722/HBw52uFtRaw6hVEeHwwZrBnUC0A2/1QExMdbZTcjVhEo4l3Cj
-         JoXQ==
+        d=gmail.com; s=20230601; t=1730107372; x=1730712172; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJZ/N5H/92rMRLmF3zGIuUS3kiG8D/BSE0Wn8eb2g+g=;
+        b=jtMA6nfrLUOo6RWMtOmpPhgwQSKpskMdEDK+dUE7fdkD3tY8wQSRBdiGT9iMeC+zL/
+         p/bTqtrF6xZv8gdR71t4TM9/onDopiDz3w9ZojKwkQq+pMSkLO62rijJUu9iwCbDN8nj
+         elZUnJeZ1CuN70yzEHn3LHFSISQEF7qlgIWSRbylPauxctyw7v0UMb8+s4UUErPRhN1k
+         iHzZk8qFWcsqVEaVHGINhlqnM6EduudFzWvq2A4rWNaBx62CcIJjhie3GeTHftwxeMPx
+         8pUmiGeBNKsgV+1IpYIqbdq3vBJ8BuFIWz3WZeP3EAeJgR6LrjDQSTYdRlauBKvnxxyW
+         d3rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730106589; x=1730711389;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6WSoUlcilR10/7Zye998C2La39OrksNIeUhu2dsusHQ=;
-        b=wJGvu217A+L4zxjnFiQUaQeMiyFILRJ9gxZa7P5juSi+PirWHpLpxngA1Oh2F++lAS
-         sDnm5UJzc5AfmI4kH4UH+ALldtKwWJVNJ2bCFNM68754TFVC6BZa8XPE4he1egIIzc0T
-         Thwg8laUp/U3/GBVIV6hBfrgp+qxLXJN+rXowo9hnhtUaq1sRyVBCwib2mllixfBtrF1
-         tl3WoX9DN/MDi0d+QElLJE0/WDfE7WsZn6lgp0V4lOx12i8oazKAew56Tfoa/0/QW6cw
-         MzewJshfU4ozyWYZW8TOIp+/rDlZhOFESfqO3lUPw09Ef8j09Doz/Ze+/wFRMmhuq2a3
-         PvMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIGHAqMHgFj4dZWiEl+W3jpuJH7UUtAEXxP3Cfhpds3Zkw5FOTv+t44FlkXx0AyF/0D32cNuYhC1+8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI+yJ1dcG4jxMLsDWZli5XsDPBnVAUUBW0U7jJ3F5HicyLCM97
-	ZuHfuNulbpx/bxuS9eBOuWwzYarmUUiV5uvxdcbIh01jiBTkW3r6ASYVRga8ZnI=
-X-Google-Smtp-Source: AGHT+IGbPSgHOd+5IoVfmKyOdhPyi6YNnIbge2Mu4Zhd8I9c7qhNtGSN9F6GBe245KWWr9fvZyKAoA==
-X-Received: by 2002:adf:fb92:0:b0:37d:2e78:8875 with SMTP id ffacd0b85a97d-38061224176mr5337702f8f.56.1730106589096;
-        Mon, 28 Oct 2024 02:09:49 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:c11d:e163:200e:8a5d? ([2a01:e0a:982:cbb0:c11d:e163:200e:8a5d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b91d36sm8849790f8f.95.2024.10.28.02.09.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2024 02:09:48 -0700 (PDT)
-Message-ID: <78e6ca30-9fd6-4384-9583-440c485fb8ed@linaro.org>
-Date: Mon, 28 Oct 2024 10:09:45 +0100
+        d=1e100.net; s=20230601; t=1730107372; x=1730712172;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jJZ/N5H/92rMRLmF3zGIuUS3kiG8D/BSE0Wn8eb2g+g=;
+        b=COGL3PzhxJfs9xvu0qGpagNxELF5bWsm/2HKdmuLNuZzApLjrnP61LhpKBBVL/5ZPU
+         bU/AHiPe70qvNZDbTxQAW8V7QCGpMxOaIxCpnWU6SjtanzKG/vojsuAqq48QYogrJIgt
+         KJVfQtUomi9kp7fkw/ZFTWYQze3KLdhNWqIkZgEmobHAcOTbZdIfSbkUVs32SRpvbRyX
+         XOLdq62NJXpXNNDTvZkZjf/EDL5e/MBQs/TgRWE7kWyXrPZ51dtUBJyIJBjttMKXwDLc
+         rpDY8h5WkfQhCxK/IoiBt4m23aLVAD8F1jJBZXjKdtO1/9Sujp6MsBr3VSx2IowfbYO5
+         ubBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXI340Db2TkFEr1f9NHKSiM689o/70tiUBVkMlTkNSc/42Sjwd9wymB0MOr+6/KRr/8JCs4c+awrW/@vger.kernel.org, AJvYcCWXyYqnD+aBOE+8yabEMa9+sFR+TxaDIdMHRxY3x9CPsBKSSaZMoAlyxP/8uaX9Ec5aCOZpLhxB9ngEpHgE@vger.kernel.org, AJvYcCXH3njgDIRJRfILEW/8pCUWEB23W2UNJZr071WmheTyycRXqn1rt9mkrRPTpe9wsNtzbRIUDwdkYsqF3EsEhqNqxeI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxijCij4QqTKpsP4YnU0YSh2rh5/Z90TnJvXAWr1vo+5YAw2/bB
+	BYGaj1c9cV1oxx6ckfa7wQLBAaXiXCIouyNrh7xjUK3RX6bZeOR1
+X-Google-Smtp-Source: AGHT+IG0x9Scdcs+etVMXKYxChdUdHKQu6TV5m9I0D5Jl1MaNkhUK8rWpK4GF+NFN4LwhTItKkiezg==
+X-Received: by 2002:a05:6512:3e08:b0:539:9f3c:3bfd with SMTP id 2adb3069b0e04-53b34a359bbmr2132385e87.58.1730107371611;
+        Mon, 28 Oct 2024 02:22:51 -0700 (PDT)
+Received: from [192.168.1.105] ([178.136.36.129])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1af331sm1043785e87.152.2024.10.28.02.22.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 02:22:51 -0700 (PDT)
+From: Markuss Broks <markuss.broks@gmail.com>
+Subject: [PATCH v4 00/10] Add support for Exynos9810 SoC and Samsung Galaxy
+ S9 (SM-G960F)
+Date: Mon, 28 Oct 2024 11:22:28 +0200
+Message-Id: <20241028-exynos9810-v4-0-6191f9d0c0f1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Amlogic A4
- SoCs
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com>
- <20241018-a4_pinctrl-v3-1-e76fd1cf01d7@amlogic.com>
- <4a79f996-9d82-48b2-8a93-d7917413ed8c@kernel.org>
- <1jttd9rein.fsf@starbuckisacylon.baylibre.com>
- <4127b448-a914-4c69-b938-29512995326f@amlogic.com>
- <1jmsj1rclh.fsf@starbuckisacylon.baylibre.com>
- <d654d2b2-977b-44c0-8b01-b26f5eb0a3fe@kernel.org>
- <5ad8f396-84a5-486d-b90d-98fbf8882d1b@linaro.org>
- <e6cd13b5-2f7a-4ab1-899c-5867bc0ea64f@kernel.org>
- <fdb4d0eb-a5e5-4061-b3cc-14958473baf3@linaro.org>
- <c8a03fa6-9ac5-434f-ba13-78e47ad341b8@kernel.org>
- <f6c4cee8-dd22-4b30-a3b2-aee48e2c3611@linaro.org>
- <91bcc765-2e56-433d-a629-c5255fc8d256@kernel.org>
- <24acd645-4094-48aa-82e3-42d30a340884@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <24acd645-4094-48aa-82e3-42d30a340884@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANRXH2cC/22Qyw6CMBBFf8V0bU1fEOrK/zAuWjpAE6HaYgMh/
+ LsFXYBxMYs7yTmTOxMK4C0EdD5MyEO0wbouBXE8oLJRXQ3YmpQRI0zQNBiGsXNBFpRgzQGMlJk
+ mWqIEPDxUdlhl11vKjQ298+PqjnTZ/tVEigkGQ4UhJieGFJe6VfZ+Kl2LFk1kWzTboSyhUpaKV
+ 5zmwOgvyrdovkN5QnUhDUghKKjd1fnTxsPzlT7SfyvN8xsq9xhGLwEAAA==
+X-Change-ID: 20241024-exynos9810-b3eed995b0b9
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Tomasz Figa <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
+ Markuss Broks <markuss.broks@gmail.com>, 
+ Maksym Holovach <nergzd@nergzd723.xyz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730107370; l=4187;
+ i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
+ bh=LaoIjVefHly8xHuPd7wZXRSEeRjEx9/k2jRv27uNo9o=;
+ b=NwrL3Z8glQieV9u8Lg0G6hcirIBC6uZIfEOkVuPlwdcHRMx/7CX0LiAxUBApm85oxFRdLUOrs
+ 52EQG6iq9kpBR7tbAkA12oK70ga38ZibZQq35ldXSwdb1nm0H2pC69c
+X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
+ pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
 
-On 28/10/2024 10:07, Xianwei Zhao wrote:
-> Hi Neil,
->      Based on the current discussion results, GPIO index macro definition does not belong to bindings. If so, the pinctrl driver keeps the existing architecture, and use numbers instead in dts file.  Or the pinctrl driver use bank mode acess, this may not be compatible with existing frameworks. This is done by adding of_xlate hook functions in pinctrl_chip struct.
-> 
-> What is your advice that I can implement in the next version. Thanks!
+Hello,
 
-Keep the driver as-is, but move the header file into arch/arm64/boot/dts/amlogic like it was done for the last reset controller support:
-arch/arm64/boot/dts/amlogic/amlogic-t7-reset.h
+This series adds initial SoC support for the Samsung Exynos 9810
+SoC and initial board support for Samsung Galaxy S9 phone (SM-G960F),
+codenamed starlte.
 
-Neil
+The Exynos 9810 SoC is also used in S9 Plus (star2lte), Note 9 (crownlte),
+and perhaps more devices. Currently only Galaxy S9 DTS file is added but it
+should be fairly simple to add support for other devices based on this SoC,
+considering they're quite similar.
 
-> 
-> On 2024/10/21 23:27, Krzysztof Kozlowski wrote:
->> [ EXTERNAL EMAIL ]
->>
->> On 21/10/2024 12:38, neil.armstrong@linaro.org wrote:
->>>>> ====><=================
->>>>> +/* Standard port */
->>>>> +#define GPIOB_START        0
->>>>> +#define GPIOB_NUM  14
->>>>> +
->>>>> +#define GPIOD_START        (GPIOB_START + GPIOB_NUM)
->>>>> +#define GPIOD_NUM  16
->>>>> +
->>>>> +#define GPIOE_START        (GPIOD_START + GPIOD_NUM)
->>>>> +#define GPIOE_NUM  2
->>>>> +
->>>>> +#define GPIOT_START        (GPIOE_START + GPIOE_NUM)
->>>>> +#define GPIOT_NUM  23
->>>>> +
->>>>> +#define GPIOX_START        (GPIOT_START + GPIOT_NUM)
->>>>> +#define GPIOX_NUM  18
->>>>> +
->>>>> +#define PERIPHS_PIN_NUM    (GPIOX_START + GPIOX_NUM)
->>>>> +
->>>>> +/* Aobus port */
->>>>> +#define GPIOAO_START       0
->>>>> +#define GPIOAO_NUM 7
->>>>> +
->>>>> +/* It's a special definition, put at the end, just 1 num */
->>>>> +#define    GPIO_TEST_N     (GPIOAO_START +  GPIOAO_NUM)
->>>>> +#define    AOBUS_PIN_NUM   (GPIO_TEST_N + 1)
->>>>> +
->>>>> +#define AMLOGIC_GPIO(port, offset) (port##_START + (offset))
->>>>> ====><=================
->>>>>
->>>>> is exactly what rob asked for, and you nacked it.
->>>>
->>>> No, this is not what was asked, at least according to my understanding.
->>>> Number of GPIOs is not an ABI. Neither is their relationship, where one
->>>> starts and other ends.
->>>
->>> I confirm this need some work, but it moved the per-pin define to start
->>> and ranges, so what did rob expect ?
->>>
->>>>
->>>> Maybe I missed something, but I could not find any users of these in the
->>>> DTS. Look:
->>>>
->>>> https://lore.kernel.org/all/20241014-a4_pinctrl-v2-3-3e74a65c285e@amlogic.com/
->>>
->>> So you want consumers before the bindings ? strange argument
->>>
->>>>
->>>> Where is any of above defines?
->>>>
->>>> Maybe they will be visible in the consumer code, but I did not imagine
->>>> such use. You expect:
->>>> reset-gpios = <&ctrl GPIOAO_START 1>???
->>>
->>> No I expect:
->>> reset-gpios = <&ctrl AMLOGIC_GPIO(B, 0) 1>;
->>>
->>> but the macro should go along the dts like we did for the reset defines,
->>> so perhaps this is the solution ?
->>
->> OK, so I said it was not a binding:
->> https://lore.kernel.org/all/u4afxqc3ludsic4n3hs3r3drg3ftmsbcwfjltic2mb66foo47x@xe57gltl77hq/
->>
->> and you here confirm, if I understood you correctly, that it goes with
->> the DTS like reset defines (I assume non-ID like defines?), so also not
->> a binding?
->>
->> What are we disagreeing with?
->>
->> Just to recall, Jerome asked whether you have to now use arbitrary
->> numbers in DTS and my answer was: not. It's still the same answer.
->>
->> Best regards,
->> Krzysztof
->>
+The support added in this series includes:
+- cpus
+- pinctrl and gpio
+- simple-framebuffer
+
+This is enough to boot to a minimal initramfs shell.
+
+The preferred way to boot this device is by using a small shim bl called
+uniLoader [1], which packages the mainline kernel and DT and jumps to
+the kernel. This is done in order to work around some issues caused by
+the stock, and non-replacable Samsung S-Boot bootloader. For example,
+S-Boot leaves the decon trigger control unset, which causes the framebuffer
+to not refresh, so simple-framebuffer wouldn't work without a secondary loader.
+Ideally, there'll be a kernel driver for the display subsystem some day to
+resolve this issue.
+
+[1] https://github.com/ivoszbg/uniLoader
+
+Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
+---
+Changes in v4:
+- make DTS build again [typo, misplaced ;] (krzk)
+- lowercase hex in pinctrl (ivo)
+- removed the perf patchset from dependencies (krzk)
+- Link to v3: https://lore.kernel.org/r/20241026-exynos9810-v3-0-b89de9441ea8@gmail.com
+
+Changes in v3:
+- fix a blank line between tags (krzk)
+- align with the opening " in eint-controller (krzk)
+- sort the memory node (ivo)
+- drop the \n (ivo)
+- drop the perf patches into separate series (krzk)
+- elaborate a bit more on dt-bindings (krzk)
+- Link to v2: https://lore.kernel.org/r/20241025-exynos9810-v2-0-99ca3f316e21@gmail.com
+
+Changes in v2:
+- sort the pinctrl nodes alphabetically (ivo)
+- move the interrupts from pinctrl file to SoC dtsi (krzk)
+- move the wakeup-eint from pinctrl file to SoC dtsi (krzk)
+- sort gpio-keys pinctrl-0 and pinctrl-names (ivo)
+- rename the bixby key node to "wink" (ivo)
+- sort gpio-keys subnodes (ivo)
+- sort pinctrl_alive gpio-keys pin descriptions (ivo)
+- fix the Co-developed-by tags and add a signoff (krzk)
+
+- Link to v1: https://lore.kernel.org/r/20241024-exynos9810-v1-0-ed14d0d60d08@gmail.com
+
+---
+Markuss Broks (10):
+      dt-bindings: arm: cpus: Add Samsung Mongoose M3
+      dt-bindings: hwinfo: samsung,exynos-chipid: Add Samsung exynos9810 compatible
+      dt-bindings: pinctrl: samsung: Add compatible for Exynos9810 SoC
+      dt-bindings: pinctrl: samsung: Add compatible for exynos9810-wakeup-eint
+      dt-bindings: soc: samsung: exynos-pmu: Add exynos9810 compatible
+      dt-bindings: arm: samsung: Document Exynos9810 and starlte board binding
+      soc: samsung: exynos-chipid: Add support for Exynos9810 SoC
+      pinctrl: samsung: Add Exynos9810 SoC specific data
+      arm64: dts: exynos: Add Exynos9810 SoC support
+      arm64: dts: exynos: Add initial support for Samsung Galaxy S9 (SM-G960F)
+
+ Documentation/devicetree/bindings/arm/cpus.yaml    |   1 +
+ .../bindings/arm/samsung/samsung-boards.yaml       |   6 +
+ .../bindings/hwinfo/samsung,exynos-chipid.yaml     |   1 +
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |   1 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |   1 +
+ .../bindings/soc/samsung/exynos-pmu.yaml           |   1 +
+ arch/arm64/boot/dts/exynos/Makefile                |   1 +
+ arch/arm64/boot/dts/exynos/exynos9810-pinctrl.dtsi | 503 +++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos9810-starlte.dts  | 119 +++++
+ arch/arm64/boot/dts/exynos/exynos9810.dtsi         | 273 +++++++++++
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 154 +++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
+ drivers/soc/samsung/exynos-chipid.c                |   1 +
+ 14 files changed, 1065 insertions(+)
+---
+base-commit: f2493655d2d3d5c6958ed996b043c821c23ae8d3
+change-id: 20241024-exynos9810-b3eed995b0b9
+
+Best regards,
+-- 
+Markuss Broks <markuss.broks@gmail.com>
 
 
