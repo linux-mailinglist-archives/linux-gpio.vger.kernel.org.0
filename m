@@ -1,100 +1,86 @@
-Return-Path: <linux-gpio+bounces-12227-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12229-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05A09B2F09
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 12:37:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D19879B3103
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 13:51:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82E8F281290
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 11:37:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95B86282674
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 12:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 964921D619E;
-	Mon, 28 Oct 2024 11:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7BD61DACB1;
+	Mon, 28 Oct 2024 12:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vtiIxZNz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exdbz+qI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576AD1D5ACF
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 11:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32191DA2E0;
+	Mon, 28 Oct 2024 12:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730115416; cv=none; b=g8jqf8tf9DfOKUYQOpYVxmWaTyberhMSlUcvhWMLxOt0BL/RTNgmpzH1xdvNHO2E2wYwwQ585Gb1aG1W/A8hofYevsfR/nszh2I3+pbE9kX5sCTxGI9J+/8luSNyD6STv5Mv9k1bT2JMTg0H8Cep99OSiXDfb+xFqDZDOrvWkD0=
+	t=1730119857; cv=none; b=f4JuuURxclJWbCGSPxxMpinZRpRYCz/WRFaVfInHsCHXT1eOPGPpS05DMgPz8aZPJF65ZyQQKkRazLeb41ZI4NSlSWDmGBKAaKDkHV+ZwHcukVDQYN8BJx0Mkr8469hTapp/9e9MrImBNgztP+Jx5jFJnP5+W2kEaX2ugaGYUe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730115416; c=relaxed/simple;
-	bh=RArrHGF2YIg63gV/XEn/Mjgwbf5E87zkb6MWL2Cs69w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QMSkPyoRwK1SaRssrCUdzd3M7Uo7cFO4xLeJrGdFx0XH4tVFwxfQaRWJ/qlLzSN73ajKHfUgtYLfN9Vqs2SLWEd4RLKk9J4kmEO0xegWDHzou7OTTpuoW1OVIk5UHwUQc3Ed7sCoR+FTB2Pd6ldc4tufymv/EmB/GRig1/+dBsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vtiIxZNz; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-539fb49c64aso6853793e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 04:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730115412; x=1730720212; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RArrHGF2YIg63gV/XEn/Mjgwbf5E87zkb6MWL2Cs69w=;
-        b=vtiIxZNzPF6iwiZiBck99Ic2G9vV+W+nP9ux4e18AY1rQ2vhpQulqE23yACVMsgCRX
-         VdeiTxi7A8ZJO1RrI+EAoihg4kXTvVHxwyhDOlllnRX0gI3fXrgpWa38sHfbngNxinN/
-         sRZZofpFaVR4mS3FciCGHXOAJ7zMaTCQHMQyE7KvcR+RkZTx3RESsGdlfV3t5wDo+mSc
-         3zLir7RWvmhHNHhD/KsTxMD/zBcyJu/xMw/2npZUEiGaIGHeer5mu0WTUewjA6Tp4LcJ
-         Wv8EIGyCS6+Yq1oaLMAWaZ7IIwiV2KmL5BPRZVSTLx9bPtKfyKyjy71705ZaMEOOndII
-         TEYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730115412; x=1730720212;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RArrHGF2YIg63gV/XEn/Mjgwbf5E87zkb6MWL2Cs69w=;
-        b=XJIaIKHL5bYGNXKh9FD8ZksU4obiQ0AFxSNGASOWB9QFcIWxYHmd5PWF+rlvjaAGzi
-         hE7YzYU5lZ1D+o0kCt66YKvoVpk6MhAtSpesoMCg/vUHEjXJ8o5vIn4cHVNpoVkarU7k
-         uIS9urKbcnG1BdkkTXcJGbRsrtpPqFlwj/OxRmVASoR+RMSzJF9o71Yjb54uctI+Y8PQ
-         uZ/Ckfit3GPpyWmZfJvLL2utDkUDRxz9Sucv6HcsJlU2lulUVgUpj9IE7JHWsKKST4tv
-         pKhhBfEvFhwZ4hmyuCwm6pTtTHSUVuy2c9MsMi6GugUDbDhOuBsCHn0Gxy6UuYTsiMfI
-         2IUA==
-X-Gm-Message-State: AOJu0YwKV/kNP5C8LQ0gjiewgp9n+c+MTLdAybwQ05GvX8vDrKO3HTYK
-	yS+f0cFy0KfT1TnBEaVPX9r8gMaWhitRvQFdG85TeMCmPRFhj8pmhBPxKAcgKaGwkIBBR+5JW4r
-	gGAUfUsMqJqMHDpKYLDbGmhaXryrKjWKwsARF5cjagtxySjvd
-X-Google-Smtp-Source: AGHT+IHCQ3wGv8ZOcI+3RyfHBAwIMvlM2QesKjoj+hXCwieVABwtxCo7klOO7mF1F+OJkyzlIbwSliMQSyYprcP+Nck=
-X-Received: by 2002:a05:6512:b8d:b0:539:89a8:600f with SMTP id
- 2adb3069b0e04-53b348cfdefmr4961269e87.23.1730115412461; Mon, 28 Oct 2024
- 04:36:52 -0700 (PDT)
+	s=arc-20240116; t=1730119857; c=relaxed/simple;
+	bh=Jcyo6teZNNn7H5N2v8qLFEqZ7T18pGwOQNXKnbfnY3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e99v0dd2O7eB9Wh8oVk170KYHC50kUNyjE+27gw+46AkQCMENgcQ9H2/4nF5lVoJYMa9LUHuGh+WRO+xqbhXGL41rsW+FeF0aZUiN3KlharX1CEam55/fdxO0Ja4FoCOPVYDVOa0yWsmuFPDasITchj4174Ipq2SRwxeQFKpc1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exdbz+qI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E79C4CEC3;
+	Mon, 28 Oct 2024 12:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730119857;
+	bh=Jcyo6teZNNn7H5N2v8qLFEqZ7T18pGwOQNXKnbfnY3c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=exdbz+qIWJTWcQ7hNYVuFf3hbKggwcEYvCdjC6PyGNX8HaC5jkmMf07nMX1HGnZPe
+	 nwo0GIozEnSoEgkLMZdwaZyK4crNbdyNfcRo+fE084ff88JQ4pxET1fTgY6tPpAMSc
+	 BstRrqiX6s0ZX5xO2HRiFRV2V9u6PXnK8PQ74yL+WmM96l5xgPOPp+XIfRDtn0doXc
+	 lUihuc7VBVqzlKW5bSR4pv9qr+HkxhJy4vK16QYzTFS20KNd/tA6CqfjdduTJHv2Sd
+	 Cxm2BRU7HqkFA/lPUosDZIaW97iC5oGhDm1GMXAJDA+YFjcJCGfrPpauOG1xhqN16M
+	 zuzVdQADfqUZA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1t5PDG-000000006IA-2ssU;
+	Mon, 28 Oct 2024 13:51:15 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 0/3] gpiolib: fix debugfs newline separators
+Date: Mon, 28 Oct 2024 13:49:57 +0100
+Message-ID: <20241028125000.24051-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241014192930.1539673-1-quic_mojha@quicinc.com>
- <CACRpkdaAVE8VMNCFA4jQ1+YLuC9=4mc9Bp2PRxeNFQoHB+NJrA@mail.gmail.com> <Zx82vLyD1JMv4Cx6@hu-mojha-hyd.qualcomm.com>
-In-Reply-To: <Zx82vLyD1JMv4Cx6@hu-mojha-hyd.qualcomm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 28 Oct 2024 12:36:39 +0100
-Message-ID: <CACRpkdbCox2VcTRRwN4EJ28SivP1R_bF6nAV0kMimDycZTsa6w@mail.gmail.com>
-Subject: Re: [PATCH v3] pinmux: Use sequential access to access desc->pinmux data
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 28, 2024 at 8:01=E2=80=AFAM Mukesh Ojha <quic_mojha@quicinc.com=
-> wrote:
+I've noticed this before on some systems but never got around to looking
+into why the gpio debugfs newline separators are sometimes missing.
 
-> How to check if this has passed the criteria and not regressing anything =
-?
-> Sorry, I have not subscribed to linux-next mailing list to get
-> regular update.
+On recent Qualcomm machines with 10+ gpio chips this can get really
+annoying when a third of the separators are missing (e.g. when verifying
+pin settings). Hence the CC stable tag.
 
-There are a number of automated build+boot tests going on on linux-next
-and no news is good news :D
+Johan
 
-So far it seems fine.
 
-Yours,
-Linus Walleij
+Johan Hovold (3):
+  gpiolib: fix debugfs newline separators
+  gpiolib: fix debugfs dangling chip separator
+  gpiolib: clean up debugfs separator handling
+
+ drivers/gpio/gpiolib.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+-- 
+2.45.2
+
 
