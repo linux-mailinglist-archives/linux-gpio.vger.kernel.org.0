@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-12190-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12191-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0055A9B273B
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 07:46:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E70419B27B9
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 07:50:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FFFB1F2482E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 06:46:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC3772854F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 06:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B348837;
-	Mon, 28 Oct 2024 06:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F5718EFCD;
+	Mon, 28 Oct 2024 06:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWYQWbvV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdBsYj7K"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E0817109B;
-	Mon, 28 Oct 2024 06:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD462AF07;
+	Mon, 28 Oct 2024 06:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730097991; cv=none; b=lnA9gOssa5KvdX2gh/J4so7ikO41nxonTOwRLhxiBVHTRpC7tIOy1S1hRSTgToZqm6dJ0zkSJgWAIIG4cVZHOnhjzJrpvX9HMJRrCx9EIbums+fjxspP5ihY4eq8t8OHx121e6CDXkafAe/88qQnitqQ0vpFSyPyQhR9NhzNhtA=
+	t=1730098238; cv=none; b=V4jBUQRQ8QnO8YCdW8FjI0JLcccgAGcLYSUWRomgM2TBt46TRl6D+bZNPnCPh0+sa32QDrn+OC4s+k10QdRkAzMMbPFm3fG4Ze26HMVOXUiuiIGzqG5PqOOd6+mcspp04XDYRNAbYgalJVi/R+HVIm63yJAEWklwmk75J/ZVlWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730097991; c=relaxed/simple;
-	bh=zraLD1i4NLRGpVjSLjiBSQ0TaidWFCShHsYJEYMdNVs=;
+	s=arc-20240116; t=1730098238; c=relaxed/simple;
+	bh=ni619cXwCzLTyrFsihCnbnrFye9SRN6upl7nSIDyVaU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pi9YR8WcF+LSdqWOD8i2U4gnTA4uvpianRaLk04z3aJ16D2djWMWskyVc+7yRFiKB/VvXwiFLWRBt4haOAiHiklNOAHw6Ym+iFjSpDKFJxwcIYOitWRI+uZyxmdFm0X/tCg4iVSNiTQQz+9Ka+RyjIxX/sheCKW6PeZBFAiHXd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWYQWbvV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2FC8C4CEC7;
-	Mon, 28 Oct 2024 06:46:25 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=E9PVWpnttgA0H8yocezO9lpWgEWGMM1Nk7jyNUV1Ij+O+v5yADXb39Sb0LCB0m2ryrg4yAEv6dXDbTgPjVoupCZh3ctj8O34UU0hrcgMAWHiYMatBLNVDUZOCp/kK5tbN1NtZU9uxbPrscZUpbuLymxOGOOJ9lk+k9wikq18WM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdBsYj7K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD0B4C4CEC3;
+	Mon, 28 Oct 2024 06:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730097991;
-	bh=zraLD1i4NLRGpVjSLjiBSQ0TaidWFCShHsYJEYMdNVs=;
+	s=k20201202; t=1730098237;
+	bh=ni619cXwCzLTyrFsihCnbnrFye9SRN6upl7nSIDyVaU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hWYQWbvVy1k6DMW5nmUi93yFgKf0h/FGq7oSvUPoUiONJH3g2ykXYQH3NYDFK7byG
-	 M8j9q0rG/ftKVgGAPwvE44aTdVwK1gHvenUawFHRZ++ugYmmGJ5tt5NytBccdN+djr
-	 RjzduoUtEtPlzgjiGT2I9P1IYq5cmoxBFDhtmZxBiECo4Ms9p0UXKQWaSYSV0BYS9l
-	 mYDpky2w94ILP4yFLUz5Qpj/hp2R1gUYMIYSDPENSUtNRU+DR/oOSVug2ksV8Cz1/B
-	 UagMxIsLWUk2jk33fos1o9ammE8lpeBrKel60Dswk0geewTsxujArCWashdph04sNr
-	 JVYSTfZD6D4TQ==
-Message-ID: <775b56c6-a7dd-4123-8868-69ca01a35af5@kernel.org>
-Date: Mon, 28 Oct 2024 07:46:23 +0100
+	b=tdBsYj7KKqUklaIlnBWweMs6yvTVfUkDzAGdTKkIJndWY1cWp0hoDYtUBxZilC0Mq
+	 J4UMXxwaiCxcyKs9Ow4V3c6bedhb25Cv/A38vW1cU3B1Kirx3R+mGtB4QcPOQ/3+TW
+	 MJzmFxu5esKl72DS0okpgzOkkrjnRX64RHSNPVB3sl0QC9nl65G5GejmXD0CFZHWjk
+	 ksQ+NsvLKu8QNA/vi4hwQmy/jlJPK031cjy5vXQ1puDFLOIe0FAIdZ9/fb71rVomut
+	 9zjdzoSoJLdgw17HbJFAB+/1OiRp5IWmJioe+M4R1UTiB13LLPWEh9qm+cuLVDPJDe
+	 hzEIbhMDuYk5Q==
+Message-ID: <c3b757c9-3232-4429-9f3c-d57ec76fb26b@kernel.org>
+Date: Mon, 28 Oct 2024 07:50:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,23 +50,22 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v3 09/10] arm64: dts: exynos: Add Exynos9810 SoC
- support
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+Subject: Re: [PATCH v3 10/10] arm64: dts: exynos: Add initial support for
+ Samsung Galaxy S9 (SM-G960F)
+To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
  <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Markuss Broks <markuss.broks@gmail.com>
+ Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Maksym Holovach <nergzd@nergzd723.xyz>
 References: <20241026-exynos9810-v3-0-b89de9441ea8@gmail.com>
- <20241026-exynos9810-v3-9-b89de9441ea8@gmail.com>
- <173005920218.11546.3963593817214010231.b4-ty@linaro.org>
+ <20241026-exynos9810-v3-10-b89de9441ea8@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,36 +111,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <173005920218.11546.3963593817214010231.b4-ty@linaro.org>
+In-Reply-To: <20241026-exynos9810-v3-10-b89de9441ea8@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/10/2024 21:00, Krzysztof Kozlowski wrote:
-> 
-> On Sat, 26 Oct 2024 23:32:40 +0300, Markuss Broks wrote:
->> Exynos 9810 is an ARMv8 mobile SoC found in various Samsung devices,
->> such as Samsung Galaxy S9 (starlte), S9 Plus (star2lte),
->> Note 9 (crownlte) and perhaps others.
->>
->> Add minimal support for this SoC, including basic stuff like:
->> - PSCI for bringing up secondary cores
->> - ARMv8 generic timer
->> - GPIO and pinctrl.
->>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [09/10] arm64: dts: exynos: Add Exynos9810 SoC support
->         https://git.kernel.org/krzk/linux/c/6c1fe47df5a79f1efc2d5c73e506c8d34692527a
-> 
+On 26/10/2024 22:32, Markuss Broks wrote:
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000 0x3c800000>,
+> +		      <0x0 0xc0000000 0x20000000>,
+> +		      <0x0 0xe1900000 0x1e700000>;
+> +		      <0x8 0x80000000 0x80000000>,
 
-And dropped (also DTS): does not even build!
-
-exynos9810-starlte.dts:72.9-10 syntax error
-
-I should not have trusted this and blindly take the patches for next. Or
-at least wait till my CI finishes building before calling it a day.
+This patch was absolutely never even built. You must never sent code
+without at least building it. It is not maintainers task to build the
+code for you.
 
 Best regards,
 Krzysztof
