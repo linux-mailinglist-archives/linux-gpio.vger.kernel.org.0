@@ -1,237 +1,351 @@
-Return-Path: <linux-gpio+bounces-12240-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12241-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9523E9B3291
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:07:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 295FA9B3296
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 15:07:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08C3CB236E0
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:07:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0D641F227CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 14:07:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 320631DDA09;
-	Mon, 28 Oct 2024 14:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D261DDC04;
+	Mon, 28 Oct 2024 14:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cRRCKCKa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6BD1DD87D
-	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 14:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EF81DD54D
+	for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 14:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730124430; cv=none; b=qzr5tHSSoZKJfYrkVze8X62plUWv9QzhVevkD1GnxWnhiXieRcLd9s/HMzL6JRwgOUvbO1u85TbuEGCVM6E+wtXgVWsTlRFkBSZ5rPmPZpcbbPG5sAPye4gkVNnzeZzBr9L6MyyUPJSOQHA4v6JDSmuFgajQicSwcB0OU+sdV8I=
+	t=1730124439; cv=none; b=FXdeeX3qurOoAQthoIHdVFlOJbwY7ACgR7sNMISEzTubZFj69ZXJ07kAQejpwPht9itINgMBUB0YnoYdz3y7c3BSrc8pgMMRBSKBv3DxgdWUiNuHdUPtIZspNCfRZzmm/OEQ/XWmT+O7R2JYzs95ijbt3L6snspJJWnrjgk8xz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730124430; c=relaxed/simple;
-	bh=cphWtKkhhPCR0SL0T9ODiGPD3s6cDdHQ8iEsC3GcO3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8McYILdSctyJuivp4w/0ZPaUHtgGi4RdiDU9y9E0mOK41ckjlx378A9ft1SQsKj3pckL2cb077ON3ANUoql5XkUbtIqj+L9y4bbHfEOfqM9iIrILlpgKZv2AKUGLVWdK8/CPb53F9X5dIg8W973Oh0q++zLVmrO3oq9LeCpw+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t5QOJ-0001De-10; Mon, 28 Oct 2024 15:06:43 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t5QOG-000rfn-1t;
-	Mon, 28 Oct 2024 15:06:40 +0100
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 174A6360944;
-	Mon, 28 Oct 2024 14:06:40 +0000 (UTC)
-Date: Mon, 28 Oct 2024 15:06:39 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241028-observant-gentle-doberman-0a2baa-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-2-tmyu0@nuvoton.com>
- <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
- <CAOoeyxUhnyYG3p+DQJG-tvU5vc5WYQZLLqCXW=uPcXTjq2gVfw@mail.gmail.com>
- <20241025-truthful-honest-newt-c371c8-mkl@pengutronix.de>
- <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
- <20241025-spirited-nocturnal-antelope-ce93dd-mkl@pengutronix.de>
- <CAOoeyxW5QwPMGAYCWhQDtZwJJLG5xj9HXpL3-cduRSgF+4VHhg@mail.gmail.com>
- <20241028-uptight-modest-puffin-0556e7-mkl@pengutronix.de>
- <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com>
+	s=arc-20240116; t=1730124439; c=relaxed/simple;
+	bh=OkQm541mL+CQThMaqvJlJK8G6Hq8gMZwEjrzY1OYG50=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=p9L+jcpk2nueXvQjTxI1w6PVzoRmSpnLicRGzT9QmZcu3DKx+s9VKtf+YpnnqcvaZ1q7SjA4vnipA5e2CyPpV5K5CrrDOFhno8jXiEtkVQUI/0oIv6UpEaDmU1hNcD5G8SUyRfLDqSvWnra+Y018ZU9/PHPpCidFFHi3dOh9wG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cRRCKCKa; arc=none smtp.client-ip=209.85.167.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-539f8490856so3959710e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Oct 2024 07:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1730124434; x=1730729234; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmWQwY0LyW7DZAdLbPONRZPTG7Y9Z40HVMwsEI41r2Q=;
+        b=cRRCKCKanDeOu5hJbb3zDOQ5s3DmmP8wQqMr/lNDfrzTxgoyyKDk6HMbYe1gxSQYVl
+         +s0M8TupCTtg8GZGdAMImN2k1hwpPs/8m7s9RYRfAIOxcQo05yz9gNbnZXYbxTMaR8Ko
+         dcbbkf+3h0ihJgBgKnq7zdRhWavU0SN5qomXU+5ZrT5+0mRQavbHdI9CTfbWg9Gpk2dL
+         JTARB7GQDZ4M8VvwtCK9mhF6cAAg/VK0z+YFc3WoNXewqiFxdA0Qh0YiXY+PGKhIVdyl
+         Rp/Lc1M47VeDwTxR6KiFehhe2S2awqU4OQ2WBnFfxwJhqSM7s9TwZFOwDgDGtCBZ9n0s
+         fGyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730124434; x=1730729234;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fmWQwY0LyW7DZAdLbPONRZPTG7Y9Z40HVMwsEI41r2Q=;
+        b=hIJyS9L3AbSKtCaWcMNf+ID3sUJlzqgWUYB0FbuofkSrT/B6McXkjxDmapoC3fts4x
+         zotMo++umxaqJijX5d1tQLh1OtMzt5op82yCpXifO6OF/oeTpMNOUM3PthDt4wm1Mo8D
+         4zh0Iudzhn2JkoLeO+XyFB32EHMXv4q86zuGWEbRIV8sPtUzQLItlCkr6sC/MjndKDpL
+         ajEHc7KF5n3lsWJzst0Dy0B7opYZpUrIVaGx80jMPIBagbNgW0qQ4Ym8r3/38+fH2gU9
+         2kv5Y5xDPIrTgAVyQg0+VkknZvrfnBp+WRzAK34LKY8aNpn3sxXFAJftiOyWA6U24+I9
+         u1cg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtcbVPyJkYSY06yNY4BDAJRtlIOHQfmm5b6OsyibpR/F8UDIluJ8J0Mn6/tOHhSZdTGsCrpJBmGfzm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8D/nPGCVKsiezuaxtw+iFq++1kZ4U7IthjM2h+4YgZSKNxI5a
+	qoC3zBNGgY3r1NfPmiPlo+5TnT8J8Ggj6V8RMBuKEQF8gtWrlZ6XX/77U8QB4BA=
+X-Google-Smtp-Source: AGHT+IHUuPqkKP8P1megHNLn/ao7CtOz4cPFTAgpqvApPN3/0axwoAMsnKF52yOT43fKrZomUCJmpA==
+X-Received: by 2002:a05:6512:2399:b0:539:e9f8:d45d with SMTP id 2adb3069b0e04-53b34a1b10fmr4101627e87.52.1730124433790;
+        Mon, 28 Oct 2024 07:07:13 -0700 (PDT)
+Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b271f56d9sm388920166b.144.2024.10.28.07.07.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 07:07:13 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v3 00/12] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Mon, 28 Oct 2024 15:07:17 +0100
+Message-ID: <cover.1730123575.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2vg3oknj3uphvbvf"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
+
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
+
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
+
+The patches are ordered as follows:
+
+-PATCHES 1 to 4: add binding schemas for clock, gpio and RP1 peripherals.
+ They are needed to support the other peripherals, e.g. the ethernet mac
+ depends on a clock generated by RP1 and the phy is reset though the
+ on-board gpio controller.
+
+-PATCHES 5 and 6: preparatory patches that fix the address mapping
+ translation (especially wrt dma-ranges).
+
+-PATCH 7 and 8: add clock and gpio device drivers.
+
+-PATCH 9: the devicetree overlay describing the RP1 chipset. Please
+ note that this patch should be taken by the same maintainer that will
+ also take patch 11, since txeieh dtso is compiled in as binary blob and is
+ closely coupled to the driver.
+
+-PATCH 10: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. The dtso since is intimately coupled with
+ the driver and will be linked in as binary blob in the driver obj.
+ The real dtso is in devicetree folder while the dtso in driver folder is
+ just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+ The reason why drivers/misc has been selected as containing folder
+ for this driver can be seen in [6], [7] and [8].
+
+-PATCH 11: add the external clock node (used by RP1) to the main dts.
+
+-PATCH 12: add the relevant kernel CONFIG_ options to defconfig.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been already promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5]) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Link:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
 
 
---2vg3oknj3uphvbvf
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
+CHANGES IN V3:
 
-On 28.10.2024 16:31:25, Ming Yu wrote:
-> > > > > > > > The Linux USB stack can receive bulk messages longer than t=
-he max packet size.
-> > > > > > >
-> > > > > > > [Ming] Since NCT6694's bulk pipe endpoint size is 128 bytes f=
-or this MFD device.
-> > > > > > > The core will divide packet 256 bytes for high speed USB devi=
-ce, but
-> > > > > > > it is exceeds
-> > > > > > > the hardware limitation, so I am dividing it manually.
-> > > > > >
-> > > > > > You say the endpoint descriptor is correctly reporting it's max=
- packet
-> > > > > > size of 128, but the Linux USB will send packets of 256 bytes?
-> > > > >
-> > > > > [Ming] The endpoint descriptor is correctly reporting it's max pa=
-cket
-> > > > > size of 256, but the Linux USB may send more than 256 (max is 512)
-> > > > > https://elixir.bootlin.com/linux/v6.11.5/source/drivers/usb/host/=
-xhci-mem.c#L1446
-> > > >
-> > > > AFAIK according to the USB-2.0 spec the maximum packet size for
-> > > > high-speed bulk transfers is fixed set to 512 bytes. Does this mean=
- that
-> > > > your device is a non-compliant USB device?
-> > >
-> > > We will reduce the endpoint size of other interfaces to ensure that M=
-FD device
-> > > meets the USB2.0 spec. In other words, I will remove the code for man=
-ual
-> > > unpacking in the next patch.
-> >
-> > I was not talking about the driver, but your USB device. According to
-> > the USB2.0 spec, the packet size is fixed to 512 for high-speed bulk
-> > transfers. So your device must be able to handle 512 byte transfers or
-> > it's a non-compliant USB device.
->=20
-> I understand. Therefore, the USB device's firmware will be modified to su=
-pport
-> bulk pipe size of 512 bytes to comply with the USB 2.0 spec.
+NEW ADDITIONS ------------------------------------------------
 
-Then you don't need manual segmentation of bulk transfers anymore!
+- Fixed a bug in of_pci_prop_ranges() that was incorrectly using
+  a CPU address instead of PCI bus address while assigning "ranges"
+  properties to PCI-PCI bridge nodes.
+  As a side effect, the patch "PCI: of_property: Sanitize 32 bit PCI
+  address parsed from DT" has been dropped since it's no longer
+  necessary.
 
-> > > > > > > > > +     for (i =3D 0, len =3D length; len > 0; i++, len -=
-=3D packet_len) {
-> > > > > > > > > +             if (len > nct6694->maxp)
-> > > > > > > > > +                     packet_len =3D nct6694->maxp;
-> > > > > > > > > +             else
-> > > > > > > > > +                     packet_len =3D len;
-> > > > > > > > > +
-> > > > > > > > > +             ret =3D usb_bulk_msg(udev, usb_rcvbulkpipe(=
-udev, BULK_IN_ENDPOINT),
-> > > > > > > > > +                                nct6694->rx_buffer + nct=
-6694->maxp * i,
-> > > > > > > > > +                                packet_len, &rx_len, nct=
-6694->timeout);
-> > > > > > > > > +             if (ret)
-> > > > > > > > > +                     goto err;
-> > > > > > > > > +     }
-> > > > > > > > > +
-> > > > > > > > > +     for (i =3D 0; i < rd_len; i++)
-> > > > > > > > > +             buf[i] =3D nct6694->rx_buffer[i + rd_idx];
-> > > > > > > >
-> > > > > > > > memcpy()?
-> > > > > > > >
-> > > > > > > > Or why don't you directly receive data into the provided bu=
-ffer? Copying
-> > > > > > > > of the data doesn't make it faster.
-> > > > > > > >
-> > > > > > > > On the other hand, receiving directly into the target buffe=
-r means the
-> > > > > > > > target buffer must not live on the stack.
-> > > > > > >
-> > > > > > > [Ming] Okay! I'll change it to memcpy().
-> > > > > >
-> > > > > > fine!
-> > > > > >
-> > > > > > > This is my perspective: the data is uniformly received by the=
- rx_bffer held
-> > > > > > > by the MFD device. does it need to be changed?
-> > > > > >
-> > > > > > My question is: Why do you first receive into the nct6694->rx_b=
-uffer and
-> > > > > > then memcpy() to the buffer provided by the caller, why don't y=
-ou
-> > > > > > directly receive into the memory provided by the caller?
-> > > > >
-> > > > > [Ming] Due to the bulk pipe maximum packet size limitation, I thi=
-nk consistently
-> > > > > using the MFD'd dynamically allocated buffer to submit URBs will =
-better
-> > > > > manage USB-related operations
-> > > >
-> > > > The non-compliant max packet size limitation is unrelated to the
-> > > > question which RX or TX buffer to use.
-> > >
-> > > I think these two USB functions can be easily called using the buffer
-> > > dynamically
-> > > allocated by the MFD. However, if they transfer data directly to the
-> > > target buffer,
-> > > they must ensure that it is not located on the stack.
-> >
-> > You have a high coupling between the MFD driver and the individual
-> > drivers anyways, so why not directly use the dynamically allocated
-> > buffer provided by the caller and get rid of the memcpy()?
->=20
-> Okay! I will provide a function to request and free buffer for child devi=
-ces,
-> and update the caller's variables to use these two functions in the next =
-patch.
+RP1 misc driver -----------------------------------
 
-I don't see a need to provide dedicated function to allocate and free
-the buffers. The caller can allocate them as part of their private data,
-or allocate them during probe().
+- Dropped -@ option while compiling the dtso.
 
-regards,
-Marc
+- Removed unused includes.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+- Dropped unused sys_clk references.
 
---2vg3oknj3uphvbvf
-Content-Type: application/pgp-signature; name="signature.asc"
+- Got rid of dump_bar().
 
------BEGIN PGP SIGNATURE-----
+- Added the relevant unregister function on exit paths for mapped
+  interrupts and domain.
 
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcfmm0ACgkQKDiiPnot
-vG/OvQf+OF2IzP8yZ65Ke0Cq9hXkJZCpDCF4vKc3f2pLJQ/RjGNeubOY0v36mFwD
-5tZBs5Y7Md645uvjFh9VNg8YzW45+0dnzgzjGC28wj7hZpAW+yxnjNJ0zdpfBOPF
-pdwcIa8OLdqZ6exM1yGAyzV/en/klaL3oHu6RB8TmEMig/NQljdIF9nyslaqIAa4
-T1f+B7NmyH4nauAdBBhAOheqdJiO+eciscoFtxmOh4U5PQqGqR7VoBhkWrkx3JD1
-CqF6D9sNT+SP91/wuNPin6n85l/YDxSFkiKBG59p2do0l/vcwcWQ0denp4PT0dhk
-ZBpf0j8jPbNWS+ad8NpEyLE42beDRw==
-=o2YF
------END PGP SIGNATURE-----
+- Added missing MODULE_DEVICE_TABLE().
 
---2vg3oknj3uphvbvf--
+- reset_control no longer claimed in probe().
+
+- dtbo_size and dtbo_start local vars definition moved at the
+  beginnning of the probe() function.
+
+- the DTB overlay is now applied after the interrupt controller
+  has been setup.
+
+- Reworked the Kconfig dependency list for CONFIG_MISC_RP1 to avoid
+  a recursion.
+
+
+GPIO/PINCTRL --------------------------------------
+
+- Gpio line names changes (and relative dtbo and preparatory patches)
+  have been dropped.
+
+
+CLOCKS --------------------------------------
+
+- raspberrypi,rp1-clocks.h: license adjusted.
+
+- Removed unused headers.
+
+- Replaced locally defined KHZ and MHZ with defines from linux/units.h
+
+- Added regmap support for registers which also has builtin support
+  for showing regs via debugfs. Dropped the previous implementation
+  of debugfs attributes.
+
+- Reworked the clock tree using clk_parent_data instead of strings. This
+  also allowed to get rid of __clk_get_hw() and friends.
+
+- Split a couple of lines assigning to calc_rate into multi-lines for
+  ease of understanding.
+
+- Dropped .set_rate function from rp1_pll_ph_ops since it does nothing.
+
+- Initialize struct clk_init_data init via = {} instead of memset.
+
+- Used dev_err_probe() instead of dev_err().
+
+- Module init/exit declaration replaced by module_platform_driver().
+
+- Kconfig: CONFIG_COMMON_CLOCK_RP1 now depends on CONFIG_MISC_RP1 instead
+  of CONFIG_PCI.
+
+
+DTS -----------------------------------------
+
+- "rp1-xosc" renamed to "xosc"
+
+
+BINDINGS ------------------------------------
+
+- raspberrypi,rp1-gpio.yaml: removed a paragraph in the description of
+  pinctrl node since it's already covered by pinctrl-bindings.
+
+- All paths to referenced bindings are now full-paths.
+
+- Uniformly using single quotes over double quotes on patterns and strings.
+
+- Amended some node names to adhere to DTS coding style.
+
+- Dropped unused labels in examples.
+
+- pci-ep-bus.yaml: simplified the definition of pci-ep-bus node.
+
+- pci-ep-bus.yaml: added additionalProperties: true.
+
+- pci1de4,1.yaml: interrupt-controller and #interrupt-cells moved from
+  pci-ep-bus node to the main device.
+
+- pci1de4,1.yaml: @unit-number not optional anymore.
+
+- pci1de4,1.yaml: droppped pci-ep-bus redefinition (already inherited by
+  pci-ep-bus.yaml). Also removed the internal SoC nodes.
+
+
+
+Andrea della Porta (12):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  dt-bindings: pci: Add common schema for devices accessible through PCI
+    BARs
+  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
+  PCI: of_property: Assign PCI instead of CPU bus address to dynamic
+    bridge nodes
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   62 +
+ .../devicetree/bindings/misc/pci1de4,1.yaml   |   80 +
+ .../devicetree/bindings/pci/pci-ep-bus.yaml   |   58 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  163 ++
+ MAINTAINERS                                   |   14 +
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |    7 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |   61 +
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1540 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   21 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/misc/rp1/rp1_pci.c                    |  357 ++++
+ drivers/misc/rp1/rp1_pci.h                    |   14 +
+ drivers/of/address.c                          |    3 +-
+ drivers/pci/of_property.c                     |    2 +-
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   11 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  801 +++++++++
+ .../clock/raspberrypi,rp1-clocks.h            |   61 +
+ include/linux/pci_ids.h                       |    3 +
+ 26 files changed, 3283 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/misc/rp1/rp1_pci.c
+ create mode 100644 drivers/misc/rp1/rp1_pci.h
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+
+-- 
+2.35.3
+
 
