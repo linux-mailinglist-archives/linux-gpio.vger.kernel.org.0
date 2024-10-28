@@ -1,217 +1,161 @@
-Return-Path: <linux-gpio+bounces-12180-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12181-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B73779B2102
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Oct 2024 23:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21C1F9B24DE
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 07:05:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 485C92813CE
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Oct 2024 22:22:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6CC7281E5D
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Oct 2024 06:05:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4230B17E900;
-	Sun, 27 Oct 2024 22:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3553C18CC13;
+	Mon, 28 Oct 2024 06:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T/YKO3E0"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FKZaqcNh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2D544384;
-	Sun, 27 Oct 2024 22:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A5F152E1C;
+	Mon, 28 Oct 2024 06:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730067720; cv=none; b=UhasZe0YMCYUaztbF93v8IPTqQUV2CvEj1ttlzEdFvkWnXn92XUWWGXZzgK+Q9diFcFmvakEaYJeM/UK6SuedBIw/++9bR+TygkZmRkmXTmNiaY77O2/lFQ8Tu9x8/7614OWNArdX3J8GL/JH2uq907nykI9EYu+CBiHsIv41VE=
+	t=1730095546; cv=none; b=gl09YyTqy8cPPnu6bBoRTwYASoI+ZRYSHIh50iWF617Gm46WJ2o45cL2GNozT3SxZj4qJinMFfIuHD8/ZGUtMQfdAhwH8awIBn05NfL8S6F9ZnFp3VF9j+0P2SswYfgT13hdPFMeV+Dg1Ua39fJ3ZcAYCWT/LWk2Kj0gjijWF74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730067720; c=relaxed/simple;
-	bh=sxgyCZvsGdDbokMrGqYRMsBz5Z+jS3XC8LLxod9zO7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvWzcfBUBD5mI5ioZ4CfZqT5j3zA+iHe1D19eR3qHg2N5/96XdvaErFF+j0c46rT29ZmlYdj9bZl3CHv4ao1+sxbclCRkXbMhZFHp4bFr6vbZHHwQNBfEW51WZFgZMyXAhgBzHCFbPl8eZRFDoucksZYfxRdzb33G2hihkjxZGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T/YKO3E0; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730067718; x=1761603718;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sxgyCZvsGdDbokMrGqYRMsBz5Z+jS3XC8LLxod9zO7U=;
-  b=T/YKO3E06TwR6BszNTEF+iLAz/hgEeK7qJeZ0U8SJkPTdfraf31WBQ6e
-   D+Z0hEA/6d/R1F+WIhQYgKgcI2JN97DHCVpkGnshLhmaCARm2pgSlmofY
-   QewlnLfk2boAKHbBbKlHpfTXeVJ/iFb3fSGe7ooPw6ttJG1RjhPyPt90g
-   AzGpokdKnsMEq8VECV1kLpZcyifPEudFkBgg4/H0gbjZp//HSRPCfV6yu
-   0jxgetWg1y9An4jyP8S62p0dipNih3q3zsRTY4IR2WWNLv79K5GEltNwu
-   MdII0MlX3F2WYQmt2ECMaTwxMsTHHMV4We0uTEpgbjmmtokBAb9dhpUS2
-   Q==;
-X-CSE-ConnectionGUID: keN3MUK3RNSEP4unCZMoeg==
-X-CSE-MsgGUID: cA6lzW5bQlaQJBzLX8/g/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="29621079"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="29621079"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2024 15:21:58 -0700
-X-CSE-ConnectionGUID: aqQQUgt+R6SMkbyDbnFpUQ==
-X-CSE-MsgGUID: eIXFp/HrQA+Fdeb+6Gj0lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,237,1725346800"; 
-   d="scan'208";a="104760119"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Oct 2024 15:21:54 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t5Bdw-000b1v-2R;
-	Sun, 27 Oct 2024 22:21:52 +0000
-Date: Mon, 28 Oct 2024 06:21:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] gpio: sysfs: use cleanup guards for the
- sysfs_lock mutex
-Message-ID: <202410280514.EkyQpKfw-lkp@intel.com>
-References: <20241026-gpio-notify-sysfs-v3-2-ad8f127d12f5@linaro.org>
+	s=arc-20240116; t=1730095546; c=relaxed/simple;
+	bh=4gWrOYe5qvxLUTmb5LuyRowPsNKJ36j2xpMUzXATJek=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=taeUfpmHdRGm3s4wilwmJSZ1lEdL+QfOQfPRieeQ8aPU4Y2blFxTBfDVW1Y0H5T+3IB4uGq9LTX7Hpo1qbggiFGFDyzatRP+/gXPerKvpz3eVxvCYMgUQXX65RNuwTfBw+N45/V/5KFD1DGZACQ6tc9xw7YMgsae+mlB79rK2Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FKZaqcNh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49RMpsXR017168;
+	Mon, 28 Oct 2024 06:05:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=+7qMhBci9rzp/OSYh/QWFq
+	7utSG5afw+UKAJn1ksEDk=; b=FKZaqcNhee0Jy3ouYu/1ItlfxDZMb6PnL+Et5c
+	f3CwzCO5kPYnfw6d910wvM5oi1HQ9X4S9tmFq/TS9D2amHWdMxswXFqDvHVsi0h/
+	qrbCzn6iKSql+gSqJuNemaaV7IhmwY9SFUkGkmrSuKEUFlkC8VKeI0YMjG0gokM+
+	ci8sA9TtX76jwITWNLxOTGP/LNLO2AXHE3LJh2UND+vIWRxnpItTSnbNAoQMwT6z
+	qHLxzZPNZjCNSsgOSCPIjQlBnoIeyiS0BgYqbeHi04jta5znqppqN8IGOxt/3GBG
+	0qDcsE3omRf7A00Lax4VGnSYcdkUtD/9qku5TVETjaFb9yQw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 42gqe5utae-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Oct 2024 06:05:26 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 49S65PXm018792
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Oct 2024 06:05:25 GMT
+Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 27 Oct 2024 23:05:19 -0700
+From: Sricharan R <quic_srichara@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
+        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
+Subject: [PATCH V5 0/6] Add minimal boot support for IPQ5424
+Date: Mon, 28 Oct 2024 11:35:00 +0530
+Message-ID: <20241028060506.246606-1-quic_srichara@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241026-gpio-notify-sysfs-v3-2-ad8f127d12f5@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: kTrVFiiyixg7UxeVzCN_m6scRJ6OU6Aq
+X-Proofpoint-ORIG-GUID: kTrVFiiyixg7UxeVzCN_m6scRJ6OU6Aq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=850 malwarescore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410280050
 
-Hi Bartosz,
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 
-kernel test robot noticed the following build errors:
+The IPQ5424 is Qualcomm's 802.11be SoC for Routers, Gateways and
+Access Points.
 
-[auto build test ERROR on a39230ecf6b3057f5897bc4744a790070cfbe7a8]
+This series adds minimal board boot support for ipq5424-rdp466 board.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-sysfs-use-cleanup-guards-for-gpiod_data-mutex/20241026-210033
-base:   a39230ecf6b3057f5897bc4744a790070cfbe7a8
-patch link:    https://lore.kernel.org/r/20241026-gpio-notify-sysfs-v3-2-ad8f127d12f5%40linaro.org
-patch subject: [PATCH v3 2/5] gpio: sysfs: use cleanup guards for the sysfs_lock mutex
-config: i386-buildonly-randconfig-004-20241028 (https://download.01.org/0day-ci/archive/20241028/202410280514.EkyQpKfw-lkp@intel.com/config)
-compiler: clang version 19.1.2 (https://github.com/llvm/llvm-project 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241028/202410280514.EkyQpKfw-lkp@intel.com/reproduce)
+Picked up patch [1] from previous post, this is a dependency for this
+series.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410280514.EkyQpKfw-lkp@intel.com/
+[1] https://patchwork.kernel.org/project/linux-clk/patch/20240626143302.810632-2-quic_devipriy@quicinc.com/
 
-All errors (new ones prefixed by >>):
+[V5] only change in patch#2 to add Minitems for ipq5424 clk binding list
+     Added reviewed tag for patch #6
 
->> drivers/gpio/gpiolib-sysfs.c:588:3: error: cannot jump from this goto statement to its label
-     588 |                 goto err_clear_bit;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:591:21: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     591 |         struct gpiod_data *data __free(kfree) = kzalloc(sizeof(*data),
-         |                            ^
-   drivers/gpio/gpiolib-sysfs.c:582:3: error: cannot jump from this goto statement to its label
-     582 |                 goto err_clear_bit;
-         |                 ^
-   drivers/gpio/gpiolib-sysfs.c:591:21: note: jump bypasses initialization of variable with __attribute__((cleanup))
-     591 |         struct gpiod_data *data __free(kfree) = kzalloc(sizeof(*data),
-         |                            ^
-   2 errors generated.
+[V4] Only change in patch #2 to fix adding 2 new clk bindings to end of list.
+     Dropped patch #3 from [V3], since it is applied now.
+     No change in other patches.
 
+[V3]
+    Fixed patch#2 as per Krzysztof Kozlowski comments
+    Added Reviewed tag for patch #5
+    Dropped patch #3 and #5 , pinctrl --> Already merged
 
-vim +588 drivers/gpio/gpiolib-sysfs.c
+[v2]
+   Fixed all review comments from Dmitry Baryshkov, Krzysztof Kozlowski,
+   Varadarajan Narayanan.
+   Added Rob Herring acked-by for patch #3.
+   Added Krzysztof Kozlowski reviewed-by and acked-by for patch #2,
+   and patch #6 respectively.
+   Added detailed description about change in respective patch.
 
-   534	
-   535	/**
-   536	 * gpiod_export - export a GPIO through sysfs
-   537	 * @desc: GPIO to make available, already requested
-   538	 * @direction_may_change: true if userspace may change GPIO direction
-   539	 * Context: arch_initcall or later
-   540	 *
-   541	 * When drivers want to make a GPIO accessible to userspace after they
-   542	 * have requested it -- perhaps while debugging, or as part of their
-   543	 * public interface -- they may use this routine.  If the GPIO can
-   544	 * change direction (some can't) and the caller allows it, userspace
-   545	 * will see "direction" sysfs attribute which may be used to change
-   546	 * the gpio's direction.  A "value" attribute will always be provided.
-   547	 *
-   548	 * Returns:
-   549	 * 0 on success, or negative errno on failure.
-   550	 */
-   551	int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
-   552	{
-   553		struct gpio_device *gdev;
-   554		struct device *dev;
-   555		int status;
-   556	
-   557		/* can't export until sysfs is available ... */
-   558		if (!class_is_registered(&gpio_class)) {
-   559			pr_debug("%s: called too early!\n", __func__);
-   560			return -ENOENT;
-   561		}
-   562	
-   563		if (!desc) {
-   564			pr_debug("%s: invalid gpio descriptor\n", __func__);
-   565			return -EINVAL;
-   566		}
-   567	
-   568		CLASS(gpio_chip_guard, guard)(desc);
-   569		if (!guard.gc)
-   570			return -ENODEV;
-   571	
-   572		if (test_and_set_bit(FLAG_EXPORT, &desc->flags))
-   573			return -EPERM;
-   574	
-   575		gdev = desc->gdev;
-   576	
-   577		guard(mutex)(&sysfs_lock);
-   578	
-   579		/* check if chip is being removed */
-   580		if (!gdev->mockdev) {
-   581			status = -ENODEV;
-   582			goto err_clear_bit;
-   583		}
-   584	
-   585		if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
-   586			gpiod_dbg(desc, "%s: unavailable (not requested)\n", __func__);
-   587			status = -EPERM;
- > 588			goto err_clear_bit;
-   589		}
-   590	
-   591		struct gpiod_data *data __free(kfree) = kzalloc(sizeof(*data),
-   592								GFP_KERNEL);
-   593		if (!data) {
-   594			status = -ENOMEM;
-   595			goto err_clear_bit;
-   596		}
-   597	
-   598		data->desc = desc;
-   599		mutex_init(&data->mutex);
-   600		if (guard.gc->direction_input && guard.gc->direction_output)
-   601			data->direction_can_change = direction_may_change;
-   602		else
-   603			data->direction_can_change = false;
-   604	
-   605		dev = device_create_with_groups(&gpio_class, &gdev->dev,
-   606						MKDEV(0, 0), data, gpio_groups,
-   607						"gpio%u", desc_to_gpio(desc));
-   608		if (IS_ERR(dev)) {
-   609			status = PTR_ERR(dev);
-   610			goto err_clear_bit;
-   611		}
-   612	
-   613		data = NULL;
-   614		return 0;
-   615	
-   616	err_clear_bit:
-   617		clear_bit(FLAG_EXPORT, &desc->flags);
-   618		gpiod_dbg(desc, "%s: status %d\n", __func__, status);
-   619		return status;
-   620	}
-   621	EXPORT_SYMBOL_GPL(gpiod_export);
-   622	
+Devi Priya (1):
+  clk: qcom: clk-alpha-pll: Add NSS HUAYRA ALPHA PLL support for ipq9574
+
+Sricharan Ramabadhran (5):
+  dt-bindings: clock: Add Qualcomm IPQ5424 GCC binding
+  clk: qcom: add Global Clock controller (GCC) driver for IPQ5424 SoC
+  dt-bindings: qcom: Add ipq5424 boards
+  arm64: dts: qcom: add IPQ5424 SoC and rdp466 board support
+  arm64: defconfig: Enable IPQ5424 RDP466 base configs
+
+ .../devicetree/bindings/arm/qcom.yaml         |    6 +
+ .../bindings/clock/qcom,ipq5332-gcc.yaml      |   41 +-
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts   |   59 +
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi         |  291 ++
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-alpha-pll.c              |   11 +
+ drivers/clk/qcom/clk-alpha-pll.h              |    1 +
+ drivers/clk/qcom/gcc-ipq5424.c                | 3309 +++++++++++++++++
+ include/dt-bindings/clock/qcom,ipq5424-gcc.h  |  156 +
+ include/dt-bindings/reset/qcom,ipq5424-gcc.h  |  310 ++
+ 13 files changed, 4189 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5424.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq5424.c
+ create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
+ create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
