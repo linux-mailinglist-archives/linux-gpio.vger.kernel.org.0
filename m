@@ -1,118 +1,120 @@
-Return-Path: <linux-gpio+bounces-12273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 768EA9B3F30
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 01:31:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC6ED9B3FB0
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 02:23:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BA8928359E
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 00:31:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BFF9282CCE
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 01:23:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B54DB8F5E;
-	Tue, 29 Oct 2024 00:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA25938382;
+	Tue, 29 Oct 2024 01:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwKalxcn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOYVcn1b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC1C1426C;
-	Tue, 29 Oct 2024 00:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC6B28E7;
+	Tue, 29 Oct 2024 01:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730161864; cv=none; b=aQMLHP+I5gxzR+NAmi9X1JOsWXRXlNwLvV6aiHrPFPejyAXKA1ZE6gZu7kWL99hKnp1eU+GAduAnBHVl5b9winD7SGcsEpwDzImQzzfjtMK73ASCINJJXJ4NzlpSUZ+eYBHNKAUi9cFVquai0v8a9SctJWwrwzupdp8Z/fsNeOw=
+	t=1730165009; cv=none; b=rMlvoXRq4DZwmSAhyH3ncYvQpaEiFAdtMdzpUl1+9EMBvV24QgmThCDYUvSDRvpR9s16JP7HM1yCyrw1LqKXiArGZQhXGhkq1Rm9LVxI6s3xtsqLbQqbl4hvBiXetcV0ydEnXxwWAh+IgiGaopRnHuJAsDtZQzWx7BE3F0Rhi0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730161864; c=relaxed/simple;
-	bh=5j0KH+uBu0d+yHWSxUFbqzwczcgyAn/9EoYnOuV7ZQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGRnHwB+Cg0LU8bOmhC8KAt1gg8tIiG4sVlfZ7E8NVFdUCCmLN46pCs+SIMKkgm8L6cT+36WbEd+MJbRC41k4CYLi2fKAH7Abd4LwbUn+P3vPAAJJhuHR1zZESv/5DbZea9AdM7iviN0j/WTTAza9OWPG5Evf7ZpTmfofUK5ZAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwKalxcn; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1730165009; c=relaxed/simple;
+	bh=QEfibKuizgvY52dQkaX6PJdG13PMDH4fxQ+Iq/k73KU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P3qxo0mFNiDw2F87VegfH0ufFQNs4un5+wit6GENlL4heim+FvmZJqWtDWsw/oK0u4NZHawJ+AczS6DOEDs2E0Wk0dioRsB1ID7zpNOkxNtJs1hjo5G/4ampYtSaZ6gpRxGRkxsSW8J/dFCMj55FjSVaa3tfXjsd0Ag0YMdpK/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JOYVcn1b; arc=none smtp.client-ip=209.85.160.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20cceb8d8b4so27987725ad.1;
-        Mon, 28 Oct 2024 17:31:02 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-288a90e4394so2417781fac.0;
+        Mon, 28 Oct 2024 18:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730161862; x=1730766662; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rwP95ZMKY4OhC0gDOi3064T240SYV5VJPiywQTjinP8=;
-        b=QwKalxcn+nosRq25iOj3enbfbadsI65qzGhQBYOwIxOdKKcabyXpRUvLw3MatQVNTo
-         0OztoqNad++3K8LA44kKf8u9lGbkYLm9JQunRdLaZLitftUW9tFDxIAmeZwDhbOdgWrg
-         0DQvaCaNZzuMI/TfLNiIyXh6h/+CxoUl/aWykA42v6i5XR6uvpkv6XbTZUNG5lWjK7Ie
-         rsgE4/1HJELrCghFn+NgqFFRj4cjaGg1Bq9SWf7CKrEdJr3/bC+5pB13Cm2gzbZFs8CP
-         aHZ+ZRE1HXtyS6A8MSJL5ucOye4BTdNqzevQp3bCRtbRsZUyysHZySutdSSqFTGWScq6
-         huug==
+        d=gmail.com; s=20230601; t=1730165006; x=1730769806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sk1dZREUQVGIecYh311eheCmxNasMewq/5f/DZTF0Vs=;
+        b=JOYVcn1btBP9Iv28SNEQOikXkvheW6NtQ0UdSC2MeBsDQ5LD3oi5Vma/97ppx7qi1u
+         K9ZH3k5FBoprIwNx5mO2EGT+9dO5imOtvrfFSxlKKpYY/qiQE4RUNaNy1F09O91sDpQM
+         INeG9ourQmGF4JbWubSyKjUe85xaY7EVrPg+Uo1fGIoUvhMC78n7K1Jr58ShjI0Soq8s
+         PaXy5afXZ1DOy5ZSTECDKlNw+R8kX8OzkpgpLa5e14wXZ0+w2LqK01AhzgSdYlmJh9Lo
+         ilBDcp24f2xlIwAys4ihGNS4/lRbuWIGel02aFpE2bSm91Ulq2SYvZH3Rkf6WXLCJOEm
+         I23A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730161862; x=1730766662;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rwP95ZMKY4OhC0gDOi3064T240SYV5VJPiywQTjinP8=;
-        b=E4XEMQP8CFxG5E39hXh2R/M+Od2a7OPVcyFT/bp0B0bgbW5s34hO6V/fnGicRm7tX2
-         +foAebe313lRKqv0P0GIJdTPl9XiPCwemBqn3DL+F3hWYNUdyJhVMgYd468mfqOO/PuZ
-         cGAEzGfwJsiAv/uiYUCiL+4hRdkYH0+DQWTpW9vm6weN2OI4kgz/HJ9rOODGyfR7r16i
-         tRKA6vbMy0zWvr+YYjdAGxMwXti075BSHhPWvdsQemQad+yaMVYxFnr5o1EfP3oP/EdE
-         Af/vvK8hf9n1wRR0zxzmP/kPD5+02P2sAoALuIkzUoNONdvXPFOtYb0frX5fMmwQsIzg
-         RK7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUEpaUq9ZTGKigmuP183gHIqBMyO3+YEnAF/IzjN3Zou1bwzktm7jCS1scAPmP93IYW++hImWd9QkABJBpc@vger.kernel.org, AJvYcCWO4CxEmuRKzPMpQ4UG9bI5t9Fn7+Du3sk3BhCuhkoI5YAUAGTSDO/rlbUYSLOiFzB4dHu+hZpIiwUE@vger.kernel.org, AJvYcCX/62REUlvE2+CcqwhixxS1K4RhbIt1kV6ioxoCsOprs2QsVLOygdwRmW1m4Z3SzD1vThAWZhftKptfUw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgUuFSdFL1bK4nR1OYNCTwtuHgZdIY2XxfUI5ViRJ7ACYmt3ye
-	fGrse03XSsxdz4S2FdEP5xeQeL6X5qMP4ZbuIh8yXEQBnQCIE7I8
-X-Google-Smtp-Source: AGHT+IESpTU6eaOAPHzlKBFpkMOmcfSYW1lo5N6fMf7AqDlKt2Zr1wW2Vpq20ZcUGF0jGeRyRBXr6g==
-X-Received: by 2002:a17:903:2289:b0:20c:b3ea:9006 with SMTP id d9443c01a7336-210eccfcd8emr5541975ad.6.1730161861970;
-        Mon, 28 Oct 2024 17:31:01 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eddc19e368sm3941319a12.14.2024.10.28.17.31.01
+        d=1e100.net; s=20230601; t=1730165006; x=1730769806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sk1dZREUQVGIecYh311eheCmxNasMewq/5f/DZTF0Vs=;
+        b=GdqldLWbkjM1tOIrN6e8nBxnCXgoPVDblfHaPYRp3F/iMjsYT7mFUqvKfE49w49lI7
+         /xRCTwyOwf2fFtaMqu2+COf+dWPsYR2WCcWjluKImp0VLeWmpGqnLPwRoaeg0U4mB57M
+         bKvFR2Ce8QdmHA6xKVTQDoAuv1VBwLIsel4feEV8XMRg9w/YlKTgBt6rdxKc5hUPPr2r
+         2XRvE2IHjc6c/uS9slL8lfea2L13AZR0GHCBqiFAk+dzCB3nv7xD17PzYcnc6+XCi0sh
+         jf44fRAU1Lw86ATdpl8BYaplHYLaquLpGZ+vMRSrxNW1Su3ed1BQIsTLW4/IdQYZSQnf
+         qy8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUmWNIeEOlD7PUh5PNlrpc1H8Cy0oOlYqN8T1yzrR4FVmhtt4HoqZB+JoLVVznLWBeTakDvGP5jx/+f@vger.kernel.org, AJvYcCUu++3XPbytKPbowy/kPRXxoUc4cCCYuMV1GlwWP7XVZ8x5TXHJ/EXxreLRO2W0/ex9+ZB0X2bhncDx2DVY@vger.kernel.org, AJvYcCXJO0b9NfO8/EX76HzK30TrWrhZzNYAeK8PbpgI4erbqYO1YHEltfpic4Gen84OPOlSHIKbBn8dCfskqQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw9xERumQ9XxxRdgEj1b8ID/h36Uu9iKkjpnVMVsWMryuWklkS
+	uhZvYfAfbB3+RqDiJVeOmhMFYtNomDm+UejE4gTisU3bg9DtFP+bRK/1SOsX
+X-Google-Smtp-Source: AGHT+IHWlqEV6BxbZIE4WDegspeRBJZliX4tFPnZbewy2MWHbK07FHcV9Rw3Pe924sDNMakmCs4aYQ==
+X-Received: by 2002:a05:6870:912a:b0:288:6d23:5f24 with SMTP id 586e51a60fabf-29051d493d3mr9099606fac.31.1730165006551;
+        Mon, 28 Oct 2024 18:23:26 -0700 (PDT)
+Received: from localhost.localdomain ([122.8.183.87])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2903824c853sm2494682fac.51.2024.10.28.18.23.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 17:31:01 -0700 (PDT)
-Date: Tue, 29 Oct 2024 08:30:20 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Chen Wang <unicorn_wang@outlook.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Inochi Amaoto <inochiama@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Yixun Lan <dlan@gentoo.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/3] pinctrl: sophgo: add support for SG2042 SoC
-Message-ID: <rbb7nlqjvek3tvjtfrqnamp6bbhmdq6fe57ey3pfk4gvks4yd3@rlc3ri4fmxiy>
-References: <20241024064356.865055-1-inochiama@gmail.com>
- <20241024064356.865055-3-inochiama@gmail.com>
- <CACRpkdbUs1eWgZCvxNYqpnUox2=4nwewBi5YPqSBO8UDhikyLA@mail.gmail.com>
+        Mon, 28 Oct 2024 18:23:25 -0700 (PDT)
+From: Chen Wang <unicornxw@gmail.com>
+To: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	inochiama@outlook.com,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Chen Wang <unicorn_wang@outlook.com>
+Subject: [PATCH] dt-bindings: pinctrl: correct typo of description for cv1800
+Date: Tue, 29 Oct 2024 09:23:12 +0800
+Message-Id: <20241029012312.3448287-1-unicornxw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbUs1eWgZCvxNYqpnUox2=4nwewBi5YPqSBO8UDhikyLA@mail.gmail.com>
 
-On Mon, Oct 28, 2024 at 02:02:49PM +0100, Linus Walleij wrote:
-> On Thu, Oct 24, 2024 at 8:44 AM Inochi Amaoto <inochiama@gmail.com> wrote:
-> 
-> > Add base driver for SG2042 SoC and pin definition.
-> >
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> 
-> This driver is clearly duplicating a ton of code from pinctrl-cv18xx.c.
-> 
-> We have no interest in having to fix bugs in two places.
-> 
-> Please factor out the common code and use the same code
-> in the new driver if you can't make the new driver a simple
-> subdriver och pinctrl-cv18xx.c.
-> 
-> Yours,
-> Linus Walleij
+From: Chen Wang <unicorn_wang@outlook.com>
 
-I will have a try to abstact the different code and reduce the duplicate.
+It should be PINMUX/PINMUX2, not GPIOMUX/GPIOMUX2, see
+<dt-bindings/pinctrl/pinctrl-cv1800b.h>.
 
-Regards,
-Inochi
+Fixes: 64aa494de6fa ("dt-bindings: pinctrl: Add pinctrl for Sophgo CV1800 series SoC.")
+Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+---
+ .../devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+index 1e6a55afe26a..feb4785a3fac 100644
+--- a/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+@@ -58,7 +58,7 @@ patternProperties:
+           pinmux:
+             description: |
+               The list of GPIOs and their mux settings that properties in the
+-              node apply to. This should be set using the GPIOMUX or GPIOMUX2
++              node apply to. This should be set using the PINMUX or PINMUX2
+               macro.
+ 
+           bias-pull-up:
+
+base-commit: 81983758430957d9a5cb3333fe324fd70cf63e7e
+-- 
+2.34.1
+
 
