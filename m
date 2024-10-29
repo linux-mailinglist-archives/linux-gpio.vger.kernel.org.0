@@ -1,151 +1,113 @@
-Return-Path: <linux-gpio+bounces-12284-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12285-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DDC79B43F0
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 09:15:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D98499B4660
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 11:05:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6FE81F2361B
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 08:15:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C2D3283A41
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 10:05:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B661DF75D;
-	Tue, 29 Oct 2024 08:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A99187FE0;
+	Tue, 29 Oct 2024 10:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K2SEk6mL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB53A1DFE21
-	for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 08:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5942038A3
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 10:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730189730; cv=none; b=ZmUQrs+95Fi4pc+VhOrUs+adxhuX0oD+wfgWpKjW+r97nnhaagrAN8xp6luh9EWx8IcSidESGtEzbcBfZekw76qdNm2Fz4WXwtcXtaqqfQD3Llml68Xt8evuZTHdJbJ6rqUQYspU5dm4oC+G1Np6o5LDjnBcSCqhTbl6jz4OFbA=
+	t=1730196324; cv=none; b=pbH0dgs5oXqJ4Xmin2O9UZ43Zx5NAeZ4k678zPxLFYHVQ29KexCOT/uBatA96U8bszWK1VCHDOjxxAyw0mhMrzdqyICnzsnCKmbEz5AfNn6mUkk8A5ydvjZPCcPRvknQGT+UAZL9CUqLAk0xEU///KBPpeeNjcPCfw9Cq9ioF08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730189730; c=relaxed/simple;
-	bh=YggC+Qxo+NVcOErzTUXjBABSyADwrdnokU2LGl0F+fs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZXxxZ7TNfdxE4zkJmzcuHYVRfCxaPTUnL0ob485qTQAA/+NTkjTbxrbccLDM73M3bYTrMx5abOULIbdt1ODGp5XNoIrsV/sNemr3gxBME8NBAEswo3OLEYwBZYvL9aMee6umb8hMmEtfHTkIYufeU1aOyR39Det0A3FUixUM/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t5hNJ-0006Vu-Og; Tue, 29 Oct 2024 09:14:49 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t5hNG-000zSr-0D;
-	Tue, 29 Oct 2024 09:14:46 +0100
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 885EA361330;
-	Tue, 29 Oct 2024 08:14:45 +0000 (UTC)
-Date: Tue, 29 Oct 2024 09:14:45 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241029-fresh-dinosaur-of-penetration-d695ff-mkl@pengutronix.de>
-References: <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
- <CAOoeyxUhnyYG3p+DQJG-tvU5vc5WYQZLLqCXW=uPcXTjq2gVfw@mail.gmail.com>
- <20241025-truthful-honest-newt-c371c8-mkl@pengutronix.de>
- <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
- <20241025-spirited-nocturnal-antelope-ce93dd-mkl@pengutronix.de>
- <CAOoeyxW5QwPMGAYCWhQDtZwJJLG5xj9HXpL3-cduRSgF+4VHhg@mail.gmail.com>
- <20241028-uptight-modest-puffin-0556e7-mkl@pengutronix.de>
- <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com>
- <20241028-observant-gentle-doberman-0a2baa-mkl@pengutronix.de>
- <CAOoeyxWh1-=NVQdmNp5HBzf1YPo9tQdh=OzUUVFmvC-F7sCHWg@mail.gmail.com>
+	s=arc-20240116; t=1730196324; c=relaxed/simple;
+	bh=AfykAnYLZupGg1fLCVn8uYBy1t/aBOVuyKkPyLQTwRc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZINy91ualHaqZg/WSEX17tMi9JvoPnhvpHjBi0x7wHKAuuDxilFy1sLiIm9I/JNjAAKK04lhQDflxsskMu6pXfiAj/ik1P+E8eneggZYHKo1x3T8IEziRGT9JWk5NY3Ery9LMNkTS0xLhbeUQc8rwvZxkmh01SwfwaMIioZEATs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K2SEk6mL; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f76a6f0dso4539677e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 03:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730196320; x=1730801120; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U4RV5zlTOUYZMKhmx1UYpbwnBm/HWX3vXyjwC0A2b/s=;
+        b=K2SEk6mLQhmuMGkCEAP/7maZCivDCatMZZU0ZxYlsyNSCCxV0fLDCKM+gL8MAINSJ2
+         966UBH/rygUX2pZm0WbB3mljpKcDeRCdmZw4LlSZEntx22jwxiGaUu2+npdSWrjr5O0M
+         w7aB/2sw6qdLeI3tUcSjT9pVsah0SfZgpiW4vYMjER0M+6uM6ehds7TRlKSiE6A7uu6T
+         +wgKZrlpDVgxRESgyv97l2sbU0mGz5/5nxaAowfDcUV3NMcKpbRf0N5iwNknbvACHYl6
+         UHzmgKN9P6l1t1QRjnMJ68S+hAlJbjmdMdmMYtmZUhWF9Ci8VJWcR9ZXK+INm6ZKxyrK
+         Aa9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730196320; x=1730801120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U4RV5zlTOUYZMKhmx1UYpbwnBm/HWX3vXyjwC0A2b/s=;
+        b=D3wbYU9fOhBsQ8UqN6/VcyWGo8e7de3GimPzbldRw/PWHgveJqaxUa68Dh1eQCAHRW
+         5xBp/SALlaJEwNhzJpOCAO9bVOmEn9ApS2P3N2WbpYYzpb6VYB/TDFjnxNMGp3LPl6xF
+         6MbysYh2ZOS1Q0eRECnmrCjzQ7nWLYkoB/qKkqM1G0madNsDz8FUFG7MfSBTLFTIgqxu
+         LpwtNEFIRrmfi4yekUnn0Vc/fl34sJiHZn3WzU0CIEZBTD5Sr4W3TPlHqV9FfKUj3xJY
+         ksjSlr8328Vkar1B6ORdSMseZrlA/2l2fCvRTWV5dxK6X+IxePYyeItUwSvdTJ6GoCHh
+         1dYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfI2uM1tReaJ62uc4Hls8qKJhBhw4N34WoMpv0Z2fqnV3FPL5yZvvqZnm5T3hCniwrIEeyp7trNiGR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhLeghav4dWc+6DNrZ2Nyw6i2jGkeD08n+Af6V8xqbHO9bk01Q
+	mNhZEHWgfOTwtiBaN/ATu05UVAXwMV/p23rizIGabs6JGaSyn+ienPG3SAwGkKEi84zexNrkhhe
+	ToGImiCdwJGHkW0HCGc530VbObGP9dIeBwMMYyA==
+X-Google-Smtp-Source: AGHT+IHRjlZ5hUDjfU+PhK/6e3oqa7R+fo3XhjKnYIjv7VyxU8Q5LEQEqbHbzMAmS4KxgFa0+3jWkOmL3SAGQgEfxvY=
+X-Received: by 2002:a05:6512:3c98:b0:536:54e9:3a63 with SMTP id
+ 2adb3069b0e04-53b34a19727mr5084956e87.49.1730196320370; Tue, 29 Oct 2024
+ 03:05:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l2xctpm5dxyfmd5l"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxWh1-=NVQdmNp5HBzf1YPo9tQdh=OzUUVFmvC-F7sCHWg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---l2xctpm5dxyfmd5l
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20241029074901.18977-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20241029074901.18977-1-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Oct 2024 11:05:07 +0100
+Message-ID: <CACRpkdZCeQFzqbSN_=jX-_406OyxOoLb3b0R5NX3SjacE5JZSQ@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v6.13
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
 
-On 29.10.2024 11:45:30, Ming Yu wrote:
-> > > > You have a high coupling between the MFD driver and the individual
-> > > > drivers anyways, so why not directly use the dynamically allocated
-> > > > buffer provided by the caller and get rid of the memcpy()?
-> > >
-> > > Okay! I will provide a function to request and free buffer for child =
-devices,
-> > > and update the caller's variables to use these two functions in the n=
-ext patch.
-> >
-> > I don't see a need to provide dedicated function to allocate and free
-> > the buffers. The caller can allocate them as part of their private data,
-> > or allocate them during probe().
->=20
-> Okay, so each child device may allocate a buffer like this during probe():
-> priv->xmit_buf =3D devm_kcalloc(dev, MAX_PACKET_SZ, sizeof(unsigned char),
-> GFP_KERNEL), right?
+On Tue, Oct 29, 2024 at 8:49=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-basically yes, probably devm_kzalloc() or embed it into the priv struct
-directly with ____cacheline_aligned:
+> The following changes since commit 9852d85ec9d492ebef56dc5f229416c925758e=
+dc:
+>
+>   Linux 6.12-rc1 (2024-09-29 15:06:19 -0700)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tag=
+s/samsung-pinctrl-6.13
+>
+> for you to fetch changes up to 6d2dbd4cec8939ad2b813b8052eb12406db528d7:
+>
+>   pinctrl: samsung: Add Exynos9810 SoC specific data (2024-10-27 21:02:08=
+ +0100)
 
-| https://elixir.bootlin.com/linux/v6.11.5/source/drivers/net/can/spi/mcp25=
-1xfd/mcp251xfd.h#L498
+Pulled into the pinctrl tree for v6.13.
 
-The size of the driver's RX and TX buffers depend on what they want to
-send and expect to receive. The next step would be to create structs the
-describe the RX and TX buffers for each driver. If you have a common
-header between each driver, create that first.
+Thanks for sorting out the Exynos drivers, excellent work as always Krzyszt=
+of!
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---l2xctpm5dxyfmd5l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcgmXIACgkQKDiiPnot
-vG+LsQf+O4zJwfuGycNIY6uZPaHVz1IAgaeC/v2Jtznp51yqr0WvDVOcdhOLHKtG
-8Rbd+lDgWhPK2WCiBnwj6fhpBzTIZSZHbVlIqX2668gYpCvRr4YTSydt1HYDNoHA
-/G2k1g8rCdtTWiynu5+P2CUdaolzZEdq+lOnCLoOkbWD1cDT/lMdHPYoyBLbLNZ8
-b7IbbBc1D6jVlBd9Om1Zn7Ev9cQQ9UGp9QY1fUWdv+KwJz76NCIMgGK93Hf5kDFy
-/5AIztMNibr+sFbwkZ7ypmag3icRiF750TOECdq0LEUPXM2eVXkQ+pIGkIcgXTQL
-p1zN+c2H8FwJZIvGgdCLxDQc2B+uLw==
-=2AiX
------END PGP SIGNATURE-----
-
---l2xctpm5dxyfmd5l--
+Yours,
+Linus Walleij
 
