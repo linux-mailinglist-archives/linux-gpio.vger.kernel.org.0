@@ -1,117 +1,112 @@
-Return-Path: <linux-gpio+bounces-12287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 264629B4C6F
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 15:46:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1E879B5575
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 23:03:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48D7F1C22881
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 14:46:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04A461C20DB7
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Oct 2024 22:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5CC5190486;
-	Tue, 29 Oct 2024 14:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89B0120A5C5;
+	Tue, 29 Oct 2024 22:03:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DajKmhy4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MoW+GWGq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D2E18787F;
-	Tue, 29 Oct 2024 14:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658792010F8
+	for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 22:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730213170; cv=none; b=ZhVQPZTUk6cNH5WkhdjRwL+xCEMJkuHLqGi9AS1LqM7jJUTlN+FniUMFWAAYmKkC97vIUtfQTQ/gB8tKIV3yYTIhLGnMmOnsquYwwK/z/SWtDfJ5+4E89/GSc8zEngnYtb7PVJzqTW7rz9H1DTDlMt3tKqO/9KFdy0+Tfx2DE8Q=
+	t=1730239410; cv=none; b=pVMeDMIIzNClXt4nd5ejm0N2iPzAcXbyZQ4KbG+5KnhEKNJYHZzGvxtHzRCbPr9aqiI//JA3eDV3zdL+UtBC+r2e3EgAD5z61kuIqXOGloWm4WAtIwjgAk+U8vKpjFRGrOHdnhb1dCyaWRLWwyuXMVN0lt8dOFf8xiFR85c9j8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730213170; c=relaxed/simple;
-	bh=z9/PAFrKjs56x5xBh+utIKnj5bxjIYhNcsNJqIgpVgc=;
+	s=arc-20240116; t=1730239410; c=relaxed/simple;
+	bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FN680fh0DeIhv5tCuzVx01Zy/DJEEY+gAEfUbXMjLgsMoMGsF2G2edGvxmcCLf9ndl1Y20eJZziXPQjwbrBGOoIKfR40lNXiZKVOYmiE4B9GpE9VX+hzPYhgnN7fxwAebKx0kX3PRdicwSEroiGz0TDJbFHQiQU9z7KZY7HQQ3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DajKmhy4; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-84fcfe29e09so1513034241.2;
-        Tue, 29 Oct 2024 07:46:08 -0700 (PDT)
+	 To:Cc:Content-Type; b=Zo6CtYeUO9JinOxro80Hvu0pGPflKJvOfMwpSE+sqEWDvwsxBG0u9FTS86wTdQ12OLDpHBkwairw3Y8iLMNYd9ey+fH/8bMKCKxpfxpk7brRDtVC762s8vW+/7L4QOPffaAAtCTPPrPpZJpeY7pZEVyb169l8AEPmO+aC8eVjgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MoW+GWGq; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fb4fa17044so60075241fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 15:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730213167; x=1730817967; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1730239407; x=1730844207; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z9/PAFrKjs56x5xBh+utIKnj5bxjIYhNcsNJqIgpVgc=;
-        b=DajKmhy4i+f9SdfWncTbdgmm+A2HcsoAwp8SZfUvNESe/qdc0P89YiZyHQWVO9r51y
-         xsJyphL8N7SDK1rQTJRqft0V7TKsbURYjzziTJEPkUrFZg3qbRNVjIq0DqBtJhrmF7pW
-         7nEBtkMdCo2Hj3d2uRCS3ltO5luAs5zJbmffZPE7oWJEhRdazF3L3qEmUcK6VP0cvApT
-         AJPo7VlOuyt6FLew1JIdsSgzc8/gRsF0wyw2vrnfoI/E+fFkoYhcUltF9v+VwD+bPeBh
-         4PmO9umIMYudoX6AJbzpZnusddh/bz/rJw0BFPgJPvJlgF7ySrUjpVHzs1dbr9ranUcZ
-         TMJQ==
+        bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
+        b=MoW+GWGqFYb18C38tw767NGzbRWH7mPLNINeizqDuRC1iYBwICoZ4QfVIurrWPclsd
+         JNCRZpHd+mw/fjfA1+vcs4BefNK7vBgCPG3ecRoB4W5KMP744EcEq6/rN2ck5YGDLSk8
+         KZlUCr0X+o5F+vg1zqHE3n7012CcBvpEJ59RuGb1R4xK8maLJGQcDc2OUNnaBCrQdxay
+         YqFbvri7MJ1OEaYi45IgM53jTIlYOZz8uSA065IwKqGERX5fTsc1oaOEH/YZ4qMGXDHW
+         LtmdL2WyrqrTks5fkwLOO2Fio9zAFoQETN2YcXgIMrrPrG6ixiR7ZApvOiF64y+WUhnZ
+         LoIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730213167; x=1730817967;
+        d=1e100.net; s=20230601; t=1730239407; x=1730844207;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z9/PAFrKjs56x5xBh+utIKnj5bxjIYhNcsNJqIgpVgc=;
-        b=wy44izXyFWr+QsLxmmMWdTrh33vA9U851fGxbdFsyPqsaYEawau5fim4rScqY0NgfL
-         Qk0+txoZnrcR3Z0m37DxQ4UGgwDAMAzYLcgPa7BWvmqgFsbixa9Ofkv5aOe3oM0y3qon
-         jLNEbNeWomgTRiVESR8UrEyb0RYlbnT2CcGGYgc3tvJ5XEX85WdQtXTYqFCYFX763gbB
-         XI5ghTWI5HrpCOvcPbwjwpMIBmqFhU0d8w/G/y0YPeW1HTw15VS8u4doDJ4ZJMi0FIC6
-         d7iGUh3YOgM71chVRNE4cBUb9dx//vThWFMQloiYgEBtlJdV9yC5TxvpcFgm8lx4TBck
-         nBvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0rbn8YRn+AGWyHypjKsx6uHgHUzD8vGaoPaRY+zQHTOrpecsWQ86OZRu3lQMxGJBdUhFlp3eRvFeACc6HyoYaCN8=@vger.kernel.org, AJvYcCVHFLgWiDdjdE/Dr6FLV9CetaxpnSZJKBvwVs0Me6pB6/w7fS4rHF93QFLXT35UsKTu7Zam0xGlqwSF2meP@vger.kernel.org, AJvYcCVgRI/x7c+qAARBgcNtMYy56gEB4DmNkLo6ObEspJtLGMosuCJ7ooI8mymkBB5IUGtnqvbT5eVA8uGuLg==@vger.kernel.org, AJvYcCXxRfn53dJgQwKv8WTEuAfHbpgTmSkSCxOnoyXFaKyEd07OuC5KSeYOOIseD2qUIJriCCRucIgxzJoh@vger.kernel.org
-X-Gm-Message-State: AOJu0YznS25uiUvhX2Qn8AOblMsXJwKsdplsTyps75taL8jffKqtyq33
-	2YGuznhwY7IeuWwtnxyGhlGZrbIFVQ/f2RkW3arkynEYJnXyOQ2dE+xnynTOlNjcvA1eRKFYfDL
-	qdQV8ylngEUIOvahdqeyg4aJ2hWE=
-X-Google-Smtp-Source: AGHT+IFgAm+Gj69QV8yDPvOm9jQHfY/PanPH41xd8pyiyekJrATHL/AQwttx7j2NsE9p/1nZPlW3HSoe8KCFEsmS/1s=
-X-Received: by 2002:a05:6122:7cc:b0:50f:fe39:a508 with SMTP id
- 71dfb90a1353d-5101523f155mr9806883e0c.11.1730213167346; Tue, 29 Oct 2024
- 07:46:07 -0700 (PDT)
+        bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
+        b=VNHp9kULAyzpyOjgXxn+RAWjKZErYmUmz1EKSfL2601W4t9nZDshTtG7t636AMXPnZ
+         1DNN9spVs4gJ47EaCGk+ACVgEbcp310qG3TdNUDBXa9Zsq2R9BFGhCSQAIGZOky7t/Ap
+         djoksJYeOQMyN7hW13iXXv3lwyhmNnwrd2LRoeJb2mvvj/+zv/zpf25HNOE6SeGW+YiU
+         FrN97PDtWIWPXtPGHBH5hgYcXY5UffXiJWh7p8V37A4zqkWry+xMlU3xPKO0NwSIYv4Q
+         oTdznrPJI5lcaovYX8DNfjXkUN7P7GwAR7mS9U4d+/wDqfRxdKQRFClqSbo6bBPBRDxs
+         148w==
+X-Forwarded-Encrypted: i=1; AJvYcCWHRMOZZW3VZ89cHV2DFhJ0QR890V10E36yjmXTP6sqsNcp2lmY8O5rB8nHAJxR7bTtVeacLr1+6nM2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkKiPQhig1SlPjORalLptpNhugqxSwkiE9fLPihRW2mCImuVtd
+	UXxkjp0IbVLXPhsiTnb5JkyL/ZhUCmY6mGaZmmNEChX7Z/oARDSSGWsez5Kcen2sMn0gvznFzei
+	ton8SOL1RGqUXB71lq+z7VCY7ijotLltlwTzriw==
+X-Google-Smtp-Source: AGHT+IGcZQz6tTz7pENhFcPJcjvryEeZRAirjIXuUi7C7dPCymNJLcuzkHhPfZv22aI+RYtsi5iRg8Bn14ptPLiFVos=
+X-Received: by 2002:a2e:be9f:0:b0:2fb:3bef:6233 with SMTP id
+ 38308e7fff4ca-2fcbe08cf3bmr61215001fa.33.1730239406513; Tue, 29 Oct 2024
+ 15:03:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025114914.714597-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <1b5f9e16-4c82-4093-8950-12188b662c39@tuxon.dev>
-In-Reply-To: <1b5f9e16-4c82-4093-8950-12188b662c39@tuxon.dev>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 29 Oct 2024 14:45:41 +0000
-Message-ID: <CA+V-a8tDwa3ZYAwZi=-cDH1f5cuJJ0EHP3Z9W1o0adKHsxLEnw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] pinctrl: rzg2l: Fix releasing of IRQ and status
- reported in pinmux-pins
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+In-Reply-To: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Oct 2024 23:03:14 +0100
+Message-ID: <CACRpkdaEQYBim8TuDCCw15QDUWhHC-VqhGq1Le7eOd76k56zwQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/6] Add mfd, pinctrl and pwm support to EN7581 SoC
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+	linux-pwm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Claudiu,
+On Wed, Oct 23, 2024 at 1:21=E2=80=AFAM Lorenzo Bianconi <lorenzo@kernel.or=
+g> wrote:
 
-On Tue, Oct 29, 2024 at 12:37=E2=80=AFPM Claudiu Beznea
-<claudiu.beznea@tuxon.dev> wrote:
->
-> Hi, Prabhakar,
->
-> On 25.10.2024 14:49, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Hi All,
-> >
-> > This patch series aims to fix the reporting of pin status in the
-> > `pinmux-pins` file and properly free up the IRQ line when using a GPIO
-> > pin as an interrupt via the `interrupts`/`interrupts-extended` property=
-.
->
-> With this series, the Ethernet PHYs IRQs switch to poll mode after a
-> suspend to RAM cycle. I've added the logs here:
-> https://p.fr33tux.org/3e8193
->
-Thank you for testing it on RZ/G3S, I'll investigate it further.
+> Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+> EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+> needs to access the same memory block (gpio memory region) to configure
+> {gio,irq}_chip and pwm functionalities respectively, so model them as
+> childs of a parent mfd driver.
 
-Cheers,
-Prabhakar
+OK someone has to merge this and I suggest that I merge patches 1-5
+(all bindings and the pinctrl driver) since the different bindings have
+dependencies between them.
+
+Then Uwe can merge patch 6/6 (the pwm driver).
+
+Anyone against?
+
+Yours,
+Linus Walleij
 
