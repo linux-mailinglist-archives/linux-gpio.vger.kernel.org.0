@@ -1,173 +1,157 @@
-Return-Path: <linux-gpio+bounces-12322-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12324-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34A4D9B6E97
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 22:15:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70B4C9B701B
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 23:59:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 416C4B21110
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 21:15:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D8921F21AD0
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 22:59:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87EB61E1A12;
-	Wed, 30 Oct 2024 21:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03548217456;
+	Wed, 30 Oct 2024 22:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn30FgKL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GCA9x10E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C588194C75;
-	Wed, 30 Oct 2024 21:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4551CF5E0;
+	Wed, 30 Oct 2024 22:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730322932; cv=none; b=NHXChaR6TfwQAu9krlH2O6y3cJf03Odwwj24Wwr/Pu0csuQtws3MZ3N5LELj2N6R4V3SU0r/OExKwd4VLkocnJiTUtTBv7tH0F/JfKjuU0W2FDB3lvdtHQcWY3sTvM5K+Mf79CKQlahug8KeruJMO2HWxnqHJuuCcLQGzAqXKlk=
+	t=1730329155; cv=none; b=IpRaMUeeJ4UYyX61Az0mQzYAZyumjz8Wt/N4lcim4zynwJiGFOT3oI48YsQ8TZ1wQ9S5+ymM2bS9GAXX7ifdqKmgW7Y8yPfdCgigklsxy32dzRej4rqiDoD0USPNPG2htY3Yh33F0d6NrNh0ApUeZNErNMw3qLmfF1v9QIHcU5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730322932; c=relaxed/simple;
-	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=GHlJ7tS9ioshbAjm5xbU5l2N7e4nMLci33KkYe6mku49OgOaRW02PvZbYl2AHB6HQKO8phu2wLYT0t+FnoIwRDzCKabU2E1G0ud6jnQtyEHozeoHP6uBPLepW/9oq7J4Ok9Ze3wT0KnRXSpZ6i4WTDkkW3C+dANtQRDJOdK7QiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn30FgKL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAABC4CECE;
-	Wed, 30 Oct 2024 21:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730322931;
-	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Sn30FgKLhEeH/3+fVxl55wltUvnTtRFcf2H+jqIFpQVQhKjYIW2MIjJ3539zvlwQ7
-	 aFHSPzV9u60J7nm2OKTcxsIKIW9B/h8TKgg0haIAl5XKebYk2eKrBFum7KN5okpfQS
-	 uXBnPEzxTp/daAJBIhPlkPxnSYbkxhb8pli6PVbydIBSkf9C72yj893KtGZjymrKGY
-	 eqOWMmvDOxE+IHj+DNztzEWjjZFOM90eLUjBc2Rh+jEkFeSyCIpdXlNy6jy9pBvepb
-	 xl7mygLzXHIoY0zrMbCWEXS8poSRxssdex4GamVBZABlQn1T2unvlWdGDlbUQUEoJS
-	 lFdm13L90KFiQ==
-Date: Wed, 30 Oct 2024 16:15:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] PCI: Remove most pcim_iounmap_regions() users
-Message-ID: <20241030211529.GA1220902@bhelgaas>
+	s=arc-20240116; t=1730329155; c=relaxed/simple;
+	bh=1MzvB5yUlO0rY30H+j8fLPLIINPuVbLXh4qjNidexYs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TL+C9h/zLYF/tbvD6B7axLhIo0f56HrBW363PK1uEEbL5ZWVCkxy12d+bLR6jSOsShJN7rZ/H18E6qRfU00mq2PxB+bwtJ/Dt4r5wyih5nqNiOh0l/wuT2mMdtfabdNKiicgOHN1DQMZifvrukD/u7QW408HGNrkTN2HDROk86k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GCA9x10E; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49UMx1dt107945;
+	Wed, 30 Oct 2024 17:59:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1730329141;
+	bh=4ytvWiOQvLWl7zLeqbP754meWrgcjcPi8srBZ8kvprk=;
+	h=From:To:CC:Subject:Date;
+	b=GCA9x10Ea5z3bDwdxpF9sgrSAs063qNYL/SG4WodEtGHrwieCQOhBxaZP1z3/o5/T
+	 KLT3pMUXCA5iGJr+R6jTzU6wSXZrpuQnB4oPMus6yv9k/4AY2yr0FKDVCxSEAQqryB
+	 J7VBfxM/hMOGGIt8tifJYz9vWNDo3jmsRZPAYiQI=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49UMx0t9084597;
+	Wed, 30 Oct 2024 17:59:00 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
+ Oct 2024 17:59:00 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 30 Oct 2024 17:59:00 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49UMx0j2053988;
+	Wed, 30 Oct 2024 17:59:00 -0500
+From: Judith Mendez <jm@ti.com>
+To: Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bin Liu <b-liu@ti.com>, Judith Mendez
+	<jm@ti.com>
+Subject: [PATCH v2] gpio: omap: Add omap_gpio_disable/enable_irq calls
+Date: Wed, 30 Oct 2024 17:59:00 -0500
+Message-ID: <20241030225900.59844-1-jm@ti.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241016094911.24818-2-pstanner@redhat.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Oct 16, 2024 at 11:49:03AM +0200, Philipp Stanner wrote:
-> Merge plan for this is the PCI-Tree.
-> 
-> After this series, only two users (net/ethernet/stmicro and
-> vdpa/solidrun) will remain to be ported in the subsequent merge window.
-> Doing them right now proved very difficult because of various conflicts
-> as they are currently also being reworked.
-> 
-> Changes in v8:
->   - Patch "gpio: ..": Fix a bug: don't print the wrong error code. (Simon)
->   - Split patch 1 into two patches to make adding of the new public API
->     obvious (Bartosz)
->   - Patch "ethernet: cavium: ...": Remove outdated sentences from the
->     commit message.
-> 
-> Changes in v7:
->   - Add Paolo's Acked-by.
->   - Rebase on current master; drop patch No.1 which made
->     pcim_request_region() public.
-> 
-> Changes in v6:
->   - Remove the patches for "vdpa: solidrun" since the maintainer seems
->     unwilling to review and discuss, not to mention approve, anything
->     that is part of a wider patch series across other subsystems.
->   - Change series's name to highlight that not all callers are removed
->     by it.
-> 
-> Changes in v5:
->   - Patch "ethernet: cavium": Re-add accidentally removed
->     pcim_iounmap_region(). (Me)
->   - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
-> 
-> Changes in v4:
->   - Drop the "ethernet: stmicro: [...] patch since it doesn't apply to
->     net-next, and making it apply to that prevents it from being
->     applyable to PCI ._. (Serge, me)
->   - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
->     stimicro" as the last user for now.
->   - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
->   - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet" instead of
->     "snet"). (Christophe)
->   - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
->   - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
->   - Apply Reviewed-by's from Andy and Xu Yilun.
-> 
-> Changes in v3:
->   - fpga/dfl-pci.c: remove now surplus wrapper around
->     pcim_iomap_region(). (Andy)
->   - block: mtip32xx: remove now surplus label. (Andy)
->   - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
->     occurs. (Andy, Christophe)
->   - Some minor wording improvements in commit messages. (Me)
-> 
-> Changes in v2:
->   - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
->     patch, put stable kernel on CC. (Christophe, Andy).
->   - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
->   - Consequently, drop patch "PCI: Make pcim_release_region() a public
->     function", since there's no user anymore. (obsoletes the squash
->     requested by Damien).
->   - vdap/solidrun:
->     • make 'i' an 'unsigned short' (Andy, me)
->     • Use 'continue' to simplify loop (Andy)
->     • Remove leftover blank line
->   - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
-> 
-> 
-> Important things first:
-> This series is based on [1] and [2] which Bjorn Helgaas has currently
-> queued for v6.12 in the PCI tree.
-> 
-> This series shall remove pcim_iounmap_regions() in order to make way to
-> remove its brother, pcim_iomap_regions().
-> 
-> Regards,
-> P.
-> 
-> [1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
-> [2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
-> 
-> Philipp Stanner (6):
->   PCI: Make pcim_iounmap_region() a public function
->   PCI: Deprecate pcim_iounmap_regions()
->   fpga/dfl-pci.c: Replace deprecated PCI functions
->   block: mtip32xx: Replace deprecated PCI functions
->   gpio: Replace deprecated PCI functions
->   ethernet: cavium: Replace deprecated PCI functions
-> 
->  drivers/block/mtip32xx/mtip32xx.c              | 18 ++++++++----------
->  drivers/fpga/dfl-pci.c                         | 16 ++++------------
->  drivers/gpio/gpio-merrifield.c                 | 15 ++++++++-------
->  .../net/ethernet/cavium/common/cavium_ptp.c    |  7 +++----
->  drivers/pci/devres.c                           |  8 ++++++--
->  include/linux/pci.h                            |  1 +
->  6 files changed, 30 insertions(+), 35 deletions(-)
+Add omap_gpio_disable_irq and omap_gpio_enable_irq
+calls in gpio-omap.
 
-Applied to pci/devm for v6.13, thanks!
+Currently, kernel cannot disable gpio interrupts in
+case of a irq storm, so add omap_gpio_disable/enable_irq
+so that interrupts can be disabled/enabled.
+
+Signed-off-by: Bin Liu <b-liu@ti.com>
+[Judith: Add commit message]
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changes since v1 RESEND:
+- split patch from series [0]
+- Add disable/enable calls without wrapper functions
+[0] https://lore.kernel.org/linux-omap/20241011173356.870883-1-jm@ti.com/
+
+Tested on am335x BeagleBone Black
+---
+ drivers/gpio/gpio-omap.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 76d5d87e9681e..137aabada26f9 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -711,6 +711,28 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
++static void omap_gpio_disable_irq(struct irq_data *d)
++{
++	struct gpio_bank *bank = omap_irq_data_get_bank(d);
++	unsigned int offset = d->hwirq;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&bank->lock, flags);
++	omap_set_gpio_irqenable(bank, offset, 0);
++	raw_spin_unlock_irqrestore(&bank->lock, flags);
++}
++
++static void omap_gpio_enable_irq(struct irq_data *d)
++{
++	struct gpio_bank *bank = omap_irq_data_get_bank(d);
++	unsigned int offset = d->hwirq;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&bank->lock, flags);
++	omap_set_gpio_irqenable(bank, offset, 1);
++	raw_spin_unlock_irqrestore(&bank->lock, flags);
++}
++
+ static void omap_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
+ {
+ 	struct gpio_bank *bank = omap_irq_data_get_bank(d);
+@@ -723,6 +745,8 @@ static const struct irq_chip omap_gpio_irq_chip = {
+ 	.irq_shutdown = omap_gpio_irq_shutdown,
+ 	.irq_mask = omap_gpio_mask_irq,
+ 	.irq_unmask = omap_gpio_unmask_irq,
++	.irq_disable = omap_gpio_disable_irq,
++	.irq_enable = omap_gpio_enable_irq,
+ 	.irq_set_type = omap_gpio_irq_type,
+ 	.irq_set_wake = omap_gpio_wake_enable,
+ 	.irq_bus_lock = omap_gpio_irq_bus_lock,
+@@ -737,6 +761,8 @@ static const struct irq_chip omap_gpio_irq_chip_nowake = {
+ 	.irq_shutdown = omap_gpio_irq_shutdown,
+ 	.irq_mask = omap_gpio_mask_irq,
+ 	.irq_unmask = omap_gpio_unmask_irq,
++	.irq_disable = omap_gpio_disable_irq,
++	.irq_enable = omap_gpio_enable_irq,
+ 	.irq_set_type = omap_gpio_irq_type,
+ 	.irq_bus_lock = omap_gpio_irq_bus_lock,
+ 	.irq_bus_sync_unlock = gpio_irq_bus_sync_unlock,
+-- 
+2.47.0
+
 
