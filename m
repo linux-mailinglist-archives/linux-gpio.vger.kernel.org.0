@@ -1,128 +1,138 @@
-Return-Path: <linux-gpio+bounces-12305-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12306-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D96149B6355
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 13:49:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D1619B65A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 15:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D138281395
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 12:49:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4C3B1F20F41
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 14:21:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC011EABAC;
-	Wed, 30 Oct 2024 12:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEDE11F1301;
+	Wed, 30 Oct 2024 14:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b="UxbVmpXW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZRfhihB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8B51E9066;
-	Wed, 30 Oct 2024 12:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2A6C13C;
+	Wed, 30 Oct 2024 14:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730292587; cv=none; b=tTBqZdEbrR6j1L0WV7aTvrbcOhp/wn9myBG0TKQ41+VmI7zMf/vLPnnQ3SObAXUxNib8+KZSeq2WwNNb5gaW0B3EWrIXWMvnIWgYe87vsFdynU1jQkUGlhHc8rhruVblYSNNLDzGL6HN/LiSTcBAu0DPFBBKeHW1gEjswYBiS5o=
+	t=1730298084; cv=none; b=kKWRR/HOtxtFigYpTVFpyYti8tLbZOJzzwld3YH16mJXQMWEvDLskKg/Tip5OAeTk5Xu9RCGUZ2EW9F1NlORAKyEmVc/lcHJOkMG9Lh8LT2dffGHlmHyEbDmpxgDuNAock7jgDHwvRhpGCedj6PkG8nbIcTyIpjHIfe1QVXSz20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730292587; c=relaxed/simple;
-	bh=+YCnTpHf4kgqcsvGPEJmRwKHA8R5k5OeoiGplCCzf7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OwPtEP3D/a3ACyOXZS2HVEF7dK4/AyQzb7VLQfdEEomhe6oS+Wz9o41KmnN58L7qj/wMkMw8u5ZvVbt358Yhv9Zw6qkgwitjzfxDke2GpKYJhYWjgfsw/BeqqrEz3yQsIn5ofkeUQig1lHEeQsLzi6uuc1Xt8nVL0jQS790QoDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=metux@gmx.de header.b=UxbVmpXW; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1730292502; x=1730897302; i=metux@gmx.de;
-	bh=+YCnTpHf4kgqcsvGPEJmRwKHA8R5k5OeoiGplCCzf7Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=UxbVmpXWvyWFMdu+GATuiw1ytz1oNpvm5GNdgPbapjupaP25dsmWNYV/SdmkFCpE
-	 VX+3bwgCyi7J1vZWt8hxBFNjCqYXAs/90EF5MTi5XI4T3wPAud49gsLSmSGWAgCFH
-	 L/MlMEdcnBrC3Z6I/Y0EX4qgIzoVFOZM2ueUS8NENLEQofE14R0wXa31OvlhCEm1F
-	 9lgOEB79j/9vjsYX9KbXu2T/UCUxO61Yl+VZqyc98kF/0soDrfczquDVKjoNkb+Qg
-	 C3a2MT2iG3Shr2kXGTjhv+n6z7zTnhYsIVyC7TaB+61rRJr4ZYE9Z0EHkdrRrpF0j
-	 0MTyH7Gn6TRMn1XJ3Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.178] ([95.114.207.188]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MUXpK-1tExqH3yV6-00WDT5; Wed, 30
- Oct 2024 13:48:22 +0100
-Message-ID: <d769ffcf-95e6-4db9-8f80-fe8a7dae0441@gmx.de>
-Date: Wed, 30 Oct 2024 13:48:45 +0100
+	s=arc-20240116; t=1730298084; c=relaxed/simple;
+	bh=bgOvNyxM1biWcyfhRvIlKkBu8+hSrIZJM9KA7N8pO9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VpnRGxs1Bd97AwOUAi6nm3ZLdzf9ueXSxfg+ZWHkBKNe9305hQjxP7htb1/Tka3QGPJSVnDc3k4Tewz7qv8KCnS42PADGQ2g81g3Gkc5cN0HNC0xDuSLj3mAZxyoE0a8/9spWg6uKspRl8u3cu/YFNpZBUeXh5V09PMHUrbcT3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZRfhihB; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e290e857d56so6273141276.1;
+        Wed, 30 Oct 2024 07:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730298081; x=1730902881; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DHmWJLAn/9laEJxekdnxjm8UsDMhYqG1tJ/wt9SJ9OU=;
+        b=OZRfhihB1RSFRiQZIYCRpM+xQwtPAw8+ag3cxQPvjFlIsuEST4eQM5ctBi4SiY92fV
+         +TP5C3Ll7MM21/TOkewjYvrNtJmL9fvpDqBZwTuHDfhR3xifjcnzIjeA05uL3oRrJucR
+         hPi1LIsz2c4kkrYxMqFsAM39OQBsnLiZE+KmkT979UXT0MGTxJWFYUdrkGsaJQy6PhfS
+         gx+waNAI1UkQQ+axm6GWr23yhNTE7VfyV3wsbFyeYCHL7iq2Uhjds7VnPViiS0a1PTZh
+         QZiZp1YKdB7utIFkehqOLzGJQK1dBGFT867ThBTd7vw8cPHpwkLUjV3xFED1/CyB+9et
+         QqFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730298081; x=1730902881;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DHmWJLAn/9laEJxekdnxjm8UsDMhYqG1tJ/wt9SJ9OU=;
+        b=mdbXyxq7IuG9D5H+iOEVZpH1wVM9wwV2+udq0Y8SyTZo5ngTgl/DlR1t9C5RPpc9bG
+         UVrnRIxhqfVMVRzoh0tcFtf3SlMXZGY+Y1uomu1tR7nE2vxEN/mkZ5THOSzS2Zl4wOry
+         N9Hja4wzJ8CwfGpNGg5m/lv53Wg1OSooizK9Y+S6x0gtjywlT0Q6EorsO3/uZqhiXhnE
+         dXAhssopgQARqpHQQPuwSKLjKxk7IG10tH4LlhEg+gFLEvbY063VXC1FMEinrySUoSyx
+         Cv/HQOz/hUmy9gMKnK6uj3DUZt2P9KEYwPTKnbhGXqqcy0+QETJQkcyjPiSTydAXSRyE
+         gxiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdmjxWA5HaRz9eOBWnJwBvbikO3ijEkjrT9S5vcJw3f7uWgT/VjfbKnBlZDaFMGKRFHh/EZVUHnI38ew==@vger.kernel.org, AJvYcCUyme4PEsCO+7fM+2oQ8C4KnVj9Djtbfi2L+c+26AIc8G3xqubTJlNdnS6W71cAalEpKJ7D5yw8PqEa@vger.kernel.org, AJvYcCV0BeRSyuKjNekrJ+pvjF4EHv6PE0rXNw682geKf0TgOyTxyvLy04v/PfdTZEC6sN9WUST6/awI+CR+@vger.kernel.org, AJvYcCVCE8FIzPk6Gp5GH7n3+W4KehWfmJVkd5w8nuQ9zkX6H5QSV5ZcAcXgcGcRb2rl6BP3od5dR5k8lGjc@vger.kernel.org, AJvYcCWHdGZnO1uoEI+8PcfYVqo8jP6kleNRvU0O6eh+M+k61/4EzZXMje8klVkWMXLfG00Wwyqiunf97L4=@vger.kernel.org, AJvYcCWxomMWOISYgN/oljYLCdEQNjBgk8MVClwWl8s+i+lsCpzKGyNeDziAN6BPWq0czFxNdsgJJUcPQrFCHOQkzbM=@vger.kernel.org, AJvYcCXD6NYzciX1DThfUJlygTHZ+YJwt4AHZnABpUiO4uPhk/lcm23t/mL46p4HdkUCPcSidfnEyWCZbIOewWiH@vger.kernel.org, AJvYcCXQMleB2sakRCeoVoau1nbftjjXuOaA4mlPflJQaTvUob9G0dDfJBPc/YgmJ1eZryo/GfJV+gbUBtnJ@vger.kernel.org, AJvYcCXc3wFUTw7chbWZvoRpspylZbazFRP7grt9Sn8q+M3YZXoCDIYrs3l6DBUIdTXgL9ppVTONKT/pO8Yo+2s=@vger.kernel.org, AJvYcCXg7lBdSrWD00Rqk5I7GpHJ1nnK
+ eWcJX5BoCezDuLQVUmGxYgAwG0WU+H9z74PG1lSaA5XBLSDf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9taKdlZ7n38xhsxTiz4wWdpWcXnrUpOqZiApuF6kHv1GHps5C
+	2ePChBf+5KjTbxZjkHohBF5yNWmfxcc/54+Ys5845QClfU4T03Bu+b9uwGRYMpsZ7eDAo/19xNE
+	IxIBAKX2vkyXEmMykO1USuOtgygk=
+X-Google-Smtp-Source: AGHT+IGKheT7lugnX8JlgJMn7QT/nmS4FJcCiGvJE3Pk7raMagj1Ij4TOsIejWemk17tl9iiaN1879b2lAZo9ua6oSM=
+X-Received: by 2002:a05:6902:c10:b0:e24:a0da:f89c with SMTP id
+ 3f1490d57ef6-e3087b7c21bmr15483239276.30.1730298081498; Wed, 30 Oct 2024
+ 07:21:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: lore.kernel.org getting senile ? [WAS: [PATCH 1/2] MAINTAINERS:
- Remove Huawei due to compilance requirements.
-To: Vladimir Vladimirovich Putin <vladimir_putin_rus@kremlin.ru>,
- torvalds@linux-foundation.org
-Cc: aospan@netup.ru, conor.dooley@microchip.com, ddrokosov@sberdevices.ru,
- dmaengine@vger.kernel.org, dushistov@mail.ru, fancer.lancer@gmail.com,
- geert@linux-m68k.org, gregkh@linuxfoundation.org,
- hoan@os.amperecomputing.com, ink@jurassic.park.msu.ru, jeffbai@aosc.io,
- kexybiscuit@aosc.io, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
- manivannan.sadhasivam@linaro.org, mattst88@gmail.com,
- netdev@vger.kernel.org, nikita@trvn.ru, ntb@lists.linux.dev,
- patches@lists.linux.dev, richard.henderson@linaro.org, s.shtylyov@omp.ru,
- serjk@netup.ru, shc_work@mail.ru, torvic9@mailbox.org,
- tsbogend@alpha.franken.de, v.georgiev@metrotek.ru, wangyuli@uniontech.com,
- wsa+renesas@sang-engineering.com, xeb@mail.ru,
- LKML <linux-kernel@vger.kernel.org>, phoronix@phoronix.com,
- redaktion@golem.de
-References: <CAHk-=whNGNVnYHHSXUAsWds_MoZ-iEgRMQMxZZ0z-jY4uHT+Gg@mail.gmail.com>
- <20241024140353.384881-1-vladimir_putin_rus@kremlin.ru>
- <20241024140353.384881-2-vladimir_putin_rus@kremlin.ru>
-Content-Language: tl
-From: metux <metux@gmx.de>
-In-Reply-To: <20241024140353.384881-2-vladimir_putin_rus@kremlin.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024-eminent-dancing-narwhal-8f25dd-mkl@pengutronix.de>
+ <CAOoeyxV4K=jR+tofeQtsMB7+smuu+Ghas5Tqfx4JvhuVK8dXrA@mail.gmail.com>
+ <20241025-modest-hasty-angelfish-1e9193-mkl@pengutronix.de>
+ <CAOoeyxU9VwsM=mRZy5AtjH=V3iSGQxkKw18qL+yeUxkh1OVHgQ@mail.gmail.com> <20241030-industrious-sidewinder-of-strength-efbe4a-mkl@pengutronix.de>
+In-Reply-To: <20241030-industrious-sidewinder-of-strength-efbe4a-mkl@pengutronix.de>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Wed, 30 Oct 2024 22:21:07 +0800
+Message-ID: <CAOoeyxUiFoU6hdj96ih4x_rUCBSzSCQ+vvab45=woZ3wLhNE7g@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1/p4ha3marvAu2CXeYNmBSD+weQhVbztKCP0nISPKnffRdbsPI3
- zPctzMmHLcQZTqlh2zjZzgis1SjXx91Sovsuto7k7PtiaIGSg5OcFzLBWgRcu14kWBAZy2V
- 6iBOO6GAd+WQX6yFBtItp11ISEXll6ojoO2a1WoqxVo2LnaaL9WPMNYPLxG752dUTxTITZF
- LcInJHKfb0M4bP+h7xstA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4vaZnIPP94U=;1c9up5UAbh4Ag/QzXUXNQvA2l0p
- 44Ceg39Q9FQgjnuFRb4ctiEQZ6+ThY3ohI4R7ghaxJvwW9GLmQklj8ELuO6HJZM3haO1kBQuj
- lPf9DjnCWUfcGZ6Ecr8v4m+aEFlTj6r1/zlhPs8EVJwnS4Pe706PuXTBJpkg5WIn7GxOQO2JW
- XajGhvRcjBrJhZNk7taO4FNBbp5dLDGkB6UepQiBXV68RMT6oTpFOwswwn3/eBeat+lHalNB/
- gw+WciTtplBXIMbtRlqxaAJboJIHQLy0eXfzWRe/U26hY4FalvSL6RW63w2giJVSyCEe63Xf2
- pnU7T294h4NAY+Lk1Uh+0usTGhMn+kqSHhbyz6XuQ9SUym/02iNMzOAUQU4B9rMEU5q6ZVIUd
- 0PZ3f2zoM/AhE/8kfql73M86UBv0ANHdx6CqwXixMw8ZaIdo+GaFI0OcAUT9fQKIyYZczFTBp
- AGABaZ971CQOkfqz9ZNcYAdXDG9laz6+7WLmruYJKXEeAyGdx7twTMJrs8FULcTe1ZOzQm3ZB
- DT9XeRboVEyBNz53wj4/qAD1UsQODVRq/XAMxGruSGXdp9S8U1GLjLvbeblVDHTp4i143RIfc
- UOHfXVzYXn7bC0uCHBJq1Wwe+j/PPMUEteRmxPqlOJxW/zJnk/+MhQ+nsjD3nQeqM4mO62C+8
- cGyUVjqqCH9JFck+CUdFeZs+muR6CcuaNof+jRlxFMXiRxLHv+44RU3hyg04PrdKE21G5zjmC
- EK9fu4IcYIpfrqOOb5TemzZQb0+1b1bsoLkyszrXyxOXZlQryGt702z9+snDKhQG4NhdmMGOd
- ZwypTOh+SvzsGp5g+0qej1rGVGE9aJPkSwI0X0drGzsuc=
 
-On 24.10.24 16:03, Vladimir Vladimirovich Putin wrote:
-> Huawei Corp was added to the US Entity List[1] on 08/20/2020.
+Hi Marc,
+
+okay, I will implement it in the next patch,
+thank you very much!
+
+Best regards
+Ming
+
+Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=8830=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:12=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> The Entity List is a trade restriction list published by the United
-> States Department of Commerce's Bureau of Industry and Security (BIS),
-> consisting of certain foreign persons, entities, or governments.
-> It is published as Supplement 4 of Part 744 of the Code
-> of Federal Regulations. [2]
-
-Interesting to see that this message got removed from lore.kernel.org.
-
-Google still has it in it's index, and marc.info still has the whole threa=
-d.
-
-The internet doesn't forget.
-
-
-=2D-mtx
+> On 30.10.2024 16:30:37, Ming Yu wrote:
+> > I am trying to register interrupt controller for the MFD deivce.
+> > I need to queue work to call handle_nested_irq() in the callback
+> > of the interrupt pipe, right?
+>
+> I think you can directly demux the IRQ from the interrupt endpoint
+> callback. But handle_nested_irq() only works from threaded IRQ context,
+> so you have to use something like generic_handle_domain_irq_safe().
+>
+> Have a look for how to setup the IRQ domain:
+>
+> | drivers/net/usb/lan78xx.c
+> | drivers/net/usb/smsc95xx.c
+>
+> But the IRQ demux in the lan78xx only handles the PHY IRQ. The ksz
+> driver does proper IRQ demux:
+>
+> | net/dsa/microchip/ksz_common.c
+>
+> regards,
+> Marc
+>
+> --
+> Pengutronix e.K.                 | Marc Kleine-Budde          |
+> Embedded Linux                   | https://www.pengutronix.de |
+> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
