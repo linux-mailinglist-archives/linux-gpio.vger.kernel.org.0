@@ -1,188 +1,139 @@
-Return-Path: <linux-gpio+bounces-12294-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12295-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B22759B5BBC
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 07:33:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 111F99B5C1E
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 07:59:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B3FDB228A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 06:33:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9410283D7F
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 06:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB5D1D1E85;
-	Wed, 30 Oct 2024 06:33:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E9831DC1A2;
+	Wed, 30 Oct 2024 06:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aibMDmx8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bewQAceO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF6D63CB;
-	Wed, 30 Oct 2024 06:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4741D9A47
+	for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2024 06:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730270003; cv=none; b=sqoHm4p84qJbhPfRRpqYtuYvN7zqBhQ2/LBaXtCkdMeiSpnuw4Q2BVzfAUELHD3nqd0xH9YY+qkGU+yRGl9GsYM6ULSp6t9c1IKrW5m3pfhqxVbLw+8/d55wAycTkRru73L0QnRRzA5zLXhiBTO5dLFRhxScAY/DqoHj+g4Feso=
+	t=1730271566; cv=none; b=QtBOn4T6w46TzWYw6/vh54CoCne1Iu/R8bAfuCKZgmetert+zzOivYnpOZnLxvi5M2ajEqzRYFOp3xgJhjgWxvR3jXN2kf4TqdZocFZwJmi7lp97WL5Vm3MxLlRYc4rheiUI29RNnTiyGPQWxB9ACT4WEnNS+vb+QrsF5daIEAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730270003; c=relaxed/simple;
-	bh=JkKmcioEchHN6SSzjPu+rsMYp/BSELwDzX0MuJ3+zZo=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BOeyrSa6wafiof1m8QHCnM02YCrinWAaEZ4elZQQz2NmkRX2TEOxDevnC/L22Q8Ct+bFJhsx5X9ICJ5E1HBhLnk8Xble0eVCqR8qdTgS7YHmS9b8WUB1lDcpTTVfBb9smroh7gVkTbL87PV0GRXizHl1M/2KUjc7NPWos0324sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aibMDmx8; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9a0c40849cso1025553666b.3;
-        Tue, 29 Oct 2024 23:33:21 -0700 (PDT)
+	s=arc-20240116; t=1730271566; c=relaxed/simple;
+	bh=i16pYFlL+2GPz4u0u591aWQv0tNB7ELcsGAfV5zdSA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRszyeUVNNF0ZNwFw2HAT/CtqjW1KzxATH/+VxO5GGq7Tz/qrQibW4ToXwQ6kR7FFRuaPd92486vz5Nkbjood9rLrBFYAgKJ37Lp0JdMXSteOUtsbMlgBn5a++tU59s/hLEzrnnd5WA7TeuBE9VTitnIpOzlxjjf9UmTjx1UR6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bewQAceO; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37d4c1b1455so3994728f8f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Oct 2024 23:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730270000; x=1730874800; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:cc:to:subject:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tQB2skrqNyBBtXr9NvGq3k5U2F5Farr1AhF3+r/DnZY=;
-        b=aibMDmx8YdW19MXdaR+LgkV+trkjCxP4Nno88xv1Jfbo5t6INgQXkK3kwux7z6waCX
-         ioVi8YbuaZET0u37uIIG0FooGqu71SyBmKIqW9FN9uPWV/eADFu6sboLx56OPFj45Cxb
-         tD6Bt0HF+4o4GjljgSDoig6RDU7f1CvW/gasR4INrp2g0oFRMVLNMQPuW1oZY5VFiVlx
-         dnpTq+ScGDncDvd4zQGeB72kubddxgtnjuC1n7v3KSNqB3aJHEF1D+l1pmfvTZEZBig1
-         IwKTbmuUaFvzw/0OwxZt4YprgHTq6puYxNgHZcb7OgUmO7uB4lrsxpWMfEfkuZzpDo3w
-         EpQw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730271562; x=1730876362; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i16pYFlL+2GPz4u0u591aWQv0tNB7ELcsGAfV5zdSA0=;
+        b=bewQAceOUlkCq4sGvFwKgJAvRCBs+2FMXbT/xf/xKK2+bG9J6UNQCE9Ob6wEX7Hr7d
+         6m3iZ9P+KrWnZ6dxEdOYQiYXeiPGM8PHmhqF5jcT6wk8fapUjJ2pPI4xjEPUEX+l8STD
+         3cuCw32RsLK467pJ4nu7b6uVo+Zlg57pAeqMoOVwnpw3GVNVeViDeAGVJyBNJCsmpzvb
+         Exsqt4SLG+/rOoy2kOTYS20YsdEX7UlDopAJRk4leXtxDWYb46z7HfA0zmZCe0V9ILA0
+         uQ9gWfULPHIbjNtAblCsCzEUA/1yo/E06ZDL3BM60maIHdbi0Ze7dBs8QShIT46X6zgD
+         4VfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730270000; x=1730874800;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:cc:to:subject:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tQB2skrqNyBBtXr9NvGq3k5U2F5Farr1AhF3+r/DnZY=;
-        b=ws/y2dZJHjYXXcByaEdS93P/lTtXWbZAH5rJ+gO7V3Feq2H4iHXVe/tD5eDL7ACx1K
-         tGceIr0lJq5OhhcRJ1VM9vhhr9Os6+JB2DrlLKsde0Ol7HgylDd9qOMP6K07lL2FA5zC
-         +0H6I5SvGYMZqZ086dlam1ucDK1REvZ761zaesVImw8KrUmI7Bg21kKTY0EiTWdUn681
-         PQkxOGsDe6N75VgrSk3n1N/2h6hRE36Odu8AhQp7uE5Qs4qeReRCygotSEzhfqQ0iucp
-         1iXzeilLVSDe+9pn6SkDHMgfpTTqrIGsQ5xzxnOz3FcEEkYo05TAnEc/ASWo95G638Sx
-         1KFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqezj/AoPg21rnYyGAR/M3VDsu5zMdI/w3dpPLvSPsyKrw7Ln5HDT+VrXbImulJOd9Hto6uN16teSrc6r2@vger.kernel.org, AJvYcCXBlA9CBUlKA4QcrFD1s9+UKzz0sq2geQI6Gmn/9q5aunpOiDox4enMHZ5Xo6uWM5Ppb17zK1cchn3bUA==@vger.kernel.org, AJvYcCXpKxaJz/Ra4XUZAVuIxqccjZ77Ay7IZp5VIaW3dfnmXgKtFJ2/ILMiKgef7S1rrKvAyGHTQgE6HEap@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO1ao4RfUC8z6AzAVjwGoC0aKEB8auwfQqxkSh4M2tCWsPkziQ
-	8yDVifxg0rQEXki3/Jk0BWjcW2IelcegpaTQGej/eHsvgW3H0Tqo
-X-Google-Smtp-Source: AGHT+IGoO/JgCl6tIFd8tMOpxidHIIxUPkp1DnQ/++FPlMXZXQ2ix6vSKLM04UkK2EC6h5bxjO2Xow==
-X-Received: by 2002:a17:906:6a0e:b0:a9a:2afc:e4da with SMTP id a640c23a62f3a-a9e3a7f433bmr177110766b.63.1730269999630;
-        Tue, 29 Oct 2024 23:33:19 -0700 (PDT)
-Received: from [10.34.27.4] ([95.183.227.34])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b30c7adadsm544485066b.175.2024.10.29.23.33.16
+        d=1e100.net; s=20230601; t=1730271562; x=1730876362;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i16pYFlL+2GPz4u0u591aWQv0tNB7ELcsGAfV5zdSA0=;
+        b=gyHc7P0xyUBn0W4KkiDAIYLa6r5bRhvwm0mp07l2Srn0wtfHSLGwemC8m6LkUQEogi
+         ICpvxZfqVwSAtG6Dqb4Vx7LUS7Um5CEqubY4nEpuDGjf78CCPav1wS4HrNstJnlBbpQR
+         UX23BytdnxTwGwHhaEcYLNsrS3yKqqyYxAHg/QgJlHnLRqdwc4z5GLaXFn3UccddUSbD
+         MyonhPxQCPS7yV+iLrRfVvyoxJEIvUH5oaL4CE8o6LAQVCKTod7UMNmuB6ZT/KMPsg5j
+         t3I1+K20beUR/C+XaOjDNuRMQWy1AZhww75jshznxgnE24IK9hbgLElSdwPZIR2/EJc+
+         PU4w==
+X-Forwarded-Encrypted: i=1; AJvYcCV4Nv17f4uIHLh4sLc2ulUgM9VQxwRskmczy5PMknFTcYQyetGI6bHPwDGYOS2dHD9TcOVABoVdUyir@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHEdchdf9mJFNTEO3nUij/tYLSNBhVL1xtkvHxsEeRjw2/Hbta
+	7a0MBik0L/3R73YV2bKGoWvRJZ1aXvhOSrunbeo2mNpw9c98W6RNUuQGfOg2QvA=
+X-Google-Smtp-Source: AGHT+IFyqfOrZ4MI+sXiINodrY0EVZIGOc3drYiZoKJHu/kEVijxTqjjc6wOezZxjLb6iMiKoIcUbQ==
+X-Received: by 2002:a5d:638b:0:b0:37d:387b:f080 with SMTP id ffacd0b85a97d-381b7075edfmr1643140f8f.15.1730271562350;
+        Tue, 29 Oct 2024 23:59:22 -0700 (PDT)
+Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b70f25sm14695531f8f.67.2024.10.29.23.59.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 23:33:17 -0700 (PDT)
-Date: Wed, 30 Oct 2024 09:33:07 +0300
-From: Yassine Oudjana <yassine.oudjana@gmail.com>
-Subject: Re: [PATCH v6 1/8] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Pull pinctrl node changes from MT6795 document
-To: Rob Herring <robh@kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, Yassine Oudjana
-	<y.oudjana@protonmail.com>, Andy Teng <andy.teng@mediatek.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Message-Id: <7VO5MS.DLTH7ISEUBUE1@gmail.com>
-In-Reply-To: <CAL_JsqJ864ZM8qgqfuyKsS5H=gsVm=nOrikQ4cuObEVBJX75JQ@mail.gmail.com>
-References: <20241011120520.140318-1-y.oudjana@protonmail.com>
-	<20241011120520.140318-2-y.oudjana@protonmail.com>
-	<20241011165640.GA2475122-robh@kernel.org>
-	<2608306c-da19-4160-b0c7-dbb8935abc42@collabora.com>
-	<CAL_JsqJ864ZM8qgqfuyKsS5H=gsVm=nOrikQ4cuObEVBJX75JQ@mail.gmail.com>
-X-Mailer: geary/46.0
+        Tue, 29 Oct 2024 23:59:21 -0700 (PDT)
+Date: Wed, 30 Oct 2024 07:59:19 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v9 3/6] dt-bindings: pwm: airoha: Add EN7581 pwm
+Message-ID: <jzihr7yp5ftyl6ojhtnv2r4duos6or6hozip7yxxodycokwjms@nfa5clftyocy>
+References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+ <20241023-en7581-pinctrl-v9-3-afb0cbcab0ec@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xv6ynghrtwc3g4ok"
+Content-Disposition: inline
+In-Reply-To: <20241023-en7581-pinctrl-v9-3-afb0cbcab0ec@kernel.org>
+
+
+--xv6ynghrtwc3g4ok
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v9 3/6] dt-bindings: pwm: airoha: Add EN7581 pwm
+MIME-Version: 1.0
 
+Hello,
 
-On Mon, Oct 14 2024 at 14:02:37 -05:00:00, Rob Herring=20
-<robh@kernel.org> wrote:
-> On Mon, Oct 14, 2024 at 3:27=E2=80=AFAM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
->>=20
->>  Il 11/10/24 18:56, Rob Herring ha scritto:
->>  > On Fri, Oct 11, 2024 at 03:03:46PM +0300, Yassine Oudjana wrote:
->>  >> From: Yassine Oudjana <y.oudjana@protonmail.com>
->>  >>
->>  >> mediatek,pinctrl-mt6795.yaml has different node name patterns=20
->> which match
->>  >> bindings of other MediaTek pin controllers, ref for=20
->> pinmux-node.yaml which
->>  >> has a description of the pinmux property, as well as some=20
->> additional
->>  >> descriptions for some pin configuration properties. Pull those=20
->> changes
->>  >> into mediatek,mt6779-pinctrl.yaml and adjust the example DTS to=20
->> match in
->>  >> preparation to combine the MT6795 document into it.
->>  >>
->>  >> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
->>  >> ---
->>  >>   .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 38=20
->> ++++++++++++++-----
->>  >>   1 file changed, 28 insertions(+), 10 deletions(-)
->>  >>
->>  >> diff --git=20
->> a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml=
-=20
->> b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->>  >> index 3bbc00df5548d..352a88d7b135e 100644
->>  >> ---=20
->> a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->>  >> +++=20
->> b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
->>  >> @@ -111,12 +111,12 @@ allOf:
->>  >>           - "#interrupt-cells"
->>  >>
->>  >>   patternProperties:
->>  >> -  '-[0-9]*$':
->>  >> +  '-pins$':
->>  >
->>  > Worst case, this could be an ABI break. Best case, it's churn for
->>  > mt6779. Is it worth unifying?
->>  >
->>  All those MediaTek pinctrl bindings are mostly the same, where only=20
->> the pin
->>  definitions in the binding header does actually change.
->>=20
->>  I think that it's worth unifying them, not only to get rid of the=20
->> duplication
->>  but mostly for consistency between all of those subnode names which=20
->> are wildly
->>  differing for no real reason... and consistency is a long time=20
->> issue with
->>  MediaTek bindings/dts in general (which is way way way better now,=20
->> but still)...
->>=20
->>  Besides - just for context and nothing else: the driver doesn't=20
->> care about
->>  the names of the subnodes, anyway... so while this is technically=20
->> an ABI break
->>  it's not really creating any functionality issue, and then,=20
->> actually, Yassine
->>  is also modifying the devicetrees to comply with his consistency=20
->> changes, so,
->>  in my own perspective, it's still acceptable.
+On Wed, Oct 23, 2024 at 01:20:03AM +0200, Lorenzo Bianconi wrote:
+> Introduce device-tree binding documentation for Airoha EN7581 pwm
+> controller.
 >=20
-> Wait, I thought there were no users?
+> Co-developed-by: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Right, When I said there were no users I was thinking of MT6779=20
-strictly, but MT6797 is included in the bindings so it counts too.=20
-mt6797.dtsi is currently the only place where these bindings are used.
+LGTM
 
->=20
-> We generally only consider node names ABI when/if something or someone
-> cares. Most of the time it doesn't matter. For the pinctrl nodes, it's
-> really just a question of churn renaming a lot of nodes.
->=20
-> Ultimately, it's up to you. I only care that the implications of the
-> changes are clear in the commit msg.
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-I'll mention MT6797 in the commit message.
+Thanks
+Uwe
 
+--xv6ynghrtwc3g4ok
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmch2UMACgkQj4D7WH0S
+/k4AsAf/WTL0HrSsNuwSLR9YrYS9gYAReyTQAnpm7wbARGWjQE5VLwUF+noWxWP/
+AWmOyJdCsgTFs3fXzuToK5SrEPTcsLv3lMAZl48Q7n6NNxMfHFFQSnLp7h+ZRKxu
+OQcfRE0N2VD/4NNDTlKZ9/LoTUTCFhJzjlGnhI6YlEe9Rj97KA1GlBrpneUUfXJ/
+ukXdcpGeN4W8DzvrzZSLjZYKT5EfDoFA0UFX6cDS1dZbe9LeCH/v13KFM5f7p1HU
++rs9IqNp62uk4YBbsaRjExCK9pcQsQMK/zxcTUn+jMbqR5wweK0wtulbSUdgChQE
+Q1oE4Hk6LfFUUnRHCMrbhDER34YMOA==
+=rEHm
+-----END PGP SIGNATURE-----
+
+--xv6ynghrtwc3g4ok--
 
