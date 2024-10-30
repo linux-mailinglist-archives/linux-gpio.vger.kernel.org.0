@@ -1,111 +1,173 @@
-Return-Path: <linux-gpio+bounces-12323-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12322-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93A8C9B6F7D
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 22:46:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34A4D9B6E97
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 22:15:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C63C1F21AC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 21:46:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 416C4B21110
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 21:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47AFD2144A7;
-	Wed, 30 Oct 2024 21:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87EB61E1A12;
+	Wed, 30 Oct 2024 21:15:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=chaudron-nautique.fr header.i=@chaudron-nautique.fr header.b="SU4kj9w7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn30FgKL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from 1.mo560.mail-out.ovh.net (1.mo560.mail-out.ovh.net [46.105.63.121])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269001CEE89
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2024 21:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.63.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C588194C75;
+	Wed, 30 Oct 2024 21:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730324363; cv=none; b=qJg5/amrBMcplUlb4nqbs6/vK3aKcUVQQvGDK/ln1uwFZth5KEQBvkLg5G72SAxuDlHE2SCxL+zKeOLG4ceyWRCb1gxJMd5CqqFXvs1bAwk1b5uU6JRTov9x4/+114+CgMUd1WOS2tPn5tU+VMo7CJk+6hZeRHubc64/Cgr7u8o=
+	t=1730322932; cv=none; b=NHXChaR6TfwQAu9krlH2O6y3cJf03Odwwj24Wwr/Pu0csuQtws3MZ3N5LELj2N6R4V3SU0r/OExKwd4VLkocnJiTUtTBv7tH0F/JfKjuU0W2FDB3lvdtHQcWY3sTvM5K+Mf79CKQlahug8KeruJMO2HWxnqHJuuCcLQGzAqXKlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730324363; c=relaxed/simple;
-	bh=MLkgZWuUa5ldTl2dW4/+4yInyl6iU2xE+/B8Rrxc9jU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=oGkeM/xJ0OxBWJBZ9CKD3TnL2OsOMZEIEh8j/etpj1zMLRSFDLgbWwwwSiacN0YWTKjmJbHeeMUIoXpamlGYPtDg6K/iy50H6WanhIis7g2oy7r0UVSxkZ0SKBn5t+7ztFCidBAFEBCXpoe4WV62GiYRkWwXize9pllc6J7XyHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chaudron-nautique.fr; spf=pass smtp.mailfrom=chaudron-nautique.fr; dkim=pass (2048-bit key) header.d=chaudron-nautique.fr header.i=@chaudron-nautique.fr header.b=SU4kj9w7; arc=none smtp.client-ip=46.105.63.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chaudron-nautique.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chaudron-nautique.fr
-Received: from director5.ghost.mail-out.ovh.net (unknown [10.108.17.234])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4Xdzyv5dr6z1WSr
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2024 20:59:51 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-4n9gt (unknown [10.110.118.160])
-	by director5.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 9BD261FE08
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2024 20:59:51 +0000 (UTC)
-Received: from chaudron-nautique.fr ([37.59.142.102])
-	by ghost-submission-5b5ff79f4f-4n9gt with ESMTPSA
-	id J2GXHkeeImfNMAAAgWZk7A
-	(envelope-from <vanvan@chaudron-nautique.fr>)
-	for <linux-gpio@vger.kernel.org>; Wed, 30 Oct 2024 20:59:51 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-102R0046677c051-aed4-4da3-85c8-fe84506e1e68,
-                    770F74D5E79245AB0A6C75712EC1B03E302C65DA) smtp.auth=vanvan@chaudron-nautique.fr
-X-OVh-ClientIp:82.64.108.188
-Message-ID: <35d12c34-848d-4093-a0f2-30fb57b1299b@chaudron-nautique.fr>
-Date: Wed, 30 Oct 2024 21:59:05 +0100
+	s=arc-20240116; t=1730322932; c=relaxed/simple;
+	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=GHlJ7tS9ioshbAjm5xbU5l2N7e4nMLci33KkYe6mku49OgOaRW02PvZbYl2AHB6HQKO8phu2wLYT0t+FnoIwRDzCKabU2E1G0ud6jnQtyEHozeoHP6uBPLepW/9oq7J4Ok9Ze3wT0KnRXSpZ6i4WTDkkW3C+dANtQRDJOdK7QiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn30FgKL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAABC4CECE;
+	Wed, 30 Oct 2024 21:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730322931;
+	bh=E/1gsPMYddyGtV5nOIdJOU+wxqCAx3Iy9SGPQsxfff0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Sn30FgKLhEeH/3+fVxl55wltUvnTtRFcf2H+jqIFpQVQhKjYIW2MIjJ3539zvlwQ7
+	 aFHSPzV9u60J7nm2OKTcxsIKIW9B/h8TKgg0haIAl5XKebYk2eKrBFum7KN5okpfQS
+	 uXBnPEzxTp/daAJBIhPlkPxnSYbkxhb8pli6PVbydIBSkf9C72yj893KtGZjymrKGY
+	 eqOWMmvDOxE+IHj+DNztzEWjjZFOM90eLUjBc2Rh+jEkFeSyCIpdXlNy6jy9pBvepb
+	 xl7mygLzXHIoY0zrMbCWEXS8poSRxssdex4GamVBZABlQn1T2unvlWdGDlbUQUEoJS
+	 lFdm13L90KFiQ==
+Date: Wed, 30 Oct 2024 16:15:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v8 0/6] PCI: Remove most pcim_iounmap_regions() users
+Message-ID: <20241030211529.GA1220902@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Le Chaudron Nautique <vanvan@chaudron-nautique.fr>
-Subject: libgpiod 2.2 installation on RaspberryPi 4
-Content-Language: en-US
-To: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 11405084584021117865
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekfedgudegvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhepkfffgggfhffuvfgtgfesthekredttddvjeenucfhrhhomhepnfgvucevhhgruhgurhhonhcupfgruhhtihhquhgvuceovhgrnhhvrghnsegthhgruhgurhhonhdqnhgruhhtihhquhgvrdhfrheqnecuggftrfgrthhtvghrnhepgfegfeduveelieevieegteegiefhheevffeuvddtfeeitedtuedtleehleetvefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkedvrdeigedruddtkedrudekkedpfeejrdehledrudegvddruddtvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepvhgrnhhvrghnsegthhgruhgurhhonhdqnhgruhhtihhquhgvrdhfrhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeitddpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=JGxH+4+kEwTOLTZv54AZw46zh3vGNT6tc2U6rBLkE8c=;
- c=relaxed/relaxed; d=chaudron-nautique.fr; h=From;
- s=ovhmo4169961-selector1; t=1730321991; v=1;
- b=SU4kj9w7r7zyOCp2i4vornKHTSV+a+BpKENm2lYyJQOZANx15XmCKVCiffo11u8PEka2uo2/
- IV1rSDuchbtRBAwOCVXwV11KUAxsdDXm8okmyt3DtTPH1nULfRlffUuTG9pwy1pl6BSqo6JH7/L
- nNLPY1DXj7dtZXLtxdyY6e6DWky9ni6lAHK1DckEfMvu8xozYoQ7YDFPnK2Hrf4VrUOmBF06v6x
- sNSH7G0rzeeTAsUFi/vuim0UCDB3Gm2l4Sjy0DOfel0u+EoIkUdrKOYgKMC7nv6SposZf4VCIy1
- woV147p7qvb80eH9sTkUM+/qQFUe1YzjsA0Yi89BeYT/Q==
+In-Reply-To: <20241016094911.24818-2-pstanner@redhat.com>
 
-Hello,
+On Wed, Oct 16, 2024 at 11:49:03AM +0200, Philipp Stanner wrote:
+> Merge plan for this is the PCI-Tree.
+> 
+> After this series, only two users (net/ethernet/stmicro and
+> vdpa/solidrun) will remain to be ported in the subsequent merge window.
+> Doing them right now proved very difficult because of various conflicts
+> as they are currently also being reworked.
+> 
+> Changes in v8:
+>   - Patch "gpio: ..": Fix a bug: don't print the wrong error code. (Simon)
+>   - Split patch 1 into two patches to make adding of the new public API
+>     obvious (Bartosz)
+>   - Patch "ethernet: cavium: ...": Remove outdated sentences from the
+>     commit message.
+> 
+> Changes in v7:
+>   - Add Paolo's Acked-by.
+>   - Rebase on current master; drop patch No.1 which made
+>     pcim_request_region() public.
+> 
+> Changes in v6:
+>   - Remove the patches for "vdpa: solidrun" since the maintainer seems
+>     unwilling to review and discuss, not to mention approve, anything
+>     that is part of a wider patch series across other subsystems.
+>   - Change series's name to highlight that not all callers are removed
+>     by it.
+> 
+> Changes in v5:
+>   - Patch "ethernet: cavium": Re-add accidentally removed
+>     pcim_iounmap_region(). (Me)
+>   - Add Jens's Reviewed-by to patch "block: mtip32xx". (Jens)
+> 
+> Changes in v4:
+>   - Drop the "ethernet: stmicro: [...] patch since it doesn't apply to
+>     net-next, and making it apply to that prevents it from being
+>     applyable to PCI ._. (Serge, me)
+>   - Instead, deprecate pcim_iounmap_regions() and keep "ethernet:
+>     stimicro" as the last user for now.
+>   - ethernet: cavium: Use PTR_ERR_OR_ZERO(). (Andy)
+>   - vdpa: solidrun (Bugfix) Correct wrong printf string (was "psnet" instead of
+>     "snet"). (Christophe)
+>   - vdpa: solidrun (Bugfix): Add missing blank line. (Andy)
+>   - vdpa: solidrun (Portation): Use PTR_ERR_OR_ZERO(). (Andy)
+>   - Apply Reviewed-by's from Andy and Xu Yilun.
+> 
+> Changes in v3:
+>   - fpga/dfl-pci.c: remove now surplus wrapper around
+>     pcim_iomap_region(). (Andy)
+>   - block: mtip32xx: remove now surplus label. (Andy)
+>   - vdpa: solidrun: Bugfix: Include forgotten place where stack UB
+>     occurs. (Andy, Christophe)
+>   - Some minor wording improvements in commit messages. (Me)
+> 
+> Changes in v2:
+>   - Add a fix for the UB stack usage bug in vdap/solidrun. Separate
+>     patch, put stable kernel on CC. (Christophe, Andy).
+>   - Drop unnecessary pcim_release_region() in mtip32xx (Andy)
+>   - Consequently, drop patch "PCI: Make pcim_release_region() a public
+>     function", since there's no user anymore. (obsoletes the squash
+>     requested by Damien).
+>   - vdap/solidrun:
+>     • make 'i' an 'unsigned short' (Andy, me)
+>     • Use 'continue' to simplify loop (Andy)
+>     • Remove leftover blank line
+>   - Apply given Reviewed- / acked-bys (Andy, Damien, Bartosz)
+> 
+> 
+> Important things first:
+> This series is based on [1] and [2] which Bjorn Helgaas has currently
+> queued for v6.12 in the PCI tree.
+> 
+> This series shall remove pcim_iounmap_regions() in order to make way to
+> remove its brother, pcim_iomap_regions().
+> 
+> Regards,
+> P.
+> 
+> [1] https://lore.kernel.org/all/20240729093625.17561-4-pstanner@redhat.com/
+> [2] https://lore.kernel.org/all/20240807083018.8734-2-pstanner@redhat.com/
+> 
+> Philipp Stanner (6):
+>   PCI: Make pcim_iounmap_region() a public function
+>   PCI: Deprecate pcim_iounmap_regions()
+>   fpga/dfl-pci.c: Replace deprecated PCI functions
+>   block: mtip32xx: Replace deprecated PCI functions
+>   gpio: Replace deprecated PCI functions
+>   ethernet: cavium: Replace deprecated PCI functions
+> 
+>  drivers/block/mtip32xx/mtip32xx.c              | 18 ++++++++----------
+>  drivers/fpga/dfl-pci.c                         | 16 ++++------------
+>  drivers/gpio/gpio-merrifield.c                 | 15 ++++++++-------
+>  .../net/ethernet/cavium/common/cavium_ptp.c    |  7 +++----
+>  drivers/pci/devres.c                           |  8 ++++++--
+>  include/linux/pci.h                            |  1 +
+>  6 files changed, 30 insertions(+), 35 deletions(-)
 
-I have some trouble installing the release 2.2 of libgpiod (or rather in 
-linking it).
-
-I want to use it on a RaspberryPi 4 (kernel 6.6.56-RT and 6.12-RT) which 
-are not provided by Raspberry but taken from https://git.kernel.org, 
-thus the problem might come from there.
-
-I have taken the 2.2 tarball on 
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
-
-when I compile my file it seems ok (just trying with one of the examples 
-from git : chip-info.c), but when I run the program obtained I have this 
-error :
-
-
-./prog: error while loading shared libraries: libgpiod.so.3: cannot open 
-shared object file: No such file or directory
-
-
-The path for ./autogen was /usr/local
-
-gpiod.h  is in /usr/local/include
-
-libgpiod.so.3  is in /usr/local/lib
-
-My programs are in ~/prog/userspace and the makefile uses -lgpiod.
-
-Am I missing and option or a path to be declared somewhere ?
-
-Thanks,
-
-Mathieu
-
--- 
+Applied to pci/devm for v6.13, thanks!
 
