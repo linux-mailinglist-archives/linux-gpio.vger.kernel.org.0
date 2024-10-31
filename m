@@ -1,125 +1,112 @@
-Return-Path: <linux-gpio+bounces-12385-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12386-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 095A79B80E1
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 18:08:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C99C89B817A
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 18:47:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C193528217E
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 17:08:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C1BF1F22154
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 17:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F37261C6F59;
-	Thu, 31 Oct 2024 17:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC931C57A0;
+	Thu, 31 Oct 2024 17:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mt44Bp8S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xHNGl4f5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D3E1BD4E5;
-	Thu, 31 Oct 2024 17:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4911C460E
+	for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 17:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730394477; cv=none; b=TsYLw7bm88KfchRDC8x/jUwmRe8IZUFRBAmNVHVCO41mc1VJqmkOynDVE3vEQwjnLxE4mv8Nr4K861OFTI6+1ZwhK7nAF81y+C4bsEWoo4wFBouBEyBgEOf8Tfs1h3Qej8UZnoCMw67LtVvS4eqrtevEdqad4VWkl7Ztx9fP8B0=
+	t=1730396820; cv=none; b=X+tz5yIwLT1W7WhQshT9dKoNJOZ5h9o+NICoj2ymyaHq/bEgxc5fI6xaMzhCiooyq/Q/Hdp1DZHENpS9hc0JWSF2AN8cIVmRS4rNnAjQvRm2V9hVp/g6qQdiEBAfoABodA/JgWhw9bosCO2C7iDuBUP9gaE0hWtbPv3tgqu2f2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730394477; c=relaxed/simple;
-	bh=b58Q8LPqCMknW6TVeH8ostYyFsH+RiBUsC302ewOwxI=;
+	s=arc-20240116; t=1730396820; c=relaxed/simple;
+	bh=kNW5YJKFKEbItLM4uYNbuJvwCmMv78DkIkndczxT8eo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Af5jwveRy5L6LrE6btf1ovz2xhYgSa2knkpWeFhI4uLBrqF+vvwbHdvkX3BYyEOeftcZuCywYTBmCdmKfzCM6gNlx3av57jnSQONP9oPMUNY0HtlisMjgJ9dkGPiuoTW9DiY4bhGME2x6Cr1d0anCxiA3Cd8FByHeQ77yXAz+X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mt44Bp8S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCDDC4CEC3;
-	Thu, 31 Oct 2024 17:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730394477;
-	bh=b58Q8LPqCMknW6TVeH8ostYyFsH+RiBUsC302ewOwxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mt44Bp8SUtkUMRBYDbk4vB5xY1wmx2LJrOpsNF9PUPmXfFtxW6KYpDVBIWw8pUer5
-	 sZihVUTXgiKn+aXPRIsPF7g7zDedlTkcWU5E0isv3yVI4tSHUQ/8N7rtrZlTMB1ayu
-	 ufmSWXvAlj599o9NEWO8iiK5brAqO80cvfuUDjRHuL9vSOH1Nzuuj79/2qltyH+1Q7
-	 opf3r4xemqxPF9aCoeu7gdEK1H0WR4xPt6SriKqTn9qpLQRNrFJ1xV3DAYONmaH+GS
-	 tsEmMcvc/yU3yOPMlHqVvpW097jC/IlgT5MiInd0At4YjFWpHYCvFlJMu0IltTcXlj
-	 Pp5lrR/FD8eyw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1t6YeJ-000000007ya-249B;
-	Thu, 31 Oct 2024 18:07:55 +0100
-Date: Thu, 31 Oct 2024 18:07:55 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/3] gpiolib: fix debugfs dangling chip separator
-Message-ID: <ZyO5a85wq1fKD-ln@hovoldconsulting.com>
-References: <20241028125000.24051-1-johan+linaro@kernel.org>
- <20241028125000.24051-3-johan+linaro@kernel.org>
- <CAMRc=Mf6yaZMsF5x=vPet=y9fa5ZTuWSAA=oi+Qw07TF8GEFbA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MGR5ikQ+rG4BJJqAWeENMzi2uRnRxv2bU1wzteFkXW6ZsWQuVScJdktMPmfVtzgu4lGCHm+fvSgi4AMgxotZTdAaAAvgLSWFATDH+g5ZMH65xPYhb3ZKZVBKs8myEKGwIDKsGJoOaYd2/X7ShXWOCeF31BWAHKhb9pg+Nm3iPao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xHNGl4f5; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so1450062e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 10:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730396817; x=1731001617; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JYVW0G4jKWF/vesRuHI0K2kAx4zvmynSz5/bDZbMrwU=;
+        b=xHNGl4f5gNxbRKa4r4CmcTfPVMl8E0+Jt961pxEv4hCkDfGksLCU7UXD+t+DmW03rz
+         VYTGL5urU2+yzCy+c6+hA1uTQnMPi+Y5KB+wjKCzncUtcZcXHOt6u5YntZjVyQSpqAlT
+         SKiDQYMHy6+01zd4LY82Neky/u7hQbcgZABbYwG/+7jDjI2kJEsfUvvIYsp/akV7JtQ1
+         KwGY93C6KrEsdSyZ07n1NxZAPuj0/LjhZ+xeII0lc47BcrqEY/K+ML/J33gfCxLmja6C
+         FEbHWJWH+7oO+J5K2BySWtEsVlmhqHx1gBY+mPvDdARS9iUxogsYWTE/HiReciyriUfo
+         8yCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730396817; x=1731001617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JYVW0G4jKWF/vesRuHI0K2kAx4zvmynSz5/bDZbMrwU=;
+        b=tOrM9qiwP9RRfdXRz/oARamPgEnsI3GISYZEV2R7J7eN58jTzD5nYA4VbAO19wrRNC
+         QzIXpP9THAOHOAQz549nLiWdY/LMRA6wlKCwrK6HH1trPRXshG7TphL53RrAqSmasbQs
+         yMaxlvMuqvWLPgO2KNNa6N2oOd5cZTcFdthUAXPdlyJ+1Nd0UkoMqExSWlgTr8Rj1U5H
+         W1xQOX45kTfv1CRu8l5Nqou6vA3PXHLsdx6u7L6kEdxXNFgejo9TT0FDxaHcfMLRSk7Q
+         M9fuKMUWDyP665+fQTnSNHNVANchP0lBFmD9rNIuW9zIEWKksRyMOvuiF9vAsNCwhcT3
+         YLcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtIbnmtKHHXVkAX9HgeJP+6VTvtTQf12sB48fpBylCDUwa+XfzMU9vhSBMlZjvXn1gVnPb05wQJhgB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjrnEsgE3kUlKikHMp3fir1YZwBuOEqkxyShqZAT6iCf+oJ1No
+	ui9kRDRKL6/hOudc7cx5qg6P3MS49CHoD4li3E10UIpu7VUyxIYr0oNvWwspWdE=
+X-Google-Smtp-Source: AGHT+IGyTeyeKwDRjDrsk0Wsj/rqtfm7DMEl1ilUZ4Hdph3NUKV99MLV9W0IhpqFsz6uKU4pSSuJcg==
+X-Received: by 2002:a05:6512:33d1:b0:539:f705:dbb3 with SMTP id 2adb3069b0e04-53b348cf8f2mr10764252e87.23.1730396816837;
+        Thu, 31 Oct 2024 10:46:56 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53c7bdccb0asm272005e87.226.2024.10.31.10.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2024 10:46:55 -0700 (PDT)
+Date: Thu, 31 Oct 2024 19:46:52 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v2 02/15] pinctrl: qcom-pmic-gpio: add support for PM8937
+Message-ID: <qavxo7hx6zl77vzyfv7tht6gsayijredceaelh5qbb7rqjk7z6@6hghlu3bxg4u>
+References: <20241031-msm8917-v2-0-8a075faa89b1@mainlining.org>
+ <20241031-msm8917-v2-2-8a075faa89b1@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf6yaZMsF5x=vPet=y9fa5ZTuWSAA=oi+Qw07TF8GEFbA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241031-msm8917-v2-2-8a075faa89b1@mainlining.org>
 
-On Thu, Oct 31, 2024 at 06:02:43PM +0100, Bartosz Golaszewski wrote:
-
-> But with this change we go from an incorrect:
+On Thu, Oct 31, 2024 at 02:19:43AM +0100, Barnabás Czémán wrote:
+> PM8937 has 8 GPIO-s with holes on GPIO3, GPIO4 and GPIO6.
 > 
-> # cat /sys/kernel/debug/gpio
-> gpiochip0: (dangling chip)
-> gpiochip1: (dangling chip)
-> gpiochip2: (dangling chip)root@qemux86-64:~#
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> to still incorrect:
-> 
-> # cat /sys/kernel/debug/gpio
-> gpiochip0: (dangling chip)
-> 
-> gpiochip1: (dangling chip)
-> 
-> gpiochip2: (dangling chip)
 
-Why do you think this is incorrect? Every chip section is separated by
-an empty line, just as it should be:
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-gpiochip0: GPIOs 512-517, parent: platform/c42d000.spmi:pmic@0:gpio@8800, c42d000.spmi:pmic@0:gpio@8800:
- gpio1 : in   low  normal  vin-0 no pull                     push-pull  low     atest-1 dtest-0
- gpio2 : in   low  normal  vin-0 no pull                     push-pull  low     atest-1 dtest-0
- gpio3 : out  low  func1   vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio4 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio5 : ---
- gpio6 : in   high normal  vin-0 pull-up 30uA                push-pull  low     atest-1 dtest-0
-
-gpiochip1: GPIOs 518-529, parent: platform/c42d000.spmi:pmic@1:gpio@8800, c42d000.spmi:pmic@1:gpio@8800:
- gpio1 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio2 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio3 : ---
- gpio4 : ---
- gpio5 : in   high normal  vin-0 pull-up 30uA                push-pull  low     atest-1 dtest-0
- gpio6 : in   high normal  vin-1 pull-up 30uA                push-pull  low     atest-1 dtest-0
- gpio7 : out  high func1   vin-1 no pull                     push-pull  low     atest-1 dtest-0
- gpio8 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio9 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio10: out  high normal  vin-1 no pull                     push-pull  low     atest-1 dtest-0
- gpio11: out  high normal  vin-1 no pull                     push-pull  low     atest-1 dtest-0
- gpio12: in   low  normal  vin-1 pull-down 10uA              push-pull  low     atest-1 dtest-0
-
-gpiochip2: GPIOs 530-537, parent: platform/c42d000.spmi:pmic@2:gpio@8800, c42d000.spmi:pmic@2:gpio@8800:
- gpio1 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio2 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio3 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio4 : out  high normal  vin-1 pull-down 10uA              push-pull  medium  atest-1 dtest-0
- gpio5 : in   low  normal  vin-1 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio6 : out  high normal  vin-1 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio7 : in   low  normal  vin-0 pull-down 10uA              push-pull  low     atest-1 dtest-0
- gpio8 : out  low  normal  vin-1 pull-down 10uA              push-pull  low     atest-1 dtest-0
-
-Johan
+-- 
+With best wishes
+Dmitry
 
