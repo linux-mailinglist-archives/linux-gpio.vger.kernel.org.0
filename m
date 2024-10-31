@@ -1,166 +1,151 @@
-Return-Path: <linux-gpio+bounces-12325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6A4A9B709B
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 00:41:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A0A9B71E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 02:30:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9F831C20A68
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Oct 2024 23:41:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EB0228381F
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 01:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ECAC217644;
-	Wed, 30 Oct 2024 23:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EEA183CD9;
+	Thu, 31 Oct 2024 01:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qgg/Bc8R"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="qwu/xyiT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB81C2141CA;
-	Wed, 30 Oct 2024 23:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89C02F855;
+	Thu, 31 Oct 2024 01:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730331702; cv=none; b=HnjFE1Zg2ROEZn8otOslmundojKVULSXkdo8YVLZ//1uCfTMoOObjnM+BxiLThCkyOUzh6KlOhE6mgsU+OTCPOZsRd5JrQiwNzef1y1AmMSl8WZmdIXqVUyQsnwO7GI/MnhAgMk+YttYhJ6pnMJpiHrF2iacP7NnlERBlygbJag=
+	t=1730338187; cv=none; b=e0GuR2bxPocFKi9/IXt79lz537bnSw35PKQXH4WT1GRMMBXChh37mAaqiXqvFktQ14oROye8rmW7vaXvQ6owb6YOdhLUML4nN+qQpVpYFmC7QgaNMUQYFXCg0228z7/n7DGeXw1cOi/uF3/7xBczH27+RuE70TleoWcE4T9oKDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730331702; c=relaxed/simple;
-	bh=M0DDN+40heMq1MUyTEiggbwfVdfQi32sS1lu41JVgR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aReKudVo+0aUjP0y7U16poXCYjzJ+OGouSwnY87kL/sWhL29JWBkwP+UYErYRf/ifQf6gXwH6aeAULhcjgGY3CyTG4w85NgwVzsgacgmUr47MHF8JSlmA5MYH2NM5vm2WNUIffMLAnKFS1pT0J9k/UJTGueICt/tIPoQp9uU+p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Qgg/Bc8R; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 49UNfNc8107073;
-	Wed, 30 Oct 2024 18:41:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1730331683;
-	bh=56mwxKqWIevGkZXhU/haryWJFMgZit1fhV8XrDFsqio=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Qgg/Bc8R5KjC8BWc1AZrdWzdx1M4rGmY8IZzuAS/fh0zC3R/Cr1reOwdMzklwTYYN
-	 kK4mv4EQHBOse+u0+m4CnKhM6Rm7tLQx3Ba/oshhO4WwI0a7Ly4gkkeMrcPyz+bDL0
-	 EPVmFlXbK/BNHPUGaiMsEdzCnnMd53Iws7CM6wTw=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49UNfNKW107369;
-	Wed, 30 Oct 2024 18:41:23 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
- Oct 2024 18:41:23 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 30 Oct 2024 18:41:23 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 49UNfMbj096597;
-	Wed, 30 Oct 2024 18:41:22 -0500
-Message-ID: <b0f15446-2e31-4776-84ec-99d96f65ef48@ti.com>
-Date: Wed, 30 Oct 2024 18:41:22 -0500
+	s=arc-20240116; t=1730338187; c=relaxed/simple;
+	bh=7dZsRjpgvzq99Vps+KUUhV2OvVoGHjcdAvRBEnYJXzY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=meLMLBEboq1XkJ4LjaQlZmrvV/WRR5GmtaRn2WU9B4IYgFwIf6ee50xfCIelTdnv9bxgrIyWfZ2wpMjiqlDQQEI1yOBcgIj86aLy1nT/Ovjo4fZ5QPnw1P/r0Rw4osx0nTQ2CBWq9TgmxaAZCDkbwppgh8kgJyUfsYFJqAsLwCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=qwu/xyiT; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.0.162] (BC24936A.dsl.pool.telekom.hu [188.36.147.106])
+	by mail.mainlining.org (Postfix) with ESMTPSA id EACCEE45AB;
+	Thu, 31 Oct 2024 01:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1730337586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AkP+23CR80b6ke8LAz2t64yf9SpQeLZtdkWj6Uov1LA=;
+	b=qwu/xyiTEmQ9n3KZMkdcThGxtDFFh72Sd1GRz0N88ogDbTRLabHaHE5tO+jrFBC+DcYEbl
+	tIYwUwdTmgJRiJZ/c8f88cGLoagu2C+9bnt6RLZ/BL7+JG1SgR2UTMY1CZd9TuxqBEUIQ6
+	hBbfuqksyrIBBlJW+NkGmFlvzQNucrlE1ti4UAHrbAHA4AIjc0ScMfwQ7eB7taySGPl0Cn
+	m9MxVB6iKApz5e+SXaQPTZ/fsOqj7mqPbItAjJNsm/J62rs23gpacOWBKVAFkNJVXJKs6z
+	wNSv3AH54SDD7qC3/Cx3S1askxV4nCY5Li6xrZ5CvIXeX09s6vOw0IIj97o8gQ==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v2 00/15] Add MSM8917/PM8937/Redmi 5A
+Date: Thu, 31 Oct 2024 02:19:41 +0100
+Message-Id: <20241031-msm8917-v2-0-8a075faa89b1@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpio: omap: Add omap_gpio_disable/enable_irq calls
-To: Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bin Liu <b-liu@ti.com>
-References: <20241030225900.59844-1-jm@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20241030225900.59844-1-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAC3bImcC/2XMSwrDIBSF4a2EO67FaxJiOso+SgbiKxeqKVqkJ
+ bj32kw7/A+H74BsE9kMt+6AZAtl2mMLcelAbyp6y8i0BsHFgBxnFnKQM04MJ90b7tygRgHt/Uz
+ W0fuU7mvrjfJrT58TLvhb/42CjDOHrtcKjZR2XIKi+KBI0V/35GGttX4BfzZofKMAAAA=
+X-Change-ID: 20241019-msm8917-17c3d0ff4a52
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Dang Huynh <danct12@riseup.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730337585; l=2793;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=7dZsRjpgvzq99Vps+KUUhV2OvVoGHjcdAvRBEnYJXzY=;
+ b=9V77oYZF4/Yq2CmGGYxDC4tV2KWT0Qjwd8/v7772iNZBLftlgJaU3Ou++pPOO03sCx3VQRTUk
+ UoyDmDj6YOKDO/g6oLATh1XgTg2pHFqZXIWb3gs15cNuvqrJm63cvfM
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Hi all,
+This patch series add support for MSM8917 soc with PM8937 and
+Xiaomi Redmi 5A (riva).
 
-Please ignore this patch, will resend this patch
-with fixed recipients in the "to" list.
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v2:
+- Add msm8937 tsens support.
+- Fix issues addressed by reviews.
+- Link to v1: https://lore.kernel.org/r/20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org
 
-Apologies for the noise.
+---
+Barnabás Czémán (12):
+      dt-bindings: pinctrl: qcom,pmic-gpio: add PM8937
+      pinctrl: qcom-pmic-gpio: add support for PM8937
+      dt-bindings: pinctrl: qcom,pmic-mpp: Document PM8937 compatible
+      pinctrl: qcom: spmi-mpp: Add PM8937 compatible
+      dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl bindings
+      dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8917
+      dt-bindings: thermal: tsens: Add MSM8937 compatible
+      thermal/drivers/qcom/tsens-v1: Add support for MSM8937 tsens
+      dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+      dt-bindings: nvmem: Add compatible for MS8917
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      arm64: dts: qcom: Add Xiaomi Redmi 5A
 
-~ Judith
+Dang Huynh (1):
+      arm64: dts: qcom: Add PM8937 PMIC
 
+Otto Pflüger (2):
+      pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+      arm64: dts: qcom: Add initial support for MSM8917
 
-On 10/30/24 5:59 PM, Judith Mendez wrote:
-> Add omap_gpio_disable_irq and omap_gpio_enable_irq
-> calls in gpio-omap.
-> 
-> Currently, kernel cannot disable gpio interrupts in
-> case of a irq storm, so add omap_gpio_disable/enable_irq
-> so that interrupts can be disabled/enabled.
-> 
-> Signed-off-by: Bin Liu <b-liu@ti.com>
-> [Judith: Add commit message]
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
-> Changes since v1 RESEND:
-> - split patch from series [0]
-> - Add disable/enable calls without wrapper functions
-> [0] https://lore.kernel.org/linux-omap/20241011173356.870883-1-jm@ti.com/
-> 
-> Tested on am335x BeagleBone Black
-> ---
->   drivers/gpio/gpio-omap.c | 26 ++++++++++++++++++++++++++
->   1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index 76d5d87e9681e..137aabada26f9 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -711,6 +711,28 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
->   	raw_spin_unlock_irqrestore(&bank->lock, flags);
->   }
->   
-> +static void omap_gpio_disable_irq(struct irq_data *d)
-> +{
-> +	struct gpio_bank *bank = omap_irq_data_get_bank(d);
-> +	unsigned int offset = d->hwirq;
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&bank->lock, flags);
-> +	omap_set_gpio_irqenable(bank, offset, 0);
-> +	raw_spin_unlock_irqrestore(&bank->lock, flags);
-> +}
-> +
-> +static void omap_gpio_enable_irq(struct irq_data *d)
-> +{
-> +	struct gpio_bank *bank = omap_irq_data_get_bank(d);
-> +	unsigned int offset = d->hwirq;
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&bank->lock, flags);
-> +	omap_set_gpio_irqenable(bank, offset, 1);
-> +	raw_spin_unlock_irqrestore(&bank->lock, flags);
-> +}
-> +
->   static void omap_gpio_irq_print_chip(struct irq_data *d, struct seq_file *p)
->   {
->   	struct gpio_bank *bank = omap_irq_data_get_bank(d);
-> @@ -723,6 +745,8 @@ static const struct irq_chip omap_gpio_irq_chip = {
->   	.irq_shutdown = omap_gpio_irq_shutdown,
->   	.irq_mask = omap_gpio_mask_irq,
->   	.irq_unmask = omap_gpio_unmask_irq,
-> +	.irq_disable = omap_gpio_disable_irq,
-> +	.irq_enable = omap_gpio_enable_irq,
->   	.irq_set_type = omap_gpio_irq_type,
->   	.irq_set_wake = omap_gpio_wake_enable,
->   	.irq_bus_lock = omap_gpio_irq_bus_lock,
-> @@ -737,6 +761,8 @@ static const struct irq_chip omap_gpio_irq_chip_nowake = {
->   	.irq_shutdown = omap_gpio_irq_shutdown,
->   	.irq_mask = omap_gpio_mask_irq,
->   	.irq_unmask = omap_gpio_unmask_irq,
-> +	.irq_disable = omap_gpio_disable_irq,
-> +	.irq_enable = omap_gpio_enable_irq,
->   	.irq_set_type = omap_gpio_irq_type,
->   	.irq_bus_lock = omap_gpio_irq_bus_lock,
->   	.irq_bus_sync_unlock = gpio_irq_bus_sync_unlock,
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml         |    1 +
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+ .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  155 ++
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |    3 +
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |    2 +
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  293 +++
+ arch/arm64/boot/dts/qcom/msm8917.dtsi              | 1999 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8937.dtsi               |  216 +++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1620 ++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    1 +
+ drivers/thermal/qcom/tsens-v1.c                    |   13 +
+ drivers/thermal/qcom/tsens.c                       |    3 +
+ drivers/thermal/qcom/tsens.h                       |    2 +-
+ 20 files changed, 4327 insertions(+), 1 deletion(-)
+---
+base-commit: f2493655d2d3d5c6958ed996b043c821c23ae8d3
+change-id: 20241019-msm8917-17c3d0ff4a52
+
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
 
