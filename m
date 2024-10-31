@@ -1,84 +1,87 @@
-Return-Path: <linux-gpio+bounces-12365-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12366-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B6D9B7A9E
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 13:34:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7E3E9B7ACC
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 13:39:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8868F281843
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 12:34:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E92631C22835
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 12:39:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D07B519B3E2;
-	Thu, 31 Oct 2024 12:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46F7F19F105;
+	Thu, 31 Oct 2024 12:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="U0iHJF39"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jri/CprH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B921C176242
-	for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 12:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E65919D087
+	for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 12:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730378067; cv=none; b=sWr+DWJBOZ3eHj2WQ8CCaDGvFx1cRofO1Lse79PBBZ9MR+K7H6Gmrj8EtY/0aMzVCVUz6GDObnh+1ew1O6MQ2hUrzO+fsSqVHfRxpTVeN60rFJED8+clHo8ZLkycjBAbyj0H+T5mwzMOJ+f3tKIrWcGBPZvMRYVzw1JcWjew1PU=
+	t=1730378307; cv=none; b=A8o0kPYfYOKRzoAuH/VvSPZMveY/7egL/9JFH0krEmsozh+jxhRhik8gNuzB2/4dKpBmIElWOgLMj2OVxVk7aZoBvmcpSfcapBXpfbKzDDCoaq67y9OH+KP/UW9wjeOd5DP+9iqrwkHOgH11lBtnT+CtZIlQT3bB1TuSnSZB2Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730378067; c=relaxed/simple;
-	bh=m48n008ctBtYqrvJex1KITkek7KCiQquXwKklYAXLWc=;
+	s=arc-20240116; t=1730378307; c=relaxed/simple;
+	bh=1cJTeyzn7vDLqCc8PIINomXm7QXgOrkmmDCiJ2+ovRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dUuj0OYTXNvcoopZYxAYKvV2EMf4a90fLxtpMmbm7ljV8tPPQHJRLtxkT0d5nK2/xN3QO9anO4ZvQeQQgshXcy4iX5MEzYcptj4Zh0pW1tbe4WoTb2Gh37fgEEKOQiGVVr3xsBXg1SGy50L+cPGc5NKG2NGLO5lH4UlKdCR+aAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=U0iHJF39; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version:Content-Type; b=DbOLgR9n9Z5RTGGC5+YgykhwDMcNP6N6Lz/JhVLCDMO8WtoIQ++bpk5xASKGD2qU7+vyZNjTFjVNhHc++d7hiGWlo0Av55WaFFWA7DrrXSbYxj6igi61kSF+0Hy7tRthLaOipTEvzWC3nccGcuptNtn+mTHFWUeH7ZdPCCIePSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jri/CprH; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43193678216so7758825e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 05:34:25 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43155abaf0bso7332285e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 05:38:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730378064; x=1730982864; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730378303; x=1730983103; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fzl3Xa9C7yODRffDmu7ydBj4yLwByepcumnubkJz5KE=;
-        b=U0iHJF39Y0H8ZkUEbxZ73rNqxpMIj4sWkjcLpwhRmYrf5uyPV92nYiMZKvleCanWje
-         NWd0u9sldlktIXDRYfPRIVkRhVxnuBhUerOaNtaYQAWbFTZSXiLivW341nXd9IZS/G+7
-         osvh7Kbf5zWORj462DuCF68sX1UpMkpfzfOgeqUFfNTZfr9BW4RLUfaXpxd29b/+s5lM
-         oaduGNkPQl8ZKWkbyacKajLHMLRC74oCE9afVbXGZFMuC/7kVta4ni4DwkNhAUKtpyPB
-         IcL+Dit7j9qDNUOA3+eDcKPTGPOqk3/lLg41RhUAZA3wDbBSj+aofa3AR9YzVoLKRKzG
-         9CKQ==
+        bh=CmBF5h/TWefDrRULij++C6U7yHFjsi/cLL82N9hFyCw=;
+        b=jri/CprHhv++bxYADekYZ/5DOINN/mphtP+neVuQyCIDIkGxaq1Wks1xVaICPyskbs
+         +ZyGyHCXaxsAZRDoW+dSxO9Rrafj9STcw9CIHRZ/faDpTROc6Ss+ddy8aX5uDmKGmXVH
+         NCPtiy/l2RVVS7QxvBeuNXz5oWfnmCRqvZyh0u72l0P/xx/Hdo6rh1HYMXQA9jGjuNb5
+         Rsd4AdLn/bOUYJFqL+9o/pUN/xN5fY+3g2CeNS5V3D+FaZooRPQH+MXrqkziajaVzn3T
+         4noBKFf71Vx1PKGor+BXhbJg35f/3n4Tf/nAtNZv5QID1Nxdwzunk1qBpuaRSsZ1iska
+         bh/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730378064; x=1730982864;
+        d=1e100.net; s=20230601; t=1730378303; x=1730983103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fzl3Xa9C7yODRffDmu7ydBj4yLwByepcumnubkJz5KE=;
-        b=BuVpVBNKWK1Lu4oIu8ayzZ/EQXxsAK0aYdYtVElEpctfrEZCCc6Le9jSCa3D88aVIX
-         /rCzRTiBLSUv/yD2xHSvZ3ThdX6o7FLcv77cge3Jr2lsXRJXjn1pDJqhfJNQwnypCc+h
-         QL3yDy5wtWchpSMiJFA3VfeDLTwuFH79eAL41kzaRK4zJDu60QyznM5esXIo/Ob/8Yf2
-         v9VRuCPv/G1pU8gRXnwxRdpCXnGqjV4lFxGxy4d3e8PFh0T82YMmbGBRlNdht1Jckd8U
-         JETRb64A/DDhrQBYpzvVb5hkY6I3byEBgB7VsylT3tJuuc+YfWOxFvI1Pu+p5zXQJucO
-         4orA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9SHB5w5iOs7TTy6HC4BeAuwYF5m7Oz3se8z8Sor6PeAO47TS9/+UlxEUDZSHE11ZXQ6DHIq37z2Im@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKaySvQ/oUi5D/JUT4HPcrp44CD0srHKboYi789aqJVLppApMu
-	ynYs5zXZXmDCTdcHmtAGKAcSY65sxH3Ui7K1Vm4+ef8JqjLwS4aS6lSzNJBjlRE=
-X-Google-Smtp-Source: AGHT+IEEO7DvzSltFuSOOW7tGilfwME6cwZASRB5gd9U1RoN4BL+MSsBkr+M1gSe6V2EUA3IAfJTCg==
-X-Received: by 2002:a05:600c:548a:b0:42c:c003:edd1 with SMTP id 5b1f17b1804b1-4319ac9c555mr173232775e9.10.1730378064138;
-        Thu, 31 Oct 2024 05:34:24 -0700 (PDT)
+        bh=CmBF5h/TWefDrRULij++C6U7yHFjsi/cLL82N9hFyCw=;
+        b=iTHsErdqblK/zycuLFnrDXRtUZoGGMneMrOOgxFf36ZLMrMaE0namvifz1oUufwueI
+         8SIXQ59sh3kj7RlFfGc+yyy8uavFmzMxNM5TRt8J0tyiO9NIyvjzW6m1d2pint/fDoBj
+         L9QLCdGf+GJ4IuGYo7z8coN/gwuno7cKXVKMVmNz09/cf7vJnLX6WCrXFJScpyDZ+X3O
+         w/EuMJJQ5eaJ3Oz72049uteSUaYjtQSK6w9surOc9Ec/eOKOODOh/b8Yg91ccDXb+jfL
+         0EFWRlnn2qutj77LrDHLcfP1bzVl0Ki9qri+wivcGjibRrZd5P2apatnJLtaYX/eEbA/
+         ZH8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuuUwRvTfusAQw6txqGArsOiHV9D/Pr+3LCtHWI9AsiLTL3FygPWCGX5FWIcuiYlk/0NP1HqP6/JLP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgQUcYyqv+Na42cvHtPnOHnauIDuuDd9GZ+9U9jgH9v0RZZIWd
+	n3haJ/R4jn4BUp7szN9Fv92eqdHznvImibJt73r4KZ2mqYKxgGcSHJV0ywoXh50=
+X-Google-Smtp-Source: AGHT+IEQ2s2Wn1EUmBJ4pYgNUgAtY8LV8iDEw8uwuEQMEgFeh5e058Ixt31/ZtENFYdEnTHUT3w/Qw==
+X-Received: by 2002:a05:600c:3c9a:b0:431:518a:683b with SMTP id 5b1f17b1804b1-4319acacb3cmr148709535e9.18.1730378303342;
+        Thu, 31 Oct 2024 05:38:23 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a6bc:32f9:21fc:be97])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4327d5abfefsm24871935e9.4.2024.10.31.05.34.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bb78b809sm67432055e9.1.2024.10.31.05.38.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 05:34:23 -0700 (PDT)
+        Thu, 31 Oct 2024 05:38:22 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+To: Hoan Tran <hoan@os.amperecomputing.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: sysfs: demote warning messages on invalid user input to debug
-Date: Thu, 31 Oct 2024 13:34:21 +0100
-Message-ID: <173037805747.6410.14300588256259138318.b4-ty@linaro.org>
+	linux-kernel@vger.kernel.org,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: dwapb: Add ACPI HID for DWAPB GPIO controller on Fujitsu MONAKA
+Date: Thu, 31 Oct 2024 13:38:21 +0100
+Message-ID: <173037828242.6687.4733700709962580211.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241021185717.96449-1-brgl@bgdev.pl>
-References: <20241021185717.96449-1-brgl@bgdev.pl>
+In-Reply-To: <20241018015640.2924794-1-fj5100bi@fujitsu.com>
+References: <20241018015640.2924794-1-fj5100bi@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,17 +94,15 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 21 Oct 2024 20:57:17 +0200, Bartosz Golaszewski wrote:
-> We should not emit a non-ratelimited warning everytime a user passes an
-> invalid value to /sys/class/gpio/export as it's an easy way to spam the
-> kernel log. Change the relevant messages to pr_debug_ratelimited().
+On Fri, 18 Oct 2024 01:56:40 +0000, Yoshihiro Furudera wrote:
+> This patch enables DWAPB GPIO controller support on Fujitsu MONAKA.
 > 
 > 
 
-Applied, thanks!
+No objections from DWAPB maintainer so applied, thanks!
 
-[1/1] gpio: sysfs: demote warning messages on invalid user input to debug
-      commit: 37d5a6d6f406322ed0850fc2af1d377aced16340
+[1/1] gpio: dwapb: Add ACPI HID for DWAPB GPIO controller on Fujitsu MONAKA
+      commit: 4f61d7fdcbc422f82acddf33cc966a13de577ce1
 
 Best regards,
 -- 
