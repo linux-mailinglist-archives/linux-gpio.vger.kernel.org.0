@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-12405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EF189B83F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 21:02:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 975529B83F4
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 21:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB53D1F22DA7
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 20:02:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0027CB2207A
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 20:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082241CDA39;
-	Thu, 31 Oct 2024 20:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A16C21CEADC;
+	Thu, 31 Oct 2024 20:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b2hH9/9b"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KukWMSYm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDFF1C7B62
-	for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 20:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0BD1CCEF1
+	for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 20:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730404929; cv=none; b=g8GSFDbgrFoZMPW7GldJuzmcVB0LjZPCBAT0Vw7CLq8egewoICsj5Sj4irQQV80kZaIc5ZfU6OivOyzzh1U8VBbrMss9tzk9EIsY05zwSZ27+JES87CVQRKyys5OhNn7HqQdeqK5gPkMfilysoicxOfS9yv0Njx/Vq4TgLg3A/g=
+	t=1730404931; cv=none; b=cqBwdoH5RLNDrHaem1QpF5Mi8dchWAvpOQscqlAId4dChNlYfJj0yjGddvXySBzH445T13e01Tr4YKe2SQd8Cjn9AVRpQbWnaU7WOHkmfJv/NO1WDVmkHzeXHc20u79ASddGkAsu7AuEiHfmS5WHXRS7fHDKTFNJd5ASjSd+t6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730404929; c=relaxed/simple;
-	bh=LYpUIS6TNygS1bs1G3bDT7Wvnqt3+q3GyXXZY5PUn8s=;
+	s=arc-20240116; t=1730404931; c=relaxed/simple;
+	bh=grXFaneMr1ISdxB6vm0ixLnCulIRiajDw5Hs4ZGd2QI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OtAL/LdRgUwvi8BxQv92XtpqgsQE1vvvpiOyGv3iT/cHyEuaJcWcxEEtX49mTGA+OkCUaphUWcbUAAL/Jgm73Qps4NDrVR/+jCjje12BTL26FTFTlCPgiKP/PWEUfov1QFnhXxfUI+sDMnI/W5W55ZcLX6l6mE3RyJrSu7n7hEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b2hH9/9b; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:To:Cc; b=p30kw5J6vpYOqz9UKPuVEs11igy9z2wV5J7uy5sxeBSkbwTsCHqCq/h2IvW1iv7wVr7RqEmdq8WPYMzWQZW8Vhsj6stfiDse8JmwPFly3cM3LZvkVuf/SoNL9VdafZ00ZJZy8jNlGAKMHm3rGFXQmns0vTpgjRoE/sLoGC9vgkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KukWMSYm; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d49ffaba6so896204f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 13:02:07 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4315e9e9642so11723835e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 13:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730404926; x=1731009726; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730404928; x=1731009728; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=S3+/PTENuc0Wqcd74grjNgAYyt4poP34aWyssLFyctE=;
-        b=b2hH9/9bHcttljhh90MZfSQiZ32uxpV/1/zMXjivir3BoeFAKmxnty7jQqm395Pf7Z
-         p7u/uQeaO8gxPx5TGo2d1CfegKJJhwgUVfEc+1LK0HKERE4rXQ+UFPejni8aAmVVrF5S
-         HjWl+2RJ0F8fdTwL8Cy2uNi6JueGnFC6bJKoqQmavyyGHW92M/ASGWQXDUmmHmnl3lP1
-         USuhnQnL5ZjC5hyg4mh3be0DQTvpGFv0VwlctD7Hx0J4jzO/0R90+w14y0muIefDHpRA
-         ELBeEuzDstZAwXwQLudi8+Nz33B30zMElnzUHu5FJQ0eukFS2i8PxkvaER1sQgO5cxy4
-         q2aw==
+        bh=HG0t4NeqbVLn85G3sOjEZke50iDELODkv6ssAwuGw0k=;
+        b=KukWMSYmZAP0rQRob9dCMV93pkgneMVxONCqrE3ElMEVOCe0Oyl4YnCVYc7iLw4Ho7
+         KzJHTBznIQr2yhKI+F3iohjJnXM6YcXeUbfRbZra7jdYbxhcICd1c/QRA2fu6DLhxnDI
+         IKS2SspLtmzE5PVE2Aj6fOk/N5zbHMcNqLXvkqY9kMy2uhTdNUgCVmTKd+Fe8BNf510d
+         DKIjTuVxdbrNQ9OxV4kvESKM+KgYyd9iYzIjVQ9uu45kleEPBsGunm2mzePVrc2A+hut
+         drQsmii/J2ECn9JcFuzRw5b4TD8E9RBLkTjZxPoWkHwIFvxc1EU4wlUjpJ73G+m7/wlB
+         eR6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730404926; x=1731009726;
+        d=1e100.net; s=20230601; t=1730404928; x=1731009728;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S3+/PTENuc0Wqcd74grjNgAYyt4poP34aWyssLFyctE=;
-        b=gtifWx7RM83HGFNxHcIl/X519Y4pUvfnEm4impTi9GV5fte2/ZQR6q3FTv0YgrwSlz
-         qRa31HCCMuuTM6v0wBlLyIBKlnRrnhoz8jJM9p+aV28t9FUy+1GdrqWnM2MQbtlK7epq
-         o67D+4Z3+8eJ0TTDMR5zCx3iYVWqPBuW2GZOliwcThVFUTNmA3FSR4wtNX1XakUFccms
-         /UMsW22BVtxPVUEh0muv2PcgSUF0HGfoITcEgY296Vy1lU5SyLCW6HddlSSigflO4VaX
-         UFnPydPGF4RPL3QUx0NiZR7M5B+qRDSujKVO3ukBoo/LqZlBNk8YlCFePZoptYsyh9+z
-         2OTg==
-X-Gm-Message-State: AOJu0YwXxpQMh+5gRG0ZqL6h1AAGUlz42Xex0xPNPOaF8RIue5Q8Rqod
-	DoHeJy0Dw3YAgI1Ow4N5Wzuatopo2YG8PnYdYrGD+ymIIILSuZzXURtvqbTY4Yg=
-X-Google-Smtp-Source: AGHT+IEmggNr+FEuZkXM1x0nNEKjGuUO++8XIqYVMGPsMqKP5Nv3ooR/+gyU7rfS3q5Ho1x6/Ve5EA==
-X-Received: by 2002:a5d:5482:0:b0:37c:d179:2f73 with SMTP id ffacd0b85a97d-381b70750d9mr5695759f8f.13.1730404926198;
-        Thu, 31 Oct 2024 13:02:06 -0700 (PDT)
+        bh=HG0t4NeqbVLn85G3sOjEZke50iDELODkv6ssAwuGw0k=;
+        b=cKfK28dYr+P4MDnmPBm/wxMwILHkXl0O1rlnx3WrMxwNapLC8LA6/lFezn2OSMTmCZ
+         dsXw4AjbYdeK0qOJJ0Jo74edy0h+CF/ea6Nn9pdUNZq3/jBkepAWNFvhZi9wYIXPdeha
+         nqHfJeF1Z90fBzsPcddPmn0+TFVICKG4VfyKfYYsAY90tKumJLjV+w/qPnyExtajkroM
+         avMXmeUlW4Bloq7frPeie8ZNK9rKggZX1RtSLZpsbzZomGAXMz9sJacA1zDpLJUD4dVU
+         CRjM5W8tIEeTRd1Xi2izAGLZN9ZT0k/NubkFdZfRVWskrbGXc16v1aqG9xeg7hDPsPLQ
+         NKYQ==
+X-Gm-Message-State: AOJu0YyLQDFLd6oKZDlopJd8IZqiee2/jghY5E7oHwuQfTWg0HpjQ8v/
+	ssxtsCr0UnbzzDExg7uSDRO1WWC5+3G8SeBPkbVtrMUWLUcDr00hsPJuSbig4tk=
+X-Google-Smtp-Source: AGHT+IFdJz3U9m7KPLf0+/MvSmAS4Ua279P5RD6u7ZsSqyiraKix7E62FxZs6WZVT7OQXDxf0bMwtw==
+X-Received: by 2002:a5d:64e7:0:b0:37d:49cc:cadc with SMTP id ffacd0b85a97d-381be7c20ebmr3290683f8f.32.1730404927612;
+        Thu, 31 Oct 2024 13:02:07 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:f39e:5519:d578:740])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c1189123sm3003993f8f.115.2024.10.31.13.02.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c1189123sm3003993f8f.115.2024.10.31.13.02.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 13:02:05 -0700 (PDT)
+        Thu, 31 Oct 2024 13:02:06 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 31 Oct 2024 21:01:54 +0100
-Subject: [PATCH v4 4/5] gpio: sysfs: emit chardev line-state events on
- active-low changes
+Date: Thu, 31 Oct 2024 21:01:55 +0100
+Subject: [PATCH v4 5/5] gpio: sysfs: emit chardev line-state events on edge
+ store
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241031-gpio-notify-sysfs-v4-4-142021c2195c@linaro.org>
+Message-Id: <20241031-gpio-notify-sysfs-v4-5-142021c2195c@linaro.org>
 References: <20241031-gpio-notify-sysfs-v4-0-142021c2195c@linaro.org>
 In-Reply-To: <20241031-gpio-notify-sysfs-v4-0-142021c2195c@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -86,48 +86,85 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=781;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2143;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ddPywcbmdK3xi5YOlUy1LjF/4WaHOEFU26L5BClPYq4=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnI+I3uiyYeJL4xbj/FYYWRgfQkObIqepxhrze8
- C3IRb8mG2CJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZyPiNwAKCRARpy6gFHHX
- coElEACfsl0RNSaWVN1L4qPsEc6stxgG0y8cHF0NAGIWQF9vV42tAA0R2333wH5PCcOyHrOLiNi
- wdq4VWH67fJc+0cuD03CGjCuvzbxhTVJVoOfmBq6bz2s0yhrQhv+ECLW7EUQpKRudSSdsTRQYTQ
- 4ysRMJasmvSovf4dJzg3dQhTmseA7/DkfKO9p5kV/JbG0py8zNC7F4Irh6EzfUnUD43g/xuEGHh
- PU2xcWRaB778XYg2kVqwaQDGNNlZivAuY739UJEOEQ9Y9jovRCVmlrwegJCDKmIXYsJ9LS9f4DT
- 8+uUv/Ivr0Fim/I0uyri2ho+0cRFhn1tg8pWE69ff9mzAWvgr0BLHfoEjp1Y5VAeLVI4+iaOQbB
- sxs4c+EUNJkwD6eVrK3UDeTlqilbIOmdyW3AgEYxLyn3wiU+YO1bFxE04PwDot5xThs63u9Zan4
- CWymhAUd9onDw+s2/IQDLKSU0NOx5C44mCg3hjTwnP0T56pcpJG5lZ9wmI1ra79Mj5Vu7dPpz+1
- 8kF4CsQJF62JKTmCie1i+afVjyAewuV+KGF8P4Rsvihu2d3etJFdYcVG0QUiMRr0ItuOqwt+Qvw
- x/VlDxmwS1b24B7zZFqh8TDE75T+lhVdU2i06rs6YF9DMzcwSzfFpmH1DG5pbBWq3pFGFGW/Rfu
- uAd7jsFyy03dTuA==
+ bh=VPwlZ8nGOi8NK4NOOYE429uUxxX6CyDyQfdMC7P82fI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnI+I4WmYgaN7hopWfPfyg4/7kgpmKSho8uMiuI
+ hmLg4nTrsuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZyPiOAAKCRARpy6gFHHX
+ chfJD/9xX94dUejypKQ2wDpArGCpy1bvkeHW93n1gGrPEIHITENtbuA7vJ/bVDI8pTXHocA6WuK
+ oPPppHXRoqSZT2iV5Gx+CjftykF/fnHH0r8ICbZKa9hZ1vzB33XSlbAgLTR7/KZJLO+sZ0hMGzP
+ ZiCAxXRpoR4a0x3JBkDMEiRqWUwXNcHkOeZBWNZTPfDV0KacyVWpBadl//yWM+c2QZwVYAFt3Fj
+ YzWrZXNUNRlXHxXb4j7KxNOTx/xaaIulu9hHBOZWkz9hjNY+9EwocM4U5pUj8FzdgMKJd5VEa+o
+ KtS44V4S+OjYJsHTFuNmmMzQnUhUrfZTee5LYCWTjn3A/K3wkq2lV4VGpC/3zA2+xI+eG3JbdGq
+ cQP1DMVdS0f6pZX924SbP6fYGbnLqaKA2T+a5uzD/AZxpXjxu7SnAyEnbxKAwAqHB+Ufk7uzP5g
+ NhhvZr9Wcx7CXy31GsztEf5J6GqGxkWhZUkeUvMRZ9QvzEkvHvoMj/qsUmNGVo91KUB+6ZMl3Ro
+ CAOTOvIqnMhB14UAK4nCLlFSYQdKt9PZ47ztVNhfujHTNkcLYqfHQZuRBzVjeUR6/5gAkepdIlu
+ 7pGKaVcfSK9+h0/HUniQQBgtIOovr2R9t9aJVjU3xt1XL0abW9tfJHt5nnGrJXMZqhHcz7CUvgm
+ Y4G1BDstItyFFDg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The sysfs active_low attribute doesn't go through the usual paths so it
-doesn't emit the line-state event. Add the missing call to
-gpiod_line_state_notify() to gpio_sysfs_set_active_low().
+In order to emit line-state events on edge changes in sysfs, update the
+EDGE flags in the descriptor in gpio_sysfs_request_irq() and emit the
+event on a successful store.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpiolib-sysfs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index dd5e850c9517..49a5aa89cafc 100644
+index 49a5aa89cafc..5d7e8e64783c 100644
 --- a/drivers/gpio/gpiolib-sysfs.c
 +++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -307,6 +307,8 @@ static int gpio_sysfs_set_active_low(struct device *dev, int value)
- 		status = gpio_sysfs_request_irq(dev, flags);
- 	}
+@@ -179,12 +179,16 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 		return -ENODEV;
  
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
-+
- 	return status;
+ 	irq_flags = IRQF_SHARED;
+-	if (flags & GPIO_IRQF_TRIGGER_FALLING)
++	if (flags & GPIO_IRQF_TRIGGER_FALLING) {
+ 		irq_flags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+ 			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+-	if (flags & GPIO_IRQF_TRIGGER_RISING)
++		set_bit(FLAG_EDGE_FALLING, &desc->flags);
++	}
++	if (flags & GPIO_IRQF_TRIGGER_RISING) {
+ 		irq_flags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+ 			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
++		set_bit(FLAG_EDGE_RISING, &desc->flags);
++	}
+ 
+ 	/*
+ 	 * FIXME: This should be done in the irq_request_resources callback
+@@ -210,6 +214,8 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ err_unlock:
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+ err_put_kn:
++	clear_bit(FLAG_EDGE_RISING, &desc->flags);
++	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+ 	sysfs_put(data->value_kn);
+ 
+ 	return ret;
+@@ -231,6 +237,8 @@ static void gpio_sysfs_free_irq(struct device *dev)
+ 	data->irq_flags = 0;
+ 	free_irq(data->irq, data);
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
++	clear_bit(FLAG_EDGE_RISING, &desc->flags);
++	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+ 	sysfs_put(data->value_kn);
  }
  
+@@ -282,6 +290,8 @@ static ssize_t edge_store(struct device *dev,
+ 	if (status)
+ 		return status;
+ 
++	gpiod_line_state_notify(data->desc, GPIO_V2_LINE_CHANGED_CONFIG);
++
+ 	return size;
+ }
+ static DEVICE_ATTR_RW(edge);
 
 -- 
 2.45.2
