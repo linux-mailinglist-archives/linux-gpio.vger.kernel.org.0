@@ -1,111 +1,356 @@
-Return-Path: <linux-gpio+bounces-12374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12375-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0FF39B7BE5
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 14:41:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F17B9B7C0E
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 14:46:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C1D71F21D5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 13:41:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DB37281E89
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 13:46:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A5C19DFA7;
-	Thu, 31 Oct 2024 13:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B201A0BC1;
+	Thu, 31 Oct 2024 13:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gui+Z2wr"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zLPDE7OO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF59913D886;
-	Thu, 31 Oct 2024 13:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8C19E96B;
+	Thu, 31 Oct 2024 13:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730382104; cv=none; b=nOCCkqNYoKjoWF769PFzh65fXeO9W/G4CTmji0lLigr27d0/35FQIIuZybbCXCYWa1SkyP7M7tqGV4/+CNXV/awZvdsmmIUx9UyLxlppKu+7kLBtAmjhRRmH8e+j3D3/aZFnI/Z+WUs2cKXjkdhNBpWnDBFuhG9kk/BFYhb5WBY=
+	t=1730382310; cv=none; b=qPOUTBvqp6AJhMxXyGmC1c4BlTsh7ifr/87ZklmdU5etnbxcyejFdivR62kymyin1aZNzCrlKvuKKu0BXeS9+CK8C/itFLN19IXS8Wpb8tnmykbu/whm7v6PQpcbL/whN/jfKqa23LKLV9BCGZjdS8hV45clsciZig491RRSNRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730382104; c=relaxed/simple;
-	bh=IYiMGXa/2aCFsI+WTnL2IWIGtncE8MUDNQypusWI5cE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pP8xhXWWO9n5c0LNqSkCu9DTfeDh9yIxK+JXx2tkj4jkikOzYCMUlEiEW030vNB822Pui8ync74+smPZ4Ci5k8ykeZxd/i6FMLrrUps5xf5RFO3hy4g7SQkwiyx86qAPdcpxRqyMhyzivOlibpSQdJIB14EBnXo0yJ0/JTqMMj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gui+Z2wr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730382102; x=1761918102;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=IYiMGXa/2aCFsI+WTnL2IWIGtncE8MUDNQypusWI5cE=;
-  b=gui+Z2wr25Kn80GBoANxHX4dG1D80pLE+nU9LZFmh3yRknVQaHloxPgq
-   Omv0G9yCRhiHIHDiaVmsYQGvXBI/1S7T6Saxg/d+Xu3ZksQ05XXr3Rxw/
-   kJwGqqKnv5JkxKIJCTC5pySe3ThUBJ0LB8KKSJ6513ZGJ/EfOayDyN1nK
-   tMnXO8k3cyYoTUbkUc+7fdvk0hN4f3Mb0+/GoziPTH9fCV6zIbq/z5GFf
-   W0IHhIY9DJ4sosaRFE60nsbtN2vfgc2XrYpW9W8XOeyAk7HWpO3qwruWE
-   ukihb9rvVX9x7XpKkE9sVsjBWkvuLJ71l6+wviZkjNuiGBMukroDo5HuB
-   Q==;
-X-CSE-ConnectionGUID: ts/6tKyyTf2qV7NB0SWfqQ==
-X-CSE-MsgGUID: eC6QFK65RDaVBxOKnCvqtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="52672904"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="52672904"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 06:41:41 -0700
-X-CSE-ConnectionGUID: uSalgK3OSNCsBQLWphpfKA==
-X-CSE-MsgGUID: LeG7h8kITZ+eqWfgWDpm9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
-   d="scan'208";a="113477991"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 06:41:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1t6VQf-00000009enI-2Va6;
-	Thu, 31 Oct 2024 15:41:37 +0200
-Date: Thu, 31 Oct 2024 15:41:37 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1730382310; c=relaxed/simple;
+	bh=WLpam1p9QTY+tyAwe9uGN5T/EjvkaTw8F5kbaZw9W6E=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W1LdGoqS1KaJu1DiTEnHSQWc9/7TPCPyj4j3AJyWGdesls7AdwdBzA6a6M7OARK4rq0K8JqL3roMak7ZJhidq0mCd0HCfQQoJDYG/DwVQ7S7DaqIZnpNfKu1niHL6TOo0virnixKY6Uv/MacDzznC+A9XmzN4ekWH95ElIQc98Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zLPDE7OO; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49VCSkg2000477;
+	Thu, 31 Oct 2024 14:44:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	G0xq6I3sjzz91t2odTGsh/XAHWma7BPt/V2d6kS19z8=; b=zLPDE7OOvTFz7zKj
+	mfnYxZX9RN1KgCj0upr9I3Kut1pLOr6bf2W916VyLxPZtJkh4MoM9zeKP/zAv/+7
+	hOx6G5BCbZd+wh3Q0qzDVtD8957nGJbqE1qWMLesM5ldbnkl7WQjDab27IrNXy/I
+	mkx1t0LJ47LhfditdSrgmPB7mFLAnzvDOPW9S2VgMvuGZCbYZudmP23cYUlFgpxr
+	xa7cu5myHDUGoyx9aTOFonheG51Z/sJuzgr6wU4O8TSlyC31Thi8UOJ/Ft/adxYA
+	occTk4WmRQq1ako7zjKoS9XW20vhESzHDQYXgKRVqfpCELQEqkOaCo5M18kt4g9d
+	rWMO0Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 42kgwbenvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 31 Oct 2024 14:44:41 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 63B8340053;
+	Thu, 31 Oct 2024 14:43:30 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D677E2721DF;
+	Thu, 31 Oct 2024 14:42:39 +0100 (CET)
+Received: from [192.168.8.15] (10.48.87.33) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 31 Oct
+ 2024 14:42:38 +0100
+Message-ID: <df12289dc65c21496d4f9818a53d9797406e2663.camel@foss.st.com>
+Subject: Re: [PATCH 07/14] dt-bindings: pinctrl: stm32: support IO
+ synchronization parameters
+From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mun Yew Tham <mun.yew.tham@intel.com>
-Subject: Re: [PATCH v2 1/1] gpio: altera: Drop legacy-of-mm-gpiochip.h header
-Message-ID: <ZyOJEYU16YsvIh2N@smile.fi.intel.com>
-References: <20241031101836.2434308-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbOy1Gj+MrAAAtQGQT=jZ+Zb-NV+Tc5nTrJ7OWT35sfwg@mail.gmail.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>,
+        Stephane
+ Danieau <stephane.danieau@foss.st.com>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Valentin Caron <valentin.caron@foss.st.com>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Cheick Traore <cheick.traore@foss.st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Date: Thu, 31 Oct 2024 14:42:35 +0100
+In-Reply-To: <CACRpkdZKimfE_00kxa_qAf+jjwxBtuKizDTd3RvOS_PDuZ_JKg@mail.gmail.com>
+References: <20241022155658.1647350-1-antonio.borneo@foss.st.com>
+	 <20241022155658.1647350-8-antonio.borneo@foss.st.com>
+	 <CACRpkdZKimfE_00kxa_qAf+jjwxBtuKizDTd3RvOS_PDuZ_JKg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbOy1Gj+MrAAAtQGQT=jZ+Zb-NV+Tc5nTrJ7OWT35sfwg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-On Thu, Oct 31, 2024 at 02:16:07PM +0100, Linus Walleij wrote:
-> On Thu, Oct 31, 2024 at 11:18 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Remove legacy-of-mm-gpiochip.h header file, replace of_* functions
-> > and structs with appropriate alternatives.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Thanks for cleaning out this!
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, 2024-10-25 at 00:38 +0200, Linus Walleij wrote:
+> Hi Antonio/Fabien,
+>=20
+> thanks for your patch!
+>=20
+> On Tue, Oct 22, 2024 at 5:59=E2=80=AFPM Antonio Borneo
+> <antonio.borneo@foss.st.com> wrote:
+>=20
+> > From: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> >=20
+> > Support the following IO synchronization parameters:
+> > - Delay (in ns)
+> > - Delay path (input / output)
+> > - Clock edge (single / double edge)
+> > - Clock inversion
+> > - Retiming
+> >=20
+> > Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> (...)
+>=20
+> I want to check if we already have some of these properties
+> and if we don't, if they could and should be made generic,
+> i.e. will we see more of them, also from other vendors?
 
-Thanks for reviewing!
+Hi Linus,
 
-It seems we have only 6 (six) drivers left, anybody to clean that in this /
-next cycle?
+Thanks for your review.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Apart for the generic property 'skew-delay' that you mentioned below, I can=
+not find other I can re-use here.
 
+I'm preparing a V2 taking care of the observation from Krzysztof and you.
 
+I will surely take 'skew-delay' in place of 'st,io-delay'.
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st,io-delay-pat=
+h:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 des=
+cription: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 IO synchronization delay path location
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0: Delay switched into the output path
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1: Delay switched into the input path
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $re=
+f: /schemas/types.yaml#/definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enu=
+m: [0, 1]
+>=20
+> This looks related to the st,io-delay below so please keep those
+> properties together.
+>=20
+> Is this path identification really needed in practice, isn't it
+> implicit from other pin config properties if the pin is used as
+> input or output, and in that case where the delay applies?
+>=20
+> Do you really have - in practice - pins that change between
+> input and output and need different delays at runtime (i.e. not
+> at startup)?
+>=20
+> Otherwise I would say that just checking if the line is in input
+> or output from other properties should be enough to configure
+> this? input-enable, output-enable to name the obvious.
+
+On STM32MP25x there is a 'skew-delay' HW block on each pin, but it's applie=
+d independently on each pin either only on the input direction OR only on t=
+he output direction.
+There is no automatic way to switch it between input and output path. This =
+property assigns the delay to one path.
+The generic property 'skew-delay' does not considers this case.
+
+While I could extend the pinctrl driver to include the info about direction=
+, that is trivial for example for UART or SPI, it will fail for bidirection=
+al pins like I2C's SDA; some use case could
+require the skew-delay on SDA input path, other on the output path.
+Also the idea of assigning the direction at startup (e.g. in the bootloader=
+) is not feasible as the delay depends on the functionality that can change=
+ at runtime e.g. by loading modules.
+I prefer having this "direction" path explicitly selected through a DT prop=
+erty.
+
+The existing properties 'input-enable' and=C2=A0'output-enable' are not spe=
+cific for the skew-delay.
+And I think it would be confusing having 'input-enable' or 'output-enable' =
+associated with a bidirectional pins like I2C's SDA.
+
+I propose to change it as, e.g.
+  st,skew-delay-on-input:
+    type: boolean
+    description: |
+      If this property is present, then skew-delay applies to input path on=
+ly,
+      otherwise it applies to output patch only.
+
+Or, it could be a new generic property (keeping backward compatibility), e.=
+g.:
+  skew-delay-direction:
+    enum [0, 1, 2]
+    default: 0
+    description: |
+      0: skew-delay applies to both input and output path, or it switches a=
+utomatically
+         between the two direction
+      1: skew-delay applies only to input path
+      2: skew-delay applies only to output path
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st,io-clk-edge:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 des=
+cription: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 IO synchronization clock edge
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0: Data single-edge (changing on rising or falling clock edge)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1: Data double-edge (changing on both clock edges)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $re=
+f: /schemas/types.yaml#/definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enu=
+m: [0, 1]
+>=20
+> This looks like it should be made into a generic property,
+
+I believe it is too specific to ST implementation.
+I see already some 'retime' mentioned in old ST bindings bindings/pinctrl/p=
+inctrl-st.txt and bindings/net/sti-dwmac.txt, but the control looks quite d=
+ifferent; I don't plan to reuse them.
+
+I will fuse in V2 this property together with the next two in a more meanin=
+gful one, partially acknowledging your proposal below.
+
+> it seems to be about how the logic is used rather than something
+> electronic but arguable fits in pin config.
+>=20
+> Isn't this usually called DDR (double data rate) in tech speak?
+>=20
+> What about a generic property "double-data-rate"?
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st,io-clk-type:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 des=
+cription: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 IO synchronization clock inversion
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0: IO clocks not inverted. Data retimed to rising clock edge
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1: IO clocks inverted. Data retimed to falling clock edge
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $re=
+f: /schemas/types.yaml#/definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enu=
+m: [0, 1]
+>=20
+> Doesn't this require st,io-retime to be specified at the same time?
+>=20
+> Then we should add some YAML magic (if we can) to make sure
+> that happens.
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st,io-retime:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 des=
+cription: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 IO synchronization data retime
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0: Data not synchronized or retimed on clock edges
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1: Data retimed to either rising or falling clock edge
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $re=
+f: /schemas/types.yaml#/definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enu=
+m: [0, 1]
+>=20
+> Can't these two be merged into one (generic) property:
+>=20
+> io-retime
+>=20
+> enum [0, 1, 2]
+>=20
+> 0=3Dnone
+> 1=3Drising retime
+> 2=3Dfalling retime
+>=20
+> Retiming seems like a very generic concept so I think it should
+> be made into a generic property.
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st,io-delay:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 des=
+cription: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 IO synchronization delay applied to the input or output path
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0: No delay
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 1: Delay 0.30 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 2: Delay 0.50 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 3: Delay 0.75 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 4: Delay 1.00 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 5: Delay 1.25 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 6: Delay 1.50 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 7: Delay 1.75 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 8: Delay 2.00 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 9: Delay 2.25 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 10: Delay 2.50 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 11: Delay 2.75 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 12: Delay 3.00 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 13: Delay 3.25 ns
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $re=
+f: /schemas/types.yaml#/definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 min=
+imum: 0
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 max=
+imum: 13
+>=20
+> This looks very similar to the existing "skew-delay" property:
+>=20
+> =C2=A0 skew-delay:
+> =C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32
+> =C2=A0=C2=A0=C2=A0 description:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this affects the expected clock skew on in=
+put pins
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and the delay before latching a value to a=
+n output
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin. Typically indicates how many double-i=
+nverters are
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 used to delay the signal.
+>=20
+> can't we just use that?
+>=20
+> Feel free to edit the text for it in
+> Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> if that is too clock-specific.
+
+I find that text already accurate; I don't plan to change it.
+But adding a generic 'skew-delay-direction' could eventually require a ment=
+ion in the description of 'skew-delay'.
+
+Best Regards,
+Antonio
 
