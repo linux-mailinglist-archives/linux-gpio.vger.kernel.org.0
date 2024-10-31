@@ -1,152 +1,213 @@
-Return-Path: <linux-gpio+bounces-12352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E8D09B7713
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 10:07:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BADB39B772C
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 10:15:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1E90B22F69
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 09:07:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23F2BB23C9B
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Oct 2024 09:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAC1192B83;
-	Thu, 31 Oct 2024 09:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E3FD1953A2;
+	Thu, 31 Oct 2024 09:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzP9zy21"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D681BD9ED;
-	Thu, 31 Oct 2024 09:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071081946B8;
+	Thu, 31 Oct 2024 09:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730365621; cv=none; b=JjYg74qAdacqTSXWvMVVUVUbW2k54T5RclzH9Wc3ENBhyMmhNewXfah5jzmPnmQwRJHNemVakavd+vnZZskVQgejtorqLf7uOj+qPgNQ2AdC/epPvGkMbaHtePh59Ckh+FcaiMouls04lhFmDgevpKLSOqTr/mHQfeHgEsgvk88=
+	t=1730366124; cv=none; b=iVRat4QVmteZpMFmg5VcqIMP/f9HwKOTIs4AdNUoACeKTB2Tsea9ouyNbG1qpACvZOocLk4Cn9F4l4m5c8vApG3Xl4/3/1xxOsMYuvFk1hvgMGkFo3k4wqHxsYQQJJOoeYqaV/h0MDC5Jx2oMHnvmKeRJ647UDoQr2Rc8G6lQEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730365621; c=relaxed/simple;
-	bh=Cb9vYVV4iHorT5/lcXuORujilvhEERcUWScRiPyhrnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p+688Nl1U4Mgjp0tuEdqJhuzTkCMoW0BbEbxDlFpvVqilzBLUJrb5dQhBWGaz7NZgw2Xx8xwPy3a3KNxnGsOwFQGEk4MT04/8rfa16YSJwd6l2k1ukPuFHNSgSm5oEY3AWR1QUjTHbm6BoZWy49q/F/01BMw/wTKUxFR+Qi/sw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6e38fa1f82fso5682167b3.1;
-        Thu, 31 Oct 2024 02:06:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730365617; x=1730970417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ltTlImt8YnKmakyynr77qn3k5jpeQaB6oPQRonuqgfw=;
-        b=ewuFP/DUOAFi1hxU3AehBC0tAup8LojYviarg5vIvqxjmkTm8x/2Uwg8ggSRaCe/2+
-         9TjmX/eJbu/g7mL4OzzTtYvEf1OOWYgIbJXyUadPsK7hlAhpZKQu4c36Gn7VgC5qWevi
-         +OTBI924O7vjPkCySTMmqUl+7FNohXg5AL9eSYWVYCiW+knOx2WNWS0fMj5z3L0bYLke
-         oJU6zIcpt1wespFRtsz71TMNQ6rydrNBL5j1FjhcCVguu2C3pt6MOzWbD85V+fVmf9Mm
-         Qg/VdvoNGIHlF1Db4+J9yZpbpLRu3pfECn0pi7uPjXFFR7omyHYlZQrxtkAHW8MySOJC
-         5zHg==
-X-Forwarded-Encrypted: i=1; AJvYcCURHT2L24UA+6s+QbG5J+eTFiGe+vQIJQn48HDWNsYI6OTxPqAhfZ2SuzGwqUElD76tUhmX+rGoD0OKZw==@vger.kernel.org, AJvYcCW9wLXw5zG+JjzGJ71WRfz6C+hBVUgEAeHUXlzey5JSYPIAyGAjQOsBmDo9+YjeryVItvChtBEQYQEM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUnqrJGKU/4jJqKNiT+KyVHVeC789H/YcBes7Ll51rqxzzgO9t
-	6ilN49URFbT9MPPK9pOGdUUITIY5t9Wog4B8NRP6oq9Kh3UTzp17j5n+hS33
-X-Google-Smtp-Source: AGHT+IEG71nIRwXL6Hri9WY7xpzXEjO2iEPCWTpKR9bBdFwXJ50GZ+b+m1py0hG2cRJJW4zL5aVULw==
-X-Received: by 2002:a05:690c:7005:b0:6e3:f9e:5fe7 with SMTP id 00721157ae682-6e9d8b889f3mr170999627b3.46.1730365617391;
-        Thu, 31 Oct 2024 02:06:57 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ea55ce7324sm1736967b3.146.2024.10.31.02.06.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2024 02:06:57 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6e38fa1f82fso5682067b3.1;
-        Thu, 31 Oct 2024 02:06:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMCBvBko05Pw84dJWDivwpA8lpAwSZiE+bXEko4Mr/vWsy1Nfqkna20FE/PalRoDkLr34x+OdTFnUmbA==@vger.kernel.org, AJvYcCVoVsaWSeE09snZbJ0Gi0WwUWiatHC/I5xJZy4xB2OTUovglj08nKUgECW3sENhsGb5ji7utTJTOnEa@vger.kernel.org
-X-Received: by 2002:a05:690c:9a0a:b0:6e3:21a9:d3c9 with SMTP id
- 00721157ae682-6e9d8962048mr198534337b3.9.1730365616772; Thu, 31 Oct 2024
- 02:06:56 -0700 (PDT)
+	s=arc-20240116; t=1730366124; c=relaxed/simple;
+	bh=5TAZTObtoVI57LD372kZHMXLpPH9kIIf+X9qKx648gM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GhZuF43jtS8fT/6VeojhbU15Q43aEkN8ri+5RO+cP8kBTpRWM/mkGMCIkhCvjwl0ImvxWC4m43tITB5FoCbW+IjEmwKw/G8ClznUl9MzDxQJsFqC5Aju1BX4b5ZX2Bxv4GcuFIlqlJadaQWADExAsoDIFDbDRPb4f387wQ927rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzP9zy21; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730366122; x=1761902122;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5TAZTObtoVI57LD372kZHMXLpPH9kIIf+X9qKx648gM=;
+  b=XzP9zy21/1aBhtsoaMUmgrgGE1XvdG5mpdy1VTJmo+vhmCZkgVWYIjYc
+   J5xdXFAqjQ7semn9y2KbjbRwkQENaDaS7+43X6DkFabqEe5w1QNXY7Cs4
+   IAWv0f5QCh0UelfkjNTDavT3l7rMJvjSl9mFWsYB7p6lqRN38domKxcu0
+   nY97Y3jNCtqq2pXUI4xr89NaYK9hrgq0szJulanb2UVo5SyMzbeyTllFM
+   OhC1eHhGQ1QkMceeQe23G4a1Aux5zx7Tuza176FuvM9WZbujeB23ZWoBM
+   qkM3nwH/7phaR+/O3PMNyZxKQyJAf1PHpsTBcNo18yM4g5SmegkLg3D0R
+   g==;
+X-CSE-ConnectionGUID: ALmgIoLCRheGxqeTOkMtAw==
+X-CSE-MsgGUID: 7mBSEVqJR1WqcnUO9hvznw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11241"; a="34023725"
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="34023725"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 02:15:21 -0700
+X-CSE-ConnectionGUID: bpSmqIzfTxWikrD5Rn3esw==
+X-CSE-MsgGUID: oXSebj6qQ1O0XI44SirHiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,247,1725346800"; 
+   d="scan'208";a="113364515"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 02:15:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t6RGv-00000009aVY-0eT8;
+	Thu, 31 Oct 2024 11:15:17 +0200
+Date: Thu, 31 Oct 2024 11:15:16 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] gpio: Use traditional pattern when checking error
+ codes
+Message-ID: <ZyNKpC_3E3GFsyXL@smile.fi.intel.com>
+References: <20241028134454.1156852-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mc_PW32jNO+C5AEQK6ej_CsCSV-HY76aJoQ6bjZ=JPOtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <140b0f7522ff2f86a7fad0be88c19111fa6cb5b1.1730282507.git.geert+renesas@glider.be>
- <04040095-27c2-49a1-b956-ac7bbd5f919a@gaisler.com> <CAMRc=MdAq3t7P_+SSCcZC3J02B5RuDQvUZjFXQbi4KViiK=-Pg@mail.gmail.com>
-In-Reply-To: <CAMRc=MdAq3t7P_+SSCcZC3J02B5RuDQvUZjFXQbi4KViiK=-Pg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 31 Oct 2024 10:06:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX_OzLc5YzqxObHQrAdZAYrCa8E5Qz4zHR_cqX370KSAw@mail.gmail.com>
-Message-ID: <CAMuHMdX_OzLc5YzqxObHQrAdZAYrCa8E5Qz4zHR_cqX370KSAw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: GPIO_GRGPIO should depend on OF_GPIO
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andreas Larsson <andreas@gaisler.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc_PW32jNO+C5AEQK6ej_CsCSV-HY76aJoQ6bjZ=JPOtg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Bartosz,
-
-On Wed, Oct 30, 2024 at 5:44=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Wed, Oct 30, 2024 at 4:45=E2=80=AFPM Andreas Larsson <andreas@gaisler.=
-com> wrote:
-> > On 2024-10-30 11:03, Geert Uytterhoeven wrote:
-> > > While the Aeroflex Gaisler GRGPIO driver has no build-time dependency=
- on
-> > > gpiolib-of, it supports only DT-based configuration, and is used only=
- on
-> > > DT systems.  Hence re-add the dependency on OF_GPIO, to prevent askin=
-g
-> > > the user about this driver when configuring a kernel without DT suppo=
-rt.
-> > >
-> > > Fixes: bc40668def384256 ("gpio: grgpio: drop Kconfig dependency on OF=
-_GPIO")
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> > > --- a/drivers/gpio/Kconfig
-> > > +++ b/drivers/gpio/Kconfig
-> > > @@ -341,6 +341,7 @@ config GPIO_GRANITERAPIDS
-> > >
-> > >  config GPIO_GRGPIO
-> > >       tristate "Aeroflex Gaisler GRGPIO support"
-> > > +     depends on OF_GPIO || COMPILE_TEST
-> > >       select GPIO_GENERIC
-> > >       select IRQ_DOMAIN
-> > >       help
+On Wed, Oct 30, 2024 at 09:20:45PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Oct 28, 2024 at 2:44 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > Or alternatively:
+> > Instead of 'if (ret == 0)' switch to "check for the error first" rule.
+> 
+> Well there's much more to this patch than that and I have some issues with it.
+> 
+> > While it gives a "+" (plus) statistics it makes the code easier to read
+> 
+> Not only does it increase the footprint but it also adds completely
+> unnecessary goto labels.
+
+These pieces can be dropped.
+
+...
+
+> > and maintain (when, e.g., want to add somethning in between touched lines).
+> 
+> The single line calls to the notifier chain are unlikely to be
+> extended anytime soon but even then I think we should cross that
+> bridge when we get there.
+
+Okay.
+
+...
+
+> > -       if (!ret)
+> > -               gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+> > +       if (ret)
+> > +               return ret;
 > >
-> >         depends on OF || COMPILE_TEST
+> > -       return ret;
+> > +       gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+> > +       return 0;
+> >  }
+> 
+> I really don't see how this makes it better. The logic here is: if the
+> underlying set config worked fine - emit the event. Otherwise continue
+> with the function (even if there's nothing there now). If anything
+> you're making it more difficult to modify later because logically the
+> notification is just an optional step on the way to returning from the
+> function.
+
+Optional steps are covered by flags, and not by checking the previous call for
+failure. So, I barely see the "optionality" of the notifications in these calls.
+
+...
+
+> >         ret = gpiod_direction_input_nonotify(desc);
+> > -       if (ret == 0)
+> > -               gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+> > +       if (ret)
+> > +               return ret;
+> 
+> Ok, for consistency I could take it but please put this into a
+> separate commit doing just that (here and elsewhere).
+
+Based on the other comments from you in this email I'm not sure I understood
+this correctly. Do you want to reject the complete patch, or do you agree on
+some pieces out of it.
+
+> > -       return ret;
+> > +       gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+> > +       return 0;
+
+...
+
+> >         ret = gpio_do_set_config(desc, config);
+> > -       if (!ret) {
+> > -               /* These are the only options we notify the userspace about. */
+> > -               switch (pinconf_to_config_param(config)) {
+> > -               case PIN_CONFIG_BIAS_DISABLE:
+> > -               case PIN_CONFIG_BIAS_PULL_DOWN:
+> > -               case PIN_CONFIG_BIAS_PULL_UP:
+> > -               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > -               case PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> > -               case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > -               case PIN_CONFIG_INPUT_DEBOUNCE:
+> > -                       gpiod_line_state_notify(desc,
+> > -                                               GPIO_V2_LINE_CHANGED_CONFIG);
+> > -                       break;
+> > -               default:
+> > -                       break;
+> > -               }
+> 
+> If you really want to get rid of one level of indentation here,
+> I suggest moving it into a separate function.
+
+Perhaps you suggested a separate change for that?
+
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* These are the only options we notify the userspace about */
+> > +       switch (pinconf_to_config_param(config)) {
+> > +       case PIN_CONFIG_BIAS_DISABLE:
+> > +       case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +       case PIN_CONFIG_BIAS_PULL_UP:
+> > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> > +       case PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> > +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> > +       case PIN_CONFIG_INPUT_DEBOUNCE:
+> > +               gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+> > +               break;
+> > +       default:
+> > +               break;
+> >         }
 > >
-> > Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+> > -       return ret;
+> > +       return 0;
 
-> Yes, if anything it should depend on CONFIG_OF but is this really an
-> issue if this shows up as an option in Kconfig? It's not a hard no
-> from my side and I have heard a similar comment from Torvalds already
-> but I really don't get it: do people go through all the make config
-> prompts on a daily basis instead of using some base config and doing
-> make olddefconfig or menuconfig at worst?
+...
 
-I never use "make olddefconfig" or "make menuconfig".
-I always use "make oldconfig".  How else do you find out about new
-driver support for the hardware you are interested in?
-I also compare the resulting config to what I had before, to catch new
-dependencies that suddenly make an option unavailable.
+> Most of this is IMO pointless churn. You typically do a lot of great
+> cleanups but this just doesn't make sense. Sorry but NAK.
 
-The kernel has 20K Kconfig options. It's nearly impossible to configure
-a kernel from scratch. Being able to filter out the thousands of
-questions that cannot possibly apply to the hardware you are configuring
-your kernel for is a big win. Times the number of people doing this...
+OK, I do one change out of that with deduplication of the direction input call,
+the rest is up to you, let's it be less readable.
 
-Thanks for applying ;-)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
