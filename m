@@ -1,146 +1,99 @@
-Return-Path: <linux-gpio+bounces-12464-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12465-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B22799B9325
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 15:28:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EC289B9331
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 15:29:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3EAC1C20DA9
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 14:28:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD1DBB2249C
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 14:29:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4923419D891;
-	Fri,  1 Nov 2024 14:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5a69qAS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5E0B1A4F12;
+	Fri,  1 Nov 2024 14:29:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AA81BF24
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 14:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7641A3A94
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 14:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730471290; cv=none; b=Lf2SiCesMRbqySKJoSMG8/RR16L6K7R4WA/yA8LzdpkOPYrLiT4XMDbkKv8PC0IqTxNNnv0A9jNfcRWmxBm/sFOzeXEbDWFHTXQrZpRokFvJIXLZ1s/7FM8wDGwWZZFYXbnwKLPyycraHnIbiXAjvkEX6V9duISpaMqs9zeHFLE=
+	t=1730471369; cv=none; b=UUP3pnafbY2vykVQHLTo2vtwQAT4o+XYH0+S9funiLVWDxRoavYnx3aLwmu9XUWWOCAPIfCSCRoEKiRzgZiIH8ZPDoGMc7ORKH1uJt4Ehi4Q9O/sVzKud9+2GRnFYrAIYmy9HnLVr4ZzVS0duAdwM9shtzMowOQPjZ/cZ9GSMjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730471290; c=relaxed/simple;
-	bh=AjAIF85z5Uxz+x4ccS2cpLYgMjub5frwQOz5VRwAuac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTsGxDAeD1jDLT/cxqVBMpAAn1Jv49ff4Ht/4U0z9fthDTzTroF60f62CX1DDjKv0Ro/4wNqKqlHVYW8VI+ohGispjsQu9H6iKv0rDj9eS75+/V1/KkMX6WaWKDmB5J8ugPcO2u7htfsxWXrWCIvJKxf1wWTNnZeOLiZ7+Yx8lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5a69qAS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E73DC4CECD;
-	Fri,  1 Nov 2024 14:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730471289;
-	bh=AjAIF85z5Uxz+x4ccS2cpLYgMjub5frwQOz5VRwAuac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g5a69qASmXc7336pZD18TTbtcSQSE0TwiC/NEjYgymyAC5W3P4+L3AFJvUTXUQkDe
-	 dXv4POevhDcZ7SACrSGqN5yMDYIV3x9u3dVi1P1Z52PfOjuGppRnl5f3fguXsj3DDb
-	 mMphP2ayeSzsdIxixb6DneLIOurgo5V8Ab8W0gSlFdiN8zZKCwoeLlzBxpEjJWkaxH
-	 GeeeTYC12pVln2LbF14vmGQQW0GdigrwYVzSaW0P97mMPgoRbouYNmu9THBV0KSYYh
-	 qOSF1zeCfpDDNRv9RXRHaI1GQ4nTMs7Hr9yGgDTydFdWjv+xzphzyjeU0AnyVgGx1O
-	 LTrm2gnVYNpBg==
-Date: Fri, 1 Nov 2024 14:28:05 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	valentina.fernandezalanis@microchip.com,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lewis Hanly <lewis.hanly@microchip.com>
-Subject: Re: [PATCH v9 1/1] gpio: mpfs: add polarfire soc gpio support
-Message-ID: <20241101-culprit-ascend-de1a8f1967d7@spud>
-References: <20241031-scouting-earmark-6b4dfc6bc6e2@spud>
- <20241031-appease-purse-55145b5dfba4@spud>
- <CAMRc=Men4sxFdSVR_WaJEG1UM7dXeGxTbw0=M_y3NsBmEOZzmQ@mail.gmail.com>
- <20241101-cadmium-speed-78ff7577347a@spud>
- <CAMRc=Mccc2tD2ZNQWpf6_wFt76p1ckyAqw-u6DBObgJV3n50CQ@mail.gmail.com>
- <20241101-affirm-evict-bbd862b08832@spud>
- <CAMRc=MfSOUCFBjqeHwyMgKmNWb4==4=kwdT+aUtPHWKuiWm0aA@mail.gmail.com>
+	s=arc-20240116; t=1730471369; c=relaxed/simple;
+	bh=VmHz5nlZIWqqvEKJFo1Nsn0vzxPDgXYMjLtwHruwULw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZA9kqN0DeYwt7mxCkyCHxWRSsv8eigoMFuaJ+VZaMC6jAcrsrBYHFVdK3jcs3jaqmQo2CZV3Sf6NDllTSTbygUrQrIh1Ru7+ufBJ95WL6SzjRrXE9akWJo85DwtwzT0lfw0aKFrcwHe/0xcztcvjR7Knj1qpjwIVXc1NAJ+SBWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20cdbe608b3so22260165ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Nov 2024 07:29:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730471367; x=1731076167;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ERLYvyPbKZ8JxkIbrL8+Ki3TJhm1EhtXm+s7krpp5vc=;
+        b=B+T0fS/7vxzJxiuvxf0SxrFqJTNbvUVGS2UAy57dhkQ0phXaZpeHU57Fb5rLdEIymb
+         AKMT5MKHKfLZ1MmJEI1yaJZQt1LmorIkQXltLC0mD/h+4iI2S02WpF3wAJSIHUMetA1Q
+         TEa4ulmjWSTwElH9PrmkEzGqEONuOoS4IkZ6Z9O5y8UEow+IJsgHayaS0tSx622O2dQh
+         0yPDaVXbwKJi3G/yTde9HilwiYnXlebi7yEHGKcUOGjh2fFkYo+FBQwm3jfqnhxojomS
+         9QtOITeYIsPAtqKoHEMlYMkoaWLXsvmwEzuFtcF3zN5KfVaE4M51gxHysIhzgkDebVtp
+         CjAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGD6W7kUUcfv8+XrMA5DtmUysNASiZjDZA4KQFlfTmn5277hX0Jc/c9ESox5k8CYzNEgmocJFrQmqB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPbsA8mZrBN8t+MTNlpYB21ViMkEmNk56wokyFEGzwfsNt163i
+	t1mgdX5+7sBKzMo9tSo8k7LmTn0zWOYpJQyEepOFhAPF1dm7z06QQN2FKkHZ0so=
+X-Google-Smtp-Source: AGHT+IEjuPaRXDmIHKxmEM1MgXCWCoRlSILQEUVyaX7oKcUJxOvSkElErAbt27tTtHIX1LTt/c1JlQ==
+X-Received: by 2002:a17:902:ce10:b0:20c:a97d:cc5c with SMTP id d9443c01a7336-210f74f6256mr147030695ad.6.1730471366846;
+        Fri, 01 Nov 2024 07:29:26 -0700 (PDT)
+Received: from localhost ([97.126.177.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056eeaa9sm22092685ad.47.2024.11.01.07.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Nov 2024 07:29:26 -0700 (PDT)
+From: Kevin Hilman <khilman@kernel.org>
+To: Judith Mendez <jm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bin Liu <b-liu@ti.com>, Judith Mendez
+ <jm@ti.com>
+Subject: Re: [PATCH RESEND v2] gpio: omap: Add omap_gpio_disable/enable_irq
+ calls
+In-Reply-To: <20241031145652.342696-1-jm@ti.com>
+References: <20241031145652.342696-1-jm@ti.com>
+Date: Fri, 01 Nov 2024 07:29:25 -0700
+Message-ID: <7h5xp7owmy.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0Mkmi9kIVRq62HD2"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfSOUCFBjqeHwyMgKmNWb4==4=kwdT+aUtPHWKuiWm0aA@mail.gmail.com>
+Content-Type: text/plain
 
+Hi Judith,
 
---0Mkmi9kIVRq62HD2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Judith Mendez <jm@ti.com> writes:
 
-On Fri, Nov 01, 2024 at 02:47:51PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Nov 1, 2024 at 2:37=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
-> >
-> > On Fri, Nov 01, 2024 at 02:09:06PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Nov 1, 2024 at 1:17=E2=80=AFPM Conor Dooley <conor@kernel.org=
-> wrote:
-> > > >
-> > > > On Thu, Oct 31, 2024 at 02:00:22PM +0100, Bartosz Golaszewski wrote:
-> > > > > On Thu, Oct 31, 2024 at 1:04=E2=80=AFPM Conor Dooley <conor@kerne=
-l.org> wrote:
-> > > >
-> > > > > > +       mpfs_gpio->gc.direction_input =3D mpfs_gpio_direction_i=
-nput;
-> > > > > > +       mpfs_gpio->gc.direction_output =3D mpfs_gpio_direction_=
-output;
-> > > > > > +       mpfs_gpio->gc.get_direction =3D mpfs_gpio_get_direction;
-> > > > > > +       mpfs_gpio->gc.get =3D mpfs_gpio_get;
-> > > > > > +       mpfs_gpio->gc.set =3D mpfs_gpio_set;
-> > > > > > +       mpfs_gpio->gc.base =3D -1;
-> > > > > > +       mpfs_gpio->gc.ngpio =3D ngpios;
-> > > > >
-> > > > > The "ngpios" property will be parsed by GPIO core so no need to s=
-et it.
-> > > >
-> > > > Are you sure it'll work here? I tried dropping the ngpios parsing, =
-but I
-> > > > get:
-> > > > gpiochip_add_data_with_key: GPIOs 0..-1 (20122000.gpio) failed to r=
-egister, -22
-> > > >
-> > > > That's coming from the device_property_read_u32(dev, "ngpios", &ngp=
-ios);
-> > > > in gpiochip_get_ngpios(). Checking against the bluefield driver and=
- the
-> > > > code in gpiochip_add_data_with_key(), it's not immediately obvious =
-what
-> > > > I am missing.
-> > >
-> > > Does dev have an fwnode correctly assigned? What does dev_fwnode(dev)=
- return?
-> >
-> > It's not a null pointer or something obviously wrong by virtue of being
-> > null-adjacent, it is a virtual address but not one that %ps can identif=
-y.
->=20
-> This is an OF system right? If you do dev_of_node(dev), does the
-> returned node->name show the OF node you expect?
+> From: Bin Liu <b-liu@ti.com>
+>
+> Add omap_gpio_disable_irq and omap_gpio_enable_irq
+> calls in gpio-omap.
+>
+> Currently, kernel cannot disable gpio interrupts in
+> case of a irq storm, so add omap_gpio_disable/enable_irq
+> so that interrupts can be disabled/enabled.
+>
+> Signed-off-by: Bin Liu <b-liu@ti.com>
+> [Judith: Add commit message]
+> Signed-off-by: Judith Mendez <jm@ti.com>
 
-Yes.
+Thanks for this patch.  Can you give a bit more context on the
+problem(s) this solves and on which SoCs/platforms it was
+developed/validated?
 
-> Does it have the
-> "ngpios" property? Can you read it with of_property_read_u32()?
+Thanks,
 
-No, EINVAL there too.
-
---0Mkmi9kIVRq62HD2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZyTldQAKCRB4tDGHoIJi
-0jqrAP9fVyzZnwRdworyCk0pT5EJIiGLJy3JJv8aknCCIHjEdQD/ammOS960I4zL
-5OsNS6ynU2pP64Buvva4f9LSe08NRgs=
-=XEKz
------END PGP SIGNATURE-----
-
---0Mkmi9kIVRq62HD2--
+Kevin
 
