@@ -1,79 +1,82 @@
-Return-Path: <linux-gpio+bounces-12473-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12474-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA7629B9814
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 20:06:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EAE69B985F
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 20:23:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FC56282CD4
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 19:06:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF0211F22BDE
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 19:23:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D79E1CF281;
-	Fri,  1 Nov 2024 19:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE30A1CF7B4;
+	Fri,  1 Nov 2024 19:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOQrMMWf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrbdQDEX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0591CEEB3;
-	Fri,  1 Nov 2024 19:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ED01A0B16;
+	Fri,  1 Nov 2024 19:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730487988; cv=none; b=Gsb6N7nufLuKQP1nDkyMdGldgxUln0KPbvJ5YYPruhnl/EJpab3pjADb/BAafMvsczbLNdJqu4TWkoTEHIygCB0w5vv8XXxZfTRVJIgtwN1K3QfZuwHrNCq3LLo6itg8zZIJUDNtJg34eo1WyQaVFBk/rRyXbCdqmHFxx76aY/Q=
+	t=1730488989; cv=none; b=HmsNEQ09we86SwA0jR4pBKhbvVHFx5ZkulXocnHmIESyKdL6lxlHkG3usBbehmYiCupkhh5KV4X+86YZBltMd6uA1Jop7hzaOZO+RiV31vCEK1a1GJzR1KfczoDb+BCwodGcUObq5g9ghc1PVrdAHg06Xss2OiHdv5fq2YqZPTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730487988; c=relaxed/simple;
-	bh=3xWr2Pv+wIaPuxk1NXjw+pgU1A7VVVQRLuOEyc6FxUI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kpZnRkP9KiqxoUJZhbrXbYPCH+PDhzDOj1/KeaAH5I+KqXtQ0eHNO43L3LcrvV+wnYampqVwb//6skmToXoqJkR/Qjff9TowmJhFT3uUNcdgVqteKPwxfexLzlutbdIfI743bZDO9QF6eUahaHWvOla45yBiekL9Q251oMmt4Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOQrMMWf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E06C4CECD;
-	Fri,  1 Nov 2024 19:06:26 +0000 (UTC)
+	s=arc-20240116; t=1730488989; c=relaxed/simple;
+	bh=IoVjrTz/gindmuxJ0QMs4DJ8o1qRWvbiA1FET2LLBkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HdEkOjgete5AUxjN4xNjis9kA4dSQ3bMiTQ1cyaSBy97pzO7HOwFT1cV4iaokzk31zRScW2PTXTyF0vaqofF6/jZbOZUHwW5C5v+3qYZKwdNYRbE6Cysban2IZyMvRxmNsStSyA+Qg7va+fWgGUGoIW7fY/Fsr6HeRZRduNlzfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrbdQDEX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1F6C4CECD;
+	Fri,  1 Nov 2024 19:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730487986;
-	bh=3xWr2Pv+wIaPuxk1NXjw+pgU1A7VVVQRLuOEyc6FxUI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=UOQrMMWfHKVdGRcY1pl18fWXvQGB2QWEFLdaX1twjYMTfI/izpjUG7lytxDyEuSOE
-	 /fABK8w7tnzZiPat/dychuD+tNHcPfuKyXJLsdfIqnKdvxN1a3lfs5k+VPx9ukn5a3
-	 WLzHoPMd1HTvBOEVGdnDIAjLlzZYfKR8osyVEk9l61XbYEBm4LI3WqlY3SQEO6s3nv
-	 nkjxpjfpgqJGcqPwEtbPgQi9OrsVohprZoYUhg7yjayQym6k1BbbOa9X10bn3iDqlz
-	 EI/HJqugZE7QAYSglOHAppUFVFnd2kEMhhhfe5pJ3sFv4ax+1z5mAeXg29ecUBS21N
-	 T624tU6e9E+nw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E683AB8A94;
-	Fri,  1 Nov 2024 19:06:36 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.12-rc6
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20241101133517.12627-1-brgl@bgdev.pl>
-References: <20241101133517.12627-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20241101133517.12627-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc6
-X-PR-Tracked-Commit-Id: 604888f8c3d01fddd9366161efc65cb3182831f1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: edf0227abd7ffa3eff5510fd760123e2e15dc879
-Message-Id: <173048799475.2811397.2845699925195434705.pr-tracker-bot@kernel.org>
-Date: Fri, 01 Nov 2024 19:06:34 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=k20201202; t=1730488989;
+	bh=IoVjrTz/gindmuxJ0QMs4DJ8o1qRWvbiA1FET2LLBkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qrbdQDEX0OezccbcP7PeNYpAbB6P/SZVG7QBZZwDgeOkhjnC8oPjnF1ZxKOB/bIkB
+	 LlBXi+kmCfNz7i3u3jE0VZGsy8SQJvYjFLdWDpOaYSMquMkiPCXh93J+c0AD9wbaei
+	 W1ySLqXm7dWe3T8T0b1EWxsFhPzwcx80/zw756Tf2Bnqf37Dv0B8IAZoe61eVIr7vi
+	 YiBGTeYv+N6ZZ6zgQyE1Snux8kYlZaXsTWxpLVb8Ep/dcWQtWLh1JbL2RmJ29K6ry6
+	 CI+zbX9hAO1ttKqSXXeTczGw7U/Ixbi2RtjxxeFscreybr3KYUkPpb5KkYguDJa2wh
+	 K60EcMgkUtE5A==
+Date: Fri, 1 Nov 2024 14:23:07 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Chen Wang <unicorn_wang@outlook.com>, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	inochiama@outlook.com, linus.walleij@linaro.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: correct typo of description for
+ cv1800
+Message-ID: <173048898705.4061273.16401199278517673218.robh@kernel.org>
+References: <20241029012312.3448287-1-unicornxw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241029012312.3448287-1-unicornxw@gmail.com>
 
-The pull request you sent on Fri,  1 Nov 2024 14:35:17 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.12-rc6
+On Tue, 29 Oct 2024 09:23:12 +0800, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> It should be PINMUX/PINMUX2, not GPIOMUX/GPIOMUX2, see
+> <dt-bindings/pinctrl/pinctrl-cv1800b.h>.
+> 
+> Fixes: 64aa494de6fa ("dt-bindings: pinctrl: Add pinctrl for Sophgo CV1800 series SoC.")
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  .../devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml      | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/edf0227abd7ffa3eff5510fd760123e2e15dc879
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
 
