@@ -1,71 +1,74 @@
-Return-Path: <linux-gpio+bounces-12454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EA589B90E2
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 13:05:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 419FC9B90EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 13:09:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C92C2B210AF
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 12:05:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0E8C1F22D14
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 12:09:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E620D19DF40;
-	Fri,  1 Nov 2024 12:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DD219F423;
+	Fri,  1 Nov 2024 12:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="V8kGI6/O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JLlJuwV6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CDE19DF41;
-	Fri,  1 Nov 2024 12:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7D319E997
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 12:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730462700; cv=none; b=dm0HdeFjF9TgUXRL+QPV8PPdFmLJZ1vikphc9CRtXPqJybUNGiddI+s03rU/ZJ2CqYXGgOYZGj4qkQD3pSL8eBmeVyqq9tUKJhvajgk6wGI/g5i0UnjIr/ul4Z+kln47uS2/zxDnv5sZDERFYpwmI2mV0AMlUVl6gL00PhdVG1A=
+	t=1730462956; cv=none; b=W50iGcF5gL5f4K4d8omfeYd7FtFunFRbsikNm0KXbKIeHnhm/aZBvC90caA+SjfhGf+zQCRPvsuFiN+Glksyd0S2r7MyHvrsN6QPCykrJnNbo3T7nkoc9IC1YgmcwO+4I+q37dti+mCpT1BnUixBntZ1uI9LYH9KixESJEieT64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730462700; c=relaxed/simple;
-	bh=VUpg8swfaMH8KH/YYd4yjICcXgkMLBMqp0RubHiLe2g=;
+	s=arc-20240116; t=1730462956; c=relaxed/simple;
+	bh=Xw3gUxp4NreqDr81PnqV12zQuTGAQJPLtbEsEBJpgU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jomQxWUKuKrKOV5AosG0HxK8mkOntwxwLFvYUXQlXWFkkkRXxG2+rgIFiJ4chp2pZniNJDWLj3VyUKrqnoYCR113ahIY1bhEbMsiFYA31BC96e8cGRmDSI1w/WyaoGyoyVAfbiByY/52KWBcGLAT7lJ9KARqT+UKy3PtxrW5axk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=V8kGI6/O; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1730462695;
-	bh=VUpg8swfaMH8KH/YYd4yjICcXgkMLBMqp0RubHiLe2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V8kGI6/OGf9VC0m9ypPCHAgD5grp8peLL1jVHBsKMKcQUcN/w1MyDpUQY5TngyiuY
-	 SucTeTCT8+2RkPrpgp8k7dEipBeaEWF98mOy4iG6iP3vfIxvI28XhvJ7o/ChVp3H19
-	 21n4VMIeO+z4mcyVF3/476PbEfeHQBb7RFqs2XeHru0kW6p+OqyQaVY8OHvi0unIIy
-	 pvIDS4tBcJePoA9cHV1VgnOhQ6MU/6xMDc2S9EVnxfvbG+KzfKrTmsPnKHfJq6yTjJ
-	 1XpH7imWfxuJOaz76QdRScHfYdOyYPqsR9zYrnAca0hj4SMYQS3Ei6QPaIfIYcqJbr
-	 PtQg4h8JEmMPg==
-Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B7E7717E1574;
-	Fri,  1 Nov 2024 13:04:53 +0100 (CET)
-Date: Fri, 1 Nov 2024 08:04:51 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, kernel@collabora.com,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
-Subject: Re: [PATCH RFC v2 3/5] pinctrl: mediatek: common: Expose more
- configurations to GPIO set_config
-Message-ID: <4ed22f25-ad10-461c-be68-8472590db44d@notapiano>
-References: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
- <20241025-kselftest-gpio-set-get-config-v2-3-040d748840bb@collabora.com>
- <CAGXv+5H9OTCn033yoi6oxxRKG1G=vbrBK+aw+ZWwGPWbn=uWuA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gqwmNsxXL4YqGvjuC3HXanKfF7IAbGMvU2zCXRCHXJQAk8RkQcBxd5RYeMjcRJYrXAOcNqVIshhIWbhhK7pZLnWbOYXPEcZM5X//cHQBtmv6j4qotfRnr13Vos2/3tz8rmn5LZwIc4wzDB0u3MnVqQ3DnA/sYUJxvKOic3/PrY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JLlJuwV6; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730462954; x=1761998954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Xw3gUxp4NreqDr81PnqV12zQuTGAQJPLtbEsEBJpgU8=;
+  b=JLlJuwV6rS2mrrfAw3RJJSOHZrE85CbV6MHT7Ij40gv2QRcZy/Ge3rDv
+   KytzkxGg1TNwOtul+XPB+BTRQJsY1PUCzKxLaV4ccSaPaCr1t3g/PxWtd
+   EpQkyvmYAj0SCQujdxuL5oysGX3xUETKFjlLEGHtpZRXz2QFNEmSFXt1i
+   yigeb3BHRU12UvmR3UZJCMGFLSrjibk+ywSqZMZ3gdutgC1p5LD3etHhz
+   KXMOaDx/TDLrcyKJUZAvAJ0jqc4AjKKTXtLoySnws2QmQBg4s2jsTDOXS
+   XrU/ouwGv5XqzkxnvBkX9Q/c+KFI7c37JyjqYKtNK9fA4SG/5KxB3yfdu
+   g==;
+X-CSE-ConnectionGUID: xLxc+yS5QVyOT7NmHepmJQ==
+X-CSE-MsgGUID: Ya7xJnVRSBe9QSuHMkJlEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="55626447"
+X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
+   d="scan'208";a="55626447"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 05:09:13 -0700
+X-CSE-ConnectionGUID: r2BSGnvlTiCtQ3ipf/amoQ==
+X-CSE-MsgGUID: mEzcs3P+SQ+esIFKd+Oa3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
+   d="scan'208";a="82863489"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 01 Nov 2024 05:09:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 2104A2D3; Fri, 01 Nov 2024 14:09:11 +0200 (EET)
+Date: Fri, 1 Nov 2024 14:09:11 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linux pin control <linux-gpio@vger.kernel.org>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.13-1
+Message-ID: <20241101120911.GX275077@black.fi.intel.com>
+References: <ZySrvXpFANlXrnh2@black.fi.intel.com>
+ <CACRpkdaDBsRGntbq4wyEFxA+-ffpQN=MbAhUsoWbp2MO8SK2MA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,32 +78,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGXv+5H9OTCn033yoi6oxxRKG1G=vbrBK+aw+ZWwGPWbn=uWuA@mail.gmail.com>
+In-Reply-To: <CACRpkdaDBsRGntbq4wyEFxA+-ffpQN=MbAhUsoWbp2MO8SK2MA@mail.gmail.com>
 
-On Fri, Nov 01, 2024 at 03:54:58PM +0800, Chen-Yu Tsai wrote:
-> On Sat, Oct 26, 2024 at 5:16 AM Nícolas F. R. A. Prado
-> <nfraprado@collabora.com> wrote:
-> >
-> > Currently the set_config callback in the gpio_chip registered by the
-> > pinctrl-mtk-common driver only supports configuring a single parameter
-> > on specific pins (the input debounce of the EINT controller, on pins
-> > that support it), even though many other configurations are already
-> > implemented and available through the pinctrl API for configuration of
-> > pins by the Devicetree and other drivers.
-> >
-> > Expose all configurations currently implemented through the GPIO API so
-> > they can also be set from userspace, which is particularly useful to
-> > allow testing them from userspace.
+Hi Linus,
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+On Fri, Nov 01, 2024 at 12:43:07PM +0100, Linus Walleij wrote:
+> Hi Andy,
 > 
-> Missing signed-off-by?
+> On Fri, Nov 1, 2024 at 11:21 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > One of the tiniest PR for Intel pin control drivers, only two changes there
+> > which were in the Linux Next for some time without reported issues. Please,
+> > pull for v6.13-rc1 (next cycle).
+> (...)
+> > The following changes since commit 42f7652d3eb527d03665b09edac47f85fb600924:
+> >
+> >   Linux 6.12-rc4 (2024-10-20 15:19:38 -0700)
+> 
+> Does this require stuff from rc4 or can you send it based on rc1?
+> 
+> I know we added some ACPI ID or so for rc4 but ... that's only
+> required at runtime right? Are there hard compile-time or
+> textual dependencies?
 
-Huh, I don't know how the pre-send checks didn't catch it, will take a look,
-thanks for pointing it out! I've added the SoB above so it can
-still be merged if no further versions are required.
+It does not strictly depend on -rc4 but is that a problem pulling from
+something that is based on > -rc1? I mean this is what we do all the
+time in TB/USB side of things and typically apply first patches to
+"next" branch on top of what was the -rcX at the moment.
 
-Thanks,
-Nícolas
+Thanks!
 
