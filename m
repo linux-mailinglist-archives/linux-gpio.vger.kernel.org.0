@@ -1,62 +1,62 @@
-Return-Path: <linux-gpio+bounces-12431-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD0189B8C94
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 09:07:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46B889B8C99
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 09:07:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CD4D1C20C97
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 08:07:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C93221F225D0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 08:07:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58FCA15852F;
-	Fri,  1 Nov 2024 08:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B53157E6B;
+	Fri,  1 Nov 2024 08:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="HS1ipa1T"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="w5JhotbS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2085.outbound.protection.outlook.com [40.107.103.85])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2058.outbound.protection.outlook.com [40.107.21.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5EF157E6B;
-	Fri,  1 Nov 2024 08:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F08158848;
+	Fri,  1 Nov 2024 08:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730448415; cv=fail; b=HtNi5+jnYH21b05UqTD472YFYQ1NJ3ROJb/yn/kuF9tBH0DuAhEAnihsk0p13VBe/WzjytyJ61H/xCaS/tZ/8kjrVUugKlM7f9alp23LIfG0H7+qV/PqtOYCT4+wNt2ePvv+JWk+jIg1+2/9211AN47h71rH4EQusLqXE6W+K6M=
+	t=1730448420; cv=fail; b=L8IKTM4RQaq6eQr6W+qHa3+YgjaHYDXs3miU+KQbD1nR91pXuFhnqyDbQWQbWnffbLpa9KJymH8QwZZW78oirUB8Mr0cF5No6LgtdziiUDc9pp17x7EBwQscCB5lFCvclgN1HErzWrQE71If3diMjpIAgxh5r6qgb61mnQL9tlM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730448415; c=relaxed/simple;
-	bh=JGk4JoPMNB3lNrzPC4j5q4MFl6lPFrbGdewh6IfAzNE=;
+	s=arc-20240116; t=1730448420; c=relaxed/simple;
+	bh=9IVsVzC/hiXmM615Gn7SZHkRdWi+8H2YhTJta+7ufo8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AH/aCgrcY48douYd7DGifiZB4bFtHY1aiDngLFxe2+wFB+11P4JMT7jDQSHMejGmpXwR07n9Tmv8S80DwQqu6k6+JUThJiqZ14O3Yq+rJM0NU8kUeAfHO3kutR0binXpMrHHJBzS9PqVI8hmD7bD1IHLZP1kFpFEPudjKtF1yTM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=HS1ipa1T; arc=fail smtp.client-ip=40.107.103.85
+	 Content-Type:MIME-Version; b=PRD4ORbSr/z0GJNzXkb3xgsN15AUpB2oeWj0AVmTFSDZYwlvA8SknvK7fjX+D0suhlNKtd/ovaM/MH3tA+w6OUSJhLH+oBz/YqMVHm4K+zXNCwWtTOSU8xRARlny5dCSGTsxxYWVL1BGmeour0qnjIkqzUToPsnGvGeFVEZdMk0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=w5JhotbS; arc=fail smtp.client-ip=40.107.21.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rXVWYevZHiOp/jnrP8UIh1VIM4tgB4DohAeib1MQi/7Dit9b0F7TNb9mMzJonw0McT1KMc5ta1Gdkf7Fc/INxa387HFBs7eRRdO+URBRW7Pu5wZGaCq9ESLJsDAcCpQQKxsMEg2ob/zCjEVi+62vHE4A2VPY5CrMhBbtrpEqva7BOXvzQYO0uodDM64cI5QIiAYHzQrDTk2oBYiKAQ2pla9WlFyBgeb5W32o17jM6aogNltnEOJWUkJFy4/OWfNmYRBHvVSeD1SzkfIxqAgFTbOpimE5RO9MNCgeLea3185R/LlCdrdK45MR9h/hXfPqZos7gGUcVUnxun3emozwog==
+ b=In6RTl1vArjiv9C/64KfK6ch4pibctXupAjaNoWp+fayAqm5uahuN/rSFA8HnVAdU63g2rTh2N+8jRgPTfoOG+EMlkPv3Z8KoCLFzOcAQl9Sv0Mv/pFAvUPuNQFbumZoE3O4hN1tAcdYI9BpeUGHy0DFnK0pZ7M9IFrv1gxlH0Ut45Z1kl56IHVOH3du3uPGt3oWolgAvxW085edbJZh8JN8jbvheRdHJ9CQMZ1YaDU/MUNlOwmvCKx2JhO9SBO/ZcEM/22v3QrxSfM+BtIDj4cIznUDrXSueM/N9zszAIDIdjd71ibYLeRYg5F+fYpkxYBzYDJKopk8fxJ9hXTYMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dNZvUuGOtpc048I2G5b6vIW80F+kyfPM/s/b6wr6lE8=;
- b=CMZnnTSyCtIzyBiKcFhM9IupDbDpzy8TdMiR+xiGRI6fk+KtYMscydjSrzgqYe320oEsJHrmyLpsJfq8Xh/BKiXGyVb0y/lUL/vWHZHmo0XppTo1YMZRDSE2ZsXKN4DHDgTVzV3oQrIyoavW8YsELL/I+OY00Sh4M49K8OAgGbJR8b56uTTAtdnc/vzTyu2AB6YxBedyDSYWqgk2PXFV9PALCIiDSdxjxENWCc9VC7I/H4mAqDstDG0MUZ9Iet48Ahvz4PBfeTBAuo+pqzUj6x9T+8FO+HEa1tvdFRq0dSnLUp6OJJvG6h2KbUScsl6ndYFINUSY9zLn50L8Ukq7yg==
+ bh=lLib9GtyC9gGrvBWHSgYaXVKTzBImFV2N1cKQg3r+mU=;
+ b=HWEGA01g5ocztC2JGscD47Fq0Bh9M1pvGdzBNqOB62ayj0G0o9f9eOU3z9HwERBMJBQMagwn2zCW7bqXBwhqto827XFYyIMDD9hTr/CfiGjbqqfZ/iyx0TFftdTSUHH8rOHNohQtQI3Q+duYB1k/Qg5WpvVtC3oXtJVhgHkqZbhXDyu8WJUuPTLkA1BkGENqrILUTGFXj07lsKZ6dqT5f8dkTTbVM03QTiSOP1LKSEkztIwAsTOxOmNuAbtzdrQUwgzrtb3lVqWJh5QP5teHDKxSxmFwknaazX2xi7b8m2QTHa0Q4NpY9BePxCdPLGzI8lhbIBi0oAgHUrNvrU+61A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dNZvUuGOtpc048I2G5b6vIW80F+kyfPM/s/b6wr6lE8=;
- b=HS1ipa1TXO7nGIVS85Ja8wyi6cHLJsXXnpUiZh6lhHCHwyx5cZ0trbQOiBHTgi7kYoWYpI3q2vM+rQiqRRpIfjesTfHhKLP08CC62dhR6pSlrBsCyfv7Syz+n0C1stvgzT7zkMhqgpoMMS0uXgb8Su7aG9T60ts6/TWd0Ppg+vFSgNzca9JqvVXrMSArXvLDrpyHhXTnDLIdXAy11qcP1z+fWjSGEj0+9XAIQ2uR8Slnhxa9AkSTj0NPaBDiKKO4C9Khvo2pJK/EwDplNMviLgptAmOY8GuCHPOKjmlHzhSwr7CrDoap6L4yMythZvPKF3xgU2ApeNZ07VcVCj8Grg==
+ bh=lLib9GtyC9gGrvBWHSgYaXVKTzBImFV2N1cKQg3r+mU=;
+ b=w5JhotbSEBqCWbarNzBO7DwpVhl9abVUBF8fgFmgPYXQsiQ6Yi4k2W/9luIa1cnjaOXHf3cpndEC3fXhru+D6zTcyIfd2HO/VNWdIpO/DuzRpdCw60HwNnT2qD6l6uytxLw/V8ap0qy+TpWHc7/KlegpHM8mCUZy/LMlNiG0mzPBaZi9a4dNcBAlv36ZmBuLF60aGZQxQjxSCq8+/5PYFcKKvozJD1A9yN2fNogoOwDNN1OjGOFmDh1OTBmNqwMXw0iH4d4BB/lSNdRkbktstzTaaKJO1RfmE5+/9SzM+xHls02b66S8mwl33156ZwkTYkn/4p/gvrg8YAEKIQuEjA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
- by PR3PR04MB7225.eurprd04.prod.outlook.com (2603:10a6:102:83::6) with
+ by AM8PR04MB8034.eurprd04.prod.outlook.com (2603:10a6:20b:249::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.32; Fri, 1 Nov
- 2024 08:06:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.20; Fri, 1 Nov
+ 2024 08:06:50 +0000
 Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
  ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
  ([fe80::6d7a:8d2:f020:455%5]) with mapi id 15.20.8114.015; Fri, 1 Nov 2024
- 08:06:47 +0000
+ 08:06:50 +0000
 From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -86,9 +86,9 @@ Cc: linux-gpio@vger.kernel.org,
 	Enric Balletbo <eballetb@redhat.com>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	imx@lists.linux.dev
-Subject: [PATCH v5 3/7] arm64: dts: s32g: make pinctrl part of mfd node
-Date: Fri,  1 Nov 2024 10:06:09 +0200
-Message-ID: <20241101080614.1070819-4-andrei.stefanescu@oss.nxp.com>
+Subject: [PATCH v5 4/7] pinctrl: s32: convert the driver into an mfd cell
+Date: Fri,  1 Nov 2024 10:06:10 +0200
+Message-ID: <20241101080614.1070819-5-andrei.stefanescu@oss.nxp.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241101080614.1070819-1-andrei.stefanescu@oss.nxp.com>
 References: <20241101080614.1070819-1-andrei.stefanescu@oss.nxp.com>
@@ -105,184 +105,350 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|PR3PR04MB7225:EE_
-X-MS-Office365-Filtering-Correlation-Id: e964c3be-bdf6-4a4a-6764-08dcfa4c21f6
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|AM8PR04MB8034:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3275821-d580-481c-15df-08dcfa4c23a9
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|7416014|366016|376014|921020|38350700014;
+	BCL:0;ARA:13230040|52116014|366016|7416014|376014|1800799024|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ak05aUx5TVlESHZpRzZ1Z1JDaXZHNHhDcm0yeDdzSm55emU1Y1hhMDlaVlRX?=
- =?utf-8?B?YU85OG00V2lRcEN0UW9od1IwWW13SE5BK0V4bkt2SHhvUCtOQ1FEUnBjckwy?=
- =?utf-8?B?d1EweXhJVWxldFVmM0xaOVdMTEx0QWNCWTIrZ1BoWThlL2JMNUFQYnFTSUlL?=
- =?utf-8?B?cWpGU1NkdTJKYWlLelBqa2FsQ2x2My93Z0xDWk81TUsyWEVaTG9HMXlyRVV2?=
- =?utf-8?B?Yzd1MDZmNHFEajllVmJuRjF6a3ZrU3UrTEtDV1VacXhzb215R1o0bnZ4aEVl?=
- =?utf-8?B?dlFxeDhSbmVtQkRpZXh0WHFMM3R3Vi9PTlpqN000cXJ5d2kvb294ODh5eHU2?=
- =?utf-8?B?OWoyeGVDZFp3dDkzOGgzeXdTUHJLazVVOFo4VkJzQVRJVEVheElkMmUwdVRv?=
- =?utf-8?B?ZmpVaC9aaU83cU1mUVY1NFF3WmNTNFUwbE9ER2o0WGh6TEx5SjFMM25zd0xW?=
- =?utf-8?B?dldiVWR3OGxZUHVTWExXb3FIcjIvV0JVa013ZEc0d0ZnU04zSVFCS2tpY2Vs?=
- =?utf-8?B?OHRhNVVoWXhTcjFFZ1JFWnorQVhDcXBqa3kyZExsOG1uK1BhWi9rM21pUXF5?=
- =?utf-8?B?YXFOMDJKbHNJTDNhN1JpdnZ2OVg3QmZjZlZ6d3hPcEhKQUFLaVhHc1EwYzVi?=
- =?utf-8?B?WlZ2U1lIK3pNR1NCdlRBNkVwdkxWWEE4cDFqMWltQlh0Z1BqSDBFMDVlY2N2?=
- =?utf-8?B?L1Z3UzlxVHBCck9GaW9UMkcxNVUxWlgxdWNCMVBXZHB6TmJVVnB6QVNQUE5W?=
- =?utf-8?B?Wk9rZWdObnlySlJPNlRIWWVoQitqeUN1bEgvYmVPWXJ6WEEyUUdKY1U0cHFO?=
- =?utf-8?B?R0xTZllqdlNZS25WV01vL0FUanNKUWVOeUZPSlFLSzdUdHBldGk1RCsrZUpZ?=
- =?utf-8?B?RnVyTlk0WmRINy83R1BiWGU3Q3ZKZ3R6VlFtTms2ZXQ0Y0krVXZGbnJSWG00?=
- =?utf-8?B?dm1scS9pVzFKVjNXVHZJNTBMQkl1Vm5VMmFCUXdkcFZnaUZVVU9yZkdXUUNL?=
- =?utf-8?B?QjFWL3B1cjNzdW1oNHJXd0NpbXU5NmNKcVNDR2NIWGk1V2ttWVNGREZHYkRB?=
- =?utf-8?B?dXZNT09VcitNNUd3VDFMYnlFTTVienpNOFdOcWVaRkttOVdlNk1IaUUwbVEv?=
- =?utf-8?B?eTBZUXF3N1QrN1JuUmdtNFkyNlJ3WkZqcmJsRDM3YW4rWE80TDRGQ05aQnQy?=
- =?utf-8?B?SUVoYVphMFFnWC9CNnNWZEhhc1VCb2hyQ1BmMWJBQktFNVdVRnliK0hFRmdM?=
- =?utf-8?B?blJIaFlsSit6eTRkbSs3VW5rV0FIQ3pBUXFEd0J4TERoTlVXWHkzTEc1bHdk?=
- =?utf-8?B?RGJVenlZU2FFNUtLSWQ4SHZ3THcvTzNUVXg1NEIzSHJHU2hkc1lleG9uTHRt?=
- =?utf-8?B?THVyRm1QTGdFOE1reHpmbkovcDloSWU4eTZ3a3VEUVlKTkRiaEFtWUtZU0k1?=
- =?utf-8?B?SS9SYXBFeUczMld3SGR3U3hOV0JsVTRVUVlxSFQ4KzltMkwwN1NBYzg1eVBB?=
- =?utf-8?B?V2VJOTZqbmdRZ004dEg3dTJKVU12VjN6UzZXdkM3elo5cVEyTi8xTHEyM2N6?=
- =?utf-8?B?Y1JKS1E5M1JKVFVZdmtTYUd0WUg3WENQYlV0QlVIc2cxQXBMRkNBa1gvdWZY?=
- =?utf-8?B?enVCNGJMY3ArTW5UL3E0Vzh2eStWZW5jd25kMU9ONE93WVRqN2R3cTBGcFlh?=
- =?utf-8?B?L1o3RmtpMHAwSkM5emFZT3pYZDd2NnRQRHlvV3VYTGFPVXRKaVh1VVhOaFJu?=
- =?utf-8?B?dC9ML0lkMnUzTHljV3UyNXZmS3k3TkZDM2ZWT0ZtR21XWmhXUjhyQWlUNHZ4?=
- =?utf-8?B?K3hqL3lpTFJZZGl5dWdCQWg1eDhTL0pWYUtBeHNXeUZtSThEa3d6dHhpZXN2?=
- =?utf-8?Q?NsrQIXD9NuAti?=
+	=?utf-8?B?TXBPc0VpYk02OFlRQWtLdnRVTHFweFFuWldDb0ZQZGw0RHRpVFJXVkR1eHNL?=
+ =?utf-8?B?S2Jqa2ZrOW9SYy9qcWhVZERUTm40dTlydENqb2p4SjBpOUVaZGJRUW1lVnRD?=
+ =?utf-8?B?NGV0cGJ0K3JRaVh1ZzB3T0VUQU1yOUpzOXFNVEFUUWNKcVJwQnFTYmU1a1dL?=
+ =?utf-8?B?Q3VXc1dMdW14akc5eTAwVWt4QXpUSUJYTkxsZU9PY3EyNnh1SjEwNXpsNDEr?=
+ =?utf-8?B?eDNqTFRaWEl5dFRGdjVyam1zYTJlR1oxT2ZwS2ZBU3IvYmNEaHBheWdObEhQ?=
+ =?utf-8?B?eE5BU1lVSllRRXFQUlBwWG1KRnVnSG11UUUyWVArelltRXE2ZmtYbm43bzFi?=
+ =?utf-8?B?bFdEcWs3RHVzQnRiZVQwdms1R3VQcFlYeVB2Yjluckkrb3dPVlcwZjB0RWNh?=
+ =?utf-8?B?QmM1STNqVHFmbFNlYUdIWjFwMzBDL0VxL0hFNGRvR0lXcUJoTThLb2RxYzI5?=
+ =?utf-8?B?NzltZzRleXVQZXJpT01XaXY4alhxb3hQOWtWZm92OHpXSGRNdnNXUEtYcHhZ?=
+ =?utf-8?B?NEE4ZHNkMmwzU0ZtcVlNdnR6TENiZUZRdWIwYjZIVmJRKzFEWGlsS2owQjdJ?=
+ =?utf-8?B?by9rdkI3L2Q4Rkl0eTlJMjFyczcwR2ZyUUN0aWh6ZUI3dUx6OWhzcjVJd3hG?=
+ =?utf-8?B?WUxHV0Z6TTNtR1AvUEFwbEk4djkrSTVFNTd2dlpDMUtYV0VMNU9rOWV6WEdT?=
+ =?utf-8?B?VTYrVHlHQUYwWU5IL2pHNnJNTkFlUmU5MGtDNU91endmclpqVTlDdWwwcFZH?=
+ =?utf-8?B?bGViREwyUmVHSGduOUtNK2hTTVpnWmlpYngwYUZPaXpJdmcwRXZQdzVvMjBj?=
+ =?utf-8?B?MmRNT2hOWHFORm0xMytZNWxpSXZHbE1JNmhHM21UMktNMW8zVmRBc2I4eUNj?=
+ =?utf-8?B?dThTVkFmM1UyaXo3bE5takNzc3UvL0dSdGV1ZkxOV2x2dU9lR2JqNXA3VkRI?=
+ =?utf-8?B?TlFlY0tnTng2RCtia0ZHWStOeENWR3F3RWIzRFFENkg0SGh6amhWZE1pQXpZ?=
+ =?utf-8?B?MVJWbkJJeVErbG50V3JDNHJOSmEvKzhsbFU3NkQrSWJvU09FWkFtbEYxUnNV?=
+ =?utf-8?B?MlBnTGhkL1NWNlR6U1cwdnpJTjBPNzMvMVFFTm5ReVAwZlRPUUJLZWtDb0tj?=
+ =?utf-8?B?N2YrWG1GTFM5Y2grdWxHK1FPdWdqZjd6bzVNNlBFZnFBOFpEdVZSaFdDUHRs?=
+ =?utf-8?B?VUFaeEhPTUY2QWRBbjBtWDFYT0FBTnZ3RnplZHNXMEZjVUpFdVZZbUt2RDUy?=
+ =?utf-8?B?NzI2WkFpWXd0YmNheHZaa0VrTmFLMkdhRUNnVnU2UmV2bmh0YXI1OUUrLzJW?=
+ =?utf-8?B?U2htc05kUHhZV3R6RTNJY0IrcUttN3lvaHZWMGtKYlhsU2pBUTlSYXlHRXl0?=
+ =?utf-8?B?VWtacStqMkE4dTlUV2NIWjduWEs3Qk04ZUlXaFFaTVU5YnRVZ0VGL01rQUZW?=
+ =?utf-8?B?Z2F4TUM4ZTRTTHdGT2ZIM0JKdFd2alZnWTYyRkFDZnlBZDlWS0NaMWtyWUZX?=
+ =?utf-8?B?SVQvSGtqanQwc1lwbGNsVzR3VUphNklMWkh6ZE43M3U3S3p1RHl2RUs3YW1P?=
+ =?utf-8?B?UjJTQ0l3Y0RQSDAzeitIWUdESDNpNnBtVGlSUFhHdzJMaGQzZnhJNC9WSWph?=
+ =?utf-8?B?UGxIWmszMDlhYnVkeVJpdjB0SVZwOHY1d0ZQR3VBaTBUeFhIci91TDJ1TFZP?=
+ =?utf-8?B?QVZBbHNScDZRek1yWmw3QkYrbXpRQlhSN01ZSXdZWTZxdWY5VnNaa3dSQ0JI?=
+ =?utf-8?B?ajN1MGE1WENVaDlWRTAyK01sRHVCeHdKT1phZ1gxVlRIbzg3Zld3RUdtcFpt?=
+ =?utf-8?B?M2xLb2xuVDJuejN6RGpvQ1J2WG5hZTE2UDFteVFGbWJVSnN3aTRyWUR5TG56?=
+ =?utf-8?Q?DTAdu3JXEVhSe?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(366016)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(7416014)(376014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VzRVdmJBR0VIQk9YNUx5cGNzM3hWalJMbGNqMXFOQ1FYMHB3SjZCNVU0RTRP?=
- =?utf-8?B?SmJheWZId3l2VFNpQlBPbXg1cEVUd2hIakxheHNINGYxbGNIMkM3WWt1dGFk?=
- =?utf-8?B?cVVZZ3pqTFVLMTJmSE9lcHYyQmFiWUhYZk1IemkyTkVmT3NVanpaWlJONzNa?=
- =?utf-8?B?MjFmV2ptL1VhMkRlREVJSC8xSXhoQTQ4SDF6TGozRUFadFYvUWhWaThpa1Fs?=
- =?utf-8?B?V2MyTWtrRGMwV0V2aUtRQmJzY20xNS9vMkc2a3NIVjdRdDlzbmZBVEN6Si9K?=
- =?utf-8?B?U0ErYWxIbytkNVhIY210MlFROWtMTmNxL1MxQTdQaGQrd1dvSk9QZE1sWC9W?=
- =?utf-8?B?dnpmVFdDWjQ1L01ldERjRkVpUGZpb3d2a3Bjd2RybTZnS1BndDFDRitMTmRL?=
- =?utf-8?B?N20wNGFiWUVyNzBoLzBYbzh1T0p3clhFbHdYajFKMEw3eTZucHBQQnQ1aFNr?=
- =?utf-8?B?TFNlN3dPSkUvVGxxOHhTUEFmZEZyd2dOWjY5ZWRneE5YemdtMGQrSnJiaWs1?=
- =?utf-8?B?bUdHalloRXo4clJ2c3ZaOXArZldOd2p0T1k0MUNJdkdxdGJHbkxFMTlyU0VU?=
- =?utf-8?B?REJOL3VyZ2ZINW1CNll0MDVncVAzcjNWUmtuY3MxNFZNVGFFblFpay9SOE9T?=
- =?utf-8?B?MkMrc0taY3prOHVUTjVYeG94UjVUK1FUSE5pMjB2aE1GbE5TQVFZTVJCcWFZ?=
- =?utf-8?B?Rlc1aUFKTUlFU0pxQTQ3UWtPVFd1djRlZUFnS3NtaWh3MDdwQ1NCVnNqUkhs?=
- =?utf-8?B?V0RDY3J6amRIZ01lOG1YanVaWm5WTndCNWY1YkJpTFp1OTdQeitKSU9RWUJo?=
- =?utf-8?B?cUE5ODRRdTVQS2xqRDVqQTBHTlAzSmhHSnRQbmJUNWdSb2krdFFqZzZONXFQ?=
- =?utf-8?B?dGNCK0wramV6bnNNTEdwdmlmU0lkUXRzRnJqNURlYzM5dUF5aTBJdCtnR0Zz?=
- =?utf-8?B?aHRXTXpvZmZ4L3Erd0NEYXNjeUpESkxGbnRHMEJuQ2JrelZLdDU3Mm4xLzN5?=
- =?utf-8?B?UTQzUGU1dVZzS2ZsWkxuYzcvRklBUzAxMmp5VEZ0SndQTm1IaUVBNHg1RDly?=
- =?utf-8?B?ZkNxeit6NURiRFlCcllSdmhzVkZFUkpOM2ZXZy9ERUV1M0NmQUxuSFF5NkdT?=
- =?utf-8?B?OVoyRGQyczZhZlhzbFFpVkNHN1U2d1lNRUFXOWJaV1BHM0dPcEpDdU85aTVy?=
- =?utf-8?B?OXpjWWhzeENGQVpYM2lGNU9TV1hXY2JOYURGUCtwRnZPMTlCN1VpU3Q4dHJt?=
- =?utf-8?B?ZFlzSEQzNEE3TS9uOWtVcXFBakJvajB6WkoxWTU0aDQ3Wi96eE9oaEY2RHQw?=
- =?utf-8?B?VHU0ekVrckx3VEtIOEJWMng4NWcrSHRCOXkzdGMza2pIZ3kycFU4dHRhdWh4?=
- =?utf-8?B?OXVtRVpsbklVcW0zdXkrMXVuOU9XUTk0OG8rMFZwMVRKY3BUTFpXNHcwa2xp?=
- =?utf-8?B?RDRDWG5TbzdDdW5OWi9GOTdFQmhWUTNGM1VTNFVWeDNFQzJkcjVUN0pUMHh3?=
- =?utf-8?B?M016eUg0S3N2ZVZkRnRkSlhKTEZjR1oxNVY1WjRqU2RYbkc3bnJZVFM2b3hQ?=
- =?utf-8?B?bkFZSXVrTFY0dkNkbFNDZS9tUVRBN2NJZ3VvWk55VFNPODl5U29haTQxN2ZE?=
- =?utf-8?B?ZDAxd2tEMTJlby9GblpVcDR0OFMxTHdjVlEwbXhhZE9tcW9mTDZyR3hJeUZH?=
- =?utf-8?B?aUlLYWVnYVg4QlYxaXVjcEFaMzRMYTVDdEU3aytBQWREVlB3Q2RiV0FpZ1N2?=
- =?utf-8?B?Y3dZOGptSFJNQ3pMZlY2aklwektlWnY0cG1idW9yNkpJaGJUaHVMaXZoTExT?=
- =?utf-8?B?NXJPbnJGVkxJbHd3cXEwQThaMVc0NDlpb3NOMU9OVEhTeXJ2b05Nc2svblYv?=
- =?utf-8?B?TWtVeHkzV285RHJiekJVMHc0aTNXM3JLMTgwU3VmYkZ5eVh5L2lVRVlkWXhE?=
- =?utf-8?B?R2N0eFA1Q2tDbnJROEhMMTJXbVozOFZVWU1TYjI2by9Oclk0SEVTdzU1dThH?=
- =?utf-8?B?Y3I3eVo4NUl5TFc3aHdOcUp6cnVacEpRdWRteUdIZ3B2dmZUWVovdFZpREp0?=
- =?utf-8?B?NTVEcEJVczBIZXBrZERRSW5Jb0tFdVJiT2RBZzdGLzdpL0xuSTQwOE1KQ2w1?=
- =?utf-8?B?dUN3N1FCblNmUmhPR1R3ZUdJcWhBdDJOVXRaMVU3K3l5T05PQUFleVJzYzR0?=
- =?utf-8?B?MVE9PQ==?=
+	=?utf-8?B?ZmhXM2h6MFoxbSsvMU5FbWM5QkRRd0l1Sm53YUN4aXdoRW9IcW9mRjErMDNi?=
+ =?utf-8?B?RkdCY2RVemhpN1BXT1R4cW1IU1RLcjZnYlBFWmxxL2RiVG5vb0RqNU9QUlVP?=
+ =?utf-8?B?d0Z3NHZqckpDdjNMSUM0K2xITjdmY2NyT2ZNcWxrYllVZ1REcTNhVjhkd0JT?=
+ =?utf-8?B?YWptWDZlZitSaVNiK0pHQ3EwYnR5NW82TVFTWC9mR0Z0VDlKVXJSUlQyN0sv?=
+ =?utf-8?B?VE9hYXVPbUN5bDJkZHV3WGxpOGlXVEFXbnB4eW82UXI1UTJQT0ZWZEFlNm9V?=
+ =?utf-8?B?eGF2MHdUR0d5Z2paM3JoR3ZWNGJKbEwyanRiZnJ3MjVncUliRDlWQ1JPMWdl?=
+ =?utf-8?B?VVlxWHMveHUrWXNuL2dpVHFvc2haSW50QlRYbHhtL2M1b3loYkhtd05LZldY?=
+ =?utf-8?B?Q0hwSW12M3BLYTc3eHN0dVJvY1dlbnNzV09oSEZDb09IZ1BjWGovSkxpdWtR?=
+ =?utf-8?B?SDdTVkl0aFB6cGpFUjhsRVY4d0NnbjN6TWxFbjR1SnN4SzVjRlpJTW5UOW01?=
+ =?utf-8?B?VXFSUmhFV1FjZ0xmZG9PWXpEMUNlYWMxNUxBZGUrOVV3VU9MK3l3V2pUaTh1?=
+ =?utf-8?B?QW0vamlvbTlHL0hyeC9hVkM4K1N3czlETHhRMStsZU1yYjlFV2ZBTHN0N0hT?=
+ =?utf-8?B?SWdsYi9DSnpMdmlnOUppKzVUOVpveDVFTVJkUzMxUWM1MUtGOFdPYzVCa1A2?=
+ =?utf-8?B?RnNMWDdoam5ralYvR0IvK2U4V1hZellRTTljVm4xWE5zeDVIMTJXUXREOXJs?=
+ =?utf-8?B?S1BaM29NVEdlZ1hzeEFXZElDT1cvN0xFdUdyVUJLaGxYdUxGR3JDV3dmVDU1?=
+ =?utf-8?B?NFM2eUFKZTRqMWwxWUNCcW9aUHVrMmZRalhSMXZURG1IWnR2bUllb3hQVVdO?=
+ =?utf-8?B?VCt5S05DS0tYa2tMM2RIdzFmc1FibStyQXFqdXJ6MU54QUxjVUo5OTRDVFpx?=
+ =?utf-8?B?eHBGa3QvcUFFRVRMa3BqL1R1RFJmaGowRUZYV2t1R1gzU0s1Tm5jdFVhZnRh?=
+ =?utf-8?B?QTlBcnNVNFB3Z0NJTTNrSjc5UkZvUUtlRU80dGVQYlltbTdVM2gxUXhzMHdN?=
+ =?utf-8?B?SWo0KzlFVDg3MU1NRzFrVVJndDRFemFpNFY4Z2R6eFZRUkZieEpXVFhkLytN?=
+ =?utf-8?B?ekZzRGxQYldyQ2tiS3RhUmhjTTg5S3ViWFVKa01MdUg4UWIzd0JSK2cxOFly?=
+ =?utf-8?B?a2pUWTVhTVIvb2ZYaDl3TzlWRW9IZ2hHaDVKT0hrQmlFbVRiUGpSSG5reG5N?=
+ =?utf-8?B?QVdpeFdvMlZVTnZudUIyY1o2MVdEbUVlZEFJV29TTng5VXBBSjd0T09Vc0Rw?=
+ =?utf-8?B?VUNtblFXNjdaMUxLT1hkVFVUNjNPeHRsbjQvcEpMeWcvcXR0eEl4ckJaV0N0?=
+ =?utf-8?B?TzBXTlFrSTFpbjFyU2dlOXZTdU1OWWhTNEIwdnVubU05MnU4N3FNMU9FZG54?=
+ =?utf-8?B?T3cxY0h3Um5kSmllbkVKbE9zSWZ4UXlDYnVQenUvMXRUNjE4OU9STE5NRFo1?=
+ =?utf-8?B?cGFuVjJGVnB0dm5wcGV4MCtCSkRDdEozL1JPakFkd1JmMERzRTc5MHowZkVE?=
+ =?utf-8?B?UmJqblZZcFM4aVRkWGZLK202U1pZRllFOHh4djBCQUhSN1VRVUhUOXg5eXBu?=
+ =?utf-8?B?RVVKSVcvajJVTklrZDVUZUZKeFFiYjhnYmJZSVZiaEk4aUszL1NwYkVGNU5n?=
+ =?utf-8?B?RlBwM2hDclFzaTdkOTFxT2ltTmxJKzdqaTgzeEtjVGlaQ214cDlLM1JkdVlG?=
+ =?utf-8?B?SlRsYlhZQ1ZVZHdqR01xYXE5QjhzOWdZTDg2SFFLZVZ4VUU5M2xZVS9RK3h2?=
+ =?utf-8?B?TjVVSWVhUCtNZW9NYXNYaWFZNGxXais0QVljNitUaklhMjA5bjhQdHRjRFQx?=
+ =?utf-8?B?Tm8vR1dCRmRJTHRDOUI3amU3M1BxNUt0ek9ZL0p0dGJiRXg5djJGK1Vic2lj?=
+ =?utf-8?B?UFZ0SXY1VnF0OWRVT3hyRWpWdTBSWC8rdHdkWDlWZUZuSUx0UDZ5NkU5Nlcz?=
+ =?utf-8?B?TWJ0cEdWTWNkbTNRUER4UUtFZ2NnOURCNEM2b3RCd1RaWDFhN1plQVFmVVBL?=
+ =?utf-8?B?VlJrRXFsM2V2bzlJS0tkRFhyN3dPLzNod29PbGp4Z2dsU0hpRmNGQUM4WjRQ?=
+ =?utf-8?B?UGtQeXBjUk5Ra1IzUXg4cTZScXdWQWlyUGhPbHk1d2V1MlNHWDd5NmRUaUt3?=
+ =?utf-8?B?R2c9PQ==?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e964c3be-bdf6-4a4a-6764-08dcfa4c21f6
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3275821-d580-481c-15df-08dcfa4c23a9
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 08:06:47.5972
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 08:06:50.4006
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zcP7JoNGLp3hSAV96vV8EomuAxObvJrLh8z3O2uYnU3q06AnhoFH7hRoWbzWz06k0TveCVZa08lFYMnRVtpPSISmlopRGWVp46QtzpIAk14=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7225
+X-MS-Exchange-CrossTenant-UserPrincipalName: w3QqhiZapPZNU6imVXEKN0cx2KhOZ8fXfznUaDRKU40DIcenRsXLze3XT4QunbAtW5Nmr2gvUkHVDIFEGr8uhzg+OUJwOiVBsIvNnpl5g9s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB8034
 
-SIUL2 is now represented as an mfd device. Therefore, the old
-pinctrl node is deprecated. Move the pinctrl related properties
-inside the new "nxp-siul2" node. The latter one is now used
-to represent the mfd device.
+The SIUL2 module is now represented as an mfd device. The pinctrl driver
+is now an mfd_cell. Therefore, remove its compatible and adjust its
+probing in order to get the necessary information from its mfd parent.
 
 Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 ---
- arch/arm64/boot/dts/freescale/s32g2.dtsi | 26 +++++++++++-------------
- arch/arm64/boot/dts/freescale/s32g3.dtsi | 26 +++++++++++-------------
- 2 files changed, 24 insertions(+), 28 deletions(-)
+ drivers/pinctrl/nxp/pinctrl-s32.h   |  1 +
+ drivers/pinctrl/nxp/pinctrl-s32cc.c | 75 +++++++++++------------------
+ drivers/pinctrl/nxp/pinctrl-s32g2.c | 23 ++-------
+ 3 files changed, 33 insertions(+), 66 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/s32g2.dtsi b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-index fa054bfe7d5c..e14ce5503e1f 100644
---- a/arch/arm64/boot/dts/freescale/s32g2.dtsi
-+++ b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-@@ -114,20 +114,18 @@ soc@0 {
- 		#size-cells = <1>;
- 		ranges = <0 0 0 0x80000000>;
+diff --git a/drivers/pinctrl/nxp/pinctrl-s32.h b/drivers/pinctrl/nxp/pinctrl-s32.h
+index add3c77ddfed..829211741050 100644
+--- a/drivers/pinctrl/nxp/pinctrl-s32.h
++++ b/drivers/pinctrl/nxp/pinctrl-s32.h
+@@ -38,6 +38,7 @@ struct s32_pinctrl_soc_data {
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int npins;
+ 	const struct s32_pin_range *mem_pin_ranges;
++	const struct regmap **regmaps;
+ 	unsigned int mem_regions;
+ };
  
--		pinctrl: pinctrl@4009c240 {
--			compatible = "nxp,s32g2-siul2-pinctrl";
--				/* MSCR0-MSCR101 registers on siul2_0 */
--			reg = <0x4009c240 0x198>,
--				/* MSCR112-MSCR122 registers on siul2_1 */
--			      <0x44010400 0x2c>,
--				/* MSCR144-MSCR190 registers on siul2_1 */
--			      <0x44010480 0xbc>,
--				/* IMCR0-IMCR83 registers on siul2_0 */
--			      <0x4009ca40 0x150>,
--				/* IMCR119-IMCR397 registers on siul2_1 */
--			      <0x44010c1c 0x45c>,
--				/* IMCR430-IMCR495 registers on siul2_1 */
--			      <0x440110f8 0x108>;
-+		siul2: siul2@4009c000 {
-+			compatible = "nxp,s32g2-siul2";
-+			reg = <0x4009c000 0x179c>,
-+			      <0x44010000 0x17b0>;
-+			reg-names = "siul20", "siul21";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&siul2 0 0 102>, <&siul2 112 112 79>;
-+			gpio-reserved-ranges = <102 10>, <123 21>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+index 501eb296c760..709e823b9c7c 100644
+--- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
++++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+@@ -12,6 +12,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/mfd/nxp-siul2.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -44,12 +45,6 @@ enum s32_write_type {
+ 	S32_PINCONF_OVERWRITE,
+ };
  
- 			jtag_pins: jtag-pins {
- 				jtag-grp0 {
-diff --git a/arch/arm64/boot/dts/freescale/s32g3.dtsi b/arch/arm64/boot/dts/freescale/s32g3.dtsi
-index b4226a9143c8..fa43d036686f 100644
---- a/arch/arm64/boot/dts/freescale/s32g3.dtsi
-+++ b/arch/arm64/boot/dts/freescale/s32g3.dtsi
-@@ -171,20 +171,18 @@ soc@0 {
- 		#size-cells = <1>;
- 		ranges = <0 0 0 0x80000000>;
+-static struct regmap_config s32_regmap_config = {
+-	.reg_bits = 32,
+-	.val_bits = 32,
+-	.reg_stride = 4,
+-};
+-
+ static u32 get_pin_no(u32 pinmux)
+ {
+ 	return (pinmux & S32_PIN_ID_MASK) >> S32_PIN_ID_SHIFT;
+@@ -85,14 +80,15 @@ struct s32_pinctrl_context {
+ 	unsigned int *pads;
+ };
  
--		pinctrl: pinctrl@4009c240 {
--			compatible = "nxp,s32g2-siul2-pinctrl";
--				/* MSCR0-MSCR101 registers on siul2_0 */
--			reg = <0x4009c240 0x198>,
--				/* MSCR112-MSCR122 registers on siul2_1 */
--			      <0x44010400 0x2c>,
--				/* MSCR144-MSCR190 registers on siul2_1 */
--			      <0x44010480 0xbc>,
--				/* IMCR0-IMCR83 registers on siul2_0 */
--			      <0x4009ca40 0x150>,
--				/* IMCR119-IMCR397 registers on siul2_1 */
--			      <0x44010c1c 0x45c>,
--				/* IMCR430-IMCR495 registers on siul2_1 */
--			      <0x440110f8 0x108>;
-+		siul2: siul2@4009c000 {
-+			compatible = "nxp,s32g3-siul2";
-+			reg = <0x4009c000 0x179c>,
-+			      <0x44010000 0x17b0>;
-+			reg-names = "siul20", "siul21";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&siul2 0 0 102>, <&siul2 112 112 79>;
-+			gpio-reserved-ranges = <102 10>, <123 21>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
+-/*
++/**
++ * struct s32_pinctrl - private driver data
+  * @dev: a pointer back to containing device
+  * @pctl: a pointer to the pinctrl device structure
+  * @regions: reserved memory regions with start/end pin
+  * @info: structure containing information about the pin
+  * @gpio_configs: Saved configurations for GPIO pins
+  * @gpiop_configs_lock: lock for the `gpio_configs` list
+- * @s32_pinctrl_context: Configuration saved over system sleep
++ * @saved_context: Configuration saved over system sleep
+  */
+ struct s32_pinctrl {
+ 	struct device *dev;
+@@ -123,14 +119,13 @@ s32_get_region(struct pinctrl_dev *pctldev, unsigned int pin)
+ 	return NULL;
+ }
  
- 			jtag_pins: jtag-pins {
- 				jtag-grp0 {
+-static inline int s32_check_pin(struct pinctrl_dev *pctldev,
+-				unsigned int pin)
++static int s32_check_pin(struct pinctrl_dev *pctldev, unsigned int pin)
+ {
+ 	return s32_get_region(pctldev, pin) ? 0 : -EINVAL;
+ }
+ 
+-static inline int s32_regmap_read(struct pinctrl_dev *pctldev,
+-			   unsigned int pin, unsigned int *val)
++static int s32_regmap_read(struct pinctrl_dev *pctldev, unsigned int pin,
++			   unsigned int *val)
+ {
+ 	struct s32_pinctrl_mem_region *region;
+ 	unsigned int offset;
+@@ -145,7 +140,7 @@ static inline int s32_regmap_read(struct pinctrl_dev *pctldev,
+ 	return regmap_read(region->map, offset, val);
+ }
+ 
+-static inline int s32_regmap_write(struct pinctrl_dev *pctldev,
++static int s32_regmap_write(struct pinctrl_dev *pctldev,
+ 			    unsigned int pin,
+ 			    unsigned int val)
+ {
+@@ -163,7 +158,7 @@ static inline int s32_regmap_write(struct pinctrl_dev *pctldev,
+ 
+ }
+ 
+-static inline int s32_regmap_update(struct pinctrl_dev *pctldev, unsigned int pin,
++static int s32_regmap_update(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			     unsigned int mask, unsigned int val)
+ {
+ 	struct s32_pinctrl_mem_region *region;
+@@ -475,8 +470,8 @@ static int s32_get_slew_regval(int arg)
+ 	return -EINVAL;
+ }
+ 
+-static inline void s32_pin_set_pull(enum pin_config_param param,
+-				   unsigned int *mask, unsigned int *config)
++static void s32_pin_set_pull(enum pin_config_param param,
++			     unsigned int *mask, unsigned int *config)
+ {
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
+@@ -838,20 +833,21 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
+ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
+ 				struct s32_pinctrl *ipctl)
+ {
++	struct nxp_siul2_mfd *mfd = dev_get_drvdata(pdev->dev.parent);
+ 	struct s32_pinctrl_soc_info *info = ipctl->info;
+-	struct device_node *np = pdev->dev.of_node;
+-	struct resource *res;
+-	struct regmap *map;
+-	void __iomem *base;
+-	unsigned int mem_regions = info->soc_data->mem_regions;
++	unsigned int mem_regions;
++	struct device_node *np;
++	u32 nfuncs = 0, i = 0, j;
++	u8 regmap_type;
+ 	int ret;
+-	u32 nfuncs = 0;
+-	u32 i = 0;
+ 
++	np = pdev->dev.parent->of_node;
+ 	if (!np)
+ 		return -ENODEV;
+ 
+-	if (mem_regions == 0 || mem_regions >= 10000) {
++	/* one MSCR and one IMCR region per SIUL2 module */
++	mem_regions =  info->soc_data->mem_regions;
++	if (mem_regions != mfd->num_siul2 * 2) {
+ 		dev_err(&pdev->dev, "mem_regions is invalid: %u\n", mem_regions);
+ 		return -EINVAL;
+ 	}
+@@ -861,26 +857,11 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
+ 	if (!ipctl->regions)
+ 		return -ENOMEM;
+ 
++	/* Order is MSCR regions first, then IMCR ones */
+ 	for (i = 0; i < mem_regions; i++) {
+-		base = devm_platform_get_and_ioremap_resource(pdev, i, &res);
+-		if (IS_ERR(base))
+-			return PTR_ERR(base);
+-
+-		snprintf(ipctl->regions[i].name,
+-			 sizeof(ipctl->regions[i].name), "map%u", i);
+-
+-		s32_regmap_config.name = ipctl->regions[i].name;
+-		s32_regmap_config.max_register = resource_size(res) -
+-						 s32_regmap_config.reg_stride;
+-
+-		map = devm_regmap_init_mmio(&pdev->dev, base,
+-						&s32_regmap_config);
+-		if (IS_ERR(map)) {
+-			dev_err(&pdev->dev, "Failed to init regmap[%u]\n", i);
+-			return PTR_ERR(map);
+-		}
+-
+-		ipctl->regions[i].map = map;
++		regmap_type = i < mem_regions / 2 ? SIUL2_MSCR : SIUL2_IMCR;
++		j = i % mfd->num_siul2;
++		ipctl->regions[i].map = mfd->siul2[j].regmaps[regmap_type];
+ 		ipctl->regions[i].pin_range = &info->soc_data->mem_pin_ranges[i];
+ 	}
+ 
+@@ -918,13 +899,13 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
+ int s32_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct s32_pinctrl_soc_data *soc_data)
+ {
+-	struct s32_pinctrl *ipctl;
+-	int ret;
+-	struct pinctrl_desc *s32_pinctrl_desc;
+-	struct s32_pinctrl_soc_info *info;
+ #ifdef CONFIG_PM_SLEEP
+ 	struct s32_pinctrl_context *saved_context;
+ #endif
++	struct pinctrl_desc *s32_pinctrl_desc;
++	struct s32_pinctrl_soc_info *info;
++	struct s32_pinctrl *ipctl;
++	int ret;
+ 
+ 	if (!soc_data || !soc_data->pins || !soc_data->npins) {
+ 		dev_err(&pdev->dev, "wrong pinctrl info\n");
+diff --git a/drivers/pinctrl/nxp/pinctrl-s32g2.c b/drivers/pinctrl/nxp/pinctrl-s32g2.c
+index 440ff1879424..9c7fe545cc85 100644
+--- a/drivers/pinctrl/nxp/pinctrl-s32g2.c
++++ b/drivers/pinctrl/nxp/pinctrl-s32g2.c
+@@ -10,6 +10,7 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/mfd/nxp-siul2.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -713,12 +714,10 @@ static const struct pinctrl_pin_desc s32_pinctrl_pads_siul2[] = {
+ static const struct s32_pin_range s32_pin_ranges_siul2[] = {
+ 	/* MSCR pin ID ranges */
+ 	S32_PIN_RANGE(0, 101),
+-	S32_PIN_RANGE(112, 122),
+-	S32_PIN_RANGE(144, 190),
++	S32_PIN_RANGE(112, 190),
+ 	/* IMCR pin ID ranges */
+ 	S32_PIN_RANGE(512, 595),
+-	S32_PIN_RANGE(631, 909),
+-	S32_PIN_RANGE(942, 1007),
++	S32_PIN_RANGE(631, 1007),
+ };
+ 
+ static const struct s32_pinctrl_soc_data s32_pinctrl_data = {
+@@ -728,22 +727,9 @@ static const struct s32_pinctrl_soc_data s32_pinctrl_data = {
+ 	.mem_regions = ARRAY_SIZE(s32_pin_ranges_siul2),
+ };
+ 
+-static const struct of_device_id s32_pinctrl_of_match[] = {
+-	{
+-		.compatible = "nxp,s32g2-siul2-pinctrl",
+-		.data = &s32_pinctrl_data,
+-	},
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, s32_pinctrl_of_match);
+-
+ static int s32g_pinctrl_probe(struct platform_device *pdev)
+ {
+-	const struct s32_pinctrl_soc_data *soc_data;
+-
+-	soc_data = of_device_get_match_data(&pdev->dev);
+-
+-	return s32_pinctrl_probe(pdev, soc_data);
++	return s32_pinctrl_probe(pdev, &s32_pinctrl_data);
+ }
+ 
+ static const struct dev_pm_ops s32g_pinctrl_pm_ops = {
+@@ -753,7 +739,6 @@ static const struct dev_pm_ops s32g_pinctrl_pm_ops = {
+ static struct platform_driver s32g_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "s32g-siul2-pinctrl",
+-		.of_match_table = s32_pinctrl_of_match,
+ 		.pm = pm_sleep_ptr(&s32g_pinctrl_pm_ops),
+ 		.suppress_bind_attrs = true,
+ 	},
 -- 
 2.45.2
 
