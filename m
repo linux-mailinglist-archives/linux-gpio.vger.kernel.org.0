@@ -1,172 +1,125 @@
-Return-Path: <linux-gpio+bounces-12467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12468-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D5D09B9424
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 16:17:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102E19B94B2
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 16:46:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9DAE21C20DC2
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 15:17:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8EE328211A
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 15:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4771C2DB2;
-	Fri,  1 Nov 2024 15:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E941C82F0;
+	Fri,  1 Nov 2024 15:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHVtaRm+"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Jj7AcoFU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ABE4778E
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 15:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B8F15B0E2;
+	Fri,  1 Nov 2024 15:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730474217; cv=none; b=lFD7fFir8U3d7YCj9BZrEZ6QhdM+bLvIBgq8Bsc0lWZ0pkTnc4lRYQ0vMkGA/rakXtjCb3ccs9pBDJSW6TLHCW6RTZrdPJ3ihsWOoIKTJsoloxcZhTyFNYcjR8O6OFCiEMxgberWMrknR08ZYmE9Lnq+bzZDbK0HEdqN5r8Nv+E=
+	t=1730475979; cv=none; b=us+fQbxXTO9+OluWHUgacUg8G9I67tRsPv3aA4IDfgv7t3blsa7HTUwoOGqcurPJdNzN1C7gIwQNgB8SOfzgs1qAqaTO4E42uU6Xx0S0q8nDf3ckQhlgxcrwzE2CsVwq/3iixu89GpP1McEwxRh4e8/nO0qYQn+QCjMLrypEyac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730474217; c=relaxed/simple;
-	bh=tomTIodgvtOS/r8tCig5+r70aPfPaOkftHuth7jHWD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ruq8xqvkAUHNKi7zA1t68tklSKiNn2L7R02ZgFSiQBLTPths5lk9yFU9kTNbXmTv+7JgqFx7ZKPwRvgpBA/J3P0Q5azSli7ejfLTTqSSAxHACbf3V3vjJUSpkNBlc6qbVfNWeMDuVaI53S6iH3Q2kgNzWDXc05JCcB2sN/WdBNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHVtaRm+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A93AC4CECD;
-	Fri,  1 Nov 2024 15:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730474217;
-	bh=tomTIodgvtOS/r8tCig5+r70aPfPaOkftHuth7jHWD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vHVtaRm+iK2FKGTvkgr8ehJH8u8O9qBxYrhpZ/LADHzblJiBCUGCmyNb8cp60TQXs
-	 zPUiEO3OYHH52uksJpGKu02ugZCeJMrCZowFZBU1QJEwIPK4Oi/wk9z0uHMZbF+oio
-	 hyPzbirI0dN8KP8skxIQy/Ghlr9crQCg6Ybp1TLn/sDpxN14e4v+cYrb2Bf9rlexLH
-	 Y4x4WvxTaxCIakHq1zAZuMwNsqe2XwA0H4zYwfW/rhErCjT429R+t5VFzz4iDxS1qn
-	 j+7COSFcOQrwA0r4kYUTvr6O2FI2tGYhzrYRwrRxDPGxrj6TkIy3Poi2tKDpiLkn3f
-	 +VIawMerAfmHQ==
-Date: Fri, 1 Nov 2024 15:16:53 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	valentina.fernandezalanis@microchip.com,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lewis Hanly <lewis.hanly@microchip.com>
-Subject: Re: [PATCH v9 1/1] gpio: mpfs: add polarfire soc gpio support
-Message-ID: <20241101-impeding-outpour-e68b980c14b8@spud>
-References: <20241031-scouting-earmark-6b4dfc6bc6e2@spud>
- <20241031-appease-purse-55145b5dfba4@spud>
- <CAMRc=Men4sxFdSVR_WaJEG1UM7dXeGxTbw0=M_y3NsBmEOZzmQ@mail.gmail.com>
- <20241101-cadmium-speed-78ff7577347a@spud>
- <CAMRc=Mccc2tD2ZNQWpf6_wFt76p1ckyAqw-u6DBObgJV3n50CQ@mail.gmail.com>
- <20241101-affirm-evict-bbd862b08832@spud>
- <CAMRc=MfSOUCFBjqeHwyMgKmNWb4==4=kwdT+aUtPHWKuiWm0aA@mail.gmail.com>
- <20241101-culprit-ascend-de1a8f1967d7@spud>
- <CAMRc=MfhwPij=t+PBicHCE6xsfBxYeKK1+r5UKMZ5vqHAbuZ2w@mail.gmail.com>
+	s=arc-20240116; t=1730475979; c=relaxed/simple;
+	bh=OpvRx1WWE+WS+DgWenvK+IRNQ2xdgICCz6OcvfsAeVw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=capuxWShof+vRqe9fGLvTnOP2EbgPNimUmvYt93bblFMYeTxy2sXt9b/OiFesVPCXjSzA9FkA1DVqwthBX9rnw+Ov63GxVcT3VNj6KVc3o6J7fYO0eLUI+lOv3OotCY3mVs/pHkxCa+5y0JNh8ua8rqQDg9B6lDRfBWQoqIjUCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Jj7AcoFU; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1730475951; x=1731080751; i=markus.elfring@web.de;
+	bh=7UB3ac7LBmeqyiSNaZiojKaC72aMNlvAd36yyxNrsRA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Jj7AcoFUcvb5OAlwS4Q6kVYWcKmEuY8+5zpeJ5WTD0pcI7n7grUNKyWlocW9GQra
+	 dDwRH3FUXlYsG5Uj85tI3OfDYJZclmbk6kdetDpayUb25hwaXFWbJp5Cqccls30yq
+	 4Bow5fsTgQGxApmTaWuC3/FFN8SF+LlPt/kTwzR2tgGWorSev9MEPyRQwVWETEH3/
+	 GtpoZuEbKYY6InQcl1dUIGM2lruXn43IX+I0PZJiWlY2Ad18OZQqEAUvwMH3+XdE1
+	 x40pyyr5brAHCXQGc9wBmsDNpAetIDAek2pYN9VycXLswWY0AUtMaqBvkbKWMKoEJ
+	 2z8PuOlENTEo1CMU0Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M6pUK-1tCvzN1kh4-00BxAE; Fri, 01
+ Nov 2024 16:45:51 +0100
+Message-ID: <fdf5702a-b739-4643-8288-86e6cfb8403d@web.de>
+Date: Fri, 1 Nov 2024 16:45:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="g8cPArKqsTu9FEC6"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfhwPij=t+PBicHCE6xsfBxYeKK1+r5UKMZ5vqHAbuZ2w@mail.gmail.com>
-
-
---g8cPArKqsTu9FEC6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, s32@nxp.com,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Chester Lin <chester62515@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>,
+ Fabio Estevam <festevam@gmail.com>,
+ Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jacky Bai
+ <ping.bai@nxp.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Lee Jones <lee@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <mbrugger@suse.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+ Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>,
+ Enric Balletbo <eballetb@redhat.com>
+References: <20241101080614.1070819-7-andrei.stefanescu@oss.nxp.com>
+Subject: Re: [PATCH v5 6/7] pinctrl: s32cc: add driver for GPIO functionality
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20241101080614.1070819-7-andrei.stefanescu@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jj8tV1/5lvgDluPBwBwySefJgimRcKB6UJMv3JG+Rfhob34M4SF
+ zpfZMhDKktYmP84RHCvTGMRiSo8eD0NXIcKYi0iJuMLPMKMkNEDgbDQ00Tu3zLt3yIR5swC
+ e48XqFieUY4xPJkF6ksXNHRlO8FG5Rj1fT66cz39pU/OTQDchlM7fOVh76RvLj2jwuEjjfl
+ jRgl7k75s3JcQFOrs36LA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7o16wLigwNM=;QX09HEZ8+jEi7umwCR8bn+fcqGK
+ iwIJYJcfDDaFsY8IuY+91YTn1TGo54jj9+n48mICBQcofmxdKYke0JIQqJZ5RTaT0m1TOIYVs
+ 0WYcQY13IvGmPayFCgdk9f98I4hbgbbzdVm60fmcjajvWqCELsqFzIisOKey4dj5AInvLdnPm
+ JPnk0whD1ihkVamcU8WuO7BleTB1K2bLnpOJX+rhxeSCy0/hxb0lpZRF0S1DENcbi2czN+vgf
+ kMYO0d1heXCAZDam18SRyaGX8UN5b1vxAxvdBZEXRl4IafyjddgXOWU6NSRvarmQul/bmK2E0
+ pjv+09sdadnPZSU1M7MxBKDdgxmj0hWRzbSuRsPvY/e4RO8RrvrfEZAyM1DM9/qsuMc6uBl9a
+ t9yWvQyXO7qrXhlZSDJ4a6VE8NzakgBTN0Wk2Ob3kKo2DbfvbssS9NaJKjFgNzNkF/u7EiiYt
+ VCvtOzcxM0bIERiOFQdAlJESvtnyzqM4fxSq5dFgFrwqPDrmWB3C6z06xziKlr/grIk5r1Jvq
+ +3IUGIqsr/+rU04AkX/bBebF/prO1QCGUBZWcBFVMTguLeqRTsBfBvrEAoXBXMByRysar3VxC
+ H34HcNDvP0KJ4/AL3Honk9AjXEvhd3wCjnMmY6uc3ExX1zIhmd6WMKX1iy9bNRgBf6khllb/h
+ ozXTFFObKmhIzHTnZbMOcqCOjxYGUkOhIZy0hdbhdcD85kEj+KfgoZRcNNDl/uvUf7Kl6zdu/
+ BD1t2+GFK9EYQH1oIoBlBxahx2DbN5Rf+K4777Aceclv50hSGqbYrTyBV0TkB4xg57/HQ0QMz
+ Ig2svqAtWJFQZJUAp40Pab1A==
 
-On Fri, Nov 01, 2024 at 03:32:16PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Nov 1, 2024 at 3:28=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
-> >
-> > On Fri, Nov 01, 2024 at 02:47:51PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Nov 1, 2024 at 2:37=E2=80=AFPM Conor Dooley <conor@kernel.org=
-> wrote:
-> > > >
-> > > > On Fri, Nov 01, 2024 at 02:09:06PM +0100, Bartosz Golaszewski wrote:
-> > > > > On Fri, Nov 1, 2024 at 1:17=E2=80=AFPM Conor Dooley <conor@kernel=
-=2Eorg> wrote:
-> > > > > >
-> > > > > > On Thu, Oct 31, 2024 at 02:00:22PM +0100, Bartosz Golaszewski w=
-rote:
-> > > > > > > On Thu, Oct 31, 2024 at 1:04=E2=80=AFPM Conor Dooley <conor@k=
-ernel.org> wrote:
-> > > > > >
-> > > > > > > > +       mpfs_gpio->gc.direction_input =3D mpfs_gpio_directi=
-on_input;
-> > > > > > > > +       mpfs_gpio->gc.direction_output =3D mpfs_gpio_direct=
-ion_output;
-> > > > > > > > +       mpfs_gpio->gc.get_direction =3D mpfs_gpio_get_direc=
-tion;
-> > > > > > > > +       mpfs_gpio->gc.get =3D mpfs_gpio_get;
-> > > > > > > > +       mpfs_gpio->gc.set =3D mpfs_gpio_set;
-> > > > > > > > +       mpfs_gpio->gc.base =3D -1;
-> > > > > > > > +       mpfs_gpio->gc.ngpio =3D ngpios;
-> > > > > > >
-> > > > > > > The "ngpios" property will be parsed by GPIO core so no need =
-to set it.
-> > > > > >
-> > > > > > Are you sure it'll work here? I tried dropping the ngpios parsi=
-ng, but I
-> > > > > > get:
-> > > > > > gpiochip_add_data_with_key: GPIOs 0..-1 (20122000.gpio) failed =
-to register, -22
-> > > > > >
-> > > > > > That's coming from the device_property_read_u32(dev, "ngpios", =
-&ngpios);
-> > > > > > in gpiochip_get_ngpios(). Checking against the bluefield driver=
- and the
-> > > > > > code in gpiochip_add_data_with_key(), it's not immediately obvi=
-ous what
-> > > > > > I am missing.
-> > > > >
-> > > > > Does dev have an fwnode correctly assigned? What does dev_fwnode(=
-dev) return?
-> > > >
-> > > > It's not a null pointer or something obviously wrong by virtue of b=
-eing
-> > > > null-adjacent, it is a virtual address but not one that %ps can ide=
-ntify.
-> > >
-> > > This is an OF system right? If you do dev_of_node(dev), does the
-> > > returned node->name show the OF node you expect?
-> >
-> > Yes.
->=20
-> I mean inside gpiochip_get_ngpios(), sorry for confusion.
+> Add basic GPIO functionality (request, free, get, set) for the existing
+> pinctrl SIUL2 driver since the hardware for pinctrl&GPIO is tightly
+> coupled.
+=E2=80=A6
+> +++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+=E2=80=A6
+> +static int s32_gpio_request(struct gpio_chip *gc, unsigned int gpio)
+> +{
+=E2=80=A6
+> +	spin_lock_irqsave(&ipctl->gpio_configs_lock, flags);
+> +	list_add(&gpio_pin->list, &ipctl->gpio_configs);
+> +	spin_unlock_irqrestore(&ipctl->gpio_configs_lock, flags);
+=E2=80=A6
 
-That is what I checked actually, didn't think you'd ask me to check the
-one in probe that works.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(spinlock_irqsave)(&ipctl->gpio_configs_lock);=E2=80=9D=
+?
+https://elixir.bootlin.com/linux/v6.12-rc5/source/include/linux/spinlock.h=
+#L551
 
-> > > Does it have the
-> > > "ngpios" property? Can you read it with of_property_read_u32()?
-> >
-> > No, EINVAL there too.
->=20
-> I assume the node is not assigned correctly. What if in your probe you
-> do: gc->fwnode =3D dev_fwnode(dev)?
-
-Makes no difference, same probe failure as before...
-
-
-=2E..but I just realised something: ngpios isn't a required property for
-this device as it has a default of 32 and 32 is how many gpios this
-controller has. Simple oversight, hours wasted. That's always the way of
-it I suppose. The core code can't be used here I suppose, since ngpios
-is optional.
-
---g8cPArKqsTu9FEC6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZyTwxQAKCRB4tDGHoIJi
-0m3+AP0XBHShmnjJ2v/O/Ze2MN2hk6ClZWlhaLyXP8jqktK49wD+Jv4N3fOeNA8S
-ag5EQ5vxggU5RLtIEEteumhpaTWsxwQ=
-=qJvd
------END PGP SIGNATURE-----
-
---g8cPArKqsTu9FEC6--
+Regards,
+Markus
 
