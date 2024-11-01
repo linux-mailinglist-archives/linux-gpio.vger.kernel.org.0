@@ -1,131 +1,187 @@
-Return-Path: <linux-gpio+bounces-12444-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12445-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2166E9B8F15
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 11:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 330E09B8F20
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 11:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C185C1F22F3E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 10:22:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACC041F22C65
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 10:25:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9655918660C;
-	Fri,  1 Nov 2024 10:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A108D15D5C5;
+	Fri,  1 Nov 2024 10:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CoawJgJt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pIXeLKXT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66612189B8E
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 10:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4718715A85A
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 10:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730456515; cv=none; b=mnDHrPAILRQ6vB3ih3eE9kipmp3igB8nreq+CZb/6nwePjmQbSyHs5+6rysmcQr4rIfEPGu7t2uLm2bDNFhRgnnuxJIqgTHhfdZk0erMLXBk9az8RfiYzQM3po16YXF8mo5cMUH/ZbiviKY+V9Zrm5iw0+azu6XIpBNmWTQoqQQ=
+	t=1730456715; cv=none; b=oC1YhpQ1JZ2E4lKNoXT08C2d7iQCSw3yF3gzcebxpy93hEiTf2qrkSBUcoD7+6Y2uxEW2ZQCJS0p7q0z47pNCngVWosCISWZn/xvr6y+w/a7LGW+D94wB1ZksZ0asAhjHFWsD4KTsgKMCTprffzxJuYEYA2PfOy1BvJzB4KHLf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730456515; c=relaxed/simple;
-	bh=DHlg4aB+Ghf2j6so3ed2FEq2x7Xpqss7RPjGRqk/H70=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z7qQmVFNg74Hr1O84QcdaU2qD53jCYMBa5ruq8BfCqSQB+FlOEQLIIdp1/TTTaoXuYfpwUHViA5ITkx5VArXDvQo7opqJRVC9vwHWfpFXI0wQD2/P4VBnMlY7CGwoiXnbwWuI+MT/Me2nOMFQ4fgb/2Sg5uZA0V+d/0ptNnOjQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CoawJgJt; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730456514; x=1761992514;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DHlg4aB+Ghf2j6so3ed2FEq2x7Xpqss7RPjGRqk/H70=;
-  b=CoawJgJtD46uoWves7B/KIkeQPOtCxE1PooR1Fm6W+0XzVndXk5fPKKc
-   F+G/q/fy4BrjNDHKYy0xQfsVMUyi+zlen0KafGbSqQfAgUzDbupNALNWn
-   8EjGEdFaWJAVqqIL7rfwN1No/BwUJMG3CxXRktwD8+t193Lqoa4Ve394C
-   Ax3+RuN2g5sLWUFnBt4Qq23JHlha2nmAfELEuLFRDFPOM0k9bXOKmh2ho
-   LbQXS2Z/l1wkpZ6PS3aPmzjUBFd4JvDihsr74s4zz5I27Gpxf0swGBkTx
-   1sNHZH0HMbWf+tV6zy78/82YqDBTufkchjXP0a8vWY70jr02Xlof5C86v
-   g==;
-X-CSE-ConnectionGUID: hZ9oCW4UST2h4t/egiAUKA==
-X-CSE-MsgGUID: +nYPlu/oSFqeoeEM2jh/Tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="29637323"
-X-IronPort-AV: E=Sophos;i="6.11,249,1725346800"; 
-   d="scan'208";a="29637323"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 03:21:53 -0700
-X-CSE-ConnectionGUID: z1dLeJ8FQVmE+Vf/bx2ApA==
-X-CSE-MsgGUID: aRqGx8ObQ5mCUYDRT/8TPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="87714355"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 01 Nov 2024 03:21:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E4FEA1AC; Fri, 01 Nov 2024 12:21:49 +0200 (EET)
-Date: Fri, 1 Nov 2024 12:21:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux pin control <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 6.13-1
-Message-ID: <ZySrvXpFANlXrnh2@black.fi.intel.com>
+	s=arc-20240116; t=1730456715; c=relaxed/simple;
+	bh=+yXHMbKZ1H5XAjjCoPBfjF7SFzBBi8D94y9c9WKOknk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ijxitINfMgA/2GlX9XpEm3aFjM7/84o/m7Fhcvz1eQDEU3Xqicm11rwd9GaPLyT8VyZo9GkTVJiGxjoxWe2dr0B+U8el6icFqwK5SXjTN7rgXjA4989zTgftclqSiOifcf3QMP6sQwwGgiuFka+EvHettZi3BhD9ZQVcr8fIxuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pIXeLKXT; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2fb5111747cso18389271fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Nov 2024 03:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730456711; x=1731061511; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WpzSgjnpO5Pgi4peizaj5qKRJmTZYgfK/PfyJYP5YwM=;
+        b=pIXeLKXT3i+5+lhQQwW32ZtR+YUZytHp9/nV8gXy+MDJLZh4Pt35wL3SKAyl+n/4Jp
+         xLTjp8j2iamuabR7bJCYYbGRB423DYN67mWpLK99GBbHkMUb+LNzsMqqDTfna4hPWZnA
+         y+KxP1jJd7ckgY1IdGhSUfnCDlJH9cfZ438JqJzqKP9XpMxwanU4SlHYcJuA1GbBVyqB
+         3NASVi7d4xns1LC07PGWbh4fYEpxI9O3mroMqGLl5/iJiERjm8PS7kwZ0HlEGtLobBtY
+         tmbsV3r+x0l9c2IIIiRAGywaPtARAi4C3UwVJxfeAmpqa65T2JG7Vziu2A8xf1GQRKGY
+         RmqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730456711; x=1731061511;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WpzSgjnpO5Pgi4peizaj5qKRJmTZYgfK/PfyJYP5YwM=;
+        b=TkzgJQfPUIYbnIGxHlmHFZpsMiPoQqoQVSG5aQBR1u9CgHu54+soQfEXqsEUXtBVEm
+         jtpHAO6BRkgCoBAjY62UQik1Jsiqry3PuPZXywYWPncrSAXO+nKO7TZniC/BR8+r6upr
+         KiN1DgNy9TGxL4r6melr39wykpUHOrnZ20hR6mqWLq0xvwBV97AFkATyCtMDbrwvRg56
+         wiojp4wntUKyE/Xi2Y+Y21tMjFpXOg/DeYv5SvGx2Ld+n5lacpUlWl4l+IKpQ1UD5Vjx
+         2zkQKlZQRIClHicVvaL6LdV3Vs1G1U2y5oyaeV7VtjNWW+Q5EWhZ53UWnnI8Znh4/OV6
+         GSQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWC7L7xthrD4MDuffShRYqVusxnBzDMuZEhmJsFMlAhXC8smsaYDgbhlvKhA5t9gSDNfvER9GY0pwvn@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlc01ZS725aIVWkCjoD+whjwRID8ID8HGRwIPg293EDypeBdrx
+	XOPOcfTTglfvRSYoNxgfo4NiYJXE75FlyiMvtI5CruqnlKSeP8BU4g/KoabDSjHOjeu5VERpSHm
+	hebW+bePH6CTKx03xOHgWQTNIzoCsym0kRPoE/Q==
+X-Google-Smtp-Source: AGHT+IEh3UD7clJCQ/gk/n1lZMbdbxLI4TLsCj8gBPyhuLX6iMsirPWos/kw6T81Ngl9MnmOHHdaCm4w/4b+g80Z8io=
+X-Received: by 2002:a2e:819:0:b0:2f7:a5fe:adbe with SMTP id
+ 38308e7fff4ca-2fdec72f2bemr26733951fa.18.1730456711357; Fri, 01 Nov 2024
+ 03:25:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20241022155658.1647350-1-antonio.borneo@foss.st.com>
+ <20241022155658.1647350-8-antonio.borneo@foss.st.com> <CACRpkdZKimfE_00kxa_qAf+jjwxBtuKizDTd3RvOS_PDuZ_JKg@mail.gmail.com>
+ <df12289dc65c21496d4f9818a53d9797406e2663.camel@foss.st.com>
+In-Reply-To: <df12289dc65c21496d4f9818a53d9797406e2663.camel@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 1 Nov 2024 11:24:58 +0100
+Message-ID: <CACRpkdbne8730=6Hvd2W5ymv3xYNC6ApPthT0Fcb+D-fafA_5A@mail.gmail.com>
+Subject: Re: [PATCH 07/14] dt-bindings: pinctrl: stm32: support IO
+ synchronization parameters
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
+	Stephane Danieau <stephane.danieau@foss.st.com>, 
+	Amelie Delaunay <amelie.delaunay@foss.st.com>, Fabien Dessenne <fabien.dessenne@foss.st.com>, 
+	Valentin Caron <valentin.caron@foss.st.com>, 
+	Gatien Chevallier <gatien.chevallier@foss.st.com>, Cheick Traore <cheick.traore@foss.st.com>, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linux pin control  maintainers,
+Hi Antonio,
 
-One of the tiniest PR for Intel pin control drivers, only two changes there
-which were in the Linux Next for some time without reported issues. Please,
-pull for v6.13-rc1 (next cycle).
+some responses below!
 
-Thanks,
+On Thu, Oct 31, 2024 at 2:44=E2=80=AFPM Antonio Borneo
+<antonio.borneo@foss.st.com> wrote:
 
-With Best Regards,
-Andy Shevchenko
+> > Otherwise I would say that just checking if the line is in input
+> > or output from other properties should be enough to configure
+> > this? input-enable, output-enable to name the obvious.
+>
+> On STM32MP25x there is a 'skew-delay' HW block on each pin,
+> but it's applied independently on each pin either only on the
+> input direction OR only on the output direction.
+> There is no automatic way to switch it between input and
+> output path. This property assigns the delay to one path.
+> The generic property 'skew-delay' does not considers this
+> case.
+>
+> While I could extend the pinctrl driver to include the info about
+> direction, that is trivial for example for UART or SPI, it will fail
+> for bidirectional pins like I2C's SDA; some use case could
+> require the skew-delay on SDA input path, other on the output path.
+> Also the idea of assigning the direction at startup (e.g. in the
+> bootloader) is not feasible as the delay depends on the
+> functionality that can change at runtime e.g. by loading modules.
+> I prefer having this "direction" path explicitly selected through
+> a DT property.
+>
+> The existing properties 'input-enable' and 'output-enable' are
+> not specific for the skew-delay.
+> And I think it would be confusing having 'input-enable' or
+> 'output-enable' associated with a bidirectional pins like I2C's SDA.
+>
+> I propose to change it as, e.g.
+>   st,skew-delay-on-input:
+>     type: boolean
+>     description: |
+>       If this property is present, then skew-delay applies to input path =
+only,
+>       otherwise it applies to output patch only.
+>
+> Or, it could be a new generic property (keeping backward compatibility), =
+e.g.:
+>   skew-delay-direction:
+>     enum [0, 1, 2]
+>     default: 0
+>     description: |
+>       0: skew-delay applies to both input and output path, or it switches=
+ automatically
+>          between the two direction
+>       1: skew-delay applies only to input path
+>       2: skew-delay applies only to output path
 
-The following changes since commit 42f7652d3eb527d03665b09edac47f85fb600924:
+I like this property the most. Can we go with the generic
+skew-delay-direction?
 
-  Linux 6.12-rc4 (2024-10-20 15:19:38 -0700)
+Also state in the existing skew-delay property that if
+skew-delay-direction is not
+present then it is assumed that the property applies to all
+directions of a pin.
 
-are available in the Git repository at:
+> > > +          st,io-clk-edge:
+> > > +            description: |
+> > > +              IO synchronization clock edge
+> > > +              0: Data single-edge (changing on rising or falling clo=
+ck edge)
+> > > +              1: Data double-edge (changing on both clock edges)
+> > > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > > +            enum: [0, 1]
+> >
+> > This looks like it should be made into a generic property,
+>
+> I believe it is too specific to ST implementation.
+> I see already some 'retime' mentioned in old ST bindings
+> bindings/pinctrl/pinctrl-st.txt and bindings/net/sti-dwmac.txt, but the c=
+ontrol looks quite different; I don't plan to reuse them.
+>
+> I will fuse in V2 this property together with the next two in a more
+> meaningful one, partially acknowledging your proposal below.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.13-1
+Hmmmm. Let's see. I know that e.g. MMC has similar properties
+and if similar things appear in other bindings (not necessarily
+pinctrl bindings) then that should also be taken into account.
 
-for you to fetch changes up to ffe624c4130f902bc519b8201a1cb4ef1e6bb05c:
+And in MMC this is called DDR.
 
-  pinctrl: elkhartlake: Add support for DSW community (2024-10-28 19:06:54 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v6.13-1
-
-* Expose DSW community on Elkhart Lake
-* Elaborate in the code comment the pull bias settings
-
-The following is an automated git shortlog grouped by driver:
-
-elkhartlake:
- -  Add support for DSW community
-
-intel:
- -  Add a human readable decoder for pull bias values
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      pinctrl: intel: Add a human readable decoder for pull bias values
-      pinctrl: elkhartlake: Add support for DSW community
-
- drivers/pinctrl/intel/pinctrl-elkhartlake.c | 38 +++++++++++++++++++++++++++++
- drivers/pinctrl/intel/pinctrl-intel.c       | 12 +++++++++
- 2 files changed, 50 insertions(+)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
