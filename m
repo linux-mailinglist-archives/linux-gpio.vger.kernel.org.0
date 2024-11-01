@@ -1,117 +1,106 @@
-Return-Path: <linux-gpio+bounces-12453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A2B9B90C5
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 12:56:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EA589B90E2
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 13:05:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27FC31F21661
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 11:56:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C92C2B210AF
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 12:05:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5B4A19CC0A;
-	Fri,  1 Nov 2024 11:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E620D19DF40;
+	Fri,  1 Nov 2024 12:05:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MxzH+GCR"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="V8kGI6/O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151919C54E
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 11:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CDE19DF41;
+	Fri,  1 Nov 2024 12:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730462182; cv=none; b=VkRVLiWmSgwSpVzMktk0LC1bIq2gHX+bk5812SrSdO8edPROkm8fzZ9FytyN5kCzdVpPgO7gklsjvR4S+041faG7hF0cTFq8skGqwmI3S2utDdvatOLz5R1Zw7BsFt9dWJJcMqRGaKHsdfzqzsSJ4pzt+vERi1vI5hNgCT7B6LY=
+	t=1730462700; cv=none; b=dm0HdeFjF9TgUXRL+QPV8PPdFmLJZ1vikphc9CRtXPqJybUNGiddI+s03rU/ZJ2CqYXGgOYZGj4qkQD3pSL8eBmeVyqq9tUKJhvajgk6wGI/g5i0UnjIr/ul4Z+kln47uS2/zxDnv5sZDERFYpwmI2mV0AMlUVl6gL00PhdVG1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730462182; c=relaxed/simple;
-	bh=1Uojm1GMg7+SmttJF2ZuBBVhB5ST+uLPitvJ1/9BMXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aABn59Z19OACReFK/+Xap8356JU8ke/tnbGtgm1viHOfjEfIpBFPQ/zs4pMQqC6SiZIW6xfTZtqCCPhRSqHZ7dlhiBplbd3epeFDpAK4dBCDKNZ6OLlEjkkRmE8nFQvWAzmgkU44htlKWtAip4UMrixnwBBEBxnrA8ni3c7ZnG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MxzH+GCR; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539e5c15fd3so1741624e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Nov 2024 04:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730462178; x=1731066978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PR7nhijIFPqEwqWUXxfWpQdSj2cyoar1EyPI7jC4FfI=;
-        b=MxzH+GCRv9ClLXszj1vkA7X0oGAXClXXgEIfvB1I/fqumEFDtqAzfp3hURIQrIAVEZ
-         BsqbkaFi5p3FyjrPwEk4hGz5p94qimaZQXAlI7Ps+m69KiH8Gbw4dgRTSE2mb6EHnH4N
-         wi3vSnMtzyNMr7ipbOc+lxfww/zjYouA+g2Fy/JvBb0lY8OC6Nw9we4tjJHv8j9xHcqC
-         BAo0oh3U+8LGjpDZCm6O4mJaKarznjkDV/o4EOKJsTDsR/VR9PTHJcaU12FxvYyDAeEf
-         5JdKWuQtH5k8F1vC1JFfyoIGkWUw5zNWqP7LAivnTuIenqLG6C0GX4ozJ7SW3/FF5C+J
-         LQsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730462178; x=1731066978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PR7nhijIFPqEwqWUXxfWpQdSj2cyoar1EyPI7jC4FfI=;
-        b=LzLyNwOKLFt5LnRZcWMfz9Kx6aehgHtlNi95zGLA7ccu0hpveLXNxnAdw6Ajee76lP
-         ngH+Wlkt4RL0mbVEl0hvDfjO6WZZOu447dYTEzJQrVv0VYVXC/RVAbKQZoitNgTB/jMh
-         WxdFNLYUPo4ytIFmX9PBbE6XUp6HoY1Hv0tajYsKcC/IsCKV+1F4RXswYkzJ4heHGgZY
-         f+ktDoJsrUA0zRLpxIIaBsO7m6noG9mmHhV8tdgrO7Rz8O6zaTtb2oxXAaiWtdkF6K0f
-         /OA6nbz1Xd9bSNw3Zx09vvwS9vA52VQ2R6eJAgfxz4HY58rKKco9OD6o40tWp5QKA/ew
-         xHZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxPnDKcLqXcWTd2+Mdny3E/Qh/tw2hJHMMACcoMl9TnU7kN9lMdfgSgXq2gxsQi0tryIGcjMn+pHbf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrUyzTfT783Vpkgbl0ocPAO4j2x7wOmcFlRvjWx6vqPiLuW/zz
-	+EORPi1eCGVJzwdZl+/yd3ppvk5StLgndWX3COpk7zHV9sEHGqBhrzftZlMYIBaKPmRG/eoDPWp
-	EFqNKwZS9Ic/fjo6HJ30hCtAB+YbstZGP2vcrQQ==
-X-Google-Smtp-Source: AGHT+IG201tjRpH4xAJy3js1MXvAZgMS+IPv3AAVo1TZLrpjjIYjlw9AiqUvvc+CIbPttUv3zlvfcUINXBzKPHjno0Q=
-X-Received: by 2002:a05:651c:211a:b0:2fc:9550:d658 with SMTP id
- 38308e7fff4ca-2fcbe004950mr124110461fa.24.1730462178345; Fri, 01 Nov 2024
- 04:56:18 -0700 (PDT)
+	s=arc-20240116; t=1730462700; c=relaxed/simple;
+	bh=VUpg8swfaMH8KH/YYd4yjICcXgkMLBMqp0RubHiLe2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jomQxWUKuKrKOV5AosG0HxK8mkOntwxwLFvYUXQlXWFkkkRXxG2+rgIFiJ4chp2pZniNJDWLj3VyUKrqnoYCR113ahIY1bhEbMsiFYA31BC96e8cGRmDSI1w/WyaoGyoyVAfbiByY/52KWBcGLAT7lJ9KARqT+UKy3PtxrW5axk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=V8kGI6/O; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1730462695;
+	bh=VUpg8swfaMH8KH/YYd4yjICcXgkMLBMqp0RubHiLe2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V8kGI6/OGf9VC0m9ypPCHAgD5grp8peLL1jVHBsKMKcQUcN/w1MyDpUQY5TngyiuY
+	 SucTeTCT8+2RkPrpgp8k7dEipBeaEWF98mOy4iG6iP3vfIxvI28XhvJ7o/ChVp3H19
+	 21n4VMIeO+z4mcyVF3/476PbEfeHQBb7RFqs2XeHru0kW6p+OqyQaVY8OHvi0unIIy
+	 pvIDS4tBcJePoA9cHV1VgnOhQ6MU/6xMDc2S9EVnxfvbG+KzfKrTmsPnKHfJq6yTjJ
+	 1XpH7imWfxuJOaz76QdRScHfYdOyYPqsR9zYrnAca0hj4SMYQS3Ei6QPaIfIYcqJbr
+	 PtQg4h8JEmMPg==
+Received: from notapiano (pool-100-2-116-133.nycmny.fios.verizon.net [100.2.116.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B7E7717E1574;
+	Fri,  1 Nov 2024 13:04:53 +0100 (CET)
+Date: Fri, 1 Nov 2024 08:04:51 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, kernel@collabora.com,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
+Subject: Re: [PATCH RFC v2 3/5] pinctrl: mediatek: common: Expose more
+ configurations to GPIO set_config
+Message-ID: <4ed22f25-ad10-461c-be68-8472590db44d@notapiano>
+References: <20241025-kselftest-gpio-set-get-config-v2-0-040d748840bb@collabora.com>
+ <20241025-kselftest-gpio-set-get-config-v2-3-040d748840bb@collabora.com>
+ <CAGXv+5H9OTCn033yoi6oxxRKG1G=vbrBK+aw+ZWwGPWbn=uWuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241101080614.1070819-1-andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <20241101080614.1070819-1-andrei.stefanescu@oss.nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 1 Nov 2024 12:56:07 +0100
-Message-ID: <CACRpkdbFQ6f6xg906ZREOgDifSWwfFWdxCqDxcLALZdYg6PWWQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] gpio: siul2-s32g2: add initial GPIO driver
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
-	Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, NXP S32 Linux Team <s32@nxp.com>, 
-	Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>, 
-	Enric Balletbo <eballetb@redhat.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGXv+5H9OTCn033yoi6oxxRKG1G=vbrBK+aw+ZWwGPWbn=uWuA@mail.gmail.com>
 
-On Fri, Nov 1, 2024 at 9:06=E2=80=AFAM Andrei Stefanescu
-<andrei.stefanescu@oss.nxp.com> wrote:
+On Fri, Nov 01, 2024 at 03:54:58PM +0800, Chen-Yu Tsai wrote:
+> On Sat, Oct 26, 2024 at 5:16 AM Nícolas F. R. A. Prado
+> <nfraprado@collabora.com> wrote:
+> >
+> > Currently the set_config callback in the gpio_chip registered by the
+> > pinctrl-mtk-common driver only supports configuring a single parameter
+> > on specific pins (the input debounce of the EINT controller, on pins
+> > that support it), even though many other configurations are already
+> > implemented and available through the pinctrl API for configuration of
+> > pins by the Devicetree and other drivers.
+> >
+> > Expose all configurations currently implemented through the GPIO API so
+> > they can also be set from userspace, which is particularly useful to
+> > allow testing them from userspace.
 
-> Andrei Stefanescu (7):
->   dt-bindings: mfd: add support for the NXP SIUL2 module
->   mfd: nxp-siul2: add support for NXP SIUL2
->   arm64: dts: s32g: make pinctrl part of mfd node
->   pinctrl: s32: convert the driver into an mfd cell
->   pinctrl: s32cc: change to "devm_pinctrl_register_and_init"
->   pinctrl: s32cc: add driver for GPIO functionality
->   MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD driver
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-How do you want to merge this?
+> 
+> Missing signed-off-by?
 
-Can the MFD and pinctrl parts be merged separately, or shall
-it all go into MFD or all into pinctrl?
+Huh, I don't know how the pre-send checks didn't catch it, will take a look,
+thanks for pointing it out! I've added the SoB above so it can
+still be merged if no further versions are required.
 
-I can certainly merge it if Lee ACKs the MFD patch.
-
-Yours,
-Linus Walleij
+Thanks,
+Nícolas
 
