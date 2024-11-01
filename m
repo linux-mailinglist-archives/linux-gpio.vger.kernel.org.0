@@ -1,235 +1,171 @@
-Return-Path: <linux-gpio+bounces-12414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12415-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A3C59B8A2F
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 05:15:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C79AC9B8A6F
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 06:24:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB129282B95
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 04:15:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F38D1F22398
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Nov 2024 05:24:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70EB146D45;
-	Fri,  1 Nov 2024 04:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433BD146596;
+	Fri,  1 Nov 2024 05:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J1Isdfys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W629EqT6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADC813777F;
-	Fri,  1 Nov 2024 04:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331078467
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Nov 2024 05:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730434516; cv=none; b=Xd1YS2/TYaHsupMeavreu3vkxJUsJ9OnkY/NsozRxeqCayDIrhYFv402AGjqMRJhskRSUTjEckqfKn2f6yKW18OamPomDmDR5FXHOQp/0MzYtRs6Fk2tJrY6qWAfwYy68rAszTAIaWaHNi7Rr8VcT9xphO/QEw44pxlZfmZ+ado=
+	t=1730438694; cv=none; b=IaDyz6efZ4KWfNuczceGpfmClFroNZ7unXJVCwmjaPnLhglAqu8BdKnzLX4kEoZRKA1a2fiHUBKJj4kIy4lv96YBXWMD6+nlvFuOt0zdyOFAVQpb3ophP1mb9GNplxAW17pJaL8foEj4DfxvhAMXz/Ou4andrfdwQJ2yPFze/wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730434516; c=relaxed/simple;
-	bh=VJA0AjiK6NmricA4WfL9xHrUVhSflUDFGoIEBijSa3M=;
+	s=arc-20240116; t=1730438694; c=relaxed/simple;
+	bh=i/I/rP8EpR52xHNlQf9Vxw2zHD+BziLr6W8qnMjeWDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFXmuNfRGkCFkkK3aCej15OfesgCwBM1KGZiNcMEIGUYYRHaRsp/oxH3l7uSmaaxgt67jt4LteGjZJ7/2F+kbol4Z3WfBs9+RGImdG3UgyBRQTo6BtINEYJ3r2inV2noUMPA6pYrWDkB/Y5Yn5JcRZ795J11uZGNZ+ItTAE4rnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J1Isdfys; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730434514; x=1761970514;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VJA0AjiK6NmricA4WfL9xHrUVhSflUDFGoIEBijSa3M=;
-  b=J1IsdfysL2bmcelras1tZvrfhh+tR11Tl0WltbkP4xlkDjWOffA4XG+r
-   ZFnTcdsQVCKrofoNdze2JtFO+UkTcqDS05ERVxN3xYyVHCnNasYwsAc9H
-   MdcwsHwCfvux4dzS/HEuVraVsd+EjYz7MQmFGqkkjcPZ4c5NlvRplPQFk
-   P5lIS4ZyME1gDvmtxI6+2Yle8TjTi8icdDN5ZpfS/O/ClnMJwVe1ZDPZZ
-   Ed27We7kDcmMCpd8vQJ4MNWDdZtVI2p8CajOrtpLuZHNPvjnyFZCBs/oB
-   J8j7Y3XVxn8g1o8I49FzyGXmaAOvirDtw0+ERtWMR7MuX+sO43Mj39ybi
-   w==;
-X-CSE-ConnectionGUID: QJ/a5MsIS3OWsP2hYevK8A==
-X-CSE-MsgGUID: BhVhWwtxSZC+2ySoDZj5FA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30414493"
-X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
-   d="scan'208";a="30414493"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 21:15:13 -0700
-X-CSE-ConnectionGUID: cFVYI5qoQiaeYqRZHIqwSw==
-X-CSE-MsgGUID: keQXpCkbQTeVGDbcHGrUGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
-   d="scan'208";a="82524144"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 31 Oct 2024 21:15:06 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t6j3w-000h7d-1T;
-	Fri, 01 Nov 2024 04:15:04 +0000
-Date: Fri, 1 Nov 2024 12:14:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 07/12] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <202411011129.wmWcuU9Z-lkp@intel.com>
-References: <c20e3d6d87c71691b149cdeeafc94009953346b2.1730123575.git.andrea.porta@suse.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iqv778T7Q/2c8/dfmcn2IvukjOkIgUdOPQfNL4BVmiOW+np/jLwcuvPeg1zjbPaxik811IG1Mjk983rRV0JGCUj9Bvx+s2sCGG/f0CAGyDBvyFspsi3BrcjGWmmRrFmRAQp2gSCi0oxG2fwR4nEJsDYl/EFpFJlqv+w/srbo7/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W629EqT6; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-210e5369b7dso16884415ad.3
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Oct 2024 22:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730438691; x=1731043491; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NHXZvV5VWIXMQNRqTTj8e5mctPAapxEvwh+ry0nUmME=;
+        b=W629EqT6alf8FgpA/c3EzDsFOgOAlWm7ZC42RyNqH8wnNx/46WTNFzevkQoG/e6jW7
+         l+zZlPho+2yUHeWvAAXz9m22ZQQbkBTgO1yXn629cxVjFCJ37FG5n+RFP+WZoDQ/6ImG
+         dTR64zyTopUVjC8itOFW45KTmFDRCiu7b2gqBGYmitxWr/eQSeoo4NF+6ISBi8vjXfyN
+         Xi3ksZaxpoU3lRoLjByHw/FnpQgnLGoJXqdLVOMXxsSr84sjrMJrpk/29YjB0yeRaIDi
+         UN49D5r27GiQJQUxmZ8ZAeryRagRezucumv7nKMMaoxtT/IdmJ7ged7e6GO1G1cArhSv
+         X2SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730438691; x=1731043491;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NHXZvV5VWIXMQNRqTTj8e5mctPAapxEvwh+ry0nUmME=;
+        b=WBtOcS/7kCXvBp7f/hQ/hwIMpF7h/rB/RdSzU2L5/pwEyoAgeL378GzqK81qqD5gsO
+         8qucSEqWreXfif2gqgCXSoPH6Dm7LPl3AZZVgYBkIuveUhvs4fzXj4bYDWe8V4qFrmZc
+         /XtMhrGVZgEBJ9toP2GsgRtXhPFJh2GOPhHiAYUsMafPVzQSHwotY3BHYhbEUv3RVIBH
+         B9rE7ZqjJQ1xAEEC0W6T0e2Vkct6MK7Se1HLqYxSs6bil0yhBhp2XLf9gIfPEnTL4FdJ
+         81xCqbkGivkI3qSnyY6HiTX06sWOew10H3Je/3wPHgLrWk9rfQAzxcCvXcXy/mlRnDrJ
+         bkrg==
+X-Gm-Message-State: AOJu0Ywa9SDIAhG4FeNa62P/Cqr71vWiua2OJwBdFJ56hzBHKlGAFOcp
+	XepOdf7qERyXsWED/oxzwaK3ablVfXfnCUOjXMonCwRKRSaEvPJO2XHz9A==
+X-Google-Smtp-Source: AGHT+IFb0KRIO6rwRHa38Ile8KlCaSQxjZAvGMaygFzqzOyzIXQPpYX7INjJOibp3yOlPdK5FGWRGg==
+X-Received: by 2002:a17:902:cf0a:b0:20b:61ec:7d3c with SMTP id d9443c01a7336-2111b00131amr28860475ad.49.1730438691130;
+        Thu, 31 Oct 2024 22:24:51 -0700 (PDT)
+Received: from rigel (60-240-10-139.tpgi.com.au. [60.240.10.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057f3dc6sm16185045ad.307.2024.10.31.22.24.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2024 22:24:50 -0700 (PDT)
+Date: Fri, 1 Nov 2024 13:24:47 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Le Chaudron Nautique <vanvan@chaudron-nautique.fr>
+Cc: linux-gpio@vger.kernel.org
+Subject: Re: libgpiod 2.2 installation on RaspberryPi 4
+Message-ID: <20241101052447.GA110734@rigel>
+References: <35d12c34-848d-4093-a0f2-30fb57b1299b@chaudron-nautique.fr>
+ <20241031020858.GA35451@rigel>
+ <3404b96e-f858-48b4-abfc-0a836d00e730@chaudron-nautique.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c20e3d6d87c71691b149cdeeafc94009953346b2.1730123575.git.andrea.porta@suse.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3404b96e-f858-48b4-abfc-0a836d00e730@chaudron-nautique.fr>
 
-Hi Andrea,
+On Thu, Oct 31, 2024 at 03:17:32PM +0100, Le Chaudron Nautique wrote:
+>
+> Le 31/10/2024 à 03:08, Kent Gibson a écrit :
+> > On Wed, Oct 30, 2024 at 09:59:05PM +0100, Le Chaudron Nautique wrote:
+> > > Hello,
+> > >
+> > Here is what I get using that tarball and:
+> >
+> > ./autogen.sh --prefix=/usr/local --enable-examples
+> > make
+> > sudo make install
+> >
+> > pi@pi4:~/libgpiod-2.2 $ ls -l /usr/local/lib
+> > total 372
+> > -rw-r--r-- 1 root root 239480 Oct 31 09:40 libgpiod.a
+> > -rwxr-xr-x 1 root root    946 Oct 31 09:40 libgpiod.la
+> > lrwxrwxrwx 1 root root     17 Oct 31 09:40 libgpiod.so -> libgpiod.so.3.1.1
+> > lrwxrwxrwx 1 root root     17 Oct 31 09:40 libgpiod.so.3 -> libgpiod.so.3.1.1
+> > -rwxr-xr-x 1 root root 155480 Oct 31 09:40 libgpiod.so.3.1.1
+> > drwxr-xr-x 2 root root   4096 Oct 31 09:40 pkgconfig
+> > drwxr-xr-x 4 root root   4096 Jan 13  2024 python3.11
+> >
+> > pi@pi4:~/libgpiod-2.2 $ ldd examples/.libs/get_chip_info
+> > 	linux-vdso.so.1 (0x0000007f9e276000)
+> > 	libgpiod.so.3 => /usr/local/lib/libgpiod.so.3 (0x0000007f9e1e0000)
+> > 	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000007f9e030000)
+> > 	/lib/ld-linux-aarch64.so.1 (0x0000007f9e239000)
+> >
+> > pi@pi4:~/libgpiod-2.2 $ examples/get_chip_info
+> > gpiochip0 [pinctrl-bcm2711] (58 lines)
+> >
+> > What do you get?
+> I didn't add the --enable-examples, I took the code from git and put it in
+> my test file/directory.
 
-kernel test robot noticed the following build errors:
+Adding the --enable-examples is just a convenient way to get the
+examples built.  Building it manually is fine too.
 
-[auto build test ERROR on clk/clk-next]
-[also build test ERROR on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus robh/for-next linus/master v6.12-rc5]
-[cannot apply to next-20241031]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> vanvan@lcntest-stable:~/prog/userspace $ ldd prog
+>     linux-vdso.so.1 (0x0000007fa851e000)
+>     libgpiod.so.3 => not found
+>     libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000007fa8300000)
+>     /lib/ld-linux-aarch64.so.1 (0x0000007fa84e1000)
+>
+> Should I look at/capture the autogen logs to see if something is amiss ?
+>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrea-della-Porta/dt-bindings-clock-Add-RaspberryPi-RP1-clock-bindings/20241028-221122
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-patch link:    https://lore.kernel.org/r/c20e3d6d87c71691b149cdeeafc94009953346b2.1730123575.git.andrea.porta%40suse.com
-patch subject: [PATCH v3 07/12] clk: rp1: Add support for clocks provided by RP1
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20241101/202411011129.wmWcuU9Z-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 639a7ac648f1e50ccd2556e17d401c04f9cce625)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241101/202411011129.wmWcuU9Z-lkp@intel.com/reproduce)
+No, the issue is ld not locating the library in /usr/local/lib for some reason.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411011129.wmWcuU9Z-lkp@intel.com/
+What does
 
-All errors (new ones prefixed by >>):
+$ ldconfig -p | grep libgpiod
 
-   In file included from drivers/clk/clk-rp1.c:9:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/clk/clk-rp1.c:9:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/clk/clk-rp1.c:9:
-   In file included from include/linux/regmap.h:20:
-   In file included from include/linux/iopoll.h:14:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> drivers/clk/clk-rp1.c:621:2: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     621 |         FIELD_SET(prim, PLL_PRIM_DIV1_MASK, prim_div1);
-         |         ^
-   drivers/clk/clk-rp1.c:399:12: note: expanded from macro 'FIELD_SET'
-     399 |         (_reg) |= FIELD_PREP(mask, (_val));     \
-         |                   ^
-   drivers/clk/clk-rp1.c:622:2: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     622 |         FIELD_SET(prim, PLL_PRIM_DIV2_MASK, prim_div2);
-         |         ^
-   drivers/clk/clk-rp1.c:399:12: note: expanded from macro 'FIELD_SET'
-     399 |         (_reg) |= FIELD_PREP(mask, (_val));     \
-         |                   ^
-   drivers/clk/clk-rp1.c:767:2: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     767 |         FIELD_SET(sec, PLL_SEC_DIV_MASK, div);
-         |         ^
-   drivers/clk/clk-rp1.c:399:12: note: expanded from macro 'FIELD_SET'
-     399 |         (_reg) |= FIELD_PREP(mask, (_val));     \
-         |                   ^
-   drivers/clk/clk-rp1.c:948:3: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     948 |                 FIELD_SET(ctrl, CLK_CTRL_AUXSRC_MASK, index - data->num_std_parents);
-         |                 ^
-   drivers/clk/clk-rp1.c:399:12: note: expanded from macro 'FIELD_SET'
-     399 |         (_reg) |= FIELD_PREP(mask, (_val));     \
-         |                   ^
-   6 warnings and 4 errors generated.
+show?
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for MODVERSIONS
-   Depends on [n]: MODULES [=y] && !COMPILE_TEST [=y]
-   Selected by [y]:
-   - RANDSTRUCT_FULL [=y] && (CC_HAS_RANDSTRUCT [=y] || GCC_PLUGINS [=n]) && MODULES [=y]
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [m]:
-   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
+I get:
+
+pi@pi4:~/libgpiod-2.2 $ ldconfig -p | grep libgpiod
+	libgpiodcxx.so.1 (libc6,AArch64) => /lib/aarch64-linux-gnu/libgpiodcxx.so.1
+	libgpiod.so.3 (libc6,AArch64) => /usr/local/lib/libgpiod.so.3
+	libgpiod.so.2 (libc6,AArch64) => /lib/aarch64-linux-gnu/libgpiod.so.2
+	libgpiod.so (libc6,AArch64) => /usr/local/lib/libgpiod.so
+
+If that doesn't provide a libgpiod.so.3 location for you then try
+
+$ sudo ldconfig
+
+to update the ld cache, and then repeating the above and the ldd.
+
+If that doesn't work, try setting
+
+$ export LD_LIBRARY_PATH=/usr/local/lib
+
+and repeating the ldd.
+
+Cheers,
+Kent.
 
 
-vim +/FIELD_PREP +621 drivers/clk/clk-rp1.c
 
-   607	
-   608	static int rp1_pll_set_rate(struct clk_hw *hw,
-   609				    unsigned long rate, unsigned long parent_rate)
-   610	{
-   611		struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
-   612		struct rp1_clockman *clockman = pll->clockman;
-   613		const struct rp1_pll_data *data = pll->data;
-   614	
-   615		u32 prim, prim_div1, prim_div2;
-   616	
-   617		get_pll_prim_dividers(rate, parent_rate, &prim_div1, &prim_div2);
-   618	
-   619		spin_lock(&clockman->regs_lock);
-   620		prim = clockman_read(clockman, data->ctrl_reg);
- > 621		FIELD_SET(prim, PLL_PRIM_DIV1_MASK, prim_div1);
-   622		FIELD_SET(prim, PLL_PRIM_DIV2_MASK, prim_div2);
-   623		clockman_write(clockman, data->ctrl_reg, prim);
-   624		spin_unlock(&clockman->regs_lock);
-   625	
-   626		return 0;
-   627	}
-   628	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
