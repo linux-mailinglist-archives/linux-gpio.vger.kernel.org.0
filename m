@@ -1,152 +1,143 @@
-Return-Path: <linux-gpio+bounces-12486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DC389BA195
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2024 18:09:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28DBB9BA1CF
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2024 18:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A761BB2133C
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2024 17:09:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BF041C20A9C
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Nov 2024 17:44:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AF61AA793;
-	Sat,  2 Nov 2024 17:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9699D1AA7B8;
+	Sat,  2 Nov 2024 17:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZetXxDm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwBOXmcB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C01919DF4B
-	for <linux-gpio@vger.kernel.org>; Sat,  2 Nov 2024 17:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451EF4EB50;
+	Sat,  2 Nov 2024 17:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730567364; cv=none; b=ai5DYi/JzPReML10EdNmFnpNeQFZ2MHWWzyI2d9bIaydyUYlzQd1XdbibXugpgqTIgcbER/aY3YxFR4l9JxSDAmPIcWCOW5NJ0mKhGafjvNN2RV1J8QFwiCTdvvARdUYwZgfm727PBsKn5nxbQEXknzJFT7MkzOpWaDQA987IZI=
+	t=1730569491; cv=none; b=ZviXAu7O9ftqipiQz2hyarXM8T2HGUevs0WGR2z9IYywSj5G0JGt+OgB90Z/oarfAQ2rbq8gWEPHmiQYb2SZbusXDE6PgprajCq+mfDZhyRMB4cykIx1jpwPjl0++CyNZ4XYRe+gS+KzYk67WVK3amHVbPg5CnfdGtBaHiubY9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730567364; c=relaxed/simple;
-	bh=Z4ujPaeRMEt6r7M7H1TsEVcv9xtm5hvQruVS6LMJgNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s5aOZuyqyEwPr6hr34aVSIApHeg43xHSdYWMrWAmrwqAXIa7W4vN+B7YunBALz7ix5iF0dU0unlD3RDB44Agp34fshYLGEfKsLiInB+uOapyBGSp7XwCbuF5kfzhxBZtLcdOtyqTjNitB+/iRXtx/KfYvyPYHo6wk9Q9hkKOeSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HZetXxDm; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20cdbe608b3so30509855ad.1
-        for <linux-gpio@vger.kernel.org>; Sat, 02 Nov 2024 10:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1730567361; x=1731172161; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=niemCpBaWtNTD33HK4hY7EmVvjCf6wQeZoDXMitV7Gw=;
-        b=HZetXxDmN8QlshSNxk61fUsiuCnePcI18I10cz+pzFpr+14WVEiM39mazf6BBNEn2h
-         Ohk2XXW3EVZWFVBVUoQz3Pfo7SLXp2+pomwWdwL1qj4NJjJC2siL2ZI0CqUfWbLmvN+H
-         t2Xy0pfNFas3HqknRQgMVVva1eRgp3ZF6cXplHW8favIvAYICny5tyiHpqvjlmLvXMId
-         i/mJFBoZgG5iX0+Ty304/YEGG/bI6o+zR78E2QiDTPiPddGMAjNZrwXdr2V0OkuorvLR
-         0G25Z69OIMq6gmkQMSGyuIXjAPrlCnEAoa1u9R4L+R/zs95PB5i92aLURxawFfHyedAd
-         QObQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730567361; x=1731172161;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=niemCpBaWtNTD33HK4hY7EmVvjCf6wQeZoDXMitV7Gw=;
-        b=DP3GoVmcvw9mRocO+cQsdCFmSQ0mTRvahRVLAwQgdlNW8BSpk9Kwt2GiCZWdpyPBUI
-         HPiPTFVsWexQqlZWIw6mKZUZK+QQXh9jCGvkNibWQS7uwvXUDf/l3c+M9MxtFfNfK03b
-         pjFHyHaG9MI+xfFmADFkmJpRQ4+tzND9mjGSBmkX6eSFy/idjStj3Lmyl06U+wefpHpe
-         1e/iGCM09f0bHEZR0cA1CNKwInmQh2VPN0ZofE3zRzbTURW7IPWvzKredapmv28CMHPY
-         mc/Pu0OH+9P8tUHc/6hf77nHNYeeTA6rEGJBDnksNWIfjNgZgiKWubOoGnswXZOePXsb
-         Pq6w==
-X-Forwarded-Encrypted: i=1; AJvYcCX0KYD/pdg40uFILT07u882250h/6kG+z2tE4YA/uHqICD3FG1ufVftXTBeljM5uMdH4wLDM6DyeIeM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPC1liBamG8LUUNnqa89x2+YtUSp8q5UIieTtEdkV7aEfVLEUb
-	oiTS5bU3Qm5h71oNmnMaqZn627SgsthsnlTPIExITBoVsvLR3b2mgMVaRqWNkA==
-X-Google-Smtp-Source: AGHT+IE57YiawuzlnoPc/P8d7TUPT1NkGH0WXOgqoMFowdmCtN7jxWsbHJCr+a/Z5Z8OOuUwKEUShw==
-X-Received: by 2002:a17:902:e810:b0:210:e8b7:58c5 with SMTP id d9443c01a7336-210f76ff16fmr219810025ad.56.1730567361173;
-        Sat, 02 Nov 2024 10:09:21 -0700 (PDT)
-Received: from thinkpad ([220.158.156.209])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056ed8efsm35882265ad.55.2024.11.02.10.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Nov 2024 10:09:20 -0700 (PDT)
-Date: Sat, 2 Nov 2024 22:39:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 05/12] PCI: of_property: Assign PCI instead of CPU bus
- address to dynamic bridge nodes
-Message-ID: <20241102170908.fa5n6pz5ldxb66zk@thinkpad>
-References: <cover.1730123575.git.andrea.porta@suse.com>
- <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1730569491; c=relaxed/simple;
+	bh=1E95OTbuDlNgkvn3HsUBOm3z72dwTWmD+hNd7j6udnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qfiXeO7uTju9ewR2MDYp5CL1Q5lVdJwydHLG4kG9M8r040z5fWlWNPzmv6Hb7eO+ogRuihdyPQ3WJZKPIPsFNrI/+GuG9wEDmgjEyOXqelYpy+xz+H6XH/pqF4Y4jhGQByfjeKzw5FPvoT+Hr+o6iuv+QN7NCTXbA0T9/MErsEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwBOXmcB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72392C4CEC3;
+	Sat,  2 Nov 2024 17:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730569490;
+	bh=1E95OTbuDlNgkvn3HsUBOm3z72dwTWmD+hNd7j6udnc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uwBOXmcBNICsqPln0GDA6gTREHWAO4gFYqU+HFnaXDg3SlIkKvdEEsswjpW0xVMz2
+	 9PKgMvS2CjEgZMBemOgG0STwduexpLmzfIhMrU5U5bKEL3B3IUrSebk5ls8xmPFwZu
+	 PymJ34cz6WHno9GqrC1tu+UJb8ezAbK9GdJutspYBi+I9sl3ItV6qGRLSpxZtnjSyb
+	 xctDqLahFaaEPHl03Jp7uPv3I89+y16eb+wEmZ4OFrUtoYgp9KOAqr98bNSJS14htD
+	 R8THl46nMZqP8hTAEsg5SALlptLiVcNPFD0aquk3LrLkqx2dgild2eb7FI8y/yE9bL
+	 51jqLPt+4dPbw==
+Message-ID: <d04d2b39-f1d1-4536-8ab2-764cd989d456@kernel.org>
+Date: Sat, 2 Nov 2024 18:44:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 09/10] arm64: dts: exynos: Add Exynos9810 SoC support
+To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
+ <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Maksym Holovach <nergzd@nergzd723.xyz>
+References: <20241028-exynos9810-v4-0-6191f9d0c0f1@gmail.com>
+ <20241028-exynos9810-v4-9-6191f9d0c0f1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241028-exynos9810-v4-9-6191f9d0c0f1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 28, 2024 at 03:07:22PM +0100, Andrea della Porta wrote:
-> When populating "ranges" property for a PCI bridge, of_pci_prop_ranges()
-> incorrectly use the CPU bus address of the resource. Since this is a PCI-PCI
-> bridge, the window should instead be in PCI address space. Call
-> pci_bus_address() on the resource in order to obtain the PCI bus
-> address.
+On 28/10/2024 10:22, Markuss Broks wrote:
+> Exynos 9810 is an ARMv8 mobile SoC found in various Samsung devices,
+> such as Samsung Galaxy S9 (starlte), S9 Plus (star2lte),
+> Note 9 (crownlte) and perhaps others.
 > 
-
-of_pci_prop_ranges() could be called for PCI devices also (not just PCI
-bridges), right?
-
-- Mani
-
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  drivers/pci/of_property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Add minimal support for this SoC, including basic stuff like:
+> - PSCI for bringing up secondary cores
+> - ARMv8 generic timer
+> - GPIO and pinctrl.
 > 
-> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-> index 5a0b98e69795..886c236e5de6 100644
-> --- a/drivers/pci/of_property.c
-> +++ b/drivers/pci/of_property.c
-> @@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
->  		if (of_pci_get_addr_flags(&res[j], &flags))
->  			continue;
->  
-> -		val64 = res[j].start;
-> +		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
->  		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
->  				   false);
->  		if (pci_is_bridge(pdev)) {
-> -- 
-> 2.35.3
-> 
+> The firmware coming with the devices based on this SoC is buggy
+> and doesn't configure CNTFRQ_EL0, as required by spec, so it's
+> needed to hardcode the frequency in the timer node.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks for the changes. All other patches were already applied - I
+dropped only DTS.
+
+Patches look good, thanks.
+
+Unfortunately, it is late in the cycle and due to some travel it is
+actually too late for me to pick it up. I will take it after the merge
+window.
+
+Best regards,
+Krzysztof
+
 
