@@ -1,126 +1,116 @@
-Return-Path: <linux-gpio+bounces-12508-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12509-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D82E59BAFEB
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 10:39:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 983369BB03E
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 10:50:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 158241C2203A
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 09:39:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C60328269F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 09:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B42921AD9F9;
-	Mon,  4 Nov 2024 09:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7CE1AF0B5;
+	Mon,  4 Nov 2024 09:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eKgs2VWt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="av9N3dOK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EBF1AC426
-	for <linux-gpio@vger.kernel.org>; Mon,  4 Nov 2024 09:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694BF1ABEDC
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Nov 2024 09:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730713145; cv=none; b=mJoVIHiogeZ2RVO1I3IPApKEDicnEYHbJKsYyc2td6p/uXb/osPbDcBSzcvyhdoKefCLj44IapfM3JL0QeUlZlmLOZ0Lf94TMrJ2epqAVqJCv5l3NyMDdkOXYnPu5xVgNGgBbOrCKvCXaBL3JWa5H/aReeF6i9hq4kMH8bPBG1Y=
+	t=1730713785; cv=none; b=Md8/Pifqq5cB7KbYAGELuCnIDg03LdbKS1CcLD2sqBfizrN9z01Yf8qKaDJ/ymUvXaTE1OK125+anv5Ab8EkJ1MFOA6RTinxtG5EavG2q6XNTjrG9dA4dIw9cICGkSHmhesgMSIHzEfakeAiiT+4jdx+jwQ+upmLXBweGtexqIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730713145; c=relaxed/simple;
-	bh=lWA4wBjqnudOhBPA3YKO6GmydLEaqN6nawopifkG9kg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DjRH7f2UFrEd1wUn2PItK5aYgzaTKXWK95Hhl874Hrg0QA6ESHwNFz6JTSYrniuF+S/DmMLUUQimp4cQQCM9r0agio5xLFx1FvBlcvZZbXRHyO7TV+UKvpHjnMwoVejcdWJquyrdmFmODnDhjE+CeSMxIihgRWLtQZvFh7b6U7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eKgs2VWt; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539e5c15fd3so3690599e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Nov 2024 01:39:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730713141; x=1731317941; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpQvt8QV10FkB9FVdzjKL66g/KP7VDUgARS3XzmfHRk=;
-        b=eKgs2VWt2CEVU65sKQOLeSMVo92ymPHWFLsasCzOpnKlNcqH0S3Ptk6cFEifwxVkoD
-         fbUGwTvhbPZCHklEDINCzC6WM4fFnG2PPhOIh2+xpr2cPiCiCK4lWg9ygF+JtrUImqVv
-         6TKvsrBn+WjLblKiIYmNCB8ec0XSa/GXMUqHWlYWyYpTbtMbLntIlRvKbbUDX0dcQaLH
-         6sRAoWC8NXp0P3cIxhXuh6LPDlP5a5rI9GZ6xcc/xtJSv/by6ZO1f6Pq1VolPj0gUu3Y
-         C9Skbnu405mZu1LP9U36FlUcpWjDVu0hdpJ67ocPZby0in9qIWaHAxlq3gkPmNvqH94i
-         eG9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730713141; x=1731317941;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpQvt8QV10FkB9FVdzjKL66g/KP7VDUgARS3XzmfHRk=;
-        b=vnmnBgiDkABiHIF2Y8pr2dpB9np/MOC4gTfj3EVOGVs4ZfqtzaWPW7Y9wKRGjtBhfP
-         Yiv8gPKWwHWkRYR2mPc6uFgqlaQIyK4ADP5s6wP8pOp2I5hym99+r6Vk5l8+2ihVgV+/
-         AQkhFOwIAfNAUk/Mj8DkJE5vQ/uOR0S7GW4QtEiM9xIVK7lxvuiJnFEow3I0GftWCDGL
-         5QTEQJ2oT3fyEpsXV7ihZLh4r5XD0EwECwFnZC21/35LBXRi2SdRvtjYXgoaZFkw4t4D
-         kdzLv68tXIiIte/6n4TxnD4+8WriVRLCxgE1r1MCWQrcZSvhZBVQVp1YZEBFSmmam815
-         OmNQ==
-X-Gm-Message-State: AOJu0Yz90SXA9o1LyMH3gewr9hmwLTeXHwky00ZDabNZSW7T+FBVbvG0
-	eokwaEO82BEyS6uKXLod9zHG5VCkQewR+RshmhVa0bN/KnQPzKndUxVypNt151mYXb9FkD3YhWT
-	JWMbD8p6KtSmlrd5uZMsyMuMfDgr+6oV00YxbIPxF4ZAsxbHXXws=
-X-Google-Smtp-Source: AGHT+IF7J2epgco4OhKtqmpdKWvUSFsqA4LzDGgRurEzjL0LicJzl863tFqh2AsUyP+gBqJMSUOQ5E0HCNfEm6QmLnA=
-X-Received: by 2002:a05:6512:308a:b0:539:fd20:c41f with SMTP id
- 2adb3069b0e04-53b348c3741mr17381087e87.3.1730713141432; Mon, 04 Nov 2024
- 01:39:01 -0800 (PST)
+	s=arc-20240116; t=1730713785; c=relaxed/simple;
+	bh=yewdgCBeNDS5X0UqwIbubwQkv4OaD91dZIv8bx/l//o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KU+/4bWj4HBvr7F3Yre4VecZr17IX5zJZGXo4lEOcJ55NTdZuCZDFXeI+zlcNzYZPYarkNKqgNH+5yIyo0psQRWW+Qy0ZP72PLFlXcqxypp07phJvLdEC+zO6sVaOiaeBYSWpPAmvsyn7jlN1o9smHy9sN1ujQf1NktFQ8rT5JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=av9N3dOK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B8DC4CECE;
+	Mon,  4 Nov 2024 09:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730713784;
+	bh=yewdgCBeNDS5X0UqwIbubwQkv4OaD91dZIv8bx/l//o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=av9N3dOKfiuyWQK8Uv1/ToD50rlua9XeNgqrnZ1lutpGGqsHrZ3zB2xsVEYJC7nXB
+	 g56ponzXC70/69h8ufJ4wZ3m4YXbTAleBvEC5s/2TqVa83mm7Ko0aYlEq/1+GXq5T8
+	 iS+/1Xc2g88EY9uswcsrkw7aktm/1aFFb/gmB6rgpat6bS/loCHVwRQ5B23PG6jtAo
+	 BGr7frgsIYQ7Gc1sBs8uWQWA9HqwNp1vmYtvg5DUxlrB4k2PUFSXMB7vX7mZ7f0wSP
+	 GCZWr2w4WPGsPtZV6HNh3QQ3UI9eMejh10BJC/PbcFrw11cwIS7+BCauD5lhqyuHME
+	 qxN0k8XMy+0ug==
+From: Conor Dooley <conor@kernel.org>
+To: linux-gpio@vger.kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	valentina.fernandezalanis@microchip.com,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v10 0/1] Polarfire SoC GPIO support
+Date: Mon,  4 Nov 2024 09:49:32 +0000
+Message-ID: <20241104-obtain-grandly-1daad5ac36b9@spud>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241030164924.3276981-1-boerge.struempfel@gmail.com>
-In-Reply-To: <20241030164924.3276981-1-boerge.struempfel@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 4 Nov 2024 10:38:50 +0100
-Message-ID: <CAMRc=McDR+hK8t+dtAc6i57_JgozkwCUmYwpTtx=heF8v13fAA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/1] dbus: manager: fix linker not finding libgpiod.so
-To: Boerge Struempfel <boerge.struempfel@gmail.com>
-Cc: linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Boerge Struempfel <bstruempfel@ultratronik.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1939; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=WW+Fda9YluU8RwKFsNk2JpPnRNYNkB+lYch3Qi3ZtMA=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOkaM9a0He/xebn8nB6bSXTZvoS2pD3yoYI5rGrnvA4r5 eaXTz3aUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgInwHmb4pxBeanAhsOXe5a4J h3Krj+zX46xl2tcce/HHyrkRkREM9xj+CjlJ+Zw/H5ny3HimjW8j15kV6VrBxw+o1dbUTm54n7u FEwA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 30, 2024 at 5:49=E2=80=AFPM Boerge Struempfel
-<boerge.struempfel@gmail.com> wrote:
->
-> When crosscompiling, the linker isn't finding libpgiod.so while linking
-> the manager to libgpiod-glib.so.
->
-> In order to fix this issue, we manually force the linker to look in
-> the corresponding folder for needed shared libraries, when building the
-> manager.
->
-> Signed-off-by: Boerge Struempfel <boerge.struempfel@gmail.com>
-> ---
->  dbus/manager/Makefile.am | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/dbus/manager/Makefile.am b/dbus/manager/Makefile.am
-> index d1cef8e..32c9e30 100644
-> --- a/dbus/manager/Makefile.am
-> +++ b/dbus/manager/Makefile.am
-> @@ -9,6 +9,7 @@ AM_CFLAGS +=3D -DG_LOG_DOMAIN=3D\"gpio-manager\"
->  AM_CFLAGS +=3D $(PROFILING_CFLAGS)
->  AM_LDFLAGS =3D $(GLIB_LIBS) $(GIO_LIBS) $(GIO_UNIX_LIBS) $(GUDEV_LIBS)
->  AM_LDFLAGS +=3D $(PROFILING_LDFLAGS)
-> +AM_LDFLAGS +=3D -Wl,-rpath,$(top_builddir)/lib/.libs
->  LDADD =3D $(top_builddir)/bindings/glib/libgpiod-glib.la
->  LDADD +=3D $(top_builddir)/dbus/lib/libgpiodbus.la
->
-> --
-> 2.43.0
->
->
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Can you give me more info on your environment? I'm cross-compiling
-just fine and the:
+Hey all,
 
-LDADD +=3D $(top_builddir)/dbus/lib/libgpiodbus.la
+Lewis is no longer at Microchip, so I've taken over the GPIO controller
+patchset that he had been working on prior to that:
+https://lore.kernel.org/linux-gpio/20220815120834.1562544-1-lewis.hanly@microchip.com/
 
-bit should be enough for linking.
+One thing that was wrong with Lewis' series was that it could only,
+depending on the iteration of the series, support GPIOs that had their
+interrupts muxed or GPIOs that had dedicated interrupts at the
+parent interrupt controller. I found that to be problematic, because the
+hardware itself always has a mix of muxed and dedicated interrupts and
+so there was always a controller rendered unusable for interrupts.
+I attempted to fix this by remodelling how the interrupt hierarchy in
+the devicetree is described, with a mux added between the GPIO
+controllers and the platform's interrupt controller. v7 introduced an
+irqchip driver for the mux between the GPIO controllers and PLIC to handle
+that problem.
 
-Bart
+After some discussion with Linus on v7, I've opted to strip out the
+interrupt handling entirely, in order to upstream this piecemeal.
+Interrupt controller support will be added at a later date, when I've
+sorted out the bits that Thomas did not approve of.
+
+The binding for this GPIO controller is already upstream, so there's
+just one patch here now.
+
+Cheers,
+Conor.
+
+v7: https://lore.kernel.org/linux-gpio/20240723-supervise-drown-d5d3b303e7fd@wendy/
+
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: valentina.fernandezalanis@microchip.com
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-gpio@vger.kernel.org>
+
+Lewis Hanly (1):
+  gpio: mpfs: add polarfire soc gpio support
+
+ drivers/gpio/Kconfig     |   6 ++
+ drivers/gpio/Makefile    |   1 +
+ drivers/gpio/gpio-mpfs.c | 160 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 167 insertions(+)
+ create mode 100644 drivers/gpio/gpio-mpfs.c
+
+-- 
+2.45.2
+
 
