@@ -1,125 +1,167 @@
-Return-Path: <linux-gpio+bounces-12542-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12543-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 023229BBAD9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 17:59:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0FA09BBD8F
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 19:56:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8952DB2145D
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 16:59:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23B71B2187C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Nov 2024 18:56:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B021CACDE;
-	Mon,  4 Nov 2024 16:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE5E1CB9F2;
+	Mon,  4 Nov 2024 18:56:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzcCOUvZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oIAiVhLd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05AD1C578C;
-	Mon,  4 Nov 2024 16:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1519C18622;
+	Mon,  4 Nov 2024 18:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730739544; cv=none; b=o4VUaOILuta+1SP6T5XHyurdtrDm0nA3hFn6fPpg9vgT9O6S6FExxCzfY0KtPv+Wc/kH5qwhQ1noOFbLk5QNqdrpitNhW53hht0WckWOQU2X9Q3EoNz1h6MO0t3xopIyh/coEgExV8cGLiJXzSBqsYVPeH74FlHI83s9Z2bGues=
+	t=1730746594; cv=none; b=njtsqEkDUt0KspR1m9ja1xcHsLHNm+F0wWHGyLnFqrVFcqL0AtAEkRZIKnPwXSnovXtGhhiHaqe3L/qnjWIPwxbpggUHt4xEjvwSbEsIqp5WLTozpWZd63ASpM5RfWYUWWmWYyBcwqN6Xcs9rY3EeZfZXB0rWBggCuwhPfPR/wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730739544; c=relaxed/simple;
-	bh=lbNqtG/m96O1XxfWmwnamE8s0OXTLNk3DYJ8x3TZBJk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NDNLo1wa/8gsJodIiXTM2TAo1MT9u2UMhf0duVBObIRv8IazlLGlfdSUTAPXNMbl5ZLnzaRuMHdRIcsJVL2d83LhUgDGwboAz2Vc52NzZdSQYadLyqfd7C6rMhC9E83LNVAV0cmDIGumjE5kWIfJ3gHMfXxQY1LR0RE31SBgpNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzcCOUvZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D4FCC4CEF8;
-	Mon,  4 Nov 2024 16:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730739544;
-	bh=lbNqtG/m96O1XxfWmwnamE8s0OXTLNk3DYJ8x3TZBJk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=OzcCOUvZLMo2VGgqdkqnOSzi5y2q96zXYMLeNdqAXYZwJr8IBvq908M9GVmksMm4P
-	 zwpPOjlJxFbxfpRqpoZxN+MVu9osbUynUI8Vz+jzvI6YDbyi+BaJ0nBd+YfMMHLhGk
-	 G4ai6zUPTqDNw42eyOZmeOuH8Fl2F7WTajzIzOGrCxAnyjD5FFvrnADMojog9M9gz1
-	 fEimBNNKtLcYaczC49lHGLB80PrrOTsmJuaCaTHDkSiim0zYKiZj0H9JfFlLwvVF61
-	 KAvZzgvMfuzv6mIBsYjPBEnRCe1rKkdCcDHTgsa944RNrS1AAhn/J+ZY+t9GkapiK0
-	 Wlq2OwV6mcPQQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D06D1BDCC;
-	Mon,  4 Nov 2024 16:59:04 +0000 (UTC)
-From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Mon, 04 Nov 2024 17:37:14 +0100
-Subject: [PATCH RESEND v13 12/12] MAINTAINERS: add myself as Marvell
- PXA1908 maintainer
+	s=arc-20240116; t=1730746594; c=relaxed/simple;
+	bh=dlpq+duPJ1CG+pBCveN6MNdRaH65rC9NIL0YlV5Jrnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACIJ/r55WAcrzhg6fkf+DWs5MnXFB+i15x+refllj/idCV11QUbs3HMbNcNw4LTHcCGqLtWAS+vF6K9ngGMY9/x7FK9WZZRb0WBV4bzp1tdgZwrHDXHdto+VrGkt94Jzpx87mmsHlmcq5RrM+IUIMhj/djnSRsp0unha2nF7qd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oIAiVhLd; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730746592; x=1762282592;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dlpq+duPJ1CG+pBCveN6MNdRaH65rC9NIL0YlV5Jrnw=;
+  b=oIAiVhLd+a3llMQlgjLJTIRetFUtjeJZA+IgZPDFB8HJxEY9UEbaZheO
+   j2nWqKvkGjRUA/sJoADC/qYOkgkJgKQI9mtVthHen9b1ww2A+ODFyix7k
+   80ooafI47lXBwwtxH3gkXkyC72Uu3P8oRRq0AcG5pSEmlR2lPomGUYN0n
+   dlSVbgfkfhUjT6/U6unmNWuDrVC74+1gnT8DRyMgZjFuTTXldMaX1D6OO
+   voelV9Zk5BNLjGmvpwzsz4vMkB2n1OyZrHsxl5OTBDO6/m4oWTOptSqnO
+   QosvumnpMWvxT13O9kqxUG6mrDzshy59K7j1eS1cn7BN0aUT/uEa35jFP
+   Q==;
+X-CSE-ConnectionGUID: lkM3/3HsS9+Sh22v9GwCIw==
+X-CSE-MsgGUID: dOisr6NtS9i/6totQecOJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11246"; a="41836003"
+X-IronPort-AV: E=Sophos;i="6.11,257,1725346800"; 
+   d="scan'208";a="41836003"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 10:56:32 -0800
+X-CSE-ConnectionGUID: w40dMfBSREWe78G09dc0jw==
+X-CSE-MsgGUID: eoY99VQZSmKKbmD/2pxLDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,257,1725346800"; 
+   d="scan'208";a="84560952"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 10:56:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t82FX-0000000B9xn-1q9Q;
+	Mon, 04 Nov 2024 20:56:27 +0200
+Date: Mon, 4 Nov 2024 20:56:27 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sai Kumar Cholleti <skmr537@gmail.com>
+Cc: bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+	mmcclain@noprivs.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: exar: set value when external pull-up or
+ pull-down is present
+Message-ID: <ZykY251SaLeksh9T@smile.fi.intel.com>
+References: <ZyjLSmtwyPiD9-r5@black.fi.intel.com>
+ <20241104154757.2306076-1-skmr537@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20241104-pxa1908-lkml-v13-12-e050609b8d6c@skole.hr>
-References: <20241104-pxa1908-lkml-v13-0-e050609b8d6c@skole.hr>
-In-Reply-To: <20241104-pxa1908-lkml-v13-0-e050609b8d6c@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=962;
- i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=WJM+jdOH+cWyAFZLAoZ/ZBIMQFxb1HLmL8TqRXOMrF0=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDOkaf0MNPB6lPD7iNKF2s8Rsb+V5SXwSPWseiFx8wBlUV
- 96w78GDjlIWBjEuBlkxRZbc/47XeD+LbN2evcwAZg4rE8gQBi5OAZjI1+cM/+z3NQT+mvjB6FRY
- smqTh0/i24+zdqZ+6H19a285Z8N1NUGGfxZSe/q2C+Q/r9+ycP1vvXM1K1a9u3S5fdGCJ86LVwS
- kz+QCAA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
-X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
- auth_id=191
-X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Reply-To: duje.mihanovic@skole.hr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241104154757.2306076-1-skmr537@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Duje Mihanović <duje.mihanovic@skole.hr>
+On Mon, Nov 04, 2024 at 09:17:57PM +0530, Sai Kumar Cholleti wrote:
+> Setting GPIO direction = high, sometimes results in GPIO value = 0.
+> 
+> If a GPIO is pulled high, the following construction results in the
+> value being 0 when the desired value is 1:
+> 
+> $ echo "high" > /sys/class/gpio/gpio336/direction
+> $ cat /sys/class/gpio/gpio336/value
+> 0
+> 
+> Before the GPIO direction is changed from an input to an output,
+> exar_set_value() is called with value = 1, but since the GPIO is an
+> input when exar_set_value() is called, _regmap_update_bits() reads a 1
+> due to an external pull-up.  regmap_set_bits() sets force_write =
+> false, so the value (1) is not written.  When the direction is then
+> changed, the GPIO becomes an output with the value of 0 (the hardware
+> default).
+> 
+> regmap_write_bits() sets force_write = true, so the value is always
+> written by exar_set_value() and an external pull-up doesn't affect the
+> outcome of setting direction = high.
+> 
+> 
+> The same can happen when a GPIO is pulled low, but the scenario is a
+> little more complicated.
+> 
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+> $ echo high > /sys/class/gpio/gpio351/direction 
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+This...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c27f3190737f8b85779bde5489639c8b899f4fd8..8d50cb7457924e3290810eaf7d3c4b145d988ede 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2593,6 +2593,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-pxa1908*.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
+> $ cat /sys/class/gpio/gpio351/value
+> 1
+> 
+> $ echo in > /sys/class/gpio/gpio351/direction 
+
+...this...
+
+> $ cat /sys/class/gpio/gpio351/value
+> 0
+> 
+> $ echo low > /sys/class/gpio/gpio351/direction 
+
+...this...
+
+> $ cat /sys/class/gpio/gpio351/value
+> 1
+
+> Fixes: 36fb7218e878 ("gpio: exar: switch to using regmap") 
+
+...and this lines have a trailing space.
+
+> Signed-off-by: Sai Kumar Cholleti <skmr537@gmail.com>
+> Signed-off-by: Matthew McClain <mmcclain@noprivs.com>
+
+Hmm... Missing Co-developed-by?
+This SoB chain puzzles me a bit, the committer should go last AFAIR.
+
+...
+
+> +	/*
+> +	 * regmap_write_bits forces value to be written when an external
+
+regmap_write_bits()
+
+
+> +	 * pull up/down might otherwise indicate value was already set
+
+Missing period at the end.
+
+> +	 */
+
+...
+
+Other than above LGTM.
 
 -- 
-2.47.0
+With Best Regards,
+Andy Shevchenko
 
 
 
