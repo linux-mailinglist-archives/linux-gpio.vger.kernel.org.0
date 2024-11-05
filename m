@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-12550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D73A9BC4CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 06:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7DCF9BC4D4
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 06:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FD531C2121D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 05:45:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 257EF1C212D8
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 05:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF091C231D;
-	Tue,  5 Nov 2024 05:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B4932C85;
+	Tue,  5 Nov 2024 05:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOesXvlN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aG2LproR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB57183CD6;
-	Tue,  5 Nov 2024 05:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B477189B80;
+	Tue,  5 Nov 2024 05:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730785500; cv=none; b=ptEgEjCt6waozvRHXyMpV5GBSV5f4tT0f/YiZ2rdWGjmmdDocsDFEQQATT9bV7A91kmu9lzIjgIX/2k2BfSugDmfwdGrbeeC1ffRcvsu7oe8GiEoG5BQ8zn5VeAHxlVznFHLmL2WeUpxsvvD0+8U1Xq/G26NQFOYuGZn/FptBUE=
+	t=1730785522; cv=none; b=WpQbis/Qh7XNcJxhSMg8ncQhelsIVzVsnCqvYjaFUGCWkI/zC+3fuet7A08wJtg4d0Ga9DA4JarCMvN5ncLeREpyq69gAgLuIcWWv0MUDphOnqOavzfEVQURJP8BLVAWrqVwgjzAP2hbJvn3o2IP8vElLm7NlsQxpPaCMtC8Odc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730785500; c=relaxed/simple;
-	bh=addazq6n2l0kd7V2RYOfC/z5VRexbSCbfjbLGPgcVMo=;
+	s=arc-20240116; t=1730785522; c=relaxed/simple;
+	bh=pj4DDAoUIGokaC2yqQD6Sx1d6qPlmvPZHoKG6fJYE7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvXl8Ii2Hu7oMPdws75bjl+OEqiF6CPKYDE6f/h1rbrkhWy9f8JC5Uw9HKZc/M9aNtVKw3e3rueCJ27/zzxmpczF3W5G4aEqAIQ5CCVoTkXKOrMzrIZvp5ujcJzexI5x49zUR+by1lXEwdyhobRDOIo7xNstIVNptotV4W2Q5yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TOesXvlN; arc=none smtp.client-ip=209.85.216.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQGsvdlkq++iV6oWhaVLqBjPfXggrt5gGDuCRTXuRtzljY1QCgY4qGaXpYI5jpwCLNIwzH+zCwJJzgasBo7ppmmnbDvnwgGOZAUexXNETJe7RNZfRvOsIVqY6+c8HOMdv6FaBhx/2UzuE0mhlLMppumgrMF3Nwtkx548Id+/sA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aG2LproR; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e56750bb0dso3494524a91.0;
-        Mon, 04 Nov 2024 21:44:59 -0800 (PST)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7ede6803585so4354416a12.0;
+        Mon, 04 Nov 2024 21:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730785499; x=1731390299; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730785521; x=1731390321; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKFlu1rGSsQukvkT9KeloJW2B0c6Ugz4QlXCY6/YUKw=;
-        b=TOesXvlNE29IIyBxwQFnOTcG2Pw14g4cMY3M7m4fCi8S6m6f65S7tQ1jUzuKtfNzkR
-         ATONrzUko6zI3eKoDCaFAmNS3YjhItbr5igqeShiV1IK5+KgtuL/RiTsHnkPU+u9I0sz
-         ErwJs5J1BkwK9YZVn6YLa7t8IH6RDpp+ZaHFZiw+e9t2lSOEYn4s9L4GivnduFzSqwI2
-         H9DZ31NaNLLdZEW6xAzYtAMSpjx0hfRi84uiNFiWzgDYFq2rVM11mifOmj5iqZzJOxm4
-         RVtTLD/cOailYg+M9XSzZNJOF9THFRYsNk+mxj1yM0hv3vAHoFLwGTG5Bx5yMxJE2sFc
-         EMQw==
+        bh=/RDLe17+douEMkUYt4Wjjg5zMXictGIxgKdWzTriDi8=;
+        b=aG2LproRaL31sInjzNNpyyKMbtxVhzaI1F7RS/rmaP8OloFzi1OM+A8L+tPYY1DF6t
+         f2iBSG/P31nOUnr/3bB/Jcek500N/lvZQ+YEpo+c+Q5+Yhyg8drLrLjGAwzqoH8Nrg+h
+         2Lgp2GiH69LB1JdkWY9RNSd/gQyXgNqYPmHcJo0wO2iIsLcJQLG2ysDA5HVnXtdb+p1Y
+         PyRoRxDZEfOUnYDPHoRR7AdeG7Z5nhxuyI6AR4k7Sec88G97txMEaG4xd1G/+9Ja40LC
+         RONELe+eaWYa5evlSQ9ueJtW/vRCBW4qnfd0k4/owCk5o6vJgAuKFQr7GJwX1CV1EHkA
+         732Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730785499; x=1731390299;
+        d=1e100.net; s=20230601; t=1730785521; x=1731390321;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZKFlu1rGSsQukvkT9KeloJW2B0c6Ugz4QlXCY6/YUKw=;
-        b=WA/QhSUuIto/+jJ0Rj4W8ITX15FLNzbKEXiIyF3nqW9ObuGHlUY/iBHWtja1JlU5rM
-         cvllGiFpek26CaLwbmRgtmY1F+TjgBakSg2E9zamr1l99oWQquLcQ/at3yq4EPZBbYhC
-         5XKoYWlRM0b2D+LY8M23jVUjm1RWOZrIa3r5r7w96Ja34KbxNSymQoVLsa9GL3EEK0KB
-         Fx39VZUfSw8ajI4d8x9JUrZ+XN6I/9y98UfALKF8gM8pFfkSktXrX7101J2q8e6+r+NA
-         F6CzrVueodLI6RPcv+0yYOkYkPHf7TXm9HVkoa4qKZmKn+sKNxdE0KX6TlvzbJPHGZcj
-         0Bfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdb4gtoJmtui4gWZOhnsDXCkAHFwiQrd5Loh+03IPGjcDmW/6VZjMlSZKQ0Cy9zLMZNDT2zjEEeTM8rA==@vger.kernel.org, AJvYcCW4VY+LLIm0TJD0AY92wSiS2mJ5lmNhXUlYn24eJiwz8F3/bc4/HDlyGeWlqvHvG7fsBg21AWJJxFUr@vger.kernel.org, AJvYcCWVsImvJ4eDsmDS8yx1kPPuSii9Q4MPD3T6tbCv4O6altFifarAO6c4KIDRMflUtkkDpELKPikjTc+Z@vger.kernel.org, AJvYcCWbtZcak9JWAOzt5QJCh0SHLfmm7/uN1Y6OrcbuFsGp1dIslqm4/1+26F123+CM0r8WQt/+hulyyGn9WdY=@vger.kernel.org, AJvYcCX8d24kfGNiiXaF8mWljkzl8SM85QFKgdTYUEAdrMJ1FL2+RxCNk/RW3bFcEBu/rPv6xbqxJdjik4cVbe/w@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJJoH7Wzp//EjTGGK/PoFmghksoFKONHaaEDvQ6orbl3tqrpct
-	DnvOnFll9USExY8HBclE0EYzrMlMMPn61ASFGtVbWwDfuT7qF5I0
-X-Google-Smtp-Source: AGHT+IFfGfuB66JHWO4NcWfWxC0I2kdjg/uIghAr5FZPGpr7sHO9jl2rgL06JW1h83pKw8joHp3FzQ==
-X-Received: by 2002:a17:90b:4a91:b0:2e2:c423:8e17 with SMTP id 98e67ed59e1d1-2e94c295063mr21438945a91.7.1730785498509;
-        Mon, 04 Nov 2024 21:44:58 -0800 (PST)
+        bh=/RDLe17+douEMkUYt4Wjjg5zMXictGIxgKdWzTriDi8=;
+        b=uTJdMg+IaTz1CzSL8CpcbmQgZR2kNOTQchs81AVKnfvSVg4bC/kuxo4M5fwnn5lcfm
+         Wr0+JYw3hLwlXY5D7qLSUnIB/WF0WZK/MHdwhYrpoOMFzpGX04dztClzWWTI3x0ph1dC
+         vff3cS7EC8bZ96qoHHAORWTYwiESP8+fkvUqtMgjQE9MhETPZEeMpFnTQCmwOwwFyNIA
+         JMA4t3kUl8Ktvt6/G20NO5M4AONn9V/MV1sq0Dg98rnb5Kc8kDjJ7cjl73egDOblMgbD
+         1yoVOAz7P1WOKo6sHNtYd5AXtcBC8/vNSWjRPIu7nfx/CRMiNtHTcpkAsER6N0fXhf+Z
+         oYzw==
+X-Forwarded-Encrypted: i=1; AJvYcCU11TfIgSzBPepy/vflvTiVXXhS49+kr901Q3YhTE3jaNf7oq4z12oey3oL2R5zfiMW8BDZvy46aFAY0A==@vger.kernel.org, AJvYcCU58bPnXMIfEaPIfxoYoPV0PYB/mthlLaH4nYaEPvS1RdAwb04wQaeBFebq6OCCys4TsHRE1WBi4y8S@vger.kernel.org, AJvYcCUxNP5VvY+SWqZnbueEGUZ3rXDMYvJRhHF6Rg4KPmZLEIdIO3lCxQBTMeprmcU6B4qGqrOp6dU90LxEbDQ=@vger.kernel.org, AJvYcCVdhX793hSuwuMtwQHLNd+oyy0EbtKwyuJFOcipxZdggQ8lcg74Eo5s4/NYA5fmCWZmT/ocuDdHnsyL@vger.kernel.org, AJvYcCXBVpEg2QQ35bYlJLKrFMTRO1RNQhn0uZ6GX/dPlKojBqTj4HCi6waBnHzAwzhkLmVBeEIiJYdHAlwaaO2u@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuU0XIlm3lkkGomHF1jgbFf+zFOGyiuBAHY0r7NKHxGYuRy9EW
+	IjuQUNM6W3ltSsIQRitaaGtoy1D8vRc0l4ncboKUn9OEaisl2BkT
+X-Google-Smtp-Source: AGHT+IGc+nG1wt+DMP+moaC/TTecbd98DJcbFy/BYzWTbFGMHiYt+g49EqO/yY9xHvXO/9A1wYjT9g==
+X-Received: by 2002:a17:90b:3ec9:b0:2d8:b510:170f with SMTP id 98e67ed59e1d1-2e94c23344emr19375465a91.20.1730785520437;
+        Mon, 04 Nov 2024 21:45:20 -0800 (PST)
 Received: from google.com ([2620:15c:9d:2:1bb4:1f23:1031:ac0e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211056ed8c7sm70499875ad.53.2024.11.04.21.44.57
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-211057a60d6sm69822985ad.124.2024.11.04.21.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 21:44:57 -0800 (PST)
-Date: Mon, 4 Nov 2024 21:44:55 -0800
+        Mon, 04 Nov 2024 21:45:20 -0800 (PST)
+Date: Mon, 4 Nov 2024 21:45:17 -0800
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
@@ -81,10 +81,11 @@ Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Haojian Zhuang <haojian.zhuang@gmail.com>,
 	Robert Jarzmik <robert.jarzmik@free.fr>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/6] Input: gpio_keys - avoid using GPIOF_ACTIVE_LOW
-Message-ID: <Zymw17NOSw2zciO9@google.com>
+Subject: Re: [PATCH v1 2/6] Input: gpio_keys_polled - avoid using
+ GPIOF_ACTIVE_LOW
+Message-ID: <Zymw7fduuSyCCdeS@google.com>
 References: <20241104093609.156059-1-andriy.shevchenko@linux.intel.com>
- <20241104093609.156059-2-andriy.shevchenko@linux.intel.com>
+ <20241104093609.156059-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,9 +94,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104093609.156059-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20241104093609.156059-3-andriy.shevchenko@linux.intel.com>
 
-On Mon, Nov 04, 2024 at 11:34:19AM +0200, Andy Shevchenko wrote:
+On Mon, Nov 04, 2024 at 11:34:20AM +0200, Andy Shevchenko wrote:
 > Avoid using GPIOF_ACTIVE_LOW as it's deprecated and subject to remove.
 > 
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -103,37 +104,39 @@ On Mon, Nov 04, 2024 at 11:34:19AM +0200, Andy Shevchenko wrote:
 Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 > ---
->  drivers/input/keyboard/gpio_keys.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+>  drivers/input/keyboard/gpio_keys_polled.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-> index 380fe8dab3b0..5eef66516e37 100644
-> --- a/drivers/input/keyboard/gpio_keys.c
-> +++ b/drivers/input/keyboard/gpio_keys.c
-> @@ -531,12 +531,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  		 * Legacy GPIO number, so request the GPIO here and
->  		 * convert it to descriptor.
->  		 */
-> -		unsigned flags = GPIOF_IN;
+> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
+> index 41ca0d3c9098..e6707d72210e 100644
+> --- a/drivers/input/keyboard/gpio_keys_polled.c
+> +++ b/drivers/input/keyboard/gpio_keys_polled.c
+> @@ -306,13 +306,8 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>  			 * Legacy GPIO number so request the GPIO here and
+>  			 * convert it to descriptor.
+>  			 */
+> -			unsigned flags = GPIOF_IN;
 > -
-> -		if (button->active_low)
-> -			flags |= GPIOF_ACTIVE_LOW;
+> -			if (button->active_low)
+> -				flags |= GPIOF_ACTIVE_LOW;
 > -
-> -		error = devm_gpio_request_one(dev, button->gpio, flags, desc);
-> +		error = devm_gpio_request_one(dev, button->gpio, GPIOF_IN, desc);
->  		if (error < 0) {
->  			dev_err(dev, "Failed to request GPIO %d, error %d\n",
->  				button->gpio, error);
-> @@ -546,6 +541,9 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  		bdata->gpiod = gpio_to_desc(button->gpio);
->  		if (!bdata->gpiod)
->  			return -EINVAL;
+> -			error = devm_gpio_request_one(dev, button->gpio,
+> -					flags, button->desc ? : DRV_NAME);
+> +			error = devm_gpio_request_one(dev, button->gpio, GPIOF_IN,
+> +						      button->desc ? : DRV_NAME);
+>  			if (error)
+>  				return dev_err_probe(dev, error,
+>  						     "unable to claim gpio %u\n",
+> @@ -325,6 +320,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
+>  					button->gpio);
+>  				return -EINVAL;
+>  			}
 > +
-> +		if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
-> +			gpiod_toggle_active_low(bdata->gpiod);
->  	}
+> +			if (button->active_low ^ gpiod_is_active_low(bdata->gpiod))
+> +				gpiod_toggle_active_low(bdata->gpiod);
+>  		}
 >  
->  	if (bdata->gpiod) {
+>  		bdata->last_state = -1;
 > -- 
 > 2.43.0.rc1.1336.g36b5255a03ac
 > 
