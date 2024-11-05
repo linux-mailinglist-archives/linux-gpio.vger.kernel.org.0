@@ -1,162 +1,130 @@
-Return-Path: <linux-gpio+bounces-12556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67F4F9BC6B9
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 08:15:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C7FA9BC6D1
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 08:22:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 998B61C221B7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 07:15:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0FE7228394E
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 07:22:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE751CF7A2;
-	Tue,  5 Nov 2024 07:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE1C1FCC77;
+	Tue,  5 Nov 2024 07:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X62WKW/x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCa9lXZj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA0318A6BA;
-	Tue,  5 Nov 2024 07:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3351D4161;
+	Tue,  5 Nov 2024 07:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730790954; cv=none; b=YCRzKaJUF1ZHvYuo7xtZDaBrLjrENEtbWrB2/3EyQRmaVniNtTbv0Xcigq1nSsqT1akuWB+AOh2T5Q67YTdAZoo3RqbTC9m3KAqed1tzHwwVbKiOd0UtSbVAH98bcRg0PcmujJF8x/7rPXVyL1FzCF2eSzh8rz2+FQl0avR3r7g=
+	t=1730791328; cv=none; b=rbZiS8yBA7Tw5EvIuR/0kAFg21uxxND9LfOkyeA5Fo4EJ7O9lT+u359OyBn63asyneouK0otPXkf/2gNd9cwEgTvr/E/5qlglbgcjGprbkHrAJBBhn6WJbbvsggJCV5b0Dli1UkD0XQG/H/1EEnog/zEb1RERANYeTw0OoaRVa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730790954; c=relaxed/simple;
-	bh=bDChX5DkQVdrQna97kJP/N8tCEz8lU/2/PDbRrhKUGA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g+IdRt9ApmVV0uaiopvaBvAKcNxbw6AZOkiUboE/+06BCqL/z5/LCZ8+qNew9By4+WZ6JQ/ZE4HwO40rnWVnopdobtyIutxGbpt5gPzeCBlVEU9UTktzKFebL3xuNMckcUHySxFwAeJ62tUIHHByQLDIBn3t2+lGCD/Q/GQgXho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X62WKW/x; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7eda47b7343so3164916a12.0;
-        Mon, 04 Nov 2024 23:15:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730790953; x=1731395753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iz/rHRFBcREQc4ZZLNXrKKaJvBiY7ob4s58NQYp/eAs=;
-        b=X62WKW/xRF7Nhmiu4Ls6VCX4TTpsqaVYP6ZERFQXQ2xRn+ADmCLiyNh+wXxXl1MmMt
-         NlXL2zBubd0IjJzvVq8NELz7qxRO836PfpxiwRG4Itzq806IMxH9f2H1oCnqIZRz70GB
-         LblkHgwCkjD7fHY/uyMd6Lvln5TaAyn5BoUQ9e6gM4OZQfIWcdb0LshJX6JsKyMUMxdC
-         weclit0A+hZcQCg24AzRSZ9sD+ydjvqkZfXIC+b9YcPeKKdjpLoWZWaoy+1wBM6XEwWm
-         P5x8HHIs3FPnftCnRdu/wgvIbAmb8FmxN4yieEv9hWr/t2hjWJfBoAUv7WCREzJhovYN
-         ZA3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730790953; x=1731395753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iz/rHRFBcREQc4ZZLNXrKKaJvBiY7ob4s58NQYp/eAs=;
-        b=lMnrvlAEff3R5T0/9A4YNheOV0VlbU2u19BOVQxmKhXmfXSxlqkDQedSDg+2osUz/l
-         vkTK0D6tR6KcPaNJ1dr0NRx+o85tWyGXYPxBTkXgjZE9V+Ik4PHFw82MCSVo7zOf0Hf1
-         gtxFPf3fEET+qR4tzATsN2aKO/F5zPcuPZVWMWfsWqp+cwu6ah5COA/75ZYgDUrP8SBT
-         6GI3aGbuauKY8ypW2tidSpuLzZ8yj13O8BFL+fwo5Iok5IbMyYVSMhhe4lRv6YJabzrv
-         mtBytGa6AWBdxeN1L4B7z4Mmd/u/Xh1ngrlHlT2+IxrjQ7NNRm2NiGLmuyhVkOEPzwUU
-         SqtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkrlvOOSTEKG65s7VsZggLi3gCRT8EO5JelKegWBiwrnR9c/OLYd9gsXXvSnFe1RuGoRpz/pX8AyFn@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCsm29GQbDpo8jql0fCr0PxSPKjuVLtnYe/I4m1hReqpug11o+
-	qNwObBCB4eN144zFgOVPceWpnSIw7UD9DgUsVnU9ET1+OU4y1fv0I6fuanfX
-X-Google-Smtp-Source: AGHT+IHryBz33ZfG+cGFeXdABWiRWMLtgcqure7yjXNkzz7ukZK3b3/ngIdIO0CJnk7GMr4cAnSsOA==
-X-Received: by 2002:a05:6a21:38c:b0:1cf:4ad8:83b9 with SMTP id adf61e73a8af0-1d9a8514112mr47980753637.43.1730790952603;
-        Mon, 04 Nov 2024 23:15:52 -0800 (PST)
-Received: from optiplex-5070.. ([182.66.67.80])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bbfc35b2sm8894190b3a.0.2024.11.04.23.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 23:15:52 -0800 (PST)
-From: Sai Kumar Cholleti <skmr537@gmail.com>
-To: andriy.shevchenko@linux.intel.com,
-	bgolaszewski@baylibre.com,
-	linux-gpio@vger.kernel.org,
-	mmcclain@noprivs.com,
-	skmr537@gmail.com
-Cc: stable@vger.kernel.org
-Subject: [PATCH v3] gpio: exar: set value when external pull-up or pull-down is present
-Date: Tue,  5 Nov 2024 12:45:23 +0530
-Message-Id: <20241105071523.2372032-1-skmr537@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZykY251SaLeksh9T@smile.fi.intel.com>
-References: <ZykY251SaLeksh9T@smile.fi.intel.com>
+	s=arc-20240116; t=1730791328; c=relaxed/simple;
+	bh=5olMJswzS9FbsKcvWpMrWq57/mIxv7Sya3+56gcJjhc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fI+Vt4Ar990Pmkwx0iJpYhVVXbBBISLA9qie8C30DA6hdjgHKQP8Ng8+9N6+SrYgcJgPvCsFk+mAx1HCRFOLXLf4jxZZionlI55oomOpMgpdKEG4ZMEyreWjyboe8LfvbS4vUyFhO/hHykcQMbGYER38VHjFghdrbEWEXr9LnAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCa9lXZj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 461CDC4CECF;
+	Tue,  5 Nov 2024 07:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730791327;
+	bh=5olMJswzS9FbsKcvWpMrWq57/mIxv7Sya3+56gcJjhc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lCa9lXZjytQ8PnhGZkmgJyPi/ku5p0GG7WqXwqLw7ZzcybG6M5+wcYxtQep8HhHty
+	 KH+bz+fU0TNIoNrU3RQiDLU4Cl6zUzfyEVvkb+Csex0sqWt4JF6sYstlL7Dh7lvvR4
+	 G/e3xpSxB66qcyeuJwFzcHIYfOBNrZ9wBAMo0Z4zUr7n5wc1TlSHdaeaUMnnZaEVka
+	 XzuWPWV8F8oNYn8jbuVogs9aMvFtoKVBhcHcg0YKGrk4dZAcvCO4hZYmDHxy3sbbZ3
+	 q07/Et3Ew6PD3abdyIuCIneOKlTXMVojV6tLg1hE+ejCrduVNESumsLt9D7L7Z8MIA
+	 oN1+k/hflSiig==
+Message-ID: <f752c400-e820-4621-b0f2-4e0ce5b620d4@kernel.org>
+Date: Tue, 5 Nov 2024 08:22:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: pinctrl: sx150xq: allow gpio line
+ naming
+To: Heiko Schocher <hs@denx.de>, linux-kernel@vger.kernel.org
+Cc: Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20241105064206.43626-1-hs@denx.de>
+ <20241105064206.43626-3-hs@denx.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20241105064206.43626-3-hs@denx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Setting GPIO direction = high, sometimes results in GPIO value = 0.
+On 05/11/2024 07:42, Heiko Schocher wrote:
+> Adding gpio-line-names property works fine for this
+> device node, but dtb check drops warning:
+> 
+> 'gpio-line-names' does not match any of the regexes: '-cfg$', 'pinctrl-[0-9]+'
+> from schema $id: http://devicetree.org/schemas/pinctrl/semtech,sx1501q.yaml#
+> 
+> Allow to add property gpio-line-names for this devices.
+> 
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> 
+> ---
 
-If a GPIO is pulled high, the following construction results in the
-value being 0 when the desired value is 1:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-$ echo "high" > /sys/class/gpio/gpio336/direction
-$ cat /sys/class/gpio/gpio336/value
-0
-
-Before the GPIO direction is changed from an input to an output,
-exar_set_value() is called with value = 1, but since the GPIO is an
-input when exar_set_value() is called, _regmap_update_bits() reads a 1
-due to an external pull-up.  regmap_set_bits() sets force_write =
-false, so the value (1) is not written.  When the direction is then
-changed, the GPIO becomes an output with the value of 0 (the hardware
-default).
-
-regmap_write_bits() sets force_write = true, so the value is always
-written by exar_set_value() and an external pull-up doesn't affect the
-outcome of setting direction = high.
-
-
-The same can happen when a GPIO is pulled low, but the scenario is a
-little more complicated.
-
-$ echo high > /sys/class/gpio/gpio351/direction
-$ cat /sys/class/gpio/gpio351/value
-1
-
-$ echo in > /sys/class/gpio/gpio351/direction
-$ cat /sys/class/gpio/gpio351/value
-0
-
-$ echo low > /sys/class/gpio/gpio351/direction
-$ cat /sys/class/gpio/gpio351/value
-1
-
-Fixes: 36fb7218e878 ("gpio: exar: switch to using regmap")
-Co-developed-by: Matthew McClain <mmcclain@noprivs.com>
-Signed-off-by: Matthew McClain <mmcclain@noprivs.com>
-Signed-off-by: Sai Kumar Cholleti <skmr537@gmail.com>
-Cc: <stable@vger.kernel.org>
----
- drivers/gpio/gpio-exar.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index 5170fe7599cd..d5909a4f0433 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -99,11 +99,13 @@ static void exar_set_value(struct gpio_chip *chip, unsigned int offset,
- 	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
- 	unsigned int addr = exar_offset_to_lvl_addr(exar_gpio, offset);
- 	unsigned int bit = exar_offset_to_bit(exar_gpio, offset);
-+	unsigned int bit_value = value ? BIT(bit) : 0;
- 
--	if (value)
--		regmap_set_bits(exar_gpio->regmap, addr, BIT(bit));
--	else
--		regmap_clear_bits(exar_gpio->regmap, addr, BIT(bit));
-+	/*
-+	 * regmap_write_bits() forces value to be written when an external
-+	 * pull up/down might otherwise indicate value was already set.
-+	 */
-+	regmap_write_bits(exar_gpio->regmap, addr, BIT(bit), bit_value);
- }
- 
- static int exar_direction_output(struct gpio_chip *chip, unsigned int offset,
--- 
-2.34.1
+Best regards,
+Krzysztof
 
 
