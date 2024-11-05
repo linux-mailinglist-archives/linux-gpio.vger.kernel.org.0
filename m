@@ -1,103 +1,190 @@
-Return-Path: <linux-gpio+bounces-12553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E80E59BC556
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 07:21:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B107E9BC5C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 07:42:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 745651F24D66
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 06:21:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63281282F5E
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Nov 2024 06:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A681D5CD4;
-	Tue,  5 Nov 2024 06:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C9D81F76A8;
+	Tue,  5 Nov 2024 06:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDFgIUEv"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="kX0XQSNc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37D61DFE8;
-	Tue,  5 Nov 2024 06:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C22319047D;
+	Tue,  5 Nov 2024 06:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730787681; cv=none; b=ih3smCWuWoEbV6VlCEHO1c82ZcsLepxipfN7S03Jfuj4sO7bQNClp3cmS9pVz+zDvIpqvYNP7ZArMMp46rdwVqRnUFBI3mcwyiQTpIqTXrjAT/e6/q6iF0KyoAORF2Qsq3wcBaVohSv5/6ucUj/p+mg01i/oyuv2rrhlOqe8RDU=
+	t=1730788943; cv=none; b=libjZgN5Mn/EVABsTkPx7wa3XsTVVISkn1IJo9xzvMNtr2a+mMMo1KkgCwFNJfotP0HvSazpu0jM0gcTeplMpmIF6PPWN/3xSHINz3zQeGruokaSjKyNfUpxiJvstvYECmSKIoRudidnaCHegyR+9FVQO6WXvIw+0VbRoBnubJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730787681; c=relaxed/simple;
-	bh=kk8dszoqp8PqiEkZB9fm5YAoTt8ToqdKlYqHvKHmOa0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IlJS7697aGpqVaEpgQd8jHgV0+YIKxO5wflOiHia7UFc2Hl1LUJkb5pB+ldLjNI4O6bbvH6X6jzxgOA7Vcd6hkQ3dI3Jh87RzPlUPvyzJSIbvx/wk0rnGKfKQnce0EW8LOlhYdbgGoWhyJmbgz67Wx+0NgyU6reS25ArGlqzh3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDFgIUEv; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e2e340218daso5050854276.0;
-        Mon, 04 Nov 2024 22:21:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730787678; x=1731392478; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=t3wFW12/6RoBqXny0VQWOTmH5aSf+LWh0KZ4bCkVkr0=;
-        b=UDFgIUEvoXQ0tOWsfZzd1cNcMKWGiquULIjrzIFwCHnkVplP2eDnjXVmcLVPlfFDMe
-         KQ6qiRkSrjpLMaEM6Byr4D4Q2bh5ZZbxkXwis3FWGZWaJ8jG/tIDSX3TVXVswvjx26rw
-         6IB/Ur+rmXACuoIxpa8QuGq6C6/ttJ04ATeGt9gdGLMKL8eML3RnLH3shH47tzEEwqcq
-         sFct5hre/HVGudfOOMnvwuXZK1Cic4ONXk+3hWAL29PQJge7sBYozlLuDpWFsMuTFD2e
-         i0D9I/9rlxwZOqEQjMM+kOhdhCbv9w9CFHJsohW36p/zQxnT0bHUjSUEgG9pMXv0moqZ
-         iA1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730787678; x=1731392478;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t3wFW12/6RoBqXny0VQWOTmH5aSf+LWh0KZ4bCkVkr0=;
-        b=FtCWOynGII977DVSQlLV7a4hsKaGZpfuH/i01hoEb8OLqcsBqlQtwY/lu6W4Bzr3x/
-         N/f2vO6LVxKTSsl4rDbHcGYbMbijOeIAlPvjRB7CYzUM5QD3ORt7067Byus4mDDNEyQt
-         S6Fs7soDKuWK/HLQbriF0yDF3fdol3YqGj5l7lx3CammjhHRiDcQigBr6Y6Z587oLmg+
-         wGZvcKXa9mMnTQm5cbJ6Oee2TbZgx0DK4gVR+ue6x7aTHtQSVXLvfQegTuFxrggFv/7l
-         A8yZT19UAYmwHvlEMpWTH4DSaECgCP41sX3Jzci6m5eddsVJaIKKPcTAIqvAcuhJRIrt
-         dpsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUi/RTmww2fBBEhsWqJ9/KHrrITWMZpj5STIQw5d9k+Ra/jL6dbQdMsEa9LQdmhUwZbHhNPuVGq598=@vger.kernel.org, AJvYcCVEMTymjrGQlbPG6Js2UUFRG1IKGf6bB1OcUm7yKQ62B8rGvZmIvkRCQxVgwYcE/dqKYCIC1L9Keg4112E=@vger.kernel.org, AJvYcCVI/7mIgZg+iIDJO74Jp/dytKeSqMLQvWNkkHClT7dcXc5ucMJpdschNYUSGFdF0c7PBIj1AbYr/L+gGJ04aHA=@vger.kernel.org, AJvYcCVQ9jkFV2yot1V4G0v7SmjTDxV1ezvqpoPZBjprZuGJJGy9Eg7uBIB+zb7Nc7dKRo0qokRR+GX71sRi@vger.kernel.org, AJvYcCVV2bUUeRfQaEnzYcTJbqP3pkZe95JvP4Dxs4qbst2psN0Iv4a0+nxczqm0sX+TL3wKmq23LZ7BqX9Ym8gY@vger.kernel.org, AJvYcCVrcpzf0qWH+i9h0n4UyAoYiN2ZMJL8QAkL8dKCirEXu9xXQHFDCCwlMDkGEbpuaeBEC/0Z7XwExPLsYQ==@vger.kernel.org, AJvYcCW5uOgORflXjroIlWko1DsoP3ZEf0u7Sjrzj0MnCMc6hRTHVxIlv2v28IPGMYukfQDsZW0tBzs9Epxk@vger.kernel.org, AJvYcCWDeBrSTQObBrgZSLyQwPtZgM2+iQYA3di0r2Zl6blPG7D5E1s6hn8KiU2an3+P/2330sjEg8Zf@vger.kernel.org, AJvYcCWcFjTndcE21ow7Scl64CaeiJgtoDLmZzmd38/JFDoTzBlMeksMZktDy0fvzmJzet7ht1HngbJ5x/wJ@vger.kernel.org, AJvYcCWrEZCgWtO8USER3+roGYiOPHQ9BYlc
- wEYOntV+6fYSQYOvzN/14gEZ75o8HLe14OjKuIcq1S330o2B@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWHGP4ZAPPfIcq23xAHxbqPgWVbn9m11d/au4Dyj9nnlXVY1id
-	CKBvSYr6Rwq65vvv6t6JDqgncMsxdoDPj29Nk5gPCRbyc2IXgdfOtiqgQ3BD9AzuuEV74L++Lsr
-	B+XnmiQu99yBFqErlyAoOeLrRHiA=
-X-Google-Smtp-Source: AGHT+IHa9Wl6kaZMC2Iqh+PZ97OJD2htTC9UI9oFXhLn0ebZGsBU/q2UeprWViXbP5D6nHQs3LLDaTs6iEW2fsyU8bY=
-X-Received: by 2002:a05:6902:15c4:b0:e29:24c:1d82 with SMTP id
- 3f1490d57ef6-e30e5b576e7mr16882810276.38.1730787677760; Mon, 04 Nov 2024
- 22:21:17 -0800 (PST)
+	s=arc-20240116; t=1730788943; c=relaxed/simple;
+	bh=u3H/hN/oj/uvo/e+323CG4HQWfcgPi2ayRqiclGrOYw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jH4/Rt+QwDklNlZZCcGkILkA1YJSYEHVfqZ1tUP0eXOXtJl3QGaHb0F5a9vSWE3tR4beBij98kCWZZj1psafUOH3D/jWOsbSjUK8yCyNzrB/TekA1URR0CAqH0qvcZMYSMoiBTGYF/B43wVJ6ej9hf5/BC04+KOES22tNjIS9Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=kX0XQSNc; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from localhost.localdomain (87-97-112-21.pool.digikabel.hu [87.97.112.21])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: hs@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 714278760C;
+	Tue,  5 Nov 2024 07:42:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1730788934;
+	bh=HdeM5g8vHJ1AvsskBa9/M6dev2ZQHPDwCf1jzKYrrhA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kX0XQSNcmxPeplOeEk6MU/04rMiPSmlkI9ruQHsWajMG7QpNMdslzY5sxdGa7k+gF
+	 U46IIG+8kNcGwvLM3JZQ+8mpzjE82q1WrpDFvMNmfykNfTV8g//23N/iVEDjruvKzU
+	 c9h455K9JOhTGQFT6GpiFYaIuatXsDEMAcxdbgGz/6VC+QTRAwuyX0cPZREHSP7d38
+	 mxj5PviVx147yeTtYObKVAAzDBzfEne4v9Uz1xBHIs7T7CaT90IlsEOLx+TT+30UkL
+	 kWcw+m2iXV13nyOCgSSOkFTty72gw1645WWivxFRdGH1WDhrpvZLDo4bN4LDKJyZdf
+	 84T31dLBUvHaQ==
+From: Heiko Schocher <hs@denx.de>
+To: linux-kernel@vger.kernel.org
+Cc: Heiko Schocher <hs@denx.de>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mathieu Othacehe <m.othacehe@gmail.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo2@yeah.net>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/3] arm64: dts: imx8mp: add support for the ABB SoM and carrier
+Date: Tue,  5 Nov 2024 07:42:03 +0100
+Message-Id: <20241105064206.43626-1-hs@denx.de>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-8-tmyu0@nuvoton.com>
- <20241026154113.66fe0324@jic23-huawei>
-In-Reply-To: <20241026154113.66fe0324@jic23-huawei>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Tue, 5 Nov 2024 14:21:06 +0800
-Message-ID: <CAOoeyxXmOE5R03Gof9zXS_E+32AFaY-miPN7jNZU+2GGX+nsKQ@mail.gmail.com>
-Subject: Re: [PATCH v1 7/9] iio: adc: Add Nuvoton NCT6694 IIO support
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Dear Jonathan,
+The board uses an ABB specific SoM from ADLink, based on NXP
+i.MX8MP SoC. The SoM is used on 3 different carrier boards,
+with small differences.
 
-Thank you for your comments,
-I will make changes based on the part you mentioned in the  future.
+series is based on:
+819837584309 - (tag: v6.12-rc5, origin/master, origin/HEAD) Linux 6.12-rc5
 
+patches are now checked with
 
-Best regards
-Ming
+make W=1 dt_binding_check
+make W=1 dtbs_check
+make W=1 CHECK_DTBS=y {for each dtb introduced in this series)
+
+as Krzysztof suggested.
+
+Changes in v3:
+added Reviewed-by from Krzysztof
+- worked in comments from Krzysztof
+  gpio-line-names should match the actual number of
+  gpios of the device.
+- added comments from Shawn Guo
+  removed unneeded new lines
+  sort nodes, properties alphabetical
+  rename pcie0-refclk -> clock-xxx
+  used GPIO_ACTIVE_HIGH instead of 0
+- added comments from Fabio Estevam
+  instead of settting each brightness-level in
+  brightness-levels add num-interpolated-steps
+- changes from me
+  fix gpio-line-names for semtech gpio controller
+  in imx8mp-aristainetos3-proton2s.dts as patch
+  "dt-bindings: pinctrl: sx150xq: allow gpio line naming"
+  of this series adds the dtb checks for them and 17 entries
+  needed now.
+
+Changes in v2:
+reworked the compatible strings for ABB imx8mp based boards
+called dtb checks, no errors for this patch
+patch dt-bindings: pinctrl: sx150xq: allow gpio line naming new in v2
+- worked in comments from Krzysztof
+  - removed unneeded dtbos and build now dtbs for each
+    carrierboard.
+  - removed user spidev entries, as I do not know the
+    real spi devices connected to...
+  - call dtb check targets as described in cover letter
+    and fixed warnings except warnings see below:
+not fixed dtb check warnings
+- pci (warning pops up for each new dtb from this patch, but
+  also for a lot of other boards, which are already in tree)
+imx8mp-aristainetos3-adpismarc.dtb: pcie-ep@33800000: reg: [[864026624, 4194304], [402653184, 134217728]] is too short
+        from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+imx8mp-aristainetos3-adpismarc.dtb: pcie-ep@33800000: reg-names: ['dbi', 'addr_space'] is too short
+        from schema $id: http://devicetree.org/schemas/pci/fsl,imx6q-pcie-ep.yaml#
+- proton2s dtb specific:
+  - rs485
+    imx8mp-aristainetos3-proton2s.dtb: serial@30a60000: rs485-rts-delay:0: 0 is not of type 'array'
+        from schema $id: http://devicetree.org/schemas/serial/fsl-imx-uart.yaml#
+    imx8mp-aristainetos3-proton2s.dtb: serial@30a60000: rs485-rts-delay:1: 0 is not of type 'array'
+        from schema $id: http://devicetree.org/schemas/serial/fsl-imx-uart.yaml#
+    imx8mp-aristainetos3-proton2s.dtb: serial@30a60000: Unevaluated properties are not allowed ('linux,rs485-enabled-at-boot-time', 'rs485-rts-active-low', 'rs485-rts-delay' were unexpected)
+        from schema $id: http://devicetree.org/schemas/serial/fsl-imx-uart.yaml#
+    do not see, what I am doing wrong, also rs485 works fine
+  - led driver
+    imx8mp-aristainetos3-proton2s.dtb: /soc@0/bus@30800000/i2c@30a30000/tlc59108@40: failed to match any schema with compatible: ['ti,tlc59108']
+    I use the comaptible entry used in drivers/leds/leds-tlc591xx.c
+    Ah, may because file
+    Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+    is not converted to yaml?
+  - pinctrl driver
+    adding 'gpio-line-names' leads in a warning as this property
+    is not checked yet (and so a warning is dropped).
+    add this check in new patch
+    dt-bindings: pinctrl: sx150xq: allow gpio line naming
+    in v2
+
+Heiko Schocher (3):
+  dt-bindings: arm: fsl: Add ABB SoM and carrier
+  dt-bindings: pinctrl: sx150xq: allow gpio line naming
+  arm64: dts: imx8mp: add aristainetos3 board support
+
+ .../devicetree/bindings/arm/fsl.yaml          |    9 +
+ .../bindings/pinctrl/semtech,sx1501q.yaml     |   43 +
+ arch/arm64/boot/dts/freescale/Makefile        |    5 +
+ .../imx8mp-aristainetos3-adpismarc.dts        |   37 +
+ .../imx8mp-aristainetos3-helios-lvds.dtso     |  113 ++
+ .../freescale/imx8mp-aristainetos3-helios.dts |   98 ++
+ .../imx8mp-aristainetos3-proton2s.dts         |  161 +++
+ .../imx8mp-aristainetos3a-som-v1.dtsi         | 1107 +++++++++++++++++
+ 8 files changed, 1573 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-adpismarc.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-helios-lvds.dtso
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-helios.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-proton2s.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aristainetos3a-som-v1.dtsi
+
+-- 
+2.20.1
+
 
