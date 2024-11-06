@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-12607-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D83E9BE0A9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:24:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77A149BE0B8
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:25:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3FBAB23B21
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:24:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8F2E1C23513
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657CC1DEFE3;
-	Wed,  6 Nov 2024 08:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B8E81DF740;
+	Wed,  6 Nov 2024 08:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jowW9uYA"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="P0pLPNAa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ADB1DE4E2
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Nov 2024 08:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147A31DF258
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Nov 2024 08:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730881206; cv=none; b=EfqkMzzSKbCgfJUxR1c+qBTK1Y8yXpg2fhUS/hDaM2vsxfqfdNcAZeP//MfscQXmIo7hVKDPASRF3P8FZvnqR3qY9zv6gi5h6JDkMpA2MT498tPXY2mGDwpaIAocd2Ns9A1mLjyYIW/5iQEnqvWTCaYUMtjcaiw5fkqBggsT0cQ=
+	t=1730881210; cv=none; b=jOi18y+oZyMWkrX1P736CJ0J4jf0p9Oxyq/UnBWGcCgwerYdHAJZ9emUapFzj2A6k1pJN3kTYZRfQzBYVfJQUAddS0IdhFYCtU/eaDQcd57jvxc7bKL9Lxya9Y8fGW53QDywjJmtjcA/QMXbJw3HUCztRQvoHWMtsJKXI+dxKkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730881206; c=relaxed/simple;
-	bh=PKvcYPeeVo6MZqcIj1y/OK2GcBrp7x8aZ87uUaLEPCc=;
+	s=arc-20240116; t=1730881210; c=relaxed/simple;
+	bh=3mgeWo9H+Ea/wgT6yghontuFY9KpbqYwCGWKEJ8OwHA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kVA6vKIJmXP7f8zMAOJv+gh7/9KLCRP0AmzQB+UTTK1grVFkU+jblJhDxuVQ/f++ZHX+mH+CA8r5B3fJ/4/2LQK1VEhIm7fAhL3mFleTV4vI+QL9lVVXsJExNtQvB2T3JVFcggeruivMk8VZBrrqE/n1uRu+6vEu7HQy+h/Pk+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jowW9uYA; arc=none smtp.client-ip=209.85.218.52
+	 MIME-Version; b=YHe6mL1ROvDsojoyWB3TUtpkOEihgaYk1g6KyeCOEaFZtr0ix1BOlt/jkNLH5RMuT7s7P++s99n53TJC11kf64fqn9/z+gZd5iygYBRLrc+ERVCxYuTOp7WdNajQCSEPNflve9lkKJ8PDHlPM4UjvohyU9rd+O90nh2vOMv09DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=P0pLPNAa; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9e44654ae3so844623366b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2024 00:20:04 -0800 (PST)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5cec93719ccso5221717a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Nov 2024 00:20:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1730881203; x=1731486003; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1730881205; x=1731486005; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lMwxZ/wNh3EItJe4u6OrzzTY0ND8WF+5jNZAaFXL5oo=;
-        b=jowW9uYA/ceVMsfp8/IdB6OfrLRtnPCjSMMpF+B2CpvUm2aDf2aYDPTdIIZeRo6IRi
-         lDM8nlDhGEzWb+NmV4GpCWnKEx6M+2CkKSQfXOsXZQ35L5CqVOgZ+6szBBhGbdaIBTvg
-         LMFMnqQmLyuq0GNEK1FXYmyeu+xvoJ+e9ODSnsiJyM9h0axiFnfdRZfUGFIRMSE8wrG8
-         mdChC5CwCbDsnvVh+sUIVmmZ0o9I/vqWCODDPHTxQt0a/yJNns5qygZsn6aMfaeNLQuV
-         m9JTWrlCugiqii88QL/73wmRXkPqLOz6sUKJn+S1+PH6lRFi/AoO0dVl3rtxujq9ojTu
-         RMBg==
+        bh=x6uZ/GJNqZSaFJF0owpb3dr1c/B7qPoNYN81eJOhWss=;
+        b=P0pLPNAaxSh7K+o9Ydklho2YEOYfdi3RqeuPg12PSoRf0e6MPx6ySclBqT1za+EG52
+         Uk1FUSayiMa5mzG2II7DjrGpNrNGkmHO84rYsSENxhe3RZj1dKkr0e/RzN4HNpA3MbPf
+         LLVQZiAW3YIK+Ps5ykG+2Uide81EtJRrLO3Hh7fCEdxYa2t8hc5FEzZz9FgYkgD4ljCf
+         Nvf7ymfHUrpvp07bxnybfnuZxuQ8LIcPsTev4PmZqcUpmw/TkjlED5y8A23rEW1kVZWf
+         35sb24H/m9IQ/vDPEj1wUPTNmLe9K80LUHg8CKcYLxDrhYyVMa7FbM/pBLXReNqWjSkx
+         LuvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730881203; x=1731486003;
+        d=1e100.net; s=20230601; t=1730881205; x=1731486005;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lMwxZ/wNh3EItJe4u6OrzzTY0ND8WF+5jNZAaFXL5oo=;
-        b=bPgs2LnVxeOKJmpLPxfbDQ9gTO46VY2wyj+xSe9UjnVZycqYWOr8xy0E516SINz3IU
-         K/MJR3UVCGLJLLBCs2tv8SOpOBwgGePelCNvD6Yi/Xh7/Q4dm4agybtbJRRiECEGvmQx
-         7qx3UWTYKZi3ntw8RqFtJ6R0eE7Bk44/M48pWTtMawT/yxFrhx4UwWDkgKvhDuMhwzl0
-         rSA+R4td+oxb4H0WOga/7rYiBxRPM+R4UpjgvqCX6ZazjetC4aUXYHNcjSCLShUdlkuX
-         b+s16Arw/nbQ5rET1X8Te3pzJZZnmFzqj29lhNFdxJRmYhSRDNwL9RoA+NbC7EH7I3nB
-         wtMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVJXDJBpP52+Vc0PAL39t43CXpGvnkUoPOJsd7HEbgWNmjZM3ICDFxStiFSPpB9vM/oQfSJjTEwQtb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4D+yUTBMQkGXfMbcbqhqfhWnjcmvMnJNsxb+QwkbhhuS0q6D4
-	K3S/jK68iv0ut4ZSr8+bdvRcKPqzHtN7LdHHcx9OlKagV1guZYNErZaw2VnJ9m0=
-X-Google-Smtp-Source: AGHT+IHza8wl50NzRTeIeafrsDLwtKSivG4FoOXk+uiSCYbSLBGMXVLloOn37+ovKQ5qgLhSm+JC7A==
-X-Received: by 2002:a17:907:783:b0:a9e:b67f:cdf6 with SMTP id a640c23a62f3a-a9eb67fd1e7mr460745966b.38.1730881202577;
-        Wed, 06 Nov 2024 00:20:02 -0800 (PST)
+        bh=x6uZ/GJNqZSaFJF0owpb3dr1c/B7qPoNYN81eJOhWss=;
+        b=Yrde/ws7zmEkGfWH9pk1robF3tXwY0SG1tYPSfyb09z085W6gJOtYNrJgKBlT/Bi0K
+         RxM4VraVYbBOfLroJ3E/RXyTwKJ9tLx5+7oogKeTq2atojemb4yt64nf/dZ8h+MYbinP
+         3KL+j4OG6fkxl0owf1wukPMMxQ380UT3cuNCTdwqCSOVpwSdpIYh1cSkWGKTpD3tpsIR
+         OQNqEQko9t4EYPCNFekaGM4xRiHO/EZzu8evBMX+KZgJr1T35XAmS1eyk4qaEo1iayQP
+         k0okJL4FJWCx2ecCC3lEM3+88LOtjWlL7YxVMbHYnIpXV7J5hGDwx/LeIBi1xfbuZK91
+         i/6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXSk8mC50UTPKDTRa9EzVmtaRiLLOr/1haSBhKjVwLSsVN24IuU0RNxWFOyzqvSC08zv/bcw4Trv1wZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCVJxMgg9ePlP0dOvUT+ILY4BDejvzgdoRxUCfLk3uudiQS+81
+	ezFsjllVmka7OmFR2vPpy9VFKLfiMQS2HJBB8/lelJPZtcZHFho/Wa4Iqyd33Fo=
+X-Google-Smtp-Source: AGHT+IHnjtY0UiA3/qwTD2Yq8zKTnc2HJdObiVxgkCsoMF1K8SoDYjBM4ZTa1RpLFO47Q2aZOqBasA==
+X-Received: by 2002:a17:906:dc8f:b0:a99:374e:f3cb with SMTP id a640c23a62f3a-a9e3a6c8e6fmr2368863666b.46.1730881205325;
+        Wed, 06 Nov 2024 00:20:05 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb16a2dbcsm241369766b.40.2024.11.06.00.20.00
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9eb16a2dbcsm241369766b.40.2024.11.06.00.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 00:20:02 -0800 (PST)
+        Wed, 06 Nov 2024 00:20:04 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: geert+renesas@glider.be,
@@ -92,11 +92,10 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 22/31] ASoC: da7213: Populate max_register to regmap_config
-Date: Wed,  6 Nov 2024 10:18:17 +0200
-Message-Id: <20241106081826.1211088-23-claudiu.beznea.uj@bp.renesas.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 23/31] ASoC: da7213: Return directly the value of regcache_sync()
+Date: Wed,  6 Nov 2024 10:18:18 +0200
+Message-Id: <20241106081826.1211088-24-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241106081826.1211088-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20241106081826.1211088-1-claudiu.beznea.uj@bp.renesas.com>
@@ -110,34 +109,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On the Renesas RZ/G3S SMARC Carrier II board having a DA7212 codec (using
-da7213 driver) connected to one SSIF-2 available on the Renesas RZ/G3S SoC
-it has been discovered that using the runtime PM API for suspend/resume
-(as will be proposed in the following commits) leads to the codec not
-being propertly initialized after resume. This is because w/o
-max_register populated to regmap_config the regcache_rbtree_sync()
-breaks on base_reg > max condition and the regcache_sync_block() call is
-skipped.
+Return directly the value of the regcache_sync() in
+da7213_runtime_resume(). In case of any failures this will inform the
+runtime resume process.
 
-Fixes: ef5c2eba2412 ("ASoC: codecs: Add da7213 codec")
-Cc: stable@vger.kernel.org
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- sound/soc/codecs/da7213.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/da7213.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-index f3ef6fb55304..486db60bf2dd 100644
+index 486db60bf2dd..4298ca77fa30 100644
 --- a/sound/soc/codecs/da7213.c
 +++ b/sound/soc/codecs/da7213.c
-@@ -2136,6 +2136,7 @@ static const struct regmap_config da7213_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
+@@ -2230,8 +2230,7 @@ static int __maybe_unused da7213_runtime_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 	regcache_cache_only(da7213->regmap, false);
+-	regcache_sync(da7213->regmap);
+-	return 0;
++	return regcache_sync(da7213->regmap);
+ }
  
-+	.max_register = DA7213_TONE_GEN_OFF_PER,
- 	.reg_defaults = da7213_reg_defaults,
- 	.num_reg_defaults = ARRAY_SIZE(da7213_reg_defaults),
- 	.volatile_reg = da7213_volatile_register,
+ static const struct dev_pm_ops da7213_pm = {
 -- 
 2.39.2
 
