@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-12622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FA1C9BE3BA
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 11:09:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6AAC9BE3C0
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 11:09:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D482C1F23766
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 10:09:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BFA4288F46
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 10:09:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E531DDC2B;
-	Wed,  6 Nov 2024 10:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F901DE2B7;
+	Wed,  6 Nov 2024 10:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Cyj05UIY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="q3x//zed"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
+Received: from mail-4027.protonmail.ch (mail-4027.protonmail.ch [185.70.40.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECD91DDC03;
-	Wed,  6 Nov 2024 10:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001E81DB36B
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Nov 2024 10:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730887750; cv=none; b=nsKHXndIUrXNFx+BywaFiW/x26iTIVnepQh43sBvD9iSSQrhhAetlJmjm4QroEnbdBugBU4QGqiIRHZ2wtDnwd8qrEL4GZpihyElBJIn626gu1gd9kfHXVTcYesiwHBs9HJCra3Ql3NMZCvG3EEPWOAPE/ZpO53OoA/+su6p0yM=
+	t=1730887761; cv=none; b=gutaIsG1Zz7q4CG1PSGbQ6xZyGC1YItXTMoZtJdi3rupHDX6zCSZSPmFhNzIOd9DwHlaANiJEqUx+Imm5gkg1mufhFbRSHLjtFlj12wFq4ZcM+AsTMlrn9R6ISTKde7yp5Y44jU1SAU7H9Pd2Ne/K3ESd9aiOUg70F4DFY8JowM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730887750; c=relaxed/simple;
-	bh=w8f6EHwbpuXfJsXd4Hk0fYwMmDt3B1x7ZQQNymSJp28=;
+	s=arc-20240116; t=1730887761; c=relaxed/simple;
+	bh=pFW5uGIhOWupB+0uZOhhB0U7XUZFKid9bw77jqLL5Io=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nv0Fkdor74GivJDC+Ik8kaznRlCnPwuv8cDcPCc3c9vLEk7R/38qFDEIlSUKbdgq8s1ktON1c2XWpKyinXXbsa8ap2e35StqwalXQzDAs8O9eosuhPZHCbsSTZfY2ubm9yBRqNuc6kVzs8h9ne5/AvuARLHq1ayqs6rHoUUozp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=Cyj05UIY; arc=none smtp.client-ip=185.70.43.166
+	 MIME-Version:Content-Type; b=Tbb+gD5ySPQIFk62gLVDoaPOa9hTafrBjtwBCgORJmrrQqt8b9UmLDym2cIGLhohhDT0Im+6fnRl3eMaqn2NmjX2Sw8silBPYaC7nWVW9wZ+DjQLTFzb0YZtDAzQ7+PXtRER2L9PJj6e2djTDppYo8YSU7vL7ChQnZrQ9Mc8ZlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=q3x//zed; arc=none smtp.client-ip=185.70.40.27
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1730887746; x=1731146946;
-	bh=w8f6EHwbpuXfJsXd4Hk0fYwMmDt3B1x7ZQQNymSJp28=;
+	s=protonmail3; t=1730887758; x=1731146958;
+	bh=4rDU23pzf+q4Fq/p7WgWy753TjJNM/Py3tStVTK1u3U=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Cyj05UIYud+EGWKbDL/T2w+9INhPklVEKHI7ivjAwEMZIpfgBI6O9maYfGY2BeIJn
-	 e3xIn6yAisX2lPmR75opQnoz7GMJ2S/KNG2Qo9ewQI4O6cqogYLD7pJG1ScG3REj//
-	 NZzqL9qRna02ShS2BgJRkRsekOqZOioNym0LPxBW/goeHMxnPTYV1zK5mPMAA77qkJ
-	 mh7X3MIlRHqUe0PKBkIl74IAuZuFzPd3vtVR1fcvu4fIrRZGaWeDgFcEUcZkMeRY8E
-	 u3sYeIXcsBq78bbcgYYL0HrEqdCJJ9oEmlUZ/7coCy2sH9uwvhan6wHDbZnVuS3sUQ
-	 9gMd2/JqodGYQ==
-Date: Wed, 06 Nov 2024 10:09:03 +0000
+	b=q3x//zedOaDsIApgZSXVhf9alKkEswwgiIWag4AqM8gGNjuDJ2nFNE4FFbDg4ePK/
+	 sSQiI0pVrUzOjXPgykwuI/kEMn4TZW120aCDN1VpcpRxK6YRssszNpEV071NpcOP7a
+	 iei0aCor2ExrULaGJiBnuHw39rdEiwXZiq3DsicwB0zg87FOdY5XMHWIloluBspFav
+	 AHPR136u1Qnuk+XYdf7fSDc5nxWKWhDeE57XmdnC1B5QmoT07VD0bcXapbqSGnAAhi
+	 Qr31IH4vBfGC4vtX6bW4F3YKZ+NgJAPSO91HBYpXIxHSU8l/x+4CsxeCyimFo+ykej
+	 82QZ8vgdyB1UA==
+Date: Wed, 06 Nov 2024 10:09:11 +0000
 To: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Andy Teng <andy.teng@mediatek.com>
 From: Yassine Oudjana <y.oudjana@protonmail.com>
 Cc: Yassine Oudjana <y.oudjana@protonmail.com>, Yassine Oudjana <yassine.oudjana@gmail.com>, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v7 4/7] arm64: dts: mediatek: mt6797: Make pin configuration nodes follow DT bindings
-Message-ID: <20241106100741.173825-5-y.oudjana@protonmail.com>
+Subject: [PATCH v7 5/7] dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Document MT6765 pin controller
+Message-ID: <20241106100741.173825-6-y.oudjana@protonmail.com>
 In-Reply-To: <20241106100741.173825-1-y.oudjana@protonmail.com>
 References: <20241106100741.173825-1-y.oudjana@protonmail.com>
 Feedback-ID: 6882736:user:proton
-X-Pm-Message-ID: 16d86c1d179cbb388235fe4342731305526f5975
+X-Pm-Message-ID: 0cb5cae7981533bf96445ccd341cf792997e4428
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,102 +62,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Add -pins suffix to pin configuration nodes to follow DT bindings
-and pass dtbs_check.
+The MT6765 pin controller has had a driver for a while, but DT
+bindings were never documented for it.
 
 Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabor=
 a.com>
 ---
- arch/arm64/boot/dts/mediatek/mt6797.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts=
-/mediatek/mt6797.dtsi
-index 0e9d11b4585be..a786d1d08f683 100644
---- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-@@ -135,70 +135,70 @@ pio: pinctrl@10005000 {
- =09=09gpio-controller;
- =09=09#gpio-cells =3D <2>;
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinc=
+trl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctr=
+l.yaml
+index 7ac1a85f822f1..4bfbaebb790c3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yam=
+l
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yam=
+l
+@@ -18,6 +18,7 @@ description:
+ properties:
+   compatible:
+     enum:
++      - mediatek,mt6765-pinctrl
+       - mediatek,mt6779-pinctrl
+       - mediatek,mt6795-pinctrl
+       - mediatek,mt6797-pinctrl
+@@ -61,6 +62,41 @@ required:
 =20
--=09=09uart0_pins_a: uart0 {
-+=09=09uart0_pins_a: uart0-pins {
- =09=09=09pins0 {
- =09=09=09=09pinmux =3D <MT6797_GPIO234__FUNC_UTXD0>,
- =09=09=09=09=09 <MT6797_GPIO235__FUNC_URXD0>;
- =09=09=09};
- =09=09};
-=20
--=09=09uart1_pins_a: uart1 {
-+=09=09uart1_pins_a: uart1-pins {
- =09=09=09pins1 {
- =09=09=09=09pinmux =3D <MT6797_GPIO232__FUNC_URXD1>,
- =09=09=09=09=09 <MT6797_GPIO233__FUNC_UTXD1>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c0_pins_a: i2c0 {
-+=09=09i2c0_pins_a: i2c0-pins {
- =09=09=09pins0 {
- =09=09=09=09pinmux =3D <MT6797_GPIO37__FUNC_SCL0_0>,
- =09=09=09=09=09 <MT6797_GPIO38__FUNC_SDA0_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c1_pins_a: i2c1 {
-+=09=09i2c1_pins_a: i2c1-pins {
- =09=09=09pins1 {
- =09=09=09=09pinmux =3D <MT6797_GPIO55__FUNC_SCL1_0>,
- =09=09=09=09=09 <MT6797_GPIO56__FUNC_SDA1_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c2_pins_a: i2c2 {
-+=09=09i2c2_pins_a: i2c2-pins {
- =09=09=09pins2 {
- =09=09=09=09pinmux =3D <MT6797_GPIO96__FUNC_SCL2_0>,
- =09=09=09=09=09 <MT6797_GPIO95__FUNC_SDA2_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c3_pins_a: i2c3 {
-+=09=09i2c3_pins_a: i2c3-pins {
- =09=09=09pins3 {
- =09=09=09=09pinmux =3D <MT6797_GPIO75__FUNC_SDA3_0>,
- =09=09=09=09=09 <MT6797_GPIO74__FUNC_SCL3_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c4_pins_a: i2c4 {
-+=09=09i2c4_pins_a: i2c4-pins {
- =09=09=09pins4 {
- =09=09=09=09pinmux =3D <MT6797_GPIO238__FUNC_SDA4_0>,
- =09=09=09=09=09 <MT6797_GPIO239__FUNC_SCL4_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c5_pins_a: i2c5 {
-+=09=09i2c5_pins_a: i2c5-pins {
- =09=09=09pins5 {
- =09=09=09=09pinmux =3D <MT6797_GPIO240__FUNC_SDA5_0>,
- =09=09=09=09=09 <MT6797_GPIO241__FUNC_SCL5_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c6_pins_a: i2c6 {
-+=09=09i2c6_pins_a: i2c6-pins {
- =09=09=09pins6 {
- =09=09=09=09pinmux =3D <MT6797_GPIO152__FUNC_SDA6_0>,
- =09=09=09=09=09 <MT6797_GPIO151__FUNC_SCL6_0>;
- =09=09=09};
- =09=09};
-=20
--=09=09i2c7_pins_a: i2c7 {
-+=09=09i2c7_pins_a: i2c7-pins {
- =09=09=09pins7 {
- =09=09=09=09pinmux =3D <MT6797_GPIO154__FUNC_SDA7_0>,
- =09=09=09=09=09 <MT6797_GPIO153__FUNC_SCL7_0>;
+ allOf:
+   - $ref: pinctrl.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mediatek,mt6765-pinctrl
++    then:
++      properties:
++        reg:
++          minItems: 9
++          maxItems: 9
++
++        reg-names:
++          items:
++            - const: iocfg0
++            - const: iocfg1
++            - const: iocfg2
++            - const: iocfg3
++            - const: iocfg4
++            - const: iocfg5
++            - const: iocfg6
++            - const: iocfg7
++            - const: eint
++
++        interrupts:
++          items:
++            - description: EINT interrupt
++
++      patternProperties:
++        '-pins$':
++          patternProperties:
++            '^pins':
++              properties:
++                drive-strength:
++                  enum: [1, 2, 4, 16]
++
+   - if:
+       properties:
+         compatible:
 --=20
 2.47.0
 
