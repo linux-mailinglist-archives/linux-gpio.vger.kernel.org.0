@@ -1,66 +1,69 @@
-Return-Path: <linux-gpio+bounces-12583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12584-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A05729BE024
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:16:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A8C39BE029
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:17:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 593AC1F24A97
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:16:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 339791F24AB8
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:17:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25431D319C;
-	Wed,  6 Nov 2024 08:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47781D365B;
+	Wed,  6 Nov 2024 08:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9TGYqYq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUPReqe9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CC418FDCE;
-	Wed,  6 Nov 2024 08:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6A918FDCE;
+	Wed,  6 Nov 2024 08:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730880999; cv=none; b=CASXNz+Q0Q4utIMK23YMnNjEERMNlA69+fgp5k2J4URGffAa3MnTpVWi9Vu8hQEnabpgujigoP31d+EZA3qrWCPT4O2qSNp3QEoiTIrVdjM0oUmE2RgHEYOlbgzqQEky4nGdkgoH87dkt1Uh5myRVjEfhV1/Bo6X8DjxHyBPFJc=
+	t=1730881042; cv=none; b=a2oHbvb6t7uPNNbXqBfYRktffDagdGQ44BhHxYlMDmMvKa2DNYKaxMegJQBO6QV2zqtCl49WPCR9aZIDDlb9GGxX+sOaTR3LaBwB9zf0VZwzXl/I9hijrCYwRu0uJl5ryUpWTk+jo/9KdwmQtdXqfqIIlhl0J9+xmwJfbMpOxdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730880999; c=relaxed/simple;
-	bh=47cL+BYGPWa06/iNmD2zZ/aGmskQxi7SqHCrJfaPG1o=;
+	s=arc-20240116; t=1730881042; c=relaxed/simple;
+	bh=BU/8HXrCA+97b1VY2hBlr7bf8upxGunWXFaXlB7m5+M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NFxmUiFOV5iQX47YhNgNQld7F70SM5wXdi9yfS9MoQJLfG/QB0t2kqFVS6dYiM3e829Plu9uDBqCwczFg+HGM8I0Rrk08W2CnhLeAUqN/7GbPdN02NLB34k/gDnCaL0wyRCNoluaGfZFV4WQ6eI0WBl/LAZe2E3/TD8QBO32EEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9TGYqYq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7ABDC4CECD;
-	Wed,  6 Nov 2024 08:16:35 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jX5/k4qWpHe0I9BOUQVI+ZJOX9o4lIw9a97akcBjr21YzZSiu6vMAPZjo6gKUBVeL86I9QCRTZSYRPW/uVkRGf4DXPhatQLllJClLJA3QPDDr/8do6H9mWOhtivVNfvKaSvOwKAqKedoNc0P7jseftTsXGdL6rBRuWWmDprUY6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUPReqe9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DBCC4CED0;
+	Wed,  6 Nov 2024 08:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730880999;
-	bh=47cL+BYGPWa06/iNmD2zZ/aGmskQxi7SqHCrJfaPG1o=;
+	s=k20201202; t=1730881041;
+	bh=BU/8HXrCA+97b1VY2hBlr7bf8upxGunWXFaXlB7m5+M=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Y9TGYqYq+3i/of8TfoNB+MveH6ytzW2HGQeqkLrss5pFUXCkhr2vnxlgb8jYMtAwN
-	 ABbMiRjNKpu8XDK3Xg+GSqcx+n43zalDmBI4fuqszOWEYkqXo/FSEr40plFNQkDJXp
-	 pLhTMDQWBEguxTqT1RVx3rhIOWpdVZcI7oG7QzMtedl9OtvGEOP9NS4bSX+mCbWRpi
-	 cXszXILIpXEHvg/Ter9JaaD6L6tfHNJLz7Tl9Te0L4d3BG7pVw70h6OF4qxyfT2bJy
-	 JUg6oAKmDBJSlz/eYorWPtFwinq7koHHzYobA1z5ohVjgNKdJ/qpOD1hAjiJz02OkN
-	 8EKNim7d1DLeQ==
+	b=QUPReqe9pJVXrM7BpaB7S0Mf7mQhKlPjAedmAY2RtA8rztlXnvWBNbPknP1wyUi4e
+	 oVJCZD9DpJJSRhobww6gxC3FzqTQqSIgFA2dxzQXN+63BBziGEWxR+ycBpqEH+r6DM
+	 /GiypEEYIelSvtvxaRLTXl8K1FLcdD7d2h3KnOKTPsEjVPpHZ9RgrJRb1Qq5X/Ye46
+	 U8EVBEimIn2SRjtdbYYyn01tIwUQRUTnZ/yxlTtH421sISfu6Ieh18HoMVndJaIlmn
+	 sWPSJAsNqdlTAdIUQzeanJwum6eDZ/8ECBEkTbKtsLVXtx/NnHQ/sZ7jv7henReyBH
+	 UDfTMry4JtZ4Q==
 From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
- linux-pwm@vger.kernel.org
-In-Reply-To: <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
-Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for
- Airoha EN7581 GPIO System Controller
-Message-Id: <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
-Date: Wed, 06 Nov 2024 08:16:35 +0000
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev
+In-Reply-To: <20241031-msm8917-v2-8-8a075faa89b1@mainlining.org>
+References: <20241031-msm8917-v2-0-8a075faa89b1@mainlining.org>
+ <20241031-msm8917-v2-8-8a075faa89b1@mainlining.org>
+Subject: Re: (subset) [PATCH v2 08/15] dt-bindings: mfd: qcom,tcsr: Add
+ compatible for MSM8917
+Message-Id: <173088103734.3238073.14614502914792299953.b4-ty@kernel.org>
+Date: Wed, 06 Nov 2024 08:17:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,17 +74,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
-> Add support for Airoha EN7581 GPIO System Controller which provide a
-> register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> dedicated pinctrl and pwm child nodes.
+On Thu, 31 Oct 2024 02:19:49 +0100, Barnabás Czémán wrote:
+> Document the qcom,msm8917-tcsr compatible.
 > 
 > 
 
 Applied, thanks!
 
-[4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
-      commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
+[08/15] dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8917
+        commit: 1b630208d797bd43645cbd0cdc3da424d1581919
 
 --
 Lee Jones [李琼斯]
