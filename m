@@ -1,122 +1,125 @@
-Return-Path: <linux-gpio+bounces-12617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12618-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8F1F9BE13F
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:43:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DB779BE33D
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 10:55:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 608A61F24706
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:43:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4649C1F2315B
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E111D63D3;
-	Wed,  6 Nov 2024 08:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B612E1DD533;
+	Wed,  6 Nov 2024 09:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRAecVAd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBIWBSwt"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17551917CD;
-	Wed,  6 Nov 2024 08:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617E81DACAF;
+	Wed,  6 Nov 2024 09:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730882602; cv=none; b=KolPzaU3yC/fsmiZ5KqQ7n8Ar0+Bu/a7wrsG2Wh+muKMHOwWmFB6p6eC8xHcsCghafx/t1dj8YFKjD7eYnEQq9ju18NmziTaWMqmWxlgHezNtHs06hx/3UEaO+RjjyT7yxnA7lZSj5wSmtH+8nekVTSQYs06fggKEqnci/6meoI=
+	t=1730886926; cv=none; b=DbcHRrBWSYYytGAfLBCv1mB+YXOEgv4un0Q4D8TtlqP3BKHZ40ZusKXkNTjtSnYMtzAppN/8LTNZvEt9lwcYxJAICsxnpn3b3xo3f/Xk4N9up3/9kfrN6BhZihGfDVF1zsiKssX8zuKV6d0T3BYr8KrUJQpMLIDJ450dR2zGRBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730882602; c=relaxed/simple;
-	bh=w49LxhkG70KI0gN8j5DWZTrcBdUddq9fKfZsQP4gzwM=;
+	s=arc-20240116; t=1730886926; c=relaxed/simple;
+	bh=RZivVHsX1p8dULP9mNC1LUxwiEF+L/SLxiNfZZN1qRE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XFqBbuZyDgLGrdM5vALIdbKuSK4+IkEDp4aUqLS3z4j10E6DtM+7Ol7L1/79hrDwbZTtwi7CdcpDRvWkOUbgyj5FHqGExjogGJsBlX3/MOLVwI23aS7U3JmjhJh5C0gz775G8lG0txJcIzuBj4AArZBQZ4iPCLDy+CwMEV8kj3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRAecVAd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED581C4CECD;
-	Wed,  6 Nov 2024 08:43:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9E45YGWo/eCO5s55pI12B0eNOnpZ8Ge9tsKpyydTPEPG8qTiP55HBaz8fxzUPoWp1MZFJJJJ0xZSfGP9cYDfDESrkSRH9xEFbetTPrC2D8YgKUOvYmnQPY2VezP02NBZXNJIFzejhVXSf/Qoy+GORoDa2IJUgdSBf8eLOktYmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBIWBSwt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AA9C4CED0;
+	Wed,  6 Nov 2024 09:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730882601;
-	bh=w49LxhkG70KI0gN8j5DWZTrcBdUddq9fKfZsQP4gzwM=;
+	s=k20201202; t=1730886926;
+	bh=RZivVHsX1p8dULP9mNC1LUxwiEF+L/SLxiNfZZN1qRE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vRAecVAd+Flufp11ATsduPALAzLfhE0vyh0tPWoZSNODge6Bf9LOEx341C/TvSAMy
-	 t17nWcjztEyKHgN9Gy4kG+/FEMqQPHMYqml0GSPUpps0qfohsdB8yeCO0Q6dIvzQAn
-	 afjWi/fP7ggEq5QpRRBBVbpG1tKd8Ge7u+nIJ5Ii30gmdyuYsvg+qJTQUVqN7vD6zc
-	 MiT2prpxIH3JI91PRlgys73btYLX7KU/CVRYmyZX9y81BtCQKVbyIMSYcdotiv62lf
-	 wMeKgr7MTAU72r5gUUy+07Btq52PNJoh3OvU7WTMuxEcnwrVK9/9TetIW9kgqMtXhS
-	 6Kxq29TQ+6ovA==
-Date: Wed, 6 Nov 2024 09:43:18 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for Airoha
- EN7581 GPIO System Controller
-Message-ID: <ZyssJpR7xwbMzUsm@lore-desk>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
- <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
+	b=JBIWBSwtMF1lHVxk8kFv5Ld+3FgvQU+Up3RYG+nPrJeI/7oWIsTpH3o1OKU+Q0qqh
+	 vsMy90fYuiQWNfhssG0Rx9/yYjW7pD0Tv3uMuO0zU9KilM7TJbeEaq5wkI7Ql+kWIi
+	 4uegJ1Az4kcKGYXINFG2SoB6DPzEaEj/iL+E4UdImwZdlt22kUwGGFu54ut7HBl3sc
+	 inlNY4wajw6+u43BLb15PKxBapCMh4TnVptbaEbkxrZXdnKXcyw/NuMF5jCunwOKLJ
+	 8+PleglAX7gZs3yWnHS8UMAlmH518P7zcXhaZOgXrEhgpfyNmAx06ZpLLgup08EAQu
+	 V0AY4hi5o/INA==
+Date: Wed, 6 Nov 2024 09:55:20 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-usb@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 3/6] leds: gpio: Avoid using GPIOF_ACTIVE_LOW
+Message-ID: <20241106095520.GM1807686@google.com>
+References: <20241104093609.156059-1-andriy.shevchenko@linux.intel.com>
+ <20241104093609.156059-4-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Wx+Mvx1qg95x0q+u"
-Content-Disposition: inline
-In-Reply-To: <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
-
-
---Wx+Mvx1qg95x0q+u
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241104093609.156059-4-andriy.shevchenko@linux.intel.com>
 
-On Nov 06, Lee Jones wrote:
-> On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
-> > Add support for Airoha EN7581 GPIO System Controller which provide a
-> > register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> > dedicated pinctrl and pwm child nodes.
-> >=20
-> >=20
->=20
-> Applied, thanks!
->=20
-> [4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Control=
-ler
->       commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
->=20
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
->=20
+On Mon, 04 Nov 2024, Andy Shevchenko wrote:
 
-Hi Lee,
+> Avoid using GPIOF_ACTIVE_LOW as it's deprecated and subject to remove.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/leds/leds-gpio.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 
-according to my understanding this patch has been already applied by Linus
-here:
+Acked-by: Lee Jones <lee@kernel.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/co=
-mmit/?h=3Ddevel&id=3D50dedb1eb1e6755ccab55f6140916c2d192be765
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index 0d59b0bbc002..a3428b22de3a 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -212,7 +212,6 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+>  					    const struct gpio_led *template)
+>  {
+>  	struct gpio_desc *gpiod;
+> -	unsigned long flags = GPIOF_OUT_INIT_LOW;
+>  	int ret;
+>  
+>  	/*
+> @@ -239,10 +238,7 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+>  	if (!gpio_is_valid(template->gpio))
+>  		return ERR_PTR(-ENOENT);
+>  
+> -	if (template->active_low)
+> -		flags |= GPIOF_ACTIVE_LOW;
+> -
+> -	ret = devm_gpio_request_one(dev, template->gpio, flags,
+> +	ret = devm_gpio_request_one(dev, template->gpio, GPIOF_OUT_INIT_LOW,
+>  				    template->name);
+>  	if (ret < 0)
+>  		return ERR_PTR(ret);
+> @@ -251,6 +247,9 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+>  	if (!gpiod)
+>  		return ERR_PTR(-EINVAL);
+>  
+> +	if (template->active_low ^ gpiod_is_active_low(gpiod))
+> +		gpiod_toggle_active_low(gpiod);
+> +
+>  	return gpiod;
+>  }
+>  
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
+> 
 
-Regards,
-Lorenzo
-
---Wx+Mvx1qg95x0q+u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZyssJgAKCRA6cBh0uS2t
-rBX2AP432eJMkZH/0I6xMefXrLL+NeoxIDMS0/hQjMIv70LhngD/VPpbBXZM0k6S
-cxO57ypvUMPKaDRXdqx6g7gGZKJ6KAU=
-=+WZo
------END PGP SIGNATURE-----
-
---Wx+Mvx1qg95x0q+u--
+-- 
+Lee Jones [李琼斯]
 
