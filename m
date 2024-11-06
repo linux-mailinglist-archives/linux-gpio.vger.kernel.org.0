@@ -1,76 +1,75 @@
-Return-Path: <linux-gpio+bounces-12650-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12651-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C46039BF8E2
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 23:06:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E11EC9BF8E4
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 23:06:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18498B228FE
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 22:05:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED56F1C21C9B
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 22:06:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 150BB20D4F1;
-	Wed,  6 Nov 2024 22:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40EDD20D511;
+	Wed,  6 Nov 2024 22:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jv2OjaGf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9Rob0+I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B64020CCFF;
-	Wed,  6 Nov 2024 22:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659EB20D4F7;
+	Wed,  6 Nov 2024 22:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730930741; cv=none; b=lNf3X35QLFZdi1+DydN4HJa6GXuApuajn6YeIKmCmnxsB5vtn8SZ3NxsWcN/DXgm1ROSSvkhR5XFFykrQ1YWRcC5l7vm1to1DV2TouBtH5DnK5vGb+E6TjmnRkPkSbXOVbpRyb9Oq0FCVcslMRQi3t/8f1NqvEp7UEuZFmnjJLQ=
+	t=1730930744; cv=none; b=PDA9VTouA3kk0KrsghYatbLbVZY7n4zEGx0qsrZnwqLddFXZ7c/snGel8sh7Hlxxsuv2LEmXMbfYYLBHxYhkDadEyAWzxp9AAEg7w1JnFPWrw3y3nLbUV2RJu3GUvdS9auCFfIPdTuNXewI4TBZ5fwK2h22E0CtURaY+8WsDe9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730930741; c=relaxed/simple;
-	bh=oY8Y2FrGBH8KQICCKj314nalJMZPuXPc6PykZh8Vt1U=;
+	s=arc-20240116; t=1730930744; c=relaxed/simple;
+	bh=HZ84kAwePXH0iKsBrbTmJ8UZTEP9+KZqEVc88CIyNII=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rT/D9CkZ/LUaZxrTL1wu5D/giBcKJ5ZNqjZJ5ARdw1fTdW462hFCmbKjyCCo/re60amkAVLmojelKgBP80pyKNt6b7I+baVRaGwLxe7lV76DCj9UxcJLnw9zb4cmmidb8ZZcOmSZDOVIrcCPoVKGua5wfynPkCskQ+TwBGCVWxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jv2OjaGf; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:To:Cc; b=vDqBWFw3M7M0irBGokVRSahmaloPCfUw+qsEEcTNKGtmqFxb1YXn+D1HHf6N5uVC6mWD9ZOaW9NUoOJgpadeGBipUwPwEMxzyI9KouZzwE10FnA6X8cVB+1cTqq0jDHUtTmG6BaZhucYK87gB2tyn0Eesy8nYfOeEC0yFe41jsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a9Rob0+I; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-431616c23b5so2109795e9.0;
-        Wed, 06 Nov 2024 14:05:38 -0800 (PST)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d4c482844so160486f8f.0;
+        Wed, 06 Nov 2024 14:05:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730930737; x=1731535537; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730930739; x=1731535539; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vEXdF7FgDobr4S8P4fiJnbBjvEddi/g16he1qCtIfY4=;
-        b=Jv2OjaGfmnD7VBPqbvx+M/oJmy+9/B2BH7hIem6OHqxtTWnaC5ju2Aotfx1QXKU+qq
-         UvnKyF/qFJesrttk94vOat1t68pPtbU4mZa72po2Lko19+zCFMLV5NTTsFHR9uMhArMx
-         uqP/ISIUle19i5WK1G3rAFHQ4b6ivBo8cdx3yWQ5+tyQ4wCbYy8vUcOd/IrPz1w2Oevm
-         r5Oy2jeVbLlpen+zM2Sra9KX0hFpqXn4qsIqi0wjvTf6Bvz90yMdIoQY2jPPf6ouexPO
-         QWRxzLbgaP2Yq4ZESsDNZr+9N2jPNuZiA/lOqI7pwrrf1eV2H5nqM6YGFlOkm3VM42MF
-         rDXA==
+        bh=TG5UJizDLgMxZKPQD1e03z/iuF1AG30m4Ug3E1znb/k=;
+        b=a9Rob0+IK54HjhsormB4S1WNTYbMItsuFFhaOFCIairgVF8yVx4rMNyoSqg/RCF/U1
+         cue/Nqjs8ippbPj3ORi2xsmIDwoQ4mwgUVgMUubeXXy/v/BFGfWOIrwwBNfrr58Pcm4B
+         nqHKk8HP78z9gRsJE/xb/TUxhKj9QmmW199gK/MFGyTg4xUlOjwhbSJAycrCrGx9s0XQ
+         tujeQPadqdgVloNhrVOF/iGIY/Agf9rDigGXTdLs3ULPdY+tn4+TzZtV8ucU0pTjCskd
+         UWC7yj4CePX3bD/1FVxmYRLqv3LsUBTTXpEM001ud0amON9t/pVy3Qi8Y2xofTYvlxnG
+         stgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730930737; x=1731535537;
+        d=1e100.net; s=20230601; t=1730930739; x=1731535539;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vEXdF7FgDobr4S8P4fiJnbBjvEddi/g16he1qCtIfY4=;
-        b=jD7uq/gbiMY7A98FkkrdHkHTLDVmwr33YJxkoG/WFvBLfb7kypt9RarRndWkcvNzXD
-         Tk0NIJ3WBtOOYnhyxVBIlNENpXazi5P8q4rb4tCwzyuIYxZsYlrVKA6bc0zCErW3eCSr
-         dlGeQ3vAweq1XbL1RXb90oPvNDBpt8qoz2C9VeroSqPlM2sAvvBj8d5XyLS5fltooOBA
-         CnoX/aiNi4oJoKIqKir7cmfJhx1Whaf1eTxCuIxcDGmowf432bcKEAqlsEXF4i59zHdi
-         XOLMVs07N1jX33pQkhdSIRmxZ1u/E65k2yTMvhy9uT4nr6CvYW3pEQyhv3mo1/6aJyYl
-         WE+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV+iEBYk1VloIWyVVqI4L5w2yXprG6LtIqBymUOQV3+dRLP2h/hHIvscw/sTrWI0dmNfoaUCUPsw7IXNTWxj1DmJ0A=@vger.kernel.org, AJvYcCVDUzvo8QxVz04gzTolf+Rx38OiQf2s8RaCUVdbUCp/n3EIh4GeGPCz4UV6wP50DsLmppQPdIP1@vger.kernel.org, AJvYcCVQr7FOmjHfIgpu6vWJdPIVbm5HPLfyrvwvVwSs2QVqYisFtLqrjm1LdblMhwUFMBojPYhX6kuqImY4Z+ex@vger.kernel.org, AJvYcCW1/R9axqCGXofDYg/OiRpkht+eQdBMn4w3CIgtWTO6CusOa6pAFUwOWJ7b8iJrnKFN763SwEhlX34m@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf4QezSw+ORHo9laNFzLhmv4bAiJ5PM7QqQURGKb2jVv8dvq1e
-	7aPGc+EgcuIGTE20r7qLHKAxkJPQ2y3GLZPEls08s2xfBJOqw2TquBPYIQ==
-X-Google-Smtp-Source: AGHT+IEDrfx1of1AMxp+HK64trdwGdT2xN20fbWPf6OXOXnfs1FmyB2Agr58LJjAT8gJWmF3VJmIyg==
-X-Received: by 2002:a05:600c:4704:b0:432:7c30:abf3 with SMTP id 5b1f17b1804b1-432af3239camr6500915e9.7.1730930736603;
-        Wed, 06 Nov 2024 14:05:36 -0800 (PST)
+        bh=TG5UJizDLgMxZKPQD1e03z/iuF1AG30m4Ug3E1znb/k=;
+        b=ssqamVANq0a2r1PMe5eZ32uh69seDF2baBPcQwiiFFGKFKB0CTqoLRctRh2TDdQhvK
+         b48eETE3JOmicjUhnCfeCDp84Z4B8MNnrvz2NIiWvMsGSo3abPWRdpEZVEjhdOTceNkl
+         PjtNHuu73P1M4kTXWAEZhcRWBeMsw/C8e5lXk+j/VBIXWACtyaL2sPB9oMeF134s2A0R
+         VG0iVydyhJ9/0M3mnM8/zQlppd5Dh+A8LyOWDkYauoJPdhwDDhh6Ac0APoZgOsugj8Z8
+         bKaSr3AGBGDdJUMjxWNKoXEgwV5QdDDS5LJyoDWZPAEucABSuSukMDuc0V6d9ZVcauXo
+         6Zhw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6OHjATnxGHYpaKRrbOvL4f9Ahpct4SunM3CJFi3cizO9X+dfiT+XBkFqkGemiXOKo/KSV7JelqAv0@vger.kernel.org, AJvYcCUBJ3R+4mCSREES2s0QK+czZNRoEolTFl8SUk8CVlL5seG+O3Sdnfow1yN+Z2pvxchFOEWKJMsEo2YV03Tl@vger.kernel.org, AJvYcCVXv8vltnOGb6qjyt3yZYq2E+Ap/oXCGldBvmV1bf5cyBy+dDM5Kxg0Ew5tbjIJL6+d5+B71Zkd9syaBalqqay22xU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRom17Q0tf+LXYIL0s9mS7uAqLnI6XESpr9/vwiDynFCN5/KXq
+	zX9eXUKbtOm/CdPxFZb+6angBZUO2bWDfQ/3HaTXolrFc2CK4KF81VvzsQ==
+X-Google-Smtp-Source: AGHT+IHseJSgbFNBVjoWiS3THi9dEo+NtqEvSttov0W6mgBFSYQFz5OMcDBoMLaZeVcaYvk10rAg0A==
+X-Received: by 2002:a5d:4106:0:b0:37c:d558:a931 with SMTP id ffacd0b85a97d-3806115902emr28098034f8f.31.1730930738992;
+        Wed, 06 Nov 2024 14:05:38 -0800 (PST)
 Received: from [127.0.1.1] (2a02-8389-41cf-e200-20b4-40af-8ae8-9c61.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:20b4:40af:8ae8:9c61])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c116b0eesm20288493f8f.106.2024.11.06.14.05.34
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c116b0eesm20288493f8f.106.2024.11.06.14.05.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 14:05:36 -0800 (PST)
+        Wed, 06 Nov 2024 14:05:38 -0800 (PST)
 From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Wed, 06 Nov 2024 23:04:39 +0100
-Subject: [PATCH 1/2] pinctrl: samsung: fix fwnode refcount cleanup if
- platform_get_irq_optional() fails
+Date: Wed, 06 Nov 2024 23:04:40 +0100
+Subject: [PATCH 2/2] pinctrl: samsung: update child reference drop comment
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241106-samsung-pinctrl-put-v1-1-de854e26dd03@gmail.com>
+Message-Id: <20241106-samsung-pinctrl-put-v1-2-de854e26dd03@gmail.com>
 References: <20241106-samsung-pinctrl-put-v1-0-de854e26dd03@gmail.com>
 In-Reply-To: <20241106-samsung-pinctrl-put-v1-0-de854e26dd03@gmail.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, 
@@ -90,47 +89,39 @@ To: Krzysztof Kozlowski <krzk@kernel.org>,
  Kyungmin Park <kyungmin.park@samsung.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
  linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, stable@vger.kernel.org
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730930732; l=1350;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730930732; l=1049;
  i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=oY8Y2FrGBH8KQICCKj314nalJMZPuXPc6PykZh8Vt1U=;
- b=U/E66BB9zFwfVf9lehclFknC50UuSS6b689jx+tQ1wE2/UOsLHRY7qyHAYqNxUflhSm5d6Ezy
- LuLJxM23r14BYZPI1Bezt4jPbCrMxGUQ5ym6t5L/ilC4tqfFmbwRyWR
+ bh=HZ84kAwePXH0iKsBrbTmJ8UZTEP9+KZqEVc88CIyNII=;
+ b=GY6vOISzcv48AjyktwTvRi2p1sfYnHYxMpMijViPTLIYSWCBj4YfC+77AwLWNjcrZw5AN774I
+ AJUXkmiayo/C8hgHn0p2gOJGfHYpceafRuVWOX8TmTl5w5PqmY565mo
 X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
  pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-Commit 50ebd19e3585 ("pinctrl: samsung: drop pin banks references on
-error paths") fixed the pin bank references on the error paths of the
-probe function, but there is still an error path where this is not done.
+Commit 954445c72fc7 ("pinctrl: samsung: Drop redundant node parameter in
+samsung_banks_of_node_get()") modified the name of the function used to
+release child nodes from samsung_drop_banks_of_node() to
+samsung_banks_node_put(). Update the comment to use the current function
+name.
 
-If samsung_pinctrl_get_soc_data() does not fail, the child references
-will have acquired, and they will need to be released in the error path
-of platform_get_irq_optional(), as it is done in the following error
-paths within the probe function.
-
-Replace the direct return in the error path with a goto instruction to
-the cleanup function.
-
-Cc: stable@vger.kernel.org
-Fixes: ab663789d697 ("pinctrl: samsung: Match pin banks with their device nodes")
 Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 ---
  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index bbedd980ec67..3ab5878b69d1 100644
+index 3ab5878b69d1..cfced7afd4ca 100644
 --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
 +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1272,7 +1272,7 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
- 
- 	ret = platform_get_irq_optional(pdev, 0);
- 	if (ret < 0 && ret != -ENXIO)
--		return ret;
-+		goto err_put_banks;
- 	if (ret > 0)
- 		drvdata->irq = ret;
+@@ -1172,7 +1172,7 @@ static void samsung_banks_node_get(struct device *dev, struct samsung_pinctrl_dr
+ 		else
+ 			dev_warn(dev, "Missing node for bank %s - invalid DTB\n",
+ 				 bank->name);
+-		/* child reference dropped in samsung_drop_banks_of_node() */
++		/* child reference dropped in samsung_banks_node_put() */
+ 	}
+ }
  
 
 -- 
