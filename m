@@ -1,92 +1,101 @@
-Return-Path: <linux-gpio+bounces-12575-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12576-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6129B9BDA10
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 01:07:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D01779BDAB4
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 01:55:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 257F728406C
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 00:07:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 872C51F2445D
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 00:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA7C36C;
-	Wed,  6 Nov 2024 00:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87B35188A18;
+	Wed,  6 Nov 2024 00:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9v0zHsQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39BB645
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Nov 2024 00:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7171885B8;
+	Wed,  6 Nov 2024 00:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730851665; cv=none; b=tcpzNevaOA1nG+bygrnO7WMW5pN72XN6l/mVAGxpa4XH8CQzWkFSe38mrZ+JEZZFJsTKsJnhekb/cUEjCR3qnCtivdVu4HmSRb+fMbrCim4gFeou0S0ojtRAZ8J5H8T5jqjIJoTZAHM7sBIeULTeSoRxomgfmRQ0IT7DQtV7Dvo=
+	t=1730854438; cv=none; b=A2d7+KtIDha2ZDrfkuNAVKDoRVrv+61Ob21mrbGPyzLxpLSspeOwevyyMBtzU9EPnLSazzFjMfejtijCEYyHLzBlqnu0HyREAWIUAyRAWpYt31tENTmGeH3m4+hPRRkbbVrWM7+YOEJZCuoMwK7xcP+ywUK9aMDmvT20/xR0DXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730851665; c=relaxed/simple;
-	bh=kTwQqa9A+0mZlhRq0JYu1svWNqI6Y/8y5m8xeFZJU3k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tAmUIc04JuShdrakxvqpi2b82kOC4/XQYFKoi+Hqvnfd7Zhs9AeXDdKPfTy6oG6lOoYxorwKxWgIXjFpeOZglQzc4fSFdcBCFwbnw8tN7TS7ZnGRRPzGwvY5j8jDxmhqaUickrPC2OjakbcjkxysbuzcmGA2+a7fwnFL8YsK9DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso4704474b3a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Nov 2024 16:07:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730851663; x=1731456463;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kTwQqa9A+0mZlhRq0JYu1svWNqI6Y/8y5m8xeFZJU3k=;
-        b=tTREfr4Az+Tolv1ubikRR1b6tK6kcajaYWip/LhQdzz9wV3HH3eT364ugQFaNO4I9f
-         92Ad0nSJuZGhwynxKu/oPeZmztSRFd4olHTbaKCW88aRrv5r4X2EnC5895xXwTdsyEgw
-         I0mVNlj2E8MdS5TL98g9fozYi331wUyU9yMqdaWYqJXKB5afDO15nT1wkwwK/NZLn1g2
-         BCEsP7wccDA8RRKFdgLaCoCxhSQN3jFyeuCoQS9qqMd9A7sc4XuReApjX6hb3FZCcbl9
-         GJApCrQb/dZ16oWJm5xkXcJzzbCRI38s+jiMegFRrS7c55FasStpPn9Bd0ALhjw3ZrY4
-         Pl5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU65rCxXi+tOsShpS9LdOFMvmVJGHkp6+VTvh5bkqlYydp8ojXlZaDFYPIJxG7SGkzajOw34mcwKPhy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbcFFRfpovtzsA9H2QbbifhC4KyotgSlFvEz+iYPKJC+Bjdt1n
-	/PJRCp5n3IB9HomCc1//VNfGj5iPhtJLwfIMqbreYE7r/urszb1OaXk/8B5omIwjq+wX7JIlLXv
-	e/So=
-X-Google-Smtp-Source: AGHT+IF2HQi/kddQ3FnPSxVXeVj8o38xZLdTphcs6EJ5ybOliVMZNihzO+Urim3X0QKInzH4JQmNGA==
-X-Received: by 2002:a05:6a00:3e16:b0:720:2dbf:9f60 with SMTP id d2e1a72fcca58-72062fd6edfmr55003071b3a.16.1730851663371;
-        Tue, 05 Nov 2024 16:07:43 -0800 (PST)
-Received: from localhost ([97.126.177.194])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-720bc1ba19asm10395890b3a.21.2024.11.05.16.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2024 16:07:42 -0800 (PST)
-From: Kevin Hilman <khilman@kernel.org>
-To: Judith Mendez <jm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bin Liu <b-liu@ti.com>, Judith Mendez
- <jm@ti.com>
-Subject: Re: [PATCH RESEND v2] gpio: omap: Add omap_gpio_disable/enable_irq
- calls
-In-Reply-To: <20241031145652.342696-1-jm@ti.com>
-References: <20241031145652.342696-1-jm@ti.com>
-Date: Tue, 05 Nov 2024 16:07:42 -0800
-Message-ID: <7hv7x1jkc1.fsf@baylibre.com>
+	s=arc-20240116; t=1730854438; c=relaxed/simple;
+	bh=HPTg6F0AYPQEIKZS8GnAFmra5qXWz8AKMhVZCHGPW+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VaRfEN3TDA3N4Lr4XSTl/Cuzf77yFGdEi2DWQtF2jOV/FPVkZWn51uz/vfMdm/AbbmUGnW2WK25HxcR+R3kf2jy2q5oSyRcAJExnxUGk/G75FxbIkf8bcwJaflcGfRBWkzBTxm67bdjbMxZichO+J0sGuh+SPr7FosuINV29scA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9v0zHsQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2EFC4CEDD;
+	Wed,  6 Nov 2024 00:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730854437;
+	bh=HPTg6F0AYPQEIKZS8GnAFmra5qXWz8AKMhVZCHGPW+I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=b9v0zHsQjN2hTRx2yrCy/4HS7d/jSxBpi8f/++f2qyq8D2UDYx3LrwDutMiLlTqlO
+	 q64b/Waq2CuLIhuHRS0m5eBc8UKnn0scn7a+5owraAIWwHPgRR3dsiY82q3NNdcyI4
+	 +rozCJzGgdOWevZGIWt+1PKNCCYlUbl5G/4yi74sxmJ93CEkhOr87SxDSP1CDgv1wZ
+	 sMByjejW+ec0YjFUG2x3U0HQrzPJOfThz0ApvJCtZ1wx4jO65RpkSZFwHL4xD+LeAc
+	 Zl7nth9qpixByJW306xgur9vTAyScFsNPQDSuHdK8Ytdbks2UdgkwVbbz3D/ZY3Vxo
+	 tO1roa2FTWnZw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: konradybcio@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	ulf.hansson@linaro.org,
+	linus.walleij@linaro.org,
+	catalin.marinas@arm.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	dmitry.baryshkov@linaro.org,
+	neil.armstrong@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sricharan R <quic_srichara@quicinc.com>
+Cc: quic_varada@quicinc.com
+Subject: Re: (subset) [PATCH V5 0/6] Add minimal boot support for IPQ5424
+Date: Tue,  5 Nov 2024 16:53:49 -0800
+Message-ID: <173085441672.26510.12002868497417768812.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241028060506.246606-1-quic_srichara@quicinc.com>
+References: <20241028060506.246606-1-quic_srichara@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Judith Mendez <jm@ti.com> writes:
 
-> From: Bin Liu <b-liu@ti.com>
->
-> Add omap_gpio_disable_irq and omap_gpio_enable_irq
-> calls in gpio-omap.
->
-> Currently, kernel cannot disable gpio interrupts in
-> case of a irq storm, so add omap_gpio_disable/enable_irq
-> so that interrupts can be disabled/enabled.
->
-> Signed-off-by: Bin Liu <b-liu@ti.com>
-> [Judith: Add commit message]
-> Signed-off-by: Judith Mendez <jm@ti.com>
+On Mon, 28 Oct 2024 11:35:00 +0530, Sricharan R wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> The IPQ5424 is Qualcomm's 802.11be SoC for Routers, Gateways and
+> Access Points.
+> 
+> This series adds minimal board boot support for ipq5424-rdp466 board.
+> 
+> [...]
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Applied, thanks!
+
+[6/6] arm64: defconfig: Enable IPQ5424 RDP466 base configs
+      commit: fd516bb4f48fc527744cae42d8e156fb09bce157
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
