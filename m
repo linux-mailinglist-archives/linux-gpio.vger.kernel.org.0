@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-12580-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12581-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68E6B9BDC8D
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 03:25:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D09C9BDCB4
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 03:29:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A4741C22FE9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 02:25:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AD5C286E6C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 02:29:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2C61F4268;
-	Wed,  6 Nov 2024 02:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7E1217336;
+	Wed,  6 Nov 2024 02:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkSP9rh5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7R4TaON"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4491D1F130B;
-	Wed,  6 Nov 2024 02:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640CA2170DC;
+	Wed,  6 Nov 2024 02:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730859182; cv=none; b=SAA62L10GIjU2PgZnsjCVcCiF1BS02ZkKqG5sMeLUe5GENHaJLRFqGIuwpAUfcYdx+jm6w092DEWarUzonEsc9DlVoQ8kiEHCqbefBYdFw0Bya3OL7vK70BfLRLB+C6xxUw0T1bSfHPNUhXsiAj51IRpTzYPg7R1E5ftHIYsqg8=
+	t=1730859235; cv=none; b=VMsRzuFq265dpV/tluj6BloCwl6rTZK0RcfBpZ6tQ5T6lgZ3pW0xyFdieG8FPQNVzVWvWWLQ5RdO3QmN/gh6dEzC5MGSF7xNJ3qIBT2tnxaXyw1+RotJRiYZDVFeTwFIG60IvWqmZIiVuKVGWxzy8dPlz+ERAUlw24yyiBnNS8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730859182; c=relaxed/simple;
-	bh=ytml5/ObCCYewVIwOZEXNVA26Qp+fx50Smd9Qbj7Y4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eu2uWCwSDYGjMSocyXx5sFEFSnDfjaU8rmzwujtAAKaAb4Ehu+rNL7JNszptkQL6JBZRHspxV29bhUkhqBm+fYgWTM0JMpP6RpT36BBSZtHiciYzanrU7Tzaa70/wtdvZLPKQEB+TR/SI56VNojcbzsCtiDpgGw/bguKm6dZgGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkSP9rh5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701D0C4CECF;
-	Wed,  6 Nov 2024 02:13:00 +0000 (UTC)
+	s=arc-20240116; t=1730859235; c=relaxed/simple;
+	bh=AbgOn6IIWglOxnKt5D36jG2+elDyOStFw9KzaK2X6/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J/iBd1M8sRWSqM79eB1PR/lxoZ1hgp+9dgbZwoQFshzpL5LT9HLtfqfKeT9z3shsCRYV4z/yd3RjQEv4qf6btV6a+eHUcIh2TyfujbyGpUi//oe/nohb1bUj008OxoX34kejbO7g9U3fCIfWLbY1cEhtKobJ5ocjQiNmZtw597M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7R4TaON; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6567C4CECF;
+	Wed,  6 Nov 2024 02:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730859181;
-	bh=ytml5/ObCCYewVIwOZEXNVA26Qp+fx50Smd9Qbj7Y4A=;
+	s=k20201202; t=1730859235;
+	bh=AbgOn6IIWglOxnKt5D36jG2+elDyOStFw9KzaK2X6/8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=fkSP9rh5YbTsvYHH4PbZqtpluG5PS6y6RW1DeOTkZ+9ECilAFjR4RwDmnlnltHVb5
-	 dhKOG51mWejGm6nVul3UjzG94mYxzC4wVtzLRyS7GsSUYGqTNp19nbhKgeuDvMcZe5
-	 VmDiy311AwMb8bdymfSvbyXnL22uBsTUkhyFKMMYdhodShpkMdFLeSQ3A7ceS7JtfG
-	 nuiLJf9+Iocox20t6BAx0vX93LIeP0UmIabwP0X4+A2qd3PDAzSKoP0zIv9v+vgCVF
-	 ifb5vQSZ3x201Nti6WLB3de3R+oD11jD0aF8j26hLF2QGjVY7bh2OZZvsxJE/l75KK
-	 vYVa8pRKbtgSg==
+	b=s7R4TaONu/E88w1iBbUvVS4gh11Efym6uACoAc145YSrqXC4w31j5yp0zT6QZ9IVw
+	 Cb7Rbozyib/u8hc/WeJ7Bx47EVl8vM4ynZ6Ii4Tp3uvRVBeFAA4ULHtnAIppMnycxY
+	 PmD3eo3TfA8sccVKEZuKv/1qIreuQvuwcUhaj42Y4UBAnP0g0M+JP8KfUe05oAB0/3
+	 0wnX5q89WfB12ool4/aB6fJH8WfzFYm4ZPbLJKzrNff/jEjYc2ex+2u07qUOo7ah36
+	 H1n/Z9GTen+SN6hNAqZ6pewzuEh8yybGK1ZGa9Gayl7AXso82hvmxOiteL/MM+Pged
+	 9SX4rw2IIka7A==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	johan+linaro@kernel.org
@@ -47,9 +47,9 @@ Cc: Thierry Reding <treding@nvidia.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "gpiolib: fix debugfs newline separators" failed to apply to v5.10-stable tree
-Date: Tue,  5 Nov 2024 21:12:58 -0500
-Message-ID: <20241106021258.183293-1-sashal@kernel.org>
+Subject: FAILED: Patch "gpiolib: fix debugfs newline separators" failed to apply to v5.4-stable tree
+Date: Tue,  5 Nov 2024 21:13:51 -0500
+Message-ID: <20241106021352.183884-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -61,7 +61,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the v5.10-stable tree.
+The patch below does not apply to the v5.4-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
