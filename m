@@ -1,119 +1,89 @@
-Return-Path: <linux-gpio+bounces-12582-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12583-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 391369BDCD9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 03:32:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A05729BE024
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 09:16:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1321289762
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 02:32:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 593AC1F24A97
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 08:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A584219481;
-	Wed,  6 Nov 2024 02:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25431D319C;
+	Wed,  6 Nov 2024 08:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6RYVlk3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9TGYqYq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75421D7E31;
-	Wed,  6 Nov 2024 02:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CC418FDCE;
+	Wed,  6 Nov 2024 08:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730859283; cv=none; b=Gb8slbe59PICAh/ovQ5TgEZGDHaH3WqwYFsWmyIy64SlECZFzaJ1W5O62QQ6mvm9q9uJQgIEZLbjm4wCDFAYCeQsPfXU66OsYHzM0S/cV7N2em94x4TXbKPIhMAoZAKtIwuFccGdcdEyKmLbBnbHNXHpTtke3lqK2LQDo8/iUiQ=
+	t=1730880999; cv=none; b=CASXNz+Q0Q4utIMK23YMnNjEERMNlA69+fgp5k2J4URGffAa3MnTpVWi9Vu8hQEnabpgujigoP31d+EZA3qrWCPT4O2qSNp3QEoiTIrVdjM0oUmE2RgHEYOlbgzqQEky4nGdkgoH87dkt1Uh5myRVjEfhV1/Bo6X8DjxHyBPFJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730859283; c=relaxed/simple;
-	bh=a1fx9W5C2Y8DIeSPoUZDAcxu4n24EELzZtYvi7JTuWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rJd/vyEsz90A7QWluSiBGx/VQeJDs+6f/7krT28jC+eXLlQUf4gFQkP6wiPgQc9+h5HQKOdJF2NoZPGuqf35d1xrZI2F8kq+rpm8pVuLNXWx/N4L+WCW7nmD2pyuaRY6dJvR9qNgjtl5QudFTtDqZVgD/Tu34M1U7RRV3wSrVgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6RYVlk3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D32C4CECF;
-	Wed,  6 Nov 2024 02:14:41 +0000 (UTC)
+	s=arc-20240116; t=1730880999; c=relaxed/simple;
+	bh=47cL+BYGPWa06/iNmD2zZ/aGmskQxi7SqHCrJfaPG1o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NFxmUiFOV5iQX47YhNgNQld7F70SM5wXdi9yfS9MoQJLfG/QB0t2kqFVS6dYiM3e829Plu9uDBqCwczFg+HGM8I0Rrk08W2CnhLeAUqN/7GbPdN02NLB34k/gDnCaL0wyRCNoluaGfZFV4WQ6eI0WBl/LAZe2E3/TD8QBO32EEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9TGYqYq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7ABDC4CECD;
+	Wed,  6 Nov 2024 08:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730859283;
-	bh=a1fx9W5C2Y8DIeSPoUZDAcxu4n24EELzZtYvi7JTuWs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=G6RYVlk3mEPqkiUBh5Tc5XkG1RSYmsESh8UJiPbjpp5XXniTQrzmuRDj9dHFHZ+c4
-	 XYEgMnqoKTUsAiS+KjiZN4O6UKzBdNHEFr2qY+ldoZuAZkNcpE5bbZCS+gBLU5NgoC
-	 8Ajb0x3hWLG+Ae2RT2HSE7b308S8zHwlqxFxXUKAhprjV6DZKgQt0hWc54vaaOP518
-	 iEqwvIv60NeVbo1N/m0KFyd6sEObE9dG+Uw8TF0WQFrItc3AeTsVOPEfhxQ2rD4T+S
-	 vhI5zhJ/lniGb9TdflFuRdFT1d2VPFrKHD5K7BwaP3db+3oO3WPQXGmzT23gz49xsy
-	 yBsXwFz6ra4lw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	johan+linaro@kernel.org
-Cc: Thierry Reding <treding@nvidia.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "gpiolib: fix debugfs newline separators" failed to apply to v4.19-stable tree
-Date: Tue,  5 Nov 2024 21:14:40 -0500
-Message-ID: <20241106021440.184439-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1730880999;
+	bh=47cL+BYGPWa06/iNmD2zZ/aGmskQxi7SqHCrJfaPG1o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Y9TGYqYq+3i/of8TfoNB+MveH6ytzW2HGQeqkLrss5pFUXCkhr2vnxlgb8jYMtAwN
+	 ABbMiRjNKpu8XDK3Xg+GSqcx+n43zalDmBI4fuqszOWEYkqXo/FSEr40plFNQkDJXp
+	 pLhTMDQWBEguxTqT1RVx3rhIOWpdVZcI7oG7QzMtedl9OtvGEOP9NS4bSX+mCbWRpi
+	 cXszXILIpXEHvg/Ter9JaaD6L6tfHNJLz7Tl9Te0L4d3BG7pVw70h6OF4qxyfT2bJy
+	 JUg6oAKmDBJSlz/eYorWPtFwinq7koHHzYobA1z5ohVjgNKdJ/qpOD1hAjiJz02OkN
+	 8EKNim7d1DLeQ==
+From: Lee Jones <lee@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+ linux-pwm@vger.kernel.org
+In-Reply-To: <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
+References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+ <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
+Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for
+ Airoha EN7581 GPIO System Controller
+Message-Id: <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
+Date: Wed, 06 Nov 2024 08:16:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-The patch below does not apply to the v4.19-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
+> Add support for Airoha EN7581 GPIO System Controller which provide a
+> register map for controlling the GPIO, pinctrl and PWM of the SoC via
+> dedicated pinctrl and pwm child nodes.
+> 
+> 
 
-Thanks,
-Sasha
+Applied, thanks!
 
------------------- original commit in Linus's tree ------------------
+[4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
+      commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
 
-From 3e8b7238b427e05498034c240451af5f5495afda Mon Sep 17 00:00:00 2001
-From: Johan Hovold <johan+linaro@kernel.org>
-Date: Mon, 28 Oct 2024 13:49:58 +0100
-Subject: [PATCH] gpiolib: fix debugfs newline separators
-
-The gpiolib debugfs interface exports a list of all gpio chips in a
-system and the state of their pins.
-
-The gpio chip sections are supposed to be separated by a newline
-character, but a long-standing bug prevents the separator from
-being included when output is generated in multiple sessions, making the
-output inconsistent and hard to read.
-
-Make sure to only suppress the newline separator at the beginning of the
-file as intended.
-
-Fixes: f9c4a31f6150 ("gpiolib: Use seq_file's iterator interface")
-Cc: stable@vger.kernel.org	# 3.7
-Cc: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-Link: https://lore.kernel.org/r/20241028125000.24051-2-johan+linaro@kernel.org
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d5952ab7752c2..e27488a90bc97 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4926,6 +4926,8 @@ static void *gpiolib_seq_start(struct seq_file *s, loff_t *pos)
- 		return NULL;
- 
- 	s->private = priv;
-+	if (*pos > 0)
-+		priv->newline = true;
- 	priv->idx = srcu_read_lock(&gpio_devices_srcu);
- 
- 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
--- 
-2.43.0
-
-
-
+--
+Lee Jones [李琼斯]
 
 
