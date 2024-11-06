@@ -1,55 +1,58 @@
-Return-Path: <linux-gpio+bounces-12619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75B149BE3AE
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 11:08:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F06459BE3B2
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 11:09:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35083288939
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 10:08:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8232A1F234A5
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 10:09:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF09A1DCB2C;
-	Wed,  6 Nov 2024 10:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 876601DB546;
+	Wed,  6 Nov 2024 10:08:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="X7uhEJLK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="V5Ysh5dT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-40130.protonmail.ch (mail-40130.protonmail.ch [185.70.40.130])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC831DCB06;
-	Wed,  6 Nov 2024 10:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7611DCB2C
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Nov 2024 10:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730887691; cv=none; b=oCCfImFIzBloVIU0tJCpIT8/ziWBu+hWLox49mLYEdoTEkw/0pfxIhvMc5vn5Kz1BPr2rWvGU8ReC1bccxRhVRhmFrzemWqFfp+4dOfN2BUmFO1dSdoSQHTvMozALod0BuesdxemM2TQguyzoZnprrxTOlkXU0fB5vXSuecwfQs=
+	t=1730887737; cv=none; b=Bh1P0PW6rr1nknzP5vXF3NAFMJa7Kr3wNjLmrKzna1S64O/XjmgJ8ej/XL8Wph8wdyU7gAhBIJGK1exQ9ad27doxgPJ97T3LEe9N6jcLw4FEENnJwCAtQ160W3KptrhvhAAp0su0RmGwjkRIRfdKKu9tPehRaJNypqX2l5MysRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730887691; c=relaxed/simple;
-	bh=DioRjFg2BsUD83/DwMDVpmXfis+iVFsiJb7QBbbqNv4=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DsnqKN5yoBYrfSdim6E4iAF9UZfm9iXbcyWZdocAGj188hPqZKB9UtgmQC+GtbF1Yjd9yPUd5g7dv11s947K88Jngwf8fBwpufTfKGzpTMA/k+0ym5IH574bzH3NYDNJQYujM8cDd4RLEDw2NWcWh3kki41NgLoUEPdBMOf183I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=X7uhEJLK; arc=none smtp.client-ip=185.70.40.130
+	s=arc-20240116; t=1730887737; c=relaxed/simple;
+	bh=va/DILIUevm8NNWXKhwyztN+R+Y+3LeC7lUxWXKJVmQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AnJRepMv07LUtRCkEq/RKobXOzbaxiFk5Yad5Kt4FK9mWEJk/AlaRfciOFG2J5G86klLe+yG/wi835R8T0vosEcTqbJoGEbLSb8bvxE7Ko1UJb8A7cAydrPzGqL1lzmphJcpq3ed59HvHl8eEG+M5Ist9X3J8M/HfZbN+kzdOLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=V5Ysh5dT; arc=none smtp.client-ip=188.165.51.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1730887681; x=1731146881;
-	bh=V8yMZc9Tul1bQH+c+HZBXPgZ3WGspgX0f/zhkZDPElE=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=X7uhEJLKYzJHzSA4QegoCAPrW1f9UZGo6GqvYkQ6T3FY2I2maGlcTtqYcc3FwfeWJ
-	 rK7FiGLqhKAUQMCU8ADy91h3fZsO19l1iGkp3pNG8xt7k/1BTKXO9koumDYu1js+OS
-	 rzgr/I+y+nEoZQm8UL8irCqpeYWlIZkcoA9Xl2ylqV/RW0zg1WBSjQVVC6So2sCSLt
-	 fK7PtN7hnGoCEBkZGnmBA1u0GewU8kUValFwExEZKsawFP07/q/mv/OkeDEu4Ty2UJ
-	 dW8oIgiKrQHtgiMmMmDYRCBmcxS6zcb2fWpy17ymidRgF+WQPWExXxT0rb0ucIJIdK
-	 fy3gkY8CGsGYg==
-Date: Wed, 06 Nov 2024 10:07:57 +0000
+	s=protonmail3; t=1730887719; x=1731146919;
+	bh=dEoDbeevWJIwX1JnG6y9+8lc/XLJscWHnsFUwOMj8fE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=V5Ysh5dThHm+t9+k4S/JuVHI0itg/nnhexwL4GlqVNQDnL6UXlYCHL1GDtmkS/oN+
+	 +wc/222sJTeCYyKRQPrlBdRRVmoRqE/7yLziZ7u7Q7tTtCQIxMifYXSwi+ZAed31Am
+	 ATHm8EqSoBLeSyquyM/j4dHypxZzrF+ouZpsJGDOxlS3pJJE0LKlrwbBVihaJon/6R
+	 lFNl/MGRtaOFSWuQiiE4efPxzPdfnqML+Ikx0l8lqqlzeGxr8KjaaW9BBscwdD8zkP
+	 lp0skUKfxJLwV+FBXBc8vgw5g/BHl4+8qmKAC86/tqWfzv2qpZumc8kI4qhoq5I1Hd
+	 VjbRh0vpyhYtA==
+Date: Wed, 06 Nov 2024 10:08:33 +0000
 To: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Andy Teng <andy.teng@mediatek.com>
 From: Yassine Oudjana <y.oudjana@protonmail.com>
 Cc: Yassine Oudjana <y.oudjana@protonmail.com>, Yassine Oudjana <yassine.oudjana@gmail.com>, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v7 0/7] MediaTek pinctrl DT binding cleanup and MT6735 pinctrl support
-Message-ID: <20241106100741.173825-1-y.oudjana@protonmail.com>
+Subject: [PATCH v7 1/7] dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Pull pinctrl node changes from MT6795 document
+Message-ID: <20241106100741.173825-2-y.oudjana@protonmail.com>
+In-Reply-To: <20241106100741.173825-1-y.oudjana@protonmail.com>
+References: <20241106100741.173825-1-y.oudjana@protonmail.com>
 Feedback-ID: 6882736:user:proton
-X-Pm-Message-ID: b1fe9a94280e119d52a160e45965c4ac9782960b
+X-Pm-Message-ID: 824e0214d7b2a6f87eb8c72b1622141a20f40769
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,109 +62,116 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-These patches are part of a larger effort to support the MT6735 SoC family =
-in
-mainline Linux. More patches (unsent or sent and pending review or revision=
-) can
-be found here[1].
+mediatek,pinctrl-mt6795.yaml has different node name patterns which match
+bindings of other MediaTek pin controllers, ref for pinmux-node.yaml which
+has a description of the pinmux property, as well as some additional
+descriptions for some pin configuration properties. Pull those changes
+into mediatek,mt6779-pinctrl.yaml and adjust the example DTS to match in
+preparation to combine the MT6795 document into it.
 
-This series adds a driver for the pin controller found on the MediaTek MT67=
-35
-and MT6735M SoCs. The two differ in the last 6 physical pins, which are use=
-d
-for MSDC2 on MT6735 but don't exist on MT6735M (since MSDC2 doesn't exist o=
-n it
-to begin with). In preparation to document DT bindings for this pin control=
-ler,
-the existing documents for MT67xx SoCs are combined into one in order to
-eliminate duplicate property definitions and standardize pin configuration =
-node
-names. Necessary cleanup is done along the way.
+The only DT that currently gets affected by these changes is mt6797.dtsi.
+It is modified to match the new bindings in a following patch.
 
-[1] https://gitlab.com/mt6735-mainline/linux/-/commits/mt6735-staging
+Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabor=
+a.com>
+---
+ .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 38 ++++++++++++++-----
+ 1 file changed, 28 insertions(+), 10 deletions(-)
 
-Changes since v6:
- - Mention changing MT6797 DT in 1st patch commit message.
- - Squash MT6735 DT binding patches.
- - Add debounce time to eint_hw struct. MT6735 supports the same debounce
-   times as MT6765 so reuse debounce_time_mt6765.
-Changes since v5:
- - Revise and fix all register bits for all group register types (IES, SMT,
-   RDSEL, TDSEL, PUPD_R0_R1, PULLEN and PULLSEL).
- - Add pull_type array.
- - Use proper getters/setters for bias and drive.
- - Add minItems for MT6795 interrupts.
-Changes since v4:
- - Remove patches that were applied previously.
- - Define interrupts items for each variant (bringing back maxItems: 1 to t=
-he top
-   level definition then adding maxItems: 2 under the MT6795 condition caus=
-es a
-   dt_binding_check error for some reason)
- - Move example changes to the patch they belong to
- - Don't unnecessarily move the allOf block.
-Changes since v3:
- - Improve interrupts description to make clear what sysirq means.
- - Set drive-strength constraints per variant.
- - Set maxItems for reg in MT6795.
- - Add blank lines between conditionals.
- - Add ref for both pinmux-node.yaml and pincfg-node.yaml.
- - Make pinctrl subnode-related changes in separate patch.
- - Fix up some pinctrl subnode property descriptions.
- - Add interrupts items descriptions to MT6765 and MT6735.Changes since v3:
- - Improve interrupts description to make clear what sysirq means.
- - Set drive-strength constraints per variant.
- - Set maxItems for reg in MT6795.
- - Add blank lines between conditionals.
- - Add ref for both pinmux-node.yaml and pincfg-node.yaml.
- - Make pinctrl subnode-related changes in separate patch.
- - Fix up some pinctrl subnode property descriptions.
- - Add interrupts items descriptions to MT6765 and MT6735.
-Changes since v2:
- - Add interrupt descriptions.
- - Change interrupts property item limits.
- - Move pinmux examples from node description to example dts.
- - Properly add myself as maintainer for MT6735 pinctrl driver and DT bindi=
-ngs
-   document.
- - Remove tabs from a few defines in pinctrl-mt6735.c.
-Changes since v1:
- - Combine other documents into existing mediatek,mt6779-pinctrl.yaml
-   instead of creating a new document with wild card in its name.
- - Split first patch into smaller patches focused on specific changes.
- - Remove syscon compatible from MT6779 DT to avoid a check error.
- - Fix interrupt count for MT6795.
-
-Yassine Oudjana (7):
-  dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Pull pinctrl node
-    changes from MT6795 document
-  dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Improve pinctrl subnode
-    and property descriptions
-  dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Add MT6795
-  arm64: dts: mediatek: mt6797: Make pin configuration nodes follow DT
-    bindings
-  dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Document MT6765 pin
-    controller
-  dt-bindings: pinctrl: mediatek,mt6779-pinctrl: Add bindings for MT6735
-    pin controller
-  pinctrl: mediatek: Add MT6735 pinctrl driver
-
- .../pinctrl/mediatek,mt6779-pinctrl.yaml      |  191 +-
- .../pinctrl/mediatek,mt6795-pinctrl.yaml      |  228 -
- MAINTAINERS                                   |    9 +
- arch/arm64/boot/dts/mediatek/mt6797.dtsi      |   20 +-
- drivers/pinctrl/mediatek/Kconfig              |    7 +
- drivers/pinctrl/mediatek/Makefile             |    1 +
- drivers/pinctrl/mediatek/pinctrl-mt6735.c     |  881 ++++
- drivers/pinctrl/mediatek/pinctrl-mtk-mt6735.h | 3993 +++++++++++++++++
- .../pinctrl/mediatek,mt6735-pinfunc.h         | 1148 +++++
- 9 files changed, 6223 insertions(+), 255 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt67=
-95-pinctrl.yaml
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6735.c
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6735.h
- create mode 100644 include/dt-bindings/pinctrl/mediatek,mt6735-pinfunc.h
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinc=
+trl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctr=
+l.yaml
+index 3bbc00df5548d..352a88d7b135e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yam=
+l
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yam=
+l
+@@ -111,12 +111,12 @@ allOf:
+         - "#interrupt-cells"
+=20
+ patternProperties:
+-  '-[0-9]*$':
++  '-pins$':
+     type: object
+     additionalProperties: false
+=20
+     patternProperties:
+-      '-pins*$':
++      '^pins':
+         type: object
+         description:
+           A pinctrl node should contain at least one subnodes representing=
+ the
+@@ -124,7 +124,9 @@ patternProperties:
+           pins it needs, and how they should be configured, with regard to=
+ muxer
+           configuration, pullups, drive strength, input enable/disable and=
+ input
+           schmitt.
+-        $ref: /schemas/pinctrl/pincfg-node.yaml
++        allOf:
++          - $ref: pinmux-node.yaml
++          - $ref: pincfg-node.yaml
+=20
+         properties:
+           pinmux:
+@@ -135,9 +137,25 @@ patternProperties:
+=20
+           bias-disable: true
+=20
+-          bias-pull-up: true
+-
+-          bias-pull-down: true
++          bias-pull-up:
++            oneOf:
++              - type: boolean
++              - enum: [100, 101, 102, 103]
++                description: Pull up PUPD/R0/R1 type define value.
++            description: |
++              For normal pull up type, it is not necessary to specify R1R0
++              values; When pull up type is PUPD/R0/R1, adding R1R0 defines
++              will set different resistance values.
++
++          bias-pull-down:
++            oneOf:
++              - type: boolean
++              - enum: [100, 101, 102, 103]
++                description: Pull down PUPD/R0/R1 type define value.
++            description: |
++              For normal pull down type, it is not necessary to specify R1=
+R0
++              values; When pull down type is PUPD/R0/R1, adding R1R0 defin=
+es
++              will set different resistance values.
+=20
+           input-enable: true
+=20
+@@ -221,8 +239,8 @@ examples:
+             #interrupt-cells =3D <2>;
+             interrupts =3D <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
+=20
+-            mmc0_pins_default: mmc0-0 {
+-                cmd-dat-pins {
++            mmc0_pins_default: mmc0-pins {
++                pins-cmd-dat {
+                     pinmux =3D <PINMUX_GPIO168__FUNC_MSDC0_DAT0>,
+                         <PINMUX_GPIO172__FUNC_MSDC0_DAT1>,
+                         <PINMUX_GPIO169__FUNC_MSDC0_DAT2>,
+@@ -235,11 +253,11 @@ examples:
+                     input-enable;
+                     mediatek,pull-up-adv =3D <1>;
+                 };
+-                clk-pins {
++                pins-clk {
+                     pinmux =3D <PINMUX_GPIO176__FUNC_MSDC0_CLK>;
+                     mediatek,pull-down-adv =3D <2>;
+                 };
+-                rst-pins {
++                pins-rst {
+                     pinmux =3D <PINMUX_GPIO178__FUNC_MSDC0_RSTB>;
+                     mediatek,pull-up-adv =3D <0>;
+                 };
 --=20
 2.47.0
 
