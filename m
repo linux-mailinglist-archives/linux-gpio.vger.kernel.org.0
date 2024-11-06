@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-12577-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12578-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F0C29BDC06
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 03:13:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D839BDC38
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 03:17:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12C4F1F27040
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 02:13:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 433BC281812
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Nov 2024 02:17:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFB01D2F76;
-	Wed,  6 Nov 2024 02:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E1A1DCB3A;
+	Wed,  6 Nov 2024 02:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQiOtc2N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUEE9GdF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3303C1D2B24;
-	Wed,  6 Nov 2024 02:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7281922F2;
+	Wed,  6 Nov 2024 02:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730859000; cv=none; b=JZ9Fm73+SCvIqBqMtw+cizRyH37XzroKltLXUnfRruD5rob2IT3Pjrx9B7vEOwaG485Lh+SJbGHRzmOhZcutb/IDMTyBmOakrTq+2L1a9ptRaDtk4KCsP1O0wwbQ6nyhmskMkK0P48x7Tv8TTdMPp99NwlI1DsJhxFHvpNsQ500=
+	t=1730859067; cv=none; b=O1lmdEnIPcWBoDNlfbEfjIHR2GPjoITlVsj1SwqnwRDlCpyYJfyPAom3BEyxZlm6UQbof9KN486BoesWVPPGbulkLWpEfrfJ3CGcGi2FA6f/Cx6leCLE30OJMoKJXpwtKSV9wfUbgShfKpWzhY82yDeztj+TcjPy5KrhlNqETp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730859000; c=relaxed/simple;
-	bh=WWMVqHkzO5qJDKucfVGXOY0zN7ViJuhOmGR4KtYX6CY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Es9RZgG6WDV7yB7pVdOtsm4wuIqj6RdMAdOTPU51BvaZ+OiPaTzEWYQZ5T/cmSE4aqVHTL1GBy8gIWZQNcYxknE/4QxY55U2Jw2U7TbcqR/4PUG13DafNmK4AlsKcxrnOeHPkZETQXzHNNFespESHGCbycMvxmER8D7XpP3eSGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQiOtc2N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7468C4CECF;
-	Wed,  6 Nov 2024 02:09:58 +0000 (UTC)
+	s=arc-20240116; t=1730859067; c=relaxed/simple;
+	bh=ABChe0DDrUh7riODHraoS3VhDBIf5nNu/+LH+8P2Dyg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bf8aiuiaa0wh+RZypj1o+Fs5Ii1M56TQXdUHaoNp2JIXKM4eysytry5wir+dot/PU2rcfPQyPRoYZhoDSSU8mp0axN48AwYzyKlIe6w5jA6iFHn1dZu4i2TAhX8nd/eXpUdm4iX8x3XZTfW+nZ+EZQVtzJQ88nFKjrRd7+zjVIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUEE9GdF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC50DC4CECF;
+	Wed,  6 Nov 2024 02:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730859000;
-	bh=WWMVqHkzO5qJDKucfVGXOY0zN7ViJuhOmGR4KtYX6CY=;
+	s=k20201202; t=1730859066;
+	bh=ABChe0DDrUh7riODHraoS3VhDBIf5nNu/+LH+8P2Dyg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=rQiOtc2NFWn4RTBN5MLBjxGT/su0QNwKxVZDc40m3huq1DifiR+Qwa6zic54lQ7/+
-	 2NMkf3f9RpMFVAf/HgKus4RT5YsmuEuEZXvTifiY4VPTVAGmVeStXxmGJMzIqFlnnE
-	 uRoJVVRZXscXZVAhU4iLuZh6iVnXHKvoNKqA7YI3baDT2YakXrywVP8cy12eNuEPzh
-	 Umnc8z5KY8Us8/aIaWaibaWzb7HpMDPLldcKySnOxDUjOO1pzj1CfJzrYRpFq91ZS+
-	 05UodBV6bXxRZzjBksKOS8bRNr/fr//TiRLtJjJc0+UWoEljmoC/su0HhJZHRdb4/l
-	 /74EqwA3w+zTQ==
+	b=UUEE9GdF6ag+xxgb9B2Z2GKjrVtp5DYCRKlOSO0zwO8DV/+LCzIaVZGOyrfmY0o3T
+	 ZjEkQ/0IwleGgeElf+yrdL53jy1c2VI86uFa2QbJf6LOAc6T3+qNNxSnRabSFH9SBJ
+	 qdAn52qFNkwg8I98ijJhxKgwh+KIt1DpT9h7B54mlmoQscA7tvMVgmvXhNQHixSXbd
+	 bzH7v8s03FvN/+2TR3uZcE9cEky7MfLuA3cuBwQEDT5fZYmzt/IRIrj5i+LJPD+rVR
+	 Z/JEB0Hf0gkxgD+8qzQQ7JnxmNgF+OWZlT0GR+/8bGjWM+sREjj0lR/rE2Y2whTK0X
+	 jQ7FcbLlQdbsg==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	johan+linaro@kernel.org
@@ -47,9 +47,9 @@ Cc: Thierry Reding <treding@nvidia.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "gpiolib: fix debugfs newline separators" failed to apply to v6.6-stable tree
-Date: Tue,  5 Nov 2024 21:09:56 -0500
-Message-ID: <20241106020957.175620-1-sashal@kernel.org>
+Subject: FAILED: Patch "gpiolib: fix debugfs newline separators" failed to apply to v6.1-stable tree
+Date: Tue,  5 Nov 2024 21:11:02 -0500
+Message-ID: <20241106021102.181999-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -61,7 +61,7 @@ X-Patchwork-Hint: ignore
 X-stable: review
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the v6.6-stable tree.
+The patch below does not apply to the v6.1-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
