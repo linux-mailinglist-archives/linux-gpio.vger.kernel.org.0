@@ -1,177 +1,116 @@
-Return-Path: <linux-gpio+bounces-12671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BFC09C0504
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 12:57:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 890EB9C0843
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 14:58:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E21631F237CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 11:57:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB3151C20C85
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 13:58:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E597A20CCEA;
-	Thu,  7 Nov 2024 11:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9327B21262F;
+	Thu,  7 Nov 2024 13:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ed3yIMs4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="refZ/lFP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911801D95B0;
-	Thu,  7 Nov 2024 11:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCD120F5AA
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Nov 2024 13:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730980662; cv=none; b=CSN/5mZVNV+pBHB/38iYw1WiJUPJAYStUFloansXRsQsQ3Rd0kzYKX2YIAgM6GLe5fgaXQUmPeT7nv8w4s4LMk2u0Aggl/AjLorwpxT6qc/+ELn8doUEOiISEc3r8pgrGva9fK6ESpRoZMNmIPZquaj2ngqJEjfy52zaByUhqBY=
+	t=1730987881; cv=none; b=DimNY8j6RU5aEUXIXK+Mhmmr9s1nn04xSqG2i1wXo72lq/2Sl8O0gmTzSnHq3D7zrjsz2NrQHVa2Jrr/JXkqom8S5DgoDES8Jr7QyJCW3h5A07UkBeBMZf4y8oJAfDXhAFuJmX3IRaYbeM7fdEnDlIPjnjMNdbd5ATU2Xn49PXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730980662; c=relaxed/simple;
-	bh=eZfarOsXhTWz3FdloJPyAIlYQTAmmc6IqpUxyEXV9sA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dWbs0noui7ntqo1nJUI2lUJbTGJ3zqW23WRKTyzITM4yGDvcZaFRZkNS4Hw5JJZCuS/CY/tNNo/K1YcmK6i/KNEnQlp1WNmCR6CfNJ8boz+G2vXv/NUAQxO0fewTY6L3EXslo4s7OHqD+pcWTFq8OZAnIs3/XKpQbutCtd3xGMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ed3yIMs4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E491C4CECC;
-	Thu,  7 Nov 2024 11:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730980662;
-	bh=eZfarOsXhTWz3FdloJPyAIlYQTAmmc6IqpUxyEXV9sA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ed3yIMs4ETe/Y+vEEefSsXttU7eM4T6VADKWGiEcxLmh+fYIWkwGCGiJ51Y91Ej0Q
-	 wlPj82G3wn8+CeVvoFTuNV1HPyGCHb0ungAs5Ch1zkpzyOlfIQw0TfUjshHH9AOx2H
-	 on+s+479ZnSgXpVyWm8OUYhNYcQ6JfmeDuAlorKPqmBTEPLResk9htJH9Me300tR6+
-	 Hi9tvgf8HymIJAJ7edmnjqFrLjX/g+jrVYiYDh6qppCgE0bOATi+hO7G9FnrVcOrWA
-	 S7rQ6ljulBobFC8kLCHNi53JFTnQxt02UsZZPEdMjyjw7mnvS7zE8Ih2hxs8gUWV1C
-	 2aZBE+ROlb7LQ==
-Message-ID: <6866a4d4-3ef1-4e87-a69e-bb9efce1a071@kernel.org>
-Date: Thu, 7 Nov 2024 12:57:29 +0100
+	s=arc-20240116; t=1730987881; c=relaxed/simple;
+	bh=3qbBNpmUOGrReqHVVDjQW2I5NomJf1SLr4J7mIVaCfs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZsZoekiNbopdHaZOSpp4If1imTP6KSNW4sFJ97BCNyWHJJ8V2Qulmoc0WLRoy7q+yvA1tMos5hFUQ1YF3CEiJnSjF3q5Hw8ePuHOUrot5kIXLpqvsp58p/5CG42hdqi3zyW5Rcpq6KsamhOqTokIILIFVopL4ki2hH/ZBdtiJRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=refZ/lFP; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2fb50e84ec7so7880521fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2024 05:57:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1730987878; x=1731592678; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tJYUlqeWWKYMuN+Qvg7ceJ2AAR8pi0zjQ8Veiy3yBI8=;
+        b=refZ/lFP6bKJ7SJU+DGOE54O+xt24u4U2RzllKDGUTwqjyTSKJtmMOSCdNk6mFVCKB
+         0eIWluNv7psUbYUDETR9jrw4yqKR4JW32oMDDKxvsPl80HcnabdCxOpGLqIeFgE8T46S
+         AVW8VCDtEaFIEDGGHtHqB0ZjBEK3CaXo9UbQ3UASg8H+bRsTAkVxmFcvSyFcu9/RXa/x
+         7uEuem/PyTBOZnoU9pKThrw/RfyXpBC8Xm5X9EkpCOuvfW07e8tXy8nJ3EPpOFzEswFR
+         eGUkwCniu09F7Tv0KEt1AgpOoTo/frLq+61f6q21h8DEnIEcMgEisIphD0mC9FK8OCSP
+         7/xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730987878; x=1731592678;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tJYUlqeWWKYMuN+Qvg7ceJ2AAR8pi0zjQ8Veiy3yBI8=;
+        b=KdR1DzEMcjQ/pFdZ8Nn8pKvXmDFGWxk8Nxmm4ApfY7oQCN4BaoZ2hC3+IlH78UxgLO
+         /4j/wfDL9zEsXKELyjwtUzDMB88RdMADCX+Yf9CEneCR5pp3nf38IY8TWhNYHxiTu+b1
+         WI3C/00K9LXBjgcXho/nei3ZRjnrk5tbRVkppDm0VD36/vJYt9RacHGzrzfSM8XmiVzj
+         Y3u5BCZ7MJqyo60Q0VEfcW8uLusQ1icz6PNbQkPrevHyT/7F6dVre2ptOobHJrwsjsAz
+         8a4hdFUfmbOBdBnhUMi/e+v/3bHnUKTWesf7rSa4Ox0UIX6YJ/WcRwp5v57N9CMgTwJ7
+         c42A==
+X-Gm-Message-State: AOJu0YzUleXHp5LjiJ4GP8lFPKLvMpX6BMWdjPkyesgw38F5BWcogDom
+	2WQdWkUw+IKqFNhagFRq6G0RECKsWK/6a1aKumEaLV01aIzFG1Skb5uGynbIrkq9HW8VmvvwL/+
+	d1zZBnDw8NZeLbjcaiDcroQEXSVLOuCsHcZLGCfqLtHrOlCjk
+X-Google-Smtp-Source: AGHT+IHD0184U8G/T9QOh0ulWFi43uyjf9DqM7wZuoJbmycRRT/zuhtwFAebBi4l09xtEJGJPWDaOILHC3e7gxNVel4=
+X-Received: by 2002:a2e:e11:0:b0:2fb:62ad:89fe with SMTP id
+ 38308e7fff4ca-2fcbdfbb311mr169104361fa.16.1730987877772; Thu, 07 Nov 2024
+ 05:57:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] dt-bindings: pinctrl: Add RaspberryPi RP1
- gpio/pinctrl/pinmux bindings
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
- Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
-References: <cover.1730123575.git.andrea.porta@suse.com>
- <9a02498e0fbc135dcbe94adc7fc2d743cf190fac.1730123575.git.andrea.porta@suse.com>
- <mjhopgkrjahaxydn3ckianqnvjn55kxrldulvjkpqivlz72uyi@57l5vhydpzc2>
- <ZyOPHm7fl_vW7mAJ@apocalypse>
- <cc2e1a17-c5b1-4608-8e32-a6dea23a7efb@kernel.org>
- <Zyir7pu8T-fjUIA4@apocalypse>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Zyir7pu8T-fjUIA4@apocalypse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241107102606.GN275077@black.fi.intel.com>
+In-Reply-To: <20241107102606.GN275077@black.fi.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 7 Nov 2024 14:57:46 +0100
+Message-ID: <CACRpkdYmB+VHAVN1XpBwTzkGUM-SDdH5NFtPQRofuyN9M3ND-Q@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.13-2
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Linux pin control <linux-gpio@vger.kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/11/2024 12:11, Andrea della Porta wrote:
+On Thu, Nov 7, 2024 at 11:26=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 
->>>>
->>>> Your example does not use any subnodes, so this looks not needed.
->>>
->>> The example has subnodes, as in the following excerpt from the example:
->>
->> I meant, you do not need properties in subnodes (1st level). You only
->> want properties in subnodes of subnodes, so 2nd level. What is the point
->> of allowing them in 1st level?
-> 
-> I will add those two sub-nodes to the example:
-> 
->             rp1-i2s0-default-state {
->                 function = "i2s0";
->                 pins = "gpio18", "gpio19", "gpio20", "gpio21";
->                 bias-disable;
->             };
-> 
->             rp1-uart0-default-state {
->                 txd-pins {
->                     function = "uart0";
->                     pins = "gpio14";
->                     bias-disable;
->                 };
-> 
->                 rxd-pins {
->                     function = "uart0";
->                     pins = "gpio15";
->                     bias-pull-up;
->                 };
->             };
-> 
-> The first is just a group of pins with the same settings, the second is 
-> a pin group with different settings per pin. This is basically the same
-> usage as in qcom,sm4250-lpass-lpi-pinctrl.yaml.
-> 
+> This is an updated Intel pinctrl pull request, now based on v6.12-rc1.
+> Please pull for v6.13 merge window.
+>
+> Thanks!
+>
+> The following changes since commit 9852d85ec9d492ebef56dc5f229416c925758e=
+dc:
+>
+>   Linux 6.12-rc1 (2024-09-29 15:06:19 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/in=
+tel-pinctrl-v6.13-2
+>
+> for you to fetch changes up to c6235c426d2ac78ab843a55cb1556b0f43175d9e:
+>
+>   pinctrl: elkhartlake: Add support for DSW community (2024-11-05 07:48:5=
+8 +0200)
 
-Ack, that's ok then.
+Thanks, pulled in!
 
-Best regards,
-Krzysztof
+Sorry for being so picky with particulars, a few of us kernel developers ha=
+ve
+this trait.
 
+Yours,
+Linus Walleij
 
