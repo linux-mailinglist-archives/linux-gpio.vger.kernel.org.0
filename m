@@ -1,157 +1,160 @@
-Return-Path: <linux-gpio+bounces-12674-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12675-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D869C0AC1
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 17:04:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72539C0C1E
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 18:03:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33528284762
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 16:04:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58C09B21C85
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 17:03:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1632215F41;
-	Thu,  7 Nov 2024 16:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA626216E09;
+	Thu,  7 Nov 2024 17:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHHwuF4f"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="q/tns1f+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A033C14900E;
-	Thu,  7 Nov 2024 16:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CC920FAA1;
+	Thu,  7 Nov 2024 17:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730995493; cv=none; b=e1vasDsecujy6awD9VdL6Fb/+IVR7ZpTU31F5CPIH2zf00RutK2Y8vMHSU+v9zfv7B+TojoX6kId7zRMNLZmIw7rGEmpQEoGQzkZ8LPl51FUkI0cWkK1LAMASAYcDQLjRqIXw5inK1I6td5kkanZ13Ax6E4NM0vDc5LSw27eNnw=
+	t=1730998981; cv=none; b=Cpg58O/GZAvRurXSYgV+/DDh3i8db1dfHS4d83/cFxigRn41BgBzapgvKWDzP+wjUBKeXxoDLRHsfpaK+Gf/2j4VrHb7i78K9sUPtZTQiHRnOz2uEvQXiUqcXnLWqV9O3xGc11oqXTo2l56Owtq1cavqVSPYj1M/dA4WUs5bvEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730995493; c=relaxed/simple;
-	bh=++Ve2R0sTl3/Af3ywbFC4oo8hw4a8zRpz8+lgtmrgu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIys6OLj3iHfGlBKDWwv237kDQIwU+Ju7cKfwAUtKVN1XFpVXTLW5gUXeixO4HawlwiQf1evfArcQSqtVyJ9MHvEy5L6X36QANxawMPeJbgJ8ea8HJgpIVWpihDv5eM8fAPA0/8SqaeE0WOGmEA51pg5Dy+qpC/dws21IwxVEyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHHwuF4f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C94C4CECD;
-	Thu,  7 Nov 2024 16:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730995493;
-	bh=++Ve2R0sTl3/Af3ywbFC4oo8hw4a8zRpz8+lgtmrgu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RHHwuF4fxfRW3tQjxVEZ4VJfnCvaN1TO837iTx6nKNtwcVYVhMgPP2hylh24GcwL4
-	 a6i0fd0+GhfSvKYhOIdoltsV0KhycO6jLLedxhAPHSjvC95vZQL++eY42jjVwrgiGt
-	 YCAkX6I5DoUZUY5usnPt8tbbPqCfjJP4iJXf+rN6lvA4qnu75YO9vh5Jd+u4lcICag
-	 xT0CrlMrtiGM7uU7lnm1/HhWRrgdZ5YPDcwmpBpJZRZhY1Nv0EB/g8r3KKlOOl/C+i
-	 qYSWy9OEcAV0RTMlHQglL1+PAzLO1mOGd+4WDzY//q4094mwQ9R+RvEw9L7kCCsK5r
-	 dsPqx893IaLPQ==
-Date: Thu, 7 Nov 2024 10:04:51 -0600
-From: Rob Herring <robh@kernel.org>
-To: Abhinav Saxena <xandfury@gmail.com>
-Cc: linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Fix repeated words
-Message-ID: <20241107160451.GB2770783-robh@kernel.org>
-References: <20241107061124.105930-1-xandfury@gmail.com>
- <20241107061124.105930-2-xandfury@gmail.com>
+	s=arc-20240116; t=1730998981; c=relaxed/simple;
+	bh=sWowJxNGrnVM2AVICTZnLfr261T7nk89aqIuCGrDuOE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=klUmxGB/oR9OeU/ziYFyqPqPOwVvKlPT0M4ZqRPMQA5M03s1hBY3cDxK1yc0YDp+tM+hBp0eUEUp1na9PFqmevFkzJcmcxXh0aJOWtnVANEmd/0nkbJ4owabQbHxXyxqop6J6yVLuFALr40Ced+S0VI60f6Q4jVba7RVK52DRWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=q/tns1f+; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.118.162] (254C2715.nat.pool.telekom.hu [37.76.39.21])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 50F47E45BA;
+	Thu,  7 Nov 2024 17:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1730998971;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Z8L0WOA8oUOrV1RaIivpMP+QvLSVaus+xjKsdJ38WrE=;
+	b=q/tns1f+0ZOZq3TQkNTThU+YACL1GeXJvEAOmyMoetebQCVf1cwBWEQmiXxpx6apLgM5YE
+	Fur6Jpg/zEOe3MF69WCHkPUO+jP26QDisGWeRKOGe8vd0Jw14fQh19GHyUTvMWzIK/Jr7B
+	bnWTZhjkJFwxfWL6wJuIkcXMf53c3F4Rm9EYiYRrbhIRNDOKXpOY8RFTqcSlDeE9Bu5ntx
+	BOZD771mVC8TYB9Z2hnsZu+xuiYQ7jgB/++OxCT1P+Bdtx2Yeq3XavKyj1yv0a2+2F4fBi
+	cbgAqsqfjd/dKis7F2nC+3oG9DOpviP7rR9Yn3hbia+4RmOLsg3ePUxphexTdg==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v3 00/14] Add MSM8917/PM8937/Redmi 5A
+Date: Thu, 07 Nov 2024 18:02:41 +0100
+Message-Id: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241107061124.105930-2-xandfury@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALHyLGcC/2WMQQ6CMBBFr0JmbU2nhVBceQ/jYoQWJpFCWtNoC
+ He3sNGE5fv57y0QbWAb4VIsEGziyJPPoE8FtAP53gruMoOSqkSJjRjjaBqsBdat7qRzJVUK8ns
+ O1vF7L93umQeOryl89nDCbT02EgopHDrdEnbG2Oo6Evsne/b9eQo9bKGk/mSNP1ll2ZCsK0dkm
+ gce5HVdv8ggGCzgAAAA
+X-Change-ID: 20241019-msm8917-17c3d0ff4a52
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Dang Huynh <danct12@riseup.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1730998969; l=3029;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=sWowJxNGrnVM2AVICTZnLfr261T7nk89aqIuCGrDuOE=;
+ b=lrq/NpJWxQngDNkabbUmfryvThLywtOn6/VUppCCwfShY5BK40F0UxYqIKvW6czXrhPE58fUv
+ 7awH/2+qr2sDIteGWPNiQGnpPC4tqi03RhvVDYR1CUWrB2Nx9UWtdFD
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Wed, Nov 06, 2024 at 11:11:23PM -0700, Abhinav Saxena wrote:
-> Fix unintentional word repetitions in devicetree binding documentation:
-> - usb.txt: Fix repeated "two"
-> - mvebu-devbus.txt: Fix repeated "from"
-> - gpio.txt: Fix repeated "Both"
-> - pinctrl-bindings.txt: Fix repeated "device"
-> - cavium/bootbus.txt: Fix repeated "one"
-> 
-> These issues were identified using the checkpatch.pl script.
-> 
-> Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio.txt                 | 2 +-
+This patch series add support for MSM8917 soc with PM8937 and
+Xiaomi Redmi 5A (riva).
 
-This and...
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v3:
+- msm8917-xiaomi-riva: Fix issues addressed by Konrad.
+- msm8917: Fix node addresses, orders of some properties.
+- pm8937: simplify vadc channels.
+- msm8917 pinctrl: Fix schema issues addressed by Krzysztof. 
+- Remove applied tcsr patch from this series.
+- Reword some commit title.
+- Link to v2: https://lore.kernel.org/r/20241031-msm8917-v2-0-8a075faa89b1@mainlining.org
 
->  .../devicetree/bindings/memory-controllers/mvebu-devbus.txt     | 2 +-
->  Documentation/devicetree/bindings/mips/cavium/bootbus.txt       | 2 +-
->  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt  | 2 +-
+Changes in v2:
+- Add msm8937 tsens support.
+- Fix issues addressed by reviews.
+- Link to v1: https://lore.kernel.org/r/20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org
 
-...this I'll take. The others need to be converted to schema.
+---
+Barnabás Czémán (11):
+      dt-bindings: pinctrl: qcom,pmic-gpio: Add PM8937
+      pinctrl: qcom-pmic-gpio: Add support for PM8937
+      dt-bindings: pinctrl: qcom,pmic-mpp: Add PM8937
+      pinctrl: qcom: spmi-mpp: Add PM8937 compatible
+      dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+      dt-bindings: thermal: tsens: Add MSM8937
+      thermal/drivers/qcom/tsens-v1: Add support for MSM8937 tsens
+      dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+      dt-bindings: nvmem: Add compatible for MS8917
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      arm64: dts: qcom: Add Xiaomi Redmi 5A
 
->  Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt     | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index d82c32217fff..530420475a4f 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -304,7 +304,7 @@ pins 50..69.
->  It is also possible to use pin groups for gpio ranges when pin groups are the
->  easiest and most convenient mapping.
->  
-> -Both both <pinctrl-base> and <count> must set to 0 when using named pin groups
-> +Both <pinctrl-base> and <count> must set to 0 when using named pin groups
->  names.
->  
->  The property gpio-ranges-group-names must contain exactly one string for each
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-devbus.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-devbus.txt
-> index 8b9388cc1ccc..1983d7eabd2b 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/mvebu-devbus.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-devbus.txt
-> @@ -43,7 +43,7 @@ Read parameters:
->   - devbus,bus-width:    Defines the bus width, in bits (e.g. <16>).
->                          Mandatory, except if devbus,keep-config is used.
->  
-> - - devbus,badr-skew-ps: Defines the time delay from from A[2:0] toggle,
-> + - devbus,badr-skew-ps: Defines the time delay from A[2:0] toggle,
->                          to read data sample. This parameter is useful for
->                          synchronous pipelined devices, where the address
->                          precedes the read data by one or two cycles.
-> diff --git a/Documentation/devicetree/bindings/mips/cavium/bootbus.txt b/Documentation/devicetree/bindings/mips/cavium/bootbus.txt
-> index 6581478225a2..1bc655d285ce 100644
-> --- a/Documentation/devicetree/bindings/mips/cavium/bootbus.txt
-> +++ b/Documentation/devicetree/bindings/mips/cavium/bootbus.txt
-> @@ -15,7 +15,7 @@ Properties:
->  
->  - #size-cells: Must be <1>.
->  
-> -- ranges: There must be one one triplet of (child-bus-address,
-> +- ranges: There must be one triplet of (child-bus-address,
->    parent-bus-address, length) for each active chip select.  If the
->    length element for any triplet is zero, the chip select is disabled,
->    making it inactive.
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index 6904072d3944..500b76ba2ab3 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -18,7 +18,7 @@ states. The number and names of those states is defined by the client device's
->  own binding.
->  
->  The common pinctrl bindings defined in this file provide an infrastructure
-> -for client device device tree nodes to map those state names to the pin
-> +for client device tree nodes to map those state names to the pin
+Dang Huynh (1):
+      arm64: dts: qcom: Add PM8937 PMIC
 
-Actually I think this was correct. See "client device" used above. 
-Maybe "client device Devicetree nodes" would be a bit clearer and use 
-the right form of Devicetree.
+Otto Pflüger (2):
+      pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+      arm64: dts: qcom: Add initial support for MSM8917
 
-Rob
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+ .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  160 ++
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |    3 +
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |    2 +
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  297 +++
+ arch/arm64/boot/dts/qcom/msm8917.dtsi              | 2007 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8937.dtsi               |  152 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1620 ++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    1 +
+ drivers/thermal/qcom/tsens-v1.c                    |   13 +
+ drivers/thermal/qcom/tsens.c                       |    3 +
+ drivers/thermal/qcom/tsens.h                       |    2 +-
+ 19 files changed, 4279 insertions(+), 1 deletion(-)
+---
+base-commit: 74741a050b79d31d8d2eeee12c77736596d0a6b2
+change-id: 20241019-msm8917-17c3d0ff4a52
+
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
+
 
