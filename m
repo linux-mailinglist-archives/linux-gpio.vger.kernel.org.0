@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-12663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED6A9C026F
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 11:34:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E449C0272
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 11:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 142AB282B9A
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 10:34:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 692FCB21401
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 10:34:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F351EF08E;
-	Thu,  7 Nov 2024 10:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5B01EF943;
+	Thu,  7 Nov 2024 10:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuDRDKvC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="st8QtLEi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3ACD1EE033;
-	Thu,  7 Nov 2024 10:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281F91EBFE4;
+	Thu,  7 Nov 2024 10:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730975629; cv=none; b=LIj0m+aHcWPfEoNofUXgz9qJiJruA/EhSgrM14vQb9QVb2zPSVDVa8Bnt9QRFQ3zEJ31YFDexA9XFIl/6Ri44tJ73zsnRkQ0e0WvrQqR0qZ426UxxPckqYUMQHUNIX3yGpBtu20t0hi/G5mreEL369A/ZGtoRl0iQpb1NL68DFQ=
+	t=1730975634; cv=none; b=du6ueEo6R+X9cwQnmEwiuyiCie4I9ZpKPUX/tUUyyQDPBjhAsSNQ/NK4vdAGMpoW/AljV4JbUMLS3I/eG7Wzrv1qP2J2p99s6VlLEN2wE8uVdBVbRYrALhAgrrm1g8U66HmjNPjMaoLUOr36f8VIz0KuyJx8ASksGri8natoYIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730975629; c=relaxed/simple;
-	bh=reqcU4aNdM/6ZnNhA3jLzmtcHP4bWr97Wp5+bu3JRsk=;
+	s=arc-20240116; t=1730975634; c=relaxed/simple;
+	bh=/SHNdVb3iqreTq7YqcqYvk2I7A/Btpfa1SVV5nSIMko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tmlov+ICiHT/pI0qV2GIM4Il0ZYO9JFWGfNxDrJM7l1u86DKJUKH89kDYX/eyaIh/Q6NX7jG895DIh9YJWz3tYPWQN6S5WLD9vEGBBQcBnPVJroGnI9IkBn2ACc5yQvf2hB7RVhnh6Mzov+bb2yj0jVCntzOsNOZnz64CCaDzF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuDRDKvC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E12D1C4CECC;
-	Thu,  7 Nov 2024 10:33:47 +0000 (UTC)
+	 MIME-Version; b=fmSMqSe9EFYhJdgP0AKfCF3cetkXBc/6PlYn4ZxV2ozckvfewirTF439TnBYTcwLhqUVFJ+DXrSWN5kyvl1sRORL8dvLeZ7zKaWI0XigpcBxO6kxFyPo1X81Nr/fszPCIi2V17EEFR8eTyiWQ/M+t4etbX0AVjWStGdGOdLZLQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=st8QtLEi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E0AC4CED0;
+	Thu,  7 Nov 2024 10:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730975629;
-	bh=reqcU4aNdM/6ZnNhA3jLzmtcHP4bWr97Wp5+bu3JRsk=;
+	s=k20201202; t=1730975633;
+	bh=/SHNdVb3iqreTq7YqcqYvk2I7A/Btpfa1SVV5nSIMko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AuDRDKvCAO7REuvLzgAgdC9fLaziDChKxRLC1X+GymWQgRXP1cg6uZmoH/bP2oke3
-	 H15769YzdiNvWcYSxJN2a9cnTDiLUfHXuRRsTMw9Oz0uH2MI87yeeeHgdq2k05tuGK
-	 3DIUYa0yXq4CNoLnLheExA16NmyHNbKqKVP2LBYo+OXIdm7XxrALE4I/gydnWFgosv
-	 ajvgkdQbXpKrOI8G76EZAArCAgVg1FL8ro0yM7SK2XwWE/Q37SYMWkA/6zl9jcg2+Z
-	 /q20tgIRB0KselE46yxJITOnnSBxbqr1Wn/YhKb71r8FLamwc9ilB7WIod9Om5TpnW
-	 LmY9mWginf/uQ==
+	b=st8QtLEiQKDugQRLzQHwtUdZKWuWHndfhJm6A5isLt4uaKQxzr75kLg6JdHJa6pP+
+	 fMH7Tt0hYXamdQiZoP0PgLSSQSWb/5pTQdEmxglTJH1dnSLf4YUq+SCEjRkkBb4N68
+	 mVZEI254SXh23emOJDln87mIS4NOJKYvcg7Tl3SC0XeC9cuCUtz+3193XhOzzPmYDp
+	 N82jkkRfHutbJfVSqEH0dyqe5KRLM3+7R7DxBpfvkQDdUzzBO3iMX6QmXuUizht/LZ
+	 9ssS8egAfsb768HqagFUh9tRsoZhKCbGYH28pL1mQIDaYgRIl7fwGLsnXM/g3Pf5+A
+	 1b5ou6uKBECBA==
 From: Conor Dooley <conor@kernel.org>
 To: linux-gpio@vger.kernel.org
 Cc: conor@kernel.org,
@@ -49,9 +49,9 @@ Cc: conor@kernel.org,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] gpio: mpfs: add CoreGPIO support
-Date: Thu,  7 Nov 2024 10:33:40 +0000
-Message-ID: <20241107-coroner-amino-5e32e3e59ced@spud>
+Subject: [PATCH v1 2/2] MAINTAINERS: add gpio driver to PolarFire entry
+Date: Thu,  7 Nov 2024 10:33:41 +0000
+Message-ID: <20241107-chewable-spoiler-3e7dd58d3e8d@spud>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241107-avatar-clapper-93eb34ad0e0c@spud>
 References: <20241107-avatar-clapper-93eb34ad0e0c@spud>
@@ -61,119 +61,33 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3746; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=z5H4J8oVRYjVIRsfHeXdKOdKxkc1/DpYI+GAd5yexjg=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOk605s/vFh4Y3VRvZfXxyrhz7HLFkVuSOf7q2BhIzhtV srM2foKHaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZhI2SuG//ntO6sFb6hOXnSL MS/j1Hb+oCzT91kNZQtPBH14ODOj7gwjQ5P1nI7uePYIxayFFo2CzT7nLazmB86QOnuJ//n5f92 hPAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=786; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=tjx+KUo79J6Ay39V+4yggVrpVN6p0ZJUyoyr1f8RSzA=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOk605s3sz6vjTddGzLV3n658nkHn/nmJ+M1NC7xn7aef KP9YfL0jlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAEzEKZ/hn8XCqlfPfp1atXNC vOpyucmNHquYr3VtzJ8ZImqVq6OwopvhD3eR2pG61j9Pwi7yTlzD++vwZOZJ1QJZFeavLhqn/T7 uzA0A
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-coreGPIO, which the "hard" core in PolarFire SoC is based on, has
-different offsets for inp/outp. Add some match_data handling to account
-for the differences.
+Lewis' original GPIO driver patchset didn't add MAINTAINERS coverage of
+the driver and I forgot to add it to the existing entry. Make up for the
+minimal amount of lost time.
 
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/gpio/gpio-mpfs.c | 38 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
-index 3718121eb97a..4aefae05a9fb 100644
---- a/drivers/gpio/gpio-mpfs.c
-+++ b/drivers/gpio/gpio-mpfs.c
-@@ -10,6 +10,7 @@
- #include <linux/errno.h>
- #include <linux/gpio/driver.h>
- #include <linux/init.h>
-+#include <linux/of_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-@@ -30,11 +31,20 @@
- #define MPFS_GPIO_TYPE_INT_LEVEL_HIGH	0x00
- #define MPFS_GPIO_TYPE_INT_MASK		GENMASK(7, 5)
- #define MPFS_IRQ_REG			0x80
-+
- #define MPFS_INP_REG			0x84
-+#define COREGPIO_INP_REG		0x90
- #define MPFS_OUTP_REG			0x88
-+#define COREGPIO_OUTP_REG		0xA0
-+
-+struct mpfs_gpio_reg_offsets {
-+	u8 inp;
-+	u8 outp;
-+};
- 
- struct mpfs_gpio_chip {
- 	struct regmap *regs;
-+	const struct mpfs_gpio_reg_offsets *offsets;
- 	struct gpio_chip gc;
- };
- 
-@@ -60,7 +70,7 @@ static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio_in
- 
- 	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
- 			   MPFS_GPIO_DIR_MASK, MPFS_GPIO_EN_IN);
--	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+	regmap_update_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index),
- 			   value << gpio_index);
- 
- 	return 0;
-@@ -84,9 +94,9 @@ static int mpfs_gpio_get(struct gpio_chip *gc, unsigned int gpio_index)
- 	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
- 
- 	if (mpfs_gpio_get_direction(gc, gpio_index) == GPIO_LINE_DIRECTION_OUT)
--		return regmap_test_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index));
-+		return regmap_test_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index));
- 	else
--		return regmap_test_bits(mpfs_gpio->regs, MPFS_INP_REG, BIT(gpio_index));
-+		return regmap_test_bits(mpfs_gpio->regs, mpfs_gpio->offsets->inp, BIT(gpio_index));
- }
- 
- static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int value)
-@@ -95,7 +105,7 @@ static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int val
- 
- 	mpfs_gpio_get(gc, gpio_index);
- 
--	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+	regmap_update_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index),
- 			   value << gpio_index);
- 
- 	mpfs_gpio_get(gc, gpio_index);
-@@ -113,6 +123,8 @@ static int mpfs_gpio_probe(struct platform_device *pdev)
- 	if (!mpfs_gpio)
- 		return -ENOMEM;
- 
-+	mpfs_gpio->offsets = of_device_get_match_data(&pdev->dev);
-+
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return dev_err_probe(dev, PTR_ERR(base), "failed to ioremap memory resource\n");
-@@ -145,8 +157,24 @@ static int mpfs_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(dev, &mpfs_gpio->gc, mpfs_gpio);
- }
- 
-+static const struct mpfs_gpio_reg_offsets mpfs_reg_offsets = {
-+	.inp = MPFS_INP_REG,
-+	.outp = MPFS_OUTP_REG,
-+};
-+
-+static const struct mpfs_gpio_reg_offsets coregpio_reg_offsets = {
-+	.inp = COREGPIO_INP_REG,
-+	.outp = COREGPIO_OUTP_REG,
-+};
-+
- static const struct of_device_id mpfs_gpio_of_ids[] = {
--	{ .compatible = "microchip,mpfs-gpio", },
-+	{
-+		.compatible = "microchip,mpfs-gpio",
-+		.data = &mpfs_reg_offsets,
-+	}, {
-+		.compatible = "microchip,coregpio-rtl-v3",
-+		.data = &coregpio_reg_offsets,
-+	},
- 	{ /* end of list */ }
- };
- 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d6aca7ffc0a..e73a0b848bf2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19837,6 +19837,7 @@ F:	arch/riscv/boot/dts/microchip/
+ F:	drivers/char/hw_random/mpfs-rng.c
+ F:	drivers/clk/microchip/clk-mpfs*.c
+ F:	drivers/firmware/microchip/mpfs-auto-update.c
++F:	drivers/gpio/gpio-mpfs.c
+ F:	drivers/i2c/busses/i2c-microchip-corei2c.c
+ F:	drivers/mailbox/mailbox-mpfs.c
+ F:	drivers/pci/controller/plda/pcie-microchip-host.c
 -- 
 2.45.2
 
