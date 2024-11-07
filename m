@@ -1,124 +1,128 @@
-Return-Path: <linux-gpio+bounces-12653-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12654-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F229BFB1F
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 02:01:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780069BFE30
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 07:11:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 97EB1B214F9
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 01:01:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C32B283562
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 06:11:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF22E7485;
-	Thu,  7 Nov 2024 01:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7228193425;
+	Thu,  7 Nov 2024 06:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lvhu9dgh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avDgTOA5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377D02CA9;
-	Thu,  7 Nov 2024 01:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F8FBE4A;
+	Thu,  7 Nov 2024 06:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730941309; cv=none; b=u6pjwHO2OVkVwtDgTM6isbNnn8GrmHmUBDEdOhA2r35kheiwllrz7LJiN9GRwhhY+CCYrEgU+uMS3oOW+R6M2XX43sduhisb+Oy+G1p6mZV2EtnsFifaR3v9np3ILOdTvds9eFqk5u6FNMEaFJaUpuN+5GC7Eq6f2rHUbsKp838=
+	t=1730959892; cv=none; b=Th7n3Gkg/Oj3Dk0M3U8BOfHrymYSV5xd1rv1/9b/Q/IMfwxa+SLGtPJhntVtx0RpeArCd1dIPQIUsN1ivbzFQVOpXg+X2HovfNjtYdZwxkQ0lrUOd58lOwve01ZjJ+yygCTo4zjNvgCsSfR/ebTWmkA9t4j65HtiRzs9p7hsDks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730941309; c=relaxed/simple;
-	bh=8LZPvUCN9C3yUR3J6KQF9rZje6rFNhSf2IWdy4LztfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dAkJwVzZKiKiZs3E8viqI0t4j9fbhlNAFcgoUomp9MAxhjXhsI//0S9zwFCJMtFQdMCMXLuuwMs2jBQ6vNWVecSk2wDuRoq9cTQYfvbsts79q68wHNEIUwe1HqFl7wY9AN3cY2jk2Z3KKPhmDwU2IafnOGFNMIEsUSO8kuJKQZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lvhu9dgh; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730941308; x=1762477308;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8LZPvUCN9C3yUR3J6KQF9rZje6rFNhSf2IWdy4LztfM=;
-  b=Lvhu9dghzo6t/W3NQZH4YkvzZM7Av0NSw6wvfoJ/QZQiF8fSZ3pfw92C
-   jptB+OEXXtwmLcDGB5Ss/TtPQ2VWQceOv82gYxzmXc9dX+Ap1H78Ecqjl
-   H+VtWYMiyDWvuIFZTXZmj35yk3mYtZomby3LwfnoihivdV4VTjwwdMkw4
-   Hp7SwK7O62YYBB3hFxLYaB7aDHUUF89Ce9POFwsz+2hh1LYh/EQNbxtYQ
-   eq9UMsm7VSpSxBYTkwBb66n8t5GbJedo1zyLKiizI+kGOlJIV9rSC9qBt
-   RLmT7BRMPHpbnhRqMdPqJKNvBnq0Tqs619/9rE5c4XJLTErsk/qZxxWBf
-   A==;
-X-CSE-ConnectionGUID: yu/4f+IqSliFSWHa7VDteg==
-X-CSE-MsgGUID: 66jC8EJeQkmJ4ijyHuQoHQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11248"; a="30868869"
-X-IronPort-AV: E=Sophos;i="6.11,264,1725346800"; 
-   d="scan'208";a="30868869"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 17:01:48 -0800
-X-CSE-ConnectionGUID: w39IjmtKRLq/XpI8W46YJw==
-X-CSE-MsgGUID: tU/9JlygSBWKwC5v93+JRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,264,1725346800"; 
-   d="scan'208";a="88828063"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 06 Nov 2024 17:01:44 -0800
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t8qu6-000pb4-12;
-	Thu, 07 Nov 2024 01:01:42 +0000
-Date: Thu, 7 Nov 2024 09:01:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yassine Oudjana <y.oudjana@protonmail.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andy Teng <andy.teng@mediatek.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Yassine Oudjana <y.oudjana@protonmail.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1730959892; c=relaxed/simple;
+	bh=5ccryXiFMCZqpwAcb8tIEL7hAQ+1BqdnpslvGenxExs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aule1AcC/0s6sP2ndQZ7uzHDbtJzSmab7YhCbwE7/yvlOmFB8W+II07Vciphv6BXwtIVAujDzW4domCPGCw+Gg6z6fbmJLCnQIeHkJUnuhioZyJa69/2qWhEhzFpegZaNWQG4WENVYz3oYndTJ+uobIdxiwbmV8WKQ4ClHcbUoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avDgTOA5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20cdbe608b3so6116215ad.1;
+        Wed, 06 Nov 2024 22:11:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730959890; x=1731564690; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mdcIOwk3kp77s1l8BhKYHWZOlMgYXx/DfwT+R9F7N9E=;
+        b=avDgTOA5cqHarx/sCyjiE4Ihkmm4J69fUUPL+zbOXuNR7vOr+huWDsQcote516dXen
+         767DshPyaRkPnNenZSebmbFe7CHfDNxUZ2ETamnE+C6iC0Jo0/2Sy97Hg5l186gHch2S
+         u5gv4e8NilrMgl2ykU46kRCxN49vQDXSVJAghrhljnpX5DT4N+6QdIHWGm9l92GQTgnM
+         cF+Mm4FY9ddPnx9pvvScF6Watvst+jxfSClj2ql4WXiiFJUopGW5iXZhe6mDo4QnFO1D
+         AgdwSnFgFtqy2Mna/fVgl+lvEQKJHUUE9WraBef4suhn4lqlGMvZXlo32ZulqW24gLim
+         jTNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730959890; x=1731564690;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mdcIOwk3kp77s1l8BhKYHWZOlMgYXx/DfwT+R9F7N9E=;
+        b=utIt3cr14TudAk6otdfMGlj1gVqV+H0hMFUjunp56LN1W2HuWWzBn/K2LsaUpw6g27
+         TN8MMh7Yn1hzjo5ONjXl9AEWQoVYXKGagV221/PNg9SZRZCOpnf9Fd8Q2DFQ6vXmtezr
+         ED76qNWQ526RUK2XeA2ft5J30dG6cF/uLtUASyKpuU1sRhCW752lN6jNTZa3+NCXb5vx
+         l6RWMWZ8hHCuRv6mpp864qMyGhsLMe7nXJdc224ejJwVp67aNZkecZsgnr6qU5kXlW0x
+         /ud/VApmEucrFp/f/uh/B23UDZisGkBpS28qcO+tV1IbDn63J0Syjdf5otr8Y2NOhXBJ
+         RWbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUp6dVJC4mVnj4reef3OMv0inlafehiEL/WgGhy7pv9+GwgeCOR4aKiblUKgAxIUFenwxKIgZiN15kKFgA=@vger.kernel.org, AJvYcCVggHP/5AYiEvC3PePRCwEcvdoDwoKmhnzu6lDwFrAvG13yk0VPIeQhYlZTgY+Ai8bpB/mFpSQC8+3MMUCF@vger.kernel.org, AJvYcCW1iDM2G070S0nxCpAGjHuGTdtX39ZHjqCEhZTOZt5hY0fZijsABE7Czbpsm+LgO146b71TrQCp3DMd@vger.kernel.org, AJvYcCWZZR4WyOYI+KgFL/QFmsfm3A7VMO6HtAeQjb6lISTRKfdaAKB4esY4kNDSN7Zdn1dgDnt1aRt6B/PvYw==@vger.kernel.org, AJvYcCWc7DvzVb2dqeajMcfzL7AyQHbZaYhcXKgJLNqgiQRoZ7sd4wbZhFLncfcdqbaEeA+hIFSjG5T+oW9XnQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6gXc/+dagmEWz2uMIH8Fi9VZf6qyTNmPxPJ2VWUJnljAbb4D8
+	xRd7NzgzskWINgU3CCWw/SZT8A5pO6sflbdJYG5Az5zGMjiW2UDV
+X-Google-Smtp-Source: AGHT+IFb44ve8UxBIvy91ELgGSUmf+xH+y8rohtBiFFGcFZF2HaHBFlJbfOx82kv14jZNYjFRB9GRQ==
+X-Received: by 2002:a17:902:c407:b0:20c:da98:d752 with SMTP id d9443c01a7336-21178618acbmr7885715ad.16.1730959890021;
+        Wed, 06 Nov 2024 22:11:30 -0800 (PST)
+Received: from 1337.tail8aa098.ts.net (ms-studentunix-nat0.cs.ucalgary.ca. [136.159.16.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21177dc7cf8sm4652465ad.34.2024.11.06.22.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 22:11:29 -0800 (PST)
+From: Abhinav Saxena <xandfury@gmail.com>
+To: linux-kernel-mentees@lists.linuxfoundation.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 7/7] pinctrl: mediatek: Add MT6735 pinctrl driver
-Message-ID: <202411070804.SS4EF03K-lkp@intel.com>
-References: <20241106100741.173825-8-y.oudjana@protonmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Abhinav Saxena <xandfury@gmail.com>
+Subject: [PATCH 0/2] Documentation: dt-bindings: Fix documentation issues
+Date: Wed,  6 Nov 2024 23:11:22 -0700
+Message-Id: <20241107061124.105930-1-xandfury@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241106100741.173825-8-y.oudjana@protonmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Yassine,
+This small patch series fixes documentation issues in devicetree bindings,
+specifically addressing repeated words and trailing whitespace found using
+checkpatch.pl script. No functional changes are included.
 
-kernel test robot noticed the following build errors:
+Patch 1 fixes repeated words in various binding documents, while patch 2
+removes trailing whitespace from several files.
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next robh/for-next linus/master v6.12-rc6 next-20241106]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yassine-Oudjana/dt-bindings-pinctrl-mediatek-mt6779-pinctrl-Pull-pinctrl-node-changes-from-MT6795-document/20241106-181127
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20241106100741.173825-8-y.oudjana%40protonmail.com
-patch subject: [PATCH v7 7/7] pinctrl: mediatek: Add MT6735 pinctrl driver
-config: arm64-randconfig-002-20241107 (https://download.01.org/0day-ci/archive/20241107/202411070804.SS4EF03K-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241107/202411070804.SS4EF03K-lkp@intel.com/reproduce)
+Abhinav Saxena (2):
+  Documentation: dt-bindings: Fix repeated words
+  Documentation: dt-bindings: Remove trailing whitespace
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411070804.SS4EF03K-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-mt6735.o:(.data+0xa0): undefined reference to `mtk_paris_pinctrl_pm_ops'
+ Documentation/devicetree/bindings/gpio/gpio.txt        |  2 +-
+ .../devicetree/bindings/interrupt-controller/msi.txt   | 10 +++++-----
+ .../interrupt-controller/nvidia,tegra20-ictlr.txt      |  2 +-
+ .../bindings/memory-controllers/mvebu-devbus.txt       |  2 +-
+ .../devicetree/bindings/mips/cavium/bootbus.txt        |  2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-bindings.txt   |  2 +-
+ .../bindings/regulator/regulator-max77620.txt          |  4 ++--
+ .../devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt      |  2 +-
+ 8 files changed, 13 insertions(+), 13 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
