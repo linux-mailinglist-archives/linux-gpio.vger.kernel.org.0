@@ -1,139 +1,116 @@
-Return-Path: <linux-gpio+bounces-12660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B04D9C0199
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 10:55:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84CD89C024A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 11:26:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A236E1C21D54
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 09:55:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4908E2838FB
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Nov 2024 10:26:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 837151E9068;
-	Thu,  7 Nov 2024 09:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F05F1EBA12;
+	Thu,  7 Nov 2024 10:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BgcXldYx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LqzFA0uj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A957C1DB349
-	for <linux-gpio@vger.kernel.org>; Thu,  7 Nov 2024 09:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5676318A95A
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Nov 2024 10:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730973267; cv=none; b=DYSPDVQ7ZAzSKkfGY8KgnnWLDFCRJnfxsUu5aNwBUb3gghpydo9/fdJ/P63aV5Y7RV5TkqhPVXzCAEgiFdnoWgIrGIpPrraRN811X6mVNqzK+CLy7MJS+eh18sF7QZQcWOg2s4DX+x2wH8CVG+u2hsf86cFWXtAJU2a1x+DE+UA=
+	t=1730975172; cv=none; b=OmR6ionGR18syBEvvrZXvHUSkWkjMcqE1opBNVZmjIumxoR1epScqfkg5hdGpeiwMItVCF95omDKO539vxyu2n060rvHgIeZCdkZWYQlI1CQkHuZftwjwl2ZFfOokRH5Gy2FPNtwfkjjYd0e3M7gf2pvoWJ36fFoWNgkj51Odn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730973267; c=relaxed/simple;
-	bh=rZG+qUpumh1N7bHbcwHQroHblYKAUapEq5+cs4Ijzfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FxtwF04451J/uTbAtG2pFBN/EPgSn7K+1DjewIeRAZLPLux4oXaAt9yHu6RiIwsZgYiOv6bIDn3UlXyAvxQwEZnn73IjlGs6P8OaKiR3GIB+OXCIB94PF2QH+lPxDck/+tOcR0vez7o1a0F3V+SA+W4+eZbWwPoArimx+6AZAWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BgcXldYx; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-539e13375d3so791273e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Nov 2024 01:54:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1730973264; x=1731578064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gNZgwweTdh5lMjl8J2ZFJR8thP5OprmqS/2pXP+zgGw=;
-        b=BgcXldYxuD7DU3EPEyNivNhKd+d5zbI1aAVpz1dNaOnVWPyyNePVIzm1U+L4R1cpPE
-         /FJe/7e9C5PQz6SO1iTIUph0bgF3fxQSagcdFWtCum99ejIlrI1mKWsoo9mK5IeB3PR8
-         rLKem+4tr4c9JmEZcbb0jfzb3Ap46OSTTG+FXbM/6w3lUto4WhRkQfeM1zi9tVkt3jEe
-         N+ARKYzW2CuNa18qnitokq6jJEZZq5l3RX/wvd4H5idcQO/WCq4lG+rRwK9ImooEhscz
-         Rci8APnegNWe+P2mnBB/gLYMoPsYxdSAvu7dB2puPw+HklulXRBb+dGlv4mjg3oeB/Qg
-         iYgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730973264; x=1731578064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gNZgwweTdh5lMjl8J2ZFJR8thP5OprmqS/2pXP+zgGw=;
-        b=oKhZx8c7IaaJB0sp//4t6iScXkQrF6aQeTVEL1KgkEPcCbDKVI5flQkczN4n7kA2yO
-         xlFUKag1ZLi08UySc5Uu/2SZILJyBvfAhcs/T0Pz8jXamevZav8O0bRG3YB3gBB28LKz
-         ZAYWZEO9wDp5RX8F8xIMTwrtQ/2F0lNfibqzXwap/kn4cqQVa4piTPdTItaDKpKXfFfl
-         1sJWyNl+Lc6EFebNc+g3uNrsMt1sXPQlN/aLmo2+LuxhMjEfS2gwLpCVBVmm8Mnn+/gz
-         d20nMBIRI32nXcs5QACcCdTRSD2O4/velCXuI6lHuktq+fGu+HgHCxhzCijmmaZOrVLK
-         wDgQ==
-X-Gm-Message-State: AOJu0YzAB5xRAjmJnSxxhi/z0ETQcqGDWq/r5eAxJZiGL8rdD1VLkbmK
-	Q04otsR8GC/nZYRjPUb0hh5ZqoDLqj7QSV/B2O4TwWf32kB/JXrEBw8bryrP5+vC1E7uz8xwFqY
-	vfwfrfLbSOFaqIaU2RPH3D42CAJ64fK/43raGX646UJCOsRCP9IU=
-X-Google-Smtp-Source: AGHT+IHO44xJZsCzvLBWR5rxVFIc9QwE3uNnyTyBySLz4/qhNvtTCX60cM7wV4WWpxDUMQCYOjTjn6pSWUcZf6Ho0hw=
-X-Received: by 2002:a2e:be8e:0:b0:2fc:a507:19c6 with SMTP id
- 38308e7fff4ca-2ff1a939441mr3932001fa.22.1730973263757; Thu, 07 Nov 2024
- 01:54:23 -0800 (PST)
+	s=arc-20240116; t=1730975172; c=relaxed/simple;
+	bh=aU7LlpVjSmpIN1Zey0HWt9FjTxP3LIdr1XJ8jP94kgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ft4+rtLxnwSaTglmy1KkNolUMjkWkUXlKUUeB2FMFyTtVqnv0b3XPUbGOuDOzkuA3RcUDyLWwbsNEPX9UbL8xTJZlJzEpHKiyfy6uyYTznWuj3E4Yj/WX+IT1ocW9OHH+aFMc/3w2xOWNzqd+3q073hZTNQTZCvhnxWweFU3ZWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LqzFA0uj; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730975169; x=1762511169;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=aU7LlpVjSmpIN1Zey0HWt9FjTxP3LIdr1XJ8jP94kgU=;
+  b=LqzFA0ujVvLMvsSqOr+DL6Y+A/g8aYhGXtOfgY+O/S5IRO5yfoLTzwSY
+   u8UWGXW9BgaydoG6/nvstKF1YcEzLgsAoYEg1k4Wlbw8w0fto+Y3/fo2c
+   gUgi4prNnr0l4DU6WtgVlW/rGcocuEYUk3cSfh3iVuYVK8Kq1aZP2i6F7
+   8cgXPAUDNtCbvzn81eMtAcx+6ZwtFkh7cs5DHAVqP2hm0yZ/7uxhhR47E
+   uz6M/InvJ93mAtpF/y5Yn5owDSEF8hiCo+ZHUgraLRq62FFG2G2N1fHeX
+   dvsdVgh7G5Ix9fKHZx+IMqBotif71Fp7hFco7v/gQKn6Rwo2pa1v6UZSo
+   A==;
+X-CSE-ConnectionGUID: SRcbxdpKTFGfXSIw4j3UbQ==
+X-CSE-MsgGUID: eZ5C0HSlRqO1E9inr62bdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="53368459"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="53368459"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 02:26:08 -0800
+X-CSE-ConnectionGUID: WwpK7DXVRfmhJTh4+8Ce8g==
+X-CSE-MsgGUID: i9fleUyZRzG9kOncqzUtjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,265,1725346800"; 
+   d="scan'208";a="85208236"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 07 Nov 2024 02:26:07 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 802ED60D; Thu, 07 Nov 2024 12:26:06 +0200 (EET)
+Date: Thu, 7 Nov 2024 12:26:06 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Linux pin control <linux-gpio@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 6.13-2
+Message-ID: <20241107102606.GN275077@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zyt0j1MZe_o7ViyK@black.fi.intel.com>
-In-Reply-To: <Zyt0j1MZe_o7ViyK@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 7 Nov 2024 10:54:12 +0100
-Message-ID: <CAMRc=Meis72jVq9Q_e0PJVWQD-ifL0O1KnQM1sx-ux7SP=e07w@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 6.13-1
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux GPIO <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Wed, Nov 6, 2024 at 2:52=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Hi Linux GPIO  maintainers,
->
-> Tiniest update for v6.13-rc1 for GPIO ACPI code. Was a few weeks in Linux=
- Next
-> without any problems reported. Please, pull.
->
-> Thanks,
->
-> With Best Regards,
-> Andy Shevchenko
->
-> The following changes since commit 9852d85ec9d492ebef56dc5f229416c925758e=
-dc:
->
->   Linux 6.12-rc1 (2024-09-29 15:06:19 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git=
- tags/intel-gpio-v6.13-1
->
-> for you to fetch changes up to 12b0e305f50988b0c75f052f86d51b5353108ca5:
->
->   gpio: acpi: switch to device_for_each_child_node_scoped() (2024-09-30 1=
-4:25:54 +0300)
->
-> ----------------------------------------------------------------
-> intel-gpio for v6.13-1
->
-> * Use device_for_each_child_node_scoped() in ACPI routines
->
-> The following is an automated git shortlog grouped by driver:
->
-> acpi:
->  -  switch to device_for_each_child_node_scoped()
->
-> ----------------------------------------------------------------
-> Javier Carrasco (1):
->       gpio: acpi: switch to device_for_each_child_node_scoped()
->
->  drivers/gpio/gpiolib-acpi.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Hi Linus,
 
-Pulled, thanks!
+This is an updated Intel pinctrl pull request, now based on v6.12-rc1.
+Please pull for v6.13 merge window.
 
-Bart
+Thanks!
+
+The following changes since commit 9852d85ec9d492ebef56dc5f229416c925758edc:
+
+  Linux 6.12-rc1 (2024-09-29 15:06:19 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.13-2
+
+for you to fetch changes up to c6235c426d2ac78ab843a55cb1556b0f43175d9e:
+
+  pinctrl: elkhartlake: Add support for DSW community (2024-11-05 07:48:58 +0200)
+
+----------------------------------------------------------------
+intel-pinctrl for v6.13-2
+
+This includes following Intel pinctrl changes for v6.13 merge window:
+
+  - Expose DSW community on Elkhart Lake.
+  - Elaborate in the code comment the pull bias settings.
+
+Both have been in linux-next with no reported issues.
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      pinctrl: intel: Add a human readable decoder for pull bias values
+      pinctrl: elkhartlake: Add support for DSW community
+
+ drivers/pinctrl/intel/pinctrl-elkhartlake.c | 38 +++++++++++++++++++++++++++++
+ drivers/pinctrl/intel/pinctrl-intel.c       | 12 +++++++++
+ 2 files changed, 50 insertions(+)
 
