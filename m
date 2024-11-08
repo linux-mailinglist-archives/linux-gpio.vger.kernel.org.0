@@ -1,62 +1,74 @@
-Return-Path: <linux-gpio+bounces-12745-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12746-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 750689C20D3
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 16:43:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD9F09C214C
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 16:58:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A11CA1C219A9
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 15:43:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 336ADB22B88
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 15:58:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61F221B441;
-	Fri,  8 Nov 2024 15:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC2921B448;
+	Fri,  8 Nov 2024 15:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U9hBt24h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeKkpdqy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC71EF0BD;
-	Fri,  8 Nov 2024 15:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBFF45023;
+	Fri,  8 Nov 2024 15:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731080593; cv=none; b=i9zI4R9cQ4Bbq/Jv4y0h2yPN1oM9hRa54cTURHUNxMEjqSz7ShG2yZLqChxl0w/HAv098Apzm4ru5oLN3YbqrMHu5K/KTSEkaBaF6dM0ZEamD5N5DGVrJvZrlUlK0dwclSiS5KsQXl7FwG+eyi7X2iXCl+xjZqOHUOW6BTE056g=
+	t=1731081495; cv=none; b=DblHOWFWQSbZTomwXWIV66vPGZubdNq5zri2B12Ykd34EpcSE7zpQ2FPFfcSbNqE/l0/kyaFLaIV9VmF02gbCJYlnKDeomrqOlVP9grF2utkC0fXntZSIJGD4GHFyflGWAPVVtxyYXSis2Xu4Yo+nyhcuyRRCnzThsfrj8e0hlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731080593; c=relaxed/simple;
-	bh=b4X++9C+P9DTjtKS5lwaxeV29oAFiHpqKkhfWAGXw7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
-	 In-Reply-To:Content-Type; b=qRzAMawDB8MzYsC1iiIG2Z2jlOqrBZBLzkO9IJPonkTGP0fEQhDWv6ZuqwyBIA+gZRdHtt14/fjPGRE4uxh3kYq+CXYJ8gmyOTby94rwvmjwA/0biIv0sCQC4dyRJ/dEE0cxs+jX8nKWqQhXp4fo0mmpB097rUZiuaWjvc2SM9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=U9hBt24h; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh5hd062572;
-	Fri, 8 Nov 2024 09:43:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1731080585;
-	bh=AdSqTP2kP6+Pzmnx8mliJefFa0Q27jkrh0vetk8iYjM=;
-	h=Date:Subject:To:References:CC:From:In-Reply-To;
-	b=U9hBt24hYZcfGOyRFgtoTXNs9ttIFvG/L2D8lrXXqa/dGIV0as6x+Fk7/T00ITi2Q
-	 4SnkPUoTTteayQmYNBNuUFI33FBpV5Joixk6+YBVWRUkIurU4Kbe+b25FRBwahk68y
-	 gvS3kaS83ETQ9XS2kRDYWOFqIDUp0KSrbfvJQ6Lo=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh583116200;
-	Fri, 8 Nov 2024 09:43:05 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 8
- Nov 2024 09:43:05 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 8 Nov 2024 09:43:05 -0600
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh5gp112055;
-	Fri, 8 Nov 2024 09:43:05 -0600
-Message-ID: <e54b0558-80ca-4352-b54a-22f9eb8c9001@ti.com>
-Date: Fri, 8 Nov 2024 09:43:05 -0600
+	s=arc-20240116; t=1731081495; c=relaxed/simple;
+	bh=DnSthTbu7M7mwlarqGz7sH5e43UB54ZbBR8qTG1CjLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PsMIooivPsoJrloEm2I/2Kzns1PqAynWEyEAEDqfYIbRojoT/yBOOjmeG7mJZ50pBUCippQMTFh6lFsJLCmX4O+tCw/RF0N4CCrTN8O3bHJAmLJ/0dRfZEhO/ime3s4htI7cOwkUniRNsQEu6FWl+PoI/u2LJgCUHoVbDgEVJhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eeKkpdqy; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53a007743e7so2857515e87.1;
+        Fri, 08 Nov 2024 07:58:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731081492; x=1731686292; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bMuVQ8Erg4hrrl+JVXSYoq6sab0sBpa1d8BTm5zUoVI=;
+        b=eeKkpdqyQ4/RUbB/DMXgNPAnT2qRENeKmNw/uOEFpXivKbf7a+exh7ZWJvxciF4t5R
+         un3Nkyx0wiXOYT7npEl3J1cm3ImY8PyM7gY60iD3heUBZhvLvEGKpPtZmHT3arT6/b0b
+         am5axUGVDuJ+FgVZzJAwdcS7ohnOsvzmmiR4Scb+bEJVJJ8SoNcUcc4oj9FBsCybef6V
+         Lt58HWqbruxIh6P+IO5ZnpsqPBMnyffk22QH1BUb2O7tsDF7aRPk/W9ypmnSfLuBw319
+         UIIaupYv+kN/i9mvULGHWrkd5SKWWAe914A/i8E5HmBtLAYG9p/BPbdGCDSajiQc26dP
+         AFMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731081492; x=1731686292;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bMuVQ8Erg4hrrl+JVXSYoq6sab0sBpa1d8BTm5zUoVI=;
+        b=FgBICUrrh6BoZPkEPPyoXRxhUGtw0o67XUPrsHv1eyd/rJTm6VKv2ROs7ippxFTxQF
+         J4zS/cScH1OF0Uo81JZ/rtdfnT0dUmktyZK/T4Dn1CLHHWjUnc8xqSm45Lz+L0hP3oDy
+         +qJd6xHQSDpU1u2+k2FretHdTc0Ruv5AEsW1wOT5V5gJs3WAs4f31Aoa0dpVFiK11LKN
+         z82jhdw/NepwYIpPUWh8rgDLVRHBPmqi0wqM5uoxawmsQlnyFZHOYq00tTNZZ3RTsFl3
+         r3lLe+ZCU+Sj7JpmdXoFWsL/6Vxudq69vibrNuhBj3pOWnKIXR6ci8aGohdUGdbAj8bY
+         5fCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBGhYYVHJdeheN4vS0QxQOf5LabBZ0/jFS2PGkeIp/Busx+kqgMcolUj3KA/8adlOYHP0tfNq9rdtc@vger.kernel.org, AJvYcCVIOVplChgQVBPz4PnJ8KBaYdVbYDcEm6hzJKTo3ULTPNMKBDQzC79hPmKK58xDvELJMgulpdDaufhb@vger.kernel.org, AJvYcCWAalcxi60hHRC2gbTY4oZ4kah2MIxhPy2XLmp2yYTJdl8HpsMOSLYkY8ETUaIWnf6XlAA7VUA3K22MVGza@vger.kernel.org, AJvYcCXAJmiBvxeAmiffKl5JxKAbaUbg6b1no+ODwaRRmdRtQbR6UcmATErKqcAELnX/0xZme+wJs9y1y4yN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ3BZU6R0UUwJCCSAR5Gu2sMxdbvsfyv3hqaFOJqZ0fwsAHNg6
+	kmfch6FKxg74Su0PtrbWxUlvSh17khNcDgaVzMIp87TQw2zXrY1l
+X-Google-Smtp-Source: AGHT+IE+YJRPuE45zAJuly7sRzZ9edVWYuRFA055vs6Y4HK/g7Ba5F53rGd+uT+sYiCfKR7OvGEqog==
+X-Received: by 2002:a05:651c:b10:b0:2fb:6169:c42a with SMTP id 38308e7fff4ca-2ff20225b59mr18443731fa.30.1731081491747;
+        Fri, 08 Nov 2024 07:58:11 -0800 (PST)
+Received: from ?IPV6:2001:470:dcf4:ac:f506:8665:9278:2fb6? ([2001:470:dcf4:ac:f506:8665:9278:2fb6])
+        by smtp.googlemail.com with ESMTPSA id 38308e7fff4ca-2ff178df92asm6986411fa.9.2024.11.08.07.58.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Nov 2024 07:58:10 -0800 (PST)
+Message-ID: <cf32d676-831c-4c3f-8965-c9be3abd5300@gmail.com>
+Date: Fri, 8 Nov 2024 18:58:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,76 +76,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2] gpio: omap: Add omap_gpio_disable/enable_irq
- calls
-To: Bartosz Golaszewski <brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>
-References: <20241031145652.342696-1-jm@ti.com> <7h5xp7owmy.fsf@baylibre.com>
- <520c7e6b-f9c0-441f-8810-8e5ede668f6a@ti.com>
- <20241105190005.cg6dpeedbirgflqm@iaqt7>
- <CAMRc=MexFELAEVpEg39teG=Yr-R71gwxRR9TtGDwHjVijzDeWA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] add driver for the WCH CH341 in I2C/GPIO mode
+To: frank zago <frank@zago.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski
+ <bgolaszewski@baylibre.com>, Wolfram Sang <wsa@kernel.org>,
+ Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+ Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20220616013747.126051-1-frank@zago.net>
 Content-Language: en-US
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Kevin Hilman
-	<khilman@kernel.org>,
-        Bin Liu <b-liu@ti.com>, <linux-omap@vger.kernel.org>
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <CAMRc=MexFELAEVpEg39teG=Yr-R71gwxRR9TtGDwHjVijzDeWA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+In-Reply-To: <20220616013747.126051-1-frank@zago.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Bartosz,
 
-On 11/6/24 7:42 AM, Bartosz Golaszewski wrote:
-> On Tue, Nov 5, 2024 at 8:00 PM Bin Liu <b-liu@ti.com> wrote:
->>
->> On Tue, Nov 05, 2024 at 12:47:58PM -0600, Judith Mendez wrote:
->>> Hi Kevin,
->>>
->>> On 11/1/24 9:29 AM, Kevin Hilman wrote:
->>>> Hi Judith,
->>>>
->>>> Judith Mendez <jm@ti.com> writes:
->>>>
->>>>> From: Bin Liu <b-liu@ti.com>
->>>>>
->>>>> Add omap_gpio_disable_irq and omap_gpio_enable_irq
->>>>> calls in gpio-omap.
->>>>>
->>>>> Currently, kernel cannot disable gpio interrupts in
->>>>> case of a irq storm, so add omap_gpio_disable/enable_irq
->>>>> so that interrupts can be disabled/enabled.
->>>>>
->>>>> Signed-off-by: Bin Liu <b-liu@ti.com>
->>>>> [Judith: Add commit message]
->>>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>>
->>>> Thanks for this patch.  Can you give a bit more context on the
->>>> problem(s) this solves and on which SoCs/platforms it was
->>>> developed/validated?
->>>
->>> Sorry for the late response. Patch was tested/developed on am335x
->>> device BBB, If you feed a PWM signal at 200KHz frequency to
->>> GPIO, and execute gpiomon 0 12 &, Linux will be unresponsive
->>> even after CTRL+C without these 2 functions in this patch. Once
->>> this patch is applied, you can get console back after hitting
->>> CTRL+C and then proceed to kill gpiomon.
->>
->> In addtion to Judith's explanation, when the PWM is applied to a GPIO
->> pin, kernel detects the interrupt storm and disables the irq, however,
->> without these callbacks, this gpio platform driver doesn't really
->> disable the interrupt in the gpio controller, so the interrupt storm is
->> still happening and handled by this gpio controller driver then causes
->> Linux unresponsive.
->>
->> -Bin.
+Hi Frank,
+
+
+Are you going to further proceed with this patch set? As far as I can 
+see, there were no updates since 2022.
+
+
+16.06.2022 04:37, frank zago пишет:
+> The CH341 is a multifunction chip, presenting 3 different USB PID. One
+> of these functions is for I2C/SPI/GPIO. This new set of drivers will
+> manage I2C and GPIO.
 > 
-> I take it that this is a fix then and should have relevant Fixes and Cc tags?
-
-ok, will send v3 with fixes tag.
-
-~ Judith
+> Changes from v5:
+> Addressed reviewers' comments.
+> Better handling of 0-bytes i2c commands
+> Use of better USB API.
+> 
+> Changes from v4:
+> I should have addressed all the comments: rework of the GPIO interrupt
+> handling code to be more modern, changes in Kconfig wording, some code
+> cleanup.
+> Driver was tested again with up to 4 of these devices. No
+> error seen.
+> 
+> Changes from v3:
+>    - really converted to an MFD driver. Driver is now split into 3
+>      modules (MFD+I2C+GPIO).
+>    - minor code cleanups
+> 
+> Changes from v2:
+>    - bug fixes
+>    - more robust USB enumeration
+>    - Changed to an MFD driver as suggested
+> 
+> During testing I found that i2c handles hot removal, but not gpio. The
+> gpio subsystem will complain with 'REMOVING GPIOCHIP WITH GPIOS STILL
+> REQUESTED', but it's a gpiolib issue.
+> 
+> Changes from v1:
+>    - Removed double Signed-off-by
+>    - Move Kconfig into the same directory as the driver
+> 
+> frank zago (4):
+>    mfd: ch341: add core driver for the WCH CH341 in I2C/SPI/GPIO mode
+>    gpio: ch341: add GPIO MFD cell driver for the CH341
+>    i2c: ch341: add I2C MFD cell driver for the CH341
+>    docs: misc: add documentation for ch341 driver
+> 
+>   Documentation/misc-devices/ch341.rst | 109 ++++++++
+>   Documentation/misc-devices/index.rst |   1 +
+>   MAINTAINERS                          |   9 +
+>   drivers/gpio/Kconfig                 |  10 +
+>   drivers/gpio/Makefile                |   1 +
+>   drivers/gpio/gpio-ch341.c            | 385 +++++++++++++++++++++++++++
+>   drivers/i2c/busses/Kconfig           |  10 +
+>   drivers/i2c/busses/Makefile          |   1 +
+>   drivers/i2c/busses/i2c-ch341.c       | 377 ++++++++++++++++++++++++++
+>   drivers/mfd/Kconfig                  |  10 +
+>   drivers/mfd/Makefile                 |   1 +
+>   drivers/mfd/ch341-core.c             |  90 +++++++
+>   include/linux/mfd/ch341.h            |  26 ++
+>   13 files changed, 1030 insertions(+)
+>   create mode 100644 Documentation/misc-devices/ch341.rst
+>   create mode 100644 drivers/gpio/gpio-ch341.c
+>   create mode 100644 drivers/i2c/busses/i2c-ch341.c
+>   create mode 100644 drivers/mfd/ch341-core.c
+>   create mode 100644 include/linux/mfd/ch341.h
+> ---
+> 2.32.0
 
 
