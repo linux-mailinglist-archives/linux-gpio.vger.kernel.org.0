@@ -1,105 +1,139 @@
-Return-Path: <linux-gpio+bounces-12744-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12745-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A6FF9C1CDF
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 13:24:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 750689C20D3
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 16:43:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 522AB1F2463C
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 12:24:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A11CA1C219A9
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 15:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4493E1E7C19;
-	Fri,  8 Nov 2024 12:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61F221B441;
+	Fri,  8 Nov 2024 15:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI2Pr8n3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U9hBt24h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC511E47CE;
-	Fri,  8 Nov 2024 12:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC71EF0BD;
+	Fri,  8 Nov 2024 15:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731068655; cv=none; b=J1X3AEoyfdV66oCCe2HAUiEYCq0k7/fra2IKOG81dnurLuFE8m35lFJU0/hI2zhd7CauuRatXdXa5q/fEQ/nl7HhA7ClgS2D3+QPJMDA8+3MZopiLYmnMIfbtya4SgRkkoMw7lLK8jlETfzgD7p4Os4kUQzDodVprnuNX3wRC78=
+	t=1731080593; cv=none; b=i9zI4R9cQ4Bbq/Jv4y0h2yPN1oM9hRa54cTURHUNxMEjqSz7ShG2yZLqChxl0w/HAv098Apzm4ru5oLN3YbqrMHu5K/KTSEkaBaF6dM0ZEamD5N5DGVrJvZrlUlK0dwclSiS5KsQXl7FwG+eyi7X2iXCl+xjZqOHUOW6BTE056g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731068655; c=relaxed/simple;
-	bh=ysuLhuMYEEC7oX4y0iwjBEgPL1C/5lpgDLTDYdB0KFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W07JqtE7jol6PHptWAQmdrferfjMTiOA7UtB5P18R42c2KurGwr+I9c0lHYfkiMDcQ+bJ8ugVrTxmjzdT3GG9AhrB7SaFTXhDxADJ0p9gZS/Iae9qZROVRZAFEUws8QLMXgPcxmYdLhIjW5imvW/XBUlQ08poC8aOTPV84QKDQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI2Pr8n3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A0EC4CECD;
-	Fri,  8 Nov 2024 12:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731068654;
-	bh=ysuLhuMYEEC7oX4y0iwjBEgPL1C/5lpgDLTDYdB0KFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZI2Pr8n3D33cVl/heubKCb1AtALRbMn0WDX2jXxKZvqNOBSAr3+XQKZPF9yNCFWrZ
-	 Wf1wLykw0HBLbfov4EzKLHUQhk4XEdKt02QUbFNxvCbA+mZvTFybivzwlPM668X4PU
-	 1bd9DSyVEYXsTHUazZinuQ3i5j7DXLfR3H/3GC5f14Fu02esA6XLSJhCH5aAS5h/Vr
-	 NUXSBwWbCjBob32hiPpy3Nb/j627PV1BP/U4adaBUaTdKHHR7FVCdEUmg4DqihjvRn
-	 ntTXDLYVW5mQOddiSLgh3hIOUlcJI36fwRfzNOUXOj/HepNR2VEByg33eFfiOmtc8r
-	 2/wyK8i0RTl1g==
-Date: Fri, 8 Nov 2024 13:24:09 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
-	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v3 06/14] dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
-Message-ID: <ufamoryw2k3oquvusqzs2e7ixu6iptfbpmdevqthbps5w7szw3@6c7enohqv537>
-References: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org>
- <20241107-msm8917-v3-6-6ddc5acd978b@mainlining.org>
+	s=arc-20240116; t=1731080593; c=relaxed/simple;
+	bh=b4X++9C+P9DTjtKS5lwaxeV29oAFiHpqKkhfWAGXw7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
+	 In-Reply-To:Content-Type; b=qRzAMawDB8MzYsC1iiIG2Z2jlOqrBZBLzkO9IJPonkTGP0fEQhDWv6ZuqwyBIA+gZRdHtt14/fjPGRE4uxh3kYq+CXYJ8gmyOTby94rwvmjwA/0biIv0sCQC4dyRJ/dEE0cxs+jX8nKWqQhXp4fo0mmpB097rUZiuaWjvc2SM9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=U9hBt24h; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh5hd062572;
+	Fri, 8 Nov 2024 09:43:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1731080585;
+	bh=AdSqTP2kP6+Pzmnx8mliJefFa0Q27jkrh0vetk8iYjM=;
+	h=Date:Subject:To:References:CC:From:In-Reply-To;
+	b=U9hBt24hYZcfGOyRFgtoTXNs9ttIFvG/L2D8lrXXqa/dGIV0as6x+Fk7/T00ITi2Q
+	 4SnkPUoTTteayQmYNBNuUFI33FBpV5Joixk6+YBVWRUkIurU4Kbe+b25FRBwahk68y
+	 gvS3kaS83ETQ9XS2kRDYWOFqIDUp0KSrbfvJQ6Lo=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh583116200;
+	Fri, 8 Nov 2024 09:43:05 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 8
+ Nov 2024 09:43:05 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 8 Nov 2024 09:43:05 -0600
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4A8Fh5gp112055;
+	Fri, 8 Nov 2024 09:43:05 -0600
+Message-ID: <e54b0558-80ca-4352-b54a-22f9eb8c9001@ti.com>
+Date: Fri, 8 Nov 2024 09:43:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241107-msm8917-v3-6-6ddc5acd978b@mainlining.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2] gpio: omap: Add omap_gpio_disable/enable_irq
+ calls
+To: Bartosz Golaszewski <brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>
+References: <20241031145652.342696-1-jm@ti.com> <7h5xp7owmy.fsf@baylibre.com>
+ <520c7e6b-f9c0-441f-8810-8e5ede668f6a@ti.com>
+ <20241105190005.cg6dpeedbirgflqm@iaqt7>
+ <CAMRc=MexFELAEVpEg39teG=Yr-R71gwxRR9TtGDwHjVijzDeWA@mail.gmail.com>
+Content-Language: en-US
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Kevin Hilman
+	<khilman@kernel.org>,
+        Bin Liu <b-liu@ti.com>, <linux-omap@vger.kernel.org>
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <CAMRc=MexFELAEVpEg39teG=Yr-R71gwxRR9TtGDwHjVijzDeWA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Nov 07, 2024 at 06:02:47PM +0100, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wr=
-ote:
-> +$defs:
-> +  qcom-msm8917-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configu=
-ration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-3][0-3])$"
+Hi Bartosz,
 
-That's not a good pattern, unless really gpio129 is not existing?
+On 11/6/24 7:42 AM, Bartosz Golaszewski wrote:
+> On Tue, Nov 5, 2024 at 8:00 PM Bin Liu <b-liu@ti.com> wrote:
+>>
+>> On Tue, Nov 05, 2024 at 12:47:58PM -0600, Judith Mendez wrote:
+>>> Hi Kevin,
+>>>
+>>> On 11/1/24 9:29 AM, Kevin Hilman wrote:
+>>>> Hi Judith,
+>>>>
+>>>> Judith Mendez <jm@ti.com> writes:
+>>>>
+>>>>> From: Bin Liu <b-liu@ti.com>
+>>>>>
+>>>>> Add omap_gpio_disable_irq and omap_gpio_enable_irq
+>>>>> calls in gpio-omap.
+>>>>>
+>>>>> Currently, kernel cannot disable gpio interrupts in
+>>>>> case of a irq storm, so add omap_gpio_disable/enable_irq
+>>>>> so that interrupts can be disabled/enabled.
+>>>>>
+>>>>> Signed-off-by: Bin Liu <b-liu@ti.com>
+>>>>> [Judith: Add commit message]
+>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>>
+>>>> Thanks for this patch.  Can you give a bit more context on the
+>>>> problem(s) this solves and on which SoCs/platforms it was
+>>>> developed/validated?
+>>>
+>>> Sorry for the late response. Patch was tested/developed on am335x
+>>> device BBB, If you feed a PWM signal at 200KHz frequency to
+>>> GPIO, and execute gpiomon 0 12 &, Linux will be unresponsive
+>>> even after CTRL+C without these 2 functions in this patch. Once
+>>> this patch is applied, you can get console back after hitting
+>>> CTRL+C and then proceed to kill gpiomon.
+>>
+>> In addtion to Judith's explanation, when the PWM is applied to a GPIO
+>> pin, kernel detects the interrupt storm and disables the irq, however,
+>> without these callbacks, this gpio platform driver doesn't really
+>> disable the interrupt in the gpio controller, so the interrupt storm is
+>> still happening and handled by this gpio controller driver then causes
+>> Linux unresponsive.
+>>
+>> -Bin.
+> 
+> I take it that this is a fix then and should have relevant Fixes and Cc tags?
 
-> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc1_rclk, sdc2_clk,
-> +                      sdc2_cmd, sdc2_data, qdsd_clk, qdsd_cmd, qdsd_data=
-0,
-> +                      qdsd_data1, qdsd_data2, qdsd_data3 ]
-> +        minItems: 1
-> +        maxItems: 16
+ok, will send v3 with fixes tag.
 
-Best regards,
-Krzysztof
+~ Judith
 
 
