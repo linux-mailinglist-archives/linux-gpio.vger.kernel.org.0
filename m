@@ -1,118 +1,103 @@
-Return-Path: <linux-gpio+bounces-12712-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12713-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10EEF9C1A00
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 11:10:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E91719C1A0C
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 11:12:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 252CF281D44
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 10:10:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB14C281FAD
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 10:11:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD0691E1C10;
-	Fri,  8 Nov 2024 10:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12E21E230C;
+	Fri,  8 Nov 2024 10:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o7pO4ipd"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="r5JSBQFv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEAB13A27D;
-	Fri,  8 Nov 2024 10:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681B51D3625;
+	Fri,  8 Nov 2024 10:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731060594; cv=none; b=ngWUhAMnjYpMD7txMmM813eotcSjbloX96BRgLcKxGbhNTm9ITArgjvalbw1UTx8uFBA9+mPv+YZyMxWYzWZOpGneteeWQXUuLZM7r7ee5nNsPwMoKLygX8pHgfmCAB5IS5OHQUtkYKW84w1FqFqb2Ys3WQVzSMZE3z0wj65zN0=
+	t=1731060712; cv=none; b=J5nueqxfbqEkBiO7QlcQUoJPhcEqH/6qUNTcmdHPuCDP9SLGQ2CktXzChasd1ihbMFCnlBYEo6EqMbtKOhwdkWEh2nTCguiZQALSoCBIUojDJUhIegEreBgJNzv3Whoa1uU+CBu9/Ds+UKybcOkTlx32Y2mBSiz49pAYsdu0m7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731060594; c=relaxed/simple;
-	bh=/Owre8X2bmyFdWdh5IzgAEzR4u/DVf5RnbdecLrI8gU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=glWOhjDKA0webCd4ysQSF+paDdRT35EPeYGFTpVVwBqx7RnRioObthglULoDvTubDOmtGdqfVrNnf1NL1qQE5bI3QYlDK6wUC3cc0R40UKREx8TgBttXLG/xy46jjyksRbox6xZ2jX2Dq0SbMMuGoM+SoB4icF7JWZa6FfNR3rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o7pO4ipd; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A32631C0004;
-	Fri,  8 Nov 2024 10:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1731060583;
+	s=arc-20240116; t=1731060712; c=relaxed/simple;
+	bh=l/rUYTtLBoZdyLaTZknHT/dDTcsmBbHTevO92xNdKD4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=EmZmVGmHeY32943fwZha2G4J8Eoy1VdUi2HtPso5IZnlNEs8gfx5BO4IQnJgaIJ0S8Q+2OUQXa4PdxnyYtS6QXLauQDDH4HOLIHVJ1cz/TGYhVhF6Chh6pPdn5+b/KWZa+SqnBL0Fgkw0D6n1gmRF/sZ7hjfe5qYN4nVmRHUJeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=r5JSBQFv; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [127.0.0.1] (254C262E.nat.pool.telekom.hu [37.76.38.46])
+	by mail.mainlining.org (Postfix) with ESMTPSA id B2ED3E45BA;
+	Fri,  8 Nov 2024 10:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1731060707;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zo9a3WX+AKY7z29IK1TOw93r3Q+54c84vMyZ0f7WcbU=;
-	b=o7pO4ipdihEntoMdvZqFEKJjTRZ7/CeS3sgg7kh+laZ9rFh+g4vs5Sps91RvX9Vvuy0DVU
-	+Fu3Am+YaWELSYw33/fpYLgb/sFnkcQF3P0w7jllmxDrVQ5bA/0b2g5TFhKrygAOPEFi5P
-	WD3Lwb4z6eVmrjDHe8uYBFLQyZ0hXBeC+CUDP0ErV6zCzvvTSYDDyUq1c61/HEjPHydjzY
-	cNEkSE+2xQ00+zc2gUacgr93r35achp3BRsCupJlsrBkrJAfVWpF49gK/8zBO4npsf9QCH
-	54tRNmFjjkDcnBPe668b5XKqzVMMcu6Pec56U8mD2mUzXMQ8NZQu0a2VpkEX1Q==
-Date: Fri, 8 Nov 2024 11:09:38 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan
- Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan
- <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro Yamada
- <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: of_property: Assign PCI instead of CPU bus address
- to dynamic PCI nodes
-Message-ID: <20241108110938.622014f5@bootlin.com>
-In-Reply-To: <20241108094256.28933-1-andrea.porta@suse.com>
-References: <20241108094256.28933-1-andrea.porta@suse.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=l/rUYTtLBoZdyLaTZknHT/dDTcsmBbHTevO92xNdKD4=;
+	b=r5JSBQFvrXn68+6+DaTg3bewx71mLwK1M9p4Z9Yy0zL4f+JLUcontlSns9CG0wIY0Y71hs
+	IQZtysEWobt/PgYn5eubVunNvcdiptorp93W5Aw3QKruKNp2xb14Y0+v48wRyDI23vuqaA
+	hZrFGYWvFtyE2VconJxJsR6Tf4DS4o2N53912gPUidmbXALU4eDiG8hdgwknRSSJluo7Wb
+	jCQMKZAJ8gJ4phJkthoq5wlhGZDaQXeLU+iMGV5qlxwqC3ZyEVc+8PIhGJ2Y1mD6UdYVqa
+	7mgaw25TyJfOJUWgpp91CnSpvp2IkYHDmMCBOxXRV1/spsmD67JINl+vX+Ecqw==
+Date: Fri, 08 Nov 2024 11:11:46 +0100
+From: =?ISO-8859-1?Q?Barnab=E1s_Cz=E9m=E1n?= <barnabas.czeman@mainlining.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>,
+ Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Dang Huynh <danct12@riseup.net>,
+ =?ISO-8859-1?Q?Otto_Pfl=FCger?= <otto.pflueger@abscue.de>
+Subject: Re: [PATCH v3 00/14] Add MSM8917/PM8937/Redmi 5A
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CACRpkdamugexe6y24Tk2fDYPP_t7QLynibdGQrUMFMwF4y90cw@mail.gmail.com>
+References: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org> <CACRpkdamugexe6y24Tk2fDYPP_t7QLynibdGQrUMFMwF4y90cw@mail.gmail.com>
+Message-ID: <43C3A05C-2D28-428B-AEB4-7BC92C55B66B@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrea,
 
-On Fri,  8 Nov 2024 10:42:56 +0100
-Andrea della Porta <andrea.porta@suse.com> wrote:
 
-> When populating "ranges" property for a PCI bridge or endpoint,
-> of_pci_prop_ranges() incorrectly use the CPU bus address of the resource.
-> In such PCI nodes, the window should instead be in PCI address space. Call
-> pci_bus_address() on the resource in order to obtain the PCI bus
-> address.
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Herve Codina <herve.codina@bootlin.com>
-> ---
-> This patch, originally preparatory for a bigger patchset (see [1]), has
-> been splitted in a standalone one for better management and because it
-> contains a bugfix which is probably of interest to stable branch.
-
-Nothing to say for the patch itself.
-
-Just here, you mentioned "see [1]" but you didn't provide the link.
-
-IMHO, this is not blocking for applying the patch but, just for other people
-looking at this email in the mailing list, can you reply providing the link?
-
-Best regards,
-Hervé
+On November 8, 2024 10:03:00 AM GMT+01:00, Linus Walleij <linus=2Ewalleij@=
+linaro=2Eorg> wrote:
+>On Thu, Nov 7, 2024 at 6:02=E2=80=AFPM Barnab=C3=A1s Cz=C3=A9m=C3=A1n
+><barnabas=2Eczeman@mainlining=2Eorg> wrote:
+>
+>> This patch series add support for MSM8917 soc with PM8937 and
+>> Xiaomi Redmi 5A (riva)=2E
+>>
+>> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <barnabas=2Eczeman@mainli=
+ning=2Eorg>
+>
+>I merged patch 1-4 from the v2 series, don't think the have any differenc=
+es
+>in v3=2E
+They are same I will remove them if there will be more iteration=2E
+>
+>Yours,
+>Linus Walleij
 
