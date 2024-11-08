@@ -1,106 +1,151 @@
-Return-Path: <linux-gpio+bounces-12710-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12711-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BF2B9C18CF
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 10:09:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D1E89C1967
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 10:42:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8E16B221BE
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 09:09:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE9031C24895
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 09:42:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91EA91E0DD7;
-	Fri,  8 Nov 2024 09:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC6D1E1A1C;
+	Fri,  8 Nov 2024 09:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ke1fw9pI"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XR0saLoa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A368E1E00AC
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Nov 2024 09:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441C91E0DAC
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Nov 2024 09:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731056964; cv=none; b=jC9OoOYMsk4PwPSRJyj8OKX/HFodUTJ6iphazr3jAnDSaYsl7S6nVeA3i96oWO/A58OcRQB5Kem8LUA2F0zR8o02DadCZhbxMTmMDq00mbe1Kvya2uMV7v45/q06Tb/DCvkSCh8oztiIBE62nWGb3TxTsuRnuoKSaFA48VfTIo8=
+	t=1731058963; cv=none; b=JPrtZQpAxmKviyRdGh3uVdabDSzueo5SqoVQOjoKUtBsIBrqWUO0pCyWrUvYuN/YeQ0IOwbu0rSbEXnhFwaU0KJj0wpjxRa9yk8iHjhnZq2fTSRboPV6FxI5JfRc3erieEWvvLMrPWUuKSUGxtHrcktePj2vHX2VZ/Xq17BeNKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731056964; c=relaxed/simple;
-	bh=FA4vkNb/mitqyAciN2f5UTCEggzC8PzDjAk9Yl3f00E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JhCb2zEW0nkZ8twWDDLg8WlUd4J0/0ctzN25n4TV1okqnhDn3rrTz+piCcKvI8lUzsAJRtfTa1OZkrWRa0fc587rBpTV40n8aAPRFXb/Hw4pgi05KsaPleuKzYv2Vs8MmglfL/TCRT9Zi1thp6mOE94cIMPERz4KHT9mFIa/66Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ke1fw9pI; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-539eb97f26aso1668812e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2024 01:09:22 -0800 (PST)
+	s=arc-20240116; t=1731058963; c=relaxed/simple;
+	bh=jWCpeLpkpA4YVoOMmIryFg1kg6ULL3RS7k8t4Z+C5X0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C9+IGg0b7HcQ6BZ2wkZuzDB36HZUmPgFvIaQ6hNkr5oHDuBXm0+LCkoDNfBsCbmpZyluJaYg0SgFoK2/sJ2ydN1li/zmjDPRTfDEnt/DoA2D7psJ9mO4N7A6ltWDHAVpX5GbTsAbRp1Y7nK6Um7C0cxK3dauAe2ILFjHqNBKU8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XR0saLoa; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a5f555cfbso145013466b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2024 01:42:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731056961; x=1731661761; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FA4vkNb/mitqyAciN2f5UTCEggzC8PzDjAk9Yl3f00E=;
-        b=Ke1fw9pIz5UfqKUPmgbYSC5Qa8sfPp1I7nVcrq4XW2W12/DHpbfnDpygH7X0mjaSvp
-         xFlIGMw2bB/qTC/ky79qW7v4QA+2wqDtbSxShDyFmk1iCkXuxQb/EpNMW2SfGglhQWYn
-         La088s1PWHi62Trnac4JXAvu+ryJ6QGA1mjcrDexEicB/qlIPS+jXN/FNpOLXebxhvFN
-         UZJYaWNP1EfStZclagbmRV41+O3jDcNt/BHnL0JhPJ0MHjqu5sPGFL2TCsgRjtFAL99p
-         sBZVIiKcoulsMDisxHUG8Lo8s9HimEvJN2LdoOCEW7iy/4XO7TXPEOLrtStvfv9+sQhz
-         7mpQ==
+        d=suse.com; s=google; t=1731058959; x=1731663759; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=edr4i5ZXuzi2MqMxkWzTe9XDLfbB9N2JCAr3MU/xkAQ=;
+        b=XR0saLoa0ONaS3dhsQouwcbhFB1/EfQETF2IRDWoymrBj8tkGjHaEc3e1eM7qTMKxG
+         wnFTyFchqpr3NeD5qJKQY8r/FcpkZDGHulOip3CT4BgKDbbjjCLNkpzJDOJvBqUee2/n
+         mSlvCMV6N602vvCPAr4eanj89VlvXbisQNdgto913yJ2/xznvTwxwmWC8supDKouwhwz
+         V0ah+sgaaLvI4kmJVvCmgy4LKyVeWEcqtZ2RHPx5kiSMAUEJ6XEwxZIhpgfa/zs99p6K
+         Eo/4NA3QqO+bPmonVuxgD32dF6xxThKMGDx08eTHpztjK2VJC8ot+kO2PjVqiaAbbk4K
+         Je9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731056961; x=1731661761;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FA4vkNb/mitqyAciN2f5UTCEggzC8PzDjAk9Yl3f00E=;
-        b=bkhAnIdqNlKZKMpK69tm9YkRqXUEdFiFkQabtdj+HFkvBthYe98p9FZbG2TkumwVk2
-         PdTncDtyeulfzFvXteLuRzQ11ZLe2GQ2H0+TOsZLxBcxLRly9IklkN9zDtrv98oUEocM
-         3CE6dx0S90RMiE+AQyThCl2bigysAQ4tySY4LmEs1pA6dXIvl3kOXrwLYIMnVkTJ4PXY
-         7DaD4Z9loIAzZeGD6jlLYhkuaFF8vjMCQPvaSbUgQU076hCneA3cz13ji32xUP66JpDD
-         SrHhy/MzdH3Mj6qR9t+cczbHNDDV4jISCTE/IGi7XF1yYaQ8O/U4vMUJ6rjt40i+6orK
-         trsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2tJlS9o6bvCFvSJsOiarHKc6b3ADpAjt0eXckkUztHYGFQlNCtgc+bqd5/tkHA2ZmNdn8d22Yh2Or@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1nF0LijqO/JXerYyR3+F1xWTw9u3ubaYWA5JcMR+gjdJay/E3
-	RzQIAMqvnKBqBBwJpO6Mes3KgQAn3VDjdVFAUqXylSTnfCAuyhzQ/ai2Rm2PkVr09X5abvy6qF4
-	/gpW/BnSKnhsJvRErfsX/20nTQEPe5uWj0q0YjBwfYH1pQsVV
-X-Google-Smtp-Source: AGHT+IHhr+fMSbLe+Spkx6S2HAMA1BNkht2ZD+kKrNtINXG0wH4E9HYyfyu1IwPxOm2Qn/Xqfjd2BS52cNcB5ulPJ58=
-X-Received: by 2002:a05:651c:211f:b0:2f6:62a1:25fe with SMTP id
- 38308e7fff4ca-2ff2028ea31mr8862541fa.23.1731056960773; Fri, 08 Nov 2024
- 01:09:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731058960; x=1731663760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=edr4i5ZXuzi2MqMxkWzTe9XDLfbB9N2JCAr3MU/xkAQ=;
+        b=HWz5YFSn+F1s+/RmCtf4vA3iUwkU9XlTysPSkO1zD4egJ28aY70rVdfvJOmgV6EZqi
+         Hc4RoHrqSlmmKO/tER5mPhEXRuUsJe82OLkmqSSJ/i3CNmWTEFNLr/DYE+05W7SIX255
+         y8aHkWi9hjTxONtFIY4AZBNQwy5JWQxRF5V5CH2s5chXoeuvDkbE2XBPfLttcmcVOk5j
+         ny8zoBgTGKV+SMF14k1I19cEJ0TlvlTcr07UcyawM/Q37CTVLYYZSLjlET7Eiz0h+cRt
+         GxbTz1m1wmp+b2Bmx2H9lIApgQHNYe3rQ92ECqIB9/os4cknOLMwYeJOVky80AErOHA8
+         CtDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa1TnGyeNBVrkS1aLlFDhnbg2D3dREMtxvvM4BlENX/WOFCfI92oz9IjXpytGSeftA0JyasZUpixxZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbzwIpR3H/GQSVr+xIXXy1GF2315w84tAyZXvHPHK+H0UqvmYi
+	UI41R1xM+1V4QJCWU2OglmqDa8rX8s/ICF8NIdJ+42PcXgVJbeqaRTyUrx0HqsA=
+X-Google-Smtp-Source: AGHT+IGmVFg6dGCdJ94MvP+GtpTJm4h6Vp+aWc3AX4E8KZIkMCx5imWZRQaFghSdUOFYkB1RH36WSQ==
+X-Received: by 2002:a05:6402:3510:b0:5c9:34b4:69a8 with SMTP id 4fb4d7f45d1cf-5cf0a2fb6f9mr2077935a12.6.1731058959540;
+        Fri, 08 Nov 2024 01:42:39 -0800 (PST)
+Received: from localhost (host-79-35-211-193.retail.telecomitalia.it. [79.35.211.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03c4ed68sm1765328a12.63.2024.11.08.01.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Nov 2024 01:42:39 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI: of_property: Assign PCI instead of CPU bus address to dynamic PCI nodes
+Date: Fri,  8 Nov 2024 10:42:56 +0100
+Message-ID: <20241108094256.28933-1-andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241105064206.43626-1-hs@denx.de> <20241105064206.43626-3-hs@denx.de>
-In-Reply-To: <20241105064206.43626-3-hs@denx.de>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 8 Nov 2024 10:09:09 +0100
-Message-ID: <CACRpkdZWDZcekXBJcW7XkfrmPiQqAiECVF_S9DMcFMMgRg8qsQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: pinctrl: sx150xq: allow gpio line naming
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 5, 2024 at 7:42=E2=80=AFAM Heiko Schocher <hs@denx.de> wrote:
+When populating "ranges" property for a PCI bridge or endpoint,
+of_pci_prop_ranges() incorrectly use the CPU bus address of the resource.
+In such PCI nodes, the window should instead be in PCI address space. Call
+pci_bus_address() on the resource in order to obtain the PCI bus
+address.
 
-> Adding gpio-line-names property works fine for this
-> device node, but dtb check drops warning:
->
-> 'gpio-line-names' does not match any of the regexes: '-cfg$', 'pinctrl-[0=
--9]+'
-> from schema $id: http://devicetree.org/schemas/pinctrl/semtech,sx1501q.ya=
-ml#
->
-> Allow to add property gpio-line-names for this devices.
->
-> Signed-off-by: Heiko Schocher <hs@denx.de>
+Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Herve Codina <herve.codina@bootlin.com>
+---
+This patch, originally preparatory for a bigger patchset (see [1]), has
+been splitted in a standalone one for better management and because it
+contains a bugfix which is probably of interest to stable branch.
 
-This patch 2/3 applied for v6.13.
+ drivers/pci/of_property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+index 5a0b98e69795..886c236e5de6 100644
+--- a/drivers/pci/of_property.c
++++ b/drivers/pci/of_property.c
+@@ -126,7 +126,7 @@ static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
+ 		if (of_pci_get_addr_flags(&res[j], &flags))
+ 			continue;
+ 
+-		val64 = res[j].start;
++		val64 = pci_bus_address(pdev, &res[j] - pdev->resource);
+ 		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
+ 				   false);
+ 		if (pci_is_bridge(pdev)) {
+-- 
+2.35.3
+
 
