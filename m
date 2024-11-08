@@ -1,153 +1,105 @@
-Return-Path: <linux-gpio+bounces-12743-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12744-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D55599C1BA3
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 11:57:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A6FF9C1CDF
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 13:24:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A7A2282E47
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 10:57:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 522AB1F2463C
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Nov 2024 12:24:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B688B1F893A;
-	Fri,  8 Nov 2024 10:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4493E1E7C19;
+	Fri,  8 Nov 2024 12:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="L4No0hir"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZI2Pr8n3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A501F8912
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Nov 2024 10:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC511E47CE;
+	Fri,  8 Nov 2024 12:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731063081; cv=none; b=NszVJJOD4SK6Bgawo7CPhZU4zRluXleVg0PvwgetKXF/408gNo1arGXxbT2PMAoKCG4w0q9hHFUbJGX6CE037IuN/VgILhl9M17b7K8q0wEzkuWz1WGnWCTxQksb3pXzY8r+4sQ9P7yk2c7cTAKgcQJ2zpAj8H3xUcoBAhmFUsQ=
+	t=1731068655; cv=none; b=J1X3AEoyfdV66oCCe2HAUiEYCq0k7/fra2IKOG81dnurLuFE8m35lFJU0/hI2zhd7CauuRatXdXa5q/fEQ/nl7HhA7ClgS2D3+QPJMDA8+3MZopiLYmnMIfbtya4SgRkkoMw7lLK8jlETfzgD7p4Os4kUQzDodVprnuNX3wRC78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731063081; c=relaxed/simple;
-	bh=FwNBb8PJKDitrkt9zMvuYiryGV3LO5HO7z0/y1frDmk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZG/cLwRmAwhrYNodrq08R4gecVXCxtrvrUbb8rP+bzGHyB5mPGABh0zr3H5SVo44IiP6gbJ76jDp5cWPwpPA4AJZsjRUQ31pqDartBbm9EKLhK3DtNh7PJylZ60b8AbvDlDEij68LB8NxhrKqbcLj0KAimV7PIEiC+dspew77lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=L4No0hir; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c9362c26d8so5358537a12.1
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2024 02:51:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1731063076; x=1731667876; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Yv9S6ASNoJOmHUs/658HSVVjNOTRq4qk+h2A23x1rM=;
-        b=L4No0hirQsa0zWYexQpA4aEGhpsFi9xkR5Ds9DbAAfqRnqtl1h3tR1vflk16FPLZra
-         DLexmGk2PSxNQCrfFtJ1n8OPTl7POoT0kbhcrX/XT/xN63zbNBtG9fmy4jJARTQoEQqg
-         hOQJlJMWdWfhYLcfSIZ7Yg5D1StHa7fQkr1T258iuP4VQpE/yZkxRLMiKsCF1ZUWoUSs
-         epQDTinBxJ9zHXIJQJpGJbnq3mHUVx3uQ9xBT/Yfdb/7brzHZyGBiosZHU6pb7FHfs8m
-         NhzXHV9RlpWi1rKATds1xz0zkezuhyTCoM8xJHUCLYlLoBBVDccv8/U/8PyaYZnk9RWQ
-         LCOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731063076; x=1731667876;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1Yv9S6ASNoJOmHUs/658HSVVjNOTRq4qk+h2A23x1rM=;
-        b=NN49JQkv3e/3nIWY7ZKz/+GWAk03omXdY6oHv2NDpRqmnMJFZfznHFSuLK4kwD0Bh6
-         rXwxRgzTTlCwpXlco8jkgPFsRgupl+m4fJQS9fD7bqahI5NYktLvEgjIsCHxwtYPv4+6
-         /82DmG9Ht3F/+wkhwuYMItyzzC0saTUB61aQoCOk/VEMcPKCBXws72c/17OKz1f2Pi0G
-         DKsadJfew6oJpzm9Q1KXZWlSD/poGvSQwiK80gvQV4ng1u8uhPYmHWBst8J5oS4r7oJQ
-         9PQNijt5l9Zf77xRuQiatzVv43Mc8U0FUXXkaI50oO2PU1QAVdEk3As0EXuD6NNRBh62
-         f7Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRS6lvlLu9B6AfiyrI1pDw+CTu90DbCec5PlR4zpXoSrN1GaWF95Hbojr4BGxL9QzLfFhKz4ghfdbb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbXfO0zZbMsgk7zwRFArpV8msymWU4rLYKMrd5Vd3XqOMUoJgf
-	4k/jv9nbM12dbMvv+ffKJvs5hsJWOYLbTiJ9bVmgrmjOvID9q2yP3endWomYC8g=
-X-Google-Smtp-Source: AGHT+IFuBqaKmSlpAgIXdyExoaT/W1PzCgtdHUGxj4xhW8TXs0GWnsMiDurm3/upr/LpAR0vUHYMIw==
-X-Received: by 2002:a17:907:3188:b0:a9e:c4df:e3c9 with SMTP id a640c23a62f3a-a9eeff97fcemr219403566b.24.1731063076495;
-        Fri, 08 Nov 2024 02:51:16 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0dc574dsm220464866b.101.2024.11.08.02.51.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 02:51:15 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	magnus.damm@gmail.com,
-	linus.walleij@linaro.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	p.zabel@pengutronix.de
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 25/25] arm64: dts: renesas: rzg3s-smarc: Add sound card
-Date: Fri,  8 Nov 2024 12:49:58 +0200
-Message-Id: <20241108104958.2931943-26-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241108104958.2931943-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20241108104958.2931943-1-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1731068655; c=relaxed/simple;
+	bh=ysuLhuMYEEC7oX4y0iwjBEgPL1C/5lpgDLTDYdB0KFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W07JqtE7jol6PHptWAQmdrferfjMTiOA7UtB5P18R42c2KurGwr+I9c0lHYfkiMDcQ+bJ8ugVrTxmjzdT3GG9AhrB7SaFTXhDxADJ0p9gZS/Iae9qZROVRZAFEUws8QLMXgPcxmYdLhIjW5imvW/XBUlQ08poC8aOTPV84QKDQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZI2Pr8n3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A0EC4CECD;
+	Fri,  8 Nov 2024 12:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731068654;
+	bh=ysuLhuMYEEC7oX4y0iwjBEgPL1C/5lpgDLTDYdB0KFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZI2Pr8n3D33cVl/heubKCb1AtALRbMn0WDX2jXxKZvqNOBSAr3+XQKZPF9yNCFWrZ
+	 Wf1wLykw0HBLbfov4EzKLHUQhk4XEdKt02QUbFNxvCbA+mZvTFybivzwlPM668X4PU
+	 1bd9DSyVEYXsTHUazZinuQ3i5j7DXLfR3H/3GC5f14Fu02esA6XLSJhCH5aAS5h/Vr
+	 NUXSBwWbCjBob32hiPpy3Nb/j627PV1BP/U4adaBUaTdKHHR7FVCdEUmg4DqihjvRn
+	 ntTXDLYVW5mQOddiSLgh3hIOUlcJI36fwRfzNOUXOj/HepNR2VEByg33eFfiOmtc8r
+	 2/wyK8i0RTl1g==
+Date: Fri, 8 Nov 2024 13:24:09 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v3 06/14] dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+Message-ID: <ufamoryw2k3oquvusqzs2e7ixu6iptfbpmdevqthbps5w7szw3@6c7enohqv537>
+References: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org>
+ <20241107-msm8917-v3-6-6ddc5acd978b@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241107-msm8917-v3-6-6ddc5acd978b@mainlining.org>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, Nov 07, 2024 at 06:02:47PM +0100, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wr=
+ote:
+> +$defs:
+> +  qcom-msm8917-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configu=
+ration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-3][0-3])$"
 
-Add sound card with SSI3 as CPU DAI and DA7212 as codec DAI.
+That's not a good pattern, unless really gpio129 is not existing?
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc1_rclk, sdc2_clk,
+> +                      sdc2_cmd, sdc2_data, qdsd_clk, qdsd_cmd, qdsd_data=
+0,
+> +                      qdsd_data1, qdsd_data2, qdsd_data3 ]
+> +        minItems: 1
+> +        maxItems: 16
 
-Changes in v2:
-- none
-
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 6dd439e68bd4..89673bbaee6d 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -44,6 +44,23 @@ key-3 {
- 		};
- 	};
- 
-+	snd_rzg3s: sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&cpu_dai>;
-+		simple-audio-card,frame-master = <&cpu_dai>;
-+		simple-audio-card,mclk-fs = <256>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi3>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&da7212>;
-+			clocks = <&versa3 1>;
-+		};
-+	};
-+
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "SDHI1 Vcc";
--- 
-2.39.2
+Best regards,
+Krzysztof
 
 
