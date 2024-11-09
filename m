@@ -1,131 +1,200 @@
-Return-Path: <linux-gpio+bounces-12756-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12757-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67FCE9C2B06
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 08:32:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D72C9C2C35
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 12:37:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C2D51F21FB7
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 07:32:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 399D9282A4D
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 11:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13A1D13CA9C;
-	Sat,  9 Nov 2024 07:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5F715623B;
+	Sat,  9 Nov 2024 11:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9vIkVg2"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="bcu1HUbV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760792B9BF;
-	Sat,  9 Nov 2024 07:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718CF13B586;
+	Sat,  9 Nov 2024 11:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731137544; cv=none; b=CgR0aCiF3TzX6zdw43vSqZ3s+kLxRda0qBMkt2+xaYqXOMhzMHTlssl3sBPD5nxtVrZS5qB/UD5VBq2ML+F2HLpt5ZI6SFUXDx/RjLhxiNvxG447kMI8+VtpCQukbPEqMykjXQI+TTgDOwSY1uhc2xvt6vt451iQJOiLmtYpa3I=
+	t=1731152218; cv=none; b=NsM3u2VDwytTBBx36qsqTIqCvfr0G+Wf7mbBPJUvrisezw4ZgHqwkOmBfzJzTI1w8dQ7qdb8bJkpJfJb+xFwe2SPMmRdHqXPakvUEr8XMySv62GggwS2uwZ/2XmVJdqSBf7s8jhmLaX381DTTPS0uW6py6Xjy86df3MZoR/cB6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731137544; c=relaxed/simple;
-	bh=BubkefP/PLSG5oJ+CoIyGUHXx6Ojnw8ELiAMMXhAtLM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uvz4ckykctfVoTgr1F45EkvsTI6gaNvNsibkcfx9+uO1fALbJAkPvJUf6wlrFgNb56Anh8FJY1PnwCC7c2t1gVVQew2ow1YTOVa8xnp3n2zOtudSXSh0tYFYe+K7LFPAMKkBz9xojDIwsY3Mm8gRQQEor39wIDYVKtcN62U8LOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9vIkVg2; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7e9e38dd5f1so2298236a12.0;
-        Fri, 08 Nov 2024 23:32:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731137543; x=1731742343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Yvsf1/Rp4Kad1l94AE2rAK6dROTiwkU3pll3PPeTNk=;
-        b=M9vIkVg2tIxILdYxbBd6e4U1gQFiExjskQj1RwmuavbRaanmcUUrBYwlGKBgEWi/t/
-         PGlpHXC3DaNekc9iGqYuqbRTEeHRu+qRxPsNiL9DZJXfDrxV6BP5L+ieS2Zrnb2GaJKD
-         EuuKqRyBpimZ1hq82xYHum5J1niPmSgYNeuMUAvI9kbIytTj72bI8QZrUTt3upQk5qE4
-         7ymYEeXqDBcC2GJoh2bbs3iZE58tuy/R8z/zoVBs9fkmOK/FuPxnc12nPjqtFr1yLSHX
-         fp+vuVWuAJ2iqATeem8MmnuyzChF0RaUqkP/lOntoMSvfOlLL9gQedchSnkFawWdj44w
-         El5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731137543; x=1731742343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Yvsf1/Rp4Kad1l94AE2rAK6dROTiwkU3pll3PPeTNk=;
-        b=Lhs+m6NCG5WvQbPEG57UcMzHouNld19WDZL2XpuQ9LOsEIAGVjV37IXyIzAXs4dukP
-         hk9EguHF9gBf4a6YoQNdPtNRdpaByTBvap3nyBYPeKLVKWi8Xg9cut8zrHsgjnK4NHYW
-         6pwBx+bE4NT8lMDqKmdlixR9n/5JX+xL6ivlniqbKLAO0eAWZtw8K52RWseMUjTaR0a+
-         34j/oXX0rCw5qz2JDw95/k++PEKveluJxsADrA2OOagYT0Zqsnp1+n+1UpmdsZTvvpLN
-         p+xIO3DvLd/0XYqPqeNphunRDxmoJdVzEbU/mBkiltG+Oe4P1rdavkUZeDQiQ8zcO4uA
-         FCSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEBh0vfMuMXmBOL8qCnnWknJ1wg8gjLfucw3HQUnpFFUekyeF9/u1eL22DrNV0TKdJt97/BPF+mVv1yOMc@vger.kernel.org, AJvYcCUX0hIW6Seg3OjRQUkijSTLDdtW2WflLIsFp/wb+opuuP+ycR5AD+lQWoLSKoD4EiMuFT00wWVIs5/+@vger.kernel.org, AJvYcCVcfD5XbbfsWus2TKy8wCwie3Yy6d8ggcWOAfgA00gvtDZaBIELngPckzPYnxnAiVNg6W8URjo6Qryk@vger.kernel.org, AJvYcCW79TrxPIrPd20+/dlB6m6q/I8HcPFVjT+naX7qg+pvIXJIPWA9Gy7vJcK4eIr/ujYGu5dHmRIbgd1K@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq4ihzx2llnDkVoRZtAABF0SBHzMutTHsI/URWlKqplMZaix0q
-	2R6McMutpouxe/jLOBNzzCMXbeRFNUxW5ij0MWqVhTxuvlod0tFBTyEuAeMEDOF3kyvS44CsgDj
-	RH0Fi8QlRngu2aIqyzKoEJBPLSenZ4fuV4Eo=
-X-Google-Smtp-Source: AGHT+IEYopClguJXTaEDehLf9kd7YspCn3tBVhwDCjIQ2Pt+JKFeb/vCnVJsJCli/BBVPJ1e1wtS0BmE7R2n3ueVnhg=
-X-Received: by 2002:a17:902:e803:b0:20c:9936:f0ab with SMTP id
- d9443c01a7336-21183d9d20bmr70911695ad.47.1731137542635; Fri, 08 Nov 2024
- 23:32:22 -0800 (PST)
+	s=arc-20240116; t=1731152218; c=relaxed/simple;
+	bh=V1UawUSDKQW4GamWm1KN87sxKxsFCibHuJXW0u4nnCQ=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=AIlaJoBR7C2Mff0iPgbkULhxXIHXEzOrEfsGDcfIc81RXco/qLJM4K/tt5DySdJQJ6TzIRKyh0cDBWCClokMPyIed//ZVA/9uZOstiZ5brx/nsMJx52a5fi5APGlhBzG9IbMxTiZus5MyV+pNMmG1IMVdpIYhVQEwZ32BVE+Whw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=bcu1HUbV; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 2CCDEE45BA;
+	Sat,  9 Nov 2024 11:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1731152207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Dx0/KnrxwnvRNW36+xQiAUbPoQ6tYjBRsSRnWhRWk4=;
+	b=bcu1HUbVDy9meZVKzU8eCUsjf5urftgsK6KzM/sY+hono5BBF5hWBf8MQVkavPzRbkT7Kh
+	TFt4toHg5hETpJEpNcQvFqbdc5Mytha4r+MrNHd4auFZJvgQardAOd7w0XlNSbTdizCNdj
+	2SwJ7Q8HgG6VXmMx4ogdMFIb7ljlfJJFaRA5YWj+vLfH3jRtiUwUa86Ly6V43DWJ+Q22X7
+	1qu7CqZZSNJqdxgOzSkHl7mnT9JRbDaBDrwEmmBi4dv5ECe1QAfN9QiL1OUR7v8jT66HJu
+	wdeFHedKnefqtIIP4/+9MY8iQ7fFrsTTwiSfcUbZWBtl8eYYxFVm2vdbsubJrg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20220616013747.126051-1-frank@zago.net> <cf32d676-831c-4c3f-8965-c9be3abd5300@gmail.com>
- <e052d872-6de2-42f4-8b36-d1e2f8359624@zago.net>
-In-Reply-To: <e052d872-6de2-42f4-8b36-d1e2f8359624@zago.net>
-From: "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
-Date: Sat, 9 Nov 2024 10:32:11 +0300
-Message-ID: <CAJs94EYpxxpOvxEtuL0Vcv9XYunw=+SnHyHcKeYqdVhYiEyr2Q@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] add driver for the WCH CH341 in I2C/GPIO mode
-To: Frank Zago <frank@zago.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bgolaszewski@baylibre.com>, Wolfram Sang <wsa@kernel.org>, 
-	Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org, 
-	Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Sat, 09 Nov 2024 12:36:47 +0100
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Konrad
+ Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria
+ <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Joerg
+ Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ iommu@lists.linux.dev, =?UTF-8?Q?Otto_Pfl=C3=BCger?=
+ <otto.pflueger@abscue.de>
+Subject: Re: [PATCH v3 12/14] arm64: dts: qcom: Add initial support for
+ MSM8917
+In-Reply-To: <0293b1c5-d405-4021-b9c1-205271107350@oss.qualcomm.com>
+References: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org>
+ <20241107-msm8917-v3-12-6ddc5acd978b@mainlining.org>
+ <0293b1c5-d405-4021-b9c1-205271107350@oss.qualcomm.com>
+Message-ID: <2c5f429d01fc04b2b40251e841bd4f64@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-=D1=81=D0=B1, 9 =D0=BD=D0=BE=D1=8F=D0=B1. 2024=E2=80=AF=D0=B3. =D0=B2 02:15=
-, Frank Zago <frank@zago.net>:
->
-> On 11/8/24 9:58 AM, Matwey V. Kornilov wrote:
-> >
-> > Hi Frank,
-> >
-> >
-> > Are you going to further proceed with this patch set? As far as I can s=
-ee, there were no updates since 2022.
-> >
->
-> Hi Matwey,
-
-Hi Frank,
-
->
-> I've been maintaining it at https://github.com/frank-zago/ch341-i2c-spi-g=
-pio, but I have had no desire to try again to upstream it.
-
-Thank you for the response and for the code.
-
-> Feel free to do it if you'd like.
-
-Just to make it clear for other people who will find this discussion
-while looking for a CH341 I2C driver: currently I don't have
-motivation to make this kind of contribution.
-
->
-> Also there's been an SPI only driver that was upstreamed a couple revisio=
-ns ago, which is incompatible with this driver.
->
-> Regards,
->   Frank.
->
->
-
-
---=20
-With best regards,
-Matwey V. Kornilov
+On 2024-11-08 18:03, Konrad Dybcio wrote:
+> On 7.11.2024 6:02 PM, Barnabás Czémán wrote:
+>> From: Otto Pflüger <otto.pflueger@abscue.de>
+>> 
+>> Add initial support for MSM8917 SoC.
+>> 
+>> Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
+>> [reword commit, rebase, fix schema errors]
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
+> 
+> [...]
+> 
+>> +		domain-idle-states {
+>> +			cluster_pwrdn: cluster-gdhs {
+> 
+> Please rename these to cluster-sleep-<n> and sort from shallowest to
+> deepest sleep state, in this case: ret, pwrdn, pc
+> 
+> [...]
+> 
+>> +
+>> +		l2_0: l2-cache {
+>> +			compatible = "cache";
+>> +			cache-level = <2>;
+>> +			cache-unified;
+>> +		};
+> 
+> Please put this under the cpu0 node
+> 
+> [...]
+> 
+>> +		restart@4ab000 {
+>> +			compatible = "qcom,pshold";
+>> +			reg = <0x4ab000 0x4>;
+> 
+> Please also pad all address parts to 8 hex digits with leading zeroes
+> 
+> [...]
+> 
+>> +			gpu_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-598000000 {
+>> +					opp-hz = /bits/ 64 <598000000>;
+>> +				};
+>> +
+>> +				opp-523200000 {
+>> +					opp-hz = /bits/ 64 <523200000>;
+>> +				};
+>> +
+>> +				opp-484800000 {
+>> +					opp-hz = /bits/ 64 <484800000>;
+>> +				};
+>> +
+>> +				opp-400000000 {
+>> +					opp-hz = /bits/ 64 <400000000>;
+>> +				};
+>> +
+>> +				opp-270000000 {
+>> +					opp-hz = /bits/ 64 <270000000>;
+>> +				};
+>> +
+>> +				opp-19200000 {
+>> +					opp-hz = /bits/ 64 <19200000>;
+>> +				};
+> 
+> Does the GPU actually function at 19.2 MHz? You can check this by 
+> removing
+> all other entries and starting some gpu workload
+Yes
+> 
+> [...]
+> 
+>> +		cpuss1-thermal {
+>> +			polling-delay-passive = <250>;
+>> +			polling-delay = <1000>;
+> 
+> You can remove polling-delay (not -passive), as we have an interrupt
+> that fires on threshold crossing
+> 
+>> +
+>> +			thermal-sensors = <&tsens 4>;
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&cpuss1_alert0>;
+>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +				};
+>> +			};
+>> +
+>> +			trips {
+>> +				cpuss1_crit: cpuss1-crit {
+>> +					temperature = <100000>;
+>> +					hysteresis = <2000>;
+>> +					type = "critical";
+>> +				};
+>> +
+>> +				cpuss1_alert0: trip-point0 {
+>> +					temperature = <75000>;
+>> +					hysteresis = <2000>;
+>> +					type = "passive";
+>> +				};
+>> +
+>> +				cpuss1_alert1: trip-point1 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> Sorting these by temperature, rising would be nice
+> 
+> Konrad
 
