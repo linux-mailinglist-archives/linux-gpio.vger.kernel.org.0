@@ -1,105 +1,131 @@
-Return-Path: <linux-gpio+bounces-12755-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12756-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 184549C2AE4
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 07:47:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67FCE9C2B06
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 08:32:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C56D91F2252B
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 06:47:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C2D51F21FB7
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 07:32:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4B213DDA7;
-	Sat,  9 Nov 2024 06:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13A1D13CA9C;
+	Sat,  9 Nov 2024 07:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dominikbrodowski.net header.i=@dominikbrodowski.net header.b="m0Ck6tLN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9vIkVg2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EC046447;
-	Sat,  9 Nov 2024 06:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.71.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760792B9BF;
+	Sat,  9 Nov 2024 07:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731134866; cv=none; b=IBT/QyegqlluWfpRLe/XhGNNVOATm5YyiKAdVF3heE98QuaGBheaVxKX8SM7ob9hgOhnLqXhlLOs447PIk8svf/MikZ4YB/QJKRCj3A0/cpuce7eg5nzECgEl8vcuW4iSiGJgedtBRXPHL53YkCzp9S2+fs3xLb/e9sT+g4hMDQ=
+	t=1731137544; cv=none; b=CgR0aCiF3TzX6zdw43vSqZ3s+kLxRda0qBMkt2+xaYqXOMhzMHTlssl3sBPD5nxtVrZS5qB/UD5VBq2ML+F2HLpt5ZI6SFUXDx/RjLhxiNvxG447kMI8+VtpCQukbPEqMykjXQI+TTgDOwSY1uhc2xvt6vt451iQJOiLmtYpa3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731134866; c=relaxed/simple;
-	bh=m68XOFghE54ivU2dcmIYLk882k+HwPd8s6RJ2NuvOUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lkqOAWdSI+s2tqRO1b2QkOlFXPTvY7kZ2JT4EdgsQboqNe2Hrc1xJQVnn+wOlxefeEWUE+28guflX8FX0vO6fzgySABl5F3emDQtlUO9FqW3Ws7uWvQZ+daaXTKXwfkhOzKsKTBtHf7GzL1SdJtC7ZR3Bgc4PdXqtbhlKvyOBs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net; spf=pass smtp.mailfrom=dominikbrodowski.net; dkim=pass (2048-bit key) header.d=dominikbrodowski.net header.i=@dominikbrodowski.net header.b=m0Ck6tLN; arc=none smtp.client-ip=136.243.71.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dominikbrodowski.net;
-	s=k10.isilmar-4; t=1731134425;
-	bh=m68XOFghE54ivU2dcmIYLk882k+HwPd8s6RJ2NuvOUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m0Ck6tLN37f+wQFu3UsQKdc+QFgC4L455vHgvRwEu/CVsrintIaqw0BGGgBpyMvdW
-	 3KihegNFT/LSWiBGJHrh2x4bq2Tw/x8qpX2tSqHkcHUtNaZ4IJ2gQGC4GnUZTUiCLQ
-	 r56r2k3qqEKDP0FwBJlQPXH7YxXcxu81/eip498VpxpX7p3tYsQfg0wB+5KyAZvFv+
-	 5cuD7F/DteExPqXttlt9JrilrD6jrYzfKLgGkoZpUZzbqFgWkNrjt5d36ItgqB3Xx/
-	 ncV2XBUlHYtqXvveXkMXoNho0jTuTbMH4TEpAUqHdct6wbuMCY+YILmbceORQa2Unv
-	 BubNYu8gN0QBA==
-Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
-	by isilmar-4.linta.de (Postfix) with ESMTPSA id 03AE8200602;
-	Sat,  9 Nov 2024 06:40:24 +0000 (UTC)
-Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
-	id B3D61A006B; Sat, 09 Nov 2024 07:40:15 +0100 (CET)
-Date: Sat, 9 Nov 2024 07:40:15 +0100
-From: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 4/6] pcmcia: soc_common: Avoid using GPIOF_ACTIVE_LOW
-Message-ID: <Zy8Dz7v2cGdGOPLj@shine.dominikbrodowski.net>
-References: <20241104093609.156059-1-andriy.shevchenko@linux.intel.com>
- <20241104093609.156059-5-andriy.shevchenko@linux.intel.com>
- <CACRpkdYF-_6vb3SsJ9EHh1mCbqeW5=qoYkLF7Re+XyGq36OJSg@mail.gmail.com>
- <Zy3NXXFFw4l-vfvr@smile.fi.intel.com>
+	s=arc-20240116; t=1731137544; c=relaxed/simple;
+	bh=BubkefP/PLSG5oJ+CoIyGUHXx6Ojnw8ELiAMMXhAtLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uvz4ckykctfVoTgr1F45EkvsTI6gaNvNsibkcfx9+uO1fALbJAkPvJUf6wlrFgNb56Anh8FJY1PnwCC7c2t1gVVQew2ow1YTOVa8xnp3n2zOtudSXSh0tYFYe+K7LFPAMKkBz9xojDIwsY3Mm8gRQQEor39wIDYVKtcN62U8LOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9vIkVg2; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7e9e38dd5f1so2298236a12.0;
+        Fri, 08 Nov 2024 23:32:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731137543; x=1731742343; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Yvsf1/Rp4Kad1l94AE2rAK6dROTiwkU3pll3PPeTNk=;
+        b=M9vIkVg2tIxILdYxbBd6e4U1gQFiExjskQj1RwmuavbRaanmcUUrBYwlGKBgEWi/t/
+         PGlpHXC3DaNekc9iGqYuqbRTEeHRu+qRxPsNiL9DZJXfDrxV6BP5L+ieS2Zrnb2GaJKD
+         EuuKqRyBpimZ1hq82xYHum5J1niPmSgYNeuMUAvI9kbIytTj72bI8QZrUTt3upQk5qE4
+         7ymYEeXqDBcC2GJoh2bbs3iZE58tuy/R8z/zoVBs9fkmOK/FuPxnc12nPjqtFr1yLSHX
+         fp+vuVWuAJ2iqATeem8MmnuyzChF0RaUqkP/lOntoMSvfOlLL9gQedchSnkFawWdj44w
+         El5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731137543; x=1731742343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Yvsf1/Rp4Kad1l94AE2rAK6dROTiwkU3pll3PPeTNk=;
+        b=Lhs+m6NCG5WvQbPEG57UcMzHouNld19WDZL2XpuQ9LOsEIAGVjV37IXyIzAXs4dukP
+         hk9EguHF9gBf4a6YoQNdPtNRdpaByTBvap3nyBYPeKLVKWi8Xg9cut8zrHsgjnK4NHYW
+         6pwBx+bE4NT8lMDqKmdlixR9n/5JX+xL6ivlniqbKLAO0eAWZtw8K52RWseMUjTaR0a+
+         34j/oXX0rCw5qz2JDw95/k++PEKveluJxsADrA2OOagYT0Zqsnp1+n+1UpmdsZTvvpLN
+         p+xIO3DvLd/0XYqPqeNphunRDxmoJdVzEbU/mBkiltG+Oe4P1rdavkUZeDQiQ8zcO4uA
+         FCSA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEBh0vfMuMXmBOL8qCnnWknJ1wg8gjLfucw3HQUnpFFUekyeF9/u1eL22DrNV0TKdJt97/BPF+mVv1yOMc@vger.kernel.org, AJvYcCUX0hIW6Seg3OjRQUkijSTLDdtW2WflLIsFp/wb+opuuP+ycR5AD+lQWoLSKoD4EiMuFT00wWVIs5/+@vger.kernel.org, AJvYcCVcfD5XbbfsWus2TKy8wCwie3Yy6d8ggcWOAfgA00gvtDZaBIELngPckzPYnxnAiVNg6W8URjo6Qryk@vger.kernel.org, AJvYcCW79TrxPIrPd20+/dlB6m6q/I8HcPFVjT+naX7qg+pvIXJIPWA9Gy7vJcK4eIr/ujYGu5dHmRIbgd1K@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq4ihzx2llnDkVoRZtAABF0SBHzMutTHsI/URWlKqplMZaix0q
+	2R6McMutpouxe/jLOBNzzCMXbeRFNUxW5ij0MWqVhTxuvlod0tFBTyEuAeMEDOF3kyvS44CsgDj
+	RH0Fi8QlRngu2aIqyzKoEJBPLSenZ4fuV4Eo=
+X-Google-Smtp-Source: AGHT+IEYopClguJXTaEDehLf9kd7YspCn3tBVhwDCjIQ2Pt+JKFeb/vCnVJsJCli/BBVPJ1e1wtS0BmE7R2n3ueVnhg=
+X-Received: by 2002:a17:902:e803:b0:20c:9936:f0ab with SMTP id
+ d9443c01a7336-21183d9d20bmr70911695ad.47.1731137542635; Fri, 08 Nov 2024
+ 23:32:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zy3NXXFFw4l-vfvr@smile.fi.intel.com>
+References: <20220616013747.126051-1-frank@zago.net> <cf32d676-831c-4c3f-8965-c9be3abd5300@gmail.com>
+ <e052d872-6de2-42f4-8b36-d1e2f8359624@zago.net>
+In-Reply-To: <e052d872-6de2-42f4-8b36-d1e2f8359624@zago.net>
+From: "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+Date: Sat, 9 Nov 2024 10:32:11 +0300
+Message-ID: <CAJs94EYpxxpOvxEtuL0Vcv9XYunw=+SnHyHcKeYqdVhYiEyr2Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] add driver for the WCH CH341 in I2C/GPIO mode
+To: Frank Zago <frank@zago.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bgolaszewski@baylibre.com>, Wolfram Sang <wsa@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org, 
+	Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am Fri, Nov 08, 2024 at 10:35:41AM +0200 schrieb Andy Shevchenko:
-> On Fri, Nov 08, 2024 at 09:28:19AM +0100, Linus Walleij wrote:
-> > On Mon, Nov 4, 2024 at 10:36 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > > Avoid using GPIOF_ACTIVE_LOW as it's deprecated and subject to remove.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Looks right to me, some testing would be even better
-> > because I never trust these flags to get right.
-> 
-> I also would like to have this, but seems the only odd fixer was active ca.
-> 2023 last time, I'm not sure we may hear from Dominik in time, otherwise the
-> series will be postponed for unknown period of time, which I do not prefer,
-> rather I will fix any regressions later (but I doubt there are here).
+=D1=81=D0=B1, 9 =D0=BD=D0=BE=D1=8F=D0=B1. 2024=E2=80=AF=D0=B3. =D0=B2 02:15=
+, Frank Zago <frank@zago.net>:
+>
+> On 11/8/24 9:58 AM, Matwey V. Kornilov wrote:
+> >
+> > Hi Frank,
+> >
+> >
+> > Are you going to further proceed with this patch set? As far as I can s=
+ee, there were no updates since 2022.
+> >
+>
+> Hi Matwey,
 
-As I don't have such hardware, I cannot help with testing, but from the
-PCMCIA point of view:
+Hi Frank,
 
-	Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
+>
+> I've been maintaining it at https://github.com/frank-zago/ch341-i2c-spi-g=
+pio, but I have had no desire to try again to upstream it.
 
-Thanks,
-	Dominik
+Thank you for the response and for the code.
+
+> Feel free to do it if you'd like.
+
+Just to make it clear for other people who will find this discussion
+while looking for a CH341 I2C driver: currently I don't have
+motivation to make this kind of contribution.
+
+>
+> Also there's been an SPI only driver that was upstreamed a couple revisio=
+ns ago, which is incompatible with this driver.
+>
+> Regards,
+>   Frank.
+>
+>
+
+
+--=20
+With best regards,
+Matwey V. Kornilov
 
