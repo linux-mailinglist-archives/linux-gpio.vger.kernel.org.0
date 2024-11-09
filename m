@@ -1,120 +1,105 @@
-Return-Path: <linux-gpio+bounces-12754-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12755-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E922B9C28C1
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 01:19:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 184549C2AE4
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 07:47:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC3D7282ECC
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 00:19:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C56D91F2252B
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Nov 2024 06:47:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA06753A7;
-	Sat,  9 Nov 2024 00:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4B213DDA7;
+	Sat,  9 Nov 2024 06:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nkZBKvvP"
+	dkim=pass (2048-bit key) header.d=dominikbrodowski.net header.i=@dominikbrodowski.net header.b="m0Ck6tLN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8A01870
-	for <linux-gpio@vger.kernel.org>; Sat,  9 Nov 2024 00:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EC046447;
+	Sat,  9 Nov 2024 06:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.71.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731111580; cv=none; b=bhJ0mOJ9d6yCYPbB9USRsLJTbf7iU4NkNmE+5ge0dGkesmRjob5onEv1yiPn944KyjN3h0iOFsUE66us8hsBWsOHRUlg2b48rs+7za0ZKmlbRKyCKHyEOzHPAQlEzV4o2LfMunHCPMknmrCxMJZwNdifZOgKozOl5LYLYqyconE=
+	t=1731134866; cv=none; b=IBT/QyegqlluWfpRLe/XhGNNVOATm5YyiKAdVF3heE98QuaGBheaVxKX8SM7ob9hgOhnLqXhlLOs447PIk8svf/MikZ4YB/QJKRCj3A0/cpuce7eg5nzECgEl8vcuW4iSiGJgedtBRXPHL53YkCzp9S2+fs3xLb/e9sT+g4hMDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731111580; c=relaxed/simple;
-	bh=L6j9s89naB7opnvnY4tHu4vgTBs+UfFjAA+WV7TeqVw=;
+	s=arc-20240116; t=1731134866; c=relaxed/simple;
+	bh=m68XOFghE54ivU2dcmIYLk882k+HwPd8s6RJ2NuvOUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PtA9NcPvSztBsvE3B/si2MIP0NLBeSG4i8Xxp2i3yNc5vvwGiDOiNhywSuvh1MKp8vxUTsuFDfUVVRl+XInidBPbiORvLhuyXiVFvchCmzr8JcfCpRIGzpT3a25JNWSNBSk382NKl7c3BG2+Z1spzVqjPxydix40iSbYg30t7wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nkZBKvvP; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so3336142e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Nov 2024 16:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731111576; x=1731716376; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BXpnPSSpQgottu2Fv5+e3o4as2xRNwzcJf3h5d26SFI=;
-        b=nkZBKvvPjeYlHhjRFuigoDFZ9FHhWVfLXAYo8M8akoHWMCk+13Quuea19ZDRUrDyWl
-         ldtDECzfHbxaYx2Sv3wmz39RG4N3rPXgSY5/pRrbXBWMCL7DnCFJZmndpWCngxVimd/7
-         Pn1LEG0HYAGsFr+PVqXeamONqctyaoOU0oS+6vlwpofuNiv5o4g/Tu1Qr5+ss7KZnJpx
-         ITeRDsKv6EmrEHluV89EGIuf7O+xJ5jGCzQaOvHEHAQMqxjCN0i4zH1uyPdI949Nkmyb
-         UrbyoBJ2fsvcaZKz539LwW8Yrg8RndF/h6PV+TXUiwNE+NpdwcV7F/FDXBUtGBdEwk9f
-         H1ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731111576; x=1731716376;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BXpnPSSpQgottu2Fv5+e3o4as2xRNwzcJf3h5d26SFI=;
-        b=N2o7iJT56dtNQhjbFxFpXcwdL20yrz+9kdLSFeHg2bRxJcOCiEM73U66UvzPBRnQD2
-         qqCI5HLms0PozhdKYRJyN19P60FGIDJX/sk4FB6vMHaPNm9zQOYPhJRLOFRKbxwzmcgY
-         sB7BDvwvOrV8eTweV9CC3Slbcn7UmYDX1O8LqKHru0ulcawA98fDZPKYDJJtYZyKXBKa
-         K3QQruIVGRFghBr46/VWxO2KA9ocRG7MR18ylajPLwxRe3lp8Vw3P+/1JKm7WY1uVPcq
-         vVOFTrWpTeCsbaKi3d1lPTHdOSmX24mIUSiAkRAcDKhR9cp3k7n0LSlXh+Y7l4FW4yVE
-         CfOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVh/QsyC6G959qJUOYRYLpsQ8EyukLHfzYKfIrmz096FRGM/hNv6znc80lGBW1MBRJIimfU+OoDoTSj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgUnhDlMLYLwWvtlFBaiF88WVyLcDLuHvPXqRunOoWoc8KO2/d
-	5KbY4g4cQNRt1rntTPzHTmfE6/zBN5Fd5r8/wHlH6lwCkLbWCRYP/+lDUytMnkU=
-X-Google-Smtp-Source: AGHT+IGy8JaWW53o7Nak3hWvpUBVz+q/19zh6rKz4u2hY6tZfCVQUBkESW5jVf0+ApmCehnOdBwEyA==
-X-Received: by 2002:a05:6512:238c:b0:52f:d0f0:e37e with SMTP id 2adb3069b0e04-53d862e4fc4mr2643346e87.42.1731111576019;
-        Fri, 08 Nov 2024 16:19:36 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53d826af0c6sm785132e87.277.2024.11.08.16.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Nov 2024 16:19:34 -0800 (PST)
-Date: Sat, 9 Nov 2024 02:19:32 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: =?utf-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
-	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
-	Otto =?utf-8?Q?Pfl=C3=BCger?= <otto.pflueger@abscue.de>
-Subject: Re: [PATCH v3 07/14] pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
-Message-ID: <ohznx4dt63gid324qqsmbb7iuqcpi5xxhftwmh5mfo2w26myrw@q4bfwrgw4mns>
-References: <20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org>
- <20241107-msm8917-v3-7-6ddc5acd978b@mainlining.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lkqOAWdSI+s2tqRO1b2QkOlFXPTvY7kZ2JT4EdgsQboqNe2Hrc1xJQVnn+wOlxefeEWUE+28guflX8FX0vO6fzgySABl5F3emDQtlUO9FqW3Ws7uWvQZ+daaXTKXwfkhOzKsKTBtHf7GzL1SdJtC7ZR3Bgc4PdXqtbhlKvyOBs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net; spf=pass smtp.mailfrom=dominikbrodowski.net; dkim=pass (2048-bit key) header.d=dominikbrodowski.net header.i=@dominikbrodowski.net header.b=m0Ck6tLN; arc=none smtp.client-ip=136.243.71.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dominikbrodowski.net;
+	s=k10.isilmar-4; t=1731134425;
+	bh=m68XOFghE54ivU2dcmIYLk882k+HwPd8s6RJ2NuvOUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m0Ck6tLN37f+wQFu3UsQKdc+QFgC4L455vHgvRwEu/CVsrintIaqw0BGGgBpyMvdW
+	 3KihegNFT/LSWiBGJHrh2x4bq2Tw/x8qpX2tSqHkcHUtNaZ4IJ2gQGC4GnUZTUiCLQ
+	 r56r2k3qqEKDP0FwBJlQPXH7YxXcxu81/eip498VpxpX7p3tYsQfg0wB+5KyAZvFv+
+	 5cuD7F/DteExPqXttlt9JrilrD6jrYzfKLgGkoZpUZzbqFgWkNrjt5d36ItgqB3Xx/
+	 ncV2XBUlHYtqXvveXkMXoNho0jTuTbMH4TEpAUqHdct6wbuMCY+YILmbceORQa2Unv
+	 BubNYu8gN0QBA==
+Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
+	by isilmar-4.linta.de (Postfix) with ESMTPSA id 03AE8200602;
+	Sat,  9 Nov 2024 06:40:24 +0000 (UTC)
+Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
+	id B3D61A006B; Sat, 09 Nov 2024 07:40:15 +0100 (CET)
+Date: Sat, 9 Nov 2024 07:40:15 +0100
+From: Dominik Brodowski <linux@dominikbrodowski.net>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Pavel Machek <pavel@ucw.cz>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 4/6] pcmcia: soc_common: Avoid using GPIOF_ACTIVE_LOW
+Message-ID: <Zy8Dz7v2cGdGOPLj@shine.dominikbrodowski.net>
+References: <20241104093609.156059-1-andriy.shevchenko@linux.intel.com>
+ <20241104093609.156059-5-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYF-_6vb3SsJ9EHh1mCbqeW5=qoYkLF7Re+XyGq36OJSg@mail.gmail.com>
+ <Zy3NXXFFw4l-vfvr@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241107-msm8917-v3-7-6ddc5acd978b@mainlining.org>
+In-Reply-To: <Zy3NXXFFw4l-vfvr@smile.fi.intel.com>
 
-On Thu, Nov 07, 2024 at 06:02:48PM +0100, Barnabás Czémán wrote:
-> From: Otto Pflüger <otto.pflueger@abscue.de>
+Am Fri, Nov 08, 2024 at 10:35:41AM +0200 schrieb Andy Shevchenko:
+> On Fri, Nov 08, 2024 at 09:28:19AM +0100, Linus Walleij wrote:
+> > On Mon, Nov 4, 2024 at 10:36â€¯AM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > 
+> > > Avoid using GPIOF_ACTIVE_LOW as it's deprecated and subject to remove.
+> > >
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > Looks right to me, some testing would be even better
+> > because I never trust these flags to get right.
 > 
-> It is based on MSM8916 driver with the pinctrl definitions from
-> Qualcomm's downstream MSM8917 driver.
-> 
-> Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
->  drivers/pinctrl/qcom/Kconfig.msm       |    6 +
->  drivers/pinctrl/qcom/Makefile          |    1 +
->  drivers/pinctrl/qcom/pinctrl-msm8917.c | 1620 ++++++++++++++++++++++++++++++++
->  3 files changed, 1627 insertions(+)
-> 
+> I also would like to have this, but seems the only odd fixer was active ca.
+> 2023 last time, I'm not sure we may hear from Dominik in time, otherwise the
+> series will be postponed for unknown period of time, which I do not prefer,
+> rather I will fix any regressions later (but I doubt there are here).
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+As I don't have such hardware, I cannot help with testing, but from the
+PCMCIA point of view:
 
+	Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
 
--- 
-With best wishes
-Dmitry
+Thanks,
+	Dominik
 
