@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-12826-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12827-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A7459C41F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 16:35:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CD0E9C42DD
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 17:43:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE630284D43
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 15:35:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 092EA281072
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 16:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4CE1A0731;
-	Mon, 11 Nov 2024 15:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE3E1A2651;
+	Mon, 11 Nov 2024 16:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="E7jzRMNy"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="ubkxAkNU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6B949625;
-	Mon, 11 Nov 2024 15:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5687E1A2557;
+	Mon, 11 Nov 2024 16:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731339276; cv=none; b=PzxSihjU1p3bzjMQuU9u+681XnGRhRpdR5HaHHz0L25WG3HWPQAsANtayUO5rHE/mVLwBzP+Nbr5Lx6sifyBe4w2Jl5Jw7CzJpNIWeYz+cwX8LsI9A/PKabWJyj5pk0EDGsIbQWpKr7WJYWVBQQCYHKrWcVDabKMShlEFgQ2AY8=
+	t=1731343401; cv=none; b=I9ca6Saf+I4B8NrqKuTWUoIa5DK4aumkbYS8uRNj39V6HoYhXMpcVt0dumlnchJ09EpBeqag2O84Q4cnEL8pyexPt3dGgbijhk5PBTKXGQv/Irf+kVBaPFVg3GquRmkx79H9fSciZMLo16/UlomjruOMf/IQAiCNGMCvSLJ3JjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731339276; c=relaxed/simple;
-	bh=s+r8MKSfjOUgsLlcKit7gbhB1uOR+p7/d0nO74Q29mc=;
+	s=arc-20240116; t=1731343401; c=relaxed/simple;
+	bh=iY5fip8VyNQjTCxGP3Jharf4ojvtFdjPkPIjSgZXFaw=;
 	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=HvDugNOjR1xpXj2izGAA3pbr3MFRBAycc8GKBAXF7TiRHjuoRfZtRUH28JAcoaPnVAqAnpxxPDwdh7580IHVhOKSziBfMxiWE/NJfwfLBEuwYmMrGOxuJ82/rYefu4KfaNVHAco8TeNwil9/fHlvg7tfn8UJkF6AKzFIvbpQp0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=E7jzRMNy; arc=none smtp.client-ip=5.75.144.95
+	 Message-ID:Content-Type; b=dINKsMdCegHfwhi3vKUOO8+UvAu1NjE9XU+M7vqg3dZj1JQDJuLZQL2cDZs1Fo6Y//5fSUatkJuE3CYzQP958GQ34et/4A5Vovjrf10h1ZPXfKn2XwqyToRXZUtIiIrPIEFC8IHdQPy8fCqA78e0zKP/4LgVtzIU7qi9okL5+as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=ubkxAkNU; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 5D313E45C8;
-	Mon, 11 Nov 2024 15:34:26 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id ED7DEE45C8;
+	Mon, 11 Nov 2024 16:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1731339266;
+	s=psm; t=1731343397;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FgH5SDBs70jQ4C2U/avkzi9hwI1VhBBZzHkW8+ms7HI=;
-	b=E7jzRMNyOIGQuTY31m7mi34wUHcZCy490mwQaIZ39ylLaTQY+lQQMeJpV++pCjfOD3RU+4
-	LW17xHcNtAQwBcn8AMv8LxRNDWwX/vB62KczSVQbaeNJmMRJk8Ha8iuh2gyjembaYD3Q/y
-	bCPQW41NUthuIjrGkXhPMMX9pbgDBsZj359KX+flJh0rqEI8sEDdj5xldYwa7LvKdvyV69
-	+5KJTeDlpZfOA+kDr+/VnVsEmSivcSGGliCMjHZMqHGQfKb0rjqe3pNMdHNOkMwxpPRNon
-	vLK17MEdir+Qr37ta3v3iXhXjiZh9AJhv7u1QH4zrQWIl53o+9oyeP++QKC1fw==
+	bh=T42R792JdevvZyQSNGT8kxHjhg5sAWnAp+dMYDJ6GJc=;
+	b=ubkxAkNUr7GNYZ+v0ArVLSzr/EULwR6TtQoStHOwpnR9Z8+xSwtpOFdMKQMTu10QxxaipZ
+	+NAgITNeavUiQT8hNPEbtQeAZ3oi3fjjELR3s/1T8AK168ewSfu6fuJnQ4V2Dnl+Oyilbg
+	4mTfp1D6vKBN9n7XdUuBW1AGgkemYXl3ewK0MlRdCiE6oqgnoPqpiw8D4B6S7XGfM5I2Mk
+	szWCBExugqcumpkBlgdDmh7CLgC6JN283CTh+BMnRv6zKeP1u+VL3QH3O+lTt0pf0i12+1
+	YpJzeQgOVe29ku9tsWdAmFXPWj7XOoRCkz8H1cyRHVaw08aHRqU/JpBE+aW1yQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 11 Nov 2024 16:34:26 +0100
+Date: Mon, 11 Nov 2024 17:43:16 +0100
 From: barnabas.czeman@mainlining.org
 To: Stephan Gerhold <stephan.gerhold@linaro.org>
 Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
@@ -73,7 +73,7 @@ In-Reply-To: <ZzHf9J0Y2uB7_vy4@linaro.org>
 References: <20241109-msm8917-v4-0-8be9904792ab@mainlining.org>
  <20241109-msm8917-v4-8-8be9904792ab@mainlining.org>
  <ZzHf9J0Y2uB7_vy4@linaro.org>
-Message-ID: <84ae6914700eff1ad66dd1048efeff97@mainlining.org>
+Message-ID: <0cf2a202c3eaccd4046a88f770e43807@mainlining.org>
 X-Sender: barnabas.czeman@mainlining.org
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
@@ -166,8 +166,6 @@ On 2024-11-11 11:44, Stephan Gerhold wrote:
 >> +			qcom,ipc = <&apcs 8 0>;
 > 
 > Can you use mboxes here?
-No, it cause deferred probe because of dependency cycle like at other 
-SoCs where it was reverted.
 > 
 >> +			qcom,smd-edge = <15>;
 >> +
@@ -189,6 +187,9 @@ SoCs where it was reverted.
 > this
 > is actually still the case? I'd have hoped they fixed those issues in
 > the firmware.
+This is come from msm8916.dtsi and it is not used yet because of not 
+upstreamed modem patch,
+maybe better to remove it, i guess.
 > 
 > Thanks for using alloc-ranges instead of fixed addresses BTW :)
 > 
@@ -232,7 +233,6 @@ SoCs where it was reverted.
 >> +		qcom,ipc = <&apcs 8 14>;
 > 
 > You have mboxes for adsp above, what about modem and
-Maybe i should set back qcom,ipc there.
 > 
 >> +
 >> +		qcom,local-pid = <0>;
