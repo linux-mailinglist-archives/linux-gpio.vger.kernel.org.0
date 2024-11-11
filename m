@@ -1,145 +1,108 @@
-Return-Path: <linux-gpio+bounces-12828-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12829-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D25F9C42FA
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 17:52:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72F589C457C
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 20:01:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C72502842A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 16:52:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3736128278D
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 19:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E631A4F12;
-	Mon, 11 Nov 2024 16:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC4D01AB6CD;
+	Mon, 11 Nov 2024 19:00:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUHL+oSz"
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="MKcVCczT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B98A1A38C4;
-	Mon, 11 Nov 2024 16:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0766F1AB50D;
+	Mon, 11 Nov 2024 19:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731343888; cv=none; b=fdWvtgsUWBYmhK+EYXfJO8rdYGzcHfkCrd7YZ+Ya7QM3iELdUJHRDtvO9s+3rThbXGM8gX46WUQ/SspJIDTMkL1Ydy3GzK1MMw6+SiGg+RGTtnACnEiqZ7RchQHn7fWWNfmXC56E3uwVaVFPau6+8Ln+/+pctoKgA+t/bWvv9jM=
+	t=1731351657; cv=none; b=a5pmm3hGoiH2q7AjfIJeZpXODeWEx/DnxK6gn6viRBZnt8e5nuM9rGF2Q22U20+ZtXFB/9JGikGjxjhi/hVMLkK4UDz6uHVRqr0c7O3HiZWWVRaMkCC5N+cPW0YAB+GhW1JNIA09c+9+y2EgYj+U5SwY6nRaiJycv+XKgcpC2pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731343888; c=relaxed/simple;
-	bh=xsTBACz35DuVfvJ2nfBri71Zv06IBtqdNgFneESDmWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sfau0sLVI9mjCR4/QiF9eeVxELQ+J3K6DmG3yEhq/jMuPwGpv8aMRLcyUS7RZEwsXZouEqgB3KVTmr2UOpZ4ocmrhvENEwW3RWzwlbWG5Nj9+EjoiJ9ux4AheSy4vA9fWyrmw3zaHIkHNKnUetb3eJBpKiWaclWem8VIfiBw6V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUHL+oSz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49836C4CECF;
-	Mon, 11 Nov 2024 16:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731343887;
-	bh=xsTBACz35DuVfvJ2nfBri71Zv06IBtqdNgFneESDmWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kUHL+oSzBDGxagLpoqTwLI49QBEK+/rlOA5HYofVHGmHvdxe96FyjWp8Vj+mYIiv1
-	 J3FxAaxhrO06O+SudaXeTCb1GPXm2HcHQvzNfgb+dNQirCDKcfIdndnn1UtPhKVJkL
-	 SATk2EnO1+6EicQpiqVzuoFjTk+Q9JoISNQXd1vJQ6mfOepGw81rsR526c0L4jnlE3
-	 8bEE03TxIBws8MRZUpGlcirTOAQSU9zCzWyP0ocJz9TxfiAbGp/rSsxo12RyN503cn
-	 VQOsFFBg94gbm19rUaEYL5x/yAPfrKul+DlAFFTkkSxXRFwDvuddVZnjTzjTKMHwcN
-	 QPF9ZqwKu3I2g==
-Date: Mon, 11 Nov 2024 16:51:20 +0000
-From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for Airoha
- EN7581 GPIO System Controller
-Message-ID: <20241111165120.GD8552@google.com>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
- <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
- <ZyssJpR7xwbMzUsm@lore-desk>
- <20241106110046.GR1807686@google.com>
- <CACRpkdbf4Pb+n-F-K-JaUvytwCGUHHh8d2rYP4A9KgVTzqSnGw@mail.gmail.com>
+	s=arc-20240116; t=1731351657; c=relaxed/simple;
+	bh=KzVPifvp+iOa3Bg8cKfqMmkzoZgJjO8HG4nRsmMmkk8=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=S71tFXzZG8/Yi33iJ9e7sInt5rCfjWq+ELOJMSKvgPQguxGs4dtQLoB/8t1NX/LhI2mwD2wOzpJxphjmySz7bCrucFUy/IIFq5gPZBwry84PNhYMhneOjN/fkCXcbZq3z4D5sckoA3zqw3jj7vJf2FM4KictTgN6j6apIihwam4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=MKcVCczT; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1731351635; x=1731956435; i=frank-w@public-files.de;
+	bh=KzVPifvp+iOa3Bg8cKfqMmkzoZgJjO8HG4nRsmMmkk8=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MKcVCczT0LrVOyHtFxP6kLVEyg9Rr1DOfg6dN97+eLgdVgfXSbbOnfGXL1iKXBZ0
+	 rHAaRovRfKpQNZGMSya3G3Dv5TxiU+75oDJFhacN/Rxg2cEl0HXP/GYix8bKjWJ4M
+	 6gdr2JSpVTgy5Dr2pBKRgdfOPBZmg5D18sn3t9RH1xp/RH1VRplnf0051FoPN5jXf
+	 PnhewIyAfYQDpXChudBkazHUfPhknM7/2B6Qs0ylrCskhmoi7GKCa8gMj7vj+GNaz
+	 WHJhAINo5m0iF/ECPlrbAnzZCX4DOScoSfkV3UHEE+qj1eY5Qo9aYq3Xw4Kb5EadF
+	 s+i/HtgRthArqrIJsg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [217.61.144.196] ([217.61.144.196]) by
+ trinity-msg-rest-gmx-gmx-live-67cd9ff8f8-qxw8q (via HTTP); Mon, 11 Nov 2024
+ 19:00:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbf4Pb+n-F-K-JaUvytwCGUHHh8d2rYP4A9KgVTzqSnGw@mail.gmail.com>
+Message-ID: <trinity-090addc5-80b8-4d9f-8f01-ed2c519e0d3d-1731351635476@trinity-msg-rest-gmx-gmx-live-67cd9ff8f8-qxw8q>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: ot_cathy.xu@mediatek.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, sean.wang@kernel.org,
+ linus.walleij@linaro.org
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ guodong.liu@mediatek.corp-partner.google.com, guodong.liu@mediatek.com
+Subject: Aw: [PATCH] pinctrl: mediatek: Add pinctrl driver
+Content-Type: text/plain; charset=UTF-8
+Importance: normal
+Date: Mon, 11 Nov 2024 19:00:35 +0000
+Sensitivity: Normal
+In-Reply-To: <20241111074030.25673-1-ot_cathy.xu@mediatek.com>
+References: <20241111074030.25673-1-ot_cathy.xu@mediatek.com>
+X-Priority: 3
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:Ozjf8sg7sz1HlEchb8Y+cG4HP+g7ZDiilByq1d+03bVEVcgQ9K0XMDkll7rll0qLgITIE
+ ZRXCP79R5bR4FbrOFYRZFZV24agGu9MeLINTAn+IiWWWtWN7bdcpMLeou+bBIyEIf18xDIMpdrSV
+ G3dap+gsWMuJOy6FmOc0oMSmNYmRTOUPBZAysz2YfIMAr96RStSuZ1aDYZ2pRlu8hQIUsjxFRQrb
+ 35pp50DzueMKPBgbh3ePBTnmVlvS3E+h9tq0NieKZMB7PhJ9imgyFutu1wujwBvHLr1RblmMq5ad
+ TjxYsWottylZQLn3jZljR2jUTMsb7Lcs1Ihwkv+dnMn/TcO/611KbYA3CrJ7SS8BGg=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Cxp8uh7T7Lo=;8fe5xqojxII002tLFune4TqJJoC
+ gZkvtiBWOB2zgESItk/7vPr7m3XzF2906z9pRMI+TK6cyBsvNgiOqrCW5kD2Bz1ayu4yTC77a
+ wjDpBWy4/v3bnRX0CgV2KB63aa2VhoN7l8NY8IMwAoA/gX/7GDUDivS5eICyGpV08NU6amwCK
+ zCC/UGQoY+JloFmJn07M6MU94UyI3Yec2h1+47MzTMQdDlCi4QxOB7JEUgKeYXAQhJXPC42N2
+ pcsGbAE/RuOPh+s5UgI5gdibRK/2DID+Z5Mm78BDJY8R46SZnFV+ru6524RtJ6hL4lAZTwTjI
+ qtyYKz3RxzSzdQ1QdwqIKmPDXWDhlM1z3YWArCqZ59C9Y56C0hkclxjWOHV3YyXYS8jz9IQMd
+ N7Kj69kG9VIiN93AuUr0pgh0anLqchRMW4oTs0NClgJCJHD5VnApKmq905mHYLt8r6wG5NCda
+ u4xK4y/MyzX5YvQTAXF8wbqz/HprgVVVgurjCPAXGEnuWlY1zhmb3swsjTzmwU1zbZIMe1e5V
+ m8k8wPJW8hnif912XQ8QEnPsvmgI9Y/Gw6c5zSRpPsZif3byyilT9TU3qc/BtC7cWcc8JPaYk
+ kLv8uCNffBBxhnD3YWdhDYLfuWB1rFpbbP+9+zY6J0rPjsz945B2wDzenafTxjIQj+OFIvdN6
+ oACatyGTpNh3R0vFBa4q230qNfQiy2PLyGbywWq41w==
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 06 Nov 2024, Linus Walleij wrote:
+&gt; Gesendet: Montag, 11. November 2024 um 08:40
+&gt; Von: ot907280 <ot_cathy.xu@mediatek.com>
+&gt; Betreff: [PATCH] pinctrl: mediatek: Add pinctrl driver
+&gt;
+&gt; From: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
+&gt;
+&gt; Add pinctrl driver for mt8196
 
-> On Wed, Nov 6, 2024 at 12:00 PM Lee Jones <lee@kernel.org> wrote:
-> > On Wed, 06 Nov 2024, Lorenzo Bianconi wrote:
-> >
-> > > On Nov 06, Lee Jones wrote:
-> > > > On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
-> > > > > Add support for Airoha EN7581 GPIO System Controller which provide a
-> > > > > register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> > > > > dedicated pinctrl and pwm child nodes.
-> > > > >
-> > > > >
-> > > >
-> > > > Applied, thanks!
-> > > >
-> > > > [4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
-> > > >       commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
-> > > >
-> > > > --
-> > > > Lee Jones [李琼斯]
-> > > >
-> > >
-> > > Hi Lee,
-> > >
-> > > according to my understanding this patch has been already applied by Linus
-> > > here:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=devel&id=50dedb1eb1e6755ccab55f6140916c2d192be765
-> >
-> > An interesting choice.  Linus?
-> 
-> Yes I suggested that I merge patches 1-5 on oct 29 and applied the
-> day after:
-> https://lore.kernel.org/linux-gpio/CACRpkdYshPusdA7bDW2y8H_wp-Fm3N-YCsY1_Qn=dZqRiFy12w@mail.gmail.com/
-> 
-> It's because the bindings are dependent on each other, this one patch has:
-> 
-> +  pinctrl:
-> +    type: object
-> +    $ref: /schemas/pinctrl/airoha,en7581-pinctrl.yaml
-> +    description:
-> +      Child node definition for EN7581 Pin controller
-> +
-> +  pwm:
-> +    type: object
-> +    $ref: /schemas/pwm/airoha,en7581-pwm.yaml
-> +    description:
-> +      Child node definition for EN7581 PWM controller
-> 
-> Those refs will explode unless the two others are merged at the same
-> time.
-> 
-> Usually we merge the whole shebang through MFD but this one felt
-> different because there is no actual MFD driver, just using simple-mfd.
-> 
-> In hindsight I should probs not have been so trigger happy and give
-> some more time for this to settle... Merge window stress I guess. :/
-> 
-> It's fine to apply textually identical patches to two trees though as
-> git will sort
-> that out so technically it's no big deal, you can keep it applied if you
-> want.
+Hi
 
-It's okay.  Life will be easier for everyone if I remove it.
+you should add your SoC to commit-/patch-title too.
 
--- 
-Lee Jones [李琼斯]
+regards Frank
+</guodong.liu@mediatek.corp-partner.google.com></ot_cathy.xu@mediatek.com>
 
