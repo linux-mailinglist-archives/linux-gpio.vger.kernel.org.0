@@ -1,250 +1,395 @@
-Return-Path: <linux-gpio+bounces-12825-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12826-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 315529C3FA3
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 14:39:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A7459C41F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 16:35:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54AA61C21827
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 13:39:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE630284D43
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Nov 2024 15:35:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992FF19D091;
-	Mon, 11 Nov 2024 13:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4CE1A0731;
+	Mon, 11 Nov 2024 15:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eO2lA6xL"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="E7jzRMNy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C1155C29;
-	Mon, 11 Nov 2024 13:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6B949625;
+	Mon, 11 Nov 2024 15:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731332361; cv=none; b=buQFzbL4ANm8Kr49dDS87knAbXoriCT8fhNDZhlp6wjm8CkPgy6q+fXntWNjp/KZ0MoAZlTTjqHkPI4q1lH2wiYCV7ObRWCNv+rZQf6COxzBp3/pGlR3mn6xyPUL7JwiQS5f54M4+0LqZAU8W62kLICP1Yw2PIV6H9lrlL7jIOI=
+	t=1731339276; cv=none; b=PzxSihjU1p3bzjMQuU9u+681XnGRhRpdR5HaHHz0L25WG3HWPQAsANtayUO5rHE/mVLwBzP+Nbr5Lx6sifyBe4w2Jl5Jw7CzJpNIWeYz+cwX8LsI9A/PKabWJyj5pk0EDGsIbQWpKr7WJYWVBQQCYHKrWcVDabKMShlEFgQ2AY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731332361; c=relaxed/simple;
-	bh=ZHl9kaQvP87pfaer5ugsO1tp61Mnu5JhljLuzu4Tf/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s/X+SB6nVY8+C+/NYdLG8krmuI95LpgpKHxqQMA2cgX8QN00usG5wLIYDRkMP0k/T9HV903i0OqRLnQJNCD32YV/RQ3WYOyDVtVLLo5d+tFsRHJd00P67iTbkOEC8DBISECo8YXf2gLWF09WeCG7hTMSO6/ubSPChVa/8dXoiiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eO2lA6xL; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1731332357;
-	bh=ZHl9kaQvP87pfaer5ugsO1tp61Mnu5JhljLuzu4Tf/Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eO2lA6xLxjaEd1crnztASfRpL09mogrvcvdzvH11lMQ0O7sS4Jr2QAIrZHgrRLnvS
-	 pLY+u2d2lfexmWyO2NGvqwSfeORSJuiraC/RhT9CtuxOZ4vRJ+qEaupO5gr9FUDpYG
-	 1DGNqiWBcRB50pL+bFHM4KuTvTYhDMffHIeezJ+RloRUbITa59aSMOSjRLVNUbfVXd
-	 ft45Bj4Z7IOxsnoRgnvTFzP6ansQX4jsfKN8+VoJnUvauwxROCnHvGhoGC8DqWrWm4
-	 uIcLCqRFMpwFAIK++Ki7q6TTeP7GPjrt9Q9VXXxjIFqZf6ae2erNzQvsIcm2aNLcwa
-	 CwlTKxYzPQofg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id AEEE117E363A;
-	Mon, 11 Nov 2024 14:39:16 +0100 (CET)
-Message-ID: <73756cb5-6bd4-4c4e-9d91-1b9c1ca96a37@collabora.com>
-Date: Mon, 11 Nov 2024 14:39:15 +0100
+	s=arc-20240116; t=1731339276; c=relaxed/simple;
+	bh=s+r8MKSfjOUgsLlcKit7gbhB1uOR+p7/d0nO74Q29mc=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=HvDugNOjR1xpXj2izGAA3pbr3MFRBAycc8GKBAXF7TiRHjuoRfZtRUH28JAcoaPnVAqAnpxxPDwdh7580IHVhOKSziBfMxiWE/NJfwfLBEuwYmMrGOxuJ82/rYefu4KfaNVHAco8TeNwil9/fHlvg7tfn8UJkF6AKzFIvbpQp0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=E7jzRMNy; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 5D313E45C8;
+	Mon, 11 Nov 2024 15:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1731339266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FgH5SDBs70jQ4C2U/avkzi9hwI1VhBBZzHkW8+ms7HI=;
+	b=E7jzRMNyOIGQuTY31m7mi34wUHcZCy490mwQaIZ39ylLaTQY+lQQMeJpV++pCjfOD3RU+4
+	LW17xHcNtAQwBcn8AMv8LxRNDWwX/vB62KczSVQbaeNJmMRJk8Ha8iuh2gyjembaYD3Q/y
+	bCPQW41NUthuIjrGkXhPMMX9pbgDBsZj359KX+flJh0rqEI8sEDdj5xldYwa7LvKdvyV69
+	+5KJTeDlpZfOA+kDr+/VnVsEmSivcSGGliCMjHZMqHGQfKb0rjqe3pNMdHNOkMwxpPRNon
+	vLK17MEdir+Qr37ta3v3iXhXjiZh9AJhv7u1QH4zrQWIl53o+9oyeP++QKC1fw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: mediatek: Add pinctrl driver
-To: ot907280 <ot_cathy.xu@mediatek.com>, matthias.bgg@gmail.com,
- sean.wang@kernel.org, linus.walleij@linaro.org
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
- Guodong Liu <guodong.liu@mediatek.com>
-References: <20241111074030.25673-1-ot_cathy.xu@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20241111074030.25673-1-ot_cathy.xu@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Date: Mon, 11 Nov 2024 16:34:26 +0100
+From: barnabas.czeman@mainlining.org
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+ <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Amit Kucheria <amitk@kernel.org>, Thara Gopinath
+ <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz
+ Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+Subject: Re: [PATCH v4 08/10] arm64: dts: qcom: Add initial support for
+ MSM8917
+In-Reply-To: <ZzHf9J0Y2uB7_vy4@linaro.org>
+References: <20241109-msm8917-v4-0-8be9904792ab@mainlining.org>
+ <20241109-msm8917-v4-8-8be9904792ab@mainlining.org>
+ <ZzHf9J0Y2uB7_vy4@linaro.org>
+Message-ID: <84ae6914700eff1ad66dd1048efeff97@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-Il 11/11/24 08:40, ot907280 ha scritto:
-> From: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
+On 2024-11-11 11:44, Stephan Gerhold wrote:
+> On Sat, Nov 09, 2024 at 01:08:10PM +0100, Barnabás Czémán wrote:
+>> From: Otto Pflüger <otto.pflueger@abscue.de>
+>> 
+>> Add initial support for MSM8917 SoC.
+>> 
+>> Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
+>> [reword commit, rebase, fix schema errors]
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8917.dtsi | 1997 
+>> +++++++++++++++++++++++++++++++++
+>>  1 file changed, 1997 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8917.dtsi 
+>> b/arch/arm64/boot/dts/qcom/msm8917.dtsi
+>> new file mode 100644
+>> index 
+>> 0000000000000000000000000000000000000000..f866843772684c695069debfc764f7a0a58843bb
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/msm8917.dtsi
+>> @@ -0,0 +1,1997 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <dt-bindings/clock/qcom,gcc-msm8917.h>
+>> +#include <dt-bindings/clock/qcom,rpmcc.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/power/qcom-rpmpd.h>
+>> +#include <dt-bindings/soc/qcom,apr.h>
+>> +#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
+>> +#include <dt-bindings/thermal/thermal.h>
+>> +
+>> +/ {
+>> +	interrupt-parent = <&intc>;
+>> +
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +
+>> +	aliases {
+>> +		mmc0 = &sdhc_1; /* SDC1 eMMC slot */
+>> +		mmc1 = &sdhc_2; /* SDC2 SD card slot */
+>> +	};
 > 
-> Add pinctrl driver for mt8196
+> I think we put aliases in each board separately nowadays, see e.g.
+> commit 154f23a8d70c ("arm64: dts: qcom: msm8916: Move aliases to
+> boards").
 > 
-
-Please fix the commit title, add a meaningful description ... and also please fix
-your name, as your email is sent by "ot907280" and not from "Cathy Xu".
-
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> Cathy Xu <ot_cathy.xu@mediatek.com>
-
-You're missing the "Signed-off-by: " part before your name.
-
-> ---
->   drivers/pinctrl/mediatek/Kconfig              |   12 +
->   drivers/pinctrl/mediatek/Makefile             |    1 +
->   drivers/pinctrl/mediatek/pinctrl-mt8196.c     | 1757 +++++++++++
->   drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 2791 +++++++++++++++++
->   4 files changed, 4561 insertions(+)
->   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
->   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
+>> [...]
+>> +		domain-idle-states {
+>> +			cluster_sleep_0: cluster-sleep-0 {
+>> +				compatible = "domain-idle-state";
+>> +				arm,psci-suspend-param = <0x41000023>;
+>> +				entry-latency-us = <700>;
+>> +				exit-latency-us = <650>;
+>> +				min-residency-us = <1972>;
+>> +			};
+>> +
+>> +			cluster_sleep_1: cluster-sleep-1 {
+>> +				compatible = "domain-idle-state";
+>> +				arm,psci-suspend-param = <0x41000043>;
+>> +				entry-latency-us = <240>;
+>> +				exit-latency-us = <280>;
+>> +				min-residency-us = <806>;
+>> +			};
 > 
-> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index a417a031659c..149a78e4216e 100644
-> --- a/drivers/pinctrl/mediatek/Kconfig
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -256,6 +256,18 @@ config PINCTRL_MT8195
->   	default ARM64 && ARCH_MEDIATEK
->   	select PINCTRL_MTK_PARIS
->   
-> +config PINCTRL_MT8196
-> +	bool "MediaTek MT8196 pin control"
-> +	depends on OF
-> +	depends on ARM64 || COMPILE_TEST
-> +	default ARM64 && ARCH_MEDIATEK
-> +	select PINCTRL_MTK_PARIS
-> +	help
-> +	  Say yes here to support pin controller and gpio driver
-> +	  on MediaTek MT8196 SoC.
-> +	  In MTK platform, we support virtual gpio and use it to
-> +	  map specific eint which doesn't have real gpio pin.
-> +
->   config PINCTRL_MT8365
->   	bool "MediaTek MT8365 pin control"
->   	depends on OF
-> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
-> index 1405d434218e..b4a39c1bafb7 100644
-> --- a/drivers/pinctrl/mediatek/Makefile
-> +++ b/drivers/pinctrl/mediatek/Makefile
-> @@ -35,6 +35,7 @@ obj-$(CONFIG_PINCTRL_MT8186)		+= pinctrl-mt8186.o
->   obj-$(CONFIG_PINCTRL_MT8188)		+= pinctrl-mt8188.o
->   obj-$(CONFIG_PINCTRL_MT8192)		+= pinctrl-mt8192.o
->   obj-$(CONFIG_PINCTRL_MT8195)		+= pinctrl-mt8195.o
-> +obj-$(CONFIG_PINCTRL_MT8196)		+= pinctrl-mt8196.o
->   obj-$(CONFIG_PINCTRL_MT8365)		+= pinctrl-mt8365.o
->   obj-$(CONFIG_PINCTRL_MT8516)		+= pinctrl-mt8516.o
->   obj-$(CONFIG_PINCTRL_MT6397)		+= pinctrl-mt6397.o
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8196.c b/drivers/pinctrl/mediatek/pinctrl-mt8196.c
-> new file mode 100644
-> index 000000000000..6d2bee706718
-> --- /dev/null
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8196.c
-> @@ -0,0 +1,1757 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2024 Mediatek Inc.
-> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include "pinctrl-mtk-mt8196.h"
-> +#include "pinctrl-paris.h"
-> +
-> +#define PIN_FIELD_BASE(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits)  \
-
-It doesn't look like there's any s_pin with a different number from e_pin - unless
-I am misreading something, you can change `s_pin` to be named `se_pin`, so that we
-stop declaring the number twice; makes it a little more readable.
-
-> +	PIN_FIELD_CALC(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits, \
-> +		32, 0)
-> +
-> +#define PINS_FIELD_BASE(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits) \
-
-Same here.
-
-> +	PIN_FIELD_CALC(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits, \
-> +		32, 1)
-> +
-> +static const struct mtk_pin_field_calc mt8196_pin_mode_range[] = {
-> +	PIN_FIELD(0, 270, 0x0300, 0x10, 0, 4),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8196_pin_dir_range[] = {
-> +	PIN_FIELD(0, 270, 0x0000, 0x10, 0, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8196_pin_di_range[] = {
-> +	PIN_FIELD(0, 270, 0x0200, 0x10, 0, 1),
-> +};
-> +
-> +static const struct mtk_pin_field_calc mt8196_pin_do_range[] = {
-> +	PIN_FIELD(0, 270, 0x0100, 0x10, 0, 1),
-> +};
-> +
-..snip..
-
-> +static const unsigned int mt8196_pull_type[] = {
-> +	MTK_PULL_PU_PD_TYPE,/*0*/		MTK_PULL_PU_PD_TYPE,/*1*/
-> +	MTK_PULL_PU_PD_TYPE,/*2*/		MTK_PULL_PU_PD_TYPE,/*3*/
-> +	MTK_PULL_PU_PD_TYPE,/*4*/		MTK_PULL_PU_PD_TYPE,/*5*/
-> +	MTK_PULL_PU_PD_TYPE,/*6*/		MTK_PULL_PU_PD_TYPE,/*7*/
-> +	MTK_PULL_PU_PD_TYPE,/*8*/		MTK_PULL_PU_PD_TYPE,/*9*/
-> +	MTK_PULL_PU_PD_TYPE,/*10*/		MTK_PULL_PU_PD_TYPE,/*11*/
-> +	MTK_PULL_PU_PD_TYPE,/*12*/		MTK_PULL_PU_PD_TYPE,/*13*/
-> +	MTK_PULL_PU_PD_TYPE,/*14*/		MTK_PULL_PU_PD_TYPE,/*15*/
-> +	MTK_PULL_PU_PD_TYPE,/*16*/		MTK_PULL_PU_PD_TYPE,/*17*/
-> +	MTK_PULL_PU_PD_TYPE,/*18*/		MTK_PULL_PU_PD_TYPE,/*19*/
-> +	MTK_PULL_PU_PD_TYPE,/*20*/		MTK_PULL_PU_PD_TYPE,/*21*/
-> +	MTK_PULL_PU_PD_TYPE,/*22*/		MTK_PULL_PU_PD_TYPE,/*23*/
-> +	MTK_PULL_PU_PD_TYPE,/*24*/		MTK_PULL_PU_PD_TYPE,/*25*/
-> +	MTK_PULL_PU_PD_TYPE,/*26*/		MTK_PULL_PU_PD_TYPE,/*27*/
-> +	MTK_PULL_PU_PD_TYPE,/*28*/		MTK_PULL_PU_PD_TYPE,/*29*/
-> +	MTK_PULL_PU_PD_TYPE,/*30*/		MTK_PULL_PU_PD_TYPE,/*31*/
-> +	MTK_PULL_PU_PD_TYPE,/*32*/		MTK_PULL_PU_PD_TYPE,/*33*/
-> +	MTK_PULL_PU_PD_TYPE,/*34*/		MTK_PULL_PU_PD_TYPE,/*35*/
-> +	MTK_PULL_PU_PD_TYPE,/*36*/		MTK_PULL_PU_PD_TYPE,/*37*/
-> +	MTK_PULL_PU_PD_TYPE,/*38*/		MTK_PULL_PU_PD_TYPE,/*39*/
-> +	MTK_PULL_PU_PD_TYPE,/*40*/		MTK_PULL_PU_PD_TYPE,/*41*/
-> +	MTK_PULL_PU_PD_TYPE,/*42*/		MTK_PULL_PU_PD_TYPE,/*43*/
-> +	MTK_PULL_PU_PD_TYPE,/*44*/		MTK_PULL_PU_PD_TYPE,/*45*/
-> +	MTK_PULL_PU_PD_RSEL_TYPE,/*46*/	MTK_PULL_PU_PD_RSEL_TYPE,/*47*/
-> +	MTK_PULL_PU_PD_RSEL_TYPE,/*48*/	MTK_PULL_PU_PD_RSEL_TYPE,/*49*/
-> +	MTK_PULL_PU_PD_RSEL_TYPE,/*50*/	MTK_PULL_PU_PD_RSEL_TYPE,/*51*/
-
-Please fix the indentation to be consistent.
-
-> +	MTK_PULL_PU_PD_RSEL_TYPE,/*52*/	MTK_PULL_PU_PD_RSEL_TYPE,/*53*/
-
-..snip..
-
-> +
-> +static const struct mtk_pin_soc mt8196_data = {
-> +	.reg_cal	= mt8196_reg_cals,
-> +	.pins	= mtk_pins_mt8196,
-> +	.npins	= ARRAY_SIZE(mtk_pins_mt8196),
-> +	.ngrps	= ARRAY_SIZE(mtk_pins_mt8196),
-
-Where is eint?!
-
-> +	.nfuncs	= 8,
-> +	.gpio_m	= 0,
-> +	.base_names	= mt8196_pinctrl_register_base_names,
-> +	.nbase_names	= ARRAY_SIZE(mt8196_pinctrl_register_base_names),
-> +	.pull_type = mt8196_pull_type,
-> +	.bias_set_combo	= mtk_pinconf_bias_set_combo,
-> +	.bias_get_combo	= mtk_pinconf_bias_get_combo,
-> +	.drive_set	= mtk_pinconf_drive_set_rev1,
-> +	.drive_get	= mtk_pinconf_drive_get_rev1,
-> +	.adv_drive_get	= mtk_pinconf_adv_drive_get_raw,
-> +	.adv_drive_set	= mtk_pinconf_adv_drive_set_raw,
-> +};
-> +
-> +static const struct of_device_id mt8196_pinctrl_of_match[] = {
-> +	{ .compatible = "mediatek,mt8196-pinctrl", .data = &mt8196_data },
-> +	{ }
-
-	{ /* sentinel */ }
-
-> +};
-
-Regards,
-Angelo
-
+> This is strange, the deeper sleep state has lower timings than the
+> previous one?
+> 
+>> +
+>> +			cluster_sleep_2: cluster-sleep-2 {
+>> +				compatible = "domain-idle-state";
+>> +				arm,psci-suspend-param = <0x41000053>;
+>> +				entry-latency-us = <700>;
+>> +				exit-latency-us = <1000>;
+>> +				min-residency-us = <6500>;
+>> +			};
+>> +		};
+>> [...]
+>> +
+>> +	rpm: remoteproc {
+>> +		compatible = "qcom,msm8917-rpm-proc", "qcom,rpm-proc";
+>> +
+>> +		smd-edge {
+>> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+>> +			qcom,ipc = <&apcs 8 0>;
+> 
+> Can you use mboxes here?
+No, it cause deferred probe because of dependency cycle like at other 
+SoCs where it was reverted.
+> 
+>> +			qcom,smd-edge = <15>;
+>> +
+>> [...]
+>> +
+>> +		mpss_mem: mpss@86800000 {
+>> +			/*
+>> +			 * The memory region for the mpss firmware is generally
+>> +			 * relocatable and could be allocated dynamically.
+>> +			 * However, many firmware versions tend to fail when
+>> +			 * loaded to some special addresses, so it is hard to
+>> +			 * define reliable alloc-ranges.
+>> +			 *
+>> +			 * alignment = <0x0 0x400000>;
+>> +			 * alloc-ranges = <0x0 0x86800000 0x0 0x8000000>;
+>> +			 */
+> 
+> Not sure how many devices you have access to, but have you tried if 
+> this
+> is actually still the case? I'd have hoped they fixed those issues in
+> the firmware.
+> 
+> Thanks for using alloc-ranges instead of fixed addresses BTW :)
+> 
+>> +			reg = <0x0 0x86800000 0x0 0>; /* size is device-specific */
+>> +			no-map;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> [...]
+>> +	smp2p-adsp {
+>> +		compatible = "qcom,smp2p";
+>> +		qcom,smem = <443>, <429>;
+>> +
+>> +		interrupts = <GIC_SPI 291 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +		mboxes = <&apcs 10>;
+>> +
+>> +		qcom,local-pid = <0>;
+>> +		qcom,remote-pid = <2>;
+>> +
+>> +		adsp_smp2p_out: master-kernel {
+>> +			qcom,entry-name = "master-kernel";
+>> +
+>> +			#qcom,smem-state-cells = <1>;
+>> +		};
+>> +
+>> +		adsp_smp2p_in: slave-kernel {
+>> +			qcom,entry-name = "slave-kernel";
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +		};
+>> +	};
+>> +
+>> +	smp2p-modem {
+>> +		compatible = "qcom,smp2p";
+>> +		qcom,smem = <435>, <428>;
+>> +
+>> +		interrupts = <GIC_SPI 27 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +		qcom,ipc = <&apcs 8 14>;
+> 
+> You have mboxes for adsp above, what about modem and
+Maybe i should set back qcom,ipc there.
+> 
+>> +
+>> +		qcom,local-pid = <0>;
+>> +		qcom,remote-pid = <1>;
+>> +
+>> +		modem_smp2p_out: master-kernel {
+>> +			qcom,entry-name = "master-kernel";
+>> +
+>> +			#qcom,smem-state-cells = <1>;
+>> +		};
+>> +
+>> +		modem_smp2p_in: slave-kernel {
+>> +			qcom,entry-name = "slave-kernel";
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +		};
+>> +	};
+>> +
+>> +	smp2p-wcnss {
+>> +		compatible = "qcom,smp2p";
+>> +		qcom,smem = <451>, <431>;
+>> +
+>> +		interrupts = <GIC_SPI 143 IRQ_TYPE_EDGE_RISING>;
+>> +
+>> +		qcom,ipc = <&apcs 8 18>;
+> 
+> ... wcnss?
+> 
+>> +
+>> +		qcom,local-pid = <0>;
+>> +		qcom,remote-pid = <4>;
+>> +
+>> +		wcnss_smp2p_out: master-kernel {
+>> +			qcom,entry-name = "master-kernel";
+>> +
+>> +			#qcom,smem-state-cells = <1>;
+>> +		};
+>> +
+>> +		wcnss_smp2p_in: slave-kernel {
+>> +			qcom,entry-name = "slave-kernel";
+>> +
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +		};
+>> +	};
+>> +
+>> [...]
+>> +
+>> +		restart@4ab000 {
+>> +			compatible = "qcom,pshold";
+>> +			reg = <0x004ab000 0x4>;
+>> +		};
+> 
+> You have PSCI for shutting down, do you actually need this?
+> 
+>> [...]
+>> +		blsp_i2c4: i2c@78b8000 {
+>> +			compatible = "qcom,i2c-qup-v2.2.1";
+>> +			reg = <0x078b8000 0x500>;
+>> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>,
+>> +				 <&gcc GCC_BLSP1_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			dmas = <&blsp1_dma 10>, <&blsp1_dma 11>;
+>> +			dma-names = "tx", "rx";
+>> +			pinctrl-0 = <&i2c4_default>;
+>> +			pinctrl-1 = <&i2c4_sleep>;
+>> +			pinctrl-names = "default", "sleep";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		blsp_i2c5: i2c@7af5000 {
+> 
+> Please use a full label here with the BLSP number and QUP instance
+> (&blspX_i2cY). This corresponds to the name of the clock, so this node
+> is actually
+> 
+>> +			compatible = "qcom,i2c-qup-v2.2.1";
+>> +			reg = <0x07af5000 0x600>;
+>> +			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>,
+> 
+> ... &blsp2_i2c1.
+> 
+> I guess the current naming is taken from downstream, but I think they
+> just assigned consecutive numbers to all the QUP instances they needed.
+> This will cause headaches in the future if someone wants to add an
+> instance that wasn't used by QC in the reference designs.
+> 
+>> +				 <&gcc GCC_BLSP2_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			dmas = <&blsp2_dma 4>, <&blsp2_dma 5>;
+>> +			dma-names = "tx", "rx";
+>> +			pinctrl-0 = <&i2c5_default>;
+>> +			pinctrl-1 = <&i2c5_sleep>;
+> 
+> &blsp2_i2c1_default/sleep for clarity
+> 
+>> +			pinctrl-names = "default", "sleep";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		blsp_spi6: spi@7af6000 {
+> 
+> &blsp2_spi2
+> 
+>> +			compatible = "qcom,spi-qup-v2.2.1";
+>> +			reg = <0x07af6000 0x600>;
+>> +			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP2_QUP2_SPI_APPS_CLK>,
+>> +				 <&gcc GCC_BLSP2_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			dmas = <&blsp2_dma 6>, <&blsp2_dma 7>;
+>> +			dma-names = "tx", "rx";
+>> +			pinctrl-0 = <&spi6_default>;
+>> +			pinctrl-1 = <&spi6_sleep>;
+> 
+> &blsp2_spi2_default/sleep
+> 
+>> +			pinctrl-names = "default", "sleep";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> [...]
+>> +		timer@b120000 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +			compatible = "arm,armv7-timer-mem";
+>> +			reg = <0x0b120000 0x1000>;
+>> +			clock-frequency = <19200000>;
+> 
+> Should be unneeded unless the firmware is broken. Can you try dropping
+> it and see if you get a warning in dmesg?
+> 
+>> [...]
+>> +		};
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv8-timer";
+>> +		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | 
+>> IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +		clock-frequency = <19200000>;
+> 
+> Same here.
+> 
+> Thanks,
+> Stephan
 
