@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-12892-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12893-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 509589C5F3E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 18:39:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5987C9C5F48
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 18:40:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 105A6281D77
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 17:39:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1948C280612
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 17:40:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4018213142;
-	Tue, 12 Nov 2024 17:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17A7F215C77;
+	Tue, 12 Nov 2024 17:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="uZsD40JD"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="iiXG4ezv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2459209664;
-	Tue, 12 Nov 2024 17:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E07213ECD;
+	Tue, 12 Nov 2024 17:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731432789; cv=none; b=kePQbzVA4LyM5hXCQjzkCcvl44nx6eYIpti7R3pYBNBY1o9x7MrolwDzOGTp0ciVmQhgBymPRWvX1sWqS2reeOjmZFpNxb4osCr/qs85wCAw5MTmv1K578XJLyKeTJAqp886XADr7+6OcorxK4+B7rliOnoPKqX+fdvH6pUV7Q8=
+	t=1731433088; cv=none; b=ThU5JswJ3yt1zeC14Vig/R2BQ3LKQprpTaxc8c0fwbwIId1/fNwFuDEwYPGrtDH3I/hLkyOs1Z/WexxQgpy0GyyNZmrlXzr63qlHh8PAqYjOb47cEuF6EfoZdelyhC0DYza4v348fATKa1dhMqNLr9x8YTf+fhGAzB3TY7sSp60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731432789; c=relaxed/simple;
-	bh=ZMippwGJIxIyDlx7CchqU2+81i9sMtpxdtNshqEH+FA=;
+	s=arc-20240116; t=1731433088; c=relaxed/simple;
+	bh=tBI/we5cobDpwZqrIAP8VPpPpJdJhS7JFNBxvv/QOZQ=;
 	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=rvoTc8Hk+ZpX0s5a78myB8hmVwbPiG9buPqbvvyWvZmwpe6H8HRg4lLx3qZh+aT9PKeyvtxkUQEmsyArYZAneJ6uygbd5DqTzTUKv+R4awR9hlQpPuqS2sPRvL1p6X4vL8eWv+gNcL/Aoar8zPuO6t0fCGqSyEfWwJ9ZhK1+7+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=uZsD40JD; arc=none smtp.client-ip=5.75.144.95
+	 Message-ID:Content-Type; b=ZttehIvATyYpwE6PCW/AyYRNZv8vSHA1al3kbrF2V5mvXJtOSItI1bxpTK1IUuWTUZjy1LmaZoVixTH/4UHcc8tAVI0HOXRfG18q00DNJ0+2vhgssqFOjRhfjYWatOhN4FhToUFHnK65RWUCFbcZvXkRklmITNGo1esoOkrAv28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=iiXG4ezv; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 460B6E45C8;
-	Tue, 12 Nov 2024 17:33:04 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id 8DAA7E45C8;
+	Tue, 12 Nov 2024 17:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1731432784;
+	s=psm; t=1731433084;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z2MTZMjG68b3T6cJYBnCLBnnuL4jBK+EhuaLspP8FtU=;
-	b=uZsD40JDUj+xKRaOPkpL6nf3J8klFmsRTOn6vreQuN1wSp87ovX6mpEFCQOBx58K8QYta7
-	VzVeaQ4h8EQJbmNZQR+3u28BgKJQqiIQ0wd/2yJ5UmCqdzO49ZieHlQVATtN9X/viRhm5C
-	AUV+br4PKChFi23R1r9xuXklYwx3712wZPJxv46CzHpYZklv7+Oe2u+rTRzoIQ//eVZ0Lv
-	cEqWoiXSf3J2nKS3tXALl0/PqfhhoPBizRmQRGV2ZBEXo3Ih9UrwyCPjV+BH13swivY/EO
-	WX28pBohIXGSjWiBqxQgD7VOTo/Kymv3m11hIsYqhRGe8YX1N9lteGUehAvx8g==
+	bh=Y18+Q1ZqjLCjhEM42biXLX0RAZwh7JK0eycDZZ0O8A8=;
+	b=iiXG4ezvnSWLdzZxkuJpyJk3g1GUNERFObVHqGgW7Mcskho3dVcdy5dWF5LAm85MdYltAH
+	qETgqzHAN5ZLAj/wxveW1mPEsx169OwBfKgYdIp/gbHh9B64re5skPKwQPktTFjPEOTDD5
+	hd+f5CKfzb+GyZElVdhQbmlcW/DjAdj2Q3Gwi2Po6tEXcCrLm7Gu08qhgrXEiLsNO2qDrw
+	V12n4LOiu7c8Pr0I6X13k91xdtXSumzImcgtNwajxnoKluvFrEoIAS7Dy/hFog2907usoE
+	O/d3NalFo68tQDiEeC7tPYklc5TnvYyd36burvq7FLqv/Eu893C5OGsq/BKrUA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 12 Nov 2024 18:33:04 +0100
+Date: Tue, 12 Nov 2024 18:38:04 +0100
 From: barnabas.czeman@mainlining.org
 To: Stephan Gerhold <stephan.gerhold@linaro.org>
 Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
@@ -73,7 +73,7 @@ In-Reply-To: <ZzOQEgLLhkH-IymV@linaro.org>
 References: <20241112-msm8917-v5-0-3ca34d33191b@mainlining.org>
  <20241112-msm8917-v5-8-3ca34d33191b@mainlining.org>
  <ZzOQEgLLhkH-IymV@linaro.org>
-Message-ID: <8d4cddf01b29cbd4b86c13081bb1ce0d@mainlining.org>
+Message-ID: <4c34cb8eec5eab92501011e446b5362d@mainlining.org>
 X-Sender: barnabas.czeman@mainlining.org
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
@@ -143,7 +143,6 @@ On 2024-11-12 18:27, Stephan Gerhold wrote:
 > This one too:
 > 
 > You have PSCI for shutting down, do you actually need this?
-Yes, power off is not working without this.
 > 
 >> +
 >> +		tlmm: pinctrl@1000000 {
@@ -254,6 +253,8 @@ Yes, power off is not working without this.
 > is suspended so we can detect insertions/removals. Also should be 
 > placed
 > in the board-specific DT part.
+I have made these based on this 
+https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.9.6.2.r1-04800-89xx.0/arch/arm64/boot/dts/qcom/msm8917-pinctrl.dtsi
 > 
 > See commit dfbda20dabaa ("arm64: dts: qcom: msm8916/39: Fix SD card
 > detect pinctrl").
