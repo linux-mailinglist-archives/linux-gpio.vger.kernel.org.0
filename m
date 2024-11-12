@@ -1,152 +1,169 @@
-Return-Path: <linux-gpio+bounces-12877-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12881-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953479C5DA6
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 17:46:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A97D09C5D45
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 17:29:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCD57B3B566
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 14:46:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F945B80A7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 15:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0435A20011E;
-	Tue, 12 Nov 2024 14:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6453203711;
+	Tue, 12 Nov 2024 15:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQkBdyJI"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="HLWjNDjm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA4D20010A;
-	Tue, 12 Nov 2024 14:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8328C202652;
+	Tue, 12 Nov 2024 15:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731422673; cv=none; b=KPHJnNRihufnqR/HcUhNJrAcaTL5/iodm8aZttaBWLmew9TSHaRo2dmbvBfrP2Z2HcXesszgHBLghW/Y/03d+WA9cNpvDsVQ7uMrNdm6ukvfzLyzgMxmtdEWb96AMqMmY/3BnyttZtiSYEvAR1mCn61rrU7Ul0X6PgJvMYDRdyI=
+	t=1731426588; cv=none; b=Mx17NHtX0r7ZHp0buGWd8yYzIhvJNPVj7jjag21OYwaUTnIfoi6zEzZYb3gzXLHFF9dtK7oDldf5l6qxfaNKwWju07TJNZ2k32VF0IYlzpTLUyrEvYPeCh2HKz1+mBM4Ag3FC75lEy3PrggrO3WoZrXwi0piHJ+PeTYbIVe6EZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731422673; c=relaxed/simple;
-	bh=EjPK34+AC2Pfhya/hAO/+gef3LLKikFCHohkMhTY3fI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pH0O+723Y20RYot48oSYP9IrMq8HCzRdFIhkbSgK/1k65WQRneevcZswg/HFiLARmMl3KOmaQivBnS+LQRf1XBVtjKtRvDIkPrI29Kv3OeQYqp7GVb4+o00dcTvkalvNXylVTHW2ytVIfFRvyeDC4VNk+Cb0tNZc+6/twJfhO1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQkBdyJI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D8B7C4CED0;
-	Tue, 12 Nov 2024 14:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731422673;
-	bh=EjPK34+AC2Pfhya/hAO/+gef3LLKikFCHohkMhTY3fI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uQkBdyJIPNx6GWYU+T7x82rGzvF8PeuQfl+zs/tOQRDrp2LJbaCDsytTuAlUH0nKQ
-	 CrX2QB6TyMhise0BmTtJRqJrEqwTUYLiVqRKSdXW8kTwoM5jYxXrY9mtWd73RAmiu7
-	 sXIhil1Q71nmi0K7oCMXIt8/aSH3EMQJuRs/RLsPuxJfNYmamJXsHZjRZYlLafXb1q
-	 nXE/pO6NON06KK6vDHDkJBqa2QPHDH/Isva5SRn4c2+qPRcGBZ5Yh6fG1JOZOKQI45
-	 MGy11AdgoqVsSGitWcvmduyYXmzKW+UEbGvYdnWMyWg4itCsl3YzwMhegY+dty5nZ6
-	 h7LyGhAFVB9Ig==
-Date: Tue, 12 Nov 2024 14:44:27 +0000
-From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for Airoha
- EN7581 GPIO System Controller
-Message-ID: <20241112144427.GI8552@google.com>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
- <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
- <ZyssJpR7xwbMzUsm@lore-desk>
- <20241106110046.GR1807686@google.com>
- <CACRpkdbf4Pb+n-F-K-JaUvytwCGUHHh8d2rYP4A9KgVTzqSnGw@mail.gmail.com>
- <20241111165120.GD8552@google.com>
+	s=arc-20240116; t=1731426588; c=relaxed/simple;
+	bh=o+bLyPhu3w+N/hvDM9vKce7HeWdpAdo8lJzvKMuwlo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Wt80F5IgoEsIEKsxa2JWjXRK2LDvzOY8EyU4XdSizHmPnygbRRLus5SDf5eSfCWiJXd2fn+APHLtOg2WNtMFxQleEwXgYieZ8Z3nvPX19G4Hd9SaMTVAC0tIRP8SsNEHy7p+k3yqTXMtiZG+YzUyxKK8GuEQ9nu9WQwqAmJuHNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=HLWjNDjm; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.93.162] (254C22F6.nat.pool.telekom.hu [37.76.34.246])
+	by mail.mainlining.org (Postfix) with ESMTPSA id A5115E45C8;
+	Tue, 12 Nov 2024 15:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1731426578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Qu//iSPzUBdNgP61SB2krwbvYfULdUWHcbv4ONQcf7g=;
+	b=HLWjNDjmV+4OZmWRSvsccwf5+xCS4gY7x1pmYvSnCJy7LiQfsFGDmsdeRlnx+gnSRmJq9G
+	1xnScc6RDaoyP2rtZtOx+lGsyb9kb7PTsESyXpr4o92BdTv0r379jfKnnCqIKFGfDRRILi
+	okSVHlRFtUsVX06grOQhPXNlv9MKrDsNZK8QdqyksRT6H92CXdauRT9ryAxqAkgc3x8hLv
+	J0rSR7ikiFFYDT0AbLkeABwOJievzJUiSse6y8MhLaIK5ZDGdgXYsJF6YAdnIq7ncQYDZr
+	kz3NwpPBHgzCeW9Jb7RVnKuDqgjI9JoUQg9u0wuihhGSg39yD0xr4viw9533yg==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v5 00/10] Add MSM8917/PM8937/Redmi 5A
+Date: Tue, 12 Nov 2024 16:49:30 +0100
+Message-Id: <20241112-msm8917-v5-0-3ca34d33191b@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241111165120.GD8552@google.com>
+X-B4-Tracking: v=1; b=H4sIAAp5M2cC/23Oy2rDMBAF0F8JWldFo0clddX/KF2M9XAGajlIx
+ SQE/3vlbGxIlneYc2furKVKqbHP053VtFCjufRg3k4snLGMiVPsmUkhNQjwfGqT82A52KCiyFm
+ jkaxvX2rKdH00ff/0fKb2N9fbo3iBbfrcsQAXPENWASE6l8zXhFR+qVAZ3+c6sq1okQesYMeyY
+ 4fCmozo/AAvsdoxCLtj1fFHjMFgiN664SXWR3x4W2+Xh+S90NZLfMbruv4DZvkLZFoBAAA=
+X-Change-ID: 20241019-msm8917-17c3d0ff4a52
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Dang Huynh <danct12@riseup.net>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731426576; l=3290;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=o+bLyPhu3w+N/hvDM9vKce7HeWdpAdo8lJzvKMuwlo8=;
+ b=Pu1mi9W2VcF8ZrGc4N9x0/wzvJt5pszAXQYfcfDZ3zIqNAGK0UVo0o9JufythIXzVUmEUY7ym
+ WhG27o9DB/9Duh/GwJTet/kyXprt+HVIUkfz3vOmt6ZdwgTrUhJB3Y6
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Mon, 11 Nov 2024, Lee Jones wrote:
+This patch series add support for MSM8917 soc with PM8937 and
+Xiaomi Redmi 5A (riva).
 
-> On Wed, 06 Nov 2024, Linus Walleij wrote:
-> 
-> > On Wed, Nov 6, 2024 at 12:00 PM Lee Jones <lee@kernel.org> wrote:
-> > > On Wed, 06 Nov 2024, Lorenzo Bianconi wrote:
-> > >
-> > > > On Nov 06, Lee Jones wrote:
-> > > > > On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
-> > > > > > Add support for Airoha EN7581 GPIO System Controller which provide a
-> > > > > > register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> > > > > > dedicated pinctrl and pwm child nodes.
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > Applied, thanks!
-> > > > >
-> > > > > [4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
-> > > > >       commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
-> > > > >
-> > > > > --
-> > > > > Lee Jones [李琼斯]
-> > > > >
-> > > >
-> > > > Hi Lee,
-> > > >
-> > > > according to my understanding this patch has been already applied by Linus
-> > > > here:
-> > > >
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=devel&id=50dedb1eb1e6755ccab55f6140916c2d192be765
-> > >
-> > > An interesting choice.  Linus?
-> > 
-> > Yes I suggested that I merge patches 1-5 on oct 29 and applied the
-> > day after:
-> > https://lore.kernel.org/linux-gpio/CACRpkdYshPusdA7bDW2y8H_wp-Fm3N-YCsY1_Qn=dZqRiFy12w@mail.gmail.com/
-> > 
-> > It's because the bindings are dependent on each other, this one patch has:
-> > 
-> > +  pinctrl:
-> > +    type: object
-> > +    $ref: /schemas/pinctrl/airoha,en7581-pinctrl.yaml
-> > +    description:
-> > +      Child node definition for EN7581 Pin controller
-> > +
-> > +  pwm:
-> > +    type: object
-> > +    $ref: /schemas/pwm/airoha,en7581-pwm.yaml
-> > +    description:
-> > +      Child node definition for EN7581 PWM controller
-> > 
-> > Those refs will explode unless the two others are merged at the same
-> > time.
-> > 
-> > Usually we merge the whole shebang through MFD but this one felt
-> > different because there is no actual MFD driver, just using simple-mfd.
-> > 
-> > In hindsight I should probs not have been so trigger happy and give
-> > some more time for this to settle... Merge window stress I guess. :/
-> > 
-> > It's fine to apply textually identical patches to two trees though as
-> > git will sort
-> > that out so technically it's no big deal, you can keep it applied if you
-> > want.
-> 
-> It's okay.  Life will be easier for everyone if I remove it.
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v5:
+- msm8917:
+  - Remove aliases.
+  - Rename spi, i2c labels and pins.
+  - Remove clock-frequency from timers
+  - Remove unused mpss_mem region.
+  - Use mboxes where it can be used, only smd-edge uses qcom,ipc.
+- msm8917-xiaomi-riva: Follow i2c label changes.
+- Link to v4: https://lore.kernel.org/r/20241109-msm8917-v4-0-8be9904792ab@mainlining.org
 
-Okay, I dropped it from my tree.
+Changes in v4:
+- msm8917 pinctrl: Fix gpio regexp in the schema.
+- msm8937 tsens: Rename ops_msm8976 to ops_common and use it for msm8937.
+- msm8917: fix address padding, naming and ordering, remove polling-delays.
+- Remove applied patches from the series.
+- Link to v3: https://lore.kernel.org/r/20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org
 
-Next time I would like a say/opportunity to Ack please.
+Changes in v3:
+- msm8917-xiaomi-riva: Fix issues addressed by Konrad.
+- msm8917: Fix node addresses, orders of some properties.
+- pm8937: simplify vadc channels.
+- msm8917 pinctrl: Fix schema issues addressed by Krzysztof. 
+- Remove applied tcsr patch from this series.
+- Reword some commit title.
+- Link to v2: https://lore.kernel.org/r/20241031-msm8917-v2-0-8a075faa89b1@mainlining.org
 
+Changes in v2:
+- Add msm8937 tsens support.
+- Fix issues addressed by reviews.
+- Link to v1: https://lore.kernel.org/r/20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org
+
+---
+Barnabás Czémán (7):
+      dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+      dt-bindings: thermal: tsens: Add MSM8937
+      thermal/drivers/qcom/tsens-v1: Add support for MSM8937 tsens
+      dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+      dt-bindings: nvmem: Add compatible for MS8917
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      arm64: dts: qcom: Add Xiaomi Redmi 5A
+
+Dang Huynh (1):
+      arm64: dts: qcom: Add PM8937 PMIC
+
+Otto Pflüger (2):
+      pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+      arm64: dts: qcom: Add initial support for MSM8917
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+ .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  160 ++
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  297 +++
+ arch/arm64/boot/dts/qcom/msm8917.dtsi              | 1974 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8937.dtsi               |  152 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1620 ++++++++++++++++
+ drivers/thermal/qcom/tsens-v1.c                    |   21 +-
+ drivers/thermal/qcom/tsens.c                       |    3 +
+ drivers/thermal/qcom/tsens.h                       |    2 +-
+ 15 files changed, 4239 insertions(+), 8 deletions(-)
+---
+base-commit: 6d59cab07b8d74d0f0422b750038123334f6ecc2
+change-id: 20241019-msm8917-17c3d0ff4a52
+
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Barnabás Czémán <barnabas.czeman@mainlining.org>
+
 
