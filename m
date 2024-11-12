@@ -1,75 +1,74 @@
-Return-Path: <linux-gpio+bounces-12844-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12845-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A076B9C5079
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 09:24:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 667AF9C50A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 09:31:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61220285E12
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 08:24:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA3481F20631
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 08:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D329920B7EE;
-	Tue, 12 Nov 2024 08:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7066620BB44;
+	Tue, 12 Nov 2024 08:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lt2oP+J5"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LB4TeJ2r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA99C20A5E6
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 08:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED58D20B212
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 08:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731399876; cv=none; b=LD+mNdviiMb6PtADfrqRrnrY9PxgFzJFnNskYyQ3jOF2NLQZUic7KQLcrhp/1OL0d3XEM5zAHv849FS9xVMqYWDENWSlH0dUkQV+kkEnUQTOsIF27JQNR1gKybUi3m2U+RNdwIL2BNJVN1qocEelmSqpXJsaZBxZc9+90olQIe4=
+	t=1731400291; cv=none; b=o9iKSRBe23fj7bhLEkDiLJcAVJEWFt1+eiZmKKOnxz4AeRw5ly7bukksVChQpz/yfoAxY/no7XKrXsL9GNTJm+PXz47PmLhA/IvYb0O/761eBkXiVSLsVwp9r+/7qYHr/K64mLlKqSC+8qI505DqQrlLvlN+d85CryctkXMdToA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731399876; c=relaxed/simple;
-	bh=jHxYyuw2zVHpcIGpYA5DH8Rcme5IdvR1VCxWiXElzms=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pEV9nfk3ph15DcTIqWKfFS7prEdcycU61RElvrQ0yGw1e21h0uXJfUFcS/0NtTzyC494PkzBmbwOsYcEU8hPJ4bsUu1l4IP0g8r9VMGV45w1iDz2UF04vBhSQX7l70y1yA2SZSLIjEzIQUnzhCcVOT7Ca/Tevm/r9Y8Rc0pYhAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lt2oP+J5; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43161e7bb25so43455035e9.2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 00:24:34 -0800 (PST)
+	s=arc-20240116; t=1731400291; c=relaxed/simple;
+	bh=xXCEJcHrEMjxlrj3J5Wc7ZCHF18/8gNCnF+VCp09UQk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c4grJ26//Mg0WRTLbglIWNvotNUbCqgpVm4Cy8CrnhSsIuEXCSIgQsOC0Rc0SwxRoU6hVcQ9eji5iOatyWznvfKYd39P+b3Yrx8UWWk/uPED3RIWMyCdHnj5NG/codug32oEHFrKEMevTaxwE9O15TvLEpAlgS3m5kVYqakCt70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LB4TeJ2r; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2feeb1e8edfso68204991fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 00:31:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1731399873; x=1732004673; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BHG/302xW3aLkt5O2SfZxjbGRcjYz+4y3Ps37Vgg7Y4=;
-        b=Lt2oP+J5Cxk02EmLh1AkfqItEtKxFfHBFoXZYVIV3YJg9JgzwUf831rtdQKF/c1yXR
-         z1lSVk2jgC+OT5KNf0QDKo7Ma/eJQSfBJw3n96rDgGWZN31FcUNSPS8n0oEXWQyNFwA+
-         KjSiMCLsSUnswxjdlLSOTkp3Xy/PR56Ca0L0uIXa5B67xtOv/yrDtzx5WlOIfzM3AlYu
-         6Jlzj6jnO6Jm+01li8asUv/puTioME8nHnbxJL+Uyljc/C2m66lM7fbrJDYkscAfjshi
-         CyqZn5zh1BCnIKQrx6RKvSPPoewW2d6f0Q0VxvcbvJyvYxG3Dgnnkq+6OOeDXKXCQ6jJ
-         PeHg==
+        d=tuxon.dev; s=google; t=1731400287; x=1732005087; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rAnhdJuivGo9yNtQ2A0g972HDr7huhPiocLItX4d5N8=;
+        b=LB4TeJ2r6klLgmNGmftgm1CuicnjPfWdd6l/EXobEKoPRyzjXSXGerHrh3sJ7v/YeK
+         w5//cC/6j4qzo0PkYHSXV7xDhpjKsClqS29urublNc1CbZavPcVFF1VPkg9KbiYsM4gF
+         T5wkH1fwX5ep9xaxCPY/plyduJ6y2V4tK9CyIq+cLaT/avR6cHX6Qxrq5f1yXsY7YmEd
+         Rg1WDtcKMAtSrs77zCAHh9Clq18x4rV6EOQdSfQgVsiomFQsHZOKSmRS4rq4yjXlBNf6
+         lggXOVe39da3in3+QET69WVVmHw9mSDJboSmt5i31FIANOo33XQ9PEunwzXDEjIulTUw
+         0SgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731399873; x=1732004673;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BHG/302xW3aLkt5O2SfZxjbGRcjYz+4y3Ps37Vgg7Y4=;
-        b=blcX5sEtLNz5mkILY9MZsLnZyxEI7EgqR+vpymEmRDS8Z5YdN3+a8qjMW0VI/uMkgC
-         yl0Ry14q1+4D41S6qt8Zgd653TRL5EwMSF/1Cd7IImgEjt5c5lMuAIBgLlLb2yATEWNn
-         NmQJ/spE9r8XUwcEm0AB8nSDq9trK4Wo3AvrELfCtoz9ra89hktXSunCUH9fR3yDBkWZ
-         odVVpuRECnPKYPVbsgy1fFjfSI1OJcEEDTn7M6JwIqoKNf2cqk2RrCk7W1yRKYrhZ0vv
-         LvyGib0NIkGe6NuPZvO08rDODdrR+HQFF7Hm9Z5ptHlv9Efc5Bz4LaeHA3/dtxP1R+sp
-         2eBA==
-X-Gm-Message-State: AOJu0YyfZT2tGDDDSjlskA5pCVU9eCVv2zlJGVJfH6QGw0XC5VohZaC6
-	1zIiWPSw7HElfkDqUwDKHti4EGcaJrftRUFs8CUm6f2PsigtSCpXOgABjq5q5qI=
-X-Google-Smtp-Source: AGHT+IGZ0+JGsE9MkHXAcU6IkVnXDchLT2F09ZqRiYJ04+9+dW1daenHhuh5nEca5lNjPLx9FocpcA==
-X-Received: by 2002:a05:600c:b91:b0:431:5e53:2dc4 with SMTP id 5b1f17b1804b1-432cce680efmr13102955e9.6.1731399872977;
-        Tue, 12 Nov 2024 00:24:32 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:860c:aff4:d0e9:9db8? ([2a01:e0a:982:cbb0:860c:aff4:d0e9:9db8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b0566544sm196515055e9.24.2024.11.12.00.24.32
+        d=1e100.net; s=20230601; t=1731400287; x=1732005087;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rAnhdJuivGo9yNtQ2A0g972HDr7huhPiocLItX4d5N8=;
+        b=YwNRApQdQsyN8N6/729cYLKuSEjkJzB1Pvr8O9ZsAXLMnmlBqgpb8jYCXHC697OpZ1
+         WD2GE/p8JcRBsscCeF7Cqd8a0Bwt2eWG3AS1anIXCARlIyiVu2KbfjK+hWiurgb0fntE
+         H5pdwcEYsHFjG0puBocANqgkSGnqWYXKBnzDGLkeZVDGvbUgSR9KqDNTpb0NdgL2v20p
+         SXAJdBGC6a9YUvYj1P2C/u68uBRSzftiGDZbzeVBWgK41c6qjxI4SvK62X9T/N7Zrz4c
+         D1c7o09gDyLAB8HOS7YOw2u3cH2B0pl8qhzvAk7RXLwB271YWuoek9E6snPzhZTZxdHQ
+         /ZBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVadiWwVyB2BXys2upy4GmNHmQSB/fhEOwYF7uXB1e9z9TS6k8UH3E9mP3bhWSTlt9Db11jAZBmi8Wq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMYgIsptEWY7iNUnmfZ3K/NYbboGC5PIia+cJuAzXmNbSXWjLT
+	Ug0cF8DfHo9dpZHsUR8Sg5v861/hDpRoDTlTaITDSiZZd3VJAzpaRdV0/AiEa/Q=
+X-Google-Smtp-Source: AGHT+IErWU2LiF5Ga+iyyaA3F58LkgbkpQmJW54uHLJyzIyElx/+t9OewFq3ElClX5zbBzsEIKDxIg==
+X-Received: by 2002:a2e:9a0a:0:b0:2f0:27da:6864 with SMTP id 38308e7fff4ca-2ff201bc4a3mr91446101fa.17.1731400286863;
+        Tue, 12 Nov 2024 00:31:26 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.28])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0def7e1sm689117266b.148.2024.11.12.00.31.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 00:24:32 -0800 (PST)
-Message-ID: <97e2b1e4-1763-42c4-a3f0-986492ecfd97@linaro.org>
-Date: Tue, 12 Nov 2024 09:24:31 +0100
+        Tue, 12 Nov 2024 00:31:26 -0800 (PST)
+Message-ID: <ce074521-7d4b-4514-9b2b-59b246686210@tuxon.dev>
+Date: Tue, 12 Nov 2024 10:31:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,142 +76,216 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC v4 0/4] Pinctrl: A4: Add pinctrl driver
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20241101-a4_pinctrl-v4-0-efd98edc3ad4@amlogic.com>
- <27aa3716-1d28-4da8-80e6-212d7f94d193@linaro.org>
- <84bbb8b3-d638-47e5-a0e9-371e9e56c89f@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <84bbb8b3-d638-47e5-a0e9-371e9e56c89f@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 24/25] arm64: dts: renesas: rzg3s-smarc: Enable SSI3
+Content-Language: en-US
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+ "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ "mturquette@baylibre.com" <mturquette@baylibre.com>,
+ "sboyd@kernel.org" <sboyd@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+ "broonie@kernel.org" <broonie@kernel.org>,
+ "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20241108104958.2931943-1-claudiu.beznea.uj@bp.renesas.com>
+ <20241108104958.2931943-25-claudiu.beznea.uj@bp.renesas.com>
+ <TYCPR01MB113329FE5E9E610BEF45DC001865F2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+ <c15bb621-6cd9-4be3-beec-20fecd411547@tuxon.dev>
+ <TY3PR01MB1134600DEBF0096A67950441086582@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <TY3PR01MB1134600DEBF0096A67950441086582@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 11/11/2024 04:26, Xianwei Zhao wrote:
-> Hi Neil,
->     Thanks for your reply.
-> 
-> On 2024/11/10 20:24, Neil Armstrong wrote:
->> [ EXTERNAL EMAIL ]
->>
->> Hi,
->>
->> Le 01/11/2024 à 09:27, Xianwei Zhao via B4 Relay a écrit :
->>> Add pinctrl driver support for Amloigc A4 SoC
->>>
->>> I want to find out what kind of solution is feasible to
->>> meet the needs of all parties. This RFC verion is one of them.
->>>
->>> All of Amogic SoCs GPIO device requirement is met here by
->>> adding GPIO bank definition instead of the pin definition.
->>> Binding header files will no longer be added to future
->>> SoCs's pin devices.
->>>
->>> The pinctrl software only adds insterface of of_xlate to support
->>> for transformation without affecting the overall framework and
->>> is compatible with previous drivers.
->>>
->>> The code in DTS file is also readable when using GPIO, as below:
->>>
->>> reset-gpios = <&gpio AMLOGIC_GPIO(AMLOGIC_GPIO_X, 6) GPIO_ACTIVE_LOW>;
->>
->> Fine, but why not use 3 cells instead of this macro ? Since you introduced the
->> custom xlate, parsing the 3 cells would be easier that using a macro:
->>
->> reset-gpios = <&gpio AMLOGIC_GPIO_X 6 GPIO_ACTIVE_LOW>;
->>
->> Neil
-> 
-> I was prepared to do this before, mainly later considering incompatible binding, using the original two parameter passing
-> 
-> If use three parameters, I  need to modify the corresponding binding property. in file:
-> Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
-> 
->        "#gpio-cells":
->          const: 2
-> It must be compatible with the current number of parameters(3)
+Hi, Biju,
 
-Yes, you may move the #gpio-cells definition out of the common yaml
-and define them in the soc spefic yaml and set it to 3 for a4.
+On 11.11.2024 13:30, Biju Das wrote:
+> Hi Claudiu,
+> 
+>> -----Original Message-----
+>> From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+>> Sent: 11 November 2024 11:20
+>> Subject: Re: [PATCH v2 24/25] arm64: dts: renesas: rzg3s-smarc: Enable SSI3
+>>
+>> Hi, Biju,
+>>
+>> On 10.11.2024 10:54, Biju Das wrote:
+>>> Hi Claudiu,
+>>>
+>>> Thanks for the patch.
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Claudiu <claudiu.beznea@tuxon.dev>
+>>>> Sent: 08 November 2024 10:50
+>>>> Subject: [PATCH v2 24/25] arm64: dts: renesas: rzg3s-smarc: Enable
+>>>> SSI3
+>>>>
+>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>
+>>>> Enable SSI3.
+>>>>
+>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> - none
+>>>>
+>>>>  arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 26
+>>>> ++++++++++++++++++++
+>>>>  1 file changed, 26 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+>>>> b/arch/arm64/boot/dts/renesas/rzg3s-
+>>>> smarc.dtsi
+>>>> index 4aa99814b808..6dd439e68bd4 100644
+>>>> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+>>>> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+>>>> @@ -64,6 +64,11 @@ vccq_sdhi1: regulator-vccq-sdhi1 {
+>>>>  	};
+>>>>  };
+>>>>
+>>>
+>>> &audio_clk1 {
+>>>        assigned-clocks = <&versa3 xx>;
+>>>        clock-frequency = <11289600>;
+>>> };
+>>
+>> audio_clk1 node is in the RZ/G3S dtsi to keep the compilation happy.
+>>
+>> For this board the audio clock1 for the SSI 3 is from <&versa3 2>.
+>>
+>> If we fill in the audio_clk1 here it will be useless, there will be no consumers for it and it is not
+>> available on board.
+> 
+> As per SSI IP needs external clks AUDIO_CLK1 and AUDIO_CLK2. 
+> 
+> AUDIO_CLK1 is provided by versa3 generator and
+> AUDIO_CLK2 is provided by Crystal.
+> 
+> Currently AUDIO_CLK2 it reports a frequency of 12288000 which is a multiple of 48kHz
+> whereas for AUDIO_CLK1, it reports a frequency of 0. 
 
-Neil
+Why? You mentioned above that "AUDIO_CLK1 is provided by versa3 generator".
+It will report the frequency provided by the versa3 clock generator, isn't it?
+
+> By defining the node, it will report as the value as
+> 11289600 which is a multiple of 44.1kHZ.
+
+Defining the node as you proposed have no meaning as it will be anyway
+disabled (see the dtsi) and will appear nowhere as no driver will be probed
+for it.
+
+Defining it's frequency and enabling will have no meaning either for the
+SSI3, as the SSI3 is connected to <&versa3 2> (as of the binding proposed
+in this patch).
 
 > 
->>
->>>
->>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>> ---
->>> Changes in v4:
->>> - Add interface of of_xlate support.
->>> - Add const for some variable.
->>> - Link to v3: https://lore.kernel.org/r/20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com
->>>
->>> Changes in v3:
->>> - Remove head file from binding.
->>> - Move GPIO define to file *.c.
->>> - Link to v2: https://lore.kernel.org/r/20241014-a4_pinctrl-v2-0-3e74a65c285e@amlogic.com
->>>
->>> Changes in v2:
->>> - Use one marco instead of all pin define.
->>> - Add unit name for dts node.
->>> - Link to v1: https://lore.kernel.org/all/20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com/
->>>
->>> ---
->>> Xianwei Zhao (4):
->>>        dt-bindings: pinctrl: Add support for Amlogic A4 SoCs
->>>        pinctrl: meson: add interface of of_xlate
->>>        pinctrl: meson: Add driver support for Amlogic A4 SoCs
->>>        arm64: dts: amlogic: a4: add pinctrl node
->>>
->>>   .../bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml |    2 +
->>>   arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |   36 +
->>>   drivers/pinctrl/meson/Kconfig                      |    6 +
->>>   drivers/pinctrl/meson/Makefile                     |    1 +
->>>   drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1321 ++++++++++++++++++++
->>>   drivers/pinctrl/meson/pinctrl-meson.c              |    4 +
->>>   drivers/pinctrl/meson/pinctrl-meson.h              |    4 +
->>>   include/dt-bindings/gpio/amlogic-gpio.h            |   50 +
->>>   8 files changed, 1424 insertions(+)
->>> ---
->>> base-commit: 58e2d28ed28e5bc8836f8c14df1f94c27c1f9e2f
->>> change-id: 20241012-a4_pinctrl-09d1b2a17e47
->>>
->>> Best regards,
->>
+> From the schematic we know that versa 3 is providing this clock and the audio_clk1 has
+> a frequency of "11289600".
 
+<&versa3 2> connected to AUDIO_CLK1 pin is configured at 11.2896MHz in this
+series. See patch 22/25:
+
++	versa3: clock-generator@68 {
++		compatible = "renesas,5l35023";
++		reg = <0x68>;
++		clocks = <&x3_clk>;
++		#clock-cells = <1>;
++		assigned-clocks = <&versa3 0>,
++				  <&versa3 1>,
++				  *<&versa3 2>*,
++				  <&versa3 3>,
++				  <&versa3 4>,
++				  <&versa3 5>;
++		assigned-clock-rates = <24000000>,
++				       <12288000>,
++				       *<11289600>*,
++				       <25000000>,
++				       <100000000>,
++				       <100000000>;
++		renesas,settings = [
++		  80 00 11 19 4c 42 dc 2f 06 7d 20 1a 5f 1e f2 27
++		  00 40 00 00 00 00 00 00 06 0c 19 02 3f f0 90 86
++		  a0 80 30 30 9c
++		];
++	};
+
+Thank you,
+Claudiu Beznea
+
+> 
+> Cheers,
+> Biju
+> 
+> 
+>>
+>> Thank you,
+>> Claudiu Beznea
+>>
+>>>
+>>> Maybe add audio_clk1, so that it described properly in clock tree??
+>>>
+>>> Cheers,
+>>> Biju
+>>>
+>>>> +&audio_clk2 {
+>>>> +	clock-frequency = <12288000>;
+>>>> +	status = "okay";
+>>>> +};
+>>>> +
+>>>>  &i2c0 {
+>>>>  	status = "okay";
+>>>>
+>>>> @@ -94,6 +99,11 @@ da7212: codec@1a {  };
+>>>>
+>>>>  &pinctrl {
+>>>> +	audio_clock_pins: audio-clock {
+>>>> +		pins = "AUDIO_CLK1", "AUDIO_CLK2";
+>>>> +		input-enable;
+>>>> +	};
+>>>> +
+>>>>  	key-1-gpio-hog {
+>>>>  		gpio-hog;
+>>>>  		gpios = <RZG2L_GPIO(18, 0) GPIO_ACTIVE_LOW>; @@ -151,6 +161,13 @@ cd {
+>>>>  			pinmux = <RZG2L_PORT_PINMUX(0, 2, 1)>; /* SD1_CD */
+>>>>  		};
+>>>>  	};
+>>>> +
+>>>> +	ssi3_pins: ssi3 {
+>>>> +		pinmux = <RZG2L_PORT_PINMUX(18, 2, 8)>, /* BCK */
+>>>> +			 <RZG2L_PORT_PINMUX(18, 3, 8)>, /* RCK */
+>>>> +			 <RZG2L_PORT_PINMUX(18, 4, 8)>, /* TXD */
+>>>> +			 <RZG2L_PORT_PINMUX(18, 5, 8)>; /* RXD */
+>>>> +	};
+>>>>  };
+>>>>
+>>>>  &scif0 {
+>>>> @@ -171,3 +188,12 @@ &sdhi1 {
+>>>>  	max-frequency = <125000000>;
+>>>>  	status = "okay";
+>>>>  };
+>>>> +
+>>>> +&ssi3 {
+>>>> +	clocks = <&cpg CPG_MOD R9A08G045_SSI3_PCLK2>,
+>>>> +		 <&cpg CPG_MOD R9A08G045_SSI3_PCLK_SFR>,
+>>>> +		 <&versa3 2>, <&audio_clk2>;
+>>>> +	pinctrl-names = "default";
+>>>> +	pinctrl-0 = <&ssi3_pins>, <&audio_clock_pins>;
+>>>> +	status = "okay";
+>>>> +};
+>>>> --
+>>>> 2.39.2
+>>>
 
