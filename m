@@ -1,114 +1,149 @@
-Return-Path: <linux-gpio+bounces-12853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12854-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 187349C52A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 11:05:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86FB9C5372
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 11:29:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C47501F21BEE
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 10:05:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D175288CBF
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 10:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8563820FA95;
-	Tue, 12 Nov 2024 10:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E9B42141C0;
+	Tue, 12 Nov 2024 10:27:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="R3BxD8MQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grShRzqD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3B420FAB4
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 10:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95632123CF;
+	Tue, 12 Nov 2024 10:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731405879; cv=none; b=A4Yd/ilv4iWOSWM+rVQ2M1DfaRSqXqcEl6NfHxHw984IM5QIgv933PDV9x/PyEIhVZaYdVkN7JCD8I4S3TjCJhJPfC4FgxpYVedCWO8Hj7uZBq2w2Xk+mvMa35ILVlvPpEekBOImVqAtGue1onWw1nLkD6YQn3xzIHjXQSSLhY8=
+	t=1731407221; cv=none; b=eSaGzSFKVY5C+DAUHgeCJGiH9Y3/N4b+kzZHivB+tdMa9gOtPAezvr7dHDILNsYp7e5TnhHNBPeoEMjArrCQK7CKfd161yp1GLLnyo7S3t3f4tpP8I9M5NHbH4dG3au5gH+2RPLiO8a/fq6z0ol7SxxIcjCxoOYC+61rMb3ymgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731405879; c=relaxed/simple;
-	bh=Lky7EDG/REpPPiw8rct1MOXvKZzPhMNCA0wViUPzBIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d38KjmyVwfgzGTYbB9DRh/xXOZrXyOnfQUPk6tKTgH/Ftz9bhRszj3hWa+W0bByDNrQSoMfbCWlxPFgU0bxxwEa4kIfOuBdxDEnAw6HM0KSqVpf6/md6F/OGyl+H5pH0/4SMxyxdRooDgbCBoTO9lTG5QEOX3/lTZxB/Z9yT4+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=R3BxD8MQ; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2fb443746b8so40809861fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 02:04:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1731405875; x=1732010675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lky7EDG/REpPPiw8rct1MOXvKZzPhMNCA0wViUPzBIg=;
-        b=R3BxD8MQxLPgCLgc39Cg8nAc4tfk7yqlFbjqcZehVfxfUhcY+c7nVEYETatOioIo4e
-         QrOi5lfLjHgHi3khn+WWTDt3WPTb4Tjzi5SRwumFZ+zT8vwVaPfRckpwg30CGUu2U0IW
-         B6ERUQlKkKmbSXTpj/cqi//ZTagV+ldlher2xME81QwfWrH+a5c794Xsqz28RJSCLXF5
-         QKI5tZoWvBn7RXsAP29h24MlnkPRiwwlikXTfeBmcDjFTg0gKKnMNZPU/MPkr24C+dfo
-         k+fbTOF8n0Pxk/YCeUSR9d++gXau106A2ZRvzGTO6EfHClPzTt85nZrbeQ0DnOTkxXkV
-         isbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731405875; x=1732010675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lky7EDG/REpPPiw8rct1MOXvKZzPhMNCA0wViUPzBIg=;
-        b=eIhcJQ+UbyznEVfbPH8xhG6WUatR5J054IeHNgjbvV7t/HVXu4QZTznBU5kD6PYHHh
-         Zs/1kGbCsWMDbKjCCfzAhn5XneixrJU/zMg0Q+Nc7CzFbjllEbaLJPq5VHAgHxDs50JL
-         7GWZB9FL2c64WChhjeKOTFrjnn9+SVNbtxsN53hRGbWHWEeMpxhwlr1+0PcH1jlag2pw
-         X5omEzuC7eAJnD/CyvJAfLbU/1adBSCRbLpy1DwgKoCM6GPcyMjeFDXJ8yztGzT4qrRg
-         erHTL+LdHuL2DqWd9sM+2Ox4V8vSSSDccxb4RAl4nNjRwePPOgZDMn8UdmC7mafzr+5P
-         nXGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG7QyZOeJouzT8O2Cvkxp5ltfpLyF59j0EoMHFgt4fT50Aly02n9LdyiKjDLRd3hMMdNmGSddGNool@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ2PbKLoaLZ2zvMiQs2JkuPBuZxbsi5+QAQUdrpavzmim4DJHk
-	+8Wl0Wzu/44A5DVszGnWkaN5fLhUx0GtzrABP3U+GvjNNd+wo5T34bDe6AQT3L984HiYYt8sD2y
-	bfRrbxJzLDjBZQL8vxtNnvO/v7rsNQcYWGLB0Bw==
-X-Google-Smtp-Source: AGHT+IGPj6WMZ1mWnYfqUQi7z48ltE3m/RULiEy0hpxdJ8Vip5CZMGk1vI1DTyaqo5BSVjAeS9FP1W1qdztcMkyqN2Y=
-X-Received: by 2002:a05:651c:512:b0:2fb:4b0d:9092 with SMTP id
- 38308e7fff4ca-2ff201e6ddfmr60122781fa.1.1731405875299; Tue, 12 Nov 2024
- 02:04:35 -0800 (PST)
+	s=arc-20240116; t=1731407221; c=relaxed/simple;
+	bh=ozCy6ZU2hX5f6zY41iGDT6qBtG5/wtGMJOKYzcXL8mI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MrkZqRIviNBXINBo44iNrZ2/55JjisUOoWCd86oaEQGUXRWW6kQ0YQVXAnp/HqeZtdtWeJQUWbP/x910Cfb/+Cd8rx/hCjIGuyNOvyCIkf3aoeXKXfz5SSfWHB74sxdMOJXFPA/p4cG0IwB/uFs2i2pxoCuKWNydVk++uvnEgws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grShRzqD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91DC7C4CED4;
+	Tue, 12 Nov 2024 10:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731407221;
+	bh=ozCy6ZU2hX5f6zY41iGDT6qBtG5/wtGMJOKYzcXL8mI=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=grShRzqDOC6wD6g9HQ/AGhq4F32MxiJQKNMgTzVhCyM9PW8pBla9yzUqIWKOX05bt
+	 EG4DiqxZaZmziVO1FD9KgFLKTSpIyyiexE4qoBnmJVNPOAXIAqJ2iOqC6GtMIMgc2T
+	 iAJMZBJ9vcdHWT6hrKhESFz01bit9vTnpeBS60mYN0xp98cfjKngUWVJ11UILDNS69
+	 m7xrsbbULN24OBRuR5ur1DJb64Z65q5QrKK76Kc/Jdb/16QqvlopDUmOiuHeWkENFO
+	 ADumb6tQvXXdzj0rgFsDZsbdWHS1KhQZJup8FiCWFeMlmrBMjiX9VYAVWI45JFInmV
+	 VglxNgYbo16lA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88068D32D75;
+	Tue, 12 Nov 2024 10:27:01 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v5 0/5] Pinctrl: A4: Add pinctrl driver
+Date: Tue, 12 Nov 2024 18:26:54 +0800
+Message-Id: <20241112-a4_pinctrl-v5-0-3460ce10c480@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241015-gpio-class-mountpoint-v2-0-7709301876ef@linaro.org>
- <2024101531-lazy-recollect-6cbe@gregkh> <CAMRc=Mea=W-1UoHMew3Si=baW3ayERrHjxjG0NPdmkCfp9dUHw@mail.gmail.com>
- <2024101535-wrangle-reoccupy-5ece@gregkh>
-In-Reply-To: <2024101535-wrangle-reoccupy-5ece@gregkh>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Nov 2024 11:04:24 +0100
-Message-ID: <CAMRc=Md6cnxz=L99aaM7a-zeHNnJGXm0P-rNJJ5r0WwRAwb2tg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: create the /sys/class/gpio mount point with
- GPIO_SYSFS disabled
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG4tM2cC/2XM3wqCMByG4VuRHbfYP5121H1ExNp+04E62UQK8
+ d6bQqR0+H3wvDOKEBxEdMlmFGBy0fk+jfyUId2ovgbsTNqIESYooQwr8Rhcr8fQYlIZ+mSKShA
+ SJTAEsO61xW73tBsXRx/eW3ti6/vNiH1mYphgDlKoIteszOGqutbXTp+179AamvgelwfMEwZZW
+ EO1JdTIfyx+OOkDFiu2pirBaK6MOOJlWT4n9FvRIAEAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1731407219; l=2465;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=ozCy6ZU2hX5f6zY41iGDT6qBtG5/wtGMJOKYzcXL8mI=;
+ b=sOGzqIGmNL31284iCxi1Im2K6kJYoy+yb5BpDC2T9TUmiq625OP+fUfHSwf99+yMwsOCF/1nF
+ Pa2dYuD0s4QAr2AkEy7txineOfnN2uYSdPybPk+c3kLiBt2IX9nu1Bo
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-On Tue, Oct 15, 2024 at 2:46=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> >
-> > What if we just add a Kconfig option allowing to disable the sysfs
-> > attributes inside /sys/class/gpio but keep the directory? It's not
-> > like it's a new one, it's already there as a baked in interface.
->
-> That's up to you, but again, please do not mount a filesystem there,
-> that's going to cause nothing but problems in the end (like debugfs and
-> tracefs and configfs do all the time when people get confused and start
-> poking around in sysfs code looking for the logic involved in other
-> places.)
->
+Add pinctrl driver support for Amloigc A4 SoC
 
-Fortunately no kernel change is required after all. The user-space can
-work around it ekhm... "elegantly" by mounting a read-only overlay on
-top of /sys/class that contains the gpio directory and mounting the
-user-space compatibility layer onto it. I know you don't like it
-either but at least I won't be submitting any such proposal to the
-kernel anymore. :)
+All of Amogic SoCs GPIO device requirement is met here by
+adding GPIO bank definition instead of the pin definition.
+Binding header files will no longer be added to future
+SoCs's pin devices.
 
-Bartosz
+The pinctrl software only adds insterface of of_xlate to support
+for transformation without affecting the overall framework and
+is compatible with previous drivers.
+
+The code in DTS file is also readable when using GPIO, as below:
+
+reset-gpios = <&gpio AMLOGIC_GPIO_X 6 GPIO_ACTIVE_LOW>;
+
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v5:
+- Modify if to switch.
+- Dropped parameter combination, bank and offset as independent parameter passing
+- Link to v4: https://lore.kernel.org/r/20241101-a4_pinctrl-v4-0-efd98edc3ad4@amlogic.com
+
+Changes in v4:
+- Add interface of of_xlate support.
+- Add const for some variable.
+- Link to v3: https://lore.kernel.org/r/20241018-a4_pinctrl-v3-0-e76fd1cf01d7@amlogic.com
+
+Changes in v3:
+- Remove head file from binding.
+- Move GPIO define to file *.c.
+- Link to v2: https://lore.kernel.org/r/20241014-a4_pinctrl-v2-0-3e74a65c285e@amlogic.com
+
+Changes in v2:
+- Use one marco instead of all pin define.
+- Add unit name for dts node.
+- Link to v1: https://lore.kernel.org/all/20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com/
+
+---
+Xianwei Zhao (5):
+      dt-bindings: pinctrl: modify gpio-cells property
+      dt-bindings: pinctrl: Add support for Amlogic A4 SoCs
+      pinctrl: meson: add interface of of_xlate
+      pinctrl: meson: Add driver support for Amlogic A4 SoCs
+      arm64: dts: amlogic: a4: add pinctrl node
+
+ .../bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml |    2 +
+ .../pinctrl/amlogic,meson-pinctrl-common.yaml      |    2 +-
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |   36 +
+ drivers/pinctrl/meson/Kconfig                      |    6 +
+ drivers/pinctrl/meson/Makefile                     |    1 +
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1335 ++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |    4 +
+ drivers/pinctrl/meson/pinctrl-meson.h              |    4 +
+ include/dt-bindings/gpio/amlogic-gpio.h            |   45 +
+ 9 files changed, 1434 insertions(+), 1 deletion(-)
+---
+base-commit: 58e2d28ed28e5bc8836f8c14df1f94c27c1f9e2f
+change-id: 20241012-a4_pinctrl-09d1b2a17e47
+
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+
 
