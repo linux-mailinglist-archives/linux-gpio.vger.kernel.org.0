@@ -1,104 +1,176 @@
-Return-Path: <linux-gpio+bounces-12870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0716B9C5874
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 14:00:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 536CC9C58DC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 14:23:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B17021F233EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 13:00:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 039DF2810AC
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 13:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E96727080E;
-	Tue, 12 Nov 2024 13:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A81B914B942;
+	Tue, 12 Nov 2024 13:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kp8i1L32"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="i89aoZhI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0E545979
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 13:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731416438; cv=none; b=ALsTuZFE8GVelBoM1wtOg+NdZcNmJ0a6g0jqhZa/CMIRwvKucnrTp4JUwKZ+DVK2cBaaUpbSL8JOlzW0UOLuPo1F5jI8gwGwtDXdvKU9hf8hTtvpC+2YkH6B46mMYycY9+uFmsY4OaqwhZ4PdXSBNOkwgcmOp4y/GP20AXKiX30=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731416438; c=relaxed/simple;
-	bh=xxcsrKwTLbLkmh5m1jPsVEtj2m13VHgDVPmJLw6lhuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VYDKDw2syIfIi8vZj63AWnQvpwx0Jl7yqKgP8JGDAW3qeuQmZqHfbXHywiEFKqYnHaWfls0LkrVOYruuF1P6her4P9Icv5SfkO2aD++I+TTywvj3bZljjH+g4Qciu2fQtjlAHTxuqlAmWC6zwJTy23k3C+r48sc5p3c4VEUrHyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kp8i1L32; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2fb3da341c9so48535271fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Nov 2024 05:00:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1731416435; x=1732021235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxcsrKwTLbLkmh5m1jPsVEtj2m13VHgDVPmJLw6lhuE=;
-        b=kp8i1L32ukcMr9VROx0twQTzp7Q3Edhobh0goQ73GmbzYByWFULvoETi6IAp77lP10
-         KHGm4gAzh5jRGwIB4pzkqNoConKIZqiX1H/pKecQt32R7R9aZqsxHTpXt2qLdLyxj1gX
-         3ivCkSp86H76hN1fld56fZIB8CoBYCSU70XFGWVylUWOgwsrc5IUJNFyvwVqCx0I8gZy
-         eIXZRkkxz/kmwiLNde6lOQ+2NJ3uQrbkuMojHnxHyobbY98GHWFzCYjb+/oelE1MKGLa
-         lGY22WID5Q2m5PhiXr84su1jW3auhY162m1gxlBV1bEd8sNtldkmuDzTxAskgdH2Sg4K
-         17XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731416435; x=1732021235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xxcsrKwTLbLkmh5m1jPsVEtj2m13VHgDVPmJLw6lhuE=;
-        b=joWB9Ku5wYgu0DzKEgGnX88W1clJk0X9LEMsYvZKDwYhAxmvF9uOnpCCJyL9cGSwVE
-         HZGegdAr/7J2ADPR9gIlOzU4lwTOam9O+o0p8vrtDPNXFfJY1UoSnJgQZF4Ff6tVFKEJ
-         2s0F7e8mBs3RdIuAV89cTFtIn4iyAgm40A+4k03BMvq8wNQtUR2k/klkTcbmZuUzRVl5
-         SA3t2WvgsXVnp1ZbRkLMYsaiBmmfemKRFvNnEf3tuFhd/FnKWvG7DJ8jD5qB1yfgT9Fk
-         gdCiTCcL9S8yFL9tn0rrywklfaoQ0lxPepij/4+VCJJwyYC5NDwKJZHfcLxDRlVmdI3/
-         1v3g==
-X-Forwarded-Encrypted: i=1; AJvYcCV1flFSI3+tIBVdiz/oxqIn6opxSAz/4hcO12RlP/nMSz+UdwbqVkUxushLHyi5/T3s++nGOR+Be1un@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeLc81U1Obu66oxcojZNvJ9dotqsgXEwIgAMQo2afYSNijzh2P
-	RL4uHVSizGphzmxPZEyDfD7hhfMMQ9znIZoFhbMjNufx+cdDyIZiXERE0uKFTSFXvJjS36BJqgB
-	Sr4APsfVXK76dv5IuRj72kTpsVYMWaUmqEP4c8SfXMW5n+a9C
-X-Google-Smtp-Source: AGHT+IHQoCYbYHwK4npDETvmHL7Ns3QU/iNUUv2vKTdTTfXGw/5QwOIzhnyWGuOFeTfKgpAx9hDGM/xZIqecmd5WxbI=
-X-Received: by 2002:a05:651c:1589:b0:2fa:d723:efba with SMTP id
- 38308e7fff4ca-2ff20162612mr75705911fa.8.1731416435473; Tue, 12 Nov 2024
- 05:00:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4181DFF7;
+	Tue, 12 Nov 2024 13:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731417810; cv=pass; b=YFYq+2Rec/Cw6b9ED9D+69rrF6g6HqM8t3S+bG+zPhelkoqhF2lm9VYo3L0rRX4y8Fch8AgHDikFHsvLGk4S/0CZslOXttAckEWS2NhDKayauGti/WY03zEA5zr1EnQ0stk4H77nKPjB8UKBSsz0uGfDpMaCbRfRJi6PS7SaBzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731417810; c=relaxed/simple;
+	bh=bcgcbtLsnfvJN/tLyVZnCzLHtUqLL24cZ8Nw9dUiTlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B3SBu0eT6xK/ZL+s6uiJMoWuvYoF1QGNgB2eE+QbpzKMoY7qcNBPqmwhjoOgDegP7f2up4JIg987haGQFavp69bTlX0Qhe6NTa8vU3qxQwua8WDlKJorAp2OubzB3rpip5iQSrPz7ZaIu1m3EewBCHldUZqOpS1OVIxDPnoXzIs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=i89aoZhI; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1731417781; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=bgUPyrww6J9+NQtS1Vgwi5dpP+UVlrlbR72nZqJoFlYFriOD71dUSVQvrLW2xxWU9KoF5E1IcT1ZdA1782T3Doxux51ebqQ0H0LySXoV1Np2/hoMXUX9mAtVpIqNbneqeGGGTEB5hbcnxm5FrwMA1Wf9GDfLOQT8KH5cjWeFrtA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1731417781; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=bcgcbtLsnfvJN/tLyVZnCzLHtUqLL24cZ8Nw9dUiTlA=; 
+	b=IIsGol37GkbRJsetbaBPni3GrGMlCMhSY2LLKMmOByCuAS3Ys5gwSMlmbah07B1N/v7gzgEwD4Og3lHDYaS3geZKYvG0sXSXddvdV32WP4H10zJuitff+xNZXXkzUF6nWsqtqZgB0eqTzz4zpM4MaxJSqtVWtlcR/yBhxdwFaeg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1731417781;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=bcgcbtLsnfvJN/tLyVZnCzLHtUqLL24cZ8Nw9dUiTlA=;
+	b=i89aoZhI+IwGr6TdCv6uoSZXVVvtW7iMmMNszB6wkpnbCOZJmDz5MZS78hN0rgqi
+	ezKpPH/qGioZ2sYq7Ov46p+bEqQ4wNp8hW99xKdYd42Jm03D8Pw1FQf9nh2hMlUIQys
+	WQ7LfJo2jfcLVsm/ab5+tnNOOBp6cbJci32nN5dA=
+Received: by mx.zohomail.com with SMTPS id 1731417780379727.6755151416451;
+	Tue, 12 Nov 2024 05:23:00 -0800 (PST)
+Received: by mercury (Postfix, from userid 1000)
+	id 9272A1060457; Tue, 12 Nov 2024 14:22:55 +0100 (CET)
+Date: Tue, 12 Nov 2024 14:22:55 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Ye Zhang <ye.zhang@rock-chips.com>, linus.walleij@linaro.org, heiko@sntech.de, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, 
+	tao.huang@rock-chips.com, finley.xiao@rock-chips.com, tim.chen@rock-chips.com, 
+	elaine.zhang@rock-chips.com
+Subject: Re: [PATCH v5 4/4] gpio: rockchip: Set input direction when request
+ irq
+Message-ID: <qwlya3kten7ugxzruohmbmmymjd6trz3rlbflirr3yym2vfe32@rapst33wknmd>
+References: <20241112015408.3139996-1-ye.zhang@rock-chips.com>
+ <20241112015408.3139996-5-ye.zhang@rock-chips.com>
+ <CAMRc=MfTmpLSEUVTXSu8jf9tyTfQc=iG9NpovFem-qSDOCnagQ@mail.gmail.com>
+ <ZzMwh2GMP-bE7aLO@smile.fi.intel.com>
+ <CAMRc=MePqsQatxNy7p5c3sE4z8RepjjLeFgpppKgEctCU3jAUw@mail.gmail.com>
+ <CAMRc=MdY1idv1o_nZFb1fKLpM5DHCPmEu5t5MMa_kV9csLgQWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241106142248.305219-1-vfazio@xes-inc.com> <CAMRc=Mfm68m52UicB8ZvTuc_Djs-4jzUo=-6YmQzGtfq0BDOmA@mail.gmail.com>
- <CAOrEah6U=c-JJqcoHqH7PpBQ+T-MuAm-Qk++QGpqx1QTnG=Ggg@mail.gmail.com>
-In-Reply-To: <CAOrEah6U=c-JJqcoHqH7PpBQ+T-MuAm-Qk++QGpqx1QTnG=Ggg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 12 Nov 2024 14:00:24 +0100
-Message-ID: <CAMRc=Mdpcz8QmCSeqDLbNtn+aZ0JAfgpgheiqXqYYJPE5S3pkQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: python: generate CPython 3.13 wheels
-To: Vincent Fazio <vfazio@gmail.com>
-Cc: Vincent Fazio <vfazio@xes-inc.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ejtr6ggm3ld65lkc"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdY1idv1o_nZFb1fKLpM5DHCPmEu5t5MMa_kV9csLgQWw@mail.gmail.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.3.1/231.391.79
+X-ZohoMailClient: External
+
+
+--ejtr6ggm3ld65lkc
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 4/4] gpio: rockchip: Set input direction when request
+ irq
+MIME-Version: 1.0
 
-On Tue, Nov 12, 2024 at 1:53=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wr=
-ote:
->
-> On Tue, Nov 12, 2024 at 6:46=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
+Hi,
+
+On Tue, Nov 12, 2024 at 01:53:48PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Nov 12, 2024 at 1:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
 l> wrote:
+> > On Tue, Nov 12, 2024 at 11:40=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Nov 12, 2024 at 09:48:06AM +0100, Bartosz Golaszewski wrote:
+> > > > On Tue, Nov 12, 2024 at 2:54=E2=80=AFAM Ye Zhang <ye.zhang@rock-chi=
+ps.com> wrote:
+> > > > >
+> > > > > Since the GPIO can only generate interrupts when its direction is=
+ set to
+> > > > > input, it is set to input before requesting the interrupt resourc=
+es.
+> > >
+> > > ...
+> > >
+> > > > This looks like a fix to me, do you want it sent for stable? If so,
+> > > > please add the Fixes tag and put it first in the series.
+> > >
+> > > Independently on the resolution on this, can the first three be appli=
+ed to
+> > > for-next? I think they are valuable from the documentation perspectiv=
+e as
+> > > it adds the explanation of the version register bit fields.
+> > >
+> > > The last one seems to me independent (code wise, meaning no potential
+> > > conflicts) to the rest and may be applied to for-current later on.
+> > >
+> > > --
+> > > With Best Regards,
+> > > Andy Shevchenko
+> > >
+> > >
 > >
-> > Did I get that right on github - this should wait until the typing and
-> > other reworks are in place?
->
-> I think we can wait to _generate_ wheels after the typing rework is done,=
- but I
-> don't think there's any real reason to delay accepting this patch if the
-> content looks ok to you
->
+> > There's another issue I see with this patch. It effectively changes
+> > the pin's direction behind the back of the GPIOLIB. If a GPIO is
+> > requested, its direction set to output and another orthogonal user
+> > requests the same pin as input, we'll never update the FLAG_IS_OUT
+>=20
+> I meant to say "same pin as interrupt". Sorry for the noise.
 
-Fair enough, applied.
+GPIO output and interrupt at the same time looks like a misconfiguration
+to me. Maybe check for that situation and return -EBUSY?
 
-Bart
+-- Sebastian
+
+>=20
+> Bart
+>=20
+> > value and I don't think any subsequent behavior can be considered
+> > defined.
+> >
+> > I applied the first 3 patches as they look alright.
+> >
+> > Bart
+
+--ejtr6ggm3ld65lkc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmczVqUACgkQ2O7X88g7
++pr69g//SFAjME4lUgAKRXNnfZVfFq+IoUFP4e1HXfxmVXggtYcVHZ8RTsry/PQo
+YXHrS+xj9lnVVeIH3mU407+ripkb1RoaZWUXtc4EHG2MZiqBjdxznCHQNuT7yRGQ
+TiLd82ZsRy3x4V3HiLaeJxByNSLsS50idq/XHqk7Jq5Ub5Jf4RQrzaQsM+Sf2WFF
+707M1dEUNKjYHBvVfIybCzNjbkGur0JWeiQ8Yo6rJkLnNTQSCgOuVmQ+/J9fPZgJ
+GABMiJ2Qor3rzudj5Ac3Mqocr3hUHpgTKT+3Uub2eHg3gF/FLil7Wdcv8QPtmJHl
+eR9vJTAF40p1mhk/xH22PGm72xdZEKot2efs8cIQ2Xfkt9kwBE+NDNc3XmxXC5/D
+iT7YhXJsscYzpBnxO2wvU113s3yPZNx5HhjuSvxj5ZLyFCP3h1A4jU8MTwu89US7
+ZaoGbnl8/s8yv5BxeysT9kwmcRG5YEGIMwJn/9vZEKqKz/3X5srXiar5Mdc0RFkq
+eKcvWHJVtgrtRdKb0TUCM9vxulfUGEk+4Pz4VQ+LdbabRWkVXWEHGXzGORIW0okA
++R/2yIMhW/9w1gRolqDjBqXIyEieie7hQgYDZEenQdTTFu5w06FCdNrhzmP+abVT
+lgGJoNXJCzEbo7EeUi2tjiMmNSHHszMu5snP3Fhz6t1iM0Rp7ys=
+=QZit
+-----END PGP SIGNATURE-----
+
+--ejtr6ggm3ld65lkc--
 
