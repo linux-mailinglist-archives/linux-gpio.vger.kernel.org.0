@@ -1,97 +1,113 @@
-Return-Path: <linux-gpio+bounces-12860-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12861-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C191E9C5511
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 11:58:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DAF39C5566
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 12:06:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 882E028AA46
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 10:58:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FD7928E013
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Nov 2024 11:06:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B57F1CD20A;
-	Tue, 12 Nov 2024 10:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CAC21733B;
+	Tue, 12 Nov 2024 10:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cE529qV5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mcaq+EWt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7323DAC18;
-	Tue, 12 Nov 2024 10:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38003217443;
+	Tue, 12 Nov 2024 10:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731407888; cv=none; b=rlNJdkCe8b2RoHo6lS9DlCUVL3eVoIBucJgWDFlClXKFzm6fFrom3NoUVAoHOd+7lBD/Hcw0qhaYsftYeEKtcEhvTZU4qgWHwKscQwvaPOgZj8gAvc0qwW9Wb9fONgyVNBDgMb2jWAzzBKGv6J6O/s3mZJ0T1mwrwqdnsUZGHqo=
+	t=1731408016; cv=none; b=EL7hRSEy3gz2gxH15XhKpK6ZGwuyRu6F4ygLK3LJ5Q4gBr6M8rpVpJCzKdxxrNsWC5ts5hpn9qh/qcA7wCWi3p1er98GZrrX/w1866znrwjbmSrVjuITMBzlLO3hEJ5492NpxS7l/HhyCHVFA02UYmO6Z+iuzNztu9D5C8SJKUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731407888; c=relaxed/simple;
-	bh=qF8JGdf/0mGdjzYO7DP7kHts4/WoQANssCTIjAVjDss=;
+	s=arc-20240116; t=1731408016; c=relaxed/simple;
+	bh=WSbuPZjViriUwxWd751c13Ib+xMquV1ZIwNh2c1zfsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXyxClc0TdPo28Aayq26yoI7Coni5KnYXYYlWYFSI2pYP8lZeE+JKc83LDDQXkTbefjiToE6MKIT9KLNf0HiWfXqlinNc0l8J35kvYFMQNwbqga5UbUS4F+2c8SG82gJx7nATRmoF/0jT3UtnKdj8wza4OiI+3FlVrWuBH5ETE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cE529qV5; arc=none smtp.client-ip=198.175.65.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=PMcucfHSJGb96DtjsJlxGuCM9f6hbs62pRfRiDF/nlKB/pzxKfV1UqQLn1LAF18834LMGeFqfaZSYM53JlxL+krer2VX9OeJ/2ANTg3s8IwjeONbADAombuqSjUbCz+QZtCilG9GPz6F/VqvKqsISHe2i+E8gUerYQiRRoUMEpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mcaq+EWt; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731407887; x=1762943887;
+  t=1731408014; x=1762944014;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qF8JGdf/0mGdjzYO7DP7kHts4/WoQANssCTIjAVjDss=;
-  b=cE529qV5i7iQAcdAsEhbuzZ9lAL2Wk1X+rhplr+FVoDrpJaFBhCnNmkd
-   O7hrXBvAvpo0/ibyZIcGXz+GnxYFX9p5qnjDsANAd6KqMYDxzj1kVUhQI
-   zeK9zFZwkvY4/5Z0o5qp9Uv00dodOqkc/6PJ7yOtL1R00ZMo3vQ7iOe8P
-   nzxcX6FDIOVAiUDWbEojg/+yO6UYLVUAEnj+zoi1sWxN+W84MjXqhxPzt
-   ot0sljSL16N7kWEtPngqI1VcHyi5TCzqr6cNMZEN75Nqp5WyAns2LaDrj
-   sGyJFLy8RLLDXnBTO2FqNS82nKcSRMt0vyj9kDbR9T5OXtwWgGEJpbJjO
-   g==;
-X-CSE-ConnectionGUID: o159H8hATGGR04/qlGJgZw==
-X-CSE-MsgGUID: Y/Jbt6HZQ/G6Fj+4C/gOeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11253"; a="31330498"
-X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
-   d="scan'208";a="31330498"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:38:06 -0800
-X-CSE-ConnectionGUID: 77uiAGmWTViu8lVPjZb/aQ==
-X-CSE-MsgGUID: qBYZYSd5RK6zlTAA1PN46A==
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WSbuPZjViriUwxWd751c13Ib+xMquV1ZIwNh2c1zfsk=;
+  b=Mcaq+EWtEaGzXKgPGzJ2XrbutIyCI85qy92sbOx/n8JhxjeSR4WOynls
+   I0rT6O336VFre0hgMS6z5b/QN2UkDtCOL8PaxmrsQ7KY+kuLKu1SPK3iH
+   3Xo/gRMYnshBIO1NHy7ukyjeHQge7bocBu2h42rPrwPIV/lfrnTeL6JrN
+   xSYXFTtqEIjJbnWzOoXJS3omPe+BWXPDZmtyB1IXsoq2Y3qM9QkuTL/59
+   Al1FttMEYWdwOsciG6a5IIlqejTY/IdxWZc9ME6TMNhK6Oy2aOxyVCVu4
+   06JS0dIYNKZRIYmm2iX06YXlmaC55tB8jopvBgvtTFNtLm6QVLGmBYWIk
+   A==;
+X-CSE-ConnectionGUID: XAoEOv54Q4eEoGgPM4DBTg==
+X-CSE-MsgGUID: AI5uHsAtR3KkMOhmlFj9MA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="31091437"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="31091437"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:40:13 -0800
+X-CSE-ConnectionGUID: x1PI4aN5Rga4d8kiUcZPSA==
+X-CSE-MsgGUID: o+qOjH0vRYiNEwLirGwchQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
-   d="scan'208";a="87343607"
+   d="scan'208";a="92482645"
 Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:38:03 -0800
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 02:40:10 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tAoHX-0000000DwKd-44wz;
-	Tue, 12 Nov 2024 12:37:59 +0200
-Date: Tue, 12 Nov 2024 12:37:59 +0200
+	id 1tAoJb-0000000DwMj-1sn6;
+	Tue, 12 Nov 2024 12:40:07 +0200
+Date: Tue, 12 Nov 2024 12:40:07 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ye Zhang <ye.zhang@rock-chips.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ye Zhang <ye.zhang@rock-chips.com>, linus.walleij@linaro.org,
+	heiko@sntech.de, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
 	mika.westerberg@linux.intel.com, tao.huang@rock-chips.com,
 	finley.xiao@rock-chips.com, tim.chen@rock-chips.com,
 	elaine.zhang@rock-chips.com,
 	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v5 2/4] gpio: rockchip: change the GPIO version judgment
- logic
-Message-ID: <ZzMwB8UQUR6BYAzI@smile.fi.intel.com>
+Subject: Re: [PATCH v5 4/4] gpio: rockchip: Set input direction when request
+ irq
+Message-ID: <ZzMwh2GMP-bE7aLO@smile.fi.intel.com>
 References: <20241112015408.3139996-1-ye.zhang@rock-chips.com>
- <20241112015408.3139996-3-ye.zhang@rock-chips.com>
+ <20241112015408.3139996-5-ye.zhang@rock-chips.com>
+ <CAMRc=MfTmpLSEUVTXSu8jf9tyTfQc=iG9NpovFem-qSDOCnagQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241112015408.3139996-3-ye.zhang@rock-chips.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfTmpLSEUVTXSu8jf9tyTfQc=iG9NpovFem-qSDOCnagQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Nov 12, 2024 at 09:54:06AM +0800, Ye Zhang wrote:
-> Have a list of valid IDs and default to -ENODEV.
+On Tue, Nov 12, 2024 at 09:48:06AM +0100, Bartosz Golaszewski wrote:
+> On Tue, Nov 12, 2024 at 2:54 AM Ye Zhang <ye.zhang@rock-chips.com> wrote:
+> >
+> > Since the GPIO can only generate interrupts when its direction is set to
+> > input, it is set to input before requesting the interrupt resources.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+...
+
+> This looks like a fix to me, do you want it sent for stable? If so,
+> please add the Fixes tag and put it first in the series.
+
+Independently on the resolution on this, can the first three be applied to
+for-next? I think they are valuable from the documentation perspective as
+it adds the explanation of the version register bit fields.
+
+The last one seems to me independent (code wise, meaning no potential
+conflicts) to the rest and may be applied to for-current later on.
 
 -- 
 With Best Regards,
