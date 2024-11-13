@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-12913-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12914-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 587B99C6A92
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 09:31:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB3259C6A95
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 09:31:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBEA0B23FE8
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 08:31:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B7281F23FF1
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 08:31:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2609118A6C3;
-	Wed, 13 Nov 2024 08:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D706718B499;
+	Wed, 13 Nov 2024 08:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/ClBW7J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+IQMb7v"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30FB11CBA;
-	Wed, 13 Nov 2024 08:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2D411CBA;
+	Wed, 13 Nov 2024 08:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731486677; cv=none; b=tmicqV9swm9+UjYyuETJFGaO8TfOFE+9oPxZRwCdtMmRP8SFFVnjf8AQ8AS3eHEWXYlnwywzqJcXpAE90Q/Wz2n5xcH4wO2g7HhP1oaE4oqDUndnquh6nZPldwwtr+keCqoBRivuF0WyGiyKBss0dxCKqjdzlLWAJrHdFK4hirI=
+	t=1731486681; cv=none; b=Kz7KF7Mj7HGlE4oUEcY3R7jj+kK8PVcDH+q6chDvtPWiubzJnEG4JyMW5bwkvztpCqDSt85iZx15HOeooEDy8VZZaApyqZTZl9WfL3eL0Ry91EwxbSn0V0uUgZgkc6mh87xKP7dj2cccWcQjnIfCJy6h7f/eYLb06RKNVnwYnDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731486677; c=relaxed/simple;
-	bh=bM0X38UhkBzintoDYGOc67/pd8CabjjLBzBwfbjIAU8=;
+	s=arc-20240116; t=1731486681; c=relaxed/simple;
+	bh=l0aV/85UGh+TiyIXs15oLeWBBhnvktxy+Ao2xmqdPEU=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Wnr5uos7FVseb9t1UjpDPTjFtInrTZvSNlSXTK9OGAe6UdO3XDunTBWgcy5W4QK+vNzwzfIyd/zHibuDlap41IBA8p2fOlMMro8HHhL/S8hhAGNVndYIY6h8++DZA4N9nFcW2LVbaS+5MVpMyHntD/Mo728Qj45IYpMuWKpsdnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/ClBW7J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A3CC4CECD;
-	Wed, 13 Nov 2024 08:31:17 +0000 (UTC)
+	 Message-Id:Subject; b=u5Cjp5AXdYj/qiRV8SYVpRIO2S5bHQqb+ypHK25XNbtqfylqeCSbh1jUT7RYQZQSVE1JeIyormrb2/NkVUnoANVAkJ4fpVTvprFYhwr150UTeBhV+miW9bEMsjLH/bqLjJihfOap6vvdNnUkvnoYLcdOWZdeMzpY7uohe/4rRTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+IQMb7v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E20D1C4CECD;
+	Wed, 13 Nov 2024 08:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731486677;
-	bh=bM0X38UhkBzintoDYGOc67/pd8CabjjLBzBwfbjIAU8=;
+	s=k20201202; t=1731486679;
+	bh=l0aV/85UGh+TiyIXs15oLeWBBhnvktxy+Ao2xmqdPEU=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=V/ClBW7JwcDylSEPox1BqKSEFHkB+LEzuBaojbVOGIy5b+8a+S9VJV/1wKjvDGtV0
-	 xIS+YSt/XmC/DGYp82maL5LSjKKKldeiQBG0tt1iO6CR2A8256Q9TW88RcWeKul782
-	 2rPdxf9wR/C6F+3wSKfViRTW3D80A4BN+Xmiwdi7TYtidAqEGeQW02n7FEnXhfXZzu
-	 zVSu/f5IXmlPvHY3FuiOgv4U4g9J1Vq1XWVdJGAXAJv4mciSkwQO8a79YowB403YBf
-	 40kCVTCcm9QaMAS1UuzvQTfhy3XI9dXXXg/iUz+k/JJ5aEa3vZFLo5OLcu+aSP7sud
-	 tjBAAe6yRErhw==
-Date: Wed, 13 Nov 2024 02:31:15 -0600
+	b=u+IQMb7vc+ybZwRlOggvAhtm85ytDrq6c9zHkN2yooJE8m+gQFoEKPWK6I8MIclz+
+	 d7RWYG1Nxf/xG0BZ9vP4/S/AvlDtGGou78bAL+EnYJhJcrZvhu6G7bMB4mgwrrVJJK
+	 pTZzVkj0aGvVniYBG6ZSyPFmzmVn/WglUcnH/0XOz6/23zBCwePmbAky1VGfG7pQ6J
+	 B1P2HH3O9oQnEIZjw/N5eFf7r+e1K50TzuvV97d6j3b45AMlX04PSydWmVMnc0wuP7
+	 iofodvFB6X09burdwn1n9hqMs/Q18Z8TPQxb1nTATC4UESeq1YtkWoPKTz0qC/ko7J
+	 Tdeg5o1J/8OJg==
+Date: Wed, 13 Nov 2024 02:31:17 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -51,36 +51,34 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, 
- linux-arm-kernel@lists.infradead.org, 
- Linus Walleij <linus.walleij@linaro.org>, 
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, 
- Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
+ Jerome Brunet <jbrunet@baylibre.com>, Bartosz Golaszewski <brgl@bgdev.pl>
 To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <20241113-a4_pinctrl-v6-1-35ba2401ee35@amlogic.com>
+In-Reply-To: <20241113-a4_pinctrl-v6-2-35ba2401ee35@amlogic.com>
 References: <20241113-a4_pinctrl-v6-0-35ba2401ee35@amlogic.com>
- <20241113-a4_pinctrl-v6-1-35ba2401ee35@amlogic.com>
-Message-Id: <173148667456.3371316.2229241108190941426.robh@kernel.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: pinctrl: move gpio-cells property
+ <20241113-a4_pinctrl-v6-2-35ba2401ee35@amlogic.com>
+Message-Id: <173148667535.3371357.17914251694384557561.robh@kernel.org>
+Subject: Re: [PATCH v6 2/5] dt-bindings: pinctrl: Add support for Amlogic
+ A4 SoCs
 
 
-On Wed, 13 Nov 2024 15:29:39 +0800, Xianwei Zhao wrote:
-> Move #gpio-cells property from common yaml file
-> to lower-level yaml files.
+On Wed, 13 Nov 2024 15:29:40 +0800, Xianwei Zhao wrote:
+> Add the dt-bindings for Amlogic A4 pin controller, and add a new
+> dt-binding header file which document the GPIO bank names of all
+> Amlogic subsequent SoCs.
 > 
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > ---
->  .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml          | 3 +++
->  .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml      | 3 ---
->  .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml  | 3 +++
->  .../bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml           | 3 +++
->  .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml      | 3 +++
->  .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml       | 3 +++
->  6 files changed, 15 insertions(+), 3 deletions(-)
+>  .../bindings/pinctrl/amlogic,meson-pinctrl-a4.yaml | 80 ++++++++++++++++++++++
+>  include/dt-bindings/gpio/amlogic-gpio.h            | 45 ++++++++++++
+>  2 files changed, 125 insertions(+)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -88,20 +86,12 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
-	from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
-	from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
-	from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
-	from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a4.yaml: patternProperties:^bank@[0-9a-f]+$:properties: 'gpio-controller' is a dependency of '#gpio-cells'
 	from schema $id: http://devicetree.org/meta-schemas/gpios.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241113-a4_pinctrl-v6-1-35ba2401ee35@amlogic.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241113-a4_pinctrl-v6-2-35ba2401ee35@amlogic.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
