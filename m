@@ -1,93 +1,88 @@
-Return-Path: <linux-gpio+bounces-12901-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12902-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C9EA9C6916
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 07:10:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F1DB9C6945
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 07:30:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AEBC282633
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 06:10:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E45A21F239E5
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 06:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9AF17085A;
-	Wed, 13 Nov 2024 06:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8686F176251;
+	Wed, 13 Nov 2024 06:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5KMiboH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cmccmta3.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4108C10F1;
-	Wed, 13 Nov 2024 06:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407EC2594;
+	Wed, 13 Nov 2024 06:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731478200; cv=none; b=PPtc6IGNW14oPKAKenJeVvFLyqsUApEEY2ZM+OoIq2zr5WM6QgcEZ94bRqNZFGyym8SFsf3Cx3HOB+DS+KRQpnOfZUg1jrfvhtWcFk0inP2SEv1Tc4Qu+iQB5EtM/kKwusqILygkmO/+Fs7XKKT7iM9AFTYDiBzBDVXawDJ41oI=
+	t=1731479439; cv=none; b=f0lpd6ku4D+HweMjwTcjMI6WvHJLDD+BWjx5/CZQKvKOaN1NkpIFOShkduf12gHImHpx9Xm56d6XZAGxbEMv9ON3MtQUO2ug4kov2tPSXvOz9jYd/CPX9DwpBJpq5iEypzGlSk2CrXM/S4cVGDCc2N3aqbpobeDfK8dqs/QTVCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731478200; c=relaxed/simple;
-	bh=Wmb/uKPUBVqo8NmwVc4sTg+m0ITnAPHpxMp6IYNl1Uw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lQA7veMiTvbP0gU+rfClT3HvK4c/ZE/pKYCdWv3O4XSSW3t9142BF2itPNeNg3eeInGfah4GzYi/4e0VKgELpC5NoaDNrRzD+Y+u5CIwwjNf5M/tDSHdbbpvhfnAVIPDqbvhrbAysKlzWbNrA2djNOrYxG+Nkrjin6klfO6PEqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee9673442affa7-1bfbc;
-	Wed, 13 Nov 2024 14:09:53 +0800 (CST)
-X-RM-TRANSID:2ee9673442affa7-1bfbc
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[223.108.79.101])
-	by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee6673442b0a41-8554f;
-	Wed, 13 Nov 2024 14:09:52 +0800 (CST)
-X-RM-TRANSID:2ee6673442b0a41-8554f
-From: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
-To: dlemoal@kernel.org
-Cc: linus.walleij@linaro.org,
-	linux-riscv@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhang jiao <zhangjiao2@cmss.chinamobile.com>
-Subject: [PATCH v2] pinctrl: k210: Undef K210_PC_DEFAULT
-Date: Wed, 13 Nov 2024 14:09:50 +0800
-Message-Id: <20241113060950.5247-1-zhangjiao2@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1731479439; c=relaxed/simple;
+	bh=hjBKF175D52aKk9ytGRzqV2rOfPcAzfyNpexBN7GjPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QtrTdrGnso5kB0NJIaxY4N6cHHQxdAFkQ1JnyPe5H/7701dOHB3fZPjTNfgVCHpxiv5NmQdu3FQ/fvTv6Z33R8a5hKuYTpDV0dgX7YVE7n59X9FGg80Re5QC4TrltSt8NOZTYc45irsX/VvR0yTwVYqvcrc3XL7sfBGGnQk2rWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5KMiboH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06826C4CECD;
+	Wed, 13 Nov 2024 06:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731479438;
+	bh=hjBKF175D52aKk9ytGRzqV2rOfPcAzfyNpexBN7GjPk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i5KMiboHxysWri9LAaFlP3XArThrmaoI/MwHm3NtdsduOllcQ1IAZUGnxMKYXOOKC
+	 OqYW4r5aVURO+TOrzfpW4wJwGVAQ9jZlTezTuzNEVcIuZcIhY3UZ4qIuOrYyVoxZWc
+	 veNnPP7Tu0lQk+H/z94BsAmX73cwW7CLOWcxZQYQSsy6jQ7Wk5ND1i8rQ79O3ygKfF
+	 tCC+jjkAv/nR4EnSvW+CeY++wpjrMfzW9m2wcm15Nqb59bE455V51igT8f7mShwPuP
+	 Qny+sL46xA2aHZ2qgcirJtvtU4nWGCgtBdnmWg6GN2yOCJ0odVtga5M9HYaRxh+2oX
+	 CywbdIQTn063g==
+Message-ID: <cad32ff9-fcb0-477e-8a8b-a7d4bb80fdfe@kernel.org>
+Date: Wed, 13 Nov 2024 15:30:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: k210: Undef K210_PC_DEFAULT
+To: zhangjiao2 <zhangjiao2@cmss.chinamobile.com>
+Cc: linus.walleij@linaro.org, linux-riscv@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241113060950.5247-1-zhangjiao2@cmss.chinamobile.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20241113060950.5247-1-zhangjiao2@cmss.chinamobile.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: zhang jiao <zhangjiao2@cmss.chinamobile.com>
+On 11/13/24 15:09, zhangjiao2 wrote:
+> From: zhang jiao <zhangjiao2@cmss.chinamobile.com>
+> 
+> When the temporary macro K210_PC_DEFAULT is no need anymore,
 
-When the temporary macro K210_PC_DEFAULT is no need anymore,
-better use its name in the #undef statement instead of
-the incorrect "DEFAULT" name.
+s/no need/not needed
 
-Fixes: d4c34d09ab03 ("pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver")
-Signed-off-by: zhang jiao <zhangjiao2@cmss.chinamobile.com>
----
-v1->v2:
-	Modify commit info and add a Fixes tag.
+> better use its name in the #undef statement instead of
 
- drivers/pinctrl/pinctrl-k210.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+s/better use/use
 
-diff --git a/drivers/pinctrl/pinctrl-k210.c b/drivers/pinctrl/pinctrl-k210.c
-index caf20215aaba..eddb01796a83 100644
---- a/drivers/pinctrl/pinctrl-k210.c
-+++ b/drivers/pinctrl/pinctrl-k210.c
-@@ -181,7 +181,7 @@ static const u32 k210_pinconf_mode_id_to_mode[] = {
- 	[K210_PC_DEFAULT_INT13] = K210_PC_MODE_IN | K210_PC_PU,
- };
- 
--#undef DEFAULT
-+#undef K210_PC_DEFAULT
- 
- /*
-  * Pin functions configuration information.
+> the incorrect "DEFAULT" name.
+> 
+> Fixes: d4c34d09ab03 ("pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver")
+> Signed-off-by: zhang jiao <zhangjiao2@cmss.chinamobile.com>
+
+With the typos fixed,
+
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+
 -- 
-2.33.0
-
-
-
+Damien Le Moal
+Western Digital Research
 
