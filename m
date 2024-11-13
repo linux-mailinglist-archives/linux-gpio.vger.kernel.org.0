@@ -1,62 +1,62 @@
-Return-Path: <linux-gpio+bounces-12930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73B8C9C6CD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 11:27:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F51A9C6CBF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 11:22:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7DC6B25397
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 10:14:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 52BC7B28E58
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 10:14:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 999561FCC57;
-	Wed, 13 Nov 2024 10:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDCED1FCF49;
+	Wed, 13 Nov 2024 10:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="KYtIXwD9"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ZvHQ81fd"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012060.outbound.protection.outlook.com [52.101.66.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0EC1FB8A9;
-	Wed, 13 Nov 2024 10:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05751FB88B;
+	Wed, 13 Nov 2024 10:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731492771; cv=fail; b=GBVUrAU9d1BGrFSXDXUgSBpDkIt5deDTn7VT+iByRkyH3drHLUeyDl9sMkXman9RUkefoaA2gl5nkBAaCeeRyrP8PA8O6PaoIsMQ1U9usuKETpaT85WbN/V3CES0ohsbcJ1G7X/gfNvbse217Jv1G74xQLYMfwuBgpIEth1PJ9s=
+	t=1731492773; cv=fail; b=lB4Eu3EZckubrUMBTBzRPnvDHMd/AFESCl6yqOpwkL79KOQUXUHg6OkFLhFSlNJIkfalhzHrv7YhIrw8/FFp0kr31TvwJ3ehPbLdByrgJfxDixwW/jndNRRkeNCmu35MHJr0MGNeFwhA6Ga5cMjYzGPP+Yni/akGbSsd+zadIYQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731492771; c=relaxed/simple;
-	bh=kF8Nr8hIBNh1rtPdDeE/GfQ/g573NEXdWCPfpGxzTL0=;
+	s=arc-20240116; t=1731492773; c=relaxed/simple;
+	bh=Iq1DHLajzm/1aUJCcgGzQoUkVF1yC/LNegicjqZQ1Mk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TAagBfdxgkTIueU8ASWj8W6ICmyRMk6ueoK5hFteyrhtFiHOo687DW7ot3c2yKI8X1t7ZyrOjo3nD3oxd9jyCw89A/QEhO6+Zy4YYyH/YCcXiD7jY7qK2Tj9Hp422yWzHvoauNmcCnYs2oM7tZ1NXt8+5XD1PTib0UxPuTrtNBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=KYtIXwD9; arc=fail smtp.client-ip=52.101.66.60
+	 Content-Type:MIME-Version; b=jPwGo65MKGmSHl3z5QsntXKxUrHIPP0hqTTPcCozlwRYcV/aGBJcf9QgskriWBAgQY+twgALKVbq/UUlZP9x64QAQ+AjT2foQhLFgcV6SMf+TyHXJer+nCLXbrLPJCvSK0ExhuhFInvyGnUj7p9xCEc2tvxfkmISO7Ze6EMgAQE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=ZvHQ81fd; arc=fail smtp.client-ip=52.101.66.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uP4zjWBVZwDojD1Yvhe6PJ9CECthvggq3Yy7PtM1ZN97tIAzbM9WR8qd+0JW+GOZjAmVi1cbsf9axG0+gkblY8ROgctMUO5NEDBkYOsexPWMTyMHH5qz+xShWtz7kGodDNh1cNnQZ1lq6ibagqOqGlNZ5CfagIjRTNM4ZxMVTb+gGLBTIKKmYU//E0ThCEgtKoeSmOgE5CVJrlSFeNUmPIX6bRvDfu7uQvtxum267QWou2zXcG+BWzx+Avk3ZI1ri+7uk+/2GUZmabN2ZXbJt3MkDr9m4upwjv8iJ1r6mUPJWMrIK3aA9pBjoxmrjlZ0orLjw6AH/vmyVbrEzBTIlQ==
+ b=Devs/9wZtRbazkamS1f3iI5L1XeJQxx7P3uElr1n5kKUlyrG5k6LDc9e3QqPTYtaqpidubcgYtIrj1sDdgDlDKFXBONLBTonXyymMKBgsP/gqx+DeoNMWyKfpeCM8+5XdNJXcfFnDclArNiphQkhLdjUf9rgZK6BMbv8Siot8qhdqh460h/oFWjMdyumUM2R/waN58MPbDz3vk8Vv1F45gLUqqd6DggbStqW43QCKBenyyDUuTkQGDHbD/0a3NwL51yptSqHPGZFvetMSwUqJVJN6W5tzmJ022sbkMda86m8QsbjubA8dKzlgev9LA6Qu3+Tc4hL5y2hCq4w8HEmgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+54voebqoeKg4PDvduKb7kbojQ1Q0j2NGqVvHwKT85I=;
- b=NG/zewrueEkYdVdkKEKAyZCFfnkrstQSfgEj4wTgztzk0hkgSVgSAQPXYZkXm8wNDZtORw73vBhySWOaiG3dq7+Dx3uj2M6qnOCsaNaQBiGGftpar0EmGfXT8rNXlLA6tP5tozXO87NOWnAxzvp9JTxWs/LPhGeDBV0qgv+0YcfZfQfqa9B1rT7jrYz7zIuR1h7VitsW+H4kEgsqDgACSfUpKZR2cIGeo7Rl2s3gS9Pzp8egp5qiL3YvcJKMUy8voebV/g2zAvEvr44laDh2IGDptx1wJQTDLlyh9eZmYSpZbQMlhkpF8mz06AKsQUOR5WZF61oZjF8SUVkqMzwO4g==
+ bh=LhuoVUdlxKCIAUVq6j+EX8ECSiAZSLCgHoHWNam5lQo=;
+ b=gNIBODEumuexhO0Q7JPfxpoosGKdSkvyOeq473Ucxh5rS/5TqrOHZn0PNlmB45DyfvmvSfS56X0nrpnbnj79rtS8lNIoasuvlSAcQw++BLeUaS+aJ9AAweWPo9/4U9JO7d6uvMNiA8ieWSpiYRH0N6Y2Z7qQKnJEXEkc7XNyn9nexoBY4L3jGtI5Lkfei7pzHBDcDSU8YobvMAzLFdAS9+qvHLYAVy8XJJ2zkV+mtNsdd7Yb2Hc5zKWHipLRbb0GBo73s8A+TeeWjX6aqeqWWLOksKiIoNIWYncjCj4xgGVspphC/IdW0KMVVnmW2JFIK+BBrB3OF8jABnVwgyYfSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+54voebqoeKg4PDvduKb7kbojQ1Q0j2NGqVvHwKT85I=;
- b=KYtIXwD9DJydHpGvp5awOFWvKECoIhi4FReSg7P+uzGV5Hg5byarPiiO64B8KuqyDuYBmBI6O8zDRUpSk2MpHFkkcW2YXUVlKcrYpr/uEp7PrJ25XlLOCX1MJV0euDF8Cx71le8wu6xr9xmfVRlBkZZBdmGZGQDYWmlm2p7Qs1hJtchfacLDhjz/vVONPAqDfoRBM78bKtvManiyxCZXXet3rKXGP40wXFUpt2fybWozfttCBmylPDGbePj8xBX9uOlc8DEpnQwEOd5cMryp2NqHfMYhS1RpVCGkMeUGDZIQ+BWDtfzfH4UnwsDvcY8Nrp3zoOmCT+5eUwoGKlYR1A==
+ bh=LhuoVUdlxKCIAUVq6j+EX8ECSiAZSLCgHoHWNam5lQo=;
+ b=ZvHQ81fdeGoMj2jgG1A/upAMAmnG1OrLgv/G1yn8/EJpzmY9Q/0gS8AUdkM07OO1PAs6VAqU+bWONIATZV3kOx8YP+Sg2LIVFzhus94benqicqv7rUNPSfrEmmGGe8kOrDHBwEELiVP2tTXKvTCB+3hmaK5BXKl1eBvVbjkYzmbicg7emy7IxSmNnvVgvWX3WyIDd1mltF8T91LsqBet7e6geLg49u2Bj/3VyImvPqKh2LBBQ4PzDRWFjkkr/Psx1kpz96zQeA+hdVBkK3sS75EJtK2oSXwDJamSlZ+uP6yROAZtlIDRsKkKa8U+ksyWpU2mjxhCM1ONvVm5RgRbwg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
  by DBBPR04MB7739.eurprd04.prod.outlook.com (2603:10a6:10:1eb::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.29; Wed, 13 Nov
- 2024 10:12:43 +0000
+ 2024 10:12:45 +0000
 Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
  ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
  ([fe80::6d7a:8d2:f020:455%4]) with mapi id 15.20.8158.013; Wed, 13 Nov 2024
- 10:12:43 +0000
+ 10:12:45 +0000
 From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -86,9 +86,9 @@ Cc: linux-gpio@vger.kernel.org,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	imx@lists.linux.dev,
 	Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Subject: [PATCH v6 6/7] pinctrl: s32cc: implement GPIO functionality
-Date: Wed, 13 Nov 2024 12:10:58 +0200
-Message-ID: <20241113101124.1279648-7-andrei.stefanescu@oss.nxp.com>
+Subject: [PATCH v6 7/7] MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD driver
+Date: Wed, 13 Nov 2024 12:10:59 +0200
+Message-ID: <20241113101124.1279648-8-andrei.stefanescu@oss.nxp.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241113101124.1279648-1-andrei.stefanescu@oss.nxp.com>
 References: <20241113101124.1279648-1-andrei.stefanescu@oss.nxp.com>
@@ -106,580 +106,121 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|DBBPR04MB7739:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2cbab589-f131-46f2-47f9-08dd03cbb66d
+X-MS-Office365-Filtering-Correlation-Id: 49d6c7aa-8b90-4792-2ef5-08dd03cbb7a5
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qlhwd1hyRm14dnRESFFvY0pyTExmVmhkTmNob2tjbitwNEZ4ak02RUhPeFI2?=
- =?utf-8?B?U3JIT25FSlM1b0xzTDRMUjkzWnB2OGhqZi9PMUFFSnV1SnFBalJVREpIclZh?=
- =?utf-8?B?RXBkdmdpTG5BOVZOcFJkK0ZNUFdodmE5TFJMcnBFYVZUb1NoODhZb1luVEMz?=
- =?utf-8?B?ektzOTJMRXc2TVAxZm83OFlISWp4QWRuRDFxTWlaZDNXRkFOdWV5eW1rV0tv?=
- =?utf-8?B?UFVka0NEVFArbkMycjNlK05kdkFLV2Y4cE45aFViVnNsVG9Pekl0ZnU0OFRk?=
- =?utf-8?B?Y00veHNBajZSQ0ZtVmxoOEpJVU9JVkJMRDNrYmdKNGpRa2tpRmhZaGc1cHFE?=
- =?utf-8?B?Zi83ZzBPRmRXOTFCVnBPNXVwY0lYZXZtUEZBMnduQVN0Q1o0OWo2VVMwWFBw?=
- =?utf-8?B?STY5MFZ6K0VWRENUZGRNdEVjT3cvUk44U0RhUkV1QTRlN3JSQnJMRUVveisv?=
- =?utf-8?B?cWg4ZmI5QlIxZzFnWkhLb3RsT1JMR2Z6d1J2YVhaL2gzOC9pbFpvV2dZRjRp?=
- =?utf-8?B?cnFSamJUVEt5Q2luTThIbmt0YTd6bTNXYWZlZlBYVzRhN0lXMDJ2ZWk3RHE1?=
- =?utf-8?B?OEFGblRuNllObXcxN25zYS9ycWxYMS85dVFSZ1JDQkZFR1Fld1ZnRWRTL2No?=
- =?utf-8?B?VEQxa1JKeXFJNzI0OVc4dGRURzhIZUduS2h0K01HY1o3OWIxK2FDTytLSkpy?=
- =?utf-8?B?cVNFYVQySFZ1alo5aVpVb1VNd3h2UzNrZzJJcjZzblhCQk8vZUU2R3dYbnpC?=
- =?utf-8?B?QTdYazdJd1E2V1UxL2kySmFmMWQ0WUk5TkU0eUtMOUlzUEV6WXlOZ1U5YUl0?=
- =?utf-8?B?U0tSd1JoQzJZNTQ5UE1ucTVMTVpzZ0xOc1lQWTU3RUhwVERjaWJMeWhIV3NK?=
- =?utf-8?B?V05LYWsyaVBFQUdiQklwZjNNNk5tYU8wYVlqcm92cjBTdFRoVHhLMXJvUEx5?=
- =?utf-8?B?ZkcwbWpZcDR5Zy9CVE4rM0RtSUgwZWJ4T1JCZXZXQW5vMnVhb2EzMFhGR3or?=
- =?utf-8?B?L0VJcmNGMTlwZGRPdkJHV04vbE4yVmw2L2RIejV5Rm5TeXVla25QbjlJY1BR?=
- =?utf-8?B?TTdKdkR2RHRsL3ovMkE4dEhUNTVRb1JZQThGTmdHMUNGSmhWYTNJSHZVbG5U?=
- =?utf-8?B?ekRlaFR3d3lFNzJmM1o0dXErUm1JcW9HNXBhTmtnaWxMakM2WER4QWNlcGYx?=
- =?utf-8?B?NjlNa3ZiamVDVHVYek95c21MUDdHekJRT3I0MmxkZ2kwSGdaOTJGN0hiZzh3?=
- =?utf-8?B?azU5V1JwZG5lUEk0SWo4VFY4Unk3VmJrYU9kcVhCQmJFdEk1NE1xVVBaSHpn?=
- =?utf-8?B?b2pqY2daYTVxUTNZd0E2bW0vdDJ5NFBYdHdTNlVLdnk4NklHamYyZlBlelZm?=
- =?utf-8?B?MXIyQnc2bCsvSGdxR2pTbnh6cy96VkJKTXRlaUdOeXJCRFd3L0M1R2dmdDcv?=
- =?utf-8?B?ZHFOb2k1c2F6TlM1aC9heU45VlJkeGtSQzMrckZGZkJBUjR5SHM1Mk1MLzJk?=
- =?utf-8?B?bFVNb3NMRVkybU45Y3Bwd0FrVUVkQWRERThacHFkUzBsL1ZmMHpZRWIwSHg1?=
- =?utf-8?B?eEVKKzZhWjRlbnBJOHlCZUxxbnlvWVQ1Z01ianlIV3VXbkF0d05kQmdyQ092?=
- =?utf-8?B?d1F5dTBzYmMrZ0NrcU5aeG1QUFIrT1lnVzliUUE1UU4zNUlrdzZXSVdBMXE3?=
- =?utf-8?B?MzZxaE0vZjdJTytrTUJKdTJuT0NUbHkxaEN4NDlDMGJqakZoOHVWYXFPbWww?=
- =?utf-8?B?RC9kaUJGM1AxUjJXN3J1a3JoVDd0eWJUU2p1N1d1Zm9MWkw2YWZDb0FoL2pD?=
- =?utf-8?B?VFA2YVA2U2NGNEc1NmlKc3VMTVdIVTJjZG1UcmNOWHI0MmYxM1B5THFQS3lK?=
- =?utf-8?Q?O1MxXAMobhlx5?=
+	=?utf-8?B?VVM2aVEzM3pvcDd4Q0ZBMXRhREV1Qjc5aWZHR0orWlpPbTU3WUpoZ0R2NElo?=
+ =?utf-8?B?bzhNK3V1Z0FQM2E2ZHAvYzFYMmZvK3F4Q0FISy9Pd3FJUFRqYlJlLzJJYzMv?=
+ =?utf-8?B?b25iMGRhL091QTQ0SWYvNWNnTmtheFZGVzlzRlhFcUR3TVNDdGRYNVJ4MWtq?=
+ =?utf-8?B?aUxIWjgwZlFpV3h5L1ltWGR2bHh2NHB1Mkc1aWxoVjhTRFVVcG0rRGhDZlZy?=
+ =?utf-8?B?K1g4eUo2NWJIQmRYTUlEaWNtZUgxRXNRb0JSOWNwcWVxYkQ3VncrWTRJTXFy?=
+ =?utf-8?B?OW1ZbWJ0N0o5NkRaSWtoeVJCK3kyR3NzdmNpdW9IWE5xZ0dtZGFuOWJlalNH?=
+ =?utf-8?B?ajhKdS9ybGZRSTEva0pBVHFzcjRuRSttTWNKRkFGZGROZkpKVGRKSVJNcTI1?=
+ =?utf-8?B?WjFVeGRCcE5xZFZSMW96MS8rdTdidXdSUGlVazJIc3ZWRGlXenFiZGZhZzNs?=
+ =?utf-8?B?bTVpejczZ3h3TVlyNHZld2J6UDZEbFBrbUhHQ2JCSUs4THZyaUpxNWRGdDBR?=
+ =?utf-8?B?RzRyZWtsS3ZFNkJ6ekhTOFc1NUtiSUJJRUwwaUtvMllrV1RTNUwvVkV3V25S?=
+ =?utf-8?B?TTc4ZEljK2xkcVhvZW1OakE4TXhRZ2RTT1Z4WFBxYnBtRmhXWjZJbElya1Rk?=
+ =?utf-8?B?N2xmcXZ3R2hvN250TEI0OFJNNEFoRTRQQzZNYmM3bHJqb2JKQWp3T29ZaUQ3?=
+ =?utf-8?B?QkNyZDcwaEZjOCtlUG54bW8xNmQveVRKYWp3Qm1NNHg4UW9RRndXeU9lcUw4?=
+ =?utf-8?B?QzQ2aXNEZXA4aEJ2enFqUS96bVl1aTBVd1R0UnU2TEN6MHJQb1FOZ1VIZHZq?=
+ =?utf-8?B?MDRaMUM1MXVNb1hkN2Q2Y2NLYlVXdXZBSVVlTDEzSEEzTk41ME9vQTBWajND?=
+ =?utf-8?B?cXphQm51Qzk4M2VGU2VtMmp4T3ZTVklEVUxCcVIzNGNuTDJ2ZlNvLzBwd0Ju?=
+ =?utf-8?B?ci9xaVVWcXdlY25lU1FnNWZiMzVpanBNNU5QMkVRUDFxWE4rL1NsTUdMMi84?=
+ =?utf-8?B?Z2YwSmI4MG9oZEhpL0RkeU1aQXg0QXNaY0ozT2loVWlodk8rSXZYQ3N1L0Vs?=
+ =?utf-8?B?NWF4TUxzUm00cVJjQ3FPZGRlVUlHMVE1RHFoQ28xRTllaW9Vd2lpNmtCdXdL?=
+ =?utf-8?B?QmlKWUtQOU9XcE9FNlNJajNNTUhoQ2VudS92TmN3ZjNTZ0l2V1IyU25ybnlQ?=
+ =?utf-8?B?ekRSOTJLUndXQzhyejJhSnp3dkRsa1BNM0s1Q2JXaE1wSnRhcTlBb1QwNi84?=
+ =?utf-8?B?T3RIMFBWbDFPSWFDeDgxQmJPNjVzaEtTbzI1TXc0RkluZUlzNXZMWVA5cHdR?=
+ =?utf-8?B?S2FiOFYzd1Q0ZW9BNTVMSjd1MEdDL0NRK1JNTG5jUElWUjQvOENSOXdEbkJP?=
+ =?utf-8?B?Tm8vNlFxZGtQdGdnamN2Z3AwdHJ5Nm9Sb05Ha0phdlFZamx4YXFpS1V2dWxN?=
+ =?utf-8?B?SVJGWHlNeGYramFhMVlqQlVTOUNmMEdCNWZCT1l4eGQzZkpEYWpKQ1BYWVJ4?=
+ =?utf-8?B?ZXhmVmNwbzBZMVNaN1dQWnBSWGZPdXl2NDBydzN0eFRrMWpqeGd4Y2NtT0E2?=
+ =?utf-8?B?SWw0eDR1NlJLeFNMWlR3WWd2Yk5nbXIxRGdPTnJyQ1dmTEZEMmZtZU52V0Ru?=
+ =?utf-8?B?ZStRelBEVmFPTFY5MngxMndSbllrT2lyODgzcDBLM3pjQU9LYzVDMExTVGlT?=
+ =?utf-8?B?UTNDZkVXMWFXUC9UU1dRcGFKWWE3YWJCb1lmT2FzeVJTY28wL3dKV0s4SGgy?=
+ =?utf-8?B?S3BiY05qOWhWL3lUSE1xaVQxWFBHdUFhTExMZjdaMFRvSzIxem5KTzlPalBM?=
+ =?utf-8?B?b1U2Qmo0TGRKdGRmU3JDR0RnZ1B4RkZEVDdoTmlDUE1IZ1dLS3Bmd2NBQkRw?=
+ =?utf-8?Q?rwtKgSuMa2Bz6?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V0I3UlNrak01S3BKYmFTbzA5SmJQY2xnOWNicE5YVW0rdGhoTGMyckFnaHc0?=
- =?utf-8?B?QUtDVlBiMlBpSkpwQU0wSFB0N0xhLytrbHpVQjVVU3ZpYVcwU3ppMnBreC9D?=
- =?utf-8?B?MUl6UTRPRSt5Qllyc29Ra2NYTVZCREYrcUNMdXZkUGhLVWtaSkhlZFArdWVh?=
- =?utf-8?B?V2tIeVRiZEVYMytYeEV4NC9qU3JON0pvdk5GSGJuUFNPRGhaL1hVbHlYRnFD?=
- =?utf-8?B?aGxwby9xVmQrRWRRazU5Q2NUWlVQL0xSTyt2dWtOcnZpVy9KOVZuTzM5dzR1?=
- =?utf-8?B?QVBMOWtZYVYvL09kMHFud1Z5K0RDMzJ5NHZEU21IL3J1V1BnLzhBZmFpYWM3?=
- =?utf-8?B?WG0vNnR4bTdEUTJNTEpkMXY0U1ZCeHVDTFN2elZJcE9SNTREdzJWQ1o5MG4z?=
- =?utf-8?B?V1c5NlEycW4vWHRQeGlyeE9Pc0VtQlhWMGVseGRyQXFjWG9Wc1dHMk9PRzRz?=
- =?utf-8?B?S2FiamtMNzNrSUpkZTJhbDlBdkpnRTVHNS8rakQ1czEzamZjNXJaaks3bXZk?=
- =?utf-8?B?VjZUampZbWFoUG1nOE8rYXozV0dYRnUyUExGcUc5ZnVMcEhRNzNjL3ZOYnRB?=
- =?utf-8?B?eGtlRVArUmxvdjcrZ0M1Z0c1akx6aUZxOG81eU53Vkw0NFk1Q0NMSjk3RmlV?=
- =?utf-8?B?WXZueU5LUzVOU0lIdFB3dmZwTE5GMDJDbG16bGpaaEZldGJYSHdHTjZkV1Fq?=
- =?utf-8?B?NVN0dmxLZXM0MTVRMVNVQ2lzcmxQRXpvcVY0MWc2ZDVjcW9GMTBUbkpOQmx5?=
- =?utf-8?B?MTBQNVUrVkxzc3ZsNkdYYXBPcWVabC91MDc2WGw0NkF6dHU0amsxQzVDbkVK?=
- =?utf-8?B?VHdLSGJJZGZtU21VOVgrQWRldXhmTk1iWjNVcXRMMVc2cU9pV0RiWkU4OTdY?=
- =?utf-8?B?cFk0ejJNNytVV2JUK2NLOTlyYThWN20vVGpmWk5sNEZGYU45ZnlQQ3FKVUg1?=
- =?utf-8?B?OFZiZmZoa1JtT05zbWo0emdiL0JoRmJjU2NIWGJOMmovMUtiNzFnKzhEVld2?=
- =?utf-8?B?Q3VrNFhISmMrdzZaQUZEV1VjSjFZZE1URS9hSllpVFJDV1d4VlM1ZU9zSW1F?=
- =?utf-8?B?a2VQeHdRNzdCVE9lR2lUWkNZUEszRWlCbUJLL2ZielA1Mlk2UStqeEZQZUll?=
- =?utf-8?B?Wjc2TytEUW56NEpsTjBwSGMyL2ptMTA2UGJRTVFxelFtZXRRZVpPYktPOEM5?=
- =?utf-8?B?UElySUxlZXZIbmx0ZXZ3K2VFOHFwSy9DakZuNU9CUDdmV3NxSXdGM2xkQ2NX?=
- =?utf-8?B?b1NWZDN0cTFxcG1WVGd1V0VxTDJ6ZmVsOUVSVEw1MlE1cG9acFZnVXZENjlZ?=
- =?utf-8?B?cGQ4cDFqaTd4ZG9NODQ5ZWh3dE1BNnlacGVtWXhVRlNpT0s2M3BGaWliSzk1?=
- =?utf-8?B?a0NTL0xZWGdFNEZLN05UR1VDOTFxanJqWTlyblhFZVdsQlBUZlQrN2VLdkxn?=
- =?utf-8?B?bVAyLzBaWC9rRnlENG56UUxvMXYwc0NqY05JSkJWbmF3K2h3SDZ1TDFBT1FM?=
- =?utf-8?B?UlhrREgyTW1RVk5CZHArUWxqSTZZTHlaS09URjdnRk9vbW1CQzR1Smo0Wnl1?=
- =?utf-8?B?U1lDVFZKMlNSeEFXMHJIeEJ5cUhmV0JwMGsvdDN4WmpocDFxNWY0YjJWeGQ1?=
- =?utf-8?B?bGljSzVRQlJjSi9DMzE2Rk84VDJpYUJHeE1QOGI4d2wxc1JSTkpzNnh0aUZs?=
- =?utf-8?B?R20yaGpuQzZtOTB1YzFJZE1HUU4vRWJqKzlqOHBRZEZFYkJ0K29oWmJOc3p0?=
- =?utf-8?B?ak9ybXBrUUFsM2tiMUhJOUNtMG1SZXZCM0NDV1owN3M1QVdqWmpoWUl4TEt1?=
- =?utf-8?B?dkhHZStadzNUWXNjZWs3QmlXdDlBK2U3bGhzWUl4WDl3NUJVY2ZhdzJGK1Rs?=
- =?utf-8?B?azhhMjNYWlBKaHJSMlZ0N1FLMGNYeU5oVTlnOE8rMlpIVW9aSmtyS1lLN2wy?=
- =?utf-8?B?UTNYdTlPdWZleStIOXU2dWpBeUx5Rk1XQXo5N3dIYWJLaFhKZUlDV3Z2NkpK?=
- =?utf-8?B?RXdCSWhWVmNzL3RHQ2hhR29uNXk2Qk9yM0J4Q2tYN3VScVFLZy9hVXU1d0Nu?=
- =?utf-8?B?S1NtZXc5d0hNQzFrMHpockFlMzRnaUl5S1JMWUkxcjcydnBXWWQyNVdsMnJn?=
- =?utf-8?B?bFlPeDIrTGJJRHpJUm9WOFZqMjhhU2NGdWNkd0luanVqZzIweVFXQ1prdmps?=
- =?utf-8?B?UlE9PQ==?=
+	=?utf-8?B?S0dhc0hqTXd5VlBHYWNpY1NNY0ZkRlRiQkUxZlE3bjIzQURVOVVKUGl4bk9U?=
+ =?utf-8?B?bXhFb3Arcm1lcmRSNFJaV1JySlhDVGNWSGJvS29KV1FjczZHbHBacElrMmtL?=
+ =?utf-8?B?YUF2L1Nhd20wS1lKZFpwVmk1YStPd1RHbkIrWVpVYTZlRU53aGk2K2pqblpB?=
+ =?utf-8?B?Zk5GaUFZNTJKRUdSQVU5cWlwK0N2citXNStnaVRSUzJTaGw2alpZZHNqNkVj?=
+ =?utf-8?B?SjRiU052WFJTU3R5Vi9WYzZRV1VwNy9ZbHVIdVgvNU5yU3RNQ1A3ZGVOekli?=
+ =?utf-8?B?VWV5RWxHbUw2K1kvdDg5TCttZ1Mwei9aZVlmYjRJQXBRWlFUNDVOeU5lQy8v?=
+ =?utf-8?B?a01uMlZlQzJyNWd1aWVSYXFReVhia0g0RmZMK2pPcnU0dk8yTkZOeVUycTIx?=
+ =?utf-8?B?eUNBOXBJNHpnbHpzbmFwR0IrUkp5bEN1bnlUTURoNWI0SmlpcWIxN2cycUFF?=
+ =?utf-8?B?L0dKVUFzbWo3SThOK2RKTzhqYzNVbGZ2UGZWUGd5YXJTR094ZXg3YXFIWDFS?=
+ =?utf-8?B?QTVmTEM0RTl0bDdjTjFXR3ZqeUt4ajVrY1RYWVBVSUNHUHdPNFo5c0d4RmZS?=
+ =?utf-8?B?eVRrYTBBRlpyOGRXR3ZBOTByeHJtMGF4QVJoTjVQeVBxb1NTS1NBT1RqU2lz?=
+ =?utf-8?B?Y2QrWVhhZEZDZExBbkRVK2JJVTBuSUYwdDNQclIwZnFDUFpFaXhTK0hkSHU0?=
+ =?utf-8?B?OTNhUk8vY1VDNnlyMGx2OXpSUFFmd1dOOTNKT00wU3ppTDhPbkZmNTJBOS9L?=
+ =?utf-8?B?N3p3aDF1NTVtbk10N2NXYTRHdEIyRDV0MlFnZzNmMlIrVUVscWhJejJlRmll?=
+ =?utf-8?B?cHNCTEs0cHplQXdYZHdoTTdQSkRxRWplR2ZZeEY1TUlnbXZVMVAwWm9ZVEN2?=
+ =?utf-8?B?SDM4VjdPRU40RHVvWUhpN3FnS2w4bFFlbUcydEt3OUlGVFBBbnZ4UTl2dy9N?=
+ =?utf-8?B?R2dqQkRaQzVoSHFyazFSODBDTmt4eE1rOWpzT254bXZHRzhHWXF2MUdleTBE?=
+ =?utf-8?B?eDV4L2ZybytyZktzWFltaDZ1dTFabHVaTTFaeDdJU3VEOTltNVd5aFBMdXFt?=
+ =?utf-8?B?MzJKRWhHMUhSMnRLd2NRR1NkNEpTU1hsQUtuUnhLRCtSdXNNWlNkMUxkSjl3?=
+ =?utf-8?B?aWM1dk04aDNTdG1JclpRMnB6R1Fmd1FObFhzRGxndTB3NGxxaU1VNDgvTjZF?=
+ =?utf-8?B?L2c5REJsUW85cXNyUkVmRThndWl3SWJEaUZMWGh5QUZFUnVHdXZ0MnJUelBZ?=
+ =?utf-8?B?cWp0RGV3ZTROWGo4NFNGQ0RYOEEzR2JYY00yRWVyRlB6aE9TNG5XbStTWGFw?=
+ =?utf-8?B?eGcyaVozWjB6eGkzQ3BBUFM0L0x5Yk9sSFBRQ0o5VU1oSVg1d0psWmhtazdX?=
+ =?utf-8?B?WlIrTGZaY0NzQndzZVlUSkdKNkswZWNneWJHWENTVko2ZmExOTVwbDdyeDVa?=
+ =?utf-8?B?MThueFE0ZENibzVsclJVRUdzTnVwc053aG9RUzlETGJoSW5hN01ycUdlMUcv?=
+ =?utf-8?B?SUdEek5GL3lTNWRubGpkYjZtQzBXSmFYTFg5UStyV1NPSWNJUVpOOTRYdjNU?=
+ =?utf-8?B?UHhXN1BtRWh3c0lsZHpvVzU2WUFIbk1sT2hnd2RaQW9aTGtKVFp5OG1kcXMr?=
+ =?utf-8?B?ZXRFdTRtejlibmJ1U003RXh2c0R2QzV3VDNtQmFyejZkQjFxSERSZWVYZm9w?=
+ =?utf-8?B?SGFhYW53K0RFOGZqK0pldmNGcjc5dm9LT1c2anVFTy8xMHg4bElIdWltR0dq?=
+ =?utf-8?B?bTBYcHVPY2xjVG5UZmxIQU96MHNRUTNPY3ZyS3gwR2RLUDNIRTNzcm1Ybmlm?=
+ =?utf-8?B?OENsVXFmbjlIWnJJSktNZzNqczArdytMVy9pZXczZUlJbTZYYVlsSVBDQnFQ?=
+ =?utf-8?B?am4vcFVYclc0WEp1Yzk1VGY1VFY5Q0VOOE9JNHB2bGdJZUFLSXUvaThCVzRV?=
+ =?utf-8?B?MkhOeVdlWWRqaXJLZzJsSjFhUzFEWFk1cDdlNW1DcksyMnc2TktEZEFMTkdx?=
+ =?utf-8?B?V0x6WjRpZW1KTmR0aEo0MFV4dzA0dnEwV0piMndreHNZbERWR0FWL3lpUktO?=
+ =?utf-8?B?OFRNRE1jdFB3QXZiR0hPc2ZBS2NVYTJWdWl6U202U1RYeGRkalFzWkJWNmw0?=
+ =?utf-8?B?STVFV0VqdHQ3ZVhPUUR2SFE3UXNZYm1Rd3NKK1ptalRncFpJTUhoSXp0UDR4?=
+ =?utf-8?B?SlE9PQ==?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cbab589-f131-46f2-47f9-08dd03cbb66d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49d6c7aa-8b90-4792-2ef5-08dd03cbb7a5
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2024 10:12:43.3145
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2024 10:12:45.3041
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7B1WWiva/XvoHxAKtmUy/Pd6LiKQABV9Ni8MJVtJkttSO6klW4OyApsJTnS8BrE4Eg8hnqjy/rDs9RTZVJWVFc61PndrzfbUJh99wKVe1fU=
+X-MS-Exchange-CrossTenant-UserPrincipalName: kqIJUzeX81GRNy61KL29ZHPyGdnoXIYpAQV6eOcoBvc0syd9AWfnlJnMidaoum7PbdZuGgLyxKmfY1H9eW3lZbyLX7gylMTZYW819UPkPGE=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7739
 
-Add basic GPIO functionality (request, free, get, set) for the existing
-pinctrl SIUL2 driver since the hardware for pinctrl&GPIO is tightly
-coupled.
-
-Also, remove pinmux_ops which are no longer needed.
+Add the new MFD driver for the SIUL2 module under the NXP S32G existing
+entry. This MFD driver currently has one cell for a combined pinctrl&GPIO
+driver and will, in the future, contain another cell for an NVMEM driver.
 
 Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 ---
- drivers/pinctrl/nxp/pinctrl-s32cc.c | 406 +++++++++++++++++++++++-----
- 1 file changed, 344 insertions(+), 62 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-index 0b79c7445929..e213a910d958 100644
---- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
-+++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-@@ -40,6 +40,14 @@
- #define S32_MSCR_ODE		BIT(20)
- #define S32_MSCR_OBE		BIT(21)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bdae0faf000c..cfbaceea5f40 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2787,7 +2787,9 @@ R:	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+ L:	NXP S32 Linux Team <s32@nxp.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/nxp,siul2.yaml
+ F:	arch/arm64/boot/dts/freescale/s32g*.dts*
++F:	drivers/mfd/nxp-siul2.c
+ F:	drivers/pinctrl/nxp/
  
-+/* PGPDOs are 16bit registers that come in big endian
-+ * order if they are grouped in pairs of two.
-+ *
-+ * For example, the order is PGPDO1, PGPDO0, PGPDO3, PGPDO2...
-+ */
-+#define S32_PGPD(N)		(((N) ^ 1) * 2)
-+#define S32_PGPD_SIZE		16
-+
- enum s32_write_type {
- 	S32_PINCONF_UPDATE_ONLY,
- 	S32_PINCONF_OVERWRITE,
-@@ -84,6 +92,7 @@ struct s32_pinctrl_context {
-  * struct s32_pinctrl - private driver data
-  * @dev: a pointer back to containing device
-  * @pctl: a pointer to the pinctrl device structure
-+ * @gc: a pointer to the gpio_chip
-  * @regions: reserved memory regions with start/end pin
-  * @info: structure containing information about the pin
-  * @gpio_configs: Saved configurations for GPIO pins
-@@ -93,6 +102,7 @@ struct s32_pinctrl_context {
- struct s32_pinctrl {
- 	struct device *dev;
- 	struct pinctrl_dev *pctl;
-+	struct gpio_chip gc;
- 	struct s32_pinctrl_mem_region *regions;
- 	struct s32_pinctrl_soc_info *info;
- 	struct list_head gpio_configs;
-@@ -366,66 +376,6 @@ static int s32_pmx_get_groups(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--static int s32_pmx_gpio_request_enable(struct pinctrl_dev *pctldev,
--				       struct pinctrl_gpio_range *range,
--				       unsigned int offset)
--{
--	struct s32_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
--	struct gpio_pin_config *gpio_pin;
--	unsigned int config;
--	unsigned long flags;
--	int ret;
--
--	ret = s32_regmap_read(pctldev, offset, &config);
--	if (ret)
--		return ret;
--
--	/* Save current configuration */
--	gpio_pin = kmalloc(sizeof(*gpio_pin), GFP_KERNEL);
--	if (!gpio_pin)
--		return -ENOMEM;
--
--	gpio_pin->pin_id = offset;
--	gpio_pin->config = config;
--
--	spin_lock_irqsave(&ipctl->gpio_configs_lock, flags);
--	list_add(&gpio_pin->list, &ipctl->gpio_configs);
--	spin_unlock_irqrestore(&ipctl->gpio_configs_lock, flags);
--
--	/* GPIO pin means SSS = 0 */
--	config &= ~S32_MSCR_SSS_MASK;
--
--	return s32_regmap_write(pctldev, offset, config);
--}
--
--static void s32_pmx_gpio_disable_free(struct pinctrl_dev *pctldev,
--				      struct pinctrl_gpio_range *range,
--				      unsigned int offset)
--{
--	struct s32_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
--	struct gpio_pin_config *gpio_pin, *tmp;
--	unsigned long flags;
--	int ret;
--
--	spin_lock_irqsave(&ipctl->gpio_configs_lock, flags);
--
--	list_for_each_entry_safe(gpio_pin, tmp, &ipctl->gpio_configs, list) {
--		if (gpio_pin->pin_id == offset) {
--			ret = s32_regmap_write(pctldev, gpio_pin->pin_id,
--						 gpio_pin->config);
--			if (ret != 0)
--				goto unlock;
--
--			list_del(&gpio_pin->list);
--			kfree(gpio_pin);
--			break;
--		}
--	}
--
--unlock:
--	spin_unlock_irqrestore(&ipctl->gpio_configs_lock, flags);
--}
--
- static int s32_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
- 				      struct pinctrl_gpio_range *range,
- 				      unsigned int offset,
-@@ -449,8 +399,6 @@ static const struct pinmux_ops s32_pmx_ops = {
- 	.get_function_name = s32_pmx_get_func_name,
- 	.get_function_groups = s32_pmx_get_groups,
- 	.set_mux = s32_pmx_set,
--	.gpio_request_enable = s32_pmx_gpio_request_enable,
--	.gpio_disable_free = s32_pmx_gpio_disable_free,
- 	.gpio_set_direction = s32_pmx_gpio_set_direction,
- };
- 
-@@ -669,6 +617,311 @@ static const struct pinconf_ops s32_pinconf_ops = {
- 	.pin_config_group_dbg_show = s32_pinconf_group_dbg_show,
- };
- 
-+static struct s32_pinctrl *to_s32_pinctrl(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct s32_pinctrl, gc);
-+}
-+
-+static struct regmap *s32_gpio_get_pgpd_regmap(struct gpio_chip *chip,
-+					       unsigned int pin,
-+					       bool output)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(chip);
-+	struct nxp_siul2_mfd *mfd;
-+	u32 base, num;
-+	int i;
-+
-+	mfd = dev_get_drvdata(ipctl->dev->parent);
-+
-+	for (i = 0; i < mfd->num_siul2; i++) {
-+		base = mfd->siul2[i].gpio_base;
-+		num = mfd->siul2[i].gpio_num;
-+
-+		if (pin >= base && pin < base + num)
-+			return output ? mfd->siul2[i].regmaps[SIUL2_PGPDO] :
-+					mfd->siul2[i].regmaps[SIUL2_PGPDI];
-+	}
-+
-+	return NULL;
-+}
-+
-+static int s32_gpio_request(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(gc);
-+	struct pinctrl_dev *pctldev = ipctl->pctl;
-+	struct gpio_pin_config *gpio_pin;
-+	unsigned int config;
-+	int ret;
-+
-+	ret = s32_regmap_read(pctldev, gpio, &config);
-+	if (ret)
-+		return ret;
-+
-+	/* Save current configuration */
-+	gpio_pin = kmalloc(sizeof(*gpio_pin), GFP_KERNEL);
-+	if (!gpio_pin)
-+		return -ENOMEM;
-+
-+	gpio_pin->pin_id = gpio;
-+	gpio_pin->config = config;
-+
-+	scoped_guard(spinlock_irqsave, &ipctl->gpio_configs_lock)
-+		list_add(&gpio_pin->list, &ipctl->gpio_configs);
-+
-+	/* GPIO pin means SSS = 0 */
-+	config &= ~S32_MSCR_SSS_MASK;
-+
-+	return s32_regmap_write(pctldev, gpio, config);
-+}
-+
-+static void s32_gpio_free(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(gc);
-+	struct pinctrl_dev *pctldev = ipctl->pctl;
-+	struct gpio_pin_config *gpio_pin, *tmp;
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&ipctl->gpio_configs_lock, flags);
-+
-+	list_for_each_entry_safe(gpio_pin, tmp, &ipctl->gpio_configs, list) {
-+		if (gpio_pin->pin_id == gpio) {
-+			ret = s32_regmap_write(pctldev, gpio_pin->pin_id,
-+					       gpio_pin->config);
-+			if (ret != 0)
-+				goto unlock;
-+
-+			list_del(&gpio_pin->list);
-+			kfree(gpio_pin);
-+			break;
-+		}
-+	}
-+
-+unlock:
-+	spin_unlock_irqrestore(&ipctl->gpio_configs_lock, flags);
-+}
-+
-+static int s32_gpio_get_dir(struct gpio_chip *chip, unsigned int gpio)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(chip);
-+	unsigned int reg_value;
-+	int ret;
-+
-+	ret = s32_regmap_read(ipctl->pctl, gpio, &reg_value);
-+	if (ret)
-+		return ret;
-+
-+	if (!(reg_value & S32_MSCR_IBE))
-+		return -EINVAL;
-+
-+	return reg_value & S32_MSCR_OBE ? GPIO_LINE_DIRECTION_OUT :
-+					  GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static unsigned int s32_pin2pad(unsigned int pin)
-+{
-+	return pin / S32_PGPD_SIZE;
-+}
-+
-+static u16 s32_pin2mask(unsigned int pin)
-+{
-+	/**
-+	 * From Reference manual :
-+	 * PGPDOx[PPDOy] = GPDO(x × 16) + (15 - y)[PDO_(x × 16) + (15 - y)]
-+	 */
-+	return BIT(S32_PGPD_SIZE - 1 - pin % S32_PGPD_SIZE);
-+}
-+
-+static struct regmap *s32_gpio_get_regmap_offset_mask(struct gpio_chip *chip,
-+						      unsigned int gpio,
-+						      unsigned int *reg_offset,
-+						      u16 *mask,
-+						      bool output)
-+{
-+	struct regmap *regmap;
-+	unsigned int pad;
-+
-+	regmap = s32_gpio_get_pgpd_regmap(chip, gpio, output);
-+	if (!regmap)
-+		return NULL;
-+
-+	*mask = s32_pin2mask(gpio);
-+	pad = s32_pin2pad(gpio);
-+
-+	*reg_offset = S32_PGPD(pad);
-+
-+	return regmap;
-+}
-+
-+static void s32_gpio_set_val(struct gpio_chip *chip, unsigned int gpio,
-+			     int value)
-+{
-+	unsigned int reg_offset;
-+	struct regmap *regmap;
-+	u16 mask;
-+
-+	regmap = s32_gpio_get_regmap_offset_mask(chip, gpio, &reg_offset,
-+						 &mask, true);
-+	if (!regmap)
-+		return;
-+
-+	value = value ? mask : 0;
-+
-+	regmap_update_bits(regmap, reg_offset, mask, value);
-+}
-+
-+static void s32_gpio_set(struct gpio_chip *chip, unsigned int gpio,
-+			 int value)
-+{
-+	if (s32_gpio_get_dir(chip, gpio) != GPIO_LINE_DIRECTION_OUT)
-+		return;
-+
-+	s32_gpio_set_val(chip, gpio, value);
-+}
-+
-+static int s32_gpio_get(struct gpio_chip *chip, unsigned int gpio)
-+{
-+	unsigned int reg_offset, value;
-+	struct regmap *regmap;
-+	u16 mask;
-+	int ret;
-+
-+	if (s32_gpio_get_dir(chip, gpio) != GPIO_LINE_DIRECTION_IN)
-+		return -EINVAL;
-+
-+	regmap = s32_gpio_get_regmap_offset_mask(chip, gpio, &reg_offset,
-+						 &mask, false);
-+	if (!regmap)
-+		return -EINVAL;
-+
-+	ret = regmap_read(regmap, reg_offset, &value);
-+	if (ret)
-+		return ret;
-+
-+	return !!(value & mask);
-+}
-+
-+static int s32_gpio_dir_out(struct gpio_chip *chip, unsigned int gpio,
-+			    int val)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(chip);
-+
-+	s32_gpio_set_val(chip, gpio, val);
-+
-+	return s32_pmx_gpio_set_direction(ipctl->pctl, NULL, gpio, false);
-+}
-+
-+static int s32_gpio_dir_in(struct gpio_chip *chip, unsigned int gpio)
-+{
-+	struct s32_pinctrl *ipctl = to_s32_pinctrl(chip);
-+
-+	return s32_pmx_gpio_set_direction(ipctl->pctl, NULL, gpio, true);
-+}
-+
-+static int s32_gpio_gen_names(struct device *dev, unsigned int cnt, char **names,
-+			      char *ch_index, unsigned int *num_index)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < cnt; i++) {
-+		if (i != 0 && !(*num_index % 16))
-+			(*ch_index)++;
-+
-+		names[i] = devm_kasprintf(dev, GFP_KERNEL, "P%c_%02d",
-+					  *ch_index, 0xFU & (*num_index)++);
-+		if (!names[i])
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int s32_gpio_remove_reserved_names(struct device *dev,
-+					  struct s32_pinctrl *ipctl,
-+					  char **names)
-+{
-+	struct device_node *np = dev->of_node;
-+	u32 base_gpio, num_gpio, tmp;
-+	int num_ranges, i, j, ret;
-+
-+	/* Parse the gpio-reserved-ranges to know which GPIOs to exclude. */
-+
-+	num_ranges = of_property_count_u32_elems(dev->of_node,
-+						 "gpio-reserved-ranges");
-+
-+	/* The "gpio-reserved-ranges" is optional. */
-+	if (num_ranges < 0)
-+		return 0;
-+	num_ranges /= 2;
-+
-+	for (i = 0; i < num_ranges; i++) {
-+		ret = of_property_read_u32_index(np, "gpio-reserved-ranges",
-+						 i * 2, &base_gpio);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Cannot parse start GPIO: %d\n",
-+					     ret);
-+
-+		ret = of_property_read_u32_index(np, "gpio-reserved-ranges",
-+						 i * 2 + 1, &num_gpio);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Cannot parse num. GPIOs: %d\n",
-+					     ret);
-+
-+		if (check_add_overflow(base_gpio, num_gpio, &tmp) ||
-+		    base_gpio + num_gpio > ipctl->gc.ngpio)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "Invalid reserved GPIOs\n");
-+
-+		/* Remove names set for reserved GPIOs. */
-+		for (j = base_gpio; j < base_gpio + num_gpio; j++) {
-+			devm_kfree(dev, names[j]);
-+			names[j] = NULL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int s32_gpio_populate_names(struct device *dev,
-+				   struct s32_pinctrl *ipctl)
-+{
-+	struct nxp_siul2_mfd *mfd = dev_get_drvdata(ipctl->dev->parent);
-+	unsigned int num_index = 0;
-+	char ch_index = 'A';
-+	char **names;
-+	int i, ret;
-+
-+	names = devm_kcalloc(dev, ipctl->gc.ngpio, sizeof(*names),
-+			     GFP_KERNEL);
-+	if (!names)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < mfd->num_siul2; i++) {
-+		if (mfd->siul2[i].gpio_base % 16 == 0)
-+			num_index = 0;
-+
-+		ret = s32_gpio_gen_names(dev, mfd->siul2[i].gpio_num,
-+					 names + mfd->siul2[i].gpio_base,
-+					 &ch_index, &num_index);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Error setting SIUL2_%d names\n",
-+					     i);
-+
-+		ch_index++;
-+	}
-+
-+	ret = s32_gpio_remove_reserved_names(dev, ipctl, names);
-+	if (ret)
-+		return ret;
-+
-+	ipctl->gc.names = (const char *const *)names;
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static bool s32_pinctrl_should_save(struct s32_pinctrl *ipctl,
- 				    unsigned int pin)
-@@ -896,12 +1149,14 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
- int s32_pinctrl_probe(struct platform_device *pdev,
- 		      const struct s32_pinctrl_soc_data *soc_data)
- {
-+	struct nxp_siul2_mfd *mfd = dev_get_drvdata(pdev->dev.parent);
- #ifdef CONFIG_PM_SLEEP
- 	struct s32_pinctrl_context *saved_context;
- #endif
- 	struct pinctrl_desc *s32_pinctrl_desc;
- 	struct s32_pinctrl_soc_info *info;
- 	struct s32_pinctrl *ipctl;
-+	struct gpio_chip *gc;
- 	int ret;
- 
- 	if (!soc_data || !soc_data->pins || !soc_data->npins)
-@@ -967,5 +1222,32 @@ int s32_pinctrl_probe(struct platform_device *pdev,
- 
- 	dev_info(&pdev->dev, "Initialized s32 pinctrl driver\n");
- 
-+	gc = &ipctl->gc;
-+	gc->parent = &pdev->dev;
-+	gc->label = dev_name(&pdev->dev);
-+	gc->base = -1;
-+	/* In some cases, there is a gap between the SIUL GPIOs. */
-+	gc->ngpio = mfd->siul2[mfd->num_siul2 - 1].gpio_base +
-+		    mfd->siul2[mfd->num_siul2 - 1].gpio_num;
-+	ret = s32_gpio_populate_names(&pdev->dev, ipctl);
-+	if (ret)
-+		return ret;
-+
-+	gc->set = s32_gpio_set;
-+	gc->get = s32_gpio_get;
-+	gc->set_config = gpiochip_generic_config;
-+	gc->request = s32_gpio_request;
-+	gc->free = s32_gpio_free;
-+	gc->direction_output = s32_gpio_dir_out;
-+	gc->direction_input = s32_gpio_dir_in;
-+	gc->get_direction = s32_gpio_get_dir;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, gc, ipctl);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Unable to add gpiochip\n");
-+
-+	dev_info(&pdev->dev, "Initialized s32 GPIO functionality\n");
-+
- 	return 0;
- }
+ ARM/Orion SoC/Technologic Systems TS-78xx platform support
 -- 
 2.45.2
 
