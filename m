@@ -1,143 +1,202 @@
-Return-Path: <linux-gpio+bounces-12969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B1FE9C746C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 15:35:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B98B9C759A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 16:07:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B656D1F273EB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 14:35:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED6881F23001
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 15:07:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A5D1FE0F8;
-	Wed, 13 Nov 2024 14:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 111A11422A8;
+	Wed, 13 Nov 2024 15:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gZzN44L7"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="e3NTgin0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6551052F76;
-	Wed, 13 Nov 2024 14:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A666C171C9;
+	Wed, 13 Nov 2024 15:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731508488; cv=none; b=FklVcqeCpJ0IF3rRvEQrjxDJvCHPSTopZ0yUJN3LlFPURo8zGtaq8cHRu9TlOQR29DupN55t6uLUOZjb8rEuilkZ8sppoU+2xxv1T9FRnUIo6gbDhgGvn+J3LB54GNtCOuAYmiq3wSyF/Ldba2BUENecIS3DtqAIaCrX9eJTxv8=
+	t=1731510467; cv=none; b=bi0GWxrSX1zQr/fWEuCN9xP2J714O7lJPWfF0ZgwjBloy9Pa1lsC/0081KruV2NFhBCBieGhUNkGl0NN527K7nnZS3LlqY6VHwTKJ4GqtADS3FNKoJrxu9nb9aDLny7lD3E+C8T7GxfsEWYormbqEQWD4O0leuvkEnv2gLplmm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731508488; c=relaxed/simple;
-	bh=dM5isGoT8gvEzdUI7m24PY0e10UMd7maYxFQPVEb2S8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NkFIJCARNMjfiSUyS9t15hmJksU7T2uC5FzyMAqxsKIu6YjmfTLksqWBztkvaISUIADaQvjmeTRXY7ZesZr2Zh40qQY1s4TGnfnETCTzSb4P0z7omPRvujhv9LGidoeyqiK+1Zgv/N+TRZwWHS+6usJqIsQr3GOySUtWN2MPilk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gZzN44L7; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731508486; x=1763044486;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dM5isGoT8gvEzdUI7m24PY0e10UMd7maYxFQPVEb2S8=;
-  b=gZzN44L7zIYrx7ClEs5xnnBbMJbhlFnnEac41s5WzlUiLqQ61c3lXSak
-   K3Xzr35ZSD/i5wXCEfOZyi7i/wY5j5bwMCHeAm3cDeCJK7CXDd48oqxk2
-   fuYCIBPHljkK65sEgLJfLnhfHjHTQA9dfdzzAhHY/9blOf+vSq5EUC8fc
-   rsIJZ19ZVo/hk1DXPJ8SHQEhdce04666v/TllpGYTAzjRYLie5BrbGSwC
-   Co8OgovfxuwM0ClyxQlubl3RAlPMZzlHrSunJVSIvHtSFpRoucWUVqW+I
-   tqV4IVMSA/IW8vEnZ8HVEuqQ3hwdukK2lhdha0VCPEg3i1L5P8pKzxZru
-   g==;
-X-CSE-ConnectionGUID: vRE7MTP6QTmCczYaaFS8gQ==
-X-CSE-MsgGUID: scf18RNuRrOa1OLYxLSOKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11254"; a="19010677"
-X-IronPort-AV: E=Sophos;i="6.12,151,1728975600"; 
-   d="scan'208";a="19010677"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2024 06:34:45 -0800
-X-CSE-ConnectionGUID: Mp0B/uQKTpulc6xwndRd1g==
-X-CSE-MsgGUID: dPCbY9paSP+5GgUIMsiBpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,151,1728975600"; 
-   d="scan'208";a="88050341"
-Received: from lkp-server01.sh.intel.com (HELO 80bd855f15b3) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 13 Nov 2024 06:34:39 -0800
-Received: from kbuild by 80bd855f15b3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tBES4-0000Sj-2J;
-	Wed, 13 Nov 2024 14:34:36 +0000
-Date: Wed, 13 Nov 2024 22:34:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
-	Larisa Grigore <larisa.grigore@nxp.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	imx@lists.linux.dev,
-	Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Subject: Re: [PATCH v6 7/7] MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD
- driver
-Message-ID: <202411132227.SO6y3U3E-lkp@intel.com>
-References: <20241113101124.1279648-8-andrei.stefanescu@oss.nxp.com>
+	s=arc-20240116; t=1731510467; c=relaxed/simple;
+	bh=H0yGji2iT1spJG+9g1OpFuNEiQisUHAdfC779LlT0VA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=mHbkvvqUzat0aII8AnvmT8AcB9yqtK/cjqiUVcZN+zFM546sBEoDf3+1YnrVifE/fz1TzUX77Wk4Cc/EnZSzm9feHy3TD+eVctTxrzJOupJa7vEQTACKfRO5ZmnV79m5W0TPJ/zHJqJRrj1T1FHXNOivG6DXYOhW0vGhc2LX3js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=e3NTgin0; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (docker-mailserver-web-1.docker-mailserver_default [172.22.0.5])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 3D162E44EA;
+	Wed, 13 Nov 2024 15:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1731510463;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D8i3R/fzkAitpNlgR9VCp3wgJnOJj83cQ/N61OxxoCI=;
+	b=e3NTgin0MdZk+2iF9LFvZSTdFD+Cj6xa7NXhKQiHgDCUG+gFClvXqf6tNgWoA6bWegiIZz
+	bl0bMhUmLqKx0vKGd8nWviW2yWsJ366M8UL12hhzJ+AJICKmtWuCagVeclX1sAMU27+3L1
+	gSVmvLvyD2hHJW0vvZSfWzISHuAVmldIeoHG5Rd7H56+SdWmhUgBV7Kuw465eVNk+ERzTj
+	tDmBOseoinxGdVcpVHj8snBzfha4fZtVtWf90QsnShJxQflzla5xTCLotgmkM0T05iezcC
+	XNEZvQDV0YC3BAHSIbO0JxGO6gKiLhSwjVoGjVBKX1iV2e1ioARXqt69ZR0KYw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113101124.1279648-8-andrei.stefanescu@oss.nxp.com>
+Date: Wed, 13 Nov 2024 16:07:43 +0100
+From: barnabas.czeman@mainlining.org
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Bjorn Andersson
+ <andersson@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Amit Kucheria <amitk@kernel.org>, Thara Gopinath
+ <thara.gopinath@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz
+ Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+Subject: Re: [PATCH v5 08/10] arm64: dts: qcom: Add initial support for
+ MSM8917
+In-Reply-To: <ZzRtEHsC4MROxN3v@linaro.org>
+References: <20241112-msm8917-v5-0-3ca34d33191b@mainlining.org>
+ <20241112-msm8917-v5-8-3ca34d33191b@mainlining.org>
+ <ZzOQEgLLhkH-IymV@linaro.org>
+ <0dae1cea420bd335be591e4b1be3d07c@mainlining.org>
+ <ZzRtEHsC4MROxN3v@linaro.org>
+Message-ID: <4415406af1e9bc066a048b9729a0c592@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Andrei,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next lee-mfd/for-mfd-next shawnguo/for-next linus/master v6.12-rc7 next-20241113]
-[cannot apply to lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrei-Stefanescu/dt-bindings-mfd-add-support-for-the-NXP-SIUL2-module/20241113-181639
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20241113101124.1279648-8-andrei.stefanescu%40oss.nxp.com
-patch subject: [PATCH v6 7/7] MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD driver
-reproduce: (https://download.01.org/0day-ci/archive/20241113/202411132227.SO6y3U3E-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411132227.SO6y3U3E-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
-   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
-   Warning: Documentation/hwmon/g762.rst references a file that doesn't exist: Documentation/devicetree/bindings/hwmon/g762.txt
-   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/mfd/nxp,siul2.yaml
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/reserved-memory/qcom
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-   Using alabaster theme
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 2024-11-13 10:10, Stephan Gerhold wrote:
+> On Tue, Nov 12, 2024 at 07:49:18PM +0100, 
+> barnabas.czeman@mainlining.org wrote:
+>> On 2024-11-12 18:27, Stephan Gerhold wrote:
+>> > On Tue, Nov 12, 2024 at 04:49:38PM +0100, Barnabás Czémán wrote:
+>> > > From: Otto Pflüger <otto.pflueger@abscue.de>
+>> > >
+>> > > Add initial support for MSM8917 SoC.
+>> > >
+>> > > Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
+>> > > [reword commit, rebase, fix schema errors]
+>> > > Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> > > ---
+>> > >  arch/arm64/boot/dts/qcom/msm8917.dtsi | 1974
+>> > > +++++++++++++++++++++++++++++++++
+>> > >  1 file changed, 1974 insertions(+)
+>> > >
+>> > > diff --git a/arch/arm64/boot/dts/qcom/msm8917.dtsi
+>> > > b/arch/arm64/boot/dts/qcom/msm8917.dtsi
+>> > > new file mode 100644
+>> > > index 0000000000000000000000000000000000000000..cf0a0eec1141e11faca0ee9705d6348ab32a0f50
+>> > > --- /dev/null
+>> > > +++ b/arch/arm64/boot/dts/qcom/msm8917.dtsi
+>> > > @@ -0,0 +1,1974 @@
+>> > > [...]
+>> > > +		domain-idle-states {
+>> > > +			cluster_sleep_0: cluster-sleep-0 {
+>> > > +				compatible = "domain-idle-state";
+>> > > +				arm,psci-suspend-param = <0x41000023>;
+>> > > +				entry-latency-us = <700>;
+>> > > +				exit-latency-us = <650>;
+>> > > +				min-residency-us = <1972>;
+>> > > +			};
+>> > > +
+>> > > +			cluster_sleep_1: cluster-sleep-1 {
+>> > > +				compatible = "domain-idle-state";
+>> > > +				arm,psci-suspend-param = <0x41000043>;
+>> > > +				entry-latency-us = <240>;
+>> > > +				exit-latency-us = <280>;
+>> > > +				min-residency-us = <806>;
+>> > > +			};
+>> >
+>> > I think my comment here is still open:
+>> >
+>> > This is strange, the deeper sleep state has lower timings than the
+>> > previous one?
+>> I was reordering based on Konrad comments when i have renamed the 
+>> nodes
+>> maybe it is not correct then.
+>> I am searching for how to validate these levels, i have find these
+>> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/arch/arm64/boot/dts/qcom/msm8917-pm.dtsi#L45-91
+> 
+> I think you translated them correctly. It feels like downstream is 
+> weird
+> or even wrong here. Usually a higher psci-mode (retention = 2, gdhs = 
+> 4)
+> also implies a deeper idle state. But at some point the
+> perf-l2-retention and perf-l2-gdhs state were swapped downstream:
+> 
+> https://git.codelinaro.org/clo/la/kernel/msm-3.18/-/commit/dea262a17a9e80dacb86b7c2f269bcc7b4df3a13
+> 
+> I don't know if this is intended or just an oversight. If no one can
+> clarify why this change was done I guess we can just choose between the
+> following two options:
+> 
+>  1. Describe it exactly like it was done downstream. In that case I
+>     would suggest swapping the node order back to what you had in v1.
+>     Even if that means that a lower idle state has the higher psci-mode
+>     (arm,psci-suspend-param). That should match what downstream did.
+> 
+> OR
+> 
+>  2. Omit cluster-sleep-0 and cluster-sleep-1. I doubt anyone will 
+> notice
+>     the minor difference in power consumption. The most important idle
+>     state is the deepest "power collapse" (PC) state.
+> 
+> @Konrad: Do you have any opinion here?
+> 
+>> Do you know where can i find psci-suspend-param-s?
+> 
+> You need to translate it like in this code here:
+> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/drivers/cpuidle/lpm-levels.c#L1337-1340
+> 
+> Roughly described:
+>  - Set BIT(30) if the CPU state has qcom,is-reset
+>  - Affinity level is the hierarchy level that goes idle.
+>    In your case: CPU = 0, L2 cache/cluster = 1.
+>    Shift that to bit 24 (1 << 24 for cache/cluster)
+>  - For the state itself you need to combine the qcom,psci-cpu-mode and
+>    qcom,psci-mode according to the qcom,psci-mode-shift.
+> 
+> E.g. for the "perf-l2-pc" state, combined with the deepest CPU state
+> ("pc"):
+> 
+>  - BIT(30) is set because of qcom,is-reset
+>  - (1 << 24) because it's a L2 cache/cluster idle state
+>  - (qcom,psci-cpu-mode = <3>) << (qcom,psci-mode-shift = <0>) = (3 << 
+> 0)
+>  - (qcom,psci-mode = <5>) << (qcom,psci-mode-shift = <4>) = (5 << 4)
+> 
+> All that combined: BIT(30) | (1 << 24) | (3 << 0) | (5 << 4)
+>   = 0x41000053
+> 
+Thanks a lot this is a very useful description.
+> Which is what you have for cluster-sleep-2. The ones you have look
+> correct to me. :-)
+> 
+>> Should I also add wfi level?
+> 
+> I think we usually omit those for the CPU at least. Not sure about the
+> cache/cluster one. As I mentioned, at the end the most important idle
+> state to have is the deepest ones. Those will get used during suspend
+> and when you don't use the device. The others are more minor
+> optimization for light usage, which will be less noticeable.
+> 
+> Thanks,
+> Stephan
 
