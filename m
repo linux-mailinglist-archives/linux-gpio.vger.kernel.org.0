@@ -1,180 +1,106 @@
-Return-Path: <linux-gpio+bounces-12933-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12934-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB0F89C6E97
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 13:05:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4027D9C7068
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 14:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACEDA2852CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 12:05:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA7EA1F21A93
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 13:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655EC200BBA;
-	Wed, 13 Nov 2024 12:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F05D1DF74E;
+	Wed, 13 Nov 2024 13:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oR9zGZdA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SPZg/52t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22736200BAE;
-	Wed, 13 Nov 2024 12:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA0A7DA7F
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 13:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731499282; cv=none; b=ZTq13ZFXTF/yv4OBxBaGS6QcBFWgfNFMcyeGqqxdN1M850NnGhVRFEDHQHdYPIU9ASzB9mnR8JgtzV92j0xYICMCOFubyg3wcy0u+gagu1YW6jwe44lDUzF8w0WsLf9c4paYGpqVdd8z9HT6H2OV7kuVA+4YIxvYVDlKJTNfZA0=
+	t=1731503947; cv=none; b=pAiujrtj3jDOFaI91scw89phnUEqGKCYND0HWalmWzKDlX8cM9KEvn9tX7RlE/5fnnYjyny/48XKQOMhCHvpjTmCUty2v69yphknhyRX5/endYZYUn5CEOkGoqGLuKU/1umqX7LajPIFnN++LD9PEyFefDXXDOsbUtu0bGmVj6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731499282; c=relaxed/simple;
-	bh=ORisRMuk1T0WqUFbKLRVSva2kgNKPqcIzImCJfmPcHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m8fuM/c2lxtPx0ZFdTfVaKSGdPrdYuMswc/jAIBTwlAjAeIu+RoBaU/1gcjkeSADNImEK361ESS6hCF4Uek3FyOn5BGTMdpKdHJkxfeLIx0x296wQU+zQnR5YYJrQw1Viyibiy95OqBbuIn83Yfuo33QV6RPEzviFWBXLaliETk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oR9zGZdA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC52C4CECF;
-	Wed, 13 Nov 2024 12:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731499280;
-	bh=ORisRMuk1T0WqUFbKLRVSva2kgNKPqcIzImCJfmPcHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oR9zGZdAsJvT5LkiPR4zsUKxMblWwDftv7xsaEcizireUrj12/KgjLoVQQu42qBpk
-	 Wp+I8rVKa1zfwO5L7Zq19zHpPjffa6boYACVMEqDNqviKY/MkwUxrE3NczQ0RG3BHG
-	 dPacMZf3WTA+iZw50QUKouI4I3StWDe6FYiGLpSiNnSbEjwY7nI0eEPOapBZ+HNkq1
-	 yh3fai6BdpzTFmW7ri78TORvtmhgD8CpFHysLCCwJTX7QDhM7aZwkmzyJZB7COfdaJ
-	 MIYgm5ygIpNo7o9z8I3i1wjHXARHhnTwvP4DhRfhDuPCgGDbRg6XPiU+F8F6DTlyMw
-	 zImhnwyCrkjYw==
-From: Conor Dooley <conor@kernel.org>
-To: linux-gpio@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] gpio: mpfs: add CoreGPIO support
-Date: Wed, 13 Nov 2024 12:01:04 +0000
-Message-ID: <20241113-jovial-atlantic-cd07f05eb2e5@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241113-ramble-blaspheme-b303dbf37271@spud>
-References: <20241113-ramble-blaspheme-b303dbf37271@spud>
+	s=arc-20240116; t=1731503947; c=relaxed/simple;
+	bh=yW187HMdqhX91+UVSPVQiglv99YzbI/8VU7veIuuY+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GAATThjoh9+eSXtFX9jgKpx4uBzodFMp/vU+lvIXt4IdE0y51ohisYU7s5WU1EoScNb+qLxBfD3VsTi1QmgNd5fdUN96zgukMEJowMD9DuIwMv10V/TmqvvNuX1rO3ilTLkC2nLYoXExZrCW4a9dRZulcMQsTbZ6pBLOEMiIp2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SPZg/52t; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb50e84ec7so46854221fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 05:19:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1731503944; x=1732108744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AsPliL2Adhiej6IN3mvc/qYdmMZTmDs6ihxNty8s1sg=;
+        b=SPZg/52tPMZdw63imNJiaclDxxXyRpCaXIyNkuJ3+0cBNYqOfdFjhBYw2ytoITRvVu
+         HK4QX/PMMgoBckKPdkhB0d/E8OJu3JvPh4ntZUknIOQczkDI+MlHax1IhEsh4jv73Z30
+         Rn0OgDUkPkt9b8wzaI6MCJz712MmekyPm0tDfmyjlCZ3oqxpgWkljWZRIz+e67e5EPNS
+         HkANsEhgI9K/iMrhckI6B0dhzll564vHw2xaYmACX8CdxNoYZwesLBLBS/0nUuzysgVU
+         SBbyCbdx2fk3ZaB6sYh5h12zZ4VpY9BlXMHsTatpqA+bMelABh/PWXgLXlo7zXR3zNdk
+         V8mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731503944; x=1732108744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AsPliL2Adhiej6IN3mvc/qYdmMZTmDs6ihxNty8s1sg=;
+        b=eEV+Nh2ZsgADDsdwOYNfQUomsNvrxldMNDZ2tQkGQgiuCCIzlMUHFNLUI7wczL3+HZ
+         M5XE5E0XxXMy+9RkBRP+CE7dF+gqAIXqAbl62sxfXnK8gBq9FVxlnWNsSzvfCvyUL98I
+         5rwt+1bEZsN1ONtBcjnCzd584a4RMBw/+AeTFfqjxsns2eFQvijzDiq8nr1eCfDQltBy
+         WU8exBMPOXFJCXRjkmMvGK0UvkG6VX+tc7+gWKTj+xkovoTSU58TkihAAaXzKOLKXSPE
+         yKkyell1yxfhNlQ7aoOPwQ0t3qmgblsMH0cUb09cvL3hP4e++IyjJl4pUGcKAGFEs3L4
+         dwyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOzBuKsVkTwt9zG288XrQhkFG7Clu828JdMABOnlxzseessCdjqk71ZrVmFwl8wBS+eJbq47zcUYMh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjnqvzOxie9VauPxy0x6AqoyxT4KWhDpDGMArD0ji1N7FpxB5J
+	gVdizSs7a69yr2ukk+5WEuL/kqLeUJJ17eelCoDBn7cUQSpVh5D1lhgwW4HdLGjiHLV4dYhpakc
+	PiqriYOGsuFWCJSxSjrqAFkavw2HbQyeGvG39YK6BVIQCY9F/61c=
+X-Google-Smtp-Source: AGHT+IH1Ezhe06hECeOAxkOJw8qhjLAtYUad08jXgtHDzXnvnn/CQgHXruYF2NTQM2STEiYtOjqCE3guD2io6f+uqcw=
+X-Received: by 2002:a05:651c:1145:b0:2fb:6198:d22b with SMTP id
+ 38308e7fff4ca-2ff20185968mr83746331fa.17.1731503943562; Wed, 13 Nov 2024
+ 05:19:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3715; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=PlBkXtuDea/efkIOtmvOmkz9aissYKKWld/e40312mY=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOkmU/5vWDMrxmDugbiOYy2LQqUnR4e/c9V95ZT7f0p0T k1UbM3vjlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAEyE04rhf63plnume7PeqlR9 /Xnh7bSF1cwSFWqOJxQM+d6plbRlhDAyfD0x0/mlola4YNonle6TjPk7Vbqm55/n6rtbs4DBUUm RBQA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+References: <20241110210040.18918-1-andy.shevchenko@gmail.com>
+In-Reply-To: <20241110210040.18918-1-andy.shevchenko@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 13 Nov 2024 14:18:52 +0100
+Message-ID: <CACRpkdbDq4zCwGcTzH-51_2=ucc7we=8P1GAzq3mypezjwsR+Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] pinctrl: cy8c95x0: A portion of cleanups
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Patrick Rudolph <patrick.rudolph@9elements.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Sun, Nov 10, 2024 at 10:00=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-coreGPIO, which the "hard" core in PolarFire SoC is based on, has
-different offsets for inp/outp. Add some match_data handling to account
-for the differences.
+> A portion of ad-hoc cleanups to the driver. Saves a few dozens of LoCs.
+>
+> Andy Shevchenko (6):
+>   pinctrl: cy8c95x0: Use 2-argument strscpy()
+>   pinctrl: cy8c95x0: switch to using devm_regulator_get_enable()
+>   pinctrl: cy8c95x0: use flexible sleeping in reset function
+>   pinctrl: cy8c95x0: Use temporary variable for struct device
+>   pinctrl: cy8c95x0: embed iterator to the for-loop
+>   pinctrl: cy8c95x0: remove unneeded goto labels
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/gpio/gpio-mpfs.c | 38 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+I really like the patches so I merged them so we get some rotation in
+linux-next.
 
-diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
-index 3718121eb97a..561a961c97a6 100644
---- a/drivers/gpio/gpio-mpfs.c
-+++ b/drivers/gpio/gpio-mpfs.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/spinlock.h>
- 
-@@ -30,11 +31,20 @@
- #define MPFS_GPIO_TYPE_INT_LEVEL_HIGH	0x00
- #define MPFS_GPIO_TYPE_INT_MASK		GENMASK(7, 5)
- #define MPFS_IRQ_REG			0x80
-+
- #define MPFS_INP_REG			0x84
-+#define COREGPIO_INP_REG		0x90
- #define MPFS_OUTP_REG			0x88
-+#define COREGPIO_OUTP_REG		0xA0
-+
-+struct mpfs_gpio_reg_offsets {
-+	u8 inp;
-+	u8 outp;
-+};
- 
- struct mpfs_gpio_chip {
- 	struct regmap *regs;
-+	const struct mpfs_gpio_reg_offsets *offsets;
- 	struct gpio_chip gc;
- };
- 
-@@ -60,7 +70,7 @@ static int mpfs_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio_in
- 
- 	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
- 			   MPFS_GPIO_DIR_MASK, MPFS_GPIO_EN_IN);
--	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+	regmap_update_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index),
- 			   value << gpio_index);
- 
- 	return 0;
-@@ -84,9 +94,9 @@ static int mpfs_gpio_get(struct gpio_chip *gc, unsigned int gpio_index)
- 	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
- 
- 	if (mpfs_gpio_get_direction(gc, gpio_index) == GPIO_LINE_DIRECTION_OUT)
--		return regmap_test_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index));
-+		return regmap_test_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index));
- 	else
--		return regmap_test_bits(mpfs_gpio->regs, MPFS_INP_REG, BIT(gpio_index));
-+		return regmap_test_bits(mpfs_gpio->regs, mpfs_gpio->offsets->inp, BIT(gpio_index));
- }
- 
- static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int value)
-@@ -95,7 +105,7 @@ static void mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int val
- 
- 	mpfs_gpio_get(gc, gpio_index);
- 
--	regmap_update_bits(mpfs_gpio->regs, MPFS_OUTP_REG, BIT(gpio_index),
-+	regmap_update_bits(mpfs_gpio->regs, mpfs_gpio->offsets->outp, BIT(gpio_index),
- 			   value << gpio_index);
- 
- 	mpfs_gpio_get(gc, gpio_index);
-@@ -113,6 +123,8 @@ static int mpfs_gpio_probe(struct platform_device *pdev)
- 	if (!mpfs_gpio)
- 		return -ENOMEM;
- 
-+	mpfs_gpio->offsets = device_get_match_data(&pdev->dev);
-+
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return dev_err_probe(dev, PTR_ERR(base), "failed to ioremap memory resource\n");
-@@ -145,8 +157,24 @@ static int mpfs_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(dev, &mpfs_gpio->gc, mpfs_gpio);
- }
- 
-+static const struct mpfs_gpio_reg_offsets mpfs_reg_offsets = {
-+	.inp = MPFS_INP_REG,
-+	.outp = MPFS_OUTP_REG,
-+};
-+
-+static const struct mpfs_gpio_reg_offsets coregpio_reg_offsets = {
-+	.inp = COREGPIO_INP_REG,
-+	.outp = COREGPIO_OUTP_REG,
-+};
-+
- static const struct of_device_id mpfs_gpio_of_ids[] = {
--	{ .compatible = "microchip,mpfs-gpio", },
-+	{
-+		.compatible = "microchip,mpfs-gpio",
-+		.data = &mpfs_reg_offsets,
-+	}, {
-+		.compatible = "microchip,coregpio-rtl-v3",
-+		.data = &coregpio_reg_offsets,
-+	},
- 	{ /* end of list */ }
- };
- 
--- 
-2.45.2
+Thanks Andy!
 
+Yours,
+Linus Walleij
 
