@@ -1,156 +1,115 @@
-Return-Path: <linux-gpio+bounces-12964-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12965-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81CDC9C7147
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 14:48:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EB099C713F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 14:47:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1082CB32AF5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 13:44:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 142FF289C53
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 13:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937C1216454;
-	Wed, 13 Nov 2024 13:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4258D204093;
+	Wed, 13 Nov 2024 13:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="dZ8sZwuF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sr3hiz4L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7189215014
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 13:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F230A1EF95B
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 13:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731504998; cv=none; b=txMMo3B1bbojw6wI4rZRY2vaxk5JBU+5b+2c8g27cQOkzRqFP8UZHAXSXl9BA6SFWGjYfWYki1DauADimSOB5G/haMpSpaSeaFcGuyCSgJLJq/M1smQblHb7a79Uby0Rt7vzDi/egSzcaQEAsr0fC5haMZ1pdeOVswsDImyGF+k=
+	t=1731505497; cv=none; b=AF/gHzzy+YJuTZzTN/RNyP3JK2INXwqPl9PFJ8EuNWzHmg+gOfIBw9EUdlR41M5qH5jBzjNTqt/OA91Us66NBCV7X3djDHkyqBF5CbWncX542cKiYDNLgIb6rw509y/LQ9F+wOjx4aSbgUQYjFJsNbzGxf3LE0you1ysSFsA0PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731504998; c=relaxed/simple;
-	bh=DXqkEsEFafo5gzhgygX2LHxqn5B71xDGuEPoHC7uuxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Olr/s6K3xIx1kMjtPSD4IFkYZL1Ep2ERfzPL+5+g32n43CkRgZXJ2O44NT1qKVcZKtpWTUr93SfrIi/XrPOrMq/yK7t0boFRsaL5ftmb8ADmK/xKdxYvkORqNTIrRTaL7OY5dKnmItbJSgTg6FMZkl8UTZM4dv6sT7xAvqhirmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=dZ8sZwuF; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-432d866f70fso2379395e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 05:36:36 -0800 (PST)
+	s=arc-20240116; t=1731505497; c=relaxed/simple;
+	bh=ps1gyRF4sV/jPf5mXq5CfuoualCziyGjdNljGcpAjsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZCuCzfgpETVFjZffVseR2GE981CXO3csYDaTbkeF9LkYiOPRRMPqPuyMkI7NQ5JVKx2Br2Wi/z1RNl9/TlQOIvV7n3W59q+MnlbWPHfoMbVuN76ki7OTMFKBr9qhGNeuJzFiRPCVwYj8LsIkPhRLjxZN5EVpAjvxJOqiVCTCUA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sr3hiz4L; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fb50e84ec7so47086181fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 05:44:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1731504995; x=1732109795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1731505492; x=1732110292; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ecd0Mof7jXO15WeLDSECeNnma82ax84EAenvyaM/htc=;
-        b=dZ8sZwuFgzApku4oIqYpfi0yVtTtTK1qR7SPRRT5B7lt3AeqmEWfDq6iSuDO39lx/k
-         cVaKmf4KD8KRCX2+8lUa7avT74ejbk17Ep9Pyp1ie4VREwWWO5FNjjmItusbF3CSjzEW
-         qts2KBi4GFbNhXFdsEcCtlKt2ZDG3sdWklweqcEKR8mTwjAbFUC0YDWLSFIV5oQ31QzI
-         bNpDAlZVbHT5J31hnVm8aUP9ru1DJ2yXTIEA+wyDow+av+3D+fqs5UgvRUj1QBw7T4jG
-         Q5NtkpIb9zufqBVOtUmRu7SMRgDTARu/JQ32WH3eewyeFXrBmBuUBKx1jvK2owsyspuW
-         Vpcw==
+        bh=n8EhfYVRnnDaaDgm96KhczVA/W2i6QYF4ETYO5Uyxvg=;
+        b=Sr3hiz4LSNME5W8AzoJ1HlE/P19gGYTPw+FXLvBWKHEJ+nz9/hytjT/ABctmUGdp0h
+         5g6edP71Yc6vDKSwFP6J3JpAAPWnLTMEATu9Z+qYj3QUBgr/DReHyYQ4aYOHozjgy9tG
+         HJW91gm2wDGvjzCsk6BW+7z4m9Fdwp9/GSkK2xp1JtFYqWBujRbcDH9XL2arv192ZLJU
+         rKKAg6nF/qm19f+imMtmGdMS4y5lPg8BRUfOClCoewhjc6zjjTwjWA+CuZFa6kDY3kuP
+         8YXDI/xZLlC1Q9TP0x9WmglCzwGs8KLAbNmYk7WD3PrLFb2n+Az7ppOorwzku568UV/x
+         wi8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731504995; x=1732109795;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1731505492; x=1732110292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ecd0Mof7jXO15WeLDSECeNnma82ax84EAenvyaM/htc=;
-        b=vl8arVOFe3jFQRkKENeuEUruiSVUFPasO2Ge/edq4fTPoL16AKl33Zxtueqhs8N8uS
-         1J4B8Q+xLXuCm/erYtKUGiKhgvI8yiuP/gbzdnxtCNiQto9M+oQln8vp0xYd1fO0jpkV
-         PK++Ss1MIfKPq1S58uAQdF+vSJfG1wAw70Y1zBAv3H98S9+J4GCZK1N9BLh9SCo9mkgP
-         6MiigG93ApKe3Qj+bNYydRxZTkD1rSojq75w/4JhnbzTqYdb69cP86NuZt3sUYF/u6vK
-         UbGts929xkq8PFT7bNf6/WihyMvpf9fjM2vmuC5Aerj9O4l2y+RQh7IhGjUP2urxKjg5
-         UDfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUd0mwCYsr4AT45KgmSeQSOJ+xLAQ5qweEyEPSlLgrMLRW7yhXYGJeUuh/MT8VFR/RS8jJV6ckWMI4Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRTVLB0YfpVJYkyoFgiZuoGtGQJwSb135gMb1ABMlxCh/t4DOe
-	L3c7aOpR7JVXm0wu884Q6dgH7VnB3wYCQSjeBMnnZx98EkvPkCEYim1ezzZkdsg=
-X-Google-Smtp-Source: AGHT+IELyaLhsE3PYbeF70nEZe+7NBLbFVxsVluLuBzChJqpUv6UsXqyPsBsDxXq4b7mT1iHHgmc9w==
-X-Received: by 2002:a05:600c:4590:b0:42c:b4f2:7c30 with SMTP id 5b1f17b1804b1-432b7515c33mr162135415e9.23.1731504995111;
-        Wed, 13 Nov 2024 05:36:35 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432d54e2f2esm25664165e9.1.2024.11.13.05.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Nov 2024 05:36:34 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	magnus.damm@gmail.com,
-	linus.walleij@linaro.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	p.zabel@pengutronix.de
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 25/25] arm64: dts: renesas: rzg3s-smarc: Add sound card
-Date: Wed, 13 Nov 2024 15:35:40 +0200
-Message-Id: <20241113133540.2005850-26-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
+        bh=n8EhfYVRnnDaaDgm96KhczVA/W2i6QYF4ETYO5Uyxvg=;
+        b=IWKifLBuyJ5t5wKYxinKqli9DCW+ewIAr8YqhSDNrTZAeeunKSGYSbqPsKHmHJuiv7
+         Rzq/9QVF5mNHlIbqXAwRVlrUXg9fll1y5O80RyyjCe49aJqXnjGHCFVkwPlYQlLI+Bze
+         6R7nGfQ+LqMNqRMhg0Bp8HFXRid7f7fB70+PJAeeSlQQy+xzCJyOjU7Ol2r5SYm3k4Jk
+         kBLUFBQNbT84q+FlK4w+OyRJd5QgnrWkQM9XKhEawFHoDiAIpMLY/b+/uhUbgDszk1Cv
+         Y6k9L8GFgLMRigfabzPEy5PAPr7AVxfgbLvTFyb7iihe9d/vc3RpSY095lJvwIt0T//B
+         WDJA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/0BI6fSoeZuttEjq2H9u/IrAEA3wadeBVHA5UkZFWQquvU9eWzBGOjNUFyU2WSnjQ4n8vxznI7bWz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjzCflT4dsLz0jl0xLoZ6lMlHs7uXH2QjUaM/Bwzt3wllUTrrN
+	WDPSxrWc9p0bpECE9SxBxL5VkSXbRwMpZH4woKHTOuCaak/z68PQrdixyBZAno3CVaTNKT3CHhM
+	qgc+9w6qqlwO9DGQO3lUxjgYijSs+hQIvmIYMfw==
+X-Google-Smtp-Source: AGHT+IG+b5aWSuZA3i2xX9eloxv3604GVUnlQQDb4BSsgZiEIKgWWJy1Jg5YtPgwVqZ9JZiAd6sMw7fi49j+Y5nheN4=
+X-Received: by 2002:a05:651c:1542:b0:2fb:5038:3eb4 with SMTP id
+ 38308e7fff4ca-2ff202686a4mr114192251fa.29.1731505492020; Wed, 13 Nov 2024
+ 05:44:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241106100741.173825-1-y.oudjana@protonmail.com> <20241106100741.173825-8-y.oudjana@protonmail.com>
+In-Reply-To: <20241106100741.173825-8-y.oudjana@protonmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 13 Nov 2024 14:44:40 +0100
+Message-ID: <CACRpkdZBwSBD2ueM=5zZX3wBxxd-ZJoEKS-zTq5fuqiKOSu3mg@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] pinctrl: mediatek: Add MT6735 pinctrl driver
+To: Yassine Oudjana <y.oudjana@protonmail.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Andy Teng <andy.teng@mediatek.com>, Yassine Oudjana <yassine.oudjana@gmail.com>, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Wed, Nov 6, 2024 at 11:09=E2=80=AFAM Yassine Oudjana
+<y.oudjana@protonmail.com> wrote:
 
-Add sound card with SSI3 as CPU DAI and DA7212 as codec DAI.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+> Add a driver for the MediaTek MT6735 SoC pin controller. This driver
+> also supports the pin controller on MT6735M, which lacks 6 physical
+> pins (198-203) used for MSDC2 on MT6735.
+>
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+(...)
+> +static struct platform_driver mt6735_pinctrl_driver =3D {
+> +       .probe =3D mtk_paris_pinctrl_probe,
+> +       .driver =3D {
+> +               .name =3D "mt6735-pinctrl",
+> +               .of_match_table =3D mt6735_pinctrl_match,
+> +               .pm =3D &mtk_paris_pinctrl_pm_ops,
 
-Changes in v3:
-- none
+.pm =3D pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
 
-Changes in v2:
-- none
+this is why you get build errors.
 
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 6dd439e68bd4..89673bbaee6d 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -44,6 +44,23 @@ key-3 {
- 		};
- 	};
- 
-+	snd_rzg3s: sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&cpu_dai>;
-+		simple-audio-card,frame-master = <&cpu_dai>;
-+		simple-audio-card,mclk-fs = <256>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi3>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&da7212>;
-+			clocks = <&versa3 1>;
-+		};
-+	};
-+
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "SDHI1 Vcc";
--- 
-2.39.2
-
+Yours,
+Linus Walleij
 
