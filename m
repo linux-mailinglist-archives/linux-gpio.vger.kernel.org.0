@@ -1,265 +1,114 @@
-Return-Path: <linux-gpio+bounces-12972-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-12988-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60E5F9C7886
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 17:16:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EEAD9C79DF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 18:23:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 857E9B2D4CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 15:13:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4108B2CA30
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Nov 2024 16:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB5C148FE1;
-	Wed, 13 Nov 2024 15:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65296139D19;
+	Wed, 13 Nov 2024 16:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aBam/ef3"
+	dkim=pass (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kJqpUlWK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from www381.your-server.de (www381.your-server.de [78.46.137.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FF314A4C3;
-	Wed, 13 Nov 2024 15:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A543216EB5D
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Nov 2024 16:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.137.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731510712; cv=none; b=FTe5DoioYOoAn92Yr8LR57mNylIXmkHhWXxkjEsy6B4Km9S3IkvQsPb297fhpekuxuLYj3lc0ZD9rew6ZqIZxjgXH/L31Z9YOS5kxUI7bopo4RAVcwX5/uyfTFQO5GCKAJ5QFZFg9dEF3FQY2EhY7hi0utA0CDPGRRzA+MuHUfc=
+	t=1731516755; cv=none; b=O1MreiK3iY/dFptTn2RT2k0jtDWH06QYrzuFE2t9eAORpcLGL29mUE6DzStNpaIUOLmI/k2Vgk6YIgtECyNiV85NZ/LN5c1N7e8rfgnH2UwZJY2pNLiTEn8bvPoH2Hl3n7IIIEtbrw8F9pNfsYND8VRdYo0/sexWpO8IoyPrORs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731510712; c=relaxed/simple;
-	bh=UjL9JXQQ119tJGWqiITE11zteO0vgLUycgawyHA9VGo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N3hvTsYhPcSOgwM6zM7GMCT6CsZv3vbDAS9DZlf+lMeFrX1HBL8niGhVAxj3Ne2Ai6ZVRNNEykRD9GJh+796tO/cCXu2SnL++nVS+iVcGrNad1ryS168ysItxRCLJ16btP+wlG+M5LGILZaG7OSO5ARi8rBj1atSWnAW6GMTNZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aBam/ef3; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Received: from [192.168.93.162] (254C230F.nat.pool.telekom.hu [37.76.35.15])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 20B13E44EF;
-	Wed, 13 Nov 2024 15:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1731510708;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4O09ZiSIv+mEo/bJ7pidfgYhpVOBMlebhOJxZ0ds7BQ=;
-	b=aBam/ef3D3d6uRhWQYHeC/qyAQyT2+necQ3Gvitd6gikjum65SnqnYW8ilkOIB3b8ffquO
-	+eqvQXk210os0CjZr5oC/GgoFCTyLdUIeiQuvWvD8Vhy27quf7JrPf9zm2TzJxzILpbTP+
-	RtmoDrHib4FCQTc2djMP5K8+ZzDqmcQQ9Y8JgjmVu8rnkCFTb2sQX4ZTM9RfYsV9ko1e0+
-	bEtN1tIzkiogdQjRk1kzrxfrN2Klk7qtNgBH7rxLui6MrM0kDpxQ/ttJqF3jKpYqkk1HIo
-	KKd2RHI+y32Y8v7bF7U+Ct3A+o3kCfvY4wKSU4Ghao7MMu4igDLQ2ClTnfYLlw==
-From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Wed, 13 Nov 2024 16:11:42 +0100
-Subject: [PATCH v6 01/10] arm64: dts: qcom: Add PM8937 PMIC
+	s=arc-20240116; t=1731516755; c=relaxed/simple;
+	bh=J0HkSgQzNc8OYFQS9bFDW1H8fmICAVSm+mT8fMEBuBY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZISdGxB5J8XOrQYiFiLRDYFjkFYpe6z0H62yVsp7WoSvdQojfAoRPIBDI7X8ZvjSzKo8wcejWByC4aBlCt4DazxGrGqbkbL4EK8V8L1GvbaUBt1MKDzQjeKyIh0wiC7wAsu7XNcIen4Uzjsv1CuEH1hoJEs+urE1tDgIqXmMF6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metafoo.de; spf=pass smtp.mailfrom=metafoo.de; dkim=pass (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b=kJqpUlWK; arc=none smtp.client-ip=78.46.137.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metafoo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metafoo.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+	s=default2002; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=rExjREVy37H6/p5pG/NUSw/EDufiDBPizQhbEK53Fnc=; b=kJqpUlWKN1s2B2NCxQqtoNv4gk
+	NuhRY95ZHRFJRlXfxP6KcPosqkytAbs5nTWfoe0TDS8zjIMzfG+Iydlaupxu7EWZXVj3Jz38bwPwx
+	XhEnZ4J6Wj9EeKZRRjlXTH/R8hb9Q+9WwiAp/UohR2NAM/WUcMjoVTBoZIqg9KmVT1YsMkuU/52pi
+	dZ8LtQ6y/uUFTTWCvlnGkAt8A9wI9XKLKLaBFeQJHZWWFEhI6T/B6UnYdGl1Y1+nnPmkzr8DKoLs2
+	9a2ZNs1ORcuST4n2EHLBA1hnyfrcEx87V2AjyBu5xCa63CrXCGnQANwaLwWIAs2tdPWP0DrnQfNEf
+	8g8B9q+g==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+	by www381.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <lars@metafoo.de>)
+	id 1tBGGB-000Knf-37;
+	Wed, 13 Nov 2024 17:30:28 +0100
+Received: from [136.25.87.181] (helo=lars-desktop.lan)
+	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <lars@metafoo.de>)
+	id 1tBGGB-000GsZ-1E;
+	Wed, 13 Nov 2024 17:30:27 +0100
+From: Lars-Peter Clausen <lars@metafoo.de>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thierry Reding <treding@nvidia.com>,
+	Prathamesh Shete <pshete@nvidia.com>,
+	linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH] gpio: tegra186: Allow to enable driver on Tegra234
+Date: Wed, 13 Nov 2024 08:29:39 -0800
+Message-Id: <20241113162939.886242-1-lars@metafoo.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241113-msm8917-v6-1-c348fb599fef@mainlining.org>
-References: <20241113-msm8917-v6-0-c348fb599fef@mainlining.org>
-In-Reply-To: <20241113-msm8917-v6-0-c348fb599fef@mainlining.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Amit Kucheria <amitk@kernel.org>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Dang Huynh <danct12@riseup.net>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731510705; l=4120;
- i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=7USdc5qvUHeHbgBI+sq8tO9MUWKj31JWpFnlIkEMcdA=;
- b=aqTbzBkiaW9VuC7u+7K3Q28ex7+fPwLo9bF18JZRpewzMXZ9azXlLEJIcz4feVaYWobKnUzYc
- vfKo762Lvg8CwpLtOTLUGEHHrqnJmfqtjWrdf5uiry4JGABhUB9Pd0z
-X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
- pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27457/Wed Nov 13 10:35:46 2024)
 
-From: Dang Huynh <danct12@riseup.net>
+Support for Tegra234 was added to the tegra186 driver in 1db9b241bb56 (
+"gpio: tegra186: Add support for Tegra234"). But the driver is not
+selectable on Tegra234. Update the Kconfig entry to allow the driver to be
+enabled on Tegra234.
 
-The PM8937 features integrated peripherals like ADC, GPIO controller,
-MPPs, PON keys and others.
+Enable the driver by default on Tegra 234 as well, similar to the other
+platforms it supports.
 
-Add the device tree so that any boards with this PMIC can use it.
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Dang Huynh <danct12@riseup.net>
-Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
 ---
- arch/arm64/boot/dts/qcom/pm8937.dtsi | 152 +++++++++++++++++++++++++++++++++++
- 1 file changed, 152 insertions(+)
+ drivers/gpio/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8937.dtsi b/arch/arm64/boot/dts/qcom/pm8937.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..38421e89e556eaaf318118175e8e2036029311a9
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pm8937.dtsi
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2023, Dang Huynh <danct12@riseup.net>
-+ */
-+
-+#include <dt-bindings/iio/qcom,spmi-vadc.h>
-+#include <dt-bindings/input/linux-event-codes.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
-+#include <dt-bindings/spmi/spmi.h>
-+
-+/ {
-+	thermal-zones {
-+		pm8937-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&pm8937_temp>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <105000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <125000>;
-+					hysteresis = <0>;
-+					type = "hot";
-+				};
-+
-+				trip2 {
-+					temperature = <145000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&spmi_bus {
-+	pmic@0 {
-+		compatible = "qcom,pm8937", "qcom,spmi-pmic";
-+		reg = <0x0 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pon@800 {
-+			compatible = "qcom,pm8916-pon";
-+			reg = <0x800>;
-+			mode-bootloader = <0x2>;
-+			mode-recovery = <0x1>;
-+
-+			pm8937_pwrkey: pwrkey {
-+				compatible = "qcom,pm8941-pwrkey";
-+				interrupts = <0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+				debounce = <15625>;
-+				bias-pull-up;
-+				linux,code = <KEY_POWER>;
-+			};
-+
-+			pm8937_resin: resin {
-+				compatible = "qcom,pm8941-resin";
-+				interrupts = <0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+				debounce = <15625>;
-+				bias-pull-up;
-+				status = "disabled";
-+			};
-+		};
-+
-+		pm8937_gpios: gpio@c000 {
-+			compatible = "qcom,pm8937-gpio", "qcom,spmi-gpio";
-+			reg = <0xc000>;
-+			gpio-controller;
-+			gpio-ranges = <&pm8937_gpios 0 0 8>;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		pm8937_mpps: mpps@a000 {
-+			compatible = "qcom,pm8937-mpp", "qcom,spmi-mpp";
-+			reg = <0xa000>;
-+			gpio-controller;
-+			gpio-ranges = <&pm8937_mpps 0 0 4>;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		pm8937_temp: temp-alarm@2400 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0x2400>;
-+			interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
-+			io-channels = <&pm8937_vadc VADC_DIE_TEMP>;
-+			io-channel-names = "thermal";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		pm8937_vadc: adc@3100 {
-+			compatible = "qcom,spmi-vadc";
-+			reg = <0x3100>;
-+			interrupts = <0 0x31 0 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#io-channel-cells = <1>;
-+
-+			channel@8 {
-+				reg = <VADC_DIE_TEMP>;
-+			};
-+
-+			channel@9 {
-+				reg = <VADC_REF_625MV>;
-+			};
-+
-+			channel@a {
-+				reg = <VADC_REF_1250MV>;
-+			};
-+
-+			channel@c {
-+				reg = <VADC_SPARE1>;
-+			};
-+
-+			channel@e {
-+				reg = <VADC_GND_REF>;
-+			};
-+
-+			channel@f {
-+				reg = <VADC_VDD_VADC>;
-+			};
-+		};
-+
-+		rtc@6000 {
-+			compatible = "qcom,pm8941-rtc";
-+			reg = <0x6000>, <0x6100>;
-+			reg-names = "rtc", "alarm";
-+			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+		};
-+	};
-+
-+	pmic@1 {
-+		compatible = "qcom,pm8937", "qcom,spmi-pmic";
-+		reg = <0x1 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pm8937_spmi_regulators: regulators {
-+			compatible = "qcom,pm8937-regulators";
-+		};
-+	};
-+};
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index cb90e3898bf0f..56fee58e281e7 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -715,13 +715,13 @@ config GPIO_TEGRA
+ 
+ config GPIO_TEGRA186
+ 	tristate "NVIDIA Tegra186 GPIO support"
+-	default ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC
+-	depends on ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC || COMPILE_TEST
++	default ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC
++	depends on ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
+ 	depends on OF_GPIO
+ 	select GPIOLIB_IRQCHIP
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	help
+-	  Say yes here to support GPIO pins on NVIDIA Tegra186 SoCs.
++	  Say yes here to support GPIO pins on NVIDIA Tegra186, 194 and 234 SoCs.
+ 
+ config GPIO_TS4800
+ 	tristate "TS-4800 DIO blocks and compatibles"
 -- 
-2.47.0
+2.39.5
 
 
