@@ -1,148 +1,76 @@
-Return-Path: <linux-gpio+bounces-13033-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13034-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 593119C9033
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 17:53:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B04489C952D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 23:36:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4483FB3EB5A
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:53:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75B012831FA
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 22:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3569919D086;
-	Thu, 14 Nov 2024 15:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F292B1AF4EA;
+	Thu, 14 Nov 2024 22:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k86e9dLW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vE1SNNJH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151BB18FDBB;
-	Thu, 14 Nov 2024 15:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948A9170A1B;
+	Thu, 14 Nov 2024 22:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731599160; cv=none; b=lIGEye0WFhEccOj9bkPSZ3og4l6UWuoRK1uJ/PqCPp1hGdR6XwWWddBlxWZoUsjfeQYUxwQKcmfx64MjVef4aZ1QBtnMC9E6WgdBQshPoS+5OcJVUeVs4vmilf1GDXjDinXj/6d3+nD5k6clAyeZ34qIefUna0Jc7GxAmWn9Q2M=
+	t=1731623807; cv=none; b=DLqOGxgzU8SS7iqnlFiq3j+iP+rf6nZd/WHBHTED+4Oexqs9Le1dSnXrC9yG80jvj2rxS8zdTryqNyWFcJChsBjEp4OmodbUmXBctu5yfElHvlBBH6ETavcoSp2Nn3yE+l5O7FKd/VprEZlOdUifMrrygbfDUNXV4A6lr044jIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731599160; c=relaxed/simple;
-	bh=5z0brDtQRBtx4SXaYJbzWU/yguAU4LV0GO74WH+JMqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KOVmXscUo0LlqbrQf+Vov8Ks/F0PNDAwflLplure3/sinECVk0HiDHu3AhnYZKGNG8tQjWkRSvd7lgreGSq84B+XJlTYencPn8oBQc1dUYrT7h9GHnZXrmjANlkq5RsfTPLiDqDVGTTHAyvOLEwiCgNOjIs9mJHpaqTDehzrnR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k86e9dLW; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AEE96240003;
-	Thu, 14 Nov 2024 15:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1731599155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PVd4FspoJAAUQaVK/sgQzSkqs6EdCPL13NCZ5VJz7fw=;
-	b=k86e9dLWi4x6VwQGxiSQmmGbjdenEI5HBux7FE811k8PyybyCldwAMpyPuqWzwDU2Lbrho
-	UCNzU7O+/ZTUoNfquKTMmylkmIOHrPl26ZTsLBnKx+asr2x09Co4u5vNxgvNCQnRNhDnWG
-	rP4b1xH0xRIEr4RMwgM3W2c7Om/R0rRdfFnCbzYWzMXQMYE9KmayoQoqy6htuEteElsEaW
-	jzn2NLBRtT1oIoazJGbNRdNJnNn0yPJmkDlI+Koz96A73l89zgJ+8R9w4fJjDDU4cCpus+
-	zpwTzL7aNZvPKLHp/kCJfB0t/CVPqcvSFIssh2fwzvOdLJe0nt1igDDesUFfJA==
-Date: Thu, 14 Nov 2024 16:45:51 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli
- <florian.fainelli@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan
- Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan
- <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro Yamada
- <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: of_property: Assign PCI instead of CPU bus address
- to dynamic PCI nodes
-Message-ID: <20241114164551.46664f5d@bootlin.com>
-In-Reply-To: <ZzYWso5jLkUMehQ6@apocalypse>
-References: <20241108094256.28933-1-andrea.porta@suse.com>
-	<20241108110938.622014f5@bootlin.com>
-	<Zy3koxz4KnV39__V@apocalypse>
-	<ZzYWso5jLkUMehQ6@apocalypse>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1731623807; c=relaxed/simple;
+	bh=mfhhuvQxgsjolz/D6JiwLtLMDBKlJ4RlLk8azVUsYko=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=dR08GlzcL65DVOVomJC6e2RAUNhntE67Ex9ic/QVomh9WPaeKaZF+c1qPHXI9AG30FGRekAbvkSRLm9l/qtezaiurIcO1HhYXGvKzibkTWxLzIkgqVxHhnRpn9riIISGkwJrOK7nQZAzlgJSdNtQqGBRvQFEn0i4skN+CoCzgyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vE1SNNJH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E9CC4CECD;
+	Thu, 14 Nov 2024 22:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731623807;
+	bh=mfhhuvQxgsjolz/D6JiwLtLMDBKlJ4RlLk8azVUsYko=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=vE1SNNJHxW0oSAzwxVA92cfDhEScdhXdsHcinHfXPL7o/u7U0zW4FzDiw8toVV3pt
+	 OP7T7gSTWPkc3tUtQ/9EnGRI9CLMfzhaydVVCpI1XGWqmo6MmtIscO8Z9bD1UyrL+X
+	 8DTJcj1um4nuHiRz9eYZ/j5CuJvPlQaifmRl4xG59xBYta8BvSFxxO/zcqvbUPNABq
+	 LXP1ZyryqCOmqVwCbqHmfWPZXoJTwTAVF7gpAv6ixHfjVqGW7eRsVdx30ek2fkEM/8
+	 99Kz0sWS8zfT1s1bvjhnG6rmImfyd+S0LnQIS2bnPCfdVW1mLSehflENQnlrruCtqb
+	 dHs7fQm2faDcQ==
+Message-ID: <0b49bddf8ac713f7d506661e081c946e.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241104-pxa1908-lkml-v13-1-e050609b8d6c@skole.hr>
+References: <20241104-pxa1908-lkml-v13-0-e050609b8d6c@skole.hr> <20241104-pxa1908-lkml-v13-1-e050609b8d6c@skole.hr>
+Subject: Re: [PATCH RESEND v13 01/12] clk: mmp: Switch to use struct u32_fract instead of custom one
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Duje =?utf-8?q?Mihanovi=C4=87?= via B4 Relay <devnull+duje.mihanovic.skole.hr@kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Will Deacon <will@kernel.org>
+Date: Thu, 14 Nov 2024 14:36:44 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-Hi Andrea,
+Quoting Duje Mihanovi=C4=87 via B4 Relay (2024-11-04 08:37:03)
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>=20
+> The struct mmp_clk_factor_tbl repeats the generic struct u32_fract.
+> Kill the custom one and use the generic one instead.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> ---
 
-On Thu, 14 Nov 2024 16:26:42 +0100
-Andrea della Porta <andrea.porta@suse.com> wrote:
-
-> Hi,
-> 
-> On 11:14 Fri 08 Nov     , Andrea della Porta wrote:
-> > Hi herve,
-> > 
-> > On 11:09 Fri 08 Nov     , Herve Codina wrote:  
-> > > Hi Andrea,
-> > > 
-> > > On Fri,  8 Nov 2024 10:42:56 +0100
-> > > Andrea della Porta <andrea.porta@suse.com> wrote:
-> > >   
-> > > > When populating "ranges" property for a PCI bridge or endpoint,
-> > > > of_pci_prop_ranges() incorrectly use the CPU bus address of the resource.
-> > > > In such PCI nodes, the window should instead be in PCI address space. Call
-> > > > pci_bus_address() on the resource in order to obtain the PCI bus
-> > > > address.
-> > > > 
-> > > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Tested-by: Herve Codina <herve.codina@bootlin.com>
-> > > > ---
-> > > > This patch, originally preparatory for a bigger patchset (see [1]), has
-> > > > been splitted in a standalone one for better management and because it
-> > > > contains a bugfix which is probably of interest to stable branch.  
-> > > 
-> > > Nothing to say for the patch itself.
-> > > 
-> > > Just here, you mentioned "see [1]" but you didn't provide the link.
-> > > 
-> > > IMHO, this is not blocking for applying the patch but, just for other people
-> > > looking at this email in the mailing list, can you reply providing the link?  
-> > 
-> > Thanks for pointing that out, sorry about that. Here it is:
-> > 
-> > [1] - https://lore.kernel.org/all/f6b445b764312fd8ab96745fe4e97fb22f91ae4c.1730123575.git.andrea.porta@suse.com/  
-> 
-> Do I have to resubmit the patch with the referenced url fixed or is it
-> ok as it is?
-
-This reference is after the '---' marker line and so will not be present in
-the changelog once the patch is applied.
-
-For this reason, I don't think you have to resubmit the patch.
-
-If you need to resubmit the patch for any other reasons (resent because
-the patch was applied, modification needed, ...) resubmit it with the
-referenced url fixed.
-
-Best regards,
-Hervé
+Applied to clk-next
 
