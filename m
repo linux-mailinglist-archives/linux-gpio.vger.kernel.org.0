@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-13030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13023-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814A09C8D4E
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:52:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C9E99C8D47
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 410AC2825D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0B441F2468A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56B0654720;
-	Thu, 14 Nov 2024 14:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49F0513B288;
+	Thu, 14 Nov 2024 14:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="itZuNDWO"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="Q5sT6LpH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A99436AF5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D202126BED
 	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731595898; cv=none; b=GmuvUtlW3aIu0ipkg9/woyk5BsbOT8pIk1fEhZGo+Fe8VFPu13kzFnqmce97Xk5ZZ6lRo9qBPzt96J3DwChQhRpyUGwXS+2tl42vFevAVQkpsy71RBGbwTN6z1QW+iLpFGiFw6TMoNZwnDBYqFs4qIQdNLQAWpXBLFX35B/2zwo=
+	t=1731595896; cv=none; b=gr7qhfbNf6k5pKJd7ms8fjqPTbWfprjwCRvr/UOt59YC1LpWyidzh1o1f0F8/jB+IWuJFEQt5VTRtJIxMWecu8Ke6Y32ZW7DccanRAKI2Fnfa2JJJ+F9VnWAGxVQhsd7Kut/YfXC9lhgEX/baKM/6B6IyxogpGdc/GJQbraTt5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731595898; c=relaxed/simple;
-	bh=vpgqjTRjvH2hDTv+KIRi22Hv4ChI0YVrwWYMdkJw4JQ=;
+	s=arc-20240116; t=1731595896; c=relaxed/simple;
+	bh=McWFR3uOMhE5eTI/8tBCKLAIlJJG+8U1ZkAEI8sdYZU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KR2kVVULnsPivajmCRVb8oV7Zu5jBxkLkp2OeEONkKJdlIx+Gap9LpvXN7W+AL0xXBOl/GiMEU44mK8Ugi/ZdFEzxlGyj7r3RKNHa4e+mjVnJNitPH4vt4e95jZqxKdEYTXeEuco20PGW55G0u/IyT17FgZxCSC5MfwALK5WbDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=itZuNDWO; arc=none smtp.client-ip=162.248.234.2
+	 MIME-Version; b=NsQ5OBHj+Z9yOYDG//MKbkKIVsGhFX5Ec+FXnAEZySrzFlL479XAXcX/lxPQbz66aIJtCWrPLYnnrCkn4luBYdJHqRr1zoWW/Tf8cOCrbs9Whic4XQKDlVrdcu5x6p4RWfl7FeNSLZ5lTij8fzwEz1yM7ujXjSdpKjuSQ7XLOpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=Q5sT6LpH; arc=none smtp.client-ip=162.248.234.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
 Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
-	by mail.xes-mad.com (Postfix) with ESMTP id 85D3020AB8;
+	by mail.xes-mad.com (Postfix) with ESMTP id 9B33720AB9;
 	Thu, 14 Nov 2024 08:51:23 -0600 (CST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
-	t=1731595883; bh=vpgqjTRjvH2hDTv+KIRi22Hv4ChI0YVrwWYMdkJw4JQ=;
+	t=1731595883; bh=McWFR3uOMhE5eTI/8tBCKLAIlJJG+8U1ZkAEI8sdYZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=itZuNDWOhP8+SGxZnSNgagTcMjMyOt/9JdTMcDd1kMjFfPCSHNO3L0zYgj9LDqigw
-	 zR65HpacjswNZ0DaYBebtgsTC+Agd/9FlhocmS/Q8k8ACzj+NdGdyfYOodmD2FD7Iw
-	 FFccKe1fOB0WeKyQpPuIlKRWaru5Q1uvcbAGmjsE=
+	b=Q5sT6LpHIPfLdYKYpvD5V9T6VYaxK2kDZtTc5Brs3mM4yrBXI03Hh+Fwuxvb0OzS5
+	 u9LFMZzUECxcXZmZbjfDntHOjPWVKE++2ry39rMuqvRoXMRxpdwsbF1QBr/WMji1DE
+	 aM5fTqPvddfWzQ1YjiLUGSyjwfn0Ao02AVr+s8PE=
 From: Vincent Fazio <vfazio@xes-inc.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@gmail.com,
 	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH v2 16/23] bindings: python: tests: clean up imports and exports
-Date: Thu, 14 Nov 2024 08:51:09 -0600
-Message-Id: <20241114145116.2123714-17-vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH v2 17/23] bindings: python: tests: make EventType private to prevent export
+Date: Thu, 14 Nov 2024 08:51:10 -0600
+Message-Id: <20241114145116.2123714-18-vfazio@xes-inc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241114145116.2123714-1-vfazio@xes-inc.com>
 References: <20241114145116.2123714-1-vfazio@xes-inc.com>
@@ -58,324 +58,137 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove unused imports and sort the remainder following isort rules.
+Previously, both tests_edge_event and tests_info_event had a public
+module level EventType member.
 
-Update the submodules to use `__all__` to advertise available imports.
+The __main__ module for unittests does a star import from both modules
+which led to an import conflict between the two.
 
-Remove an unnecessary blank line in the VersionString class to abide by
-the ruff formatter's rules (compatible with black's formatting).
+It is not necessary to import EventType to run unit tests.
+
+Now, EventType is private to avoid being imported via star syntax.
 
 Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 ---
- bindings/python/tests/__init__.py            |  2 --
- bindings/python/tests/__main__.py            |  5 ++---
- bindings/python/tests/gpiosim/__init__.py    |  2 ++
- bindings/python/tests/gpiosim/chip.py        |  3 ++-
- bindings/python/tests/procname/__init__.py   |  2 ++
- bindings/python/tests/tests_chip.py          |  5 +++--
- bindings/python/tests/tests_chip_info.py     |  3 ++-
- bindings/python/tests/tests_edge_event.py    |  9 +++++----
- bindings/python/tests/tests_info_event.py    | 10 +++++-----
- bindings/python/tests/tests_line.py          |  3 ++-
- bindings/python/tests/tests_line_info.py     | 12 ++++++------
- bindings/python/tests/tests_line_request.py  |  6 +++---
- bindings/python/tests/tests_line_settings.py |  7 +++----
- bindings/python/tests/tests_module.py        |  7 +++----
- 14 files changed, 40 insertions(+), 36 deletions(-)
+ bindings/python/tests/tests_edge_event.py | 14 +++++++-------
+ bindings/python/tests/tests_info_event.py | 10 +++++-----
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/bindings/python/tests/__init__.py b/bindings/python/tests/__init__.py
-index 02f4e8d..2374e81 100644
---- a/bindings/python/tests/__init__.py
-+++ b/bindings/python/tests/__init__.py
-@@ -2,8 +2,6 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
- import os
--import unittest
--
- from distutils.version import LooseVersion
- 
- required_kernel_version = LooseVersion("5.19.0")
-diff --git a/bindings/python/tests/__main__.py b/bindings/python/tests/__main__.py
-index ea4143f..8b4260d 100644
---- a/bindings/python/tests/__main__.py
-+++ b/bindings/python/tests/__main__.py
-@@ -4,17 +4,16 @@
- 
- import unittest
- 
-+from . import procname
- from .tests_chip import *
- from .tests_chip_info import *
- from .tests_edge_event import *
- from .tests_info_event import *
- from .tests_line import *
- from .tests_line_info import *
-+from .tests_line_request import *
- from .tests_line_settings import *
- from .tests_module import *
--from .tests_line_request import *
--
--from . import procname
- 
- procname.set_process_name("python-gpiod")
- 
-diff --git a/bindings/python/tests/gpiosim/__init__.py b/bindings/python/tests/gpiosim/__init__.py
-index f65e413..64a1551 100644
---- a/bindings/python/tests/gpiosim/__init__.py
-+++ b/bindings/python/tests/gpiosim/__init__.py
-@@ -2,3 +2,5 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
- from .chip import Chip
-+
-+__all__ = ["Chip"]
-diff --git a/bindings/python/tests/gpiosim/chip.py b/bindings/python/tests/gpiosim/chip.py
-index 6af883e..691bfe1 100644
---- a/bindings/python/tests/gpiosim/chip.py
-+++ b/bindings/python/tests/gpiosim/chip.py
-@@ -1,10 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
--from . import _ext
- from enum import Enum
- from typing import Optional
- 
-+from . import _ext
-+
- 
- class Chip:
-     """
-diff --git a/bindings/python/tests/procname/__init__.py b/bindings/python/tests/procname/__init__.py
-index af6abdd..436ff40 100644
---- a/bindings/python/tests/procname/__init__.py
-+++ b/bindings/python/tests/procname/__init__.py
-@@ -2,3 +2,5 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
- from ._ext import set_process_name
-+
-+__all__ = ["set_process_name"]
-diff --git a/bindings/python/tests/tests_chip.py b/bindings/python/tests/tests_chip.py
-index bd4ae34..9110beb 100644
---- a/bindings/python/tests/tests_chip.py
-+++ b/bindings/python/tests/tests_chip.py
-@@ -2,12 +2,13 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
- import errno
--import gpiod
- import os
-+from unittest import TestCase
-+
-+import gpiod
- 
- from . import gpiosim
- from .helpers import LinkGuard
--from unittest import TestCase
- 
- 
- class ChipConstructor(TestCase):
-diff --git a/bindings/python/tests/tests_chip_info.py b/bindings/python/tests/tests_chip_info.py
-index d392ec3..9474f38 100644
---- a/bindings/python/tests/tests_chip_info.py
-+++ b/bindings/python/tests/tests_chip_info.py
-@@ -1,10 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
-+from unittest import TestCase
-+
- import gpiod
- 
- from . import gpiosim
--from unittest import TestCase
- 
- 
- class ChipInfoProperties(TestCase):
 diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
-index 68ab17e..7e7fada 100644
+index 7e7fada..c24d344 100644
 --- a/bindings/python/tests/tests_edge_event.py
 +++ b/bindings/python/tests/tests_edge_event.py
-@@ -1,16 +1,17 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+@@ -12,7 +12,7 @@ from gpiod.line import Direction, Edge
  
--import gpiod
- import time
--
--from . import gpiosim
- from datetime import timedelta
- from functools import partial
--from gpiod.line import Direction, Edge
- from threading import Thread
- from unittest import TestCase
+ from . import gpiosim
  
-+import gpiod
-+from gpiod.line import Direction, Edge
-+
-+from . import gpiosim
-+
- EventType = gpiod.EdgeEvent.Type
+-EventType = gpiod.EdgeEvent.Type
++_EventType = gpiod.EdgeEvent.Type
  Pull = gpiosim.Chip.Pull
  
+ 
+@@ -87,7 +87,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.RISING_EDGE)
++            self.assertEqual(event.event_type, _EventType.RISING_EDGE)
+             self.assertEqual(event.line_offset, 2)
+             ts_rising = event.timestamp_ns
+ 
+@@ -95,7 +95,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.FALLING_EDGE)
++            self.assertEqual(event.event_type, _EventType.FALLING_EDGE)
+             self.assertEqual(event.line_offset, 2)
+             ts_falling = event.timestamp_ns
+ 
+@@ -114,7 +114,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.RISING_EDGE)
++            self.assertEqual(event.event_type, _EventType.RISING_EDGE)
+             self.assertEqual(event.line_offset, 6)
+ 
+             self.assertFalse(req.wait_edge_events(timedelta(microseconds=10000)))
+@@ -132,7 +132,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.FALLING_EDGE)
++            self.assertEqual(event.event_type, _EventType.FALLING_EDGE)
+             self.assertEqual(event.line_offset, 6)
+ 
+             self.assertFalse(req.wait_edge_events(timedelta(microseconds=10000)))
+@@ -150,7 +150,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.RISING_EDGE)
++            self.assertEqual(event.event_type, _EventType.RISING_EDGE)
+             self.assertEqual(event.line_offset, 2)
+             self.assertEqual(event.global_seqno, 1)
+             self.assertEqual(event.line_seqno, 1)
+@@ -159,7 +159,7 @@ class WaitingForEdgeEvents(TestCase):
+             events = req.read_edge_events()
+             self.assertEqual(len(events), 1)
+             event = events[0]
+-            self.assertEqual(event.event_type, EventType.RISING_EDGE)
++            self.assertEqual(event.event_type, _EventType.RISING_EDGE)
+             self.assertEqual(event.line_offset, 4)
+             self.assertEqual(event.global_seqno, 2)
+             self.assertEqual(event.line_seqno, 1)
 diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/tests/tests_info_event.py
-index a226e52..bbdbc0f 100644
+index bbdbc0f..1976f4b 100644
 --- a/bindings/python/tests/tests_info_event.py
 +++ b/bindings/python/tests/tests_info_event.py
-@@ -3,17 +3,17 @@
- 
- import datetime
- import errno
--import gpiod
- import threading
- import time
--import unittest
--
--from . import gpiosim
- from dataclasses import FrozenInstanceError
- from functools import partial
--from gpiod.line import Direction
- from unittest import TestCase
- 
-+import gpiod
-+from gpiod.line import Direction
-+
-+from . import gpiosim
-+
- EventType = gpiod.InfoEvent.Type
- 
- 
-diff --git a/bindings/python/tests/tests_line.py b/bindings/python/tests/tests_line.py
-index 70aa09b..2182567 100644
---- a/bindings/python/tests/tests_line.py
-+++ b/bindings/python/tests/tests_line.py
-@@ -1,9 +1,10 @@
- # SPDX-License-Identifier: LGPL-2.1-or-later
- # SPDX-FileCopyrightText: 2024 Kent Gibson <warthog618@gmail.com>
- 
--from gpiod.line import Value
- from unittest import TestCase
- 
-+from gpiod.line import Value
-+
- 
- class LineValue(TestCase):
-     def test_cast_bool(self):
-diff --git a/bindings/python/tests/tests_line_info.py b/bindings/python/tests/tests_line_info.py
-index 2779e7a..79281a8 100644
---- a/bindings/python/tests/tests_line_info.py
-+++ b/bindings/python/tests/tests_line_info.py
-@@ -1,17 +1,17 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
--import errno
-+from unittest import TestCase
-+
- import gpiod
--import unittest
-+from gpiod.line import Bias, Clock, Direction, Drive
+@@ -14,7 +14,7 @@ from gpiod.line import Direction
  
  from . import gpiosim
--from gpiod.line import Direction, Bias, Drive, Clock
  
- HogDir = gpiosim.Chip.Direction
- 
- 
--class GetLineInfo(unittest.TestCase):
-+class GetLineInfo(TestCase):
-     def setUp(self):
-         self.sim = gpiosim.Chip(
-             num_lines=4,
-@@ -49,7 +49,7 @@ class GetLineInfo(unittest.TestCase):
-             self.chip.get_line_info()
+-EventType = gpiod.InfoEvent.Type
++_EventType = gpiod.InfoEvent.Type
  
  
--class LinePropertiesCanBeRead(unittest.TestCase):
-+class LinePropertiesCanBeRead(TestCase):
-     def test_basic_properties(self):
-         sim = gpiosim.Chip(
-             num_lines=8,
-@@ -86,7 +86,7 @@ class LinePropertiesCanBeRead(unittest.TestCase):
-             self.assertEqual(info6.debounce_period.total_seconds(), 0.0)
+ class InfoEventDataclassBehavior(TestCase):
+@@ -101,7 +101,7 @@ class WatchingInfoEventWorks(TestCase):
  
+         self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
+         event = self.chip.read_info_event()
+-        self.assertEqual(event.event_type, EventType.LINE_REQUESTED)
++        self.assertEqual(event.event_type, _EventType.LINE_REQUESTED)
+         self.assertEqual(event.line_info.offset, 7)
+         self.assertEqual(event.line_info.direction, Direction.INPUT)
+         ts_req = event.timestamp_ns
+@@ -109,14 +109,14 @@ class WatchingInfoEventWorks(TestCase):
+         # Check that we can use a float directly instead of datetime.timedelta.
+         self.assertTrue(self.chip.wait_info_event(1.0))
+         event = self.chip.read_info_event()
+-        self.assertEqual(event.event_type, EventType.LINE_CONFIG_CHANGED)
++        self.assertEqual(event.event_type, _EventType.LINE_CONFIG_CHANGED)
+         self.assertEqual(event.line_info.offset, 7)
+         self.assertEqual(event.line_info.direction, Direction.OUTPUT)
+         ts_rec = event.timestamp_ns
  
--class LineInfoStringRepresentation(unittest.TestCase):
-+class LineInfoStringRepresentation(TestCase):
-     def test_line_info_str(self):
-         sim = gpiosim.Chip(
-             line_names={0: "foo"}, hogs={0: ("hogger", HogDir.OUTPUT_HIGH)}
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index 285c9f1..c3e86c5 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -1,12 +1,12 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+         self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
+         event = self.chip.read_info_event()
+-        self.assertEqual(event.event_type, EventType.LINE_RELEASED)
++        self.assertEqual(event.event_type, _EventType.LINE_RELEASED)
+         self.assertEqual(event.line_info.offset, 7)
+         self.assertEqual(event.line_info.direction, Direction.OUTPUT)
+         ts_rel = event.timestamp_ns
+@@ -146,7 +146,7 @@ class UnwatchingLineInfo(TestCase):
+         with self.chip.request_lines(config={0: None}) as request:
+             self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
+             event = self.chip.read_info_event()
+-            self.assertEqual(event.event_type, EventType.LINE_REQUESTED)
++            self.assertEqual(event.event_type, _EventType.LINE_REQUESTED)
+             self.chip.unwatch_line_info(0)
  
--import errno
-+from unittest import TestCase
-+
- import gpiod
-+from gpiod.line import Clock, Direction, Drive, Edge, Value
- 
- from . import gpiosim
--from gpiod.line import Clock, Direction, Drive, Edge, Value
--from unittest import TestCase
- 
- Pull = gpiosim.Chip.Pull
- SimVal = gpiosim.Chip.Value
-diff --git a/bindings/python/tests/tests_line_settings.py b/bindings/python/tests/tests_line_settings.py
-index 83be3d9..832ac8a 100644
---- a/bindings/python/tests/tests_line_settings.py
-+++ b/bindings/python/tests/tests_line_settings.py
-@@ -2,12 +2,11 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
- import datetime
--import gpiod
--
--from . import gpiosim
--from gpiod.line import Direction, Edge, Bias, Drive, Value, Clock
- from unittest import TestCase
- 
-+import gpiod
-+from gpiod.line import Bias, Clock, Direction, Drive, Edge, Value
-+
- 
- class LineSettingsConstructor(TestCase):
-     def test_default_values(self):
-diff --git a/bindings/python/tests/tests_module.py b/bindings/python/tests/tests_module.py
-index c6f07a6..f46729f 100644
---- a/bindings/python/tests/tests_module.py
-+++ b/bindings/python/tests/tests_module.py
-@@ -1,13 +1,13 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
--import gpiod
- import os
--import unittest
-+from unittest import TestCase
-+
-+import gpiod
- 
- from . import gpiosim
- from .helpers import LinkGuard
--from unittest import TestCase
- 
- 
- class IsGPIOChip(TestCase):
-@@ -50,7 +50,6 @@ class IsGPIOChip(TestCase):
- 
- 
- class VersionString(TestCase):
--
-     VERSION_PATTERN = "^\\d+\\.\\d+(\\.\\d+|\\-devel|\\-rc\\d+)?$"
- 
-     def test_api_version_string(self):
+         self.assertFalse(
 -- 
 2.34.1
 
