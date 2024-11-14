@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-13027-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEFA79C8D4B
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E9A69C8D49
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 508F11F2416F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B81361F2439F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5113413CA8D;
-	Thu, 14 Nov 2024 14:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD13013C8F9;
+	Thu, 14 Nov 2024 14:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="cu9gY9F3"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="P44RjYjS"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D426F307
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1796133987
 	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731595897; cv=none; b=RWAeuxA+bLx5YPWdbLOM+BS/h9TfxdNPY9K0XJusjbSjRdwAr0b+FLtoauOrl0Ir0GqOrFCggqmkt9AHWqtBqrmySkB4l6J+36WtppK0tUAddJfIdC+AN5IgC9kmLI3wEY/JuJgIyO2L7fP0InQCm7Ctq4Vqd82Ex2li3AmPCqg=
+	t=1731595896; cv=none; b=MPEfU6qCKiFR9n5RBoD45SjFpauVn8aiaZ4e/vEYgrU5UyzrlNGatvBfBb3vicaqcggY7DEANCHmcOSEh2Z4+m/V8FMcuARViqIiP0LSnwvotGZo8ei3/k+SExs9SgR/ByuCNEdR/2VgKGdnCuyFe+0I5CeYEsyJ7N7rPXYf2Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731595897; c=relaxed/simple;
-	bh=GqsbHIiZILytSGfI3bEakJVjHTB/n+zOG9o/ML+KvC8=;
+	s=arc-20240116; t=1731595896; c=relaxed/simple;
+	bh=+yW1lNtX3BKFoo/xRbe7YuEAUj8k0bc3UC9pBxL2csI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u8Rjin3FSVpJ1oCDBmxgzUA/T4l5QoC9nqObR/8YtHo396huGPUdZFWloFMmDBQgql5ZwoHUOHHEA9j3fBoVUasEJkouX4CP/HRRZ4bPGYKSyIQsUEJSX0YpTmWFlOsFbf+e6OutMhPZAhqRjn6aTRp0NpnsTxgD/oEnl0h4Pyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=cu9gY9F3; arc=none smtp.client-ip=162.248.234.2
+	 MIME-Version; b=HCGcE0wLxARaPayJ1y3eQfS7Zm4EmvwaqyytXDlkP8vZlojIdMucPfOm2aoIi8XZ1+LGosuk0rVWuva3s4j7lKOpT9jeKa3STVX6tDMiwG7/2PyXcxt9Vutp9LnY9k3j61tnZOGhdtTd6g/9kK8trNB44V9McnqOt58/XndnunY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=P44RjYjS; arc=none smtp.client-ip=162.248.234.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
 Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
-	by mail.xes-mad.com (Postfix) with ESMTP id DBF6220ABD;
+	by mail.xes-mad.com (Postfix) with ESMTP id F079120ABE;
 	Thu, 14 Nov 2024 08:51:23 -0600 (CST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
-	t=1731595883; bh=GqsbHIiZILytSGfI3bEakJVjHTB/n+zOG9o/ML+KvC8=;
+	t=1731595884; bh=+yW1lNtX3BKFoo/xRbe7YuEAUj8k0bc3UC9pBxL2csI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cu9gY9F3GDz+VXHmlQHKswhxHPzXw3pvbJOR2+RuUQ8WOXja0RMPxFPCScBMpuD1x
-	 lBJUE6h4v5Pz2lJkaH4VtQPUr3RcEzgJnROV4AyKYSvE71o3GgsBxSnMJLrc/hqn3x
-	 +1lYCtJQFUqDyVAaL7twGK2F1Ufg9KP0GQK6/mWs=
+	b=P44RjYjSstzHBDZJ1t5+Aa00N30YL/RiAQ7ARSP+TleSw5uXyMqUttns7cXkIkczz
+	 f/weJP8JcfiZY1RBFGZujKf3yuX6ECVbTXeMj3Psk4yjWIgLGNW2m8cw5I3dkjF6ed
+	 bP66j9fn5hVTIhrYgYyhdnwlHg8WWkHWUTANpcAw=
 From: Vincent Fazio <vfazio@xes-inc.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@gmail.com,
 	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH v2 20/23] bindings: python: tests: add type hints to internal members
-Date: Thu, 14 Nov 2024 08:51:13 -0600
-Message-Id: <20241114145116.2123714-21-vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH v2 21/23] bindings: python: tests: ignore purposeful type errors
+Date: Thu, 14 Nov 2024 08:51:14 -0600
+Message-Id: <20241114145116.2123714-22-vfazio@xes-inc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241114145116.2123714-1-vfazio@xes-inc.com>
 References: <20241114145116.2123714-1-vfazio@xes-inc.com>
@@ -58,173 +58,246 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add type hints for internal members of the test cases so type checkers
-can ensure the code properly constrains to these types and accounts for
-scenarios where the values are `None`.
+Some of the unit tests intentionally call methods or assign properties
+with invalid values to ensure they fail in an expected way.
 
-In most cases, the type checker is allowed to assume the inferred type
-upon assignment.
+Type checkers complain for these instances so inform them via directive
+that these lines should be ignore for specific errors.
 
-An example is any test case that creates a `Chip` as part of its `setUp`
-method. Many of these tests subsequently set the reference to `None` in
-`tearDown` to free up resources to be collected by the GC.
+Additionally, some lines that access properties without assigning the
+value look like they perform no action to linters.
 
-If the member was "properly" typed to be `Optional`, all references in
-the unit tests would need to be guarded by an assert or a cast or
-ignored by the type checker. This is noisy and doesn't add value since
-for the life of the test it should always be a valid reference.
-
-Instead, allow `tearDown` to violate the inferred type and inform the
-type checker to ignore the assignment via directive.
-
-If the tests are ever changed to set the member to something other than
-the inferred type outside of `tearDown`, explicit type hints and proper
-checks should be added.
+To appease the linter, read the value into a throw-away variable.
 
 Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 ---
- bindings/python/tests/tests_chip.py       |  6 +++---
- bindings/python/tests/tests_chip_info.py  |  6 +++---
- bindings/python/tests/tests_edge_event.py |  5 +++--
- bindings/python/tests/tests_info_event.py | 11 ++++++-----
- bindings/python/tests/tests_line_info.py  |  4 ++--
- 5 files changed, 17 insertions(+), 15 deletions(-)
+ bindings/python/tests/tests_chip.py         | 12 ++++++------
+ bindings/python/tests/tests_chip_info.py    |  6 +++---
+ bindings/python/tests/tests_info_event.py   | 12 ++++++------
+ bindings/python/tests/tests_line_info.py    |  2 +-
+ bindings/python/tests/tests_line_request.py | 16 ++++++++--------
+ bindings/python/tests/tests_module.py       |  6 +++---
+ 6 files changed, 27 insertions(+), 27 deletions(-)
 
 diff --git a/bindings/python/tests/tests_chip.py b/bindings/python/tests/tests_chip.py
-index 9c8f875..218f238 100644
+index 218f238..9b31e30 100644
 --- a/bindings/python/tests/tests_chip.py
 +++ b/bindings/python/tests/tests_chip.py
-@@ -75,7 +75,7 @@ class ChipProperties(TestCase):
+@@ -52,11 +52,11 @@ class ChipConstructor(TestCase):
  
-     def tearDown(self) -> None:
-         self.chip.close()
--        self.sim = None
-+        self.sim = None  # type: ignore[assignment]
+     def test_missing_path(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.Chip()
++            gpiod.Chip()  # type: ignore[call-arg]
  
-     def test_get_chip_path(self) -> None:
-         self.assertEqual(self.sim.dev_path, self.chip.path)
-@@ -200,7 +200,7 @@ class StringRepresentation(TestCase):
+     def test_invalid_type_for_path(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.Chip(4)
++            gpiod.Chip(4)  # type: ignore[arg-type]
  
-     def tearDown(self) -> None:
-         self.chip.close()
--        self.sim = None
-+        self.sim = None  # type: ignore[assignment]
  
-     def test_repr(self) -> None:
-         self.assertEqual(repr(self.chip), 'gpiod.Chip("{}")'.format(self.sim.dev_path))
-@@ -224,7 +224,7 @@ class StringRepresentationClosed(TestCase):
-         self.chip = gpiod.Chip(self.sim.dev_path)
+ class ChipBooleanConversion(TestCase):
+@@ -85,10 +85,10 @@ class ChipProperties(TestCase):
  
-     def tearDown(self) -> None:
--        self.sim = None
-+        self.sim = None  # type: ignore[assignment]
+     def test_properties_are_immutable(self) -> None:
+         with self.assertRaises(AttributeError):
+-            self.chip.path = "foobar"
++            self.chip.path = "foobar"  # type: ignore[misc]
  
-     def test_repr_closed(self) -> None:
-         self.chip.close()
+         with self.assertRaises(AttributeError):
+-            self.chip.fd = 4
++            self.chip.fd = 4  # type: ignore[misc]
+ 
+ 
+ class ChipDevPathFromLink(TestCase):
+@@ -172,7 +172,7 @@ class ClosedChipCannotBeUsed(TestCase):
+         chip.close()
+ 
+         with self.assertRaises(gpiod.ChipClosedError):
+-            chip.path
++            _ = chip.path
+ 
+     def test_close_chip_and_try_controlled_execution(self) -> None:
+         sim = gpiosim.Chip()
+@@ -182,7 +182,7 @@ class ClosedChipCannotBeUsed(TestCase):
+ 
+         with self.assertRaises(gpiod.ChipClosedError):
+             with chip:
+-                chip.fd
++                _ = chip.fd
+ 
+     def test_close_chip_twice(self) -> None:
+         sim = gpiosim.Chip(label="foobar")
 diff --git a/bindings/python/tests/tests_chip_info.py b/bindings/python/tests/tests_chip_info.py
-index acb0da9..aabfbee 100644
+index aabfbee..fdceda9 100644
 --- a/bindings/python/tests/tests_chip_info.py
 +++ b/bindings/python/tests/tests_chip_info.py
-@@ -15,10 +15,10 @@ class ChipInfoProperties(TestCase):
-         self.info = self.chip.get_info()
+@@ -31,13 +31,13 @@ class ChipInfoProperties(TestCase):
  
-     def tearDown(self) -> None:
--        self.info = None
-+        self.info = None  # type: ignore[assignment]
-         self.chip.close()
--        self.chip = None
--        self.sim = None
-+        self.chip = None  # type: ignore[assignment]
-+        self.sim = None  # type: ignore[assignment]
+     def test_chip_info_properties_are_immutable(self) -> None:
+         with self.assertRaises(AttributeError):
+-            self.info.name = "foobar"
++            self.info.name = "foobar"  # type: ignore[misc]
  
-     def test_chip_info_name(self) -> None:
-         self.assertEqual(self.info.name, self.sim.name)
-diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
-index f80d6a5..d7766ec 100644
---- a/bindings/python/tests/tests_edge_event.py
-+++ b/bindings/python/tests/tests_edge_event.py
-@@ -5,6 +5,7 @@ import time
- from datetime import timedelta
- from functools import partial
- from threading import Thread
-+from typing import Optional
- from unittest import TestCase
+         with self.assertRaises(AttributeError):
+-            self.info.num_lines = 4
++            self.info.num_lines = 4  # type: ignore[misc]
  
- import gpiod
-@@ -54,13 +55,13 @@ class EdgeEventInvalidConfig(TestCase):
- class WaitingForEdgeEvents(TestCase):
-     def setUp(self) -> None:
-         self.sim = gpiosim.Chip(num_lines=8)
--        self.thread = None
-+        self.thread: Optional[Thread] = None
+         with self.assertRaises(AttributeError):
+-            self.info.label = "foobar"
++            self.info.label = "foobar"  # type: ignore[misc]
  
-     def tearDown(self) -> None:
-         if self.thread:
-             self.thread.join()
-             del self.thread
--        self.sim = None
-+        self.sim = None  # type: ignore[assignment]
  
-     def trigger_falling_and_rising_edge(self, offset: int) -> None:
-         time.sleep(0.05)
+ class ChipInfoStringRepresentation(TestCase):
 diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/tests/tests_info_event.py
-index 7e12b8e..1005647 100644
+index 1005647..e726a54 100644
 --- a/bindings/python/tests/tests_info_event.py
 +++ b/bindings/python/tests/tests_info_event.py
-@@ -7,6 +7,7 @@ import threading
- import time
- from dataclasses import FrozenInstanceError
- from functools import partial
-+from typing import Optional
- from unittest import TestCase
+@@ -29,13 +29,13 @@ class InfoEventDataclassBehavior(TestCase):
+                 event = chip.read_info_event()
  
- import gpiod
-@@ -51,7 +52,7 @@ class WatchingInfoEventWorks(TestCase):
-     def setUp(self) -> None:
-         self.sim = gpiosim.Chip(num_lines=8, line_names={4: "foobar"})
-         self.chip = gpiod.Chip(self.sim.dev_path)
--        self.thread = None
-+        self.thread: Optional[threading.Thread] = None
+                 with self.assertRaises(FrozenInstanceError):
+-                    event.event_type = 4
++                    event.event_type = 4  # type: ignore[misc, assignment]
  
-     def tearDown(self) -> None:
-         if self.thread:
-@@ -59,8 +60,8 @@ class WatchingInfoEventWorks(TestCase):
-             self.thread = None
+                 with self.assertRaises(FrozenInstanceError):
+-                    event.timestamp_ns = 4
++                    event.timestamp_ns = 4  # type: ignore[misc]
  
-         self.chip.close()
--        self.chip = None
--        self.sim = None
-+        self.chip = None  # type: ignore[assignment]
-+        self.sim = None  # type: ignore[assignment]
+                 with self.assertRaises(FrozenInstanceError):
+-                    event.line_info = 4
++                    event.line_info = 4  # type: ignore[misc, assignment]
  
-     def test_watch_line_info_returns_line_info(self) -> None:
+ 
+ def request_reconfigure_release_line(chip_path: str, offset: int) -> None:
+@@ -76,14 +76,14 @@ class WatchingInfoEventWorks(TestCase):
+ 
+     def test_watch_line_info_no_arguments(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.chip.watch_line_info()
++            self.chip.watch_line_info()  # type: ignore[call-arg]
+ 
+     def test_watch_line_info_by_line_name(self) -> None:
+         self.chip.watch_line_info("foobar")
+ 
+     def test_watch_line_info_invalid_argument_type(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.chip.watch_line_info(None)
++            self.chip.watch_line_info(None)  # type: ignore[arg-type]
+ 
+     def test_wait_for_event_timeout(self) -> None:
          info = self.chip.watch_line_info(7)
-@@ -138,8 +139,8 @@ class UnwatchingLineInfo(TestCase):
+@@ -162,7 +162,7 @@ class UnwatchingLineInfo(TestCase):
  
-     def tearDown(self) -> None:
-         self.chip.close()
--        self.chip = None
--        self.sim = None
-+        self.chip = None  # type: ignore[assignment]
-+        self.sim = None  # type: ignore[assignment]
+     def test_unwatch_line_info_no_argument(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.chip.unwatch_line_info()
++            self.chip.unwatch_line_info()  # type: ignore[call-arg]
  
-     def test_unwatch_line_info(self) -> None:
-         self.chip.watch_line_info(0)
+     def test_unwatch_line_info_by_line_name(self) -> None:
+         self.chip.watch_line_info(4)
 diff --git a/bindings/python/tests/tests_line_info.py b/bindings/python/tests/tests_line_info.py
-index 9828349..7bc244d 100644
+index 7bc244d..5eb6cd5 100644
 --- a/bindings/python/tests/tests_line_info.py
 +++ b/bindings/python/tests/tests_line_info.py
-@@ -22,8 +22,8 @@ class GetLineInfo(TestCase):
+@@ -46,7 +46,7 @@ class GetLineInfo(TestCase):
  
-     def tearDown(self) -> None:
-         self.chip.close()
--        self.chip = None
--        self.sim = None
-+        self.chip = None  # type: ignore[assignment]
-+        self.sim = None  # type: ignore[assignment]
+     def test_no_offset(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.chip.get_line_info()
++            self.chip.get_line_info()  # type: ignore[call-arg]
  
-     def test_get_line_info_by_offset(self) -> None:
-         self.chip.get_line_info(0)
+ 
+ class LinePropertiesCanBeRead(TestCase):
+diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
+index 76edb1d..bae8815 100644
+--- a/bindings/python/tests/tests_line_request.py
++++ b/bindings/python/tests/tests_line_request.py
+@@ -24,10 +24,10 @@ class ChipLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
+ 
+     def test_passing_invalid_types_as_configs(self) -> None:
+         with self.assertRaises(AttributeError):
+-            self.chip.request_lines("foobar")
++            self.chip.request_lines("foobar")  # type: ignore[arg-type]
+ 
+         with self.assertRaises(AttributeError):
+-            self.chip.request_lines(None, "foobar")
++            self.chip.request_lines(None, "foobar")  # type: ignore[arg-type]
+ 
+     def test_offset_out_of_range(self) -> None:
+         with self.assertRaises(ValueError):
+@@ -39,7 +39,7 @@ class ChipLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
+ 
+     def test_request_no_arguments(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.chip.request_lines()
++            self.chip.request_lines()  # type: ignore[call-arg]
+ 
+ 
+ class ModuleLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
+@@ -51,10 +51,10 @@ class ModuleLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
+ 
+     def test_passing_invalid_types_as_configs(self) -> None:
+         with self.assertRaises(AttributeError):
+-            gpiod.request_lines(self.sim.dev_path, "foobar")
++            gpiod.request_lines(self.sim.dev_path, "foobar")  # type: ignore[arg-type]
+ 
+         with self.assertRaises(AttributeError):
+-            gpiod.request_lines(self.sim.dev_path, None, "foobar")
++            gpiod.request_lines(self.sim.dev_path, None, "foobar")  # type: ignore[arg-type]
+ 
+     def test_offset_out_of_range(self) -> None:
+         with self.assertRaises(ValueError):
+@@ -66,7 +66,7 @@ class ModuleLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
+ 
+     def test_request_no_arguments(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.request_lines()
++            gpiod.request_lines()  # type: ignore[call-arg]
+ 
+ 
+ class ChipLineRequestWorks(TestCase):
+@@ -200,7 +200,7 @@ class LineRequestGettingValues(TestCase):
+ 
+     def test_get_values_invalid_argument_type(self) -> None:
+         with self.assertRaises(TypeError):
+-            self.req.get_values(True)
++            self.req.get_values(True)  # type: ignore[arg-type]
+ 
+ 
+ class LineRequestGettingValuesByName(TestCase):
+@@ -602,7 +602,7 @@ class ReleasedLineRequestCannotBeUsed(TestCase):
+             req.release()
+ 
+             with self.assertRaises(gpiod.RequestReleasedError):
+-                req.fd
++                _ = req.fd
+ 
+ 
+ class LineRequestSurvivesParentChip(TestCase):
+diff --git a/bindings/python/tests/tests_module.py b/bindings/python/tests/tests_module.py
+index 2718624..efd49db 100644
+--- a/bindings/python/tests/tests_module.py
++++ b/bindings/python/tests/tests_module.py
+@@ -17,15 +17,15 @@ class IsGPIOChip(TestCase):
+ 
+     def test_is_gpiochip_invalid_argument(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.is_gpiochip_device(4)
++            gpiod.is_gpiochip_device(4)  # type: ignore[arg-type]
+ 
+     def test_is_gpiochip_superfluous_argument(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.is_gpiochip_device("/dev/null", 4)
++            gpiod.is_gpiochip_device("/dev/null", 4)  # type: ignore[call-arg]
+ 
+     def test_is_gpiochip_missing_argument(self) -> None:
+         with self.assertRaises(TypeError):
+-            gpiod.is_gpiochip_device()
++            gpiod.is_gpiochip_device()  # type: ignore[call-arg]
+ 
+     def test_is_gpiochip_good(self) -> None:
+         sim = gpiosim.Chip()
 -- 
 2.34.1
 
