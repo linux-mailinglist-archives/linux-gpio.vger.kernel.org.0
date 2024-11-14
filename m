@@ -1,109 +1,115 @@
-Return-Path: <linux-gpio+bounces-13005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E63E9C8C66
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:04:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D03C9C8D26
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:45:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A6F1B2E6A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 13:50:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 297BE1F2392E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:45:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F081DFE8;
-	Thu, 14 Nov 2024 13:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E026F06D;
+	Thu, 14 Nov 2024 14:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H08tIFnA"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zNzHCC/h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B87D17C8B;
-	Thu, 14 Nov 2024 13:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE3B3D0C5
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731592213; cv=none; b=DZvm9C1JETF98Gge8ZlfoCFHogdE+VEl167QpMR0PEdV6G7c+Gl0LTC1gc7xLoF/kF+o/i/0Lr5H+oIaBOZofCZyiystlhZq4NrJBXgFnsr7EgcLDz2Qqs+idMDI+gff8Yyc0ebB0jrsyCaKiGvBhKZKdTkv2vZAgADlpNgY7ls=
+	t=1731595502; cv=none; b=azo0cIt2zaWSfP6wIEeJ75c0rxvV32XLGfP85YILyaDySG2L+4hr1w7FavmfkxkLDE575KOfWslj4damFXo45nY2F473kI+TA4HdL+UwJcnig6KnJOKeOqRZole12tE42owUo0cONMnNA28mdMXbhWf6fnukOWI8u3AvBYjRvhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731592213; c=relaxed/simple;
-	bh=RxFq6bYjSC95SEdvaMlXM31AEtsd7ZEogKLttu9p5dM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+eHVgJXPZo0u6jn8LZ2+VLa8mp+4gkJR3x0I4q+hozysInBtTNWuqPBQxnJW6lxLi2eDXXZ129jA9RYYGZkxfp1VHpm6/pe7CiP9Om6PWBXZqKf9RJ163ZOC+yYPzfyeahMnx28fBv+Kw/FZgsl6TDoMMG2BIq7HXkHKalzwdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H08tIFnA; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1731592212; x=1763128212;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=RxFq6bYjSC95SEdvaMlXM31AEtsd7ZEogKLttu9p5dM=;
-  b=H08tIFnArnRWl4TmrvoqpeAa6ul9RzNoalInMa48hiUh2uOEmfLGj4N9
-   UnSsev+LOxfg+yZholTx4ZYORE+hiVDK17oqJPHa036fPji2a5UDlRIto
-   45f03DP1Nf4a0Oe772jvn66LivLz9zfL16tnukxzsyPMihI7o0l8LSAXn
-   Fgu7BTECSUua8OvonHhy3CXZnnziNRuGj+TMGDymQd7f6JZs4/QHD2Kfs
-   /KQYthHCwfCug88Akc5z9KE9D2TH5ooWEeZ9SekDZlL6YfA/Pw8ykfX7A
-   k0dmPf/bdkqU++GkWkpqYBCWqfnuHKZX5sHMyvbZJmFq3jvOV/zh4NnJS
-   Q==;
-X-CSE-ConnectionGUID: eHjTXNaNQZevHSHZ3SA5fQ==
-X-CSE-MsgGUID: 40DMI41kToeIZ9Sds4vprg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="42158949"
-X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
-   d="scan'208";a="42158949"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 05:50:10 -0800
-X-CSE-ConnectionGUID: uSzprHoUSGOcIj4vMWD/mg==
-X-CSE-MsgGUID: cOMhJ5kAQ3ucIjbtCIcFUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,154,1728975600"; 
-   d="scan'208";a="88599940"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2024 05:50:09 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tBaEY-0000000Ejne-1oUB;
-	Thu, 14 Nov 2024 15:50:06 +0200
-Date: Thu, 14 Nov 2024 15:50:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+	s=arc-20240116; t=1731595502; c=relaxed/simple;
+	bh=+rMLXFzgqKZLk8rQ+k3N/R9MMAXehsTmRTsmokLBChY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dJLhBDweLl2duVOlNZP9gVq7C8fcKg0bmO/MekDnbRBHDQwRljFBqrPDkH/y+xjoKYkTST+SKd2idsFX+Csls/MTfKzXJwc81y9sMpNFnu24OFAYE7NF8SxQCE8QnLRxPIW3JyHANQQ4ZJVYFhwK55Dou7SPKn6LXyuh6bAK32Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zNzHCC/h; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-432d866f70fso6434755e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 06:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1731595499; x=1732200299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aEgpr39w0CcAsiKuCtl80T/zdi1/rF4sSBWwhuKglcU=;
+        b=zNzHCC/h5f8K6GCgsbToTwYTbQ4f0mVY/hum2IyKHnIWe/9P4LsLY+/fXVEfQ64mmO
+         7ykX3YGaQca8Rw4YCAWRhTC48kHolYHIa4mpB92YaxAsNQRFDFN/lXIklnQp3z8xQfWT
+         jRDmcnfriTi80vb3yw/vin+gDUg/1X68c+5Sv4/2Zc5PjNREFNlhV3P2fJkhT14qAJ9Q
+         U3XhPtjuLJHt63JBKZyZbrBrfu6O1/JtACRZDfAR5T0xYDThhVsQqeIJweaPLXZcHIPV
+         t3KQXb2UTE864Xqq6d8xfT0MU5JwqtfK3DoL+9vTGpPGyjK06r/77nB/5taWA9JuvqIj
+         qB2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731595499; x=1732200299;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aEgpr39w0CcAsiKuCtl80T/zdi1/rF4sSBWwhuKglcU=;
+        b=sMZYI8ynOj7plMi/gfswJjB+mpPx0zpVP78fFf1Pm3NyYwXjCo9SvZF3EmQazv5VGS
+         Dz7bPvhqJuklNRJkFR5+xAKwlOqSAP9zWRlH5UnsEQGD7DEYQu+icL+3lLabCIWhzGT5
+         /3HsWa8z+GryQhZWanvZX6155FgxFu2k7/Enz4aX+9pWtboSarcNXgGpTrM8qkMFJRxV
+         Jhq9ji+n+zo+1H9P5pVJ846EF/+grmthgPej8RljPekMG10v5YgIXksdVfA7jzmNztNR
+         jiyBOqsi0aeojY1xXNdU2ktuIKA9afSAwOT8GxTS9qjSipfWfJ7mja2wfK8lCIv96GX5
+         eeWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXENZ6YV3GzguI0A7CJ38kS6rW/aZmWrIDvBAF71Q8+IUaHB//sKTH7hkHxLMhKgBH0qYhP95NeF+qs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMHnypNYeAvzgOm5f2sXA+HXruLqOaoWSVlPUue5McqYRcj9Js
+	M9DxtktUzkm2NS9W1X2IYPj2FpiY8Kvuva32JF/P88shEnZmK5/UHu6gbGOCO4U=
+X-Google-Smtp-Source: AGHT+IEFpp9RmzTQrpWugYQ7Zu1HutntmJdWfk/HE3B/Cs4tqZen/YgodsoFDkE2lDf4RFmjYyk4qw==
+X-Received: by 2002:a05:600c:5124:b0:42c:b995:2100 with SMTP id 5b1f17b1804b1-432b74faa3bmr199575445e9.6.1731595498566;
+        Thu, 14 Nov 2024 06:44:58 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d8d6:4da5:9533:12ec])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab721efsm23527295e9.4.2024.11.14.06.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 06:44:58 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Lars-Peter Clausen <lars@metafoo.de>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpio: Move and sort Kconfig entries as suggested
-Message-ID: <ZzYADpZgTyQN_NDo@smile.fi.intel.com>
-References: <20241113171219.2949157-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MeaDjhxAwmTcNZ+oHniFn4EWVEmfP8MdNWitmD+Rr=scA@mail.gmail.com>
- <ZzXTbEcrLigXWpAu@smile.fi.intel.com>
- <CAMRc=MeEtyTXr6A4gXbbN=ZY1tzAQnbVMF0NYA2_6Xm3=jfS6Q@mail.gmail.com>
- <ZzXhf2zM9IisvZhs@smile.fi.intel.com>
- <CAMRc=Mdo2DysJRPvJRU9RwTCH8nmw_CFRYYoLfvfC8+j0K9roA@mail.gmail.com>
+	Thierry Reding <treding@nvidia.com>,
+	Prathamesh Shete <pshete@nvidia.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: tegra186: Allow to enable driver on Tegra234
+Date: Thu, 14 Nov 2024 15:44:57 +0100
+Message-ID: <173159549500.53717.13347422076056240861.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241113162939.886242-1-lars@metafoo.de>
+References: <20241113162939.886242-1-lars@metafoo.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdo2DysJRPvJRU9RwTCH8nmw_CFRYYoLfvfC8+j0K9roA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Nov 14, 2024 at 01:59:19PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Nov 14, 2024 at 12:39 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
 
-> You know what? How about just reordering Kconfig entries
-> alphabetically for this merge window and next release cycle we can
-> decide on what to do about Kconfig consistency?
+On Wed, 13 Nov 2024 08:29:39 -0800, Lars-Peter Clausen wrote:
+> Support for Tegra234 was added to the tegra186 driver in 1db9b241bb56 (
+> "gpio: tegra186: Add support for Tegra234"). But the driver is not
+> selectable on Tegra234. Update the Kconfig entry to allow the driver to be
+> enabled on Tegra234.
+> 
+> Enable the driver by default on Tegra 234 as well, similar to the other
+> platforms it supports.
+> 
+> [...]
 
-I think I expended time for this patch. Consider it as a report and proceed
-how you think is the best, Thanks!
+Applied, thanks!
 
+[1/1] gpio: tegra186: Allow to enable driver on Tegra234
+      commit: a5cc199f4de2a2a10e3c9d3fc2d07d634d1e5d0f
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
