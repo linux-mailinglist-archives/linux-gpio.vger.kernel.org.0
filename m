@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-13024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13026-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83F5C9C8D48
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05FEB9C8D4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45BA12821F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C001C281D88
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA4613C3CD;
-	Thu, 14 Nov 2024 14:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E92F7DA66;
+	Thu, 14 Nov 2024 14:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="Of9jKf7a"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="tHgznKxK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1212FF70
-	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1705336E
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731595896; cv=none; b=TjsSyFBhvxaMXTTJfiwjpXRFSmPaoXG7QxlNr+60RBlb4F3mAZNo6hcTgphlqcp/34RoxKhoAWPc3tkYLN6XeqVXBt8ePtDnovdImNxgiZ5KqfOwVq9Ai7Ug9dDnO8pLn3331OK97A+2AUT2T3CPlIkqrSOBnc+NTZLlRcemsCQ=
+	t=1731595896; cv=none; b=LLCNTf7OJpH/lLldtGCqtjFqsP9YoFA2mIXyGifYtEYVWhqJZDIGvAK4hw7QBi5YbjRGyd5vDOvdn2bXB4wBLUj2QnH2bP2ObsC3Ygb8bCrhLi2eq8U/lL7wDoh9S5lrXHWA8K/H+g1OdBs0rqjYn0MIk0j/1WTrWTlThQs+Qs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731595896; c=relaxed/simple;
-	bh=PZ2PXOyR3EdAWFgjqGbH0qHNu/MYDSd0UrdD1rj8pac=;
+	bh=3buoQxfsBeu/2LtnS6PhbYb3vk35HwEBDXbocvanbXE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CQKG4k6ZZ88Z+ZYAUokdCG+TetqMpiJ0jyDPebXpFqPd65Apyv0B9ew6Kwyk+6HDmmqXPGSomLGXW9jABLhFk9uvL4Am626SUz5hSZKlhBrRL/yB5ACkZ88UXfgEAcPL8D04XbpVMzKW/w0zqvTSi8sZ6EnGIK80KbBk2DTC9Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=Of9jKf7a; arc=none smtp.client-ip=162.248.234.2
+	 MIME-Version; b=BDhkUCk9jnXbDOfrNSjXhewJ1FEt45LV/9nujOSPiKXW8aS7ROq+nCeUiKbJy/PFAnjx4lCYV6lqZuc0RWVPPunIjL/0gg4d5HfU4G7pvoezJGxBJP0MMsvNwk1bS5x3LbI6V2iEgoydU29w+QWGoppn1mjZX6BThrdfkbqRlGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=tHgznKxK; arc=none smtp.client-ip=162.248.234.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
 Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
-	by mail.xes-mad.com (Postfix) with ESMTP id 119E520ABF;
+	by mail.xes-mad.com (Postfix) with ESMTP id 2628E20AC0;
 	Thu, 14 Nov 2024 08:51:24 -0600 (CST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
-	t=1731595884; bh=PZ2PXOyR3EdAWFgjqGbH0qHNu/MYDSd0UrdD1rj8pac=;
+	t=1731595884; bh=3buoQxfsBeu/2LtnS6PhbYb3vk35HwEBDXbocvanbXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Of9jKf7a5AGJrEJwqQCUU6TBa5L/FBdgFgOK+y/Lg8NtVDXrY4QCQH2XAxWHeG03a
-	 gQgvnhobTxFL9npAYbPgWNiEoZwHdY0nzs3YslPoIz34mb5nne5xyYb/VnkGA8z1fG
-	 EmxgeiiYBfHhwBajrvYQM3RTFdS3sWvBzzXOa2D0=
+	b=tHgznKxKKpTMJUtLE+JhLw2lb55Aa+SurYKeRHG2cZxdtf4JQQ3OH3MwyMBZ2jhZi
+	 I/Orz30JG4Cd7rcniZ9qnIKMpUFQABKFzbYist8ZRTj5D+/0iYTWJUeU3oW/M0Mjir
+	 hvA3XkCY9qPKPh2Cc3NFwfxSkzjQHCWLom4fUbr8=
 From: Vincent Fazio <vfazio@xes-inc.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@gmail.com,
 	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH v2 22/23] bindings: python: tests: selectively use f-strings
-Date: Thu, 14 Nov 2024 08:51:15 -0600
-Message-Id: <20241114145116.2123714-23-vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH v2 23/23] bindings: python: configure and document dev dependencies
+Date: Thu, 14 Nov 2024 08:51:16 -0600
+Message-Id: <20241114145116.2123714-24-vfazio@xes-inc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241114145116.2123714-1-vfazio@xes-inc.com>
 References: <20241114145116.2123714-1-vfazio@xes-inc.com>
@@ -58,127 +58,96 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since their inclusion in Python 3.6, f-strings have become the preferred
-way to format strings with variable values as they are generally more
-readable as the value substitution is in place and doesn't have to be
-parsed from the list or arguments to `.format()`.
+Mypy [0] is a popular static type checker that validates attribute and
+variable use and ensures function arguments adhere to type annotations.
 
-Where it does not impact readability (when the line is <120 characters),
-swap usage of `.format()` to an f-string.
+Ruff [1] is a popular Rust-based Python linter and code formatter. It
+has support for a large set of linting rules [2] and largely complies
+with the Black format [3].
 
-For lines that are not converted, inform the linter to ignore attempts
-to upgrade those instances to f-strings [0]
+Add documentation to README.md for how to run the tools.
 
-[0]: https://docs.astral.sh/ruff/rules/f-string/
+[0]: https://mypy.readthedocs.io/en/stable/
+[1]: https://docs.astral.sh/ruff/
+[2]: https://docs.astral.sh/ruff/rules/
+[3]: https://docs.astral.sh/ruff/formatter/#black-compatibility
 Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 ---
- bindings/python/tests/__init__.py           | 4 +---
- bindings/python/tests/tests_chip.py         | 8 ++++----
- bindings/python/tests/tests_chip_info.py    | 2 +-
- bindings/python/tests/tests_line_request.py | 4 +---
- bindings/python/tests/tests_module.py       | 4 ++--
- 5 files changed, 9 insertions(+), 13 deletions(-)
+ bindings/python/README.md      | 17 ++++++++++++++++
+ bindings/python/pyproject.toml | 36 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/bindings/python/tests/__init__.py b/bindings/python/tests/__init__.py
-index 2374e81..a0f22ae 100644
---- a/bindings/python/tests/__init__.py
-+++ b/bindings/python/tests/__init__.py
-@@ -9,7 +9,5 @@ current_version = LooseVersion(os.uname().release.split("-")[0])
+diff --git a/bindings/python/README.md b/bindings/python/README.md
+index cb5cee6..89c824c 100644
+--- a/bindings/python/README.md
++++ b/bindings/python/README.md
+@@ -112,3 +112,20 @@ make python-tests-run
  
- if current_version < required_kernel_version:
-     raise NotImplementedError(
--        "linux kernel version must be at least {} - got {}".format(
--            required_kernel_version, current_version
--        )
-+        f"linux kernel version must be at least {required_kernel_version} - got {current_version}"
-     )
-diff --git a/bindings/python/tests/tests_chip.py b/bindings/python/tests/tests_chip.py
-index 9b31e30..d5a64b3 100644
---- a/bindings/python/tests/tests_chip.py
-+++ b/bindings/python/tests/tests_chip.py
-@@ -25,7 +25,7 @@ class ChipConstructor(TestCase):
-             pass
+ from the `libgpiod/bindings/python` directory as root (necessary to be able
+ to create the **gpio-sims** used for testing).
++
++## Linting/Formatting
++
++When making changes, ensure type checks and linting still pass:
++
++```
++python3 -m venv venv
++. venv/bin/activate
++pip install mypy ruff
++mypy; ruff format; ruff check
++```
++
++Ideally the gpiod library will continue to pass strict checks:
++
++```
++mypy --strict
++```
+\ No newline at end of file
+diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.toml
+index f6bf43c..d6f5f9b 100644
+--- a/bindings/python/pyproject.toml
++++ b/bindings/python/pyproject.toml
+@@ -3,3 +3,39 @@
  
-     def test_open_chip_by_link(self) -> None:
--        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        link = f"/tmp/gpiod-py-test-link.{os.getpid()}"
-         sim = gpiosim.Chip()
- 
-         with LinkGuard(sim.dev_path, link):
-@@ -94,7 +94,7 @@ class ChipProperties(TestCase):
- class ChipDevPathFromLink(TestCase):
-     def test_dev_path_open_by_link(self) -> None:
-         sim = gpiosim.Chip()
--        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        link = f"/tmp/gpiod-py-test-link.{os.getpid()}"
- 
-         with LinkGuard(sim.dev_path, link):
-             with gpiod.Chip(link) as chip:
-@@ -203,7 +203,7 @@ class StringRepresentation(TestCase):
-         self.sim = None  # type: ignore[assignment]
- 
-     def test_repr(self) -> None:
--        self.assertEqual(repr(self.chip), 'gpiod.Chip("{}")'.format(self.sim.dev_path))
-+        self.assertEqual(repr(self.chip), f'gpiod.Chip("{self.sim.dev_path}")')
- 
-         cmp = eval(repr(self.chip))
-         self.assertEqual(self.chip.path, cmp.path)
-@@ -212,7 +212,7 @@ class StringRepresentation(TestCase):
-         info = self.chip.get_info()
-         self.assertEqual(
-             str(self.chip),
--            '<Chip path="{}" fd={} info=<ChipInfo name="{}" label="foobar" num_lines=4>>'.format(
-+            '<Chip path="{}" fd={} info=<ChipInfo name="{}" label="foobar" num_lines=4>>'.format(  # noqa: UP032
-                 self.sim.dev_path, self.chip.fd, info.name
-             ),
-         )
-diff --git a/bindings/python/tests/tests_chip_info.py b/bindings/python/tests/tests_chip_info.py
-index fdceda9..dbb7fd0 100644
---- a/bindings/python/tests/tests_chip_info.py
-+++ b/bindings/python/tests/tests_chip_info.py
-@@ -49,5 +49,5 @@ class ChipInfoStringRepresentation(TestCase):
- 
-             self.assertEqual(
-                 str(info),
--                '<ChipInfo name="{}" label="foobar" num_lines=16>'.format(sim.name),
-+                f'<ChipInfo name="{sim.name}" label="foobar" num_lines=16>',
-             )
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index bae8815..afee644 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -635,9 +635,7 @@ class LineRequestStringRepresentation(TestCase):
-             with chip.request_lines(config={(2, 6, 4, 1): None}) as req:
-                 self.assertEqual(
-                     str(req),
--                    '<LineRequest chip="{}" num_lines=4 offsets=[2, 6, 4, 1] fd={}>'.format(
--                        self.sim.name, req.fd
--                    ),
-+                    f'<LineRequest chip="{self.sim.name}" num_lines=4 offsets=[2, 6, 4, 1] fd={req.fd}>',
-                 )
- 
-     def test_str_released(self) -> None:
-diff --git a/bindings/python/tests/tests_module.py b/bindings/python/tests/tests_module.py
-index efd49db..7120c63 100644
---- a/bindings/python/tests/tests_module.py
-+++ b/bindings/python/tests/tests_module.py
-@@ -36,14 +36,14 @@ class IsGPIOChip(TestCase):
-         self.assertTrue(gpiod.is_gpiochip_device(path=sim.dev_path))
- 
-     def test_is_gpiochip_link_good(self) -> None:
--        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        link = f"/tmp/gpiod-py-test-link.{os.getpid()}"
-         sim = gpiosim.Chip()
- 
-         with LinkGuard(sim.dev_path, link):
-             self.assertTrue(gpiod.is_gpiochip_device(link))
- 
-     def test_is_gpiochip_link_bad(self) -> None:
--        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        link = f"/tmp/gpiod-py-test-link.{os.getpid()}"
- 
-         with LinkGuard("/dev/null", link):
-             self.assertFalse(gpiod.is_gpiochip_device(link))
+ [build-system]
+ requires = ["setuptools", "wheel", "packaging"]
++
++[tool.mypy]
++python_version = "3.9"
++files = [
++  "gpiod/",
++  "tests/",
++]
++
++[[tool.mypy.overrides]]
++module = "gpiod.line.*"
++strict_equality = false # Ignore Enum comparison-overlap: https://github.com/python/mypy/issues/17317
++
++[tool.ruff]
++target-version = "py39"
++include = [
++  "gpiod/**/*.py",
++  "gpiod/**/*.pyi",
++  "tests/**/*.py",
++  "tests/**/*.pyi",
++]
++
++[tool.ruff.lint]
++select = ["B", "E", "F", "I", "TCH", "UP"]
++ignore=[
++  # Ignore chained exception warnings for now: https://docs.astral.sh/ruff/rules/raise-without-from-inside-except/
++  "B904",
++  # Never enforce line length violations. Let the formatter handle it: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
++  "E501",
++  # Ignore new Union (|) syntax until we require 3.10+
++  "UP007",
++]
++
++[tool.ruff.lint.per-file-ignores]
++"gpiod/__init__.py" = ["F403", "F405"]  # ignore warnings about star imports
++"tests/__main__.py" = ["F403"]
++"tests/**.py" = ["F841"]  # ignore warnings about unused variables
+\ No newline at end of file
 -- 
 2.34.1
 
