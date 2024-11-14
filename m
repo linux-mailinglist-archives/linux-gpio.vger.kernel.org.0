@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-13020-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13016-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F05099C8D44
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE1BA9C8D42
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 15:51:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A92381F24259
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1B54282567
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Nov 2024 14:51:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E88E6F2F3;
-	Thu, 14 Nov 2024 14:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D433E136327;
+	Thu, 14 Nov 2024 14:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="bHBvF/5X"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="dKuDWkVE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0454D9FE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFE643AD2
 	for <linux-gpio@vger.kernel.org>; Thu, 14 Nov 2024 14:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731595895; cv=none; b=dR0lwy3/VVBG4y8fclYyn3Nisu82uiMoxgk8u9fpfbKbu4uPq+RoFMTi3vWAWc34upeTb3321+vlxjHIQ73o+2YGYbc9a8NrcInoy3Y/91l9UtGfi3fEXY5JDCSVZy9kk/dIBCVV56plNnX67euDfCpgTZRr/EJIM4tB2m/75j4=
+	t=1731595894; cv=none; b=sX8uq38e5f/SCyloQGOJg/RUwmIuGMthacHx1EZZxuJPMOze4hjP1f4d9lUtZUGjCTFiXIfASfFWUjaNojM5yf7BSWOQwBbGrEpz1/+QiiaveEip7CJK4FwW5i+HMRAE7LBp3zy6SjC9suypbB9hpWIrtPspD7TH04PBhA5keAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731595895; c=relaxed/simple;
-	bh=xePOxLQmu+k04jd8EiUx7g+K1U4mxeZ1DY2jQpuYac4=;
+	s=arc-20240116; t=1731595894; c=relaxed/simple;
+	bh=ZAPje8Lv+/hR8Gn0fHhrkcvWtUex3wV0GRH+5dkkX1Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hg3kL+POg+aoFTO/hJQ3TA8PyS9elgnOJmq2kx1j5HuqHgoUMbd2Ifp3L70VB00yilq1ThOZ4KqrP/i9oeArRykrHNZysLUw9LfW0CSVpc46mUqnQEdOExc4VcNaVe7gN+JZxWVMO+3YS7jdC8rrX2ItTvc1W2HtJeKtxpZeIAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=bHBvF/5X; arc=none smtp.client-ip=162.248.234.2
+	 MIME-Version; b=LEXuRWGQj5FzuiKsZcnDZkN7sjtqOG/1UTalCP/JXIwK2svPjGZdG8FAuwYWohZ1HGTjHapPv6kAyKobIRN4EfjIMJeGl6Gkhas1dZ4odK2gstVMZebCboJw3fFELeb1QcFWEL8u89JXHJitI6TxMLpRIDQqRg9E3/NBntZGLYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=dKuDWkVE; arc=none smtp.client-ip=162.248.234.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
 Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
-	by mail.xes-mad.com (Postfix) with ESMTP id 1F1ED20AB2;
+	by mail.xes-mad.com (Postfix) with ESMTP id 3389520AB4;
 	Thu, 14 Nov 2024 08:51:23 -0600 (CST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
-	t=1731595883; bh=xePOxLQmu+k04jd8EiUx7g+K1U4mxeZ1DY2jQpuYac4=;
+	t=1731595883; bh=ZAPje8Lv+/hR8Gn0fHhrkcvWtUex3wV0GRH+5dkkX1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bHBvF/5X7wKKUy5ZjsMz4nMYUjQ6bjUB9g0t3BSSg3iFfgxgpSNqtHyRMZBI4I5Eg
-	 p8YX1kzBn0Plm/pawjatZ2ssZsMWlATqodKAnVqyZcVqWgR53cWZ2WZzGSowpGgKwz
-	 O47qx8NHZcZ5W479k7ZUwHm9zSP8QA1u4XotfAgg=
+	b=dKuDWkVEJdN/+J4NX0l86qMtkvgrUoc7Yv/So9HLzGy6oMLZELjNilT0oCx/qI+0m
+	 XpvqYLNWY3nvPouejsDhL5caw4HsieqO3GZ+HRDM8lnviwYyoiuYmGU5keb7RMBtuX
+	 4R0Dp3xOUoiqCoGh2V2T3pWNuEDi5iAStbA9C/NI=
 From: Vincent Fazio <vfazio@xes-inc.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@gmail.com,
 	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH v2 11/23] bindings: python: fix LineRequest union-attr type errors
-Date: Thu, 14 Nov 2024 08:51:04 -0600
-Message-Id: <20241114145116.2123714-12-vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH v2 12/23] bindings: python: convert lines to offsets in LineRequest
+Date: Thu, 14 Nov 2024 08:51:05 -0600
+Message-Id: <20241114145116.2123714-13-vfazio@xes-inc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241114145116.2123714-1-vfazio@xes-inc.com>
 References: <20241114145116.2123714-1-vfazio@xes-inc.com>
@@ -58,89 +58,78 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since `LineRequest._req` is typed to be `Optional` and because type
-checkers may not be able to infer that an object is not `None` from an
-earlier call (such as `_check_released`) it is necessary to inform type
-checkers of the state of the object to silence union-attr [0] errors.
+Remove `_check_line_name` in favor of a new function, `_line_to_offset`,
+that converts a line reference to an offset.
 
-Instead of littering the code with "# type: ignore" comments, use casts
-to inform type checkers that objects are not `None`.
+This new function helps narrow types and simplifies the iteration logic
+that is used to build objects to interface with `_ext.Request`.
 
-Using `assert` is another option, however this duplicates the logic in
-`_check_released` so is redundant at best and, at worst, is not a safe
-replacement as `assert` can be elided in optimized Python environments
-and these checks need to be runtime enforced.
-
-[0]: https://mypy.readthedocs.io/en/stable/error_code_list.html#check-that-attribute-exists-in-each-union-item-union-attr
 Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 ---
- bindings/python/gpiod/line_request.py | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ bindings/python/gpiod/line_request.py | 29 +++++++++++----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
 diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
-index f8bbf64..81f2517 100644
+index 81f2517..3f181c9 100644
 --- a/bindings/python/gpiod/line_request.py
 +++ b/bindings/python/gpiod/line_request.py
-@@ -3,7 +3,7 @@
- 
- from __future__ import annotations
- 
--from typing import TYPE_CHECKING, Optional, Union
-+from typing import TYPE_CHECKING, Optional, Union, cast
- 
- from . import _ext
- from ._internal import poll_fd
-@@ -78,7 +78,7 @@ class LineRequest:
-         not be used after a call to this method.
+@@ -94,14 +94,15 @@ class LineRequest:
          """
-         self._check_released()
--        self._req.release()
-+        cast(_ext.Request, self._req).release()
-         self._req = None
+         return self.get_values([line])[0]
  
-     def get_value(self, line: Union[int, str]) -> Value:
-@@ -128,7 +128,7 @@ class LineRequest:
+-    def _check_line_name(self, line: Union[int, str]) -> bool:
+-        if isinstance(line, str):
+-            if line not in self._name_map:
+-                raise ValueError("unknown line name: {}".format(line))
+-
+-            return True
+-
+-        return False
++    def _line_to_offset(self, line: Union[int, str]) -> int:
++        if isinstance(line, int):
++            return line
++        else:
++            _line: Union[int, None]
++            if (_line := self._name_map.get(line)) is None:
++                raise ValueError(f"unknown line name: {line}")
++            else:
++                return _line
+ 
+     def get_values(
+         self, lines: Optional[Iterable[Union[int, str]]] = None
+@@ -121,10 +122,7 @@ class LineRequest:
+ 
+         lines = lines or self._lines
+ 
+-        offsets = [
+-            self._name_map[line] if self._check_line_name(line) else line
+-            for line in lines
+-        ]
++        offsets = [self._line_to_offset(line) for line in lines]
  
          buf = [None] * len(lines)
  
--        self._req.get_values(offsets, buf)
-+        cast(_ext.Request, self._req).get_values(offsets, buf)
-         return buf
- 
-     def set_value(self, line: Union[int, str], value: Value) -> None:
-@@ -158,7 +158,7 @@ class LineRequest:
-             for line in values
-         }
- 
--        self._req.set_values(mapped)
-+        cast(_ext.Request, self._req).set_values(mapped)
- 
-     def reconfigure_lines(
-         self,
-@@ -193,7 +193,7 @@ class LineRequest:
-             settings = line_settings.get(offset) or LineSettings()
-             line_cfg.add_line_settings([offset], _line_settings_to_ext(settings))
- 
--        self._req.reconfigure_lines(line_cfg)
-+        cast(_ext.Request, self._req).reconfigure_lines(line_cfg)
- 
-     def wait_edge_events(
-         self, timeout: Optional[Union[timedelta, float]] = None
-@@ -227,7 +227,7 @@ class LineRequest:
+@@ -153,10 +151,7 @@ class LineRequest:
          """
          self._check_released()
  
--        return self._req.read_edge_events(max_events)
-+        return cast(_ext.Request, self._req).read_edge_events(max_events)
+-        mapped = {
+-            self._name_map[line] if self._check_line_name(line) else line: values[line]
+-            for line in values
+-        }
++        mapped = {self._line_to_offset(line): value for line, value in values.items()}
  
-     def __str__(self) -> str:
-         """
-@@ -279,4 +279,4 @@ class LineRequest:
-         File descriptor associated with this request.
-         """
-         self._check_released()
--        return self._req.fd
-+        return cast(_ext.Request, self._req).fd
+         cast(_ext.Request, self._req).set_values(mapped)
+ 
+@@ -186,7 +181,7 @@ class LineRequest:
+                 lines = [lines]
+ 
+             for line in lines:
+-                offset = self._name_map[line] if self._check_line_name(line) else line
++                offset = self._line_to_offset(line)
+                 line_settings[offset] = settings
+ 
+         for offset in self.offsets:
 -- 
 2.34.1
 
