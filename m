@@ -1,113 +1,116 @@
-Return-Path: <linux-gpio+bounces-13044-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13045-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C006C9CDDEB
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 12:59:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EAF99CDE43
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 13:30:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85F7D282D2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 11:59:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 468FD1F2279F
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 12:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65CA31B983E;
-	Fri, 15 Nov 2024 11:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC671B6D04;
+	Fri, 15 Nov 2024 12:30:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cZvkPU1F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="asciRo2P"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509D73BB22
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Nov 2024 11:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0A5CA5B;
+	Fri, 15 Nov 2024 12:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731671944; cv=none; b=tJ+E/hWVIO1Re+GArdyCf2LXmtCBt3OwHi0RKiGVc22Hx9WBnI3Z9ISsLEfbwt9F5cYrDsQ/s81bZwpgBZV1SYxg7P/bMjqfhF8zkK7O6xeAECOZxEsAMjLrezQMvMrjbO8osrYwtoRQgYezvk1LHMXed4mkvy8YYg96OFJCPj8=
+	t=1731673835; cv=none; b=Pkg+E9WepDWvMgQOyE4mjtJ9YiiVDBlhNeq8QPhyfVr4pPLYTcL0LqUatfUrIOKP19qVmh79L9xsIkSud3ZtmtDt7Eu27vfqr4MT1WEmH+k/6kQ3o7x5LORoaQU8b/mNBn6nolc1ajBk+jq4Y6zreQeqxgCO0bWtj34+cjt12pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731671944; c=relaxed/simple;
-	bh=HTGuyqghFMpQLRstslb57s6VUDSp1VzcCf57gtfUdOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y+VXOIXLgDOHX04UPo95YxKzrOZomzxnMP7wjwePumAeP0+ux3S6pZF9Yvw0ti+79ydb1Obsy2kMkstVGAZgdhEw94DqWPQEOMp6e19NvAPyqQz8PgkGmgFBX2sAsQP1N5asPzv9+c6SKdkqeTUzrqR9mb44s20C3AKsQ6veYKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cZvkPU1F; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ff550d37a6so17697171fa.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Nov 2024 03:59:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1731671940; x=1732276740; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EXwHEadxWmCoxLkoyLtprE1vuyARVAjxnpelz5IPf9Y=;
-        b=cZvkPU1FRN0JGdn1zTkNB5pY0cZE9x5uqvH+miAewaZ69n2gjpjzh4a8XifDO8ERIx
-         ADrmXOWyieSFa7Nr/13hRw1Ur1dfBuix1nYWNNLK22z6EqpoJvmcGNV7sp0ClfKb/WgL
-         AgYngDJvCD9nJWy9cLjS30W8+C0VpXDx6MOAjspW32zjmMa/RKwSs43UmV5ajGIK35jj
-         Z2Belk8hFVaf/z8AmnJQ8fdhh9p9jVi9npgKiZROteaM/zRxLQP6iU+Sy31M5tDjWsRy
-         Be0NNxdep34p8v96mn3dzZ6b/JLCDAucHRRF1wIO7eyNA3lWqoW/WzrELfyJbOE6Zgxa
-         VgiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731671940; x=1732276740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXwHEadxWmCoxLkoyLtprE1vuyARVAjxnpelz5IPf9Y=;
-        b=hax0T1oblyRcxg50tjBKO6w7583i5xGX4wSVqpZwJx7Def69KjGsgkQOJ3Ha7Z6pOS
-         O3O8vRcZKArqV5lponDYCO36k/00FEZuf8a9RA97DP1Om18PMhdg4FqlZOcJ3Z9Ny1tJ
-         JPhB+SWmpWMnp7UyPCmc4EeMbh7mw2j4oNU6JOe4rcNdz0tX8SliokKZMKCbktCOr1E2
-         cZvBWr0NigcwelWu42cgoUD5/q4ZcORQQEKbWpGia5K32w+jIoU7n78mzcTyqjj4T0mV
-         sThK4uZjX3vB/tsts4WMtNM1aqTpf41c8e5eSGv4fMBiwhKeka8AxIvbX7Mgcoe82JNl
-         6Tjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUg2e6eWnr6XpkSUUeafm21RWQG0av2wO57myFNREvKPF9LlbzbsApIdxkgwhF3PkWbJ2xKEwnWvsK6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ/rA6ZkP7Bvk1uDCTddQxh8s4eu2/A8tymCelAdq1lpFP9Pva
-	Li4CGy+MTkrbTf0jHQe9xXi+qW4Y8LxMj17iY56sQ8K+HYYjmHj+vVX8ZRWdKUYySlujqFhPbc4
-	nZXreOXetpCzChjPok8V/C9+PRUwxkDSIgL2OdQ==
-X-Google-Smtp-Source: AGHT+IF0nsR2k8u6MoTlNgkeSprRNolHD2YJ9vJ829LyOHGCWai/LvnLaLM3UhO2dd/h8Cvtta4ugz2CwMMNB/wzaxA=
-X-Received: by 2002:a05:651c:2212:b0:2ef:21b3:cdef with SMTP id
- 38308e7fff4ca-2ff609a6c1cmr15902051fa.25.1731671940255; Fri, 15 Nov 2024
- 03:59:00 -0800 (PST)
+	s=arc-20240116; t=1731673835; c=relaxed/simple;
+	bh=NaxNLBeCp7ye0quQ7CtXuUKXt6V/1rAQduCHa/H3SX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fd2lF7OeJAfQHp7eZn18RC3tLdI+5/42q/BPx52zLIryw9P+QpD7k0hJY1E/oxB9gz9SisDhWCHq43qWE9l/tqqcot0tF28vYfiey9o9rg+/jCXVm2wWbyXC9MqC6OBT4RTfXWOJsPXjzf8P5TU72sbUHKm2kKUF2uuWVAfwzls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=asciRo2P; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731673834; x=1763209834;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NaxNLBeCp7ye0quQ7CtXuUKXt6V/1rAQduCHa/H3SX4=;
+  b=asciRo2PTWyXwglXlDuzn8hoxubNaljUn2PJJ4qfIlsCR8uvPTAF5kAe
+   i2mSM641s2q3kxB4/E3EIRt6TrjzAms955P74BBkzBh9vIK6egNBT0q+t
+   NtFTRygGprO38U3jWjQc7l2e98aY5ezAFRFB/g6w7cg22cPXS69KAmkfs
+   u3HtlxXFAQf/CCLaIBoIXX2kQ5IWy5E5Sx+H2hb0fFnK01mEsmBzw+rNQ
+   X2S6fcJySJ4xhaecLsmiVuzSkQW9SKsDXS+rJ8iVjeDbMacmcGx42giGG
+   0IrgqihF6YlsJh3LGONJ22a9JubmM0rvOaePpol0UYHr8ovNnYWzmDzTO
+   g==;
+X-CSE-ConnectionGUID: e3Ts+XT7Sx6ps1Tdpv5p7A==
+X-CSE-MsgGUID: fnsMXwLRT7GXAfBuO00VNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11256"; a="43077365"
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="43077365"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 04:30:33 -0800
+X-CSE-ConnectionGUID: PJBs1wj9TQOp12NFmvbjlw==
+X-CSE-MsgGUID: gA5j0lUrS9+Fnv97A0XQGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,156,1728975600"; 
+   d="scan'208";a="126090615"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 15 Nov 2024 04:30:31 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3525F1AC; Fri, 15 Nov 2024 14:30:30 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mun Yew Tham <mun.yew.tham@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/1] gpio: altera: Add missed base and label initialisations
+Date: Fri, 15 Nov 2024 14:29:46 +0200
+Message-ID: <20241115123028.3904126-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241112201659.16785-1-surajsonawane0215@gmail.com>
- <ZzcWGJxqMJVYd4Tp@black.fi.intel.com> <f9daa71f-cba7-4086-a523-a2e6aa526ff3@stanley.mountain>
-In-Reply-To: <f9daa71f-cba7-4086-a523-a2e6aa526ff3@stanley.mountain>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 15 Nov 2024 12:58:48 +0100
-Message-ID: <CAMRc=MfuC8rfag-8vxFqJ=qsXzsTpoBfvP+xWS9+rBdj0H0epQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-exar: replace division condition with direct comparison
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Suraj Sonawane <surajsonawane0215@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 15, 2024 at 12:55=E2=80=AFPM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
->
-> Uh, I had to think back...  I had forgotten that I actually published tha=
-t
-> check.  I can unpublish it.
->
-> I wrote it based on a real issue, and then when I looked at the warnings =
-quite
-> a few places wrote code like "if (x / 4)" where they had intended to writ=
-e if
-> if ((x % 4) =3D=3D 0).  So it seemed like a good idea.
->
-> But in the two years since I published the warning, it has mostly been fa=
-lse
-> positives.
->
-> regards,
-> dan carpenter
->
+During conversion driver to modern APIs the base field initial value
+of the GPIO chip was moved from -1 to 0, which triggers a warning.
+Add missed base initialisation as it was in the original code.
 
-Ok, I dropped this patch from my queue. I typically trust smatch so I
-picked it up without giving it much thought.
+Also initialise the GPIO chip label correctly.
 
-Bart
+Fixes: 50dded8d9d62 ("gpio: altera: Drop legacy-of-mm-gpiochip.h header")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+Can be folded into the mentioned change, up to you and sorry for missing
+these in the first place.
+
+ drivers/gpio/gpio-altera.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
+index 039fef26546e..73e660c5e38a 100644
+--- a/drivers/gpio/gpio-altera.c
++++ b/drivers/gpio/gpio-altera.c
+@@ -261,6 +261,11 @@ static int altera_gpio_probe(struct platform_device *pdev)
+ 	altera_gc->gc.set		= altera_gpio_set;
+ 	altera_gc->gc.owner		= THIS_MODULE;
+ 	altera_gc->gc.parent		= &pdev->dev;
++	altera_gc->gc.base		= -1;
++
++	altera_gc->gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", dev_fwnode(dev));
++	if (!altera_gc->gc.label)
++		return -ENOMEM;
+ 
+ 	altera_gc->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(altera_gc->regs))
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
 
