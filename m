@@ -1,162 +1,207 @@
-Return-Path: <linux-gpio+bounces-13047-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13048-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CB49CDFDC
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 14:25:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C95689CEC32
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 16:14:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 293B3283F0E
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 13:25:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A9E41F28DA7
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 15:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ED7B1BDAB9;
-	Fri, 15 Nov 2024 13:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBF21D5AC6;
+	Fri, 15 Nov 2024 15:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2RVY6Yl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2OuknJs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005511B85EC;
-	Fri, 15 Nov 2024 13:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCF51D5AAE;
+	Fri, 15 Nov 2024 15:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731677149; cv=none; b=LIv2A5wQwgQSZbThuOBa6ibHdLalucaiu1STASTCU6xEQxDWwnq2u3h9rgHkgSZSwfr4Wv3Art7g57ZI6Qw0KeBJf5lbfTwDZlvgHgDqqpaBEDQG/Wt6HmaEmEldv0zp39hYceWXDGB7290agqttg2IIvTcbO56j7sK5IWIrpC4=
+	t=1731683590; cv=none; b=VaAVSBfssyajUPLPHdc3pA34C4ebIIPlUPp5F7sEoYIwGVtLMPHIt5nPmHX7VcjO2nRzUC+d9N6F6jYbx3z8v+bKJ/25qoZQnYL27nc8b09nbf/WvC4MfTQvDvlkijmuxqoSpq6NZox3ALyea4EW7216XJ2sIPAhYA5t9aQxu2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731677149; c=relaxed/simple;
-	bh=4B5oeUK6/jbemP4QwIO7GYzG5tkdJuJsHjYt3C78Gl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aejMVstkQgvOXtdKCd9ymCTbNanzr2RoLNhDySzLF9964VNSyIc+NzHjaCToeA04hBa/XIWY/1A6x3EMv/g6Xic0b41lKR0ObSSjgUKZG5Llj2oWw8ff4zy7KEN8Dvff+44FdN+gcZbVYMZ/JllsO9D//2pkaYnURoInN2JTOVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2RVY6Yl; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71e953f4e7cso1460572b3a.3;
-        Fri, 15 Nov 2024 05:25:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731677147; x=1732281947; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ucy62BZOJLWyZBpQLjqHTc1f1/F23x403Dd196TgvE4=;
-        b=H2RVY6YlIG+Q9n8gglAadGHvsiHfXkU+tL35n9BoPtQX2MjmNLZDXjjcr43lZrOnxS
-         IcWYTOCopuH3bZihDqZeSxahomz1VyATCTrul8S7zFQe2cd84WfYzHSjSDZVPk1zHv1x
-         kfnK0f1KYqs6rpkmX8yfgp/PBqKJ0smz74pBWI0xXU7KoN6ILvTB7oxeHT1EO4IZT+6U
-         oSwIiUrGwbAqhs9NwTfuM6MpVT/h/mm+ij0aayFn4a52fQTtDANwPfLpdoSSzRkdkBvN
-         QY9CnEOha65ry8SAiZLRmGtrm0cYWNxU1wMf9pevgR4WJQSbkK0XKU3+yWzASyrrBuuU
-         Ep4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731677147; x=1732281947;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ucy62BZOJLWyZBpQLjqHTc1f1/F23x403Dd196TgvE4=;
-        b=shtb0vEIHLSy58LOv+AY4mCGNbtdMkwiHZFl/g3PBeJyDarT0C9Z4xgBDj9vZY0Tgc
-         ODK43LwPR16fhIn2/EH1TVbI5N675ZwJnuqB6k5I1fyDWH3MEigteTydLXpGZPwpsceB
-         jGPZX4Br3in1AhWQwRjbH4aRanGAZ3yWqmTmjrGXtrRlv1sDMNqc2lajAep5bBKqMveJ
-         VpSEf6aZ95cLo/KgOBqxD3JfiCt0GhjTN5rLkVKxCPVEmxgl1h6/pQjIRF6tRoljbsKq
-         sPMY17oK53E5kMgAfWguIWA6+OvvF0EtKqRK/pyiIJhzc6EUVFatjvstdpEcHxRpVuJ0
-         hs9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUlHOFNm/3YZb5dtRnIq4O0ma1lhe0p5FRJ6sA1WDUQDaB8EXg4a8fvI3xzGOkAp85kvaj2uauRPI26@vger.kernel.org, AJvYcCV5YSpM5I/F4PXOz35aYgDREzaEj4GN4M6Mo7bMX7ujnHTG2/odzkhLe+05e1QYkAY8mptts1iIG9FgtDDl@vger.kernel.org
-X-Gm-Message-State: AOJu0YypDKwwM+Vc4wRcTg1oMzZLg8lBEqqvmXZYD8csk9nK6N0CWXR3
-	h+O0BfucWRQvNtYxiLEqWIR4Af+BXL5glup95pW2Wo9ZZEZb30pb
-X-Google-Smtp-Source: AGHT+IF0jlNXXc3zGvbQG4ypYJEla/PXxxiW6xj1VKhzYV4SFOwlaXUfIWAdDmA37lLspv8Us4pQMw==
-X-Received: by 2002:a05:6a00:853:b0:71e:66b:c7eb with SMTP id d2e1a72fcca58-72476cdc9f1mr3317158b3a.23.1731677147165;
-        Fri, 15 Nov 2024 05:25:47 -0800 (PST)
-Received: from ?IPV6:2409:40c0:48:969e:e221:9e2d:e416:1b41? ([2409:40c0:48:969e:e221:9e2d:e416:1b41])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7247711e39esm1314426b3a.77.2024.11.15.05.25.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Nov 2024 05:25:46 -0800 (PST)
-Message-ID: <090f78b1-88c9-44e5-959f-07b4f97cd1bc@gmail.com>
-Date: Fri, 15 Nov 2024 18:55:41 +0530
+	s=arc-20240116; t=1731683590; c=relaxed/simple;
+	bh=klAyE4yJ7Pn0JVsn2LEXwcXJbbb9kRKwa/irKLMf2T4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Qwqk4NfIK64+HAregbVHSzbJbjOkrXNQYffuR03R7VpFWbUGpUFb48wxHythcf2C9EyShCsGiE9Jajp9+3hFkl7QuNJyvrqZsk6z72/fRPoaXovaGJuH+yHwIDOYJxcYkXKQ1RsEJjuGTuV4Nql1twuRIbsrwuuznHEU8TDh4B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2OuknJs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711A0C4CECF;
+	Fri, 15 Nov 2024 15:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731683589;
+	bh=klAyE4yJ7Pn0JVsn2LEXwcXJbbb9kRKwa/irKLMf2T4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Y2OuknJsoQAQB5m7vthDedO97fOYrfqPfuhYnNLlKVzFW7tZk9IRd+A1mUc7AYKSJ
+	 PbyyduVPzN2oe+HqLk4I4d6Oe5V/AHzXht4DMRL0s99krwOsFnG7buZMdrloTcpeWj
+	 2P1u2t7iCC6o3us+6BQars4uiZo1ddxYYDq6KLslps0O26EgkkLwJ1PFNnUSLuHdT1
+	 H7jtP/DfTPZv0p+TEgJ/LISYJwjFrpD1TSPmFSu42OgVifnAhOGTlDIl9iqB4rqvgI
+	 taQSFHcUReld+K139G1fP8NQ/wovMoB1ZOLFOgXoSlRPM1xcGOjD7TnJrJrKu1vny9
+	 sOG8lk1AC/+Hw==
+Date: Fri, 15 Nov 2024 09:13:07 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: gpio-exar: replace division condition with direct
- comparison
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241112201659.16785-1-surajsonawane0215@gmail.com>
- <ZzcWGJxqMJVYd4Tp@black.fi.intel.com>
-Content-Language: en-US
-From: Suraj Sonawane <surajsonawane0215@gmail.com>
-In-Reply-To: <ZzcWGJxqMJVYd4Tp@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: iommu@lists.linux.dev, Zhang Rui <rui.zhang@intel.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, Will Deacon <will@kernel.org>, 
+ linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, devicetree@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Lukasz Luba <lukasz.luba@arm.com>, 
+ Joerg Roedel <joro@8bytes.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, Dang Huynh <danct12@riseup.net>, 
+ linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, 
+ linux-pm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+In-Reply-To: <20241113-msm8917-v6-0-c348fb599fef@mainlining.org>
+References: <20241113-msm8917-v6-0-c348fb599fef@mainlining.org>
+Message-Id: <173168321268.2749739.14402170098343790318.robh@kernel.org>
+Subject: Re: [PATCH v6 00/10] Add MSM8917/PM8937/Redmi 5A
 
-On 15/11/24 15:06, Andy Shevchenko wrote:
-> + Dan
+
+On Wed, 13 Nov 2024 16:11:41 +0100, Barnabás Czémán wrote:
+> This patch series add support for MSM8917 soc with PM8937 and
+> Xiaomi Redmi 5A (riva).
 > 
-> I have to comment on this change as it's a bit controversial.
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+> Changes in v6:
+> - msm8917:
+>   - Consolidate SDC pins, remove sdc2-cd-on/off pins.
+>   - Remove cluster-sleep-0 and cluster-sleep-1
+>   and rename cluster-sleep-2 to cluster-sleep-0.
+>   - Fix spi, i2c and related pinctrl namings.
+> - msm8917-xiaomi-riva: follow i2c name changes.
+> - Link to v5: https://lore.kernel.org/r/20241112-msm8917-v5-0-3ca34d33191b@mainlining.org
 > 
-> TL;DR: this patch is not more than a (harmless?) noise.
+> Changes in v5:
+> - msm8917:
+>   - Remove aliases.
+>   - Rename spi, i2c labels and pins.
+>   - Remove clock-frequency from timers
+>   - Remove unused mpss_mem region.
+>   - Use mboxes where it can be used, only smd-edge uses qcom,ipc.
+> - msm8917-xiaomi-riva: Follow i2c label changes.
+> - Link to v4: https://lore.kernel.org/r/20241109-msm8917-v4-0-8be9904792ab@mainlining.org
 > 
-> On Wed, Nov 13, 2024 at 01:46:59AM +0530, Suraj Sonawane wrote:
->> Fix an issue detected by the Smatch tool:
->>
->> drivers/gpio/gpio-exar.c:52 exar_offset_to_sel_addr() warn:
->> replace divide condition 'pin / 8' with 'pin >= 8'
->> drivers/gpio/gpio-exar.c:62 exar_offset_to_lvl_addr() warn:
->> replace divide condition 'pin / 8' with 'pin >= 8'
+> Changes in v4:
+> - msm8917 pinctrl: Fix gpio regexp in the schema.
+> - msm8937 tsens: Rename ops_msm8976 to ops_common and use it for msm8937.
+> - msm8917: fix address padding, naming and ordering, remove polling-delays.
+> - Remove applied patches from the series.
+> - Link to v3: https://lore.kernel.org/r/20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org
 > 
-> This message does not really explain why.
+> Changes in v3:
+> - msm8917-xiaomi-riva: Fix issues addressed by Konrad.
+> - msm8917: Fix node addresses, orders of some properties.
+> - pm8937: simplify vadc channels.
+> - msm8917 pinctrl: Fix schema issues addressed by Krzysztof.
+> - Remove applied tcsr patch from this series.
+> - Reword some commit title.
+> - Link to v2: https://lore.kernel.org/r/20241031-msm8917-v2-0-8a075faa89b1@mainlining.org
 > 
->> The division 'pin / 8' was used to check if the pin number is 8 or greater,
->> which can be confusing and less readable.
+> Changes in v2:
+> - Add msm8937 tsens support.
+> - Fix issues addressed by reviews.
+> - Link to v1: https://lore.kernel.org/r/20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org
 > 
-> It's inaccurate description. Everyone who is familiar with GPIO HW is
-> also familiar with line grouping in banks. Here is the clear statement
-> "get the bank number (where 8 lines per bank), and if it's 0 do this,
-> else do that". It might be in the future that (new version of) HW will
-> gain more banks and we would return to "division".
+> ---
+> Barnabás Czémán (7):
+>       dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+>       dt-bindings: thermal: tsens: Add MSM8937
+>       thermal/drivers/qcom/tsens-v1: Add support for MSM8937 tsens
+>       dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+>       dt-bindings: nvmem: Add compatible for MS8917
+>       dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+>       arm64: dts: qcom: Add Xiaomi Redmi 5A
 > 
->> Replacing it with 'pin >= 8' makes the code clearer by directly
->> comparing the pin number.
+> Dang Huynh (1):
+>       arm64: dts: qcom: Add PM8937 PMIC
 > 
-> I don't think this statement is fully true. See above.
+> Otto Pflüger (2):
+>       pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+>       arm64: dts: qcom: Add initial support for MSM8917
 > 
->> This also removes reliance on integer division,
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+>  .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+>  .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+>  .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  160 ++
+>  .../devicetree/bindings/thermal/qcom-tsens.yaml    |    1 +
+>  arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+>  arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  297 +++
+>  arch/arm64/boot/dts/qcom/msm8917.dtsi              | 1946 ++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/pm8937.dtsi               |  152 ++
+>  drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+>  drivers/pinctrl/qcom/Makefile                      |    1 +
+>  drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1620 ++++++++++++++++
+>  drivers/thermal/qcom/tsens-v1.c                    |   21 +-
+>  drivers/thermal/qcom/tsens.c                       |    3 +
+>  drivers/thermal/qcom/tsens.h                       |    2 +-
+>  15 files changed, 4211 insertions(+), 8 deletions(-)
+> ---
+> base-commit: 6d59cab07b8d74d0f0422b750038123334f6ecc2
+> change-id: 20241019-msm8917-17c3d0ff4a52
 > 
-> On top of that "division" here uses power-of-two divisor, which any
-> optimizing (and this code I think won't ever be built without
-> optimization turned on) compiler (I think from the very beginning of
-> the Linux kernel project) knows how to convert to right shifts on
-> the platforms that support that (and how many do not nowadays? 0?).
+> Best regards,
+> --
+> Barnabás Czémán <barnabas.czeman@mainlining.org>
 > 
-> Additionally in the cases when we have a / 8; a % 8 type of expressions
-> coupled together, the compiler actually may issue an integer division
-> assembly instructions on some ISAs where it gives two values in one
-> go. Replacing like the above might break that (if the compiler is old
-> or not clever enough).
-> 
->> which can be harder to understand
-> 
-> No, "division" by power-of-two numbers is very well understandble.
-> 
->> and may introduce subtle bugs in the future.
-> 
-> What bugs?
-> 
-> The bottom line is that: I recommend to work with smatch developers
-> to amend smatch instead.
-> 
-> P.S. I wouldn't like to see similar patches to other GPIO drivers,
-> especially those that use a / 8; a % 8 type of expressions together.
 > 
 
-I understand your points about the familiarity of line grouping in GPIO 
-hardware and the optimization behavior of compilers for power-of-two 
-division. I initially thought this could be a good fix as I have seen 
-similar changes before. Thank you for the feedback—I will keep this in 
-mind before submitting such patches in the future.
 
-Best regards,
-Suraj Sonawane
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/msm8917-xiaomi-riva.dtb' for 20241113-msm8917-v6-0-c348fb599fef@mainlining.org:
+
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: /soc@0/syscon@1937000: failed to match any schema with compatible: ['qcom,tcsr-msm8917', 'syscon']
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: pmic@0: gpio@c000:compatible:0: 'qcom,pm8937-gpio' is not one of ['qcom,pm2250-gpio', 'qcom,pm660-gpio', 'qcom,pm660l-gpio', 'qcom,pm6125-gpio', 'qcom,pm6150-gpio', 'qcom,pm6150l-gpio', 'qcom,pm6350-gpio', 'qcom,pm6450-gpio', 'qcom,pm7250b-gpio', 'qcom,pm7325-gpio', 'qcom,pm7550ba-gpio', 'qcom,pm8005-gpio', 'qcom,pm8018-gpio', 'qcom,pm8019-gpio', 'qcom,pm8038-gpio', 'qcom,pm8058-gpio', 'qcom,pm8150-gpio', 'qcom,pm8150b-gpio', 'qcom,pm8150l-gpio', 'qcom,pm8226-gpio', 'qcom,pm8350-gpio', 'qcom,pm8350b-gpio', 'qcom,pm8350c-gpio', 'qcom,pm8450-gpio', 'qcom,pm8550-gpio', 'qcom,pm8550b-gpio', 'qcom,pm8550ve-gpio', 'qcom,pm8550vs-gpio', 'qcom,pm8916-gpio', 'qcom,pm8917-gpio', 'qcom,pm8921-gpio', 'qcom,pm8941-gpio', 'qcom,pm8950-gpio', 'qcom,pm8953-gpio', 'qcom,pm8994-gpio', 'qcom,pm8998-gpio', 'qcom,pma8084-gpio', 'qcom,pmc8180-gpio', 'qcom,pmc8180c-gpio', 'qcom,pmc8380-gpio', 'qcom,pmd8028-gpio', 'qcom,pmi632-gpio', 'qcom,pmi8950-gpio', 'qc
+ om,pmi8994-gpio', 'qcom,pmi8998-gpio', 'qcom,pmih0108-gpio', 'qcom,pmk8350-gpio', 'qcom,pmk8550-gpio', 'qcom,pmm8155au-gpio', 'qcom,pmm8654au-gpio', 'qcom,pmp8074-gpio', 'qcom,pmr735a-gpio', 'qcom,pmr735b-gpio', 'qcom,pmr735d-gpio', 'qcom,pms405-gpio', 'qcom,pmx55-gpio', 'qcom,pmx65-gpio', 'qcom,pmx75-gpio', 'qcom,pmxr2230-gpio']
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: pmic@0: mpps@a000:compatible: 'oneOf' conditional failed, one must be fixed:
+	'qcom,pm8937-mpp' is not one of ['qcom,pm8019-mpp', 'qcom,pm8226-mpp', 'qcom,pm8841-mpp', 'qcom,pm8916-mpp', 'qcom,pm8941-mpp', 'qcom,pm8950-mpp', 'qcom,pmi8950-mpp', 'qcom,pm8994-mpp', 'qcom,pma8084-mpp', 'qcom,pmi8994-mpp']
+	'qcom,pm8937-mpp' is not one of ['qcom,pm8018-mpp', 'qcom,pm8038-mpp', 'qcom,pm8058-mpp', 'qcom,pm8821-mpp', 'qcom,pm8901-mpp', 'qcom,pm8917-mpp', 'qcom,pm8921-mpp']
+	'qcom,ssbi-mpp' was expected
+	from schema $id: http://devicetree.org/schemas/mfd/qcom,spmi-pmic.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: gpio@c000: compatible:0: 'qcom,pm8937-gpio' is not one of ['qcom,pm2250-gpio', 'qcom,pm660-gpio', 'qcom,pm660l-gpio', 'qcom,pm6125-gpio', 'qcom,pm6150-gpio', 'qcom,pm6150l-gpio', 'qcom,pm6350-gpio', 'qcom,pm6450-gpio', 'qcom,pm7250b-gpio', 'qcom,pm7325-gpio', 'qcom,pm7550ba-gpio', 'qcom,pm8005-gpio', 'qcom,pm8018-gpio', 'qcom,pm8019-gpio', 'qcom,pm8038-gpio', 'qcom,pm8058-gpio', 'qcom,pm8150-gpio', 'qcom,pm8150b-gpio', 'qcom,pm8150l-gpio', 'qcom,pm8226-gpio', 'qcom,pm8350-gpio', 'qcom,pm8350b-gpio', 'qcom,pm8350c-gpio', 'qcom,pm8450-gpio', 'qcom,pm8550-gpio', 'qcom,pm8550b-gpio', 'qcom,pm8550ve-gpio', 'qcom,pm8550vs-gpio', 'qcom,pm8916-gpio', 'qcom,pm8917-gpio', 'qcom,pm8921-gpio', 'qcom,pm8941-gpio', 'qcom,pm8950-gpio', 'qcom,pm8953-gpio', 'qcom,pm8994-gpio', 'qcom,pm8998-gpio', 'qcom,pma8084-gpio', 'qcom,pmc8180-gpio', 'qcom,pmc8180c-gpio', 'qcom,pmc8380-gpio', 'qcom,pmd8028-gpio', 'qcom,pmi632-gpio', 'qcom,pmi8950-gpio', 'qcom,pmi8
+ 994-gpio', 'qcom,pmi8998-gpio', 'qcom,pmih0108-gpio', 'qcom,pmk8350-gpio', 'qcom,pmk8550-gpio', 'qcom,pmm8155au-gpio', 'qcom,pmm8654au-gpio', 'qcom,pmp8074-gpio', 'qcom,pmr735a-gpio', 'qcom,pmr735b-gpio', 'qcom,pmr735d-gpio', 'qcom,pms405-gpio', 'qcom,pmx55-gpio', 'qcom,pmx65-gpio', 'qcom,pmx75-gpio', 'qcom,pmxr2230-gpio']
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-gpio.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: /soc@0/spmi@200f000/pmic@0/gpio@c000: failed to match any schema with compatible: ['qcom,pm8937-gpio', 'qcom,spmi-gpio']
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: mpps@a000: compatible: 'oneOf' conditional failed, one must be fixed:
+	'qcom,pm8937-mpp' is not one of ['qcom,pm8019-mpp', 'qcom,pm8226-mpp', 'qcom,pm8841-mpp', 'qcom,pm8916-mpp', 'qcom,pm8941-mpp', 'qcom,pm8950-mpp', 'qcom,pmi8950-mpp', 'qcom,pm8994-mpp', 'qcom,pma8084-mpp', 'qcom,pmi8994-mpp']
+	'qcom,pm8937-mpp' is not one of ['qcom,pm8018-mpp', 'qcom,pm8038-mpp', 'qcom,pm8058-mpp', 'qcom,pm8821-mpp', 'qcom,pm8901-mpp', 'qcom,pm8917-mpp', 'qcom,pm8921-mpp']
+	'qcom,ssbi-mpp' was expected
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,pmic-mpp.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: /soc@0/spmi@200f000/pmic@0/mpps@a000: failed to match any schema with compatible: ['qcom,pm8937-mpp', 'qcom,spmi-mpp']
+
+
+
+
+
 
