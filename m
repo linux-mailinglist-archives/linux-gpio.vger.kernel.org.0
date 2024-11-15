@@ -1,90 +1,113 @@
-Return-Path: <linux-gpio+bounces-13049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6525A9CF38B
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 19:04:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 497419CFAA2
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Nov 2024 00:00:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9624DB33083
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 17:09:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 832111F22B05
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Nov 2024 23:00:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133441D54D6;
-	Fri, 15 Nov 2024 17:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5091922DD;
+	Fri, 15 Nov 2024 23:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUkFj+1V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfNIsmwB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FC4136341;
-	Fri, 15 Nov 2024 17:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47223190471;
+	Fri, 15 Nov 2024 23:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731690565; cv=none; b=r0k5GIL1luI2H+uOXkgu5lU64Hr62GifrF0xpeNCG7AkNS5qyyrm9ppazRdw4fyvCWFtYGX3gQpL/Z7RWzqM0OVTT1V/WMjNLiHLYuUR3uYBVO8vflBgy9/7dkK3a5sWIDCal+3BspCoJJU8r09tdOrspg1UBpj2DJlZa7y7LIw=
+	t=1731711639; cv=none; b=OoKRSOWikPzNQwgFPM5bUN0XJj1zI3MvEYD+jWc0MYHX4nT0vIgQ9THTrouEM8OA9jud6mykTIYeayjhoFBGeFdImQESS5TzBLuqOD49EGztWU93RatYDzfTyLmwKPU/tiSG9ah6G0uPqGp9UE2OF8rHCTfwxN4N7wkZyx/O+uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731690565; c=relaxed/simple;
-	bh=Kat0vAa0R0WH/hqaed0tTlbgXevMzDUhnZLBXcBEO8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g7VW7DCSUc2CaZ+ZrhH6mQKTzZH5E2LDQTu3W0AvXq6J1AsjO/ZVLa0TkJcWkHAuy7dHD0IbItT96hGHLX/JacSbUyyVhY2M42dwGyQAbfUovNKvvYutokoboax7yXy4srid6oH9lF4wGC+G8+YTiPtg9bVn9WcPLrOty3lItEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUkFj+1V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2DDC4CECF;
-	Fri, 15 Nov 2024 17:09:24 +0000 (UTC)
+	s=arc-20240116; t=1731711639; c=relaxed/simple;
+	bh=QjYUCesSzmPUEfzbC9zPe2WGXqZbFeekhkm5jj0rv0Q=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=s0F/6Mjbg3gwEyBBsPUNHDttQYPmFVFqa/40JwnoiRmo3mBc/NB97/dp9OljD4DymY0yuqUDCxAovfACjL3lRn8RrS5/a0fTZsEf7b32pFydejkZg+jhPo0fNsLGl0BMD3X9ff0z1WbME1dr82yFfEv5w4+gFyMB7TeOodm608o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfNIsmwB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9D1C4CECF;
+	Fri, 15 Nov 2024 23:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731690565;
-	bh=Kat0vAa0R0WH/hqaed0tTlbgXevMzDUhnZLBXcBEO8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tUkFj+1V4H5JGTNQNeKE4bp0/9yLPX11JH7rDNUBd59qfbrY9qhxOwyU0GyclUsqU
-	 FNzzJimsDZSn+6yn/qxKa2ddEzagWoSkSqTvnx4WaW+t0LwO3Z4AaYik8wLx2n74q+
-	 NpNKkVtN8tEz3F/TZhEoJzS3hmGeIbtWCZRzOJsiNihxb6aTIaoc6/WupAaaibGRBk
-	 lNCBVlvVD/KMGu/LAEsVsIetmZWL3RPltmcGJAavsXyg5o0l4MXMzILTPAfq0o9q4o
-	 pRoRUNKAHH5MexxRl8sHW9L7Imb4cyyTOw8FVeKJbOreurjMpNy8usapuVmgXNCPCb
-	 OiU5TZf0qidPA==
-Date: Fri, 15 Nov 2024 11:09:23 -0600
-From: Rob Herring <robh@kernel.org>
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] dt-bindings: pinctrl: move gpio-cells and
- gpio-controller property
-Message-ID: <20241115170923.GA3356657-robh@kernel.org>
-References: <20241113-a4_pinctrl-v7-0-0546a20c1c22@amlogic.com>
- <20241113-a4_pinctrl-v7-1-0546a20c1c22@amlogic.com>
+	s=k20201202; t=1731711637;
+	bh=QjYUCesSzmPUEfzbC9zPe2WGXqZbFeekhkm5jj0rv0Q=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=LfNIsmwBaETXBKpVfELWkaIeOXpsYlX4NcQGhoVkzjv9fPfycLfJ4QTq+dZnZyGI4
+	 XfEdOZEf6pOERnUloDpfZFewiiojUBVeaYjk4JdD9hcSHcp5NfJEiO8efkka4cshSP
+	 dAQ0EDDNG3DYfF2XqRfrmhKCJkFTk/q0otAZDR7phnkZHU/yIeZXI3/jwR4/uq7uxG
+	 Xp03oVKuJYLxUYvFyUbcjDjRxvU0nMCm4KYUbxKeC8gxT/npCd3SFsDpAFq1Uo9qGJ
+	 c4vg4T8KHpqCm2b/fzR+iYTZOGsVlY6Ec0pQQAwav8TFqFdceK3Q/fVE0bKC5RAMWi
+	 7WptndJJWugjQ==
+Message-ID: <8366cb0ba95b8b7d8608657e977614aa.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113-a4_pinctrl-v7-1-0546a20c1c22@amlogic.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZzcxIYKcZ-z6ubrZ@apocalypse>
+References: <cover.1730123575.git.andrea.porta@suse.com> <914978925d34cfb5bee10fe92603f98763af48b0.1730123575.git.andrea.porta@suse.com> <cxwzmlzafgdu2uarcx7mdv4p32zig7efatcg4dzmctho6mvykl@dgwvf3ltcjmo> <ZyNK0RxJKdNCV11N@apocalypse> <ZzcxIYKcZ-z6ubrZ@apocalypse>
+Subject: Re: [PATCH v3 01/12] dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vge
+ r.kernel.org, linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
+To: Andrea della Porta <andrea.porta@suse.com>
+Date: Fri, 15 Nov 2024 15:00:35 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-On Wed, Nov 13, 2024 at 05:37:28PM +0800, Xianwei Zhao wrote:
-> Move #gpio-cells and gpio-controller properties from common yaml file
-> to lower-level yaml files.
-> 
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->  .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml        | 5 +++++
->  .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml    | 5 -----
->  .../bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml           | 5 +++++
->  .../bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml         | 5 +++++
->  .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml    | 5 +++++
->  .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml     | 5 +++++
->  6 files changed, 25 insertions(+), 5 deletions(-)
+Quoting Andrea della Porta (2024-11-15 03:31:45)
+> On 10:16 Thu 31 Oct     , Andrea della Porta wrote:
+> > On 08:23 Tue 29 Oct     , Krzysztof Kozlowski wrote:
+> > > > +  '#clock-cells':
+> > > > +    description:
+> > > > +      The index in the assigned-clocks is mapped to the output clo=
+ck as per
+> > > > +      definitions in include/dt-bindings/clock/raspberrypi,rp1-clo=
+cks.h.
+> > >=20
+> > > You still describe how current driver matches assigned-clocks to your
+> > > output clocks. That's not the property of clock-cells and that's not =
+how
+> > > assigned-clocks work.
+> >=20
+> > This description is taken by another upstream binding, please see
+> > Documentation/devicetree/bindings/clock/renesas,5p35023.yaml
+> >=20
+> > Its purpose is to let the user know how clock-cell number specified
+> > in assigned-clocks is mapped to the clock provided by this generator.
+> > Since some of these clocks are shared among peripherals, their frequency
+> > cannot be set by consumers, so it's the provider itself (i.e. the clock
+> > device described with this binding) that should take care of them.
+> > The renesas example has assigned-clocks specified though, please see be=
+low.
+> >=20
+> > >=20
+> > > There are no assigned clocks in your DTS, so this is really irrelevant
+> > > (or not correct, choose).
+> >=20
+> > In the first revision of this patchset (please see [1] and following me=
+ssages)
+> > I had the assigned-clocks setup in the example while trying to explain =
+their
+> > purpose, but Conor said those didn't seem to be relevant, hence I dropp=
+ed them.
+> > Maybe I had to be more incisive on that.
+> > So, I'd be inclined to retain the description as it is and reintroduce =
+some
+> > assigned-clocks in the example as in the renesas one, would it be ok fo=
+r you?
+>=20
+> Since I'm on the verge of producing a new patchset revision, may I kindly=
+ ask
+> some comments on this? Is it ok for you?
+>=20
 
-Please don't send new versions when the prior version comments are not 
-resolved.
-
-Rob
+Everyone knows how #clock-cells works. It shouldn't need a description
+about how it works. It should just point at the header file with the
+numbers if anything.
 
