@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-13085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F65A9D1765
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2024 18:50:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12F239D19BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2024 21:41:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C05452833FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2024 17:50:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9DA5CB222AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Nov 2024 20:41:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534EA1C07EC;
-	Mon, 18 Nov 2024 17:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 158931E5732;
+	Mon, 18 Nov 2024 20:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="CvgZ8LmO"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Z87tQCm2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9813E8AE;
-	Mon, 18 Nov 2024 17:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9D13E8AE;
+	Mon, 18 Nov 2024 20:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731952195; cv=none; b=BCtvsNXIOwEoWVZOShOFW1tLmFqaXz1Guc+3I6vSo6tmhX+eXRIrz7Ls0pXiUt8WApqYyWNKIMYW1qXkgMcs91zLQQlclfdrofv/liLxutdl8wIyEilWS6xf81UJYAgBCiBMB7LZCxq/Eq5sKhEM/lh8064QKHO8D8is5WMKcP0=
+	t=1731962471; cv=none; b=uYorSw6MeyYaCTbV0YqW6cKW96fAF4/ffuqvgZvWtyxBXA9ywtFD+OC9kSiCLfohqVfmGjYSalNoO5op+GWQCB9BNjqsY0KD0ASqqoD1bwTYnVUuFcD7cnKxi0qGZok1aeO4NqxalO5YOUfz6SLFH9hrQCh/GzFkafuVcVTm2tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731952195; c=relaxed/simple;
-	bh=s8Mcf03i/aNKLyu54XXwTZKMYXn4YbUNSZMT5ZgYmAs=;
+	s=arc-20240116; t=1731962471; c=relaxed/simple;
+	bh=LnYa092RE7BvV3uytN7fiQQixEXb/DI7ReymMTLp7xc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fbvadszj6dUDtOLqMYVWhCrhPlf75opspvR0ntgMufh/DluqWN9V6ASS9C/VO3pDjWGlQQ2KjkS2iafAnK54th3WPURfBbJcoVGMCWws0NQonR2/Ow7axy7M8n7ynHVsG1nhLQUNT2N8Nu9qXh3TrHQfuwLZ694/L9dstgDMDuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=CvgZ8LmO; arc=none smtp.client-ip=80.12.242.28
+	 In-Reply-To:Content-Type; b=CVXCg5sOGwOPNP0rpXhRBQVHHtibzy+P4h8Irlj8rDwcYPPEETKFtv38OdY6c858uZ8ogHamrXBqOnhjKAtPNj/fM+wYZ6c9m+XI7Q+i6Srtt0EdEXPIwU+05+QexQ5GJdrwFvDBQO0PYtm11Ps8YYEKlebcWkRvcrFKbmLZUSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Z87tQCm2; arc=none smtp.client-ip=80.12.242.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Received: from [192.168.1.37] ([90.11.132.44])
 	by smtp.orange.fr with ESMTPA
-	id D5sftAobEYfukD5sftuvIF; Mon, 18 Nov 2024 18:49:49 +0100
+	id D8YLtJy3aW6lUD8YLtdjd8; Mon, 18 Nov 2024 21:41:05 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1731952189;
-	bh=0lmL6Ml3/ySb/jedLCT0Yz+EsgzLwGRL3HflcFIhF8o=;
+	s=t20230301; t=1731962465;
+	bh=2taa0UsiDaOJXoR9CITESohKEOrxoakSVH3g+gRS8Vs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=CvgZ8LmOwyswLBBlxp/vw23cwYCgi859mdP/lWv8q9+7lxWq76eKJ/6xVrMiLNWhS
-	 bDbsQAejkfjoKCbNqFu0zVKY0xH00v9QELTnn09AN1/OFDcJuN32GVZXsurra4am9u
-	 aj4QbW5uSpSjGLZJJm+ZBlVNy/ogXPNDXK0ge2iJa92vEY5vbTQ3sMXnXL/AY3VaQr
-	 PJRxLEAw3avSTxhQ5KF5si8XiwwOoao523j030lW3q7AOXZzQvdzOwShCDk82dzL+s
-	 f/Yph6pW+azXI0snt2CAWV6s5HQ1wXMvj+CdS1Z3dqtxIkUvgbyHpws92sJGQx+XmT
-	 6/XTmwg8cF9hg==
+	b=Z87tQCm2pAyVE5hS3osvEjqtFlDYtFmWWvZMd8pDyCk0/4P753RBg0TM4yBfGfiKb
+	 IYDXx/GSbiYWXZF0D0xAJ7eHfHdv11FkvtklAenfc2M0LZ+p8r8XIs0vg4kpqqUm9b
+	 zIwBSGzZ/0n7Niwb3Jk5rRTRpXOJYQlyLX0bxxtev2I+Fq9GmUIQ6biRxY3OMmpsze
+	 N5R5VlrsO9hxVoPPewrR+jhgO6l9nCNx6H+ZfmsCeJ7SxqqO4TvL/xGGcht0itQmO4
+	 JOvepPKaQhRPjZxpGyVIKx7ZGVZ2cksnFSj+aIwwFauyLqBsiKPBroFSL9dN3UM3u3
+	 Lu+A4FwUcKT+g==
 X-ME-Helo: [192.168.1.37]
 X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 18 Nov 2024 18:49:49 +0100
+X-ME-Date: Mon, 18 Nov 2024 21:41:05 +0100
 X-ME-IP: 90.11.132.44
-Message-ID: <52fb32e9-11f4-48a7-8042-0e09f26569d3@wanadoo.fr>
-Date: Mon, 18 Nov 2024 18:49:44 +0100
+Message-ID: <c8358dc9-24e0-40f9-b559-18cf7b93f5c3@wanadoo.fr>
+Date: Mon, 18 Nov 2024 21:40:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,15 +99,18 @@ Le 18/11/2024 à 10:40, André Draszik a écrit :
 > in same file. It should likely call gpiochip_unlock_as_irq() if clk_enable()
 > failed.
 
-Agreed.
+Also wondering if it is needed in exynos_irq_release_resources() if 
+clk_enable() fails and we early return.
 
-> 
-> Care to fix that as well?
+I don't know how these callbacks are used and if we could dead-lock in 
+such a situation.
 
-NP, I'll send a patch.
+What do you think?
 
 CJ
 
+> 
+> Care to fix that as well?
 > 
 > That said,
 > 
