@@ -1,109 +1,156 @@
-Return-Path: <linux-gpio+bounces-13107-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13108-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DE029D27CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2024 15:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AAB2A9D2866
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2024 15:43:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A99FBB261B8
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2024 14:03:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2643B23A6B
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Nov 2024 14:41:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C52E31CBEBF;
-	Tue, 19 Nov 2024 14:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDBA1CDFDA;
+	Tue, 19 Nov 2024 14:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NAfgvx26"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qajm3mYq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEFA1798C
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2024 14:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B171CBEAD
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2024 14:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732025003; cv=none; b=tbb5mp/QaHUy+DC6eH60xRkMX3D7OI2GOysTvF3p20BOJubBn2pC9+cOj5lK/G3qli/qcjEVQgSRW50WN6/8q8JzhX3MB4HhBoCZD7qVcqIg6DpjkCBPKloUV8psnMcFQSf4+Ocnjz4JnoDxKUVbzm5EuDFCuJo7msiPxEiLCA4=
+	t=1732027296; cv=none; b=jZQRmqvx1EnoSJtspXtVtRm5kP/50SjgPGOzfnV+tq3A5lOTKZiFejkpd2YlXwipqr5aTFrXnCA+aTfS52YXMWAyRu7295Jop561u//56VI7KQeWa0+dr20s+Y8+V9QGHhu1aTBG7W8zlAAuk+ZZNLiG118lXBryLoGzN4aRyfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732025003; c=relaxed/simple;
-	bh=XDan2pMdxm1JcsYRxdwJ29E80Ni8T4tMTAZHfhiJ9es=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NbDENV7iROSb1xIUBBXRGnFKoi0gb/iFuEG/pluo/PRJSHYdKX7duTGnLoxU5k2NonNtYeWCYK1LIrIkl8qiMdfSsg9XeAs/uiZQc8fJw2OlN8PH0/p1hGPkgc4SE6/VGOWM+rZ0NWsRr5+TEmx03muuAi0Xrfy0bM07EXswXIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NAfgvx26; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1732027296; c=relaxed/simple;
+	bh=/5vOAD8bXrmLuHSH6AUkzn54OnZYnQPDPZjq0snv5tA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p8VXXZlyaYKfp6mIE/j0TGCpbA4MwQRTNOMIeDKGEjvV40TI89hFhDVUex3EMGVqCTDXbsqV8+c+I7bq92Yl4E+Cw206mbPrT53sRC2ZHjFgxhCLb4BVpWl4MTRpYfRITTsv7EzAtwXOrOzVmhAocBTa1F1rY5YWbcCUCjPfwYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qajm3mYq; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539d9fffea1so929340e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2024 06:03:21 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4316a44d1bbso37075565e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2024 06:41:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732025000; x=1732629800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732027292; x=1732632092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XDan2pMdxm1JcsYRxdwJ29E80Ni8T4tMTAZHfhiJ9es=;
-        b=NAfgvx26V1LqcqO3kaexaBpNVrYUjIy/ZUmtMPndWv+DzGusU3b06aT1d0rTzeV4Sa
-         1ql3O7yTNCjnWbsWcInSpgE7GzkVF3tBNMXyuAPmyPoFnl+wLSY8B6A9SptHOwBJQft/
-         jJ2E1NEE5r4rbE5fGFvICxsGZ1+Ppt0hNm8fZpIP0buY7ZZIR3H+8pN/eaCuw56cEFTG
-         dOcLc4RRnMdKoBcojkQczwRZAyGuCG5xhWodpu4IGZzK7SpAezzZx4+9gt6CCN//UN+w
-         6aioTI30TXLszCw++5eCQHrhcDMxnLKD1+6pDjjCI1AcmoGCsoVmxG463aPAaE6n8Yfv
-         RHnw==
+        bh=wbscTTS8AhC8YbweTdT4va4OGiY/fz4HckMpxdKJ9Ck=;
+        b=qajm3mYqkeyoS34EF3Q6UQKP6H+iOkCUKOSkr+vZc0vcw0TtEfQLeCaoAG3SnC5HYe
+         CYEG3PPpmuPMerdh4RUICr2eDS8xvpA7FCnTxsqlLuIF8uQolnX9bCbfHwFD0NwSjglU
+         9sZQxWwbbBfLe3eR+UB+/K5LGJLXFqqG698Hucksv7uQ7BoeVkIfrUYGHM3Kic26/boe
+         xwos9QzXmrvk+oWRBLMKEZvK969WbkH52UVFtTqk8/kXHroL+LNpqvcoJCF/h0SqlEmV
+         CmEEGJqJ16W63WwGxhSv8Kakj4YZiTqEWCsAs2eqgyjk+M5/AEKSQ8Qhvz+fqB/1tSfx
+         UYwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732025000; x=1732629800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1732027292; x=1732632092;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XDan2pMdxm1JcsYRxdwJ29E80Ni8T4tMTAZHfhiJ9es=;
-        b=WoG4uejPA7qfacgSXHYLmsVkOMYUdaRYPQZ+KLfnzqOtXnmUEt7cfi27D4HzpEilxg
-         louoPKJvuhQv82IIaGb9G9dJTMAqIuSoE/za/PjkjUApWtK6fG7URV1HUblzg9VlyXuK
-         ok+78OrGP5sfhG0YgcJ7SMjROE9n5UUw97clocWikfiFJCdzFT+FwIWtvLmHhNavJJ/3
-         WTiLBZSpxMoqf6nymj5JFjOuVcqyRCqIYWZPv9ym4/+orqdAMRQ1PNh6xwxlGhUgBU2c
-         FZdxaHQ8AFRdjkIB1qj2HO6a1Jwtw/AEuYL2P/euBex6m/eurWqZyEnMrSoojCFXpA7o
-         xU3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3WzSj38oBLG/Zj/11lmNLmaNVMgPmhyVOjoOPy7LVTLqzXS88lbidjiQbFMuYk5UGK6G5w0VfWus4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFpZed1SEbeGRcQPPJGZpKr3u+Gg+YzRn53qneq+S6Krk+g0ZA
-	FJ0WWhGZSdpzsEtr9v9f8lND61ilvRQ47ZYH6SvEDAFZLLTi8XqAHD8YDGkzB2gu45Doo54KNms
-	7IzT+5TQkpFx5qpOtsUkifWsw5ySgY66M1k9Wo1DuFo4I+dSt
-X-Google-Smtp-Source: AGHT+IG5wCW2DZ+DJlZVZZu1aIKijqV5FP5BC+Ce+pUzMX6/lpkeXtmFptFPAUm6W4+BNgUmIbntR4NIAeRtZOzdcYo=
-X-Received: by 2002:a05:6512:2213:b0:53d:a860:d13 with SMTP id
- 2adb3069b0e04-53dab257c62mr7058172e87.0.1732024999667; Tue, 19 Nov 2024
- 06:03:19 -0800 (PST)
+        bh=wbscTTS8AhC8YbweTdT4va4OGiY/fz4HckMpxdKJ9Ck=;
+        b=HTzgaA1xanFeP+0zf3Gj7Iu8MNn1wmZUNGRFoACP6rJ0y0k6jkPeblOvrC+T5TQghm
+         vUB+kWU0tHZwuKGOct2PKLkqGNGIU8N9dyev4aHZ04M1O1GaZ4OuhL2p0acTzVFdWbhG
+         lxw7/DPqT2RTKGllvH7BwEc94BLHrZ0YHYKJy5yqauvjs4MFYNdEDuvtifva26NvlUJH
+         hN8Xa7lW8KhacLQMDxpFaorf/fiuPZtQOK5eXBJNOq9dRl/XskbvQz1Tw+kSXBqcswct
+         LCHWhJsYQgVpM5aDzO4AiqUWZflJSpMUDo6H9wEcRdh+E9ledXJM/T2u6rToe0+DWN4f
+         rFWw==
+X-Gm-Message-State: AOJu0YyBcfbL05TUzrsvZaP7Kp0I4abNzUOJdJu+zFbcX9P0LAh1dj8r
+	aZDmh53DCeWRa6r0PR6ROy5u03hNpyxJ7k/aIlHggFs6J+sjIRs1N7tYa32bVMUeJkf2dtGGqxZ
+	r
+X-Google-Smtp-Source: AGHT+IHdAVH+GyRnnH2zclY+A8wawk9Mwiz7twyoK4CuI+5smSTql9iKBmQt6H1fXw2mLZyAmSumrA==
+X-Received: by 2002:a05:600c:3507:b0:431:5aea:964 with SMTP id 5b1f17b1804b1-432df74dd09mr142076155e9.19.1732027292013;
+        Tue, 19 Nov 2024 06:41:32 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ced5:6c04:b538:be0e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab78783sm194421055e9.12.2024.11.19.06.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2024 06:41:31 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Vincent Fazio <vfazio@xes-inc.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	vfazio@gmail.com
+Subject: Re: [libgpiod][PATCH v2 00/23] bindings: python: conform to mypy and ruff linter recommendations
+Date: Tue, 19 Nov 2024 15:41:30 +0100
+Message-ID: <173202728741.118621.15314684745762899478.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241114145116.2123714-1-vfazio@xes-inc.com>
+References: <20241114145116.2123714-1-vfazio@xes-inc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241114145116.2123714-1-vfazio@xes-inc.com> <CAMRc=Me9qD-VRr-JSXfFkE2O4xUhoKBSo5ug-nyw0b4wkQ7WrQ@mail.gmail.com>
- <CAOrEah5PHxr6HR2KBpV3BT1xM_eSdZWmeyUKA-bGswmk0G=JHg@mail.gmail.com>
-In-Reply-To: <CAOrEah5PHxr6HR2KBpV3BT1xM_eSdZWmeyUKA-bGswmk0G=JHg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 19 Nov 2024 15:03:08 +0100
-Message-ID: <CAMRc=Mf25FKYz7ARi8wPfXa=4oD7XuAAXieG0sWJjg5qJv6mVA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 00/23] bindings: python: conform to mypy and
- ruff linter recommendations
-To: Vincent Fazio <vfazio@gmail.com>
-Cc: Vincent Fazio <vfazio@xes-inc.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 19, 2024 at 2:57=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wr=
-ote:
->
-> On Tue, Nov 19, 2024 at 7:51=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> >
-> > Thanks for your work, this really improves the bindings.
->
-> My pleasure!
->
-> >
-> > On a related note: we still have some uses of deprecated distutils in
-> > the code. Do you know how we should replace LooseVersion to not use it
-> > anymore?
-> >
->
-> I can look into this. Should we create an issue in the GH repo to track t=
-his?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Sure! I will apply this series shortly.
 
-Bart
+On Thu, 14 Nov 2024 08:50:53 -0600, Vincent Fazio wrote:
+> This patch series employs mypy [0] and ruff [1] to ensure the gpiod
+> library has correctly typed public interfaces, is performing proper type
+> checking internally, is consistently formatted in a standard code style
+> that targets Python 3.9 syntax, and passes a subset of linting checks.
+> 
+> Patches 1 and 2 remove unused imports, sort and guard the remainder, and
+> ensure the publicly usable classes are available from the gpiod module.
+> 
+> [...]
+
+Applied, thanks!
+
+[01/23] bindings: python: clean up imports and exports
+        commit: 7fde8a47f5845b20ef4774416b28bf063848dc0e
+[02/23] bindings: python: make internal a private submodule
+        commit: b306ce694ab1acf75502ae1cedf8ab6d8d9e7647
+[03/23] bindings: python: loosen type requirements in public API
+        commit: 8f62e6c45355588621ca5916cfab6d1d8e787a77
+[04/23] bindings: python: explicitly type gpiod.request_lines
+        commit: f5c70ec993497d92e62e0660f12d2bd22deb4a7b
+[05/23] bindings: python: add type stub for the _ext module
+        commit: 30e23df2ef9ffcb8f488383bcfceb03e07c31db3
+[06/23] bindings: python: add missing method type hints
+        commit: 498ec6df34cd103a532e33fa1a7edf47339f88de
+[07/23] bindings: python: add type hint for the sec variable in poll_fd
+        commit: 2a2904082fd1bbbf5863dccd4184873c5826ae72
+[08/23] bindings: python: add type hints for Chip's internal members
+        commit: 1cc8bedab60e9c72c215076424dceba0ecba5ff4
+[09/23] bindings: python: fix Chip union-attr type errors
+        commit: 72e51c8a94f508c472c855331ba680bb1d0b95e2
+[10/23] bindings: python: add type hints for LineRequest's internal members
+        commit: 01efd10160bfcf09566992522aa70319241d3db7
+[11/23] bindings: python: fix LineRequest union-attr type errors
+        commit: fcb520f9fe5cc6e550646daee224c6e3d0c3bfb6
+[12/23] bindings: python: convert lines to offsets in LineRequest
+        commit: fcddb71b45e7bf7dde3eb0c6849acba7bc609462
+[13/23] bindings: python: cast return value of LineRequest.get_values
+        commit: f3444341f4964b47f8e72f4ef697fad535d9dcc6
+[14/23] bindings: python: selectively use f-strings
+        commit: 42308c2df11a6ec30661ba7d90a8afe368bb378b
+[15/23] bindings: python: tests: fix duplicate test name
+        commit: 0f40c01a09c2aec7319fedf82eb171a37663912b
+[16/23] bindings: python: tests: clean up imports and exports
+        commit: 171577eb41f916b77772346c6fe12defea626793
+[17/23] bindings: python: tests: make EventType private to prevent export
+        commit: 66c12b72ebf21170eff96f2f3f3a864b41237c65
+[18/23] bindings: python: tests: add type stubs for external modules
+        commit: 72f2eede085905d2f55d6a1aabddcebb21ca264c
+[19/23] bindings: python: tests: add missing method type hints
+        commit: d9313c18a06432ec10732b94885f915bdbc722bf
+[20/23] bindings: python: tests: add type hints to internal members
+        commit: f04f58ae1d548542134a31f48a1285b59a2915fc
+[21/23] bindings: python: tests: ignore purposeful type errors
+        commit: 632ea4df4b3ec9c3721623b150c5f6964447db54
+[22/23] bindings: python: tests: selectively use f-strings
+        commit: 3bb5368ba2a399b975ea552b2ea86cf5079739fa
+[23/23] bindings: python: configure and document dev dependencies
+        commit: 0505dc36435b6d87523f530192d6025fc94222f3
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
