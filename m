@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-13145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13147-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88D689D363A
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 10:01:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63CEA9D3661
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 10:06:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 428251F21AC9
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 09:01:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB3C1B23618
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 09:06:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7B0D188721;
-	Wed, 20 Nov 2024 09:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B736A18A6AE;
+	Wed, 20 Nov 2024 09:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYmZIND2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shP2YrDa"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63166171092;
-	Wed, 20 Nov 2024 09:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59092136A;
+	Wed, 20 Nov 2024 09:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732093306; cv=none; b=FOdHHqv4Hhk+O0NWxxNkrefcuJY+yHyldsqNXO+fRXri1jHMJynLHDPi3eO8Bbj5Lwb59H5KTTuHWU3HdS8pbLz4GYgqpYMOaGLBsZDSzNzuLxVTpkCMETE0Vjoeddzf4d7/6fBPuXngWQQqx2fCQCY/ItWkj/5j/3l+gXdI4EA=
+	t=1732093553; cv=none; b=PBqaiMu75tAntC8jzyz8k19Tkmhhuzynk9J6emIOBbguH7IFW4rPc8qqF6PvmiSUEEjE/1JubVoryimo1NP8jyC0kfG6623VI1D6kLuYkQz6v0cLergIT9140kUxHws8cESmKROBxalwAFVAfAvIybX0ql6jAYC1yXDlbeEQJdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732093306; c=relaxed/simple;
-	bh=vQmb3ozX2WozvazAM/jZQXfMfq96gf5MaCAgcdpd67I=;
+	s=arc-20240116; t=1732093553; c=relaxed/simple;
+	bh=WO8hLANsPSWfDRTdCVZPGdNfpBAAEwfxq1h8xg7OMPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOX6iJOpYsrqgnHiuKxREVbdfFj3ZU5T4FAz3HVMrvmGfSZWyPbWMHoW99QNwwtnd2MyIa3bqvH+hmbf7u0qVaWvwDOn/1Qc2ArXsHLhpDEW373DWUdRBH8lSarckEp+l5jJKlWGWV9/3oIMcCmXGVtEMvE36eCi1SrfBVjbl8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYmZIND2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2056EC4CECD;
-	Wed, 20 Nov 2024 09:01:44 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Farla51M3t9mAGY5m4I8UneMrxyQzJktAmTg0hRduJAnzH6ldnQCz8n9cojU2KIKzZ0VhjUx4s7uOQttw0va1qBJ4ejld1U9I8EtXw9YLZ4SySZ049XLkXIXlVCeG3eO508/F7S9sHphMpmm9k+pecBRznNa2iTh/srQzSQb4fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shP2YrDa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09AF6C4CECD;
+	Wed, 20 Nov 2024 09:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732093306;
-	bh=vQmb3ozX2WozvazAM/jZQXfMfq96gf5MaCAgcdpd67I=;
+	s=k20201202; t=1732093552;
+	bh=WO8hLANsPSWfDRTdCVZPGdNfpBAAEwfxq1h8xg7OMPU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bYmZIND2yOy1iFWp44uBlwJOLVf2cM+qLsT5Knw64J0vnTm1tdn4jUbjLVg5PpuEH
-	 Z+xFcQk6f0GW5SkJD8wGG2Bs6wOqKjfmKc1yIe6ksRpt+0k7NGZsTe/1zBDhcw+/G5
-	 q4ihjk/S58QajLWEEsCakj+NzPMWMk//UIdmaWAghRS3oqEbIPAxfAWzqW1qjkKcGR
-	 pPqou6gVBDdbJ0l5V8r39OY66vzyKVS+Bi/txfDim9GHMllrmc0zN39j/jFDSh8usX
-	 WV2uLixBcLVFgrN16s+U/hZnmEHpgjbzYrQCIretzIJTVI7c7renQf2RYltj5K72lZ
-	 NeF8f5Z5ohiKw==
-Date: Wed, 20 Nov 2024 10:01:42 +0100
+	b=shP2YrDa5nyalGUXibhQWcwYsUUNXbIj4uyAddSvqI5tmNh5dCNMhtiD/aGVjDFHU
+	 YM/VgyV1Gh3MJKOWEyXgKw+p/xPIpDctrAEO4ZxmR0XSLmX40tWuhDV4Y6jRFOr95M
+	 TZ2yas7y5h04TMGAdjLnxRGHPtKIncbiezxSDI/AuFiLPLhdTK0Bh0Lvfxo+RWTiaY
+	 DUajAqUNQtIvsjTlwVKFxmVlGyE43h8D6FSWbUQGhzQqIkldyPQR1/o6Tpds1Ay3XW
+	 5LsRiDQ4PWxBmfJ/A/44Ft/GF9ZCOoMwm58G2wEQtfTMuhIV1SxeVIz+cDvJc38m3I
+	 vVH/iGeUNsztw==
+Date: Wed, 20 Nov 2024 10:05:49 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Ryan.Wanner@microchip.com
 Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
@@ -51,11 +51,10 @@ Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH 09/15] dt-bindings: clock: at91: Allow MCKs to be
- exported and referenced in DT
-Message-ID: <cxcurxzeiygafcmrieqvsmt6f6svplzya2qxtltgnbj3t7s3av@xdpnuf5eohlu>
+Subject: Re: [PATCH 00/15] Add support for SAMA7D65
+Message-ID: <qfdr5ef6dc4v46x5bhuz4smyxfwreudmaou557s6be6ipejbyv@g62lm3syt2rf>
 References: <cover.1732030972.git.Ryan.Wanner@microchip.com>
- <726533dbd5663e95b768bd19d2d544a197e5781d.1732030972.git.Ryan.Wanner@microchip.com>
+ <uskwi3uzowtbm6o4y2blcnktacvymasf53ppzxg5su4shvt6e6@bpuejjtwuczw>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,33 +63,30 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <726533dbd5663e95b768bd19d2d544a197e5781d.1732030972.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <uskwi3uzowtbm6o4y2blcnktacvymasf53ppzxg5su4shvt6e6@bpuejjtwuczw>
 
-On Tue, Nov 19, 2024 at 09:40:15AM -0700, Ryan.Wanner@microchip.com wrote:
-> From: Varshini Rajendran <varshini.rajendran@microchip.com>
+On Wed, Nov 20, 2024 at 10:01:08AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Nov 19, 2024 at 09:40:06AM -0700, Ryan.Wanner@microchip.com wrote:
+> > From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> > 
+> > This series adds support for the SAMA7D65 SoC.
+> > 
+> > There have been patches in this series that have been tagged as
+> > Reviewed-by or Acked-by, I will link these threads below.
+> > 
+> > 1) https://lore.kernel.org/lkml/20240829-sama7d65-core-dt-v1-1-e5d882886f59@microchip.com/
+> > 2) https://lore.kernel.org/lkml/20240829-sama7d65-sck-v1-1-3e7b19e3cbf9@microchip.com/
+> > 3) https://lore.kernel.org/lkml/20240829-sama7d65-next-v1-1-53d4e50b550d@microchip.com/
+> > 4) https://lore.kernel.org/lkml/1da0abbb-94e5-42fd-a2d2-71d5d7d253fb@microchip.com/
 > 
-> Export MCK3 and MCK5 to be accessed and referenced in DT to assign to
-> the clocks property for sama7d65 SoC.
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> ---
->  include/dt-bindings/clock/at91.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-> index 6ede88c3992d..e37f1b9cdabf 100644
-> --- a/include/dt-bindings/clock/at91.h
-> +++ b/include/dt-bindings/clock/at91.h
-> @@ -42,6 +42,10 @@
->  #define PMC_PLLADIV2		(PMC_MAIN + 11)
->  #define PMC_LVDSPLL		(PMC_MAIN + 12)
->  
-> +/* SAMA7D65 */
-> +#define PMC_MCK3               (PMC_MAIN + 13)
-> +#define PMC_MCK5               (PMC_MAIN + 14)
+> Merging everything into one thread makes it more difficult for
+> maintainers to apply patches. Some maintainers don't like cherry
+> picking.
 
-This goes with the clock binding.
+https://lore.kernel.org/lkml/4962c133-50e7-4d3f-998a-b8d853ab1425@kernel.org/
+
+I asked to put bindings with its users. Primary user is the driver and
+this is explained in submitting bindings patches document.
 
 Best regards,
 Krzysztof
