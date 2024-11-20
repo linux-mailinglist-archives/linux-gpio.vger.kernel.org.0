@@ -1,244 +1,99 @@
-Return-Path: <linux-gpio+bounces-13161-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13162-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 081DF9D3C77
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 14:18:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A84749D3CF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 15:00:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71C78B22D42
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 13:18:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7000A28387D
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 14:00:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE2F41A4F20;
-	Wed, 20 Nov 2024 13:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A191BBBC1;
+	Wed, 20 Nov 2024 13:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="U/XpkS6E"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ciNW9rXF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6752AD00
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 13:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9231B1AB6C1
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 13:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732108725; cv=none; b=oN7mD8ec1cUjF9wVrcHdXFmiwY/IhUGxzSln5WR6OJI4b5Q/l56znYEUn0xHU9Aprhb2ZgfI2hNGJnBuDM6WCussxL6Wh5TNVyMpV5Za2h4+2w0H4o0qp4n1EF9/wuI6x9/ZYBkiiYVT5xkTxb0YDyPuuygHZWzFFnMgGlIDrac=
+	t=1732111175; cv=none; b=KCgDPQcATvYIYbp5MOLi9mTTzcfoPIbfDY2w05ozzHVGIdFfeRrNtz75tshd0GDCRtSKoDewfcPB1NN4cRBAQTkt2X7UjMiHgvyUUzM3+URO41TqX0DE63mVtgb2V88MGeWH/zWUgkPtxmuDm5aNQqITR/zre5XrV4R4uW+3ddY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732108725; c=relaxed/simple;
-	bh=62YQGSyI89J7vC2iJB9r9HU/zhCbSQ/RnJOg54pUxJw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ApBNf0+M4EchdpFZLXrtOsYusDXrX2dbNauYT+N+ST+7he+uKWwiTbrC1lAJ8m+w+fO5qHk3PT7vAyz6jN/mRJ6S/gl/Xm4nvX8ydZT7qVEtqrUDDr2lK75FKNE8XYD+WhI8aQId7IBXArsMrsTUsfGDgsV42uCPK+U3xNuSwqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=U/XpkS6E; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1732111175; c=relaxed/simple;
+	bh=r0bsBRHdUVhsstLHLmGZCtCYJbm8LUhKw5wUTiU+7/Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IAdsty/TIObZv0WzHYesmZQILjmGDvGafEzDFDD2fj9u4jIQ94E5EvT7q4P4PnNWdWIN6Hst60XCxWqA7C1qXZgbDdr1XMDzDVfOkUwF38JLG+GRe6xfGLcsliZSb5PVFbjWwNgkXxV7Vh34NuO1LDIfGXIeQHwOMKDDVtcQKY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ciNW9rXF; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3824aef833bso2270298f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 05:18:43 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ff589728e4so10168281fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 05:59:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732108722; x=1732713522; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X/JBQicLHaOhD1kC5E6qUZNFZFyAgxZrSTsNJDYxERw=;
-        b=U/XpkS6EEUT8/nJCSQcemDolNu2o029a1k4LAn12Yelaw40JwPYqzA5CM301MLm4L1
-         bgRWA0YFcpi7HyBUl4b9kXPd1spNT6+C0NtvBgDfyvH9Sobi6kTo9e2m/Fz7TOwcjp+S
-         OYgSAfkFQFOVcFZUPbjbh2fvZoVp1Dk07Qvt5qEs9ZnQjORFW1R9TzNuWc6PmYmJdl65
-         GbIPM5aAQ/lzF1imctgq5aKuZA0Gzcl5Yw9EuAbaOGw7FJfRZJyJ8IsH2RpwBgdOYS5Q
-         Nf69ZahrMnTK5r2KFpnRTc9o0RoFYln6brLFzQAvol0EqBB/kNyFT6ql6pHhyzdYdnhs
-         uV4A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732111172; x=1732715972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0bsBRHdUVhsstLHLmGZCtCYJbm8LUhKw5wUTiU+7/Q=;
+        b=ciNW9rXFcyWZ5hfshSoPpbi0R2EfmR+YEbVXNEfDR7GFCS7svgT/420xAub+0jynac
+         9yV64iFtIAFPqM7+5E1Q4HznzvegS+X+t47d7nFbdUYAL9m1VYwzcZktkX7N/IEPD76/
+         kJ9Xlp9/0mI5kFWdQixI0xI3nsVIoIhMZ3UH9LQJRMbdINaaJj+Q//wc1Uw4Sme1fQlE
+         8I7HA/mk5tNhXDgIkUsxWxLznTc/EtvICZ06OwqYqjFN3YFusvAKF5zk3X9ih00A1hBg
+         Rt9sGPBrZA9WqXFmqQizBw+qFtKuTB6qXygwYzMABCSOMczSORjXIkujYomW+AHmFTg3
+         zLMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732108722; x=1732713522;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1732111172; x=1732715972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=X/JBQicLHaOhD1kC5E6qUZNFZFyAgxZrSTsNJDYxERw=;
-        b=NRPngUP2xQNn7AbJbCk2N1lfz/qDlwoqs0jPEd3qxCibPKdzugknNn1VrYdOsS5Ucz
-         pz88Jodqgae6+YUA9Ej8UgGfjRx8gxt2UYVbnOnJ3Ru5vdssSGM1PBJrvTgblatXIcVf
-         RQFRTW6idvqqb9sleTNkYv0ZF8L673YIKZLC/FmEDEhnS/4NksqzyfKcZsg+tJVHq8EY
-         JyVeOETDGBCLHZXzOj6CVp4UMwkBf+sj3MLZCzLpHqUL85zp9ZTaNqMRHLppY1q+LGlt
-         W9ba3DAJyesM2A3NcrUaBUMXOecdv3/n7nLSPImnKKuhyrm9eVfUNP03QWc12Z6NVJBf
-         DL/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXPHFcbbuE/W8t2r2ajaDuga8EeAVfqc2jSD6GM55XuoXvQ/Ve4NdVWHHSj4svIrz1tcjvJlkSunP6Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvsEia6a6kZj8JpyQ/Fhj5BsQ3G1M+sLTBYEXZjatnOJ5O5XEs
-	voNbs8zjbLegPrUJXuEBpCjzjHG5WDIJRCIyCyzMgCuAZ0rIon5CUk1DyvdNPM+8Ywbu72itsuw
-	m
-X-Google-Smtp-Source: AGHT+IHibnAAxmEUnohymQfPjeIMUuf690kAUFBypPIh9MUANto6qsLFzh074hnBiTnLt3Nff2tcLg==
-X-Received: by 2002:a05:6000:1541:b0:382:5177:3a4f with SMTP id ffacd0b85a97d-38254b21313mr2163684f8f.49.1732108721694;
-        Wed, 20 Nov 2024 05:18:41 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:e93c:902f:82f5:7ce8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825493ee48sm2040188f8f.98.2024.11.20.05.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2024 05:18:41 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 20 Nov 2024 14:18:20 +0100
-Subject: [PATCH 3/3] bindings: python: tests: provide and use
- system.check_kernel_version()
+        bh=r0bsBRHdUVhsstLHLmGZCtCYJbm8LUhKw5wUTiU+7/Q=;
+        b=tLJIMQAxEo0cmrnRqju8lKHRacHN78wZd3MvdR7AEYbXItg1AWJxbxZkt8C9wm+rhi
+         az6JjpHnqCpthWbGq/+3ovfMTiZqrEdG7ejY7b7z5x8rdEWMHr99LfO/jQKd4tZljEZ0
+         JqHMCtcRfeAIk0qQaDQuTefpFUon4ekGs106+Hl4tBqE7MU8HqPIDXZWTsg6Zj65O84Q
+         gWgTPMmqXYawM1DucoQOhSlATOKVuaK6QVTDH4oluK/Fz0tzAfkipcscXCu9DefFji9j
+         TxbHqag6noL3/IKNfBQWhzVLNfXZVvgywmQFfSqYhRHCxzpSGlDfojLFQHm5hqYgxSv1
+         7Plw==
+X-Gm-Message-State: AOJu0YwP9V5n0SvbZdWcOwDE+j72aVv76AhzMDXi8C+YbhT081wMCiPn
+	IdmYpCGosYZOszITkkuquQMUkjXr8nprl6KkcjlyIXvD+zmVw+IvAknBxj0p9/AZ41/AAvCWQxd
+	q82ABIYCNveKpJcn5J39Q0VF08LWUB1ZaP2FXtqI6cfPQofJa
+X-Google-Smtp-Source: AGHT+IEdUyGl94A4Q/rnD1BGxCBFWTIqBB51hfK7GHrOYzp+GP9Zel7qBuxhMsFXcrW8Yd6XVsO6eyhkMKwEtBqGVfM=
+X-Received: by 2002:ac2:58d6:0:b0:53b:1fd1:df4e with SMTP id
+ 2adb3069b0e04-53dc0fbd349mr795993e87.19.1732111171499; Wed, 20 Nov 2024
+ 05:59:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241120-drop-distutils-v1-3-7498e8b3babe@linaro.org>
-References: <20241120-drop-distutils-v1-0-7498e8b3babe@linaro.org>
-In-Reply-To: <20241120-drop-distutils-v1-0-7498e8b3babe@linaro.org>
-To: Vincent Fazio <vfazio@xes-inc.com>, Phil Howard <phil@gadgetoid.com>, 
- Kent Gibson <warthog618@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- linux-gpio@vger.kernel.org
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4754;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=kO26J6grBHQ7Skc0uLR5oJOBXkTROWyWPkuR+0//ilg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnPeGum5owo1EshfxUlyJ/Rp4MDoBA9+GPFcSqZ
- yMI2YuVzACJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZz3hrgAKCRARpy6gFHHX
- ciruD/4kfwvjdQlGvAjdc4rV4DHsrUnXhoE/4ve7X313wPJwjsqKw+/kwGhJsnkj09dlqjreQdh
- FZX9tQ77H9OvSkjOjb0/qSaRr3Jesnj89A/Rhh0JaYe/I1pRmVzgG32AcZGHm8DEEmKe+aTiQhg
- 3zJfG2Y+FrtTNhY7v+7pE1ov1Y9nqsnVgDScknHGinKrrw9/KM/IramJm9OawV2UTnCZ9ZPl1Qj
- ocUPzGG7/565OJEqhAZOHtA3Oj048B7Xyw8zGaCsbSfPpRDn8qdI9AlhZeyzJs51ux+2UjVPIVC
- ETbUvhergSTrUN3LPKty/Wx4VGze7PlXtM6bSPM+NXoyGWWUlaTbjMI4WHk1hXHyQvAPWYaBd7y
- d0wsY+mq9YWRoRCHNxs1rvT2FsQnQumqAe/zC4Y4ZeIOpix/S1C6agojhjPCP5ArLxgPf/VfZfo
- /hA9pyyzqzOsfE/5ckvvuRBqsaGd99NMdDJz4Z2rkBreC+sDXedjiitGr7q3C1rGkW1V1STrWcs
- 8qk+phA+43NbvJrwFnBDygE4fuZV9mXrRKDji5g6gDQZd2FiWZ3yC1jWqfOOYIUjSzOw/+ZXjPc
- 7FETHWNBbl6Et+eBC4aNOPG/rF0PjbDpue7x9dgJnfo2XykUQroi0AAOWYU6XW3d6YhsJJ8pe+Y
- MFtcO2dPDgqvf7Q==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20241114145116.2123714-1-vfazio@xes-inc.com> <20241114145116.2123714-3-vfazio@xes-inc.com>
+In-Reply-To: <20241114145116.2123714-3-vfazio@xes-inc.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 20 Nov 2024 14:59:20 +0100
+Message-ID: <CAMRc=MevfBeB99HH70a4eyD2P6a7V6x2ntADDeTO89cZr0P3Eg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 02/23] bindings: python: make internal a
+ private submodule
+To: Vincent Fazio <vfazio@xes-inc.com>
+Cc: linux-gpio@vger.kernel.org, vfazio@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Nov 14, 2024 at 3:51=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
+wrote:
+>
+> The internal submodule shouldn't be exposed as part of the public
+> interface, so mark it private following PEP 8 convention [0].
+>
+> [0]: https://peps.python.org/pep-0008/#public-and-internal-interfaces
+> Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+> ---
 
-We claim that libgpiod python bindings have no dependencies other than
-the python standard library but this is not true - the tests do depend
-on deprecated distutils for kernel version parsing.
+FYI this broke `make dist` because the Makefile still tries to package
+internal.py (without the '_' prefix). I fixed it in tree.
 
-As distutils is deprecated, the recommended improvement is to use the
-Version class from packaging.version but this would too entail pulling
-in an external module.
-
-Let's instead implement the kernel version check in C using uname() and
-put it into the tests.system extension. This allows us to entirely drop
-the distutils import.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/tests/__init__.py        | 11 +++++-----
- bindings/python/tests/system/__init__.py |  4 ++--
- bindings/python/tests/system/_ext.pyi    |  1 +
- bindings/python/tests/system/ext.c       | 37 ++++++++++++++++++++++++++++++++
- 4 files changed, 45 insertions(+), 8 deletions(-)
-
-diff --git a/bindings/python/tests/__init__.py b/bindings/python/tests/__init__.py
-index a0f22ae..3eb13f7 100644
---- a/bindings/python/tests/__init__.py
-+++ b/bindings/python/tests/__init__.py
-@@ -1,13 +1,12 @@
- # SPDX-License-Identifier: LGPL-2.1-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+# SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
- 
--import os
--from distutils.version import LooseVersion
-+from .system import check_kernel_version
- 
--required_kernel_version = LooseVersion("5.19.0")
--current_version = LooseVersion(os.uname().release.split("-")[0])
-+_required_kernel_version = (5, 19, 0)
- 
--if current_version < required_kernel_version:
-+if not check_kernel_version(*_required_kernel_version):
-     raise NotImplementedError(
--        f"linux kernel version must be at least {required_kernel_version} - got {current_version}"
-+        f"linux kernel version must be at least v{'.'.join([str(i) for i in _required_kernel_version])}"
-     )
-diff --git a/bindings/python/tests/system/__init__.py b/bindings/python/tests/system/__init__.py
-index 436ff40..cba9b92 100644
---- a/bindings/python/tests/system/__init__.py
-+++ b/bindings/python/tests/system/__init__.py
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
--from ._ext import set_process_name
-+from ._ext import check_kernel_version, set_process_name
- 
--__all__ = ["set_process_name"]
-+__all__ = ["check_kernel_version", "set_process_name"]
-diff --git a/bindings/python/tests/system/_ext.pyi b/bindings/python/tests/system/_ext.pyi
-index df8bb15..0a19d6c 100644
---- a/bindings/python/tests/system/_ext.pyi
-+++ b/bindings/python/tests/system/_ext.pyi
-@@ -2,3 +2,4 @@
- # SPDX-FileCopyrightText: 2024 Vincent Fazio <vfazio@gmail.com>
- 
- def set_process_name(name: str) -> None: ...
-+def check_kernel_version(major: int, minor: int, release: int) -> bool: ...
-diff --git a/bindings/python/tests/system/ext.c b/bindings/python/tests/system/ext.c
-index e7c1cc4..c982fa6 100644
---- a/bindings/python/tests/system/ext.c
-+++ b/bindings/python/tests/system/ext.c
-@@ -1,8 +1,11 @@
- // SPDX-License-Identifier: LGPL-2.1-or-later
- // SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+// SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
- 
- #include <Python.h>
-+#include <linux/version.h>
- #include <sys/prctl.h>
-+#include <sys/utsname.h>
- 
- static PyObject *
- module_set_process_name(PyObject *Py_UNUSED(self), PyObject *args)
-@@ -21,12 +24,46 @@ module_set_process_name(PyObject *Py_UNUSED(self), PyObject *args)
- 	Py_RETURN_NONE;
- }
- 
-+static PyObject *
-+module_check_kernel_version(PyObject *Py_UNUSED(self), PyObject *args)
-+{
-+	unsigned int req_maj, req_min, req_rel, curr_maj, curr_min, curr_rel;
-+	struct utsname un;
-+	int ret;
-+
-+	ret = PyArg_ParseTuple(args, "III", &req_maj, &req_min, &req_rel);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = uname(&un);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	ret = sscanf(un.release, "%u.%u.%u", &curr_maj, &curr_min, &curr_rel);
-+	if (ret != 3) {
-+		PyErr_SetString(PyExc_RuntimeError,
-+				"invalid linux version read from the kernel");
-+		return NULL;
-+	}
-+
-+	if (KERNEL_VERSION(curr_maj, curr_min, curr_rel) <
-+	    KERNEL_VERSION(req_maj, req_min, req_rel))
-+		Py_RETURN_FALSE;
-+
-+	Py_RETURN_TRUE;
-+}
-+
- static PyMethodDef module_methods[] = {
- 	{
- 		.ml_name = "set_process_name",
- 		.ml_meth = (PyCFunction)module_set_process_name,
- 		.ml_flags = METH_VARARGS,
- 	},
-+	{
-+		.ml_name = "check_kernel_version",
-+		.ml_meth = (PyCFunction)module_check_kernel_version,
-+		.ml_flags = METH_VARARGS,
-+	},
- 	{ }
- };
- 
-
--- 
-2.45.2
-
+Bart
 
