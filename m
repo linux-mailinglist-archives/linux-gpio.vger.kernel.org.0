@@ -1,100 +1,140 @@
-Return-Path: <linux-gpio+bounces-13157-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13158-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CE999D39B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 12:42:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84A8C9D3C74
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 14:18:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8854DB25647
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 11:42:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 448C6281BE1
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 13:18:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1561A2567;
-	Wed, 20 Nov 2024 11:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122C81A264A;
+	Wed, 20 Nov 2024 13:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oi+BfHp0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SEtYZLNB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9B61A01BE;
-	Wed, 20 Nov 2024 11:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B1B1991AA
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 13:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732102939; cv=none; b=GAebh14FRFB9KZ5HAhePZpRz+0izZqzihJc5/pOeF5RGtHb/0cKn9wsebDN7MDSwjxwq0U4qVbFjtu94HGTjYObBL4YtmOAPdjWFOJXw93lo2BTnAcsUPcCR4V+sT8VSD79DA3hgCd13qhj9bPTvMaJIPXFv03yTWVgmyV+uwnc=
+	t=1732108722; cv=none; b=itDQAGFPeLDY+pcWWVk+5ss41Pg3sO4Hq4IoKqn3CzUcJZcSwk9ZC5XTt+8ANRjdsqq0EJbVHQZ8jX96AJRghsV0oFw7szk6T8lCwQOiHh4quKPjrtZLZHX/SvNckBQ4cWX2VEsOGHouaXbMiCPuldjNc+YFLpsjjNT0V/pxRBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732102939; c=relaxed/simple;
-	bh=CvCJEH+Lxk8A3OmQGhvy3VkIiHAL8qBPQY/3xvua5Yc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=D/gJ8TvQFgQpZQpz2QuJo8W4pXYb5HQU06V8+Wia9bPBExJUt+D7KmwSnI0eVusEZA7xoV2jXQLWiVk4cCG4CuHn9oe4adsdasQx9r/pySWEYNp+P0Gv8p9Zs8AiG5KR7YutcIza/r7NYAlBXMEQB9te3pK2aiylKl3agtQQbpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oi+BfHp0 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=/sRJJY0JNrqdLEGJDTJnDSvIbBEf57fqyOcD4plwToo=; b=o
-	i+BfHp0yo7CpgWl4iRsbC6WbtVWD88T48DoBGhsLXMI2a5px3sd1tCdHYaaL5OSx
-	/azSuy/Dr2r+2BdDBLfodD6cT0q1nfwfgNvKrOjQx1XrAEsjHYKc3kG+38E8QXkM
-	DR1VfczF1jfxWc1hQdyFFTxQN9J+FTOOto0/3Eqv5A=
-Received: from 00107082$163.com ( [111.35.191.191] ) by
- ajax-webmail-wmsvr-40-127 (Coremail) ; Wed, 20 Nov 2024 19:41:43 +0800
- (CST)
-Date: Wed, 20 Nov 2024 19:41:43 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, kees@kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] gpio: Fix a potential abuse of seq_printf() format
- string
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
-References: <505e5950dd2d76e6c3a8af57bc0cd1e0fbf2b637.1732093745.git.00107082@163.com>
- <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
-X-NTES-SC: AL_Qu2YAP2bvUEr5SKRZOkZnEYQheY4XMKyuPkg1YJXOp80lyTjxx4AbG5JGn/s9fmABgemoQm8YBJz9tpBXo9nWpiogbqMBx5/2flkEchxccmW
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1732108722; c=relaxed/simple;
+	bh=E/nnVzt97xxowtI745H62T4OdsLZNmp/xjekMeq/M/k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ck5LmD1AeFVMGqIKj07YUAzNRIbm3IzXUTyCW0A57KqSC6IPchyNusI+4U25K7k0n2NY4gofsPC0qlWr9hx/7u8CWeD66UTBOIUZYoM+f5DIukOV9lQwGOYReKbMCexi397It0z/C9A2oaQLaUhJ+f7Y46qZIaFbh/E2oa1xZiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SEtYZLNB; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4314f38d274so58669985e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 05:18:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732108719; x=1732713519; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UM4gel+q9ak/o056gbZe8wG98dXFQKUi0fe1Vz3q+Wo=;
+        b=SEtYZLNBQNPwl3CPumfDgcdGdz6xuGrjseYhP0L/v2OmiGKBNNlZ/p5ARugprcLyPv
+         maGK3Guw1e6h8JJw9urrXgFiZHYSj2NffSUVAOtGMPaJVuQN2xeRNyL/xDYd9KykH1nH
+         cq4K1cyrwPBSrUQ0caLQlCFImKPt5XITZHAUYW8OC0/5QpryTTm4EPOEeuYA7PdlcU7O
+         U77q8Z9jH56Sa1ZFbXMbWeeppUCL0Gu32K4B72xJirh3Im1PBfONKGrVcTzohFUIJmJ6
+         a6N+YmXhDYXN9VOuqsQLTM6zLPygmHicsvF3G9VpjxMBIepkpsSQfYvVacUpdewUVGM1
+         VRcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732108719; x=1732713519;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UM4gel+q9ak/o056gbZe8wG98dXFQKUi0fe1Vz3q+Wo=;
+        b=eNO7SFG4UMG2nHIihwm6HvjsiN5E+ZvJP5q8baFIoUZmT3pNevEa/LIbVubw+/gXZf
+         4V9KQ8jZ4v1HDFH1b5weHhmKkwrvwS+2q9WnfYOZ1ZqOEpWAMJOPEMDvN9j9VEYGyIVH
+         SAe3IDJeoTLr/MpPOSO+fbR28CltzbIFjg4RXjv9r7gxJbmOlpp7NgW+TJEJouyPUj4y
+         h8I4e3H3uo6rvlH7S4Cz/NA3ENiquj2r2Far/C4/PSs6FnMCC+FSNPNAn9/adYY9FYU4
+         z3OUTd+0V7Id3lexrQ9oH0WRhA0k28rjPufFlUN+xkcwjjWGXkIMAU9hBWpVPaCCDDnT
+         t09Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXGdfj1IKNSFYrUbspx1e7spoWIGbIYMR7/gnA7kn89ot3jQjzQTuVc2+WfmZUuPG0XV0tj9VR1JXpF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqEA5EwKFhTcY2WdpX26v586STn/taQI9yTQyjdTnGnucQb4dM
+	HCRUpP5jlwLMHRQF867kWpRxPqRJfn2BV1K0GzMg7yaI/mQBo8oSVpuJTQ++Kn8=
+X-Google-Smtp-Source: AGHT+IHzSkGuq2LYX24LW5NW9FRYDTauOmJCv25CkmeQwzFVID5NUWzCY2zlo5nKolLJ3LTYm5z+PA==
+X-Received: by 2002:a05:600c:1d0b:b0:431:6083:cd30 with SMTP id 5b1f17b1804b1-43348981999mr27451375e9.6.1732108718891;
+        Wed, 20 Nov 2024 05:18:38 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:e93c:902f:82f5:7ce8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825493ee48sm2040188f8f.98.2024.11.20.05.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2024 05:18:38 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/3] bindings: python: drop dependency on distutils
+Date: Wed, 20 Nov 2024 14:18:17 +0100
+Message-Id: <20241120-drop-distutils-v1-0-7498e8b3babe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <238c054f.ad0a.1934960d5fe.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:fygvCgD3_6z4yj1nIeIsAA--.56031W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gmdqmc9uhySaAADsp
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJnhPWcC/x3MQQqAIBBA0avIrBMca9VVooXoWAOh4lgE0d2Tl
+ m/x/wNClUlgVg9Uulg4pw4cFPjdpY00h26wxk6I1uhQc9GBpZ2ND9Eu+ujQ2cnjCD0qlSLf/3B
+ Z3/cDuq0Z62AAAAA=
+To: Vincent Fazio <vfazio@xes-inc.com>, Phil Howard <phil@gadgetoid.com>, 
+ Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ linux-gpio@vger.kernel.org
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1545;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=E/nnVzt97xxowtI745H62T4OdsLZNmp/xjekMeq/M/k=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnPeGnCaePiMnusr7T9gRs7S8NLKavfmr9RJQLL
+ XNvW/wdD6eJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZz3hpwAKCRARpy6gFHHX
+ coKiD/9q7AeAkhvdqcwxqLAPJiyz1pEQIEEn3UC0/2ymZ24j/4qDzfKewiCXCtoomlDbnR8Lduo
+ FLCMisOAdLbeS8L/zBfnmCNvb4d/TxZCsJNefr052on7I9L1/CmIs11tmDngOO7ReJdsLzSZ3ka
+ w7UUwV1+U4ITQU+ChjuP/ctAmNb/HL6bP5zXOmvzw8bbcM18EVmbLgfdXscxUP57Iw6h0OY8PHf
+ Xpmb+zaKfq/b8d7oK4MY01BwVWLFqGjQYg4yI5k1zNu3kfZJ+DBV0LHDulXKgo9Si0Ngll7yoEj
+ OeKFFHI6lOqnBEr15s+rwXe6Hv1DbM2LGC8RouJ+7+ysrw4W6Vg7T0t4+8GHDUtCWbgXbaps5zd
+ bZw6iVqjW3VMoUqk8+nDMIUrYHPd6Zhb8Pg51PNIzuHd2epUI+KNNSJx4wPcaV6yHt3CowcGdi+
+ WHjOeAFz0GTzklYWD1sLQ7a7xk5RTgrN9whpJ7uBNEXxMnq+NrjZI5U8PxUgQQWjZptXgcAmDKU
+ 3fVLXEapQgu1AmkLLbIBxgP2hVRtn4sQQLkJNmHGSoCZFgD/+GBABCzcxJxoXyfrFza22vzz4J9
+ HInW0Kv2m6f4TtAejYBq1J28VxjtglqzGDExrlfkEjf89xymEHugwWC5VLUyz2SR7IFLbbiqyKp
+ 91HbW8R+t3sqICQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-CkF0IDIwMjQtMTEtMjAgMTk6MDQ6MzksICJHZWVydCBVeXR0ZXJob2V2ZW4iIDxnZWVydEBsaW51
-eC1tNjhrLm9yZz4gd3JvdGU6Cj5IaSBEYXZpZCwKPgo+T24gV2VkLCBOb3YgMjAsIDIwMjQgYXQg
-MTA6MTXigK9BTSBEYXZpZCBXYW5nIDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4gVXNpbmcg
-ZGV2aWNlIG5hbWUgYXMgZm9ybWF0IHN0cmluZyBvZiBzZXFfcHJpbnRmKCkgaXMgcHJvbmUgdG8K
-Pj4gIkZvcm1hdCBzdHJpbmcgYXR0YWNrIiwgb3BlbnMgcG9zc2liaWxpdHkgZm9yIGV4cGxvaXRh
-dGlvbi4KPj4gU2VxX3B1dHMoKSBpcyBzYWZlciBhbmQgbW9yZSBlZmZpY2llbnQuCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4KPlRoYW5rcyBmb3Ig
-eW91ciBwYXRjaCEKPgo+PiAtLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQtc2dwaW8uYwo+
-PiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQtc2dwaW8uYwo+PiBAQCAtNDIwLDcgKzQy
-MCw3IEBAIHN0YXRpYyB2b2lkIGFzcGVlZF9zZ3Bpb19pcnFfcHJpbnRfY2hpcChzdHJ1Y3QgaXJx
-X2RhdGEgKmQsIHN0cnVjdCBzZXFfZmlsZSAqcCkKPj4gICAgICAgICBpbnQgb2Zmc2V0Owo+Pgo+
-PiAgICAgICAgIGlycWRfdG9fYXNwZWVkX3NncGlvX2RhdGEoZCwgJmdwaW8sICZiYW5rLCAmYml0
-LCAmb2Zmc2V0KTsKPj4gLSAgICAgICBzZXFfcHJpbnRmKHAsIGRldl9uYW1lKGdwaW8tPmRldikp
-Owo+PiArICAgICAgIHNlcV9wdXRzKHAsIGRldl9uYW1lKGdwaW8tPmRldikpOwo+Cj5JZiB3ZSB3
-YW50IHRvIGFkZCB0aGUgbWlzc2luZyBzcGFjZSBoZXJlLCB0aGUgY29kZSBoYXMgdG8gYmUgY2hh
-bmdlZAo+dG8gdXNlIHNlcV9wcmludGYoLi4uLCAiICVzIiwgLi4uKSBhZ2Fpbi4KCkl0J3Mga2lu
-ZCBvZiBzdHJhbmdlIHRvIGFkZCBsZWFkaW5nIGFsaWdubWVudCBzcGFjZXMgaW4gYSBmdW5jdGlv
-biBuYW1lZCB4eHhfcHJpbnRfY2hpcCgpOyAKCj4KPkhvd2V2ZXIsIGl0IG1pZ2h0IGJlIHNpbXBs
-ZXIgdG8gbW92ZSB0aGlzIHRvIHRoZSBjb3JlLiBJLmUuIGFkZCBhbgo+dW5jb25kaXRpb25hbCBz
-ZXFfcHV0YyhwLCAnICcpIHRvIHNob3dfaW50ZXJydXB0cygpWzFdLCBhbmQgZHJvcCB0aGUKPnNw
-YWNlcyBmcm9tIGFsbCBjYWxsYmFja3MgYW5kIGZyb20gdGhlIGZhbGxiYWNrcyBpbiBzaG93X2lu
-dGVycnVwdHMoKS4KCkkgd291bGQgdm90ZSBmb3IgdGhpcyBhcHByb2FjaCwgICBpZiB3ZSB3YW50
-IHRvIGZpeCAgdGhvc2UgbWlzYmVoYXZpbmcgYWxpZ25tZW50cy4KSXQncyBjbGVhbmVyLgoKCj4K
-PlsxXSBodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92Ni4xMi9zb3VyY2Uva2VybmVs
-L2lycS9wcm9jLmMjTDUwMwo+Cj5HcntvZXRqZSxlZXRpbmd9cywKPgo+ICAgICAgICAgICAgICAg
-ICAgICAgICAgR2VlcnQKPgo+LS0gCj5HZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
-IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCj4KPkluIHBlcnNv
-bmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEg
-aGFja2VyLiBCdXQKPndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAi
-cHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKCgpUaGFua3N+CkRhdmlkCg==
+Python tests depend on the distutils package which not only is an
+external dependency but is also deprecated. This series replaces it with
+version parsing implemented in the C extension.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (3):
+      bindings: python: add .pyi files to EXTRA_DIST
+      bindings: python: tests: rename procname to system
+      bindings: python: tests: provide and use system.check_kernel_version()
+
+ bindings/python/MANIFEST.in                        |  2 +-
+ bindings/python/build_tests.py                     | 10 +--
+ bindings/python/gpiod/Makefile.am                  |  1 +
+ bindings/python/tests/Makefile.am                  |  2 +-
+ bindings/python/tests/__init__.py                  | 11 ++-
+ bindings/python/tests/__main__.py                  |  4 +-
+ bindings/python/tests/gpiosim/Makefile.am          |  1 +
+ bindings/python/tests/procname/ext.c               | 42 ------------
+ .../python/tests/{procname => system}/Makefile.am  |  1 +
+ .../python/tests/{procname => system}/__init__.py  |  4 +-
+ .../python/tests/{procname => system}/_ext.pyi     |  1 +
+ bindings/python/tests/system/ext.c                 | 79 ++++++++++++++++++++++
+ configure.ac                                       |  2 +-
+ 13 files changed, 100 insertions(+), 60 deletions(-)
+---
+base-commit: 0505dc36435b6d87523f530192d6025fc94222f3
+change-id: 20241120-drop-distutils-afcfa1a24c13
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
