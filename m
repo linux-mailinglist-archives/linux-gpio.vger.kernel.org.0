@@ -1,132 +1,82 @@
-Return-Path: <linux-gpio+bounces-13140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB319D342D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 08:36:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D0F29D361B
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 09:59:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DE8E283831
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 07:35:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3D83B258C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 08:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1027C158DD8;
-	Wed, 20 Nov 2024 07:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C564E18EFC1;
+	Wed, 20 Nov 2024 08:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gube/4re"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8G/IvZS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01753156676
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Nov 2024 07:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698F1176FB6;
+	Wed, 20 Nov 2024 08:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732088152; cv=none; b=MhMf//ra+rRnstaXoZSOal4YN3z60cB0V2sZBlHmFEyrkOBoHLoZ60K065fanv9QX2yFXKiQPDRsfbYvUVgoF0C+5r4DEjT92GzlEb0cKMksQjCI3zj19kP8S1QDAsiT9zT7cu115omNGzNbD5kRokFvQsK1u9yWYg+Bm5AdIXg=
+	t=1732093120; cv=none; b=hW+NLnE7sFw109bglEyYhwwVqEQ9tidXynwBHOGMTYrM3SxcJbzIFBTaR5/G7oxkga/hzPUjVmWxOFLtweJCvjLfMQZ/bdLolpo7OtcL+oYDtKKlW+fEt3lYCs4umN+rqvsZ8op4Z5qc7Xh9zlDS7VltfTwGjsuLs6M2RLY2Eg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732088152; c=relaxed/simple;
-	bh=JKSJqxGDbiLgwxdlepXXqCf3WXM9QgPafwIjc7kN2GQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X8jltImKbuqEe27bWC7Zb3f5Hr8dyYkhRi3xx1zgMZxaSEdHSpkNIlyWzxWnIayLXccPZXw2FoL4T+2G3Zlv3qzCxibNGp/7EbkW1SkTJncu8fk9IyPBIKHHOwOU1cMshrWfsaQ10uQH3YH4jzn+gIDVeTZI7SIVYBHkRKbYP58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gube/4re; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53a007743e7so5793476e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Nov 2024 23:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732088149; x=1732692949; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bVdt7me2BL/1fsMZfkqd2rx53sv6P4dXB86USYdpOEM=;
-        b=gube/4rer9PLcsI6AmV14GR7H9ocmCXp6NwZTNkJ9YtGQjZF0dQihvM57EvBm0ffQa
-         4BBnE/XmlsL1aNr28zHT+lTtS/YJfjHfCUbpTx5f1IAoNXkWYUpk8Df5HgT5E4GGrWZ5
-         MAOuU1RMB7H2rxGU9oRqC+ezW/dx49PG6CkyOHM0wULAefGQP/yBsuRmjyBBGTSQEWpM
-         F/+6BuR3GjaN0EVlX2iJrrW5BVvyGcn+hTo+HiZo9G4Fz41r7MvByo2P2SVe56r3gE/a
-         eyYBcP1e/o3S2U4uM1msILRXh1zynRJ5dlz97GTSRJ1mDOs90Sj58pI1O75o211UJ1UH
-         WrMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732088149; x=1732692949;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bVdt7me2BL/1fsMZfkqd2rx53sv6P4dXB86USYdpOEM=;
-        b=ENwO/Vw4+5xBR5L23d2knm+zH8IcjL4DaMeHAoqIx9336deu8fzEUXMiNvjUsHVCJG
-         YigrkXTT73gia3X1/hm5Vmjpyf+hkUfPOrgB6BisE7Rpr/ZeimMJsmcStD4HM23z0RYP
-         PRnKnBwrmG++9jw7ceEGCrXJrCikOsAczEItjTxZwOhXCw6sXq2MH1vTAZD1xEyGZfZh
-         fOYUkozyFjrNIKRky6NaTnUwP5F4NFZ7N8OS9vS1/CFdHG4l8EF46WtFA2g1B0Nl7ZB+
-         3tWQWNXk45BWL9IUybebmGkxe71LxXnZ62+f8Sz4YOUcfEzlNjTGnJiT4ROphTQcaPpj
-         vTUA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4xEZphmtsVuLWu3oo+qeQgNGI+5N8Pqbk35Cku3fQb0g1GoHh8QoPhVKhDZ8GpuI/dUZDPurv4v1A@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7J9H/wZoXlwUy/6ZR69Cow+yy4dq8uPtcZ65iG1vSRg2J1L1O
-	dsRkAUBBSObYJuS/QebJjIkexCYgRX+m2S+Dbs5fQBBlsHg0z9Or3BNwjnBX8hR0+LTMmI3XEnp
-	QJzFmRfK/dZRTzZ9BDT9KK66vsRv8Eyu1ZApONA==
-X-Google-Smtp-Source: AGHT+IFhQwU+3f9jL5bp/lYeAYqWZlBwDx6zgv89CNCtOeVal/X2CJMoACyYoC+2s8VaM4/eB5xVe1ULuCvFi6rF4uM=
-X-Received: by 2002:a05:6512:118c:b0:539:f1ce:5fa8 with SMTP id
- 2adb3069b0e04-53dc136debcmr552235e87.49.1732088149001; Tue, 19 Nov 2024
- 23:35:49 -0800 (PST)
+	s=arc-20240116; t=1732093120; c=relaxed/simple;
+	bh=LkbTewK9y9FgQpIpn6FxzD8GeeGKuw9teOC1wFZlEIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z8m5JppQ6RF4BSTePVxDINBavwJFWpJ55ax9HqnOKXuipSO3FEaI1oEC6QNzGowIDR6kDHVYq0i/caFvAZdpu5XPz4vub38E0oXdHt1taPondrNKBi0yekuEq41ewND/q+CE9W6Ikv7bF5peMAcLktGi9MQtEFgb81uDD9Cat3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8G/IvZS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17523C4CECD;
+	Wed, 20 Nov 2024 08:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732093120;
+	bh=LkbTewK9y9FgQpIpn6FxzD8GeeGKuw9teOC1wFZlEIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I8G/IvZSeEN6SRunWHKDMW0hs6cXQs1BWbXrI6z3OftWVjB/fmT6KMeQatQrvhR3+
+	 5p0VDfymfaotgM+ypHVfHhUKyORadIPW5MES6y4K//6PO87Hep9K5pqWyW7sbX68gU
+	 SevZLn1H59aSuRygcWwm2YK8xy553fkK7QsVWUAItHh+ICdx6klIpFUEStqGWofVrl
+	 9TGw1BTm8Q3e/VetHaXsdghZ32sLv5J5LkgD5yh+LD7gWyb4mRwyBuENYs95TCsTK1
+	 ThbOkJU3EDMJgM+IcEWAAkkfAZZf2cj/G+uVIbnUXLsqbmxbVlrniLpTWx+n8g/m8D
+	 AAL2G0GcI8ltA==
+Date: Wed, 20 Nov 2024 09:58:36 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ryan.Wanner@microchip.com
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
+	mturquette@baylibre.com, sboyd@kernel.org, arnd@arndb.de, dharma.b@microchip.com, 
+	mihai.sain@microchip.com, romain.sioen@microchip.com, varshini.rajendran@microchip.com, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 02/15] dt-bindings: mfd: atmel,sama5d2-flexcom: add
+ microchip,sama7d65-flexcom
+Message-ID: <ce4rq6gefqrsaubpab573qi2r6ozagxvgjcdpslo32gvnxjapa@tbvdzcrsbmme>
+References: <cover.1732030972.git.Ryan.Wanner@microchip.com>
+ <46928aa2d15d05fa3046c270a51a10cd56c2e919.1732030972.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241120053055.225195-1-00107082@163.com>
-In-Reply-To: <20241120053055.225195-1-00107082@163.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Nov 2024 08:35:38 +0100
-Message-ID: <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
-Subject: Re: [PATCH] Fix a potential abuse of seq_printf() format string in drivers
-To: David Wang <00107082@163.com>, Kees Cook <kees@kernel.org>
-Cc: brgl@bgdev.pl, tglx@linutronix.de, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, geert@linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <46928aa2d15d05fa3046c270a51a10cd56c2e919.1732030972.git.Ryan.Wanner@microchip.com>
 
-On Wed, Nov 20, 2024 at 6:31=E2=80=AFAM David Wang <00107082@163.com> wrote=
-:
+On Tue, Nov 19, 2024 at 09:40:08AM -0700, Ryan.Wanner@microchip.com wrote:
+> From: Dharma Balasubiramani <dharma.b@microchip.com>
+> 
+> Add flexcom binding documentation for sama7d65.
 
-> Using device name as format string of seq_printf() is proned to
-> "Format string attack", opens possibility for exploitation.
-> Seq_puts() is safer and more efficient.
->
-> Signed-off-by: David Wang <00107082@163.com>
+You also consolidate entries into one enum as preferred coding style, so
+this should be mentioned here.
 
-Okay better get Kees' eye on this, he looks after string vulnerabilities.
-(But I think you're right.)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->  drivers/gpio/gpio-aspeed-sgpio.c            | 2 +-
->  drivers/gpio/gpio-aspeed.c                  | 2 +-
->  drivers/gpio/gpio-ep93xx.c                  | 2 +-
->  drivers/gpio/gpio-hlwd.c                    | 2 +-
->  drivers/gpio/gpio-mlxbf2.c                  | 2 +-
->  drivers/gpio/gpio-omap.c                    | 2 +-
->  drivers/gpio/gpio-pca953x.c                 | 2 +-
->  drivers/gpio/gpio-pl061.c                   | 2 +-
->  drivers/gpio/gpio-tegra.c                   | 2 +-
->  drivers/gpio/gpio-tegra186.c                | 2 +-
->  drivers/gpio/gpio-tqmx86.c                  | 2 +-
->  drivers/gpio/gpio-visconti.c                | 2 +-
->  drivers/gpio/gpio-xgs-iproc.c               | 2 +-
->  drivers/irqchip/irq-gic.c                   | 2 +-
->  drivers/irqchip/irq-mvebu-pic.c             | 2 +-
->  drivers/irqchip/irq-versatile-fpga.c        | 2 +-
->  drivers/pinctrl/bcm/pinctrl-iproc-gpio.c    | 2 +-
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
->  drivers/pinctrl/pinctrl-mcp23s08.c          | 2 +-
->  drivers/pinctrl/pinctrl-stmfx.c             | 2 +-
->  drivers/pinctrl/pinctrl-sx150x.c            | 2 +-
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 2 +-
+Best regards,
+Krzysztof
 
-Can you split this in three patches per-subsystem?
-One for gpio, one for irqchip and one for pinctrl?
-
-Then send to each subsystem maintainer and CC kees on
-each.
-
-I'm just the pinctrl maintainer. The rest can be found with
-scripts/get_maintainer.pl.
-
-Yours,
-Linus Walleij
 
