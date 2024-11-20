@@ -1,125 +1,100 @@
-Return-Path: <linux-gpio+bounces-13156-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13157-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E400E9D391F
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 12:07:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CE999D39B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 12:42:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9BE2285B79
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 11:07:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8854DB25647
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Nov 2024 11:42:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EE381A706A;
-	Wed, 20 Nov 2024 11:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1561A2567;
+	Wed, 20 Nov 2024 11:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oi+BfHp0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0BF17BB2E;
-	Wed, 20 Nov 2024 11:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F9B61A01BE;
+	Wed, 20 Nov 2024 11:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732100695; cv=none; b=SOU3xlHw74jjQObqMcOoekb2QYofT+HJAHRQa+TgDrj6ahESG0L2axHsDfS8DdursFmIKy+56P/OPrfrYf+Xr9hWP9FBv6+8t73982XZrnd5GQSWI9VsLWwRnqzNPMR3m/rrIrTI203hrIFJXI1aWeqQfKASN07Ivy6MuPJoDnA=
+	t=1732102939; cv=none; b=GAebh14FRFB9KZ5HAhePZpRz+0izZqzihJc5/pOeF5RGtHb/0cKn9wsebDN7MDSwjxwq0U4qVbFjtu94HGTjYObBL4YtmOAPdjWFOJXw93lo2BTnAcsUPcCR4V+sT8VSD79DA3hgCd13qhj9bPTvMaJIPXFv03yTWVgmyV+uwnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732100695; c=relaxed/simple;
-	bh=OVgDtO9cy79NmdkAcw8w1WJzWj8zv5JR955m1f7MFXg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lQ8zClH1ZVoSv5yhmVuTPEl6JDNGLIdakRs+a4DoA1RoxGIZvJUnQCnKL0tTtFbIUYP/XJwKB6jpzbF8FVDhFj1Ey0D6/qUB9r0UvByklHOdhbO1/wNuRruE38mYNEdS/Rld7XJUjZeLHdsX/H2XSlAuMtpi5FuPN4CN0w9EwMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e382589e8fdso4921614276.0;
-        Wed, 20 Nov 2024 03:04:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732100693; x=1732705493;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zp6NHSwjq6RwaH2ECKqkZ0C2RUZPVMxuS7OZbSAMyD4=;
-        b=bbD6LVwhlesTZ8K12IksHlH9gtUSx7BOKKxC81ufNRzqOvHDOvPu+d/9GgsI+ltl3m
-         yvnNh7GaQPLyAXnBW6P5iowJj554XsQnWI3Qpc9YjtzA3SGv/ouPujHK8jbWhcqT38wi
-         i9w0I+ONF875vM2UOVX3gDFF1eC4eupzdEJDh1Yl/AYCrTFSgRSwJlftcZHdrqnxg54z
-         fKiptXo4djSzepn7WUikWisGFtMPy6ubI/y6KiB5yFLJ1SOx1/KXM213C230VG1dXaA2
-         nr0ym1lDaGxdH3m8TFe381cHvXgcm1HmndILbzVLg8yDdv+kDtgq1M1jCLmgZj1L6dn5
-         xZdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhEqNjkyGcTpgfDrnuOsq73vVDglHzQ/jIkyK0JFa4dN4U5N90+L4Q7ZT5/ZYehinloTb2KOWGtLfm@vger.kernel.org, AJvYcCX08vfz8l6py2cT4YzBsc+Kh8lCaCcLd/3ZIUIa23YcgUBWZLHI5LDRj7NWQDOTlQohCvl/MTprOKVIa2dQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP2DuntsHTzqbI2vpGRLJBzcvx/ECqelXTELEokN45UWoDoAGk
-	0yUHKuBlHL4gV2vucI9YizhOq+0vLb1/fLKxZMunQzpsnHOpPikGZ0tjpvG6
-X-Google-Smtp-Source: AGHT+IEvzfm1D7yGYLwAl3xFYA4+17B4OVsEp/4JGaNISiV6xjtmlLOv6r5PhA3pdjbeAfeDtSUEGg==
-X-Received: by 2002:a05:6902:1b82:b0:e38:ba98:47e0 with SMTP id 3f1490d57ef6-e38cb717550mr1854413276.47.1732100692805;
-        Wed, 20 Nov 2024 03:04:52 -0800 (PST)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e387e73baefsm3141626276.18.2024.11.20.03.04.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2024 03:04:51 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6e3c3da5bcdso57096627b3.2;
-        Wed, 20 Nov 2024 03:04:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV2fuk4HISGl1m7CFat2JszeBZr/2dlQf7zGxokFbmjYfg8D98mQljcDdHPL9r1tHWAsYgChcovBqRI2Bbt@vger.kernel.org, AJvYcCW60YkyAphh8wYuzmsI1chOrlVd4WkJ4TJ+HDzsW+hJPLd30QuXmh0ZhCZAcQJxx8eCNG4dyovc5Vlr@vger.kernel.org
-X-Received: by 2002:a05:690c:9c07:b0:6ee:6241:ac9d with SMTP id
- 00721157ae682-6eebd2ae6efmr25400857b3.28.1732100691631; Wed, 20 Nov 2024
- 03:04:51 -0800 (PST)
+	s=arc-20240116; t=1732102939; c=relaxed/simple;
+	bh=CvCJEH+Lxk8A3OmQGhvy3VkIiHAL8qBPQY/3xvua5Yc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=D/gJ8TvQFgQpZQpz2QuJo8W4pXYb5HQU06V8+Wia9bPBExJUt+D7KmwSnI0eVusEZA7xoV2jXQLWiVk4cCG4CuHn9oe4adsdasQx9r/pySWEYNp+P0Gv8p9Zs8AiG5KR7YutcIza/r7NYAlBXMEQB9te3pK2aiylKl3agtQQbpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oi+BfHp0 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=/sRJJY0JNrqdLEGJDTJnDSvIbBEf57fqyOcD4plwToo=; b=o
+	i+BfHp0yo7CpgWl4iRsbC6WbtVWD88T48DoBGhsLXMI2a5px3sd1tCdHYaaL5OSx
+	/azSuy/Dr2r+2BdDBLfodD6cT0q1nfwfgNvKrOjQx1XrAEsjHYKc3kG+38E8QXkM
+	DR1VfczF1jfxWc1hQdyFFTxQN9J+FTOOto0/3Eqv5A=
+Received: from 00107082$163.com ( [111.35.191.191] ) by
+ ajax-webmail-wmsvr-40-127 (Coremail) ; Wed, 20 Nov 2024 19:41:43 +0800
+ (CST)
+Date: Wed, 20 Nov 2024 19:41:43 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, kees@kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] gpio: Fix a potential abuse of seq_printf() format
+ string
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
+References: <505e5950dd2d76e6c3a8af57bc0cd1e0fbf2b637.1732093745.git.00107082@163.com>
+ <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
+X-NTES-SC: AL_Qu2YAP2bvUEr5SKRZOkZnEYQheY4XMKyuPkg1YJXOp80lyTjxx4AbG5JGn/s9fmABgemoQm8YBJz9tpBXo9nWpiogbqMBx5/2flkEchxccmW
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <505e5950dd2d76e6c3a8af57bc0cd1e0fbf2b637.1732093745.git.00107082@163.com>
-In-Reply-To: <505e5950dd2d76e6c3a8af57bc0cd1e0fbf2b637.1732093745.git.00107082@163.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 20 Nov 2024 12:04:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
-Message-ID: <CAMuHMdWEuWrfj3p0pX7FX6AgOKryFUnCEBRhPkhvnSEkMwThpQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: Fix a potential abuse of seq_printf() format string
-To: David Wang <00107082@163.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, kees@kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <238c054f.ad0a.1934960d5fe.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:fygvCgD3_6z4yj1nIeIsAA--.56031W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gmdqmc9uhySaAADsp
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-Hi David,
-
-On Wed, Nov 20, 2024 at 10:15=E2=80=AFAM David Wang <00107082@163.com> wrot=
-e:
-> Using device name as format string of seq_printf() is prone to
-> "Format string attack", opens possibility for exploitation.
-> Seq_puts() is safer and more efficient.
->
-> Signed-off-by: David Wang <00107082@163.com>
-
-Thanks for your patch!
-
-> --- a/drivers/gpio/gpio-aspeed-sgpio.c
-> +++ b/drivers/gpio/gpio-aspeed-sgpio.c
-> @@ -420,7 +420,7 @@ static void aspeed_sgpio_irq_print_chip(struct irq_da=
-ta *d, struct seq_file *p)
->         int offset;
->
->         irqd_to_aspeed_sgpio_data(d, &gpio, &bank, &bit, &offset);
-> -       seq_printf(p, dev_name(gpio->dev));
-> +       seq_puts(p, dev_name(gpio->dev));
-
-If we want to add the missing space here, the code has to be changed
-to use seq_printf(..., " %s", ...) again.
-
-However, it might be simpler to move this to the core. I.e. add an
-unconditional seq_putc(p, ' ') to show_interrupts()[1], and drop the
-spaces from all callbacks and from the fallbacks in show_interrupts().
-
-[1] https://elixir.bootlin.com/linux/v6.12/source/kernel/irq/proc.c#L503
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+CkF0IDIwMjQtMTEtMjAgMTk6MDQ6MzksICJHZWVydCBVeXR0ZXJob2V2ZW4iIDxnZWVydEBsaW51
+eC1tNjhrLm9yZz4gd3JvdGU6Cj5IaSBEYXZpZCwKPgo+T24gV2VkLCBOb3YgMjAsIDIwMjQgYXQg
+MTA6MTXigK9BTSBEYXZpZCBXYW5nIDwwMDEwNzA4MkAxNjMuY29tPiB3cm90ZToKPj4gVXNpbmcg
+ZGV2aWNlIG5hbWUgYXMgZm9ybWF0IHN0cmluZyBvZiBzZXFfcHJpbnRmKCkgaXMgcHJvbmUgdG8K
+Pj4gIkZvcm1hdCBzdHJpbmcgYXR0YWNrIiwgb3BlbnMgcG9zc2liaWxpdHkgZm9yIGV4cGxvaXRh
+dGlvbi4KPj4gU2VxX3B1dHMoKSBpcyBzYWZlciBhbmQgbW9yZSBlZmZpY2llbnQuCj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5jb20+Cj4KPlRoYW5rcyBmb3Ig
+eW91ciBwYXRjaCEKPgo+PiAtLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQtc2dwaW8uYwo+
+PiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1hc3BlZWQtc2dwaW8uYwo+PiBAQCAtNDIwLDcgKzQy
+MCw3IEBAIHN0YXRpYyB2b2lkIGFzcGVlZF9zZ3Bpb19pcnFfcHJpbnRfY2hpcChzdHJ1Y3QgaXJx
+X2RhdGEgKmQsIHN0cnVjdCBzZXFfZmlsZSAqcCkKPj4gICAgICAgICBpbnQgb2Zmc2V0Owo+Pgo+
+PiAgICAgICAgIGlycWRfdG9fYXNwZWVkX3NncGlvX2RhdGEoZCwgJmdwaW8sICZiYW5rLCAmYml0
+LCAmb2Zmc2V0KTsKPj4gLSAgICAgICBzZXFfcHJpbnRmKHAsIGRldl9uYW1lKGdwaW8tPmRldikp
+Owo+PiArICAgICAgIHNlcV9wdXRzKHAsIGRldl9uYW1lKGdwaW8tPmRldikpOwo+Cj5JZiB3ZSB3
+YW50IHRvIGFkZCB0aGUgbWlzc2luZyBzcGFjZSBoZXJlLCB0aGUgY29kZSBoYXMgdG8gYmUgY2hh
+bmdlZAo+dG8gdXNlIHNlcV9wcmludGYoLi4uLCAiICVzIiwgLi4uKSBhZ2Fpbi4KCkl0J3Mga2lu
+ZCBvZiBzdHJhbmdlIHRvIGFkZCBsZWFkaW5nIGFsaWdubWVudCBzcGFjZXMgaW4gYSBmdW5jdGlv
+biBuYW1lZCB4eHhfcHJpbnRfY2hpcCgpOyAKCj4KPkhvd2V2ZXIsIGl0IG1pZ2h0IGJlIHNpbXBs
+ZXIgdG8gbW92ZSB0aGlzIHRvIHRoZSBjb3JlLiBJLmUuIGFkZCBhbgo+dW5jb25kaXRpb25hbCBz
+ZXFfcHV0YyhwLCAnICcpIHRvIHNob3dfaW50ZXJydXB0cygpWzFdLCBhbmQgZHJvcCB0aGUKPnNw
+YWNlcyBmcm9tIGFsbCBjYWxsYmFja3MgYW5kIGZyb20gdGhlIGZhbGxiYWNrcyBpbiBzaG93X2lu
+dGVycnVwdHMoKS4KCkkgd291bGQgdm90ZSBmb3IgdGhpcyBhcHByb2FjaCwgICBpZiB3ZSB3YW50
+IHRvIGZpeCAgdGhvc2UgbWlzYmVoYXZpbmcgYWxpZ25tZW50cy4KSXQncyBjbGVhbmVyLgoKCj4K
+PlsxXSBodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92Ni4xMi9zb3VyY2Uva2VybmVs
+L2lycS9wcm9jLmMjTDUwMwo+Cj5HcntvZXRqZSxlZXRpbmd9cywKPgo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgR2VlcnQKPgo+LS0gCj5HZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
+IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCj4KPkluIHBlcnNv
+bmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEg
+aGFja2VyLiBCdXQKPndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAi
+cHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKCgpUaGFua3N+CkRhdmlkCg==
 
