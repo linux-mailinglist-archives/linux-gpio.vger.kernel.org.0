@@ -1,86 +1,85 @@
-Return-Path: <linux-gpio+bounces-13176-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13177-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 050E99D4889
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2024 09:11:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37E269D488B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2024 09:11:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6BEE1F2238D
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2024 08:11:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3E3C1F22440
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Nov 2024 08:11:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 248AE1CB320;
-	Thu, 21 Nov 2024 08:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81BCB1CB520;
+	Thu, 21 Nov 2024 08:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1TTuoVS2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qSNSMf7K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E539E1CB305
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2024 08:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B301D1CB313
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2024 08:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732176641; cv=none; b=rdcdqmtuPOLXuWpLRamg+0XymbKYFo1ObAoO7v/ELOSwyENdEoyAwRlGINnrdDl8c6VwVljf0hnI341OUDNTmmJzmX8L1H9deom7gsqivk8DYYnmNvkOnArOzn3goFhLCA3Q92qzQrl8FjPNQsbqe7BmjKb3v1y9MdhcZRyz/WY=
+	t=1732176643; cv=none; b=AmZRmxeClaxymrqkhrWREUMcAFtNzTRONlbjsTRXHBH15V7kKa1VwdpWdSDxZE95khh3sjD87TsTbxClky4F9seQUPds6QAI4WXlL+K7FsMhskUY9LdC2an6C+2Xwufj59x5kvMESUwFDc8JjHFp3G1ChR0AXsUml3+kEX1wOm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732176641; c=relaxed/simple;
-	bh=5lOL0dAG+qWC0r4hkRD0OLI4t1JweZw1bUh7yRT08po=;
+	s=arc-20240116; t=1732176643; c=relaxed/simple;
+	bh=iDnfgN6PGF/7eyy8/94LuMag65g09uiHiBRee2CmnRI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tblDpVmLHxdB7NPnKqlfbshUG30RpQEGj+dXeDAnEQscwicXbARKpuUOZlvo/W9yB/U+slA3cwf680R1vP82nzab0Fvvn0UHNo5e4TnHp04p2e9PJ45VvHC+fixznbNb8F8gnoAuSqszV31vRS3P0Zqh1EojFOVZFm9YpNRDWKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1TTuoVS2; arc=none smtp.client-ip=209.85.167.51
+	 MIME-Version:Content-Type; b=DipVuPc3n5sy4Msm2Ccs+qm99CiQHCM5a2G6Kf9f7MY1k9do5vlXtLcPqNO9kTsyxhku1GhrjqpVY7iaRdhiLIG6HdkP+MompfSTgfEkgzssYwVfNEsmv5QtsW1F3TNaeIetjiqZ/l78AGSitST3DNuiNlqb3WDSS7WJh0Dd9/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qSNSMf7K; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53da3b911b9so588175e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2024 00:10:39 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4315baa51d8so4938475e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Nov 2024 00:10:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732176637; x=1732781437; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732176639; x=1732781439; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rnPwcB+5WPLiKnjzFr2LUkl9/dt100jcqR+MZTr4V+I=;
-        b=1TTuoVS2T9NrTTbNg9Mq83G5VUQHaoObfwe9gGuQGEaJwNQlnq9WLn+vw0DQF5N4pB
-         yIEpSD42X1m1p9oO4t/s8+aVW+sRYkWQYHwUDxj9buUp+Dr0rDy1FIh41eMM9kk30bJ8
-         WqPA5qafJVPYpN0pplYyNMTp8HSB9mPbuMiZf+EcXIUVX3YkeOFUj/lJpBjg6JdPx68q
-         FiBYCKgjbboYTU1pnIsuf7Ennkmgaq2tmJ6HuAvwponiQDh7hqNH4rKsQGN3xMSFmS9w
-         J6MmPHOiSSHiutr3A0zio0bv4FLIbOV9JxuMpr508BvRkpz7OMPTpLEZsomuFLXTB1Pk
-         e8AA==
+        bh=sQemGKV1Bllv1eo/npoEZbbDyGyqNGRo1Pu4zW5KeD4=;
+        b=qSNSMf7KFrZrc4xcOTbAF9Mor1guiCFSsgfuhYw//KYaFhWUz18lrYGalM3baip55G
+         o/ebpoRgMrnJthKule/uEmeUqE/gw+2Z5g6zyQ/aynT+l+scKT0dpdJVVUS44vjGidlE
+         m839el3mcxdKMMNpB+VHRUp4mizq3Hl6zjggIwG8LTUU2XdqQ8dQsw1G+L2xeoKG6ShW
+         0CKGprZ4rH/1g4YDBVTMbNGKwT8l0cqcLnBRZyBb37pShCnPenzuG2ys63rMfmlvIty9
+         8KsG7Sovn2As/fqAKVzlYuFTvPwOnghYsJ/caBokYZ22KrOJ8z8ZxqRU96dhQSPEheu0
+         qDUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732176637; x=1732781437;
+        d=1e100.net; s=20230601; t=1732176639; x=1732781439;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rnPwcB+5WPLiKnjzFr2LUkl9/dt100jcqR+MZTr4V+I=;
-        b=tPoXNtPoEfM9KBjXJzw8guONsWlpt7dLvMEb/KHErG9NJYtGAcXfdsbf6Mq7tjJK46
-         M8V0YFZTnJwxFp8XeeTFhndvZz9Yf+j/yj74oyc/kiK0+K0OuQW9akaFKoOQMnS3QNkW
-         RBIcDttaqDSJVpBBRjay75FSPU0MmQRspKKREn+OynWbr1oFNi16PMdmiVV5EtRXdlpA
-         OYNH78KYJhZHv8zZ5MlZSY7u75ClIVFaaFheF7l/85JQqZmeM/VFf8GyLhKK8594+zoL
-         UN3Np1GlPdOpJ4QirZATWL644xcTqyy+dpLqVVOJP/2W0fGmFPn1qKB6SMCnC9D+g8Uw
-         w2qw==
-X-Gm-Message-State: AOJu0Yzc98DiP/ESQ92XOHVuGxk5WPrgh8Qmou8o7dWw4lSvehQihA7t
-	VegIALmrTItxkJxP7TDZ1qjkaR3s4a0Hdx0evHWPXUCqrreT4yBWxKLWDdWv+OJQfS4LFxZXsyy
-	G
-X-Google-Smtp-Source: AGHT+IGlTpfF8XVK0B5gc3g3nL1WX7zKVvmRxcMqPy555X8l8nNBazMekEELBSkNiok4v12jorW8dQ==
-X-Received: by 2002:a05:6512:3b24:b0:53d:c062:b5b7 with SMTP id 2adb3069b0e04-53dc136739dmr2901878e87.42.1732176637449;
-        Thu, 21 Nov 2024 00:10:37 -0800 (PST)
+        bh=sQemGKV1Bllv1eo/npoEZbbDyGyqNGRo1Pu4zW5KeD4=;
+        b=Ytwk8QFuK/g80IsOgPoOrj/YfW997e5StC71yT+csdynWY5L/LneQOd6JvHf3Us3Lx
+         OueonYEndQLcym5GmYovNGWmAHxYPudVBliuKXv9o6D3ayuLe0jKKaMShauGfN62jMiB
+         dIXaX5hhDcfeZX8CoTdGSA4x+C0kPQvnkpWqsIl09QUhzP4yHNlrD/UsreK1lV4A4/CQ
+         Iup49ZoiKoLfMncVF0vbAa0wxlRCALXwbFFlsJoHAGAxhIT9Ptzz6z9RL7g3N48ew9C5
+         H60WIIH0qkxT48HHC/TnhrB2rplITXWj2CsjF24+eg311/+F3tzRSQarB3wOM/uJzRoR
+         WvOA==
+X-Gm-Message-State: AOJu0Yz0KgduThcOSIr5/eEnJ67yC61YTg91bfzzoq0GEGTQNXzGXzcj
+	KAJFHrr3EkKEpUEUi2hUG/tc5i4EadDGt/PplzwNni+mME+46D3bujfoRCAXV0vhN9EONltpBCt
+	l
+X-Google-Smtp-Source: AGHT+IFAtlq3C5FetoSTY9WO82Elg/WGpTD8ieKV2vPhZ+MsbQlICDjhoLXP4IZVp/9ulSV5A7GPcw==
+X-Received: by 2002:a05:600c:5125:b0:430:582f:3a9d with SMTP id 5b1f17b1804b1-4334f01f731mr45241085e9.26.1732176638718;
+        Thu, 21 Nov 2024 00:10:38 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d902:9409:ef0:268d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b01e1170sm46696195e9.3.2024.11.21.00.10.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b01e1170sm46696195e9.3.2024.11.21.00.10.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2024 00:10:36 -0800 (PST)
+        Thu, 21 Nov 2024 00:10:37 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Mun Yew Tham <mun.yew.tham@intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 1/1] gpio: altera: Add missed base and label initialisations
-Date: Thu, 21 Nov 2024 09:10:28 +0100
-Message-ID: <173217662607.10730.5524794345806722350.b4-ty@linaro.org>
+Subject: Re: [PATCH v2 1/1] gpio: zevio: Add missed label initialisation
+Date: Thu, 21 Nov 2024 09:10:29 +0100
+Message-ID: <173217662606.10730.5446470361475878860.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241118095402.516989-1-andriy.shevchenko@linux.intel.com>
-References: <20241118095402.516989-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20241118092729.516736-1-andriy.shevchenko@linux.intel.com>
+References: <20241118092729.516736-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,20 +92,16 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 18 Nov 2024 11:28:02 +0200, Andy Shevchenko wrote:
-> During conversion driver to modern APIs the base field initial value
-> of the GPIO chip was moved from -1 to 0, which triggers a warning.
-> Add missed base initialisation as it was in the original code.
-> 
+On Mon, 18 Nov 2024 11:27:07 +0200, Andy Shevchenko wrote:
 > Initialise the GPIO chip label correctly as it was done by
 > of_mm_gpiochip_add_data() before the below mentioned change.
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/1] gpio: altera: Add missed base and label initialisations
-      commit: c7899503ad9c06a0c6ee2796301139731cf1f5ab
+[1/1] gpio: zevio: Add missed label initialisation
+      commit: 5bbed54ba66925ebca19092d0750630f943d7bf2
 
 Best regards,
 -- 
