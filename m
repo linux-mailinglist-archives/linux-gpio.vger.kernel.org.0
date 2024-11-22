@@ -1,142 +1,185 @@
-Return-Path: <linux-gpio+bounces-13201-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13202-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C6459D608B
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 15:40:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 869949D62D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 18:16:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9548BB2240A
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 14:40:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D9BAB249C2
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 17:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 763321442F6;
-	Fri, 22 Nov 2024 14:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63A1339A1;
+	Fri, 22 Nov 2024 17:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kk41hIxV"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="hi2BMbQd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7513632B;
-	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913B51CD3F
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2024 17:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732286137; cv=none; b=j8K6KaphYMBYyn3kdsFMfRoFnzIRdEAcH2twHEYBOOuZXF99itsWuOy5j8fcvZhfZjB1zWokxzq4fdNRWlQ22rqvqemwEt9WTkEs7em1diJ2xXfw3hF+4l9FJIDXVd7e8H7TnmyK0d+V8S9h4YR/Kxf6SvCxZpFpSNdqyRPLbXo=
+	t=1732295794; cv=none; b=kXw6o4vFUUcJ8xi5HHhpqtZtOCkhkNyAMa9y9P0tDxvJZP3nkqq9kOACdValb0sEFWBGo9ogZM3H1EggHBOI2t8pneSR4M2vwBeqNbAUR/ZRDkzDc3V5Y4MEShilYEfLlPSPoeo+EbevxaqS6kV8J7Sd0TL851nTyu20qmGNMQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732286137; c=relaxed/simple;
-	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHXt/7M8izQuwROVOGTiuJLkEOilvFm4+i9zEkcLJxWcEfRRv6EM23Zw+B/95GMhZLJHhIo7S9WqzqNOAHrwWU6khhFpWjgwzqB1B780ytOrfKXtCFrkLfIIiuedhFn5vB6tsIYQlkZb99Yv6QhfHwsHlKqEdUVluKUljX5NrLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kk41hIxV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD89C4CECE;
-	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1732286136;
-	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kk41hIxVbqJi+HRvUxayl8qy4FydMVYORD+YncMsakBNAFYyJfpT76T5jLcN/DJzn
-	 k5X4+fLtDEDUyLpF8dPpVUkaDqDYfO5sH776WqA+LWucQ0G1OF8HlmHnAUP5NIYyPw
-	 WTP8gvTV6a2Edgu8k5sL0gk5uT8FbTMcA6Tw6OJA=
-Date: Fri, 22 Nov 2024 15:35:10 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, David Wang <00107082@163.com>,
-	brgl@bgdev.pl, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, geert@linux-m68k.org,
-	linux-hardening@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] Fix a potential abuse of seq_printf() format string in
- drivers
-Message-ID: <2024112259-bagful-commend-89ff@gregkh>
-References: <20241120053055.225195-1-00107082@163.com>
- <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
- <202411201008.5262C14@keescook>
- <2024112031-unreal-backslid-0c24@gregkh>
- <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
+	s=arc-20240116; t=1732295794; c=relaxed/simple;
+	bh=As+S2HIcqDK6J9q5LmIvoMMmR56boqQ0D/RskL91u+g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mkog/3+G2k8y2KwYR9p7ZPRjHHYz+RbzNjFLeFbQMB8vzLbaGovksQ4BifI3xsMLdIViwLX5uSQGL3iFbk/vZbyc6P3nO6YpJ7L6UDdeAETVlwhnJailzZC8hY5dHa2V6zDuPKR+0ncD3sBtaICeIUmJsyXe7AKKVwAN7Z3DRi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=hi2BMbQd; arc=none smtp.client-ip=162.248.234.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
+Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
+	by mail.xes-mad.com (Postfix) with ESMTP id 89A872018C;
+	Fri, 22 Nov 2024 11:10:46 -0600 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
+	t=1732295446; bh=As+S2HIcqDK6J9q5LmIvoMMmR56boqQ0D/RskL91u+g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hi2BMbQdQ7Dq47+m93qxYBUJIyR1Nx+ZsBxBXgLUk4SxKU9pn8GzxxyleRM1YhOhy
+	 q4PzFoYvjCaoiZMtK0oR3FnAdAxdjpof14nC/fOtDUsTac7VQvSCOmrgyevWc1lYor
+	 ZHPG0WR/LoltLrbpeYY3KgVP2xMnroBab38zDjnk=
+From: Vincent Fazio <vfazio@xes-inc.com>
+To: linux-gpio@vger.kernel.org
+Cc: vfazio@gmail.com,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Vincent Fazio <vfazio@xes-inc.com>
+Subject: [libgpiod][PATCH] bindings: python: migrate metadata to pyproject.toml
+Date: Fri, 22 Nov 2024 11:10:27 -0600
+Message-Id: <20241122171027.762311-1-vfazio@xes-inc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
 
-On Thu, Nov 21, 2024 at 08:38:27PM -0800, Kees Cook wrote:
-> 
-> 
-> On November 20, 2024 11:28:35 AM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >On Wed, Nov 20, 2024 at 10:12:40AM -0800, Kees Cook wrote:
-> >> On Wed, Nov 20, 2024 at 08:35:38AM +0100, Linus Walleij wrote:
-> >> > On Wed, Nov 20, 2024 at 6:31 AM David Wang <00107082@163.com> wrote:
-> >> > 
-> >> > > Using device name as format string of seq_printf() is proned to
-> >> > > "Format string attack", opens possibility for exploitation.
-> >> > > Seq_puts() is safer and more efficient.
-> >> > >
-> >> > > Signed-off-by: David Wang <00107082@163.com>
-> >> > 
-> >> > Okay better get Kees' eye on this, he looks after string vulnerabilities.
-> >> > (But I think you're right.)
-> >> 
-> >> Agreed, this may lead to kernel memory content exposures. seq_puts()
-> >> looks right.
-> >> 
-> >> Reviewed-by: Kees Cook <kees@kernel.org>
-> >
-> >Wait, userspace "shouldn't" be controlling a device name, but odds are
-> >there are some paths/subsystems that do this, ugh.
-> >
-> >> To defend against this, it might be interesting to detect
-> >> single-argument seq_printf() usage and aim it at seq_puts()
-> >> automatically...
-> >
-> >Yeah, that would be good to squash this type of issue.
-> >
-> >> > >  drivers/gpio/gpio-aspeed-sgpio.c            | 2 +-
-> >> > >  drivers/gpio/gpio-aspeed.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-ep93xx.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-hlwd.c                    | 2 +-
-> >> > >  drivers/gpio/gpio-mlxbf2.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-omap.c                    | 2 +-
-> >> > >  drivers/gpio/gpio-pca953x.c                 | 2 +-
-> >> > >  drivers/gpio/gpio-pl061.c                   | 2 +-
-> >> > >  drivers/gpio/gpio-tegra.c                   | 2 +-
-> >> > >  drivers/gpio/gpio-tegra186.c                | 2 +-
-> >> > >  drivers/gpio/gpio-tqmx86.c                  | 2 +-
-> >> > >  drivers/gpio/gpio-visconti.c                | 2 +-
-> >> > >  drivers/gpio/gpio-xgs-iproc.c               | 2 +-
-> >> > >  drivers/irqchip/irq-gic.c                   | 2 +-
-> >> > >  drivers/irqchip/irq-mvebu-pic.c             | 2 +-
-> >> > >  drivers/irqchip/irq-versatile-fpga.c        | 2 +-
-> >> > >  drivers/pinctrl/bcm/pinctrl-iproc-gpio.c    | 2 +-
-> >> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-mcp23s08.c          | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-stmfx.c             | 2 +-
-> >> > >  drivers/pinctrl/pinctrl-sx150x.c            | 2 +-
-> >> > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 2 +-
-> >> > 
-> >> > Can you split this in three patches per-subsystem?
-> >> > One for gpio, one for irqchip and one for pinctrl?
-> >> > 
-> >> > Then send to each subsystem maintainer and CC kees on
-> >> > each.
-> >> > 
-> >> > I'm just the pinctrl maintainer. The rest can be found with
-> >> > scripts/get_maintainer.pl.
-> >> 
-> >> Oof. That's a lot of work for a mechanical change like this. Perhaps
-> >> Greg KH can take it directly to the drivers tree instead?
-> >
-> >I can take it all, as-is, right now, if you want me to.  Just let me
-> >know.
-> 
-> Yes, please do. I will send a patch for making seq_printf more defensive separately.
+PEP 621 [0] designated pyproject.toml as the standard place to store
+project metadata.
 
-Great, now queued up, let's make sure 0-day is ok with it...
+Setuptools, the build system used by this project, has support for
+reading metadata from this location. As such, migrate the majority of
+the metadata out of `setup.py`.
 
-greg k-h
+For now, the external modules are left declared in `setup.py` because
+support within pyproject.toml is still experimental [1].
+
+New metadata has been added/updated, namely:
+  * Add Trove classifiers
+  * Add a link to the issues page
+  * Update license from LGPL-2.1 to LGPL-2.1+ to match SPDX identifier
+
+[0]: https://peps.python.org/pep-0621/
+[1]: https://setuptools.pypa.io/en/stable/userguide/ext_modules.html#pyproject-toml
+Closes: https://github.com/brgl/libgpiod/issues/107
+Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+---
+ bindings/python/pyproject.toml | 43 +++++++++++++++++++++++++++++++++-
+ bindings/python/setup.py       | 20 +---------------
+ 2 files changed, 43 insertions(+), 20 deletions(-)
+
+diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.toml
+index d6f5f9b..dbc0c7d 100644
+--- a/bindings/python/pyproject.toml
++++ b/bindings/python/pyproject.toml
+@@ -2,7 +2,48 @@
+ # SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
+ 
+ [build-system]
+-requires = ["setuptools", "wheel", "packaging"]
++requires = ["setuptools>=69.0.0", "wheel", "packaging"]
++build-backend = "setuptools.build_meta"
++
++[project]
++name = "gpiod"
++dynamic = ["version"]
++description = "Python bindings for libgpiod"
++readme = "README.md"
++license = {text = "LGPL-2.1-or-later"}
++requires-python = ">=3.9.0"
++authors = [
++  {name = "Bartosz Golaszewski", email = "brgl@bgdev.pl"},
++]
++classifiers = [
++  "Development Status :: 5 - Production/Stable",
++  "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
++  "Operating System :: POSIX :: Linux",
++  "Typing :: Typed",
++  "Programming Language :: Python",
++  "Programming Language :: Python :: 3",
++  "Programming Language :: Python :: 3 :: Only",
++  "Programming Language :: Python :: 3.9",
++  "Programming Language :: Python :: 3.10",
++  "Programming Language :: Python :: 3.11",
++  "Programming Language :: Python :: 3.12",
++  "Programming Language :: Python :: 3.13",
++]
++
++[project.urls]
++Homepage = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
++Issues = "https://github.com/brgl/libgpiod/issues/"
++
++[tool.setuptools]
++platforms = ["linux"]
++include-package-data = false
++
++[tool.setuptools.dynamic]
++version = {attr = "gpiod.version.__version__"}
++
++[tool.setuptools.packages.find]
++include = ["gpiod"]
++namespaces = false
+ 
+ [tool.mypy]
+ python_version = "3.9"
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index 0d518af..1af4709 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -4,7 +4,7 @@
+ from os import getenv, path, unlink
+ from shutil import copytree, rmtree
+ 
+-from setuptools import Extension, find_packages, setup
++from setuptools import Extension, setup
+ from setuptools.command.build_ext import build_ext as orig_build_ext
+ from setuptools.command.sdist import log
+ from setuptools.command.sdist import sdist as orig_sdist
+@@ -18,11 +18,6 @@ TAR_FILENAME = "libgpiod-{version}.tar.gz"
+ ASC_FILENAME = "sha256sums.asc"
+ SHA256_CHUNK_SIZE = 2048
+ 
+-# __version__
+-with open("gpiod/version.py", "r") as fd:
+-    exec(fd.read())
+-
+-
+ def sha256(filename):
+     """
+     Return a sha256sum for a specific filename, loading the file in chunks
+@@ -225,19 +220,6 @@ gpiod_ext = Extension(
+ )
+ 
+ setup(
+-    name="gpiod",
+-    url="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
+-    packages=find_packages(exclude=["tests", "tests.*"]),
+-    package_data={"gpiod": ["py.typed", "_ext.pyi"]},
+-    python_requires=">=3.9.0",
+     ext_modules=[gpiod_ext],
+     cmdclass={"build_ext": build_ext, "sdist": sdist},
+-    version=__version__,
+-    author="Bartosz Golaszewski",
+-    author_email="brgl@bgdev.pl",
+-    description="Python bindings for libgpiod",
+-    long_description=open("README.md", "r").read(),
+-    long_description_content_type="text/markdown",
+-    platforms=["linux"],
+-    license="LGPLv2.1",
+ )
+-- 
+2.34.1
+
 
