@@ -1,118 +1,142 @@
-Return-Path: <linux-gpio+bounces-13200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A4B9D6042
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 15:24:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C6459D608B
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 15:40:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 654E2B21E34
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 14:24:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9548BB2240A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 14:40:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 514D17405A;
-	Fri, 22 Nov 2024 14:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 763321442F6;
+	Fri, 22 Nov 2024 14:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EC4A2+uh"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kk41hIxV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4154B2309B7
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2024 14:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7513632B;
+	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732285469; cv=none; b=NZuzXlshyD18wDjI+zrV+MA5QCJfsE6ieSfqDcQ0trc4VajSItNWjP18RZW5is2oWUrwt/2F55xdSpGda9s3UqXidw6YNUwuXHeRe3llfvJgxdW660Q49YHDJgZGnSwzLlj8tqwZ4mw8jOWS7/hyj4Lb2CVOsCT3TujpMBBocME=
+	t=1732286137; cv=none; b=j8K6KaphYMBYyn3kdsFMfRoFnzIRdEAcH2twHEYBOOuZXF99itsWuOy5j8fcvZhfZjB1zWokxzq4fdNRWlQ22rqvqemwEt9WTkEs7em1diJ2xXfw3hF+4l9FJIDXVd7e8H7TnmyK0d+V8S9h4YR/Kxf6SvCxZpFpSNdqyRPLbXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732285469; c=relaxed/simple;
-	bh=SZrIbYqNJooRI/8mP+lYzjg7Ex28ZYxTZhOjMiHUNPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bZ8idZ0yGwljer/11wzVfFMI6p4YLPgHOu4TElOn3X881BpQU5IzwNXY3cbFG1Us9WS/enlt/rCv7k4VQ1F8jL3hmwDd/bnhO6zDZycXAkrQ8Iz1OlYD35k66M8JGci4BVU3QmcDMulEplaNr5Ev4sWcMemZgu8DQ9dqWER3qhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EC4A2+uh; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43169902057so18862285e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Nov 2024 06:24:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732285465; x=1732890265; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Nh6Qm3+g7FvP2C/uBSg+5gQrB4CqmwHy+4OBt6kFZI=;
-        b=EC4A2+uh64dTIGUT+8QIUvLnOQWEkhXvOFfncLcyFP+Gd8TNZkXX3GKaGy44KJEBEb
-         EQvZb0hcASClrxmreGjVvNY9OYqiImQu0c8yxOsQhpQt2tozOYDuYXVj/VEulmmNT9jJ
-         BKy4TLc7ane+8sOvuBQol/LDirhw/yE+L7mFnUPolcOSSWda1KZXb8QmbSki9CHETcVx
-         kWl8ialId8mXqDhj5zbYDg1f27p/B3uMLWzF/nAjKQLHIG6wpquOY+qfuDvkL6y3ZKWH
-         GnAjABsLfWlgQtcKcHIq8DAvfTtcxPlZFkdnXN7WfwFJXOxpvHSPDS5oXRbn5uQeVtyV
-         syGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732285465; x=1732890265;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Nh6Qm3+g7FvP2C/uBSg+5gQrB4CqmwHy+4OBt6kFZI=;
-        b=UjowKWkLeE68u8CYzRHmfVXi8W8NAdbiN/2R9Ocd9pxokmHClGlErVuiP/OwzM6avU
-         0pwY/hRh06abKInfPR6CPqNnN52ubDF0rqNgbki7h3+Pe+++nXhWFzZ+iDfXApWxADJe
-         rKBIoOWQjL/pCrP99j7x3FqSS2YOtMqfg5lTeOSHIMPH0sCAihgVIve02E3MuBTU3JcO
-         BO9lV+ydRK7Ocepv3XgC1GGVcdyZrg3Du4IyJz4QUpR+F0RwtlWmVFxfGVzhZdPUQ22e
-         ROa+w2bfV4do1MiAqCvNLARs9uFPNCbxKAxyHDMHCoB/7Tma2budhoY8DZy0Ap8bMuJU
-         1B4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnGWZbsOMKwIX+oWyUvMemtUBVMIuPk8rnAsGhptcVO36sVmmpkXnMcm7TtDOo50cpUggAsmpKLnDU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVmdtAoavaMW0T971b1SGUTHCv8F9NorYDuiyXBiaT1mr9Z4HJ
-	DbjTEErqVNNUncpaY+Mbtr1toPC7e7otBJs+fZiduubZNYQDAz2qgZBDK7DyONo=
-X-Gm-Gg: ASbGncuDYuJrMQNleym7EIUZz0mfcsfRJGfY8kEioXQu+alrSaDuf9AoDIG4xYuCrnM
-	+2Bc1L8+nzA94sSt9HwyeT65Woom8FQ2VaDhFPKe9qpsauT7MIe/qmiNWbc9i6rivUfXA0eXsOu
-	d+/mkCTTr2v9scnoKhfrOTmmxqL7yuDBTtdk+BOR8JgTKZnl2boL+7foXR1PrlouT0e794M3aCX
-	7F27Ual8+iRm5B/Cce9/3YVgNQUMk5HAz9U+HC0LeBY4LzJ9g==
-X-Google-Smtp-Source: AGHT+IFIZ2iG2mcVpwd2xQ6e2MRIo00PE7xJ1mgrdA8y0aNVfwo7kWxoPIgftfJ9yBIuyCxe0iV2Mg==
-X-Received: by 2002:a05:600c:1f96:b0:430:57f2:bae2 with SMTP id 5b1f17b1804b1-433ce4ab949mr23121145e9.23.1732285465348;
-        Fri, 22 Nov 2024 06:24:25 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1651:6ba4:e8f3:d05f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433b45d4ce6sm91642195e9.25.2024.11.22.06.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 06:24:24 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: mpsse: Remove usage of the deprecated ida_simple_xx() API
-Date: Fri, 22 Nov 2024 15:24:23 +0100
-Message-ID: <173228543205.96444.5329013618408854886.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2ce706d3242b9d3e4b9c20c0a7d9a8afcf8897ec.1729423829.git.christophe.jaillet@wanadoo.fr>
-References: <2ce706d3242b9d3e4b9c20c0a7d9a8afcf8897ec.1729423829.git.christophe.jaillet@wanadoo.fr>
+	s=arc-20240116; t=1732286137; c=relaxed/simple;
+	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LHXt/7M8izQuwROVOGTiuJLkEOilvFm4+i9zEkcLJxWcEfRRv6EM23Zw+B/95GMhZLJHhIo7S9WqzqNOAHrwWU6khhFpWjgwzqB1B780ytOrfKXtCFrkLfIIiuedhFn5vB6tsIYQlkZb99Yv6QhfHwsHlKqEdUVluKUljX5NrLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kk41hIxV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD89C4CECE;
+	Fri, 22 Nov 2024 14:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1732286136;
+	bh=P3LpHamRarxbPekIwfEOuKQjsioKyb0VI61LrbiusJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kk41hIxVbqJi+HRvUxayl8qy4FydMVYORD+YncMsakBNAFYyJfpT76T5jLcN/DJzn
+	 k5X4+fLtDEDUyLpF8dPpVUkaDqDYfO5sH776WqA+LWucQ0G1OF8HlmHnAUP5NIYyPw
+	 WTP8gvTV6a2Edgu8k5sL0gk5uT8FbTMcA6Tw6OJA=
+Date: Fri, 22 Nov 2024 15:35:10 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, David Wang <00107082@163.com>,
+	brgl@bgdev.pl, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, geert@linux-m68k.org,
+	linux-hardening@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] Fix a potential abuse of seq_printf() format string in
+ drivers
+Message-ID: <2024112259-bagful-commend-89ff@gregkh>
+References: <20241120053055.225195-1-00107082@163.com>
+ <CACRpkdZ0zwn0908LDqrfQJtF7M-WRcKA4qdJdwSXZNzm0L47CA@mail.gmail.com>
+ <202411201008.5262C14@keescook>
+ <2024112031-unreal-backslid-0c24@gregkh>
+ <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8BEA1444-469F-4276-AB04-0CF7C324916D@kernel.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Fri, 22 Nov 2024 13:45:45 +0100, Christophe JAILLET wrote:
-> ida_alloc() and ida_free() should be preferred to the deprecated
-> ida_simple_get() and ida_simple_remove().
-> 
-> This is less verbose.
+On Thu, Nov 21, 2024 at 08:38:27PM -0800, Kees Cook wrote:
 > 
 > 
+> On November 20, 2024 11:28:35 AM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> >On Wed, Nov 20, 2024 at 10:12:40AM -0800, Kees Cook wrote:
+> >> On Wed, Nov 20, 2024 at 08:35:38AM +0100, Linus Walleij wrote:
+> >> > On Wed, Nov 20, 2024 at 6:31 AM David Wang <00107082@163.com> wrote:
+> >> > 
+> >> > > Using device name as format string of seq_printf() is proned to
+> >> > > "Format string attack", opens possibility for exploitation.
+> >> > > Seq_puts() is safer and more efficient.
+> >> > >
+> >> > > Signed-off-by: David Wang <00107082@163.com>
+> >> > 
+> >> > Okay better get Kees' eye on this, he looks after string vulnerabilities.
+> >> > (But I think you're right.)
+> >> 
+> >> Agreed, this may lead to kernel memory content exposures. seq_puts()
+> >> looks right.
+> >> 
+> >> Reviewed-by: Kees Cook <kees@kernel.org>
+> >
+> >Wait, userspace "shouldn't" be controlling a device name, but odds are
+> >there are some paths/subsystems that do this, ugh.
+> >
+> >> To defend against this, it might be interesting to detect
+> >> single-argument seq_printf() usage and aim it at seq_puts()
+> >> automatically...
+> >
+> >Yeah, that would be good to squash this type of issue.
+> >
+> >> > >  drivers/gpio/gpio-aspeed-sgpio.c            | 2 +-
+> >> > >  drivers/gpio/gpio-aspeed.c                  | 2 +-
+> >> > >  drivers/gpio/gpio-ep93xx.c                  | 2 +-
+> >> > >  drivers/gpio/gpio-hlwd.c                    | 2 +-
+> >> > >  drivers/gpio/gpio-mlxbf2.c                  | 2 +-
+> >> > >  drivers/gpio/gpio-omap.c                    | 2 +-
+> >> > >  drivers/gpio/gpio-pca953x.c                 | 2 +-
+> >> > >  drivers/gpio/gpio-pl061.c                   | 2 +-
+> >> > >  drivers/gpio/gpio-tegra.c                   | 2 +-
+> >> > >  drivers/gpio/gpio-tegra186.c                | 2 +-
+> >> > >  drivers/gpio/gpio-tqmx86.c                  | 2 +-
+> >> > >  drivers/gpio/gpio-visconti.c                | 2 +-
+> >> > >  drivers/gpio/gpio-xgs-iproc.c               | 2 +-
+> >> > >  drivers/irqchip/irq-gic.c                   | 2 +-
+> >> > >  drivers/irqchip/irq-mvebu-pic.c             | 2 +-
+> >> > >  drivers/irqchip/irq-versatile-fpga.c        | 2 +-
+> >> > >  drivers/pinctrl/bcm/pinctrl-iproc-gpio.c    | 2 +-
+> >> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
+> >> > >  drivers/pinctrl/pinctrl-mcp23s08.c          | 2 +-
+> >> > >  drivers/pinctrl/pinctrl-stmfx.c             | 2 +-
+> >> > >  drivers/pinctrl/pinctrl-sx150x.c            | 2 +-
+> >> > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 2 +-
+> >> > 
+> >> > Can you split this in three patches per-subsystem?
+> >> > One for gpio, one for irqchip and one for pinctrl?
+> >> > 
+> >> > Then send to each subsystem maintainer and CC kees on
+> >> > each.
+> >> > 
+> >> > I'm just the pinctrl maintainer. The rest can be found with
+> >> > scripts/get_maintainer.pl.
+> >> 
+> >> Oof. That's a lot of work for a mechanical change like this. Perhaps
+> >> Greg KH can take it directly to the drivers tree instead?
+> >
+> >I can take it all, as-is, right now, if you want me to.  Just let me
+> >know.
+> 
+> Yes, please do. I will send a patch for making seq_printf more defensive separately.
 
-Good point, applied, thanks!
+Great, now queued up, let's make sure 0-day is ok with it...
 
-I will send it next week with other fixes I have queued for v6.13-rc1.
-
-[1/1] gpio: mpsse: Remove usage of the deprecated ida_simple_xx() API
-      commit: f57c084928661969a337c731cd05e1da97320829
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+greg k-h
 
