@@ -1,164 +1,110 @@
-Return-Path: <linux-gpio+bounces-13198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A29879D5F10
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 13:46:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A11B9D5F13
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 13:47:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F3D11F237B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 12:46:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACCEEB26E7D
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Nov 2024 12:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 974421DF969;
-	Fri, 22 Nov 2024 12:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55CC1DEFC8;
+	Fri, 22 Nov 2024 12:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o47lvyrb"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lhYRuWY5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7A91E52D;
-	Fri, 22 Nov 2024 12:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7451E492;
+	Fri, 22 Nov 2024 12:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732279546; cv=none; b=DMu551kWUuJNEaZIe8B2LNWH+cDK4sE5dQKLnVSZ2pPYqbsWCPjw9WZUBN4bI8MZ9jZRlWXJQ9AKODCx6PCE6dvFmDNS/Iwt3I6T9YP4F0fQlMPkIoEj5Q2sSBkQeqQPirQ4kL0lT15r8Yi2UUxBPJ0puQo8AxP4654tkY+sXsU=
+	t=1732279574; cv=none; b=ZdY9+CN91P2qkiTbMDaZx2cA4kj2UvNlVp1fo9dDJCCs9YHdEfWAz5UjofQAORkp/NJGC4+t3F7fs6s3r+ad3SN1KO6IGPFBlpDqRzyRUm6rt34PKf72qf+sLsoXfYORuHDna9pOB9TeJgt0/4sIKpkh4eO9X/5q/AzfX1IlBuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732279546; c=relaxed/simple;
-	bh=Bm4WRksVmD7sFXxYAq19D3ZgtZ11SpKaEs2hcjauaeE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fdiL12mthyvJP+pylKLQrfVCJQ1bweZK0PudHCtI4RzHk9UJFd/5I1guho/IUhtsVPgf9erU/AOshS0Z+W8Te/HPFMGiob+LcsTTtSxWZq3GkZxWo+sI10r6mgjae5gjhGP6+LQtNeQ6K6Wl+BuVuPSvMDoDsxOEe0CgBgLUbhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o47lvyrb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AM7FNGn020915;
-	Fri, 22 Nov 2024 12:45:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	42j83bS2JYE8Us/GYuAe6PoNrQZYsucJiuGsc4BcDmc=; b=o47lvyrbPJA1LkUp
-	nBGVG6w98t5BmJt0At9E2+cZ3533tueryNDjrNyoHfN3NKJIiG6WpKXp18WteUZL
-	yHEtADgSreyuTzNvXx5dlyndqUSebwzoONl7lGVEFj2xs12ATOuqq1rgez8ddSkI
-	irI+1+Mw96lpKvMcJHhRvVQvsYqKxGqtf3x36khaDHy766WAcfmpTBsNZ0FpG0oI
-	oIkZM9y3bfMBKzuVF1Wv6iKwoQ4Vh5sX6ztSWCNpPHtFt3ZPXu4GJE+J3RyGUn5x
-	x8N06kLQVZD8zkkhprM/5xKjzXBHYzg1Ztzkx/tBcOuwetIYktLz5XGTAveVkHq4
-	60Ov4Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4320wk47qe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Nov 2024 12:45:41 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AMCjeWZ005097
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Nov 2024 12:45:40 GMT
-Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 22 Nov 2024 04:45:36 -0800
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-To: <andersson@kernel.org>, <linus.walleij@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-Subject: [PATCH 4/4] arm64: dts: qcom: ipq5424: configure spi0 node for rdp466
-Date: Fri, 22 Nov 2024 18:15:05 +0530
-Message-ID: <20241122124505.1688436-5-quic_mmanikan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241122124505.1688436-1-quic_mmanikan@quicinc.com>
-References: <20241122124505.1688436-1-quic_mmanikan@quicinc.com>
+	s=arc-20240116; t=1732279574; c=relaxed/simple;
+	bh=HbmXBgGe4VtYNsyBvgCkfTFBJyyNuOGJY1ZWEnc4+QQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=skYkyifG9qOPCzWhMoB12ISsnu3/GnV5MPDDudnBPg8MQAeJUas5BTRKJWHSy+05BghV8xhiARO0i4+z81IB2eVe8RSmHvmj7j40BLDA6RTzaqDw16qRve2frgOpT4WFj2yZSUJ6Rtr8c7VVOd7PXuP+y7Ln6UepEDpF+msDHwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lhYRuWY5; arc=none smtp.client-ip=80.12.242.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id ET33tjl3RNbMMET33tD1vc; Fri, 22 Nov 2024 13:46:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1732279570;
+	bh=hNiBKTNhrvcmco3gchSSISv4AnKViBv+HKmddqScrPA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lhYRuWY5JHFf1WyOVjOVsqZOklg7jeJyTSDQHhSnCc6cYS0uaxf03b1c6RifR80Wp
+	 YxHd5M3IpW7L51fhTBzo8csajmPHG4UBh+P075Zdc1qBAnIhUmI/xi5FJhBdl7EmIz
+	 kkMzgJudkYVIA/VRbkH/4cAwkXfIikEVRQh9Z1C23vCW2wV53gBEwekLJOia4LrVS5
+	 i6CwOoPrjifkhPKVbKJBIqpfwgF17moFWeaVBHxR/Dm2lBzucd197kLKd9ou2o5PCX
+	 1H/R11ZLh1NnKepFa2mvcJdEYgafE10G6Sa52he9wMcr4eIqCsMY0AtszTcKl8ilbD
+	 CsTNPDeZAIGIg==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 22 Nov 2024 13:46:10 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: mpsse: Remove usage of the deprecated ida_simple_xx() API
+Date: Fri, 22 Nov 2024 13:45:45 +0100
+Message-ID: <2ce706d3242b9d3e4b9c20c0a7d9a8afcf8897ec.1729423829.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Z8MRihk9J0XKbZAElDvwjQRjoQcBkncU
-X-Proofpoint-GUID: Z8MRihk9J0XKbZAElDvwjQRjoQcBkncU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=830
- adultscore=0 mlxscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411220108
 
-Enable the SPI0 node and configure the associated gpio pins.
+ida_alloc() and ida_free() should be preferred to the deprecated
+ida_simple_get() and ida_simple_remove().
 
-Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+This is less verbose.
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 45 +++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+The ida_simple_get()/ida_simple_remove() API was close to be removed (see
+[1]). A usage has been re-introduced in v6.12 with this new driver 🙁
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-index d4d31026a026..6256216ca764 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-@@ -23,6 +23,36 @@ &sleep_clk {
- };
+[1]: https://lore.kernel.org/all/cover.1722853349.git.christophe.jaillet@wanadoo.fr/
+---
+ drivers/gpio/gpio-mpsse.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpsse.c b/drivers/gpio/gpio-mpsse.c
+index 3ab6651d2226..6bfc447b71fd 100644
+--- a/drivers/gpio/gpio-mpsse.c
++++ b/drivers/gpio/gpio-mpsse.c
+@@ -403,7 +403,7 @@ static void gpio_mpsse_ida_remove(void *data)
+ {
+ 	struct mpsse_priv *priv = data;
  
- &tlmm {
-+	spi0_default_state: spi0-default-state {
-+		clk-pins {
-+			pins = "gpio6";
-+			function = "spi0_clk";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+		};
-+
-+		cs-pins {
-+			pins = "gpio7";
-+			function = "spi0_cs";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		miso-pins {
-+			pins = "gpio8";
-+			function = "spi0_miso";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+		};
-+
-+		mosi-pins {
-+			pins = "gpio9";
-+			function = "spi0_mosi";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio5";
-@@ -57,3 +87,18 @@ &xo_board {
- 	clock-frequency = <24000000>;
- };
+-	ida_simple_remove(&gpio_mpsse_ida, priv->id);
++	ida_free(&gpio_mpsse_ida, priv->id);
+ }
  
-+&qupv3 {
-+	spi0: spi@1a90000 {
-+		pinctrl-0 = <&spi0_default_state>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		flash@0 {
-+			compatible = "micron,n25q128a11", "jedec,spi-nor";
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			spi-max-frequency = <50000000>;
-+		};
-+	};
-+};
+ static int gpio_mpsse_probe(struct usb_interface *interface,
+@@ -422,7 +422,7 @@ static int gpio_mpsse_probe(struct usb_interface *interface,
+ 	priv->intf = interface;
+ 	priv->intf_id = interface->cur_altsetting->desc.bInterfaceNumber;
+ 
+-	priv->id = ida_simple_get(&gpio_mpsse_ida, 0, 0, GFP_KERNEL);
++	priv->id = ida_alloc(&gpio_mpsse_ida, GFP_KERNEL);
+ 	if (priv->id < 0)
+ 		return priv->id;
+ 
 -- 
-2.34.1
+2.47.0
 
 
