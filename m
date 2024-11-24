@@ -1,112 +1,107 @@
-Return-Path: <linux-gpio+bounces-13244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F1C99D7755
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 19:29:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91D259D77ED
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 20:32:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8A25B23661
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 16:55:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96AFCB22F9E
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 19:26:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9306518B460;
-	Sun, 24 Nov 2024 16:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C790D156962;
+	Sun, 24 Nov 2024 19:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoZNqMVt"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PknNvkSM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5135C189F45;
-	Sun, 24 Nov 2024 16:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E722500A6;
+	Sun, 24 Nov 2024 19:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732467300; cv=none; b=HOWKw81wJUcTrJONcmrdpY10JApkSb3VUSEKgzZ8U6RD5E+9YqZNRdzlXhUQt25rdPiyEG7MxWE0jQCNsOLqSxiMAvntyqGifc8rkovn8CQ6fBfqsTQtyEkg+3jAoiUfG7jBW7T346XCoUyc/cele5m5mJMrB7Mh4KBuCMJnW70=
+	t=1732476383; cv=none; b=CbFG4sh5Nhfem4Is/OJJisgVKUI8t9RCbV1Oz9Hn7yEdUm35lTjcv+shfnf+pYqdjow8GnrTTfGjpYBOZ9ghJx+s3jhDrbtbsvDQPi3MBKnHSXCZKPMJqjd6dacK4UtXB3ndV6bothIckzYl8fWOv280BPH6Ig7xjrUGRGLUlxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732467300; c=relaxed/simple;
-	bh=xjHzIgrs0evP7qQh1vDP8iL2YuIbWNeUnTID39DnOfQ=;
+	s=arc-20240116; t=1732476383; c=relaxed/simple;
+	bh=1qIuIvpK2MuhI/SQRLZVbgKJw5u3DWeW/6z9aow2UFc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1P+mCL121f4j9MhvDoT94T+Hyt2EgSr9YmF9+Yh6YcKhYnD5uKr/il8GrGr2pqyc/qDwFE2VpTD5Ng2lHMmU3bkDdD1rIIRJ2VvYtJm4GYuuKvMHsNJoYuQZq5ANLReQsGzezC/zv6l5CXkCkBRdoyRKZ74pPVocHLcF6P7hQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoZNqMVt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFCBC4CECC;
-	Sun, 24 Nov 2024 16:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732467299;
-	bh=xjHzIgrs0evP7qQh1vDP8iL2YuIbWNeUnTID39DnOfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uoZNqMVtF8aUG2rkbpgEkw4uObOeEM5TcWw+QgZ/wekchZlpLwoWzHBF1olPVSqnz
-	 SM2KcYljWokCjLyaIuHaNF8peWIG/NET1R6TKxYBq7K9pgP+Vu3v0g1nF9p/T4mEjS
-	 Mh/ijXQoBQrd9+xZQ+MuWt+2AGhmjr6/+f8t/2ljHz4EAUh15LkObVHBXZa3KHIONX
-	 V4fO5oeY2c8aGxzl0AwIt1Gt8UAVHfsZ5t4jOPxtf6Hqht2AIT8dvT3ZPC6a+4Gkfk
-	 6nrKCkP2PuclaQP/iiAponvcrF5NxtzZqJmoaSBANtBtJoViFQsLz6BM6HXGzk1jfo
-	 e+pomu2pAHf1w==
-Date: Sun, 24 Nov 2024 11:54:58 -0500
-From: Sasha Levin <sashal@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] pin control changes for v6.13
-Message-ID: <Z0NaYhtZy89ObgmR@sashalap>
-References: <CACRpkdZWqTOTzYYgD-wAps2Ygsh-D+nxaW76hrWSdTDZZKBA_w@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j80rMhWZy638JeCQv7zjRBniX5IT5/1C0F9OIbCvmWrC2SnR7IkoHw1aU+yERvflJu2cheZy1otZ815SqJGXGb8IucKFUFEQygzM9YKoy1PXMVkEG63ueMbjUUUWi9FWTav+eeqh8jezB+VkhPVYHQPufNhkjz0ptuOWtSOpRLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PknNvkSM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=i3bP0t16qsr90BwN1tiQOKPDR7z/6lXOBhQWdTBTAaU=; b=PknNvkSMC52LiAhA92txLc/aKX
+	447dPAd8ahF9BHssahwaLfnKSsifKDkUd4TYXyjF4o6JEW4XQQFdhGrop/Qf/mwgGR0oNpvHs7xh2
+	GcH42RuOLGW36Dks561K1Eb7Vf4RK/3p4gB49E1sC7CMYd+mADqhuVEbWT3QVXisIBZM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tFIF7-00EJWL-1B; Sun, 24 Nov 2024 20:26:01 +0100
+Date: Sun, 24 Nov 2024 20:26:01 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <22e08939-fa89-4781-824e-1ea01648fb1b@lunn.ch>
+References: <cover.1732444746.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZWqTOTzYYgD-wAps2Ygsh-D+nxaW76hrWSdTDZZKBA_w@mail.gmail.com>
+In-Reply-To: <cover.1732444746.git.andrea.porta@suse.com>
 
-Hi Linus,
+> This patchset is also a first attempt to be more agnostic wrt hardware
+> description standards such as OF devicetree and ACPI, where 'agnostic'
+> means "using DT in coexistence with ACPI", as been already promoted
+> by e.g. AL (see [4]). Although there's currently no evidence it will also
+> run out of the box on purely ACPI system, it is a first step towards
+> that direction.
 
-I've just hit the issue you've described in this PR:
+When combined with CONFIG_PCI_DYNAMIC_OF_NODES and this patch series:
 
-On Sat, Nov 23, 2024 at 05:23:26PM +0100, Linus Walleij wrote:
->- The second issue is more sneaky: a recent fixup patch to one
->   of the rc:s (I think -rc4) fixed some error path bugs in
->   the AW9523 driver, then a patch to the regular devel is
->   improving the use of devres so the fixed errorpath fixes
->   things broken.
->
->I have been applying the following fixup patch for -next to work:
+https://patchwork.kernel.org/project/linux-pci/cover/20241114165446.611458-1-herve.codina@bootlin.com/
 
-And realized that that proposed fixup:
+It probably does work, or is very near to working. Bootlin appear to
+have the LAN966x working on an ACPI system, and what you are adding is
+not very different.
 
->diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
->index ebd590a3cec6..90059b0d20e5 100644
->--- a/drivers/pinctrl/pinctrl-aw9523.c
->+++ b/drivers/pinctrl/pinctrl-aw9523.c
->@@ -983,11 +983,8 @@ static int aw9523_probe(struct i2c_client *client)
->        lockdep_set_subclass(&awi->i2c_lock,
->i2c_adapter_depth(client->adapter));
->
->        pdesc = devm_kzalloc(dev, sizeof(*pdesc), GFP_KERNEL);
->-       if (!pdesc) {
->-               ret = -ENOMEM;
->-               goto err_disable_vregs;
->-       }
->-
->+       if (!pdesc)
->+               return -ENOMEM;
->        ret = aw9523_hw_init(awi);
->        if (ret)
->                return ret;
->
->This can be folded in as an "evil merge" or applied separately on
->top, your pick.
+I'm also currently playing around in this area, trying to instantiate
+some complex networking hardware using DT overlays on an ACPI system.
 
-Is effectively a revert of one of the commits that are part of this PR:
-
->      pinctrl: aw9523: add missing mutex_destroy
-
-Would it make more sense to just re-do this PR without the offending
-commit? I understand that this is a fairly small fixup, but I'm
-concerned that this will just create confusion later on...
-
--- 
-Thanks,
-Sasha
+     Andrew
 
