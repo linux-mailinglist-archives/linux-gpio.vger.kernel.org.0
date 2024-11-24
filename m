@@ -1,164 +1,160 @@
-Return-Path: <linux-gpio+bounces-13237-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13238-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20C7F9D6DF4
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 11:53:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FFF79D6F77
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 14:10:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0586281523
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 10:53:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 012F5B2BAAF
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 13:05:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66275199384;
-	Sun, 24 Nov 2024 10:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0948198A29;
+	Sun, 24 Nov 2024 12:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XBrJQIO6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFmeaxfo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83DB1922D4
-	for <linux-gpio@vger.kernel.org>; Sun, 24 Nov 2024 10:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4E16EBE8;
+	Sun, 24 Nov 2024 12:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732445498; cv=none; b=WCQZaP26fMdkNt6QzdXyTGke9rGMKcyBvbesldYpQWS8AeABL26IRCCfwBqzgfGLIK0XCls20RRFLfV8lc30VJCHc5SuUBOuCG9DDUAsvBdvnYMiXEYqX/Nfs/FVc7rnC3EM9xDiJX3s2MT0Wi2SwzPaCkQUl+mVlzLKwzH8RSw=
+	t=1732452561; cv=none; b=ib4rqKVILf/RQemAvEvPcDWbcsiTwVPd0Z2uUjtWO+FAcZIBH1rrzsElejKlmTF+zY74cEQcC7nmNZrfy+OThMW8hUJPdWuRGQw0+PZHQFLR5Tgw5sHkHqFQUEkDa7RZaXlnyF6cUiueBI5Xaa7NTZxZQNEcZnH5lAPOKqoOd4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732445498; c=relaxed/simple;
-	bh=t5mH22vOPTQPTUILy+w//FEAgDrx/+HJYbcUWeq1WtE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZFNJ71ZhTQHYtIpG5UlC28RRZfj+agvSYQ9STA6FNm5kzq64acjrYMP24xjQM/bya6eNuVhOLQAX467yEGDNfWYv0OB1uf8bJreXbNYXTAWX5guZaW/dztxN/Q70ieRWLh7i0O75DHFtKmRNLBBFd9r3EHFiHmSNu5U6Bf6TXaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XBrJQIO6; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aa51b8c5f4dso263184366b.2
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Nov 2024 02:51:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1732445494; x=1733050294; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MFDhd9Wyt3Hlc0wulj/fO0SlrgobJnK/8PJIrWrttTM=;
-        b=XBrJQIO6TFOrhqJqChpvemq8eyuRlb8SF7xLzm22CQ3h7+Jnz8CPYYDHLjx26DX1RW
-         6ApASgXuIFEm6DhHhkDUQAWTWqIAA1LDrcR1mdihtdczKBjTLNr7t4efGzMNI2+aUSoX
-         US9+FrcX0s0VZkQl7ejfBesJfrPTi5WbmmAYVxRH83iQTdoN/3xu2LVVKs9V677A7BFy
-         J43V9f6jGw3CbZgb3Em5S7gjohYs9BqQdBiPXl/z/I7MalBvmBQzxTDtJismy7qYlC4e
-         nSdqrISk9U7hkSe69WmLgs2RGuV2F0wTXR0l2150pilqyVfkbQ1wLm5UC7GyBjndB5ED
-         YtYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732445494; x=1733050294;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFDhd9Wyt3Hlc0wulj/fO0SlrgobJnK/8PJIrWrttTM=;
-        b=B9cc2wGORO5pUUXyptPXw+Yq9Bi8qctr4a0qrjRBkIvUMDvjDcfvZ2wwXY0V0XSDZc
-         p8A0s/Mm1sY2strs4xndXqj+MComH0I/SeeW7YGwIx4OgRpqCoQpR5RegTDmQr7Y7W2x
-         EGFRWPzhVMgt4+LhxLTbFCse3GDGlVEvsMnNigwf88q7lbgSoVaJePM/3M6xtSw99sV1
-         piZ6qNcQXDpw4aP70PUapC8mR63iWBaJfc5hKEwc4MIPV1gah4rVeoCWpETPI5jt9VDW
-         zKL/j7Lcv5Y92gXTu7+/VgGtx7hXMfla9IVWvxnohJULELpIzZ6CPHYn7m4uhsJdcpHR
-         beIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNBo/sOUOJPYb1ZVE5dJpsriCcawx4IcvyQRQsKXAf8UdE1LljzvFin0Cd5NXWqAc2ZyrAGFFXvnyV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUdActSfOXns+uQSs+xRkEslO70mdBmbcIzmLi1wSCfwQ4euda
-	C5JziCDI4H9p6TbN8bv3KISlcF0uOiYuA7CsUIAjt3KQEDSMij3Fs3jLbs2kmIY=
-X-Gm-Gg: ASbGncvWQJIQJjSfauBHprKmz6086LsY2cy/CdGr/NCuKk1w642D6l5mRznWBppmlDa
-	VKBnz+aivlgy8nxlw7qgHUhO+3l44dWJQTEWHp/slwgFV6Te+AYnzfBzq2JILq91V35aAK0ZErB
-	2YpVBaFoDEpL1fz+3FRnrwSRmEgq+Uwv4fWX/cuttWHpLFXatZX1aOf3fNjqcdaaNsb+TFlsbYK
-	B2b3aSZc7KCXzCT10OkFMYi2W4EanFGzKIr+kqGr+F4aFyH0C0lK/nEVJCD6CPnGPk2aN4zRsak
-	yyonnA+7gUtVHX8jIEHX
-X-Google-Smtp-Source: AGHT+IGkXmpO8F4Dhl0EGpNxs7dSonbb3C4mmRh0iCiEPq5mTBcYlRE2EkQKpKCjp2nit8IeufV0YA==
-X-Received: by 2002:a17:906:18aa:b0:aa5:4cdf:4a29 with SMTP id a640c23a62f3a-aa54cdf4a4emr66028666b.31.1732445493808;
-        Sun, 24 Nov 2024 02:51:33 -0800 (PST)
-Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b2f9e25sm328892766b.78.2024.11.24.02.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Nov 2024 02:51:33 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
+	s=arc-20240116; t=1732452561; c=relaxed/simple;
+	bh=eTeBQf1Wo6ia4RtNUcO2BnjPEZ1uNdYxUUEKDWbt6r8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OO07UidrNSWENnrnPnsi/5ns1dWBBN4EG7sREi7D7LjtGko90cm13kTgr+WOG8Md6oAXskoZ+t2HXXI+49QN6uuvfP5AD/heFZ5L3e6feY5bUTxzLve6wPFAXKF16Y/ZFujN55g/MeZFk12pOkNuHHlfDgsKtwwXwz02Ut/hkps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFmeaxfo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79818C4CECC;
+	Sun, 24 Nov 2024 12:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732452561;
+	bh=eTeBQf1Wo6ia4RtNUcO2BnjPEZ1uNdYxUUEKDWbt6r8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZFmeaxfoJtuNx3EzMxdVJsucX9qgYnNu8h/ZcTT60PtOL6FynvjL27O6NCZlftVHX
+	 S1ldDkgIEh+EDz+U6I0EUwrnpseNSUHDvmPKPqdqxgTzMRQtaHmRwg9O8d3GVTeaKM
+	 rJbYoCoCDwllRI6O7vt0G5lNheTGaLRGkqeJmD9JOEVeguPM9Vj5+TVZTlDgwer99/
+	 /2mbRBAm5crMrTVU67Bj8tkCh3do6JQB00JcjlsigiESlFy4ASibOG5A2pJmGmSeNA
+	 +Xx8A57O86PU4otPIzCJ5LGgxzzU2g1+k6UT54CdhigWZG2OJmQpreCa4hxjkNugFk
+	 5Hw9M+Gb0nmOg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v4 10/10] arm64: defconfig: Enable RP1 misc/clock/gpio drivers
-Date: Sun, 24 Nov 2024 11:51:47 +0100
-Message-ID: <2292350a8bcf583129f93996c8a6ad5572813d9a.1732444746.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1732444746.git.andrea.porta@suse.com>
-References: <cover.1732444746.git.andrea.porta@suse.com>
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 01/23] gpio: free irqs that are still requested when the chip is being removed
+Date: Sun, 24 Nov 2024 07:48:12 -0500
+Message-ID: <20241124124919.3338752-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.1
 Content-Transfer-Encoding: 8bit
 
-Select the RP1 drivers needed to operate the PCI endpoint containing
-several peripherals such as Ethernet and USB Controller. This chip is
-present on RaspberryPi 5.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+[ Upstream commit ec8b6f55b98146c41dcf15e8189eb43291e35e89 ]
+
+If we remove a GPIO chip that is also an interrupt controller with users
+not having freed some interrupts, we'll end up leaking resources as
+indicated by the following warning:
+
+  remove_proc_entry: removing non-empty directory 'irq/30', leaking at least 'gpio'
+
+As there's no way of notifying interrupt users about the irqchip going
+away and the interrupt subsystem is not plugged into the driver model and
+so not all cases can be handled by devlinks, we need to make sure to free
+all interrupts before the complete the removal of the provider.
+
+Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+Tested-by: Herve Codina <herve.codina@bootlin.com>
+Link: https://lore.kernel.org/r/20240919135104.3583-1-brgl@bgdev.pl
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpio/gpiolib.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5fdbfea7a5b2..7c3254b043b3 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -609,6 +609,7 @@ CONFIG_PINCTRL_QCM2290=y
- CONFIG_PINCTRL_QCS404=y
- CONFIG_PINCTRL_QDF2XXX=y
- CONFIG_PINCTRL_QDU1000=y
-+CONFIG_PINCTRL_RP1=m
- CONFIG_PINCTRL_SA8775P=y
- CONFIG_PINCTRL_SC7180=y
- CONFIG_PINCTRL_SC7280=y
-@@ -689,6 +690,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
- CONFIG_SENSORS_SL28CPLD=m
- CONFIG_SENSORS_INA2XX=m
- CONFIG_SENSORS_INA3221=m
-+CONFIG_MISC_RP1=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_DEVFREQ_THERMAL=y
-@@ -1270,6 +1272,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
- CONFIG_COMMON_CLK_FSL_SAI=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_COMMON_CLK_PWM=y
-+CONFIG_COMMON_CLK_RP1=m
- CONFIG_COMMON_CLK_RS9_PCIE=y
- CONFIG_COMMON_CLK_VC3=y
- CONFIG_COMMON_CLK_VC5=y
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 2b02655abb56e..44372f8647d51 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -14,6 +14,7 @@
+ #include <linux/idr.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
++#include <linux/irqdesc.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/lockdep.h>
+@@ -713,6 +714,45 @@ bool gpiochip_line_is_valid(const struct gpio_chip *gc,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+ 
++static void gpiod_free_irqs(struct gpio_desc *desc)
++{
++	int irq = gpiod_to_irq(desc);
++	struct irq_desc *irqd = irq_to_desc(irq);
++	void *cookie;
++
++	for (;;) {
++		/*
++		 * Make sure the action doesn't go away while we're
++		 * dereferencing it. Retrieve and store the cookie value.
++		 * If the irq is freed after we release the lock, that's
++		 * alright - the underlying maple tree lookup will return NULL
++		 * and nothing will happen in free_irq().
++		 */
++		scoped_guard(mutex, &irqd->request_mutex) {
++			if (!irq_desc_has_action(irqd))
++				return;
++
++			cookie = irqd->action->dev_id;
++		}
++
++		free_irq(irq, cookie);
++	}
++}
++
++/*
++ * The chip is going away but there may be users who had requested interrupts
++ * on its GPIO lines who have no idea about its removal and have no way of
++ * being notified about it. We need to free any interrupts still in use here or
++ * we'll leak memory and resources (like procfs files).
++ */
++static void gpiochip_free_remaining_irqs(struct gpio_chip *gc)
++{
++	struct gpio_desc *desc;
++
++	for_each_gpio_desc_with_flag(gc, desc, FLAG_USED_AS_IRQ)
++		gpiod_free_irqs(desc);
++}
++
+ static void gpiodev_release(struct device *dev)
+ {
+ 	struct gpio_device *gdev = to_gpio_device(dev);
+@@ -1125,6 +1165,7 @@ void gpiochip_remove(struct gpio_chip *gc)
+ 	/* FIXME: should the legacy sysfs handling be moved to gpio_device? */
+ 	gpiochip_sysfs_unregister(gdev);
+ 	gpiochip_free_hogs(gc);
++	gpiochip_free_remaining_irqs(gc);
+ 
+ 	scoped_guard(mutex, &gpio_devices_lock)
+ 		list_del_rcu(&gdev->list);
 -- 
-2.35.3
+2.43.0
 
 
