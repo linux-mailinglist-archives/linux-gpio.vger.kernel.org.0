@@ -1,144 +1,154 @@
-Return-Path: <linux-gpio+bounces-13223-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13224-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FBB79D6CD9
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 08:03:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 478589D6D77
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 11:05:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB80CB212A0
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 07:03:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8856281512
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 10:05:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0F4161320;
-	Sun, 24 Nov 2024 07:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A68188938;
+	Sun, 24 Nov 2024 10:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNjvCB77"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TLKQGZKh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85079847C;
-	Sun, 24 Nov 2024 07:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE36136E
+	for <linux-gpio@vger.kernel.org>; Sun, 24 Nov 2024 10:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732431823; cv=none; b=lM23r6vW+wzFT9ZerXodmBqaKjW16uRez4Y3Tl20aFklcI28L9QHOgRT3xiwHnCIRhCW9GxqxPFiJnlV2XNHPHqsr7wLv1mliEQR7CPRkotRmDtDt4lXwdt4LQX2GlmitKpMMGcun0UREqf0tRCa6TIWBoQRt8pldMkOT1rlPOg=
+	t=1732442714; cv=none; b=j2kwAln7q/5W8RhhiziDl5GQvQOQCS8eanO9ek9qwYpNRWGcjYFA9+Tgm3U9UFEX/GVYzBum4pYEmzfs2EfZN2T2hsCjSJOyTMHVkKxAvlWDB5tXQKaY2C/WzrHtNOIPLqZI0fkrEpmwMdiUqsPIkZnBiAvo+R0BQwZNQN6inxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732431823; c=relaxed/simple;
-	bh=U6Tlt3BxSKeFW+wA+3+1tADVS8GO2VfRzO09ZArFa+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrRAZXksCenBcRxINcDjAp3WT/tbfqHHLpPicaN8tkgvgIq0ZsaiT1t9h1jSU0YgYf4RcDzvqNGM+GfTVr/Nw/8I8QId27bLhgV5JoFqV+b0gIfsRdXdBJYMYoFMe44HHGQov2W8g0DTHy3qFXhkNR5hfWZcIIu4nwla47cuNe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hNjvCB77; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso2872241b3a.3;
-        Sat, 23 Nov 2024 23:03:40 -0800 (PST)
+	s=arc-20240116; t=1732442714; c=relaxed/simple;
+	bh=xYyBbJ1bV1F/AvNsXaz4DN1NT7f6hP3J7eQ9A3tlTH4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=NT4LFhoAXGKk4yiduJAMNMOEN/SBxyLEcOo4WXo621SWcXxeWn+4k5PjPclNuCZ/+2dj4oHcD4Bpy0BtdJhCNUAeeIqJbhA2+eP1AP+GEbukVkcWKZOow9+a9JmZdQYyiTRmveejB2f9y08FBCR4kpBCyco4dhxnptJ/HTofI00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TLKQGZKh; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-aa5366d3b47so119215066b.0
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Nov 2024 02:05:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732431820; x=1733036620; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8+qSEIb/xpvTf99gUqbHHSva1XFV5L53/BpJ4Wq+3k8=;
-        b=hNjvCB77DZVSSoJkwmJVmvUxttz4Yb1xDyS4nWFSXwW9WMwqfEQY+typrdgyEKrtfx
-         M5lqzdkpkHAGjixuX6BU/2JHYB/01vVpRat0F4sAi6TIVovSw1TfJOPD3ygFn2ceBbaM
-         d2xnCX70zFQVGUzLvzhWdjSw+xkcCu6k09WQ+1ViAimAYoBrhrMekMzSEWDMhGMiIwSB
-         spJ1w5iZZ8uAoQPF43YsLAm4S22gsfTiMHVH4lmQ9BkMlSpHyVOirz1420UviMAZRLBC
-         btL6x222nSxqLe37IB8qfei1YaPBj/DJ8wGqxbJ0cFMpvK+GyVjNgbCb1wvbxnVUX2J/
-         RloA==
+        d=suse.com; s=google; t=1732442709; x=1733047509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc/jEUsBswYkaNb52ief0DkwziwerNcpWx/rdhbBFpU=;
+        b=TLKQGZKh+ukC5GklXmw+ac1cisJMfJ/M6s7jxDRqmrl/2wE9o6QcwwPv2dvzgZPJXa
+         DazyQG9LwNsz7SQqZV3eq2KfztXmaGh7rT3wU8uP6gijFuhzjlIKvWwGLeWuz75FecLS
+         WLpcpZ1seh/UX1LbbyRXR+rAd4s8ltTJON0tKceFw1cfduXDH9GU/RQ9JGdx6PGvzJ2j
+         UoG0Q4v9tMq0XLmlHClz1y5CWirF+nOmbL9MdkWCb7MdkgFAmln758io8bywfuYT2PCV
+         wQnc3c+Ki/6NECj4RX6fFWvJFla8KVGE6wOd+WwnbqR8zA/uoD+B+1CZ3sHp73fqW0kV
+         JAow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732431820; x=1733036620;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8+qSEIb/xpvTf99gUqbHHSva1XFV5L53/BpJ4Wq+3k8=;
-        b=Z26EflRlzSZn/UPn0UUhxp5q95uG9OGxFxdI8vGwHO2k1hcFa8nOJAE5PxAhFhftQz
-         VxC5JHEq8d6xxeFRDV1rWPNLw6lJevsH0euVhwATYnmrcupMUfd25MDckFELsDIJkzto
-         /qFZBrkvNNqlmBCng0BNfmagbejdJmVOJ7O8oPl9sg5acXkSgTlZzBLLZ5kPmKSpDnDc
-         mcmZ+CzwVJQOyRkjFtPboKw3RJJ6e+Gi/ows/tIXCAVUl6mNfJRUJltn8G5Qzo1mHzv6
-         /GaF+fmJb7yqLNHZyje84PV/3xoswKPBJJieVw5T5oSRvfZs8MQk7/tGeR/m08HNCJhD
-         iqCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSyh1ZZnzNJbiGeeehtuFpdlQudc6xXF+RlyHGu0mexBog0hG3QfVo8mSV/4K+mIkgg12dSqHGLdOHjrc=@vger.kernel.org, AJvYcCUUqyVwMSnyOkRwme0PGpU73MS55pphDh2EAU03GjpbtljSf18qYBB3vmfEbQZg7atlJYuvHmhr9sSx@vger.kernel.org, AJvYcCUxs8GwQJTY0we4xbCtvtAlauW8YwF2jaeZ9ZwAyNjMozMBXj945ybFO6AB7MA35afrOc/Dr4FojLg1UUj2@vger.kernel.org, AJvYcCXFQM4FACt3c8k6xtDfXlcxcpUqKZIl2yVV7jOzUdYpAcr7YhSf9GQH8hPhCvcJRnhlC2uyKg7S7U7FHTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhNRPdFxMvo287PdSkf8dFrjKrS5//Sh00x9fSCdUlTncYfs1B
-	J3DNuJhWdt+JBCA18XybdzQqcv7xHEqHQgQWW4N7jBmXE4JlePah
-X-Gm-Gg: ASbGncsNW2MoZW3lS4E29bUvdU6c6LqjXJHlulElgZOPHmJ0+0mTBrt4qEPxJoXU76Q
-	m2OEpSp/9bCVp1rdWV9gQPAOGklW7CHlrLX8B25M73DhI3iIJu60cCyWQvMTcrvJ337p2JIkZIJ
-	nsg9Gr1Yr9b8SK8RT6YWyoM+KMD2/TZ/7Jix+8lRD8Cbo0adtNWZYOVEdZQ82JODFtq5Vx4dOCj
-	G/5qHi/OXfX5a5syWbokgEpMeIxNgLdb+RVDRJWd9nQgNs5eXjuVcD1vrc=
-X-Google-Smtp-Source: AGHT+IH7TOHKbIPRJvFIiTj3hN04KXsPhYsJKG8MVBvbqDQfAuzhLM5JaKfeqy4Gz+rA+jUW0lh64g==
-X-Received: by 2002:a17:90b:4b4f:b0:2ea:4a6b:79d1 with SMTP id 98e67ed59e1d1-2eb0e2303efmr11390699a91.11.1732431820152;
-        Sat, 23 Nov 2024 23:03:40 -0800 (PST)
-Received: from google.com ([2601:647:5e00:4acd:8a2a:c45a:2a1f:28b0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2eb0d048c41sm4837160a91.41.2024.11.23.23.03.38
+        d=1e100.net; s=20230601; t=1732442709; x=1733047509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc/jEUsBswYkaNb52ief0DkwziwerNcpWx/rdhbBFpU=;
+        b=g3tQxwlBBkRLtabsvWSqB81uj6gqO5e5NmqdwFkBgeLwPPnYBmi4E0wv4GpiWqibwm
+         g2UNgB8vJ7kaB2gdGCneMwu3jxtBJy4Pybx3Uulm3nIofGkKhFnUghTR/Vew5n9leobr
+         St9KVVa7MlfnuvS6goZytEFeG6f6htT6b13FvggfkoupLbAx6TwaG7F2LPWD5Fh0S7Ss
+         I7YrqK1qEGytBP4oOQ2va27wTdZeAk+lAQBHzsW+D2FUXo9nKUWFwtqJSi5xvQW1mI13
+         xMOFNj26pzGJwhAalOJmBQoGHp0xLmjk+1eURrgYp8PGxmut4QU8MT5nu95Rh8vvzTUk
+         u1YA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkTrZGBvFNQ1UYFPwMWsIPc4g07w3xmkSTSyGQl7D2954H9dvCQzptFk317I1jPxNxhrkGeHoCW5gE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAg24HHU9eBMZ5iGsfG6BiLOwu+7gE1pWr8ZOJH/h4ZopaQprZ
+	M8a9YTDWEy+rXuquPuI8/RIGecfgyFyLWxmQ0TnTqTpZN3vXrk+KB47hQqz3CJM=
+X-Gm-Gg: ASbGnctDqw8NixqWcPnfxVnXdNhEH+3M19JhFpm52VcmKgihdZ2+8KCovXW2GXcgocR
+	Pnrh+t8Gc5KhpjfOI4HRvq3SOzjqo8VpA0CB40Bo5NoCHnRUEzLfWg3jLn60Wp3OdyQsKMXIo2M
+	hEJV+zzHos8H5b+1a7djaApV5UF8IPSYpDDmhhOuW8D/zlnONzjYoh3dxeG+Qh04+vdOkgxrHg9
+	zsDebzlkoedQfdAtrad4VqzPIlFVPvKhk0ScWT7HUgWPEnBaVWE/eQBXeBZryExRh+aDjYT+3Un
+	IhyqLa9WtFm/1kb0cIoK
+X-Google-Smtp-Source: AGHT+IE6n1Sl2VjDnUF5IiR4wNGa1GDW8vw2+O+cu/s3Q+7FHS16Q8BL2O+lyk7mxoO9jBhc7KuPpQ==
+X-Received: by 2002:a17:907:77c9:b0:a9a:67aa:31f5 with SMTP id a640c23a62f3a-aa50990b2a9mr726045266b.10.1732442709155;
+        Sun, 24 Nov 2024 02:05:09 -0800 (PST)
+Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa51759732asm295266666b.14.2024.11.24.02.05.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2024 23:03:39 -0800 (PST)
-Date: Sun, 24 Nov 2024 07:03:36 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	broonie@kernel.org, pierre-louis.bossart@linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v1 1/5] devres: Introduce devm_kmemdup_array()
-Message-ID: <Z0LPyMed-4a8cajD@google.com>
-References: <20241123200527.7830-1-raag.jadav@intel.com>
- <20241123200527.7830-2-raag.jadav@intel.com>
+        Sun, 24 Nov 2024 02:05:08 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 0/2] Preserve the flags portion on 1:1 dma-ranges mapping
+Date: Sun, 24 Nov 2024 11:05:35 +0100
+Message-ID: <cover.1732441813.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241123200527.7830-2-raag.jadav@intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Raag,
+Empty dma-ranges in DT nodes using 3-cell address spcifier cause the
+flag portion to be dropped by of_translate_one(), failing the translation
+chain. This patch aims at fixing this issue.
 
-On Sun, Nov 24, 2024 at 01:35:23AM +0530, Raag Jadav wrote:
-> Introduce '_array' variant of devm_kmemdup() for the users which lack
-> multiplication overflow check.
+Part of this patchset was originally preparatory for a bigger patchset
+(see [1]). It has been split in a standalone one for better management
+and because it contains a bugfix which is probably of interest to stable
+branch.
+I've also added new tests to unittest to prove it.
 
-I am not sure that this new helper is needed. Unlike allocators for
-brand new objects, such as kmalloc_array(), devm_kmemdup() makes a copy
-of already existing object, which is supposed to be a valid object and
-therefore will have a reasonable size. So there should be no chance for
-hitting this overflow unless the caller is completely confused and calls
-devm_kmemdup() with random arguments (in which case all bets are off).
+Many thanks,
+Andrea
 
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->  include/linux/device.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index b4bde8d22697..c31f48d0dde0 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -358,6 +358,16 @@ char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
->  const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
->  void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
->  	__realloc_size(3);
-> +static inline void *devm_kmemdup_array(struct device *dev, const void *src,
-> +				       size_t n, size_t size, gfp_t flags)
-> +{
-> +	size_t bytes;
-> +
-> +	if (unlikely(check_mul_overflow(n, size, &bytes)))
-> +		return NULL;
-> +
-> +	return devm_kmemdup(dev, src, bytes, flags);
-> +}
->  
->  unsigned long devm_get_free_pages(struct device *dev,
->  				  gfp_t gfp_mask, unsigned int order);
-> -- 
-> 2.35.3
-> 
+References:
+[1] - https://lore.kernel.org/all/3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com/
 
-Thanks.
+
+Changes in V2:
+
+- Added blank lines between paragraphs in commit message for patch 2
+- Fixed a comment to explain the code behaviour in a straighter way
+
+
+Andrea della Porta (2):
+  of/unittest: Add empty dma-ranges address translation tests
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+
+ drivers/of/address.c                        |  3 +-
+ drivers/of/unittest-data/tests-address.dtsi |  2 ++
+ drivers/of/unittest.c                       | 39 +++++++++++++++++++++
+ 3 files changed, 43 insertions(+), 1 deletion(-)
 
 -- 
-Dmitry
+2.35.3
+
 
