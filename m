@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-13238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FFF79D6F77
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 14:10:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93A399D7272
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 15:09:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 012F5B2BAAF
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 13:05:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92362B30086
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Nov 2024 13:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0948198A29;
-	Sun, 24 Nov 2024 12:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716F61A7AC7;
+	Sun, 24 Nov 2024 12:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFmeaxfo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUSNXnX8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF4E16EBE8;
-	Sun, 24 Nov 2024 12:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF3E1A4AB3;
+	Sun, 24 Nov 2024 12:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732452561; cv=none; b=ib4rqKVILf/RQemAvEvPcDWbcsiTwVPd0Z2uUjtWO+FAcZIBH1rrzsElejKlmTF+zY74cEQcC7nmNZrfy+OThMW8hUJPdWuRGQw0+PZHQFLR5Tgw5sHkHqFQUEkDa7RZaXlnyF6cUiueBI5Xaa7NTZxZQNEcZnH5lAPOKqoOd4k=
+	t=1732452687; cv=none; b=VGlGt+hXix9qWsLV96zfdVZPaI3eIicRlxS1XGyUczCZwV6bWXy96BNRs2wLA3MauAmagZWtx/ArU5Ptnd7L6KYQkGBLBZpAOO1Gf2DtZqHDsSzMXAPYaASyCijFnb0dovJ9NAUsWgzUx9q6KX/Wl1Yge4+iqckmT2+dTy8ol0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732452561; c=relaxed/simple;
-	bh=eTeBQf1Wo6ia4RtNUcO2BnjPEZ1uNdYxUUEKDWbt6r8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OO07UidrNSWENnrnPnsi/5ns1dWBBN4EG7sREi7D7LjtGko90cm13kTgr+WOG8Md6oAXskoZ+t2HXXI+49QN6uuvfP5AD/heFZ5L3e6feY5bUTxzLve6wPFAXKF16Y/ZFujN55g/MeZFk12pOkNuHHlfDgsKtwwXwz02Ut/hkps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFmeaxfo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79818C4CECC;
-	Sun, 24 Nov 2024 12:49:20 +0000 (UTC)
+	s=arc-20240116; t=1732452687; c=relaxed/simple;
+	bh=pyxpTIZtrThzi3UW+RgNWeEURAFAs7FBqcO87VHinwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RjnnOWF2YbfdGbHp4k3m5oPjWM48Tuw3CJg6jTCNL+EdREE7iPeE+v0TUezXYVxWP54vM/tEFEIzoYVpd6sO1rugefltP+pebUyHlc4lfnSM/P0/SN4AM6A70/ShMmQtamj6Hrks1d7ibvS4+gIYiiXXPTXYNKfz3xOkR8WgJ2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUSNXnX8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDA7C4CECC;
+	Sun, 24 Nov 2024 12:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732452561;
-	bh=eTeBQf1Wo6ia4RtNUcO2BnjPEZ1uNdYxUUEKDWbt6r8=;
+	s=k20201202; t=1732452686;
+	bh=pyxpTIZtrThzi3UW+RgNWeEURAFAs7FBqcO87VHinwU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZFmeaxfoJtuNx3EzMxdVJsucX9qgYnNu8h/ZcTT60PtOL6FynvjL27O6NCZlftVHX
-	 S1ldDkgIEh+EDz+U6I0EUwrnpseNSUHDvmPKPqdqxgTzMRQtaHmRwg9O8d3GVTeaKM
-	 rJbYoCoCDwllRI6O7vt0G5lNheTGaLRGkqeJmD9JOEVeguPM9Vj5+TVZTlDgwer99/
-	 /2mbRBAm5crMrTVU67Bj8tkCh3do6JQB00JcjlsigiESlFy4ASibOG5A2pJmGmSeNA
-	 +Xx8A57O86PU4otPIzCJ5LGgxzzU2g1+k6UT54CdhigWZG2OJmQpreCa4hxjkNugFk
-	 5Hw9M+Gb0nmOg==
+	b=pUSNXnX8E8sF9RPpYPWKB+ObM1sVWTwfrPogFCcHFkYwPtNRIO+1bvfJhR6iMbG00
+	 EBwL0/D0mKao7k7nwzFD33aHiY3BuTNTkv6aMHEtHtTKXLt6Vu1zTjmpr1rcfjBzvP
+	 6fwMuWhde5n8xrUnDdFs8gTxb6/oyAkYizly49RCMStN5wveHOIQUe7OcU+aZ+mmWv
+	 syvHrY9kNq7RpZ5rjushGcYjuw/OUZtCBztWfosOqP8NeaL7xxfPNcecO+Rik0enFm
+	 g96OLFjfWDJ8hvIqw/NHjmb2dsGCFPA5cVhugPqaXUfy6A1DclXxPeHk3SjAI4QgbW
+	 F2skVmgJo0khg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -49,9 +49,9 @@ Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 01/23] gpio: free irqs that are still requested when the chip is being removed
-Date: Sun, 24 Nov 2024 07:48:12 -0500
-Message-ID: <20241124124919.3338752-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.11 01/20] gpio: free irqs that are still requested when the chip is being removed
+Date: Sun, 24 Nov 2024 07:50:31 -0500
+Message-ID: <20241124125124.3339648-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.1
+X-stable-base: Linux 6.11.10
 Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -89,7 +89,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 41 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 2b02655abb56e..44372f8647d51 100644
+index 337971080dfde..206757d155ef9 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
 @@ -14,6 +14,7 @@
@@ -100,7 +100,7 @@ index 2b02655abb56e..44372f8647d51 100644
  #include <linux/kernel.h>
  #include <linux/list.h>
  #include <linux/lockdep.h>
-@@ -713,6 +714,45 @@ bool gpiochip_line_is_valid(const struct gpio_chip *gc,
+@@ -710,6 +711,45 @@ bool gpiochip_line_is_valid(const struct gpio_chip *gc,
  }
  EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
  
@@ -146,7 +146,7 @@ index 2b02655abb56e..44372f8647d51 100644
  static void gpiodev_release(struct device *dev)
  {
  	struct gpio_device *gdev = to_gpio_device(dev);
-@@ -1125,6 +1165,7 @@ void gpiochip_remove(struct gpio_chip *gc)
+@@ -1122,6 +1162,7 @@ void gpiochip_remove(struct gpio_chip *gc)
  	/* FIXME: should the legacy sysfs handling be moved to gpio_device? */
  	gpiochip_sysfs_unregister(gdev);
  	gpiochip_free_hogs(gc);
