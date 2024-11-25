@@ -1,125 +1,110 @@
-Return-Path: <linux-gpio+bounces-13248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13249-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DC349D79F3
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 03:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B37BE9D7C21
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 08:49:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC1F8B21AE6
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 02:06:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39717B2135C
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 07:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FCF7125D6;
-	Mon, 25 Nov 2024 02:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D46B155747;
+	Mon, 25 Nov 2024 07:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJiMbLUh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="el8Y6miP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA864A2D;
-	Mon, 25 Nov 2024 02:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DC52500CD;
+	Mon, 25 Nov 2024 07:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732500412; cv=none; b=EOJdeNuFbDGLsQ1on1m5I5TYnBjaxvu8vXCDXD64GnvsGYkjRAjL96FSoUMxQEkKZdM32HHiAFC9Wn28KxY3xlnulTlgjoUY3KzejKFPFwO2kbv/fJffhCQ+3z/6ZLGVpx3HOCjC5YJMA1zvI/R8gdgxm/le9C2hb2UL0hb29XE=
+	t=1732520970; cv=none; b=S2x62Zmt4afbnIIKQIJchMxVqYEEIS+pDsZ1DM9ejNpi+gXtlbl9PofEr4MGEqYpESu99N/vLMBoMgP1ory9aI3WuKVu5X5XsQFWlM4H0d7m+yXsG2juLFLV354ZHpppXwtsWjMufJSrhpEvlKdXRqnJTH7JV0u45b/W7G/N2JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732500412; c=relaxed/simple;
-	bh=fKuuSMNf+Qy6m8ZOXTb7mpNsw2y4fw7IbYodhFF8XTE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=SgLX/6WRvwbPbBVXQEVCyDgq2wkrgUPkqLvP7ie0Uxv72pOgCZ2smStvDumjLV4bLf9jzF9uCPxpjAltcSTFQnsTnxyEfYMrRkx/LtKBiEVisxk5ACQdn7no/RdTFNIYuk4sLR0gSCVOSPRKrubyBeaOf4uxM9i6nQsHcyHJQm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJiMbLUh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D4FC4CECC;
-	Mon, 25 Nov 2024 02:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732500411;
-	bh=fKuuSMNf+Qy6m8ZOXTb7mpNsw2y4fw7IbYodhFF8XTE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OJiMbLUhe7rNCTkqgTcbf/1gksuekRvIEHdo7FgaTZ5Krjo4kOrZ8wyXNpfOVwwVX
-	 HAQdaEjQ5uFHcYXFHWip4rvCEvkuHnSx1c5Mjl26rB4NyCIca8qjK809oIWHmpk56W
-	 rPqk8nLn4mQwyoU6T42DPWnRGe9aK3adMADGzOZd5pWEUcl26NvWVcAnjivNmsMCe4
-	 QszW4mn4yLRtHkeu4OXCTVXJKeKrdcYfCMGvafMHTH8kbGuOcven9NrIDzgs3kJkve
-	 qKzgN0UMzpEMoSRIsbhhTL1LJgBbiCnV7wCHIcC7QaEbISlV3HZqRThvdlL5Jz1UZL
-	 24ZiZnnvzNW0A==
-Date: Sun, 24 Nov 2024 20:06:49 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1732520970; c=relaxed/simple;
+	bh=Q9pwQZ367/dYdTXJasRylk1GyYiolNOY2J8AWlFyzwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F50a61czkaJ7KiRmhhr1rbQcwBuZ1CCF8H140hDaekrrikaowaLFXbYoh44E4zfd54SQB8SyNC+4NhLe2clVH2UsRIXK1H+mJF24FLeptxfDsXqKZmrTGYSYHkkkAU3Y9ZrD9MVnvSai909IlUERvt1IMpHnsL56A8ksTsR+P8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=el8Y6miP; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732520968; x=1764056968;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q9pwQZ367/dYdTXJasRylk1GyYiolNOY2J8AWlFyzwE=;
+  b=el8Y6miPxY0C37BHWkIBdk5kLS4dSNquIddkqTV3xmiCC41e2uI6oh0b
+   H+M1Kjb51ThO0ab3ruMl2KHhu8z06SJsE2dIQ9/d7NGLTjgpt3SQPWagq
+   UHuu9Zg1Um9Q18jPWiSHV7Q9fsxp/T3AwwFyjjf798AIUXd8bkn1767dl
+   w5DbRH/Flk5K1YBUfiXUQ28vZ4IdaJPKQyQPG8hcznR4fnkGXKvk6ZrYa
+   foYW2YnRq5w99hWTfKtloYWR1XL8ARftJOdhMHzYSdICn5V54gcR88ldO
+   zykL0LGofx0BPnf09P3LBNit0Z1xEKmC/txSg4NSiMkX9L63/wm4HMQ1R
+   w==;
+X-CSE-ConnectionGUID: 0TXTjPXJQNudr5DmyHKGRQ==
+X-CSE-MsgGUID: Ke2qRtTQQu647/b0M8xDgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11266"; a="32740347"
+X-IronPort-AV: E=Sophos;i="6.12,182,1728975600"; 
+   d="scan'208";a="32740347"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2024 23:49:28 -0800
+X-CSE-ConnectionGUID: pxY7O9fcSuGdYlHOInkmPg==
+X-CSE-MsgGUID: R4o3wtvdTCW5wO1mRjziiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,182,1728975600"; 
+   d="scan'208";a="122036046"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2024 23:49:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tFTqU-00000000fmp-1knr;
+	Mon, 25 Nov 2024 09:49:22 +0200
+Date: Mon, 25 Nov 2024 09:49:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
+	linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+	broonie@kernel.org, pierre-louis.bossart@linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] devres: Introduce devm_kmemdup_array()
+Message-ID: <Z0QsAm3FdZDJ8kY0@smile.fi.intel.com>
+References: <20241123200527.7830-1-raag.jadav@intel.com>
+ <20241123200527.7830-2-raag.jadav@intel.com>
+ <Z0LPyMed-4a8cajD@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Dragan Cvetic <dragan.cvetic@amd.com>, linux-gpio@vger.kernel.org, 
- Herve Codina <herve.codina@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
- Derek Kiernan <derek.kiernan@amd.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
- Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
- Andrew Lunn <andrew@lunn.ch>, Saravana Kannan <saravanak@google.com>, 
- devicetree@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, 
- linux-arm-kernel@lists.infradead.org, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Krzysztof Wilczynski <kw@linux.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-In-Reply-To: <ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com>
-References: <cover.1732444746.git.andrea.porta@suse.com>
- <ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com>
-Message-Id: <173250040873.6640.9720381303445148722.robh@kernel.org>
-Subject: Re: [PATCH v4 04/10] dt-bindings: misc: Add device specific
- bindings for RaspberryPi RP1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z0LPyMed-4a8cajD@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Sun, 24 Nov 2024 11:51:41 +0100, Andrea della Porta wrote:
-> The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> schema is intended as minimal support for the clock generator and
-> gpio controller peripherals which are accessible through BAR1.
+On Sun, Nov 24, 2024 at 07:03:36AM +0000, Dmitry Torokhov wrote:
+> On Sun, Nov 24, 2024 at 01:35:23AM +0530, Raag Jadav wrote:
+> > Introduce '_array' variant of devm_kmemdup() for the users which lack
+> > multiplication overflow check.
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  .../devicetree/bindings/misc/pci1de4,1.yaml   | 74 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> 
+> I am not sure that this new helper is needed. Unlike allocators for
+> brand new objects, such as kmalloc_array(), devm_kmemdup() makes a copy
+> of already existing object, which is supposed to be a valid object and
+> therefore will have a reasonable size. So there should be no chance for
+> hitting this overflow unless the caller is completely confused and calls
+> devm_kmemdup() with random arguments (in which case all bets are off).
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Don't we want to have a code more robust even if all what you say applies?
+Also this makes the call consistent with zillions of others from the alloc
+family of calls in the Linux kernel.
 
-yamllint warnings/errors:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/pci1de4,1.example.dtb: clocks@c040018000: 'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
 
