@@ -1,148 +1,153 @@
-Return-Path: <linux-gpio+bounces-13250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34FB59D7CF9
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 09:34:50 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC1BE9D7D2B
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 09:45:42 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F39EC1638EC
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 08:45:38 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0395618CC10;
+	Mon, 25 Nov 2024 08:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZSxjbz+w"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0A87B233EE
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 08:34:47 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D162618A92F;
-	Mon, 25 Nov 2024 08:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DDIv0taD"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938261537D7
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Nov 2024 08:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A780618A95A;
+	Mon, 25 Nov 2024 08:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732523683; cv=none; b=jJJVYrIEL/2FlVMl2bcLxycg8oQfJOF+LcaY1QjpdvT4GuT+e0pSW5zljEDGuL16WN7+F7wubIljnmbBMr9AZPQVmqr7fqfaiYvVVQ7vSUP1fCXBXNVMI557iPs6cbIds7p0MKrh8A7B7vSad6wBDYkDI4vkw626Om+yn0vzMyo=
+	t=1732524336; cv=none; b=ZmfH98PityVz/hm/DSsg/ki9pztHHw1BBvw7/28Ec1xcBB8J1pG7brPV5QaAdk6Ve+3ytEemtzeQLElNNlGcsT4NCcVuoOSStoaA0OLn3QUjBYl7sqofzV8UFwNBc3uvFOFOBpv2e7k7I9uh17JpfLd/zwIUmYol3G1VUsUnedU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732523683; c=relaxed/simple;
-	bh=5Nhv1Mm0+fbxtk2KdzQJbKFpjj2DWs2QHyapg7sOW0E=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g3QZv+nv3dBlGigmZ4ulSNwDr+IxWHKsmbNsZDcK3G7n1SkQx8jHt3EmJ0oCU+UCB0tOSxJG/UnVMKDjw6g/+8Q4x6ZCwm7dPIimqW1spdWT64Kj5ZMTsDGkpUcoCIAuQYDZBViBvljDqVG67DhOAnOuFY32bnLnI7YSDJQes98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DDIv0taD; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aa549f2fa32so136948966b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Nov 2024 00:34:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1732523680; x=1733128480; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vg0D/GXC726IE1EJTMsV29mWCwy+CAcBXGOGjtO3CHw=;
-        b=DDIv0taDA8NxOu9j0vaARHXUXN4/MCxzDydDyuQWYRsU6gz+vewnPcxNbF5zL0IQUy
-         qBwx06I22FYw0quLmSmGeCa46iLIfjgp7JD+lcl+HAPlFLsBk6Ln4ZF8AGjC5iyBYbFy
-         gqp2M9QOQJY/OtQYJoRLyFJL3EPUYc+kCmwnbkfWl5TfRImvmS6ntM3BftwNAWDiQTws
-         9zy90N3EpUfI6BJBEh59TNYWyH56oSdrtTpUp8jG2m3TTaGd45+H4miYskgztd+fSZi0
-         8oVkI98JzMyUzc30rRJTLJQOoUmCYv6sLWr0j/GmAeMsOY+mmKo69aM7HoYritTbnsWu
-         BtNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732523680; x=1733128480;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vg0D/GXC726IE1EJTMsV29mWCwy+CAcBXGOGjtO3CHw=;
-        b=aeulqSL+wi7hb7NYXa8iAXmDPjKKZ33UDRY1soe+j/bfhyDsDTFTWRShKo+AZinJHM
-         zPNFuH3dwMl53e7NSjs1aZui0vuYruyJ/zav+0N0nvgl/BfRMvOGQezQNPvJIpJ6QCYF
-         KoQQahNyHWM5CtXrn/SK67pYhKoyhxE8Qyk6OMaXXUJqnjqjoQKvehVhGop1ldlsittk
-         czl1fy08XJOirrXXIX3y/MTc2RLylsOUd+nh/YelfSjJgdI1x9h/QHlJRToIFKIw3B2B
-         X2d9ciBmhOWojwbbF7QD6CN0LdxQrmFJmdsgTDSPWuUNr9R71LsxgjNwqTi8e9gG55Hr
-         9nfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeVSrxC9WzIa2dWH0L1AVgkKs48aSbMSLTK92Yy/TyPFlJLjr1Ad17jQEW8ZZI6U7DTUFCe1JelUgZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1fXG/0iy7HdrObmcAaXchdcFeTqeacTN1q//JY8RoJNRaDDcN
-	I8eXEelaNTeo5G0ECUxdxbzNSm6wyOxfnu4IFdo5GX+7FNhtaTgDecFNnqJVwSs=
-X-Gm-Gg: ASbGncsdcR/5E153gEbEfb+poyrkSUDR+YcXPqfYE2Swxl7Wms3skqlMnQG56rot0QI
-	eudo7uZGDQZLi6yb8SeTHuWUEDtE+c7imG40c1Jg4rDnvF5ppd2NV7X8jBPD6SxJXbUduB5+qUG
-	IKz50B8qMrnb0+X5jRjrpMsKG1+tSYWN9NR1nnlPCjCIE1wfOSYFryYbXlPfQawlXg9BmIRxRAY
-	bnqL51yurn98nUctqKUvYn1zHmJq/GnUmNaZ/NChg6UZJGT/fv9f27JaarRqWTYGZD4WapwXVQq
-	cGezO32iVKYLLz8fibW/
-X-Google-Smtp-Source: AGHT+IHTcfEoEYoZ9eKBklAA7GYxZ5kMOqK2yZ8KaAw01uPI3MZswrc9AVeFlfapHP8sHh0b3gsj9A==
-X-Received: by 2002:a17:906:3096:b0:aa5:1d0c:3671 with SMTP id a640c23a62f3a-aa51d0c36femr719670166b.23.1732523679890;
-        Mon, 25 Nov 2024 00:34:39 -0800 (PST)
-Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b57c19esm433460966b.154.2024.11.25.00.34.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Nov 2024 00:34:39 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 25 Nov 2024 09:35:12 +0100
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z0Q2wJBMdN1dyJWA@apocalypse>
-References: <cover.1732444746.git.andrea.porta@suse.com>
- <c48e6b9b178cdaa01b92ae82e8fd24c2ba5f170c.1732444746.git.andrea.porta@suse.com>
- <e57c9c8b-2534-4d3a-b762-ca9c1f7dac40@lunn.ch>
+	s=arc-20240116; t=1732524336; c=relaxed/simple;
+	bh=lJwVS70v3SVo849D24NQ+rHlsxNtn9U5Tb4DJEULkZQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Q0Kl4rt8T61oNHOTdqkMUJJSjVjORPpEsxBu6f6pPEIPmjsqwxelc23uYu1+3IjZolDGvFNkmHo7WwL0/9DUkFBQi+MChLc3hhv+nA5d4nnLdaYKVnHKK5f7dH6IkxwVKPaWJG+LOdP/MQpIUN3aV9EM/QqtLqZlaoZCxrVhjYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZSxjbz+w; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 982751BF209;
+	Mon, 25 Nov 2024 08:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1732524330;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ia3Rtg8suGGbEgeGtI6bMKQYuwy5zPE5EYeOCxo1k80=;
+	b=ZSxjbz+wvLN0WDnB48hKLTWmaFX2E909P7klwppPN4lP3GrB0sD8Ab6jnSAGCbVEdAYq7X
+	peOF2fC2V1T5zDGVSfZS0rGZpeZJSyTQA/dn+lZjpxSHsyAPQ1fyhpAkErxmK+ncZo+I5e
+	AueQ27DuCwMWX1UEL/0YZaIYeghgi4T3IdyRHnIjLjXNjyTpE7sGjx+fHua0TJpU0r/m5Z
+	uyhMDgZ7edyr6Uav25qKcTBX04LvbhmeyNSMaODWvuoVeu5hJ2+BMzSzd+jq5Mf77IH99K
+	DeN4MI/1T0tVbstV5pMW0FjfVByffz2szzJ+xPXZ1k+F3qXvlm+MK9e22Q/edA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH v3 0/9] misc: Support TI FPC202 dual-port controller
+Date: Mon, 25 Nov 2024 09:45:14 +0100
+Message-Id: <20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e57c9c8b-2534-4d3a-b762-ca9c1f7dac40@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABs5RGcC/1WMQQ6CMBBFr0K6tqYzNJS64h7GBZSpNFFKWtJoC
+ He3YIy6+28y7y0sUnAU2alYWKDkovNjhvJQMDO045W46zMzFChBgOJ2MnnzyopOlTpvVbP8PAW
+ y7rGHzpfMg4uzD8+9m2C7vhMg6k8iARfckkRT6bozGpvO+/nmxqPxd7ZFEv6I8BUxi0pKkhY0t
+ tj/i+u6vgC4ORTF1wAAAA==
+X-Change-ID: 20241017-fpc202-6f0b739c2078
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Romain Gantois <romain.gantois@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Hi Andrew,
+Hello everyone,
 
-On 20:33 Sun 24 Nov     , Andrew Lunn wrote:
-> > +++ b/drivers/misc/rp1/rp1-pci.dtso
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +
-> > +/* the dts overlay is included from the dts directory so
-> > + * it can be possible to check it with CHECK_DTBS while
-> > + * also compile it from the driver source directory.
-> > + */
-> > +
-> > +#include "arm64/broadcom/rp1.dtso"
-> 
-> This is probably O.K, for now, but really the tooling should be
-> extended so that DT files can be checked anywhere in the tree. I can
-> see more such embedded DT overlays appearing with time, and there is
-> nothing actually arm64 specific here, it is architecture agnostic. It
-> is just a PCIe device, there is no reason it could not be used on a
-> S390, Risc-V, or loongarch.
+This is version three of my series which adds support for the TI FPC202
+dual-port controller. This is an unusual kind of device which is used as a
+low-speed signal aggregator for various types of SFP-like hardware ports.
 
-I completely agree with you.
+The FPC202 exposes an I2C, or SPI (not supported in this series) control
+interface, which can be used to access two downstream I2C busses, along
+with a set of low-speed GPIO signals for each port. It also has I2C address
+translation (ATR) features, which allow multiple I2C devices with the same
+address (e.g. SFP EEPROMs at address 0x50) to be accessed from the upstream
+control interface on different addresses.
 
-Regards,
-Andrea
+I've chosen to add this driver to the misc subsystem, as it doesn't
+strictly belong in either the i2c or gpio sybsystem, and as far as I know
+it is the first device of its kind to be added to the kernel.
 
-> 
->       Andrew
+Along with the FPC202 driver itself, this series also adds support for
+dynamic address translation to the i2c-atr module. This allows I2C address
+translators to update their translation table on-the-fly when they receive
+transactions to unmapped clients. This feature is needed by the FPC202
+driver to access up to three logical I2C devices per-port, given that the
+FPC202 address translation table only has two address slots.
+
+Best Regards,
+
+Romain
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+---
+Changes in v3:
+- Described the "reg" property of downstream ports in the FPC202 bindings
+- Link to v2: https://lore.kernel.org/r/20241118-fpc202-v2-0-744e4f192a2d@bootlin.com
+
+Changes in v2:
+- Renamed port nodes to match i2c adapter bindings.
+- Declared atr ops struct as static const.
+- Free downstream ports during FPC202 removal.
+- Link to v1: https://lore.kernel.org/r/20241108-fpc202-v1-0-fe42c698bc92@bootlin.com
+
+---
+Romain Gantois (9):
+      dt-bindings: misc: Describe TI FPC202 dual port controller
+      media: i2c: ds90ub960: Replace aliased clients list with bitmap
+      media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+      i2c: use client addresses directly in ATR interface
+      i2c: move ATR alias pool to a separate struct
+      i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+      i2c: support per-channel ATR alias pools
+      i2c: Support dynamic address translation
+      misc: add FPC202 dual port controller driver
+
+ .../devicetree/bindings/misc/ti,fpc202.yaml        |  96 +++++
+ MAINTAINERS                                        |   7 +
+ drivers/i2c/i2c-atr.c                              | 480 ++++++++++++++-------
+ drivers/media/i2c/ds90ub913.c                      |   9 +-
+ drivers/media/i2c/ds90ub953.c                      |   9 +-
+ drivers/media/i2c/ds90ub960.c                      |  65 +--
+ drivers/misc/Kconfig                               |  11 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/ti_fpc202.c                           | 440 +++++++++++++++++++
+ include/linux/i2c-atr.h                            |  67 ++-
+ 10 files changed, 989 insertions(+), 196 deletions(-)
+---
+base-commit: adc218676eef25575469234709c2d87185ca223a
+change-id: 20241017-fpc202-6f0b739c2078
+
+Best regards,
+-- 
+Romain Gantois <romain.gantois@bootlin.com>
+
 
