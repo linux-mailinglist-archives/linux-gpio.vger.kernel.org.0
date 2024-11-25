@@ -1,158 +1,102 @@
-Return-Path: <linux-gpio+bounces-13267-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13268-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAF7D9D863A
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 14:22:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99C839D8666
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 14:28:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0C5E28B0FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 13:22:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F825286615
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Nov 2024 13:28:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879B51B2182;
-	Mon, 25 Nov 2024 13:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B481AB528;
+	Mon, 25 Nov 2024 13:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkykpNRv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpGUPoDy"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F651ABEA0;
-	Mon, 25 Nov 2024 13:21:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D72F1AA78E;
+	Mon, 25 Nov 2024 13:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732540868; cv=none; b=aUaY3xT/o0cJLzCbDeXglCemjmEMvicq+vBSzAzD/dtB2Wx+kW530fcPIgLxkROZwZ2BHjz17kufh3b4xi+tl1SbgmgpApAjs6qfuR8s0H024e8Upf9P1D9wqSlHGQwWFd2dNp4uIYTbo3jqtwFDOdInGroRJfZKTS1QYyjzPE4=
+	t=1732541322; cv=none; b=AZCpxjL2KSGG4v4bSxXW+HX0obnt5e7/CvgbFKXyvmPL1zQNGkVHC0jL8a+lnJCmt5J+s1LLQFK2R6efJj5xkItU7SwAu6UeZxgWFkKvcQiRlDvn7w+UDdETA9Vc06hJqyENGhr/y8ROh88PZjEMeOjduhleGK4V9GNHj+G3hSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732540868; c=relaxed/simple;
-	bh=3Z560kziSQXi2my1WMJNnxEGuywtw7Uta9RcrJwEvHc=;
+	s=arc-20240116; t=1732541322; c=relaxed/simple;
+	bh=NoZVCppL8F6xXg/rkssmXdlSEzoxZVEEPwLIm3+L6NA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SuooNe8ZwnTtoCOi9CmZaVxtI3RK4K5Q7VXDgNFl/4cisnYCLEltVo3upnd4MsGH9uqvaWCgZcUqIBBWREkcVxVBo2R+qRJY9YR5AL71vWj+oUW+hhKO9OvIiziennBN6Qy0GQ6zXn//BFbSF8CeBwA+qjP4FloJgegOLR388HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkykpNRv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610F7C4CED2;
-	Mon, 25 Nov 2024 13:21:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLtCcZkwzxCdBcqeqLP6YUZGj0/+zjTZMOTPMIZGDT5RiQMLbUEEE/ezjeaCaB2ctcg9y1Zwnq0jYVnQ8NWzKJEYNxvKT9yahIEw8RPCfZMVYvv5KelEDNL3c6r8ohDMefIiADRpJJyAYMU4eAUpOcRXiLevH7aR4Waam2t7Nw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpGUPoDy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A2AC4CECE;
+	Mon, 25 Nov 2024 13:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732540866;
-	bh=3Z560kziSQXi2my1WMJNnxEGuywtw7Uta9RcrJwEvHc=;
+	s=k20201202; t=1732541322;
+	bh=NoZVCppL8F6xXg/rkssmXdlSEzoxZVEEPwLIm3+L6NA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YkykpNRv7e4NVi4Q3z8ffrcHtigFITXEIxN/5bTSjYdSwaphoIBGxqmG+/Xb46TI7
-	 lHS/FY0EsAUAz1aYRprNvi6QHcyObwv8xHeGqJ05oGkRLX0e0qKg8xflK6oz4lAXf7
-	 YhDyUrt9P4stTb7wr4Cj6faNKuabUVK/uT5TkuTTJ9M8Dgc7pTuXnnsJprFpWQcWsr
-	 oJtVByZrcaZVyAzTcmcBTi8a4HHu7UG0bHWY3Xph56B8h9135/UIM79mhNBzIGU96v
-	 JXhwAWUIHHY0CyLinhprle6eH9ZMJ6gAhhpTH9YT2OXbHgesMLMXeqrXQl9GDr9GhR
-	 cR4Addly+n0lQ==
-Date: Mon, 25 Nov 2024 07:21:04 -0600
-From: Rob Herring <robh@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Dragan Cvetic <dragan.cvetic@amd.com>, linux-gpio@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	linux-arm-kernel@lists.infradead.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Wilczynski <kw@linux.com>
-Subject: Re: [PATCH v4 04/10] dt-bindings: misc: Add device specific bindings
- for RaspberryPi RP1
-Message-ID: <20241125132104.GA1520508-robh@kernel.org>
-References: <cover.1732444746.git.andrea.porta@suse.com>
- <ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com>
- <173250040873.6640.9720381303445148722.robh@kernel.org>
- <Z0RAGkBc-yz5lqN6@apocalypse>
+	b=lpGUPoDy+lpjK8ovjXSc/xTMJcV/SY4/HKvoVZEEDnvvbJnNYIvocXaQWHC7cxWo5
+	 YX9mLLmF1/LeyQ2yyfuh6BDUE70R7hsShSjVsGlkvB7fp0/oR2lyx5PQynjXUusnba
+	 uijAWtWfKBwHhYBaKFpycH1jpWwHKBwGeDb6tma5XC5AuT8ZETsvTh5+tNXcqONUr9
+	 mppQPAnFzNp3xrS5j3jhn5v+YONueox1fx2+IV1pRuHz7GNF+cY8NzJOJIvt4dIsOb
+	 E16naW+VWwsEDo17U5VvRmf2NsACxEPK0VI13B5MtbJKZ7h0Gx3nNRjX4oxHGmeI/Z
+	 JzKuaEIfZ31Ww==
+Date: Mon, 25 Nov 2024 08:28:40 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] pin control changes for v6.13
+Message-ID: <Z0R7iGP-0cQwmY7A@sashalap>
+References: <CACRpkdZWqTOTzYYgD-wAps2Ygsh-D+nxaW76hrWSdTDZZKBA_w@mail.gmail.com>
+ <Z0NaYhtZy89ObgmR@sashalap>
+ <CACRpkdaZ=YvMSLYWUrmsjknk-gNV8o5v_y8sasRcxweyTSkKHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <Z0RAGkBc-yz5lqN6@apocalypse>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaZ=YvMSLYWUrmsjknk-gNV8o5v_y8sasRcxweyTSkKHQ@mail.gmail.com>
 
-On Mon, Nov 25, 2024 at 10:15:06AM +0100, Andrea della Porta wrote:
-> Hi Rob,
-> 
-> On 20:06 Sun 24 Nov     , Rob Herring (Arm) wrote:
-> > 
-> > On Sun, 24 Nov 2024 11:51:41 +0100, Andrea della Porta wrote:
-> > > The RP1 is a MFD that exposes its peripherals through PCI BARs. This
-> > > schema is intended as minimal support for the clock generator and
-> > > gpio controller peripherals which are accessible through BAR1.
-> > > 
-> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > > ---
-> > >  .../devicetree/bindings/misc/pci1de4,1.yaml   | 74 +++++++++++++++++++
-> > >  MAINTAINERS                                   |  1 +
-> > >  2 files changed, 75 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> > > 
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> > 
-> > yamllint warnings/errors:
-> > 
-> > dtschema/dtc warnings/errors:
-> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/pci1de4,1.example.dtb: clocks@c040018000: 'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
-> > 	from schema $id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+On Mon, Nov 25, 2024 at 09:48:59AM +0100, Linus Walleij wrote:
+>On Sun, Nov 24, 2024 at 5:55 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+>> I've just hit the issue you've described in this PR:
+>(...)
+>> Is effectively a revert of one of the commits that are part of this PR:
+>>
+>> >      pinctrl: aw9523: add missing mutex_destroy
+>>
+>> Would it make more sense to just re-do this PR without the offending
+>> commit? I understand that this is a fairly small fixup, but I'm
+>> concerned that this will just create confusion later on...
+>
+>I don't follow what you mean I should do. The offending commit is a
+>fix and it is already upstream since -rc4.
 
-The error comes from this schema and...
+Oh, there's something off in the PR itself: it lists "pinctrl: aw9523:
+add missing mutex_destroy" as a commit that is included in this PR, but
+really it's already upstream.
 
-> > 
-> > doc reference errors (make refcheckdocs):
-> > 
-> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ebb21da5cb41391421b364815705be8b4c415f8a.1732444746.git.andrea.porta@suse.com
-> > 
-> > The base for the series is generally the latest rc1. A different dependency
-> > should be noted in *this* patch.
-> > 
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> > date:
-> > 
-> > pip3 install dtschema --upgrade
-> > 
-> > Please check and re-submit after running the above command yourself. Note
-> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> > your schema. However, it must be unset to test all examples with your schema.
-> > 
-> 
-> Sorry about that, but even if I see that this should be the case (I've dropped
-> the clock-name property from raspberrypi,rp1-clock.yaml), I can't reproduce it
-> with:
-> 
-> # make W=1 dt_binding_check DT_SCHEMA_FILES=pci1de4,1.yaml
+Sorry, I got confused by that.
 
-You've limited testing to schema files matching pci1de4,1.yaml.
+>Torvalds could probably fix the issue by simply reverting
+>393c554093c0c4cbc8e2f178d36df169016384da
+>instead of applying the fixup though, it has the same textual and
+>semantic effect. I just tested it and it works fine.
+>
+>^Torvalds: looks like revert on top is a better idea than fixups
+>so we don't upset the stable maintainer scripts.
 
-> 
-> and the output is:
-> 
->   CHKDT   Documentation/devicetree/bindings
->   LINT    Documentation/devicetree/bindings
->   DTEX    Documentation/devicetree/bindings/misc/pci1de4,1.example.dts
->   DTC [C] Documentation/devicetree/bindings/misc/pci1de4,1.example.dtb
-> 
-> dt-schema seems up to date. Is my command line correct?
-> 
-> Many thanks,
-> Andrea
-> 
+Yes, a revert would be nicer as it'll make sure we can easily get it to
+older stable trees.
+
+-- 
+Thanks,
+Sasha
 
