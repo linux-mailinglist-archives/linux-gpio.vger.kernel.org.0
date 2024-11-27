@@ -1,130 +1,124 @@
-Return-Path: <linux-gpio+bounces-13320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13321-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 507DA9DA88D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 14:31:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C6189DA8EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 14:45:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16BDD2836E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 13:31:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9083CB232EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 13:45:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B7A1FCF65;
-	Wed, 27 Nov 2024 13:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A76401FCFF7;
+	Wed, 27 Nov 2024 13:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="obUDK7Ff"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSSmnWME"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85B75B1FB
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2024 13:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F7C1FCFC2;
+	Wed, 27 Nov 2024 13:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732714308; cv=none; b=pApZ3JNR41GMUvxKybf2Gh+8p2LLrkwvbJbjKYwDvpW2hj6YOsYbUJLs+6al9VXzFgMvTUAJDoCQXGWJMmCKOyecAQN+r4xAZjm6/yDsyLKR02pHfh4rila/1WsGN9CGpsN6hWItZR4G8Ehpbr0bLExmJJ8SvjLhuhNqjYPo1EE=
+	t=1732715045; cv=none; b=hGLct5odxnHXNwHmNx9dwjVp6k1t1Mkjc6Lf/0aOm6HGHBwvEp/M5e2smmTZE6RuXrn6VgNw3HQFSBzGbXObTYD+iem6DKjVxVEKpsEKOB++znbNsDnRP/OATKnA5hl+0khACtzaap1Z4CXb5rAVBNYyuA5Z6UAplG+Bfw0H0Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732714308; c=relaxed/simple;
-	bh=bN47fR18OH0WdE2rDO97scLvyDs+vxcpNsEAlfsRtbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CPTLYKL8POkO4RscuqNHle9/axFjDooaelhx+LU/SlZjoP9G9DQ65F1cR1BJOI2ZOWARhL4SKMk230B1m1LaTBidzG7L6jNYgLaTP9mF75kBUO7EyxxBLMAXaykhMHoTdTAupsMa/YZ5+IwjCQudzXOK7HgMuyQmse+reShVf1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=obUDK7Ff; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-434a8b94fb5so5141085e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Nov 2024 05:31:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1732714305; x=1733319105; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOFGJl9JdmOF60cr1pmexdxHzrHoLWb6fwjhsqCmvjg=;
-        b=obUDK7Ffdsypqa7OKT2DRI5fNwYBhMfJUOoBaipZmJzzi5Sx678Gfnn9Hd8FsEFM9Y
-         L0Q2ti9mhK/PCU+Kbdns93O9opYiSgRkGsakRCV/1c/oBOqdaQ9rAzfTsvucYPWLVIhP
-         gmYojssW8HOOwIsvAMgeZu6OoDyaFpv8AKMEgkWNdqdfto1qcQkQtJ5fMsv8165xOJ0/
-         xJhdL+AfOKdbAlxwy8lAOtOUoPsjQD2mIGvWHjT0CAzde21bjFWBCoKs2ohVZzb17Wey
-         FZ3SS498gsO9iZRJKKJhsyuKYUFG18SU1cCK4naP6elpyu72h0GLMrVl9buABzN01wRE
-         lm1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732714305; x=1733319105;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oOFGJl9JdmOF60cr1pmexdxHzrHoLWb6fwjhsqCmvjg=;
-        b=KGqc3p87gcwvazp/Z6XfBBca1pwzRjfucbjlBVezICoda9VlFdY5kx7c0qRBG0Z9vs
-         /2yJbk8HlSEwYDhVRYz/TFahTPE8ZYzm5FqY/p6p1jcw6O32czithrCkUoO6/+Smhljq
-         9j6IaoOzsAVAY7lo26s8lHrNuOlyjh3UUbOUPZg48u2fvllpQDI6pgtQa1KjE1wX2bWH
-         wpZrPiuDBf52+zXT8UdBg1ulk8iIhm+5iKP7INFLXQLjp6keOCivvAiIM69IqKIcYb5u
-         cwySB9Kv8l8qvFJpZNN622j5nWhRDB+f00d2ZiAyPtv9nYzz/LtdDBPMSt2yYwAzIPol
-         tAdA==
-X-Gm-Message-State: AOJu0YzMbqxVsUYtQmdPqjtg4TicdJcxWNUW+0FCTcn+XHozmtKgyvjn
-	GZF91lMFhOvZyKika8vU/9hmFHdN/6TUjUXrskTOa7jfpd3R0bxZ5zxqBF8L4HI=
-X-Gm-Gg: ASbGncs5ktgvSWWIskVEywjauBQk+uUCtAgZSOQBzr/ORkjT6uD3ZU0Ht/UlhUJ/UJZ
-	4lHq08SyIp7Zr+GsEsi/zw60qUe6BE0r4T1HX3J7awWVtLyaEhx76jJ64h4Toqz1lRvx0Z5HhEQ
-	lU4erdPtelBbj2/gpJJgPOkDTN4OOLw2b8J2+ES4f9WDslDle2HxVo7+xhV0aPAm9ssObU8b2Aa
-	84adz71134353AEo/2FoRH9C1Ncaik/m449oitD/lfdwtjqdA==
-X-Google-Smtp-Source: AGHT+IH0EqUhyemE4/m5M0TNmAEA6mq0LMucFk2qrYo5tBv6rlaC4egCVkStM+m455RKCMpOlQ/4lw==
-X-Received: by 2002:a05:600c:450e:b0:433:c76d:d56b with SMTP id 5b1f17b1804b1-434a9e28dd7mr24969875e9.12.1732714304858;
-        Wed, 27 Nov 2024 05:31:44 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:fecd:58cc:bc05:528d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434aa7a49a5sm21776925e9.7.2024.11.27.05.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Nov 2024 05:31:44 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Vincent Fazio <vfazio@xes-inc.com>,
-	Phil Howard <phil@gadgetoid.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] bindings: python: relax the verbosity adjustment in build_tests.sh
-Date: Wed, 27 Nov 2024 14:31:39 +0100
-Message-ID: <20241127133139.120107-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1732715045; c=relaxed/simple;
+	bh=J5kbzFJdRU8mGY871AZ3Cz82lCZYsmam9fRQzz21ITk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mGwpykMt8K+JrFvOBS1uwNCkiZnqHrI8fBOHMXEvM25Nv96Xw2FCf6vtyEJcflKAlIvO3ttBuBZ7qrOFDw8hggZdeaCZuHdFRexwgmS/pYuPSWOTdvwzq0K13fgGd6GmzNPSDk6N2gUedw013yfoFKwJ4hjyDbMKQ3iS/J5J1FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSSmnWME; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77148C4CECC;
+	Wed, 27 Nov 2024 13:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732715044;
+	bh=J5kbzFJdRU8mGY871AZ3Cz82lCZYsmam9fRQzz21ITk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hSSmnWMEoU1j6ZJ3uX6MsrZUbaV5vF9BPfFyVIk4PEduBfHU+/mYermlj1Jt0GIGc
+	 u3np+OJuvEHZqlF2+FsIs6HxrnnlzXI1k/j04JS7ZRlkV5GXE44BtSKwNcu8iCIXHF
+	 9I1wMZZ86PSAcNK8ooEArxq3uTanWIMoFZguxp73wIfOj9Ue+ZZZ/hZ+lJi3g+rqDT
+	 IeiPMn3RTq5xgp6oSQPlSQWkgLPuvKJgG4CoumDeFGt0xYvQaIjP2j6rs4iZl1n1Dl
+	 bGoKcsv3JUmpFuc/z9GK/c6s9l8s9fsK0JkSJN4ibherM9WlldEA6OWqL0NRxcv2K1
+	 PNoeX8o8MUVwQ==
+Date: Wed, 27 Nov 2024 07:44:02 -0600
+From: Rob Herring <robh@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 0/2] Preserve the flags portion on 1:1 dma-ranges
+ mapping
+Message-ID: <20241127134402.GA3351562-robh@kernel.org>
+References: <cover.1732441813.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1732441813.git.andrea.porta@suse.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Nov 24, 2024 at 11:05:35AM +0100, Andrea della Porta wrote:
+> Empty dma-ranges in DT nodes using 3-cell address spcifier cause the
+> flag portion to be dropped by of_translate_one(), failing the translation
+> chain. This patch aims at fixing this issue.
+> 
+> Part of this patchset was originally preparatory for a bigger patchset
+> (see [1]). It has been split in a standalone one for better management
+> and because it contains a bugfix which is probably of interest to stable
+> branch.
+> I've also added new tests to unittest to prove it.
+> 
+> Many thanks,
+> Andrea
+> 
+> References:
+> [1] - https://lore.kernel.org/all/3029857353c9499659369c1540ba887d7860670f.1730123575.git.andrea.porta@suse.com/
+> 
+> 
+> Changes in V2:
+> 
+> - Added blank lines between paragraphs in commit message for patch 2
+> - Fixed a comment to explain the code behaviour in a straighter way
+> 
+> 
+> Andrea della Porta (2):
+>   of/unittest: Add empty dma-ranges address translation tests
+>   of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+> 
+>  drivers/of/address.c                        |  3 +-
+>  drivers/of/unittest-data/tests-address.dtsi |  2 ++
+>  drivers/of/unittest.c                       | 39 +++++++++++++++++++++
+>  3 files changed, 43 insertions(+), 1 deletion(-)
 
-When building tests using the build_tests.py script, we try to increase
-the verbosity using setuptools.logging.configure() preferably but
-falling back to distutils.log.set_verbosity() if the former is missing.
+Applied, thanks!
 
-This however creates a hard dependency on distutils on older environments
-missing the recently added setuptools method. The build however, can work
-fine even with default (low) verbosity so instead of bailing out if the
-second import fails, just keep going.
-
-Closes: https://github.com/brgl/libgpiod/issues/109
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/build_tests.py | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/bindings/python/build_tests.py b/bindings/python/build_tests.py
-index 84cedfc..ebe1727 100644
---- a/bindings/python/build_tests.py
-+++ b/bindings/python/build_tests.py
-@@ -82,9 +82,13 @@ try:
- 
-     configure()
- except ImportError:
--    from distutils.log import DEBUG, set_verbosity
-+    try:
-+        from distutils.log import DEBUG, set_verbosity
- 
--    set_verbosity(DEBUG)
-+        set_verbosity(DEBUG)
-+    except ImportError:
-+        # We can still build the tests, it will just be very quiet.
-+        pass
- 
- with tempfile.TemporaryDirectory(prefix="libgpiod-") as temp_dir:
-     command = build_ext(dist)
--- 
-2.45.2
-
+Rob
 
