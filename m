@@ -1,119 +1,97 @@
-Return-Path: <linux-gpio+bounces-13309-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13310-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2486A9DA3C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 09:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 29A1C9DA3EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 09:30:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5490166403
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 08:20:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC0B6164958
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 08:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48EE0185B73;
-	Wed, 27 Nov 2024 08:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0CF188014;
+	Wed, 27 Nov 2024 08:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QsCPjwDS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lQS5Pwyc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787DD13C816;
-	Wed, 27 Nov 2024 08:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2822A1114;
+	Wed, 27 Nov 2024 08:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732695639; cv=none; b=IWyl9P6ayG/V8IZGkUFPG+Urq7/ddRQR5tAdr5hAQUM7VbXeBhthTuo8VMR+XyJWJlJlWE9CV24dfUEMjYYWeOhXi+OVUAkYt4nQaJ32TB5TEYjuQ6jsqazE9+cJreUQ6/nXXOVCmob/stcX7fJ4KL1pT71WYJQvdEAR4WkjsXA=
+	t=1732696214; cv=none; b=iOqePIN1tMMcaUNLZfWapfiBFSL2y7dyplZ0xuvpoMfbP3xlKrZkBDUfX1RgSkU51xJfhO5bqBRWB17ZEy499AGQik+947eCtDJ4E1gm9vyLP/nSjFG51o9pzhhWjv0NehzYTXMXUS/Kmi3XFkp3ApwpnSaR3wYP3/STW2SNjdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732695639; c=relaxed/simple;
-	bh=TJMspgLIAfQfEO+bmJU8NLexuKEQCktJ3J1jXkLkl+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ctxrpY5nig3Tu8CpjK2XzlVopaSInuKf5TBTrtUQMMkIEIStBry8Iw1KpCYsk3rNyRF6IXtpErJpGBlrVpZE6FtqRkhN0O+lv4JRmk5MVFmF0aAP4vIgher4KN7krvTbtEv0L/ISUBvdyzLVjCjugr9y4z+EfWA6+uAdPHb6u4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QsCPjwDS; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 196281C0006;
-	Wed, 27 Nov 2024 08:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1732695628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TJMspgLIAfQfEO+bmJU8NLexuKEQCktJ3J1jXkLkl+k=;
-	b=QsCPjwDSdqfFGctHU8kmHHbZbQAC0XTlMYph8wEKJXseCnyHu4P/M9cWTHdgspaKSo3rJQ
-	cPJ3m9s8zgkluTc0foCsaK88Vt12KrOgohLdeuvGjIlaxdt+lnkB4TYP0yOPgn8n61uQXN
-	HJfr5umpbJVT0RqMzXh0jtx+hSqLYOGwNfCnfDNukNggy0BxOFkZyQL4YTU9z/tozLazhf
-	6hJvFVBKEIVg5et/KmPw+IcEz9LLv2myfrwlYCyatUVat65i0gQGCL+fsIxFA07eZirZny
-	yg2dFGJVrf9OpHN1Ej3Z5Tr2bFib2aSOkCINjOE3oRN9oMOGG+ijwKyk+Xdz5w==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject:
- Re: [PATCH v3 1/9] dt-bindings: misc: Describe TI FPC202 dual port controller
-Date: Wed, 27 Nov 2024 09:20:26 +0100
-Message-ID: <3923123.7gsWKXV4c1@fw-rgant>
-In-Reply-To: <20241126-precinct-corrode-516d3a476479@spud>
-References:
- <20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com> <2072150.UuDqf3iUMg@fw-rgant>
- <20241126-precinct-corrode-516d3a476479@spud>
+	s=arc-20240116; t=1732696214; c=relaxed/simple;
+	bh=/oRV7hIUPzEpk+6vrKInkgL1/QdYFRkFO4vKGXZNuDg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eMsYM9D4JnXlFB06XWfnK/DztCZSP/jusHfLi5qu5B/Kcs+qqrlm+RWNtf8K4nCoiKMtwrQKqIOc1K/MLn7nvGrvsyAWLowh9E9222MJk2Mr6QUWlp+L7u6hpkHDXxe6wOEvkHdbbcWnhj0e3Q5EUFWvHvR25YTU9e/epU06lGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lQS5Pwyc; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1732696213; x=1764232213;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/oRV7hIUPzEpk+6vrKInkgL1/QdYFRkFO4vKGXZNuDg=;
+  b=lQS5Pwycl2nE+ywNdqh4y4NJjiUxozW6JLVFrYqxXIrTFFEJwn+9zL73
+   0Q3xUP/eWm8DnnvmMkhX3q1dutOXKwBpZ4pt9LYIl9swm2z1isr7dZ3Vw
+   ItyR8ZD7odbSjmasqu3hS5kNrnMZxitPxk8xlwiLoiPxAbCzMXJZewlaU
+   KgMEtBkYVWgJyM2Au7jUobcwMuHYsfU8SnHFtS4Ro8DBC6Wue6osBocF3
+   vX41B459L1tSzyj2EZ1dcRFNIi9Ml+TR+zyg5NuaLOdZ+K8CSAbq88KnN
+   FqFZWsnxFkRvbWHtKejRNMTWxsNml6O04uzfn8LHPDOulVyifIUmr47mt
+   w==;
+X-CSE-ConnectionGUID: Oici1sDXRc2kOeh3jdqW/Q==
+X-CSE-MsgGUID: IYR4bBbxQG+ZqGquerYeNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="32834852"
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="32834852"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 00:30:12 -0800
+X-CSE-ConnectionGUID: fIyf8uVCRXySnZ/c8CIQVA==
+X-CSE-MsgGUID: joLlenH8RDOHVykxZcZV9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,189,1728975600"; 
+   d="scan'208";a="91822814"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2024 00:30:09 -0800
+Message-ID: <e659ccc0-ab47-4596-b23a-80eff2128c19@linux.intel.com>
+Date: Wed, 27 Nov 2024 09:30:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-GND-Sasl: romain.gantois@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] ASoC: Intel: avs: use devm_kmemdup_array()
+To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
+ linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+ andriy.shevchenko@linux.intel.com, dmitry.torokhov@gmail.com,
+ broonie@kernel.org, pierre-louis.bossart@linux.dev
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
+ Cezary Rojewski <cezary.rojewski@intel.com>
+References: <20241126172240.6044-1-raag.jadav@intel.com>
+ <20241126172240.6044-7-raag.jadav@intel.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20241126172240.6044-7-raag.jadav@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On mardi 26 novembre 2024 19:09:43 heure normale d=E2=80=99Europe centrale =
-Conor Dooley wrote:
-> On Tue, Nov 26, 2024 at 09:05:42AM +0100, Romain Gantois wrote:
-> > Hello Conor,
-=2E..
-> >=20
-> > But then again, you could consider that DT bindings should only describe
-> > what is possible, and not only what makes sense as a use case. I don't
-> > really know how to answer this question myself, so I'll refer to the
-> > maintainers' opinions.
-> I don't really know what how this device works, which is why I am asking
-> questions. If there is no use case were someone would only wire up one
-> of the downstream ports then making both required is fine. I was just
-> thinking that someone might only hook devices up to one side of it and
-> leave the other unused entirely. Seemed like it could serve its role
-> without both sides being used based on the diagram in
-> https://docs.kernel.org/i2c/i2c-address-translators.html
-> unless it is not possible for the atr to share the "parent" i2c bus with
-> other devices?
++Cezary
 
-It is possible for the FPC202 to share it's parent bus with other devices. =
-And I
-guess you could wire up only one port and use the component as a simple
-address translator and GPIO aggregator.
+On 11/26/2024 6:22 PM, Raag Jadav wrote:
+> Convert to use devm_kmemdup_array() which is more robust.
+> 
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
 
-So indeed, requiring both ports to be described seems unnecessary.
-
-Thanks,
-
-=2D-=20
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-
+Reviewed-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
 
