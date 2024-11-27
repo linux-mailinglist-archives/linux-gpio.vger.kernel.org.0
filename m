@@ -1,125 +1,119 @@
-Return-Path: <linux-gpio+bounces-13308-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13309-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95F8F9DA35E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 08:55:20 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2486A9DA3C6
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 09:20:46 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04A58280C3D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 07:55:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5490166403
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Nov 2024 08:20:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B8F155A4D;
-	Wed, 27 Nov 2024 07:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48EE0185B73;
+	Wed, 27 Nov 2024 08:20:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bucSP35A"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QsCPjwDS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC7018E0E;
-	Wed, 27 Nov 2024 07:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787DD13C816;
+	Wed, 27 Nov 2024 08:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732694113; cv=none; b=tnmK7FOdzZ7OTxb3LY2s2xDD8AfyHcjuHn66wRT9wtdoOHjzVAKo510e5/0xLUlfO/rlRPunU566b/FbB5cTPyX85FZmwULWMfHCFH68Ie8IRskjCDR2ZfIQrC6ZydbGcZ+UiG9Bzxvqa7LLCT820YGKu3Uesb+r7HopvUipHec=
+	t=1732695639; cv=none; b=IWyl9P6ayG/V8IZGkUFPG+Urq7/ddRQR5tAdr5hAQUM7VbXeBhthTuo8VMR+XyJWJlJlWE9CV24dfUEMjYYWeOhXi+OVUAkYt4nQaJ32TB5TEYjuQ6jsqazE9+cJreUQ6/nXXOVCmob/stcX7fJ4KL1pT71WYJQvdEAR4WkjsXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732694113; c=relaxed/simple;
-	bh=x0xX5vYSBWllewRjPzdfK0c874WVsNj5qAoWrojVTGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYuDsypKvwkjC7mUNPQMAl1mJG2hhAyzJwFSLWUWxeMe5ApCS8R5LdFSarJrBm/xbouz2kzYHIDlq4Eh3G9LER5/kXGHI/ZKtJIeoQDSX4X99vj5/aEOnNeDRMTN5ruREwA9IpsCjguDZhVDzAnUfZR7tNyaOFrVCO5H2USWzyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bucSP35A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6B3C4CECC;
-	Wed, 27 Nov 2024 07:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732694112;
-	bh=x0xX5vYSBWllewRjPzdfK0c874WVsNj5qAoWrojVTGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bucSP35AKAy65nI+BITULDx0+C9mvIKCfCDFgHIyv84XK+74qXxwFqUbTN41rkK+C
-	 Ra6tp1daRWkSizWrHnXH10FW7w58tZ2kX8hBinj8iFiX1chlQzHLXzCN+l4ncSQR03
-	 OnPHmh97RjPzSeDuH/4EE01NtM3RfoJgytMQdFBrt2uZX5X3MUhBxpKV/tKlolYwP2
-	 AAPuj17Gfvw2HqlZy5FOkO4Dv2lqO62E3NZ22t36PrOPbxmBz/MoM46QZS/72X63i3
-	 4rCESMHIqtId3GjebgFlSCLkaOZ8aJEJHy9tLVB3HTM8J+Qb7joF3gswz/if9EU4DG
-	 43V0+UResU/dA==
-Date: Wed, 27 Nov 2024 08:55:09 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof Wilczynski <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
-	Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 02/10] dt-bindings: pinctrl: Add RaspberryPi RP1
- gpio/pinctrl/pinmux bindings
-Message-ID: <4ufubysv62v7aq53qfzxmup5agmqypdvemd24vm6eentph46qq@3kveluud3zd3>
-References: <cover.1732444746.git.andrea.porta@suse.com>
- <9b83c5ee8345e4fe26e942f343305fdddc01c59f.1732444746.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1732695639; c=relaxed/simple;
+	bh=TJMspgLIAfQfEO+bmJU8NLexuKEQCktJ3J1jXkLkl+k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ctxrpY5nig3Tu8CpjK2XzlVopaSInuKf5TBTrtUQMMkIEIStBry8Iw1KpCYsk3rNyRF6IXtpErJpGBlrVpZE6FtqRkhN0O+lv4JRmk5MVFmF0aAP4vIgher4KN7krvTbtEv0L/ISUBvdyzLVjCjugr9y4z+EfWA6+uAdPHb6u4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QsCPjwDS; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 196281C0006;
+	Wed, 27 Nov 2024 08:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1732695628;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TJMspgLIAfQfEO+bmJU8NLexuKEQCktJ3J1jXkLkl+k=;
+	b=QsCPjwDSdqfFGctHU8kmHHbZbQAC0XTlMYph8wEKJXseCnyHu4P/M9cWTHdgspaKSo3rJQ
+	cPJ3m9s8zgkluTc0foCsaK88Vt12KrOgohLdeuvGjIlaxdt+lnkB4TYP0yOPgn8n61uQXN
+	HJfr5umpbJVT0RqMzXh0jtx+hSqLYOGwNfCnfDNukNggy0BxOFkZyQL4YTU9z/tozLazhf
+	6hJvFVBKEIVg5et/KmPw+IcEz9LLv2myfrwlYCyatUVat65i0gQGCL+fsIxFA07eZirZny
+	yg2dFGJVrf9OpHN1Ej3Z5Tr2bFib2aSOkCINjOE3oRN9oMOGG+ijwKyk+Xdz5w==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject:
+ Re: [PATCH v3 1/9] dt-bindings: misc: Describe TI FPC202 dual port controller
+Date: Wed, 27 Nov 2024 09:20:26 +0100
+Message-ID: <3923123.7gsWKXV4c1@fw-rgant>
+In-Reply-To: <20241126-precinct-corrode-516d3a476479@spud>
+References:
+ <20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com> <2072150.UuDqf3iUMg@fw-rgant>
+ <20241126-precinct-corrode-516d3a476479@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9b83c5ee8345e4fe26e942f343305fdddc01c59f.1732444746.git.andrea.porta@suse.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Sun, Nov 24, 2024 at 11:51:39AM +0100, Andrea della Porta wrote:
-> +  '#interrupt-cells':
-> +    description:
-> +      Specifies the Bank number [0, 1, 2] and Flags as defined in
-> +      include/dt-bindings/interrupt-controller/irq.h.
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/raspberrypi-rp1-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/raspberrypi-rp1-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  raspberrypi-rp1-state:
-> +    allOf:
-> +      - $ref: pincfg-node.yaml#
-> +      - $ref: pinmux-node.yaml#
-> +
-> +    description:
-> +      Pin controller client devices use pin configuration subnodes (children
-> +      and grandchildren) for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          pattern: "^gpio([0-9]|[1-5][0-9])$"
+On mardi 26 novembre 2024 19:09:43 heure normale d=E2=80=99Europe centrale =
+Conor Dooley wrote:
+> On Tue, Nov 26, 2024 at 09:05:42AM +0100, Romain Gantois wrote:
+> > Hello Conor,
+=2E..
+> >=20
+> > But then again, you could consider that DT bindings should only describe
+> > what is possible, and not only what makes sense as a use case. I don't
+> > really know how to answer this question myself, so I'll refer to the
+> > maintainers' opinions.
+> I don't really know what how this device works, which is why I am asking
+> questions. If there is no use case were someone would only wire up one
+> of the downstream ports then making both required is fine. I was just
+> thinking that someone might only hook devices up to one side of it and
+> leave the other unused entirely. Seemed like it could serve its role
+> without both sides being used based on the diagram in
+> https://docs.kernel.org/i2c/i2c-address-translators.html
+> unless it is not possible for the atr to share the "parent" i2c bus with
+> other devices?
 
-You have 54 GPIOs, so up to 53.
+It is possible for the FPC202 to share it's parent bus with other devices. =
+And I
+guess you could wire up only one port and use the component as a simple
+address translator and GPIO aggregator.
 
-Use also consistent quotes, either ' or ".
+So indeed, requiring both ports to be described seems unnecessary.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Thanks,
 
-Best regards,
-Krzysztof
+=2D-=20
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+
 
 
