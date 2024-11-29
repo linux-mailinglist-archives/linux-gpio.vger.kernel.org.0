@@ -1,276 +1,176 @@
-Return-Path: <linux-gpio+bounces-13346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13347-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E3FF9DC025
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:01:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C767E9DC048
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:12:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C317A280A7B
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:01:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24649B20EAA
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:12:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE78179972;
-	Fri, 29 Nov 2024 07:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB51A1586FE;
+	Fri, 29 Nov 2024 08:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cV8Fl2j8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ozj3eVRE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B7F159209;
-	Fri, 29 Nov 2024 07:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B0B45C14;
+	Fri, 29 Nov 2024 08:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732867193; cv=none; b=s2s8fHFhDpyEXZiz1HLytiM1AmhIqIEwvyNmupkKx4OvzrXNvQVHGcsRAHAcE6XxEtz4+JanpXkXpj+7PbxnqW/tdG39p5upBhLPx93mgSW9dk3FSvNU5eTGtZWSCKEsofcVkhdu6e4xRQYX/V6+OsNfeI7211t+vvAkswqWpQY=
+	t=1732867916; cv=none; b=E0ReW2xcJPu+g2m1cK5EbC7x8ReFmUojeSLOd4C/2Bd/Eb9gjeW9iAKnPTwFDF2RJmMTFafOLAC/0F7sl9vzj/tN79X1YMa/CnGpPHjjma1PW8o+lBq+zVBXiciXNvnQHx8oYJ7XU0iDY1KDCnPvm3FAA7yyMU9NyV85vEs6B+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732867193; c=relaxed/simple;
-	bh=TNj5EiTOMzDJ0PKM4MIWEv3ufyXXV6h9punYRpWZDKc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Bf7MscjK+t+oQ1zvrqDNGoCuFjaJLbyXp4vnW83HEneEQ7Cg98+MVYin56XS7/pIT+bLrIfsWrCRydchcVjUAHWYqmdZfo/A6IOpsTsE7cfQBVAjAP3iJY0DC4Lnso1oaDztH4Kuzmjq5uBIAbWGDhcZi6dPfckF19rXRrcZE14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cV8Fl2j8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ASLZ99Q011311;
-	Fri, 29 Nov 2024 07:59:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c2W5Jc9ESQZPhwrskfSZmD27wZzekj5ji0rlq1whTWk=; b=cV8Fl2j8DMOopiNE
-	UW7BXAQ25HNQqcOyuJMxhWbsueCOQA1DSwYJxTls/gTjEDQ5X1K+GmFfCiQEB0FB
-	rsVlcVwMgwGLTd+YJRrRIs40USOUcXr9BmUJCj8/5xtGTkyqPjnVYzYy170fVrrw
-	HZPvb/XwDKYOQPkLEIugkdpE6rVQLi4FOsnP9xWdizWRIlErL2SBEVdgyRJ18Onk
-	Hz0NxpEGj06e3/ID7U+dhkGQnxmfrGTyInI+U6SJMPMHYACe/+TcBv1GIQJgvANh
-	0PafrbG8+UOao9rniOPnm3irQqSmZIipKlYfKfTAYBOJAL7Pahz4ZwBGgwKqjU8s
-	X5PNyA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4366xw4vny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Nov 2024 07:59:39 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4AT7xc4q002890
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Nov 2024 07:59:38 GMT
-Received: from szioemm-lnxbld002.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 28 Nov 2024 23:59:31 -0800
-From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
-Date: Fri, 29 Nov 2024 15:57:48 +0800
-Subject: [PATCH 8/8] drm/msm/dp: Support external GPIO HPD with 3rd pinctrl
- chip
+	s=arc-20240116; t=1732867916; c=relaxed/simple;
+	bh=AiJGowtHIo1rzk5BX2SihIa4VHmiP8g4FSFO5Tp/vgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BMnJE/8+Z+81LGAGF6jCzAxVgmzc9Elj4ci654maVTvlhSHcNwJTHmF4LPVQh/sYqiENzlswdML0mvy++V14ksHVxoc4imAgNb70VCOWaXoI5WqFv9f3VUt1CPcpfSNEHq05ZYjdC9BjMABNoEGy5OK9mESTmuyb6Fvft4BokLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ozj3eVRE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E32C4CECF;
+	Fri, 29 Nov 2024 08:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732867916;
+	bh=AiJGowtHIo1rzk5BX2SihIa4VHmiP8g4FSFO5Tp/vgo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ozj3eVRE2B4Xfraaf9xGTcamEH1wgUHuep/fSaiyvGsB1MgKdkcv9ceMg/tYg+v1M
+	 s5g8y2asddbXCwWSHZG/yUqhbJkvfoTZfNO+mULTKG3MhSMVN9lMKti5ady6AwKOO4
+	 Isgn+mGhO0VZnBhVc4sC+buohU/YQiMgmoR3jCzVeXFBh9RxRRiTe7lSAz0pQ9KyjU
+	 TkqzKu67OKKeppO1+uezQNB6WlPqO3RDkuDNNeDJvKRM23EQXo9WP8iatYUQ9rHWuw
+	 3Dbly7K36aa3vW5uNLENQC+e6WBKJ1+ifcWInNhg//iiaEmxbVb6FDv0VGN9FBaeYk
+	 pat95dwmE27MA==
+Message-ID: <69185db0-7fe7-4acf-b0c8-c1d8fe90535f@kernel.org>
+Date: Fri, 29 Nov 2024 09:11:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20241129-add-displayport-support-for-qcs615-platform-v1-8-09a4338d93ef@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] dt-bindings: display/msm: Document DP on QCS615
+To: Xiangxu Yin <quic_xiangxuy@quicinc.com>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, quic_lliu6@quicinc.com, quic_fangez@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org
 References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
-In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
-To: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul
-	<vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
-        <quic_fangez@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, Xiangxu Yin <quic_xiangxuy@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1732867105; l=4469;
- i=quic_xiangxuy@quicinc.com; s=20241125; h=from:subject:message-id;
- bh=TNj5EiTOMzDJ0PKM4MIWEv3ufyXXV6h9punYRpWZDKc=;
- b=GyogZ628z9aZFe6b5wiADpPghpaIkxyLi/0Kuotl2chQMlWFKmVE/aM4lLc3LE7wf4wgiLMzs
- rqlHSHvRfzSDJpXyO6xaLLA2qfSCX6d7te4ywU7ad1sP8ogKOFVa8sD
-X-Developer-Key: i=quic_xiangxuy@quicinc.com; a=ed25519;
- pk=F1TwipJzpywfbt3n/RPi4l/A4AVF+QC89XzCHgZYaOc=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: O8LqOFgAl-AgO4VTrSQFKu8WR8dshWwy
-X-Proofpoint-ORIG-GUID: O8LqOFgAl-AgO4VTrSQFKu8WR8dshWwy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2411290064
+ <20241129-add-displayport-support-for-qcs615-platform-v1-1-09a4338d93ef@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-1-09a4338d93ef@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for handling HPD (Hot Plug Detect) signals via external
-GPIOs connected through pinctrl chips (e.g., Semtech SX1509Q). This
-involves reinitializing the relevant GPIO and binding an interrupt
-handler to process hot plug events. Since external GPIOs only support
-edge interrupts (rising or falling) rather than state interrupts, the
-GPIO state must be read during the first DP bridge HPD enablement. This
-ensures the current connection state is determined and a hot plug event
-is reported accordingly.
+On 29/11/2024 08:57, Xiangxu Yin wrote:
+> Document the DP hardware found on the Qualcomm QCS615 platform.
+> 
+> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+> ---
+>  .../devicetree/bindings/display/msm/dp-controller.yaml      | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+> index a212f335d5ffae545d2e5bacec95299ca45e8405..a609245ae601bdc60b65f19d3e59c559886a969d 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+> @@ -26,6 +26,7 @@ properties:
+>            - qcom,sc8280xp-dp
+>            - qcom,sc8280xp-edp
+>            - qcom,sdm845-dp
+> +          - qcom,sm6150-dp
 
-Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
----
- drivers/gpu/drm/msm/dp/dp_display.c | 83 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+I see sm6150, not qcs615.
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index eb6fb76c68e505fafbec563440e9784f51e1894b..22c288ca61b9b444a7b8d4a574c614bfef9d88be 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -13,6 +13,8 @@
- #include <linux/delay.h>
- #include <drm/display/drm_dp_aux_bus.h>
- #include <drm/drm_edid.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of_gpio.h>
- 
- #include "msm_drv.h"
- #include "msm_kms.h"
-@@ -78,6 +80,10 @@ struct msm_dp_display_private {
- 
- 	unsigned int id;
- 
-+	bool ext_gpio;
-+	int gpio_num;
-+	struct work_struct  gpio_work;
-+
- 	/* state variables */
- 	bool core_initialized;
- 	bool phy_initialized;
-@@ -1182,6 +1188,42 @@ static irqreturn_t msm_dp_display_irq_handler(int irq, void *dev_id)
- 	return ret;
- }
- 
-+
-+static void msm_dp_gpio_work_handler(struct work_struct *work)
-+{
-+	struct msm_dp_display_private *dp = container_of(work,
-+			struct msm_dp_display_private, gpio_work);
-+	struct gpio_desc *desc;
-+	bool hpd;
-+
-+	if (dp->ext_gpio) {
-+		desc = gpio_to_desc(dp->gpio_num);
-+		if (!desc) {
-+			pr_err("Failed to get gpio_desc for GPIO %d\n", dp->gpio_num);
-+			return;
-+		}
-+
-+		hpd = gpiod_get_value_cansleep(desc);
-+		if (hpd)
-+			msm_dp_add_event(dp, EV_HPD_PLUG_INT, 0, 0);
-+		else
-+			msm_dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 0);
-+	}
-+}
-+
-+static irqreturn_t msm_dp_gpio_isr(int unused, void *data)
-+{
-+	struct msm_dp_display_private *dp = data;
-+
-+	if (!dp) {
-+		DRM_ERROR("NULL data\n");
-+		return IRQ_NONE;
-+	}
-+
-+	schedule_work(&dp->gpio_work);
-+	return IRQ_HANDLED;
-+}
-+
- static int msm_dp_display_request_irq(struct msm_dp_display_private *dp)
- {
- 	int rc = 0;
-@@ -1193,6 +1235,21 @@ static int msm_dp_display_request_irq(struct msm_dp_display_private *dp)
- 		return dp->irq;
- 	}
- 
-+	if (dp->ext_gpio) {
-+		int edge, gpio_irq;
-+
-+		gpio_irq = gpio_to_irq(dp->gpio_num);
-+		edge = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
-+
-+		rc = devm_request_threaded_irq(&pdev->dev, gpio_irq, NULL,
-+		msm_dp_gpio_isr, edge, "dp_gpio_isr", dp);
-+		if (rc < 0) {
-+			DRM_ERROR("failed to request ext-gpio IRQ%u: %d\n",
-+					gpio_irq, rc);
-+			return rc;
-+		}
-+	}
-+
- 	rc = devm_request_irq(&pdev->dev, dp->irq, msm_dp_display_irq_handler,
- 			      IRQF_TRIGGER_HIGH|IRQF_NO_AUTOEN,
- 			      "dp_display_isr", dp);
-@@ -1308,10 +1365,32 @@ static int msm_dp_display_probe(struct platform_device *pdev)
- 		return -EPROBE_DEFER;
- 	}
- 
-+	if (of_find_property(pdev->dev.of_node, "dp-hpd-gpio", NULL)) {
-+		dp->ext_gpio = true;
-+		dp->gpio_num = of_get_named_gpio(pdev->dev.of_node, "dp-hpd-gpio", 0);
-+		if (dp->gpio_num < 0) {
-+			dev_err(&pdev->dev, "Failed to get gpio:%d\n", dp->gpio_num);
-+			return dp->gpio_num;
-+		}
-+
-+		if (!gpio_is_valid(dp->gpio_num)) {
-+			DRM_ERROR("gpio(%d) invalid\n", dp->gpio_num);
-+			return -EINVAL;
-+		}
-+
-+		rc = gpio_request(dp->gpio_num, "dp-hpd-gpio");
-+		if (rc) {
-+			dev_err(&pdev->dev, "Failed to request gpio:%d\n", dp->gpio_num);
-+			return rc;
-+		}
-+		gpio_direction_input(dp->gpio_num);
-+	}
-+
- 	/* setup event q */
- 	mutex_init(&dp->event_mutex);
- 	init_waitqueue_head(&dp->event_q);
- 	spin_lock_init(&dp->event_lock);
-+	INIT_WORK(&dp->gpio_work, msm_dp_gpio_work_handler);
- 
- 	/* Store DP audio handle inside DP display */
- 	dp->msm_dp_display.msm_dp_audio = dp->audio;
-@@ -1678,6 +1757,10 @@ void msm_dp_bridge_hpd_enable(struct drm_bridge *bridge)
- 	msm_dp_catalog_hpd_config_intr(dp->catalog, DP_DP_HPD_INT_MASK, true);
- 
- 	msm_dp_display->internal_hpd = true;
-+
-+	if (dp->ext_gpio)
-+		schedule_work(&dp->gpio_work);
-+
- 	mutex_unlock(&dp->event_mutex);
- }
- 
+>            - qcom,sm8350-dp
+>            - qcom,sm8650-dp
+>        - items:
+> @@ -109,6 +110,18 @@ properties:
+>    vdda-1p2-supply:
+>      deprecated: true
+>  
+> +  max-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Maximum allowed width for display modes
+> +    default: 7680
 
--- 
-2.25.1
+I don't see why this is a property of board. Drop. Anyway, missing
+vendor prefix or unnecessary $ref, if it comes from other schema.
 
+> +
+> +  dp-hpd-gpio:
+
+gpios
+
+> +    description: External GPIO for controlling HPD when a 3rd pinctrl is used
+> +    items:
+> +      - description: phandle to 3rd GPIO controller
+> +      - description: GPIO pin number
+> +      - description: Optional GPIO flags
+
+Nope, that's not how GPIOs are created. Please take a look at any other
+schema.
+
+Anyway, I doubt that you need this property. See common bindings for
+display pieces.
+
+
+Best regards,
+Krzysztof
 
