@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-13347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C767E9DC048
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:12:05 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D26689DC04D
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:14:59 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24649B20EAA
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:12:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A8B41637B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB51A1586FE;
-	Fri, 29 Nov 2024 08:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F239A158A19;
+	Fri, 29 Nov 2024 08:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ozj3eVRE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3x4Mbjk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B0B45C14;
-	Fri, 29 Nov 2024 08:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FE6158558;
+	Fri, 29 Nov 2024 08:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732867916; cv=none; b=E0ReW2xcJPu+g2m1cK5EbC7x8ReFmUojeSLOd4C/2Bd/Eb9gjeW9iAKnPTwFDF2RJmMTFafOLAC/0F7sl9vzj/tN79X1YMa/CnGpPHjjma1PW8o+lBq+zVBXiciXNvnQHx8oYJ7XU0iDY1KDCnPvm3FAA7yyMU9NyV85vEs6B+g=
+	t=1732868091; cv=none; b=np65LqDwFQYAOCnDAOwDa4jLQaKPIqPgCsu/e1+0ew+Lp3Geu7ewBqB7J0dG9yDD9H5PwmNLgutzlmXYAzmitwJ4KEgoJwKRaR2lWWCQmjBYQGC25rjrOWs7PolqswJvI9Z8F698/6WLeiPM+twGPJk7GB6Z202SVc+zLu0Q9Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732867916; c=relaxed/simple;
-	bh=AiJGowtHIo1rzk5BX2SihIa4VHmiP8g4FSFO5Tp/vgo=;
+	s=arc-20240116; t=1732868091; c=relaxed/simple;
+	bh=qMkzk6aRKRtywYcgiPjU1mfsswe8+rD4pkz2MbkpaRA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BMnJE/8+Z+81LGAGF6jCzAxVgmzc9Elj4ci654maVTvlhSHcNwJTHmF4LPVQh/sYqiENzlswdML0mvy++V14ksHVxoc4imAgNb70VCOWaXoI5WqFv9f3VUt1CPcpfSNEHq05ZYjdC9BjMABNoEGy5OK9mESTmuyb6Fvft4BokLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ozj3eVRE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E32C4CECF;
-	Fri, 29 Nov 2024 08:11:46 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=X8uWLMZCOOjcshLFQqREF0Oqb/UQCbvYKVsRXJArGHQDJPZ+4Re5Mu529b6rHLy4MBW9KLVWbAzaUqwpG2590bjKVNDK5iygPGQPnJvGpi0qtEZouNAxkHA+dkCwy+wGKEU9jrVMICIrVoBldaZsbcqMHysUv6G3KIt7HAbBsjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3x4Mbjk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDECC4CED4;
+	Fri, 29 Nov 2024 08:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732867916;
-	bh=AiJGowtHIo1rzk5BX2SihIa4VHmiP8g4FSFO5Tp/vgo=;
+	s=k20201202; t=1732868091;
+	bh=qMkzk6aRKRtywYcgiPjU1mfsswe8+rD4pkz2MbkpaRA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ozj3eVRE2B4Xfraaf9xGTcamEH1wgUHuep/fSaiyvGsB1MgKdkcv9ceMg/tYg+v1M
-	 s5g8y2asddbXCwWSHZG/yUqhbJkvfoTZfNO+mULTKG3MhSMVN9lMKti5ady6AwKOO4
-	 Isgn+mGhO0VZnBhVc4sC+buohU/YQiMgmoR3jCzVeXFBh9RxRRiTe7lSAz0pQ9KyjU
-	 TkqzKu67OKKeppO1+uezQNB6WlPqO3RDkuDNNeDJvKRM23EQXo9WP8iatYUQ9rHWuw
-	 3Dbly7K36aa3vW5uNLENQC+e6WBKJ1+ifcWInNhg//iiaEmxbVb6FDv0VGN9FBaeYk
-	 pat95dwmE27MA==
-Message-ID: <69185db0-7fe7-4acf-b0c8-c1d8fe90535f@kernel.org>
-Date: Fri, 29 Nov 2024 09:11:45 +0100
+	b=p3x4MbjkIOvylfcfh5vcZ5+oEyRhtZUdDNqgDU/CFrXjDOYDlElMFez5hKcc29HLT
+	 mUH88VFNEzotbSD0+E7togd2fpINZfnlSVcAVvwS56iVvivOOHfd/OrIYzZTMKzF9J
+	 w/B1a4r3GxqVKl+tIzzoyuW9AjIcLJO+u9BYAIxfWsfoyrzczbarwf8h5ApEqnibg3
+	 kpxsN7zCalF7wGHCfaAlteD1Zxbmt8Y0PNjuQt60Ioh7BvlU61/VjGUH+mLg+9wvLd
+	 YNQ84m793FDvcx0VoynsjhSIo6ggCAhKBL92aZ5CAHbbPa5H2MSyY7sQQT0KKN5t1b
+	 f0bJQyjvmFfAQ==
+Message-ID: <dffc023f-186d-4316-a022-2344f0849ba1@kernel.org>
+Date: Fri, 29 Nov 2024 09:14:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: display/msm: Document DP on QCS615
+Subject: Re: [PATCH 2/8] dt-bindings: phy: qcom,msm8998-qmp-usb3-phy: Add DP
+ support for QCS615
 To: Xiangxu Yin <quic_xiangxuy@quicinc.com>, Rob Clark <robdclark@gmail.com>,
  Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
@@ -68,7 +69,7 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-gpio@vger.kernel.org
 References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
- <20241129-add-displayport-support-for-qcs615-platform-v1-1-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-2-09a4338d93ef@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,61 +115,81 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-1-09a4338d93ef@quicinc.com>
+In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-2-09a4338d93ef@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29/11/2024 08:57, Xiangxu Yin wrote:
-> Document the DP hardware found on the Qualcomm QCS615 platform.
+> Declare the DP QMP PHY present on the Qualcomm QCS615 platforms.
 > 
 > Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
 > ---
->  .../devicetree/bindings/display/msm/dp-controller.yaml      | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  .../bindings/phy/qcom,msm8998-qmp-usb3-phy.yaml     | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> index a212f335d5ffae545d2e5bacec95299ca45e8405..a609245ae601bdc60b65f19d3e59c559886a969d 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> @@ -26,6 +26,7 @@ properties:
->            - qcom,sc8280xp-dp
->            - qcom,sc8280xp-edp
->            - qcom,sdm845-dp
-> +          - qcom,sm6150-dp
-
-I see sm6150, not qcs615.
-
->            - qcom,sm8350-dp
->            - qcom,sm8650-dp
->        - items:
-> @@ -109,6 +110,18 @@ properties:
->    vdda-1p2-supply:
->      deprecated: true
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,msm8998-qmp-usb3-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,msm8998-qmp-usb3-phy.yaml
+> index 1636285fbe535c430fdf792b33a5e9c523de323b..eb21cfe734526fce670c540212a607a016cedf2c 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,msm8998-qmp-usb3-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,msm8998-qmp-usb3-phy.yaml
+> @@ -18,6 +18,7 @@ properties:
+>      enum:
+>        - qcom,msm8998-qmp-usb3-phy
+>        - qcom,qcm2290-qmp-usb3-phy
+> +      - qcom,qcs615-qmp-dp-phy
+>        - qcom,qcs615-qmp-usb3-phy
+>        - qcom,sdm660-qmp-usb3-phy
+>        - qcom,sm6115-qmp-usb3-phy
+> @@ -47,7 +48,7 @@ properties:
+>      const: 0
 >  
-> +  max-width:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Maximum allowed width for display modes
-> +    default: 7680
+>    clock-output-names:
+> -    maxItems: 1
+> +    maxItems: 2
 
-I don't see why this is a property of board. Drop. Anyway, missing
-vendor prefix or unnecessary $ref, if it comes from other schema.
 
-> +
-> +  dp-hpd-gpio:
+Why all devices now have two clocks? No, this needs lower constraints
+and further customization per each variant.
 
-gpios
+>  
+>    "#phy-cells":
+>      const: 0
+> @@ -62,7 +63,8 @@ properties:
+>      items:
+>        - items:
+>            - description: phandle to TCSR hardware block
+> -          - description: offset of the VLS CLAMP register
+> +          - description: offset of the VLS CLAMP register in USB mode
+> +                         and offset of the DP Phy mode register in DP mode
 
-> +    description: External GPIO for controlling HPD when a 3rd pinctrl is used
-> +    items:
-> +      - description: phandle to 3rd GPIO controller
-> +      - description: GPIO pin number
-> +      - description: Optional GPIO flags
+You change all existing devices, no.
 
-Nope, that's not how GPIOs are created. Please take a look at any other
-schema.
+>      description: Clamp register present in the TCSR
+>  
+>    ports:
+> @@ -128,6 +130,21 @@ allOf:
+>              - const: com_aux
+>              - const: pipe
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,qcs615-qmp-dp-phy
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +            - const: cfg_ahb
+> +            - const: ref
 
-Anyway, I doubt that you need this property. See common bindings for
-display pieces.
+Top level says you have minimum 4 clocks, not 2. You need to fix that,
+if this devices stays in this schema. Anyway your changes suggest device
+is quite different, so probably should not be here in the first place
+but in different schema, maybe new one.
+
 
 
 Best regards,
