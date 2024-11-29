@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-13364-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13365-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C4739DEAEF
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 17:27:58 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FD399DEB7D
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 18:11:32 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDB8D163CE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 16:27:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C61C42823CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 17:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898FE14E2E6;
-	Fri, 29 Nov 2024 16:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20C3419C569;
+	Fri, 29 Nov 2024 17:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SXKYN/KE"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bDOwkwrp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2998545BEC
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Nov 2024 16:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44F91553BC
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Nov 2024 17:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732897671; cv=none; b=iW8wd1VEepD9/rzAIJWY5/uZn1jHkwUuMQZTXoG2azhM/X4fahxvNksxnD4neNmvveqRqe3i3kSl5Ey1qe9OyVYyfghacmES3aycEy6v3C9o6aEBJqcKpQJdUBWwCIKKFIoRpF0oEw2O+g5Nomd/ccAP0AiAzupjg4NuOxgjCF0=
+	t=1732900284; cv=none; b=kyxx8dhJraoCDcw+w6m7SefEQrS2n6XT5NHlLH5pQdcvuyaDH8q7/elZNIAJsFJrm8gVFbDl6TA8o6r/YO5r7mnfZcA0a0wF0EG5x7lm3V5+5w5l58c3/zevKA9bM9Q+BGanNskv+rGNMdTyyqCFbyRlGAQJevgIrlkUEXmLY64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732897671; c=relaxed/simple;
-	bh=5w1O89chOqgyMhWZqb9VM6E+m7Ixqgv0RFEj+OZES/M=;
+	s=arc-20240116; t=1732900284; c=relaxed/simple;
+	bh=u4VeqDNvTWRAhnRMPvx5ZxHgDaIe1hpfxIJoqfWrVgE=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+56deaHKE9K2SjsxXoVJTboG6QAYPE/IPeAPMZipZcBfSl7i9g7AgEbJeoUqsAsM2ecxd3sGNxtqEW/oknVpj6Ys/PchaT6xwfcc7OmYhRNnH+jhfxE9ORt10bT5Tpsyju4rGt6pa4UqrsO0RK13et0RSo9tl9WyLlA/NOQ/RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SXKYN/KE; arc=none smtp.client-ip=209.85.218.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=faIIEEMg8T92sT2m1IlVH2lQudyK+5iwQPKjZCpT+7l7mt7i+ahdVIVwJGtXjEpyIM9ObWEXVH+3uyVB2U6PgqXgGxLO5EXbHEQXX4htQYa76wM9xUmvfoal9We9EyUvratuRWiJCXyGOTDcmvZXCJ7jKrzOLE61m4tBxZp7jQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bDOwkwrp; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aa51bf95ce1so396142166b.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Nov 2024 08:27:47 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53df80eeeedso2134692e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Nov 2024 09:11:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1732897666; x=1733502466; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1732900281; x=1733505081; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OwH5v+3GE18kFTNrayT4BgfE0WPSq36ccL8dVwg+Yh0=;
-        b=SXKYN/KEOyynrFJcDSY9fKinPxPtzm7uWRAULf7byMbXWKz2zCJu6+aQnV0Ep6+Wpz
-         UWoux77G37vEbXIdP0h95EneTQqw8W2nAx5UaY/ePqEfSOrxE9elLbGEcs/ZIqsv6bqF
-         Y6Ukh96oPrRmCQvTdqpOU/xxQW0kIQIsYqzpkA823EiuH7tr+sBr8y/aZY7OEBoPuO07
-         4yeVObIAAL64qCdwaLxiXHktmKeQrd/sagClP4y8JbCRwV36elsRVvcFRCncLiiHcx1g
-         NDURsOThUhktc//Il1++bMjEk9NqtJYNbliGeWiyN9/7LaoAe4Js8NNjnaRwr1ql/4DY
-         EUwQ==
+        bh=wKStJ4JMYm6/f7jAdkMonmjOHy/XStYH3AHNh9QPw+k=;
+        b=bDOwkwrp57+hdJuQM2yuTXFuR2uJQz4KquU51t8PIHqO8eQiDyD9aQNlzcorNorPaT
+         xp7YOLadRHiHqNeLg9IJY6J/ulFR/j/syM1NdPODXmEbzVOl5mUR/WOlAKf2q/W7pRWF
+         OVISodhH2VoKdzyWp6LX1fXe+h47Uvf/jzI/K4qJMK0C/xvuS5ytvS7xf5oYa3VTLyd7
+         VWtiSLzoTH2KjPpjC534rVGaPgyoky1fRIlQrXwp05orw95J08DpqUP7G6xtWuVpeMBw
+         wDC8XOyxR1Qfs1jSuK0KTWCb5rsWjIdgrxuwVXnYBHN2hXoRrC0USPiYqn3iDJLpFYf4
+         VHpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732897666; x=1733502466;
+        d=1e100.net; s=20230601; t=1732900281; x=1733505081;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OwH5v+3GE18kFTNrayT4BgfE0WPSq36ccL8dVwg+Yh0=;
-        b=U065vHJ1siuCYuU6Q4N2TQHcEBiqyzCQ9TfXwDFBGw63bQP2YSN21FHnfAAslbAMuz
-         jdVnUGZENISBTyffwI/L0ECHm4eUtZdBM3deQ64z4dl+Bt0bJSPD7fKTyrCqF3chqrTC
-         CYmhpSTx0bKv5KjyTCGxgg4L6x0Ou0vbxLX5Z+YHUXIyLEOQviHiVVTHKxcnKi2RdAn8
-         /3DG+hMZDdHSJTbcZfOi8Xp/RDm19JmV28I+Gq4HqNcKrMhUYcE5TrclPvTCdrcNxziU
-         YIyaS7T2sAL3Vz+yBwtEI2BeTxCV1WQ6oPW7sEq7fmo/ncsivs6E+5UMMTm6S3tCIZN1
-         ni/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVRI47gD03bJeYHLxwdtaKuK1JajD+5wdwrgqygKMoqo19lzgGYoR/eS9X898sIC687ueNDja+vTYpv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQZJlNvXEs3hTNyotQwn7k9CWAwOrSI/W04rqrvHG9Xu4v7+s2
-	M0DIpYVDUhJCw7yNy6YTKsLj00es2u56zqa/bpqwwDnPBRWJkcOz+AinmMfgyX8=
-X-Gm-Gg: ASbGncswLjEfO4CuEfQHRJN0STcDMpbcoA5Iovw9wGs/TxkiJxVt5HLi4wHEFS3K0hm
-	ru5OEe0FOABvh4tKjzB144RIEIAMA6NqPslQuNlgAwIwvA05o3dTLz0ba2p8TRnLd8he7unRun8
-	bgrvczgS+4TdNFpk9nO1H4yDggI5DRXN95G7d+iH+tXXjJYIhTo9W+Xcc4/SQQYWkbR8T63AETe
-	HqfNPlveI4uhKkbuyspSMRT0zvY5PTdNNH2CXv/e0WY8hwAr9MNzXDw+H9CHg2yktqHMTXBUVgj
-	R76RyG+KShZLa23v2+BM
-X-Google-Smtp-Source: AGHT+IFdG9GOu7z7VbF3RaWxqyGcxIpQuKws1pr8ZUhjgAPYuz3ueFSPxNUGdj5E67EBohC3LgYQSw==
-X-Received: by 2002:a17:906:318d:b0:aa5:1957:3431 with SMTP id a640c23a62f3a-aa580edfbfcmr1150158266b.1.1732897666347;
-        Fri, 29 Nov 2024 08:27:46 -0800 (PST)
+        bh=wKStJ4JMYm6/f7jAdkMonmjOHy/XStYH3AHNh9QPw+k=;
+        b=Gyp/6onozW/BLk51KrdnCsncGkKCU08Fr3xFWt+0Pw5vqq8AIxexYW1IQnfuB520Ub
+         2v1qp13PXSL0Hi7rXUQULohaRd0tbiX3lUmfs6RnvVxBi6kudjwgZ7ihN37RzfcpvesS
+         837+o98WuKdo59j32CF+8f11NBOdEGe1o/ShzUXZiR6AeCvt37x0h4+DvUHIU3pYjegu
+         6s88tgpv2HIsHuPXuHMYiwSnKqtaqxoDYTsjP6MXRjC9KKmiCRcGjXOeVpCwbO9/3OW1
+         8ZCFUVts/3yIPEu14HwQb6q+ODQDrt9VIViz3Z77v9rna8IBW8eUi1CwBEGYTdZ7nhDf
+         vikw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBfYiG5Wrml3AxtNvVn+Bw15i+3pNBvT+d6AXfWdi4QHS8AsD51YrQ2vAbmQBcdQWBexEFI743y6oP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHXPwyVl84EiEG46oQYaAWmB1+bFMGKCJyv7x97JVcqIzIRlsI
+	T+k/U4x7kwB8w+hfWavBjU7O9uPkiXGMm9pCX4wEMrRo4UDfhA8+wytV3Nan7Hg=
+X-Gm-Gg: ASbGncufhx70q+sLPT6UhNGhTsg4gercjrt51mLKZ37ihqWtrNbWLI68iY2311/+8B0
+	+GkBT6b12l1ZaSEJzOcGKgu8d3Pd5LUMTvotEXIqmWk/2mHdjgxRpwP+i6Uk3L/73cT0F4IgdCu
+	3TM36fWEHiLmjEf/cqPboNz8+Kp3H+ScRAkln5DaXlb8G+0CXaeCRXaExV9PsuOFrPM1fHDwUhY
+	vLamTBS4GZC3uVNOhhjU7xTRZV4+OPDsTxV0b8pd+l8vOCYoZW2ylK8IeejEu4vGwlsBp52HTAo
+	7Wkxtmmp5ezj9PmkPz4j
+X-Google-Smtp-Source: AGHT+IHZ3oTCh7gVSsmHhrZ3fiOp7cXkhyrNMHuydkCIk2tz2qxDfVIno+QP7oK2bTxacMEqt16MJg==
+X-Received: by 2002:a05:6512:39d2:b0:53d:ec9a:138f with SMTP id 2adb3069b0e04-53df0112687mr8431697e87.57.1732900280754;
+        Fri, 29 Nov 2024 09:11:20 -0800 (PST)
 Received: from localhost (host-79-49-220-127.retail.telecomitalia.it. [79.49.220.127])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5996c193asm189510666b.38.2024.11.29.08.27.45
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5998e63a2sm192130166b.113.2024.11.29.09.11.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Nov 2024 08:27:45 -0800 (PST)
+        Fri, 29 Nov 2024 09:11:20 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 29 Nov 2024 17:28:19 +0100
-To: Stefan Wahren <wahrenst@gmx.net>
+Date: Fri, 29 Nov 2024 18:11:53 +0100
+To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -98,15 +98,17 @@ Cc: Andrea della Porta <andrea.porta@suse.com>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
 	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
 	Herve Codina <herve.codina@bootlin.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 08/10] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z0nro2vMNxoU35GH@apocalypse>
+Subject: Re: [PATCH v4 02/10] dt-bindings: pinctrl: Add RaspberryPi RP1
+ gpio/pinctrl/pinmux bindings
+Message-ID: <Z0n12a6irbXQomdD@apocalypse>
 References: <cover.1732444746.git.andrea.porta@suse.com>
- <c48e6b9b178cdaa01b92ae82e8fd24c2ba5f170c.1732444746.git.andrea.porta@suse.com>
- <c5575991-eab1-40ef-a984-b23076b09cf3@gmx.net>
+ <9b83c5ee8345e4fe26e942f343305fdddc01c59f.1732444746.git.andrea.porta@suse.com>
+ <4ufubysv62v7aq53qfzxmup5agmqypdvemd24vm6eentph46qq@3kveluud3zd3>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -115,106 +117,65 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5575991-eab1-40ef-a984-b23076b09cf3@gmx.net>
+In-Reply-To: <4ufubysv62v7aq53qfzxmup5agmqypdvemd24vm6eentph46qq@3kveluud3zd3>
 
-Hi Stephan,
+Hi Krzysztof,
 
-On 19:35 Mon 25 Nov     , Stefan Wahren wrote:
-> Hi Andrea,
+On 08:55 Wed 27 Nov     , Krzysztof Kozlowski wrote:
+> On Sun, Nov 24, 2024 at 11:51:39AM +0100, Andrea della Porta wrote:
+> > +  '#interrupt-cells':
+> > +    description:
+> > +      Specifies the Bank number [0, 1, 2] and Flags as defined in
+> > +      include/dt-bindings/interrupt-controller/irq.h.
+> > +    const: 2
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +patternProperties:
+> > +  "-state$":
+> > +    oneOf:
+> > +      - $ref: "#/$defs/raspberrypi-rp1-state"
+> > +      - patternProperties:
+> > +          "-pins$":
+> > +            $ref: "#/$defs/raspberrypi-rp1-state"
+> > +        additionalProperties: false
+> > +
+> > +$defs:
+> > +  raspberrypi-rp1-state:
+> > +    allOf:
+> > +      - $ref: pincfg-node.yaml#
+> > +      - $ref: pinmux-node.yaml#
+> > +
+> > +    description:
+> > +      Pin controller client devices use pin configuration subnodes (children
+> > +      and grandchildren) for desired pin configuration.
+> > +      Client device subnodes use below standard properties.
+> > +
+> > +    properties:
+> > +      pins:
+> > +        description:
+> > +          List of gpio pins affected by the properties specified in this
+> > +          subnode.
+> > +        items:
+> > +          pattern: "^gpio([0-9]|[1-5][0-9])$"
 > 
-> Am 24.11.24 um 11:51 schrieb Andrea della Porta:
-> > The RaspberryPi RP1 is a PCI multi function device containing
-> > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > and others.
-> >
- 
-...
-
-> > +          Support the RP1 peripheral chip found on Raspberry Pi 5 board.
-> > +	  controller, USB controller, I2C, SPI and UART.
-> > +
-> > +          The driver is responsible for enabling the DT node once the PCIe
-> > +	  endpoint has been configured, and handling interrupts.
-> > +
-> > +          This driver uses an overlay to load other drivers to support for
-> > +	  RP1 internal sub-devices.
-> Please fix up the leading whitespace here
+> You have 54 GPIOs, so up to 53.
 
 Ack.
 
-> > diff --git a/drivers/misc/rp1/Makefile b/drivers/misc/rp1/Makefile
-> > new file mode 100644
-> > index 000000000000..508b4cb05627
-> > --- /dev/null
-> > +++ b/drivers/misc/rp1/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-
-...
-
-> > +#define RP1_INT_SYSCFG		58
-> > +#define RP1_INT_CLOCKS_DEFAULT	59
-> > +#define RP1_INT_VBUSCTRL	60
-> > +#define RP1_INT_PROC_MISC	57
-> > +#define RP1_INT_END		61
-> > +
-> > +struct rp1_dev {
-> > +	struct pci_dev *pdev;
-> > +	struct irq_domain *domain;
-> > +	struct irq_data *pcie_irqds[64];
-> > +	void __iomem *bar1;
-> > +	int ovcs_id;
-> /* overlay changeset id */
+> 
+> Use also consistent quotes, either ' or ".
 
 Ack.
 
-> > +	bool level_triggered_irq[RP1_INT_END];
-> > +};
-> > +
-> > +static void msix_cfg_set(struct rp1_dev *rp1, unsigned int hwirq, u32 value)
-> > +{
-
-...
-
-> > +	struct device_node *rp1_node;
-> > +	struct rp1_dev *rp1;
-> > +	int err  = 0;
-> Please remove the extra space after err
-
-Ack.
-
-> > +	int i;
-> > +
-> > +	rp1_node = dev_of_node(dev);
-> > +	if (!rp1_node) {
-> > +		dev_err(dev, "Missing of_node for device\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	rp1 = devm_kzalloc(&pdev->dev, sizeof(*rp1), GFP_KERNEL);
-> > +	if (!rp1)
-> > +		return -ENOMEM;
-> > +
-> > +	rp1->pdev = pdev;
-
-...
-
-> > +	err = pci_alloc_irq_vectors(pdev, RP1_INT_END, RP1_INT_END,
-> > +				    PCI_IRQ_MSIX);
-> > +	if (err < 0)
-> > +		return dev_err_probe(&pdev->dev, err,
-> > +				     "pci_alloc_irq_vectors failed");
-> > +	else if (err != RP1_INT_END) {
-> Please add braces for the if case
-
-Ack.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Many thanks,
 Andrea
 
-> > +		dev_err(&pdev->dev, "Cannot allocate enough interrupts\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > 
+> 
+> Best regards,
+> Krzysztof
+> 
 
