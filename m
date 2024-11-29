@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-13349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7C099DC05D
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:18:37 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC57F9DC065
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 09:21:25 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9678C1636AA
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:18:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72B8A281FE8
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Nov 2024 08:21:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7089715A87C;
-	Fri, 29 Nov 2024 08:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED3C15B115;
+	Fri, 29 Nov 2024 08:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+wqLbTS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7hJyQr2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152F812B93;
-	Fri, 29 Nov 2024 08:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B920912B93;
+	Fri, 29 Nov 2024 08:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732868312; cv=none; b=IW0KFnT/TBZbodV+ER56ClkqmtqSyugvOEt8CEMDmeITRpVlyT6tSZHXgEjAG4I2mVBMTtoqewozzm2zEcVGhRtbOk0sc9j6KEiOJ9aWDSY2iQt/wmffziY6NqBBXqHOVjcKugceADuCO/YpA+Rnbv2RxkqFlw+OqsNJYbN8QsA=
+	t=1732868480; cv=none; b=P+J3yrvBfZRqsgFusHuqaiVMrbjL/OiYf/NcDjZdPCcOrjyt7Zfug77CuM1HSjkNNGMcfrzPBcLw+uQkkleHiVyjradfGxybW38FLPMtqLfvuY/9mfrZKDsb3uR297rNY6PS7Yuu69mWenmZnDONUjNeXUb8PC6/18AaJIyvp2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732868312; c=relaxed/simple;
-	bh=xMkz6fERXZNiSubbZRI0VHrYzPilrzXZT5lEy2tOasE=;
+	s=arc-20240116; t=1732868480; c=relaxed/simple;
+	bh=KZ7ntoFjiRE4qae6dkopyRJLmQ10JWGG6InjMJTRkT4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BUjNjnsTPuQTPtLxFIEw6ziZiB8633exRyqnbf19E/7nRpROLTNvm5v4hALFqQ2nmVMsNchnPI9miZ+Ga4O1vqWZ/luGaYA6fW84+aVPSZCGBBWoL+orNwlKbCaXU06rM02xppZP89YuCbkaDytJhgzyWf18ubAyWkhioiPO2WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+wqLbTS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2CB9C4CECF;
-	Fri, 29 Nov 2024 08:18:23 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=ntt6Rpv4G+1+FCZtVbN275QhvvZ94Y2FgeHKt6AGCxOLXoGjAYYKOjJestCI+zQQ+dhNcAy7NQ82EE5z42bD9O/MxIWNEPCpAaPui9GDVrJSV+tJccrhLJoT7w7Kw1OErSPXB7PX8DyGhzjVR6pamnldjGuSN9HKTnu/DqS/7H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7hJyQr2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 856B5C4CECF;
+	Fri, 29 Nov 2024 08:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732868311;
-	bh=xMkz6fERXZNiSubbZRI0VHrYzPilrzXZT5lEy2tOasE=;
+	s=k20201202; t=1732868480;
+	bh=KZ7ntoFjiRE4qae6dkopyRJLmQ10JWGG6InjMJTRkT4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G+wqLbTSN94HvN9PGn5apNt+U/YqWXKbg0ykmuhdigeAISMBgUtyaJqwi4Sw9kKu/
-	 FWCbqtSUkEdqMpt9AGIcUa+WtaOMukVDvkT46bDbm6Eya0JGlPLm7UefSa5cmQ037x
-	 JhcZ49CrvixhMLHiOillSF8xVYcaUER0AuV2UyuCnjNY50SykAXOtSl9ZZzUr7fuOr
-	 nPzM7rcS8BZ+KHysU9CXeZ6xgcv/6tXmjMhVS38l5UzjOyUwo+6nnWYSTpK1+vYYae
-	 ZE7ZPuoLbFKOC25IhGQiuE7TBXNtgmn1fpb3uEHfIGhqChJuqRoVeuxyXDRaMuqRkt
-	 I4ZK18cY7Afog==
-Message-ID: <b310587f-c6c3-41dd-83bf-6affbcc65730@kernel.org>
-Date: Fri, 29 Nov 2024 09:18:21 +0100
+	b=B7hJyQr2adnxbl6WkkiCsz6QtzYu1jwp6HCl2VfCsV6WebVjB7BjLa3xkpSjWoB2z
+	 Jiyt9WU94BvPBNU7fK6mPQodt+BjouxOEpilzk9cXeESLUMNK6QgyN1/W3kC2fr/Lx
+	 L+2fEDVTfpBvV3ng9HGequHoLsgDw/GHhBUEz/CsGW2g55c1N+Bx66IBPriSXAtFoV
+	 a2Sqp4Hd4mza32JS7i9MgEWCQMza7IRw1Blv1LzQ/XYvJQChz4Cc3V6uqlc1grFou0
+	 akHoETfTE+Cf3sv2pA27SNWevNtAWBPa4bYn8Pa0mS5TCKmQTDtZTABkLz+4p+aINE
+	 Xpp7sVNNj6epw==
+Message-ID: <b3f89c19-a6d6-40a0-9225-111cc59221a2@kernel.org>
+Date: Fri, 29 Nov 2024 09:21:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
- QCS615
+Subject: Re: [PATCH 8/8] drm/msm/dp: Support external GPIO HPD with 3rd
+ pinctrl chip
 To: Xiangxu Yin <quic_xiangxuy@quicinc.com>, Rob Clark <robdclark@gmail.com>,
  Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
@@ -69,7 +69,7 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-gpio@vger.kernel.org
 References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
- <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-8-09a4338d93ef@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -115,208 +115,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+In-Reply-To: <20241129-add-displayport-support-for-qcs615-platform-v1-8-09a4338d93ef@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 29/11/2024 08:57, Xiangxu Yin wrote:
-> Extended DP support for QCS615 USB or DP phy. Differentiated between
-> USBC and DP PHY using the match table’s type, dynamically generating
-> different types of cfg and layout attributes during initialization based
-> on this type. Static variables are stored in cfg, while parsed values
-> are organized into the layout structure.
-> 
-> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-dp-phy.h |    1 +
->  drivers/phy/qualcomm/phy-qcom-qmp-usbc.c   | 1453 ++++++++++++++++++++++++----
->  2 files changed, 1254 insertions(+), 200 deletions(-)
-
-
-
-...
-
-> +	/* program default setting first */
-> +	writel(0x2A, tx + QSERDES_V3_TX_TX_DRV_LVL);
-> +	writel(0x20, tx + QSERDES_V3_TX_TX_EMP_POST1_LVL);
-> +	writel(0x2A, tx2 + QSERDES_V3_TX_TX_DRV_LVL);
-> +	writel(0x20, tx2 + QSERDES_V3_TX_TX_EMP_POST1_LVL);
-> +
-> +	writel(voltage_swing_cfg, tx + QSERDES_V3_TX_TX_DRV_LVL);
-> +	writel(pre_emphasis_cfg, tx + QSERDES_V3_TX_TX_EMP_POST1_LVL);
-> +	writel(voltage_swing_cfg, tx2 + QSERDES_V3_TX_TX_DRV_LVL);
-> +	writel(pre_emphasis_cfg, tx2 + QSERDES_V3_TX_TX_EMP_POST1_LVL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcs615_qmp_configure_dp_phy(struct qmp_usbc *qmp)
-> +{
-> +	struct qmp_phy_dp_layout *layout = to_dp_layout(qmp);
-> +	u32 status;
-> +
-> +	writel(0x01, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +	writel(0x05, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +	writel(0x01, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +	writel(0x09, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +
-> +	writel(0x20, layout->dp_serdes + QSERDES_COM_RESETSM_CNTRL);
-> +
-> +	// C_READY
-
-Use Linux coding style.
-
-Anyway, drop all useless comments. Say something useful or don't say
-anything.
-
-> +	if (readl_poll_timeout(layout->dp_serdes + QSERDES_COM_C_READY_STATUS,
-> +			status,
-> +			((status & BIT(0)) > 0),
-> +			500,
-> +			10000)) {
-> +		dev_err(qmp->dev, "C_READY not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	// FREQ_DONE
-> +	if (readl_poll_timeout(layout->dp_serdes + QSERDES_COM_CMN_STATUS,
-> +			status,
-> +			((status & BIT(0)) > 0),
-> +			500,
-> +			10000)){
-> +		dev_err(qmp->dev, "FREQ_DONE not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	// PLL_LOCKED
-> +	if (readl_poll_timeout(layout->dp_serdes + QSERDES_COM_CMN_STATUS,
-> +			status,
-> +			((status & BIT(1)) > 0),
-> +			500,
-> +			10000)){
-> +		dev_err(qmp->dev, "PLL_LOCKED not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	writel(0x19, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +	udelay(10);
-> +
-> +	// TSYNC_DONE
-> +	if (readl_poll_timeout(layout->dp_phy + QSERDES_V3_DP_PHY_STATUS,
-> +			status,
-> +			((status & BIT(0)) > 0),
-> +			500,
-> +			10000)){
-> +		dev_err(qmp->dev, "TSYNC_DONE not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	// PHY_READY
-> +	if (readl_poll_timeout(layout->dp_phy + QSERDES_V3_DP_PHY_STATUS,
-> +			status,
-> +			((status & BIT(1)) > 0),
-> +			500,
-> +			10000)){
-> +		dev_err(qmp->dev, "PHY_READY not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	writel(0x3f, layout->dp_tx + QSERDES_V3_TX_TRANSCEIVER_BIAS_EN);
-> +	writel(0x10, layout->dp_tx + QSERDES_V3_TX_HIGHZ_DRVR_EN);
-> +	writel(0x0a, layout->dp_tx + QSERDES_V3_TX_TX_POL_INV);
-> +	writel(0x3f, layout->dp_tx2 + QSERDES_V3_TX_TRANSCEIVER_BIAS_EN);
-> +	writel(0x10, layout->dp_tx2 + QSERDES_V3_TX_HIGHZ_DRVR_EN);
-> +	writel(0x0a, layout->dp_tx2 + QSERDES_V3_TX_TX_POL_INV);
-> +
-> +	writel(0x18, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +	writel(0x19, layout->dp_phy + QSERDES_DP_PHY_CFG);
-> +
-> +	if (readl_poll_timeout(layout->dp_phy + QSERDES_V3_DP_PHY_STATUS,
-> +			status,
-> +			((status & BIT(1)) > 0),
-> +			500,
-> +			10000)){
-> +		dev_err(qmp->dev, "PHY_READY not ready\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcs615_qmp_calibrate_dp_phy(struct qmp_usbc *qmp)
-> +{
-> +	static const u8 cfg1_settings[] = {0x13, 0x23, 0x1d};
-> +	struct qmp_phy_dp_layout *layout = to_dp_layout(qmp);
-> +	u8 val;
-> +
-> +	layout->dp_aux_cfg++;
-> +	layout->dp_aux_cfg %= ARRAY_SIZE(cfg1_settings);
-> +	val = cfg1_settings[layout->dp_aux_cfg];
-> +
-> +	writel(val, layout->dp_phy + QSERDES_DP_PHY_AUX_CFG1);
-> +
-> +	qmp_usbc_check_dp_phy(qmp, "pos_calibrate");
-> +
-> +	return 0;
-> +}
-> +
-> +static int qmp_usbc_com_init(struct phy *phy)
->  {
->  	struct qmp_usbc *qmp = phy_get_drvdata(phy);
-> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
-> -	void __iomem *pcs = qmp->pcs;
-> +	int num_vregs;
->  	u32 val = 0;
->  	int ret;
-> +	unsigned int reg_pwr_dn;
 >  
-> -	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
-> +	if (qmp->type == QMP_PHY_USBC_USB) {
-
-
-Sorry, all this code is unreviewable. Organize your changes in logical,
-reviewable chunks.
-
-> +		struct qmp_phy_usb_cfg *cfg = to_usb_cfg(qmp);
+> +	if (of_find_property(pdev->dev.of_node, "dp-hpd-gpio", NULL)) {
+> +		dp->ext_gpio = true;
+> +		dp->gpio_num = of_get_named_gpio(pdev->dev.of_node, "dp-hpd-gpio", 0);
+> +		if (dp->gpio_num < 0) {
+> +			dev_err(&pdev->dev, "Failed to get gpio:%d\n", dp->gpio_num);
+> +			return dp->gpio_num;
+> +		}
 > +
-> +		num_vregs = cfg->num_vregs;
-> +		reg_pwr_dn = cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL];
-> +	} else {
-
-...
-
-> +		.compatible = "qcom,qcs615-qmp-dp-phy",
-> +		.data =  &(struct dev_cfg) {
-> +			.type = QMP_PHY_USBC_DP,
-> +			.cfg = &qcs615_dpphy_cfg,
-> +		},
->  	}, {
->  		.compatible = "qcom,sdm660-qmp-usb3-phy",
-> -		.data = &sdm660_usb3phy_cfg,
-> +		.data =  &(struct dev_cfg) {
-> +			.type = QMP_PHY_USBC_USB,
-> +			.cfg = &sdm660_usb3phy_cfg,
-> +		},
->  	}, {
->  		.compatible = "qcom,sm6115-qmp-usb3-phy",
-> -		.data = &qcm2290_usb3phy_cfg,
-> +		.data =  &(struct dev_cfg) {
-> +			.type = QMP_PHY_USBC_USB,
-> +			.cfg = &qcm2290_usb3phy_cfg,
-> +		},
->  	},
->  	{ },
->  };
+> +		if (!gpio_is_valid(dp->gpio_num)) {
+> +			DRM_ERROR("gpio(%d) invalid\n", dp->gpio_num);
+> +			return -EINVAL;
+> +		}
 > +
-
-
-You make some random changes all over this file. No, clean it up.
-
->  MODULE_DEVICE_TABLE(of, qmp_usbc_of_match_table);
->  
->  static struct platform_driver qmp_usbc_driver = {
-> 
-
+> +		rc = gpio_request(dp->gpio_num, "dp-hpd-gpio");
+This is not how you request GPIOs. All this code is just wrong. See
+Gpiolib API description/document. Or any other driver using GPIOs.
 
 Best regards,
 Krzysztof
