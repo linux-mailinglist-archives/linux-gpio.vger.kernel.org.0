@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-13412-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ED5D9E0A6C
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 18:50:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 118BE9E0A7A
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 18:55:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 22786B2E462
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:22:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7DEDCB2B0C6
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC5C205E1E;
-	Mon,  2 Dec 2024 15:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CB0207A04;
+	Mon,  2 Dec 2024 15:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rq2WOtSZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUUx7lHf"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58EE2040AA;
-	Mon,  2 Dec 2024 15:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFB204F8F;
+	Mon,  2 Dec 2024 15:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733152628; cv=none; b=ZnsMUWKnVqEx6TQ/qcO0d+wtEqQafs6fzoB9UkerwoO/bZ1UfIHVTGAz3ql8yb9/XUAbZj5f4xD8MlTCgH1RKjvVftSBXyjqaVwao6/Y/hiyNooQCO51RdpTuB+dn9RddYR9LVcpBSKYFYouReCuOucIR5Sgu5pz1xJbP8zfu58=
+	t=1733152936; cv=none; b=m4wKKeaxGk9cfOjyrgvb8mAMkNEPNHl1suQrTNT3atf8thIZ9gDjvFiA1u0qC+Pc3gKIoLtOnKbtwsnQ6q/uJRTXGHCLZhUaTEcpF6ZkhrsPu/BZGXKQfBhzbwnGe0rkAvDGZbvcja7dQlp6ZvI1hFpmfXt0Bc7F/koOYtx6pSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733152628; c=relaxed/simple;
-	bh=SoX6p1yA2O8NnnyxuSjhY3p8fMe5bc9Az3QhUnQrqNM=;
+	s=arc-20240116; t=1733152936; c=relaxed/simple;
+	bh=fMgv+yuJZSY3uaaQETMbs+RJU+yPn08IqtayuTbK6/c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R7oCJTm5F6yPo0qe+zUiDbXUpdeS6OUiXTOhybd+FAckE380oxwd5lyVt01cdXUYOJoFeEQA3iNsSPN9Lh0sQd6CI03uBc9HM744zmDVKRM7AG6yO0/FISBQDNShdlIX+q0JHldgfGg+pH9Mh36YUViykyvQXFQpinla1QBNcLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rq2WOtSZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950ECC4CED1;
-	Mon,  2 Dec 2024 15:17:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=fjSSBzw3wFCVi0SmlgZJ6Ws49Es8mvPatqR4ZssdOYOwgLf7iZNvt+O2ui9kaw9k1YBLVz26u7hD8aN7ur+M4F/Jn0mXwrdPx2mybHkjqJx3fCD+++fnhj86rfMAS1/T8SboGf/DmOntkMicKmCpvItfQSOjcDdo1/RvP7HZZj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUUx7lHf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F95FC4CED6;
+	Mon,  2 Dec 2024 15:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733152628;
-	bh=SoX6p1yA2O8NnnyxuSjhY3p8fMe5bc9Az3QhUnQrqNM=;
+	s=k20201202; t=1733152936;
+	bh=fMgv+yuJZSY3uaaQETMbs+RJU+yPn08IqtayuTbK6/c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Rq2WOtSZ8e/nyoYmqqWhc1AyEyiXxAGjZqUGOZ02LDFoLwpSQFxQ31jaKciYAK8EZ
-	 lz9quxcAAscQP+wh9Gld5g9v7Eipm7W5D7kso8XhlA38LnjbjLG+IJaB7DbuAJ0NvX
-	 BvZKbpDqowDreMnlbEg9I9Km4PqP/ZZKE4PsugfiOMbY75xsxn9Ayf7Vl88KasAl2G
-	 GIzwht0Wf+G7RcmSjzF4b9Jtjjz+J9mP2OYakm5iCiIlPAXY0Srs+3sXvs/+05IuW2
-	 JB+6qbRs0KhjYIuzj770vJF4HXUoQtk4jx5IYsoCUO2UmJKNWOU8m1PShKPl4FdeP/
-	 OeuB1ARmvFP3Q==
-Message-ID: <0167e83b-7b73-4784-b022-903272866fe1@kernel.org>
-Date: Mon, 2 Dec 2024 16:16:58 +0100
+	b=UUUx7lHfUhva2ZxmhoIl2hQOl9DNlES3J4+BPvQ3+8OyGWmTKMFVE6zaT2pat5Nst
+	 ljE0gu0tVuCZUZDudHcX1odlZv9w2KqP42fLvARo42f1jTo8HT9twAjq92tCldRLJR
+	 gWkPziQX1V98Ksi6rxZSXqvtrEujuK7/DS7c3n3FFrh84TuL4oOj99Hj7VAZpbVx4k
+	 1B/7bCop+HaUKysizSj/hE2xc5Q1a/Dhg6kKnqF5tnpFHkJx5axVYDrp/1rWkhDp5w
+	 pReLyOtZJRoZWsBdPU5q2F5XrqTYsDr93gUcCJVwv4ozBMuC0o39apjlJmMRaFcHdi
+	 ZiT873HdU4BwA==
+Message-ID: <8b2863e7-d504-49dc-a2ad-d34bfbeb6de8@kernel.org>
+Date: Mon, 2 Dec 2024 16:22:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] dtbindings: display: bcm2711-hdmi: Correct bindings
- for 2712
+Subject: Re: [PATCH 5/7] arm64: dts: broadcom: Add interrupt-controller flag
+ for intc on BCM2712
 To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
@@ -71,7 +71,7 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
  linux-gpio@vger.kernel.org
 References: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
- <20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com>
+ <20241202-dt-bcm2712-fixes-v1-5-fac67cc2f98a@raspberrypi.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -117,58 +117,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com>
+In-Reply-To: <20241202-dt-bcm2712-fixes-v1-5-fac67cc2f98a@raspberrypi.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 02/12/2024 15:31, Dave Stevenson wrote:
-> The previous patch just adding the compatible missed out that the
+> BCM2712 DT was producing dtbinding validation errors of
+
+s/DT/DTS/
+No one uses term like "dtbinding". Use full make target name or DT schema.
 
 
-"The previous" is meaningless in this context. There is nothing
-previous. Refer to commit (see submitting patches).
-
-> number of interrupts changed
 > 
-> Fixes: 62948c62abca ("dt-bindings: display: Add BCM2712 HDMI bindings")
-
-There is no such commit in linux-next. Fix patches while they are on the
-mailing list. If you refer here to broken DRM process, then basically
-you are on your own because we won't able to see it.
-
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-Typo in subject prefix. It's dt-bindings.
-
-> ---
->  .../bindings/display/brcm,bcm2711-hdmi.yaml        | 44 +++++++++++++++-------
->  1 file changed, 30 insertions(+), 14 deletions(-)
+> interrupt-controller@7cd00000: 'interrupt-controller' is a required
+> property
+> interrupt-controller@7cd00000: '#interrupt-cells' is a required property
 > 
-> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> index 6d11f5955b51..6af342c9b6b8 100644
-> --- a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> +++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-> @@ -56,22 +56,38 @@ properties:
->        - const: cec
->  
->    interrupts:
-> -    items:
-> -      - description: CEC TX interrupt
-> -      - description: CEC RX interrupt
-> -      - description: CEC stuck at low interrupt
-> -      - description: Wake-up interrupt
-> -      - description: Hotplug connected interrupt
-> -      - description: Hotplug removed interrupt
-> +    oneOf:
-> +      - items:
-> +        - description: CEC TX interrupt
-> +        - description: CEC RX interrupt
-> +        - description: CEC stuck at low interrupt
-> +        - description: Wake-up interrupt
-> +        - description: Hotplug connected interrupt
-> +        - description: Hotplug removed interrupt
+> Fix them by adding the required flags.
 
-You need to narrow these per variant in allOf:if:then.
+But are these valid? Why do you think that binding is correct? Or you
+just silence the warning regardless whether this matches the hardware?
+
+
 Best regards,
 Krzysztof
 
