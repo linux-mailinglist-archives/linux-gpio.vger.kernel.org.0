@@ -1,101 +1,121 @@
-Return-Path: <linux-gpio+bounces-13400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EF129E0336
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:20:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 761149E0532
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:37:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 654BD284A6A
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 13:20:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B44EEB31C8A
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:03:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC81D1FF611;
-	Mon,  2 Dec 2024 13:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D121420409F;
+	Mon,  2 Dec 2024 14:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QsvnnYeR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPbXcQEp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B061FE469;
-	Mon,  2 Dec 2024 13:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CC82036EC
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 14:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733145580; cv=none; b=f2Q2QljelOLbmADivQxDcVyPtzll1BViL/ahW3Lk5YXIU29dKyp8xAg9IZfo+7PXDALUZfuRtold19vp3fTAlBp//KQbRLoOEUZRfum4+kP/Tkz0CoII2NI9cQB1WLhtdr6LbHiQuf3GbTzymWcPIGBo7zVrGrQHf8Q7cfmYg/w=
+	t=1733148133; cv=none; b=l3b1s4a4upp5s+kn6moI9wo6PaK1YcaNEhsVoYy5Hjpr41zjAg2NoJ7Z8JVBBA6XqoSA5o2zjc1NPPlIy62eT8tqDDsr4Gg8UlamvF8Svzd46ghX2ncjEe8qHj8ECXYyLvTCYNdFDH5R7O+Se3mdWQ/M1EUt1K0UUwZ3nbuyVEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733145580; c=relaxed/simple;
-	bh=3ANWplAUBgovd+r2c5F0DHHbFkPx0NNGGSzCJkkazTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ca1+UaDD6YTSuNmj8QDd1bi6UM5jopW81KqUgnq59J4qlIayQh35UyzJ1AiVHvJ4oWpXOpONQhcJdKG/epTFgOVnpOr34kpAMrCMTsqrj8M+EB2RVFhtTqTUqXaE9bgfwIoo2/RaUOGjR35ki0r5G/J7hbuSsHbygFagFrO3Efc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QsvnnYeR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F154C4CED1;
-	Mon,  2 Dec 2024 13:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733145580;
-	bh=3ANWplAUBgovd+r2c5F0DHHbFkPx0NNGGSzCJkkazTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QsvnnYeRmQFOM47DM3aMTxuclN6ixZs73+YJA+Vxitho9R2GoOAN/s5U8Ggl02Dit
-	 rVr6QnFKjqYx8mDprfyf6HyqbrxRFNHERZoGuntFWZrMyVIXDAITPihjT/w4mzZQsU
-	 b+daFEdL+shpyPrKxCnTwCX1Wsj8M10ooIscN26h2pgfBtWEC7R4XPqQoH7WRCHPA4
-	 5dajSumU0us0bWYUJb8lRL5WYHB92MZDGYIBVdE92fX11cpfJZSBbwUVq7TOfQSswU
-	 Ezv9aWK6BcoYQv74YHV2tiYZRQ3HsV+wSl1OWYFsgLOkLI9HHS22BHfywXQgd/GYQO
-	 hWnle2F0xiEVQ==
-Date: Mon, 2 Dec 2024 13:19:35 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bough Chen <haibo.chen@nxp.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"brgl@bgdev.pl" <brgl@bgdev.pl>,
-	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-	"marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH v2] gpio: pca953x: do not enable regmap cache when there
- is no regulator
-Message-ID: <9b214857-4cea-4480-86b3-0e469ce9e36f@sirena.org.uk>
-References: <20241128020042.3124957-1-haibo.chen@nxp.com>
- <f71643eb-ee9c-4b39-af26-738ae82fd4bd@sirena.org.uk>
- <DU0PR04MB9496A16FB98C8492C9F012CD902A2@DU0PR04MB9496.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1733148133; c=relaxed/simple;
+	bh=jJxlcqRxB873knVtlY401xtr37Z90jDtvx8oMXlNiPY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=BMcfguVVaau6fldqWai6iWydUUI551GYw3LICm4oi4GayrEYL9TAL8ev2OVp4aZfAO0EphchcRSONg7M5me+BnL1GO4uyMH4xej4Uk8U6fPAeyEzduYCBnalcCLmQovpeyRDyP8jITwH8HDPbZV76P3L42F6M8l6NRee4pPT3OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cPbXcQEp; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-385d851e7c3so238861f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 06:02:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733148130; x=1733752930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bt9rbvg88W4Mm9rufdW2t6Ewrnb3f/HKBLkJJoL/hiY=;
+        b=cPbXcQEpR+v+1F0ESx/yn6K016tyOZ90xmHzKs9eFufHLPd/Htwmp6RwU0C88/Gxgm
+         SOjGNkibqUK+/0kg7uqcxYkq8iEUCgylj/kGHOf7+7x4W1H3xbQGUuFwMzbSYoZCmV3p
+         V4cisD/L7bMH0glRxcu544Upj48fQeUjQK9V+PY+oT5sMgyIlSt25+HUOPaNpuxKr33L
+         babHjzUafvf3OZPDDVmaqD4q0etRFuepSxM4MgzPDUvpJU3x58GfwiZNTq4d8DPAeaPl
+         C1UVFquvJ8iul0YnjxNr0ghq3wNX+h7BBpnCD9yGQkvciChcKhrUaJr5fLKtlhNP1E2Q
+         VF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733148130; x=1733752930;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bt9rbvg88W4Mm9rufdW2t6Ewrnb3f/HKBLkJJoL/hiY=;
+        b=JxeRmEPbaxSacb0y4mCN2aZ54wjEfqwcOLg+f4ump7kW8hGHen/l54mi940pTmxFK0
+         KZyEEvmV//WDWdbIkhegJnPSySZLni+WxaBOvHtmTNEecwTxVhGsI0JGIFWdmOiiz880
+         QoqT7mQjC7oJTWZ+u6HwqBIi8RtYxOoE2D3hsZ4bCKa+iTB80OzlWLfhd5Vme7BVwx3Z
+         vxs2JzrCch6MWl8Fuu/Ry+7bhZ1xYs1ymG/pB8vB7bcW1p+Rqiec+0wDDnaTEeaAl3a9
+         6z04iYhKpvpMNHq1ieL2SShtTKdAJAUX4F57ur9d/hhWZAP0HQi3jAEeWxU6tpsAyCnX
+         ebPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWelhcMBTUAYUfB4H5wz0uelqOrmbxcVDHy6IPTbfaogdsNe2kPLm9eX4G9jEKTp/9YD2Z9esCLfZca@vger.kernel.org
+X-Gm-Message-State: AOJu0YycLBftoYvQ3Q61EQnkVU0h2ReMdT9eChyl/n3H9E8+wEwZ/W40
+	tmxci3fyMZmNpIys8cgeloLUN/UWbph0etXuaoEeG0cMTBLXt6HKt3xMw3tv7zY=
+X-Gm-Gg: ASbGncscnqFpTEd8QWRyCdP5ptUJh1Y3G2ea3Vu7XMkLn/HsRYiFO4M8eeG9+lbqAlt
+	5uQmYb9QHFUwSnetLpkucHiTEAowYcG7y7ttPyPIAO9xTdqBoyUkXG/+1+5z5PqB86qaMZq2O1d
+	ijPJ+jsK5Aqf/g1X4CrXBkMz1S4bFaLtA1I5gCN+kkSGavAio1EW6WpEL3yk6GdkbTmViHR4aWu
+	J9h7jLE2H1RWpBiMDkgQ4N0fXaxwuC+rbECMXPTs43nhgnCYjEeEwcFKisbDA+i
+X-Google-Smtp-Source: AGHT+IFbpzvvcbBvcWNOUYta+EWWguWeH07ZXYUdJCdTYkzN3I9OEgPah3/QG+sVL8wvnjrRt4H4Kw==
+X-Received: by 2002:a5d:6487:0:b0:385:e9ba:acea with SMTP id ffacd0b85a97d-385e9baadf7mr2382448f8f.10.1733148128320;
+        Mon, 02 Dec 2024 06:02:08 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.218.23])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385eed2510esm4232260f8f.69.2024.12.02.06.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2024 06:02:07 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org
+In-Reply-To: <f148d823acfb3326a115bd49a0eed60f2345f909.1731844995.git.christophe.jaillet@wanadoo.fr>
+References: <f148d823acfb3326a115bd49a0eed60f2345f909.1731844995.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] pinctrl: samsung: Fix irq handling if an error occurs
+ in exynos_irq_demux_eint16_31()
+Message-Id: <173314812685.47615.16378245073169097611.b4-ty@linaro.org>
+Date: Mon, 02 Dec 2024 15:02:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yuASf+FYGuLtSoxu"
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9496A16FB98C8492C9F012CD902A2@DU0PR04MB9496.eurprd04.prod.outlook.com>
-X-Cookie: (null cookie
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
 
---yuASf+FYGuLtSoxu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sun, 17 Nov 2024 13:03:32 +0100, Christophe JAILLET wrote:
+> chained_irq_enter(() should be paired with a corresponding
+> chained_irq_exit().
+> 
+> Here, if clk_enable() fails, a early return occurs and chained_irq_exit()
+> is not called.
+> 
+> Add a new label and a goto for fix it.
+> 
+> [...]
 
-On Fri, Nov 29, 2024 at 02:26:13AM +0000, Bough Chen wrote:
+Applied, thanks!
 
-> I once thought to move current system PM to NOIRQ PM, but seems not all i2c bus controller support i2c operation during NOIRQ PM.
-> Let me think whether there is a better solution, or do you have any suggestion?
+[1/1] pinctrl: samsung: Fix irq handling if an error occurs in exynos_irq_demux_eint16_31()
+      https://git.kernel.org/pinctrl/samsung/c/f686a2b52e9d78cf401f1b7f446bf0c3a81ebcc0
 
-I'm not sure we have any better option than also moving the I2C
-controllers TBH.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
---yuASf+FYGuLtSoxu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmdNs+YACgkQJNaLcl1U
-h9Ao1Af/VsL/J5Brjv4Z6AnYFbaiN/Ecg77q9kmJWxki3Sm7JFh6IXJW351neMZT
-wd9jnv53TTJJFMsBomhgI2UmkpnGw371HTCW2Io7DiSglJO8RLRZqTkRieiCZ4C8
-QKPmlCd8t+HB4PWK6Lsx7OgXGS1YbpdTY9r+U4q8xFLc2OG82oTjgUuQ+lA3FymU
-6ifrZcX0fzgxrJuXskmn6IOolUm53muvOSkd9S5q2uDr5hsg3J2hp8tcDjrLK5Jb
-x4KuquxoRwQ5W72fK/x6NTwF68Vsh01ee21f5MQaOi40bdfZYC2F6GSjgvkK0GyS
-pWbZ6FYbmXPfgzExvbxXxXLtaTmrFA==
-=BOsp
------END PGP SIGNATURE-----
-
---yuASf+FYGuLtSoxu--
 
