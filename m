@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-13404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1EE79E052B
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:36:52 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFAFE9E055B
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:45:30 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82F6928477A
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:36:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 560F0167A9B
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:37:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24EDD205E3F;
-	Mon,  2 Dec 2024 14:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56E620371E;
+	Mon,  2 Dec 2024 14:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="SBFZtwSh"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="d3x+UxdZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB0A20B7E1
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 14:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C7420B80F
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 14:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733149939; cv=none; b=eRE4/EwlQ+aQvGN5D8u6EexAs+Aw4YoOUsFP7TgnfHxQcm6g7c1YCEXwUsrVUkSjuZPqFryuM/c9DLmquFrSYt62la1sDtxfG9si5EQsyPGcmT0NHvxAvt5ZmVpuI4npwg96YMVMRmOc7gZOhhoo9phjZ3vbXlWaKvZ3mlsjEDU=
+	t=1733149942; cv=none; b=aWLzybpAtXWxWUT17HSJgjusVvb3Ucri70rGWu5Qt28ZTccORWBbUN7IZ2SH7oc2/Wn4qKpvyzT0nJU4Es/ab1I5ZSSh9aOZwaQnhzFs16BmnohrubFA3hE2n3ZiUOU+1gSF0V0WLLL04FMjRGPdx8mh1RUNyPsCHL09gur3Csw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733149939; c=relaxed/simple;
-	bh=qOmQJTbCQeuHlJprqQwHbB2+QP0lQNzJMUj3CXSju98=;
+	s=arc-20240116; t=1733149942; c=relaxed/simple;
+	bh=FQOZmUNicupuaj+h7+nIqZLEwfVhlNCxkDeqgMBEpIo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oz2uRfuS6nfWdvJVML685S6YdC3Jv/uPsGtMnvjWsqf7OLQGSig3e2ktP69AF8BWE/ZrmwZzZNLbNxkP4f+qrvxsAnTEGVFDISrQRpW6X+pbKOviJ0WF7B8iqt4KrFtWZ+YxhDe+Fczcz4kD7+xm67OtuUVrhs6F5qtnLZ7/JPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=SBFZtwSh; arc=none smtp.client-ip=209.85.221.54
+	 In-Reply-To:To:Cc; b=S9CDXaTAQj+QRcUiKIlFXjwLD4Nv3ohGzTNQw751Slx0Hi5SLih54Y+FkggLeRp0/MZjkzdSBoeK4W7pMcyEnaO6LDPGUiil9BQ3F2RK9cYb8AgffCr1Jum6qDx4dnNMI9yZkYDo3r7VsxX7v8fpjWxVYRScI9/06IXolrajVnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=d3x+UxdZ; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385f06d0c8eso762478f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 06:32:17 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-385e27c75f4so1545242f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 06:32:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1733149936; x=1733754736; darn=vger.kernel.org;
+        d=raspberrypi.com; s=google; t=1733149937; x=1733754737; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iOx9NaY1qX5HDoI2TYyztMEaA2o1c52TzC8u++gvhCQ=;
-        b=SBFZtwShXawYeNjjUhQw+4rL9onAhwCscQ9RguLo0UFvZVSaYE6fdFw2emSBV+sbYr
-         0Gpk6kcv64QNj4Ffm3MFy/+T7n8YXvGPiGdAVhKaly+CrOS7S4P9yHuIrIz7t7xbE3DC
-         9BxHxtL2DGZ12+7E3s/iDpmY/t4RfA6gKFuHsyIBgoptIT7ftKlF/SxSpqEgruKPqbYr
-         PgEf1+/OBWMrjCm4WDh1juXONUBFm60P9qXZg2dSK9VwuvOLzfK/Hn1FLUCbSyYBiS1g
-         QdkuDxNKDABgHOXn3MoplgmvNpDaCmWox5/D+e7/C4It+MmQ2ZPjw+k7r9nAg15ewGU7
-         7dTQ==
+        bh=7AFVILEGG6inA8zYmU/doFUBGD/IkzUATf3B1mIzQMQ=;
+        b=d3x+UxdZbLevh/ZBKcrsuOUyjOFQULhVF14UVtAk757k+6YDMiVWbX5ICak/lR8ihr
+         BsaH3S41avVqHG6VEgaVzL54U4Db7YaslfJ50wOcQzV5Q/PVa3dAf11jhz52X4IaQ7pu
+         WCXsgVcGkIuk+n1bYZ/C8cC34jpfv/qjsg+0vw1CroP8ZVZ2UA+blKW8tqrGrlPnrF6c
+         vm54BkjHlBzRfY/Mu5vmTCZ5/EQIzhwGzmxNHKUCJuh4rKdUP3LFPA+5Pm9+f7xXHPir
+         iDzw36qMwgYc+9cFRhYP2WJt7956NL1VOO8Gk7kQ7rP6xRB5XFPl2Ig77eRpJ7oNHqAI
+         sSMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733149936; x=1733754736;
+        d=1e100.net; s=20230601; t=1733149937; x=1733754737;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iOx9NaY1qX5HDoI2TYyztMEaA2o1c52TzC8u++gvhCQ=;
-        b=HgKJva71JC+uKnQO0XDbsiqU+JpMZRhDh83ybJxBKWQTlKfnvveXdq3rLJQdR1QLjx
-         Od1u+PGEa46LOlJT/3UU9+VFZmxlIpuiINhyrYqhItu40Gh2MaYKKxihZGAAnes4ctFM
-         AU/YbFH1jUtasFRxVwVDWGNs4MCMZOA9Il4hudZnDsmWgauBrJnVsC03kwtOWuSAwgD2
-         pJz2omTuHPauCUSTuZKmI+xQATtvvi/NuO+g4cz+8znJuzUpc1v3oXrZQCTpIT9IVNZk
-         NA7IUytiBO+5PqnRGDYPtnewwAmsdNDJx5WmMw/3eBFs8r8frE7XBZYdz5lhMe8jzVqA
-         vsMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsGGkdpL14g1SuDVGs+d9sNNN8GiecsX5LmLWLiGcKUY4E0G+yhci+eYc5vVL9eiY43iyYUHT9hdxA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9SeR3AFfB0OWm8bzuyzuc5LuTSEQ+pMlKXU1iW6AKTiocftKn
-	JaHuQTt31/Az9U+/u91CBiN1Lr1/f0h/nFAiSv5T1eRsogaQRaCz3zeafNwgUvw=
-X-Gm-Gg: ASbGnct+YGV389Mlj91LAfeEGtIn6DRuytmnui5lT3IxqYwmJ+Yz76wImAdCj34HaL2
-	CdOObioFc7iZ4DPIzYkV5TWm8vYWNM8toQ2IXN/HraxB9WSpvX1mCfbccxW+wCvsQXu4hZYxW0u
-	Ca0ayPPPYRyBu3Qzp2+CXb0sxqy5a7dedahAHvr84ov3UiKvj7jSeEgAPRZQZWszw0AhdjbiOX/
-	lxWmVkbzxnCnSZq1/1pSaIHVgLFzty1jsZZaBPT/Q==
-X-Google-Smtp-Source: AGHT+IGWILDCH0oN5IIP6AmBZHCVw8v8xYQoGIqxbhQefLB2luB62aEimC6i2AGfGXR0N+C6cAzdpg==
-X-Received: by 2002:a5d:6c6d:0:b0:385:e8aa:2a4e with SMTP id ffacd0b85a97d-385e8aa2c01mr5694103f8f.31.1733149936076;
-        Mon, 02 Dec 2024 06:32:16 -0800 (PST)
+        bh=7AFVILEGG6inA8zYmU/doFUBGD/IkzUATf3B1mIzQMQ=;
+        b=t31E921A2qzYpl7xkCyT49u3uK5KY72bpElz9awETAr5dnpj+nCFX/Lj5DuDjxpMKN
+         lhTY2PwCmplyztn+98foLtKw6gVFUc1nUDjKoHHfAwYOYRUv6oMpYqNkZhC87SQrB2b8
+         h11C6l7VzzFLH9EeRdY0+wrzzyR7GQYaiyb0RML7MlrOFufMuvbk2zT/cWgL32vaDGCD
+         gYt/lifguA6eJJsQYWo0ZeqirOu/zr4uxgpo6Rbql3Vf8s7HtcOyQ4YfTH7yj7NDv4YE
+         wYqEj6FTtHjLtKdYr6eQHZP/TI9ls4QYMqzvq2CVx3mmcdJm+5trxBhJx558pcLI2Bbb
+         /mVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVil5QHhhZDSV+EXEcwL8pbpJgV4KrQaY38o3kyH0knN7C3+cr31Ts8p6bo8kiVSQvOBTI3Q/NAuEQU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/UhnFy7OzM8mEcxFMNwqlvcx5YqjABJVzNBvqUrMLstwNkBm+
+	10LB5toyMFsxBtSeKP8wuNtmHd31dsGuJ2pJytIgo3SeLu8RAN8pg0PVqyWIwow=
+X-Gm-Gg: ASbGncv+rRJ5HR0sNw/eaFEZ+8LDhXwWxU/uvopiOEpNLeCXxbRlzleVqvRfAq137pl
+	QcQA30aVakskjV5yazptxAhZ4SsbGg+NqzKtGdlTHfWOKw3AkX3oSFjnHEkhMqSBW6fmAi15ST+
+	jpFvIIk8S8JCrGSH1YokwsCBXIp00oEML8feLnOCHCj1OZzjVorsRtKW8Bxxcl+WrlwUetNrqA7
+	7jKkSeQ4xGD4stE2QmefZd0kJQFEVZXEAhcLFq5PA==
+X-Google-Smtp-Source: AGHT+IEh8wUvPPp6fmiu8qi70G2dLIyR2cy0B8DQH6XpxZjumKSN1WVLLU9bXrhtMfH6hCylA9amQQ==
+X-Received: by 2002:a05:6000:4024:b0:385:e4a7:df07 with SMTP id ffacd0b85a97d-385e4a7e08dmr6305010f8f.42.1733149937090;
+        Mon, 02 Dec 2024 06:32:17 -0800 (PST)
 Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-434aa74f1e6sm188429555e9.9.2024.12.02.06.32.15
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-434aa74f1e6sm188429555e9.9.2024.12.02.06.32.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Dec 2024 06:32:15 -0800 (PST)
+        Mon, 02 Dec 2024 06:32:16 -0800 (PST)
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 02 Dec 2024 14:31:54 +0000
-Subject: [PATCH 1/7] dtbindings: display: bcm2711-hdmi: Correct bindings
- for 2712
+Date: Mon, 02 Dec 2024 14:31:55 +0000
+Subject: [PATCH 2/7] dtbindings: display: Fix BCM2835 HVS bindings for
+ BCM2712
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com>
+Message-Id: <20241202-dt-bcm2712-fixes-v1-2-fac67cc2f98a@raspberrypi.com>
 References: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
 In-Reply-To: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -105,72 +105,113 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
 X-Mailer: b4 0.14.1
 
-The previous patch just adding the compatible missed out that the
-number of interrupts changed
+The previous patch adding the compatible string missed out that
+the number of interrupts and clocks changed with BCM2712 too.
 
-Fixes: 62948c62abca ("dt-bindings: display: Add BCM2712 HDMI bindings")
+Update to validate clock and interrupts for the variants.
+
+Fixes: 6cfcbe548a3a ("dt-bindings: display: Add BCM2712 HVS bindings")
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 ---
- .../bindings/display/brcm,bcm2711-hdmi.yaml        | 44 +++++++++++++++-------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+ .../bindings/display/brcm,bcm2835-hvs.yaml         | 77 +++++++++++++++++-----
+ 1 file changed, 61 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-index 6d11f5955b51..6af342c9b6b8 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-@@ -56,22 +56,38 @@ properties:
-       - const: cec
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+index f91c9dce2a44..ab59edbcf32c 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+@@ -19,12 +19,13 @@ properties:
+   reg:
+     maxItems: 1
  
-   interrupts:
--    items:
--      - description: CEC TX interrupt
--      - description: CEC RX interrupt
--      - description: CEC stuck at low interrupt
--      - description: Wake-up interrupt
--      - description: Hotplug connected interrupt
--      - description: Hotplug removed interrupt
-+    oneOf:
-+      - items:
-+        - description: CEC TX interrupt
-+        - description: CEC RX interrupt
-+        - description: CEC stuck at low interrupt
-+        - description: Wake-up interrupt
-+        - description: Hotplug connected interrupt
-+        - description: Hotplug removed interrupt
+-  interrupts:
+-    maxItems: 1
++  interrupts: true
+ 
+-  clocks:
+-    maxItems: 1
+-    description: Core Clock
++  interrupt-names: true
 +
-+      - items:
-+        - description: CEC TX interrupt
-+        - description: CEC RX interrupt
-+        - description: CEC stuck at low interrupt
-+        - description: Hotplug connected interrupt
-+        - description: Hotplug removed interrupt
- 
-   interrupt-names:
--    items:
--      - const: cec-tx
--      - const: cec-rx
--      - const: cec-low
--      - const: wakeup
--      - const: hpd-connected
--      - const: hpd-removed
-+    oneOf:
-+      - items:
-+        - const: cec-tx
-+        - const: cec-rx
-+        - const: cec-low
-+        - const: wakeup
-+        - const: hpd-connected
-+        - const: hpd-removed
++  clocks: true
 +
-+      - items:
-+        - const: cec-tx
-+        - const: cec-rx
-+        - const: cec-low
-+        - const: hpd-connected
-+        - const: hpd-removed
++  clock-names: true
  
-   ddc:
-     $ref: /schemas/types.yaml#/definitions/phandle
+ required:
+   - compatible
+@@ -33,17 +34,61 @@ required:
+ 
+ additionalProperties: false
+ 
+-if:
+-  properties:
+-    compatible:
+-      contains:
+-        enum:
+-          - brcm,bcm2711-hvs
+-          - brcm,bcm2712-hvs
+-
+-then:
+-  required:
+-    - clocks
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm2711-hvs
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: Core Clock
++
++      required:
++        - clocks
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm2712-hvs
++
++    then:
++      properties:
++        clocks:
++          maxItems: 2
++        clock-names:
++          items:
++            - const: core
++            - const: disp
++        interrupts:
++          items:
++            - description: Channel 0 End of frame
++            - description: Channel 1 End of frame
++            - description: Channel 2 End of frame
++        interrupt-names:
++          items:
++            - const: ch0-eof
++            - const: ch1-eof
++            - const: ch2-eof
++      required:
++        - clocks
++        - clock-names
++        - interrupt-names
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm2835-hvs
++
++    then:
++      properties:
++        interrupts:
++          maxItems: 1
+ 
+ examples:
+   - |
 
 -- 
 2.34.1
