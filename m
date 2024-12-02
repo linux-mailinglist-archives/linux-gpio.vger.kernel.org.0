@@ -1,144 +1,127 @@
-Return-Path: <linux-gpio+bounces-13416-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13417-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 118BE9E0A7A
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 18:55:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE4159E097F
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 18:12:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7DEDCB2B0C6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:25:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 644FABC2A21
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:25:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CB0207A04;
-	Mon,  2 Dec 2024 15:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95693209688;
+	Mon,  2 Dec 2024 15:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUUx7lHf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k5Lk6NCL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFB204F8F;
-	Mon,  2 Dec 2024 15:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0781209678
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 15:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733152936; cv=none; b=m4wKKeaxGk9cfOjyrgvb8mAMkNEPNHl1suQrTNT3atf8thIZ9gDjvFiA1u0qC+Pc3gKIoLtOnKbtwsnQ6q/uJRTXGHCLZhUaTEcpF6ZkhrsPu/BZGXKQfBhzbwnGe0rkAvDGZbvcja7dQlp6ZvI1hFpmfXt0Bc7F/koOYtx6pSU=
+	t=1733153050; cv=none; b=Qg4WySimA3Rzvs65vmo/NZauerrx+rJyyA2HD7WctSwG+4BXYj21GFqIT2NOpB8xRPtr1VfMKDdssWMeFc1Wfi1aSc0PhIy0ecR3iHpVmEFA1k95eyEglruOnzGNOapdS/3IW5Fn6itq2oJ9ze/WZD7RFo2SMG6/oNQLIG1k/k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733152936; c=relaxed/simple;
-	bh=fMgv+yuJZSY3uaaQETMbs+RJU+yPn08IqtayuTbK6/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fjSSBzw3wFCVi0SmlgZJ6Ws49Es8mvPatqR4ZssdOYOwgLf7iZNvt+O2ui9kaw9k1YBLVz26u7hD8aN7ur+M4F/Jn0mXwrdPx2mybHkjqJx3fCD+++fnhj86rfMAS1/T8SboGf/DmOntkMicKmCpvItfQSOjcDdo1/RvP7HZZj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUUx7lHf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F95FC4CED6;
-	Mon,  2 Dec 2024 15:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733152936;
-	bh=fMgv+yuJZSY3uaaQETMbs+RJU+yPn08IqtayuTbK6/c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UUUx7lHfUhva2ZxmhoIl2hQOl9DNlES3J4+BPvQ3+8OyGWmTKMFVE6zaT2pat5Nst
-	 ljE0gu0tVuCZUZDudHcX1odlZv9w2KqP42fLvARo42f1jTo8HT9twAjq92tCldRLJR
-	 gWkPziQX1V98Ksi6rxZSXqvtrEujuK7/DS7c3n3FFrh84TuL4oOj99Hj7VAZpbVx4k
-	 1B/7bCop+HaUKysizSj/hE2xc5Q1a/Dhg6kKnqF5tnpFHkJx5axVYDrp/1rWkhDp5w
-	 pReLyOtZJRoZWsBdPU5q2F5XrqTYsDr93gUcCJVwv4ozBMuC0o39apjlJmMRaFcHdi
-	 ZiT873HdU4BwA==
-Message-ID: <8b2863e7-d504-49dc-a2ad-d34bfbeb6de8@kernel.org>
-Date: Mon, 2 Dec 2024 16:22:06 +0100
+	s=arc-20240116; t=1733153050; c=relaxed/simple;
+	bh=+Xl8s91uz6z0166yhunqPMLThqhGtXNxm6DGP1hGyaY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aU/o8Fd8D5OOl80PxWjz2ttYgnbfFs57vW851tVfUH2ImKiHqvgAztcvDNhD3m48XeUJL+vEig88w5iDfyVvybCBPzMQIKzY6VZaBeXjmfHqskQdCgEfX/bLlYab5JAypkoI84y2J+PYm05qk2sA78Fn6crwkuOOVRSZD7IueoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k5Lk6NCL; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e398273d6ffso3020842276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 07:24:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733153047; x=1733757847; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XMx9usLc+8H+1O3Ux5r/Qz56sk5GB2iRle+hBCjO6+0=;
+        b=k5Lk6NCL/Q9S2n2SD7XUQy3GgjWsjcXzD2V/+giR9rhAUrOGGCsMQ/r8/8dAPLYGsW
+         ulCSdELHI1aTBluKfiDycsvm82o8sgvRyGtiXYSAGP0/WxrT27xmDDDgbwE+M/CCvKEd
+         0uh4t60+ULG1Ks4uJ4LNZYFklbSa+BPzal9TSB/GfYKX+XXRNKkYMor2pa3wur1kOHlS
+         FwhQtAJpO5o9tSZUZtX+ynvGl4TSVftm5BgyNchSRDtjBsudY0vkHF6+9NmXWz9zclq8
+         x8WgYa44Bx7oS49t0Opu8E+xUy/9ma+sg7UrILv5kSFdznhmNNCq9kHIJbfa2juCgfhX
+         oyJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733153047; x=1733757847;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XMx9usLc+8H+1O3Ux5r/Qz56sk5GB2iRle+hBCjO6+0=;
+        b=iE3IXexXtU+xAPOUN9DiQL/KE7omgJKpFbvp5/4b5bj6u6pYC4C4Ezosob6soYw/pM
+         U2RvgecZCllW/myK83Envc9IJuQF+h1m+lEJmEgcRvb5qtBX1LI/b1l+/vISTu/vxGU7
+         DhjyS66tgNZddv2rr5ZLREOo/CnDyQPlvDGuXJ0Babd6VeM460qc1I45JaHeDeR1KkLp
+         O93r+2Pv4LjcsLBZRQmzjPV/ISWcx9SCr5hUgJIFj7bXvyhdjR2ZZCnvo05NxzbO13IC
+         6vIesU6n3a09nKR4k1siKpD4Q4VuiujlLldnK+WZ+OsE9PfkZvQEmq6fB+5QwfYj3kW8
+         hdsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHs9cPEKoq3pjIkZhxb1YwnI7TbMTFZMVm6b3o+vCCaooV3PBCx455kdkeMYLlLVjEDi0pBwxQWll3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiFD9Q5HzSwUSnOkrVNSnP9qsyN0G31vM6oTzqCuO9xmkK9m8Q
+	ivg+hPCWEG2oauC9WZUyFV7uQpsKYkUHYTT9lb6jdaUfQfGxYG6Y8OhyxZNlc3Cm/aX6j7FLiIJ
+	QAUZhrbRzTgksaYau39Nw8N9aRXPZmN5t2brxOA==
+X-Gm-Gg: ASbGnctNhbTIUs9eg37OamD/aD2LfYV5skJE/5ixwjJPa9+YJVOJ2zQBxzmQamVQ3XM
+	k2bN/7sIQR3N/oEjJot1Z4USSWtgcAt9o
+X-Google-Smtp-Source: AGHT+IEGJdd9IwF7sSUzoqqAWgtWCRY1a0UMhBwb88ErQOHU8BaxnCWHnPMW9+ru+41yFpFYGuJqHhtoLonEK76JtT0=
+X-Received: by 2002:a05:6902:1895:b0:e30:c614:5c3a with SMTP id
+ 3f1490d57ef6-e395b869b78mr21357729276.3.1733153046692; Mon, 02 Dec 2024
+ 07:24:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] arm64: dts: broadcom: Add interrupt-controller flag
- for intc on BCM2712
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>,
- =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Doug Berger <opendmb@gmail.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
- linux-gpio@vger.kernel.org
-References: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
- <20241202-dt-bcm2712-fixes-v1-5-fac67cc2f98a@raspberrypi.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241202-dt-bcm2712-fixes-v1-5-fac67cc2f98a@raspberrypi.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1732030972.git.Ryan.Wanner@microchip.com> <e9e9e4cf0753422706bdc44fe7d20ca3a686ce7a.1732030972.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <e9e9e4cf0753422706bdc44fe7d20ca3a686ce7a.1732030972.git.Ryan.Wanner@microchip.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 2 Dec 2024 16:23:30 +0100
+Message-ID: <CAPDyKFpN-2kowdi_eCtbW1WEdc5OKh7tj60GfbPPBR0Hbpyj5Q@mail.gmail.com>
+Subject: Re: [PATCH 04/15] dt-bindings: mmc: atmel,sama5d2-sdhci: add microchip,sama7d65-sdhci
+To: Ryan.Wanner@microchip.com
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, mturquette@baylibre.com, sboyd@kernel.org, 
+	arnd@arndb.de, dharma.b@microchip.com, mihai.sain@microchip.com, 
+	romain.sioen@microchip.com, varshini.rajendran@microchip.com, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/12/2024 15:31, Dave Stevenson wrote:
-> BCM2712 DT was producing dtbinding validation errors of
+On Tue, 19 Nov 2024 at 17:42, <Ryan.Wanner@microchip.com> wrote:
+>
+> From: Dharma Balasubiramani <dharma.b@microchip.com>
+>
+> Add mmc binding documentation for SAMA7D65.
+>
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 
-s/DT/DTS/
-No one uses term like "dtbinding". Use full make target name or DT schema.
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
-> 
-> interrupt-controller@7cd00000: 'interrupt-controller' is a required
-> property
-> interrupt-controller@7cd00000: '#interrupt-cells' is a required property
-> 
-> Fix them by adding the required flags.
-
-But are these valid? Why do you think that binding is correct? Or you
-just silence the warning regardless whether this matches the hardware?
-
-
-Best regards,
-Krzysztof
+> ---
+>  Documentation/devicetree/bindings/mmc/atmel,sama5d2-sdhci.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/atmel,sama5d2-sdhci.yaml b/Documentation/devicetree/bindings/mmc/atmel,sama5d2-sdhci.yaml
+> index 8c8ade88e8fe..ba75623b7778 100644
+> --- a/Documentation/devicetree/bindings/mmc/atmel,sama5d2-sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/atmel,sama5d2-sdhci.yaml
+> @@ -22,6 +22,7 @@ properties:
+>        - items:
+>            - enum:
+>                - microchip,sam9x7-sdhci
+> +              - microchip,sama7d65-sdhci
+>                - microchip,sama7g5-sdhci
+>            - const: microchip,sam9x60-sdhci
+>
+> --
+> 2.43.0
+>
+>
 
