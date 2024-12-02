@@ -1,139 +1,162 @@
-Return-Path: <linux-gpio+bounces-13403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13405-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA689E04CA
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:25:49 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A669F9E0559
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:45:09 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E73422834B5
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:25:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3EC0165187
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A88205E11;
-	Mon,  2 Dec 2024 14:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A3B120B207;
+	Mon,  2 Dec 2024 14:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ox+ox1b9"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="JnAOaWtj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A3A205E01;
-	Mon,  2 Dec 2024 14:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E282420B211
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 14:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733149488; cv=none; b=VkOjDaJxfz7BckmKFH3t8QsQFqzlqRen6an7xm7vX1HCD3M4z7t2kcumBDJb8bNvMw5+85YR9dNJ9GtZ1jkUrMeKoHrTeKg2+qaUlkJIND5xUUwh73oagkncDdv3a9IifW0tJJBOBM5VBbfmXN+nzfyXoykmh+65bOdqyx49ZWY=
+	t=1733149940; cv=none; b=AfcQE+rCffSQxtVTMoTyxKJMucWqpVYEUh36EFU/Zz7lMHCIFeNtepCs3wASoswdMMLSXNCEQv1teRN2sKmkbwkznXi91bgczn8apPxgWQQricExAOwU/N1wd8QL/skbTadOe21x66VYrPq0eO1gLxn+STY82XlxrYP+wAs11w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733149488; c=relaxed/simple;
-	bh=Xx/D7lDCCFjn7E4qJiycmX1zgCDu9SsFkkSXil1i524=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y5x91N8FFCoX8rYgAZnVk42mw1mdiQMUsKC69LNW1liiVj2sGrYfRcGvP/OIaKRqpIl0/ohTi78AnFgeceCY78UeqjBwlYo8v9w/LWWK6ZgQ2bQ7Oa2uxzI08GqM/cUoFx/f4CHoGBQ2hW+AxDqVq7jz58venNFNLa0kDt30iQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ox+ox1b9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35FAC4CED6;
-	Mon,  2 Dec 2024 14:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733149487;
-	bh=Xx/D7lDCCFjn7E4qJiycmX1zgCDu9SsFkkSXil1i524=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ox+ox1b9h5kwYjHJV5EbfaSOgavcB5cwBowF161NNpbvqeur0IYx0lmPD5JBnBCTJ
-	 ufr1Dte0XvDVFrej7A7tIJPQNBrEaDcRtJbmB2O7uIDPrHktdoM2tuNABLw9ZB4/hE
-	 PKod4OkI/EX/wyUjKtISRduPHDoNGSb50wcjQExh84TDcDA3CaHkl25L4tj2rURGWl
-	 jcPRbC1LX9cy6q29ugykdnch69iRB5jRHD/3jeqfiuA8Npl8hPxJy6kDyUWkosOMTu
-	 AO2LUFkATnm6y25RCF3ZJEsqtQK237zN8KMb1tFfojE1qw6NcobS5Rm4nFjQIPz1he
-	 p61LaNs8VmOYQ==
-Message-ID: <682e8a50-8247-4f98-9ecd-03e1b3b3c359@kernel.org>
-Date: Mon, 2 Dec 2024 15:24:40 +0100
+	s=arc-20240116; t=1733149940; c=relaxed/simple;
+	bh=5zXjITbgA5FSFSmYOEMfbg84vfuGIoappc2/TOnidqA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iDWva645cMS3nKrZpFVE0S4zbScdsMvKZszBEaup2xjSPJr2lU6/2ryzfw46s6qFN1pWFEkdlDH1qaDPAjLSFzL5QcD/nexNmMBmcUDtM1OE/07Iow86F8PbLxFKA1LzxUKDUqt5vX0wKi3wNUYkPI1FdjF9ef73F+B22W/bP/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=JnAOaWtj; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4349f160d62so36586395e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 06:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1733149935; x=1733754735; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=66NaRjYo+TdRIjIUtk+A/zrTfjyMbW0NLvNCk3ACUHQ=;
+        b=JnAOaWtjEutUVX5FoLqjgsgCyMTJhtRjF8G8nLY1Ee/5lsmHIlR/1f9MYOSTlUBx4m
+         CYrSa9AN3gxy5Dltk8AIPUBcjFzVe71gdav0nzROfvW0QJebT0PptUfUigBsq9bR5KEK
+         Pz2bwvZJTVR+RWQrVLMFj3/y06LAzKPR6UBuHQsWPjrbubZ+7mQDP2FnnFCyMPHsimCK
+         tR7TfOaqq89NhpIM19SotIYGUmKYCNTRj5xUU5ByGd+WufZn9ALY8ks8EefHL1g1cPzf
+         f5dOo6SKcXMKqGjjndhktzDjM3oKm9GoLAx2QzKC6PvxhNCQiDJSPZn5GqgN1ptzNkxe
+         CJ3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733149935; x=1733754735;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=66NaRjYo+TdRIjIUtk+A/zrTfjyMbW0NLvNCk3ACUHQ=;
+        b=qXFtVLDDWDfS7KywdF4wbUOpkeeUpqZguSLprYMYfRVLhzSTqAoAuwtrumzCK/RU2C
+         DPLvB6zHSuK6RltqcXHf02DhgIlCHpQN7S7AGBYq7v1lT5Qca83LtOrvhQT7D6zU9MAQ
+         RrgInC0k4GqtDvzYCzMGXICAU77JnCnKjCTmcMTlSMwmFVBv/CeYNaQBwJCvcMJSg9qP
+         lxsf1ejFKExj3qwtqfy0xvvLtS0mCExjmTxsJkgDbKttx9MfMgfyVNauRfGjM92Fs7xW
+         nEkNOFPU8U91/72KqSYdi9fL7KNma0jevgLyiDlOmjFcqE8VJlsbnKu0LyDHnD+lis1r
+         JtNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLKXP0zmovQRZClvd65Csbbw12EWfqtgClkSvuOVfj9xTmxK/5Ah2fGl1yT2f7dNiIpiKVcZZy3p5w@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGT6KCYNYrRlsmro5PEb87UT1xdy3UXzNU2LBjUcGVLDJNSn66
+	f1vINd9DuC9ZYnCGZfLMBd9MT4gJwzgpUFt6Du8uYaGjwoD8co0aQOcRpRQzG9Y=
+X-Gm-Gg: ASbGncu3PkjCqvLRWQBkEaYqG0ldXh1NYbkQhghdIGEYhD+CFAK4J1SpLvFYi/7jsro
+	VcRqjZRNXeORNaoZ87eNkJKsKEFtR7CzFQLtwkDdNidCmmN402+vyq6iT8hNyL73+MdCAsW4xW8
+	LgvDDzQ9kP7+/f/rdIvYkKqNMF+sI3gjpzc8H6SqaBiA702tSgcug4uTf72w4tB8W76C9c9gb3e
+	fehFMT2YRPoV68F2kM2nngx0wN5ik+2/Oa1EHEs8Q==
+X-Google-Smtp-Source: AGHT+IFjvnTvxoYoYzXeiS+rT48r6tDHyIvnEQ/xQrP8Q+YrgHiGsItI6q35+4octUNLW9uQ5Wq4wQ==
+X-Received: by 2002:a05:600c:1e09:b0:434:a8d8:760e with SMTP id 5b1f17b1804b1-434a9dc6774mr200107125e9.19.1733149935182;
+        Mon, 02 Dec 2024 06:32:15 -0800 (PST)
+Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-434aa74f1e6sm188429555e9.9.2024.12.02.06.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2024 06:32:14 -0800 (PST)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: [PATCH 0/7] drm/vc4: Fixup DT and DT binding issues from recent
+ patchset
+Date: Mon, 02 Dec 2024 14:31:53 +0000
+Message-Id: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/10] arm64: dts: exynos: Add initial support for
- Samsung Galaxy S9 (SM-G960F)
-To: Markuss Broks <markuss.broks@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa
- <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Maksym Holovach <nergzd@nergzd723.xyz>
-References: <20241028-exynos9810-v4-0-6191f9d0c0f1@gmail.com>
- <20241028-exynos9810-v4-10-6191f9d0c0f1@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241028-exynos9810-v4-10-6191f9d0c0f1@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANnETWcC/x3LQQqAIBBA0avErBvQQVK6SrTQmmoWWWhEEN49a
+ fn4/BcyJ+EMffNC4luyHLFCtw1Mm48ro8zVQIqM1uRwvjBMO1lNuMjDGf0SFDuvvLEd1O1M/Id
+ 6DWMpHxlHVi9iAAAA
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Eric Anholt <eric@anholt.net>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Doug Berger <opendmb@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, 
+ linux-gpio@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.14.1
 
-On 28/10/2024 10:22, Markuss Broks wrote:
-> Samsung Galaxy S9 (SM-G960F), codenamed starlte, is a mobile phone
-> released in 2017. It has 4GB of RAM, 64GB of UFS storage, Exynos9810
-> SoC and 1440x2960 Super AMOLED display.
-> 
-> This initial device tree enables the framebuffer pre-initialised
-> by bootloader and physical buttons of the device, with more support
-> to come in the future.
-> 
-> Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
-> Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
-> ---
->  arch/arm64/boot/dts/exynos/Makefile               |   1 +
->  arch/arm64/boot/dts/exynos/exynos9810-starlte.dts | 119 ++++++++++++++++++++++
->  2 files changed, 120 insertions(+)
+I missed the DT errors from the recent patchset[1] (DT patches
+in linux-next via Florian, DRM bindings patches on dri-misc-next)
+as Rob's bot report got spam filtered, so this is a fixup set.
 
-This does not apply. Please rebase and resend.
+Largely it was changes to number of interrupts or clocks in the
+bindings, so those are now covered.
+
+I've fixed up the missing "interrupt-controller" flags for 2711
+and 2712 whilst here.
+
+I can't get my head around what is meant to happen with ranges:
+"soc@107c000000: firmware: 'ranges' is a required property"
+The meaning seems obvious.
+
+However if I add it then I get:
+"firmware: '#address-cells', '#size-cells', 'dma-ranges', 'ranges' do
+not match any of the regexes: 'pinctrl-[0-9]+'
+from schema $id: http://devicetree.org/schemas/arm/bcm/raspberrypi,bcm2835-firmware.yaml#
+
+There's obviously some other flag I need to set in the bindings,
+but I can't work it out. We have similar errors for all the Pi
+platforms for one or more nodes.
+Please advise and I'll happily fix them all.
+
+Thanks
+  Dave
+
+[1] https://lore.kernel.org/linux-arm-kernel/20241025-drm-vc4-2712-support-v2-0-35efa83c8fc0@raspberrypi.com/
+
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+Dave Stevenson (7):
+      dtbindings: display: bcm2711-hdmi: Correct bindings for 2712
+      dtbindings: display: Fix BCM2835 HVS bindings for BCM2712
+      dt-bindings: gpio: brcmstb: add gpio-line-name
+      arm64: dts: broadcom: Fix device tree warnings for BCM2712 display pipeline
+      arm64: dts: broadcom: Add interrupt-controller flag for intc on BCM2712
+      arm: dts: broadcom: Add interrupt-controller flag for intc on BCM2711
+      arm64: dts: broadcom: Fix device tree errors on BCM2712.
+
+ .../bindings/display/brcm,bcm2711-hdmi.yaml        | 44 +++++++++----
+ .../bindings/display/brcm,bcm2835-hvs.yaml         | 77 +++++++++++++++++-----
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml           |  2 +
+ arch/arm/boot/dts/broadcom/bcm2711.dtsi            |  2 +
+ arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts   |  9 +--
+ arch/arm64/boot/dts/broadcom/bcm2712.dtsi          | 10 +--
+ 6 files changed, 106 insertions(+), 38 deletions(-)
+---
+base-commit: 8c3f4a248f35817d2f604c0e3df1bccf27590228
+change-id: 20241128-dt-bcm2712-fixes-afb0e8a0a476
 
 Best regards,
-Krzysztof
+-- 
+Dave Stevenson <dave.stevenson@raspberrypi.com>
+
 
