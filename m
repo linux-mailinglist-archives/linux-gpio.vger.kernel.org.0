@@ -1,118 +1,138 @@
-Return-Path: <linux-gpio+bounces-13422-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13411-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 603B19E076E
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 16:46:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95E039E09A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 18:17:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 267FC280478
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 15:46:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1E03B80D02
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 14:39:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 648083D0C5;
-	Mon,  2 Dec 2024 15:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D8520E016;
+	Mon,  2 Dec 2024 14:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nno5o5gi"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="rOVlOKqN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C14CB5B;
-	Mon,  2 Dec 2024 15:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6C20DD62
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 14:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733154403; cv=none; b=j0TPaR2GsVbfc1rhVMX8V+AaL6kYc9iJXj1dzzIFViu0kR3iJIxYEuPN1ilBz2p9euezkDJFEKOQzHGInoD4YrB5UsMirKtUmuw4Z4RRRwVzGTmJLSkc4zSeAubqDPrryPNSCaRRyGkGo+JE42zCDkixCUKEQmEvWSGTVMygnno=
+	t=1733149951; cv=none; b=jbBYT+bO3kKJdCamh/vwfZzYVweatsIQittX6E3WRMvZHkMawIHQUrtlfbpxnhgam929RIfqCALYxbmyCZWY134/YU47/AtdWEdhMGPec0T1sJXoxR9Swdd5hDGREQOGddP4mV3ZINDLmQEbi9j/CZZ1DAEV2Zh+sxWX5FhnJek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733154403; c=relaxed/simple;
-	bh=nq9CApm2lwU3fpXbg/FXX6NMDF+2uS9tBRO+bf3mRTs=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=EUjc5alotiSdT84/e0ed+GtHIdcp0ieLuBvgG2kZcu/xwV42A8rqNbp8tScaMdVBvg5LDr6uAkx1PQRtw5YQs2PGS7jBTARylvC17f9ztR6utWYBI1PEnoqaZBeNbiuhWG1x+pmtlTycY3+w61C7vmq64tBahO00+1lQIbFO9ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nno5o5gi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D32DC4CED1;
-	Mon,  2 Dec 2024 15:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733154402;
-	bh=nq9CApm2lwU3fpXbg/FXX6NMDF+2uS9tBRO+bf3mRTs=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Nno5o5ginogysZYOoinMPACfcmzLi+NvkvWdGsltRWpC9rd1iSKUzbuKi+dexEVC6
-	 VBtR9WlggSfrnvBoqJqs0HkfdK/167+6KxETARnP6EwNHRD5jVdxn6m4avfERluDb/
-	 5ss+bMZ4iGWtGQLEFZOa0nDNjhIxHi04yO8djXxrhWaRqpQhQhA8pJ/JeB/71CnHT9
-	 kIqWc4NVCgwZBbPXFy041BMzFegKtLFI70GfYZJZCjncRo2oi8cdWiCwxHRpyXWc3S
-	 npTdtucykpJxCkuIpL0b+1MP4REnLr1rGA+BZP8TpUGuEANUx/62bgjJYSDFun9x1z
-	 ReYvBWoS/hrYw==
-Date: Mon, 02 Dec 2024 09:46:40 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1733149951; c=relaxed/simple;
+	bh=VpIZ3WAj8mBewaf40+mFXB+hswqRhINEMgjB6sIu+Jg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tCoGTwyMfMIbZa+oZUcl7CRE+XCsNMytmGAN7Nwq+JG8QDoKiVLwnGUkf3KWUMn13pR0nSSQHGxWj0Qt4/vgWSGK/PLPvk4ntdbL+8mFxksVzEI4+2J5j3gMS1BoBkZVQg2xMP22ndnJEVPs2EXOJkqpNCuVH8wio+xjvy1SSRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=rOVlOKqN; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-434a736518eso54702075e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 06:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1733149948; x=1733754748; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qoO0W1lzMLcOdS6iQBTqdnnGTSDtRuJivefn0QP3emg=;
+        b=rOVlOKqNRaLJKPfY3LeLf/dLnSSeXjaRxsQZ3ndhAbTn+WPM5mMOfZK5mHYLoTAoTb
+         rIPIjMCgH/IsLoxPZ/VVtYOPR7kS8tBpQ6xhvkTOPHFalKq4exvumPcgA+1I/JpLUXkV
+         30hEk+3a9ctVtM49gCRKGKVcYtgoCM2JSzNkUi3RXX7oQDjEB3GkAwz3xOs1B+FA/WrI
+         8JkweOd3LotNUxRnQfTBL6TFRFUK2hLA4Hd/5E8xw9K0iahBAVWnSo4Dto8vUaKF3hdb
+         dNw/xE1mVKyGuD1KYR5pnQgnUJIRZgsRECau15nVVwLSjPmG06W7bswQjth7a6Fp3Cou
+         WZNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733149948; x=1733754748;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qoO0W1lzMLcOdS6iQBTqdnnGTSDtRuJivefn0QP3emg=;
+        b=uSFOHulFpaSQ31/ZExhTUhpdVro+NHmL8MR3j0G7ntZE3Qi8NgTwP0QrBQTwgQsaeU
+         eJ4is6dBB3HrHwziWsC0MNdwG+Pu5Tx/+rutIHyrTJuCFJNSAodUdru7a++ZNMmFlbEX
+         VrMKaOo/BWuRW+Sj7CbRvnKFpQqLZw1rqS9lSluC+pV6NQtvYjpBRHE2B4dhoT5kBUeS
+         DSG60/h3r3Q2mVRDVy3n6XC2l9W7wZrgabZgwRPsTrHzNAHR4qDRRK2ASzldb442tCJ+
+         1H2N8STZFk96FmjyrdWCTXwBTPfdj92gGVv9YPESstvqnm7Qdheyw8N4+8l61c7sfLcf
+         cynA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfDKJTeyC3qXnlaWa6gLwiuSRY65WZJVj1sFN2oRN0XuzkJv6K451H+La5B/5I0h8g2hR9shC4Mafq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx08MHb+WcQz+z4rH9Q2Q8NpSg6OlPf+MDV4Ms7UoKJPY4JyQk
+	H1T4XmZjS3d8yE8BGBSnhO6qnS79C6nZwhy6EW5hS+/khBvOMCDx0AmYJ9ZLvBE=
+X-Gm-Gg: ASbGnctULyyphMB3NAdqQk/Oeh6O608WFp4jkWsdmilEbZvv2FRdajpR1Xdf8UC21e+
+	9lAPYZs+G0eWkRuBmB/dkrfbz3klbr97n80NF5q1KH6Dk1lse79iw6qy7sN3f/IHP54Dcnf2Mtj
+	dvI4WNMmbw/t6bDNLO+to+TSnUhN8sRylGwIEseN93E0TG/TE8ip7WHThS1qFkKjU7GVuYPljwe
+	elpycphat6Zfw2EUj3K463Uh+UxZEVfzfgAui5X9A==
+X-Google-Smtp-Source: AGHT+IE0KkUbbY+W4pZJfpChMoM/Bgrd/vrm1xb0nOBeoKJCjAgqt5slzwSLTSLUpuVmedDgVR+CWQ==
+X-Received: by 2002:a05:600c:3549:b0:434:a923:9321 with SMTP id 5b1f17b1804b1-434a9dbb626mr248858685e9.5.1733149941245;
+        Mon, 02 Dec 2024 06:32:21 -0800 (PST)
+Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-434aa74f1e6sm188429555e9.9.2024.12.02.06.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2024 06:32:20 -0800 (PST)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Mon, 02 Dec 2024 14:31:59 +0000
+Subject: [PATCH 6/7] arm: dts: broadcom: Add interrupt-controller flag for
+ intc on BCM2711
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>, Doug Berger <opendmb@gmail.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Conor Dooley <conor+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- dri-devel@lists.freedesktop.org, 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241202-dt-bcm2712-fixes-v1-6-fac67cc2f98a@raspberrypi.com>
+References: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
+In-Reply-To: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
  Florian Fainelli <florian.fainelli@broadcom.com>, 
  Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Simona Vetter <simona@ffwll.ch>, Ray Jui <rjui@broadcom.com>, 
- Eric Anholt <eric@anholt.net>, Linus Walleij <linus.walleij@linaro.org>, 
- Scott Branden <sbranden@broadcom.com>, David Airlie <airlied@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- linux-kernel@vger.kernel.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-In-Reply-To: <20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com>
-References: <20241202-dt-bcm2712-fixes-v1-0-fac67cc2f98a@raspberrypi.com>
- <20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com>
-Message-Id: <173315440083.2722567.15501799626521434805.robh@kernel.org>
-Subject: Re: [PATCH 1/7] dtbindings: display: bcm2711-hdmi: Correct
- bindings for 2712
+ Eric Anholt <eric@anholt.net>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Doug Berger <opendmb@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, 
+ linux-gpio@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.14.1
 
+BCM2711 DT was producing dtbinding validation errors of
 
-On Mon, 02 Dec 2024 14:31:54 +0000, Dave Stevenson wrote:
-> The previous patch just adding the compatible missed out that the
-> number of interrupts changed
-> 
-> Fixes: 62948c62abca ("dt-bindings: display: Add BCM2712 HDMI bindings")
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> ---
->  .../bindings/display/brcm,bcm2711-hdmi.yaml        | 44 +++++++++++++++-------
->  1 file changed, 30 insertions(+), 14 deletions(-)
-> 
+interrupt-controller@40000000: 'interrupt-controller' is a required
+property
+interrupt-controller@40000000: '#interrupt-cells' is a required property
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fix them by adding the required flags.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml:59:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml:67:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml:76:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml:84:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+ arch/arm/boot/dts/broadcom/bcm2711.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-dtschema/dtc warnings/errors:
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711.dtsi b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+index e4e42af21ef3..313b1046d74f 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+@@ -51,6 +51,8 @@ soc {
+ 		local_intc: interrupt-controller@40000000 {
+ 			compatible = "brcm,bcm2836-l1-intc";
+ 			reg = <0x40000000 0x100>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 		gicv2: interrupt-controller@40041000 {
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20241202-dt-bcm2712-fixes-v1-1-fac67cc2f98a@raspberrypi.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.34.1
 
 
