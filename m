@@ -1,231 +1,139 @@
-Return-Path: <linux-gpio+bounces-13377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2490E9DFCC3
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 10:06:18 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5AF21608E1
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 09:06:14 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BE21FA15A;
-	Mon,  2 Dec 2024 09:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Lvk0Nskf"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 170E49DFD3D
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 10:33:12 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B571F9F7C;
-	Mon,  2 Dec 2024 09:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0FE3281E69
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 09:33:10 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1A5E1FBC9E;
+	Mon,  2 Dec 2024 09:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sh2DOCRR"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04A41FA270
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 09:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733130371; cv=none; b=WZOtU97Hgd1loE0u72KO/xkbiKajNTOFCSpDd8jS1mBVuBmegH477aqBByXLkNkXb0YUpzF4rPaihg8AXId9HHY6SmtUGw8wUCYeTd8RgjFVsHb180nbXB+chczu2D7XG3kcwhV7RzEB/hYw/C6769JvYzvNZPARaFFSVXGiAYo=
+	t=1733131973; cv=none; b=F8tlR9WBK9OEcbkMiNZn2XVklh8rVoahPhZio4GITenWNJ4Kzv5ZNC5aURsfzAtzNdOBgr51uJ5Yvpt1acTw9y0mR4Wf0XOURgbchvWtwfJtNJfDL8XuaYUuFewrii2axhFGGN/5hK9oVbfgnAEq5EL0DyyGOaZXeQbj4+yKCaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733130371; c=relaxed/simple;
-	bh=FeRiWK/Mi3cvW5oP5QNPzPX/ZuOrxFunwvbdy+KhMlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ceHqJabEpi+lx5SD6NrAO3jV6jaRJ9LKdOBMYKtZUUzief3Rx3zzaz+ktCSBXhywsQGfsIP4uCWP3qDVvDbww+2qa5lopNNGbsZnZ8IDNCud5+LdUKOvhv4LrYEf/lPm+ldQmOLBZQeT0/YflFoZZ/5M95S2mWUBou3meQX9ihs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Lvk0Nskf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B290TwE010338;
-	Mon, 2 Dec 2024 09:05:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Q+PjIrCert+/x3e/5SEkFOVcd9o7Q54etqy826imJuw=; b=Lvk0Nskf1gPfvfDw
-	6oiXQJKJretf1FbX6tCF65Oin00bzsNqPMVLSqto5EjPwoOpWEPYgs+gRxPnYPvJ
-	OugShnOB3gSM79fEDqRmEQ8XPhpWD3KqT1LC5gxg6NKa8wQee/sdLBKJLOJl84Ml
-	z+puN4qOi2uAEjJAArl7BULURcrB2m5egdBKKGFp/IT0RtKVgs+rMAS1BZAtm56/
-	9edM3NsNnYyqQnpTLI6H7otEPojliXVkq7xuuxMSf5t+cW/0HXwfYHh0sttMSi+0
-	OipxLk/k6/UWv5z098AG+rtXMIaiTw8GXzuHuhrR3+ki+ByzTzCeacU2DFtjVHIh
-	9ZfvvQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 437v07m479-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Dec 2024 09:05:52 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B295qEj015760
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 2 Dec 2024 09:05:52 GMT
-Received: from [10.64.16.135] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 2 Dec 2024
- 01:05:45 -0800
-Message-ID: <95a78722-8266-4d5d-8d2f-e8efa1aa2e87@quicinc.com>
-Date: Mon, 2 Dec 2024 17:05:37 +0800
+	s=arc-20240116; t=1733131973; c=relaxed/simple;
+	bh=eYORF81wpS5r5CboRFAWx5G/GfVASyQGa5TvPaUF1yM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=my8cZzD5WEzqZJEd/67wOnthqT+IR2Wo+5w/po5W5jj3YSpWIeH+2iNhmkxNShvzH5qOZjW63VWGjXm78Tm+TNmXGhoo7eHaxP9BBEAobUYbHv1ZN0hMUPFnxhZrZZKthLfShnvqynOzSzOu0Z56+d3Nc9VYNva+8BIDWyl1tu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sh2DOCRR; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e38df4166c7so3194552276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 01:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733131970; x=1733736770; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ykJ4gnZ8OI+lNlsS7GnWz+Q0GYuAZsbDat/k0gHdcy0=;
+        b=Sh2DOCRRIP6YQyWFw5vRejWNdbnXGXUZjmZke4QJ2bHCf61mc6wP+yJR4eHngvM1gU
+         8tWJsx6K6OPnI4w5DBbz6/Jv5VTiXulyrBYcYNRU2+C329w0scY2lWBoSumjGlAq9OEu
+         jiMnld81lJMCu6yS0kYHoQpcqPwySI3xSPwVdaosVJ2XVzor6pk7+E+MTatvrwtalDDT
+         Iv8FqF0MUK2Hesrat+bXYf8hcuJ1GNWJ7+7Vw5S3KNHaunVZiAq0rWMf0e7fiFQhb7RC
+         x/T5oi3ff+8TXtQyeJLTySyYOQOiKT7IUuziCxcflV4hjdzvXyrNnH/Z+vc/HYHGlbjh
+         TtbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733131970; x=1733736770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ykJ4gnZ8OI+lNlsS7GnWz+Q0GYuAZsbDat/k0gHdcy0=;
+        b=j+JnLclnSC+S5QIMSkyMS6c5w0DRhgngyGu4jWcywPUmxhuPuAA4DjP0JAyEFuYtbN
+         swxDP7JSfHM9aBW+YdY5NVKql4da8gFFv9wOseaOf5MKCstmnu56Y17fQUinwm5F/qOm
+         bmnE3Ig3zZZMmAxsHOqldccpd0kBczrknYCuL6CfUD0Asqt4h0mSrTBnVsotqKxeABsr
+         0BuI0suOC7W3D5rchGjE2Nxr+gGf3fQz9NkWDRpcAQ6MihaMMJkJZomtswSkK37o8v86
+         tQHZaY3ppFDXC29bD20u2I2oJLeyIuNbM9Nh5feOzEBy6W1J+uLg0iG4LRS3Bd4OyTDN
+         sGtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWO/35rRAgof5+2BCfgWWc9o6yPd9IOwwEc4jZj2v1+UVWBzilwMzbNQan1kOJXSsZLTPaesMCRM2LE@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjfr+9NuP6MIoJgeFMv/CiHRytq+PIyfCdxE19X+nv+LqCq7JP
+	/OMiLqcsPLg9moxUnKhuaAcvICrJ9hN2ktYznA4wwS8ceZyEYJc7YQ8PshJImYp2fRg+qsZwn4F
+	5jjqws1WvjshgcfkFV6kIVez5XZcRKTlwP28bIQ==
+X-Gm-Gg: ASbGncu3I66vCDbFxdr0JthYG9IGv+m+h5hD/suU2/IyvbDPjQN8GLaP8MG/UkewfPl
+	yw6cElxtllHGzsU3g5xUN5pQAS174fQ==
+X-Google-Smtp-Source: AGHT+IGT3z3TbHSFBQBWWQ1KvYeMAU20/kLWtZdyfcltpfmv3iUgGjIOBFmp2Bw/pBAtCruUtd0beWsC6yrtxdL0HE0=
+X-Received: by 2002:a05:6902:150d:b0:e38:b889:7eff with SMTP id
+ 3f1490d57ef6-e395b870d38mr18514341276.6.1733131969951; Mon, 02 Dec 2024
+ 01:32:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] drm/msm/dp: Add maximum width limitation for modes
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Kuogee
- Hsieh" <quic_khsieh@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kishon
- Vijay Abraham I" <kishon@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
-        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
 References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
  <20241129-add-displayport-support-for-qcs615-platform-v1-6-09a4338d93ef@quicinc.com>
- <CAA8EJpprTGRTxO+9BC6GRwxE4A3CuvmySsxS2Nh4Tqj0nDRT_Q@mail.gmail.com>
-From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
-In-Reply-To: <CAA8EJpprTGRTxO+9BC6GRwxE4A3CuvmySsxS2Nh4Tqj0nDRT_Q@mail.gmail.com>
+ <CAA8EJpprTGRTxO+9BC6GRwxE4A3CuvmySsxS2Nh4Tqj0nDRT_Q@mail.gmail.com> <95a78722-8266-4d5d-8d2f-e8efa1aa2e87@quicinc.com>
+In-Reply-To: <95a78722-8266-4d5d-8d2f-e8efa1aa2e87@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 2 Dec 2024 11:32:45 +0200
+Message-ID: <CAA8EJpo-1o9i4JhZgdbvRxvoYQE2v18Lz_8dVg=Za7a_pk5EDA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] drm/msm/dp: Add maximum width limitation for modes
+To: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_lliu6@quicinc.com, quic_fangez@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: GJp2ATP3aUD-3hgyB8FaFF86sI5EXzVQ
-X-Proofpoint-GUID: GJp2ATP3aUD-3hgyB8FaFF86sI5EXzVQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412020079
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 2 Dec 2024 at 11:05, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>
+>
+>
+> On 11/29/2024 9:52 PM, Dmitry Baryshkov wrote:
+> > On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> w=
+rote:
+> >>
+> >> Introduce a maximum width constraint for modes during validation. This
+> >> ensures that the modes are filtered based on hardware capabilities,
+> >> specifically addressing the line buffer limitations of individual pipe=
+s.
+> >
+> > This doesn't describe, why this is necessary. What does "buffer
+> > limitations of individual pipes" mean?
+> > If the platforms have hw capabilities like being unable to support 8k
+> > or 10k, it should go to platform data
+> >
+> It's SSPP line buffer limitation for this platform and only support to 21=
+60 mode width.
+> Then, shall I add max_width config to struct msm_dp_desc in next patch? f=
+or other platform will set defualt value to =E2=80=98DP_MAX_WIDTH 7680'
+
+SSPP line buffer limitations are to be handled in the DPU driver. The
+DP driver shouldn't care about those.
+
+> >>
+> >> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+> >> ---
+> >>  drivers/gpu/drm/msm/dp/dp_display.c |  3 +++
+> >>  drivers/gpu/drm/msm/dp/dp_display.h |  1 +
+> >>  drivers/gpu/drm/msm/dp/dp_panel.c   | 13 +++++++++++++
+> >>  drivers/gpu/drm/msm/dp/dp_panel.h   |  1 +
+> >>  4 files changed, 18 insertions(+)
 
 
-
-On 11/29/2024 9:52 PM, Dmitry Baryshkov wrote:
-> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
->>
->> Introduce a maximum width constraint for modes during validation. This
->> ensures that the modes are filtered based on hardware capabilities,
->> specifically addressing the line buffer limitations of individual pipes.
-> 
-> This doesn't describe, why this is necessary. What does "buffer
-> limitations of individual pipes" mean?
-> If the platforms have hw capabilities like being unable to support 8k
-> or 10k, it should go to platform data
-> 
-It's SSPP line buffer limitation for this platform and only support to 2160 mode width.
-Then, shall I add max_width config to struct msm_dp_desc in next patch? for other platform will set defualt value to ‘DP_MAX_WIDTH 7680'
->>
->> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
->> ---
->>  drivers/gpu/drm/msm/dp/dp_display.c |  3 +++
->>  drivers/gpu/drm/msm/dp/dp_display.h |  1 +
->>  drivers/gpu/drm/msm/dp/dp_panel.c   | 13 +++++++++++++
->>  drivers/gpu/drm/msm/dp/dp_panel.h   |  1 +
->>  4 files changed, 18 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
->> index 4c83402fc7e0d41cb7621fa2efda043269d0a608..eb6fb76c68e505fafbec563440e9784f51e1894b 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_display.c
->> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
->> @@ -944,6 +944,9 @@ enum drm_mode_status msm_dp_bridge_mode_valid(struct drm_bridge *bridge,
->>         msm_dp_display = container_of(dp, struct msm_dp_display_private, msm_dp_display);
->>         link_info = &msm_dp_display->panel->link_info;
->>
->> +       if (mode->hdisplay > msm_dp_display->panel->max_dp_width)
->> +               return MODE_BAD;
->> +
->>         if (drm_mode_is_420_only(&dp->connector->display_info, mode) &&
->>             msm_dp_display->panel->vsc_sdp_supported)
->>                 mode_pclk_khz /= 2;
->> diff --git a/drivers/gpu/drm/msm/dp/dp_display.h b/drivers/gpu/drm/msm/dp/dp_display.h
->> index ecbc2d92f546a346ee53adcf1b060933e4f54317..7a11f7eeb691976f06afc7aff67650397d7deb90 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_display.h
->> +++ b/drivers/gpu/drm/msm/dp/dp_display.h
->> @@ -11,6 +11,7 @@
->>  #include "disp/msm_disp_snapshot.h"
->>
->>  #define DP_MAX_PIXEL_CLK_KHZ   675000
->> +#define DP_MAX_WIDTH   7680
->>
->>  struct msm_dp {
->>         struct drm_device *drm_dev;
->> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
->> index 8654180aa259234bbd41f4f88c13c485f9791b1d..10501e301c5e073d8d34093b86a15d72e646a01f 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_panel.c
->> +++ b/drivers/gpu/drm/msm/dp/dp_panel.c
->> @@ -4,6 +4,7 @@
->>   */
->>
->>  #include "dp_panel.h"
->> +#include "dp_display.h"
->>  #include "dp_utils.h"
->>
->>  #include <drm/drm_connector.h>
->> @@ -455,6 +456,16 @@ static u32 msm_dp_panel_link_frequencies(struct device_node *of_node)
->>         return frequency;
->>  }
->>
->> +static u32 msm_dp_panel_max_width(struct device_node *of_node)
->> +{
->> +       u32 max_width = 0;
->> +
->> +       if (of_property_read_u32(of_node, "max-width", &max_width))
->> +               max_width = DP_MAX_WIDTH;
->> +
->> +       return max_width;
-> 
-> msm_dp_panel->max_dp_width = DP_MAX_WIDTH;
-> of_property_read_u32(of_node, "max-width", &msm_dp_panel->max_dp_width);
-> 
->> +}
->> +
->>  static int msm_dp_panel_parse_dt(struct msm_dp_panel *msm_dp_panel)
->>  {
->>         struct msm_dp_panel_private *panel;
->> @@ -490,6 +501,8 @@ static int msm_dp_panel_parse_dt(struct msm_dp_panel *msm_dp_panel)
->>         if (!msm_dp_panel->max_dp_link_rate)
->>                 msm_dp_panel->max_dp_link_rate = DP_LINK_RATE_HBR2;
->>
->> +       msm_dp_panel->max_dp_width = msm_dp_panel_max_width(of_node);
->> +
->>         return 0;
->>  }
->>
->> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
->> index 7603b92c32902bd3d4485539bd6308537ff75a2c..61513644161209c243bbb623ee4ded951b2a0597 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_panel.h
->> +++ b/drivers/gpu/drm/msm/dp/dp_panel.h
->> @@ -51,6 +51,7 @@ struct msm_dp_panel {
->>         u32 lane_map[DP_MAX_NUM_DP_LANES];
->>         u32 max_dp_lanes;
->>         u32 max_dp_link_rate;
->> +       u32 max_dp_width;
->>
->>         u32 max_bw_code;
->>  };
->>
->> --
->> 2.25.1
->>
-> 
-> 
-
+--=20
+With best wishes
+Dmitry
 
