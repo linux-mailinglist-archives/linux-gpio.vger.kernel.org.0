@@ -1,52 +1,50 @@
-Return-Path: <linux-gpio+bounces-13381-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13386-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B5199DFF8D
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 12:01:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F6A89DFFC7
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 12:09:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 97C63B23239
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 11:01:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F076281532
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 11:09:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E9931FBC9E;
-	Mon,  2 Dec 2024 11:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6208E1FDE14;
+	Mon,  2 Dec 2024 11:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="jWnQmxgk"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="ArHi1nWC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243381FBCAF;
-	Mon,  2 Dec 2024 11:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761F31FCFE7;
+	Mon,  2 Dec 2024 11:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733137270; cv=none; b=VD3ZKaqx5el3O88RmDa80Hm9v30ihTVxOkrr2y3u0IQKpLfl/eiMXFNneIqml3netn6/H01j7CyegfWsSnih/kn/WTOQ4iZcWdg04ndaZh7D8Ln8uJ4A4Y3k6lGI/BErWTYKLUApNL+3Zzaxym1MIdr4JXTANUwYlnukkgOpl7o=
+	t=1733137766; cv=none; b=eY0XrR7BtLH84+xdCFcJURQ7aGkIK8ZBWN8hJPs0tSgOnZkPMx8zyWj/rLiBvfHqY0digpzlgXkSR5l+Su+Omc9jNk5X7+Rz7lwGxnzUk2PVh+E3AYrDRYvSaW3T5mIHYhsn9NRGn5eN2YKoB999wxvOTRKqiyiShxa4xKXkqEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733137270; c=relaxed/simple;
-	bh=IvpqhaV/xulVv5zlmJNnCYugVm2DCsNChR4uZU0CDlk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PUaszpeln95dsmoLi79+axXop5uMc3UudPbDW3aj71wwv8qzO+UW/RLnlRfcTaTHFKjT1oZhxdizEUkzA2/oNrpz64pVhKXbOkF6fzJWJyzGeqVLNqPUx2qLJz6oMEFHeZf5IIoV9ziskX0qp/a6g1+H9JL0cTJA/1r9cSPt5Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=jWnQmxgk; arc=none smtp.client-ip=134.0.28.8
+	s=arc-20240116; t=1733137766; c=relaxed/simple;
+	bh=ehSSEoWvXlF4UI9qtPYGUyBaauQysGmoOhwaF7jtG7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MQlqPiQZYpfRiczjj+vVgzWkHoBFdkWK31IHnB30quf6XNdzXG0tEWgpFA8uGyAQ4R59o5TyBG4o81MidqampnRoF6F9m4Ennag+IgyhVc9K17XHuYL2V3aaV18FT+BxUbO6rtVdxKAd3fXDU2MeezIHFbj3aRghZw3VPNPsrH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=ArHi1nWC; arc=none smtp.client-ip=134.0.28.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout3.routing.net (Postfix) with ESMTP id 4B8D860FA4;
-	Mon,  2 Dec 2024 11:01:01 +0000 (UTC)
+	by mxout3.routing.net (Postfix) with ESMTP id 7B32260FA5;
+	Mon,  2 Dec 2024 11:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1733137261;
+	s=20200217; t=1733137257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wyqoNi8b0e4G/mNuoNqWCCyWIXNgFap4NSrKlakizDk=;
-	b=jWnQmxgku532SImzVOvuu35tPoZrB/MDuyEJomKh6H1lDaNVZ+xwvX/O6+lYX5iX3P+t7c
-	tPX/tWNT24o3cMsOhIIdd3StsGWECMmAP4KjPz1lo25GVXZgNaW8gl33kUrJha3pCI5XHp
-	mumQciykHwsn04y3CqEYGBaJT6/SfZ0=
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=86EvgCO6od0cvtHnJ8468kzI29+oaxRmTIup/RkDzcA=;
+	b=ArHi1nWCoN+5NaD7YWdy0JFjjfVTHhXym47DOdaM+9fX04Be/GCvXii40N+5naHPKrsi7A
+	GTM0rjkWw2UUR4srnK7+Cj9D6qBEYuBM4DN7JQQwUBOCMvKlN20Td4sTvCwBU+gltwcqFW
+	sfp2TS1TYXcllwKLAYMI0RoqVfrvQV8=
 Received: from frank-u24.. (fttx-pool-217.61.149.104.bambit.de [217.61.149.104])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 818A4100475;
-	Mon,  2 Dec 2024 11:01:00 +0000 (UTC)
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 83B971002C7;
+	Mon,  2 Dec 2024 11:00:56 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -61,227 +59,67 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v5 5/5] arm64: dts: mediatek: mt7988: add pinctrl subnodes for bpi-r4
-Date: Mon,  2 Dec 2024 12:00:39 +0100
-Message-ID: <20241202110045.22084-6-linux@fw-web.de>
+Subject: [PATCH v5 0/5] Add pinctrl support for mt7988
+Date: Mon,  2 Dec 2024 12:00:34 +0100
+Message-ID: <20241202110045.22084-1-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241202110045.22084-1-linux@fw-web.de>
-References: <20241202110045.22084-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: c495ca34-053a-4cad-a31c-eb515f8c7e92
+X-Mail-ID: 55088614-6dd8-4657-af48-c5c86a14cb8f
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add board specidic pinctrl configurations on Bananapi R4.
+This series adds pinctrl driver, dt-bindings and dts node for pinctrl
+on mediatek mt7988 SoC.
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 189 ++++++++++++++++++
- 1 file changed, 189 insertions(+)
+changes in v5:
+- rebased to 6.13-rc1
+- moved dt nodes with mutliple options to BPI-R4 board
+- changes suggested by angelo in v4
+- changed example in binding and dt node to not using const MTK_DRIVE_8mA
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-index efc4ad0b08b8..aa2dabc041fd 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-@@ -9,3 +9,192 @@ / {
- 	model = "Banana Pi BPI-R4";
- 	chassis-type = "embedded";
- };
-+
-+&pio {
-+	mdio0_pins: mdio0-pins {
-+		mux {
-+			function = "eth";
-+			groups = "mdc_mdio0";
-+		};
-+
-+		conf {
-+			pins = "SMI_0_MDC", "SMI_0_MDIO";
-+			drive-strength = <8>;
-+		};
-+	};
-+
-+	i2c0_pins: i2c0-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c0_1";
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_0";
-+		};
-+	};
-+
-+	i2c1_sfp_pins: i2c1-sfp-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_sfp";
-+		};
-+	};
-+
-+	i2c2_0_pins: i2c2-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_0";
-+		};
-+	};
-+
-+	i2c2_1_pins: i2c2-g1-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_1";
-+		};
-+	};
-+
-+	gbe0_led0_pins: gbe0-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led0";
-+		};
-+	};
-+
-+	gbe1_led0_pins: gbe1-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led0";
-+		};
-+	};
-+
-+	gbe2_led0_pins: gbe2-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led0";
-+		};
-+	};
-+
-+	gbe3_led0_pins: gbe3-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led0";
-+		};
-+	};
-+
-+	gbe0_led1_pins: gbe0-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led1";
-+		};
-+	};
-+
-+	gbe1_led1_pins: gbe1-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led1";
-+		};
-+	};
-+
-+	gbe2_led1_pins: gbe2-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led1";
-+		};
-+	};
-+
-+	gbe3_led1_pins: gbe3-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led1";
-+		};
-+	};
-+
-+	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led0";
-+		};
-+	};
-+
-+	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led1";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_45";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_51";
-+		};
-+	};
-+
-+	mmc0_pins_sdcard: mmc0-sdcard-pins {
-+		mux {
-+			function = "flash";
-+			groups = "sdcard";
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		mux {
-+			function = "uart";
-+			groups =  "uart0";
-+		};
-+	};
-+
-+	snfi_pins: snfi-pins {
-+		mux {
-+			function = "flash";
-+			groups = "snfi";
-+		};
-+	};
-+
-+	spi0_pins: spi0-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0";
-+		};
-+	};
-+
-+	spi0_flash_pins: spi0-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0", "spi0_wp_hold";
-+		};
-+	};
-+
-+	spi1_pins: spi1-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi1";
-+		};
-+	};
-+
-+	spi2_pins: spi2-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2";
-+		};
-+	};
-+
-+	spi2_flash_pins: spi2-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2", "spi2_wp_hold";
-+		};
-+	};
-+};
+changes in v4:
+- fixed fixed string binding error
+
+changes in v3:
+- rebase on rafals dts patches
+- update binding to have mux subnode as fixed string and conf with optional suffix
+
+changes in v2:
+  binding:
+  - drop gpio-cells description
+  - move ref in mux subnode up
+  - order uart-functions alphanumeric and fix typo
+  dts:
+  - fix indentation of reg-values
+
+Daniel Golle (2):
+  pinctrl: mediatek: add support for MTK_PULL_PD_TYPE
+  pinctrl: mediatek: add MT7988 pinctrl driver
+
+Frank Wunderlich (3):
+  dt-bindings: pinctrl: add binding for MT7988 SoC
+  arm64: dts: mediatek: mt7988: add pinctrl support
+  arm64: dts: mediatek: mt7988: add pinctrl subnodes for bpi-r4
+
+ .../pinctrl/mediatek,mt7988-pinctrl.yaml      |  578 ++++++
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  |  189 ++
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi     |   54 +
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt7988.c     | 1556 +++++++++++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |   73 +-
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |    1 +
+ 8 files changed, 2448 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7988.c
+
 -- 
 2.43.0
 
