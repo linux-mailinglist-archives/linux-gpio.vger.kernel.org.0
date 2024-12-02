@@ -1,112 +1,120 @@
-Return-Path: <linux-gpio+bounces-13371-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13372-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CDAC9DFBEA
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 09:29:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDC549DFBEF
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 09:31:11 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAAACB20FC8
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 08:29:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8747162A4B
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Dec 2024 08:31:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BD81F9ABD;
-	Mon,  2 Dec 2024 08:28:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80E541F9A90;
+	Mon,  2 Dec 2024 08:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NcQ+J1lK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XRJR2fQ8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A501F9EAA
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 08:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B9913635B
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Dec 2024 08:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733128124; cv=none; b=asv+XbPk01mWgwPK9d2/S6X8qHImCliaMiGy4liGj734U36eYl+x8KGvYrp8Klp5J/GPIhG2OXNI08Ff7ar2t5T6JpSsw4rdhO5tywq44hwsr3+RZNLm0ge3jq1h9hGjdXtz9FJLKVGC3+XJsyY9qKdPCn7kN0knqcud5B3mv2w=
+	t=1733128268; cv=none; b=QBc4WkS0PdYYLOkdiQIrTPNiUaZ9bLrty9NYppuTnRdf3bFH9dIdH5fDQFNqYxv9X4RQJk01n6oD1pVgg2WNQDirGarVU3UVmRobC4pLqL30WPVBD8Ut3KDYyXp90DYsVd+oonIOMVjNDqNSIbxCGiAPLgWNOdt7dd6K7NsdSvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733128124; c=relaxed/simple;
-	bh=5JV3gAlPUo0XXSWSO7i8jvQiKD+1lNY6362eKKQVPfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I0PuzFlJTRKUU8eeBxOX7etx9qhefq7cFXD4ybVNoZD2qqMbKdhxeBlic5FOmQObJjXE6P/vuxcvCIK5/4t/XkpADDz9aihaGXRIPdG7YIbHirxRmYYTL4oxrJrBbAVE2h8BD7mybwag2unfnWkrlaQHilgyIOTjDvuS8GiLlp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NcQ+J1lK; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1733128268; c=relaxed/simple;
+	bh=J41CQbXhpXGs/TkgJYtvEkFmiougYbhBmn+mJwqF+Gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QMOg70dtprJl5d+r8nrXAjU7oA15vWRH2Hd7Y1+L5n6jgDCd7dP0+lstnPgef8jENch15JqMa92ux2A8/21QGIcDs0SjBGFRM2vMJ2j36QCAYKUWV3SAhi8U+AlGSk/uQcKnWdxG2Q3pHPH/ckqchVbCdsOjZXl90bSz+Crwx4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XRJR2fQ8; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53dde5262fdso4327218e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 00:28:41 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385f07cd1a4so771278f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Dec 2024 00:31:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733128120; x=1733732920; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733128261; x=1733733061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0lA2R5yBGG1AlxEJkdWe3WNZKH3ahCkbkWHPXpKdHbM=;
-        b=NcQ+J1lKBtMZTXn50uPHuPGVWSScRxvIvVnVmUuO/ShQTIg70NNq+FCJLJM1hav6fS
-         j5Zu4GHgCl+QRwNC2ZNVSAVQRNqbvjNbikGxr3s7b9Njyv3Ivd2sFGvSJ7UYuybMsvBB
-         UcdpNq7gfL6QRWT5f/z/krZ/lXGIXxXOLFqg8wGhctyVd/PUjTfhEa5iZkLiMBhaMWNW
-         KRaguyD1XvmUij6tjDVkf9vdJsLtnyIfRR9N6qO8pABX2G/wIc73Qahxl/m/SzKbv+L4
-         vpMtWevOvq9Kx6zafWUVLnVATQH0LOgGCUR3iOzG/udXfjPIGRv3I9hTF7kezpEZ6a52
-         L9Cw==
+        bh=Mr1WQaW+vl9ftkqr49hXwsrwWQsvpIpp7R0EYmxCG8Y=;
+        b=XRJR2fQ8ONq0UYsMGy3r2wu5hZlY4/ePrfl39wO1B0bfCI+ul3rGEq0fohw5JPLk+j
+         p9yWDWYRu7ZOTeDskU3Pxx+pvSaH/1B6lcW/kDMN2FPnGNcDJZTgf/QBmE7AbhzV+cFh
+         i+rT9qC4I74d79s6f5kY4kh0ZvTa6hpgdbTY+2Ww8rXSPE8yTZRJS3CfLyHs4xF8D5PA
+         zDDcaUNvZ1LRTtjGWRP5VVhhE440tUPq8jelEBTCUreF/VLQyl9G1On9ZmGRT4uLsla1
+         Omwhof5jwwqJDif6UqU/bBRBjGT82iKIwK3GYX9aOcfr4XGOQZjeV5wNIPZwzQmvfbnF
+         YJzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733128120; x=1733732920;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1733128261; x=1733733061;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0lA2R5yBGG1AlxEJkdWe3WNZKH3ahCkbkWHPXpKdHbM=;
-        b=uEwJrlqpca+isBLMz3cUrRiAIplrU79bVMJenteS0Qfnz91D8Puu6b3HdH0YW5EHKk
-         ZdUbrVZbxirF75VKgzDYb1LASrFEVGwm0S3YLfs97Lil4F3k/m7kyoTv7MO3Ma3fQwjp
-         WrFoBKHwE3Cb4X72EfaW8ruDNFQW5aeOaf8f+QDJmY91sajz/V1DjXyRHxBM7c/9ELok
-         sN97BlNLwbImX6VyveUFFeOHfOsblyu1YtLU4hJ2i9B39cyeN4f1pjgIErgXIruLio5P
-         UVmw6gQA0U1qQUixNv9Xgrc34GpjhawE4VChpYmEL4w7PTyWoWLnF9ebBZhWdaBrsNTy
-         75JQ==
-X-Gm-Message-State: AOJu0YwRf2w8c+OKnnzvuq+ZB9HbBO8zH02dh8gEOiGhWZmDHGB+YhD0
-	+y6/WEYIqDLjhJROg7e3AJvV290razJu4NHzjMMxUz9QFWekVTsfwuE38SLlB1pmkmE1a1Zj0zi
-	5VzN2QVM7GxJISrIWZnT2ggCtSwbuKw3yfpegOYMZQdG3BZDkpCg=
-X-Gm-Gg: ASbGncsVG10r0lScz057WYCjyWjag8rDFLaBIp2HTTX962eqx4vANjlYeCKYgkoWp4p
-	4ukJ9TXpE15QkzKKd3lBqIt0+eWeTrJmRLD6yUIbsDQotk7PNq5aXIdt+/tmnqWQ=
-X-Google-Smtp-Source: AGHT+IEKXBFbXyaJPIBH/O9HSmq32tEtI9jixt/ErrdbKjxus9+PENdH3cSCYJcPu4pst5tE+gHj9KaRYFFg/hpZurc=
-X-Received: by 2002:a05:6512:124e:b0:53d:e4d2:bb3 with SMTP id
- 2adb3069b0e04-53df0114870mr11805772e87.50.1733128119793; Mon, 02 Dec 2024
- 00:28:39 -0800 (PST)
+        bh=Mr1WQaW+vl9ftkqr49hXwsrwWQsvpIpp7R0EYmxCG8Y=;
+        b=CDJcAfqbiPBMRv22PGo/nA+jE2DC7ufLEWQJao73XU6siN8/U5YY8LlG7kA2V0cBcF
+         P8ZlClRDHlkTG7aSDB4XB1APGzf2mrdTAH+5nKFDi05UMQpMJfYcFXEXV2SBQy3mslPT
+         w91OygUAoCD3TE+r1iJMKsH2mFrgR+fVgDf+zKiQE3zhg3eII3ZPmz2yRqFLDjNiyBiN
+         xWRRSfZr3MCvPmd/OfBwrsygIR2VWTC5rX5c88dOoGrMbyJrJ4bERCfdQzrhQtYbOZbT
+         FUoS2soF2UIjtQNRAvkFjO8jh3chM6eMJttKooJmsGFC/2WF04m1zqqYq8tos4Ps+Soc
+         l6Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCEN49vsZRyrikR6r6ffBC7lHWU0NY4HJC5LDwyzdPtrQ9Z+KH1A7vxiB4J6UA55aXS/AvvSzaymt6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzteezz1tLOxssHJJeXPay88OjTtOpjQKUpCY8nt6/vF/L+RGte
+	R+MOO+NKsFeHPnjOoXB+U7Q9fOhOw6wVoLIVk6kipZyqykkMjWAxPrKWKZU3LmU=
+X-Gm-Gg: ASbGncuov+knhz1sneGtignYiQyg30y/EwpQ3FRTdLlRyiVrEDsNr38fvt0RFFTakKE
+	giL5wMwEMpzKeD6ygT5eTSdbtAmbEdyDrjRrAb/4YiYreobk+IpIxE46rsv6VdySAtCfx5m7eTM
+	yB++Jnfw6VPAn/1CaB6vu36tt1ekZrnWl+d8sXeWWwZIMXluZ3j67yh1M3qm/ZrGdkgsytnHUaS
+	0tpSusva04NW7NlcK8vgSMafi/HBkm23WoQdXTCYvGolWtrAw==
+X-Google-Smtp-Source: AGHT+IH0qD4qJ+Q2+Z3HWwSBPO/fM4Ao3Cp9So8OM+vgZLsk3AP7yVg8oGPeVLdEmdz1wJc5I4R3Yw==
+X-Received: by 2002:a05:6000:2d08:b0:385:ee59:4510 with SMTP id ffacd0b85a97d-385ee594757mr2437769f8f.9.1733128261466;
+        Mon, 02 Dec 2024 00:31:01 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:223b:dce7:ef1c:4bc4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385e32ee381sm6841715f8f.76.2024.12.02.00.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Dec 2024 00:31:01 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vincent Fazio <vfazio@xes-inc.com>,
+	Phil Howard <phil@gadgetoid.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH] bindings: python: relax the verbosity adjustment in build_tests.sh
+Date: Mon,  2 Dec 2024 09:30:59 +0100
+Message-ID: <173312825663.12253.12650640900797258431.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241127133139.120107-1-brgl@bgdev.pl>
+References: <20241127133139.120107-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241130201516.18034-1-george@george-graphics.co.uk> <20241201231313.42935-1-george@george-graphics.co.uk>
-In-Reply-To: <20241201231313.42935-1-george@george-graphics.co.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 2 Dec 2024 09:28:28 +0100
-Message-ID: <CAMRc=Md0DsRaSXenO8D-4VD4aXtaxF7rUKBd2xhLZLxK9qx4zA@mail.gmail.com>
-Subject: Re: [PATCH] libgpiod: bindings: python: Fix PyDict_Next contiguous
- assumption and pypy
-To: George Harker <george@george-graphics.co.uk>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 2, 2024 at 12:15=E2=80=AFAM George Harker
-<george@george-graphics.co.uk> wrote:
->
-> PyDict_Next does not guarantee pos is contiguous, and pypy increments
-> past the end of the dict size.  Patch fixes reliance on pos for construct=
-ing
-> args for gpiod call.
->
-> As per discussion here https://github.com/pypy/pypy/issues/5142
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Ah, it's right there in the documentation too[1]:
 
-"Its value represents offsets within the internal dictionary
-structure, and since the structure is sparse, the offsets are not
-consecutive."
+On Wed, 27 Nov 2024 14:31:39 +0100, Bartosz Golaszewski wrote:
+> When building tests using the build_tests.py script, we try to increase
+> the verbosity using setuptools.logging.configure() preferably but
+> falling back to distutils.log.set_verbosity() if the former is missing.
+> 
+> This however creates a hard dependency on distutils on older environments
+> missing the recently added setuptools method. The build however, can work
+> fine even with default (low) verbosity so instead of bailing out if the
+> second import fails, just keep going.
+> 
+> [...]
 
-Thanks for the catch.
+Applied, thanks!
 
-I wasn't aware pypy actually reimplements the entire C API of cpython.
-How would I go about building libgpiod python bindings with pypy?
+[1/1] bindings: python: relax the verbosity adjustment in build_tests.sh
+      commit: 27ec1af8b1836a1fcd6cbb8376324a21ee5b483e
 
-Bart
-
-[1] https://docs.python.org/3/c-api/dict.html#c.PyDict_Next
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
