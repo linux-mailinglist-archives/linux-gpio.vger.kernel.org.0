@@ -1,150 +1,131 @@
-Return-Path: <linux-gpio+bounces-13470-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13471-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D857E9E2E76
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 22:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB82C9E2FE7
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 00:34:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E284283361
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 21:54:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7041E2834C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 23:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2647208997;
-	Tue,  3 Dec 2024 21:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C718202F84;
+	Tue,  3 Dec 2024 23:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FiZf/AIZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1752C/t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC391362;
-	Tue,  3 Dec 2024 21:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7461455897;
+	Tue,  3 Dec 2024 23:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733262891; cv=none; b=cbd051WZ7p8E5SGhdSumzBtF4v5w0eT0wKM5FVmFWiSe5HkNPUMqP0DNsPcLCQfpEmQtEAz0DZfwgUZwZwz1WuKLM6is+voWRxIFIDZAhqpiZb7dmlTIg8wn8lOiCNTAvgJZeDOHxknk1X6PjxkArIdE1n22erkvkVU8zDhRIgA=
+	t=1733268838; cv=none; b=UpO2ZTk12VIiNy3oIRm6uDPhMMggGEmbuc32afs7vipzcCXApzpbWu2q2ujf8YPpY4c49JGXpW/wCVBZJgyUT10zuJ54UBwQZsI+Oa1uVtbH3IfhnMehqA/SkynSvS49dKuInFdVps3cSCEYreXtkQqXLIeRk+IbZUDCi+txL9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733262891; c=relaxed/simple;
-	bh=mO3P53jjRSPArFtNaOavfmbYHxijZc/rirxayXf1Ewg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gEN0nP3OUbFiFOTqDcl/jYpUXF38PTdUMvBkyY168UODowyWVZdJ8HEuhrTp0xdIFboLFVpS+qW4Lgur/jvGBWnOl6t6gPr2jd2HzSAfm51LQyUubatcgDTifQbu2ImqA7LfqkzyMyKmaoBHun69ABI2ENFsrnbTNJaxhTlf2Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FiZf/AIZ; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4B3LsfSS1506095
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Dec 2024 15:54:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1733262881;
-	bh=t9UmxNX5ocO42iQ/orx9DcB2voE4RNWe9sONi2VfXO8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=FiZf/AIZBa7IJ63jtMmleyIqt7IrlbAVzYtbbT99/uFO6siU22YeEGtHsf64ivNHK
-	 F/VAF11xeYLS72Nw4fK1S3YOXHvUZ5oGLFFsnhA5vNX+WyiXrI6yG9QMtrOovEkAKA
-	 EpbUFet5BvnMgqcPcPQNl8rCJz+I/WHUqQib+m1U=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4B3LseUv000330
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 3 Dec 2024 15:54:40 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
- Dec 2024 15:54:40 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 3 Dec 2024 15:54:40 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4B3LsdIT081180;
-	Tue, 3 Dec 2024 15:54:40 -0600
-Message-ID: <37f90519-48e9-4caa-80c6-9f6ae61aae0a@ti.com>
-Date: Tue, 3 Dec 2024 15:54:39 -0600
+	s=arc-20240116; t=1733268838; c=relaxed/simple;
+	bh=23b1ZGVdfwFrDv8H1WoVxUqqB5MIQmsaiBWfLBxd6hU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V2ug5Hjl5wC4c59Gn3V1wUeh/qCO/dSQJavTMwm+vrLUog9CvqayLE5ni6jZ5mJIx07GedDf63vWXlaf66XymwK9Ae0CNPtToYkk+19SAd2KFzBp1YOt3KbzivEtcuMpcyPlG3IR89UPkZ5bh+1+Na1h3KXu5ZoDU+qyJMvmxgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1752C/t; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-724e1b08fc7so5495513b3a.0;
+        Tue, 03 Dec 2024 15:33:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733268836; x=1733873636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jplALg4JiAwh3fPgDAk/lVd13WxepigZdut6GMlKTQQ=;
+        b=h1752C/tCZEzxAA3YHu3r5XA+CWIGvt8bXw25kAoYkX8US81yIOH/0Xgsrr+ic0gzh
+         uaFl62bodM+BlbiPIbeB6VqAQmQUHZa1mCdG4jOg3Cl0K20SU1sowRY+gJ0Ad4OxMDdg
+         5uB0EfAKWRLnoy1zgiyoAN5yLZjKxnDSvLrR5sPZu30lmV165/FgbOT3A+gxjSlWGPM5
+         0FvZKJLJ4jQtGtmCGY0kaymW7z6T9/2zXfgV1SyQuaMlt3qtcq9MDIKVot1pL0vTVvPu
+         q6YTv7xWe1CUeOsJW6spJnK1eZtTICOrfkODobLrVVW6RhizTHqXTVQwvqRxLnbwHoda
+         x01Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733268836; x=1733873636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jplALg4JiAwh3fPgDAk/lVd13WxepigZdut6GMlKTQQ=;
+        b=xHuKeLMfUZDTL4533Zr7N/mfQMjp0yxchzhcP1k8jMx19Xfb7BDepNLhSgi5xYmMLA
+         jwMJ0OBoKaTha7upKx6K8oB2bTfyakTkqWbodHIa7bRC91KcD8sRiTXiNkH+Az4ZpGWB
+         8KOqISZLSzfltVAzpCmREz1+bypvQeGrg6fzNQ//mgQT85K1dq9Z5ZTgummHyjLuYzdV
+         DuYisKJMgl1M6FE8bO37N0+XkHyTzctmQshzRmIGXgluIX4WZV3B9Z10AMgpxmwdwzIk
+         Wsco+FMckbyr6s6UFXqDBHz013JrpCzwM1vW3DLhE2AVTivRbcH+9JnDB6XlwNZswAsG
+         maww==
+X-Forwarded-Encrypted: i=1; AJvYcCWuArqVA4YqIQhRR2ppbs39pnD8H+ugWu3qkl0cs+y0gnwaCzwJfkhUJqRCglZXPDeB5DGU8XFT027lE8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkRDML7jmGTpwcDFo7RJ33xNB1V8sCgyU+jqfCc5s0M2LaPMVE
+	szXQdriuuV4StrEFeNfJ9Fxv8ae+FscJQDxh7SSJ/AgkcPUrdLLdUiCjImu1+3Q=
+X-Gm-Gg: ASbGncvR1pdRm8pcuSEIGGp/SxumV46CTIankc8LfAmnRP4hbiDD9sUIzrvojT6ZVbw
+	arD+emzDI5d6z36LSp54FpWoUibRyefIC3yXKQC28a+ZSW4yR0FkBMBSD6wXEVBQs5IejleqcQR
+	kejL1hHae9/fCe1ZEpNI/QqcoPOI4uqqjtmrNm5j64jKtdhNf8iZNyshE0KN1Qe62H303sv4Nze
+	nNudsXtdTbD2a7GnVgs7pmYOA==
+X-Google-Smtp-Source: AGHT+IEemUSIMxxd7GHqxTuF5vKs0XqrXU71EJ5JMBJ6zerMn4TImqsl5Vs2K+HGA7tP/ObQKD2yoQ==
+X-Received: by 2002:a05:6a00:14d5:b0:71e:7d52:fa6d with SMTP id d2e1a72fcca58-7257fcc9e56mr5610834b3a.21.1733268836550;
+        Tue, 03 Dec 2024 15:33:56 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8200:dab8::a86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725417fb9b9sm11402849b3a.109.2024.12.03.15.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2024 15:33:56 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] gpio: twl4030: use gpiochip_get_data
+Date: Tue,  3 Dec 2024 15:33:54 -0800
+Message-ID: <20241203233354.184404-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] gpio: omap: allow building the module with
- COMPILE_TEST=y
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Alexander Sverdlin
-	<alexander.sverdlin@siemens.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20241203164143.29852-1-brgl@bgdev.pl>
- <213de4bc-3706-4bb0-a827-06c63bfe0294@ti.com>
- <CAMRc=Md_u3YmseW5kV5VH4F99_0P=tc4pWty_fB3dVfv_JDxWQ@mail.gmail.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <CAMRc=Md_u3YmseW5kV5VH4F99_0P=tc4pWty_fB3dVfv_JDxWQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 12/3/24 2:36 PM, Bartosz Golaszewski wrote:
-> On Tue, Dec 3, 2024 at 7:41 PM Andrew Davis <afd@ti.com> wrote:
->>
->> On 12/3/24 10:41 AM, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> For better build coverage, allow building the gpio-omap driver with
->>> COMPILE_TEST Kconfig option enabled.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>> ---
->>>    drivers/gpio/Kconfig | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->>> index 56fee58e281e7..fb923ccd79028 100644
->>> --- a/drivers/gpio/Kconfig
->>> +++ b/drivers/gpio/Kconfig
->>> @@ -530,7 +530,7 @@ config GPIO_OCTEON
->>>    config GPIO_OMAP
->>>        tristate "TI OMAP GPIO support" if ARCH_OMAP2PLUS || COMPILE_TEST
->>>        default y if ARCH_OMAP
->>> -     depends on ARM
->>> +     depends on ARM || COMPILE_TEST
->>
->> Why do we have this depends on ARM at all? It already has that condition
->> above on ARCH_OMAP2PLUS which limits to ARM outside of compile testing.
->>
->> And anything that selects ARCH_OMAP2PLUS also selects ARCH_OMAP, so we
->> could just do this:
->>
-> 
-> I agree we can drop that bit.
-> 
->> --- a/drivers/gpio/Kconfig
->> +++ b/drivers/gpio/Kconfig
->> @@ -528,9 +528,9 @@ config GPIO_OCTEON
->>             family of SOCs.
->>
->>    config GPIO_OMAP
->> -       tristate "TI OMAP GPIO support" if ARCH_OMAP2PLUS || COMPILE_TEST
->> -       default y if ARCH_OMAP
->> -       depends on ARM
->> +       tristate "TI OMAP GPIO support"
->> +       default y
->> +       depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> 
-> This would default to y with COMPILE_TEST. We definitely don't want
-> that. IMO it should be:
-> 
-> tristate "TI OMAP GPIO support"
-> depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> default y if ARCH_OMAP2PLUS
-> 
+We can pass the pointer in probe to gpiochip_add_data instead of using
+dev_get_drvdata.
 
-Looks good to me
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/gpio/gpio-twl6040.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Andrew
+diff --git a/drivers/gpio/gpio-twl6040.c b/drivers/gpio/gpio-twl6040.c
+index 6c3fbf382dba..b9171bf66168 100644
+--- a/drivers/gpio/gpio-twl6040.c
++++ b/drivers/gpio/gpio-twl6040.c
+@@ -22,7 +22,7 @@
+ 
+ static int twl6040gpo_get(struct gpio_chip *chip, unsigned offset)
+ {
+-	struct twl6040 *twl6040 = dev_get_drvdata(chip->parent->parent);
++	struct twl6040 *twl6040 = gpiochip_get_data(chip);
+ 	int ret = 0;
+ 
+ 	ret = twl6040_reg_read(twl6040, TWL6040_REG_GPOCTL);
+@@ -46,7 +46,7 @@ static int twl6040gpo_direction_out(struct gpio_chip *chip, unsigned offset,
+ 
+ static void twl6040gpo_set(struct gpio_chip *chip, unsigned offset, int value)
+ {
+-	struct twl6040 *twl6040 = dev_get_drvdata(chip->parent->parent);
++	struct twl6040 *twl6040 = gpiochip_get_data(chip);
+ 	int ret;
+ 	u8 gpoctl;
+ 
+@@ -91,7 +91,7 @@ static int gpo_twl6040_probe(struct platform_device *pdev)
+ 
+ 	twl6040gpo_chip.parent = &pdev->dev;
+ 
+-	ret = devm_gpiochip_add_data(&pdev->dev, &twl6040gpo_chip, NULL);
++	ret = devm_gpiochip_add_data(&pdev->dev, &twl6040gpo_chip, twl6040);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "could not register gpiochip, %d\n", ret);
+ 		twl6040gpo_chip.ngpio = 0;
+-- 
+2.47.0
+
 
