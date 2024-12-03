@@ -1,91 +1,124 @@
-Return-Path: <linux-gpio+bounces-13455-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 966149E27FE
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 17:47:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1016E9E23A2
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 16:40:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A8582B3B001
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 14:15:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA7B8282879
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 15:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149D41F4285;
-	Tue,  3 Dec 2024 14:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC0720B80D;
+	Tue,  3 Dec 2024 15:34:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eV8dbB0y"
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="eZ4U4tRU";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="eZ4U4tRU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652B91F470C;
-	Tue,  3 Dec 2024 14:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F820B7F2;
+	Tue,  3 Dec 2024 15:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733235307; cv=none; b=asTpiVGA9eLniWNTdhfQA1KKHYycInzO6ugwPJwWHKnCKg2NHzPOQRMVfQCkMh0j8JBQtIKJp0kPRqWaiE/tXzqVmD+Z7gY0oihlpn3u+LxDpDIQe9Gsq0eAAp4dKfxz5i86a3sUGYFf1e6PaZEVljpNwDq4FWCldXylzUAlmoY=
+	t=1733240099; cv=none; b=LtsNsGvhJHeu81DybNV1Tnad3qIu185S17gjtYYMfeIrQgzLqokNR79DHho68oaMlUZb+lWlwVDODEDmeZQaPwV2CYF2wnfaUadLjEyHfsKQ5H3Jvd5/2zqZXM/yjgQL6zuVBNE6C5qTr8tmjuqNDsY/jYvS3CR50e9S54tAQJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733235307; c=relaxed/simple;
-	bh=otjp6fYdcQzk+5AvgniGQevgVU4Q/zRyHp+OMqcrZCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HYaDxpRPChn8Uyjf/bQiJ9juK9RYfC9uUPWIfAWUGDsCd8TdRMte6lZI9adO30MtC2DoSrnBkQky8FMaZ+p2RIJLctrDLpce92vGEwqFH5ksf8RMqUtgDbPtFcmxK3YSv6CH9JiCG6tw8FKjyKeH8R2rfZ3uvgTj1f5bzS9I2dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eV8dbB0y; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7fc99fc2b16so3250635a12.3;
-        Tue, 03 Dec 2024 06:15:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733235305; x=1733840105; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dnnlg27hHT84ddacWLdvIxoxbg96vC/0KvkjROoZZL8=;
-        b=eV8dbB0y1bzCbrXUoYprAhUDE9RUYyYe2p4MJOvDcDQwwxElqT3HstuzEZQh/bqKfW
-         DUHrOd9o80Las/8OPBidV37o/d7xtePx0MsjB52E8wu3um7I5kY2UDIAm8LbvIqRbK1u
-         gr09YJegMUuMJ2E+RND77FegRQBjehxouoo1sdnAkNDwho47J9blaaY6oCF7oFMngBT4
-         pB2L+ODqimTb+r3ftVm+v+BRfkXX+PSOb8/7r+zgm6C+QqD1LzTWGl5pGqd9iAKoKyIM
-         u/x9y1PLPi/NORYGxHcLPnhoLsuscvzTq+1SWDrC/uw0ZM+sj0eJRbBza99qC+LIgaPy
-         nmLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733235305; x=1733840105;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dnnlg27hHT84ddacWLdvIxoxbg96vC/0KvkjROoZZL8=;
-        b=MGkXgx/NjHFrUGu3V2P06G1CKfx5Ax+R6mFYndu8dEczCuyGdX7UPCDV3zK6o0JE/a
-         8cbmGsw4AWBrluzEBHcTmcOlRQ34eRh9cZvH7YVXvxegkf3fBAMG2JDE/HOzNFzHDVp0
-         piM0gxHbx8+Fsc/0x8oly+eKRirTlKeNRG0mSwpoabXEkTaWmCx/gEaQ4y3rvnQJprQH
-         PPm7vuvxXehysZXIVlQZfujKVai/jSMLv+obzsR8BOxhGrcF89GWORTrcp55iDRK3qZB
-         IlsqcmRPNd6ImK/cndmPybE90y9rl/HX0ijYMz6DQPLRK9WppQThE+F07pWK9s+XQjzq
-         aMEg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1qk4UYm5BUcxQAc1p3I7OaBU0rZEMsMMasCD1dMn0IVKu0S/s3YWzP2zUNJMV9x+HJBG1Vi8oWxJNuJDL@vger.kernel.org, AJvYcCWiWavQQ+tCQZlk1nGpkKoj1IeZHmsuYquViJnvVrQia3H9v6dNLnEG7zP6eXZBVJnntP0n22/+L6bIX54YAKge@vger.kernel.org, AJvYcCXgWgF0IfW8ZD+Ed9SlItHI/cJzw89CYhVbGIUjF2NliB2mUZk/EyHGkpdT6U1KEHiUwtq6igFVYSq6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2tVsKTQkjHLJT7jlFswRq6WrvWuT5hOy+v/RLDi5HlK8oq6dV
-	CDmMdnpDn2YnefxbiBywvv0U/emq2dqxbHyfsX3tdO8Q4ylmUfJK
-X-Gm-Gg: ASbGncvxMm0dU8dG4YcZ//ZJUEvka3yd/0x5Ho9xmw1LIhcVB0KL6uRlBA5TdWyUebE
-	iCBWdjFrfamSHbcj+xmymYWMvRgjASZHLaj8aqGESjFSD34ZH5IvoA2tmQciQ/lrT4RPMKpaPbX
-	zxFJTMWJgS2/dQUKn+zh6XDHZzUmP7snWgE1wETbvFNownmOMx6IMuS/om879hFuTmGaswLp8Pt
-	GUK5QZ1GNAEZxeH8SsmjfFmXWewpzgtsxhRN47gX3q5etcCS4dkiQ==
-X-Google-Smtp-Source: AGHT+IGpfGDLH2w610CQpBh8JS3ZVLxqkebA3sOq33OOaOXgapbnBj8OqD4JhwtGZRXqXu0UffIboA==
-X-Received: by 2002:a05:6a20:3948:b0:1d8:a9c0:8853 with SMTP id adf61e73a8af0-1e1653c5066mr4269737637.23.1733235304954;
-        Tue, 03 Dec 2024 06:15:04 -0800 (PST)
-Received: from ubuntuxuelab.. ([58.246.183.50])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fc9c2d3e28sm9798996a12.17.2024.12.03.06.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 06:15:04 -0800 (PST)
-From: Haoyu Li <lihaoyu499@gmail.com>
-To: Wentong Wu <wentong.wu@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Haoyu Li <lihaoyu499@gmail.com>
-Subject: [PATCH] drivers: gpio: gpio-ljca: Initialize num before accessing item in ljca_gpio_config
-Date: Tue,  3 Dec 2024 22:14:51 +0800
-Message-Id: <20241203141451.342316-1-lihaoyu499@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733240099; c=relaxed/simple;
+	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cmgqloiInue402+/BJHVxQP5t0EI7sL5NRa4fqage/DVyh26AaN6TKl97ZPjT0dlmrn+HEGkp2zFri/+e8Yo5AWz3H/ZvbDnt//uVq19D38t8ZdlC28HxIWRWzuVt2dtSjEABCNQBZOftMpJ3zXsa2H+pxD8rxU6B+G6ok+KLwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=eZ4U4tRU; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=eZ4U4tRU; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1733240096;
+	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=eZ4U4tRU1qIWP3lhCG1NFGqdlkJwbCoeHoXmlbwbm0xojoL7yxF2OmBDrwRg5sJZD
+	 yUR1Ufh9cMTmWMSk/QfvKgX3lU1FOQtEkMYCzG5HJRGBhs9c6tkPAgFURJTLia4EJE
+	 fFgUsJsyCn7Ieybkh2Zt2C6KjPseMR4k9lZkDFPA=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id A95511286A94;
+	Tue, 03 Dec 2024 10:34:56 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id Nouo1dbPKzw4; Tue,  3 Dec 2024 10:34:56 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1733240096;
+	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=eZ4U4tRU1qIWP3lhCG1NFGqdlkJwbCoeHoXmlbwbm0xojoL7yxF2OmBDrwRg5sJZD
+	 yUR1Ufh9cMTmWMSk/QfvKgX3lU1FOQtEkMYCzG5HJRGBhs9c6tkPAgFURJTLia4EJE
+	 fFgUsJsyCn7Ieybkh2Zt2C6KjPseMR4k9lZkDFPA=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id F32C01286A7D;
+	Tue, 03 Dec 2024 10:34:50 -0500 (EST)
+Message-ID: <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Zijun Hu <zijun_hu@icloud.com>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas@t-8ch.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jean
+ Delvare <jdelvare@suse.com>,  Guenter Roeck <linux@roeck-us.net>, Martin
+ Tuma <martin.tuma@digiteqautomotive.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Andreas Noever <andreas.noever@gmail.com>, Michael
+ Jamet <michael.jamet@intel.com>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>,  Yehezkel Bernat
+ <YehezkelShB@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean
+ <olteanv@gmail.com>,  "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Dan Williams
+ <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
+ Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, Takashi
+ Sakamoto <o-takashi@sakamocchi.jp>, Jiri Slaby <jirislaby@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Lee Duncan <lduncan@suse.com>, Chris
+ Leech <cleech@redhat.com>, Mike Christie <michael.christie@oracle.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali
+ <njavali@marvell.com>, Manish Rangankar <mrangankar@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Alison
+ Schofield <alison.schofield@intel.com>, Andreas Larsson
+ <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor
+ <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>, Sudeep Holla
+ <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
+  linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org, 
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com, 
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Date: Tue, 03 Dec 2024 10:34:49 -0500
+In-Reply-To: <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
+	 <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+	 <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
+	 <2024120320-manual-jockey-dfd1@gregkh>
+	 <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
+	 <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
+	 <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+	 <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,34 +127,85 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the new __counted_by annocation in ljca_gpio_packet, the "num"
-struct member must be set before accessing the "item" array. Failing to
-do so will trigger a runtime warning when enabling CONFIG_UBSAN_BOUNDS
-and CONFIG_FORTIFY_SOURCE.
+On Tue, 2024-12-03 at 22:56 +0800, Zijun Hu wrote:
+> On 2024/12/3 22:07, Thomas Weißschuh wrote:
+> > On 2024-12-03 08:58:26-0500, James Bottomley wrote:
+> > > On Tue, 2024-12-03 at 21:02 +0800, Zijun Hu wrote:
+> > > > On 2024/12/3 20:41, Greg Kroah-Hartman wrote:
+> > > > > On Tue, Dec 03, 2024 at 08:23:45PM +0800, Zijun Hu wrote:
+> > > [...]
+> > > > > > or squash such patch series into a single patch ?
+> > > > > > 
+> > > > > > various subsystem maintainers may not like squashing way.
+> > > > > 
+> > > > > Agreed, so look into either doing it in a bisectable way if
+> > > > > at all possible.  As I don't see a full series here, I can't
+> > > > > suggest how it needs to happen :(
+> > > > > 
+> > > > 
+> > > > let me send you a full series later and discuss how to solve
+> > > > this issue.
+> > > 
+> > > It's only slightly more complex than what we normally do: modify
+> > > all instances and then change the API.  In this case you have an
+> > > additional problem because the prototype "const void *" will
+> > > cause a mismatch if a function has "void *".  The easiest way to
+> > > solve this is probably to make device_find_child a macro that
+> > > coerces its function argument to having a non const "void *" and
+> > > then passes off to the real function.  If you do that in the
+> > > first patch, then you can constify all the consumers and finally
+> > > remove the macro coercion in the last patch.
+> > 
+> > Casting function pointers like that should be detected and trapped
+> > by control flow integrity checking (KCFI).
+> > 
+> > Another possibility would be to use a macro and _Generic to
+> > dispatch to two different backing functions. See __BIN_ATTR() in
+> > include/linux/sysfs.h for an inspiration.
 
-Fixes: 1034cc423f1b ("gpio: update Intel LJCA USB GPIO driver")
+That's way over complicated for this conversion: done properly there
+should be no need for _Generic() compile time type matching at all.
 
-Signed-off-by: Haoyu Li <lihaoyu499@gmail.com>
----
- drivers/gpio/gpio-ljca.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> this way may fix building error issue but does not achieve our
+> purpose. our purpose is that there are only constified
+> device_find_child().
+> 
+> 
+> > This also enables an incremental migration.
+> 
+> change the API prototype from:
+> device_find_child(..., void *data_0, int (*match)(struct device *dev,
+> void *data));
+> 
+> to:
+> device_find_child(..., const void *data_0, int (*match)(struct device
+> *dev, const void *data));
+> 
+> For @data_0,  void * -> const void * is okay.
+> but for @match, the problem is function pointer type incompatibility.
+> 
+> there are two solutions base on discussions.
+> 
+> 1) squashing likewise Greg mentioned.
+>    Do all of the "prep work" first, and then
+>    do the const change at the very end, all at once.
+> 
+> 2)  as changing platform_driver's remove() prototype.
+> Commit: e70140ba0d2b ("Get rid of 'remove_new' relic from platform
+> driver struct")
+> 
+>  introduce extra device_find_child_new() which is constified  -> use
+> *_new() replace ALL device_find_child() instances one by one -> 
+> remove device_find_child() -> rename *_new() to device_find_child()
+> once.
 
-diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
-index 503d2441c58f..817ecb12d550 100644
---- a/drivers/gpio/gpio-ljca.c
-+++ b/drivers/gpio/gpio-ljca.c
-@@ -82,9 +82,9 @@ static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
- 	int ret;
- 
- 	mutex_lock(&ljca_gpio->trans_lock);
-+	packet->num = 1;
- 	packet->item[0].index = gpio_id;
- 	packet->item[0].value = config | ljca_gpio->connect_mode[gpio_id];
--	packet->num = 1;
- 
- 	ret = ljca_transfer(ljca_gpio->ljca, LJCA_GPIO_CONFIG, (u8 *)packet,
- 			    struct_size(packet, item, packet->num), NULL, 0);
--- 
-2.34.1
+Why bother with the last step, which churns the entire code base again?
+Why not call the new function device_find_child_const() and simply keep
+it (it's descriptive of its function).  That way you can have a patch
+series without merging and at the end simply remove the old function.
+
+Regards,
+
+James
 
 
