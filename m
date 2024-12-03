@@ -1,116 +1,150 @@
-Return-Path: <linux-gpio+bounces-13467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1565C9E2DE4
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 22:16:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D857E9E2E76
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 22:54:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48F82B3CDFC
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 20:29:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E284283361
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 21:54:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19661F891C;
-	Tue,  3 Dec 2024 20:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2647208997;
+	Tue,  3 Dec 2024 21:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IzKmXKVt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FiZf/AIZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C92500D3
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Dec 2024 20:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC391362;
+	Tue,  3 Dec 2024 21:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733257756; cv=none; b=QI9Jh0OK/Pa+W6+RTn5dK/DDnXyYvniNd9ULnLcimLLIbUd8kP53A2ykh+yGsEraqwZ9bxyX3H+zkpEbrc3a72/WFIH6BEC1af9gOD9E67hblSKnisyfBPWUOJ+6j4J52Z1AQ2p95hNfaCBns/14f5mABspDrCJRpme8RqHnQqA=
+	t=1733262891; cv=none; b=cbd051WZ7p8E5SGhdSumzBtF4v5w0eT0wKM5FVmFWiSe5HkNPUMqP0DNsPcLCQfpEmQtEAz0DZfwgUZwZwz1WuKLM6is+voWRxIFIDZAhqpiZb7dmlTIg8wn8lOiCNTAvgJZeDOHxknk1X6PjxkArIdE1n22erkvkVU8zDhRIgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733257756; c=relaxed/simple;
-	bh=2hSinAL4R3/SHXrjCZlF8ZFTT4TfPUKaRnGo9pzyb+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kopIxiL3t3ObFqW3jAlOrVJGXBt3Rfve5AwAohufBPlQUrlF+GvVjtwBXVWe6H4IxIk7dmObTGjB31m5J+be2z3pro+FTcgAcm4Kq4gJzVCDc+jkO2LnnTLAw7TW9hixYY15zJewBKzWzDmBowF74/euYVnDym1CyoIQKJ0u47E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IzKmXKVt; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-53de852a287so6702951e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2024 12:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733257753; x=1733862553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G33sr/zeO/KNwROltqYFJOHkNCcSFcaU2C0F67a9tG4=;
-        b=IzKmXKVt7kiUwEbe0LjFN4q755MJZvEdPSoTxxdXXSakImv9JfLm9gfJHgiUJ+Qgzf
-         jtM7FvVPA9/CUdeQkCiTfpneQKaGcwz8bqM2eBBBnw/ry791raO7eGdXM4fpDS6CEWIS
-         fBDSepHLxTGx+LVl0EHhSYeRKk/oKBD+pCb64sd+AV1WKHzT90/CvTtFn2LH58KbE1lt
-         opvAWM/hxzb5nprpy5M92fxjhgni6bx/CIJlAUG1cBRvcZM9NP1Lx1PlRvKgcSHWOzyn
-         bi0iFUDjiekvqWWnVQPTq2oVsLCwAgT3NrEfozmd2u2uOciTeb4P21DudNIcLx7urkoa
-         xdng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733257753; x=1733862553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G33sr/zeO/KNwROltqYFJOHkNCcSFcaU2C0F67a9tG4=;
-        b=u2F57bLkA2IvUKhnRqny2/tyUgQ8JKUoT1hMD4FKqCoxdOlGFunRNUQE/hU98JJr2F
-         IHGRFvruKozajc6suyrQmh2u8o+bgB+MPzCUQhbq2HE9wSg9+PhlOjTvvnSX98kMezTV
-         +LFqIMMHhhD/h850JXziFHwH7FIfhZf5hvhngt3v4+bFqKQg/GCJu5Woo8YFkw4GXBNf
-         9q2M8PzkjSNnDmoY8eMQ2DEXzVYy1Bdby4ghPiIvWANOUKoKYX1UsZXTRceFxoLK+8ME
-         7YJQlUpD5rOIjhAgRD4cFyZhogeNDNoPn4ss+Oyz4GY9kj5f8l0knwfW03oMaMw4SBOr
-         XJDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEIHE5WOhqxNk3ZrWF3PAiUbH8ituR6TvelbeQuRKAxHBpHFWUSnD/o1Q8e1tHxCxBfRyPqqO8n8iD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMKo0f1HZvnPzDq6Q1DZd0letyOvOtv6eb1DcMj6CrmzlV4R9E
-	wa0BXhCKjSYmzD5nLQ5wkzT3InPBQDO0uuWXvDxFEdffcJyoHXj6U2XyuTRp2Y/X9cCCZf4YNKo
-	buAReNfVZiy9PtyTHLxH1CdUXz9h8qqor3+VSTw==
-X-Gm-Gg: ASbGncup/dAKI5CE9R4KtMK9ZzjIhjP9RaME246Ssqn3YyLqjHATDZV5+9n1ndX1a0V
-	aIiYQQqw4ziFDfd884VLsxEnCwUtVGkY=
-X-Google-Smtp-Source: AGHT+IFibD9nFMNX+0okWcr0jW9dG5zLnrxoOl37S9ED0qKXToBphOFXAaG0TMap6CEbrI7BqpcPt8HoQ70SurfLgYk=
-X-Received: by 2002:a05:6512:10ce:b0:53d:a4f3:29ed with SMTP id
- 2adb3069b0e04-53e1b890148mr621166e87.27.1733257752908; Tue, 03 Dec 2024
- 12:29:12 -0800 (PST)
+	s=arc-20240116; t=1733262891; c=relaxed/simple;
+	bh=mO3P53jjRSPArFtNaOavfmbYHxijZc/rirxayXf1Ewg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gEN0nP3OUbFiFOTqDcl/jYpUXF38PTdUMvBkyY168UODowyWVZdJ8HEuhrTp0xdIFboLFVpS+qW4Lgur/jvGBWnOl6t6gPr2jd2HzSAfm51LQyUubatcgDTifQbu2ImqA7LfqkzyMyKmaoBHun69ABI2ENFsrnbTNJaxhTlf2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FiZf/AIZ; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4B3LsfSS1506095
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Dec 2024 15:54:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1733262881;
+	bh=t9UmxNX5ocO42iQ/orx9DcB2voE4RNWe9sONi2VfXO8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=FiZf/AIZBa7IJ63jtMmleyIqt7IrlbAVzYtbbT99/uFO6siU22YeEGtHsf64ivNHK
+	 F/VAF11xeYLS72Nw4fK1S3YOXHvUZ5oGLFFsnhA5vNX+WyiXrI6yG9QMtrOovEkAKA
+	 EpbUFet5BvnMgqcPcPQNl8rCJz+I/WHUqQib+m1U=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4B3LseUv000330
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 3 Dec 2024 15:54:40 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
+ Dec 2024 15:54:40 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 3 Dec 2024 15:54:40 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4B3LsdIT081180;
+	Tue, 3 Dec 2024 15:54:40 -0600
+Message-ID: <37f90519-48e9-4caa-80c6-9f6ae61aae0a@ti.com>
+Date: Tue, 3 Dec 2024 15:54:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6b9e55dbf544297d5acf743f6fa473791ab10644.1733242798.git.geert+renesas@glider.be>
- <f552b813-1817-4507-9699-fae87575a762@lunn.ch>
-In-Reply-To: <f552b813-1817-4507-9699-fae87575a762@lunn.ch>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 3 Dec 2024 21:29:02 +0100
-Message-ID: <CAMRc=Mfh5Rv8OKWOcPVzJp-_e_bXgywT2=+N2cF1ONT3kiw7tQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: GPIO_MVEBU should not default to y when compile-testing
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] gpio: omap: allow building the module with
+ COMPILE_TEST=y
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Alexander Sverdlin
+	<alexander.sverdlin@siemens.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Bartosz
+ Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20241203164143.29852-1-brgl@bgdev.pl>
+ <213de4bc-3706-4bb0-a827-06c63bfe0294@ti.com>
+ <CAMRc=Md_u3YmseW5kV5VH4F99_0P=tc4pWty_fB3dVfv_JDxWQ@mail.gmail.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <CAMRc=Md_u3YmseW5kV5VH4F99_0P=tc4pWty_fB3dVfv_JDxWQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Dec 3, 2024 at 9:13=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Tue, Dec 03, 2024 at 05:23:16PM +0100, Geert Uytterhoeven wrote:
-> > Merely enabling compile-testing should not enable additional
-> > functionality.
->
-> Sorry for being dumb, but i don't actually see what is wrong here.
->
-> There are 4 GPIO drivers which have
->
->         def_bool y
->
-> COMPILE_TEST is about building as much as possible, in order to find
-> build bugs. So i don't get what you mean by additional
-> functionality. No additional functionality within the MVEBU driver
-> gets enabled by COMPILE_TEST.
->
->         Andrew
+On 12/3/24 2:36 PM, Bartosz Golaszewski wrote:
+> On Tue, Dec 3, 2024 at 7:41 PM Andrew Davis <afd@ti.com> wrote:
+>>
+>> On 12/3/24 10:41 AM, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> For better build coverage, allow building the gpio-omap driver with
+>>> COMPILE_TEST Kconfig option enabled.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>> ---
+>>>    drivers/gpio/Kconfig | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>>> index 56fee58e281e7..fb923ccd79028 100644
+>>> --- a/drivers/gpio/Kconfig
+>>> +++ b/drivers/gpio/Kconfig
+>>> @@ -530,7 +530,7 @@ config GPIO_OCTEON
+>>>    config GPIO_OMAP
+>>>        tristate "TI OMAP GPIO support" if ARCH_OMAP2PLUS || COMPILE_TEST
+>>>        default y if ARCH_OMAP
+>>> -     depends on ARM
+>>> +     depends on ARM || COMPILE_TEST
+>>
+>> Why do we have this depends on ARM at all? It already has that condition
+>> above on ARCH_OMAP2PLUS which limits to ARM outside of compile testing.
+>>
+>> And anything that selects ARCH_OMAP2PLUS also selects ARCH_OMAP, so we
+>> could just do this:
+>>
+> 
+> I agree we can drop that bit.
+> 
+>> --- a/drivers/gpio/Kconfig
+>> +++ b/drivers/gpio/Kconfig
+>> @@ -528,9 +528,9 @@ config GPIO_OCTEON
+>>             family of SOCs.
+>>
+>>    config GPIO_OMAP
+>> -       tristate "TI OMAP GPIO support" if ARCH_OMAP2PLUS || COMPILE_TEST
+>> -       default y if ARCH_OMAP
+>> -       depends on ARM
+>> +       tristate "TI OMAP GPIO support"
+>> +       default y
+>> +       depends on ARCH_OMAP2PLUS || COMPILE_TEST
+> 
+> This would default to y with COMPILE_TEST. We definitely don't want
+> that. IMO it should be:
+> 
+> tristate "TI OMAP GPIO support"
+> depends on ARCH_OMAP2PLUS || COMPILE_TEST
+> default y if ARCH_OMAP2PLUS
+> 
 
-No, Geert is right. I have been yelled at by Linus Torvalds already
-for too eagerly enabling too many options. COMPILE_TEST is really
-about making it possible to build more things with make allmodconfig,
-not necessarily defaulting to y for everything.
+Looks good to me
 
-Bart
+Andrew
 
