@@ -1,145 +1,140 @@
-Return-Path: <linux-gpio+bounces-13481-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13482-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D58F19E3435
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 08:41:55 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8CF09E345A
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 08:45:47 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3298EB25F91
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 07:41:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4747168205
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 07:45:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1786818D65A;
-	Wed,  4 Dec 2024 07:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="B/QbZNIa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C45CF18C907;
+	Wed,  4 Dec 2024 07:44:33 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4647B18C907;
-	Wed,  4 Dec 2024 07:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E09018C018
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Dec 2024 07:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733298105; cv=none; b=HBWlIeMk6E9tS7V3YMVJTqXYFvFnsqNKMrxiRHms58k2q+8XO9rHsLVSHGnLyPr284k7GtdVOJp3ppYkaqGwHflJeQjdmlIl2Yl6hzpi7MS+WwBYaVu833P/YaRWRJQhu1RzrPnFhaUCMNiF0BEwIsOd9KSaFoxzncXRUPU3erY=
+	t=1733298273; cv=none; b=L9fxbekoZ7wMw5JwVlp456/ewO5EeIYNuBoJkkMbFoWi7kSmNrLwomL73J+hYfbA2a2Yvevc5oEpLOZo9QJUuDM9KvjHocLulqYdKdlH9cDvp5jlR8ymozwZMB9L900DfjdIOqtNo8C/2/rKN9b2/1AEJDSVS/Xi6U/gDrVieic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733298105; c=relaxed/simple;
-	bh=UVFzzezC46FreKs2vaAw27DcvUsJ4OuyToeM0qBCxvA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=b5ltSaQdXzJUTmjh962lEkkKJ3bUDI+oAgS+2A4kjCP3qfb0flTEIV8RuAG/1UbT8sq0cZs8qr5YCKS5rBJ1iFll1j0i41zp2duMPxw64FQJVotEQ4egzM/ciEb1umE7S69uQbndKdIigTu2W7KtX5IA4V1PHyVM4ApgUb8E9EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=B/QbZNIa; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1733298087; x=1733902887; i=frank-w@public-files.de;
-	bh=UVFzzezC46FreKs2vaAw27DcvUsJ4OuyToeM0qBCxvA=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=B/QbZNIau9e3IcVcJ3Nl54NQKWbKQ9349D+UQhhixxb15cGFoh2ADWDcn4hTffoX
-	 9+i3sgJ0vqPXyKy8PQEfRGOiAs4jDa8RuZsOUiXYIOE8rguOJJ+tAGf7yRu9EyI6a
-	 E9lokBmPZYUYYrD8qnYSBs9w/X0p2gde0afx9uLJ+FplQ9c24JimaRIMG2B0hnZ4g
-	 uuNX3NsFug174Zi2otJBkw2f5umdtjbnF3Dx1MIwmeX3yLhFr3yz2Iyu5t2j3Zhkx
-	 AYUsm2wQEqweY4AefGlHhW0bfZllFQwpCLZ+P2urjIyHMCl1jW6T1iq5hYALm753F
-	 qWLsniJaHCjldIwnSg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [127.0.0.1] ([194.15.87.121]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MjS54-1u3fLB1jb8-00adr5; Wed, 04
- Dec 2024 08:41:27 +0100
-Date: Wed, 04 Dec 2024 08:41:26 +0100
-From: Frank Wunderlich <frank-w@public-files.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Frank Wunderlich <linux@fw-web.de>
-CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 3/5] dt-bindings: pinctrl: add binding for MT7988 SoC
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <iwmnxlqpaijvr4kmzwk3elacqj5ukqlchfs67ca6c6gxrycpbb@pc6a6scqkdi5>
-References: <20241202110045.22084-1-linux@fw-web.de> <20241202110045.22084-4-linux@fw-web.de> <iwmnxlqpaijvr4kmzwk3elacqj5ukqlchfs67ca6c6gxrycpbb@pc6a6scqkdi5>
-Message-ID: <1DBA844B-4DB2-4AA2-BF04-B3CC39B3C3F8@public-files.de>
+	s=arc-20240116; t=1733298273; c=relaxed/simple;
+	bh=nQwun8gQeIulYObus+ufiUfKKMTtuMYa/H+rS48IiqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g628KoYchDT36ntSHu/0nnH+1eV5Cya8P5eWWNf29IkZJfWKQnMDj8MSd3/D5V7Pw63gWl/fr4NTFQjJEDcaAADeokCLlGHI6E7HYv2B1Qh/Y+J9hPjHq7qUor8Ht00kiYH+hksmKlvL0h4Kx2XfelY0gd2DDlNRAZElVVp1xsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-85bb13573fbso1060334241.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2024 23:44:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733298270; x=1733903070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H/icQyzmGHz1TzMA4Cqp5hMi0/miDynHZBXtehJraUg=;
+        b=bHWGBvN+Y9eT/3ZDP5uLWmPNQqEFIwWxLeNZaWwIb0nsMnVageA88Om9RplBIaxLQ9
+         mE8vbEje+tMYqbvnyeEK/lF8zrLIGtxvH9V9MkS/BdB1g7iqPWzILrdmw7NLbwfSRGtP
+         sh3JlcNylwi3pvguArbo4If3d0YC8YHoddEuCdX5hRF9DeWjsuPKCn6pPZGupeGkexpg
+         fEvsCzVaG/vD1r+N6Hq+RqXHMBoXV9Hm+7XFRfyn9T3oPi9+tnQO5QPzimmbqq/59Xph
+         JJG9z1vuyZTzgf3D3wOhFKPNiEYvi1jORikGFlS1QisjFcu4Jfz83kx/KM+jE9Zd5BRD
+         2Y6g==
+X-Forwarded-Encrypted: i=1; AJvYcCV8L5wVQGfIYGcmGn25dzCF8A3IKSeIkyQPSVJM6rvLXj7LuIKB88DBJcnhO/7nvFJl2c4j+MalKY20@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRDTBGmKqq9PCMI0R8T6B5E5Tv/NsaRpiAy5vAp8ej1qRMYs1Z
+	274KmdLrzfKYweSuj57sGxy0AFwU6iHR1ggZT48+RmcwSLx0pmJJuy+t1jLU
+X-Gm-Gg: ASbGncuYOAZwzd3led9/KuD9aNITqsuHP58y/nhfHM9+GwnSv3mu2TCxSbTEveZ8msb
+	vrkA1pip1dB8MKjTuhyyLr8Id4yQu7eo0L0mdaja7LKeyyyxzJ774SoJyCXh3oDocEFx+qcEewS
+	7BY9RumXY72C2F2fqFpT2AfLqeDRtdlbfHoJ9gKQypNR9NOa57SlLtXxCPLgDVsQTm6vfHlW9k5
+	YNHJHXzRDD5BwCr+QywXp6QJGyij1ZRjWCDIIGlIsFDxTFShanVrQuVjJNmZhSPxaL1+NX9h/Mv
+	aAaNJzKFHxWh
+X-Google-Smtp-Source: AGHT+IGBKiCA4EzIzbQNL14ATbjd0tw312cR0OcpPbc4wrSzxeqUpy0utbw476IOzVEWgnfHu9h6aw==
+X-Received: by 2002:a05:6102:290d:b0:4af:98c6:c60e with SMTP id ada2fe7eead31-4af98c6c8a0mr6663115137.23.1733298269748;
+        Tue, 03 Dec 2024 23:44:29 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4af590e724bsm2347283137.9.2024.12.03.23.44.27
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2024 23:44:27 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-85bb13573fbso1060316241.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2024 23:44:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW9cAEMF+OWqWU5iCyLnAtXJAb9unw4KEG3PI5giuvJVdtCyRS8lopZLucKfRPMOtjiXFD3FNsCUsty@vger.kernel.org
+X-Received: by 2002:a05:6102:41aa:b0:4af:48a6:79c4 with SMTP id
+ ada2fe7eead31-4af972eaa24mr7774024137.17.1733298266923; Tue, 03 Dec 2024
+ 23:44:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <6b9e55dbf544297d5acf743f6fa473791ab10644.1733242798.git.geert+renesas@glider.be>
+ <f552b813-1817-4507-9699-fae87575a762@lunn.ch> <CAMRc=Mfh5Rv8OKWOcPVzJp-_e_bXgywT2=+N2cF1ONT3kiw7tQ@mail.gmail.com>
+ <44126f2f-92ce-412b-ad9d-e0e0ea28d36d@lunn.ch>
+In-Reply-To: <44126f2f-92ce-412b-ad9d-e0e0ea28d36d@lunn.ch>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 4 Dec 2024 08:44:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUaPkpSzrkqPRzZZfj6Npmj-8Ax5dXEGbjKXAyCW_DLXA@mail.gmail.com>
+Message-ID: <CAMuHMdUaPkpSzrkqPRzZZfj6Npmj-8Ax5dXEGbjKXAyCW_DLXA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: GPIO_MVEBU should not default to y when compile-testing
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7jC8s2s7lVFQtf9IU1byVwhZN2EKibzOoMEEWpGfAWUBTs/5dAc
- J5161Qvl1qdhoS5VoKfAnOBN33EyjxHrWH4MjoC6GZQZ8U6gBod2qWlT6WKUzJ75dr9ZCwb
- xmQdWnm9GKsqIFRiPNZ+6gmvWY+VQ+BVV91as7VkpejWOzctJRtQ1STOW2sohgEZ+JSXG1X
- twiq+B6q6xhymAPyM4aRw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Pbqe7Pa+lEA=;UF7c5YedZdBVFclMVjACVAIYVbo
- AlXP5YkFR242Eo/xRAFUGIZwGvfyu1NDYIhPIexeOa4J1sDFtXjZVOVrsqYsn1M3m+vuuJzWn
- GIOVVpcQ9GXjVZnOi710fEaOk6VQssrzdIte8ANlntpt0xDbfX84wEhxDoCm5QTxW9hItWLce
- xIhh5Zg5bCjKcyM5IgfTwQbkHb1Fct2Y/P17PyAiEXek75e2jUgPFj6ldMWPfGqfSZVY1ei/f
- itLo18elPheLyl0NOK3tSGdqDgJw4WOCcVKP/02EC5Y/aWSlGbwi50amAxpvluRy3xtO9HVtT
- kDYBfDy5OX4K3tbX90ufwVCiH00JT3eWNdwjyW6g2t+Q3wB4n/uVpg2QPOGBRfEPjn544Kd7f
- mVYg/SHQljpb8p6HEeuIClNNifueIXRJy392phSo0brNNm3zsgvDjOixF/pUCzr2CBzGgaHHR
- ekrhhfkMrxGQ20qWQyPA1pr2BSj7XKzcmtH2JIXz8E2skkKgxU2l9WEqwkNCOn88FxjXsqoBG
- uRsTlsqN1KcRDx9YZSHGGbZM4Ia+uvCAZqdvknvtPxLtlYRc6gIoptCGyrnRqVh0AYy+UKUfW
- cI31VUyK0NJn+U0jz67lb/yViIUdT/kQWjZFPUv6HIzpla1kb/tFcGxvy3gYTwKtbpfHI4jmf
- A2tWrKUCZ1nK+TTAVDMAygAJscWpomalt1glWLZr3XBYq0ukPpfdOQ88VxuNwkGhTp+Kiy8Cz
- BFdIRlJ1qcwIcjDmw3Lo2zlez0sNravkZXVK0U0ExY1tKwpXIBQarPVoW2GCeNd8dWH+XP7nK
- yCn7sp4HwB69hQJzSGDfvRC6i0c2D2ZJ9rBZUu4H7jc/6r7yug3sdqQ2T1NkQ0ssvJaWJ5JGL
- ed88jRefP1Jce+teQTGSSRdfey7sglQvWDE4yn2TRKBQphiNdFcXW7MxRTnq7jZp89PAuafWC
- zs+N/j8m6fkTPhV0h0mL25SVCoeNWSRO4aJCl+FXwQANOMLWDplIA/rJZIY2HrchZXW2EcTWk
- 5EGvnN3p6nXVKVr4UxhfBTeMP4CAH5MWmgz3KnVB9UFAqm8XzwzUFXaAPVfSqd61TCOjl0Ohg
- H6+C2Y2AwOyO4lv8m8DGhnC+zx4trn
 
-Am 4=2E Dezember 2024 08:35:37 MEZ schrieb Krzysztof Kozlowski <krzk@kernel=
-=2Eorg>:
->On Mon, Dec 02, 2024 at 12:00:37PM +0100, Frank Wunderlich wrote:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> This adds bindings for MT7988 pinctrl driver=2E
->>=20
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> ---
->> changes in v5 (so not adding RB from Rob given in v4):
->> - do not use MTK_DRIVE_8mA in example
->> - add _0 functions for pwm
->>
->
-><form letter>
->This is a friendly reminder during the review process=2E
->
->It looks like you received a tag and forgot to add it=2E
->
->If you do not know the process, here is a short explanation: Please add
->Acked-by/Reviewed-by/Tested-by tags when posting new versions, under
->or above your Signed-off-by tag=2E Tag is "received", when provided
->in a message replied to you on the mailing list=2E Tools like b4 can help
->here=2E However, there's no need to repost patches *only* to add the tags=
-=2E
->The upstream maintainer will do that for tags received on the version
->they apply=2E
->
->https://elixir=2Ebootlin=2Ecom/linux/v6=2E5-rc3/source/Documentation/proc=
-ess/submitting-patches=2Erst#L577
->
->If a tag was not added on purpose, please state why and what changed=2E
-></form letter>
+Hi Andrew,
 
-Is this an automatic message? I guess yes=2E=2E=2E
+On Tue, Dec 3, 2024 at 9:59=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+> On Tue, Dec 03, 2024 at 09:29:02PM +0100, Bartosz Golaszewski wrote:
+> > On Tue, Dec 3, 2024 at 9:13=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wro=
+te:
+> > >
+> > > On Tue, Dec 03, 2024 at 05:23:16PM +0100, Geert Uytterhoeven wrote:
+> > > > Merely enabling compile-testing should not enable additional
+> > > > functionality.
+> > >
+> > > Sorry for being dumb, but i don't actually see what is wrong here.
+> > >
+> > > There are 4 GPIO drivers which have
+> > >
+> > >         def_bool y
 
-I have not added it (robs reviewed-by) from v4 due to changes and explaine=
-d why in changelog=2E If i'm wrong please let me know=2E
+None of these depend on || COMPILE_TEST.
 
->Best regards,
->Krzysztof
+> > > COMPILE_TEST is about building as much as possible, in order to find
+> > > build bugs. So i don't get what you mean by additional
+> > > functionality. No additional functionality within the MVEBU driver
+> > > gets enabled by COMPILE_TEST.
+> >
+> > No, Geert is right. I have been yelled at by Linus Torvalds already
+> > for too eagerly enabling too many options. COMPILE_TEST is really
+> > about making it possible to build more things with make allmodconfig,
+> > not necessarily defaulting to y for everything.
 >
+> So are you saying COMPILE_TEST should allow something to be enabled,
+> but should not actually enable it?
 
+It is meant for relaxing dependencies, i.e. to allow you to do
+build-testing of drivers that cannot possibly work on the system you
+are compiling a kernel for.
 
-regards Frank
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
