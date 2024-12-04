@@ -1,83 +1,76 @@
-Return-Path: <linux-gpio+bounces-13471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB82C9E2FE7
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 00:34:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B1F49E33C6
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 08:04:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7041E2834C5
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2024 23:34:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C481284836
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 07:04:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C718202F84;
-	Tue,  3 Dec 2024 23:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2820187848;
+	Wed,  4 Dec 2024 07:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1752C/t"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cehRV6EX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7461455897;
-	Tue,  3 Dec 2024 23:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC481E522
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Dec 2024 07:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733268838; cv=none; b=UpO2ZTk12VIiNy3oIRm6uDPhMMggGEmbuc32afs7vipzcCXApzpbWu2q2ujf8YPpY4c49JGXpW/wCVBZJgyUT10zuJ54UBwQZsI+Oa1uVtbH3IfhnMehqA/SkynSvS49dKuInFdVps3cSCEYreXtkQqXLIeRk+IbZUDCi+txL9Y=
+	t=1733295861; cv=none; b=T6pl17Ml0LDiv9YMoQnKd+u+Aoap0o42JlUzJ+TzALT2k9XUAD0zHbXO8bA/9qgVGsHp00WRUsSJRTFc41LYmjB/1dHTyGEnCUEXjCmWfIFegrxUR+qAh32BHUxxRJ72O3Q+ml67U9I5GVmi3nJ2OmGgc9PljcctnBQ7gro7LA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733268838; c=relaxed/simple;
-	bh=23b1ZGVdfwFrDv8H1WoVxUqqB5MIQmsaiBWfLBxd6hU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V2ug5Hjl5wC4c59Gn3V1wUeh/qCO/dSQJavTMwm+vrLUog9CvqayLE5ni6jZ5mJIx07GedDf63vWXlaf66XymwK9Ae0CNPtToYkk+19SAd2KFzBp1YOt3KbzivEtcuMpcyPlG3IR89UPkZ5bh+1+Na1h3KXu5ZoDU+qyJMvmxgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1752C/t; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-724e1b08fc7so5495513b3a.0;
-        Tue, 03 Dec 2024 15:33:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733268836; x=1733873636; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jplALg4JiAwh3fPgDAk/lVd13WxepigZdut6GMlKTQQ=;
-        b=h1752C/tCZEzxAA3YHu3r5XA+CWIGvt8bXw25kAoYkX8US81yIOH/0Xgsrr+ic0gzh
-         uaFl62bodM+BlbiPIbeB6VqAQmQUHZa1mCdG4jOg3Cl0K20SU1sowRY+gJ0Ad4OxMDdg
-         5uB0EfAKWRLnoy1zgiyoAN5yLZjKxnDSvLrR5sPZu30lmV165/FgbOT3A+gxjSlWGPM5
-         0FvZKJLJ4jQtGtmCGY0kaymW7z6T9/2zXfgV1SyQuaMlt3qtcq9MDIKVot1pL0vTVvPu
-         q6YTv7xWe1CUeOsJW6spJnK1eZtTICOrfkODobLrVVW6RhizTHqXTVQwvqRxLnbwHoda
-         x01Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733268836; x=1733873636;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jplALg4JiAwh3fPgDAk/lVd13WxepigZdut6GMlKTQQ=;
-        b=xHuKeLMfUZDTL4533Zr7N/mfQMjp0yxchzhcP1k8jMx19Xfb7BDepNLhSgi5xYmMLA
-         jwMJ0OBoKaTha7upKx6K8oB2bTfyakTkqWbodHIa7bRC91KcD8sRiTXiNkH+Az4ZpGWB
-         8KOqISZLSzfltVAzpCmREz1+bypvQeGrg6fzNQ//mgQT85K1dq9Z5ZTgummHyjLuYzdV
-         DuYisKJMgl1M6FE8bO37N0+XkHyTzctmQshzRmIGXgluIX4WZV3B9Z10AMgpxmwdwzIk
-         Wsco+FMckbyr6s6UFXqDBHz013JrpCzwM1vW3DLhE2AVTivRbcH+9JnDB6XlwNZswAsG
-         maww==
-X-Forwarded-Encrypted: i=1; AJvYcCWuArqVA4YqIQhRR2ppbs39pnD8H+ugWu3qkl0cs+y0gnwaCzwJfkhUJqRCglZXPDeB5DGU8XFT027lE8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkRDML7jmGTpwcDFo7RJ33xNB1V8sCgyU+jqfCc5s0M2LaPMVE
-	szXQdriuuV4StrEFeNfJ9Fxv8ae+FscJQDxh7SSJ/AgkcPUrdLLdUiCjImu1+3Q=
-X-Gm-Gg: ASbGncvR1pdRm8pcuSEIGGp/SxumV46CTIankc8LfAmnRP4hbiDD9sUIzrvojT6ZVbw
-	arD+emzDI5d6z36LSp54FpWoUibRyefIC3yXKQC28a+ZSW4yR0FkBMBSD6wXEVBQs5IejleqcQR
-	kejL1hHae9/fCe1ZEpNI/QqcoPOI4uqqjtmrNm5j64jKtdhNf8iZNyshE0KN1Qe62H303sv4Nze
-	nNudsXtdTbD2a7GnVgs7pmYOA==
-X-Google-Smtp-Source: AGHT+IEemUSIMxxd7GHqxTuF5vKs0XqrXU71EJ5JMBJ6zerMn4TImqsl5Vs2K+HGA7tP/ObQKD2yoQ==
-X-Received: by 2002:a05:6a00:14d5:b0:71e:7d52:fa6d with SMTP id d2e1a72fcca58-7257fcc9e56mr5610834b3a.21.1733268836550;
-        Tue, 03 Dec 2024 15:33:56 -0800 (PST)
-Received: from ryzen.lan ([2601:644:8200:dab8::a86])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725417fb9b9sm11402849b3a.109.2024.12.03.15.33.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Dec 2024 15:33:56 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
+	s=arc-20240116; t=1733295861; c=relaxed/simple;
+	bh=YdnkwsyP9ZbPTwCVmhzFpJ5mHWs7w/NyCvftsJKROms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lRtZiSHT2Np4C2GucbKkEW4EUOtQgbn0ztO13lQk7PfRmt2D/wwg4offLIDLf3GKs2cy7aRCHTQ3TuypjTRZJZzZZs06vgVocxwsQWVhcNDIAbDcOKcT8kmfmQnwa5l5R+urCiADsuLqhj8Szw0mV3zwPSE3eEZBgm9QceWpjTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cehRV6EX; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733295860; x=1764831860;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YdnkwsyP9ZbPTwCVmhzFpJ5mHWs7w/NyCvftsJKROms=;
+  b=cehRV6EXWLcm1KR8x7B+iXZHl84THvN+7hETI83Ifohw3VYe62MBtc8g
+   iKS5JxJlmlgNm7w5UdShRPCK8R0FQMFp0rmZWtzYeDxz6HH6BAUwBGIL/
+   oZW0spm1MEwQ97782hhqhbTVQ0JN0WucD9y0X2B2Qo5JmIU6+9+QzLqXh
+   +xm2DnKBfAEIO/OXq/Iht/DyZLu5oZddQoMesHKhhby2D313ngB44FDI/
+   jvZM7i3PiPYozg1aNdLn0SoYFN8TmnF4gnYT7b6Ti7SHgDgPduKl9zslE
+   NJsAzoOrtCfB0yz4d7AVKDfpc9IXu+AtVN5fVShknLTb5+zRHtJiOfiIH
+   A==;
+X-CSE-ConnectionGUID: Wu7W6W4PR6W1AwF4+ANNfQ==
+X-CSE-MsgGUID: B9ZeT9GvT5m4KKCmZ/u6ew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="44573902"
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="44573902"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 23:04:19 -0800
+X-CSE-ConnectionGUID: CCrikU8eQ7q946kT7aKyvw==
+X-CSE-MsgGUID: rd58mtUmRqqavqY/vRZT2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
+   d="scan'208";a="93540775"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 03 Dec 2024 23:04:17 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 14A2727C; Wed, 04 Dec 2024 09:04:15 +0200 (EET)
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: twl4030: use gpiochip_get_data
-Date: Tue,  3 Dec 2024 15:33:54 -0800
-Message-ID: <20241203233354.184404-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>,
+	Shankar Bandal <shankar.bandal@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 0/7] gpio: Fixes for Granite Rapids vGPIO driver
+Date: Wed,  4 Dec 2024 09:04:08 +0200
+Message-ID: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,46 +79,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We can pass the pointer in probe to gpiochip_add_data instead of using
-dev_get_drvdata.
+Hi,
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpio/gpio-twl6040.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This series includes several fixes for the Granite Rapids vGPIO driver
+found during validation.
 
-diff --git a/drivers/gpio/gpio-twl6040.c b/drivers/gpio/gpio-twl6040.c
-index 6c3fbf382dba..b9171bf66168 100644
---- a/drivers/gpio/gpio-twl6040.c
-+++ b/drivers/gpio/gpio-twl6040.c
-@@ -22,7 +22,7 @@
- 
- static int twl6040gpo_get(struct gpio_chip *chip, unsigned offset)
- {
--	struct twl6040 *twl6040 = dev_get_drvdata(chip->parent->parent);
-+	struct twl6040 *twl6040 = gpiochip_get_data(chip);
- 	int ret = 0;
- 
- 	ret = twl6040_reg_read(twl6040, TWL6040_REG_GPOCTL);
-@@ -46,7 +46,7 @@ static int twl6040gpo_direction_out(struct gpio_chip *chip, unsigned offset,
- 
- static void twl6040gpo_set(struct gpio_chip *chip, unsigned offset, int value)
- {
--	struct twl6040 *twl6040 = dev_get_drvdata(chip->parent->parent);
-+	struct twl6040 *twl6040 = gpiochip_get_data(chip);
- 	int ret;
- 	u8 gpoctl;
- 
-@@ -91,7 +91,7 @@ static int gpo_twl6040_probe(struct platform_device *pdev)
- 
- 	twl6040gpo_chip.parent = &pdev->dev;
- 
--	ret = devm_gpiochip_add_data(&pdev->dev, &twl6040gpo_chip, NULL);
-+	ret = devm_gpiochip_add_data(&pdev->dev, &twl6040gpo_chip, twl6040);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "could not register gpiochip, %d\n", ret);
- 		twl6040gpo_chip.ngpio = 0;
+Alan Borzeszkowski (5):
+  gpio: graniterapids: Fix vGPIO driver crash
+  gpio: graniterapids: Fix incorrect BAR assignment
+  gpio: graniterapids: Determine if GPIO pad can be used by driver
+  gpio: graniterapids: Check if GPIO line can be used for IRQs
+  gpio: graniterapids: Fix GPIO Ack functionality
+
+Shankar Bandal (2):
+  gpio: graniterapids: Fix invalid GPI_IS register offset
+  gpio: graniterapids: Fix invalid RXEVCFG register bitmask
+
+ drivers/gpio/gpio-graniterapids.c | 52 ++++++++++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 11 deletions(-)
+
 -- 
-2.47.0
+2.45.2
 
 
