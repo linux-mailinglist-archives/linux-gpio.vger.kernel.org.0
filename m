@@ -1,56 +1,59 @@
-Return-Path: <linux-gpio+bounces-13494-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13495-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B5749E40B3
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 18:10:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43CB69E40E7
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 18:13:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 112BA284809
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 17:10:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1609288DB0
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 17:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D3A9210185;
-	Wed,  4 Dec 2024 17:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7584421146D;
+	Wed,  4 Dec 2024 17:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmPdSXBK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCeOhGO3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E0320CCC5;
-	Wed,  4 Dec 2024 17:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7FD2111A7;
+	Wed,  4 Dec 2024 17:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331608; cv=none; b=DLm5MAkqbPIfZVLRvFzmg7X41R4Ekcdz/wVnh+ZAcuWljSKZohulShaTf0dwc3/uojeMe9iIpM5PWZn296nTTj/T+fUdrYqiafzYdoBHfI4vAphGFzcKMTO2NcmkfqI4MRh/KTcSgMmfrCfpJtYs+4eOiUc1aLUrk9KAYxnna+E=
+	t=1733331636; cv=none; b=bpeduUSHwFQ6TbVaH/1vBBu+cv7yUxlHMMkjYWEYC6K1q7qqKPMMV0F/r8Nd0cLPkdIMuKoiHt4cB112unun2YgAdxY00GeOMTSeFBeXfoUrZRvA7lpr+y1iUBloDwLOyuHhZR3A+X8OabyTFE/yBZiXvhFb9a6zfxQnbbAX+yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331608; c=relaxed/simple;
-	bh=qOxobhayZsSfFAlWKlP4MIFI68mJ1JOLD8MP5y0VOMM=;
+	s=arc-20240116; t=1733331636; c=relaxed/simple;
+	bh=4PTzI9SiixNaBPPfu0IX8+a8aPSOijkDtiLpKSS0aaw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JnJV7a7n2OWBhGryAhBZLgXSl30sPCsG+x//BQZqMN/ZAnEWTWSxbRM/AJnvlufkp/2+d458bZ5MNSL0R80w4aex9K3qyTU7VKnZMROy3nfGgs7NJzV2PxBjOCqYaKKiKD48N6GFRdXOK7kHM2MQqwMMNJqdDyxfcCEsMqpQEsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmPdSXBK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A506C4CECD;
-	Wed,  4 Dec 2024 17:00:07 +0000 (UTC)
+	 MIME-Version:Content-Type; b=iLuyRYxUQmBFg2D66dkLHzd06Gd7+uJtmhtd/WEHFkENb9rLtBpFDrNCwbhhEwgfMjdOBrdERxPXHAusqSYTjSld5D8NtoJ2/O2TqXoYTSYihYtAJDqeMjSALC+GK2thvIiqTkyzQ9ePsbldRYBAodZkRt+kr7EeLcNF8ymRe1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCeOhGO3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05608C4CECD;
+	Wed,  4 Dec 2024 17:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331607;
-	bh=qOxobhayZsSfFAlWKlP4MIFI68mJ1JOLD8MP5y0VOMM=;
+	s=k20201202; t=1733331636;
+	bh=4PTzI9SiixNaBPPfu0IX8+a8aPSOijkDtiLpKSS0aaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RmPdSXBKKNcqzjPgSgZlg0Wc94Wk5X0zoAiP1hep+LHZSRRMNtW3aBfoXMbZjcYsh
-	 GocaYF3yq9fL/HzVAoB59JEqRNwDaCo3cbjVFzGbffuCoaWR0w6XH6r+TqHwqopFXa
-	 w00jwZRoqBa2+dgmIuSl2CYDfCYk0A2qf7mZhVdpsOa/l3++GrAPemv3hVxJJlAnIW
-	 gTYp2mmG1Wa9fkvVeYTkuJxhsuwjhsDjAGpoksbVIRlz44hPi09eHqeLZR+LlCEwT1
-	 xBfJnqvzhnwI9Kwt6lX6nKFnbUvZXIE7jIT/w5CukGBgg0YKFyyPkx/hC2wdFGnFII
-	 Xd1ZO+PBh5riA==
+	b=eCeOhGO3THcKos7bfyi8OxxrGCapAhO3ZNuk9XyDnHTMLRz7qTPbuiAB76JXU9Le/
+	 qfKMeNU6FnBs0SgjqN+mGzukZYlhe+AAIo3/Khh8GQMxBrtE8SwxW3MzUYpPxHoTQ7
+	 ErOlVtZ8wjfKkqy6+f0wPihwld0kYEDeq6FvxeWHvT2ZPhIoQjcqdMwnGybce8CSrD
+	 AXkeufT9yHLoEnm1uhvJggIRKx97Ye0UoYDTEKdcUfVD70Rrpkfn66gwgF3C57tsTj
+	 di5BSV1QXdOeXcHVuY/izKYqykwXF0n838y5a2NgtqFAztMjKxOZXFU7sxKzAUeYNh
+	 qcMKj0oMWlaXA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mukesh Ojha <quic_mojha@quicinc.com>,
+Cc: =?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
+	andersson@kernel.org,
+	linux-arm-msm@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 12/33] pinmux: Use sequential access to access desc->pinmux data
-Date: Wed,  4 Dec 2024 10:47:25 -0500
-Message-ID: <20241204154817.2212455-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.11 26/33] pinctrl: qcom-pmic-gpio: add support for PM8937
+Date: Wed,  4 Dec 2024 10:47:39 -0500
+Message-ID: <20241204154817.2212455-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204154817.2212455-1-sashal@kernel.org>
 References: <20241204154817.2212455-1-sashal@kernel.org>
@@ -60,339 +63,40 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.11.10
 Content-Transfer-Encoding: 8bit
 
-From: Mukesh Ojha <quic_mojha@quicinc.com>
+From: Barnabás Czémán <barnabas.czeman@mainlining.org>
 
-[ Upstream commit 5a3e85c3c397c781393ea5fb2f45b1f60f8a4e6e ]
+[ Upstream commit 89265a58ff24e3885c2c9ca722bc3aaa47018be9 ]
 
-When two client of the same gpio call pinctrl_select_state() for the
-same functionality, we are seeing NULL pointer issue while accessing
-desc->mux_owner.
+PM8937 has 8 GPIO-s with holes on GPIO3, GPIO4 and GPIO6.
 
-Let's say two processes A, B executing in pin_request() for the same pin
-and process A updates the desc->mux_usecount but not yet updated the
-desc->mux_owner while process B see the desc->mux_usecount which got
-updated by A path and further executes strcmp and while accessing
-desc->mux_owner it crashes with NULL pointer.
-
-Serialize the access to mux related setting with a mutex lock.
-
-	cpu0 (process A)			cpu1(process B)
-
-pinctrl_select_state() {		  pinctrl_select_state() {
-  pin_request() {				pin_request() {
-  ...
-						 ....
-    } else {
-         desc->mux_usecount++;
-    						desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
-
-         if (desc->mux_usecount > 1)
-               return 0;
-         desc->mux_owner = owner;
-
-  }						}
-
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-Link: https://lore.kernel.org/20241014192930.1539673-1-quic_mojha@quicinc.com
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Link: https://lore.kernel.org/20241031-msm8917-v2-2-8a075faa89b1@mainlining.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/core.c   |   3 +
- drivers/pinctrl/core.h   |   1 +
- drivers/pinctrl/pinmux.c | 173 ++++++++++++++++++++++-----------------
- 3 files changed, 100 insertions(+), 77 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 314ab93d76918..35f1046db9b6a 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -220,6 +220,9 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 
- 	/* Set owner */
- 	pindesc->pctldev = pctldev;
-+#ifdef CONFIG_PINMUX
-+	mutex_init(&pindesc->mux_lock);
-+#endif
- 
- 	/* Copy basic pin info */
- 	if (pin->name) {
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index 4e07707d2435b..d6c24978e7081 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -177,6 +177,7 @@ struct pin_desc {
- 	const char *mux_owner;
- 	const struct pinctrl_setting_mux *mux_setting;
- 	const char *gpio_owner;
-+	struct mutex mux_lock;
- #endif
- };
- 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index aae71a37219b2..90ca50d9efb6a 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -14,6 +14,7 @@
- 
- #include <linux/array_size.h>
- #include <linux/ctype.h>
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -93,6 +94,7 @@ bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned int pin)
- 	if (!desc || !ops)
- 		return true;
- 
-+	guard(mutex)(&desc->mux_lock);
- 	if (ops->strict && desc->mux_usecount)
- 		return false;
- 
-@@ -127,29 +129,31 @@ static int pin_request(struct pinctrl_dev *pctldev,
- 	dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
- 		pin, desc->name, owner);
- 
--	if ((!gpio_range || ops->strict) &&
--	    desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
--		dev_err(pctldev->dev,
--			"pin %s already requested by %s; cannot claim for %s\n",
--			desc->name, desc->mux_owner, owner);
--		goto out;
--	}
-+	scoped_guard(mutex, &desc->mux_lock) {
-+		if ((!gpio_range || ops->strict) &&
-+		    desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
-+			dev_err(pctldev->dev,
-+				"pin %s already requested by %s; cannot claim for %s\n",
-+				desc->name, desc->mux_owner, owner);
-+			goto out;
-+		}
- 
--	if ((gpio_range || ops->strict) && desc->gpio_owner) {
--		dev_err(pctldev->dev,
--			"pin %s already requested by %s; cannot claim for %s\n",
--			desc->name, desc->gpio_owner, owner);
--		goto out;
--	}
-+		if ((gpio_range || ops->strict) && desc->gpio_owner) {
-+			dev_err(pctldev->dev,
-+				"pin %s already requested by %s; cannot claim for %s\n",
-+				desc->name, desc->gpio_owner, owner);
-+			goto out;
-+		}
- 
--	if (gpio_range) {
--		desc->gpio_owner = owner;
--	} else {
--		desc->mux_usecount++;
--		if (desc->mux_usecount > 1)
--			return 0;
-+		if (gpio_range) {
-+			desc->gpio_owner = owner;
-+		} else {
-+			desc->mux_usecount++;
-+			if (desc->mux_usecount > 1)
-+				return 0;
- 
--		desc->mux_owner = owner;
-+			desc->mux_owner = owner;
-+		}
- 	}
- 
- 	/* Let each pin increase references to this module */
-@@ -178,12 +182,14 @@ static int pin_request(struct pinctrl_dev *pctldev,
- 
- out_free_pin:
- 	if (status) {
--		if (gpio_range) {
--			desc->gpio_owner = NULL;
--		} else {
--			desc->mux_usecount--;
--			if (!desc->mux_usecount)
--				desc->mux_owner = NULL;
-+		scoped_guard(mutex, &desc->mux_lock) {
-+			if (gpio_range) {
-+				desc->gpio_owner = NULL;
-+			} else {
-+				desc->mux_usecount--;
-+				if (!desc->mux_usecount)
-+					desc->mux_owner = NULL;
-+			}
- 		}
- 	}
- out:
-@@ -219,15 +225,17 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 		return NULL;
- 	}
- 
--	if (!gpio_range) {
--		/*
--		 * A pin should not be freed more times than allocated.
--		 */
--		if (WARN_ON(!desc->mux_usecount))
--			return NULL;
--		desc->mux_usecount--;
--		if (desc->mux_usecount)
--			return NULL;
-+	scoped_guard(mutex, &desc->mux_lock) {
-+		if (!gpio_range) {
-+			/*
-+			 * A pin should not be freed more times than allocated.
-+			 */
-+			if (WARN_ON(!desc->mux_usecount))
-+				return NULL;
-+			desc->mux_usecount--;
-+			if (desc->mux_usecount)
-+				return NULL;
-+		}
- 	}
- 
- 	/*
-@@ -239,13 +247,15 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 	else if (ops->free)
- 		ops->free(pctldev, pin);
- 
--	if (gpio_range) {
--		owner = desc->gpio_owner;
--		desc->gpio_owner = NULL;
--	} else {
--		owner = desc->mux_owner;
--		desc->mux_owner = NULL;
--		desc->mux_setting = NULL;
-+	scoped_guard(mutex, &desc->mux_lock) {
-+		if (gpio_range) {
-+			owner = desc->gpio_owner;
-+			desc->gpio_owner = NULL;
-+		} else {
-+			owner = desc->mux_owner;
-+			desc->mux_owner = NULL;
-+			desc->mux_setting = NULL;
-+		}
- 	}
- 
- 	module_put(pctldev->owner);
-@@ -459,7 +469,8 @@ int pinmux_enable_setting(const struct pinctrl_setting *setting)
- 				 pins[i]);
- 			continue;
- 		}
--		desc->mux_setting = &(setting->data.mux);
-+		scoped_guard(mutex, &desc->mux_lock)
-+			desc->mux_setting = &(setting->data.mux);
- 	}
- 
- 	ret = ops->set_mux(pctldev, setting->data.mux.func,
-@@ -473,8 +484,10 @@ int pinmux_enable_setting(const struct pinctrl_setting *setting)
- err_set_mux:
- 	for (i = 0; i < num_pins; i++) {
- 		desc = pin_desc_get(pctldev, pins[i]);
--		if (desc)
--			desc->mux_setting = NULL;
-+		if (desc) {
-+			scoped_guard(mutex, &desc->mux_lock)
-+				desc->mux_setting = NULL;
-+		}
- 	}
- err_pin_request:
- 	/* On error release all taken pins */
-@@ -493,6 +506,7 @@ void pinmux_disable_setting(const struct pinctrl_setting *setting)
- 	unsigned int num_pins = 0;
- 	int i;
- 	struct pin_desc *desc;
-+	bool is_equal;
- 
- 	if (pctlops->get_group_pins)
- 		ret = pctlops->get_group_pins(pctldev, setting->data.mux.group,
-@@ -518,7 +532,10 @@ void pinmux_disable_setting(const struct pinctrl_setting *setting)
- 				 pins[i]);
- 			continue;
- 		}
--		if (desc->mux_setting == &(setting->data.mux)) {
-+		scoped_guard(mutex, &desc->mux_lock)
-+			is_equal = (desc->mux_setting == &(setting->data.mux));
-+
-+		if (is_equal) {
- 			pin_free(pctldev, pins[i], NULL);
- 		} else {
- 			const char *gname;
-@@ -611,40 +628,42 @@ static int pinmux_pins_show(struct seq_file *s, void *what)
- 		if (desc == NULL)
- 			continue;
- 
--		if (desc->mux_owner &&
--		    !strcmp(desc->mux_owner, pinctrl_dev_get_name(pctldev)))
--			is_hog = true;
--
--		if (pmxops->strict) {
--			if (desc->mux_owner)
--				seq_printf(s, "pin %d (%s): device %s%s",
--					   pin, desc->name, desc->mux_owner,
-+		scoped_guard(mutex, &desc->mux_lock) {
-+			if (desc->mux_owner &&
-+			    !strcmp(desc->mux_owner, pinctrl_dev_get_name(pctldev)))
-+				is_hog = true;
-+
-+			if (pmxops->strict) {
-+				if (desc->mux_owner)
-+					seq_printf(s, "pin %d (%s): device %s%s",
-+						   pin, desc->name, desc->mux_owner,
-+						   is_hog ? " (HOG)" : "");
-+				else if (desc->gpio_owner)
-+					seq_printf(s, "pin %d (%s): GPIO %s",
-+						   pin, desc->name, desc->gpio_owner);
-+				else
-+					seq_printf(s, "pin %d (%s): UNCLAIMED",
-+						   pin, desc->name);
-+			} else {
-+				/* For non-strict controllers */
-+				seq_printf(s, "pin %d (%s): %s %s%s", pin, desc->name,
-+					   desc->mux_owner ? desc->mux_owner
-+					   : "(MUX UNCLAIMED)",
-+					   desc->gpio_owner ? desc->gpio_owner
-+					   : "(GPIO UNCLAIMED)",
- 					   is_hog ? " (HOG)" : "");
--			else if (desc->gpio_owner)
--				seq_printf(s, "pin %d (%s): GPIO %s",
--					   pin, desc->name, desc->gpio_owner);
-+			}
-+
-+			/* If mux: print function+group claiming the pin */
-+			if (desc->mux_setting)
-+				seq_printf(s, " function %s group %s\n",
-+					   pmxops->get_function_name(pctldev,
-+						desc->mux_setting->func),
-+					   pctlops->get_group_name(pctldev,
-+						desc->mux_setting->group));
- 			else
--				seq_printf(s, "pin %d (%s): UNCLAIMED",
--					   pin, desc->name);
--		} else {
--			/* For non-strict controllers */
--			seq_printf(s, "pin %d (%s): %s %s%s", pin, desc->name,
--				   desc->mux_owner ? desc->mux_owner
--				   : "(MUX UNCLAIMED)",
--				   desc->gpio_owner ? desc->gpio_owner
--				   : "(GPIO UNCLAIMED)",
--				   is_hog ? " (HOG)" : "");
-+				seq_putc(s, '\n');
- 		}
--
--		/* If mux: print function+group claiming the pin */
--		if (desc->mux_setting)
--			seq_printf(s, " function %s group %s\n",
--				   pmxops->get_function_name(pctldev,
--					desc->mux_setting->func),
--				   pctlops->get_group_name(pctldev,
--					desc->mux_setting->group));
--		else
--			seq_putc(s, '\n');
- 	}
- 
- 	mutex_unlock(&pctldev->mutex);
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index d2dd66769aa89..79ee60514372d 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -1226,6 +1226,8 @@ static const struct of_device_id pmic_gpio_of_match[] = {
+ 	{ .compatible = "qcom,pm8550ve-gpio", .data = (void *) 8 },
+ 	{ .compatible = "qcom,pm8550vs-gpio", .data = (void *) 6 },
+ 	{ .compatible = "qcom,pm8916-gpio", .data = (void *) 4 },
++	/* pm8937 has 8 GPIOs with holes on 3, 4 and 6 */
++	{ .compatible = "qcom,pm8937-gpio", .data = (void *) 8 },
+ 	{ .compatible = "qcom,pm8941-gpio", .data = (void *) 36 },
+ 	/* pm8950 has 8 GPIOs with holes on 3 */
+ 	{ .compatible = "qcom,pm8950-gpio", .data = (void *) 8 },
 -- 
 2.43.0
 
