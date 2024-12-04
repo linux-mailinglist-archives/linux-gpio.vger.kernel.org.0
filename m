@@ -1,140 +1,123 @@
-Return-Path: <linux-gpio+bounces-13482-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13483-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8CF09E345A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 08:45:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51AE59E39C4
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 13:22:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4747168205
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 07:45:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E77B1644DA
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 12:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C45CF18C907;
-	Wed,  4 Dec 2024 07:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 580981ABEDC;
+	Wed,  4 Dec 2024 12:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="Uom3x20N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E09018C018
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Dec 2024 07:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30E1126C10
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Dec 2024 12:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733298273; cv=none; b=L9fxbekoZ7wMw5JwVlp456/ewO5EeIYNuBoJkkMbFoWi7kSmNrLwomL73J+hYfbA2a2Yvevc5oEpLOZo9QJUuDM9KvjHocLulqYdKdlH9cDvp5jlR8ymozwZMB9L900DfjdIOqtNo8C/2/rKN9b2/1AEJDSVS/Xi6U/gDrVieic=
+	t=1733314921; cv=none; b=WJ/dwIWtSJWyn0ygWBLeJ0ZdDLigRhkbgvjoNo3aB7+u5Bk2aMmyqviDYBE3Q91VN1ux/CEBZ6Niw8raJQ0/pAd41Qc0aOXfDfQ3rhg5AXVxJU9Ys36c7bpcDrWm07msWCX8wXUPx7KKN6VvUaF+CDSF7wTYZUcSy2/HBg0CfRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733298273; c=relaxed/simple;
-	bh=nQwun8gQeIulYObus+ufiUfKKMTtuMYa/H+rS48IiqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g628KoYchDT36ntSHu/0nnH+1eV5Cya8P5eWWNf29IkZJfWKQnMDj8MSd3/D5V7Pw63gWl/fr4NTFQjJEDcaAADeokCLlGHI6E7HYv2B1Qh/Y+J9hPjHq7qUor8Ht00kiYH+hksmKlvL0h4Kx2XfelY0gd2DDlNRAZElVVp1xsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-85bb13573fbso1060334241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2024 23:44:31 -0800 (PST)
+	s=arc-20240116; t=1733314921; c=relaxed/simple;
+	bh=O0+CZXRHoLhsOSEitRRDTKgkAC79kSRwtnY1L0/yYNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lspUtLt1Ei2tHUKYUYvvqIa3QYQZs5yTyKSSpQhL5njmX4bzxe85o4SnbhI6Sr+IeD7wZdR4KLhdRqhgOFFRZTbrBnzEvf1QstE2VAQJ6juDJGdA506+gvBKdTWLz72oLAeuE7MuyPM/O7R/qlH00LI0EL7UwzWXa07jAonh2wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=Uom3x20N; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-724e113c821so6025473b3a.3
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Dec 2024 04:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1733314918; x=1733919718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vA7Nd2pT2tcxnsmGLiZWmOqELHFvQ7VmLEwSYWG5byM=;
+        b=Uom3x20N/wRCatZIo5qxOgDMxpVvqWqctpgu1vM4kGOggIFOE0C7S45/X8XHanmLQD
+         ufLgoFCVpmiwWWOzNI6sicUt98JGziNUrFxs0vLZv3IG/ZCozrinZ6d3QAVx8fhO+ibI
+         QqkmxRMR7o43jPtLXaNMFMJ+YCOGMjjVtL7o2e6Gh+mrBO+H9mqQebbxIEQxhMf9/A+a
+         RrOPWtdA9xBcEnLyXEfJgpWOwUoFAVvTvCiCB4Fxd8Ar6GzVMPzHUtWyf/A8vYpnMQXY
+         ZcWCzi9tCy+FxLAquRZw9XD3X1jzArK5kWYF1q4Un+Zir0/+pRi40cUWpOn6qCiE5PFB
+         QuSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733298270; x=1733903070;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H/icQyzmGHz1TzMA4Cqp5hMi0/miDynHZBXtehJraUg=;
-        b=bHWGBvN+Y9eT/3ZDP5uLWmPNQqEFIwWxLeNZaWwIb0nsMnVageA88Om9RplBIaxLQ9
-         mE8vbEje+tMYqbvnyeEK/lF8zrLIGtxvH9V9MkS/BdB1g7iqPWzILrdmw7NLbwfSRGtP
-         sh3JlcNylwi3pvguArbo4If3d0YC8YHoddEuCdX5hRF9DeWjsuPKCn6pPZGupeGkexpg
-         fEvsCzVaG/vD1r+N6Hq+RqXHMBoXV9Hm+7XFRfyn9T3oPi9+tnQO5QPzimmbqq/59Xph
-         JJG9z1vuyZTzgf3D3wOhFKPNiEYvi1jORikGFlS1QisjFcu4Jfz83kx/KM+jE9Zd5BRD
-         2Y6g==
-X-Forwarded-Encrypted: i=1; AJvYcCV8L5wVQGfIYGcmGn25dzCF8A3IKSeIkyQPSVJM6rvLXj7LuIKB88DBJcnhO/7nvFJl2c4j+MalKY20@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRDTBGmKqq9PCMI0R8T6B5E5Tv/NsaRpiAy5vAp8ej1qRMYs1Z
-	274KmdLrzfKYweSuj57sGxy0AFwU6iHR1ggZT48+RmcwSLx0pmJJuy+t1jLU
-X-Gm-Gg: ASbGncuYOAZwzd3led9/KuD9aNITqsuHP58y/nhfHM9+GwnSv3mu2TCxSbTEveZ8msb
-	vrkA1pip1dB8MKjTuhyyLr8Id4yQu7eo0L0mdaja7LKeyyyxzJ774SoJyCXh3oDocEFx+qcEewS
-	7BY9RumXY72C2F2fqFpT2AfLqeDRtdlbfHoJ9gKQypNR9NOa57SlLtXxCPLgDVsQTm6vfHlW9k5
-	YNHJHXzRDD5BwCr+QywXp6QJGyij1ZRjWCDIIGlIsFDxTFShanVrQuVjJNmZhSPxaL1+NX9h/Mv
-	aAaNJzKFHxWh
-X-Google-Smtp-Source: AGHT+IGBKiCA4EzIzbQNL14ATbjd0tw312cR0OcpPbc4wrSzxeqUpy0utbw476IOzVEWgnfHu9h6aw==
-X-Received: by 2002:a05:6102:290d:b0:4af:98c6:c60e with SMTP id ada2fe7eead31-4af98c6c8a0mr6663115137.23.1733298269748;
-        Tue, 03 Dec 2024 23:44:29 -0800 (PST)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4af590e724bsm2347283137.9.2024.12.03.23.44.27
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 23:44:27 -0800 (PST)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-85bb13573fbso1060316241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2024 23:44:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW9cAEMF+OWqWU5iCyLnAtXJAb9unw4KEG3PI5giuvJVdtCyRS8lopZLucKfRPMOtjiXFD3FNsCUsty@vger.kernel.org
-X-Received: by 2002:a05:6102:41aa:b0:4af:48a6:79c4 with SMTP id
- ada2fe7eead31-4af972eaa24mr7774024137.17.1733298266923; Tue, 03 Dec 2024
- 23:44:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733314918; x=1733919718;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vA7Nd2pT2tcxnsmGLiZWmOqELHFvQ7VmLEwSYWG5byM=;
+        b=qcXQwnQbpeSX73B/9CTG3ZWuMJAHTn6mp59iGGcZpKRfD9ZB8E02ufcMLfns6PbB4z
+         SCSIj7tVXZf4WlCFdd8cxYVI2WSD9DR7u1x91qcGaEDqmf5GJBPA1EoVDQzZeT1VljMo
+         19klq1prQeyHtRjXwY9qk1y5Exh+Nj0S5ueVSt5KkblrYtt7DI2s50wrclS3NWC+sbQl
+         2ToliQ25DoTzXIO0SSNMdipvMoFPqwWW/OZPISFO9oqMojJQcnzyYmSYk1vVSOiuuJJW
+         3H+Aj/CnErAsxRCrNC4MTmqFCk8+DcAI0E2isZqNScLSuoeLrjxF6djRbsd3jdxzdGRd
+         0Q+w==
+X-Gm-Message-State: AOJu0YxL2EsBQgpOfWdJlCfeKtvMyaa3mOq9OXo7I6hcdIC3z7jW2KJS
+	bRhYYowGdaoYb5Sz2zuagqiqRaaI3ZF4OarfdmWfSgSVzoy6sA2i7AudF9CCAqc=
+X-Gm-Gg: ASbGncvfnZGVmfLHx52lDG7zhQT8zuQlbc1UnIbdONI8/yYt1kl9mqJpdtMZ9t9eqAO
+	m6J/F9Io9LBO/cg+shjDfaAW2dijNCFg0AMEK7Uqew3Jn/YhfnWUHbZBB+iQxec/P673hguwHie
+	Jr3qFTxaJbc66UiQgLFyb8hA20OiU4k0izgVkDjZqh/vvlcLNv8icmS+HSKpnr1C3wv1iO2oZlm
+	AUjCDSi7DxE3wtgzTtgrVUz5TRzO4+5uEkp8mBG6h/WLzuY3Y/FeDgQ5NhvtQxfA8mBxV/QQwFA
+	TLZJGv6Pi58e0amKppEq7DKcrt+BnL1+6qI3
+X-Google-Smtp-Source: AGHT+IHjQkOdo46dmxaDZzTFvvOlHVd6WgqkQozubtunjnmQmCHM94rOAR6GNhK32SZ25ae6Gc6QXw==
+X-Received: by 2002:a05:6a00:cc4:b0:725:389:3e11 with SMTP id d2e1a72fcca58-7257fcac089mr9684155b3a.20.1733314917674;
+        Wed, 04 Dec 2024 04:21:57 -0800 (PST)
+Received: from localhost.localdomain (133-32-227-190.east.xps.vectant.ne.jp. [133.32.227.190])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254176fd6fsm12664606b3a.62.2024.12.04.04.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2024 04:21:57 -0800 (PST)
+From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-gpio@vger.kernel.org,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+Subject: [PATCH] gpio: gpiolib: fix refcount imbalance in gpiochip_setup_dev()
+Date: Wed,  4 Dec 2024 21:21:52 +0900
+Message-Id: <20241204122152.1312051-1-joe@pf.is.s.u-tokyo.ac.jp>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6b9e55dbf544297d5acf743f6fa473791ab10644.1733242798.git.geert+renesas@glider.be>
- <f552b813-1817-4507-9699-fae87575a762@lunn.ch> <CAMRc=Mfh5Rv8OKWOcPVzJp-_e_bXgywT2=+N2cF1ONT3kiw7tQ@mail.gmail.com>
- <44126f2f-92ce-412b-ad9d-e0e0ea28d36d@lunn.ch>
-In-Reply-To: <44126f2f-92ce-412b-ad9d-e0e0ea28d36d@lunn.ch>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 4 Dec 2024 08:44:15 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUaPkpSzrkqPRzZZfj6Npmj-8Ax5dXEGbjKXAyCW_DLXA@mail.gmail.com>
-Message-ID: <CAMuHMdUaPkpSzrkqPRzZZfj6Npmj-8Ax5dXEGbjKXAyCW_DLXA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: GPIO_MVEBU should not default to y when compile-testing
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Andrew,
+In gpiochip_setup_dev(), the refcount incremented in device_initialize()
+is not decremented in the error path. Fix it by calling put_device().
 
-On Tue, Dec 3, 2024 at 9:59=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
-> On Tue, Dec 03, 2024 at 09:29:02PM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Dec 3, 2024 at 9:13=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wro=
-te:
-> > >
-> > > On Tue, Dec 03, 2024 at 05:23:16PM +0100, Geert Uytterhoeven wrote:
-> > > > Merely enabling compile-testing should not enable additional
-> > > > functionality.
-> > >
-> > > Sorry for being dumb, but i don't actually see what is wrong here.
-> > >
-> > > There are 4 GPIO drivers which have
-> > >
-> > >         def_bool y
+Fixes: aab5c6f20023 ("gpio: set device type for GPIO chips")
+Signed-off-by: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+---
+ drivers/gpio/gpiolib.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-None of these depend on || COMPILE_TEST.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 679ed764cb14..6b2d50370ab7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -800,7 +800,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+ 
+ 	ret = gcdev_register(gdev, gpio_devt);
+ 	if (ret)
+-		return ret;
++		goto err_put_device;
+ 
+ 	ret = gpiochip_sysfs_register(gdev);
+ 	if (ret)
+@@ -813,6 +813,8 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+ 
+ err_remove_device:
+ 	gcdev_unregister(gdev);
++err_put_device:
++	put_device(&gdev->dev);
+ 	return ret;
+ }
+ 
+-- 
+2.34.1
 
-> > > COMPILE_TEST is about building as much as possible, in order to find
-> > > build bugs. So i don't get what you mean by additional
-> > > functionality. No additional functionality within the MVEBU driver
-> > > gets enabled by COMPILE_TEST.
-> >
-> > No, Geert is right. I have been yelled at by Linus Torvalds already
-> > for too eagerly enabling too many options. COMPILE_TEST is really
-> > about making it possible to build more things with make allmodconfig,
-> > not necessarily defaulting to y for everything.
->
-> So are you saying COMPILE_TEST should allow something to be enabled,
-> but should not actually enable it?
-
-It is meant for relaxing dependencies, i.e. to allow you to do
-build-testing of drivers that cannot possibly work on the system you
-are compiling a kernel for.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
