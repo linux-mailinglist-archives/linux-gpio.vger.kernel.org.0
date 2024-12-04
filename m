@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-13501-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13504-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B115C9E4430
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 20:10:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50A9E9E451E
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 20:54:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39961B85FA7
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 17:22:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7CC8DBA0226
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2024 17:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F28821773F;
-	Wed,  4 Dec 2024 17:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 138E422578D;
+	Wed,  4 Dec 2024 17:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dxg17y1y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyDc9wRt"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1C7217738;
-	Wed,  4 Dec 2024 17:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0219225771;
+	Wed,  4 Dec 2024 17:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331746; cv=none; b=L50wU7IW7V51F68i/mh/Z6enrGceZ0rqWDlhjI1jHhWhhh7aVcsn8ZQyCfZu4ASt2oCbdGlazazE3mDlwdEI9NA5Eoc9O7QStW+xMye69HgrLxDdobqBBlOmnkvvilDeKUxR3ctCF2aWJ3QOKLU6J0wOwlFsueDlpJfQR1kSc+I=
+	t=1733331781; cv=none; b=th+HOkBTJNzybrkB/CJ6eA1ZYLr/g8htPYO0Mqwby/X+P1K+vmHUQb/Vnw9LGnG+myid3VHRJnX12WkyAuRIc13SRkaNrxSbqqW20FPOQxOhvpmYA+qTDCXTccGaNbOMG+ORDsszmHVai6Ef47Xv56+6Od5hlIFoHYy8ACsAK6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331746; c=relaxed/simple;
-	bh=uJ8xeLxvMqeuFlk8XlRgpRa1Nai86MbCWmlWaytvUtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HJuSsLNXAFowEtB+2oeNARvzkTgHwgV+27vVqZh13XYApjx5COu7BaEc5bAOJllFv4IxBQugK43gYSVJ/iwkVcXdRSwJhoh5GJhRPFBo9LJ2vaapuQRxG2QlSqn9Bm4wYrukieKxTx03kbsPr7Uj1zb82phxleEXf60ONMoLN14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dxg17y1y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6CDC4CECD;
-	Wed,  4 Dec 2024 17:02:24 +0000 (UTC)
+	s=arc-20240116; t=1733331781; c=relaxed/simple;
+	bh=YwO3Q2f4FsLS/5XpKdz3ZlRCiBwyZqJ3ML/XJ3gZePw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sz4KHdEoXQYNW/Gzf/Pw3mAYiz5XgmTF9B7igiq4zQhX9F0FckJY/6QUdOF/l5/UlG+WQyVPcWBeYk61W9FDHz+MYnHaoMM7MpV16TRcHDogD9MHD4Y11kPiHmlMFu3R/fuGPNow6UTRFQU42o8kWFt/EuXk7XWsJoYr52IdaWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyDc9wRt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20794C4CECD;
+	Wed,  4 Dec 2024 17:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331745;
-	bh=uJ8xeLxvMqeuFlk8XlRgpRa1Nai86MbCWmlWaytvUtc=;
+	s=k20201202; t=1733331781;
+	bh=YwO3Q2f4FsLS/5XpKdz3ZlRCiBwyZqJ3ML/XJ3gZePw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Dxg17y1yVN4Cgq5ABreg/BSjNdflOzgPlptZfbat/QFR3Js1XjkizB31nF+PcshHl
-	 u1qsSfEIJH3aAX/10zP3JABD8+0zA3TBIkCx+aIwpk1LJlEZ3KD5Kr+P410sUXUQ8N
-	 otcy7YocspPV9GMtLpbKCSIXZCXyva+hjW3QklBPVtcJJolyFSSSEXy0hUFTcZP5o9
-	 2ojKnFAqwg5CPG3K7VbvHxZPw6S7GdPA8H0FCFErGnsqqHLKvk5aF8LuEEVqxgaSw6
-	 jG6Gnbec4oTvmJyu03iLzph27MwfkNq3aD3QHIsMb582FgNW5py8sOuBnroqBR0Hfj
-	 UwTl4zcGDRmaA==
+	b=hyDc9wRt1Bqh0YoMGQXxFkETWYMiaQwDfEOQPVIHAmG31PyVlR5EEhEFlbFZeuZBd
+	 p5G5fu9+YPZGFihDSY7wzfL05OIHE53MFnD1DObjHsv3+cqD0ly7J6JK7eQXw970jP
+	 cc777a9O2MQxp8ld+pTZH88Lk2temSc5cE5FP51a2f6InpJb8bQ3TDsGBDvSEZlm0W
+	 TvvVjUaiUJW0W0JaMh0yuqJ9RiTFKjDR5wSx0UoPEpAUjet4ATNST9FoovATWGUA2w
+	 pKeO5Py8fY+MKNmwqVyopmRGKBhvA5KOIB+U5krcbUJoicwsHr1J60rLYEdT8OVRMx
+	 lPIu4TpSCJudA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: Esben Haabendal <esben@geanix.com>,
 	shawnguo@kernel.org,
 	ping.bai@nxp.com,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 01/15] pinctrl: freescale: fix COMPILE_TEST error with PINCTRL_IMX_SCU
-Date: Wed,  4 Dec 2024 10:50:40 -0500
-Message-ID: <20241204155105.2214350-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 1/9] pinctrl: freescale: fix COMPILE_TEST error with PINCTRL_IMX_SCU
+Date: Wed,  4 Dec 2024 10:51:31 -0500
+Message-ID: <20241204155141.2214748-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.119
+X-stable-base: Linux 5.15.173
 Content-Transfer-Encoding: 8bit
 
 From: Esben Haabendal <esben@geanix.com>
@@ -87,7 +87,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 7a32f77792d9a..86110fc3c1465 100644
+index 21fa21c6547b1..93b38d97a7263 100644
 --- a/drivers/pinctrl/freescale/Kconfig
 +++ b/drivers/pinctrl/freescale/Kconfig
 @@ -9,7 +9,7 @@ config PINCTRL_IMX
