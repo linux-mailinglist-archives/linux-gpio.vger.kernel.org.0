@@ -1,155 +1,180 @@
-Return-Path: <linux-gpio+bounces-13558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B04299E5B48
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 17:25:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E8C9E5D1E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 18:30:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1724168922
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 16:25:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EABBD1882A8A
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 17:30:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79693222582;
-	Thu,  5 Dec 2024 16:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C1F22577F;
+	Thu,  5 Dec 2024 17:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3ZpoIMZn"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LmpzgA3p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2123521D5B7
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8A0224AFA
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 17:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733415902; cv=none; b=eS2w3PAqcVJOGgqJt7FmPFvaqZjbe57W0BkS2ZyjrnCK4EU9ywwEzVAjRnxQwE7li1sXQwicc7PCvTMSLDG8fgsIMXLoOBLbXx0hIw9HmOFAnhS+ulh4FeltEPY38S7MvAdZZlXrUB3Lbj8sdmDo9fVu6gxjUq1F9OCNhgpDaFw=
+	t=1733419816; cv=none; b=T76l9355UiRiKDvneWiLOd/f7GaNDR1yeT0PYc1d0/rScl9gBg/+xsjgpExDcSJr09Zpw4N8sQOSA+TAdmI1bDGLqHhmW0DgA+dJKPvqIkVyzk+VuaG1V6ZsSPJd6BIabbUC3ihOIDeFhJyeGQmAcNqyDzCIsAsjH56RPL+4AJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733415902; c=relaxed/simple;
-	bh=R7CVb9LI65y/3Qu32CYYXvSxOe5U0ZYewJNDLJ5FwCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FM5HR8Pgp5Njq4Wo339ucuAt8Nn0faem34HwYyOssFDbeN3+z2ymfGJpKcUE1oqONtINhTSZYXTiBy+xwexXuqVoNuYqpIhtnaqv9KezOdqCJ8DPki6Rq1C5Foabpl/lhpQB/C5JkB/doU3fl6Snfn1/Rjjltk1ho7Dea5f8K5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3ZpoIMZn; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53e152731d0so1952332e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Dec 2024 08:24:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733415897; x=1734020697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ItHEVA7I8S1EP8oyTKl1F93KEEHRVDFUauUtw/1Acb0=;
-        b=3ZpoIMZnwjCl4Vv5bu6PGSXVdDmY7k4Cj1zgHc6F/cvtw8CM1rNR1LTJDsCfgmd0g2
-         BceSlvbQiLyYiwl1rdWJ3jv2Ns4UxCWRnsrFu4TQEusFPgx7FkT2UIodCH6L3llBjvZX
-         XNAHzd6Taqadu0P2fGi/yUIsqcbc2LJaCMf0KU5YlqUl8Ra8J04m6hedyjqo7k0PtBfa
-         YzZpvhommBUg5ON/+IUYW1PeMHGPsGOGeDu3G435iCu3IM89jIWqEOC9Hd0bT3dOemUj
-         +5wiSeoDLmTU2wBbs3vqgyCGSboeppp2+z3qZoXORDMgU0UpKaORWbQqfQFXw+JpXtdd
-         NE3A==
+	s=arc-20240116; t=1733419816; c=relaxed/simple;
+	bh=oRA1uXnvpsmjJQDCBwr+QMnYjfUCn926pHr/Oj5VxTI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QTDoxICBdj0ErezNlELuwfENhoiM8HUVIwjeI5j9zU9UY+zScLwGVEEmCRM/mcKIWpoXOCa/0lz8Yy+ovspKtvznEjtto4QjzuxstZ9FePJdwNem/ahXAiE+JGt3wzado9T5x9TIHlHEtHMCNRhuHChgQOQd55KigXG85V3nXP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LmpzgA3p; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B5Boa5c029231
+	for <linux-gpio@vger.kernel.org>; Thu, 5 Dec 2024 17:30:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AaqtZOlfrn0s5WOa1v+zVEs6LfsFYydrC3W6W40E/bI=; b=LmpzgA3pcNpMy9CB
+	VYfrvB4ziiUIsaFs8JBWG9lYuCr7+OwNUciD5v0+/eezBK+gojEkd3HIrm9zaKv6
+	MXDnun4k4pl3frdE1wtTMNevPdyio6F0HBDykcdjGMQai96Nw6zwLG8P2nsBA1kR
+	PbGZz9Xuy17upHmQHlHiuypX1fbpiS5kPPIjZOlwJO/1VH8O41pbHUwx6RkjrFcj
+	j625YK4XgCUppXvS14a2dTo3Jjmwph0tBzX3n/e7Gof9FqhQ7cSugDvxEQjqgS6S
+	pz9rT990eBnVrEbb/dl0FliNRMJifYdhAXbSSWe4zw34qboPVPZFOx82ZkQ9kLON
+	lwZHmA==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43bbnj0ya7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 05 Dec 2024 17:30:13 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4669114c62dso3020051cf.3
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Dec 2024 09:30:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733415897; x=1734020697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ItHEVA7I8S1EP8oyTKl1F93KEEHRVDFUauUtw/1Acb0=;
-        b=eC9jJuqaVfZY2YB6NNrK3Usbxg1QH8aIUjcMtNcSF9dSXMwWFCrKIHY/ZVo1E8NOic
-         2PXDoTRBEx62UweVzSr3oPU+g3R3NUrtEuMlFMFJvWFWv29Ta5RYcC3yrXVyLKoOU6C9
-         mGMxto5OsO/Vjum86HXrpqkdRhqrdnoGD7X5azHMwjAMrW+ezWH2nrgOPreFzgowBVFQ
-         yk0XCzbj1qXHxHMJF+jAeSMjK/K5ONF9sqWWfuQYBY9OYppGyUqjFFzyw0OnLEzbNFUT
-         RYGoE6Xc1G87qjztTHtANYHbABjqNzAZtg4exNZJeay+AtTD3BH4sh7PkQB6f6ZIZY7i
-         sr6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWHiYJErcZ9EO9VqlcRoypg5dC0i/eQI/EfXQkrDbkIFfc4WMDj81IaKSb5WXT2cMOb/N31zjnOVLnV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM50sxk0A/GG/pChW9fImcHHffasVbfVDq3qYvzT4+5DomfwrE
-	MQrjrWb9ibkUiqV88yUM+7LJywQKe3W9S8P7VkLFT1BP+f00aELVdfmvcdr8epfFnbJWNEAPJ+t
-	zLIe/R3vspj1pO1L1H1B1M43CL/CJxK4qnoLz2w==
-X-Gm-Gg: ASbGncvkgA593BC27neA5npb71oL47Fn9YBBlrgWrhjetgMadJdaumX4CWztoVzzgi0
-	J3RdcGkei0RPRCEiS2uNbFnyAGRE2i/3WD88WdciAoyuWJDqIFkJRPwbsx1lGPg==
-X-Google-Smtp-Source: AGHT+IErYJU9bnmgh/S4XgU0jcrMWfkUEiJSX94XfyJ1xliCjLlWQwaDM6P30GxT6teJ6fjjXCYzQKweIZQ1ynm3Yi8=
-X-Received: by 2002:a05:6512:4006:b0:53d:f6bc:23ec with SMTP id
- 2adb3069b0e04-53e216f74ecmr1077273e87.5.1733415897149; Thu, 05 Dec 2024
- 08:24:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733419813; x=1734024613;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AaqtZOlfrn0s5WOa1v+zVEs6LfsFYydrC3W6W40E/bI=;
+        b=lYSlf24SQdDLZ2QnVhpbgzpHRYwMZJ/9iPB7VWjjBrQJXuI2ofa5zbZImelimO1E6O
+         PleMFtPFAIKgr5S2g4pFtfCNq5co2OUAOGID3y+OYQMUtgTCG4oJqzgL+a0Lvrv4A11D
+         rzR5srKmmaws4pS7F/ORgGeSkb6HolYXC9q5rsZKlDEz9R0d8GgIWUY1+BPa6KYrLNE8
+         pmRYBLBe0B732h/y+iTGd8dL04fGweZdlQNvesp1KPIIKZDFel2iNYnOFgmqTz5+OauM
+         lbat0cX85uuQ10k9UsZzjdUXXfsoOlqGi1qxSdTUM1e4J1bAXVXsfYSUCEb0f/iWdEvR
+         x79A==
+X-Forwarded-Encrypted: i=1; AJvYcCWO6TjFTwSRZaV/A63hEFMXK01azgHf6cLd5vrjiX3SimVVVo9EaCAVARv4odmfdl0lJzK2MxxXZZ++@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaoTR4WjznpoX2Og4SPjqonj/bpNojcl8bRkJIH3wXjYkRqpoc
+	9aQ0ldG+kHqZzzpZ00HLGVseiWfCk5YsEk2PUFYJltlVhyH2o5M1zXUj2C4pShg+i3MULyx+tvv
+	xTyRdheaA6ZPsrrKuOuvByaG4v7zbrctOSoJPdSe1y/MxJ1Yu8DHC3Uw33j93
+X-Gm-Gg: ASbGncsfJMtfAyOcDxbipMr/Na92c2fTFuqqVLiGYjyRxoRRUOmb554G3Li63hEhrMi
+	Lwf1HSrx34xtqFLfbdT8KWW2LgJKtH0Mg6xtl2WR71rTWaE/gvJBCcDtVguYcr9BY9Pq8L0MDcr
+	sZubnWLXuse3Z1qU+/U0CRqTRbRyOZ2N+9ENU09G2brvq038B61nod/i1FkVEyYB211G06Dzvpm
+	d9f3zzq2cjj/gpO7ss7PwUkRCNdO0hyRCb1hNGEHkk78VHUXy2+y8Ic1okK9GCptP8CcvnMfCyW
+	9C8yWPm3pzv/LQ3fRLWbgQgqKp5vo7E=
+X-Received: by 2002:ac8:7f07:0:b0:458:2619:45b4 with SMTP id d75a77b69052e-46734ce0fe0mr99951cf.7.1733419812737;
+        Thu, 05 Dec 2024 09:30:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHVXY2uZ+6FfU3SZe7AmGKYUL4OMFBVbnlBIZtVhOo7V9MP+Fxh/D8gWbwDaEuRWz8DmAjjtw==
+X-Received: by 2002:ac8:7f07:0:b0:458:2619:45b4 with SMTP id d75a77b69052e-46734ce0fe0mr99491cf.7.1733419812145;
+        Thu, 05 Dec 2024 09:30:12 -0800 (PST)
+Received: from [192.168.212.120] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d14c799181sm1074740a12.70.2024.12.05.09.30.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2024 09:30:10 -0800 (PST)
+Message-ID: <249fb0aa-5624-41cb-8a3b-c2e54dba87df@oss.qualcomm.com>
+Date: Thu, 5 Dec 2024 18:30:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com> <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
-In-Reply-To: <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 5 Dec 2024 17:24:46 +0100
-Message-ID: <CAMRc=Mf--vRm15N2au-zvP89obcxRuk+3OOLqFtrjgg61_LotA@mail.gmail.com>
-Subject: Re: [PATCH v3 08/11] gpio: sim: Remove gpio_sim_dev_match_fwnode()
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com, 
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: ipq5424: configure spi0 node for
+ rdp466
+To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, andersson@kernel.org,
+        linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, konradybcio@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com
+References: <20241122124505.1688436-1-quic_mmanikan@quicinc.com>
+ <20241122124505.1688436-5-quic_mmanikan@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20241122124505.1688436-5-quic_mmanikan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 9ouNe1VMIMQ_dJcPkg8FRP65OeC2xGOT
+X-Proofpoint-ORIG-GUID: 9ouNe1VMIMQ_dJcPkg8FRP65OeC2xGOT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412050128
 
-On Thu, Dec 5, 2024 at 1:15=E2=80=AFAM Zijun Hu <zijun_hu@icloud.com> wrote=
-:
->
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
->
-> gpio_sim_dev_match_fwnode() is a simple wrapper of device_match_fwnode()
-> Remvoe the unnecessary wrapper.
->
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+On 22.11.2024 1:45 PM, Manikanta Mylavarapu wrote:
+> Enable the SPI0 node and configure the associated gpio pins.
+> 
+> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
 > ---
->  drivers/gpio/gpio-sim.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 370b71513bdb529112e157fa22a5451e02502a17..b1f33cbaaaa78aca324f99c45=
-a868e7e79a9d672 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -413,11 +413,6 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip=
- *chip)
->         return devm_add_action_or_reset(dev, gpio_sim_sysfs_remove, chip)=
-;
->  }
->
-> -static int gpio_sim_dev_match_fwnode(struct device *dev, const void *dat=
-a)
-> -{
-> -       return device_match_fwnode(dev, data);
-> -}
-> -
->  static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device=
- *dev)
->  {
->         struct gpio_sim_chip *chip;
-> @@ -503,7 +498,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *sw=
-node, struct device *dev)
->         if (ret)
->                 return ret;
->
-> -       chip->dev =3D device_find_child(dev, swnode, gpio_sim_dev_match_f=
-wnode);
-> +       chip->dev =3D device_find_child(dev, swnode, device_match_fwnode)=
-;
->         if (!chip->dev)
->                 return -ENODEV;
->
->
-> --
-> 2.34.1
->
->
+>  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 45 +++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+> index d4d31026a026..6256216ca764 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+> @@ -23,6 +23,36 @@ &sleep_clk {
+>  };
+>  
+>  &tlmm {
+> +	spi0_default_state: spi0-default-state {
+> +		clk-pins {
+> +			pins = "gpio6";
+> +			function = "spi0_clk";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +
+> +		cs-pins {
+> +			pins = "gpio7";
+> +			function = "spi0_cs";
+> +			drive-strength = <8>;
+> +			bias-pull-up;
+> +		};
+> +
+> +		miso-pins {
+> +			pins = "gpio8";
+> +			function = "spi0_miso";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +
+> +		mosi-pins {
+> +			pins = "gpio9";
+> +			function = "spi0_mosi";
+> +			drive-strength = <8>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+>  	sdc_default_state: sdc-default-state {
+>  		clk-pins {
+>  			pins = "gpio5";
+> @@ -57,3 +87,18 @@ &xo_board {
+>  	clock-frequency = <24000000>;
+>  };
+>  
+> +&qupv3 {
+> +	spi0: spi@1a90000 {
 
-Please use get_maintainers.pl to get the complete list of addresses to Cc.
+&spi0 {
+	pinctrl-0 = <..
+	...
+};
 
-Bartosz
+KonraD
 
