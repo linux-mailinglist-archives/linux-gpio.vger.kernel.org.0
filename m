@@ -1,125 +1,106 @@
-Return-Path: <linux-gpio+bounces-13548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13F629E5665
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 14:19:33 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1ED81670E2
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 13:19:29 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5771218AD3;
-	Thu,  5 Dec 2024 13:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="IN6sqLn/"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B78ED9E567A
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 14:20:59 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A467218852
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 13:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.54
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78F232834AF
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 13:20:58 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B48821323B;
+	Thu,  5 Dec 2024 13:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVyuTB9O"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38B7C13D
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 13:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733404769; cv=none; b=U6t5oHUsheDs1Hqx2kuSBzvRkGMDVYFbX6buqNn5xgh69PUD9JVjaimrL9lndiqPve7apMQBquR3Ch1kmzeZ0wdzHRz5QiByr2Jgr0U94xFJv0B+rucKngZjXMxuF1yFkASQyH+IlyfjCRl7dhD2UXl6jgeU9JBqhYPjhyZVDeo=
+	t=1733404855; cv=none; b=kjZeSndkqH1nHCtfMoa8yYRs7UXDvEsnOscmjLgzTLBBzo9H2l7ve6ZcbaHnMpEKxGCHwnUGUOHgFR+hFkGvV0Ve4JGaVkb14GfDJyFMKuLIjAYaNkXSBzmOKLJhFWdja+ialzDyIFuvCQsMeDxJw23PDv/AohsKAidtWzC8lD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733404769; c=relaxed/simple;
-	bh=Y8SH9YRW4Y+tbLnxz2fC5g3ZDI0vc4mItkQNyvm6VZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M7rh0a/P6rsymdgp4Xb+Fw2rUzdhtsFx0z4TVv9Fxt3MOughA1hsTSa7V0wzaQam/+5jN5UHjygpXE3Ew3OcEDcVZIv32rcoweo209UXg3l8dae0Gf+ZKc5mTI6qqO/Y3OaZ6MEVk4eaVSzKubpJpDK06Ytkb2i34m5/AbFo7SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=IN6sqLn/; arc=none smtp.client-ip=17.58.6.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733404763;
-	bh=DeIIq7By5hb3j6D6u79xafAimRNm6W+G83In10fjfT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
-	 x-icloud-hme;
-	b=IN6sqLn/x5OCaqJO4vF5gn/fcjmZc3fZlyeytDMJnKp7XQ3de7PoFnmqSe0zeC9a5
-	 vUwI0Tptt7E+4Q3DWUqdgUpD0xOI9lBpQ4RQvwZlnJGvBh2ctgzycf7q159ExifH7K
-	 a8AIRvkTNSgebMbC7lLYAk5B4kjmGYrIRQclMfECHJrJ1+KGG+jAbVUk+xSHPoDbnh
-	 1e9j8QEBXLJX5ZxwWzRD/5Q41qX+s8eZZmLJoAKcnBcHGPNxbbfWDhHq6Q/v1949Vm
-	 rVciEGx0K4GT+eFIHW+pi7hnAXPVyGUzlxkEJ6XEG1lJhoSlPxkPp1AOo8we43GZSE
-	 xVpU9Q2Rr6i5g==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id C58AC3A1052;
-	Thu,  5 Dec 2024 13:19:06 +0000 (UTC)
-Message-ID: <f150fd45-7f84-4036-aa0e-32bd04fbeb67@icloud.com>
-Date: Thu, 5 Dec 2024 21:19:02 +0800
+	s=arc-20240116; t=1733404855; c=relaxed/simple;
+	bh=4wQg33KHlBFl/ICiryUfjIUKGePzRjhb7WMsT0wPKqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kkyv5toZSPeh7Vx7wMeY0A+/etB2o+p+8Wv57fA0MKuE428lMhf3Ck9gJaqVSsxkKKfHg9QEP+A/e6jPmCj23pIfo33Y2Qa3EKIT2qBjAabjSZrK9Fe9VM/81b3HomKTWpWPsh9Q7Z/tyHbzxoUlIWicuqeDiehg+uzGEPHJfJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVyuTB9O; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733404854; x=1764940854;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4wQg33KHlBFl/ICiryUfjIUKGePzRjhb7WMsT0wPKqY=;
+  b=jVyuTB9OBdF8DHEv9Vd/NtWzRog4xQ9BxPBo5TsE3Txo9T/3JyXYISPa
+   wkjBeFC80+bxicDI8MOcbo1yCBOSpS01N9PGUD0p6D1UAUl7IklPqTEx7
+   mPQEIHNJxDChpuH2Jq2NF4hprW6G8gKDSvH3s0gWMNj8rN7v47BBcsXp/
+   /+vvK5I3oIVYtalh20LIgfAS3oxFNjEjWhWRc3l3MVJQZpVkxqz2CwIRl
+   DANP2wgDer8qPJBdTCcjmjWQcu4UxmPgWE6iVQD47i0T364AgCRRf/wMf
+   qhER2kWw/T6s/auimGKEL4mRvxXh7EH4HD9lyojwjxVIE13FrVzAbdgpz
+   A==;
+X-CSE-ConnectionGUID: 8SGIh+xDQ3ewV68Cjc2dSw==
+X-CSE-MsgGUID: UeytgR5zRmm5G3y4vSpqeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="37650556"
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="37650556"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 05:20:53 -0800
+X-CSE-ConnectionGUID: FewPbKxzRNKz8EqKopnWTg==
+X-CSE-MsgGUID: kR0cGUiZR3uClJtAKiFfcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,210,1728975600"; 
+   d="scan'208";a="125004484"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 05 Dec 2024 05:20:52 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3001242D; Thu, 05 Dec 2024 15:20:50 +0200 (EET)
+Date: Thu, 5 Dec 2024 15:20:50 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: gpiolib: fix refcount imbalance in
+ gpiochip_setup_dev()
+Message-ID: <Z1GoskmQH0_FhxID@black.fi.intel.com>
+References: <20241204122152.1312051-1-joe@pf.is.s.u-tokyo.ac.jp>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/11] gpio: sim: Remove gpio_sim_dev_match_fwnode()
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- quic_zijuhu <quic_zijuhu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, netdev@vger.kernel.org
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
- <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
- <7ugfaj2h3sy77jpaadco5xtjalnten3gmvozowcle3g7zcdqs4@sqf5l47onbsi>
- <ac42e652-4128-44ea-976e-5234360d8183@quicinc.com>
- <eyu7nm5hvwfqxgysnrzsvianzf7abvlovpxfo7snsxowmuuhpj@tah3gkqm5ldj>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <eyu7nm5hvwfqxgysnrzsvianzf7abvlovpxfo7snsxowmuuhpj@tah3gkqm5ldj>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2qHgOEYCHFJo6csSrQf0NeEl1TvG8_uZ
-X-Proofpoint-ORIG-GUID: 2qHgOEYCHFJo6csSrQf0NeEl1TvG8_uZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-05_11,2024-12-05_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=736 spamscore=0
- phishscore=0 clxscore=1011 suspectscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412050096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241204122152.1312051-1-joe@pf.is.s.u-tokyo.ac.jp>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 2024/12/5 18:37, Uwe Kleine-König wrote:
-> On Thu, Dec 05, 2024 at 04:37:08PM +0800, quic_zijuhu wrote:
->> On 12/5/2024 4:10 PM, Uwe Kleine-König wrote:
->>> On Thu, Dec 05, 2024 at 08:10:17AM +0800, Zijun Hu wrote:
->>>> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>>>
->>>> gpio_sim_dev_match_fwnode() is a simple wrapper of device_match_fwnode()
->>>> Remvoe the unnecessary wrapper.
-> 
-> Just spotted: s/Remvoe/Remove/
-> 
+On Wed, Dec 04, 2024 at 09:21:52PM +0900, Joe Hattori wrote:
+> In gpiochip_setup_dev(), the refcount incremented in device_initialize()
+> is not decremented in the error path. Fix it by calling put_device().
 
-this typo error is my mistake, will correct it.
+First of all, we have gpio_put_device().
+Second, what the problem do you have in practice? Can you show any backtrace?
+Third, how had this change been tested?
 
->>>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
->>>> ---
->>>>  drivers/gpio/gpio-sim.c | 7 +------
->>>
->>> I think if you move this patch before patch #4 in your series, you only
->>> have to touch this file once.
->>
->> the precondition of this change is patch #4, it will have building error
->> if moving it before #4.
->>
->> actually, we can only do simplifications with benefits brought by #4.
-> 
-> Ah I see. I thought that device_match_fwnode only got the const for the
-> 2nd parameter in patch #4.
-> 
-> Best regards
-> Uwe
+Looking at the current code I noticed the following:
+1) gpiochip_add_data_with_key() has already that call;
+2) gpiochip_setup_devs() misses that call.
+
+This effectively means that you inroduce a regression while fixing a bug.
+
+The GPIO device initialisation is non-trivial, please pay more attention to the
+code.
+
+Bart, can this be removed or reverted before it poisons stable?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
