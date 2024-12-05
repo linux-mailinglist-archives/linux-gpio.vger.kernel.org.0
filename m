@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-13515-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13516-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9A4C9E4A77
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 01:12:13 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B963B9E4A8C
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 01:12:54 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A78E283B23
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 00:12:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B5DE1662BF
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2024 00:12:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827592033A;
-	Thu,  5 Dec 2024 00:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B60E1CA64;
+	Thu,  5 Dec 2024 00:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="01AUCv/V"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="AaMBReMo"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A388BEA
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 00:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81F3D26D
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Dec 2024 00:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733357489; cv=none; b=Lri85O34BCvIqBZw08Ak4p3kaFvYWmqxbWXj72ylfzfqyR2/bSojE9Oa+TiVbN+ngUxTnENDgTUQn//GOoxCdsC31u4rLlQYj+/Z6PAIcp4o1zdwCaRsFjK4dnNLPX90NmWxbZXUZPzzHXxY2ZE1VDUep/iYKpShiG8XN9cqwf0=
+	t=1733357501; cv=none; b=tABwbV6lvLTAO3EZlpyu9XUkUSCpDCX6JRo6qyESo29y3RdtifNEnPmgrLIW+1a2ib7NAiqF0rzncoNPIRCDgc7CWZabPwjvx0Y6wrIhEIrxfzusfO3OPa1oqYe2xQL/YekiNbmFYr7JVMnLfx6zgGpV/Ez+NhBEYVse8ip9rGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733357489; c=relaxed/simple;
-	bh=REZF6/hkKTlwm2A1iapKIp3QBE0n/m1TORFl69tFs5Q=;
+	s=arc-20240116; t=1733357501; c=relaxed/simple;
+	bh=Txz+DMIu0HjYpVAknikfDcPuYhSiW9S4S4zdgwMhpwc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jZCmkSkj/Q1qp7b4jpWAviVlGHl7tiBMrMOWtg06U4IxggklE9nxVLketpFl9eU4jDCfzp2YptcQ/8RQEm5QHyUERqq1Ak9gP6vMo7Yk9GeMeRuV4CfZRm1MFHDl2HVybwQdlXRw4rV78JWs3qNTolqq+RGZ1KQD8fak5y5N2Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=01AUCv/V; arc=none smtp.client-ip=17.58.6.52
+	 In-Reply-To:To:Cc; b=kzSBS7wXIi6KsI+J/+w//3fqMLFZc0g1dCJazGMTA2/EEkOMRK6RFfnqdvnFSQzYckpcC/5sqvYD4wdrI/gxUofraG0qdkFEU3N18xC8StnRPPxsGtAGqvEMGMSzz8KAvCzzyffJ37GdV2YuBhIVngWHaHbxez7tpnxuobo0AS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=AaMBReMo; arc=none smtp.client-ip=17.58.6.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733357487;
-	bh=J5dZErqHWkqkbiTZ/fetJ0ewz9CCUgVEnKPjhnCoIqc=;
+	s=1a1hai; t=1733357498;
+	bh=s27I9OiFEC5wqMAA52fLVTkJnWq/1PJykguAupy9zqE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
 	 x-icloud-hme;
-	b=01AUCv/VOnVd/OpcOMyJLqg2MZhYvalNTdwO/nf0pjuIuCQLpj8bCXqabLO3SaN+J
-	 yRezCqItFjRcLdX9nJzu237LUed2yPzXsY+/z3Bo6gNkEVB3W9yoc1HZqA3v4M54o8
-	 PRNj5gwMNxcG7FCAC5KNWEJKPRNYxtOFboIqr6bCedwbXPzKHekydcsZuvRPOMznRd
-	 bFFFvSMydgDu0u1w00EXuuVE+7kMVLHj6AnKylpWz4tfAQPDPCflMQ38GJhMahs1MD
-	 HX2HC+mvs7/FDeobHf6rtbJlEmAE69sIodmpbQcX7E7pvuwFiV4HVeCK5x5e/tZzaI
-	 wyKIbjoLM/rdA==
+	b=AaMBReMoVb0lSqAfWtIUZpyS48WBzfGTBOJ4idA3UTiHPD2VtroZkQ2LBN26ektJg
+	 fWn3prREbzLFl1KoR6iEfktUfII9bNpwImON/ESQxnnCGdIvgrdRLSaWxJFHci1T3+
+	 7NybdpqcQ0yv26rJDrTmYi/hddtW8/+6dXAto5WBo0rAWD88KO7IIA5ZvyFOLXoS3q
+	 ehVekwdLcpYLutCiajjJFG3pTCbtr0jk8alc/U2FFnmyq/Bb6zygfMsypJ4uBM5ZI9
+	 tbuNaRvpVXLTsvhH4fEp6taGKZ0GU8hvEvaOfF2yRIJtK2DzKbEZ48vUsP4jrfOc3O
+	 hELDsSGo1WePQ==
 Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 8B0E680030E;
-	Thu,  5 Dec 2024 00:11:16 +0000 (UTC)
+	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id C8B2580027B;
+	Thu,  5 Dec 2024 00:11:27 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Date: Thu, 05 Dec 2024 08:10:11 +0800
-Subject: [PATCH v3 02/11] slimbus: core: Constify slim_eaddr_equal()
+Date: Thu, 05 Dec 2024 08:10:12 +0800
+Subject: [PATCH v3 03/11] bus: fsl-mc: Constify fsl_mc_device_match()
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241205-const_dfc_done-v3-2-1611f1486b5a@quicinc.com>
+Message-Id: <20241205-const_dfc_done-v3-3-1611f1486b5a@quicinc.com>
 References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
 In-Reply-To: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -76,44 +76,43 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  linux-serial@vger.kernel.org, netdev@vger.kernel.org, 
  Zijun Hu <quic_zijuhu@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: A5avaC9zWkEyGxiUZV1XaLznKCTQ9MaZ
-X-Proofpoint-GUID: A5avaC9zWkEyGxiUZV1XaLznKCTQ9MaZ
+X-Proofpoint-ORIG-GUID: 7Q8uF-g7w7uKUYtHNcd92_FB_Q-fmK-F
+X-Proofpoint-GUID: 7Q8uF-g7w7uKUYtHNcd92_FB_Q-fmK-F
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2024-12-04_19,2024-12-04_02,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
  clxscore=1015 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- spamscore=0 mlxlogscore=738 classifier=spam adjust=0 reason=mlx
+ spamscore=0 mlxlogscore=820 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.19.0-2308100000 definitions=main-2412040186
 X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
 From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-bool slim_eaddr_equal(struct slim_eaddr *a, struct slim_eaddr *b)
-does not modify @*a or @*b.
+fsl_mc_device_match() does not modify caller's inputs.
 
-Constify it by simply changing its parameter type to
-'const struct slim_eaddr *'.
+Constify it by simply changing its parameter types to const pointer.
 
 Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
- drivers/slimbus/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bus/fsl-mc/dprc-driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
-index 65e5515f7555e2eb840fedaf2dc4cc5d76dbc089..b5d5bbb9fdb6614ffd578f5754226b50e394f0df 100644
---- a/drivers/slimbus/core.c
-+++ b/drivers/slimbus/core.c
-@@ -328,7 +328,8 @@ void slim_report_absent(struct slim_device *sbdev)
- }
- EXPORT_SYMBOL_GPL(slim_report_absent);
+diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
+index 4b68c84ef485055c9b300b4f7912a20f959b8ac1..11c8fadcf85148b4e4ea6b97b7efb6d4ddf22d3c 100644
+--- a/drivers/bus/fsl-mc/dprc-driver.c
++++ b/drivers/bus/fsl-mc/dprc-driver.c
+@@ -22,8 +22,8 @@ struct fsl_mc_child_objs {
+ 	struct fsl_mc_obj_desc *child_array;
+ };
  
--static bool slim_eaddr_equal(struct slim_eaddr *a, struct slim_eaddr *b)
-+static bool slim_eaddr_equal(const struct slim_eaddr *a,
-+			     const struct slim_eaddr *b)
+-static bool fsl_mc_device_match(struct fsl_mc_device *mc_dev,
+-				struct fsl_mc_obj_desc *obj_desc)
++static bool fsl_mc_device_match(const struct fsl_mc_device *mc_dev,
++				const struct fsl_mc_obj_desc *obj_desc)
  {
- 	return (a->manf_id == b->manf_id &&
- 		a->prod_code == b->prod_code &&
+ 	return mc_dev->obj_desc.id == obj_desc->id &&
+ 	       strcmp(mc_dev->obj_desc.type, obj_desc->type) == 0;
 
 -- 
 2.34.1
