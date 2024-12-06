@@ -1,321 +1,288 @@
-Return-Path: <linux-gpio+bounces-13573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13574-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B1F09E6519
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 04:38:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 144851884AF3
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 03:38:46 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E920418D63C;
-	Fri,  6 Dec 2024 03:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DUOxUiFM"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B69AB9E66B8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 06:17:56 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7329155333
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Dec 2024 03:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AECA28577B
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 05:17:55 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34D63198E89;
+	Fri,  6 Dec 2024 05:17:45 +0000 (UTC)
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B50D21957E7;
+	Fri,  6 Dec 2024 05:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733456321; cv=none; b=lZo3nv/bh4Ukby7nulE45Ai9QBhS2lfkIg5SwEmUPLtxlFHcPDIiO3oek25vLb33thzPZ9etMknzntncP42hBsPKFja9YGaV6EIRnRJ/b6nhaOS+3zkUri+iGITSpC7xMCnOw1xVc0+eWdmmumOdCh45Y35d1Y77M0vrjWGLAoc=
+	t=1733462265; cv=none; b=FqRy7Qpl2cm6nV4RkslAiS+L02MQKnDzGJmbjGKo4Lxn2QA92tri97+HvRDHsiDNno21LECDTgh94TrylXKkvwODmv/n3FWbBOtpXA4g+JX+U2BYnMmkDDWTyoLatDlGop1ueGS4NFqBB+Z0+IerzgWDDEfydH7QaJmt+mZ5rkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733456321; c=relaxed/simple;
-	bh=WdVWr8ZuDIgQmP0z9ZZY6FEa+pvLTuS1R6vfu6cP1po=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ea7GeKFpsEKD0FQBkC55sKAOM/zskBMRUK9vc7avcRfHwyqkG0mTsL0PehD+qR4B2jFlZXf8OH2dlxJdyIz7ENcCOv7AQM07IAL7UwreWbDwYpQ98CNHnBwVWDWowGzR2t/6t1ZBL1JhWGlXIK+X558KG9oAWcy/A4HB17f0ers=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DUOxUiFM; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733456319; x=1764992319;
-  h=date:from:to:cc:subject:message-id;
-  bh=WdVWr8ZuDIgQmP0z9ZZY6FEa+pvLTuS1R6vfu6cP1po=;
-  b=DUOxUiFM/w/By+P5pVrl0dPgUhgak9y1uXYKD//CMzi2wW0NfgGAv5hp
-   OajMIGIKb9vUQDp8DlC12XYBM2eVfDDEHw1uiAnFI8UfhBOdrCOBRc9mu
-   s88W8l0dPHcqmtnzxKypjQksQxiEJ0PJRe3H2UR5ltzzGK2+8CfnpuiiU
-   AAMYxL22C2PWS/YKw8XIm06QBuVB6OQg6WBxa2nY4I4nsvrwdC8P1PNmE
-   h4asmOsAOSdWCBvdPkoQIOUU/9Qb5WPugqHcl6G+/d1iWSR/U2OtayUU0
-   IHvdG/9Ll2umm+bqH/w4YjtfVdAKT/x4Jtz5+H1xm4f3BFIsSt+h6RFwk
-   w==;
-X-CSE-ConnectionGUID: bJh7jXBKSjOqoZ2ceZ6P7g==
-X-CSE-MsgGUID: sgialLY/R6WMXxr5VbB7bQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33118830"
-X-IronPort-AV: E=Sophos;i="6.12,212,1728975600"; 
-   d="scan'208";a="33118830"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 19:38:39 -0800
-X-CSE-ConnectionGUID: Xn/wmoSPR4SndQan/rAleA==
-X-CSE-MsgGUID: kK4mNXYLSjuNbNimBEjzKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,212,1728975600"; 
-   d="scan'208";a="94735840"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 05 Dec 2024 19:38:38 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tJPAp-0000fP-19;
-	Fri, 06 Dec 2024 03:38:35 +0000
-Date: Fri, 06 Dec 2024 11:35:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- d4216a10e8b6f15b5e47663abd6c21d1149bb5d0
-Message-ID: <202412061139.iD1cSnfi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1733462265; c=relaxed/simple;
+	bh=htWnPQEOdyY5bfg02Phqku26+mG3fe+DlxFNe4nH85o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nyukigSefwsD6J9cqr+Y0lOdVFWJs7qauVZoB+9gkUAoiR1i+CVLQ727q2ft5vv4wSiAIn8NBnhVzkRx4hzYSH4MvUf7OrntPBqTWStpoh3r6CqKl9YbLSBYYXPsTjMfybDhwgAjK8RC4mRr4kyPChiFV5i8lHjGVP4VERte5TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
+HMM_SOURCE_IP:10.158.242.145:63557.884707989
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-123.150.8.42 (unknown [10.158.242.145])
+	by 189.cn (HERMES) with SMTP id 2B0DE1001C9;
+	Fri,  6 Dec 2024 13:14:00 +0800 (CST)
+Received: from  ([123.150.8.42])
+	by gateway-153622-dep-5c5f88b874-qw5z2 with ESMTP id 41a007c610964447a52ad752c2c17d3f for krzk@kernel.org;
+	Fri, 06 Dec 2024 13:14:01 CST
+X-Transaction-ID: 41a007c610964447a52ad752c2c17d3f
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+From: Song Chen <chensong_2000@189.cn>
+To: krzk@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	Song Chen <chensong_2000@189.cn>
+Subject: [PATCH] regulator:s5m8767 Fully convert to GPIO descriptors
+Date: Fri,  6 Dec 2024 13:13:58 +0800
+Message-Id: <20241206051358.496832-1-chensong_2000@189.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: d4216a10e8b6f15b5e47663abd6c21d1149bb5d0  gpio: ljca: Initialize num before accessing item in ljca_gpio_config
+This converts s5m8767 regulator driver to use GPIO
+descriptors.
 
-elapsed time: 830m
+Signed-off-by: Song Chen <chensong_2000@189.cn>
+---
+ drivers/regulator/s5m8767.c      | 110 ++++++++++---------------------
+ include/linux/mfd/samsung/core.h |   5 +-
+ 2 files changed, 37 insertions(+), 78 deletions(-)
 
-configs tested: 228
-configs skipped: 8
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index d25cd81e3f36..d0b1eed4dfa0 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -5,7 +5,7 @@
+ 
+ #include <linux/cleanup.h>
+ #include <linux/err.h>
+-#include <linux/of_gpio.h>
++//#include <linux/of_gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -15,6 +15,7 @@
+ #include <linux/mfd/samsung/s5m8767.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/regmap.h>
++#include <linux/of.h>
+ 
+ #define S5M8767_OPMODE_NORMAL_MODE 0x1
+ 
+@@ -23,6 +24,8 @@ struct s5m8767_info {
+ 	struct sec_pmic_dev *iodev;
+ 	int num_regulators;
+ 	struct sec_opmode_data *opmode;
++	struct gpio_desc *buck_gpios[3];
++	struct gpio_desc *buck_ds[3];
+ 
+ 	int ramp_delay;
+ 	bool buck2_ramp;
+@@ -35,8 +38,7 @@ struct s5m8767_info {
+ 	u8 buck2_vol[8];
+ 	u8 buck3_vol[8];
+ 	u8 buck4_vol[8];
+-	int buck_gpios[3];
+-	int buck_ds[3];
++
+ 	int buck_gpioindex;
+ };
+ 
+@@ -272,9 +274,9 @@ static inline int s5m8767_set_high(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+ 
+ 	return 0;
+ }
+@@ -283,9 +285,9 @@ static inline int s5m8767_set_low(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
+ 
+ 	return 0;
+ }
+@@ -486,16 +488,22 @@ static int s5m8767_pmic_dt_parse_dvs_gpio(struct sec_pmic_dev *iodev,
+ 			struct sec_platform_data *pdata,
+ 			struct device_node *pmic_np)
+ {
+-	int i, gpio;
++	int i;
++	char label[32];
+ 
+ 	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-dvs-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
++		pdata->buck_gpios[i] = devm_gpiod_get_index(iodev->dev,
++					"s5m8767,pmic-buck-dvs", i, GPIOD_OUT_LOW);
++		if (IS_ERR(pdata->buck_gpios[i])) {
++			dev_err(iodev->dev, "invalid gpio[%d]\n", i);
+ 			return -EINVAL;
+ 		}
+-		pdata->buck_gpios[i] = gpio;
++
++		/* SET GPIO*/
++		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
++		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
++		gpiod_direction_output(pdata->buck_gpios[i],
++					(pdata->buck_default_idx >> (2 - i)) & 0x1);
+ 	}
+ 	return 0;
+ }
+@@ -504,16 +512,21 @@ static int s5m8767_pmic_dt_parse_ds_gpio(struct sec_pmic_dev *iodev,
+ 			struct sec_platform_data *pdata,
+ 			struct device_node *pmic_np)
+ {
+-	int i, gpio;
++	int i;
++	char label[32];
+ 
+ 	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-ds-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
++		pdata->buck_ds[i] = devm_gpiod_get_index(iodev->dev,
++					"s5m8767,pmic-buck-ds", i, GPIOD_OUT_LOW);
++		if (IS_ERR(pdata->buck_ds[i])) {
++			dev_err(iodev->dev, "invalid gpio[%d]\n", i);
+ 			return -EINVAL;
+ 		}
+-		pdata->buck_ds[i] = gpio;
++
++		/* SET GPIO*/
++		snprintf(label, sizeof(label), "%s%d", "S5M8767 DS", i + 2);
++		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
++		gpiod_direction_output(pdata->buck_gpios[i], 0);
+ 	}
+ 	return 0;
+ }
+@@ -785,61 +798,6 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
+-						pdata->buck4_gpiodvs) {
+-
+-		if (!gpio_is_valid(pdata->buck_gpios[0]) ||
+-			!gpio_is_valid(pdata->buck_gpios[1]) ||
+-			!gpio_is_valid(pdata->buck_gpios[2])) {
+-			dev_err(&pdev->dev, "GPIO NOT VALID\n");
+-			return -EINVAL;
+-		}
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
+-					"S5M8767 SET1");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
+-					"S5M8767 SET2");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
+-					"S5M8767 SET3");
+-		if (ret)
+-			return ret;
+-
+-		/* SET1 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[0],
+-				(s5m8767->buck_gpioindex >> 2) & 0x1);
+-		/* SET2 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[1],
+-				(s5m8767->buck_gpioindex >> 1) & 0x1);
+-		/* SET3 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[2],
+-				(s5m8767->buck_gpioindex >> 0) & 0x1);
+-	}
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[0], "S5M8767 DS2");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[1], "S5M8767 DS3");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[2], "S5M8767 DS4");
+-	if (ret)
+-		return ret;
+-
+-	/* DS2 GPIO */
+-	gpio_direction_output(pdata->buck_ds[0], 0x0);
+-	/* DS3 GPIO */
+-	gpio_direction_output(pdata->buck_ds[1], 0x0);
+-	/* DS4 GPIO */
+-	gpio_direction_output(pdata->buck_ds[2], 0x0);
+-
+ 	regmap_update_bits(s5m8767->iodev->regmap_pmic,
+ 			   S5M8767_REG_BUCK2CTRL, 1 << 1,
+ 			   (pdata->buck2_gpiodvs) ? (1 << 1) : (0 << 1));
+diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
+index 750274d41fc0..b757f15877a3 100644
+--- a/include/linux/mfd/samsung/core.h
++++ b/include/linux/mfd/samsung/core.h
+@@ -33,6 +33,7 @@
+ #define STEP_12_5_MV		12500
+ #define STEP_6_25_MV		6250
+ 
++#define BULK_GPIO_COUNT		3
+ struct gpio_desc;
+ 
+ enum sec_device_type {
+@@ -77,10 +78,10 @@ int sec_irq_resume(struct sec_pmic_dev *sec_pmic);
+ struct sec_platform_data {
+ 	struct sec_regulator_data	*regulators;
+ 	struct sec_opmode_data		*opmode;
++	struct gpio_desc			*buck_gpios[3];
++	struct gpio_desc			*buck_ds[3];
+ 	int				num_regulators;
+ 
+-	int				buck_gpios[3];
+-	int				buck_ds[3];
+ 	unsigned int			buck2_voltage[8];
+ 	bool				buck2_gpiodvs;
+ 	unsigned int			buck3_voltage[8];
+-- 
+2.25.1
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-20
-alpha                               defconfig    gcc-14.2.0
-arc                              alldefconfig    gcc-14.2.0
-arc                              allmodconfig    clang-20
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-20
-arc                         haps_hs_defconfig    gcc-13.2.0
-arc                        nsimosci_defconfig    clang-20
-arc                            randconfig-001    clang-20
-arc                   randconfig-001-20241205    clang-20
-arc                   randconfig-001-20241206    gcc-14.2.0
-arc                            randconfig-002    clang-20
-arc                   randconfig-002-20241205    clang-20
-arc                   randconfig-002-20241206    gcc-14.2.0
-arc                           tb10x_defconfig    clang-20
-arc                        vdk_hs38_defconfig    gcc-14.2.0
-arc                    vdk_hs38_smp_defconfig    gcc-14.2.0
-arm                              allmodconfig    clang-20
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-20
-arm                     am200epdkit_defconfig    gcc-14.2.0
-arm                         assabet_defconfig    clang-15
-arm                         at91_dt_defconfig    gcc-14.1.0
-arm                          collie_defconfig    gcc-14.2.0
-arm                          exynos_defconfig    clang-20
-arm                           imxrt_defconfig    clang-20
-arm                        keystone_defconfig    clang-20
-arm                            mps2_defconfig    clang-20
-arm                        multi_v7_defconfig    gcc-14.2.0
-arm                         mv78xx0_defconfig    gcc-14.2.0
-arm                        mvebu_v5_defconfig    gcc-14.1.0
-arm                        mvebu_v7_defconfig    gcc-14.2.0
-arm                           omap1_defconfig    clang-20
-arm                           omap1_defconfig    gcc-14.2.0
-arm                          pxa910_defconfig    gcc-14.2.0
-arm                            randconfig-001    clang-20
-arm                   randconfig-001-20241205    clang-20
-arm                   randconfig-001-20241206    gcc-14.2.0
-arm                            randconfig-002    clang-20
-arm                   randconfig-002-20241205    clang-20
-arm                   randconfig-002-20241206    gcc-14.2.0
-arm                            randconfig-003    clang-20
-arm                   randconfig-003-20241205    clang-20
-arm                   randconfig-003-20241206    gcc-14.2.0
-arm                            randconfig-004    clang-20
-arm                   randconfig-004-20241205    clang-20
-arm                   randconfig-004-20241206    gcc-14.2.0
-arm                             rpc_defconfig    gcc-14.2.0
-arm                         s5pv210_defconfig    gcc-14.2.0
-arm                        shmobile_defconfig    gcc-14.2.0
-arm                          sp7021_defconfig    gcc-14.2.0
-arm                           spitz_defconfig    gcc-14.2.0
-arm                           u8500_defconfig    gcc-13.2.0
-arm64                            allmodconfig    clang-20
-arm64                             allnoconfig    gcc-14.2.0
-arm64                          randconfig-001    clang-20
-arm64                 randconfig-001-20241205    clang-20
-arm64                 randconfig-001-20241206    gcc-14.2.0
-arm64                          randconfig-002    clang-20
-arm64                 randconfig-002-20241205    clang-20
-arm64                 randconfig-002-20241206    gcc-14.2.0
-arm64                          randconfig-003    clang-20
-arm64                 randconfig-003-20241205    clang-20
-arm64                 randconfig-003-20241206    gcc-14.2.0
-arm64                          randconfig-004    clang-20
-arm64                 randconfig-004-20241205    clang-20
-arm64                 randconfig-004-20241206    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-20
-i386                 buildonly-randconfig-001    gcc-12
-i386        buildonly-randconfig-001-20241206    clang-19
-i386                 buildonly-randconfig-002    gcc-12
-i386        buildonly-randconfig-002-20241206    clang-19
-i386                 buildonly-randconfig-003    gcc-12
-i386        buildonly-randconfig-003-20241206    clang-19
-i386                 buildonly-randconfig-004    gcc-12
-i386        buildonly-randconfig-004-20241206    clang-19
-i386                 buildonly-randconfig-005    gcc-12
-i386        buildonly-randconfig-005-20241206    clang-19
-i386                 buildonly-randconfig-006    gcc-12
-i386        buildonly-randconfig-006-20241206    clang-19
-loongarch                        alldefconfig    gcc-14.2.0
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-m68k                             alldefconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       m5249evb_defconfig    gcc-14.2.0
-m68k                        m5307c3_defconfig    clang-20
-m68k                        m5307c3_defconfig    gcc-14.1.0
-m68k                            mac_defconfig    gcc-14.2.0
-m68k                          multi_defconfig    gcc-14.2.0
-m68k                        mvme147_defconfig    clang-20
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    clang-20
-mips                         bigsur_defconfig    gcc-14.2.0
-mips                           ci20_defconfig    gcc-14.2.0
-mips                          eyeq6_defconfig    clang-20
-mips                            gpr_defconfig    clang-20
-mips                           ip27_defconfig    gcc-14.2.0
-mips                           ip28_defconfig    clang-20
-mips                           jazz_defconfig    clang-20
-mips                      maltaaprp_defconfig    clang-20
-nios2                             allnoconfig    gcc-14.2.0
-openrisc                         alldefconfig    clang-20
-openrisc                          allnoconfig    clang-20
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                  or1klitex_defconfig    gcc-14.2.0
-openrisc                 simple_smp_defconfig    clang-20
-openrisc                       virt_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-20
-parisc                           allyesconfig    gcc-14.2.0
-parisc                generic-64bit_defconfig    gcc-14.2.0
-parisc64                         alldefconfig    clang-20
-parisc64                         alldefconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-20
-powerpc                          allyesconfig    clang-20
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                    amigaone_defconfig    gcc-14.1.0
-powerpc                      arches_defconfig    gcc-14.2.0
-powerpc                   bluestone_defconfig    gcc-13.2.0
-powerpc                      cm5200_defconfig    gcc-14.2.0
-powerpc                       ebony_defconfig    clang-18
-powerpc                       eiger_defconfig    gcc-14.2.0
-powerpc                     ep8248e_defconfig    clang-20
-powerpc                    ge_imp3a_defconfig    gcc-13.2.0
-powerpc                       holly_defconfig    clang-20
-powerpc                       holly_defconfig    gcc-14.2.0
-powerpc                        icon_defconfig    clang-20
-powerpc                  iss476-smp_defconfig    gcc-14.2.0
-powerpc                 linkstation_defconfig    clang-20
-powerpc                      mgcoge_defconfig    gcc-14.2.0
-powerpc                 mpc8313_rdb_defconfig    gcc-13.2.0
-powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
-powerpc               mpc834x_itxgp_defconfig    gcc-14.2.0
-powerpc                 mpc837x_rdb_defconfig    clang-20
-powerpc                    mvme5100_defconfig    gcc-14.2.0
-powerpc                     ppa8548_defconfig    clang-20
-powerpc                       ppc64_defconfig    clang-18
-powerpc                      ppc6xx_defconfig    gcc-14.2.0
-powerpc                         ps3_defconfig    gcc-14.2.0
-powerpc                     redwood_defconfig    gcc-14.2.0
-powerpc                     skiroot_defconfig    clang-20
-powerpc                     skiroot_defconfig    gcc-14.2.0
-powerpc                     tqm8540_defconfig    clang-20
-powerpc                     tqm8540_defconfig    gcc-14.2.0
-powerpc                     tqm8541_defconfig    gcc-14.2.0
-powerpc                     tqm8548_defconfig    clang-20
-powerpc                     tqm8555_defconfig    clang-20
-powerpc                     tqm8560_defconfig    clang-20
-powerpc64                        alldefconfig    clang-18
-riscv                            allmodconfig    clang-20
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-20
-riscv                            allyesconfig    clang-20
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-13.2.0
-riscv                    nommu_virt_defconfig    gcc-14.2.0
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                        dreamcast_defconfig    clang-18
-sh                ecovec24-romimage_defconfig    gcc-13.2.0
-sh                         ecovec24_defconfig    clang-20
-sh                        edosk7705_defconfig    gcc-14.2.0
-sh                        edosk7760_defconfig    clang-20
-sh                        edosk7760_defconfig    gcc-14.2.0
-sh                             espt_defconfig    gcc-14.2.0
-sh                 kfr2r09-romimage_defconfig    gcc-14.1.0
-sh                          r7780mp_defconfig    clang-18
-sh                          rsk7269_defconfig    clang-18
-sh                          sdk7786_defconfig    clang-20
-sh                           se7206_defconfig    clang-20
-sh                           se7343_defconfig    clang-20
-sh                           se7722_defconfig    gcc-14.2.0
-sh                           se7724_defconfig    gcc-14.2.0
-sh                           se7750_defconfig    gcc-14.2.0
-sh                   secureedge5410_defconfig    clang-18
-sh                             sh03_defconfig    clang-20
-sh                           sh2007_defconfig    gcc-14.2.0
-sh                     sh7710voipgw_defconfig    clang-20
-sh                   sh7724_generic_defconfig    gcc-14.2.0
-sh                        sh7757lcr_defconfig    clang-20
-sh                        sh7763rdp_defconfig    clang-20
-sh                             shx3_defconfig    gcc-14.2.0
-sh                            titan_defconfig    gcc-14.2.0
-sh                          urquell_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                       sparc32_defconfig    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-20
-um                               allyesconfig    clang-20
-um                           x86_64_defconfig    gcc-13.2.0
-x86_64               buildonly-randconfig-001    gcc-12
-x86_64      buildonly-randconfig-001-20241205    clang-19
-x86_64      buildonly-randconfig-001-20241206    clang-19
-x86_64               buildonly-randconfig-002    gcc-12
-x86_64      buildonly-randconfig-002-20241205    clang-19
-x86_64      buildonly-randconfig-002-20241206    clang-19
-x86_64               buildonly-randconfig-003    gcc-12
-x86_64      buildonly-randconfig-003-20241205    clang-19
-x86_64      buildonly-randconfig-003-20241206    clang-19
-x86_64               buildonly-randconfig-004    gcc-12
-x86_64      buildonly-randconfig-004-20241205    clang-19
-x86_64      buildonly-randconfig-004-20241206    clang-19
-x86_64               buildonly-randconfig-005    gcc-12
-x86_64      buildonly-randconfig-005-20241205    clang-19
-x86_64      buildonly-randconfig-005-20241206    clang-19
-x86_64               buildonly-randconfig-006    gcc-12
-x86_64      buildonly-randconfig-006-20241205    clang-19
-x86_64      buildonly-randconfig-006-20241206    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    clang-20
-xtensa                          iss_defconfig    gcc-14.2.0
-xtensa                    xip_kc705_defconfig    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
