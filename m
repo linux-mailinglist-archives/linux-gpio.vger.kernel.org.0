@@ -1,48 +1,79 @@
-Return-Path: <linux-gpio+bounces-13576-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13577-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 924469E68F9
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 09:33:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EBBE9E6959
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 09:53:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E1B7161A81
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 08:33:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14BE016731E
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2024 08:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B141DDA3A;
-	Fri,  6 Dec 2024 08:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345281DF978;
+	Fri,  6 Dec 2024 08:53:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwp4SlyC"
+	dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b="H0QMG5/V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771AF6FBF;
-	Fri,  6 Dec 2024 08:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D20F1D9A48
+	for <linux-gpio@vger.kernel.org>; Fri,  6 Dec 2024 08:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733474034; cv=none; b=sBF1Pq/Fed65+aEiuT/OdYSP+aETklx+yzJp+QZT3OiJI7fWvD16gIww/Q/Mc+BtAphF1gDwTgq5SKUhLsrWtvhXZTW1SzxWyobHTG7kNyPt8ytHO1rZEE4GrwEVFzaV7SEw0gTbgdDWbP1W7Q60nDhM//aVsbNe5nQI+H0ozIg=
+	t=1733475212; cv=none; b=WWQz0NGaIfxSz2j7zBJPKV+G9FOpojHVYCx5ma+o5J/PeefenfYb+SlgBHAUmcpHKxypgMFbyIYjKrw7GwQKNm1C1LpYAh9CxfjOxLHTbGspH26IZBcYnGuIl9ncIwA1MS7hRGpCiA5Iand/tA1z6+GgZ+/khD9Nuje5bKmO7NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733474034; c=relaxed/simple;
-	bh=DdsykxjoYwGNap8VBMiXurGFc0Soee4yASPhhni6j/Q=;
+	s=arc-20240116; t=1733475212; c=relaxed/simple;
+	bh=dVhJzd+zi2qvnhI6V4kLZeLkA7Rn9FM8MiYf957XXwU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lY2l8mJTi8mHssegF9oXwSo/HLMtoM+AZk994k0qGf0to3bPG6s9Mav2OLJ3d9GM9ZLAnfcXP7Sszea1G+fKlrojwA768zFhFrcmQT+IU1ksoe9vVYqfQ6Sx/JYgb9ytCAZP51452CgxH0qWL5Gccv5jaDLINux0WM9nJfrRu5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwp4SlyC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D8AC4CED1;
-	Fri,  6 Dec 2024 08:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733474034;
-	bh=DdsykxjoYwGNap8VBMiXurGFc0Soee4yASPhhni6j/Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bwp4SlyCOjqE1HX7OTfX265WGvdBBIYnnd5v2H7PnzHa0M+WMCXRw0hawTxkPyvDK
-	 WQiW3Utv+26d8d7PZy095rUn82Qhc8qqFbuu+Y0wIl2b/pDP+MPnpWh9uBdrGQaZQN
-	 IgPGsw9cp9OfQZcdN0wKBXzX9OtX5c73VnFf4syWEBXDSpwDH6PnYBgjAtzFLhM1P7
-	 JKtDUNUOcGgXxP/J1nTc7ECVXCj5woG/a0mfJiZDw9amF9Dhh977yBYIyB5sFr2rdO
-	 682Db5mC1VALKjbex0OZk+0dSIXPynaMtM5GEOO3Y0xcI3FjXtwG6rTbkhta743aEP
-	 rImWaBq/Lrb4g==
-Message-ID: <17a4dbd7-56cb-4c20-a913-0df5c39fc3ff@kernel.org>
-Date: Fri, 6 Dec 2024 09:33:48 +0100
+	 In-Reply-To:Content-Type; b=T3luPaP92bXVhIPoYbu0y/8EQ+4+0QyScS3ChEWZlxYGf3Swn8pLqEa60mfd5dvvh8rQmCVPXpEuh6l+ph1WY5E8PRsZU9t4PTwEHwRH//TRbVsX4PN2rA7kvXR/jpyKNGvPmklNr74WWmf8p/6pVIdRxJSNOHZcR/NOXEI60t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.i=@pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com header.b=H0QMG5/V; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=pf.is.s.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pf.is.s.u-tokyo.ac.jp
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7fc41b4c78bso1222941a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Dec 2024 00:53:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pf-is-s-u-tokyo-ac-jp.20230601.gappssmtp.com; s=20230601; t=1733475210; x=1734080010; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lhAWXP/xYcgG165en4AgCqVK5kkwITFAfiMlRNxRk38=;
+        b=H0QMG5/VYGecgCIVCGNNvUIPPP/0rEFBwzWFZakgQYFe+5v6sWVQUp0gnzHbDa1jc4
+         sQC0vZgG3F6ROl1/WDKu+mBXRwXHgucsPcx44t/9iL0ixuDBJQNgnZOqmThcSotmOgkH
+         jkhhcyNaEwTI/Sgokk96YfHgyVsEKC8PormAkJp2avcRPDZnqBypbcGSEcQ4OEJgnQNR
+         kddG7LGfBtolLVEKUpGfZ9olOGBlEa6nK1TQkXQBB3lebuCBExEr+Gcj1sMm/1N/y/w7
+         JLCZO9e1lskSvuPUWQPRTVL48vPyIEtCAxhIRsmWy7L131kLo3LZFkLZWziOJUIKBPHs
+         56MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733475210; x=1734080010;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lhAWXP/xYcgG165en4AgCqVK5kkwITFAfiMlRNxRk38=;
+        b=PDoWObiOyIa8Q8X9dz9FGyqFYZ8HVUYJPhXf8Qd65lFLfNuaXyRV4DL4K36rlmhhJC
+         ou3CpNU3CXlOxCNBMF2fBIq5BEZt7c/jEXeXS6jCheCnyyeb7HHTUw+4xIeZ0xtpPlDl
+         JHpm1hqinaVv5z9Xiig84qCv5EvyY4ju/ebLyaU99s1HncRsl4AoLrWqvTyuvA7t5BoE
+         uR9rxLQeJZZpSHlqcfEfc6JoYUSAQ2NYFFEBNmD9rorP251sZGzFY8zYAcs7ssm6nhvI
+         aUbZ3Ewz0EHlK2krLPzE5VjOxaTUKrcvoL1d9oBgXgQwAa0kljXpe2FJ+ZiKMIgE06Rc
+         kmbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPw5EZhIy9wUz8tfDJRUclfrLCgFkuaQoAssF/0b2RJ/VNqsq//8UB3UhT5woL6lt9VikJKjGlKzij@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+3w1caDnt9LqHhvhqr6OdmHGjGn1J2XvjjMDU8x4WA9UG45SQ
+	aVP24K8x6uYhntzbX6xwB7yT7NViwKXPCaDClb6YOiJ3p/8iI6FOfVzm+BdvGp0=
+X-Gm-Gg: ASbGncu8CRl9AJXFiCn7eBCp8IHmb3BwReoDzx+98GR5t7kLI7Qe+fCtJriNnoA25EP
+	W5pUkFZ285iaT14ZoUFHoIWlof5RR9TjuvSjewIAoQ7BMhW29Jqj8SvQQbSL2o3tGarh6fq0JKM
+	fBZ5BtYr0b6JvNMnRXMpj4t0Id8CfF7ztPccp+lxeFie4A+7oRuxJLiv6PXJCeIFwhuHlhiPeRT
+	pnbZDWj9ji0d8k4ODfwyUq96Wck+66drmAjibVUVKfouzSlYVo67HcT9qp9a1x9BUJ/RDrMZkGQ
+	lhbe1UeLfhPCySH6VjHmdkdkLa0HcQ==
+X-Google-Smtp-Source: AGHT+IGVC68J1Hzhc2DJ5JzM2SWZtS95n2/RU7xPk9iO5TFT0l2oWgmdNro3sDkmHuu1N0xvn6m2YQ==
+X-Received: by 2002:a05:6a20:729b:b0:1e0:d9e9:a2c7 with SMTP id adf61e73a8af0-1e1870b92damr4214712637.15.1733475209777;
+        Fri, 06 Dec 2024 00:53:29 -0800 (PST)
+Received: from ?IPV6:2001:f70:39c0:3a00:8296:81d6:350c:96bb? ([2001:f70:39c0:3a00:8296:81d6:350c:96bb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725a29e8f52sm2490824b3a.58.2024.12.06.00.53.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Dec 2024 00:53:29 -0800 (PST)
+Message-ID: <1cbec5a7-6c83-4abe-8532-041dbf891e16@pf.is.s.u-tokyo.ac.jp>
+Date: Fri, 6 Dec 2024 17:53:25 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,320 +81,63 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator:s5m8767 Fully convert to GPIO descriptors
-To: Song Chen <chensong_2000@189.cn>, lgirdwood@gmail.com,
- broonie@kernel.org, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20241206051358.496832-1-chensong_2000@189.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] gpio: gpiolib: fix refcount imbalance in
+ gpiochip_setup_dev()
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+References: <20241204122152.1312051-1-joe@pf.is.s.u-tokyo.ac.jp>
+ <Z1GoskmQH0_FhxID@black.fi.intel.com>
+ <CAMRc=Me004KgVZDVVCD1r_yDfpRjVsw2TAJCGiHd+TEiQ4xW6A@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241206051358.496832-1-chensong_2000@189.cn>
-Content-Type: text/plain; charset=UTF-8
+From: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
+In-Reply-To: <CAMRc=Me004KgVZDVVCD1r_yDfpRjVsw2TAJCGiHd+TEiQ4xW6A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 06/12/2024 06:13, Song Chen wrote:
-> This converts s5m8767 regulator driver to use GPIO
-> descriptors.
+Thank you for the review. And yes, I should have paid more attention to 
+the code, sorry. I have reflected the reviewed points in the V2 patch, 
+so please take a look at it.
 
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+On 12/5/24 22:20, Andy Shevchenko wrote:
+ > On Wed, Dec 04, 2024 at 09:21:52PM +0900, Joe Hattori wrote:
+ >> In gpiochip_setup_dev(), the refcount incremented in device_initialize()
+ >> is not decremented in the error path. Fix it by calling put_device().
+ >
+ > First of all, we have gpio_put_device().
 
-Subject: missing : after s5m prefix.
+Fixed in the V2 patch.
 
-> 
-> Signed-off-by: Song Chen <chensong_2000@189.cn>
-> ---
->  drivers/regulator/s5m8767.c      | 110 ++++++++++---------------------
->  include/linux/mfd/samsung/core.h |   5 +-
->  2 files changed, 37 insertions(+), 78 deletions(-)
-> 
-> diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-> index d25cd81e3f36..d0b1eed4dfa0 100644
-> --- a/drivers/regulator/s5m8767.c
-> +++ b/drivers/regulator/s5m8767.c
-> @@ -5,7 +5,7 @@
->  
->  #include <linux/cleanup.h>
->  #include <linux/err.h>
-> -#include <linux/of_gpio.h>
-> +//#include <linux/of_gpio.h>
+ > Second, what the problem do you have in practice? Can you show any 
+backtrace?
+ > Third, how had this change been tested?
 
-Some development code was left.
+I am building a static analysis tool, and it reported this reference 
+leak. I overlooked that it still reported the same error after this 
+patch, and it is fixed in the V2 patch. If a backtrace is needed, I will 
+try.
 
->  #include <linux/gpio/consumer.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -15,6 +15,7 @@
->  #include <linux/mfd/samsung/s5m8767.h>
->  #include <linux/regulator/of_regulator.h>
->  #include <linux/regmap.h>
-> +#include <linux/of.h>
->  
->  #define S5M8767_OPMODE_NORMAL_MODE 0x1
->  
-> @@ -23,6 +24,8 @@ struct s5m8767_info {
->  	struct sec_pmic_dev *iodev;
->  	int num_regulators;
->  	struct sec_opmode_data *opmode;
-> +	struct gpio_desc *buck_gpios[3];
-> +	struct gpio_desc *buck_ds[3];
->  
->  	int ramp_delay;
->  	bool buck2_ramp;
-> @@ -35,8 +38,7 @@ struct s5m8767_info {
->  	u8 buck2_vol[8];
->  	u8 buck3_vol[8];
->  	u8 buck4_vol[8];
-> -	int buck_gpios[3];
-> -	int buck_ds[3];
+ >
+ > Looking at the current code I noticed the following:
+ > 1) gpiochip_add_data_with_key() has already that call;
 
-Don't move them.
+Thank you for pointing out, the call has been removed in the V2 patch.
+ > 2) gpiochip_setup_devs() misses that call.
 
-> +
+I was not sure if the gpiochip_setup_devs() should have an error path to 
+remove all the registered GPIO devices when a single registration fails, 
+thus it is not addressed in the V2 patch. If such a cleanup path is 
+needed, please let me know.
 
-No need.
-
->  	int buck_gpioindex;
->  };
->  
-> @@ -272,9 +274,9 @@ static inline int s5m8767_set_high(struct s5m8767_info *s5m8767)
->  {
->  	int temp_index = s5m8767->buck_gpioindex;
->  
-> -	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-> -	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> -	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
->  
->  	return 0;
->  }
-> @@ -283,9 +285,9 @@ static inline int s5m8767_set_low(struct s5m8767_info *s5m8767)
->  {
->  	int temp_index = s5m8767->buck_gpioindex;
->  
-> -	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-> -	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> -	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
->  
->  	return 0;
->  }
-> @@ -486,16 +488,22 @@ static int s5m8767_pmic_dt_parse_dvs_gpio(struct sec_pmic_dev *iodev,
->  			struct sec_platform_data *pdata,
->  			struct device_node *pmic_np)
->  {
-> -	int i, gpio;
-> +	int i;
-> +	char label[32];
->  
->  	for (i = 0; i < 3; i++) {
-> -		gpio = of_get_named_gpio(pmic_np,
-> -					"s5m8767,pmic-buck-dvs-gpios", i);
-> -		if (!gpio_is_valid(gpio)) {
-> -			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
-> +		pdata->buck_gpios[i] = devm_gpiod_get_index(iodev->dev,
-> +					"s5m8767,pmic-buck-dvs", i, GPIOD_OUT_LOW);
-> +		if (IS_ERR(pdata->buck_gpios[i])) {
-> +			dev_err(iodev->dev, "invalid gpio[%d]\n", i);
-
-Why not printing error msg? This should be also return dev_err_probe
-
->  			return -EINVAL;
->  		}
-> -		pdata->buck_gpios[i] = gpio;
-> +
-> +		/* SET GPIO*/
-
-What is a SET GPIO?
-
-> +		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
-
-Why using "SET" as name, not the actual name it is used for? Buck DVS?
-
-> +		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
-> +		gpiod_direction_output(pdata->buck_gpios[i],
-> +					(pdata->buck_default_idx >> (2 - i)) & 0x1);
-
-This is not an equivalent code. You set values for GPIOs 0-1 even if
-requesting GPIO 2 fails.
-
-On which board did you test it?
-
->  	}
->  	return 0;
->  }
-> @@ -504,16 +512,21 @@ static int s5m8767_pmic_dt_parse_ds_gpio(struct sec_pmic_dev *iodev,
->  			struct sec_platform_data *pdata,
->  			struct device_node *pmic_np)
->  {
-> -	int i, gpio;
-> +	int i;
-> +	char label[32];
->  
->  	for (i = 0; i < 3; i++) {
-> -		gpio = of_get_named_gpio(pmic_np,
-> -					"s5m8767,pmic-buck-ds-gpios", i);
-> -		if (!gpio_is_valid(gpio)) {
-> -			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
-> +		pdata->buck_ds[i] = devm_gpiod_get_index(iodev->dev,
-> +					"s5m8767,pmic-buck-ds", i, GPIOD_OUT_LOW);
-> +		if (IS_ERR(pdata->buck_ds[i])) {
-> +			dev_err(iodev->dev, "invalid gpio[%d]\n", i);
->  			return -EINVAL;
->  		}
-> -		pdata->buck_ds[i] = gpio;
-> +
-> +		/* SET GPIO*/
-> +		snprintf(label, sizeof(label), "%s%d", "S5M8767 DS", i + 2);
-> +		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
-> +		gpiod_direction_output(pdata->buck_gpios[i], 0);
->  	}
->  	return 0;
->  }
-> @@ -785,61 +798,6 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
-> -						pdata->buck4_gpiodvs) {
-> -
-> -		if (!gpio_is_valid(pdata->buck_gpios[0]) ||
-> -			!gpio_is_valid(pdata->buck_gpios[1]) ||
-> -			!gpio_is_valid(pdata->buck_gpios[2])) {
-> -			dev_err(&pdev->dev, "GPIO NOT VALID\n");
-> -			return -EINVAL;
-> -		}
-> -
-> -		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
-> -					"S5M8767 SET1");
-> -		if (ret)
-> -			return ret;
-> -
-> -		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
-> -					"S5M8767 SET2");
-> -		if (ret)
-> -			return ret;
-> -
-> -		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
-> -					"S5M8767 SET3");
-> -		if (ret)
-> -			return ret;
-> -
-> -		/* SET1 GPIO */
-> -		gpio_direction_output(pdata->buck_gpios[0],
-> -				(s5m8767->buck_gpioindex >> 2) & 0x1);
-> -		/* SET2 GPIO */
-> -		gpio_direction_output(pdata->buck_gpios[1],
-> -				(s5m8767->buck_gpioindex >> 1) & 0x1);
-> -		/* SET3 GPIO */
-> -		gpio_direction_output(pdata->buck_gpios[2],
-> -				(s5m8767->buck_gpioindex >> 0) & 0x1);
-> -	}
-> -
-> -	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[0], "S5M8767 DS2");
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[1], "S5M8767 DS3");
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[2], "S5M8767 DS4");
-> -	if (ret)
-> -		return ret;
-> -
-> -	/* DS2 GPIO */
-> -	gpio_direction_output(pdata->buck_ds[0], 0x0);
-> -	/* DS3 GPIO */
-> -	gpio_direction_output(pdata->buck_ds[1], 0x0);
-> -	/* DS4 GPIO */
-> -	gpio_direction_output(pdata->buck_ds[2], 0x0);
-> -
->  	regmap_update_bits(s5m8767->iodev->regmap_pmic,
->  			   S5M8767_REG_BUCK2CTRL, 1 << 1,
->  			   (pdata->buck2_gpiodvs) ? (1 << 1) : (0 << 1));
-> diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
-> index 750274d41fc0..b757f15877a3 100644
-> --- a/include/linux/mfd/samsung/core.h
-> +++ b/include/linux/mfd/samsung/core.h
-> @@ -33,6 +33,7 @@
->  #define STEP_12_5_MV		12500
->  #define STEP_6_25_MV		6250
->  
-> +#define BULK_GPIO_COUNT		3
-
-Where do you use ot?
-
->  struct gpio_desc;
->  
->  enum sec_device_type {
-> @@ -77,10 +78,10 @@ int sec_irq_resume(struct sec_pmic_dev *sec_pmic);
->  struct sec_platform_data {
->  	struct sec_regulator_data	*regulators;
->  	struct sec_opmode_data		*opmode;
-> +	struct gpio_desc			*buck_gpios[3];
-> +	struct gpio_desc			*buck_ds[3];
->  	int				num_regulators;
->  
-> -	int				buck_gpios[3];
-> -	int				buck_ds[3];
-
-Don't move the code.
-
->  	unsigned int			buck2_voltage[8];
->  	bool				buck2_gpiodvs;
->  	unsigned int			buck3_voltage[8];
-
-
-Best regards,
-Krzysztof
+ >
+ > This effectively means that you inroduce a regression while fixing a bug.
+ >
+ > The GPIO device initialisation is non-trivial, please pay more 
+attention to the
+ > code.
+ >
+ > Bart, can this be removed or reverted before it poisons stable?
+ >
+Best,
+Joe
 
