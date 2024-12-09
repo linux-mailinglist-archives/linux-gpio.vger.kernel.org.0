@@ -1,118 +1,149 @@
-Return-Path: <linux-gpio+bounces-13667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC9A59E9728
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:34:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11EB59E9739
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:35:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E32016A8CD
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:30:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6050418864CC
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:32:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410D21A238A;
-	Mon,  9 Dec 2024 13:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 639641A23A6;
+	Mon,  9 Dec 2024 13:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qPs8Xzsk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0B233157;
-	Mon,  9 Dec 2024 13:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F8323314B
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Dec 2024 13:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733751007; cv=none; b=XoohNI4fARx/3pyzKV9YkFpW0ICDa+3A1wnj/ahuHPsIYC8Euv0JB9JCPLd249T719ma0VhjwHvCXXYFBcd65qsUXGIcNecFz2PjuINTeIaXSO+EHRFIXau6m/4M+SvI1HH7XvA4y6GU96toqIFdjzV9hYEkEW2iq9CyPTJrolc=
+	t=1733751122; cv=none; b=PtcWF9wTM/6KBF+90f56a7NkZCsbB5gJWh04bOZLm32PkCH9J4AnKwT2EK/FF/mn33cN87MsDyMTfy6TwGJhG4Qz3kc8ayuIYJjkcbDwMlJ8yWNAvH8ZfKmllxUUwFo3OWIWsHRlMTCv48qSdXjwQSKiukCGZgkG46FZJSOHHRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733751007; c=relaxed/simple;
-	bh=YEMGXB0MoeTQD9c+Ltz3nao8e0c8pp7JWuZ504qsbtY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D3CfToxpqnJ7tDum4hN0oUs4NLwyRumYgKA/gZy1zMt2Y+M4q+SGCHUNjSpHqJJSgp2f4LcQ6AGcpl4FTvezPjx33qexYmT+iVJnCUd3/RCkLxp9hhGIdxEbeDenv1MhKItJgEC7v3MmxXMo4Jp9VJ8wDRAyQsaTp4ahDVU4QOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-85c529e72bcso470590241.0;
-        Mon, 09 Dec 2024 05:30:05 -0800 (PST)
+	s=arc-20240116; t=1733751122; c=relaxed/simple;
+	bh=d9PZTUr6orWHC23l539tFQMpBlNZRrC0wSrH3eHbn6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IIWOrn9bPnQAJrZQvwEYY5nMxWA1c/o6sWlo/Zyq2uUC0PYfJJCclePQ567mEaULuwNW8IByqATGToDTBZjEIzaxigM1NiMchsXxLNZG5w09ItY2kavRUkzQARx/9BNGU6kwH4bQ9FZP+4dL48xQrd3ZtgZGSUwMWqQ11UrhDac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qPs8Xzsk; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5ceb03aadb1so5668728a12.0
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Dec 2024 05:32:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1733751119; x=1734355919; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BbxG3yBrfjzh5m7OHA690Ws9nh2pSGo1XTyv9ZWjP/M=;
+        b=qPs8XzskI4s8GAW0T+6e6bq0we2GDAz/a5wNCsoi3/PiayF4ixL+oKHZKTMf23BSR2
+         wqVaIXStsXhaV7kFTOSiomjw59CJr8zGq1hLUl6dxBwnVBr5Ju3uqr3H2yVzBbs10cHk
+         Ft7+O6akMOEEmJfmU/t8j7rr+YVgr0JpB1OksVizPJA50Izq2dAPg4iIkjVNnzTEOAxY
+         flX+Dr+LWOYTHItDXS3Wqlhs2m+Sv5RzqY1BQp53vZ5TXH7Pn88i4vt06F9WDsHdSwzo
+         okK4FWqrSnymwcXx7Ithj9Z39LUAZ65LnIxiBhQ6b9Vmi/79yqqwrH53iuczjsItfnjR
+         I2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733751002; x=1734355802;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RtZbd29HX50F62FjGhcvqNG8diKJQIVgFd1izOOOLbE=;
-        b=p7+wDI5qh5TWxXsLnAkiaJ5amDuZRotB4+cLCHUdsxEgj/zqSfF4P2Zo9bq7Sp5cDh
-         eSmo5/fNefvodQrEOBHzaAsGx0EJ2rOuKFMfNs87KEZ3zMIjowXhcQkJqxBC/yvy/BqM
-         ly13lXWATDbSwNnbs4EGvWMsJeOT++EztQm+3yd6jVBJBjagbAj8ON9r5FygzGaB1nrj
-         nGq7bc+GN4mF9YUAXWGMgiGjkLBO7dhyHXSkaoGd3i7wnbKQZ1VcdOHnOrdVvEyaQiQ+
-         C+7THjpCP7M+JtW0KR4y4T+02dChhP9xo1Sklfagr6g7tvPccTmspZgm2b3ON1hoMfdf
-         oL9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdk/Psj0DLP0SNuUjr3HVSdaUYXKvjBO9u9KDdygCBtSG2KSQckaceG7XDgP5S6v7ViNZy+3bPXo1HEfI=@vger.kernel.org, AJvYcCV+o7SVw+gZameFJS/Z4dw/UujUNo1knSma8MJdnh28NjC7C4StE8gxuLuhJ6AwqQOUJBiN+JIZfAU8qagn@vger.kernel.org, AJvYcCVG3G8Micyfm9ZxbZ1vjKekDsw1ioBgOb9eSv7uOKXDZjdF2Jfk0WPfTEtGbz8ezsyKT6DQ4If762JY@vger.kernel.org, AJvYcCW7fsfGnGQQgSAZFkXVp2TDaXr9TwhYMNeADKSwfTEZRGFJLjgcLK8P44tyGdx07ZoxndBRrxyXHwc+EyktwjWRLdA=@vger.kernel.org, AJvYcCXSRYGlDIp4AAsWcCSCZx2GDeuMLgXu2Y9afgNoxy+0y+4KRpeQ8XYLQphR7cGaU+gh62/oGimMcwBLtw==@vger.kernel.org, AJvYcCXVCDFqYytI5UfkVEo+wt/FD5WiWOu9hzYmUQthQ12Kbml1+yOiCYCMZDjJ5lYkMdQY9wanHbMHUFLM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvZ7TlYOvfmtQgewIWCp7KwaSsMjZrQdoaFkPrK2WKW0ZX6PgP
-	SuGqcJvmRBFNWTWMFd5QyGsBU3Q+5xcV61npbPmxrIOgdonPMPfg4jnveR0KzXU=
-X-Gm-Gg: ASbGnctHyCJpF6QX+buY9sTPxHAonZuI97/C67XhB5G+bz7TjRubqhD7yHupIc028F8
-	zaFdijxt/bg3/hasY9RQTZ75UhDZmVALf3unJH5i5PymtHFgZeP0+DEfsUwTeKc0Aq7v0m9mx9N
-	IZa46G3DuFapKVOWT3kvc1b4UkWp9z46qbnKSxxaOAhJRI4yTURbN7TMw94K/nTudsjqS1VdaOJ
-	x5ymfqeQxR721Pq6keytizVXFXK6EemTGdkgL+xwjg+19vgCq8Ad+AmCmHKHJar3OdTZx3DC/Ih
-	H4Rxpqo98XBA
-X-Google-Smtp-Source: AGHT+IGkZWJBKkd8l8W7VhyqTj7gaLve/Og/ZMN0kRbJEDNTdFOfszLfAEWwG+Kbon+YkNGNUELg6g==
-X-Received: by 2002:a05:6122:2a12:b0:518:7eec:be7a with SMTP id 71dfb90a1353d-5188834b027mr631080e0c.5.1733751002301;
-        Mon, 09 Dec 2024 05:30:02 -0800 (PST)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51606dc43efsm557997e0c.32.2024.12.09.05.30.01
+        d=1e100.net; s=20230601; t=1733751119; x=1734355919;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BbxG3yBrfjzh5m7OHA690Ws9nh2pSGo1XTyv9ZWjP/M=;
+        b=ILAIVxXutzJe1+e4L0/pHf7TOol3Lhgpk0BoAItoquHnoynO/3MBlDV/yEjAWvw5g4
+         iZ+1dVp8vEZ8sIb/hZalTTpIv/6W9QRW2myLaWTcGoQeDEYWWxAZ2Bzurdgb4V08ogQ5
+         3lfxlVLoB/P0DZOTxbPcYPF2Pau8tNpm7R0wgy86lipI1vzGaSe5UTokeTiKgvkWOVhO
+         ZtRLcCvgSuqLcvLNFT25I2DCT76WZf+0qso5jFRPq5GjdsAQNHuQxlXBJ9t4P/kvyzPr
+         ZgM7F/PvU+nm9TKrDdSCsC9CFpfEMPzJyEvtPGrGk7IW1aFAjOsxuIYmMVrIhzTDc+TW
+         tGEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWm5hWmS2b7oGWuGb0nrsoQ5zeyiWQ93Ps2SbL+eOJRfDr4VUXZJWIO22Dp3hjgyzWIQ4bdf8yRwu95@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz50uJumEvA4xnILLHeBUIgxxi51V1qtswTulIQ+nZG7NhF1/hE
+	9OixHK87n9RNYXH0aBs9BDTMD005t1uOGCkCanOy3rJZhHuxctYz0ccy1prNRGs=
+X-Gm-Gg: ASbGncvx/m+UVfYVKWnn3lyHA9sLlI3seCIuOv8jsHuN9/YXcNKN7DqO9zkHHshjwPS
+	WqX9D6dpWXKEJxZhpXzVZJwmpSR5AumMzMgrUX/Q83zL8zpAREZu+6w3oXyB+GBAyQQ8TnBJZlN
+	KhwDM7rvpnet21vR4Jm5XdsOA2IJ6Mtm2zqJaS4+Plk9GdRgTO5vJ7WhAtVcicCg38m51JZ6mbK
+	s/87R314a/q5SWP+Bjnb5b65H7j9jaEmPfsYRdpreGG/obpY+2ujq2rEgg=
+X-Google-Smtp-Source: AGHT+IEsrlESQiYVoiKv8vD0ypOrjTVD+6RHuECL3G9XiqxEE715IsjeegDQVL8LbbssL5zLsoGdrw==
+X-Received: by 2002:a05:6402:2689:b0:5d0:b879:fa36 with SMTP id 4fb4d7f45d1cf-5d418506a04mr834126a12.7.1733751118594;
+        Mon, 09 Dec 2024 05:31:58 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.161])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d3ec8ef816sm2678075a12.59.2024.12.09.05.31.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 05:30:01 -0800 (PST)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4aff3f30d9aso406979137.1;
-        Mon, 09 Dec 2024 05:30:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVMZvMBn2bzpCgM3TzGY+CVpjx1dCCh4tonItBCPKgnxBupMBTCQeb1+YDDMDrP71ta/jMxdfkeMi6wATk=@vger.kernel.org, AJvYcCVNz8MR/mtCpGAIGke8D9Q5QTLrdy3jxU7cUywf/HlNZOcp1qeAzvPgxI6ltWj/4JA90fEUbRJO9swr@vger.kernel.org, AJvYcCVqJs/rPWQeiC8Oz4QGxNRZIAFvvvSXVAln+WVXQ7F92wMjxnCeMqkYNLhm7d+asZbM5z9E7Uv4UjRAsdyp@vger.kernel.org, AJvYcCVrzU7IkPoIHGmz6aS9lIuMgHviyPDt7M7JH4GZRQNsH/a9V031obsSehs0nN2hGPQWdsOn2aNNTtN1tiPejTY9PTU=@vger.kernel.org, AJvYcCX3cWx3FArGN/tiVPeFYO9RVuoxE8+WSDWmXzdCiDIWGw3oLT3oXoEXI3BVIueHgM8t7ZOvwLGejz9T@vger.kernel.org, AJvYcCXLNFufAQ6lVvBwgE3yM93+RH4EGlH+z1vD+zovaKchrfL6qyLUw3GIjXMXRAezJ4rm0EYPUOH4tVc9Uw==@vger.kernel.org
-X-Received: by 2002:a05:6102:38ca:b0:4af:fa1b:d8f9 with SMTP id
- ada2fe7eead31-4b11604bf5bmr578413137.7.1733751001320; Mon, 09 Dec 2024
- 05:30:01 -0800 (PST)
+        Mon, 09 Dec 2024 05:31:58 -0800 (PST)
+Message-ID: <97049f44-cdcf-42be-aefb-c535bd7d0dbc@tuxon.dev>
+Date: Mon, 9 Dec 2024 15:31:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-12-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20241113133540.2005850-12-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Dec 2024 14:29:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWqsSPduGA+3OS7T5jm6dHUPKpmGFSH4aVy1MhjNpQMrQ@mail.gmail.com>
-Message-ID: <CAMuHMdWqsSPduGA+3OS7T5jm6dHUPKpmGFSH4aVy1MhjNpQMrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 11/25] ASoC: renesas: rz-ssi: Remove the first argument
- of rz_ssi_stream_is_play()
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com, 
-	broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org, 
-	perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/25] ASoC: renesas: rz-ssi: Use only the proper
+ amount of dividers
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com,
+ broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org,
+ perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
+ <20241113133540.2005850-8-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdVms8xKxuX=gC49ognvXmY+8a3SttJOG=7iuCUVL4vcdQ@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdVms8xKxuX=gC49ognvXmY+8a3SttJOG=7iuCUVL4vcdQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 13, 2024 at 2:36=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> The first argument of the rz_ssi_stream_is_play() is not used. Remove it.
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Hi, Geert,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 09.12.2024 15:22, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Wed, Nov 13, 2024 at 2:36 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> There is no need to populate the ckdv[] with invalid dividers as that
+>> part will not be indexed anyway. The ssi->audio_mck/bclk_rate should
+>> always be >= 0.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/sound/soc/renesas/rz-ssi.c
+>> +++ b/sound/soc/renesas/rz-ssi.c
+>> @@ -258,8 +258,7 @@ static void rz_ssi_stream_quit(struct rz_ssi_priv *ssi,
+>>  static int rz_ssi_clk_setup(struct rz_ssi_priv *ssi, unsigned int rate,
+>>                             unsigned int channels)
+>>  {
+>> -       static s8 ckdv[16] = { 1,  2,  4,  8, 16, 32, 64, 128,
+>> -                              6, 12, 24, 48, 96, -1, -1, -1 };
+>> +       static s8 ckdv[] = { 1,  2,  4,  8, 16, 32, 64, 128, 6, 12, 24, 48, 96 };
+> 
+> "u8", as 128 doesn't fit in s8 (why doesn't the compiler complain?).
 
-Gr{oetje,eeting}s,
+Failed to notice that. Thank you for pointing it! I saw no compiler
+complains, though.
 
-                        Geert
+Thank you,
+Claudiu
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+>>         unsigned int channel_bits = 32; /* System Word Length */
+>>         unsigned long bclk_rate = rate * channels * channel_bits;
+>>         unsigned int div;
+> 
+> The rest LGTM.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
