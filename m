@@ -1,169 +1,92 @@
-Return-Path: <linux-gpio+bounces-13628-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13629-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7FDE9E8BA4
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 07:43:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47F6D9E8BEC
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 08:13:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 47B26188356B
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 06:43:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43C281884F5D
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 07:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240B1214A64;
-	Mon,  9 Dec 2024 06:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B78F214A77;
+	Mon,  9 Dec 2024 07:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JL95D+/m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Owti/1xW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C262135D0;
-	Mon,  9 Dec 2024 06:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162AB214A65
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Dec 2024 07:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733726622; cv=none; b=VvhF92fikdt1OeOerzmaCqGO8Y2h+yKDp5e/uN5XGF5CDouOEyXGSUkiS1EzdCEZJ1DkTziLXL2rvSCKfgX1zwtdzd2anSkcXDsBJpgHi93+tuJ70mYyB2phW7UmYFrv8kXEiXamHX77oq67phIZm9Kdx+CuwRrBHmlkHTWAKXI=
+	t=1733728410; cv=none; b=hfBrSuKMekw+iAuI43Rfj8Z3S4N9G1fWzlPOPAB37el+NEJMqV+wjqBLs4dH8Sw67ohKOzxpBN7Fp1i6fAlOPXnQlFh42vyM08o7eiGKgOOP5FiEuBnRNb2u3p80SuP2D8nXyuKn+HyGCFGfdYu55oEjEt07B61Mzqfp5Z1k0rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733726622; c=relaxed/simple;
-	bh=vLK+Yed2BeeQ8DSf6jqpnA9LNHXJjh09orawJilA99k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dQCBy6u8pfMvJTP9QZhcw2rnpdgfbjw0tUdbHCILd3K7um1OcOUQjpURDFaSxKnEpWYKYAqMHTqHFv5XTBFGb+IScnN8ZaLPv2nhvytytfwcl+JO8+ixRi208rAcHXREqEVT2sKES+foGR2U7d94PLQCgFRThYTIo3H50aGhK6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JL95D+/m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B8M024R025063;
-	Mon, 9 Dec 2024 06:43:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bjZFA3oy2Si6WnAP3k2skZKTYXVLLfhTiMOnT+d73m0=; b=JL95D+/mW+l0hxcY
-	/SajKDTxEWp2377xIoa/5yqCIR/0P9iwY+wZWUIGWWUFX5GZBqKLU+i7KAAhg52a
-	XsGkTlV7kTtKjAuG8j3lpbhGgp9nqCwcX1HMxkjmjrgQeRJoFSlGM9TO6RQwb/nP
-	pjdUszt3T7KDv/8YP60bW0OSF+MjdUw1UEjff7m23z5pCvGw39h9CZWAV3T69hN1
-	Uo760CH3qp4WHpJO5V/g4wWciudI3ussYYE7HHmPeJjOCMLWDE6yg5WABwOcwS0k
-	M5qbdXxXPmu+dhXOcL3UGZFYE/IfXhBs5jVI6AX53TRru0eiO5fZf5/fQH8xez4T
-	zKyamA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43cek1ukc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Dec 2024 06:43:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B96haCg024382
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Dec 2024 06:43:36 GMT
-Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Dec 2024
- 22:43:32 -0800
-Message-ID: <aa8a252d-cb7c-45c9-bb44-dcaaa01d10bb@quicinc.com>
-Date: Mon, 9 Dec 2024 12:13:29 +0530
+	s=arc-20240116; t=1733728410; c=relaxed/simple;
+	bh=guW4JDCy97UMAbxJxHPUnSBMa/3ouXbjc5B28y/wNF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjnu6RIeFNZqeuGi5GQW8BXTHKg0+1VYqZ30USaonz9qc1Gr/IdXiM0PGN5IafIvcKRfLEPSE+jFhtrKrnReNoLO8sWk7Invq/kcd6cpMDd1M7ZN6VElnTvYu97wEfaPGwaujRvNPkxnXvBg4RJ+xQK+3Fh1KFDCL561Fq8TiV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Owti/1xW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF0FC4CED1;
+	Mon,  9 Dec 2024 07:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733728409;
+	bh=guW4JDCy97UMAbxJxHPUnSBMa/3ouXbjc5B28y/wNF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Owti/1xW9rGB1DXkzXiNLCwc1TI7INF6Mg+vqX4Z5JOG11xANH/af+SBNMvnNH19m
+	 +3/Zk6NBbtm7Mo2pAH4jD5r0zq0rjLqJ2gPmp+c0sPYyOA0R/IHgq3CmnIz/87IrZV
+	 xnOiA28l9lBD2PJugMk01FmyIOesbpgAk6nmLms5RcwYzSoBpGvr03ZeP0ygp4hNwF
+	 K/RT4R0ZcuPRTQ14VmIsKVSnWXvMLfqFenwm37fy+l8s42XCz2AGq8reLiLTmeHkxE
+	 qRyeF4h2D5Dz291kn5rYtlFCgi96erDBGUWCmYXs6bwvnQ8JYX1sqUIA4Va6zn/3Wd
+	 5UiVcopfQtxUA==
+Date: Mon, 9 Dec 2024 16:13:23 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: idio-16: Actually make use of the GPIO_IDIO_16
+ symbol namespace
+Message-ID: <Z1aYk49f-Z9CiX5X@ishi>
+References: <20241203172631.1647792-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: ipq5424: configure spi0 node for
- rdp466
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
-        <linus.walleij@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
-References: <20241122124505.1688436-1-quic_mmanikan@quicinc.com>
- <20241122124505.1688436-5-quic_mmanikan@quicinc.com>
- <249fb0aa-5624-41cb-8a3b-c2e54dba87df@oss.qualcomm.com>
-Content-Language: en-US
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-In-Reply-To: <249fb0aa-5624-41cb-8a3b-c2e54dba87df@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ocV8A6s3eBXsm7eJxQd1IJenPenF7FPs
-X-Proofpoint-ORIG-GUID: ocV8A6s3eBXsm7eJxQd1IJenPenF7FPs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0 phishscore=0
- spamscore=0 mlxlogscore=881 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412090052
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="X4EBMo4KHa/altiO"
+Content-Disposition: inline
+In-Reply-To: <20241203172631.1647792-2-u.kleine-koenig@baylibre.com>
 
 
+--X4EBMo4KHa/altiO
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 12/5/2024 11:00 PM, Konrad Dybcio wrote:
-> On 22.11.2024 1:45 PM, Manikanta Mylavarapu wrote:
->> Enable the SPI0 node and configure the associated gpio pins.
->>
->> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 45 +++++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> index d4d31026a026..6256216ca764 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
->> @@ -23,6 +23,36 @@ &sleep_clk {
->>  };
->>  
->>  &tlmm {
->> +	spi0_default_state: spi0-default-state {
->> +		clk-pins {
->> +			pins = "gpio6";
->> +			function = "spi0_clk";
->> +			drive-strength = <8>;
->> +			bias-pull-down;
->> +		};
->> +
->> +		cs-pins {
->> +			pins = "gpio7";
->> +			function = "spi0_cs";
->> +			drive-strength = <8>;
->> +			bias-pull-up;
->> +		};
->> +
->> +		miso-pins {
->> +			pins = "gpio8";
->> +			function = "spi0_miso";
->> +			drive-strength = <8>;
->> +			bias-pull-down;
->> +		};
->> +
->> +		mosi-pins {
->> +			pins = "gpio9";
->> +			function = "spi0_mosi";
->> +			drive-strength = <8>;
->> +			bias-pull-down;
->> +		};
->> +	};
->> +
->>  	sdc_default_state: sdc-default-state {
->>  		clk-pins {
->>  			pins = "gpio5";
->> @@ -57,3 +87,18 @@ &xo_board {
->>  	clock-frequency = <24000000>;
->>  };
->>  
->> +&qupv3 {
->> +	spi0: spi@1a90000 {
-> 
-> &spi0 {
-> 	pinctrl-0 = <..
-> 	...
-> };
-> 
+On Tue, Dec 03, 2024 at 06:26:30PM +0100, Uwe Kleine-K=F6nig wrote:
+> DEFAULT_SYMBOL_NAMESPACE must already be defined when <linux/export.h>
+> is included. So move the define above the include block.
+>=20
+> Fixes: b9b1fc1ae119 ("gpio: idio-16: Introduce the ACCES IDIO-16 GPIO lib=
+rary module")
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-Thanks for reviewing the patch.
-I will update in the next version.
+Acked-by: William Breathitt Gray <wbg@kernel.org>
 
-Thanks & Regards,
-Manikanta.
+--X4EBMo4KHa/altiO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ1aYkwAKCRC1SFbKvhIj
+K12AAQCs2Y9g5dBilFXn8/7aoqikhdZeP1OeOxfC4qgAVmUSkwEAthPWXSczWych
+Kqnj/ToLZKvfcF7nMx0uevNLwdbkEA0=
+=Ew4W
+-----END PGP SIGNATURE-----
+
+--X4EBMo4KHa/altiO--
 
