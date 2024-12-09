@@ -1,294 +1,154 @@
-Return-Path: <linux-gpio+bounces-13660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB6659E9597
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:05:54 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2FAC9E96A9
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:26:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D2CB2804E2
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:05:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C10D8188D7C5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:22:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CCE8238750;
-	Mon,  9 Dec 2024 12:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="O6Uvkgqv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61CA3222D47;
+	Mon,  9 Dec 2024 13:15:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A31238752;
-	Mon,  9 Dec 2024 12:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E1E1B0404;
+	Mon,  9 Dec 2024 13:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733749093; cv=none; b=GRNWq/88OcfARN/bX2dScJUrrnJsYfrUayoA/d+MMouDayRNmZQujdWqspRNzGcc70gzIyuTTbKtukQc5PTUfhVaC8tbVpQMrZ9qTCMTsKjhTXj/Twjw+3+Q2rO3217LyS5i1L9cCRmIkCLbaBp1nd0jGT8Eea1QMBUA1CAWwPk=
+	t=1733750145; cv=none; b=Ad+5Y9IhyVOqNi+Oz8tHR6UjubObZto7AWjCCfImbj2SPbQSGZ5apdHJr4qpDepaD05lImhGpS6/jUeXDpasaLt1gr9INOhfuvBUMlYkP+oEG3XwwQxqFlySkhyxfmz0HzevR6GmUmHNUqbiJ+gjh/O9rt1sky8AfRQEQRNCQNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733749093; c=relaxed/simple;
-	bh=6UZ3b55lrsEhBahVpolZJYYTK41fvsvdDwnrobrW5DE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEplCw2GHsi4a65XtlOTKU6irCooQp5KIVwIp2aGN4KIxtEbwKkiskzK/GmevcO+Oe1rOHVo9yVliWK3PqV4tWk9etsr+hcNtmzWUYGU6ZZmdYYqgXoDlNjsvhbK6qyTgHHGWLFRZ3nZeJsw4AQeUhcgjbNCVmnud3vYOu9HFVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=O6Uvkgqv; arc=none smtp.client-ip=134.0.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout1.routing.net (Postfix) with ESMTP id 67ACE40723;
-	Mon,  9 Dec 2024 12:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1733749079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h9hJbrCkID9njK8gmR7wgNylWfvZwjtKiOfcT9fad1M=;
-	b=O6Uvkgqv1oJwuBmp6sexddoNuLPM93k5VMZ2x15satRQe9lMa7TFbCb6UgHi1EonJcJA0b
-	WMZtWVSqKmcv1BqIyEmCslFxD0xFEuDhnLYObCSg0Ih2tNNLa+PQa6AsU3ADvqCpN+qP6w
-	RraGpOcEmTfM+7NVwQzyzHHHBEbAA5E=
-Received: from frank-u24.. (fttx-pool-80.245.75.28.bambit.de [80.245.75.28])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id A755980494;
-	Mon,  9 Dec 2024 12:57:58 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v6 5/5] arm64: dts: mediatek: mt7988a-bpi-r4: Add pinctrl subnodes for bpi-r4
-Date: Mon,  9 Dec 2024 13:57:39 +0100
-Message-ID: <20241209125742.9307-6-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241209125742.9307-1-linux@fw-web.de>
-References: <20241209125742.9307-1-linux@fw-web.de>
+	s=arc-20240116; t=1733750145; c=relaxed/simple;
+	bh=lh/Nf8r8mXVMnZOUdv/stO7zBDdteR2rS6iLVzqqYwQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C7GSyzrsVFduYyZqerklGNn9rhWORwjp5riQDsil7LTXJgvLOYUjf/NE5ZF4JU282RMSWcAMgbQRZqRwg3w97dniqHEpMoiB23qNoEO/MvFsZASu4HqGcbLxwRYkAURzWdK64u1nyRdELGmLu9JtElYURbQP4B6g2Y3N4rkQAwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6d900c27af7so16703446d6.2;
+        Mon, 09 Dec 2024 05:15:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733750140; x=1734354940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uIGy8FeFMEG5S1lHlLlnwF/0gV8yzkzOW8jZGh+/bqk=;
+        b=P7742JeJ3EuVKWoQ8OFs9G0XjW4JDEnURVT6fEkhweuoesi4GaotWN0eGfKI1Y84bU
+         Dqm4fP/1ahLdH8uqhfP3J64WPnMq7C+VhC4Lgq7u//8i117nY6TpGCvbbkq0UeAEPEPs
+         GiRjuS4+JAYpsAmn0Zxf15vQ3OV+cAX8LhszqoAhtZB++avQ4R+d2v2QcRji0ggx9AyP
+         SDRLvk+YHLNk4GghKIihN9cbCsCpDthh4tkOpFCcFFCFKhz4ETrqqgoDrg0VHh+uNTFX
+         A2M3dx8SgwXEsJbXLWn5VMNzyrmValLenX9VklzdIIXs8R8nIFu/D3VrbZaw13isfYle
+         Y1Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3XbUz9oWh3EcGNmhpI6rz127fSQJo0YcyoR4/vfLEg+fG/ZajMqK9a7WYJqWdxYUDyVC+cXbSk8N+iJhrFX/1P1k=@vger.kernel.org, AJvYcCUR4P6Is6cV92a/hWq3tB1FhG+nqYxFAOkl5QjFg/Bw+Dial1O5h8M3s5dQ8R9Ha+oPDMB92rnE@vger.kernel.org, AJvYcCUqmLTnuE0dTHGBINKjAoyyZtNeFc6mBkUw/SGJt6R88JqPLfSvp0qFN8Hg+8m+XpweSvIFIHZ7tSHU+Tg=@vger.kernel.org, AJvYcCUsWjqtp9MLPPEU1zIQZsa1ly/kKt6HjodA/AbJ1TCG8G2zUS9PG12t7TLrlAnVvdQ8ojcbW+37DjuX@vger.kernel.org, AJvYcCV438ofmlFsDfXSdMAHCmb32mYtMqW7JUz9CQRqkscmdA7anEkCxT04zwnMDPpz4+0Ikm9pkUtbsR9wLbqj@vger.kernel.org, AJvYcCVe6C570aLWJwJQv2tjwXGea1OfMgTOEAXHMb+yGOt/8leQrQwnXq+nG/0KMkkrLFHudd2VwDzEeOVY@vger.kernel.org, AJvYcCVy4OD+li3CeYLsb/pn9kDcMlf6kVpnvnEzo3mejxvD2eBY9KwzBFUMmKSYOx7c4tXFnczWdgjLiXdfsw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfGX/Y9HDimJVpwshvMTm5giVy+17qjg1dBXJOJ5Ya4de60glg
+	sFjJCCmMgSYr0HZ2UQ9Ax9MjL9W79gtrEdmfYc/gUl3VlYhpvN7zLjWoNXmaJfY=
+X-Gm-Gg: ASbGnctl4j16MrhKux2IRmN9d35ovyPJZ8nTTQfzyVrOWA6DcRpqED0dUxIiMmk3trv
+	6AfS4KO0D3n1efd6gd2QkYYzAql3y9AFjnPfSfXrg8ppWLKEJemMZzngHAhXW6ZGajF1Urusxsr
+	wcVGdjCd2ADF8N03izWfe0QVFvBk3HwbOYfWUHUjMqKCRE3c6x+Xgi7ssriQdPbe00CwdWDiGig
+	80A6bKVq8x6Av3jTWXIkZohY6eXuM9e+DozVWgqHyGjCjYB3PXHorc4s3jtpsx4OnHuVL230xQa
+	qHM3maUYILFPv8c7
+X-Google-Smtp-Source: AGHT+IHrqWZIuvIEmy43fVOVGVVSkwU8XBB5DoBQnnvQtgovpWb4fbtF1e8jZLXcDYXLGg2YT4k8vQ==
+X-Received: by 2002:a05:6214:d88:b0:6d8:880b:665d with SMTP id 6a1803df08f44-6d8e73e8b96mr191295966d6.41.1733750140461;
+        Mon, 09 Dec 2024 05:15:40 -0800 (PST)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8f79157f6sm27242336d6.54.2024.12.09.05.15.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2024 05:15:39 -0800 (PST)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7b6cade6e1fso123588185a.2;
+        Mon, 09 Dec 2024 05:15:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV89GsC/RqBPcYvZEKGXnzQWWaYE0e29YWk6MsHpyUAMtqEn2vKw//txHgiduJ+RKEzmMBOyTMYtSoj5w==@vger.kernel.org, AJvYcCVddHqW4hnsjGsHVekLUp4RxyD8xjH85snkyNgABVrQefF+Yv97RVANRFtOPW0Cqb5XAY4/K14h@vger.kernel.org, AJvYcCVg7vdjiGu39T5LQxNEdt4nrPBU6azZRBz4tBa74wB+h/iT+z3CZxDf5RUNhBR9I6T/oUDlORzbDe/7QJed@vger.kernel.org, AJvYcCWAYgxHvD6m3tQd4UB4jJUDKkeu3sxFsuFIbnrUYXVWewkvF6+J1XzdNWM5nX2MEGrIDqRdaK0HMtpRHFY=@vger.kernel.org, AJvYcCWC4xZWpq9oaLKEjHL4964U3hBnOaJJn6cb7HYPGWp0hewO5UglaRqaCErp3mzW4Lnleg9ul/MCX9F9@vger.kernel.org, AJvYcCWFleGVAFG9hZSPXS5GRjF/BBlXCRW4TtL5ooVEAjiFaimWmQzPvbC5g6BeBez4dW1NM8/GQhpEecEPCUHl29l+2Y8=@vger.kernel.org, AJvYcCWp2a6atfaLVfvbIPWTjF24Qe6OgSTJNf/dO+xoJLg5pU7m6XM7wrJI53PJX6NkIm/oKKTBVx3Rr03H@vger.kernel.org
+X-Received: by 2002:a05:620a:2912:b0:7b6:d4df:28a7 with SMTP id
+ af79cd13be357-7b6d4df2b49mr526820785a.38.1733750138520; Mon, 09 Dec 2024
+ 05:15:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 6844d47c-33ba-424d-875d-d13ee78b957c
+References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-7-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20241113133540.2005850-7-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Dec 2024 14:15:26 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUa9GnzOMOBhpQcX88Yy2qvgKmKMdeEwEVo-OXgr-3SMg@mail.gmail.com>
+Message-ID: <CAMuHMdUa9GnzOMOBhpQcX88Yy2qvgKmKMdeEwEVo-OXgr-3SMg@mail.gmail.com>
+Subject: Re: [PATCH v3 06/25] ASoC: renesas: rz-ssi: Terminate all the DMA transactions
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com, 
+	broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org, 
+	perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Hi Claudiu,
 
-Add board specific pinctrl configurations on Bananapi R4.
+On Wed, Nov 13, 2024 at 2:35=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> In case of full duplex the 1st closed stream doesn't benefit from the
+> dmaengine_terminate_async(). Call it after the companion stream is
+> closed.
+>
+> Fixes: 4f8cd05a4305 ("ASoC: sh: rz-ssi: Add full duplex support")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
-changes in v6:
-- fix typo
-- start title uppercase
-- use bpi-r4 prefix
----
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 189 ++++++++++++++++++
- 1 file changed, 189 insertions(+)
+Thanks for your patch!
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-index efc4ad0b08b8..aa2dabc041fd 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-@@ -9,3 +9,192 @@ / {
- 	model = "Banana Pi BPI-R4";
- 	chassis-type = "embedded";
- };
-+
-+&pio {
-+	mdio0_pins: mdio0-pins {
-+		mux {
-+			function = "eth";
-+			groups = "mdc_mdio0";
-+		};
-+
-+		conf {
-+			pins = "SMI_0_MDC", "SMI_0_MDIO";
-+			drive-strength = <8>;
-+		};
-+	};
-+
-+	i2c0_pins: i2c0-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c0_1";
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_0";
-+		};
-+	};
-+
-+	i2c1_sfp_pins: i2c1-sfp-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_sfp";
-+		};
-+	};
-+
-+	i2c2_0_pins: i2c2-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_0";
-+		};
-+	};
-+
-+	i2c2_1_pins: i2c2-g1-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_1";
-+		};
-+	};
-+
-+	gbe0_led0_pins: gbe0-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led0";
-+		};
-+	};
-+
-+	gbe1_led0_pins: gbe1-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led0";
-+		};
-+	};
-+
-+	gbe2_led0_pins: gbe2-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led0";
-+		};
-+	};
-+
-+	gbe3_led0_pins: gbe3-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led0";
-+		};
-+	};
-+
-+	gbe0_led1_pins: gbe0-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led1";
-+		};
-+	};
-+
-+	gbe1_led1_pins: gbe1-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led1";
-+		};
-+	};
-+
-+	gbe2_led1_pins: gbe2-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led1";
-+		};
-+	};
-+
-+	gbe3_led1_pins: gbe3-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led1";
-+		};
-+	};
-+
-+	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led0";
-+		};
-+	};
-+
-+	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led1";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_45";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_51";
-+		};
-+	};
-+
-+	mmc0_pins_sdcard: mmc0-sdcard-pins {
-+		mux {
-+			function = "flash";
-+			groups = "sdcard";
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		mux {
-+			function = "uart";
-+			groups =  "uart0";
-+		};
-+	};
-+
-+	snfi_pins: snfi-pins {
-+		mux {
-+			function = "flash";
-+			groups = "snfi";
-+		};
-+	};
-+
-+	spi0_pins: spi0-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0";
-+		};
-+	};
-+
-+	spi0_flash_pins: spi0-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0", "spi0_wp_hold";
-+		};
-+	};
-+
-+	spi1_pins: spi1-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi1";
-+		};
-+	};
-+
-+	spi2_pins: spi2-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2";
-+		};
-+	};
-+
-+	spi2_flash_pins: spi2-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2", "spi2_wp_hold";
-+		};
-+	};
-+};
--- 
-2.43.0
+> Changes in v3:
+> - collected tags
+> - use proper fixes commit SHA1 and description
 
+I am not sure which one is the correct one: the above, or commit
+26ac471c5354583c ("ASoC: sh: rz-ssi: Add SSI DMAC support")...
+
+> --- a/sound/soc/renesas/rz-ssi.c
+> +++ b/sound/soc/renesas/rz-ssi.c
+> @@ -415,8 +415,12 @@ static int rz_ssi_stop(struct rz_ssi_priv *ssi, stru=
+ct rz_ssi_stream *strm)
+>         rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TEN | SSICR_REN, 0);
+>
+>         /* Cancel all remaining DMA transactions */
+> -       if (rz_ssi_is_dma_enabled(ssi))
+> -               dmaengine_terminate_async(strm->dma_ch);
+> +       if (rz_ssi_is_dma_enabled(ssi)) {
+> +               if (ssi->playback.dma_ch)
+> +                       dmaengine_terminate_async(ssi->playback.dma_ch);
+> +               if (ssi->capture.dma_ch)
+> +                       dmaengine_terminate_async(ssi->capture.dma_ch);
+> +       }
+
+rz_ssi_stop() is called twice: once for capture, and a second time for
+playback. How come that doesn't stop both?
+Perhaps the checks at the top of rz_ssi_stop() are not correct?
+Disclaimer: I am no sound expert, so I may be missing something...
+
+>
+>         rz_ssi_set_idle(ssi);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
