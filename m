@@ -1,106 +1,140 @@
-Return-Path: <linux-gpio+bounces-13649-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13650-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 816B29E9435
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:34:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA0AD9E948F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:42:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FDEF18820A6
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 12:33:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6021F188177F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 12:42:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17917228CB1;
-	Mon,  9 Dec 2024 12:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C3222488B;
+	Mon,  9 Dec 2024 12:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="HmsVggyO"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lkLPGtuJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1CB228CB3;
-	Mon,  9 Dec 2024 12:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC1F184545;
+	Mon,  9 Dec 2024 12:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733747559; cv=none; b=fV63zZnBuuVMBdn8Vxfgiqf+IbR0w3lVbTyCZWFL+Zi7MKAN4HLzizHaAO5CXNx9lJ4VMaoqXuVXAYJtvHEzayU7vmldzpEaz1yOw6IK9Fyhi4DFE3R/GP7aEK3QA+f9GSDCKif5ZDoS9t9OFa1H7Hvyoghsvsilc23n12jrdS0=
+	t=1733748172; cv=none; b=AqeAKvlAb5tFMzJHC8UXKwHI7PwQH5oDWzXtVfouuUe1WqoBtcEj9axZM4xK5aZ5yMgxoQ8oq90hKakGPKGCvOVoQ/cFbJR3I4PknhEqARTLbQOiBmuxozRAm0UoY4KyKA4TYvKPzzzaxT3DFJXWDO+ATEoXtQVBuFj6Xd14rYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733747559; c=relaxed/simple;
-	bh=eTL/Zz4CgiLwSVDJJZSIvMZWl9IFMTtE63Ql03tuA4c=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=pts3+k7XAHj/gsf8yVwINoB6EzKowc0BCLe2btwZAKTTE7EMn6Wb+nlZKBJhn7lMGZ6qA3TbJDCpws77TjdrgoUfiFW8RNmEbSnZUdumozyKrqk+4+KYmuoSuQ2m68vYrlfAx477MajVXeBr3EWeOnBjvoUVpSYd+yguPt1T1LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=HmsVggyO; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-	by mxout3.routing.net (Postfix) with ESMTP id 82C55605F0;
-	Mon,  9 Dec 2024 12:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1733747548;
+	s=arc-20240116; t=1733748172; c=relaxed/simple;
+	bh=RQrfWmo4OTsSJ/kPbJNVpBZAz5FRd3GqPzJiPkdi6cM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L5pQEBOWNb/gf/WkzE0feSebva3rtQDbrM90+WJit3PnRvMwaFqKueI5KKEeE0BNiG5rIr/UUidZVzg7YdwdwklMgHQTZd5QkQbZmH3tk7ql4vt5KEXkUm4+PJ8bHJqmGoEAujUYcLtz5UKswH5AI1Buk1abxwc8ZfpE79u8osI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lkLPGtuJ; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from relay8-d.mail.gandi.net (unknown [217.70.183.201])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 5353FC0F10;
+	Mon,  9 Dec 2024 12:42:40 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A2011BF203;
+	Mon,  9 Dec 2024 12:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1733748152;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2fNQK0VC5hmdkf5xB9w2EQXUei7uJNRsiN8mjKgCeDE=;
-	b=HmsVggyOYb4b6hCgAOoZTRkTYjnu9X2Mj1mGgv+WcHtMf7EKAtJCqImI3UsGf6tXhGFg+t
-	yPWIWYJFPaDQFS3dBLz0v0ImNUHd9OA/hadfZ4wSk8zROQZA1WP3y0nrw8YRG4uUlSTcXy
-	NiatFxMY57d2z2gD1NYj0tuRadkkGwo=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox1.masterlogin.de (Postfix) with ESMTPSA id D6DEF4003A;
-	Mon,  9 Dec 2024 12:32:27 +0000 (UTC)
+	bh=zmWNpmDB2L6Ktl0LzB1M24Lop3ag8dWEwbvJgygrndU=;
+	b=lkLPGtuJmohDKLCRhYFzRQNNYRhSi2WALq49ASl+yflenUQahjVdkz9DvEadX3HcT1vMo9
+	rWqSytJYK5p6kGoTKTXWrwiA7PjoKOWVgQxubgMrtPWBTmlB4mhuxU8euFJ1bfVSTiY8DK
+	Eqc6poaKfSGVy/GRIJVy79ZJg3+AJYrk+NUYpQjoxlY8yy4IvhLn2SuXkFfs+gZ65jv+F3
+	H6S8lMWa6b4Gj/2q6FVR/7rnIWaLyThJwXsIX2QkuOVm5hJuNhJRjI9lsBG3idPXXRDTVe
+	5q7GhzXzteeuN10P47mSPd/diAjb0lzixf4x0DXwdAkbXLMladlDtxUMjqjYkA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH v3 8/9] i2c: Support dynamic address translation
+Date: Mon, 09 Dec 2024 13:42:29 +0100
+Message-ID: <3255950.5fSG56mABF@fw-rgant>
+In-Reply-To: <141bbac1-5289-4335-a566-387721439bef@ideasonboard.com>
+References:
+ <20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com>
+ <20241125-fpc202-v3-8-34e86bcb5b56@bootlin.com>
+ <141bbac1-5289-4335-a566-387721439bef@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 09 Dec 2024 13:32:27 +0100
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang
- <sean.wang@kernel.org>, Frank Wunderlich <frank-w@public-files.de>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v5 5/5] arm64: dts: mediatek: mt7988: add pinctrl subnodes
- for bpi-r4
-In-Reply-To: <9b1a385e-da1c-429b-91b9-d5b5d6d5abb7@collabora.com>
-References: <20241202110045.22084-1-linux@fw-web.de>
- <20241202110045.22084-6-linux@fw-web.de>
- <9b1a385e-da1c-429b-91b9-d5b5d6d5abb7@collabora.com>
-Message-ID: <4e0ace7c5a0766395f8801bdd2fcdbf9@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mail-ID: b6b2de20-0394-48f5-9719-e7ee90c90504
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Am 2024-12-09 12:52, schrieb AngeloGioacchino Del Regno:
-> Il 02/12/24 12:00, Frank Wunderlich ha scritto:
->> From: Frank Wunderlich <frank-w@public-files.de>
->> 
->> Add board specidic pinctrl configurations on Bananapi R4.
->> 
->> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Can you change the title as suggested in the review for the other 
-> series?
-> So that we stay consistent.
+Hi Tomi,
 
-already done in my tree (and fixed typo in commit message) ;)
+On vendredi 29 novembre 2024 10:54:35 heure normale d=E2=80=99Europe centra=
+le Tomi=20
+Valkeinen wrote:
+> Hi Romain,
+>=20
+> On 25/11/2024 10:45, Romain Gantois wrote:
+> > The i2c-atr module keeps a list of associations between I2C client alia=
+ses
+=2E..
+> > i2c_atr_dynamic_attach/detach_addr from racing with the bus notifier
+> > handler to modify alias_list.
+> >=20
+> > Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+> > ---
+> >=20
+> >   drivers/i2c/i2c-atr.c         | 244
+> >   ++++++++++++++++++++++++++++++++----------
+> >   drivers/media/i2c/ds90ub960.c |   2 +-
+> >   include/linux/i2c-atr.h       |  13 ++-
+> >   3 files changed, 202 insertions(+), 57 deletions(-)
+>=20
+> This fails with:
+>=20
+> WARNING: CPU: 1 PID: 360 at lib/list_debug.c:35
+> __list_add_valid_or_report+0xe4/0x100
+>=20
+> as the i2c_atr_create_c2a() calls list_add(), but i2c_atr_attach_addr(),
+> which is changed to use i2c_atr_create_c2a(), also calls list_add().
+>=20
+> Also, if you add i2c_atr_create_c2a() which hides the allocation and
+> list_add, I think it makes sense to add a i2c_atr_destroy_c2a() to
+> revert that.
+>=20
+> There's also a memory error "BUG: KASAN: slab-use-after-free in
+> __lock_acquire+0xc4/0x375c" (see below) when unloading the ub960 or
+> ub953 driver. I haven't looked at that yet.
 
-8e566779ee82 arm64: dts: mediatek: mt7988a-bpi-r4: Add pinctrl subnodes 
-for bpi-r4
+I think I've found what's causing this KASAN splat.  i2c_atr_del_adapter is
+freeing it's alias pool before setting atr->adapter[chan_id] to NULL. So
+there's a time window during which bus notifications can trigger a call
+to i2c_atr_attach_addr, leading to a UAF on the alias pool struct.
 
-> After which,
-> 
-> Reviewed-by: AngeloGioacchino Del Regno 
-> <angelogioacchino.delregno@collabora.com>
+I'll fix this in v4.
 
-thx
+Thanks,
 
-are parts 1+2 now ok?
+=2D-=20
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-regards Frank
+
+
 
