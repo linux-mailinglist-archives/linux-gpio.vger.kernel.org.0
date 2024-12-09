@@ -1,84 +1,82 @@
-Return-Path: <linux-gpio+bounces-13679-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13680-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA7D9E9919
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 15:36:58 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D857F9E9A1C
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 16:12:40 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D442281BFA
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:36:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3B34161775
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 15:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6067A1B4255;
-	Mon,  9 Dec 2024 14:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 768361BEF75;
+	Mon,  9 Dec 2024 15:12:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553751B4230;
-	Mon,  9 Dec 2024 14:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A07233133;
+	Mon,  9 Dec 2024 15:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733755004; cv=none; b=PoFzwBEvZtmJoM2jy2EqGtIlAX0u7tFzjLucpBUuLsGJvUBjcRkIHXiTVgWciKfpafXX3SmXFR0ejHSw7urA0cKlsN6sxgf/Pl9lU97BnaV7E4y1Ij1Py0QJEaftdRNwwNh8hn2Czlb+DUwGTpfsUvgw34D3WKYr9lAJHayy59Q=
+	t=1733757154; cv=none; b=ijEFrMOAkkpntVyf3clHZ2F8zMvKaqB0ilHtCE1NNr4hhSCAqQlt5NqnWoxCDzV05YctSNYfZciBXxdYklVT2PDBHPDpE1ydTeCxoFW9kz8hkSkZcBsyzzwXkWEe7wEx57Ylzvkf0NgXwIIvaUALa8kCzsiRroCsunlg6VwkG7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733755004; c=relaxed/simple;
-	bh=Nd3H8p6H+rsIOUfjuB+bee+f98nbsvyxdUK30ssb0N8=;
+	s=arc-20240116; t=1733757154; c=relaxed/simple;
+	bh=+ifZWT9KFK7/CMJKg3gDWnMlJDYO+L1kCWVAFEPVSE0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g4gPLlgCAg6FNSDO3DNraJVHVkH3xaRbn5MBp1tIy9TqAvdiSvcgmFGvVf6pzDeIkIoLwMLdahVnqbxRnUleFuWSL0n6ocludL5nr+dyIISn4NYVVkno2W8OqjAlJagAVGForTjrXbLVwczSBD4kFd8khQSpxjNt8gzZffSGOcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.174
+	 To:Cc:Content-Type; b=YfTSTh9EGGMH2G1as27oI9FXgfyZ6BtN3r9vt/g4NBwCtddr4iwAKIjR6ewDqL2JMEy7aBYeoIo3Xjt465wItWt0m03murvYmLaNuAXzSTDMu2PRGVqDe8Jb17Mv/IbgDUFLs5s3Jp2E9uB5g5MG7K6RNwPv/CbP81U+A7B7cZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4676859b911so5649021cf.2;
-        Mon, 09 Dec 2024 06:36:41 -0800 (PST)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6c375b4f0so143309785a.3;
+        Mon, 09 Dec 2024 07:12:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733754998; x=1734359798;
+        d=1e100.net; s=20230601; t=1733757150; x=1734361950;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/cu7yqJcTi11GhnQJf4QGWZ6ZChKi43wkfq11i2dHuM=;
-        b=tBswoW4KKnJRBVHyebStc06u0pQncXF+RxPvdth8BO2/+wTijJn8nOaiv7tMrPY51T
-         tTWeFYwd2fHkeCqa4L1/ZKR2gKZY8CCievc0yrmyxWynT/5d8ph+jS81KUCnN0hmOk1L
-         Xig1wT81m2OfrZ8D7kUpuVAaXW9EtiyCbFepE14sf8h5inJ+8gaNAmH4wI+WUrf6IsTc
-         t9QQuDRIHnkO76dBR7dGm2HMpk/ySpLU1ze5U1157fEFW7rRbtSlJaMr6NT138X9lMLv
-         //HE9uZz6Z7dNVCxx8UT+X6CT1p2PPJg5sxpe3DgluuRNQhLXBBaL0l3IwBn7B6x/mzh
-         LAOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+nmCb2wqpC3+nj9yW4H9fc5NIlBJ8UZ/LTcFSQkJJT97akh5uG4aCBtFpAhhZRZ2LjOQ4iu5yOR2q9xXc@vger.kernel.org, AJvYcCUNm90QY7qPKOYUgVml8NwyqFSvetuN4MGmWevDtq/64Rr40vHYWmoY6HVLc+EY9MBJraG+xQ1aDNqd6g==@vger.kernel.org, AJvYcCVcc8uTnpNQxVjB/983TXNEH6Sb6a/eTjFFuFQTU0sAR2QWpIJ8m5vRRAKreOpMvP8Uk/SLSp5Qo0euvyw=@vger.kernel.org, AJvYcCWHmJwywr1QUWMXPkj2M31+7hwzwhRwWblt9bf4mmN5/EPhFiuuTLn2PjI4TiIGLZYxAbnHNnuBib9N@vger.kernel.org, AJvYcCWs7Rylg2qXJsghB0HzJ+OGMG6cQbIIv0ZjimcEdHWMpNWumhVPHPhLDdbTRgcXTGP+NAVNzfYlaJlraZ0uPf1CXAw=@vger.kernel.org, AJvYcCX/4/CXGXMfrtqS/ooNkeDdQKtBXxIOV+ckhpRiKWtMv8750pP48AQRvvf2MyQndTbdG2hK0bgUe3Qu@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbKqbbkI7VuzUD7AyFK18oFMV97J0NFgQzTFSgQUxxMcut/sOF
-	/iTR6AgtZZlnjkCK8e7BJPDzMtMErWd8jYMnsB1UaqZeGrOfR/WRQX0MweeOAR4=
-X-Gm-Gg: ASbGncsvC29LuHHnx0D9mBaFI+gNDx/2aooT3jcYXMui9V22TyYYsD96tKZGxCM5wa4
-	Hem70m6S0gdreDOe7J9/HQUKHomDwZ6RtG84siZGwfhQmMnvJDjQDYq1n0THDW/wxgfr7QRUihw
-	3CWElilPmu0DAZu1CbJNFwHnBwTaiYJpB0Bha+LS22wIzllqKED0hqZZ7ohDfide/o/7NKbrP8/
-	az/++PjHPQs63npJxwdLC6tKAG9Bg61/4ODhijp+uRTIVZjNRrKCnW84rM2zyoEUR9Jm7eg3+IX
-	4iKv9sO2gaGx7rgN
-X-Google-Smtp-Source: AGHT+IH0/ZnsmiUgr0hIwRMBYH0jxsVpdyVZKKGlnX0pnS/xTeatm+CszvDLZG2fn2Qj8iiAd3CeAQ==
-X-Received: by 2002:ac8:5f87:0:b0:466:ac8d:7341 with SMTP id d75a77b69052e-46734f70394mr188339731cf.35.1733754997806;
-        Mon, 09 Dec 2024 06:36:37 -0800 (PST)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com. [209.85.222.177])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46764d04355sm11682981cf.54.2024.12.09.06.36.36
+        bh=RTTAFWhXK+GXq2DggiRg3AsKRc195SUBzTDQQERiP0U=;
+        b=HZ+9b8TjTNHe7gtTD5PkGzVXqnZQIi6C5foAMbDE6EMAxdNo4lwfkd/+Nxh0xmFSsK
+         M6x0gDtSiikS4g7Z3Sv1dL13vv/AhPHwkrlAFG4wjN18Pu7F40nXK/BAjISf1y8V3ugZ
+         G40DvdfLZ0WwNp2ayKkZ1PW60gZ1MfpdcSW4GNE+ox23EDPijCRCRnJIU5k8RpgdBxVH
+         sspFyVQ5WFnM2Z+a1cADU58kl7rHeTrkZfcn3B7LqAwhK3Y2KE09Urlup/7JiRHHEaSB
+         YWNIxQb0VEYTz3EdJpqCyKc31Sb9SNr6Gk8ETXbFpPrdr+O/i8/zBbIKTuh+jhBhF5il
+         QwCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDAXJLt1sG4ru3RvWegPEf8ZDmP0B9MADW9j3O0QTNflrilJYClzhhG0fbDh25imydV4UkRBCDYpHn@vger.kernel.org, AJvYcCVIeXrSFxClw1ZIyM5V90l0JxZCA0TZ7lIjgiXTtWy3rcCRKx3SNlkkpggoVgg2I9RbUZsPuB2SR5EF7PV8@vger.kernel.org, AJvYcCVOgqwzXR/WdGR1OlxXeTEDG+qSBRU9cLXPaigLUoP7wYptA5GxFrWssD9idFlIMH14WrrtMaWtjeqF@vger.kernel.org, AJvYcCVVVLVUmj0EA4de4f9LzGBXAbefaWpEgl641zm2mvBeuxBL2eZJ0BcwTzxL/Fp8sMuuj22X+KE7I08DSubpBu90Fmg=@vger.kernel.org, AJvYcCWMGvRMbZyTynWfPqrZrReGAdhOGMaR25pOm4Wsy4dFHo6+6Kl57ugveLE6tSxAtfYszl6rmRMUjI405A==@vger.kernel.org, AJvYcCXSLisoya4qW3t2Nnh6UGFxC2b2Bh1nQLvGkAKHKNRpl4idcEAD4ckTis0Yycy5VfJPvXqhld1xh8+qAZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUqMfJgcZ7H1DXGv4mYhmnvHQ8bLMwnfASxMKnFzQfUVM3drux
+	e0OwZr6w9+68nw60IdtblApQz/CZxsZyp6CHecNN3tjICGHXOMTEDeW3jXXLPWc=
+X-Gm-Gg: ASbGncuWvkU/B5iOqVaaM5tECZQ+qLUKYVpSdIzIlPPBcGOOsnBcC2mhHgX19f7WwCD
+	CvYrWoicIISKAeI0ErJLx4c+mxwy+SvImqElJE2OYrLhtzzgfl7ku0rcyLD3cO5wYDMIQuzjjqd
+	Uq8FXR3xpSs/9auTxbaAuHjwEzTPA0jXLukXhAl3nKY2l0pC2mvqbJLhBwoKxK2ZvNR565u/Lq8
+	VIjWfIZ6Ss29NFWhydHbXVDcpwtpFRwu75W2xOl8gfO3pOeuwVlUCADOxbpYlJS4STT/Gh/3LyG
+	LBrxKYxRb6ZLyOab
+X-Google-Smtp-Source: AGHT+IG82yTXDxwxzlwl9ZFHBDQWXX6jUae5TeOWX75g45Aa+giCqoA31qrl+X0wE6OkbATIdHH8kg==
+X-Received: by 2002:a05:620a:2682:b0:7b6:62f9:109b with SMTP id af79cd13be357-7b6bcb924e5mr2040730585a.42.1733757150093;
+        Mon, 09 Dec 2024 07:12:30 -0800 (PST)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b6d1aae961sm157208485a.93.2024.12.09.07.12.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 06:36:36 -0800 (PST)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7b15d7b7a32so290501485a.1;
-        Mon, 09 Dec 2024 06:36:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVGryO4Lrb+2kY5StLpLZwz4rtUS46xRWUWhV/NzluFQ1/owBjIDLyMgZlz1O8O9nmH6ZnJg1Usu+sB@vger.kernel.org, AJvYcCVW00rYqNZSi8hc+0InQhXjRqv6TZyDhO+LErlIHbQHZcN46VDs9FbGTlyYvwWXFDK6HQDvVr81hIQ8EDg=@vger.kernel.org, AJvYcCVcISAhRiA+c8sHhyiylvoPS3+QjGNILpFpKtyKFcWhOyCUUA0nNVRDzZqiuIeff9nzqPxJqkJD2sMtCA==@vger.kernel.org, AJvYcCWK4Pt8fnitP1Er1r97p8RPe1Rq7A5bqOxbmRg076zYr4fS5th1QksB80+97w3bFbx4lm+gs92q+6QW@vger.kernel.org, AJvYcCWx3bJPULlAOa2VwPAJSkOskad8NCC+uIjfDeDdmroIwItsFnaw83+TXDmFDynTFaUNZ+K/IncbWR+YfStya/pqBd0=@vger.kernel.org, AJvYcCXMocXL9RoWrCKh53fOzXl9jrF5sIOj3+sRoKeXOdYTabMolavCqcqhC8TdXAshRZzCJUgJjGJpB6VuwbPI@vger.kernel.org
-X-Received: by 2002:a05:620a:1a87:b0:7b6:66d0:5abf with SMTP id
- af79cd13be357-7b6bcbb328emr1528679585a.59.1733754996319; Mon, 09 Dec 2024
- 06:36:36 -0800 (PST)
+        Mon, 09 Dec 2024 07:12:29 -0800 (PST)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7b6c375b4f0so143307285a.3;
+        Mon, 09 Dec 2024 07:12:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULDQPzqQEsex61hksmg+Gk0lNzaY05EA/NFfYPdJm6kw10CgzHVSsaOxQ8yGYI4Ps/RCZ14rUuyiFPqGEC@vger.kernel.org, AJvYcCVangHVLGKOwzMoWq0PpJkUW6uSpevZXMIRIweQQr4MyM8KhLgRb4YBQCADohP8IpyQUhdS9dEwIV3K@vger.kernel.org, AJvYcCVuLYl5tIMbn+HClaD6Fcn2FVJDJoj/P213XOvDLnLECB8FJ4/VubkJ7hs+qebEIL7PpoDSQchmUm5XXQ==@vger.kernel.org, AJvYcCWMOF0pJMpfKI8xwGgf0bUPqVk/HbfTNsPBe80FhvedqMToadkEpYGHwQ6SkCmV9rMqOk2tTzKOk1rwgsUG/fHCJXw=@vger.kernel.org, AJvYcCXeCKhehmfy+Xt2hHvYZEKicLS8tugM7z3lZu6qXWvvZmJV20dRbFhUIHqsLvUdh0aok4y8Qh7lTjj48NI=@vger.kernel.org, AJvYcCXybg11DKW8yyF7Df7T1U004QmQmJr+cwMp6VbU0qCiwPL6hZvuyhXvBsYpl23tFJX8fews577wpMS4@vger.kernel.org
+X-Received: by 2002:a05:620a:2793:b0:7b6:67a0:4993 with SMTP id
+ af79cd13be357-7b6bcac8c15mr1818373285a.6.1733757149521; Mon, 09 Dec 2024
+ 07:12:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
- <20241113133540.2005850-21-claudiu.beznea.uj@bp.renesas.com> <CAMuHMdW_2hMfT3tGNEANyWkUqVW3wAEsSttyqfR=L4mn9VxStA@mail.gmail.com>
-In-Reply-To: <CAMuHMdW_2hMfT3tGNEANyWkUqVW3wAEsSttyqfR=L4mn9VxStA@mail.gmail.com>
+References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-22-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20241113133540.2005850-22-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Dec 2024 15:36:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVa-CJ1T40B+Dg=p44gHWhGB3tyiGW7F-Ygi7B0SJ2ePQ@mail.gmail.com>
-Message-ID: <CAMuHMdVa-CJ1T40B+Dg=p44gHWhGB3tyiGW7F-Ygi7B0SJ2ePQ@mail.gmail.com>
-Subject: Re: [PATCH v3 20/25] ASoC: dt-bindings: renesas,rz-ssi: Document the
- Renesas RZ/G3S SoC
+Date: Mon, 9 Dec 2024 16:12:17 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWV8zNgqTCc=a9tqP45tQ_rv9NV_zLJcPnqyF-nMoin4A@mail.gmail.com>
+Message-ID: <CAMuHMdWV8zNgqTCc=a9tqP45tQ_rv9NV_zLJcPnqyF-nMoin4A@mail.gmail.com>
+Subject: Re: [PATCH v3 21/25] arm64: dts: renesas: r9a08g045: Add SSI nodes
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
 	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
@@ -88,44 +86,62 @@ Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
 	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 9, 2024 at 3:24=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
-> On Wed, Nov 13, 2024 at 2:36=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev=
-> wrote:
-> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >
-> > The SSI IP variant present on the Renesas RZ/G3S SoC is similar to the
-> > one found on the Renesas RZ/G2{UL, L, LC} SoCs. Add documentation for
-> > it.
-> >
-> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/Documentation/devicetree/bindings/sound/renesas,rz-ssi.yaml
-> > +++ b/Documentation/devicetree/bindings/sound/renesas,rz-ssi.yaml
-> > @@ -19,6 +19,7 @@ properties:
-> >            - renesas,r9a07g043-ssi  # RZ/G2UL and RZ/Five
-> >            - renesas,r9a07g044-ssi  # RZ/G2{L,LC}
-> >            - renesas,r9a07g054-ssi  # RZ/V2L
-> > +          - renesas,r9a08g045-ssi  # RZ/G3S
-> >        - const: renesas,rz-ssi
->
-> This part is fine.
->
-> The section about the dmas properties also needs an update, as the
-> documented MID/RID values do not apply to RZ/G3S.  I recommend just
-> dropping the list of values.  People should look them up in the
-> hardware documentation.
+Hi Claudiu,
 
-Actually the whole dma description can be dropped, as its format
-is duplicated from, and dictated by .../dma/renesas,rz-dmac.yaml.
+On Wed, Nov 13, 2024 at 2:36=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Add DT nodes for the SSI IPs available on the Renesas RZ/G3S SoC. Along
+> with it external audio clocks were added. Board device tree could use it
+> and update the frequencies.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+> @@ -14,6 +14,22 @@ / {
+>         #address-cells =3D <2>;
+>         #size-cells =3D <2>;
+>
+> +       audio_clk1: audio-clk1 {
+
+audio1-clk (cfr. r9a07g044.dtsi)
+
+> +               compatible =3D "fixed-clock";
+> +               #clock-cells =3D <0>;
+> +               /* This value must be overridden by boards that provide i=
+t. */
+> +               clock-frequency =3D <0>;
+> +               status =3D "disabled";
+
+Please do not disable this node.
+
+> +       };
+> +
+> +       audio_clk2: audio-clk2 {
+
+audio2-clk
+
+> +               compatible =3D "fixed-clock";
+> +               #clock-cells =3D <0>;
+> +               /* This value must be overridden by boards that provide i=
+t. */
+> +               clock-frequency =3D <0>;
+> +               status =3D "disabled";
+
+Please do not disable this node.
+
+> +       };
+> +
+
+The rest LGTM.
 
 Gr{oetje,eeting}s,
 
