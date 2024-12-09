@@ -1,48 +1,63 @@
-Return-Path: <linux-gpio+bounces-13685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 601CE9E9FD7
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 20:50:19 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B972318868CA
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 19:50:18 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F901991AA;
-	Mon,  9 Dec 2024 19:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QN+hx12R"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B9A9EA027
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 21:19:18 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A31819343B;
-	Mon,  9 Dec 2024 19:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9666B282A27
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 20:19:14 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9483B198E76;
+	Mon,  9 Dec 2024 20:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dQoCNGGH"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB3849C;
+	Mon,  9 Dec 2024 20:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733773813; cv=none; b=rN73U0AHEL73+Se+pRUgQCOqATR68iRe/NDaP8LF9oc9WS0DVDg0ywt3Y06HZDZC/GVwuGdKAbc2D97z0IMpYp7lqn/9PGYqUQlPTxKRVeMOBebWkoayNZFsHpxLjgDhGFxNexd3SdvR+LDxm0WEE4/Hn+5HTiAoS9cR3LomMMc=
+	t=1733775549; cv=none; b=r/bH8a3vcaGsGOf3V09DseKqNid21gamMcFDq46PfrFiAcTjWN49a342PvEo+ap4AoSqJ4Qs5B/lI8gZ0qJQ9sORRj0t91/nsjOYcc02e3WzkxXGK5upgmjaiJXnNAQKIiL3pZmBkkCIyFRF3QvXwY8UqtFGYnob6ePfLMrhBZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733773813; c=relaxed/simple;
-	bh=WFyzCPUIdQEg7do8gqzOuZUa8ipE3gSeX/hK+rkfFkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iInDl4NJhJEdaqOY53FWFiz9Q08WtTLn9qn+y3r+gjqaIdBS1YcrpnVFhdrDQQa+U1HyXkaLRt1iFmiaeuLdztBzoU6d1RVk19CaorkPWWngLhJkdS65Bvus10whm/4TouVeREfPyGvDYeTI9FNvb9TY4CoLsTXB2uM3BbIxfwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QN+hx12R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940D0C4CED1;
-	Mon,  9 Dec 2024 19:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733773812;
-	bh=WFyzCPUIdQEg7do8gqzOuZUa8ipE3gSeX/hK+rkfFkg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QN+hx12RIQYDWCp3wPjsJwArcAmy8s1Q6y2UfLvZdvZADOEaY3DVg86cA5uC7m2bV
-	 DlSJoCfS+i75RrTOr8nMu1lVdMHV4jp4ASPM7+ePN8sCz1UJOKtXN8ZhTBC53MNZqj
-	 S3Gx/sMTPFXpCvCLRRrr2/jfuUIQcdiMJ9bU1Hr02xPyJymPyvDR1ZV6rCou/UJDS+
-	 sNVsDiTo6PzyEnasklpxgqwpEHhfl798ad0QGee7KsLuv7fEymFQmNcZcU2m0B2w0w
-	 C2jZ6I3NZEAz+IZT4xfj07A3VnUEb5ZXy910CsI3eLo124/4w0qmkI0sGue80Z2cqi
-	 ji0qSlyBKDoig==
-Message-ID: <bf80a815-a602-4bbe-a950-e8b6c1b0789a@kernel.org>
-Date: Mon, 9 Dec 2024 20:50:07 +0100
+	s=arc-20240116; t=1733775549; c=relaxed/simple;
+	bh=uz+K+SAXiw7B9fmpjgpXZQAhhDopnh3fXndnk8ms4uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LkkS2YtMxSWnc2dTFZooDVe8jrfPvZlQYaRYd9cujnfBMvVXC4D/U/HhDk4QyZZKd3bpagx9YD/0N8HP6Zowh2bO9soECe8C+OadBx8CuwrEqPmbw+2LAUiwlBtMemQDKLGBTRCKJbJ88wo6kYCorsTpffu136xgfsd8OkOICQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dQoCNGGH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B9E6kHS006931;
+	Mon, 9 Dec 2024 20:18:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EbMyNtDxooo6rHnhUiB7v/jMrrTSDUYZJmIjsmUNZGk=; b=dQoCNGGHmCG1pQAq
+	NyaEq4eQIleCYk9XFq8aPxgpmqDNkhDrYwxqALjLxGEhB27VTNQa/jqPDKDQhTOK
+	C/Vyh/IoVwc+8LbsyVohkVTvc+ky+Sevsz8bFyyU0oatonl9rFd2dmHTubUhpwav
+	vhzp9lr5lse6WVXhnFYGXr6rUBkvfaA1DTwymH6o+k4B5Lq6YXr3FxCF32yymDJX
+	6wZISGXoastZ4HMPYKFTvgSebSyBAjRJN5VU6VOS4mMmUeJ3nkYdfw6AtfDfS7jJ
+	JdLBb0fZUJq6YqtHOkrj1sBbR8S1jKENlTw7PsRbeZJhJiHuLaVDg9rL2MPD2dVb
+	YVx9XQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43e21bh2jn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Dec 2024 20:18:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B9KIlGm024851
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Dec 2024 20:18:47 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 9 Dec 2024
+ 12:18:43 -0800
+Message-ID: <e7dafea3-2dc6-4737-b257-1dac6d7ce65f@quicinc.com>
+Date: Mon, 9 Dec 2024 12:18:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,141 +65,137 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator:s5m8767 Fully convert to GPIO descriptors
-To: Song Chen <chensong_2000@189.cn>, lgirdwood@gmail.com,
- broonie@kernel.org, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20241206051358.496832-1-chensong_2000@189.cn>
- <17a4dbd7-56cb-4c20-a913-0df5c39fc3ff@kernel.org>
- <862662aa-c5a2-4e15-b97f-ca1b4757ab25@189.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 6/8] drm/msm/dp: Add maximum width limitation for modes
+To: Xiangxu Yin <quic_xiangxuy@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Kuogee
+ Hsieh" <quic_khsieh@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon
+ Vijay Abraham I" <kishon@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
+        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-6-09a4338d93ef@quicinc.com>
+ <CAA8EJpprTGRTxO+9BC6GRwxE4A3CuvmySsxS2Nh4Tqj0nDRT_Q@mail.gmail.com>
+ <95a78722-8266-4d5d-8d2f-e8efa1aa2e87@quicinc.com>
+ <CAA8EJpo-1o9i4JhZgdbvRxvoYQE2v18Lz_8dVg=Za7a_pk5EDA@mail.gmail.com>
+ <86b9a8be-8972-4c19-af0c-da6b3667cbf4@quicinc.com>
+ <fb6enh3wzusadc6r7clg7n7ik2jsucimoi7dnecnsstcz4r6e6@dtahvlm522jj>
+ <3e7660b3-934a-4b11-82a3-48137d63ea5d@quicinc.com>
+ <5cdd9f7a-2c28-4ac2-a4da-304d25efbca3@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <862662aa-c5a2-4e15-b97f-ca1b4757ab25@189.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <5cdd9f7a-2c28-4ac2-a4da-304d25efbca3@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: SehKFPSmVCqQ_Px7chkZwuF6fzktwkaO
+X-Proofpoint-ORIG-GUID: SehKFPSmVCqQ_Px7chkZwuF6fzktwkaO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 mlxlogscore=647 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412090157
 
-On 07/12/2024 07:16, Song Chen wrote:
->>>   		}
->>> -		pdata->buck_gpios[i] = gpio;
->>> +
->>> +		/* SET GPIO*/
+
+
+On 12/8/2024 5:57 PM, Xiangxu Yin wrote:
+> 
+> 
+> On 12/7/2024 4:13 AM, Abhinav Kumar wrote:
 >>
->> What is a SET GPIO?
 >>
->>> +		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
+>> On 12/3/2024 5:58 AM, Dmitry Baryshkov wrote:
+>>> On Tue, Dec 03, 2024 at 03:41:53PM +0800, Xiangxu Yin wrote:
+>>>>
+>>>>
+>>>> On 12/2/2024 5:32 PM, Dmitry Baryshkov wrote:
+>>>>> On Mon, 2 Dec 2024 at 11:05, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 11/29/2024 9:52 PM, Dmitry Baryshkov wrote:
+>>>>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>>>>>>>>
+>>>>>>>> Introduce a maximum width constraint for modes during validation. This
+>>>>>>>> ensures that the modes are filtered based on hardware capabilities,
+>>>>>>>> specifically addressing the line buffer limitations of individual pipes.
+>>>>>>>
+>>>>>>> This doesn't describe, why this is necessary. What does "buffer
+>>>>>>> limitations of individual pipes" mean?
+>>>>>>> If the platforms have hw capabilities like being unable to support 8k
+>>>>>>> or 10k, it should go to platform data
+>>>>>>>
+>>>>>> It's SSPP line buffer limitation for this platform and only support to 2160 mode width.
+>>>>>> Then, shall I add max_width config to struct msm_dp_desc in next patch? for other platform will set defualt value to ‘DP_MAX_WIDTH 7680'
+>>>>>
+>>>>> SSPP line buffer limitations are to be handled in the DPU driver. The
+>>>>> DP driver shouldn't care about those.
+>>>>>
+>>>> Ok, Will drop this part in next patch.
+>>>
+>>> If you drop it, what will be left from the patch itself?
+>>>
 >>
->> Why using "SET" as name, not the actual name it is used for? Buck DVS?
-> 
-> from below snippets:
-> s5m8767_pmic_probe of drivers/regulator/s5m8767.c
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->                      "S5M8767 SET1");
->          if (ret)
->              return ret;
-> 
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->                      "S5M8767 SET2");
->          if (ret)
->              return ret;
-> 
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->                      "S5M8767 SET3");
-
-
-Yeah, your code is fine.
-
-> 
-> and arch/arm/boot/dts/samsung/exynos5250-spring.dts
-> 
->          s5m8767,pmic-buck-dvs-gpios = <&gpd1 0 GPIO_ACTIVE_LOW>, /* DVS1 */
->                            <&gpd1 1 GPIO_ACTIVE_LOW>, /* DVS2 */
->                            <&gpd1 2 GPIO_ACTIVE_LOW>; /* DVS3 */
-> 
->          s5m8767,pmic-buck-ds-gpios = <&gpx2 3 GPIO_ACTIVE_LOW>, /* SET1 */
->                           <&gpx2 4 GPIO_ACTIVE_LOW>, /* SET2 */
->                           <&gpx2 5 GPIO_ACTIVE_LOW>; /* SET3 */
-> 
+>> Yes agree with Dmitry, max_width is really not a DP related terminology.
 >>
->>> +		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
->>> +		gpiod_direction_output(pdata->buck_gpios[i],
->>> +					(pdata->buck_default_idx >> (2 - i)) & 0x1);
+>> This patch should be dropped.
 >>
->> This is not an equivalent code. You set values for GPIOs 0-1 even if
->> requesting GPIO 2 fails.
+>> So there were two issues, overall in this series causing this patch:
 >>
->> On which board did you test it?
-> 
-> You are right ,it's not equivalent with original code, i will fix it. 
-> but i have a question here:
-> 
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->                      "S5M8767 SET1");
->          if (ret)
->              return ret;
-> 
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->                      "S5M8767 SET2");
->          if (ret)
->              return ret;
-> 
->          ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->                      "S5M8767 SET3");
->          if (ret)
->              return ret;
-> 
-> if it fails to request buck_gpios[2] after successfully requests 
-> buck_gpios[0] and buck_gpios[1], the probe fails as well, should it call 
-> gpiod_put to return gpio resource?
+>> 1) In https://patchwork.freedesktop.org/patch/625822/, instead of using VIG_SDM845_MASK, we should be using VIG_SDM845_MASK_SDMA. Without that even 2k will not work, will leave a comment there.
+>>
+>> 2) 4k will still fail. I dont think we can even support 4k on QCS615 but the modes should be filtered out because there is no 3dmux.
+>>
+>> I have submitted https://patchwork.freedesktop.org/patch/627694/ to address this.
+>>
+>> Xiangxu, please let me know if that works for you.
+>>
+>> Thanks
+>>
+>> Abhinav
+> Thanks for your patchsets,
+> After apply patch 625822 & 627694，mode filter works correctly on QCS615 platform with both 4k and 2k monitor.
+> work>>>>>>>
 
+Thanks. If you can give your Tested-by on 
+https://patchwork.freedesktop.org/patch/627967/, that would be great.
 
-Aren't you using devm interface? Please read the API. You do not need to
-put anything, unless you use some other interface and I missed the point
-of the question.
-
-Best regards,
-Krzysztof
+>>>>>>>> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+>>>>>>>> ---
+>>>>>>>>    drivers/gpu/drm/msm/dp/dp_display.c |  3 +++
+>>>>>>>>    drivers/gpu/drm/msm/dp/dp_display.h |  1 +
+>>>>>>>>    drivers/gpu/drm/msm/dp/dp_panel.c   | 13 +++++++++++++
+>>>>>>>>    drivers/gpu/drm/msm/dp/dp_panel.h   |  1 +
+>>>>>>>>    4 files changed, 18 insertions(+)
+>>>>>
+>>>>>
+>>>>
+>>>
+> 
 
