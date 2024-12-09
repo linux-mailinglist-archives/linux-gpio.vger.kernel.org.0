@@ -1,83 +1,82 @@
-Return-Path: <linux-gpio+bounces-13673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 968359E97FC
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:58:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F689E986E
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 15:09:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56D801626B4
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 13:58:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 463191883FB1
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:08:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C40E1ACEA2;
-	Mon,  9 Dec 2024 13:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3631A1B0432;
+	Mon,  9 Dec 2024 14:08:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9949B1A238F;
-	Mon,  9 Dec 2024 13:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0988C1A2392;
+	Mon,  9 Dec 2024 14:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733752698; cv=none; b=J91nsnL4PFLh8JsgPcIiEpZlwOAEuQqsEBLdp76XQH1zlpoJ7+WcuCJhBrkY74l7/saJfEd0UyptNXzPl25+RY85ajIEZVdf74e+a7bLw7RU0ZBE1YivQGe/oc5I/o0mM/T0k1zhHB/JoBpcs5ipz2UnA4HG/kDOOS8YGUjnmGk=
+	t=1733753282; cv=none; b=eHgw4WD005xiuBcr0+bBm6FDFXq5pUs0YYCypDK+cQE4U7IFXXhURMhK3knM7sHZOHEZZWQ8lBu+9j+BRvV1yI1New6liBpMGr1cqJ25EftBO/LoJjlCnumHIWJuY27RTKUu+G2tNfUEQzMFXsXeMSZUkHC+kjT9UJDFJ5BBtZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733752698; c=relaxed/simple;
-	bh=AJo8kL0H8Z4CRD8RoAa8TcNd8u3JMsHI8ocGAW+ciDI=;
+	s=arc-20240116; t=1733753282; c=relaxed/simple;
+	bh=fMLnWKRwyXGyQvbk+QJaHut2AAjD6XdKv4stgmyMhrI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eV30lILylggGp11ZA2CTa5JrfvN/MVTY2UdN+GovKa70cIieWif9sqp87SCihUKa1HDfyDL9ERxccWM7TwHcEbNlNXibUzR8PFJQDIW39M/P7dgPgb6uH4b+KVDfA4Z/gvFfQQkEmayPlqHgD7bzudJHoq7QOv5Hy+QfieToVFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.44
+	 To:Cc:Content-Type; b=WNVmrzuEXzxzesrKgzLpfeVQCi+6ehVojuEAOWxGluUEFdXHzUPw4Wkc/pcG1RKyCpH3REupGcd8Baq6vtbTcm9nygmh1FqFdGSucV8OSO5PNrmK5q7Lz3V7a5MsjbXSQVMcQtYbS2Cw42Ih1x8IgBbMkCpAJP0TClVZuS3y+n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4afe5f6af9eso350878137.3;
-        Mon, 09 Dec 2024 05:58:16 -0800 (PST)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6d918f066c1so2789736d6.2;
+        Mon, 09 Dec 2024 06:07:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733752695; x=1734357495;
+        d=1e100.net; s=20230601; t=1733753278; x=1734358078;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hLkjsOTCbQGkhyDK24ICy+Ea6Qhv/I2EMPhwpTrMFPk=;
-        b=p4yOCV/KmYOEIcaWr3QYmiio/QFMStK0ctVMrvh3JNCoAfVBlqoKrIYmB5S8P065Cy
-         4eWWZlneTXsh1vXbUtHCAhmq98PGniK6lUbRj1G1TkSWo8GDpyrLuGy7sA6TUuXNcJNg
-         YOqpO4WHlkqqOChbhzhZLpIUxfMhjHoNEJ7oqdIxkbU+UWu1midld/eBCl5jQnChkFse
-         Is8BDLOGcstshGxw2E5ooh6swuhri0C5qKYKXlyaWrRURooaKFCgJvERwgRYA2V3JAxo
-         kKmgJupuFSINyoMewlSZ8XOsr37mUMwxHaJ2QG+mzMbb2h+SBL65eWBO7H3MUPbDhAzO
-         crQg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0sLQrA95FRsQ0ujWJiH39jjsE10tGnnA6iTJn0SQVt51oT86cMkGw55yAOCo6NTpnsRxZPk+8YHQnes4z@vger.kernel.org, AJvYcCVVRsD4dVk9+49pJtvkSeMA1PQHFZH6FW0qpYXXopy9i5AoXfGNEZqEjLgJB/JSaAXC+8usbkq/E02a@vger.kernel.org, AJvYcCVjPh+xyUx9QeHabxM5AW6Kmd6nQctJUWvfMue78XWgU3Hb9B0QT3z74FN44UNv9qqXkRgbnTd+l9tHzCwobxw413Q=@vger.kernel.org, AJvYcCWX5+SZtQl/67icQDjsN7XaBbrE3h558pAiVjCIZMObNPQ4L/C2uI2NFje0cojhWL1ZNSYFmMDf4HjRGJ8=@vger.kernel.org, AJvYcCWnpyo1d2IXyZQWW6N5FHFQ3rQjJzJG8mhfYrKFsqXpOFO71rdGrfHOgZZrtQDrGQthmz75jPwo630UEA==@vger.kernel.org, AJvYcCX7oSUCH5awZR2ri7x7liHuDQOcLdo5yXzwYxqPLGjpx6L/UVeF8hTQHhSse1IHdyFMtOEPHbX+c/Eh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx51LgaYFCj6JiC9BCgGjenBZWjWsHkGaG14i4lJbTexYTUOyMT
-	diQb4nV6RHMumo4wda8ruwEvPCNqL0qJQh3mG5jWHqLd3kTpd/D5GV49KM7d1HQ=
-X-Gm-Gg: ASbGncs1pAMWEXq7MmixQi9Agt7pm/6McBZK91LzTMiYX3hJPRwqUe+hu6pGgd58ywP
-	AIx2nFGAq2gGPL+0j0pn0lDMDRjgVQypi0Lo+3xU360b/RISZdxD7TLn4vWKU/94m22NuXfzOhr
-	nUFgTLrSTxHoIDZjH51bdW4wZqTJRDwrmgqu9U3LK0n5n7FFDUf4e0p22H1VC17P/kcV/q319cR
-	BOhtMes9V9CaLt/5DJ6mL/5tfXMbU5+SyRMDCG0enpciqUKRHnV+Lw2GintLd8NJb/FZgu0z6hi
-	94px79Os3vcC
-X-Google-Smtp-Source: AGHT+IEaJrYG6AB0Cp90Sts3LqH3OS/tu7fU7ApM9EQNqGVaUcTouqkGEkmRA30CMKW8iAy0d6iXPA==
-X-Received: by 2002:a05:6102:26d2:b0:4af:3973:6b22 with SMTP id ada2fe7eead31-4b1161b6d52mr693177137.22.1733752694693;
-        Mon, 09 Dec 2024 05:58:14 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4aff6e96b0bsm291279137.14.2024.12.09.05.58.14
+        bh=NK85peZI82UVhOXh97j60VdocE1lKKGDWZ00ZE8W9eY=;
+        b=k5ma8HVqxiS7Po5d9lWDkpyxDe1lPxovZLArsAjUXDG6KzUUr3ox4/if4DJg8MyKRh
+         pfUcBoN96IXcb8+WESPNmU/g6bWVG26zqliq2OEdM2E303THlkTETO731Cnvds8kN3m4
+         2vZlG8IcBzY6mmnsO8ayllnSDpGR2ebLyiTFFnYpQo7tDJRfz6jF/8i1/bllR1yB98G5
+         FyTteQJ92z25acC6WPyYzgsvmkOsSGPXRKrRbcFMnLSm8Rg74tBn/nuqb8mZFW1VMJAD
+         JuBErXUY5r/c82obbbSzir3wUxkZbgsCZSh7IOqvQFIp8mLinMxMkmPZ0pr4OgstuGpd
+         7whg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYWiAe3mnX0FBwc5NNje127p+0sbok8mhf24dST1k3NBOCdf7Sgvfv9+TaUcPtkiXpjnF0aNhYtVx3byE=@vger.kernel.org, AJvYcCV5BzWFcG5mAyI68ilcAL4Mr5SAHWws1Lh7Plkc94yGgbOH23CtEOaDUR03uAyFc0GsKibFuStVc9BVxVKn@vger.kernel.org, AJvYcCWLuL4Qdghh7sVZkT+oA9kafe5RYA79henlWFrMwhmDepmeMGBT82wl0EaaXDnv6T6srVYvFKoopLdM@vger.kernel.org, AJvYcCWjTpTKOVttCW3+cGzBnZ4jk535YP2KOB47G+LrXMuqp4jJFL5lpPTL+RLlBBo8SphWZyMbFW2pTj2FVg==@vger.kernel.org, AJvYcCXIe1AD74T8eKtTSM0IP2gkgMgMDKWOcwHTfpiEjRcWuxWOPcWHgnlyQKXY57SFxjYAfALNGrVpA7rC@vger.kernel.org, AJvYcCXYlfSG/psS6fMnZ30eS4mp3wbtwkEFIX8Tb14BKmynUn7goqxDge1w271qvnfDl9Zqe2L4qj1K2LFme+n8H6fni+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQm2EkLWCQuXpSxUvP+xWNXF7mLkMazpK/hww0vDMIiO67Ex94
+	q1WqyTeI/J6M1D5m/ueDFlzaAWlKmCKO7ouaSOegu/It6H9aszd6RfK2wlytvlU=
+X-Gm-Gg: ASbGncteKBgnFH2Oa0caC48A6QSrVbssFVW7Bxk7Wc5QnmW7MdtOAFhVGXSZ7D7vhcI
+	9A/L7RA5BjMe4OWb+wTrLthv5MGl2h24iPJk8a82E9EOhbcDZfqwEv+3cVeGk2Bep2/+jUfowqP
+	8sIkvLb7blWRJy+JPqeNdMypPv20VUDdFKWWC2ebliEQcGBsTaWqvYYNAlTpWmTxIQEB0+2r7fN
+	WeeZFHlZeg61DvgnP6g86CHfx7DOfvsRWirRp1SCso9y3cSod+u0biLDJEo0CCrHHGDGhUug/sm
+	1lCeQmH3rQlA5Sw/
+X-Google-Smtp-Source: AGHT+IGtSm/6Govk+zvtcEVPCSCFg8HtsvNFDnWqfndNmGREu2OYgrE8AM7EOlskNLZngdC393FbIg==
+X-Received: by 2002:a05:6214:400b:b0:6d8:7ed4:335b with SMTP id 6a1803df08f44-6d8e714c6afmr183834266d6.26.1733753277752;
+        Mon, 09 Dec 2024 06:07:57 -0800 (PST)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d90e0c40f1sm13740416d6.89.2024.12.09.06.07.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 05:58:14 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4afe5f6af9eso350864137.3;
-        Mon, 09 Dec 2024 05:58:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVMJHntN+wGak6t2iJrJ3BfdoElqBZF6RMPC3JnMnRiz8xT9tX1rmGtjQIWISslKlBbL9ceqn0nJHdEjA==@vger.kernel.org, AJvYcCVSJ2AAB56YImP2SOGIgAqCL3Wy8aQM7ghAbEtBhPHcTAkhBpLS8zQThfMlp8mfD0Dm3zmHXxA5BIJBQmZ0ADLrB5o=@vger.kernel.org, AJvYcCVy/lc2x+j3CBOYqi5Bd1UsqkwjDGJKEWkBtVDucd6TJo+JZ3Ss5WfCvBYV3OrUSM5YsJBxOp68DNQM@vger.kernel.org, AJvYcCW0uZ47Xfxv4Z6u7zswcADVel0/bTENMyAzxSpEDv2/X4e3sJ4YaHWCF3AcO4OQibHXq1jxi6mH+FjxoBuc@vger.kernel.org, AJvYcCWoDL8r2//D0jYQCr/TswGMYONfvfxoxsDlpebdSzRsxHk0dgWBMkSsFFgZWCSLTtgXoS6wLgJnclW8sjM=@vger.kernel.org, AJvYcCXdMlL7QCBXwg9HeMP1679v9p0jivxw6AVM7q1do5eUHAq4IeBMH/5gykHmOh8T1AeAQ2Po2avja2Hx@vger.kernel.org
-X-Received: by 2002:a05:6102:f0f:b0:4af:f32e:ea76 with SMTP id
- ada2fe7eead31-4b11601d4c4mr639446137.5.1733752694184; Mon, 09 Dec 2024
- 05:58:14 -0800 (PST)
+        Mon, 09 Dec 2024 06:07:57 -0800 (PST)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-467631f3ae3so6114301cf.0;
+        Mon, 09 Dec 2024 06:07:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUmG6koKSmcaL5RXXm8s0wXQ+wmCOj/JPSjmop29ELgT105FMfrziSBDY8JzoLW3ZNFZzyXm1q/JW2oGp2SXNGGMc0=@vger.kernel.org, AJvYcCVNaqphxvxUI5I8+jcq69EgszBkw54oJiwfyCnY6X52w3CS3JrxkiwKpeazf44tgHDq4AIk6wwj2W6zNQ4=@vger.kernel.org, AJvYcCVQEf/SrsutMX1EZn4QoZwfV80gY5kK9c5oAwXyT7yxDsF5Didj8/kMoPQwV74N1+nTTK0p1yUfzNLs/C4C@vger.kernel.org, AJvYcCWGuXB8R2OIBNnMG/SC+4WMkJg0bnnSmvLewsxEOHsNZQuZey78REDVNRY4ajHgnPvy2VnHY1ChkwlS1g==@vger.kernel.org, AJvYcCWiqg+fUPmHfxaFVrI19kLuHiwtd+r9nEaC96ZgWoiDECPlOxLed6podGbYg+mbECenNStslw/bdGWO@vger.kernel.org, AJvYcCXWpU34LlLb9/0vuIXIustLITlouqhIfP7218f959rXGTkx5BxkfeMea0zGiUMLHiq4e1t37TKKmHni@vger.kernel.org
+X-Received: by 2002:a05:620a:1d09:b0:7b6:d1f6:3df with SMTP id
+ af79cd13be357-7b6d1f605d0mr887904185a.21.1733753276599; Mon, 09 Dec 2024
+ 06:07:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-17-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20241113133540.2005850-17-claudiu.beznea.uj@bp.renesas.com>
+References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-18-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20241113133540.2005850-18-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Dec 2024 14:58:02 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWc-zPHwYLkOos5hujCeAKxHb6O7k-KB0GQKtQjSoWEfQ@mail.gmail.com>
-Message-ID: <CAMuHMdWc-zPHwYLkOos5hujCeAKxHb6O7k-KB0GQKtQjSoWEfQ@mail.gmail.com>
-Subject: Re: [PATCH v3 16/25] ASoC: renesas: rz-ssi: Enable runtime PM
- autosuspend support
+Date: Mon, 9 Dec 2024 15:07:44 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXHHG11tRnNgfmz8vEUE1vn_Eb6qjroK470w=ERfmP=mw@mail.gmail.com>
+Message-ID: <CAMuHMdXHHG11tRnNgfmz8vEUE1vn_Eb6qjroK470w=ERfmP=mw@mail.gmail.com>
+Subject: Re: [PATCH v3 17/25] ASoC: renesas: rz-ssi: Add runtime PM support
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
 	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
@@ -95,9 +94,10 @@ On Wed, Nov 13, 2024 at 2:36=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
 wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Enable runtime PM autosuspend support. The chosen autosuspend delay is
-> zero for immediate autosuspend. In case there are users that need a
-> different autosuspend delay, it can be adjusted through sysfs.
+> Add runtime PM support to the ssi driver. This assert/de-assert the
+> reset lines on runtime suspend/resume. Along with it the de-assertion of
+> the reset line from probe function was removed as it is not necessary
+> anymore.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
