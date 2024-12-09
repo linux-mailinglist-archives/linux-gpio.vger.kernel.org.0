@@ -1,192 +1,196 @@
-Return-Path: <linux-gpio+bounces-13625-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 795CC9E8913
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 02:58:13 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B7CB9E8A7A
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 05:44:47 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42CA72826DD
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 01:58:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 131031646FD
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 04:44:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2DCB28691;
-	Mon,  9 Dec 2024 01:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3469190685;
+	Mon,  9 Dec 2024 04:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aYVL/QDI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyxRVjlU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0756FC0E;
-	Mon,  9 Dec 2024 01:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185B189BBF;
+	Mon,  9 Dec 2024 04:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733709486; cv=none; b=SnAmk/GB03yQn/0n/Oijyefqpg1lyOR4qQYaGQOzgNanDuyPXglYUo1ssl8X/ascB/1IOdSLeLSYrUrsANlGvkxlmsd2XqByMpH1l0ZrmC1x19FaQD6JBg3dbzwSZLnhXcOugv2YYjW/YwrrLfDOX5qMCAhQQNFS+QahClkjRnQ=
+	t=1733719482; cv=none; b=o2WNkQ3PMS5L6ZQqF/JVzvItfI8w6CX2ZWmar8IcSqRU4x/IAD48vzNAq6CL8CsekIvH2mHCW/IpZMIvAGwnJCFFsdQ/qYJLyIdktJxss9H2A9kIhsRAT88IhkH//yWoDTB50HbrPXjeEwCQKSmxTaTebRH+HPGeQloLGzfP18Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733709486; c=relaxed/simple;
-	bh=26ws/KgChiIeAZTv7IM2pgQp+NqAg4iGZ7rpERs3Gs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kq7uzIk28QGG/v/brGMY+pgbvwk/RkDNyElnibe5R0H1bUdU62+26c6AmJIo0Kc2e7EtxvdcexjWnzVHPLucpe6p6GgdnsLYfNo6g2Y/vNc8+RYwyHWIHQSpgVLFSaHeq0lg74rRF3/HZNYMZB/QZ7/SSrEjlXTW1k+hCqKT5/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aYVL/QDI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B90QGVn020262;
-	Mon, 9 Dec 2024 01:57:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CG8II9ztrbXAFXn/IH/2hf7r1GGna+rqHK57zUB/bNU=; b=aYVL/QDI5hRBCESG
-	gYYAxB1Jr0qodPz2M2xbt/JMNcoRoBNZs8xC1V3uwoq+Jf5P+cWv2D0SU1UQR0/M
-	T2eLohmOtOyA2bFSvoz123IpkZOeURYCf/nIfYwjVwv7eQAyXZDZ5SCRtJr0SBng
-	IXT3p1usNWdSsO1rXlSYeeyZJkabKG8rxnEgZIoI8gDFj189N7VQ+kb/PZA8iBMJ
-	xdJaUjqCZOymB7MLaSm/ISPhx/oeXiftwxMpDfoDtjq/rH0umXmv1xD7IP9w9UD4
-	KYv5rP+18JY4MYCm+Fy6ZR5eaJ4O8abTulwPAzZohbPvopy/cJQRwjQeFg6bXXYH
-	h0Jcmg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43cc2eb7p3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Dec 2024 01:57:43 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4B91vgCk012972
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Dec 2024 01:57:42 GMT
-Received: from [10.64.16.135] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Dec 2024
- 17:57:35 -0800
-Message-ID: <5cdd9f7a-2c28-4ac2-a4da-304d25efbca3@quicinc.com>
-Date: Mon, 9 Dec 2024 09:57:33 +0800
+	s=arc-20240116; t=1733719482; c=relaxed/simple;
+	bh=LHdowryXzqQdVdkjfptOPo5XBccx32PtE3ujdcb8Xh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jM/KF37BubTm6SH+cBWoA07PYcJvTVozG6psyzRwaXKqBFOPeKgt3I4Dbk++rpmT9xtv7/E6LuxQxM2T9W1lB9rCAWH0yDSEvmKAm/HftQe2nPeHlB22IkqQZTUUEJwrPBIv7DCPF7ob914Z9SMzKec6IbvsTI1kYyLB4X3YS2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyxRVjlU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733719481; x=1765255481;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LHdowryXzqQdVdkjfptOPo5XBccx32PtE3ujdcb8Xh0=;
+  b=PyxRVjlUqfRVE/ckpJDIf7xGrV32FxbgBe4o4gvpmrYd4fLTUXi/xbxQ
+   XFNispItwQ/z8qT/Hrig0GDUclnLVY0cFvQS9yjJ9JiI93dtAuIw8XfyN
+   98tmQ3WNeHgTSintjcADfSqaMX7ESukf6FeTOu/bHMl2dlRxpJkuj0Hkb
+   t04NGQY3WxZ/tyXqV58efyashf0w8QuapoU1+PH/anIR4yBp58olpRqDQ
+   GV47DMzbxNRoD5lJoyHNB2gRakJakR6q7iiQzsfD62XiVrGDjjYyY6iVr
+   Ea1kWZJfqI0JS9snolCVx474l5GK2L9jc/6YiH7uf6iZ94hrtu8lhe4ii
+   Q==;
+X-CSE-ConnectionGUID: Y1CDNkqhT1ewT16pNvE3tw==
+X-CSE-MsgGUID: UZoaPPpSSSq30EgwosRWPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11280"; a="33916998"
+X-IronPort-AV: E=Sophos;i="6.12,218,1728975600"; 
+   d="scan'208";a="33916998"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2024 20:44:40 -0800
+X-CSE-ConnectionGUID: tpp8DdWqTCK1r34HNWe2jQ==
+X-CSE-MsgGUID: 7XgwCz8RT7y4mjsjo7S4sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,218,1728975600"; 
+   d="scan'208";a="118205074"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 08 Dec 2024 20:44:39 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tKVdM-0003uH-1J;
+	Mon, 09 Dec 2024 04:44:36 +0000
+Date: Mon, 9 Dec 2024 12:44:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kyle Hendry <kylehendrydev@gmail.com>, linus.walleij@linaro.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kyle Hendry <kylehendrydev@gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm63268: Add gpio function
+Message-ID: <202412081215.VyJuftPL-lkp@intel.com>
+References: <20241207223335.17535-1-kylehendrydev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] drm/msm/dp: Add maximum width limitation for modes
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Kuogee
- Hsieh" <quic_khsieh@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kishon
- Vijay Abraham I" <kishon@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
-        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
- <20241129-add-displayport-support-for-qcs615-platform-v1-6-09a4338d93ef@quicinc.com>
- <CAA8EJpprTGRTxO+9BC6GRwxE4A3CuvmySsxS2Nh4Tqj0nDRT_Q@mail.gmail.com>
- <95a78722-8266-4d5d-8d2f-e8efa1aa2e87@quicinc.com>
- <CAA8EJpo-1o9i4JhZgdbvRxvoYQE2v18Lz_8dVg=Za7a_pk5EDA@mail.gmail.com>
- <86b9a8be-8972-4c19-af0c-da6b3667cbf4@quicinc.com>
- <fb6enh3wzusadc6r7clg7n7ik2jsucimoi7dnecnsstcz4r6e6@dtahvlm522jj>
- <3e7660b3-934a-4b11-82a3-48137d63ea5d@quicinc.com>
-From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
-In-Reply-To: <3e7660b3-934a-4b11-82a3-48137d63ea5d@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Uka-izgVnq1gjnLi7O1BlO94c-l0rngb
-X-Proofpoint-GUID: Uka-izgVnq1gjnLi7O1BlO94c-l0rngb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- mlxlogscore=710 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412090014
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241207223335.17535-1-kylehendrydev@gmail.com>
+
+Hi Kyle,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next linus/master v6.13-rc1 next-20241206]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kyle-Hendry/pinctrl-bcm63268-Add-gpio-function/20241208-063718
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20241207223335.17535-1-kylehendrydev%40gmail.com
+patch subject: [PATCH] pinctrl: bcm63268: Add gpio function
+config: x86_64-buildonly-randconfig-005-20241208 (https://download.01.org/0day-ci/archive/20241208/202412081215.VyJuftPL-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241208/202412081215.VyJuftPL-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412081215.VyJuftPL-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pinctrl/bcm/pinctrl-bcm63268.c:630:7: warning: variable 'reg' is used uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
+     630 |         case BCM63268_NOREG:
+         |              ^~~~~~~~~~~~~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:638:31: note: uninitialized use occurs here
+     638 |         regmap_update_bits(pc->regs, reg, mask, val);
+         |                                      ^~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:603:18: note: initialize the variable 'reg' to silence this warning
+     603 |         unsigned int reg;
+         |                         ^
+         |                          = 0
+>> drivers/pinctrl/bcm/pinctrl-bcm63268.c:630:7: warning: variable 'mask' is used uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
+     630 |         case BCM63268_NOREG:
+         |              ^~~~~~~~~~~~~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:638:36: note: uninitialized use occurs here
+     638 |         regmap_update_bits(pc->regs, reg, mask, val);
+         |                                           ^~~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:604:24: note: initialize the variable 'mask' to silence this warning
+     604 |         unsigned int val, mask;
+         |                               ^
+         |                                = 0
+>> drivers/pinctrl/bcm/pinctrl-bcm63268.c:630:7: warning: variable 'val' is used uninitialized whenever switch case is taken [-Wsometimes-uninitialized]
+     630 |         case BCM63268_NOREG:
+         |              ^~~~~~~~~~~~~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:638:42: note: uninitialized use occurs here
+     638 |         regmap_update_bits(pc->regs, reg, mask, val);
+         |                                                 ^~~
+   drivers/pinctrl/bcm/pinctrl-bcm63268.c:604:18: note: initialize the variable 'val' to silence this warning
+     604 |         unsigned int val, mask;
+         |                         ^
+         |                          = 0
+   3 warnings generated.
 
 
+vim +/reg +630 drivers/pinctrl/bcm/pinctrl-bcm63268.c
 
-On 12/7/2024 4:13 AM, Abhinav Kumar wrote:
-> 
-> 
-> On 12/3/2024 5:58 AM, Dmitry Baryshkov wrote:
->> On Tue, Dec 03, 2024 at 03:41:53PM +0800, Xiangxu Yin wrote:
->>>
->>>
->>> On 12/2/2024 5:32 PM, Dmitry Baryshkov wrote:
->>>> On Mon, 2 Dec 2024 at 11:05, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 11/29/2024 9:52 PM, Dmitry Baryshkov wrote:
->>>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
->>>>>>>
->>>>>>> Introduce a maximum width constraint for modes during validation. This
->>>>>>> ensures that the modes are filtered based on hardware capabilities,
->>>>>>> specifically addressing the line buffer limitations of individual pipes.
->>>>>>
->>>>>> This doesn't describe, why this is necessary. What does "buffer
->>>>>> limitations of individual pipes" mean?
->>>>>> If the platforms have hw capabilities like being unable to support 8k
->>>>>> or 10k, it should go to platform data
->>>>>>
->>>>> It's SSPP line buffer limitation for this platform and only support to 2160 mode width.
->>>>> Then, shall I add max_width config to struct msm_dp_desc in next patch? for other platform will set defualt value to ‘DP_MAX_WIDTH 7680'
->>>>
->>>> SSPP line buffer limitations are to be handled in the DPU driver. The
->>>> DP driver shouldn't care about those.
->>>>
->>> Ok, Will drop this part in next patch.
->>
->> If you drop it, what will be left from the patch itself?
->>
-> 
-> Yes agree with Dmitry, max_width is really not a DP related terminology.
-> 
-> This patch should be dropped.
-> 
-> So there were two issues, overall in this series causing this patch:
-> 
-> 1) In https://patchwork.freedesktop.org/patch/625822/, instead of using VIG_SDM845_MASK, we should be using VIG_SDM845_MASK_SDMA. Without that even 2k will not work, will leave a comment there.
-> 
-> 2) 4k will still fail. I dont think we can even support 4k on QCS615 but the modes should be filtered out because there is no 3dmux.
-> 
-> I have submitted https://patchwork.freedesktop.org/patch/627694/ to address this.
-> 
-> Xiangxu, please let me know if that works for you.
-> 
-> Thanks
-> 
-> Abhinav
-Thanks for your patchsets,
-After apply patch 625822 & 627694，mode filter works correctly on QCS615 platform with both 4k and 2k monitor.
-work>>>>>>>
->>>>>>> Signed-off-by: Xiangxu Yin <quic_xiangxuy@quicinc.com>
->>>>>>> ---
->>>>>>>   drivers/gpu/drm/msm/dp/dp_display.c |  3 +++
->>>>>>>   drivers/gpu/drm/msm/dp/dp_display.h |  1 +
->>>>>>>   drivers/gpu/drm/msm/dp/dp_panel.c   | 13 +++++++++++++
->>>>>>>   drivers/gpu/drm/msm/dp/dp_panel.h   |  1 +
->>>>>>>   4 files changed, 18 insertions(+)
->>>>
->>>>
->>>
->>
+   595	
+   596	static int bcm63268_pinctrl_set_mux(struct pinctrl_dev *pctldev,
+   597					    unsigned selector, unsigned group)
+   598	{
+   599		struct bcm63xx_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+   600		const struct pingroup *pg = &bcm63268_groups[group];
+   601		const struct bcm63268_function *f = &bcm63268_funcs[selector];
+   602		unsigned i;
+   603		unsigned int reg;
+   604		unsigned int val, mask;
+   605	
+   606		for (i = 0; i < pg->npins; i++)
+   607			bcm63268_set_gpio(pc, pg->pins[i]);
+   608	
+   609		switch (f->reg) {
+   610		case BCM63268_LEDCTRL:
+   611			reg = BCM63268_LED_REG;
+   612			mask = BIT(pg->pins[0]);
+   613			val = BIT(pg->pins[0]);
+   614			break;
+   615		case BCM63268_MODE:
+   616			reg = BCM63268_MODE_REG;
+   617			mask = BIT(pg->pins[0]);
+   618			val = BIT(pg->pins[0]);
+   619			break;
+   620		case BCM63268_CTRL:
+   621			reg = BCM63268_CTRL_REG;
+   622			mask = BIT(pg->pins[0]);
+   623			val = 0;
+   624			break;
+   625		case BCM63268_BASEMODE:
+   626			reg = BCM63268_BASEMODE_REG;
+   627			mask = f->mask;
+   628			val = f->mask;
+   629			break;
+ > 630		case BCM63268_NOREG:
+   631			/*Do nothing, leave registers as default*/
+   632			break;
+   633		default:
+   634			WARN_ON(1);
+   635			return -EINVAL;
+   636		}
+   637	
+   638		regmap_update_bits(pc->regs, reg, mask, val);
+   639	
+   640		return 0;
+   641	}
+   642	
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
