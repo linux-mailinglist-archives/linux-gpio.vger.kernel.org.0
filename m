@@ -1,177 +1,119 @@
-Return-Path: <linux-gpio+bounces-13630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1A3E9E8C8C
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 08:48:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 70F039E8EB0
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 10:26:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2B0118864C3
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 07:48:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 362B71886552
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 09:26:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECAB214A95;
-	Mon,  9 Dec 2024 07:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A329D216385;
+	Mon,  9 Dec 2024 09:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="ToeJQjYP";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="Gm6n3ncw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HZ2vIv+1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DB915573D;
-	Mon,  9 Dec 2024 07:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533FD18DF6B
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Dec 2024 09:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733730478; cv=none; b=CtQfWMQrztqNY9Y+025WKL/uv2pNzX2wM4RSYr53Y5IqT/MPrtqZhydjpHHhydBlmGuPxw36lTFVpEcMElzjgcjeKYSnCDt545UdV8ps0AEtoSzBZQconMNxUDDf/jaCdD2PNPBx+a8wUxZzfHnkcDY/wmPCU9wvQ7zn6qcXdb8=
+	t=1733736400; cv=none; b=oplkrIIoUDJydSxQsnaFsdjvw3Oe4jEsJPjqld8q6VJ5R8ZFPruarUnwo5xccNeCYwZyRG/xRXhRjHt5wSHlFbeX9l2v4dTAK+o98PmiXgJIleMD5qIQ/4eXmDT2QlsHlfVFfUVThYz9LyFAOrCLh4Rt/ZtmwN7iTbAcxwQ1Pg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733730478; c=relaxed/simple;
-	bh=Sd8GLV1GZTuMQndnci343v7z53UP/Oxb0I80I1PF628=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=plQRaP5le1OMkzXReG+xMPtSE84IWSu3ww2x/Ybf5XaZu491jle952tX+CBmBYzyqYXAYXKXSy2/9oEv/bsFxIM8S7gvBR29zfPsu+sb0HOlw8ThizffNQdpKKsWVgHSIU1OR1Tsg7zGcVNqWVptjy8sm4sE3dRIJHJ3C2o+9LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=ToeJQjYP; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=Gm6n3ncw; arc=none smtp.client-ip=89.207.88.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com 1983EE0008
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1733730464; bh=9rTtz124RMOkvIMCEigwQM+K63GbqUml6CtYuHYZxYQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=ToeJQjYPeOBCziDWhCGfg59C+idKZRuO623CNHq4hFVAqT4I8Eax1tF8lFRHrgZIV
-	 Ts3HdvhXMMTJZhEokQ3hyVxIrwgihFr+SbmRP/idBAE2n70AQUMN8J7EG+yeIdnSqi
-	 anAIpy5ROaTQvhEVfUCys5lGkrKWjiJl+1WeAcuyBCZWi6mUzF6PvYzxAcmWhGBiJW
-	 3LhToC76XQhNU8tTo16wkDakjbQ9hAw/jfrUBXSl3Im0DVRZGJ8jzlmaC54czBCQF/
-	 +2wDQ5RGb+zBDrN9MRuPQbjxwkm3RVhdjJ6j5JkWQyG9hRbe8qUAH15vjS2Np5inPq
-	 WW6Bvp3ppk9aQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1733730464; bh=9rTtz124RMOkvIMCEigwQM+K63GbqUml6CtYuHYZxYQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Gm6n3ncwcl/8vHsVaZTj99eQ0lnMXMQOA0pyPiTfHOCvqn9rGpWCjNu7GB3btY1M7
-	 iG+swQDeJ71FLU3hoa7+ZSaoFlWRDDZ7vwFyX2tmHEZhQB+mQBA3yAywBMKMCoE1Qc
-	 C6jmW0AbKPrc4sXWRSCTarHDcmsj8nYScbsmqerqQvkCb2eaWT+UxuQZABi0P1bQeL
-	 FN61V8UM2h7Wy2w5MeX+vlOAxxZH81sn5x4h19I12TPPLOfww2GFOYC06ZOUI2XmA9
-	 3aa4iAnJmsqnx5oAbPDXvAJYVmNP4diCkxIj3V4WbTP6IotdMOotAm1+JnlSf7/MKb
-	 2oouM3UHwo3Mg==
-From: Evgenii Shatokhin <e.shatokhin@yadro.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Nikita
- Shubin <nikita.shubin@maquefel.me>, <linux@yadro.com>, Evgenii Shatokhin
-	<e.shatokhin@yadro.com>, <stable@vger.kernel.org>
-Subject: [PATCH] pinctrl: mcp23s08: Fix sleeping in atomic context due to regmap locking
-Date: Mon, 9 Dec 2024 10:46:59 +0300
-Message-ID: <20241209074659.1442898-1-e.shatokhin@yadro.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733736400; c=relaxed/simple;
+	bh=S3jXuFMMiKh2Yb7r5nwQWoJG4IrpikONNjCY37QwD7c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DMLo5hz2hkRjP7LjorycHYuywJWWhu7JPD+wT+buiQjuRUbnqmKcCIzI17E0TduozvYtLQPpGIygVcoCld/UM5px8m/zAHU00IMV7EJhRCGXzo6jU4+I9HIwy+o72fEZJepgNusitJYY6ldO0zJhQI4rzeZuQzh+9yeqJG6jQgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HZ2vIv+1; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30229d5b22fso2819221fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Dec 2024 01:26:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733736396; x=1734341196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JA7WfMBaWYSOWyPZjVUGr+yIsyS/SHIMPboP5ogrJ9o=;
+        b=HZ2vIv+1t91imJFoBW4Qbju7c27QRctMhaAesttafd0sZFtA1TH1fJgm/7THaxEW4J
+         eu/enEw8UjmYXSnPFkJgejvrAElzoQxTcGwoOF9lan6iZ4YEeO2I82s/IdTdC+7Ry5eM
+         x3lWJ5w7zXtnMF6/E+R+28Jl7a3IJo8gfSTwv4z2TyByIhS/MLVoCZmRO8zmNZobD8hE
+         8TijWZkYwc4I7OC1qcQXUYHphvKixkDvDV9A9+UCVIggHOfFVCIRX2nvm7PkIlqSWO3e
+         /S58oMps6n3Qb3CORLbToocASJtdEMN2vySk7f+0FypNC5K0xzGKb3wXyoVZBQ+hdIaH
+         a1jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733736396; x=1734341196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JA7WfMBaWYSOWyPZjVUGr+yIsyS/SHIMPboP5ogrJ9o=;
+        b=rl7iCjnDrMc1/t1VnCRUrn8sSa49R7MwcJsYGAGOcK/JnykoUvu1U7kACN5fKkk0U1
+         5X/5/hKbc1fLWzpWWpFAsHUcw5WQ7MGuQU/sYUBjeON7XY7ZkYy6b9PWaevhMGiIel9Z
+         FTfvSDAs986uzKWuKsi2Va8vL1d1u6lALdA3hx7VMD3OAqQ03LKZen2kTscyz3qXzplY
+         qZPZsTx3t4AuPEhWzQUYZ2J+0frFUDOPveV9ollYIHot+klK/DgICsuS6qSXhJc2hZAA
+         erlHYfErp1gOF+5RcALMlxAF9s2I0+zA3zQk7WNvLO2An/uJbSVo7+xf65Uz79Kwe+eF
+         ta4Q==
+X-Gm-Message-State: AOJu0Yz+p2JpHIjplY4FaD9jfJNuFV0fDGZhqz/PyT/mggQfNsxzN4Cg
+	GbNP1P8cCqvq3yKDyyQBKg0DG6laizpEetA1Gifkr8doqzhqDXuqcp3sGJ2CWIWJe2RMcmHlO86
+	XyzAaNXE/IR9p/2D1i7z2q0A9IltrX4sCd8ikT1KxKCIaVQVq
+X-Gm-Gg: ASbGncsPMrynYWGTSGZi8NXfjae6saZda4LAJK31NVeLE2cYqsyDnd5AYnjggGBDNiy
+	u5ZBPa1EUwKXNDy7ho4Q67cwFLm0WHtGRELCxFhooV6yNaIzG2CfXYuAo+3kHBgw=
+X-Google-Smtp-Source: AGHT+IHVsOZgryC4h4VjxC7j6HciKNWsP7C2j4MqzsjCzQl2X0gPVPPuNInO4s/JC631gEidDwqq//1/DbQ48OftW4M=
+X-Received: by 2002:a2e:b8c9:0:b0:302:251a:bd0a with SMTP id
+ 38308e7fff4ca-302251abe45mr7651591fa.9.1733736396034; Mon, 09 Dec 2024
+ 01:26:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: T-EXCH-08.corp.yadro.com (172.17.11.58) To
- T-EXCH-10.corp.yadro.com (172.17.11.60)
+References: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 9 Dec 2024 10:26:25 +0100
+Message-ID: <CAMRc=MdadVG6B5cXeRubNqBXFAJYd4zFOg93DPpTFJetYH8XYw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] gpio: Fixes for Granite Rapids vGPIO driver
+To: Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>, 
+	Shankar Bandal <shankar.bandal@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If a device uses MCP23xxx IO expander to receive IRQs, the following
-bug can happen:
+On Wed, Dec 4, 2024 at 8:04=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Hi,
+>
+> This series includes several fixes for the Granite Rapids vGPIO driver
+> found during validation.
+>
+> Alan Borzeszkowski (5):
+>   gpio: graniterapids: Fix vGPIO driver crash
+>   gpio: graniterapids: Fix incorrect BAR assignment
+>   gpio: graniterapids: Determine if GPIO pad can be used by driver
+>   gpio: graniterapids: Check if GPIO line can be used for IRQs
+>   gpio: graniterapids: Fix GPIO Ack functionality
+>
+> Shankar Bandal (2):
+>   gpio: graniterapids: Fix invalid GPI_IS register offset
+>   gpio: graniterapids: Fix invalid RXEVCFG register bitmask
+>
+>  drivers/gpio/gpio-graniterapids.c | 52 ++++++++++++++++++++++++-------
+>  1 file changed, 41 insertions(+), 11 deletions(-)
+>
+> --
+> 2.45.2
+>
 
-  BUG: sleeping function called from invalid context
-    at kernel/locking/mutex.c:283
-  in_atomic(): 1, irqs_disabled(): 1, non_block: 0, ...
-  preempt_count: 1, expected: 0
-  ...
-  Call Trace:
-  ...
-  __might_resched+0x104/0x10e
-  __might_sleep+0x3e/0x62
-  mutex_lock+0x20/0x4c
-  regmap_lock_mutex+0x10/0x18
-  regmap_update_bits_base+0x2c/0x66
-  mcp23s08_irq_set_type+0x1ae/0x1d6
-  __irq_set_trigger+0x56/0x172
-  __setup_irq+0x1e6/0x646
-  request_threaded_irq+0xb6/0x160
-  ...
+Andy: any comments on these? I'm willing to take it for the next rc this we=
+ek.
 
-We observed the problem while experimenting with a touchscreen driver which
-used MCP23017 IO expander (I2C).
-
-The regmap in the pinctrl-mcp23s08 driver uses a mutex for protection from
-concurrent accesses, which is the default for regmaps without .fast_io,
-.disable_locking, etc.
-
-mcp23s08_irq_set_type() calls regmap_update_bits_base(), and the latter
-locks the mutex.
-
-However, __setup_irq() locks desc->lock spinlock before calling these
-functions. As a result, the system tries to lock the mutex whole holding
-the spinlock.
-
-It seems, the internal regmap locks are not needed in this driver at all.
-mcp->lock seems to protect the regmap from concurrent accesses already,
-except, probably, in mcp_pinconf_get/set.
-
-mcp23s08_irq_set_type() and mcp23s08_irq_mask/unmask() are called under
-chip_bus_lock(), which calls mcp23s08_irq_bus_lock(). The latter takes
-mcp->lock and enables regmap caching, so that the potentially slow I2C
-accesses are deferred until chip_bus_unlock().
-
-The accesses to the regmap from mcp23s08_probe_one() do not need additional
-locking.
-
-In all remaining places where the regmap is accessed, except
-mcp_pinconf_get/set(), the driver already takes mcp->lock.
-
-This patch adds locking in mcp_pinconf_get/set() and disables internal
-locking in the regmap config. Among other things, it fixes the sleeping
-in atomic context described above.
-
-Fixes: 8f38910ba4f6 ("pinctrl: mcp23s08: switch to regmap caching")
-Cc: stable@vger.kernel.org
-Signed-off-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
----
- drivers/pinctrl/pinctrl-mcp23s08.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index d66c3a3e8429..b96e6368a956 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -86,6 +86,7 @@ const struct regmap_config mcp23x08_regmap = {
- 	.num_reg_defaults = ARRAY_SIZE(mcp23x08_defaults),
- 	.cache_type = REGCACHE_FLAT,
- 	.max_register = MCP_OLAT,
-+	.disable_locking = true, /* mcp->lock protects the regmap */
- };
- EXPORT_SYMBOL_GPL(mcp23x08_regmap);
- 
-@@ -132,6 +133,7 @@ const struct regmap_config mcp23x17_regmap = {
- 	.num_reg_defaults = ARRAY_SIZE(mcp23x17_defaults),
- 	.cache_type = REGCACHE_FLAT,
- 	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+	.disable_locking = true, /* mcp->lock protects the regmap */
- };
- EXPORT_SYMBOL_GPL(mcp23x17_regmap);
- 
-@@ -228,7 +230,9 @@ static int mcp_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_PULL_UP:
-+		mutex_lock(&mcp->lock);
- 		ret = mcp_read(mcp, MCP_GPPU, &data);
-+		mutex_unlock(&mcp->lock);
- 		if (ret < 0)
- 			return ret;
- 		status = (data & BIT(pin)) ? 1 : 0;
-@@ -257,7 +261,9 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_PULL_UP:
-+			mutex_lock(&mcp->lock);
- 			ret = mcp_set_bit(mcp, MCP_GPPU, pin, arg);
-+			mutex_unlock(&mcp->lock);
- 			break;
- 		default:
- 			dev_dbg(mcp->dev, "Invalid config param %04x\n", param);
--- 
-2.34.1
-
+Bart
 
