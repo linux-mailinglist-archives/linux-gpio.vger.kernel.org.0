@@ -1,172 +1,174 @@
-Return-Path: <linux-gpio+bounces-13675-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13676-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 862409E9875
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 15:09:56 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03A3C9E98AE
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 15:24:18 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B912E18846ED
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:09:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51EA92858DF
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2024 14:24:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A99EA1B0407;
-	Mon,  9 Dec 2024 14:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D291B043F;
+	Mon,  9 Dec 2024 14:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYqXzMjY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B066235968;
-	Mon,  9 Dec 2024 14:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F11B041F;
+	Mon,  9 Dec 2024 14:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733753359; cv=none; b=id5NF7OujjeJCFmDbxWat7YAgM4rVzzndhD1l7CjcgjABMmcW5WMgrE6r+EPiPWr4gw239URfGGNmcBTQ3q1vbIl1DDndkzwc2NjNfyJwdcNh49Ux9vzG5xACq5JSr8/Dp1vL8AsPWjLlF4SMXEC4AnGdA8ETNTKEhWowyufTGc=
+	t=1733754252; cv=none; b=nHOFZ/OTkOUHnZ+czlaEceqcDjOK6vHq5baIWxTS/PzoGCshS/HXs1mmGB6n+BvGS/4DOnrNJx94IR5cRynSmHhjvdBBvvQcZJoniR2K1pXX0AS/N5VKg4dRqkCWVsgm0tXNHUiMWkxg5PPSWTYkMApQS0J0fBf75ZotX6XPi08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733753359; c=relaxed/simple;
-	bh=s9Ldmug26kxAmuSbYyoIvZf07MyJobSWL4Un9vG+tFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RKgwBAkoLc9xGjqYBQL91qG38McnM5ysSmiT8Z5HXrRF0tNcHoCUVY5UAdH3cKu49EDJOSWfdTd8BuBuMQauH03T3UNHNAff7G9Ld0YHhDJF7CgIpbIL45Lx4yri9jngq/oBRtxaMT4ZE7V7Ww71ZMONHpTqnvdwf/WQbPNSBoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1733754252; c=relaxed/simple;
+	bh=loJGK4qglNnZxmQ/mmjN5eIA+Z/el656TuQvp7Y6ios=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eG98iAYhlih6pFY86Zc7G8d2ldEVMTKNSjRqJnmL25gmdHBFQqqhytT+ajspO1n/baQfPgZWZRYBM57IoyxzpRIj+UXkr36+8f4xTDAdfiHN6TgXgnqPxIVZOthHE6FkmIxHxbs0FzeeLe+4kJooGMLVMPyQhEXmUvsEm48MbL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VYqXzMjY; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-467631f3ae3so6131411cf.0;
-        Mon, 09 Dec 2024 06:09:16 -0800 (PST)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3862df95f92so2260527f8f.2;
+        Mon, 09 Dec 2024 06:24:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733754248; x=1734359048; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J4bmO8+d8DdGy7XEHiowe6nmsMnr1jfJx+QmO5T6lzw=;
+        b=VYqXzMjY0Lf/NSxxnKHcavZ++QtZJI4jrMjCPs3PUyNf3qoJ2D39miJkkfQjC4CPLO
+         buJncS4zrVIimZUOaFCOvaeMnWi5p7LOspCCrElp2+x95hiTnzdINuKwLsDdfUdqRSpY
+         SGWG/031xrCkXjpjj3o15Sf6jMd/vmtFArONo/H20jS6aXGKe8Yno/0DUF0OJkl7bnc2
+         3axC0tyj1jMgiJTVwDf1nHguxjpfbFDz+oodM/UcSmXhq72l/3o40/3XFldZl2oTTFSL
+         W7zi62gi7ZynCtAdO+U0WygjhQXZcjBrwYiYFs2hW6+7bkBVwlEOuxoZ0tTCUGp/kL0W
+         lTAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733753355; x=1734358155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V7vHMlMX/1emap3oJbzw6fcX2VkuumLPk5gGBhXT388=;
-        b=ji6cpONsxOnW3JXNWlvK/nmVVnmFyREgPl5hZiNDgQDWcUnFtCY+m8lMgLLOoIKm2z
-         rcP/TwqQKDai2kghPHFDMl8AQzZXJ5gW3B0A6O1+OH/btbT49WTeBoRsvKAZc/EyE3O7
-         jaG4MNKkJ7hfXRUyz4KTTIuH6GTdDtsICHOPUEiWBp2o2PnT6BA8sXF2vdmxmiw790Fw
-         664R+ok0voKj8wfKTHYG5oEmFxRLUqSOcop8owTY8n3yStSAhUWATZLb83ypxCjEtTKF
-         utHX74CtHP6HBKh4Wwl7pNFdkv5PycEM09FF9r92mKWjlS70FG8B1QEoVPqn4or9GBaV
-         VVDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU63VniDVeKJ6sPY7nZZ+GNC3WlKJ1aQISB4Kx7oEhxqB0k9u/m7oHSZl488kNNbzCb/aQovwFJo18O@vger.kernel.org, AJvYcCU6Cz3Hu3gy8H9RA4ZOJUZkSxm6i9aYbJuwY6RPnDtLBNmpIs/VIiqoGelKmwUyQ0af/GPVTrmiA3w6@vger.kernel.org, AJvYcCVuu40KSvjLc/V8eqzgBDcVXi3wcBIWqp/eJvNs0+DFhQcKKxO2a0e1vVcrM1G5JHznrVgFzVVQ71lhkQ==@vger.kernel.org, AJvYcCW9Wklj1FszkjOXeRZdbpfnX49zOqiGufQyliG4RkfqxdVJtKqirCvJZYSNL344QIQYmr0DuO23/r7XGB8lJamP7do=@vger.kernel.org, AJvYcCWHqNSsuPaObw0o9RRCPTD3whFTOsZmHm1FR+T/nGefmmSruutZVltNOeXxHUBIeBfnwCjXxNR1W6c8UDQ=@vger.kernel.org, AJvYcCWeI59JpovYmVXjpZgImLcEX2DgGDAQ4vvRrjp/DeitBDPkPl8IugUtCJ/BrtJ0xv7YrG3RFy5SGVhVDhvK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0LRM2+FKIxkI8j3teLxy/n0vsVt/maYN1GI0cffKWCUQJuTBC
-	0J4lojVbusBzbZkiTBsdN4VTIRNe6cNFs7P4c3ol3UIaXJC8BMZjygkiMUOhwCI=
-X-Gm-Gg: ASbGnctkIXmoQChIFaX31PepjtiLvP+6wkuH9D4Ne3//xUoXJQUc1aNlneEvopgDYF8
-	Kv5U7sD9cwigC8UL+K6SiASYLdXkisl2+DWw5FISigrtoAaFR3+jeViI5yuVgC59BY2XeXyw2eP
-	KNbAdIJ5Edi5SvrrpArOPDo/04jAlSKAq69eUyTxp68DbMrg2552Wisvf2In12roJCvUso5URFq
-	DvmmehMt3AZbzKn1I/zY2A42pWZsuVyfpKVshYeo1XHhTtickO1s6kIQjgS3nfGGZerSNFGJgLv
-	LUtTLWp9mtu3YAub
-X-Google-Smtp-Source: AGHT+IFmYBf6Lgem1LIc/g0v9i2I6fJ81QKT0JVmvMw49IDJlRz6FCpd2JjuQH7p2i3vtR8e8++dZw==
-X-Received: by 2002:a05:6214:1d0b:b0:6d8:a486:e87c with SMTP id 6a1803df08f44-6d8e70d5e49mr188233176d6.4.1733753355181;
-        Mon, 09 Dec 2024 06:09:15 -0800 (PST)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com. [209.85.222.173])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8da695ca3sm49339036d6.32.2024.12.09.06.09.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 06:09:14 -0800 (PST)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b6882c33acso272830485a.2;
-        Mon, 09 Dec 2024 06:09:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9XqkDNMEJgCfajsMhk5PpHOZ4HGRMXiTLOUu4V6j39a12y2v3ISUC3oo67ySQ8SRriNdwbG0RDDAHguUg@vger.kernel.org, AJvYcCUPRk4KnqKl2mUHfU/pTOx87+lcqNyyilF8yDSLiYg6KIyOkpQKwIrJTc2t0jAZCgDcnGrl+XS3oKz6@vger.kernel.org, AJvYcCVPcgtn4FeduTNVMfVjHDIWL70A2E1H0vy8FKZFio9DLa1fUbDs0DIbM7jzhdOudcYcIodmG3KCjP7a@vger.kernel.org, AJvYcCW32Agq1UNv45icop672gD9gJchpoR4IAwyOFFPUmQr4etsmjv+2YhWeDxXL9R1MBsfBE9J5wdYA36zdg==@vger.kernel.org, AJvYcCWAezZx/W/+kIsIaBZdQ7uRl/qclD36CHYhjqInRBFC+Wskn7y1eMLc3CefepEwGa/llD/lf9lyDAva62A=@vger.kernel.org, AJvYcCX+B8+4WqAToKdk6bY3MWzAnhESynP/trlvNFyR8GxmRqtGnF73u5Zl2IoOlb3aYF+jF5RCKwCZ3VBUqvB2VaW2tq0=@vger.kernel.org
-X-Received: by 2002:a05:620a:2619:b0:7b6:d754:207f with SMTP id
- af79cd13be357-7b6d75422bbmr410771985a.50.1733753354661; Mon, 09 Dec 2024
- 06:09:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733754248; x=1734359048;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J4bmO8+d8DdGy7XEHiowe6nmsMnr1jfJx+QmO5T6lzw=;
+        b=OjDne9+FH14Z1nb9PBN9EkzwZ1GXAt4YjwbrOqOSZj04T9PW7mJghz4rrJLc1ks3ec
+         wFarHbiJAk7lkloVXl3KSyLkQa23BXWJye/OI6HpjfUEezg1QldwVgiv9aOaoqZPIHTB
+         pHL9jHg2TYNe2bkl+UuLPPHf2kfGho4grdRfS8Ps+JYv3bD2fCVsqc08P197J/3JMblH
+         Ww939Uggpq0GjAJo0DKumgAJwgkRRqq1Ws2LRurvb9Kejk7ZCNr0nwPdcp30e7YWvXuq
+         +W/atv4XuKIeBWrQ3hClizWzvVAaGyORlYPtFfKsiUvRgbqCj6N+O/zvqyc3c0ElNa4B
+         wBLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaSyGoPhjGaV87a0AsswHG9aQrhGtEmb1TmpMOwCzMsvEKcmYXCHNRFNaM+PL32ZnAT64AhCDX1do1@vger.kernel.org, AJvYcCWouD9pa8Cr+/qO77MzQ5SsYCKoxWsh5iWUZ3ctPGd7Ur24rEPHcGDnfA8iITpcElK+FgCUeJOsbI9bZP/P@vger.kernel.org, AJvYcCXoIbXabCxbaHydjRDySa5WjGnITVfj/5cnIwAHPIOHhbBGSTwuVkAzoGwQ5HDY73/ydzpRgx2Ih7r8MAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWadoHMRUw4TIMLeVA78HXxKvsZ+MLvW4rXqDSlJxX5nQHQ/bi
+	tyQR9/Au3C1ywrSPr9CdS+YBSOT/o6SvZMA8yVN1gsBH/yb4NU3LT57PaQ==
+X-Gm-Gg: ASbGncvDxdAly9hpK79mlOu81rMy6XmcQzm8HCBtCW+y4X/CMJZiDXj7JO7UbiEDy5d
+	bDdH4Uzuaxnh2xoWeV1A5sp1l90K/oW6tTbBbpntQvZvzsoVe2ja9wYEksyfdXxZOkkjXZnUjY5
+	29XzEyfqpQJZLevBGOX2ipF0KUcwh+q01SIhVWxXJMnBn/IHMimjepMXw7g69dAdI50lsLUxTJP
+	+0LfZWeYRdP8KAfSZiZuqeBjlObSssJYMyG28/2LYjFy0oQpWl6erl1YTi9N2ZCbJfaSdB90xX8
+	Gu9B5wQFOxi3f9DgqmODSfYlWNrAXhpJnZzr
+X-Google-Smtp-Source: AGHT+IHkB/NdOZh2fTJYGimoI8wlEFEwKE28euDZnByrZuT3OE1yaSiZeEhbLmlQ3rcOd9X7N1yCUQ==
+X-Received: by 2002:a05:6000:2d12:b0:385:faec:d94d with SMTP id ffacd0b85a97d-3862b3e2f99mr6963305f8f.51.1733754248241;
+        Mon, 09 Dec 2024 06:24:08 -0800 (PST)
+Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38621fbbea8sm13170972f8f.97.2024.12.09.06.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 06:24:07 -0800 (PST)
+Date: Mon, 9 Dec 2024 15:24:06 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Prathamesh Shete <pshete@nvidia.com>
+Cc: linus.walleij@linaro.org, peng.fan@nxp.com, linux-gpio@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl-tegra: Add config property GPIO mode
+Message-ID: <mrhi42z4bnswba4vls3shkrvls3wfqn5wwgb5tm5gvzspysz5h@k65xzhumzhuv>
+References: <20241209101314.22834-1-pshete@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com> <20241113133540.2005850-19-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20241113133540.2005850-19-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Dec 2024 15:09:02 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWhWJfuMFoXdbubg3MuJXsFPAoEMCifLOiP-wJanmg1kQ@mail.gmail.com>
-Message-ID: <CAMuHMdWhWJfuMFoXdbubg3MuJXsFPAoEMCifLOiP-wJanmg1kQ@mail.gmail.com>
-Subject: Re: [PATCH v3 18/25] ASoC: renesas: rz-ssi: Issue software reset in
- hw_params API
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com, 
-	broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org, 
-	perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="inqf4xrtqtxwf6rm"
+Content-Disposition: inline
+In-Reply-To: <20241209101314.22834-1-pshete@nvidia.com>
+
+
+--inqf4xrtqtxwf6rm
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pinctrl-tegra: Add config property GPIO mode
+MIME-Version: 1.0
 
-On Wed, Nov 13, 2024 at 2:36=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> The code initially issued software reset on SNDRV_PCM_TRIGGER_START
-> action only before starting the first stream. This can be easily moved to
-> hw_params() as the action is similar to setting the clocks. Moreover,
-> according to the hardware manual (Table 35.7 Bits Initialized by Software
-> Reset of the SSIFCR.SSIRST Bit) the software reset action acts also on th=
-e
-> clock dividers bits. Due to this issue the software reset in hw_params()
-> before configuring the clock dividers. This also simplifies the code in
-> trigger API.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Mon, Dec 09, 2024 at 03:43:14PM +0530, Prathamesh Shete wrote:
+> The SFIO/GPIO select bit is a crucial part of Tegra's pin multiplexing
+> system:
+> - When set to 1, the pin operates in SFIO mode, controlled by the
+>   pin's assigned special function.
+> - When set to 0, the pin operates as a general-purpose GPIO.
+>=20
+> This SFIO/GPIO select bit that is set for a given pin is not displayed,
+> adding the support to retrieve this information from the
+> pinmux set for each pin.
+>=20
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c | 11 +++++++++++
+>  drivers/pinctrl/tegra/pinctrl-tegra.h |  2 ++
+>  2 files changed, 13 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegr=
+a/pinctrl-tegra.c
+> index 9523b93008d0..b3501c78b5b6 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -96,6 +96,7 @@ static const struct cfg_param {
+>  	{"nvidia,slew-rate-falling",	TEGRA_PINCONF_PARAM_SLEW_RATE_FALLING},
+>  	{"nvidia,slew-rate-rising",	TEGRA_PINCONF_PARAM_SLEW_RATE_RISING},
+>  	{"nvidia,drive-type",		TEGRA_PINCONF_PARAM_DRIVE_TYPE},
+> +	{"nvidia,gpio-mode",		TEGRA_PINCONF_PARAM_GPIO_MODE},
+>  };
+> =20
+>  static int tegra_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> @@ -476,6 +477,16 @@ static int tegra_pinconf_reg(struct tegra_pmx *pmx,
+>  		*bit =3D g->drvtype_bit;
+>  		*width =3D 2;
+>  		break;
+> +	case TEGRA_PINCONF_PARAM_GPIO_MODE:
+> +		if (pmx->soc->sfsel_in_mux) {
+> +			*bank =3D g->mux_bank;
+> +			*reg =3D g->mux_reg;
+> +			*bit =3D g->sfsel_bit;
+> +			*width =3D 1;
+> +		} else {
+> +			*reg =3D -ENODEV;
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I think this should be either -EINVAL or -ENOTSUPP. If you look at
+pinconf_generic_dump_one() where this function is ultimately called, it
+will ignore those errors as "legal" but print out an error for all other
+error codes. Since this code will potentially execute on chips that
+don't support SFSEL in the mux register, leaving -ENODEV here might spam
+the output with error messages.
 
-> --- a/sound/soc/renesas/rz-ssi.c
-> +++ b/sound/soc/renesas/rz-ssi.c
-> @@ -388,6 +388,15 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, str=
-uct rz_ssi_stream *strm)
->         return 0;
->  }
->
-> +static int rz_ssi_swreset(struct rz_ssi_priv *ssi)
-> +{
-> +       u32 tmp;
-> +
-> +       rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, SSIFCR_SSIRST);
+Thierry
 
-Nit: no need to clear SSIFCR_SSIRST first:
+--inqf4xrtqtxwf6rm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    rz_ssi_reg_mask_setl(ssi, SSIFCR, 0, SSIFCR_SSIRST);
+-----BEGIN PGP SIGNATURE-----
 
-cfr. what the original code did below.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmdW/YUACgkQ3SOs138+
+s6ETMA//Q6XxBSaXe92FVUzxunURDD2n+OM5z14ULDVTpv2T73f9IAKhYYDTutLN
+9hiVi0hUeUBuDUjtHQw1sRJlic5kI79iHAPtb6/RCgnWFcmZUey35lX2LknCGTTr
+fMe58ccsHB1Qehly+ibiB70QPj12J9v7iamCpmWcMBPt+pE28o5iUmlFb9Lms4oe
+yWMCrvtXBvmoGPXtXcsNWttOqV1cYdkD37iJqk2G/jMVg0NdRQ8z3boW+8iTUcKI
+d0g4pzMK/fwwgh8nnnxWWAl3fg6SMKCozveAw8dbsvfdgV2MBMr9vatXSYarVt+5
+TiUBmwqk/ewtF57hYeU0Qmo7k2MVQR/eXCoolraqLiZU2JFI4hei94ioMyNmpmt5
+nwa2MnUuwYHwq+HKToIV6GNr+4PLvDPZNo9IIK0kHqVT0XvoiWK65LC9Ck1ZNIgM
+AkN2UnFAVqVGyiumf8c4qT5gxfvm7DMIs6ZCOVOt4lHkJj1TEqTP7TePPvSlIDUb
+UKfIaF5XUbIvK3ilLjpx6AOxdcEZgkrMGI9Mv/NYPl9Ak6wvGhzvhq5IDNXM9D5T
+dKByNSzGUtYUKaHKRxEOgDAcGqSkfo2ep5dsXlPxGu9PgpktNnUjRIdlUW/N4++y
+HiE3z0A+ulbQd5mWngVHj6WY4M0HzpfpwJ5Y77l9/Ofp8knK66Y=
+=dPg4
+-----END PGP SIGNATURE-----
 
-> +       rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, 0);
-> +       return readl_poll_timeout_atomic(ssi->base + SSIFCR, tmp, !(tmp &=
- SSIFCR_SSIRST), 1, 5);
-> +}
-> +
->  static int rz_ssi_stop(struct rz_ssi_priv *ssi, struct rz_ssi_stream *st=
-rm)
->  {
->         strm->running =3D 0;
-> @@ -782,14 +791,6 @@ static int rz_ssi_dai_trigger(struct snd_pcm_substre=
-am *substream, int cmd,
->
->         switch (cmd) {
->         case SNDRV_PCM_TRIGGER_START:
-> -               /* Soft Reset */
-> -               if (!rz_ssi_is_stream_running(&ssi->playback) &&
-> -                   !rz_ssi_is_stream_running(&ssi->capture)) {
-> -                       rz_ssi_reg_mask_setl(ssi, SSIFCR, 0, SSIFCR_SSIRS=
-T);
-> -                       rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, =
-0);
-> -                       udelay(5);
-> -               }
-> -
->                 rz_ssi_stream_init(strm, substream);
->
->                 if (ssi->dma_rt) {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--inqf4xrtqtxwf6rm--
 
