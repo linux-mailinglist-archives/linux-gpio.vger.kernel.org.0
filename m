@@ -1,130 +1,157 @@
-Return-Path: <linux-gpio+bounces-13691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E5369EAD70
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 11:02:16 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A02359EADB9
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 11:15:13 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61F942871FF
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:02:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DF3E16362D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AAA678F47;
-	Tue, 10 Dec 2024 10:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EBF01DC996;
+	Tue, 10 Dec 2024 10:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E8CxyqtB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B3D23DEA8;
-	Tue, 10 Dec 2024 10:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7600578F47
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 10:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733824920; cv=none; b=mZed0Tfi//vJQMWbvIN1EaMa3EBVAibmusifrSTbyiCLv2rWoux0akpHYmnm5wv0ZU+0x8b5B6XQs0X0Jq6AXf9zcg2mKzPRVrc7IfaaC9neV5GyklYJsr71O+NW2ZXGLMR4SpjP5D3PPUZc6HG7wEJxUd/Hft3W6hncHOBOaHM=
+	t=1733825707; cv=none; b=Bsw0VyPV5LUKv8o7hwg2pb8J+6xkYvKu+YNkmlTTW3khJjaOyaR+Uvmcg0Ok7dzXTvS7VK0h9ASpc9Z/RBQTRqE4oF9WrepuG5TPEyEUZdCDXj2C6LCZcYMpqpqtk7xTAlK5NjhyjYU7EPswSzOUw/VmiUcunI9FRo0gUzuwQgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733824920; c=relaxed/simple;
-	bh=MIvthA4Nl0uIya4VAI4zbquPEcUw0r+hPY8+Sk51arQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WccFUJrwFQyuCdYk89J7R71s9y9+cLt4qDbkRfyHK4U01kA85VnayIk53NUH7cf0DbcP8PFc9FiHrn3LfyPCl8kPYheAN1HkqpeoiM6pv1Hy/jVjRuLrfaaamrh7GjSf9eJ1juhLRyiNQ4N89DS7F+ugWJefgPEA8JlFDA33ZQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85c5316f15cso699238241.1;
-        Tue, 10 Dec 2024 02:01:57 -0800 (PST)
+	s=arc-20240116; t=1733825707; c=relaxed/simple;
+	bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsDir0V1eV0Ebn1g7otSyVBWIlF7otgyOTU4eX5EotvtdpfUgozqexAgjXjqw21mFDMjKtIoVl8P7nHMGtDF+oXgDcYuuBe/FEVlYNnliHtXOqX/imLWCm7bgwUpeK6L7bNQsq/eH+t7mK05HgnN+bVRulwveBYyrh81MsmG+Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E8CxyqtB; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-385eed29d17so3684411f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 02:15:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733825702; x=1734430502; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
+        b=E8CxyqtBmwZgxWcyUFEASk2icLpaJReaFTZyoAWwcZiNwUYFhz1oycVrc2X0ODWAyy
+         X1gGR4rusV9yWuU4kb/sESWfhmDv4BJ8qL+wccQtsx/h8oHQIHojZHPJlQddwRiQCWd6
+         Sldd+V4l5BZrJCEjPNEkJD15KHGx8DadD+WZdXXvdRn265/Z1mdCf6lxukjmVDzzklOv
+         8feeW72vPQuX8oIAWmuWOfFtwESKQzv5pT/0co4oiT19E0m013I7PKKAd92lj1QdMxEq
+         +SpqQ7QusnAlu5xxTk1JqkICZhi1vR2uNDOLBzXulitXNatE5heTgv/7nUJeJIo4MasQ
+         qqTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733824913; x=1734429713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bU21a0wFb5B0tExmN7JfphqZemuXjOPWEnAeMmariLg=;
-        b=wFPIMgITgcRb5gzRmyaLljITo9sWyBzcuIT9SsDDY5nuYu4/Xm6KtGKMP4JLEjSELO
-         LlpNZpG+d/IfWM6TxFQHw3JRFGttErbWVXaUHBKjC4phWXTmSnhY2bMSx7jayVtQeMyB
-         ivRYIdZhsrJbbFyTING173fREpJy6pjcb6qSeoZeSsIBnNDNwHdEfP8/+ezMlw5lq17+
-         mwvMC87NQM1QYLGZf+qEmfrn/SkqUIYBNdobZ30rCcV/1nPsnsParG6rZ7wAPZD8Q50i
-         4D3FBBYBtqLFjzwebTO9CuDnXjXO9EJOh2LcKnA2WS7ndhIoph8m8bPxOOJAhFEakK/E
-         5Fmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Da3G7PUS2Dv/c3CJL2IRdyHZbY9zVfC4AQuwNm2LSY8pPhH0bEccrb2dTq6ohtAbuN7Htxvo5y5PhgWjtBREWYM=@vger.kernel.org, AJvYcCV6nRchI8llXITmFM0ljTxORpGbebGuxsosWyvBe8Uj/BzvqL9/akAFkoE2ZflVTwYef2U8nxN5hqhj@vger.kernel.org, AJvYcCVH8EFS8f+n8yp7300J6kt9VpShioElidRiZcow4xOEPYmeAqYPzrLGokpOVx1MvlqSZ3DODQm/q1ejeA==@vger.kernel.org, AJvYcCVR4PoBYLTJZMd33LW9tCZg+zLxotMyolw0APTJezQPNhCWFERGYyWLBq2vnUieJThgMEtSfHP1S93f@vger.kernel.org, AJvYcCXABWJv2wwOWoWEIf5mcVx7ghZ8HYo5DQ2wo5is1XgSaHgPbjGcVjwT6Zf1Hs/azO8jelkAME6kw2kHLh4=@vger.kernel.org, AJvYcCXC1/cAIqFMQd18hlnWIYb8HB+Uszz2YYXocClK8Qn/JriEYAOyx+yJEKWAYklOwasRo+IW7REtu5FioNLp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS+0lCLKZY/DbRYeT9FJkTSZimqzB+kay3FTSSRPplOG2IjdAV
-	i+TWw4oAlyCCtMpW6cEhj5b0UszYNoDJSz1YydyAZfIn7Vl+6hi3wLUrKL0Q
-X-Gm-Gg: ASbGnctXvSMDRp7ZUBy4pALvSIez3kvMp2XY9WFTiF/W7UyKQYXj8aXACqXFTyGBzU6
-	i64H9ppolW5fPbzA4/gXOvubFLJ00WBpatAQD5GQbM1fmbee5mqbz++Mbk3TJs1TYnGmwyK5kCN
-	W6ynkMeFtPRD+aJH0pbeF2c66S3Kl9oxwG/MXGNEA8EskaJ+ZoKV9qRcPajbuxk7NjUGT/0jkX3
-	/YSrI9ELr2W/dCvqRK/F5da9K4t6VnztJeA7OuvUMdBdZ4VMHgH3tRlswMm42zf+9niGaABCPow
-	14jZk/le6TGmCLiY
-X-Google-Smtp-Source: AGHT+IE2glzDbFQ8/qA586D6GHtukx1rNvayEpcjtXdeyGqmrc8YCt3NYo6N4RmpUILzbkpad1Uckw==
-X-Received: by 2002:a05:6122:a04:b0:517:167a:5cc6 with SMTP id 71dfb90a1353d-517167a7947mr6532784e0c.6.1733824913077;
-        Tue, 10 Dec 2024 02:01:53 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51886b8c3dasm175951e0c.30.2024.12.10.02.01.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2024 02:01:51 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4afdd15db60so971174137.1;
-        Tue, 10 Dec 2024 02:01:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUIG9w9g45XGa068q/dp9pxwsteGkeZ2exItFUpf5CglM3ShM5r2kCTad9ZJ+Ttp9b8hNl80SS6uy1Odwu3@vger.kernel.org, AJvYcCV+2R42JPFPY+Dehwjze5xEyYM4qNb5TA8EzMHHkYx4crWn7UYyE+Wi1on8AI2y+xj+gvLG52AUbHqxKCX1uwG8JFA=@vger.kernel.org, AJvYcCWP6k7ChKg7gsGcefJuG/yBn9xa+0dzexZAH4Mg1xVDLx8gkvejv+4SbApkLICw3Hkb8k0LxG0dwR6u@vger.kernel.org, AJvYcCWSj3CRb7IDn/AByrb+4e5L7SRfxVmoqkRqHKZKGmI8gz8vh8Nw00JdkRcjvmiGrHM/XtbT7ibBSOIf@vger.kernel.org, AJvYcCWiQT8FkXpNUuJY3J4sQdtXI17FjEOVeCkc9bRibNxsRzOBJJHi0A9vv+ao8il1/N/cuuiC2n5PetQxHw==@vger.kernel.org, AJvYcCXOxsheMAYI7/tl3zyhD+yP3p8eSk/sgQG2FMUE3d/8zvNYVBC5eXYo8xsL3Y3Ici5uLlhOQou1f8FQZIA=@vger.kernel.org
-X-Received: by 2002:a05:6102:3583:b0:4af:aaa4:dd9a with SMTP id
- ada2fe7eead31-4afcaa18834mr13656547137.10.1733824911603; Tue, 10 Dec 2024
- 02:01:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733825702; x=1734430502;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
+        b=SMXcZBCW/jLmgkKv1yqSUyc+VIcumJWwlz0hO9dCWTkFrGgWT1bwnzgDoG1K9NqxZs
+         sjCb2/jxlR/458E/4Y235g+lTtptyt8t2FDfuTY2nVx0VG7CeI0Yu2sCZPndfJiopEWG
+         dnKqs+autXNjdPrFpTHTkYUJzReDrOFNOYxKbVCrQkFSMFKDaS04gd8jr/B7ND9EGtG0
+         pIBjKO4oJUFVKInkB01nSarCtTvfxU0Huqpf9jpwjNnNabSjYH5JqrVTJ6COB5rNR+z3
+         u7oUFGwpa9sJMciul7PgrCuzCEkOIUE7JKZFxWSXJVUkH1EOZ8ML6x1PfUib9slXfdk3
+         Bd6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXCGlitE34aREKBuOboYNfdElXCocIvvdjDEq8g5mnDYbepxTMB0UQ5DeNeYjx1pLMxPFdP7wYSpdIE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDhap6pPYAuSOSS9mzF6s5aMZ+1LbVjeBRNy7S7CJn8a1AHRqJ
+	BIGk8A+Iwu/YKokawJKwg0EfWp+SEEO8+AMViKPe6gfIgA5dDrM0nxJ1jMm8fVDSkn0/jgckvxI
+	7758=
+X-Gm-Gg: ASbGncv1c2PC/PpNHEsL4EOJGNPA4yxGtty1F6WLpv4wPZoRllR/+NeZ+XbERGsR6uR
+	HRsVg4I3/zaiU+hRlWTQudnyXXEbSF469COZ3CqBw67mVHqLpJv0W7gD6Tl2OxcImMKseBZqhjx
+	JThVCdi4dTID2ap4XB/RfaB8hPgT1A6NEy8aGlCi34XFrsLfmdjAjHsrGOLvsivbe4MA8iEANGV
+	K6IMrJElQLvCxUIe4eUdtay1+F/cqAVuTx5myOdnH4NOHMFYioxVtWxKFSrOQtCXtGG89Cb0YF9
+	3mlfmTi5
+X-Google-Smtp-Source: AGHT+IHAF+MK4nT2wby8tFZabj/cGZDwP7OF8n1O3n74dFPzK5cudq0rsVYUf99xFyH0dj5J1nvPUQ==
+X-Received: by 2002:a5d:64eb:0:b0:386:3918:16a8 with SMTP id ffacd0b85a97d-3863918193dmr7492471f8f.13.1733825701756;
+        Tue, 10 Dec 2024 02:15:01 -0800 (PST)
+Received: from localhost (p5dc6838f.dip0.t-ipconnect.de. [93.198.131.143])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3861ecf42desm15180561f8f.15.2024.12.10.02.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2024 02:15:01 -0800 (PST)
+Date: Tue, 10 Dec 2024 11:14:59 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: William Breathitt Gray <wbg@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: idio-16: Actually make use of the GPIO_IDIO_16
+ symbol namespace
+Message-ID: <ekyhfceyoqkjoyw2rmw5jbasxzx6c5p2ufub6vmtv5xqi5e4fq@3eq7obihlrhj>
+References: <20241203172631.1647792-2-u.kleine-koenig@baylibre.com>
+ <CAMRc=Md4t9QuiCtJ3TswSM-2qdOwR5_yk=kVN7wcvN4jz+yhkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
- <20241113133540.2005850-15-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdU+_NuLp2FuwwcLfJRe2ssMtp=z7fqcsANgYfFehTNJGg@mail.gmail.com> <ed0f6c49-8e39-4cc6-ba93-35a9372bb532@tuxon.dev>
-In-Reply-To: <ed0f6c49-8e39-4cc6-ba93-35a9372bb532@tuxon.dev>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 10 Dec 2024 11:01:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXgakz=bBrqaUgniLJdOMULBG++zcOJ=U-fizToVv5b6w@mail.gmail.com>
-Message-ID: <CAMuHMdXgakz=bBrqaUgniLJdOMULBG++zcOJ=U-fizToVv5b6w@mail.gmail.com>
-Subject: Re: [PATCH v3 14/25] ASoC: renesas: rz-ssi: Use goto label names that
- specify their actions
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com, 
-	broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org, 
-	perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="snharesphbrtpqly"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md4t9QuiCtJ3TswSM-2qdOwR5_yk=kVN7wcvN4jz+yhkw@mail.gmail.com>
+
+
+--snharesphbrtpqly
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] gpio: idio-16: Actually make use of the GPIO_IDIO_16
+ symbol namespace
+MIME-Version: 1.0
 
-Hi Claudiu,
+Hello Bartosz,
 
-On Tue, Dec 10, 2024 at 10:56=E2=80=AFAM Claudiu Beznea
-<claudiu.beznea@tuxon.dev> wrote:
-> On 09.12.2024 15:51, Geert Uytterhoeven wrote:
-> > Inside this block there are several return statements.
-> > As we know DMA is not available when we get here, these do not
-> > need to call rz_ssi_release_dma_channels() hence do not use
-> > "goto err_release_dma_chs".
-> > However, this may be missed when making future changes.
-> > So perhaps it may be prudent to make this safer, by moving this inside
-> > the failure branch of the rz_ssi_dma_request() check above?
->
-> I agree! As this series is already big enough I would prefer to handle it
-> after it is integrated. Keeping it like this doesn't impact the RZ/G3S su=
-pport.
->
-> Are you OK with this approach?
+On Mon, Dec 09, 2024 at 10:28:14AM +0100, Bartosz Golaszewski wrote:
+> On Tue, Dec 3, 2024 at 6:26=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@baylibre.com> wrote:
+> >
+> > DEFAULT_SYMBOL_NAMESPACE must already be defined when <linux/export.h>
+> > is included. So move the define above the include block.
+> >
+> > Fixes: b9b1fc1ae119 ("gpio: idio-16: Introduce the ACCES IDIO-16 GPIO l=
+ibrary module")
+> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+> > ---
+> > Hello,
+> >
+> > this is based on current Linus Torvalds's master branch and depends on
+> > the topmost commit there.
+>=20
+> Can you rebase it on top of the gpio/for-current branch? It doesn't
+> apply to my tree in its current form.
 
-Fine for me!
+Your tree is based on v6.13-rc1. If you keep it that way and you apply
+my patch that you ask me to rebase there, it will conflict when it's
+pulled into Linus's tree as ceb8bf2ceaa7 in his tree touches that file,
+too
 
-Gr{oetje,eeting}s,
+So if I fix the merge conflict now to make my patch applicable to your
+tree, you or one of the Linuses has to do the reverse resolution again
+at a later point in time. Is that really what you want?
 
-                        Geert
+An easy way out is to backmerge v6.13-rc2 into your tree (or rebase on
+-rc2) and only then apply my patch.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Best regards
+Uwe
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--snharesphbrtpqly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdYFKEACgkQj4D7WH0S
+/k4I5gf/T/8wwNDO7Fot1U23iC5kP8Ii66h+LS2P8LYxaHwoZas676HXzN2Od0gD
+ebdU/j830aZp/au5aoXKSiwxSd81f6hqK2qlkm8/gPW9jpoNRHcelQQyF++SGN0r
+zZ5ZFD0/lcMdDGL+kVsiXWnWga2uJ7FdKx4jBUd1kOqhNnR6LzK8Ujyiho3mmphK
+ittYcEWTmFeqO67bajLdqpekpxOzzckJSy73buZJdENTfuYQ7iXCrPYDOChqCW8V
+BkMuU34eqAze1LbHHjgnQdlR0bVaJcONlySp2FMOFeD/+1Q+ayDV7TUeon46vz6E
+6lzeENLp/KJfv0X9IkWddKHNJ4wvow==
+=zjyP
+-----END PGP SIGNATURE-----
+
+--snharesphbrtpqly--
 
