@@ -1,165 +1,134 @@
-Return-Path: <linux-gpio+bounces-13687-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13688-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A168F9EA8F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 07:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B7259EAC98
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:42:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53D21283FE5
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 06:52:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 017A5294264
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 09:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0825722CBCC;
-	Tue, 10 Dec 2024 06:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93B7A215765;
+	Tue, 10 Dec 2024 09:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wEBLexRJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from 189.cn (ptr.189.cn [183.61.185.104])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931611D7E31;
-	Tue, 10 Dec 2024 06:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.104
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AD9215760
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 09:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733813526; cv=none; b=Lz1WbiP9MHeTy4vo6847/sIaW5mOgzO4fWt0NpdlTGdGNlCXyWWeVIT7uSCtng9wqH5i/P/9KN9C8oeZDaDOc8mT3D+boMAUg4psYe9n0J3XBCmiwD6/bMU4kQ4HKPpd4biM6tTUjfExvoBEcJMdpnEHum+S19ZQHPAjHnZtt+0=
+	t=1733823483; cv=none; b=KVEz9NJswMHYNS/PAqm09GM1pqwTbfVWocYPagK4c5Wbfh0RD/vUl9NdJzgD/HpywVSufZDsLt0bDQA0xz0YvsEB0ziPdqcetBjzw9VC5dXtmZbZm0mixeJnzdc/IyitYVeRkuTDefPyCxMiT4acYOxgQF8rAGLH4gLdb951qUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733813526; c=relaxed/simple;
-	bh=1wo6h0OJIzB66Qq1Y13/KffCz76yHWcvbhx2dxPieDw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dp0xLyEFV0YedWHN7FcH2V3kUd/1pXs/6JbdtbJt58NwpL10yID9zXMz+K/ANJcBeTwSScSgSQ2ugrbq5jDVvRgTOgOXTGmGRd7RHqHHtKTWwls0LH+2PyWm5pfpYpzxeDtf3bf85B+7jHivnV4uvj5jiWG/yfQLajfKXf6wiJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
-HMM_SOURCE_IP:10.158.243.18:47524.362293956
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-123.150.8.42 (unknown [10.158.243.18])
-	by 189.cn (HERMES) with SMTP id AA7CD102982;
-	Tue, 10 Dec 2024 14:51:53 +0800 (CST)
-Received: from  ([123.150.8.42])
-	by gateway-153622-dep-5c5f88b874-pd459 with ESMTP id 1a4a4f250c474ca0a0ca5c21d408b4f4 for krzk@kernel.org;
-	Tue, 10 Dec 2024 14:51:54 CST
-X-Transaction-ID: 1a4a4f250c474ca0a0ca5c21d408b4f4
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.42
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-Message-ID: <692f3d4a-dded-4e1b-8bb8-95fd165d2f15@189.cn>
-Date: Tue, 10 Dec 2024 14:51:52 +0800
+	s=arc-20240116; t=1733823483; c=relaxed/simple;
+	bh=60guHFuRpbe4wvLXU7u9E4YAsgZevp/WicEhNCYeH1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WbcZjyZ9+4Y1eZTKAn/r0F6/qYfH2Ta5ubpszJ+JTcWyUAid97mX5OzebhECK8jZC8DEIW0aTI59xxcT9QK3gyEIrEAi3NPSTWAi1Jt4IPBZaxEklXWfoJDGxCag+iVcqjoALQUxKhISu+4/o0HPmllk/+msRPYoQY6q6XA7sPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wEBLexRJ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-434f74e59c7so22106275e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 01:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733823480; x=1734428280; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VXO1I48hqq3Yjyl5wU6rrxXQLGo0Q6gGMkcgwSYT/Co=;
+        b=wEBLexRJdztaNSB9heVnnWS9oMzuMdQ8M/sbHzKqoo2xVgZ/R6v4DDWTzgQ6rL8j3H
+         f7mLzFvLfjJw+JepLTIe+2C3nA+Nhr2V8oB7yqcbd8jIMQ3uG1GUHPfd0fTVPG+UdO/V
+         PquSi/e4+0FXWyiUqt4ZmwyfMr+nlcsWq7ctoMG9Z3q7skRiDdaJjq0M0UH8KlCkjV70
+         nKhj1bh3xHEPjQ2VWdddN+lv9gSBZj+V9r7/Oe4gTrMLOD1kyK4GA2mAIsX0rxCf1zhS
+         2KC4GelFeIH/7lBQ6oz/uCtFhyWBgagvw4HYJLkWTmOP0JcnL1ScDME+0eY5YJldVq9o
+         YZNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733823480; x=1734428280;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VXO1I48hqq3Yjyl5wU6rrxXQLGo0Q6gGMkcgwSYT/Co=;
+        b=tzKQ/docIWPZUBgYIKaN15MpIQu7GpmaMA5c/bnFPfH/pZ2kWHAKYmPIlUFlPELI+j
+         i23fIlaemd+KZRi0AdloIPW2wT5QPeiG5jsGs47BEfus3mlepe/NIYMWLHGLRmzc5RNe
+         380EAjlezIWvp+PuawQv/zDd/igCKgy/JVpXrMOzoyWsgLt96jmHj9cpxEpZR7vlUufu
+         WtrU+1j0POshOO6JAL+1UI8XH9LWcrBmPiDLKuUptGrJ/UnKZhchjOTQI7Oxscy5t8ht
+         V79eVAFRN0E/Cq6UxNrevwKtS+ci+cxZpXkWpQ2RgqcuGBgV0DEEKu6kBMGo2sbIknYI
+         fLQw==
+X-Gm-Message-State: AOJu0YwOYqw6FCx85dOB9yMkmEzRRDr3HiSfCacQpLzG+/ucL0obcD6b
+	WzSqS2cbccY7J8rO2uLrqufnD31//3W1maVBCJ+rZfLRyPvVDBNItj1AAraKyO8X23k9bVLyCzn
+	9
+X-Gm-Gg: ASbGncsMBzpP5yxJ1KPRW7y5YHtZ2mrAm3jh8GTRJCelMlj0MNGZYxeArpXT5jvpHdU
+	2dDwHNeg5ioDpZPmR+Cl0e67fO9Hj2iMdi1HfV/iWDFRX18zLLG9rLEN6dKBdhc01FGQHwoMYOE
+	9RFNXRHZ9vUsQn1WaCm+ZXdBf9BTfQjv23PngA9DbqezMBAg8S6qGBHMxDrbhkZtL9qK3pWu2kD
+	lO1cBVkY/8OQoKVprnsvAMy39b+5pJo47Gxb7H5UxFNew9dyRF0Jg==
+X-Google-Smtp-Source: AGHT+IGTlpBcb6k5YeTkGn3U8EKQlzzdVQk2arUij8CCL8EMbPFIW+Z2OxmULOsfgBaPIa+UYaFhOA==
+X-Received: by 2002:a05:6000:23c4:b0:385:d143:138b with SMTP id ffacd0b85a97d-386453fd5fbmr2208692f8f.51.1733823479256;
+        Tue, 10 Dec 2024 01:37:59 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4c2b:c454:658c:f771])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-386352d45fcsm9952443f8f.59.2024.12.10.01.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2024 01:37:58 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>,
+	Shankar Bandal <shankar.bandal@intel.com>
+Subject: Re: [PATCH 0/7] gpio: Fixes for Granite Rapids vGPIO driver
+Date: Tue, 10 Dec 2024 10:37:57 +0100
+Message-ID: <173382347085.25305.7878942557222092615.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
+References: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator:s5m8767 Fully convert to GPIO descriptors
-To: Krzysztof Kozlowski <krzk@kernel.org>, lgirdwood@gmail.com,
- broonie@kernel.org, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20241206051358.496832-1-chensong_2000@189.cn>
- <17a4dbd7-56cb-4c20-a913-0df5c39fc3ff@kernel.org>
- <862662aa-c5a2-4e15-b97f-ca1b4757ab25@189.cn>
- <bf80a815-a602-4bbe-a950-e8b6c1b0789a@kernel.org>
-Content-Language: en-US
-From: Song Chen <chensong_2000@189.cn>
-In-Reply-To: <bf80a815-a602-4bbe-a950-e8b6c1b0789a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-hi Krzysztof,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It's clear, will send a v2 soon.
+
+On Wed, 04 Dec 2024 09:04:08 +0200, Mika Westerberg wrote:
+> This series includes several fixes for the Granite Rapids vGPIO driver
+> found during validation.
+> 
+> Alan Borzeszkowski (5):
+>   gpio: graniterapids: Fix vGPIO driver crash
+>   gpio: graniterapids: Fix incorrect BAR assignment
+>   gpio: graniterapids: Determine if GPIO pad can be used by driver
+>   gpio: graniterapids: Check if GPIO line can be used for IRQs
+>   gpio: graniterapids: Fix GPIO Ack functionality
+> 
+> [...]
+
+Applied, thanks!
+
+[1/7] gpio: graniterapids: Fix vGPIO driver crash
+      commit: eb9640fd1ce666610b77f5997596e9570a36378f
+[2/7] gpio: graniterapids: Fix incorrect BAR assignment
+      commit: 7382d2f0e802077c36495e325da8d253a15fb441
+[3/7] gpio: graniterapids: Fix invalid GPI_IS register offset
+      commit: 0fe329b55231cca489f9bed1db0e778d077fdaf9
+[4/7] gpio: graniterapids: Fix invalid RXEVCFG register bitmask
+      commit: 15636b00a055474033426b94b6372728b2163a1e
+[5/7] gpio: graniterapids: Determine if GPIO pad can be used by driver
+      commit: 0588504d28dedde6789aec17a6ece6fa8e477725
+[6/7] gpio: graniterapids: Check if GPIO line can be used for IRQs
+      commit: c0ec4890d6454980c53c3cc164140115c4a671f2
+[7/7] gpio: graniterapids: Fix GPIO Ack functionality
+      commit: 0bb18e34abdde7bf58fca8542e2dcf621924ea19
 
 Best regards,
-
-Song
-
-在 2024/12/10 03:50, Krzysztof Kozlowski 写道:
-> On 07/12/2024 07:16, Song Chen wrote:
->>>>    		}
->>>> -		pdata->buck_gpios[i] = gpio;
->>>> +
->>>> +		/* SET GPIO*/
->>>
->>> What is a SET GPIO?
->>>
->>>> +		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
->>>
->>> Why using "SET" as name, not the actual name it is used for? Buck DVS?
->>
->> from below snippets:
->> s5m8767_pmic_probe of drivers/regulator/s5m8767.c
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->>                       "S5M8767 SET1");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->>                       "S5M8767 SET2");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->>                       "S5M8767 SET3");
-> 
-> 
-> Yeah, your code is fine.
-> 
->>
->> and arch/arm/boot/dts/samsung/exynos5250-spring.dts
->>
->>           s5m8767,pmic-buck-dvs-gpios = <&gpd1 0 GPIO_ACTIVE_LOW>, /* DVS1 */
->>                             <&gpd1 1 GPIO_ACTIVE_LOW>, /* DVS2 */
->>                             <&gpd1 2 GPIO_ACTIVE_LOW>; /* DVS3 */
->>
->>           s5m8767,pmic-buck-ds-gpios = <&gpx2 3 GPIO_ACTIVE_LOW>, /* SET1 */
->>                            <&gpx2 4 GPIO_ACTIVE_LOW>, /* SET2 */
->>                            <&gpx2 5 GPIO_ACTIVE_LOW>; /* SET3 */
->>
->>>
->>>> +		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
->>>> +		gpiod_direction_output(pdata->buck_gpios[i],
->>>> +					(pdata->buck_default_idx >> (2 - i)) & 0x1);
->>>
->>> This is not an equivalent code. You set values for GPIOs 0-1 even if
->>> requesting GPIO 2 fails.
->>>
->>> On which board did you test it?
->>
->> You are right ,it's not equivalent with original code, i will fix it.
->> but i have a question here:
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->>                       "S5M8767 SET1");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->>                       "S5M8767 SET2");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->>                       "S5M8767 SET3");
->>           if (ret)
->>               return ret;
->>
->> if it fails to request buck_gpios[2] after successfully requests
->> buck_gpios[0] and buck_gpios[1], the probe fails as well, should it call
->> gpiod_put to return gpio resource?
-> 
-> 
-> Aren't you using devm interface? Please read the API. You do not need to
-> put anything, unless you use some other interface and I missed the point
-> of the question.
-> 
-
-Not until you told me, I read the devm code, devres_release_all releases 
-gpio resources eventually by calling dr->node.release(devm_gpiod_release).
-
-many thanks.
-
-> Best regards,
-> Krzysztof
-> 
-> 
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
