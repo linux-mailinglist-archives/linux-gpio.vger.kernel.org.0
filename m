@@ -1,134 +1,123 @@
-Return-Path: <linux-gpio+bounces-13688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B7259EAC98
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:42:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B45439EAD57
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:59:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 017A5294264
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 09:42:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E38B282B36
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 09:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93B7A215765;
-	Tue, 10 Dec 2024 09:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619741DC9BA;
+	Tue, 10 Dec 2024 09:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wEBLexRJ"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="E3hp/VzP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AD9215760
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 09:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BC01DC9B3
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 09:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733823483; cv=none; b=KVEz9NJswMHYNS/PAqm09GM1pqwTbfVWocYPagK4c5Wbfh0RD/vUl9NdJzgD/HpywVSufZDsLt0bDQA0xz0YvsEB0ziPdqcetBjzw9VC5dXtmZbZm0mixeJnzdc/IyitYVeRkuTDefPyCxMiT4acYOxgQF8rAGLH4gLdb951qUI=
+	t=1733824606; cv=none; b=hUt4LUvV8c6Ie1C3RZUzId/sZbbmWpEyilWes6L436wXLThtIhNHM3nmc3K+NNUKGKr1FjmpHkq2SF6UV9gYTvWOP6Thdad48G4gR1yPfdXrkabTQEkns4HqUGHseIPXd1LOQeNnXDajkIr9ueqaMGNLun2jCliM9ei8bLn/ZLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733823483; c=relaxed/simple;
-	bh=60guHFuRpbe4wvLXU7u9E4YAsgZevp/WicEhNCYeH1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WbcZjyZ9+4Y1eZTKAn/r0F6/qYfH2Ta5ubpszJ+JTcWyUAid97mX5OzebhECK8jZC8DEIW0aTI59xxcT9QK3gyEIrEAi3NPSTWAi1Jt4IPBZaxEklXWfoJDGxCag+iVcqjoALQUxKhISu+4/o0HPmllk/+msRPYoQY6q6XA7sPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wEBLexRJ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-434f74e59c7so22106275e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 01:38:01 -0800 (PST)
+	s=arc-20240116; t=1733824606; c=relaxed/simple;
+	bh=kOBH0vMe0xTQDXgWPorv7i1vsjSVrIhgJ0QqbJFZGP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qsxde8ZCO+RRLheeUgJI/J9VzaGSMszSVTlRHBAaMcTnwW9IQC81Ono0ItaFsjJM8SmRyqmGPSuSXrRtXWhoPSgIF+CC+NKcgFTCKxacO5Bkzl1DR6i/kFF8fcggnoeh7cHxyA4K4SwJ1zkqIVK0OkUSj9rEpKhjP6gz815j55U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=E3hp/VzP; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3862b40a6e0so2248691f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 01:56:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733823480; x=1734428280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXO1I48hqq3Yjyl5wU6rrxXQLGo0Q6gGMkcgwSYT/Co=;
-        b=wEBLexRJdztaNSB9heVnnWS9oMzuMdQ8M/sbHzKqoo2xVgZ/R6v4DDWTzgQ6rL8j3H
-         f7mLzFvLfjJw+JepLTIe+2C3nA+Nhr2V8oB7yqcbd8jIMQ3uG1GUHPfd0fTVPG+UdO/V
-         PquSi/e4+0FXWyiUqt4ZmwyfMr+nlcsWq7ctoMG9Z3q7skRiDdaJjq0M0UH8KlCkjV70
-         nKhj1bh3xHEPjQ2VWdddN+lv9gSBZj+V9r7/Oe4gTrMLOD1kyK4GA2mAIsX0rxCf1zhS
-         2KC4GelFeIH/7lBQ6oz/uCtFhyWBgagvw4HYJLkWTmOP0JcnL1ScDME+0eY5YJldVq9o
-         YZNg==
+        d=tuxon.dev; s=google; t=1733824602; x=1734429402; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kOBH0vMe0xTQDXgWPorv7i1vsjSVrIhgJ0QqbJFZGP4=;
+        b=E3hp/VzPKLaBQJc1w6MPAgYZfc+1H0YB+8+rJ9EWrPGFWPT0kztjQZSoiyATSyUr0i
+         KcKWcx+yWush0dy/9+4PGpr3fBbZoTMu1OYglSVIyB5OZ48/+rXqyat1oaAR53cpDXw5
+         Yi33RHKyuCPGSiNqz5vAa2VpcN469IMWx4kXi8jr20d18DDyQtNe7u5uJ2LaZ11vWqTR
+         bDxUU3JWcEu+x2xQqtRb9HVrkGtzRb2/cVHZlFZBh46kvDe1qi8/ytwZ0n2iwseJYqEJ
+         99s09Sp6TjtT7UUq5q48TdGZ4lBWrFjUNucASTgDO0h7RTtiTQ2z+dxnPoOXgcbDivrG
+         6bfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733823480; x=1734428280;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXO1I48hqq3Yjyl5wU6rrxXQLGo0Q6gGMkcgwSYT/Co=;
-        b=tzKQ/docIWPZUBgYIKaN15MpIQu7GpmaMA5c/bnFPfH/pZ2kWHAKYmPIlUFlPELI+j
-         i23fIlaemd+KZRi0AdloIPW2wT5QPeiG5jsGs47BEfus3mlepe/NIYMWLHGLRmzc5RNe
-         380EAjlezIWvp+PuawQv/zDd/igCKgy/JVpXrMOzoyWsgLt96jmHj9cpxEpZR7vlUufu
-         WtrU+1j0POshOO6JAL+1UI8XH9LWcrBmPiDLKuUptGrJ/UnKZhchjOTQI7Oxscy5t8ht
-         V79eVAFRN0E/Cq6UxNrevwKtS+ci+cxZpXkWpQ2RgqcuGBgV0DEEKu6kBMGo2sbIknYI
-         fLQw==
-X-Gm-Message-State: AOJu0YwOYqw6FCx85dOB9yMkmEzRRDr3HiSfCacQpLzG+/ucL0obcD6b
-	WzSqS2cbccY7J8rO2uLrqufnD31//3W1maVBCJ+rZfLRyPvVDBNItj1AAraKyO8X23k9bVLyCzn
-	9
-X-Gm-Gg: ASbGncsMBzpP5yxJ1KPRW7y5YHtZ2mrAm3jh8GTRJCelMlj0MNGZYxeArpXT5jvpHdU
-	2dDwHNeg5ioDpZPmR+Cl0e67fO9Hj2iMdi1HfV/iWDFRX18zLLG9rLEN6dKBdhc01FGQHwoMYOE
-	9RFNXRHZ9vUsQn1WaCm+ZXdBf9BTfQjv23PngA9DbqezMBAg8S6qGBHMxDrbhkZtL9qK3pWu2kD
-	lO1cBVkY/8OQoKVprnsvAMy39b+5pJo47Gxb7H5UxFNew9dyRF0Jg==
-X-Google-Smtp-Source: AGHT+IGTlpBcb6k5YeTkGn3U8EKQlzzdVQk2arUij8CCL8EMbPFIW+Z2OxmULOsfgBaPIa+UYaFhOA==
-X-Received: by 2002:a05:6000:23c4:b0:385:d143:138b with SMTP id ffacd0b85a97d-386453fd5fbmr2208692f8f.51.1733823479256;
-        Tue, 10 Dec 2024 01:37:59 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4c2b:c454:658c:f771])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-386352d45fcsm9952443f8f.59.2024.12.10.01.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 01:37:58 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>,
-	Shankar Bandal <shankar.bandal@intel.com>
-Subject: Re: [PATCH 0/7] gpio: Fixes for Granite Rapids vGPIO driver
-Date: Tue, 10 Dec 2024 10:37:57 +0100
-Message-ID: <173382347085.25305.7878942557222092615.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
-References: <20241204070415.1034449-1-mika.westerberg@linux.intel.com>
+        d=1e100.net; s=20230601; t=1733824602; x=1734429402;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kOBH0vMe0xTQDXgWPorv7i1vsjSVrIhgJ0QqbJFZGP4=;
+        b=xM83jnAAlcmYPUwNYpA1LcZX2EGoxenMVSoWupl1aQgjsgi9mO/AIg1cwZ5GFrFAx+
+         smSts6DZWWYJpKtKs57V060vnczXf5G9n8SR5dCJ+bfqAVY2a3a+F8qCcNPA+Ap/A5Pj
+         3p3bjEIbj3f6+yWnU8UBdCzG0ec8kktGqhQbJW+P7hsKAuQXkeE5Wj8N9SYVnXvTnakw
+         2Q3yHCbC3C2Mm20OlvvDrp6FtcnvDpTX9i+a4cPNWG3MVQUfag72dsyvii1RVuiiZsUm
+         +RrOt/tindwMGoX5podaBf0svvBit8XkqfCa/SIJSTfPlp7DqAW7qTeukc3eBgQuHyWR
+         9jCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV04yMBUmqgOEcwAJRQ9REpgVMoyCld8JL89rTYCLDWQ8MlK0JQryNmgcxLbJITiRirVc7S15mCFVxN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDnWOKypwtPyK3bevAMHMMkb1U0HHdApdj7eiFF+EZuJRuhCyf
+	QYAGzt+2+HfEQBCi0gfVNLDe8+DLvZbiQm388xExNvkAE/UdteAXuuABeRmoSCx7kxS0sZ09rib
+	s
+X-Gm-Gg: ASbGncuVpqpfO0VM2zHUiFCCqHcLf2nTopeJVuMVQuh0jszv5QzbufefEXqpaXfujOl
+	xlWkz2WMTU/piYN1dHIHyx5FQ2FxUov7q/rBgiC16QeYXowloUkGFSq3Khn353Oa6RiS4VZuBHq
+	84R1t3g1AK6ZvCP1hOtCEtbtEMSQLcKnZc5TEPPQilEHHWRwxSIh+/a0opP5VJAO+tyg0cmFAUU
+	/cMWEDCs6evLbbCNnb9QhB8eTxhBPXPaRVMTTH7BG4GmhHIxbTaTSWbn7dRcKs=
+X-Google-Smtp-Source: AGHT+IGBn3J/kwjMkMOumD3GgGk3HgegGtxShYE8MGa5RyAHXgSBmzxZuUlRrYhXtKyrcLpn+/1Lzg==
+X-Received: by 2002:a5d:6c6d:0:b0:382:4926:98fa with SMTP id ffacd0b85a97d-386453fe979mr2475238f8f.40.1733824602299;
+        Tue, 10 Dec 2024 01:56:42 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.161])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3862190989fsm15684319f8f.73.2024.12.10.01.56.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2024 01:56:41 -0800 (PST)
+Message-ID: <ed0f6c49-8e39-4cc6-ba93-35a9372bb532@tuxon.dev>
+Date: Tue, 10 Dec 2024 11:56:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 14/25] ASoC: renesas: rz-ssi: Use goto label names that
+ specify their actions
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, biju.das.jz@bp.renesas.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com,
+ broonie@kernel.org, magnus.damm@gmail.com, linus.walleij@linaro.org,
+ perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de,
+ linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
+ <20241113133540.2005850-15-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdU+_NuLp2FuwwcLfJRe2ssMtp=z7fqcsANgYfFehTNJGg@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdU+_NuLp2FuwwcLfJRe2ssMtp=z7fqcsANgYfFehTNJGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi, Geert,
 
+On 09.12.2024 15:51, Geert Uytterhoeven wrote:
+> Inside this block there are several return statements.
+> As we know DMA is not available when we get here, these do not
+> need to call rz_ssi_release_dma_channels() hence do not use
+> "goto err_release_dma_chs".
+> However, this may be missed when making future changes.
+> So perhaps it may be prudent to make this safer, by moving this inside
+> the failure branch of the rz_ssi_dma_request() check above?
 
-On Wed, 04 Dec 2024 09:04:08 +0200, Mika Westerberg wrote:
-> This series includes several fixes for the Granite Rapids vGPIO driver
-> found during validation.
-> 
-> Alan Borzeszkowski (5):
->   gpio: graniterapids: Fix vGPIO driver crash
->   gpio: graniterapids: Fix incorrect BAR assignment
->   gpio: graniterapids: Determine if GPIO pad can be used by driver
->   gpio: graniterapids: Check if GPIO line can be used for IRQs
->   gpio: graniterapids: Fix GPIO Ack functionality
-> 
-> [...]
+I agree! As this series is already big enough I would prefer to handle it
+after it is integrated. Keeping it like this doesn't impact the RZ/G3S support.
 
-Applied, thanks!
+Are you OK with this approach?
 
-[1/7] gpio: graniterapids: Fix vGPIO driver crash
-      commit: eb9640fd1ce666610b77f5997596e9570a36378f
-[2/7] gpio: graniterapids: Fix incorrect BAR assignment
-      commit: 7382d2f0e802077c36495e325da8d253a15fb441
-[3/7] gpio: graniterapids: Fix invalid GPI_IS register offset
-      commit: 0fe329b55231cca489f9bed1db0e778d077fdaf9
-[4/7] gpio: graniterapids: Fix invalid RXEVCFG register bitmask
-      commit: 15636b00a055474033426b94b6372728b2163a1e
-[5/7] gpio: graniterapids: Determine if GPIO pad can be used by driver
-      commit: 0588504d28dedde6789aec17a6ece6fa8e477725
-[6/7] gpio: graniterapids: Check if GPIO line can be used for IRQs
-      commit: c0ec4890d6454980c53c3cc164140115c4a671f2
-[7/7] gpio: graniterapids: Fix GPIO Ack functionality
-      commit: 0bb18e34abdde7bf58fca8542e2dcf621924ea19
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thank you for your review,
+Claudiu
 
