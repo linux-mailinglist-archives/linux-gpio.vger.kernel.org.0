@@ -1,183 +1,163 @@
-Return-Path: <linux-gpio+bounces-13713-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13714-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4D4F9EB4AD
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 16:22:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0B499EB4EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 16:28:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1474C1881B4B
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 15:22:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79F701689A0
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 15:28:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6681BBBC0;
-	Tue, 10 Dec 2024 15:22:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764A678F23;
+	Tue, 10 Dec 2024 15:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPlq64R/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NHOpQ367"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F84B78F23;
-	Tue, 10 Dec 2024 15:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5AD1A0BD1
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 15:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733844148; cv=none; b=sC4RiQ9b81jIq4ivkfWzPJC7gbgBx0p8kqHIyFnRrCUGWKAQkljzxIvu3KUmI30tbPcnCWwo5jIx4MrJ9kMkskkXd1NYmkykfeuoKjEhGuUMyYMyMVjt3OZL/uLXYeXE8GFbJne81shOUFdq9cQKN9xyXXA7jsLwEwJ05wiZOLg=
+	t=1733844527; cv=none; b=igctmRVQybCEbXROp2liTAaCgmscQh+Y9IR0ZMXZvIV2OFLVOWyyz1FZ8oyy9kCw2vL8OsPGFnyAHgQUMLJ4b1moaiRXTa/3TyBe954eBM6ZrpLHC4sccQpGLQVEljo6BBIMhfihtE4yP3mii/RzlZQ883iqN4SYXX4Oz4rkb9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733844148; c=relaxed/simple;
-	bh=HVhiN2OBd6AGD8swy+GfRlzAmnRnYgAGWrQ6OR38Ccg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cD6FYPMNdD7HixjKLLPIYRUd8pAp0NKEXCfznBV+AHacXdLR/N78ZF9xgMDew5iGGG68vNXUYDTBmlvC3O8YYjlicguzOYEalOVrIwjOHxIWeLYCMF8qpii8YRuZrr0k5HPqMjqSI1qpv5/ZZZKIGvf4SRvNiVYo5cxst1mhARw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPlq64R/; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ef8c012913so2290129a91.3;
-        Tue, 10 Dec 2024 07:22:26 -0800 (PST)
+	s=arc-20240116; t=1733844527; c=relaxed/simple;
+	bh=LTYocZL5oWsf2YI5ZS44VP1gP5ltjucZDav0M7je+jY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XeDDP637Jcmur2aATDMAer+nazT4BOSqGuiwm5xVzE8Gx6lQRnCGOGIPWcteZ4K8aWhvgT2J/Zbv4+HiSOyCQe8N4s7ko7abs+3+BVrje9srAnQsPi70+PIvi4oJiDIP1QHxl2zJGFvOwhNb1JwE3qJwx6th59HwtIDzV5SrLcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NHOpQ367; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53e3a5fa6aaso3171732e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 07:28:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733844146; x=1734448946; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=rVmwqWOa/zEr6Xgq+J3zkDZBkkOC/ONE9vJotzchERc=;
-        b=dPlq64R/VnHWM1bOvw3DqR7NcByzUPGoXCV5GiKn7wex9M8NdMoqm0TeBjgkeU7f8d
-         RCxoKiwECnxQB+CDbZSd+o29flMYgpMghEOLrSKzCQettrEu8mJjEJqwhNy43yYGAbdg
-         VZs2TLHe7G3cWfmjFWm6JgeVl3VylUrVE6dyIe8a+WnYpoFhSadQF9+z7E9pSdQsj/4j
-         S+yo5SiPs8Sx3BoCi0sR7zE7zfA4ZbSCt/XBe8Nl1x34UeAaW3YdCNvhaHzbnhhNrzuN
-         xgEE88o9AwvUeGV3p6Fl6GAnGdaOz5dOa05IsoeWih0oVSg28olirIcNYA2CI8U+JTEF
-         94Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733844146; x=1734448946;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733844523; x=1734449323; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rVmwqWOa/zEr6Xgq+J3zkDZBkkOC/ONE9vJotzchERc=;
-        b=T/nw5f+xL3+eM+sIZSo68XPyMpObrteSkkoVJUyTqu/RfIbqw+xIVx0akFZtKTMXRJ
-         NiwFIYmC14lM3QwPmyeXNPLXAAMAYshfFGv2RY8xJ2PzX0pWwg0KVIoAzj/b8D3xO9si
-         cZA94cWJg4Hm6R1GKr2k1fcoFDghY//nIZc3/xovqXhZnxC7Xn96iPe9ZgSRemif8T/q
-         uypb9bzTR/rhydTQo8uaGU9zSfh9z18BI6odhmaCzQJqUF5d5UKafzK8yTcgE6DAyej0
-         N7wXURIxDtBzMOJv+nVH8LxBEg0iK/ml/8sytF3i4hVoTucTrcMMOQ6kEGZFruJ2raRW
-         sv9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQweumVCZYoI29Em6efbMwYMjZDLB7LTJXK+a/qNTJj7VHVEVwZuf+JaafnDlxWXIHEVrxAdjcNfM=@vger.kernel.org, AJvYcCUxYtdtbXMpmPNvyAc2h77FyCvHI31O2u+QetYn0BF7ee4B3JjawhMhMA7UchRTKIWOQHvIRM1wJ27X@vger.kernel.org, AJvYcCVLOlHavfAmSgwfZIrLstrV3WAfmCYlski5mX6J/7mzaJR7UJl+/W00BS8VBfLjF7pbYANIyemt@vger.kernel.org, AJvYcCW2Ti3PLfgRU0jJ0CQd0lOoV353z4sz1FjMln5JSPWKw2JMIt1pKys+FjsIiWRtTyYn7pDZlZ1RCMH7oA==@vger.kernel.org, AJvYcCWjr30Qnt+HJh1gm5/xKVeLg+I3lX8j4U/IozXXXQVRvc/WNyhpGoQcj/VGuGrq82SaxczwdsExdRay@vger.kernel.org, AJvYcCXK1zm9lsO0eXMUu4wXRwMoWRtv9wIGTKnlFMiIDRZzEB1c28IgX5De//p+Dkytt8YV6iOdeOspEwmiyZU=@vger.kernel.org, AJvYcCXfjv4dgFszjK5q1cbBbpmcRAzcZzSUN/aNzH3dmkRmpB6fGQ7CY31s3ewJ+t3QxJaiEOAh+Aa0X6VfByN2tnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo152wzM+eZGy4rLEpih3aGigxP2TPTkSxmTi3Hk9jA+/+fjbm
-	UOYd7mhtMlZZ23uIF1uhf2HqskHuLkUYWZgKUvV5XBSfIJ1MeIUQ
-X-Gm-Gg: ASbGnct90AnBzCP9SyzE1p4FmF8jDkRIBF7xG/S6b5tSwgVu+eK1WQSDYe7SeHXlZTT
-	DFPFCW5c1/2FNCzViRLfeVnHAaM2fdvS0ksB+dP8cTyXMeET/Mk7BL1AIq15pXs71tvLDOImIOO
-	vYaZthOvVqTobGuDc3U1FsnKMpDa0Cc1lgRnYW2XbxSC2ZKMvhlR/RjuAB74AUrdFdvBn12lCJJ
-	Wc5xaFr6v4dTdrgKkYWlgVi1icCEV2894U2Y120GOmb/Gp9hvqU3pnTMp0xkW43lJVDpxxi+xm/
-	HxxJInOQm+MH0EMQvjH/NL66Q2c=
-X-Google-Smtp-Source: AGHT+IE69d+SUpUCbyXFidBraWIC6ZOeXjpJlhEVcNtxdVDV4xbV+c0aS0/OIIKn6yXac6dM5U2V0A==
-X-Received: by 2002:a17:90b:3d87:b0:2ef:1134:e350 with SMTP id 98e67ed59e1d1-2ef6ab2739dmr25065458a91.35.1733844144217;
-        Tue, 10 Dec 2024 07:22:24 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ef45f95899sm9954572a91.12.2024.12.10.07.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2024 07:22:23 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e8165e99-9770-4287-8a05-709a9a7bb701@roeck-us.net>
-Date: Tue, 10 Dec 2024 07:22:21 -0800
+        bh=pDKpYwanTCXkaNZLsUiajAa8SFN4AmiEMF5THo0ThJs=;
+        b=NHOpQ367qNsUn7PC7LXG9GjRkVXA5KOT7DKfHeMs3AAEehVMZWPANk/Sn8z7gpaeXm
+         w0PJr34moDbS5ss6erCWL7DOglFICylKKcnkTdTIXQfBxf96nch9iHcV0iild+SR1T9t
+         XGtGvZreXPMdOinYYOTxYUn4b8XnD9TZfsnkvcqC5Q7O9D626wkJ3Qxe57HYREROiBhA
+         pod6FwsonCZms0hc+hHtBIFUniVQnFxkyi79CYgKoLbeGaChcv1XcHTHdCg2XUCcyXk9
+         NFK+ofTYt4MyTFc2aq+YRfHXmkWDaa1Si7PhsaDy7u6AVG+jQgQMSfAIFp16LyrAx571
+         9Aow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733844523; x=1734449323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pDKpYwanTCXkaNZLsUiajAa8SFN4AmiEMF5THo0ThJs=;
+        b=FStSNzo47TpJ4PF1qbV2p4tsYDCnWutazm4poQKTX1mmj+NhXsW2MhRsve54r5TJL8
+         TgWOBBdK6WWY3FiTylOGIb/Yie0gEqYYaQbrISU/wctrNr/JMyN8oSvz0NNJYRVV/ypQ
+         leQ+MsbjjfDp6sWz/ebvwGAhg1GjK1mMT+CUzP1oI6R+AzhgiiP9DcFC/D1m1TMf1SYK
+         0mbhPE2ZHX9p6YAzl7PRiwgBgYW3+8y1itJ+uJKxKgjhi7NxgYX0vPDl9MN9K7/CZW0F
+         Z4oHtT/dhl9F8pPxWn0GgpNNGn31KoM3isbTtdwkOLYMeco65AfU/Ds8/asLNIKK89LE
+         e2+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVfT8dPggDih22efZXaLotNaeJwLG9FFyNR+Osq3Hvd9dR5j7TaRLAx76BrwVgGmcWm+23TZ/g6yWJa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT/lja6I3dLIVX/b5GC2XgL1wiWcaf6UDSnjYjTAxTYrToHdTW
+	dB9N/zd/fP4Jnv96DKh8reZTCOpGeUa9XHr6DBbenRYxCENcslSCdh64BGGy7jTEJPok5QSRAEp
+	qDIQqe0FuiKY3uW6wDQQT9LgxbvhsM+hGPbR/gQ==
+X-Gm-Gg: ASbGncvSVynRnbmPltUnwuaKN2m7nGs6DueUB73wNWHnmeE1+3mNSLHHiz3nz9SLsKp
+	B1f7HfKdZQMoawugFo2QQM0nGwZeIhU15msFeTqKb+jWDocNhVXNLuB3NtNeaO96qA0M=
+X-Google-Smtp-Source: AGHT+IEl9NToaw9OH3mU8Ko++yXj4paFr+RIVag30QwFkcKgeNwggmBDK6AasAbZQ+A6GkPzhuTv39CicpK+WCYtyVE=
+X-Received: by 2002:a05:6512:3d89:b0:53e:3852:999c with SMTP id
+ 2adb3069b0e04-540251e59dcmr1417953e87.12.1733844522959; Tue, 10 Dec 2024
+ 07:28:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] watchdog: Add Nuvoton NCT6694 WDT support
-To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
- linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
- mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, wim@linux-watchdog.org, jdelvare@suse.com,
- alexandre.belloni@bootlin.com
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <20241210104524.2466586-1-tmyu0@nuvoton.com>
- <20241210104524.2466586-6-tmyu0@nuvoton.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20241210104524.2466586-6-tmyu0@nuvoton.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <PH1P110MB160324C826F703A91F39BE7C9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
+ <PH1P110MB1603ED35A156B907BC8177EE9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
+In-Reply-To: <PH1P110MB1603ED35A156B907BC8177EE9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 10 Dec 2024 16:28:31 +0100
+Message-ID: <CAMRc=McXdu8HHbn8yYjHB6PmDdy-dXuBmf=aSRZZVQ0okoPuCw@mail.gmail.com>
+Subject: Re: [PATCH libgpiod] bindings: python: provide fileno() for Chip and LineRequest
+To: Vincent Fazio <vfazio@xes-inc.com>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/10/24 02:45, Ming Yu wrote:
-> This driver supports Watchdog timer functionality for NCT6694 MFD
-> device based on USB interface.
-> 
-> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> ---
-...
-> +static int nct6694_wdt_probe(struct platform_device *pdev)
-> +{
-...
-> +	wdev->timeout = timeout;
-> +	wdev->pretimeout = pretimeout;
-> +	if (timeout < pretimeout) {
-> +		dev_warn(data->dev, "pretimeout < timeout. Setting to zero\n");
-> +		wdev->pretimeout = 0;
-> +	}
-> +
-> +	wdev->min_timeout = 1;
-> +	wdev->max_timeout = 255;
-> +
-> +	mutex_init(&data->lock);
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	/* Register watchdog timer device to WDT framework */
-> +	watchdog_set_drvdata(&data->wdev, data);
-> +	watchdog_init_timeout(&data->wdev, timeout, dev);
+On Tue, Dec 10, 2024 at 4:04=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
+wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Vincent Fazio
+> > Sent: Tuesday, December 10, 2024 8:27 AM
+> > To: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Kent Gibson <warthog618@gmail.com>; Linus Walleij
+> > <linus.walleij@linaro.org>; linux-gpio@vger.kernel.org; Bartosz Golasze=
+wski
+> > <bartosz.golaszewski@linaro.org>
+> > Subject: Re: [PATCH libgpiod] bindings: python: provide fileno() for Ch=
+ip and
+> > LineRequest
+> >
+> >
+> >
+> > > -----Original Message-----
+> > > Ah! This is why I didn't see it, I missed the --strict switch. Thanks=
+.
+> > >
+> > > On an unrelated note: mypy --strict is giving me this:
+> > >
+> > > bindings/python/gpiod/line.py:19: error: Non-overlapping equality che=
+ck
+> > (left
+> > > operand type: "Value", right operand type: "int") [comparison-overlap=
+]
+> > >
+> > > for:
+> > >
+> > > 18     def __bool__(self) -> bool:
+> > > 19         return self =3D=3D self.ACTIVE
+> > >
+> > > How do I fix it?
+> >
+> > This is odd, because I specifically ignore this:
+> > https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/bindings=
+/python
+> > /pyproject.toml#n57
+> >
+> > How do you have this set up?
+>
+> If you're doing this outside of the bindings/python directory, try specif=
+ying the config file:
+>
+> ```
+> (xtf-py3.12) vfazio@vfazio4 ~/development/libgpiod $ mypy --config-file=
+=3Dbindings/python/pyproject.toml --strict bindings/python/gpiod
+> Success: no issues found in 13 source files
+> ```
 
-This is pointless since timeout is pre-initialized with a value != 0.
-That means a value provided through devicetree will never be used
-unless the user sets timeout=0 as module parameter. But then the above
-check for pretimeout is useless.
+Yes, this works, thanks.
 
-Guenter
+Bart
 
+>
+> However, if you run it on `bindings/python` the output will be noisy beca=
+use it's not limiting itself to the "files" section within the mypy setting=
+s.
+>
+> I wrote the pyproject settings with the unwritten rule that the checks wo=
+uld be rooted within `bindings/python` and not outside of it.
+>
+
+Got it.
+
+Bart
+
+> We should probably document our expectations for how these checks are run=
+ and then update the config file to respect those expectations.
 
