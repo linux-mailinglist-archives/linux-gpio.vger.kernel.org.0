@@ -1,160 +1,134 @@
-Return-Path: <linux-gpio+bounces-13711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C45679EB45B
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 16:09:36 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C7AB9EB4A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 16:21:44 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1E3D1886F99
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 15:09:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AF512862BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 15:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42ACD1B423F;
-	Tue, 10 Dec 2024 15:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F8351BAED6;
+	Tue, 10 Dec 2024 15:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v343TJ32"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LDjxTAfi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0041ACDE7
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 15:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A956F1B425E;
+	Tue, 10 Dec 2024 15:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733843367; cv=none; b=GrDo1hjHthpvtbmD2Cm6mXpSibSnx7fXTzVu2Ev1v/vYVP8111XMmVWLIFknozavXQL0sZwTcpXpUpNdn0Ays2DG4F9XPDUk0OgTqV1Uv6VkPgMnX9xcoeuLlukdk+k8AdESudEto6q/gl7sI9h0Nxx1w4ABaeOYeexOtnwkjv8=
+	t=1733844093; cv=none; b=P4Mgj5pNYL3ciQasgMZzJoo98q0YqfGMtHLOvMcebBpuJoMepWt0puc7mVgQVXZJTNAdQHLkEkXbzTCfcOpfI87xltemzTpFFjIrh7MnB4M2g85leX6oXH+z/rYj8qqMCYA4EMYbrA+zORloeTklnAHOASND+sH87P7p5wbGUD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733843367; c=relaxed/simple;
-	bh=80/01DvwhCk8ER/fRhyWLCJzR9PTogDCxXobO9F/RVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1qwl/c63szr82H0roOnLqqkh7bu0I/kAsETvC7a39QOtcFjRXfLzoq00lDxAkX+6QPGcqGn4/LMwMDSXaObet+bDtEozImpYvVIGU8UJEcrRMBqmO/vPLoCGyh/URxCuYsvFxCgpyVLQFf1vQnX55jblh5jl3f2u/6vU10B1kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v343TJ32; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30033e07ef3so42566851fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 07:09:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733843363; x=1734448163; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ONPoAWCr/z6lJfjDFKtgqfFAw1BGCZer+GCPiaXmPhw=;
-        b=v343TJ323DUGi5/m5/FrFrr89Ph+Zv0XeBvNt5huqxBnTkff5QRbzRW4pZWUNVttAH
-         Tlu95DPvvAHT6zUodswBHcvRf56JzyawVTfBR3dNWKdZBuljZlgr98bGiaYlYhsT2uPr
-         gu2V6zwkFTh/b0OkdHryyJxrj6RtGPrHiLfKlc7gYXsQf9dCVs7btgZvkKZX6c2s7A5D
-         j16flk5a/dCWOovI+7SnICyPlYr2x69lQCEDNw3b+KKPoQstS9stPw88m8Cgd+fcoYjM
-         k5eTuUxolSI1b/X9ta78apmdeiOgLYvib+f/TqAunaMr6fsiBMlz4PwghoiKHHVF7aMN
-         xuOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733843363; x=1734448163;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ONPoAWCr/z6lJfjDFKtgqfFAw1BGCZer+GCPiaXmPhw=;
-        b=WX8e4pWAXB9O89oaGYsN6m2NVLTvRHNBkPsZB6vNhAbAEIFaQmgTR20DRhj5SaTxcZ
-         gRq2hOrprEo5nR6VIzxkETUUNeGk3Vzzk4V2TRGrK0NjzuZtV6hxIIjcLTUtbDXSqpSU
-         jd+rFAGTT6fujZZiAuTieicucM4UDKfpGtydN13Gbkj2K/ghe9OSMQsbPWZwqFutVi2i
-         135UP6VQHK1+Bovb/cWFT9wCUhdwxPVX9Zxq5gaht8dLKa+xef3DYrwblTcVvlXqiQkn
-         /ur7VGSqXXYWeQ+vR7cckhqHLEdxuMWplDTzF/PCwGhM/f52jfQFxCKhqc35GZWaTLT4
-         s8Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWsi/OW57RfN7CGpDk7aqvKkuPfN/8TLrz3AXPNlxeuBih1oZZ+Ag8lHRqAZGu8Ntg5666Na0sLTvjv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4085xVT2PuJwGGnmjMWkKb/Wr8DClnFjcNVKH+efPVdtzdW2n
-	tWaeamQMXe08vsOHZeeRJVTQIQcFkJ9lSL+aYBOjTtiK8NDyrwxInmRbXvmBtS0=
-X-Gm-Gg: ASbGncvYgOdF8r+HJjgoNcxzPgsBAqNS/x8CExt+1W1vmWsD9wsRN3pbnuqkBYfxRq3
-	/Gf1AO8nA9Znc9pNuZgpOd7Q/mHDv5cwWneGOY4ciPfZKMAI0+E7J8YnXouoHfWUjDPCQtc1j0N
-	QLwoPQd9uiuNd6giLf27JrTivAQ3BrNONoQlDwWwDhJv9PNURWUHC8ZYEnpe7fNXQd+G+vYXt+r
-	tc3l6oAY09kp9SRTakqoaUbbXDrSHrdRvXShrySj0IanY1hkglwvlvZWBzRyp0Wbjf7Jy/yiT2U
-	PK4F7pOJpboo63OqQxwni+RY1l1uUyZi8w==
-X-Google-Smtp-Source: AGHT+IH4LG5o5SbyEh1Vovj71WLwSfFbBGhk7NJh/k58qLpSj2p2TBBGrOFSDDq9rnPlmsaGShNmLg==
-X-Received: by 2002:a2e:be0b:0:b0:2ff:b8f5:5a17 with SMTP id 38308e7fff4ca-3023282c1femr12568441fa.5.1733843363188;
-        Tue, 10 Dec 2024 07:09:23 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-302259416c5sm5907321fa.6.2024.12.10.07.09.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 07:09:22 -0800 (PST)
-Date: Tue, 10 Dec 2024 17:09:21 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Xiangxu Yin <quic_xiangxuy@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_lliu6@quicinc.com, quic_fangez@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
- QCS615
-Message-ID: <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
-References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
- <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
- <CAA8EJppOR_UXoVpMt-dhfWdCz3UNfsXGdz8X9NqpaSmYj3AZDg@mail.gmail.com>
- <5ea14162-567b-462d-be02-b73b954b7507@quicinc.com>
- <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+	s=arc-20240116; t=1733844093; c=relaxed/simple;
+	bh=3GlGE3KlJLpLrehcIsMPjWrvW8X2DBShR7lNXEMAm0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r7LVhjBAn8+cFDGMI7cs9a4kml2FrW4raHuBov9+q4cnsZv9lB2+wHixPgl/91ukwl6AfMP4i2Je1u3sfmysr+WtHY78uNbEk6jZjLj4rBr4MVJvyJwMLo1Zb1mmTeR8uZW6R0cZDtQUwBwxacRmRB/y+/RG79rlXQON+j1qHuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LDjxTAfi; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C26571C0008;
+	Tue, 10 Dec 2024 15:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1733844081;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kr3K+pxKkOvGHu/heW337Yn2yGQRwqjuj8j4+9JVtbE=;
+	b=LDjxTAfieZOp7wsnn6XgpYGnEuIkCG0kUWiIOtieTECJVGWvH2/+nlQdaWMGi8YkOfzemE
+	phU2Hn98XIyZ6kQ4fjHG1+Ovx5S70Ce9TJW3RpXo8Iz6bNxDRyqUOF4vx82rgJSNAM6rjA
+	1CzL5Nc5VVSEDjbzcwCz5P4xvadcnIplFi0FEdNNMwHzIBCDZZensz04jrEFPE0l3YVbcK
+	3YKzWcdC1j37yJ4fufVA+41aqPpWCX5mVhUqugj7V+8VCs3Ci2pFC2hZJHm4eGBlKl5EMM
+	4nkiUeML5dbaJaQrHVUsKwsbVO4bQuFwjaAauF4LMPiBYHREHX9xz0x/SaF1ZA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH v3 8/9] i2c: Support dynamic address translation
+Date: Tue, 10 Dec 2024 16:21:19 +0100
+Message-ID: <2099546.fqZRxdAdAU@fw-rgant>
+In-Reply-To: <3255950.5fSG56mABF@fw-rgant>
+References:
+ <20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com>
+ <141bbac1-5289-4335-a566-387721439bef@ideasonboard.com>
+ <3255950.5fSG56mABF@fw-rgant>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Thu, Dec 05, 2024 at 08:31:24PM +0200, Dmitry Baryshkov wrote:
-> On Thu, Dec 05, 2024 at 09:26:47PM +0800, Xiangxu Yin wrote:
-> > 
-> > 
-> > On 11/29/2024 10:33 PM, Dmitry Baryshkov wrote:
-> > > On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
-> > >>
-> > >> Extended DP support for QCS615 USB or DP phy. Differentiated between
-> > >> USBC and DP PHY using the match table’s type, dynamically generating
-> > >> different types of cfg and layout attributes during initialization based
-> > >> on this type. Static variables are stored in cfg, while parsed values
-> > >> are organized into the layout structure.
-> > > 
-> > > We didn't have an understanding / conclusion whether
-> > > qcom,usb-ssphy-qmp-usb3-or-dp PHYs are actually a single device / PHY
-> > > or two PHYs being placed next to each other. Could you please start
-> > > your commit message by explaining it? Or even better, make that a part
-> > > of the cover letter for a new series touching just the USBC PHY
-> > > driver. DP changes don't have anything in common with the PHY changes,
-> > > so you can split the series into two.
-> > > 
-> > Before implement DP extension, we have discussed with abhinav and krishna about whether use combo, usbc or separate phy.
-> 
-> What is "DP extension"?
-> 
-> > 
-> > We identified that DP and USB share some common controls for phy_mode and orientation.
-> > Specifically, 'TCSR_USB3_0_DP_PHYMODE' controls who must use the lanes - USB or DP,
-> > while PERIPH_SS_USB0_USB3PHY_PCS_MISC_TYPEC_CTRL controls the orientation.
-> > It would be more efficient for a single driver to manage these controls. 
-> 
-> The question is about the hardware, not about the driver.
-> 
-> > Additionally, this PHY does not support Alt Mode, and the two control registers are located in separate address spaces. 
-> > Therefore, even though the orientation for DP on this platform is always normal and connected to the video output board, 
-> > we still decided to base it on the USBC extension.
-> 
-> Could you please clarify, do usb3-or-dp PHYs support DP-over-USB-C? I
-> thought that usbc-or-dp platforms support that, but they don't
-> support DP+USB pin configuration. Note, the question is broader than
-> just QCS615, it covers the PHY type itself.
-> 
-> Also, is TCSR configuration read/write or read-only? Are we supposed to
-> set the register from OS or are we supposed to read it and thus detemine
-> the PHY mode?
+Hi Tomi,
 
-Any updates on these two topics?
+On lundi 9 d=C3=A9cembre 2024 13:42:29 heure normale d=E2=80=99Europe centr=
+ale Romain=20
+Gantois wrote:
+> Hi Tomi,
+>=20
+=2E..
+> > This fails with:
+> >=20
+> > WARNING: CPU: 1 PID: 360 at lib/list_debug.c:35
+> > __list_add_valid_or_report+0xe4/0x100
+> >=20
+> > as the i2c_atr_create_c2a() calls list_add(), but i2c_atr_attach_addr(),
+> > which is changed to use i2c_atr_create_c2a(), also calls list_add().
+> >=20
+> > Also, if you add i2c_atr_create_c2a() which hides the allocation and
+> > list_add, I think it makes sense to add a i2c_atr_destroy_c2a() to
+> > revert that.
+> >=20
+> > There's also a memory error "BUG: KASAN: slab-use-after-free in
+> > __lock_acquire+0xc4/0x375c" (see below) when unloading the ub960 or
+> > ub953 driver. I haven't looked at that yet.
+>=20
+> I think I've found what's causing this KASAN splat.  i2c_atr_del_adapter =
+is
+> freeing it's alias pool before setting atr->adapter[chan_id] to NULL. So
+> there's a time window during which bus notifications can trigger a call
+> to i2c_atr_attach_addr, leading to a UAF on the alias pool struct.
 
--- 
-With best wishes
-Dmitry
+It seems like my initial theory was wrong. The bus notifier wouldn't trigge=
+r=20
+after the adapter has been removed.
+
+However, the "alias_pool->shared" flag is not set anywhere in the i2c-atr=20
+module! So a more likely theory is that the common alias pool is being
+freed when the first channel is deleted. Thus, the second channel is
+still referencing a freed alias pool during it's deletion, hence the UAF.
+
+Properly setting the "shared" flag of alias pools owned by the i2c_atr stru=
+ct
+should fix this.
+
+Thanks,
+
+=2D-=20
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+
+
 
