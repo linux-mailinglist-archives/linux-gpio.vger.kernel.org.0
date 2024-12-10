@@ -1,209 +1,348 @@
-Return-Path: <linux-gpio+bounces-13718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45AFA9EBBF9
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 22:41:03 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A14B168FBD
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 21:41:00 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED03823978A;
-	Tue, 10 Dec 2024 21:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="RD/32VVr"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from USG02-CY1-obe.outbound.protection.office365.us (mail-cy1usg02on0081.outbound.protection.office365.us [23.103.209.81])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 929C89EBE0D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 23:48:48 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673F7237A57
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 21:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.103.209.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733866858; cv=fail; b=CjUn74xLID2fKlUKZkLhJek6DRchsLnTECifpGFmXp0RzVCLSGiIvbdBxJBs+B/PiuJYAl/6wyp3GNSa/HDajVn5VzwePhbEKjB8Xbxw//u01MCvervWSEmzQtFzFizSzaFlirtFEAlEBBrFdiPKFoqqzI3w12pg+7dlDP5REmk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733866858; c=relaxed/simple;
-	bh=gQDEL7XES3IBE+m9e/R31/8QhW+2Vu1tkF5nzcDCuFI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EHyWupRHpnZO3p9ceNJHQGs7DUKtwTWaYNhKl6VD7WSfUq14FGzUiDTWuGBPz8ORPp1wtx84IM3E4034Z/cMIgX56xGLES0JeF3W9tU0F0Fq1BkXO9++q7UoqWZPxtmCtUsL+lunDcaKeoTgxyUtyMCd3KO9CnbjAVcFcmRGJcM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (2048-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=RD/32VVr; arc=fail smtp.client-ip=23.103.209.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector5401; d=microsoft.com; cv=none;
- b=VKDoPwUPvbCrM/TJQRmVMOMUSKfTSUFLaJvvvCnQzcSrgdc7CunmjWeMDIobuqNpwbsDDPch5LY/L4uXxd47S0maR3Se0eE9t0fpJqmcuFOpwI9X8GFT6lgRS8eY1gUTfYW5M1dLG0KGITQxiy6b1dKupZojQY8f0dC0rrCmefVVSXoWBt1VPGyugJcVOAXcSHtZE56vxRsNVvbWrWSkEz9u7HZJeWoTXi3SAXtrrbsigBANtPR/IK6VcC5Q3jIIXmMRXjf23s4A9QYXvSgi8eGZ0/Jo+pI0gtomF1PCpjZ+za/U69v9x31PzHpyGSeNGqgkI24lgLCsOm5w/z9Q8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector5401;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gQDEL7XES3IBE+m9e/R31/8QhW+2Vu1tkF5nzcDCuFI=;
- b=zDWKFLtBrCSqxeJ2BZFt/EdjYoBWkBD5EM1k901AF9lw1vL2Jm4s/2V7wrPZXaNvM/RWJY9jKJoxR+UjIpP9ZOiKfixoeZjnc8mefOk6WD9UUnvMC8sTxgl/el7SSm1+mEPI3j/oVmuqZMvCneXrAB8lDf5iU8orM3GVlH+YSfprcYhLQti77yARSMG9ROw02/85w90o/drc3li6QsKnDhVHNh7DesjLNH9ohsJ5E19zsbTGu3hpJBCNQdLxVYKKO8geutgui1Eq8i5P5RSpWP/nuQwHFXxPRaBkk+iSCGOMWnNES8c7zb1DzPLY6femk7AN0geu5ldcazk44eLNBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xes-inc.com; dmarc=pass action=none header.from=xes-inc.com;
- dkim=pass header.d=xes-inc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xes-inc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gQDEL7XES3IBE+m9e/R31/8QhW+2Vu1tkF5nzcDCuFI=;
- b=RD/32VVrF/oEsyod/lCyl3YsbGW9Jrw/n7oLnPKHfUhgAVfCIaNdpiyuAOTksutGPSk2jIkoht5mRA/bvek4p2sswm0Z3UkR8Uiy3sd0hlqII5CfwmQAvrESKYWXMxTIu2CS0RBO9IOx3VzHDaD+fxc3ywZfUb3Z0GCnAL0y+r+1LI5blFk05lN+SGl4yHHKF8K73TYo9sB0XjR6bYIl3j3gvdzSuou6adfTMCBNmjXaPEif9ML/DFFS/O/7PzdPeEDUzlrNRcX5ftJTvlmTrA74884kKkvFqikmeuydseNgxVcVNS+Ks5SozYIV33Vr3itqGn6YsxJf5U39dFmxwA==
-Received: from PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:18b::15)
- by PH1P110MB1775.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:177::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.27; Tue, 10 Dec
- 2024 15:02:55 +0000
-Received: from PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
- ([fe80::71c7:106d:6bd3:fa2e]) by PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
- ([fe80::71c7:106d:6bd3:fa2e%4]) with mapi id 15.20.8182.026; Tue, 10 Dec 2024
- 15:02:55 +0000
-From: Vincent Fazio <vfazio@xes-inc.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Kent Gibson <warthog618@gmail.com>, Linus Walleij
-	<linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-Subject: RE: [PATCH libgpiod] bindings: python: provide fileno() for Chip and
- LineRequest
-Thread-Topic: [PATCH libgpiod] bindings: python: provide fileno() for Chip and
- LineRequest
-Thread-Index: AdtLDxlnny9QK8EGR1+zjEq275fA6gABIGZg
-Date: Tue, 10 Dec 2024 15:02:54 +0000
-Message-ID:
- <PH1P110MB1603ED35A156B907BC8177EE9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-References:
- <PH1P110MB160324C826F703A91F39BE7C9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-In-Reply-To:
- <PH1P110MB160324C826F703A91F39BE7C9F3DA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=xes-inc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH1P110MB1603:EE_|PH1P110MB1775:EE_
-x-ms-office365-filtering-correlation-id: 592a897e-a415-4c98-1996-08dd192bb9ef
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|41320700013|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?bXdCQXFlaHNicnFlaUM2allSYSthMERSMktBNW12VWhjYUpKaURGN2VQQVVU?=
- =?utf-8?B?RGFCQ25WTGFENHExZmFGZUtGVEZWRE1IL1BWcEJ6Z0RCN1k4T2RtM1V3U3J5?=
- =?utf-8?B?L04vZ3h1b1laZ2xkaE9zcUlneW5OTjJ0eE12SVljN2RZM2lSOTQ0b2pHeDNB?=
- =?utf-8?B?WGZpenh0cmc0T095TUEwZlVxVmxxRHRMb1hMU1hvdTJiTkdxdFJ0RGp5ZitS?=
- =?utf-8?B?NTVTNzR2REN5MTZCTlVJbHk4eUY3b2dsVXo0eG91TVMxQzdqQ2ltbjRJRGg3?=
- =?utf-8?B?NVlDejFuODF5OUpCMG1NaWIzZFAxbEMyY05GQnNZTVRaOG5MT2MvYk4rZHB5?=
- =?utf-8?B?bHIyTFZtYlVFWHFiSEhaV1ZJWDVpank2b1ErVnNuZ3Fhd1hSeTRZTXA3cEZ1?=
- =?utf-8?B?eU5LdkpZY3gzYjZaampseXdGb3hKZTVNNi81N3duOFZjUlVXMStsWnhTSHJI?=
- =?utf-8?B?RThSQWk2d0tGcFp6VU9pd0hvM2JsYnl1N2I3RnRqTlNmL1lkb3JZbjljaHVM?=
- =?utf-8?B?RkxzdG9NUTRFcmN2d255Mit3czBhTmQ1SGtmNG85M05BSWlmMjg1ZWZRWlR5?=
- =?utf-8?B?U1N1eWVCNGRzRjZsejBXL1RiUzV0N3VOV3hpTFN0bVRrTVV5YkZLNjF3dDdL?=
- =?utf-8?B?azdmSGovczNBNDVNaVZUS0tOcHRDc1hxRG8wRFV3Q1c4MXp4ajZSNFpWSHI3?=
- =?utf-8?B?N1h1TjNRbVluSHRRYUhRTW5IQ3NLenh4S0lsckhVcnptMUY5WmlnMUliMTVV?=
- =?utf-8?B?dzRrVDZNT3dFRnJOb1dYYks0UFRNZmljalFJZEcvYzRSQ1l2cnJibm9vZmll?=
- =?utf-8?B?ZFFxOWdaaUxudVlieDkxbzJtQlFBMGx1ZGM1UFVlSHYvWDZ0eGRYd2VrTWdv?=
- =?utf-8?B?WEwzVFRGUVJBSlhNblpYRjBTVkI4WFhuVXRBQ0hUM1ZRS0lsZUdJUmR2V3Vv?=
- =?utf-8?B?UkdYUDgyYzUxRFdPL0ZId3R1QlB5dmM2THZ1YVJnYmI0RmF5U1QzbU9mUWJ0?=
- =?utf-8?B?QTUzclduM1ViSEc4cEJGR0tVMXNDOWU5bVJOT1dUTE1pRG4xQ3ZOUVRETVk2?=
- =?utf-8?B?My9oMHEwcXVQbUFqLzdVYU5wZzJHekJGMFZvUXdOQmhZRk9KZzFwK05WbHpi?=
- =?utf-8?B?YnY5ejZ3L29qaXh1QVV4aDVCcXo4d3EwcmVIdnBGMnhDaEZaUHBGODZxaHoz?=
- =?utf-8?B?bncyZHNORHVWOW1FQlN4M1dLRzY0NCtBS1RUOG80SFhpbkhvZWZVeGo3UlZv?=
- =?utf-8?B?VVRjd3FKYUo4SitENlNDc3JmNHlyQTlRUFJHZ2xCbHkrRzJvK3B5UjQxbW5Q?=
- =?utf-8?B?U21udXJzemdlRExnTDNtcjRUbllITHhoL21RVG14TG9WUjdjeU9KZ3V2eXd2?=
- =?utf-8?B?cHUvQ3g5aC9HSjRTa3VKSkN0WDcyTzhuRnN5ZE96NjFsWTdIMU5WWGtoTFZ1?=
- =?utf-8?B?QVIwdVBQejFKNm0rSUNRNkRMQ1QzTVBrREhnRjRjV2taSTI2MWFBZ2g1Tita?=
- =?utf-8?B?cmMvajBJR1pIZjdES3B2cUZMakNBa2tzMDlOa1ZzWDZDUHZlQ2U3VHdLTzhq?=
- =?utf-8?B?TUd1QjhzMDZlSit0dHdoZnpkNnV2em9hWHFlc0lLTDg2R21OTysyRXNydjQw?=
- =?utf-8?B?M1IreHFhNTJjVThLajMxR1hvWkZrek9mZTVSNS8rQTNUUzVUTWFqOHRRRTZn?=
- =?utf-8?B?YmxETi9RbmNjQndPN04zOU0zdzVaQU9QL3FBVTlBaDBuWFNFQ2ZGeWdzV2Zz?=
- =?utf-8?B?R1Z2bWNGSGRWNjBBWW5JQVk3K3p3bS9FcUhjSG8wcFR0VzlqODk1d2Q0Z0FU?=
- =?utf-8?B?M0JDOGhYc3VKR01RZnIwNURVSjRsVE5zeGcvQ0wwM2NuaDFocTEzYURuR0Rz?=
- =?utf-8?B?UjlVTzl6eGcvM1NTNUZFL201T3U0WG9SdEJPYVdnNkUxSHc9PQ==?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VVY5bmlIbzNUZXFJY0hmY0xEbGpiV25EUmNsRmNsTlBWYS9lRnY2TWRtYUFG?=
- =?utf-8?B?SHJDRUZlUFRsSUF3TjJ2Mjd6NWpNb3J2a0sxMXRIK1BHR3k3dC8rWllNQzZD?=
- =?utf-8?B?YWVudWJvU3RBSmkyMG9iUkhCLzRSN3dsVXhSYzdWT3d4TWVCM1FpU1JuVStE?=
- =?utf-8?B?bkc0c1pwOUp6R2VDZFJsWFpIMTU5bDdLeDdTOTVZNldFY1RKV09Pdld5c2hv?=
- =?utf-8?B?c1Q4TFUyZWJxblg4cjlHUlJNcHMxSnNsOExzMk9TREVoYzJ2TVJGQ3Z1OFV5?=
- =?utf-8?B?VllmbVlTRlZlZTQvWnA0TUR5eXY5M3U0Qm56M1ZUQXU2OEtjeTRheng2OVZa?=
- =?utf-8?B?VXhWdk11THpZb3NzV29UaEJwS3h3T25vLzgvVGp0d0FKVjRweXZKTVFGN0Yv?=
- =?utf-8?B?bUI5RFJQTSszS0FmL3psVHNpUWdtbTRIMktPL1R3QWQ1ckp2Q2N6azlLVW5V?=
- =?utf-8?B?ZGkycnQyV2tSdDNtdnhDY1hYTTE0NEU5ZllRTUorSzlhSGtmOEJCMDRKekkz?=
- =?utf-8?B?dHQxcFVuOWF0L251SFBPWmxtN3l3K0NpM1o5d1pqTmNiTTd3RXpwU1RiMTN4?=
- =?utf-8?B?T1dpSW41eC9XWFdXeHVqNTlhSDNSM3E4MVEvRVVsWDBBZjM0Wk9OaXpJVk1Q?=
- =?utf-8?B?S1BwNnk5RkVVWk1LR2VOZVRNUk1yMDVzVWFDVG1RTjJFSjBpUUEyYTZ2TDNa?=
- =?utf-8?B?SVI3dUxVaWs2SW1qODJXcWwrM2pUbURGWXkyYWRPUjFkMXpmcjROZVFkRk9J?=
- =?utf-8?B?elBWd3I2SVA4eVlkUEZ4c3V0cStUNUpZTVZYeDViZll2d3FmdWZCcExZdmVw?=
- =?utf-8?B?UlZSSHA1SjhQbGdJRmFnTnJzZ2ZUYWo3ZVRDRGQ4OXMvZEdJZzRkRGZydEpO?=
- =?utf-8?B?bDRFTEFOcW44dzlTdTJJR1ZWK2dQS2xHNS9iMDZZcmhGd0w1MkNwdlVnZTVt?=
- =?utf-8?B?aElTdzNHSGlVV1VHUEd3cks2YXB0UTRhV3BhelFFTCs1azhXUk5VNkdaV3NV?=
- =?utf-8?B?NWtHUlNWVnViTnBSKzJXSy85QS9lcmRUOE9ZdStqTjhsbEkrb3UwbVVQNElq?=
- =?utf-8?B?KzFoeDBNeWRvRm84YUxEZS94Z3dVR204NnIvWUZIT2FjR2d1Vi9XTXorM2Vp?=
- =?utf-8?B?Wkw3TzlWZFljK1p0YTZHdjFya1EwbWNZNmNWWkdWNnM0Y1dzNnMrYW9mN05s?=
- =?utf-8?B?STFLb0ZhM0xjYWFyZGkyaVY3bmVJVFVLQ2hmTFBtUjBxRGZwQ3laaTFsNE1n?=
- =?utf-8?B?cjZ2YXhDZzY1dEN2ZDJTWVBxbUNYZDBpMjBDN0VaemJzUG03VFpDNFRkdmtq?=
- =?utf-8?B?ZUJVZ0pBVUFORGF1YzFyOXBVTmE3V3R3cHRSaVpMTG5nSEZsRDhhSTB2RGRx?=
- =?utf-8?B?bnZ6TXdzamE5cnFoZzNTcHBaN2x3czV5OTNaUmdEUmgxME5Zelo1K2Q4MXI1?=
- =?utf-8?B?YkFFZEM0c0swT21EbGEreXZ5SGwwLzF4NWRDekpwbVl5QnVHT0ZiR2JMZjRn?=
- =?utf-8?B?dXFTMm1XdndFVjNmNFBqTjBuU3psODFKSkJWYlhnR1VSQnZuMmcrZmxibEsy?=
- =?utf-8?B?SGtMcTV6YjFuaFVNQWtIUjB4N2Y0OEp5OVRKK0dFRzg5bXZGR2NRV3BveXZW?=
- =?utf-8?B?SHJWVWk0ckRNdGpacVB0Rm5ZSkxKMnM0RlcvWkhMNVk2cGNRTTZFMHlDMkJk?=
- =?utf-8?B?L0dFdHVYNWtCZ3BET01sUFFsNFlPamJ3VS9OZzhrdnV1TXd6d3MvQjI5VW9q?=
- =?utf-8?B?WkFObW1RaFB1T3phRGM2Q2hoRXgvdlBnKzFzZ2NzbWxZVGZ4aGQrN1lCRW0z?=
- =?utf-8?B?T0p6QW1pd2tWWmhmS1NTQWphT29VTmNhb2dXeXI3cGVzNEl5Z2VweU04OGRO?=
- =?utf-8?B?THlwdVVUK0J1cnRpWHZPWFVLSFF6czN2alZzajAvRlhabG90bTJkRkR5YjVl?=
- =?utf-8?B?bTR6aG11TkZLbW55aWZubXhJRnVEc01ZMm9qU3NXenc5TFQxaEhmMkRjYVBS?=
- =?utf-8?Q?pIhAIzkrNxd1bLjlwCVgHddTjx3RSg=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13A9F2835B0
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 22:48:47 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A971F1911;
+	Tue, 10 Dec 2024 22:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXGdNUi5"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E6D1F191E;
+	Tue, 10 Dec 2024 22:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733870920; cv=none; b=BFuIybj9402DmdFjkiykGNW03cxsaBzfIGwXbnuxkguKqCMPFkZMc+CIWdNqQnMMaEogo0Jk+qAz3ykW7nirM+wxyZ9QfmEUWbUXfI1G+VxMLMgOf4E4Oy9b/LQ2bWjLOFHOA4RWtUt/QeyT9u5j8GGgsq9vzG8IMowsg0wTB68=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733870920; c=relaxed/simple;
+	bh=JbfTjk/AUSCaV/r+Feth3Qp+vkKOiy7wYeD0hMMfSfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2Y7ZzseTiyy8vbTUCmsv729eBhXSYW4cTdF1gkKiomWU9D3U9IfePtCejuZBJFm0Tkg+vGNUhqO94k5pnSo9kvJu+TG3RTGN+RVy4ek54NBjfSkp+IeTPhNwFu8EXr/nQ9wVaQQ+BhB2VFUMQgkz6s/Jst9PBAcX5FYBJ8haw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXGdNUi5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99FF0C4CED6;
+	Tue, 10 Dec 2024 22:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733870919;
+	bh=JbfTjk/AUSCaV/r+Feth3Qp+vkKOiy7wYeD0hMMfSfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GXGdNUi5V+9H7Q/rcFhrRyyn6FddxKbXUKcht8e2j8XR9rqYpE1KiWpTvR5Bz0dO8
+	 xYgk3L+wk3sGcosBw+g2gqiOpHQEnqsB5Oznxeq7bXdCDgiFguPYDuZMwmKpeLTCA/
+	 viMNrMhoxMOD18K/ewmYX+BYS2jnDAF5Qxfy4jGnhkwRMHz88L68n1fY/lW117BAvM
+	 Oam0zp5bsnFh9wTzAVfGtkhomTZQpfB7ayUIh0zvOtfBOShgP1tZeEhnfD7kQvi9LV
+	 WA7wU3con0L5Mu65ZTswUEBlHb+isoIafHpTCuiRQ8Neygkdn5nlsUh2kHuHHzbp6W
+	 TAlLf7bXxBwAw==
+Date: Tue, 10 Dec 2024 16:48:37 -0600
+From: Rob Herring <robh@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 08/10] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <20241210224837.GA702616-robh@kernel.org>
+References: <cover.1733136811.git.andrea.porta@suse.com>
+ <28fe72eec1c08781770cee65032bb10a6d5994a9.1733136811.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: xes-inc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 592a897e-a415-4c98-1996-08dd192bb9ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2024 15:02:55.0080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2925f1cd-bdc3-4a76-bb38-6159e20a17f1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH1P110MB1775
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28fe72eec1c08781770cee65032bb10a6d5994a9.1733136811.git.andrea.porta@suse.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmluY2VudCBGYXppbw0K
-PiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAxMCwgMjAyNCA4OjI3IEFNDQo+IFRvOiBCYXJ0b3N6
-IEdvbGFzemV3c2tpIDxicmdsQGJnZGV2LnBsPg0KPiBDYzogS2VudCBHaWJzb24gPHdhcnRob2c2
-MThAZ21haWwuY29tPjsgTGludXMgV2FsbGVpag0KPiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
-PjsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IEJhcnRvc3ogR29sYXN6ZXdza2kNCj4gPGJh
-cnRvc3ouZ29sYXN6ZXdza2lAbGluYXJvLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBsaWJn
-cGlvZF0gYmluZGluZ3M6IHB5dGhvbjogcHJvdmlkZSBmaWxlbm8oKSBmb3IgQ2hpcCBhbmQNCj4g
-TGluZVJlcXVlc3QNCj4gDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+IEFoISBUaGlzIGlzIHdoeSBJIGRpZG4ndCBzZWUgaXQsIEkgbWlzc2VkIHRoZSAtLXN0cmlj
-dCBzd2l0Y2guIFRoYW5rcy4NCj4gPg0KPiA+IE9uIGFuIHVucmVsYXRlZCBub3RlOiBteXB5IC0t
-c3RyaWN0IGlzIGdpdmluZyBtZSB0aGlzOg0KPiA+DQo+ID4gYmluZGluZ3MvcHl0aG9uL2dwaW9k
-L2xpbmUucHk6MTk6IGVycm9yOiBOb24tb3ZlcmxhcHBpbmcgZXF1YWxpdHkgY2hlY2sNCj4gKGxl
-ZnQNCj4gPiBvcGVyYW5kIHR5cGU6ICJWYWx1ZSIsIHJpZ2h0IG9wZXJhbmQgdHlwZTogImludCIp
-IFtjb21wYXJpc29uLW92ZXJsYXBdDQo+ID4NCj4gPiBmb3I6DQo+ID4NCj4gPiAxOCAgICAgZGVm
-IF9fYm9vbF9fKHNlbGYpIC0+IGJvb2w6DQo+ID4gMTkgICAgICAgICByZXR1cm4gc2VsZiA9PSBz
-ZWxmLkFDVElWRQ0KPiA+DQo+ID4gSG93IGRvIEkgZml4IGl0Pw0KPiANCj4gVGhpcyBpcyBvZGQs
-IGJlY2F1c2UgSSBzcGVjaWZpY2FsbHkgaWdub3JlIHRoaXM6DQo+IGh0dHBzOi8vZ2l0Lmtlcm5l
-bC5vcmcvcHViL3NjbS9saWJzL2xpYmdwaW9kL2xpYmdwaW9kLmdpdC90cmVlL2JpbmRpbmdzL3B5
-dGhvbg0KPiAvcHlwcm9qZWN0LnRvbWwjbjU3DQo+IA0KPiBIb3cgZG8geW91IGhhdmUgdGhpcyBz
-ZXQgdXA/DQoNCklmIHlvdSdyZSBkb2luZyB0aGlzIG91dHNpZGUgb2YgdGhlIGJpbmRpbmdzL3B5
-dGhvbiBkaXJlY3RvcnksIHRyeSBzcGVjaWZ5aW5nIHRoZSBjb25maWcgZmlsZToNCg0KYGBgDQoo
-eHRmLXB5My4xMikgdmZhemlvQHZmYXppbzQgfi9kZXZlbG9wbWVudC9saWJncGlvZCAkIG15cHkg
-LS1jb25maWctZmlsZT1iaW5kaW5ncy9weXRob24vcHlwcm9qZWN0LnRvbWwgLS1zdHJpY3QgYmlu
-ZGluZ3MvcHl0aG9uL2dwaW9kDQpTdWNjZXNzOiBubyBpc3N1ZXMgZm91bmQgaW4gMTMgc291cmNl
-IGZpbGVzDQpgYGANCg0KSG93ZXZlciwgaWYgeW91IHJ1biBpdCBvbiBgYmluZGluZ3MvcHl0aG9u
-YCB0aGUgb3V0cHV0IHdpbGwgYmUgbm9pc3kgYmVjYXVzZSBpdCdzIG5vdCBsaW1pdGluZyBpdHNl
-bGYgdG8gdGhlICJmaWxlcyIgc2VjdGlvbiB3aXRoaW4gdGhlIG15cHkgc2V0dGluZ3MuDQoNCkkg
-d3JvdGUgdGhlIHB5cHJvamVjdCBzZXR0aW5ncyB3aXRoIHRoZSB1bndyaXR0ZW4gcnVsZSB0aGF0
-IHRoZSBjaGVja3Mgd291bGQgYmUgcm9vdGVkIHdpdGhpbiBgYmluZGluZ3MvcHl0aG9uYCBhbmQg
-bm90IG91dHNpZGUgb2YgaXQuDQoNCldlIHNob3VsZCBwcm9iYWJseSBkb2N1bWVudCBvdXIgZXhw
-ZWN0YXRpb25zIGZvciBob3cgdGhlc2UgY2hlY2tzIGFyZSBydW4gYW5kIHRoZW4gdXBkYXRlIHRo
-ZSBjb25maWcgZmlsZSB0byByZXNwZWN0IHRob3NlIGV4cGVjdGF0aW9ucy4NCg==
+On Mon, Dec 02, 2024 at 12:19:32PM +0100, Andrea della Porta wrote:
+> The RaspberryPi RP1 is a PCI multi function device containing
+> peripherals ranging from Ethernet to USB controller, I2C, SPI
+> and others.
+> 
+> Implement a bare minimum driver to operate the RP1, leveraging
+> actual OF based driver implementations for the on-board peripherals
+> by loading a devicetree overlay during driver probe.
+> 
+> The peripherals are accessed by mapping MMIO registers starting
+> from PCI BAR1 region.
+> 
+> With the overlay approach we can achieve more generic and agnostic
+> approach to managing this chipset, being that it is a PCI endpoint
+> and could possibly be reused in other hw implementations. The
+> presented approach is also used by Bootlin's Microchip LAN966x
+> patchset (see link) as well, for a similar chipset.
+> 
+> Since the gpio line names should be provided by the user, there
+> is an interface through configfs that allows the userspace to
+> load a DT overlay that will provide gpio-line-names property.
+> The interface can be invoked like this:
+> 
+> cat rpi-rp1-gpios-5-b.dtbo > /sys/kernel/config/rp1-cfg/gpio_set_names
+
+Where's the configfs support? This looks like a stale comment.
+
+If this is the general purpose configfs interface for overlays, that's 
+likely never going upstream. If you want this support, then you should 
+load your overlay with the firmware loader instead of building it into 
+the kernel. You can of course add that later.
+
+> and is designed to be similar to what users are already used to
+> from distro with downstream kernel.
+> 
+> For reasons why this driver is contained in drivers/misc, please
+> check the links.
+> 
+> This driver is heavily based on downstream code from RaspberryPi
+> Foundation, and the original author is Phil Elwell.
+> 
+> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  MAINTAINERS                   |   1 +
+>  drivers/misc/Kconfig          |   1 +
+>  drivers/misc/Makefile         |   1 +
+>  drivers/misc/rp1/Kconfig      |  21 ++
+>  drivers/misc/rp1/Makefile     |   3 +
+>  drivers/misc/rp1/rp1-pci.dtso |   8 +
+>  drivers/misc/rp1/rp1_pci.c    | 366 ++++++++++++++++++++++++++++++++++
+>  drivers/misc/rp1/rp1_pci.h    |  14 ++
+>  drivers/pci/quirks.c          |   1 +
+>  include/linux/pci_ids.h       |   3 +
+>  10 files changed, 419 insertions(+)
+>  create mode 100644 drivers/misc/rp1/Kconfig
+>  create mode 100644 drivers/misc/rp1/Makefile
+>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+>  create mode 100644 drivers/misc/rp1/rp1_pci.c
+>  create mode 100644 drivers/misc/rp1/rp1_pci.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fbdd8594aa7e..d67ba6d10aa8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19583,6 +19583,7 @@ F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+>  F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+>  F:	drivers/clk/clk-rp1.c
+> +F:	drivers/misc/rp1/
+>  F:	drivers/pinctrl/pinctrl-rp1.c
+>  F:	include/dt-bindings/clock/rp1.h
+>  F:	include/dt-bindings/misc/rp1.h
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 09cbe3f0ab1e..ffa4d8315c35 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -651,4 +651,5 @@ source "drivers/misc/uacce/Kconfig"
+>  source "drivers/misc/pvpanic/Kconfig"
+>  source "drivers/misc/mchp_pci1xxxx/Kconfig"
+>  source "drivers/misc/keba/Kconfig"
+> +source "drivers/misc/rp1/Kconfig"
+>  endmenu
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 40bf953185c7..3b6b07a23aac 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -74,3 +74,4 @@ lan966x-pci-objs		:= lan966x_pci.o
+>  lan966x-pci-objs		+= lan966x_pci.dtbo.o
+>  obj-$(CONFIG_MCHP_LAN966X_PCI)	+= lan966x-pci.o
+>  obj-y				+= keba/
+> +obj-$(CONFIG_MISC_RP1)		+= rp1/
+> diff --git a/drivers/misc/rp1/Kconfig b/drivers/misc/rp1/Kconfig
+> new file mode 100644
+> index 000000000000..15c443e13389
+> --- /dev/null
+> +++ b/drivers/misc/rp1/Kconfig
+> @@ -0,0 +1,21 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# RaspberryPi RP1 misc device
+> +#
+> +
+> +config MISC_RP1
+> +	tristate "RaspberryPi RP1 PCIe support"
+> +	depends on OF_IRQ && PCI_MSI && PCI_QUIRKS
+> +	select OF_OVERLAY
+> +	select PCI_DYNAMIC_OF_NODES
+> +	help
+> +	  Support the RP1 peripheral chip found on Raspberry Pi 5 board.
+> +
+> +	  This device supports several sub-devices including e.g. Ethernet
+> +	  controller, USB controller, I2C, SPI and UART.
+> +
+> +	  The driver is responsible for enabling the DT node once the PCIe
+> +	  endpoint has been configured, and handling interrupts.
+> +
+> +	  This driver uses an overlay to load other drivers to support for
+> +	  RP1 internal sub-devices.
+> diff --git a/drivers/misc/rp1/Makefile b/drivers/misc/rp1/Makefile
+> new file mode 100644
+> index 000000000000..508b4cb05627
+> --- /dev/null
+> +++ b/drivers/misc/rp1/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_MISC_RP1)		+= rp1-pci.o
+> +rp1-pci-objs			:= rp1_pci.o rp1-pci.dtbo.o
+> diff --git a/drivers/misc/rp1/rp1-pci.dtso b/drivers/misc/rp1/rp1-pci.dtso
+> new file mode 100644
+> index 000000000000..0bf2f4bb18e6
+> --- /dev/null
+> +++ b/drivers/misc/rp1/rp1-pci.dtso
+> @@ -0,0 +1,8 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +
+> +/* the dts overlay is included from the dts directory so
+> + * it can be possible to check it with CHECK_DTBS while
+> + * also compile it from the driver source directory.
+
+I haven't tried, but I think if you set CHECK_DTBS=y, then this file 
+will get checked. Applying it to the base DT will not though.
+
+> + */
+> +
+> +#include "arm64/broadcom/rp1.dtso"
+> diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
+> new file mode 100644
+> index 000000000000..0dd345341c6f
+> --- /dev/null
+> +++ b/drivers/misc/rp1/rp1_pci.c
+> @@ -0,0 +1,366 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> + * All rights reserved.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "rp1_pci.h"
+> +
+> +#define RP1_DRIVER_NAME		"rp1"
+> +
+> +#define RP1_HW_IRQ_MASK		GENMASK(5, 0)
+> +
+> +#define REG_SET			0x800
+> +#define REG_CLR			0xc00
+> +
+> +/* MSI-X CFG registers start at 0x8 */
+> +#define MSIX_CFG(x) (0x8 + (4 * (x)))
+> +
+> +#define MSIX_CFG_IACK_EN        BIT(3)
+> +#define MSIX_CFG_IACK           BIT(2)
+> +#define MSIX_CFG_ENABLE         BIT(0)
+> +
+> +/* Address map */
+> +#define RP1_PCIE_APBS_BASE	0x108000
+> +
+> +/* Interrupts */
+> +#define RP1_INT_IO_BANK0	0
+> +#define RP1_INT_IO_BANK1	1
+> +#define RP1_INT_IO_BANK2	2
+> +#define RP1_INT_AUDIO_IN	3
+> +#define RP1_INT_AUDIO_OUT	4
+> +#define RP1_INT_PWM0		5
+> +#define RP1_INT_ETH		6
+> +#define RP1_INT_I2C0		7
+> +#define RP1_INT_I2C1		8
+> +#define RP1_INT_I2C2		9
+> +#define RP1_INT_I2C3		10
+> +#define RP1_INT_I2C4		11
+> +#define RP1_INT_I2C5		12
+> +#define RP1_INT_I2C6		13
+> +#define RP1_INT_I2S0		14
+> +#define RP1_INT_I2S1		15
+> +#define RP1_INT_I2S2		16
+> +#define RP1_INT_SDIO0		17
+> +#define RP1_INT_SDIO1		18
+> +#define RP1_INT_SPI0		19
+> +#define RP1_INT_SPI1		20
+> +#define RP1_INT_SPI2		21
+> +#define RP1_INT_SPI3		22
+> +#define RP1_INT_SPI4		23
+> +#define RP1_INT_SPI5		24
+> +#define RP1_INT_UART0		25
+> +#define RP1_INT_TIMER_0		26
+> +#define RP1_INT_TIMER_1		27
+> +#define RP1_INT_TIMER_2		28
+> +#define RP1_INT_TIMER_3		29
+> +#define RP1_INT_USBHOST0	30
+> +#define RP1_INT_USBHOST0_0	31
+> +#define RP1_INT_USBHOST0_1	32
+> +#define RP1_INT_USBHOST0_2	33
+> +#define RP1_INT_USBHOST0_3	34
+> +#define RP1_INT_USBHOST1	35
+> +#define RP1_INT_USBHOST1_0	36
+> +#define RP1_INT_USBHOST1_1	37
+> +#define RP1_INT_USBHOST1_2	38
+> +#define RP1_INT_USBHOST1_3	39
+> +#define RP1_INT_DMA		40
+> +#define RP1_INT_PWM1		41
+> +#define RP1_INT_UART1		42
+> +#define RP1_INT_UART2		43
+> +#define RP1_INT_UART3		44
+> +#define RP1_INT_UART4		45
+> +#define RP1_INT_UART5		46
+> +#define RP1_INT_MIPI0		47
+> +#define RP1_INT_MIPI1		48
+> +#define RP1_INT_VIDEO_OUT	49
+> +#define RP1_INT_PIO_0		50
+> +#define RP1_INT_PIO_1		51
+> +#define RP1_INT_ADC_FIFO	52
+> +#define RP1_INT_PCIE_OUT	53
+> +#define RP1_INT_SPI6		54
+> +#define RP1_INT_SPI7		55
+> +#define RP1_INT_SPI8		56
+> +#define RP1_INT_SYSCFG		58
+> +#define RP1_INT_CLOCKS_DEFAULT	59
+> +#define RP1_INT_VBUSCTRL	60
+> +#define RP1_INT_PROC_MISC	57
+
+Why all these defines which will never be used because they come from 
+DT?
+
+Rob
 
