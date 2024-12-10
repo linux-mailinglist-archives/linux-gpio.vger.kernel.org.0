@@ -1,157 +1,266 @@
-Return-Path: <linux-gpio+bounces-13692-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13693-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A02359EADB9
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 11:15:13 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 801879EADF3
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 11:26:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DF3E16362D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:15:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C401282C70
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2024 10:26:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EBF01DC996;
-	Tue, 10 Dec 2024 10:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E92194A60;
+	Tue, 10 Dec 2024 10:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E8CxyqtB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oEILC5Gx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7600578F47
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 10:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4E123DE9F
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 10:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733825707; cv=none; b=Bsw0VyPV5LUKv8o7hwg2pb8J+6xkYvKu+YNkmlTTW3khJjaOyaR+Uvmcg0Ok7dzXTvS7VK0h9ASpc9Z/RBQTRqE4oF9WrepuG5TPEyEUZdCDXj2C6LCZcYMpqpqtk7xTAlK5NjhyjYU7EPswSzOUw/VmiUcunI9FRo0gUzuwQgE=
+	t=1733826390; cv=none; b=pYCSLYQOERj8oIvEZLSzskpB2VKMrTDtZ+FPAvL6GGyhKU2naDudvvNQWMsjXazH1ciKHmLvw0N3VnnAb1Wv6AL/h4+HpW8k00wV3uV5K6A75JCJppVAiy7iTtz9JcLx6FvDCluez89WN6kESH0DkyTnaCKN9gMDvGzlcdwCHb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733825707; c=relaxed/simple;
-	bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VsDir0V1eV0Ebn1g7otSyVBWIlF7otgyOTU4eX5EotvtdpfUgozqexAgjXjqw21mFDMjKtIoVl8P7nHMGtDF+oXgDcYuuBe/FEVlYNnliHtXOqX/imLWCm7bgwUpeK6L7bNQsq/eH+t7mK05HgnN+bVRulwveBYyrh81MsmG+Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E8CxyqtB; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-385eed29d17so3684411f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 02:15:03 -0800 (PST)
+	s=arc-20240116; t=1733826390; c=relaxed/simple;
+	bh=SSwbJ0AxYORSTQg1T00cv1dPKxJp8bJbL6S+0UIlXTU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZFmXx0mf1IidM/4BnjQCmAq4nwuonyMKmNjgrZa0x9whbA4KLm5Ca3jfL0z7PCWvSij3x7QkLHjQFifzY81R72nWpRl+flR9X+k1OABDJUyr6UN0yDpe08fARTcdXKADLqB/7jyF5h7aOB8ZNNusPINgL2AUuaqo0JGHPsSJB3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oEILC5Gx; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-434a852bb6eso51840495e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2024 02:26:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733825702; x=1734430502; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
-        b=E8CxyqtBmwZgxWcyUFEASk2icLpaJReaFTZyoAWwcZiNwUYFhz1oycVrc2X0ODWAyy
-         X1gGR4rusV9yWuU4kb/sESWfhmDv4BJ8qL+wccQtsx/h8oHQIHojZHPJlQddwRiQCWd6
-         Sldd+V4l5BZrJCEjPNEkJD15KHGx8DadD+WZdXXvdRn265/Z1mdCf6lxukjmVDzzklOv
-         8feeW72vPQuX8oIAWmuWOfFtwESKQzv5pT/0co4oiT19E0m013I7PKKAd92lj1QdMxEq
-         +SpqQ7QusnAlu5xxTk1JqkICZhi1vR2uNDOLBzXulitXNatE5heTgv/7nUJeJIo4MasQ
-         qqTQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733826386; x=1734431186; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nV3CDvGXklY4iT4cHqjdDfwAAuC+22Xnt2fl3fnkZVo=;
+        b=oEILC5GxlUn6ry9O3hOMRfYXEHIWgNyikCUuXhD+07U6SwcCt3WhPi/e6VvO/nq2hN
+         H1iqDSW+bXv3ExtYk6X+PvCg6ZAysID5iOby1ZNxFwWVwlAnMvy6mzhx2bf/6O/6ipel
+         UzaW/aiey/Tdk/DCzR5vhmr5ZoaveEILUT1hEGgH13BVykmXRn2HgojFszDmshHqOUxr
+         zN9+9XWsxwwjq8nJkfXmx6kDnnPkD3n+TR5U5gri6RKOnBLSwEM+8Qh6AWm8qMhgMk7B
+         MSD1GWwj/6bqNRvnaimSWOYNxRN62V1y348DbenYl2F6K9fh3JsvggZuUifpfQr/Sy5f
+         Rv4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733825702; x=1734430502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hxqzHHY8diBwOx0+l2LdTXhqIMDiIDIS/LcxGVlCmlc=;
-        b=SMXcZBCW/jLmgkKv1yqSUyc+VIcumJWwlz0hO9dCWTkFrGgWT1bwnzgDoG1K9NqxZs
-         sjCb2/jxlR/458E/4Y235g+lTtptyt8t2FDfuTY2nVx0VG7CeI0Yu2sCZPndfJiopEWG
-         dnKqs+autXNjdPrFpTHTkYUJzReDrOFNOYxKbVCrQkFSMFKDaS04gd8jr/B7ND9EGtG0
-         pIBjKO4oJUFVKInkB01nSarCtTvfxU0Huqpf9jpwjNnNabSjYH5JqrVTJ6COB5rNR+z3
-         u7oUFGwpa9sJMciul7PgrCuzCEkOIUE7JKZFxWSXJVUkH1EOZ8ML6x1PfUib9slXfdk3
-         Bd6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXCGlitE34aREKBuOboYNfdElXCocIvvdjDEq8g5mnDYbepxTMB0UQ5DeNeYjx1pLMxPFdP7wYSpdIE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDhap6pPYAuSOSS9mzF6s5aMZ+1LbVjeBRNy7S7CJn8a1AHRqJ
-	BIGk8A+Iwu/YKokawJKwg0EfWp+SEEO8+AMViKPe6gfIgA5dDrM0nxJ1jMm8fVDSkn0/jgckvxI
-	7758=
-X-Gm-Gg: ASbGncv1c2PC/PpNHEsL4EOJGNPA4yxGtty1F6WLpv4wPZoRllR/+NeZ+XbERGsR6uR
-	HRsVg4I3/zaiU+hRlWTQudnyXXEbSF469COZ3CqBw67mVHqLpJv0W7gD6Tl2OxcImMKseBZqhjx
-	JThVCdi4dTID2ap4XB/RfaB8hPgT1A6NEy8aGlCi34XFrsLfmdjAjHsrGOLvsivbe4MA8iEANGV
-	K6IMrJElQLvCxUIe4eUdtay1+F/cqAVuTx5myOdnH4NOHMFYioxVtWxKFSrOQtCXtGG89Cb0YF9
-	3mlfmTi5
-X-Google-Smtp-Source: AGHT+IHAF+MK4nT2wby8tFZabj/cGZDwP7OF8n1O3n74dFPzK5cudq0rsVYUf99xFyH0dj5J1nvPUQ==
-X-Received: by 2002:a5d:64eb:0:b0:386:3918:16a8 with SMTP id ffacd0b85a97d-3863918193dmr7492471f8f.13.1733825701756;
-        Tue, 10 Dec 2024 02:15:01 -0800 (PST)
-Received: from localhost (p5dc6838f.dip0.t-ipconnect.de. [93.198.131.143])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3861ecf42desm15180561f8f.15.2024.12.10.02.15.00
+        d=1e100.net; s=20230601; t=1733826386; x=1734431186;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nV3CDvGXklY4iT4cHqjdDfwAAuC+22Xnt2fl3fnkZVo=;
+        b=ojIF2KrDAE6DODv3VkvFMriiyi/CbKN3HwJEjAKnYmy4eBEu6A1taJd3jAMfwym0XD
+         QTFCGg3rzSujYK2zo1lr+dAzFiepEgF4Uk6CaoPr8pptGbKZG1jxJiEo8+blkKdK+8sl
+         yxIt41cviku+CUSRLHGnNTtGuH1gy2gN0xuvtezqmCbnaQFvhEkp+nIdpE3VybD0Agtt
+         xhzQnK738mKkDeYIzyRHnsqIROCzdEqP8nGmOOLvMT96o+j2dlb873dIoZCQTgYWTQLD
+         LDuToYEZnyQfvqZnRKfbB8WF5BsGY2bpdnjbB5j+fBlZDctEVpdyLdLl6jRLSghwnJhX
+         W04g==
+X-Gm-Message-State: AOJu0YyleEPIwh9dqMJihIIPKe/FlTv5cGIcnVuNQ/TfWhUAaMHObWFe
+	DjBhZkdlfuKuglesN/ibhuZ7XhwGqQtOba4N7kA9a/rN0zMhJP4VJdFhcBAmaaU=
+X-Gm-Gg: ASbGncsKE/z465+lM04tAJBMJkFAAq4hIUVx6ed+dllz9bEv0eE5c8ed5+u0cwEGgHH
+	5JRjFaoa6l15wByBWqoaHWsfFDFzwt/1vQH3cEbSo4sI1z2SfkgH7JVvTbaB48wTEYBtwlONzXA
+	/EziGMX/LfKZ2cDMwizlE7bg5rK/hQzmz2cGheUE1QNzOYvlHbaCNfYQVtkF8DjYkEXlLOk8Wmy
+	PwtojdoCBLxqj7z8TNBBiRhmQl7wmGwgFgk/I4n6ah3a5U=
+X-Google-Smtp-Source: AGHT+IH8ZzBZJOW2IvXo9KjTv+gpUa7PvMa+6O7YuQemBDXdxRkf9+VkzASLTCY3KSpHgbYA8egkJw==
+X-Received: by 2002:a05:600c:3d8f:b0:434:a19a:5965 with SMTP id 5b1f17b1804b1-434fff306afmr32646835e9.6.1733826385878;
+        Tue, 10 Dec 2024 02:26:25 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4c2b:c454:658c:f771])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434f5774454sm79436875e9.13.2024.12.10.02.26.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 02:15:01 -0800 (PST)
-Date: Tue, 10 Dec 2024 11:14:59 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: William Breathitt Gray <wbg@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: idio-16: Actually make use of the GPIO_IDIO_16
- symbol namespace
-Message-ID: <ekyhfceyoqkjoyw2rmw5jbasxzx6c5p2ufub6vmtv5xqi5e4fq@3eq7obihlrhj>
-References: <20241203172631.1647792-2-u.kleine-koenig@baylibre.com>
- <CAMRc=Md4t9QuiCtJ3TswSM-2qdOwR5_yk=kVN7wcvN4jz+yhkw@mail.gmail.com>
+        Tue, 10 Dec 2024 02:26:25 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 10 Dec 2024 11:26:20 +0100
+Subject: [PATCH libgpiod] bindings: python: provide fileno() for Chip and
+ LineRequest
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="snharesphbrtpqly"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md4t9QuiCtJ3TswSM-2qdOwR5_yk=kVN7wcvN4jz+yhkw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241210-python-fileno-v1-1-c811cb70e122@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAEsXWGcC/x3MQQqAIBBA0avErBtoLIi6SrQoHWsgVDSikO6et
+ HyL/zMkjsIJxipD5EuSeFdAdQV6X9zGKKYYVKM6UtRgeM7dO7RysPNIbAbdr7ajdoHShMhW7v8
+ 3wSHrFsQbmN/3A46sH25pAAAA
+To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5209;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=EftAkI1i3xSLcaLcQDbBcKu+KQYQ2QpI3HNs90ut5jg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnWBdRvpx1d8WeEofrKXjtXKqLfpZ5WljlKbPrA
+ Rk530o2fO2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ1gXUQAKCRARpy6gFHHX
+ ckuXEACRDtyeL2UoBdLs+lW+iaG43AZRDQ5Pt958JyoiiLydtIbLWVaAF06+SNxQhRq5rjyFRvh
+ 9FnckAvLrLz7MFurXZJAY1dkx3eGo7PjH/b4g4cvcl7mAcE1nqtD0OoNUTqRNe4tQDEC3T1nwiK
+ rOd52THjuaArR8OfPq9+wZvElbmdJFvhZz/yVZEPN+CdxJXQPDCgHwmQKJQn1emO2GEVyDr/cEC
+ VSBNqwh+F3tTf0CesJZg+uvJkpVaNu98HU500q5unBQKJ1CgLregL2gjalgw4dlOf7AJ8kcmo7Z
+ 0axJYYgYwCS9EvHlgtiGdS3gzRvP0ZCOcxd49b3mG4SFak8LZqT2gqs4XgwvfWPja+CANTh+c1w
+ khMcoHM9Qq7uGV27+JnFmoQe4APjbD61rP2n7zeIcJYTp/ZvB0y3oRDN8MChenTFG6QXJB5KYuX
+ hMwoiLPJLdb/KziE64UswZH2BoxrnRbLmgZZaSCPdtNPAJoEVn2hRptG2NKOOAU5bAlnsjx21h6
+ 6jMn79RWhfTjfXak97ZDo+QvlbHSI5bHuU1tAciiyE14hiO+Lq/5wBfe2SrVXZwWuRbg/xJXIHZ
+ NlXYPDnytiCkbK/Dd0y1WkPla4cnpo3GwhsqF3K7OI3A+UfKVzQbz8VSfQF2rr8jEscCjG24wGw
+ SVPR5P4vD6uxfFQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---snharesphbrtpqly
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpio: idio-16: Actually make use of the GPIO_IDIO_16
- symbol namespace
-MIME-Version: 1.0
+Certain polling APIs in the standard library - most notably: the
+select() function and the poll class - allow to poll any object that
+implements the fileno() method returning the underlying file descriptor
+number.
 
-Hello Bartosz,
+Implement fileno() for Chip and LineRequest which allows users to do:
 
-On Mon, Dec 09, 2024 at 10:28:14AM +0100, Bartosz Golaszewski wrote:
-> On Tue, Dec 3, 2024 at 6:26=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> >
-> > DEFAULT_SYMBOL_NAMESPACE must already be defined when <linux/export.h>
-> > is included. So move the define above the include block.
-> >
-> > Fixes: b9b1fc1ae119 ("gpio: idio-16: Introduce the ACCES IDIO-16 GPIO l=
-ibrary module")
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> > ---
-> > Hello,
-> >
-> > this is based on current Linus Torvalds's master branch and depends on
-> > the topmost commit there.
->=20
-> Can you rebase it on top of the gpio/for-current branch? It doesn't
-> apply to my tree in its current form.
+  rd, _, _ = select([chip/request], [], [], 1)
 
-Your tree is based on v6.13-rc1. If you keep it that way and you apply
-my patch that you ask me to rebase there, it will conflict when it's
-pulled into Linus's tree as ceb8bf2ceaa7 in his tree touches that file,
-too
+where rd will contain the actual object passed to select which makes for
+easier reading of events afterwards.
 
-So if I fix the merge conflict now to make my patch applicable to your
-tree, you or one of the Linuses has to do the reverse resolution again
-at a later point in time. Is that really what you want?
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ bindings/python/gpiod/chip.py             |  6 +++++
+ bindings/python/gpiod/line_request.py     |  6 +++++
+ bindings/python/tests/tests_edge_event.py | 37 +++++++++++++++++++++++++++++++
+ bindings/python/tests/tests_info_event.py | 18 +++++++++++++++
+ 4 files changed, 67 insertions(+)
 
-An easy way out is to backmerge v6.13-rc2 into your tree (or rebase on
--rc2) and only then apply my patch.
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
+index 30201b5..ddd07b8 100644
+--- a/bindings/python/gpiod/chip.py
++++ b/bindings/python/gpiod/chip.py
+@@ -344,6 +344,12 @@ class Chip:
+ 
+         return request
+ 
++    def fileno(self) -> int:
++        """
++        Return the underlying file descriptor.
++        """
++        return self.fd
++
+     def __repr__(self) -> str:
+         """
+         Return a string that can be used to re-create this chip object.
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+index 9471442..ef53e16 100644
+--- a/bindings/python/gpiod/line_request.py
++++ b/bindings/python/gpiod/line_request.py
+@@ -224,6 +224,12 @@ class LineRequest:
+ 
+         return cast(_ext.Request, self._req).read_edge_events(max_events)
+ 
++    def fileno(self) -> int:
++        """
++        Return the underlying file descriptor.
++        """
++        return self.fd
++
+     def __str__(self) -> str:
+         """
+         Return a user-friendly, human-readable description of this request.
+diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
+index d7766ec..bd73802 100644
+--- a/bindings/python/tests/tests_edge_event.py
++++ b/bindings/python/tests/tests_edge_event.py
+@@ -4,6 +4,7 @@
+ import time
+ from datetime import timedelta
+ from functools import partial
++from select import select
+ from threading import Thread
+ from typing import Optional
+ from unittest import TestCase
+@@ -201,6 +202,42 @@ class ReadingMultipleEdgeEvents(TestCase):
+             self.global_seqno += 1
+ 
+ 
++class PollLineRequestObject(TestCase):
++    def setUp(self) -> None:
++        self.sim = gpiosim.Chip(num_lines=8)
++        self.request = gpiod.request_lines(
++            self.sim.dev_path, {2: gpiod.LineSettings(edge_detection=Edge.BOTH)}
++        )
++        self.thread: Optional[Thread] = None
++
++    def tearDown(self) -> None:
++        if self.thread:
++            self.thread.join()
++            del self.thread
++        self.request.release()
++        del self.request
++        del self.sim
++
++    def trigger_rising_edge(self, offset: int) -> None:
++        time.sleep(0.05)
++        self.sim.set_pull(offset, Pull.UP)
++
++    def test_select_request_object(self):
++        self.thread = Thread(target=partial(self.trigger_rising_edge, 2))
++        self.thread.start()
++
++        rd, wr, ex = select([self.request], [], [], 1)
++        self.assertFalse(wr)
++        self.assertFalse(ex)
++        self.assertEqual(rd[0], self.request)
++
++        events = rd[0].read_edge_events()
++        self.assertEqual(len(events), 1)
++
++        event = events[0]
++        self.assertEqual(event.line_offset, 2)
++
++
+ class EdgeEventStringRepresentation(TestCase):
+     def test_edge_event_str(self) -> None:
+         sim = gpiosim.Chip()
+diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/tests/tests_info_event.py
+index e726a54..b3688f1 100644
+--- a/bindings/python/tests/tests_info_event.py
++++ b/bindings/python/tests/tests_info_event.py
+@@ -7,6 +7,7 @@ import threading
+ import time
+ from dataclasses import FrozenInstanceError
+ from functools import partial
++from select import select
+ from typing import Optional
+ from unittest import TestCase
+ 
+@@ -131,6 +132,23 @@ class WatchingInfoEventWorks(TestCase):
+         self.assertGreater(ts_rel, ts_rec)
+         self.assertGreater(ts_rec, ts_req)
+ 
++    def test_select_chip_object(self):
++        info = self.chip.watch_line_info(7)
++
++        self.thread = threading.Thread(
++            target=partial(request_reconfigure_release_line, self.sim.dev_path, 7)
++        )
++        self.thread.start()
++
++        rd, wr, ex = select([self.chip], [], [], 1)
++        self.assertFalse(wr)
++        self.assertFalse(ex)
++        self.assertEqual(rd[0], self.chip)
++
++        event = rd[0].read_info_event()
++        self.assertEqual(event.event_type, _EventType.LINE_REQUESTED)
++        self.assertEqual(event.line_info.offset, 7)
++
+ 
+ class UnwatchingLineInfo(TestCase):
+     def setUp(self) -> None:
 
-Best regards
-Uwe
+---
+base-commit: 6d9133a259e64da5e03c7e7784f0f27de7b3e59f
+change-id: 20241210-python-fileno-1ed9c7bf413a
 
---snharesphbrtpqly
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdYFKEACgkQj4D7WH0S
-/k4I5gf/T/8wwNDO7Fot1U23iC5kP8Ii66h+LS2P8LYxaHwoZas676HXzN2Od0gD
-ebdU/j830aZp/au5aoXKSiwxSd81f6hqK2qlkm8/gPW9jpoNRHcelQQyF++SGN0r
-zZ5ZFD0/lcMdDGL+kVsiXWnWga2uJ7FdKx4jBUd1kOqhNnR6LzK8Ujyiho3mmphK
-ittYcEWTmFeqO67bajLdqpekpxOzzckJSy73buZJdENTfuYQ7iXCrPYDOChqCW8V
-BkMuU34eqAze1LbHHjgnQdlR0bVaJcONlySp2FMOFeD/+1Q+ayDV7TUeon46vz6E
-6lzeENLp/KJfv0X9IkWddKHNJ4wvow==
-=zjyP
------END PGP SIGNATURE-----
-
---snharesphbrtpqly--
 
