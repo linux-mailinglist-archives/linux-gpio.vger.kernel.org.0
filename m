@@ -1,157 +1,185 @@
-Return-Path: <linux-gpio+bounces-13747-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13748-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEDD49EC788
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 09:44:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5659EC99B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 10:46:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 665D116A5A6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 08:44:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44D88188CB48
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 09:46:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188D61DDA14;
-	Wed, 11 Dec 2024 08:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D8E1C5F2E;
+	Wed, 11 Dec 2024 09:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="fET0avlR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CXK98O+b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21B68489;
-	Wed, 11 Dec 2024 08:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64497236FA9
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2024 09:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733906649; cv=none; b=ThL46FX1tE+61lZ5tEoxqXkWhTCAq8cUk0DSJCBR//c1t1z37F8ffVfWZS6onmvKlaHsVM49L5+0e8x/Xm09FsadngqQSwmBHUHKV+ywy8V0/u01+0lytjWbJohxG5aGph45mu7EpBlSQgZb/LPZ9nIxOHF0DRnKz+k+Mug1ZGg=
+	t=1733910371; cv=none; b=FMJCFuwPv+5gImJmFqAO9USYFsIRj5ufpZckmhSDh22E3uiZd4jT4LDrHWNi+Ha05Di63UxdUSBJ04+fxo53FgjyJngE9c3/Lmnb+s8FfWh1YzLbIiCEjhzZ5TqpcztNrHlqeV+Xj9Dq+O20/ttjCYliiSKhxpabtxp/MOPwQZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733906649; c=relaxed/simple;
-	bh=/PcBGhHEt4WHwzP0k5DYrT6el/XNOWWzhcQsKxmNuU8=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=h7MPnBJZPFqzOiplfuISWXi9cKvMHyN787LtWPVCQTWh8tuvClA4JtT5ZAaMVh1+yEQ1M/JNViyPcAytHHGnwhe/Ru0zYdmCOdzqrwGjN6Lz3BRx05JqVK59IpcINgXTaWIVyz6694DpxWluCn0n3L4k4Kn7MkENQ6y1tKV0TQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=fET0avlR; arc=none smtp.client-ip=134.0.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout1.routing.net (Postfix) with ESMTP id 13DE340349;
-	Wed, 11 Dec 2024 08:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1733906639;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WUoipqwINErtScImQT/pK8ikFLW9WxsFyv2aWgrTKQU=;
-	b=fET0avlRfjFvv6n1c4Q7Byb5prAb2b6BY2o49YLKT3+i/tNGTqN5LxuMYxmsigTLJ5WuZf
-	TduRVyFFyJpATin75Ah4YgvM0WSqzgGn1JPEQJEAfgVGQdO/sSNxB9HZ4U1CYfVH+ihB2k
-	LOvt0BkmZZ0UPpSCW1ka4m2JJZ+PhY8=
-Received: from webmail.hosting.de (unknown [134.0.26.148])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 46180360076;
-	Wed, 11 Dec 2024 08:43:58 +0000 (UTC)
+	s=arc-20240116; t=1733910371; c=relaxed/simple;
+	bh=96xDb2QJ+Z2BJIZEG1wSU9Udptki77JpU9Ok634UV5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C/ZMR8ZDO3LclUmvzar7YSvOAcuBSS4nEwgPnIP6PWYUfunkNgbfHxzwX92JQisRbOP6SQl53LMzApj8s+zpTwzY7qiZBNwLo1r3th+XzpIO3SJJ1eX/N2DThcAt1yr1FEG5g5wqqveQmKVSII+J1GbtdQAZFrRI7FmiF+vCX6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CXK98O+b; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53df6322ea7so7545413e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2024 01:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1733910367; x=1734515167; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tea4vIJiGPJWHixoiDd5FPFnMHQTgOFRwTGQIe3zrGg=;
+        b=CXK98O+btl5yN/TDhGPuzbijVErfJ1QGdUjBjCIuZGWc0IKJ0cCcx1Atacq+kILEaU
+         6++iZS43VIOC2Nj3u1CGJn6YaKjvwuXyWhmXCDhDnk+vM06fuApm6WqYzJQgcYOCv/AT
+         6+h32G/E64BXt7LQxUs5eV7ijckBnFAetUk8LYORYHiZSuoBoYpp65JozAu0Li+NCqQs
+         gUFqMdkXSD7Cesv1J2hJCDxFcW+SEKQnPyhZijKLpO3PBcwezcqVZg7I+t0FjUHUc2ol
+         F8K6XTtumtFkrgLXPBy+R48l/4+cS/gwDAzHkxxCCmk+B7R1pNw7bjgz43e4Iyae42Jm
+         i9fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733910367; x=1734515167;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tea4vIJiGPJWHixoiDd5FPFnMHQTgOFRwTGQIe3zrGg=;
+        b=n+kN0wbSOst7fu86bpatY6ZNmWUXKfPlT00bUHmKw7QwMx/oqX4H+Al4H1VR3hrf0F
+         XEL9OzBXdsru3nreWTUvZ4VRVBL/jz50qQS45B9nHQb3PgwmDmMlpDbcfhr7lVJzVlrD
+         N60O3fsvunV3cyXSFnoKcO19QkDX19xSXFo6k6kHp05T/ozvyK5Bky2o31ogTN5aE/mW
+         eOrmgdNhj7TYCJ89vAzzRnZBCnbhPjKs5D/AsAwDq6xsSUmGiBWOC3KsdeYZSt023nSb
+         MFuCg6yPPG9gLKEjywQeH2WZtpTXcy4BkTF/vn8Zo/T4uqTupx+dpmMCwkKq4BjuhZre
+         /kng==
+X-Forwarded-Encrypted: i=1; AJvYcCV0K5xsqjxTa7SyjsUr0HCheuyA1ydQ3IT+AonTVZYrjKnXrL126LAr8HxOvAU9DIARwmsCTAfRtr47@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHfowLKflySZMycfs+0muMySRzCnx6WhBxGeBmJfh2YH7e9LxJ
+	eB5rKBCTNZRak7s0UjPLqcarJZDiJi1M0szUtTjn82Un6SOoHbJfTyIex3COtp0=
+X-Gm-Gg: ASbGncvf9ByvHfnKQB7GzX055m7pSowmCckZDuMhRBrL/TC4gkO1xlbTiPWYHXlxRBI
+	oUDT035EW0YkCOXRvrRJMNvXBuokdWN+c1yr4XTOFPrHIg/8Be375A/WypQW/ZKCbe6mJQSD9CM
+	rcTEmpsk7rSM95gR8D/UUVsJnj3bwtykf4KEGX/kL2Sz5kpO1hlUB1mbfezfYrTBZUSWQ8UbxYL
+	uyfrE2sy368zw1CffOpkX6npQkGQ+t+BY9ZKAUMAUJmYTgKB4hUlM6kW3n8H9YDsBD5kmQeJuk0
+	WlvJfyJJLYY2jJswLfAt9zZvw06t0rTbWw==
+X-Google-Smtp-Source: AGHT+IEtlbI01qtT4hElvvQMyeb/TKdaC5qWfnqkdfHb5ztyN2VBFJ9f2yMWhkC3MvVYmq106RrFMw==
+X-Received: by 2002:a05:6512:3c85:b0:53e:1c3e:34 with SMTP id 2adb3069b0e04-5402a6056a1mr671998e87.38.1733910367530;
+        Wed, 11 Dec 2024 01:46:07 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53e22974f2bsm1973804e87.99.2024.12.11.01.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 01:46:06 -0800 (PST)
+Date: Wed, 11 Dec 2024 11:46:03 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, quic_lliu6@quicinc.com, quic_fangez@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
+ QCS615
+Message-ID: <t5vcjlf44fhae4f2h75cfs3f7r6tdstw4ysmkapvvawj6xp23x@xnxqnxvyhshe>
+References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+ <CAA8EJppOR_UXoVpMt-dhfWdCz3UNfsXGdz8X9NqpaSmYj3AZDg@mail.gmail.com>
+ <5ea14162-567b-462d-be02-b73b954b7507@quicinc.com>
+ <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+ <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
+ <527baded-f348-48a8-81cd-3f84c0ff1077@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 11 Dec 2024 09:43:58 +0100
-From: "Frank Wunderlich (linux)" <linux@fw-web.de>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean
- Wang <sean.wang@kernel.org>, Frank Wunderlich <frank-w@public-files.de>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>,
- Sam Shih <sam.shih@mediatek.com>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_=C3=9CNAL?=
- <arinc.unal@arinc9.com>
-Subject: Re: [PATCH v5 2/5] pinctrl: mediatek: add MT7988 pinctrl driver
-In-Reply-To: <32201aec-f3d2-49a7-b0ca-2ede10fec103@wanadoo.fr>
-References: <20241202110045.22084-1-linux@fw-web.de>
- <20241202110045.22084-3-linux@fw-web.de>
- <32201aec-f3d2-49a7-b0ca-2ede10fec103@wanadoo.fr>
-Message-ID: <598f595589d061bf314d942095cd5dc6@fw-web.de>
-X-Sender: linux@fw-web.de
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: f7caaa60-9ba2-4071-927a-9434349a1399
+In-Reply-To: <527baded-f348-48a8-81cd-3f84c0ff1077@quicinc.com>
 
-Am 2024-12-10 19:45, schrieb Christophe JAILLET:
-> Le 02/12/2024 à 12:00, Frank Wunderlich a écrit :
->> From: Daniel Golle <daniel@makrotopia.org>
->> 
->> Add pinctrl driver for the MediaTek MT7988 SoC.
->> 
->> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
->> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
->> [correctly initialise for the function_desc structure]
->> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->> 
->> ---
+On Wed, Dec 11, 2024 at 08:46:16AM +0800, Xiangxu Yin wrote:
 > 
-> ...
 > 
->> +/* flash */
->> +static int mt7988_snfi_pins[] = { 22, 23, 24, 25, 26, 27 };
->> +static int mt7988_snfi_funcs[] = { 2, 2, 2, 2, 2, 2 };
->> +
->> +static int mt7988_emmc_45_pins[] = {
->> +	21, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37
->> +};
->> +static int mt7988_emmc_45_funcs[] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 
->> };
->> +
->> +static int mt7988_sdcard_pins[] = { 32, 33, 34, 35, 36, 37 };
->> +static int mt7988_sdcard_funcs[] = { 5, 5, 5, 5, 5, 5 };
->> +
->> +static int mt7988_emmc_51_pins[] = { 38, 39, 40, 41, 42, 43,
->> +				     44, 45, 46, 47, 48, 49 };
->> +static int mt7988_emmc_51_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
->> 1, 1 };
-> 
-> At least all the _pins arrays could be const.
-> Maybe we could also make it possible to have _funcs const as well.
-> 
-> ...
-> 
->> +static struct mtk_pin_soc mt7988_data = {
-> 
-> const?
+> On 12/10/2024 11:09 PM, Dmitry Baryshkov wrote:
+> > On Thu, Dec 05, 2024 at 08:31:24PM +0200, Dmitry Baryshkov wrote:
+> >> On Thu, Dec 05, 2024 at 09:26:47PM +0800, Xiangxu Yin wrote:
+> >>>
+> >>>
+> >>> On 11/29/2024 10:33 PM, Dmitry Baryshkov wrote:
+> >>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+> >>>>>
+> >>>>> Extended DP support for QCS615 USB or DP phy. Differentiated between
+> >>>>> USBC and DP PHY using the match table’s type, dynamically generating
+> >>>>> different types of cfg and layout attributes during initialization based
+> >>>>> on this type. Static variables are stored in cfg, while parsed values
+> >>>>> are organized into the layout structure.
+> >>>>
+> >>>> We didn't have an understanding / conclusion whether
+> >>>> qcom,usb-ssphy-qmp-usb3-or-dp PHYs are actually a single device / PHY
+> >>>> or two PHYs being placed next to each other. Could you please start
+> >>>> your commit message by explaining it? Or even better, make that a part
+> >>>> of the cover letter for a new series touching just the USBC PHY
+> >>>> driver. DP changes don't have anything in common with the PHY changes,
+> >>>> so you can split the series into two.
+> >>>>
+> >>> Before implement DP extension, we have discussed with abhinav and krishna about whether use combo, usbc or separate phy.
+> >>
+> >> What is "DP extension"?
+> >>
+> I'm sorry confusion casued by my description. It's means extend DP implemnt for USBC phy driver.
+> >>>
+> >>> We identified that DP and USB share some common controls for phy_mode and orientation.
+> >>> Specifically, 'TCSR_USB3_0_DP_PHYMODE' controls who must use the lanes - USB or DP,
+> >>> while PERIPH_SS_USB0_USB3PHY_PCS_MISC_TYPEC_CTRL controls the orientation.
+> >>> It would be more efficient for a single driver to manage these controls. 
+> >>
+> >> The question is about the hardware, not about the driver.
+> >>
+> >>> Additionally, this PHY does not support Alt Mode, and the two control registers are located in separate address spaces. 
+> >>> Therefore, even though the orientation for DP on this platform is always normal and connected to the video output board, 
+> >>> we still decided to base it on the USBC extension.
+> >>
+> >> Could you please clarify, do usb3-or-dp PHYs support DP-over-USB-C? I
+> >> thought that usbc-or-dp platforms support that, but they don't
+> >> support DP+USB pin configuration. Note, the question is broader than
+> >> just QCS615, it covers the PHY type itself.
+> >>
+> >> Also, is TCSR configuration read/write or read-only? Are we supposed to
+> >> set the register from OS or are we supposed to read it and thus detemine
+> >> the PHY mode?
+> > 
+> > Any updates on these two topics?
+> > 
+> Still confirming detail info with HW & design team.
+> I’ll update the information that has been confirmed so far.
+> This phy support DP-over-USB-C,but it's not support alt-mode which 2 lane work for DP, other 2 lane work for USB.
+> TCSR phy mode is read/write reg and we can read for determine phy mode.
 
-can do, but for funcs i see no clear way
+Ok, thanks for the explanation. From my point of view:
 
-angelo, can i keep the RB, when changing pins/mtk_pin_soc to const 
-(without changing macro in drivers/pinctrl/mediatek/pinctrl-moore.h)?
+- Implement the DP PHY to be a part of the same driver. Each device
+  supported by the usbc driver should get both PHYs.
 
->> +	.reg_cal = mt7988_reg_cals,
->> +	.pins = mt7988_pins,
->> +	.npins = ARRAY_SIZE(mt7988_pins),
->> +	.grps = mt7988_groups,
->> +	.ngrps = ARRAY_SIZE(mt7988_groups),
->> +	.funcs = mt7988_functions,
->> +	.nfuncs = ARRAY_SIZE(mt7988_functions),
->> +	.eint_hw = &mt7988_eint_hw,
->> +	.gpio_m = 0,
->> +	.ies_present = false,
->> +	.base_names = mt7988_pinctrl_register_base_names,
->> +	.nbase_names = ARRAY_SIZE(mt7988_pinctrl_register_base_names),
->> +	.bias_disable_set = mtk_pinconf_bias_disable_set,
->> +	.bias_disable_get = mtk_pinconf_bias_disable_get,
->> +	.bias_set = mtk_pinconf_bias_set,
->> +	.bias_get = mtk_pinconf_bias_get,
->> +	.pull_type = mt7988_pull_type,
->> +	.bias_set_combo = mtk_pinconf_bias_set_combo,
->> +	.bias_get_combo = mtk_pinconf_bias_get_combo,
->> +	.drive_set = mtk_pinconf_drive_set_rev1,
->> +	.drive_get = mtk_pinconf_drive_get_rev1,
->> +	.adv_pull_get = mtk_pinconf_adv_pull_get,
->> +	.adv_pull_set = mtk_pinconf_adv_pull_set,
->> +};
-> 
-> ...
-> 
-> CJ
+- Make sure not to break the ABI: #phy-cells = <0> should still work and
+  return USB PHY, keeping backwards compatibility. Newer devices or
+  upgraded DT for old devices should return USB PHY for <... 0> and DP
+  PHY for <... 1>.
+
+- I'm not shure how to handle the USB and DP coexistence, especially in
+  your case of the USB-or-DP PHY.
+
+-- 
+With best wishes
+Dmitry
 
