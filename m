@@ -1,150 +1,117 @@
-Return-Path: <linux-gpio+bounces-13762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13763-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7B009ECFDD
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 16:35:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F59A9ED03B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 16:46:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5587E167C18
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 15:35:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1DEA1884AB5
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 15:46:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6233C1A76D4;
-	Wed, 11 Dec 2024 15:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA7231DD0D6;
+	Wed, 11 Dec 2024 15:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="VlU4gdHm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="KmMALQrg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwdZuG/9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF89A1A4E9E;
-	Wed, 11 Dec 2024 15:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBBC1D8DFB;
+	Wed, 11 Dec 2024 15:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733931320; cv=none; b=IHT7PIl7qqnuYfeITjAK1tmuJ3TTFgAhvlqAvcDkGkeYjfiP9BK3nFolDQdb2bB4CV8jUretzYLPwVCjW+a1cg3Gk5CrfmtuMYgINnMtE/svA2RfVK88uyp30W9HotiSsyyoEhxMrsDFpRZjCpUjClQUKM+LWw3eNqxOihekLSA=
+	t=1733931904; cv=none; b=dUk9rSGtUWf/+5n3LAgqN6YCAIyVbrT8QeZvsG8m/m+Ca3OPALhUYVDvA8jEKSlGdrK/6+XHOFSHtwxzeErlQ57Efd/4D+5FnTQPP3UNsjVACR7YWBFSycTK5ksrhvtvxv+/3ibZ9VQQxMWfP0z+f+6QNAN8ASqCboUTWvdkvho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733931320; c=relaxed/simple;
-	bh=CBrRXCBDXzJyRcpKO1KAvD9x3v4k3C8W/5ulgYUbhHE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NDjLOsLvpWFgi+8jdjG93+ZyQYQPJTSarEik+2Xo7v9W8+T5TbnimGkD/KNns22inHV5Nax3gu8RIwGHxOk7S98JKloplpYiX29oguGvNupJCix21thTO3+YeJfKsN+bs4+5EwL1eAeu0NQ3Gs5LxdbREEq4qLmLAFHmIZXfoX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=VlU4gdHm; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=KmMALQrg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1733931316; x=1765467316;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=2XwkcdEsEk4eyD2TGy648qZkGwuJpx7ENIxAqvrs4cY=;
-  b=VlU4gdHmqCiLLsY5lKShzxHeQLxQHHzvCNDALxA/HVuIga9kARXy4XR+
-   Vq15w2lbwfggOsqTfy75Fmw8NhAXDO5IfuYQLZkssgDVwdOk4orhaHNBw
-   IWMNezYVyjSDiQUF5678Pwwv18ajEcMu8kCY3LCzQLB5nT8iGj+cd7oTL
-   uLx0U4ykQ1uUcP6Hd57sW0ABnkY7V8oEkW3WFgrcFd9SkiT01LuVq6/+X
-   0tYsY69I1JmyMKu3S3m16btYsCSQMpEp4S1X8m4jnOeQSI4TSjSyesK2k
-   0YcUuPBJGkFAYETri7+++ldBWCPaIbf/i2hmSKd4qx/lgfIrQwivSOgA8
-   A==;
-X-CSE-ConnectionGUID: BMgRZIHISrGsDDZhmNE+Vg==
-X-CSE-MsgGUID: ZQ26mmc8RAauFlKe0OQOYA==
-X-IronPort-AV: E=Sophos;i="6.12,226,1728943200"; 
-   d="scan'208";a="40542880"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 11 Dec 2024 16:35:06 +0100
-X-CheckPoint: {6759B12A-21-2508CA35-F8546865}
-X-MAIL-CPID: 7E02583DD20E2049FCEA9FD40FC1EB8F_4
-X-Control-Analysis: str=0001.0A682F24.6759B12B.000D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1C9F816AB31;
-	Wed, 11 Dec 2024 16:35:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1733931302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XwkcdEsEk4eyD2TGy648qZkGwuJpx7ENIxAqvrs4cY=;
-	b=KmMALQrgKkt7/hI2EmKa37WANn2nOrO3oRF/8dlIpKGqklh11C7RO836W5MlSceSYR01KW
-	FfG0+EhTYzmEn5E46GP0sMp9m65VWQlQIrb5UcHLWSSPlXEw9nHVxJh1KjukZJpRSo5kuF
-	NoDqQsGM46ET+t8NXmlb9AF1yM1RaFqXBBub9+iJnf6VfcelGiEibcRcskiid4vVkHQrew
-	6HHXVefbf4wsOFy4VIei1LGIKQ1s2tYQSsPb0dniNHUD192pvpcPRHSP+kcWPwcRHFzXwh
-	wbggZcFyX3DzaCjMWks6Ik3xdySEVocPnpyBwYLeb2yzL20Z7TXB6lmLZL1+gQ==
-Message-ID: <3ceb31ad50046ada646f91e45c857f6350a06116.camel@ew.tq-group.com>
-Subject: Re: [PATCH 0/4] gpio-tqmx86: cleanup + changing directions
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux@ew.tq-group.com, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 11 Dec 2024 16:35:01 +0100
-In-Reply-To: <CAMRc=Mcw-r3b_a0XmpfVbF04MuZYnmM05AZqGav8GA_PM0-ozA@mail.gmail.com>
-References: <cover.1733739697.git.matthias.schiffer@ew.tq-group.com>
-	 <CAMRc=Mcw-r3b_a0XmpfVbF04MuZYnmM05AZqGav8GA_PM0-ozA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1733931904; c=relaxed/simple;
+	bh=vHm0I24vOCK9hphozbx59ldx5MK6x+yw152du/dxzQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNiRADiNOK9KCkICOBtSIcqY7Nc2KVrAGd++ENetmIfj6e6fyNHO+0d9iv4CMo2th3LpHxwMxLsMkdIGB/C/DvOKoFJZ5zd7/V36j/r3Ic9r+9bZXyDBtfk5gWoD4ae21iHvL6HqOUy1kcbEr4XeDS4oGG9FL/OFda7SV7/pBlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwdZuG/9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB6CC4CED7;
+	Wed, 11 Dec 2024 15:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733931904;
+	bh=vHm0I24vOCK9hphozbx59ldx5MK6x+yw152du/dxzQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uwdZuG/9DGh1Kv6z9czTnByEkoQ7zv0Ni6reos4sf6Y+LDh737/aEjnOnrpzbywKM
+	 MI7cbuFIN67NNDauEeu/pvjX/UM8XiGRcVOdHbwnmkMeK3I/BKuIxFewEB0AJUqmZo
+	 YMo4QxJ6xG3o5gY7sE1SlZUtBDdAZ0OwjKEQwI3FItt3VwFzlA9Tv4cnPG/MzfGNC1
+	 0TkVsoLpJP/U21I4jq7fnEBgdnT9JH/+4pj74d419+luMBlcSTGzSLnfkROYMdhreS
+	 7PtOaZx+l/aRJG0ONrGstgp7mn7m5hCcPSwh89UlGIdIaN3TUHrMdvnTGujDQTUBhc
+	 o+xjgo1wLNXqg==
+Date: Wed, 11 Dec 2024 15:44:55 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Christophe Lizzi <clizzi@redhat.com>,
+	Alberto Ruiz <aruizrui@redhat.com>,
+	Enric Balletbo <eballetb@redhat.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v6 2/7] mfd: nxp-siul2: add support for NXP SIUL2
+Message-ID: <3b090335-20b4-4d73-aabc-ddac98311e33@sirena.org.uk>
+References: <20241113101124.1279648-1-andrei.stefanescu@oss.nxp.com>
+ <20241113101124.1279648-3-andrei.stefanescu@oss.nxp.com>
+ <20241211124454.GE7139@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
-
-On Wed, 2024-12-11 at 16:12 +0100, Bartosz Golaszewski wrote:
->=20
-> On Mon, Dec 9, 2024 at 11:36=E2=80=AFAM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> >=20
-> > This is the first of two series adding new features to the gpio-tqmx86
-> > driver. The first 3 patches are cleanup/preparation and the last patch
-> > adds support for changing the directions of GPIOs.
-> >=20
-> > Once this is merged, the final series will add support for new TQMx86
-> > variants (SMARC and COM-HPC) that feature up to 14 GPIOs and full IRQ
-> > support on all lines.
-> >=20
->=20
-> It's not like this series is very big, what stops you from posting the
-> entire thing right away? It would probably add more context to this
-> series.
->=20
-> Bart
-
-The second series is bigger and involves both the GPIO and MFD drivers. I k=
-inda
-expect a few rounds of reviews to be needed before it gets accepted, so my
-intention was to get these smaller, more obvious patches out of the way fir=
-st.
-
-Best regards,
-Matthias
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wVbzCNTZslHN//4Y"
+Content-Disposition: inline
+In-Reply-To: <20241211124454.GE7139@google.com>
+X-Cookie: Every path has its puddle.
 
 
+--wVbzCNTZslHN//4Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->=20
-> >=20
-> > Matthias Schiffer (4):
-> >   gpio: tqmx86: add macros for interrupt configuration
-> >   gpio: tqmx86: consistently refer to IRQs by hwirq numbers
-> >   gpio: tqmx86: introduce tqmx86_gpio_clrsetbits() helper
-> >   gpio: tqmx86: add support for changing GPIO directions
-> >=20
-> >  drivers/gpio/gpio-tqmx86.c | 135 +++++++++++++++++++++++--------------
-> >  1 file changed, 84 insertions(+), 51 deletions(-)
-> >=20
-> > --
-> > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, =
-Germany
-> > Amtsgericht M=C3=BCnchen, HRB 105018
-> > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan=
- Schneider
-> > https://www.tq-group.com/
-> >=20
+On Wed, Dec 11, 2024 at 12:45:56PM +0000, Lee Jones wrote:
 
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+> Seeing as the vast majority of this 400 line driver pertains to Regmap
+> handling (!), would you be kind enough to cast your expert eye over it
+> please?
+
+Is there something specific you're concerned about there?  It looks like
+it's just data which should be fine.
+
+--wVbzCNTZslHN//4Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmdZs3cACgkQJNaLcl1U
+h9DjSwf/a3+f8IyMBTLXlpe5a4EfnD4elhoE27ywlRj5aQYmHVvYh/b/32n4w27U
+WkS8gziks+D3cLHY34wMDKv+Vvv20SrhfVTUIOjfzNibhRpIb4QhaQE6BBd4+iXa
+aRkjxjYkPEUnAkkREJnTqhHddR1J3iNLi6ADGPmzRPd3vHbF5gwg7RytZpJPyYjr
+y65mFPZIQQXb/9w3cEp9UTUyrpOy7bjV1eeoGj+SlnFmGipONjjS56azAV4IxBg4
+2xgFkB28tT7gNMWacjT3ha8MGAKRPK+GFzYiVxFJo6nsBkajTLZ1RyVI+fjiFY8Q
+yyJ5g5C3ZWYjAL87ug96nFUMV/sC8A==
+=0gSx
+-----END PGP SIGNATURE-----
+
+--wVbzCNTZslHN//4Y--
 
