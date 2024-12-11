@@ -1,144 +1,181 @@
-Return-Path: <linux-gpio+bounces-13734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1B2D9EC092
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 01:16:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97F8A9EC10C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 01:46:52 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3A261886604
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 00:16:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C8F5284204
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 00:46:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3D432BD04;
-	Wed, 11 Dec 2024 00:15:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A72642A95;
+	Wed, 11 Dec 2024 00:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcZxQyQn"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KjCTQrhB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BB929429;
-	Wed, 11 Dec 2024 00:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAE81F5EA;
+	Wed, 11 Dec 2024 00:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733876123; cv=none; b=AIJHW1W0+G3q2YWUIIz03L+DKcXB4VPI/t2MxVAK2mhpvw5jnbxtlneUyh/uZkBsxG9KbnUOJIAJtjqluZtiVgzJhBFN33f0DLJFQ+fuXpWnR1O0zDGcjBNkYuap4/1tV+kp4bmScO6q51pVh3cfOQKX6AnYSOTZzQ3QeVJ7bOk=
+	t=1733878006; cv=none; b=AtWsIhr/uSXpNGGDpkNronxlZ8arxtwDXz/yBBcWA1RGFwUNIMi9d3loxhkO3IwGzrB3v0vFnUEG3F2OlJYYDRgYNa+Xaqf0PgjgdX6an3a8eYzRuQPT53A7lMeTc9YjIBppwI2Q6SyhMSIJYMgQsqo+ZnPfdryCl3CZIrjFgNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733876123; c=relaxed/simple;
-	bh=dGg+vBlN2/227YFWWZ5lxQQNKHiuZJtH1L6qz8F0oog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lb41r3OvbvRiKR0ckV/egEo+4b/kgBVn7jMSPWPadZRipGpmgIX2JEH2IDbquo/kGzZcNikGxrNKb6v9q6opdRE4AcaVF4f71U+EJCndycY/Wjv/Ap22pTI1W/kj+PaW+jIz+SUHsiQ+404r1iCXyx/J3wtvjlpvpmhefvnzRfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcZxQyQn; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ee8e8e29f6so4898496a91.0;
-        Tue, 10 Dec 2024 16:15:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733876121; x=1734480921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYyY/eAjCLfnO1ga0kM6bbWLwR3rL+BViXn0zTn5BM8=;
-        b=jcZxQyQnldshISt2C7S9Tu+W5LiXpku3siuwKYDH4f8QmarZNgU9XXZ3WVBa0D4NaN
-         HEie6E0a++7L0fa5FifCrnxHKNqgiR7czzf3nvHm/5OuGerBBr18sqsXk1yQSjFeWg2x
-         TTAxzwTgpltq/OAsKQXlEN3hqULBMZT4raXbYliYizBYQM5na6cled9oI6cwT0/mI1JJ
-         RauyhnsPeQDepByKgl0OErvFjGxcD2U6e4sgTGHn54899fJsJTy0IFtS7tYo4KWTKjHb
-         LyOqmT6SDwBeyT6ELkf3e7O+KEFJz/p510wknYKGuKWylA+hj9Bn96BQtZT3ptPTaoMS
-         NEIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733876121; x=1734480921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kYyY/eAjCLfnO1ga0kM6bbWLwR3rL+BViXn0zTn5BM8=;
-        b=hf5IOpIVFahtZKL++ROLbWK/IUpg+Spyh7ZFAzSjnr5HrTjkpDb2Isb3SRsr1sfntR
-         KObP82p7aIlpqbj7ukF9P+nRobd6/kvdKcEC6a+P/RyHYxClZ7XF8+KMDubNjhHyoDnL
-         qHJGuMwDsSJB31fy7z4+auChE4Q5TQuTziO7hosGb25gpcrBdSb79ve/hYvRre8IIcEP
-         SE0dLGrWncSPWTZcjlxKsxeCGT3PywIdJdG72p4cn+/YxFwn1D/Pm+DHMJWzEQI6OGwt
-         c3n0FLO73KgPIUDmOcAlyLgHjEHIMcpLlKsKQCyV89xKwF1pgA3ltFwi2E9qJ8nMEpp7
-         gYBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgLKG8MJ1RvJar3VCJiLz3CuCMws/AJF0GEfHYHGrnpCyaNyFBLmU3/p+DFrou4Z0Z7DF/R1dXN1dt@vger.kernel.org, AJvYcCWof9mY7QiZGoz2akLZSPCOb+ShXAyvgcD0ju5CJeZC5tVjvUq9raqNC9E0fKHev+2CBGU/BvRAhBKZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3SJR7YV7wPVw8wi2KD66kQUz31ZvFRERwZnYlzWx/MgQt3eU8
-	S3cEEkTU5ulqdcXliZcSZTGQojNn7Pk5I+d0vQg9xO5c5f6dHlM6
-X-Gm-Gg: ASbGncshvFi7ohF+aFirWp97q6zCJOyQyREEzSS+z8Ykcs2z2ygFGOJOaJsrdyIU/mi
-	o8a6yLWZ9QGZA6u6hLbE971mXktde4YKmIYWm41Bk7vCR5DfGg1VE7VXI7nh1j4GYXRXkngsKJ1
-	tYrWqXavSSbm2DyF/nuVmxo2jeCF8TdEqPDykmSqyWGebVGoBShzGQ5kBlvfMBjcOMOtAQ0CpE9
-	oaftUqIAJ9B9ThsmGZ2BPWr/G4Yn9if2oSVEqAlv6FH+SvWCBOHjls=
-X-Google-Smtp-Source: AGHT+IERMFesUj9YuS+KayK8BhZgeSmODJ2S6t8QwfxBKZgQuHLXCFTk9mpxELWOBJ9kfjx1a2s/Ig==
-X-Received: by 2002:a17:90b:3803:b0:2ee:9d36:6821 with SMTP id 98e67ed59e1d1-2f12802a560mr1297495a91.27.1733876121454;
-        Tue, 10 Dec 2024 16:15:21 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:adc0:9d23:2d12:1822])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ef27078b03sm13470360a91.38.2024.12.10.16.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 16:15:20 -0800 (PST)
-Date: Tue, 10 Dec 2024 16:15:18 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH 1/3] gpio: swnode: Add ability to specify native chip
- selects for SPI
-Message-ID: <Z1jZliSoXziuLt1u@google.com>
-References: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
- <20240326141108.1079993-2-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1733878006; c=relaxed/simple;
+	bh=1H3cIATD0dXLlSVUR/ldxmWO5MYq4IIJi3J0Hk+r9dY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=This7hUD2SpQwiQYcWKzJ+68txULhjMeyPBxPMLVfx4RcNOQgzrxQBmYyZpukzXTv9flvk+Nf/x3CZ+1ZRQwZ8IiP8mZVdaSQZtCG8abITtdIGneuf3mOPZPAHv/SzFq2VMB4+htoatatFw5JlzlnuW2M/u8LE7feE3mrTbSlSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KjCTQrhB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BADXbp4014608;
+	Wed, 11 Dec 2024 00:46:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pOvQ4kEW5+JbIoo3oLAx3A6GmkI7mBSEDvoz1mE4eXw=; b=KjCTQrhBUH38ytjN
+	RUtbiO/IEO49nRXsFTPDMtuOEqVqcvodDRVk5i8iitWNs2a8WE6Q1ZwVJo7OQi7y
+	cXvEum9l7opxX4RhHY4nXSUoZsL2bnmNBCwwS2+i05Q2THqox6sGVMGx7mueioXY
+	PnJ24Hy3X644/kanKm5OxEu7Os4VR507b4b6Wm9pTB6GcvB/TTJC5aJ+0XbD6rzn
+	nSCS2LnaRLNzK70P7nXChTrJVcaCll0nh3ht+BLRbF9pxgvZaw1g9vaoNCmRVKt9
+	/HP8JdX0Ahy2FZwpmOoN0CqY5JBJvx+jsnKQqYu0uoY2F/nhObKJp11xoPFcKtLd
+	4MFU3Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43ee3nb71x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 00:46:25 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BB0kPcP029536
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 00:46:25 GMT
+Received: from [10.64.16.135] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Dec
+ 2024 16:46:18 -0800
+Message-ID: <527baded-f348-48a8-81cd-3f84c0ff1077@quicinc.com>
+Date: Wed, 11 Dec 2024 08:46:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326141108.1079993-2-ckeepax@opensource.cirrus.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
+ QCS615
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Kuogee
+ Hsieh" <quic_khsieh@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon
+ Vijay Abraham I" <kishon@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
+        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+ <CAA8EJppOR_UXoVpMt-dhfWdCz3UNfsXGdz8X9NqpaSmYj3AZDg@mail.gmail.com>
+ <5ea14162-567b-462d-be02-b73b954b7507@quicinc.com>
+ <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+ <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
+From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+In-Reply-To: <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ygGzruQ_LQRZ7QNeIARNz0cm5J1Cy4Os
+X-Proofpoint-ORIG-GUID: ygGzruQ_LQRZ7QNeIARNz0cm5J1Cy4Os
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412110004
 
-On Tue, Mar 26, 2024 at 02:11:06PM +0000, Charles Keepax wrote:
-> SPI devices can specify a cs-gpios property to enumerate their
-> chip selects. Under device tree, a zero entry in this property can
-> be used to specify that a particular chip select is using the SPI
-> controllers native chip select, for example:
+
+
+On 12/10/2024 11:09 PM, Dmitry Baryshkov wrote:
+> On Thu, Dec 05, 2024 at 08:31:24PM +0200, Dmitry Baryshkov wrote:
+>> On Thu, Dec 05, 2024 at 09:26:47PM +0800, Xiangxu Yin wrote:
+>>>
+>>>
+>>> On 11/29/2024 10:33 PM, Dmitry Baryshkov wrote:
+>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>>>>>
+>>>>> Extended DP support for QCS615 USB or DP phy. Differentiated between
+>>>>> USBC and DP PHY using the match table’s type, dynamically generating
+>>>>> different types of cfg and layout attributes during initialization based
+>>>>> on this type. Static variables are stored in cfg, while parsed values
+>>>>> are organized into the layout structure.
+>>>>
+>>>> We didn't have an understanding / conclusion whether
+>>>> qcom,usb-ssphy-qmp-usb3-or-dp PHYs are actually a single device / PHY
+>>>> or two PHYs being placed next to each other. Could you please start
+>>>> your commit message by explaining it? Or even better, make that a part
+>>>> of the cover letter for a new series touching just the USBC PHY
+>>>> driver. DP changes don't have anything in common with the PHY changes,
+>>>> so you can split the series into two.
+>>>>
+>>> Before implement DP extension, we have discussed with abhinav and krishna about whether use combo, usbc or separate phy.
+>>
+>> What is "DP extension"?
+>>
+I'm sorry confusion casued by my description. It's means extend DP implemnt for USBC phy driver.
+>>>
+>>> We identified that DP and USB share some common controls for phy_mode and orientation.
+>>> Specifically, 'TCSR_USB3_0_DP_PHYMODE' controls who must use the lanes - USB or DP,
+>>> while PERIPH_SS_USB0_USB3PHY_PCS_MISC_TYPEC_CTRL controls the orientation.
+>>> It would be more efficient for a single driver to manage these controls. 
+>>
+>> The question is about the hardware, not about the driver.
+>>
+>>> Additionally, this PHY does not support Alt Mode, and the two control registers are located in separate address spaces. 
+>>> Therefore, even though the orientation for DP on this platform is always normal and connected to the video output board, 
+>>> we still decided to base it on the USBC extension.
+>>
+>> Could you please clarify, do usb3-or-dp PHYs support DP-over-USB-C? I
+>> thought that usbc-or-dp platforms support that, but they don't
+>> support DP+USB pin configuration. Note, the question is broader than
+>> just QCS615, it covers the PHY type itself.
+>>
+>> Also, is TCSR configuration read/write or read-only? Are we supposed to
+>> set the register from OS or are we supposed to read it and thus detemine
+>> the PHY mode?
 > 
->         cs-gpios = <&gpio1 0 0>, <0>;
+> Any updates on these two topics?
 > 
-> Here the second chip select is native. However, when using swnodes
-> there is currently no way to specify a native chip select. The
-> proposal here is to register a swnode_gpio_undefined software node,
-> that can be specified to allow the indication of a native chip
-> select. For example:
-> 
-> static const struct software_node_ref_args device_cs_refs[] = {
-> 	{
-> 		.node  = &device_gpiochip_swnode,
-> 		.nargs = 2,
-> 		.args  = { 0, GPIO_ACTIVE_LOW },
-> 	},
-> 	{
-> 		.node  = &swnode_gpio_undefined,
-> 		.nargs = 0,
-> 	},
-> };
+Still confirming detail info with HW & design team.
+I’ll update the information that has been confirmed so far.
+This phy support DP-over-USB-C,but it's not support alt-mode which 2 lane work for DP, other 2 lane work for USB.
+TCSR phy mode is read/write reg and we can read for determine phy mode.
 
-I am sorry, I am very late to the party, but wouldn't it all work by
-simply setting ".node" to NULL? As far as I can see we have in
-software_node_get_reference_args():
 
-	...
-
-	if (index * sizeof(*ref) >= prop->length)
-		return -ENOENT;
-
-	ref_array = prop->pointer;
-	ref = &ref_array[index];
-
-	refnode = software_node_fwnode(ref->node);
-	if (!refnode)
-		return -ENOENT;
-
-if ref->node is NULL then software_node_fwnode(ref->node) will return
-NULL and we'll get -ENOENT which will bubble up to
-gpiod_get_index_optional() in SPI core.
-
-Thanks.
-
--- 
-Dmitry
 
