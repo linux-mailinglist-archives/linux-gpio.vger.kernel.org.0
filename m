@@ -1,63 +1,53 @@
-Return-Path: <linux-gpio+bounces-13776-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6769E9ED3EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 18:46:28 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51E069ED468
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 19:05:04 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1092282F1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 17:46:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 013AE1673DF
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 18:04:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16BA01FF1DF;
-	Wed, 11 Dec 2024 17:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CACF204098;
+	Wed, 11 Dec 2024 18:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiAKsZet"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="O7k1Zazs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4DD1DE880;
-	Wed, 11 Dec 2024 17:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAEC1DE4C8;
+	Wed, 11 Dec 2024 18:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733939175; cv=none; b=DKQ32fEbgbkkM7ZrPgy23iew7MyFaH/bfKq290YbposrFS3553lhHRlpl07FX3hgpyRaI0irXrLqx8VEjI0hweIxbvoTRQ6jljKnTBLJffpui+GQ10P6WyAM34vkUOn9voSfYLeWT5yCgYpZnWpWm0oKvHpZIu/vjUwqsCRl7w8=
+	t=1733940287; cv=none; b=HUZpFtIGqToAGdBoXRtMus4Rh5XHmJG7V7zTakaDGeqLKHs/7lNnB+r10V+335yr0weRn25hFvRD8wue9UI1D1b7TVcB0Ax2OlDmPABx93JL3p00VN/OvUIbxi5NxIyiurJYwBmYJrO12EdkkXEtCRsy7ODiY98HTqOVXPDRlG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733939175; c=relaxed/simple;
-	bh=vOVt9wIICb4stJ86oXlAZKMSYQkw7EDhkwpdVdVl2AY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ERt9TdatKQwRPrdNATLq6O5AKfxilzqk+KmUfNl12PuD4ULvfMSGKoZbJFn90bAI1gB6x/vIxxpwcTM5wz+XbaoPgyP0OGuhP/cQ6ycNZD5CnCUybaURBAElEeNMYWPwzlrM9mWLEIBEw90PbwkV1L+uOOrOwmx6h1sb1NMVUeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiAKsZet; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BF1C4CED2;
-	Wed, 11 Dec 2024 17:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733939175;
-	bh=vOVt9wIICb4stJ86oXlAZKMSYQkw7EDhkwpdVdVl2AY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=SiAKsZetgCXQ5lTUnNEl+W5N8Nj8MZABFwAJcICPIpy8XTo0mT7K5XK3HkCZY1XVs
-	 Lr/rH8CTvmoGmUcgv528aOdr5gyWeacRr6KwVn8VElZz48MpuAj+c3A73RRpQ0D6rM
-	 qLfah4JEaxW3+FPEFZleXd1RZQdIv/mwsAQob8KaRdyyELb0+ggro3L72VXUw3Hzq2
-	 qURHfIpkVCZOO5nT2+MpQ8v/FX5jGtXxY5LJCscpA+Y+Zrd1Q/3CP0Y5vEWxzTnx0i
-	 mUW4l/8VZDCSnKIzFCUuqhUUBh9B5XWGg6MF4Cu3DOe6jnO3RsdXTfuHqfuXHTNi5K
-	 os89zKR5XwUIw==
-From: Mark Brown <broonie@kernel.org>
-To: geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org, 
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
- lgirdwood@gmail.com, magnus.damm@gmail.com, linus.walleij@linaro.org, 
- perex@perex.cz, tiwai@suse.com, p.zabel@pengutronix.de, 
- Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20241113133540.2005850-1-claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: (subset) [PATCH v3 00/25] Add audio support for the Renesas
- RZ/G3S SoC
-Message-Id: <173393917085.1376442.1457625888835465190.b4-ty@kernel.org>
-Date: Wed, 11 Dec 2024 17:46:10 +0000
+	s=arc-20240116; t=1733940287; c=relaxed/simple;
+	bh=l94BK7mrqrW7wfB86W1pvJPZMlYxTL4bfJJgI4EhRVQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D737FP4bGt//0vnxDeNMCUNConCof1L/YVXtxpR5m3nknAAey7tUWQgvKikYBtRd4I4tXbeltOtnakalkrHIUtNeXfA3H9kCeOjsLiFC0tRpyhliuPAtc1TnUowfZkv2d+w1IFQ5Qd4Cc+TBmqe7+pWsyE1WbthrM2a3h9Z6r7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=O7k1Zazs; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.118.162] (254C2319.nat.pool.telekom.hu [37.76.35.25])
+	by mail.mainlining.org (Postfix) with ESMTPSA id BFA8CE44CE;
+	Wed, 11 Dec 2024 17:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1733939950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AQb1l6P2tQO5E8YgADPihN0HvZV+3EZDBO65HMerFUg=;
+	b=O7k1ZazsmnVW8KqgLQWR1tYndN87ZMRb1G6rvZLqC7AWNO1TblfK3J2aJ3rCdFQg1w7I43
+	Z09r/5fmOZfTznjhJtgbqQa+Woi9pgX1A5uPyRjxdHHvRj5Tv7MOgStJbbWrJmgpauht5e
+	V9tAzk932GZHrDbx5EeuMLtrCZg+PEKmgtVeCgF7E+mhJtI2dpjjm13aYqm/Y+t7majLfL
+	gcq9bE+pqWsBOlMfCB4GK40wSOKugig5+JpUTgaEwYohQdJWPerRXoxUv/L3hXCel/Qh33
+	lYu8hN5s8STLx/3fczhgC2ph6t+IRBxOyhtB5q2i7UM0vndKiTUTh9yiAx4/Xw==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v8 0/8] Add MSM8917/PM8937/Redmi 5A
+Date: Wed, 11 Dec 2024 18:59:04 +0100
+Message-Id: <20241211-msm8917-v8-0-197acc042036@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,79 +55,131 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-9b746
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOjSWWcC/23PTW7DIBAF4KtErOuKYcAwXfUeUReYHweptitTW
+ aki3704G5Di5RvxvWEeLIc1hcw+Lg+2hi3ltMwlmLcLczc7j6FLvmQmuJDAgbopT4ZAd6Adeh6
+ jtEqw8vpnDTHdn03Xr5JvKf8u69+zeINj+tqxQce7CBGdBW9MUJ+TTfN3mtM8vi/ryI6iTTQYo
+ WJRsLFcq2itoQFOMVYMXFeMBffeO2WdJ22GUyxb3HxbHpuHQMSlJmHPsWowiIpVweVglB4RCM5
+ x32KsuC/YoTRxUEQxxFOsGyxkxfq4GYQWZFD2qn/B+77/A+i7qgMRAgAA
+X-Change-ID: 20241019-msm8917-17c3d0ff4a52
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Dang Huynh <danct12@riseup.net>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733939948; l=3685;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=l94BK7mrqrW7wfB86W1pvJPZMlYxTL4bfJJgI4EhRVQ=;
+ b=R633mGFXByhKcb6oYnzij7wzGsygYNA9ivAfglNKI0x1s9HqtWuDx2IWw8tx9a1zMvvCxc3Sa
+ IyqzwT7Ae7qAFZYq90Vw5wSb0ga8bUwu+ovbvbdQkRUMcZUbaOVkkOw
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Wed, 13 Nov 2024 15:35:15 +0200, Claudiu wrote:
-> Series enables the audio support for the Renesas RZ/G3S
-> SoC along with runtime PM and suspend to RAM.
-> 
-> Patches:
-> -    01/25 - add clock, reset and power domain support
-> - 02-04/25 - update versaclock3 clock generator driver to support the
->              5L35023 hardware variant; versaclock3 provides clocks for
->              the audio devices (SSIF, DA7212 codec)
-> -    05/25 - add pin control support for audio
-> - 06-20/25 - add SSIF support for the RZ/G3S SoC; fixes and cleanups
->              were also included
-> - 21-25/25 - add device tree support
-> 
-> [...]
+This patch series add support for MSM8917 soc with PM8937 and
+Xiaomi Redmi 5A (riva).
 
-Applied to
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v8:
+- pm8937, msm8917, msm8917-xiaomi-riva: remove unused includes
+- Link to v7: https://lore.kernel.org/r/20241124-msm8917-v7-0-612729834656@mainlining.org
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Changes in v7:
+- msm8917-xiaomi-riva:
+  - Add pinctrls for used GPIO pins.
+  - Use interrupts-extend for charger.
+  - Order properies.
+- Link to v6: https://lore.kernel.org/r/20241113-msm8917-v6-0-c348fb599fef@mainlining.org
 
-Thanks!
+Changes in v6:
+- msm8917:
+  - Consolidate SDC pins, remove sdc2-cd-on/off pins.
+  - Remove cluster-sleep-0 and cluster-sleep-1
+  and rename cluster-sleep-2 to cluster-sleep-0.
+  - Fix spi, i2c and related pinctrl namings.
+- msm8917-xiaomi-riva: follow i2c name changes.
+- Link to v5: https://lore.kernel.org/r/20241112-msm8917-v5-0-3ca34d33191b@mainlining.org
 
-[06/25] ASoC: renesas: rz-ssi: Terminate all the DMA transactions
-        commit: 541011dc2d7c4c82523706f726f422a5e23cc86f
-[07/25] ASoC: renesas: rz-ssi: Use only the proper amount of dividers
-        commit: 55c209cd4318c701e6e88e0b2512a0f12dd02a7d
-[08/25] ASoC: renesas: rz-ssi: Fix typo on SSI_RATES macro comment
-        commit: 100c6b22d6c70adabdf45dcb346d7d853bff6a30
-[09/25] ASoC: renesas: rz-ssi: Remove pdev member of struct rz_ssi_priv
-        commit: a73710a25808a585a2bf0a8325eb16fd6a2f370c
-[10/25] ASoC: renesas: rz-ssi: Remove the rz_ssi_get_dai() function
-        commit: dec61e16e72db196e8dc1daf7f7022fd98e6d921
-[11/25] ASoC: renesas: rz-ssi: Remove the first argument of rz_ssi_stream_is_play()
-        commit: 109e60866f11c7db8f720f01b0bda3105c47b463
-[12/25] ASoC: renesas: rz-ssi: Use readl_poll_timeout_atomic()
-        commit: 4bf77dfa3308b7cfda29d9c4ead1dc32f1ceefa9
-[13/25] ASoC: renesas: rz-ssi: Use temporary variable for struct device
-        commit: 403366d2a43eb7c911c6cddf1d7882e429d1212d
-[14/25] ASoC: renesas: rz-ssi: Use goto label names that specify their actions
-        commit: f0c155c9da7536ab33687b5207eb21e704122a56
-[15/25] ASoC: renesas: rz-ssi: Rely on the ASoC subsystem to runtime resume/suspend the SSI
-        commit: e8fcf25f562891d5c0734d4f49c44bb6aa72bc15
-[16/25] ASoC: renesas: rz-ssi: Enable runtime PM autosuspend support
-        commit: cf3a79e4f826fc680fd7bfef7c427e2cc6023bc3
-[17/25] ASoC: renesas: rz-ssi: Add runtime PM support
-        commit: 3888672495fcaee98b90196c0a899b1c2eb57d5b
-[18/25] ASoC: renesas: rz-ssi: Issue software reset in hw_params API
-        commit: fc2a31affb22394d1d74d3ecc86b5c68da33d52a
-[19/25] ASoC: renesas: rz-ssi: Add suspend to RAM support
-        commit: 1fc778f7c833aeb13041adc06f016f1a2dff7350
-[20/25] ASoC: dt-bindings: renesas,rz-ssi: Document the Renesas RZ/G3S SoC
-        commit: 699a9733a354d74482ae4d4304acdbb0c0318a23
+Changes in v5:
+- msm8917:
+  - Remove aliases.
+  - Rename spi, i2c labels and pins.
+  - Remove clock-frequency from timers
+  - Remove unused mpss_mem region.
+  - Use mboxes where it can be used, only smd-edge uses qcom,ipc.
+- msm8917-xiaomi-riva: Follow i2c label changes.
+- Link to v4: https://lore.kernel.org/r/20241109-msm8917-v4-0-8be9904792ab@mainlining.org
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Changes in v4:
+- msm8917 pinctrl: Fix gpio regexp in the schema.
+- msm8937 tsens: Rename ops_msm8976 to ops_common and use it for msm8937.
+- msm8917: fix address padding, naming and ordering, remove polling-delays.
+- Remove applied patches from the series.
+- Link to v3: https://lore.kernel.org/r/20241107-msm8917-v3-0-6ddc5acd978b@mainlining.org
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Changes in v3:
+- msm8917-xiaomi-riva: Fix issues addressed by Konrad.
+- msm8917: Fix node addresses, orders of some properties.
+- pm8937: simplify vadc channels.
+- msm8917 pinctrl: Fix schema issues addressed by Krzysztof. 
+- Remove applied tcsr patch from this series.
+- Reword some commit title.
+- Link to v2: https://lore.kernel.org/r/20241031-msm8917-v2-0-8a075faa89b1@mainlining.org
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Changes in v2:
+- Add msm8937 tsens support.
+- Fix issues addressed by reviews.
+- Link to v1: https://lore.kernel.org/r/20241019-msm8917-v1-0-f1f3ca1d88e5@mainlining.org
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+---
+Barnabás Czémán (5):
+      dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+      dt-bindings: iommu: qcom,iommu: Add MSM8917 IOMMU to SMMUv1 compatibles
+      dt-bindings: nvmem: Add compatible for MS8917
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      arm64: dts: qcom: Add Xiaomi Redmi 5A
 
-Thanks,
-Mark
+Dang Huynh (1):
+      arm64: dts: qcom: Add PM8937 PMIC
+
+Otto Pflüger (2):
+      pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
+      arm64: dts: qcom: Add initial support for MSM8917
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+ .../bindings/pinctrl/qcom,msm8917-pinctrl.yaml     |  160 ++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dts   |  333 ++++
+ arch/arm64/boot/dts/qcom/msm8917.dtsi              | 1944 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8937.dtsi               |  150 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    6 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             | 1620 ++++++++++++++++
+ 11 files changed, 4224 insertions(+)
+---
+base-commit: 1b2ab8149928c1cea2d7eca30cd35bb7fe014053
+change-id: 20241019-msm8917-17c3d0ff4a52
+
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
 
