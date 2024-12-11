@@ -1,136 +1,214 @@
-Return-Path: <linux-gpio+bounces-13752-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13753-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59C689ECC7E
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 13:47:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C3BF9ECC94
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 13:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C153161038
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 12:47:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E45731630DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 12:50:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6ED323FD0D;
-	Wed, 11 Dec 2024 12:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B6923FD1B;
+	Wed, 11 Dec 2024 12:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4glr2YT"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKHlB12J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF4D23FD03
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2024 12:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40A523FD03;
+	Wed, 11 Dec 2024 12:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733921236; cv=none; b=EAkq4/eWatRAh/1/vXSNcNeuoATNOi6F7n1z0aZIJlwwTR1r9J+PfXJnI4Z8GIff/mOculHwUqmkFVrMIlXuT/FEiotW9eu1LJfB2vEX+bseIR+ED636c+Qatfsy0MmKxfqYdWPutLKdpqTrkgHILkbRKwghdDfJ2r2pStcfyk0=
+	t=1733921434; cv=none; b=owB0k5y8nZLTEEDC6wV/Cx877PBcXBZkIwWGi7MrWQ/lXHlkT3UsfnixloxMf04wznWw4T6bRWt+CMcfa+sEHOLFArulvBH202/t8l+i7J87dOIAbsbzlzHr6IFUleNq2ePvx/x34fR2XxwOu2oGs39MO3gS0zygERYAX+SkjJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733921236; c=relaxed/simple;
-	bh=y4fFjXVJEqMPSzqTtHUfPs3UdSK1mcztnZsQtSm47+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NfVzL9KhnwlwVS7cPb37GWhTBKgdOqdsEG6HNDKmpr3TRZ/Itb4K84X2X9Vr/rrJOHMzS9OvY+YoeeNZj+hnF3gBBsx709bBD/dDT/xTRmea9pR/wyiGjg3f21P0nzpoSAFxOSIe/a+a8dAIP36pI/RgZhBtLAIXnMDzCgk50CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A4glr2YT; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43618283dedso14602495e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2024 04:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733921232; x=1734526032; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N6kTL5GB3PSflSCTwDuuseKTZXYkA6ilPyaKtT0Vb3Q=;
-        b=A4glr2YT3dF5MT0ppVgN1uxyc8ZEmDhbs+miVrK2mqPsyfunY2tKyfkRoEz6MHHxWe
-         NCUGbXoRDxbYsSKxsdMyEmU62MriXe3cvWoJ2Trt2CY5o/tBdtAV24iD2/xreLGshXZU
-         BC+jMW/gTd3RtN+nFdNL8Q8ukjrBlpPL/9Di+hHxIQeoOAqUJzwXF83LG5VouJ8dXxts
-         t3rcvtfy1OjnZ7MUGgvv629De7sow4DUrWTN2XCm2EDMDagEtzujsvbAdfxZ1foCABli
-         Ohs0dnKRQegPqFrSvFG/2ZDzWG4IbXGoZnsTlQpQ1Y7NqPIakIYOXgGndlnJJ2Yrv2RZ
-         M4zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733921232; x=1734526032;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6kTL5GB3PSflSCTwDuuseKTZXYkA6ilPyaKtT0Vb3Q=;
-        b=FsUNnpqHMZKRFeb3FY1jQTMpwSm4wcmvpbZvdGdE2V6Ho3xiSnJOmpAaLf4zzoukNc
-         zaWTWhTJF++s2Q2awcBCIl/REo4ND8cKLxc41loqqv20lHp7iuIk8s+OmcS3yPy3rVQW
-         pxmA5Wgt5mHJM8S2fq4PwdJ4tnc+Jv/feveT3uOtfpEI21QsJXBOf+vNR0A+uKJ+XqAt
-         Twyk9aROQwHV2Tf/RyGDcWUnMm8QTREue/60O4XqOZEwwlPiHbmDw0yUpiGaNbpBbYdd
-         YZL3y3SL+0T981yfXIimqIfdwYtJ4r0zNbDrmxbJH6FmjHAeko7DScxrToE1agxExOtx
-         hEvQ==
-X-Gm-Message-State: AOJu0YwioqU+o/VQtimy0dNNO9QzBu6Ynf+hiChzCAgQtuKbLncJrnj9
-	JCzEuy5vOsYhilbfnxHMHfuh3RCNMUi9YbODkzOKn1utCWPAT0ANGMScK6xPjQw=
-X-Gm-Gg: ASbGnctGerEmWQFpwUy2dusCcWfgsvRw1kiyvheHGRLvka45gpFduRX9ybybDbn9j/W
-	5KU2gfltJDU7swodkS15x3Ip4z4JHge3n9tv/wEgnlKs420Kwbc+3s95jyA1P0G/FL5gPOfjQR9
-	OAIDoYoap2mPlrEj+k4e0Xv52Y7/97Ast7PHctlXafbBQ28mfOQBtMJAicaoA3imrG+YQmnvkm3
-	caTkCRn6k3lfClHEhh2cIvOkihYWPNpBoy/Wfw9hMppZNK+OeOHvPHLejQ=
-X-Google-Smtp-Source: AGHT+IH//IzWLugAUc3CYh/VIxHlw6qP2T6DZC6sKJMxzT4hkTRkIeqgIQeidADCa09S0+JpfYYSEA==
-X-Received: by 2002:a5d:6da6:0:b0:37d:4647:154e with SMTP id ffacd0b85a97d-3864ce85edbmr1995303f8f.9.1733921232463;
-        Wed, 11 Dec 2024 04:47:12 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38782514eabsm1230212f8f.70.2024.12.11.04.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 04:47:11 -0800 (PST)
-Date: Wed, 11 Dec 2024 15:47:08 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: [bug report] pinmux: Use sequential access to access desc->pinmux
- data
-Message-ID: <d70ad7a2-8a69-462d-9f92-13f0d76da51f@stanley.mountain>
+	s=arc-20240116; t=1733921434; c=relaxed/simple;
+	bh=DLZ8JtqP2Hut3FClq30R8h56SUydehouyNxY+A8+iZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=q9307oVv9xT7lW43fTC/jKqaDMZcxe3EKhzhIAfwPhPOF1BM62V8suCfioDO3kx4M+nMHMcjmbzQrgEjwxSnrsosNbFzNLnr6hhNkyvkDglBjc3sIhWudhUmpD8zcmkb79phfIpWQmldphCPu0SGuk8JAi5P6FP0+crDUu4FUc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKHlB12J; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BBAokM2006981;
+	Wed, 11 Dec 2024 12:50:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zk4s7vhB2asnvEBnYuTFCimLlmm/nGDu1HLQOKCWzJw=; b=bKHlB12Jc8cR9Zp4
+	/EF33Rrz2D9AwqIyHOV5F1upJtrVWdK1NJn3tfowkFdhpPIj7/wGLCiGjgx7KchR
+	tHdxHg8Vt/dadt2UERt8XsQ1wpOEudK1WorLRGBu2l6EQb4U8avn0yxwThtrA+eN
+	XeNR8i2DeyOjPcQ8t1vNVl925MX25zjNjb/pVjitF8WQNyOaWQ12CobMMICCWgCT
+	OQIgvGu9ppiUGoMr9H/8nv26lrxm0qUYRME+Irxx0dpEEZSArssg0mSygxrYgdfT
+	DJkBAyM0Gh2mVkb2C6i51qmsUBHECMAlhZyGC8qOi4dHLo3SyAQYzQZXnlXt/i2s
+	RKsFhw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43f0r9swvp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 12:50:13 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BBCoCuX026022
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Dec 2024 12:50:12 GMT
+Received: from [10.64.16.135] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Dec
+ 2024 04:50:05 -0800
+Message-ID: <d5151b82-5f05-4826-99b4-e925c20550b4@quicinc.com>
+Date: Wed, 11 Dec 2024 20:50:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
+ QCS615
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Kuogee
+ Hsieh" <quic_khsieh@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon
+ Vijay Abraham I" <kishon@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
+        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+ <CAA8EJppOR_UXoVpMt-dhfWdCz3UNfsXGdz8X9NqpaSmYj3AZDg@mail.gmail.com>
+ <5ea14162-567b-462d-be02-b73b954b7507@quicinc.com>
+ <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+ <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
+ <527baded-f348-48a8-81cd-3f84c0ff1077@quicinc.com>
+ <t5vcjlf44fhae4f2h75cfs3f7r6tdstw4ysmkapvvawj6xp23x@xnxqnxvyhshe>
+From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+In-Reply-To: <t5vcjlf44fhae4f2h75cfs3f7r6tdstw4ysmkapvvawj6xp23x@xnxqnxvyhshe>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: YEcBUSMTawlFVl6QGG7shl_PtInvRli7
+X-Proofpoint-GUID: YEcBUSMTawlFVl6QGG7shl_PtInvRli7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412110093
 
-Hello Mukesh Ojha,
 
-Commit 5a3e85c3c397 ("pinmux: Use sequential access to access
-desc->pinmux data") from Oct 15, 2024 (linux-next), leads to the
-following Smatch static checker warning:
 
-	drivers/pinctrl/pinmux.c:132 pin_request()
-	warn: sleeping in atomic context
+On 12/11/2024 5:46 PM, Dmitry Baryshkov wrote:
+> On Wed, Dec 11, 2024 at 08:46:16AM +0800, Xiangxu Yin wrote:
+>>
+>>
+>> On 12/10/2024 11:09 PM, Dmitry Baryshkov wrote:
+>>> On Thu, Dec 05, 2024 at 08:31:24PM +0200, Dmitry Baryshkov wrote:
+>>>> On Thu, Dec 05, 2024 at 09:26:47PM +0800, Xiangxu Yin wrote:
+>>>>>
+>>>>>
+>>>>> On 11/29/2024 10:33 PM, Dmitry Baryshkov wrote:
+>>>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>>>>>>>
+>>>>>>> Extended DP support for QCS615 USB or DP phy. Differentiated between
+>>>>>>> USBC and DP PHY using the match table’s type, dynamically generating
+>>>>>>> different types of cfg and layout attributes during initialization based
+>>>>>>> on this type. Static variables are stored in cfg, while parsed values
+>>>>>>> are organized into the layout structure.
+>>>>>>
+>>>>>> We didn't have an understanding / conclusion whether
+>>>>>> qcom,usb-ssphy-qmp-usb3-or-dp PHYs are actually a single device / PHY
+>>>>>> or two PHYs being placed next to each other. Could you please start
+>>>>>> your commit message by explaining it? Or even better, make that a part
+>>>>>> of the cover letter for a new series touching just the USBC PHY
+>>>>>> driver. DP changes don't have anything in common with the PHY changes,
+>>>>>> so you can split the series into two.
+>>>>>>
+>>>>> Before implement DP extension, we have discussed with abhinav and krishna about whether use combo, usbc or separate phy.
+>>>>
+>>>> What is "DP extension"?
+>>>>
+>> I'm sorry confusion casued by my description. It's means extend DP implemnt for USBC phy driver.
+>>>>>
+>>>>> We identified that DP and USB share some common controls for phy_mode and orientation.
+>>>>> Specifically, 'TCSR_USB3_0_DP_PHYMODE' controls who must use the lanes - USB or DP,
+>>>>> while PERIPH_SS_USB0_USB3PHY_PCS_MISC_TYPEC_CTRL controls the orientation.
+>>>>> It would be more efficient for a single driver to manage these controls. 
+>>>>
+>>>> The question is about the hardware, not about the driver.
+>>>>
+>>>>> Additionally, this PHY does not support Alt Mode, and the two control registers are located in separate address spaces. 
+>>>>> Therefore, even though the orientation for DP on this platform is always normal and connected to the video output board, 
+>>>>> we still decided to base it on the USBC extension.
+>>>>
+>>>> Could you please clarify, do usb3-or-dp PHYs support DP-over-USB-C? I
+>>>> thought that usbc-or-dp platforms support that, but they don't
+>>>> support DP+USB pin configuration. Note, the question is broader than
+>>>> just QCS615, it covers the PHY type itself.
+>>>>
+>>>> Also, is TCSR configuration read/write or read-only? Are we supposed to
+>>>> set the register from OS or are we supposed to read it and thus detemine
+>>>> the PHY mode?
+>>>
+>>> Any updates on these two topics?
+>>>
+>> Still confirming detail info with HW & design team.
+>> I’ll update the information that has been confirmed so far.
+>> This phy support DP-over-USB-C,but it's not support alt-mode which 2 lane work for DP, other 2 lane work for USB.
+>> TCSR phy mode is read/write reg and we can read for determine phy mode.
+> 
+> Ok, thanks for the explanation. From my point of view:
+> 
+> - Implement the DP PHY to be a part of the same driver. Each device
+>   supported by the usbc driver should get both PHYs.
+> 
+> - Make sure not to break the ABI: #phy-cells = <0> should still work and
+>   return USB PHY, keeping backwards compatibility. Newer devices or
+>   upgraded DT for old devices should return USB PHY for <... 0> and DP
+>   PHY for <... 1>.
+> 
+Yes, currently we have implemented like your description,
+Each deivce shoud get both PHYs, DP PHY for <... 1> and USB PHY for <... 0>.
+> - I'm not shure how to handle the USB and DP coexistence, especially in
+>   your case of the USB-or-DP PHY.
+> 
+For coexistence process:
 
-drivers/pinctrl/pinmux.c
-    113 static int pin_request(struct pinctrl_dev *pctldev,
-    114                        int pin, const char *owner,
-    115                        struct pinctrl_gpio_range *gpio_range)
-    116 {
-    117         struct pin_desc *desc;
-    118         const struct pinmux_ops *ops = pctldev->desc->pmxops;
-    119         int status = -EINVAL;
-    120 
-    121         desc = pin_desc_get(pctldev, pin);
-    122         if (desc == NULL) {
-    123                 dev_err(pctldev->dev,
-    124                         "pin %d is not registered so it cannot be requested\n",
-    125                         pin);
-    126                 goto out;
-    127         }
-    128 
-    129         dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
-    130                 pin, desc->name, owner);
-    131 
---> 132         scoped_guard(mutex, &desc->mux_lock) {
-                             ^^^^^
-The patch adds a mutex to solve a race condition.  However the omap_hsmmc
-driver potentially calls this with a spinlock held in the suspend/resume
-path so it leads to a sleeping in atomic warning.
+When we start implement DP part, usb driver team said only need config TCSR phy mode and orientation during switch in USB-C port.
+Based on your previous comments avout SW_PWRDN, I'm confirming with the USB team whether SW_REST/SWPWRDN/START_CTRL registers might affect DP.
 
-The call tree is:
+Anyway, even though the original SoC design supports DP or USB over Type-C，
+but on QCS615 ADP AIR platform, there are only four USB-A port which works with 'qcs615-qmp-usb3-phy' driver, and no USB-C port.
+DP port is mappped from usb pin to the video out sub-board.
+so we are unable to verify the switching case between DP and USB devices under USB-C.
 
-omap_hsmmc_runtime_resume() <- disables preempt
--> pinctrl_select_default_state()
-omap_hsmmc_runtime_suspend() <- disables preempt
--> pinctrl_pm_select_idle_state()
-   -> pinctrl_select_bound_state()
-      -> pinctrl_select_state()
-         -> pinctrl_commit_state()
-            -> pinmux_enable_setting()
-               -> pin_request()
+However, I'm also confirming whether anything other will affect USB and DP each other.
 
-regards,
-dan carpenter
+
 
