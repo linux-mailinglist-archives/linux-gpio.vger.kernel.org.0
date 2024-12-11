@@ -1,85 +1,279 @@
-Return-Path: <linux-gpio+bounces-13736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAE889EC1C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 02:56:32 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98EC69EC428
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 06:14:25 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 634EB284F04
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 01:56:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0267D168F01
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 05:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2AF1DF270;
-	Wed, 11 Dec 2024 01:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRHcntU6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC1A71C07E4;
+	Wed, 11 Dec 2024 05:14:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98D01422A8;
-	Wed, 11 Dec 2024 01:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from 189.cn (ptr.189.cn [183.61.185.103])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB05D1C07C4;
+	Wed, 11 Dec 2024 05:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733882185; cv=none; b=MgGLFIFw9/6NnyOoA+44Kc+5eL1pYlhGqMdlP+Yo9iR0CaJKqT7I4qLLX8hFYE5lMNHJdeiXNjtql863dJ02ERC1cW1gFarfRtXFx1GNlu24hlJIDmgOQWjXBb8MMtQFzNSJccY7lfkOgP9uIpYoiZcFrD6paS3m5SGk4CRPy8M=
+	t=1733894057; cv=none; b=on6s9ItDjVU1xHoruI3YTiKtM7twyHE9J+NmXmF5hCFqcgpa/syoTxuACFTytnagxKGx+wSkjoVY+7Y2hd2tW4RB/VCRPLV/NZsygT3eRWJe4m4WEUeB5aLs2ncy2dT8hhz54p+Zc17EKxEud1Rofp98CVlEAGFM+1yhGH21JCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733882185; c=relaxed/simple;
-	bh=L9hpu8B4bEbv4BWzFDWIU58mS0NmeBwiwVL18jWxcmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ym8DKZ14/g6ux4T4o3nMApf9CA+yG7xcWoYb01dGuDWM+XPP3kRFtUbbmHwuCDouAT5BR/FnfMom9NXdoVSuYtRqWqF13JkFUzC9CFtLkSsrnX3s+IJBLwsnnx9WpFN5xONkuJ1ruGpsOqcyJRgI/PsZgj0v/tdcapa7bBLyfdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRHcntU6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A8BC4CED6;
-	Wed, 11 Dec 2024 01:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733882185;
-	bh=L9hpu8B4bEbv4BWzFDWIU58mS0NmeBwiwVL18jWxcmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eRHcntU6PUTaQAoAcl1WW2JDRXgUKIXE7WBD7o897zJVjdXb+uAiSlKSMQNPpDzh/
-	 CBJkfx8GA0/BK7W2DxurNJNOHL0weszqvRbEy8rzexSz9ta3UBrxKwe2UcGKEtu/0I
-	 Vm0SIlF3cQ25hub1vkMJbn8v7uxSo1NusbEq1EBA8lIsJbnMPbSr+/OFukp161Alfv
-	 Mf9skIEs60bLDHpHFv5HQGSDlxF2cGKr2azC27J4VbIb8skxdprs/As1YbPvmXa3Qf
-	 s6APl4ww4KZXiib2CpXNuzIpWorqL83QDNashcBW2pkabbAF4S0zvLXVHk1hxvBwDW
-	 P/hlfzaglAtKA==
-Date: Tue, 10 Dec 2024 17:56:23 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-Cc: Ming Yu <a0282524688@gmail.com>, <tmyu0@nuvoton.com>, <lee@kernel.org>,
- <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andi.shyti@kernel.org>,
- <mkl@pengutronix.de>, <mailhol.vincent@wanadoo.fr>,
- <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
- <pabeni@redhat.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
- <jdelvare@suse.com>, <alexandre.belloni@bootlin.com>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-i2c@vger.kernel.org>, <linux-can@vger.kernel.org>,
- <netdev@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
- <linux-hwmon@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20241210175623.748da1b8@kernel.org>
-In-Reply-To: <2d6e82ff-9f68-427e-a8a6-8dd31b3c94e4@intel.com>
-References: <20241210104524.2466586-1-tmyu0@nuvoton.com>
-	<20241210104524.2466586-2-tmyu0@nuvoton.com>
-	<2d6e82ff-9f68-427e-a8a6-8dd31b3c94e4@intel.com>
+	s=arc-20240116; t=1733894057; c=relaxed/simple;
+	bh=xOKJ7qt0WfS0XyDsy5u7icGNxiFNPCNQRKosTSntKOk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pcPCd6RKH79z4Wno8EkVVHvSmvpEBm4jlUqF60eQH8mgYqZI7lO4pZFhHQOukAA3c+8GFwuEcUdpgeNn7NvVmScBXIU1qfYCGpJF5N27J+UC3BTlzZFbVzXI3vgtmSQcsdYd56GHlpKIZu0JU4kvkXAuVZ6+nyHRKrE/SE3ox48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
+HMM_SOURCE_IP:10.158.243.18:7884.121043416
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-123.150.8.42 (unknown [10.158.243.18])
+	by 189.cn (HERMES) with SMTP id 1E938100208;
+	Wed, 11 Dec 2024 13:10:21 +0800 (CST)
+Received: from  ([123.150.8.42])
+	by gateway-153622-dep-5c5f88b874-pd459 with ESMTP id 4e5728c57c8d4093b2d6a3afacd6fde7 for krzk@kernel.org;
+	Wed, 11 Dec 2024 13:10:22 CST
+X-Transaction-ID: 4e5728c57c8d4093b2d6a3afacd6fde7
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+From: Song Chen <chensong_2000@189.cn>
+To: krzk@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	Song Chen <chensong_2000@189.cn>
+Subject: [PATCH v2] regulator:s5m8767: Fully convert to GPIO descriptors
+Date: Wed, 11 Dec 2024 13:10:19 +0800
+Message-Id: <20241211051019.176131-1-chensong_2000@189.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Dec 2024 11:57:41 +0100 Mateusz Polchlopek wrote:
-> > +int nct6694_read_msg(struct nct6694 *nct6694, u8 mod, u16 offset,
-> > +		     u16 length, void *buf)
-> > +{
-> > +	struct nct6694_cmd_header *cmd_header = nct6694->cmd_header;
-> > +	struct nct6694_response_header *response_header = nct6694->response_header;  
-> 
-> RCT violation
+This converts s5m8767 regulator driver to use GPIO descriptors.
 
-This code is not under net not drivers/net
-As a general rule please focus on functional review, formatting and
-process issues are harder to judge unless you read all of the mailing
-list traffic.
+---
+v1 - v2:
+1, reedit commit message.
+2, remove development code.
+3, print error msg in dev_err_probe.
+4, doesn't set gpiod directions until successfully requesting
+   all gpiods. It's pretty much equivalent with original code.
+
+Signed-off-by: Song Chen <chensong_2000@189.cn>
+---
+ drivers/regulator/s5m8767.c      | 106 ++++++++++++++-----------------
+ include/linux/mfd/samsung/core.h |   4 +-
+ 2 files changed, 48 insertions(+), 62 deletions(-)
+
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index d25cd81e3f36..b23df037336b 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -5,7 +5,7 @@
+ 
+ #include <linux/cleanup.h>
+ #include <linux/err.h>
+-#include <linux/of_gpio.h>
++#include <linux/of.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -35,8 +35,8 @@ struct s5m8767_info {
+ 	u8 buck2_vol[8];
+ 	u8 buck3_vol[8];
+ 	u8 buck4_vol[8];
+-	int buck_gpios[3];
+-	int buck_ds[3];
++	struct gpio_desc *buck_gpios[3];
++	struct gpio_desc *buck_ds[3];
+ 	int buck_gpioindex;
+ };
+ 
+@@ -272,9 +272,9 @@ static inline int s5m8767_set_high(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+ 
+ 	return 0;
+ }
+@@ -283,9 +283,9 @@ static inline int s5m8767_set_low(struct s5m8767_info *s5m8767)
+ {
+ 	int temp_index = s5m8767->buck_gpioindex;
+ 
+-	gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
+-	gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
++	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
+ 
+ 	return 0;
+ }
+@@ -486,16 +486,19 @@ static int s5m8767_pmic_dt_parse_dvs_gpio(struct sec_pmic_dev *iodev,
+ 			struct sec_platform_data *pdata,
+ 			struct device_node *pmic_np)
+ {
+-	int i, gpio;
++	int i;
++	char label[32];
+ 
+ 	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-dvs-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
+-			return -EINVAL;
+-		}
+-		pdata->buck_gpios[i] = gpio;
++		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
++		pdata->buck_gpios[i] = devm_fwnode_gpiod_get_index(
++					iodev->dev,
++					of_fwnode_handle(pmic_np),
++					"s5m8767,pmic-buck-dvs",
++					i, GPIOD_OUT_LOW, label);
++		if (IS_ERR(pdata->buck_gpios[i]))
++			return dev_err_probe(iodev->dev, PTR_ERR(pdata->buck_gpios[i]),
++						"can't get GPIO\n");
+ 	}
+ 	return 0;
+ }
+@@ -504,16 +507,19 @@ static int s5m8767_pmic_dt_parse_ds_gpio(struct sec_pmic_dev *iodev,
+ 			struct sec_platform_data *pdata,
+ 			struct device_node *pmic_np)
+ {
+-	int i, gpio;
++	int i;
++	char label[32];
+ 
+ 	for (i = 0; i < 3; i++) {
+-		gpio = of_get_named_gpio(pmic_np,
+-					"s5m8767,pmic-buck-ds-gpios", i);
+-		if (!gpio_is_valid(gpio)) {
+-			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
+-			return -EINVAL;
+-		}
+-		pdata->buck_ds[i] = gpio;
++		snprintf(label, sizeof(label), "%s%d", "S5M8767 DS", i + 2);
++		pdata->buck_ds[i] = devm_fwnode_gpiod_get_index(
++					iodev->dev,
++					of_fwnode_handle(pmic_np),
++					"s5m8767,pmic-buck-ds",
++					i, GPIOD_OUT_LOW, label);
++		if (IS_ERR(pdata->buck_ds[i]))
++			return dev_err_probe(iodev->dev, PTR_ERR(pdata->buck_ds[i]),
++						"can't get GPIO\n");
+ 	}
+ 	return 0;
+ }
+@@ -788,57 +794,37 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
+ 	if (pdata->buck2_gpiodvs || pdata->buck3_gpiodvs ||
+ 						pdata->buck4_gpiodvs) {
+ 
+-		if (!gpio_is_valid(pdata->buck_gpios[0]) ||
+-			!gpio_is_valid(pdata->buck_gpios[1]) ||
+-			!gpio_is_valid(pdata->buck_gpios[2])) {
++		if (IS_ERR(pdata->buck_gpios[0]) ||
++			IS_ERR(pdata->buck_gpios[1]) ||
++			IS_ERR(pdata->buck_gpios[2])) {
+ 			dev_err(&pdev->dev, "GPIO NOT VALID\n");
+ 			return -EINVAL;
+ 		}
+ 
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
+-					"S5M8767 SET1");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
+-					"S5M8767 SET2");
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
+-					"S5M8767 SET3");
+-		if (ret)
+-			return ret;
+-
+ 		/* SET1 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[0],
++		gpiod_direction_output(pdata->buck_gpios[0],
+ 				(s5m8767->buck_gpioindex >> 2) & 0x1);
+ 		/* SET2 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[1],
++		gpiod_direction_output(pdata->buck_gpios[1],
+ 				(s5m8767->buck_gpioindex >> 1) & 0x1);
+ 		/* SET3 GPIO */
+-		gpio_direction_output(pdata->buck_gpios[2],
++		gpiod_direction_output(pdata->buck_gpios[2],
+ 				(s5m8767->buck_gpioindex >> 0) & 0x1);
+ 	}
+ 
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[0], "S5M8767 DS2");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[1], "S5M8767 DS3");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->buck_ds[2], "S5M8767 DS4");
+-	if (ret)
+-		return ret;
++	if (IS_ERR(pdata->buck_ds[0]) ||
++		IS_ERR(pdata->buck_ds[1]) ||
++		IS_ERR(pdata->buck_ds[2])) {
++		dev_err(&pdev->dev, "GPIO NOT VALID\n");
++		return -EINVAL;
++	}
+ 
+ 	/* DS2 GPIO */
+-	gpio_direction_output(pdata->buck_ds[0], 0x0);
++	gpiod_direction_output(pdata->buck_ds[0], 0x0);
+ 	/* DS3 GPIO */
+-	gpio_direction_output(pdata->buck_ds[1], 0x0);
++	gpiod_direction_output(pdata->buck_ds[1], 0x0);
+ 	/* DS4 GPIO */
+-	gpio_direction_output(pdata->buck_ds[2], 0x0);
++	gpiod_direction_output(pdata->buck_ds[2], 0x0);
+ 
+ 	regmap_update_bits(s5m8767->iodev->regmap_pmic,
+ 			   S5M8767_REG_BUCK2CTRL, 1 << 1,
+diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
+index 750274d41fc0..c06fff66e755 100644
+--- a/include/linux/mfd/samsung/core.h
++++ b/include/linux/mfd/samsung/core.h
+@@ -79,8 +79,8 @@ struct sec_platform_data {
+ 	struct sec_opmode_data		*opmode;
+ 	int				num_regulators;
+ 
+-	int				buck_gpios[3];
+-	int				buck_ds[3];
++	struct gpio_desc		*buck_gpios[3];
++	struct gpio_desc		*buck_ds[3];
+ 	unsigned int			buck2_voltage[8];
+ 	bool				buck2_gpiodvs;
+ 	unsigned int			buck3_voltage[8];
+-- 
+2.25.1
+
 
