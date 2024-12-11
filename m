@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-13770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D2069ED18D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 17:28:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 127A19ED18B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 17:28:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7755D18894D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 16:28:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31BBB161FA3
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2024 16:28:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CAC11DDC06;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141B01DDA24;
 	Wed, 11 Dec 2024 16:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kaAV0jIe"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jFYOe4Yq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492811DCB09;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493091DD0DC;
 	Wed, 11 Dec 2024 16:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733934482; cv=none; b=HKjMxyQ8ag8+rtSXW5s6Dt8l+R/093MSfxq/SzozC3WQIvCm5aS/eFdXKcdSWjrCMPOMhy2XOn/17V43LTQ1cWcb5vlBECRF4EjST77537TRYgr4+dYVTGVrI73pKOP2hTP1C0fv1JbKTxVx6PWIw3Sa9Nd9aei3aH89OaIpKes=
+	t=1733934481; cv=none; b=CvtObbKbYN959zvHbYUwotRajc1iz+7J4bEwIKomSZMm62jWbFRVJuAejIOdpYozTDPsiRdZ9KIkn9LUDHKmGpGnIZWo+UY6b0zAYqSTbypKHD3ZwCOUBuRlnWPbfKnEtbHaMRL1NtNCTSG2s81pYI9G5lB9QWvGkjzyPsg1ptg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733934482; c=relaxed/simple;
-	bh=A72m0aIUimExktaT990umlPxE578madL+BQI1rpCTdk=;
+	s=arc-20240116; t=1733934481; c=relaxed/simple;
+	bh=R9Ph2LuNSizL9cZ5KwZKjg48Yy4GVSq4AuUp2eZ53Mc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sJVyvwLLE09S2AdSruQUFcl+2BI8zXCHe4Upzg5XxXu/FvMQdyjyDIhsZ2iefm9ySMFvxSElj3v2EFNYb1jxCUIXyyDmy+9PDpET6TBO2+nUAN5c/iufAXsg2epgv/wjUXKYdOJXMB7rUFSJokgq1f6qdD9my1D2hENM1ubyU1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kaAV0jIe; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=hzhLuTxnSGfdT0o61VR2qkrSGxfBQiWppM5qKT3/Yjil+WGNc44q7AKA+ssFbWF7khv5fVxe/Mw9Qlfze6Vqq9iQnMamgVC4XlCL5yq17UhvvGMGFga0gQYK+xjWi3iRxG3MXv1idyq7asNFQRr1aWrfk2VEBEvd0W2cRmDtmUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jFYOe4Yq; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8650C24000D;
-	Wed, 11 Dec 2024 16:27:51 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 19D3624000C;
+	Wed, 11 Dec 2024 16:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1733934472;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZQayVAe1OKxHfTylerB8TQVBruMZzFhLn/t/stczNho=;
-	b=kaAV0jIeXmltH5Iy+ZBRkyzAcTGDb2+z5aAzX/Xgmj7amkdiym+9dJDhjaMOSQKHPcUZA8
-	5jJri6Gu6/+0tX+S5Of22E9vX+vLCTI1OYq8Nzj0CYP5DzQj0rxlEifvrfClCWUbMcXxkk
-	l2ZRb4VEq/BcTw26HN2wXhiQEHbIT5FMl8PuSXejg03Bb080T/3Y1U0K/9qhIYOMPRFdbc
-	FMCCeC3ct8t5kwRxDr8sLZie4Ajul8TRahjUtX9T+HB21aX1i80I8EgGdOr57LHIxgPriM
-	6Dd2mSrTigMONqtBn9uO1Tb2jVUcFqk4/dQ2B175LZMQoN+zkzIIPpuD21mp7Q==
+	bh=GJLX7UutB8ehS0hHXBDQ4WgR2Cmh6ovxEz75/hzjYaI=;
+	b=jFYOe4YqQizwu6An/9RPBSvh2vpj9zksMTEK3eBWi66gZ2Dxo2ZpAAmqDCanz62rpsNjh6
+	lhS8HWxuaCkcf/rkWCgGfQFcI/hA9CvH/uU+QQ9eICZiuclHKA0EYxyviocdOSxSZxF4aY
+	FavOqmrxdWAfIE3OiwOdcNzdzfDL0pHhK6DZFTMCUnW+Q1BJgr0vt+PzS4oxzaR9CdKRnu
+	I4FyJfGanB8km/tHOY0Ne4PR+/QBOWDff9PNdUnd/bepvoDpPvXMj8CpiM38GQW/EAkzwi
+	hIV3oBswyaNUOVqEleGvQanKaZEgCA1yO+JmDOxbpTwQZRCpBeMssvIv12wu8A==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 11 Dec 2024 17:27:17 +0100
-Subject: [PATCH 2/5] leds: Add AAEON UP board LED driver
+Date: Wed, 11 Dec 2024 17:27:18 +0100
+Subject: [PATCH 3/5] gpiolib: add gpiochip_add_pinlist_range() function
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241211-aaeon-up-board-pinctrl-support-v1-2-24719be27631@bootlin.com>
+Message-Id: <20241211-aaeon-up-board-pinctrl-support-v1-3-24719be27631@bootlin.com>
 References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
 In-Reply-To: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -69,185 +69,153 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Add support for LEDs on AAEON UP boards. These leds are managed by the
-onboard FPGA:
-- UP boards: yellow, green, red
-- UP Squared boards: blue, yellow, green, red
+Add gpiochip_add_pinlist_range() function to add a range for GPIO <-> pin
+mapping, using a list of non consecutive pins.
+Previously, it was only possible to add range of consecutive pins using
+gpiochip_add_pin_range().
 
-Based on the work done by Gary Wang <garywang@aaeon.com.tw>, largely
-rewritten.
+The struct pinctrl_gpio_range has a 'pins' member which allows to set a
+list of pins (which can be non consecutive). gpiochip_add_pinlist_range()
+is identical to gpiochip_add_pin_range(), except it set 'pins' member
+instead of 'pin_base' member.
 
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/leds/Kconfig        |   9 ++++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-upboard.c | 126 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 136 insertions(+)
+ drivers/gpio/gpiolib.c      | 74 +++++++++++++++++++++++++++++++++------------
+ include/linux/gpio/driver.h | 12 ++++++++
+ 2 files changed, 66 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index b784bb74a837..984ef5cfa9fa 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -815,6 +815,15 @@ config LEDS_SC27XX_BLTC
- 	  This driver can also be built as a module. If so the module will be
- 	  called leds-sc27xx-bltc.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 3c8ec7f3a83b..e0fe07167e62 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2227,26 +2227,9 @@ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
  
-+config LEDS_UPBOARD
-+	tristate "LED support for the UP board"
-+	depends on LEDS_CLASS && MFD_UPBOARD_FPGA
-+	help
-+	  This option enables support for the UP board LEDs.
-+
-+	  This driver can also be built as a module. If so the module will be
-+	  called leds-upboard.
-+
- comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
+-/**
+- * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
+- * @gc: the gpiochip to add the range for
+- * @pinctl_name: the dev_name() of the pin controller to map to
+- * @gpio_offset: the start offset in the current gpio_chip number space
+- * @pin_offset: the start offset in the pin controller number space
+- * @npins: the number of pins from the offset of each pin space (GPIO and
+- *	pin controller) to accumulate in this range
+- *
+- * Calling this function directly from a DeviceTree-supported
+- * pinctrl driver is DEPRECATED. Please see Section 2.1 of
+- * Documentation/devicetree/bindings/gpio/gpio.txt on how to
+- * bind pinctrl and gpio drivers via the "gpio-ranges" property.
+- *
+- * Returns:
+- * 0 on success, or a negative errno on failure.
+- */
+-int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+-			   unsigned int gpio_offset, unsigned int pin_offset,
+-			   unsigned int npins)
++static int __gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
++				    unsigned int gpio_offset, unsigned int pin_offset,
++				    unsigned int const *pins, unsigned int npins)
+ {
+ 	struct gpio_pin_range *pin_range;
+ 	struct gpio_device *gdev = gc->gpiodev;
+@@ -2264,6 +2247,7 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 	pin_range->range.name = gc->label;
+ 	pin_range->range.base = gdev->base + gpio_offset;
+ 	pin_range->range.pin_base = pin_offset;
++	pin_range->range.pins = pins;
+ 	pin_range->range.npins = npins;
+ 	pin_range->pctldev = pinctrl_find_and_add_gpio_range(pinctl_name,
+ 			&pin_range->range);
+@@ -2282,8 +2266,58 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
  
- config LEDS_BLINKM
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 18afbb5a23ee..e7982938ddc1 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
- obj-$(CONFIG_LEDS_TURRIS_OMNIA)		+= leds-turris-omnia.o
-+obj-$(CONFIG_LEDS_UPBOARD)		+= leds-upboard.o
- obj-$(CONFIG_LEDS_WM831X_STATUS)	+= leds-wm831x-status.o
- obj-$(CONFIG_LEDS_WM8350)		+= leds-wm8350.o
- obj-$(CONFIG_LEDS_WRAP)			+= leds-wrap.o
-diff --git a/drivers/leds/leds-upboard.c b/drivers/leds/leds-upboard.c
-new file mode 100644
-index 000000000000..b350eb294280
---- /dev/null
-+++ b/drivers/leds/leds-upboard.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * UP board LED driver.
+ 	return 0;
+ }
++
++/**
++ * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
++ * @gc: the gpiochip to add the range for
++ * @pinctl_name: the dev_name() of the pin controller to map to
++ * @gpio_offset: the start offset in the current gpio_chip number space
++ * @pin_offset: the start offset in the pin controller number space
++ * @npins: the number of pins from the offset of each pin space (GPIO and
++ *	pin controller) to accumulate in this range
 + *
-+ * Copyright (c) AAEON. All rights reserved.
-+ * Copyright (C) 2024 Bootlin
++ * Calling this function directly from a DeviceTree-supported
++ * pinctrl driver is DEPRECATED. Please see Section 2.1 of
++ * Documentation/devicetree/bindings/gpio/gpio.txt on how to
++ * bind pinctrl and gpio drivers via the "gpio-ranges" property.
 + *
-+ * Author: Gary Wang <garywang@aaeon.com.tw>
-+ * Author: Thomas Richard <thomas.richard@bootlin.com>
++ * Returns:
++ * 0 on success, or a negative errno on failure.
 + */
-+
-+#include <linux/device.h>
-+#include <linux/container_of.h>
-+#include <linux/leds.h>
-+#include <linux/mfd/upboard-fpga.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define led_cdev_to_led_upboard(c)	container_of(c, struct upboard_led, cdev)
-+
-+struct upboard_led {
-+	struct regmap_field *field;
-+	struct led_classdev cdev;
-+};
-+
-+struct upboard_led_profile {
-+	const char *name;
-+	unsigned int bit;
-+};
-+
-+static struct upboard_led_profile upboard_up_led_profile[] = {
-+	{ "upboard:yellow:" LED_FUNCTION_STATUS, 0 },
-+	{ "upboard:green:" LED_FUNCTION_STATUS, 1 },
-+	{ "upboard:red:" LED_FUNCTION_STATUS, 2 },
-+};
-+
-+static struct upboard_led_profile upboard_up2_led_profile[] = {
-+	{ "upboard:blue:" LED_FUNCTION_STATUS, 0 },
-+	{ "upboard:yellow:" LED_FUNCTION_STATUS, 1 },
-+	{ "upboard:green:" LED_FUNCTION_STATUS, 2 },
-+	{ "upboard:red:" LED_FUNCTION_STATUS, 3 },
-+};
-+
-+static enum led_brightness upboard_led_brightness_get(struct led_classdev *cdev)
++int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
++			   unsigned int gpio_offset, unsigned int pin_offset,
++			   unsigned int npins)
 +{
-+	struct upboard_led *led = led_cdev_to_led_upboard(cdev);
-+	int brightness, ret;
-+
-+	ret = regmap_field_read(led->field, &brightness);
-+
-+	return ret ? LED_OFF : brightness;
-+};
-+
-+static int upboard_led_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
++	return __gpiochip_add_pin_range(gc, pinctl_name, gpio_offset,
++					pin_offset, NULL, npins);
++}
+ EXPORT_SYMBOL_GPL(gpiochip_add_pin_range);
+ 
++/**
++ * gpiochip_add_pinlist_range() - add a range for GPIO <-> pin mapping
++ * @gc: the gpiochip to add the range for
++ * @pinctl_name: the dev_name() of the pin controller to map to
++ * @gpio_offset: the start offset in the current gpio_chip number space
++ * @pin_list: the list of pins to accumulate in this range
++ * @npins: the number of pins to accumulate in this range
++ *
++ * Calling this function directly from a DeviceTree-supported
++ * pinctrl driver is DEPRECATED. Please see Section 2.1 of
++ * Documentation/devicetree/bindings/gpio/gpio.txt on how to
++ * bind pinctrl and gpio drivers via the "gpio-ranges" property.
++ *
++ * Returns:
++ * 0 on success, or a negative errno on failure.
++ */
++int gpiochip_add_pinlist_range(struct gpio_chip *gc, const char *pinctl_name,
++			       unsigned int gpio_offset, unsigned int const *pins,
++			       unsigned int npins)
 +{
-+	struct upboard_led *led = led_cdev_to_led_upboard(cdev);
++	return __gpiochip_add_pin_range(gc, pinctl_name, gpio_offset, 0, pins,
++					npins);
++}
++EXPORT_SYMBOL_GPL(gpiochip_add_pinlist_range);
 +
-+	return regmap_field_write(led->field, brightness != LED_OFF);
-+};
+ /**
+  * gpiochip_remove_pin_ranges() - remove all the GPIO <-> pin mappings
+  * @gc: the chip to remove all the mappings for
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 2dd7cb9cc270..8037f9a1e2a9 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -751,6 +751,9 @@ struct gpio_pin_range {
+ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ 			   unsigned int gpio_offset, unsigned int pin_offset,
+ 			   unsigned int npins);
++int gpiochip_add_pinlist_range(struct gpio_chip *gc, const char *pinctl_name,
++			       unsigned int gpio_offset, unsigned int const *pins,
++			       unsigned int npins);
+ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
+ 			unsigned int gpio_offset, const char *pin_group);
+@@ -765,6 +768,15 @@ gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
+ {
+ 	return 0;
+ }
 +
-+static int upboard_led_probe(struct platform_device *pdev)
++static inline int
++gpiochip_add_pinlist_range(struct gpio_chip *gc, const char *pinctl_name,
++			   unsigned int gpio_offset, unsigned int const *pins,
++			   unsigned int npins)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct upboard_fpga *fpga = dev_get_drvdata(dev->parent);
-+	struct upboard_led_profile *led_profile;
-+	struct upboard_led *led;
-+	int led_instances, ret, i;
-+
-+	switch (fpga->fpga_data->type) {
-+	case UPBOARD_UP_FPGA:
-+		led_profile = upboard_up_led_profile;
-+		led_instances = ARRAY_SIZE(upboard_up_led_profile);
-+		break;
-+	case UPBOARD_UP2_FPGA:
-+		led_profile = upboard_up2_led_profile;
-+		led_instances = ARRAY_SIZE(upboard_up2_led_profile);
-+		break;
-+	default:
-+		return dev_err_probe(dev, -EINVAL, "Unknown device type %d\n",
-+				     fpga->fpga_data->type);
-+	}
-+
-+	for (i = 0; i < led_instances; i++) {
-+		const struct reg_field fldconf = {
-+			.reg = UPBOARD_REG_FUNC_EN0,
-+			.lsb = led_profile[i].bit,
-+			.msb = led_profile[i].bit,
-+		};
-+
-+		led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
-+		if (!led)
-+			return -ENOMEM;
-+
-+		led->field = devm_regmap_field_alloc(&pdev->dev, fpga->regmap, fldconf);
-+		if (IS_ERR(led->field))
-+			return PTR_ERR(led->field);
-+
-+		led->cdev.brightness_get = upboard_led_brightness_get;
-+		led->cdev.brightness_set_blocking = upboard_led_brightness_set;
-+		led->cdev.max_brightness = LED_ON;
-+
-+		led->cdev.name = led_profile[i].name;
-+
-+		ret = devm_led_classdev_register(dev, &led->cdev);
-+		if (ret)
-+			return ret;
-+	}
-+
 +	return 0;
 +}
 +
-+static struct platform_driver upboard_led_driver = {
-+	.driver = {
-+		.name = "upboard-leds",
-+	},
-+	.probe = upboard_led_probe,
-+};
-+
-+module_platform_driver(upboard_led_driver);
-+
-+MODULE_AUTHOR("Gary Wang <garywang@aaeon.com.tw>");
-+MODULE_AUTHOR("Thomas Richard <thomas.richard@bootlin.com>");
-+MODULE_DESCRIPTION("UP Board LED driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:upboard-led");
+ static inline int
+ gpiochip_add_pingroup_range(struct gpio_chip *gc,
+ 			struct pinctrl_dev *pctldev,
 
 -- 
 2.39.5
