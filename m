@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-13824-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13825-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A46D49EF097
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 17:29:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C01D9EF09C
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 17:29:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D7B5128D72A
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 16:29:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F279328AC4B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 16:29:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8BC232366;
-	Thu, 12 Dec 2024 16:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 984432336A7;
+	Thu, 12 Dec 2024 16:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="pw0JJYUU"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="LN8c1uWk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66096231A2F
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 16:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83923231A48
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 16:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734020349; cv=none; b=AmmL4Dsmlky4zqL1MQfSZvMgiunxB+cItIz09MBa89d4xtKzFFFo4/ZLgr0H2DrmzBAe7DHz4IcIQK4RqrxdOpRku4KaRXpqsc4/YOGF+ZCaVNuC2orNrCGwuE7aVTXKYiSERnVEA1c19QDBUSGWbAwecL7/lNs5czHDS5XrQGc=
+	t=1734020350; cv=none; b=ZARTJ+wmcCv71kelizNrcxyTrOrTTUQ8++9kZW/dZo3dR9GErn15e9sL1rEZgzCf1RpwBSrIow9IdHXId7LUEAdFQiC6vmIPNnym1weuEBXP2rDXjluHpFq5gpGST9qFI0ejD9cb1hvGvI6IDQ0sZqC/z7xBBbjJNVicCi0rz3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734020349; c=relaxed/simple;
-	bh=rkPNOS/CThHiZ6WlZSF0eZPRzkaH0woMbTCR+SPr3t8=;
+	s=arc-20240116; t=1734020350; c=relaxed/simple;
+	bh=z49WJ/Ecx3cRmoavwvCyrBSrNBZWdJ5YBE+eW9OtjMY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m5Znaf7duppZ7jKCjtDfdZcUJ4QckG4SkVf+0pSjxOBDPdbnw4t+mDuylMLhqewlVI0EnUlGyPQ6ViFOcDuXntlcfJG3LrdJqmPL0637r/bAWNGyRTExJ/hOqf+5JlBaxlVLCwV4wZdwzscPzH8IDdwpWbo+JB1AR4Yjc+8JPR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=pw0JJYUU; arc=none smtp.client-ip=209.85.128.50
+	 In-Reply-To:To:Cc; b=OCPRK1mqwlbRouc/XQTxRGKdJMYW+mFgrsYM7KNu6f4lfTIzKKo2dRGbbU5FWpv4TrUvA5JfX/dF/7AIzzLBFrWjlS7B266fEVaLU98TDZpFzlRKeCZuXR3xEb1ARqer3jYUjxwpfC0nL4RAdKUps47YN9gOKl1inxV5Jef04EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=LN8c1uWk; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4361815b96cso5793045e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 08:19:07 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-435004228c0so10350205e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 08:19:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1734020345; x=1734625145; darn=vger.kernel.org;
+        d=raspberrypi.com; s=google; t=1734020347; x=1734625147; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZmY4nSeOHfUAeSRoOGUYAdGnJvM3BDuelhiAae/7ZWg=;
-        b=pw0JJYUU8lSpKaYDG1xYEW30vvb8fR1NvawXdELQX9Y6mK70Y6/vu1rkkSu+eFdcaG
-         YWF9nrKSZS5qbGTb8+/EJJD3HcedIwLxdHThtgVs/e45sJUT3Gh3Y31TNvv25NMvvZeY
-         0YpX++blG3D9AQZ7p60v+tGpeyEGS645Bbro3tkPXVBthgbRIH8//RM2WisK7C5WPuTh
-         uTVy/eCa+BKpM/nK14RuJ7FbXBrQ8VL2p0q7yUbNk4r30gyIUSHpgVvnPOEqWUr8DOUA
-         r2ZFpZU/U4AhvuwAgx1vo73cpfmJSZ7q5wtwh9KL31wLQWo7sx0Sivl5mFoL+pR5qG6v
-         NyGA==
+        bh=Fzut7xbqOYPi19sCzyZBocxByvsBqwohQ5FyR54rsTQ=;
+        b=LN8c1uWky/LtsLuX3IMAYIO13wzKVv6rQ+KonJdKsm0AcTz6fEmhwIkf4nIYfEVwOF
+         41MSaBvPoSGGJb5HxXKBaJuBm6FCcoaOHk1jeQ2aMZWjis5LDmnvnTbx3+hOd+XLu5By
+         cpizOCm9Vf22CppP3GnY2xBv44Ulb+gtbFA8Bjjia+ke7BSNu1obegNEabbqYPco7jd7
+         RGsEfvDdB5J3Mx47grWpo9q3GWTz+Du1qLRktQkvgk5Tv0h4O8QneiLJc5Tslo2wC83r
+         Oehg61sxLO7eECzjKE/c2MHOJisWM4lEdfl1POlGB4XJYtklDn/JsUsJQomwZd4s5Q9D
+         9F9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734020345; x=1734625145;
+        d=1e100.net; s=20230601; t=1734020347; x=1734625147;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZmY4nSeOHfUAeSRoOGUYAdGnJvM3BDuelhiAae/7ZWg=;
-        b=mnZTmTcBtst+nw9ZDGs6BCanDzQbZTgorKBOM4hZDA3o3IqKoOtpFN4qNFQyM8hUre
-         MN7yITvNpQ6SOaOGulLBFuoHZNCRe21UCAWRNULn+uq396D7eq71VhgtVPC6sd/cZ1qP
-         DJW7vZTaDU+YT+307haSE7ilOMvJi45QIfE2MabN71Y2jA88hhjVdaSECFJuQY0T+VHy
-         3ap/lOxUoH1858iN0UuovgEg8UHPEDtpOKib9ZXp/jIYnn2L9fhku4cUMrxBh2wnoTkP
-         tRG+jej5Z+wZn9NgWp2mZyoWjuqD6zszB59tJkoy9AEMoBCwAlqw2go1Ea5QU6n8asCz
-         VrDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+X0ub5sq9MGV0UVGR9fyWye0+3uPsZvGadXY1dRyqwSIkXfj1nEni4SLdT6cRlO5ME5k4GjH7Hc6E@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpSyjzKMDlUGoesJUErfkXaFdN6QwAWLxjFp/YnlZzNjCZBmkW
-	IzV7dltVnBFKAlGSYuDCQs2Y99GdkxPvDoLzvTDH77cn4ZcKkpJ5H6LXYCXLNGU=
-X-Gm-Gg: ASbGncs9xP2ugvaDsq9UaPIxQhY6oN+M++LhGCW+61Z7Iw9caD067fyKF4acBI0gTET
-	T00utYzVSqsR4DzKhZe05PGYWKef6TeaV3dkZvyaNHZgsD3RcuVnJ54pxcfWVmiSro+v/o2Ncsc
-	Cvg3/cHbXDI+ejraouK5MVlnVqlwe05nlkig9zvDIuG6oZDvqHP9geP7WZpGJqynayceRtOdPRj
-	UYvBYvrhjlq0CCYt4+l/pnzMEcpLPv7VXf8bb8sEwTHwYog
-X-Google-Smtp-Source: AGHT+IGaFVqNcAbsh2wXwykvgIG8wIvYr5xOyoWGcWi8bclbVOgLkhFW5BR0LdTPsNVGk8Tlgv5MLQ==
-X-Received: by 2002:a05:600c:b86:b0:434:f2f4:4c07 with SMTP id 5b1f17b1804b1-4361c373f5fmr66829415e9.15.1734020345541;
-        Thu, 12 Dec 2024 08:19:05 -0800 (PST)
+        bh=Fzut7xbqOYPi19sCzyZBocxByvsBqwohQ5FyR54rsTQ=;
+        b=Jg+wlM8rRCxfA2BNTDvRTVvBxC5vWj4KYaRxR4sdb4YdQyIoLVokatmyy93i7JR13d
+         DpcagJyIZnNYoffJP+K09kOrsWY+jipLWBcyrNCBV5DOOysLFSuabfortCVjSfrJZGgX
+         Yh8GHWjz3jfk0A9awnNbyT9zJlD593pwoYMTfdp+Al0m0U6hi86w4O+G2vqtULPuVeqA
+         kK6rIkb9RZ7Z40IqECCzbit1142V3jnQMOh0WErrKvZ5xgwsWfZCSu7xwALXozvH4Abk
+         CW5Zol26Xsk/iTA+D6BUWiT72aP8KwICsVAX0CDRKGAF7ErTWENIhz9FQWXPHkSp9GEJ
+         iPNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWJtuppe3dSJqvclblIdEcf4ZVI5GBlsWUy7htZR2JBCu0XUWGxO1c9fBaiq6MrhuaW3YNhQr3Cq0c@vger.kernel.org
+X-Gm-Message-State: AOJu0YywxFqHN7GS6TwNNdoCWzDp9CQm+yVstgo49HyRgb3SBOaD0rB6
+	qaw0AXyxzWFP7myzmG+avcsUaBEX2aG2Q2l+Mje2qWFxlv0YWDIjdSUX9NnQuLA=
+X-Gm-Gg: ASbGnctu7LgeaeTslSKjct75Ywwi1y5cFHKzFmcBJ3dLSvGS6z425ufiIGaCkLZKXUp
+	ftlXPfdr1qhE/sIz9Kudo105zTtIwwmhYt7fglyfifdvPsmEvB4WZRdmKFBBvEnLaGQRkq2IfRS
+	Zu/It0KSNPcKcTZG+lRiwNKN/aQ5WLpAo4OZ7nVddx98C6Lq4ulVxZAqSh9gJ+hvHdu3in2dDSt
+	e8Yw8l+r5Eju4SPaQqPoe+4jZNcEdYO5VUYelLYjLUHj7l7
+X-Google-Smtp-Source: AGHT+IHoZqbjRY4dxkOhKOSnSfMy3sMqazkkzCHwzeDCSj2+qMUGuSSsMXf/szART5dZ1m3BKwwUjQ==
+X-Received: by 2002:a05:600c:468c:b0:436:18d0:aa6e with SMTP id 5b1f17b1804b1-4361c396ad1mr69550575e9.5.1734020346842;
+        Thu, 12 Dec 2024 08:19:06 -0800 (PST)
 Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4361e322328sm44336105e9.0.2024.12.12.08.19.04
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4361e322328sm44336105e9.0.2024.12.12.08.19.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2024 08:19:04 -0800 (PST)
+        Thu, 12 Dec 2024 08:19:06 -0800 (PST)
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Thu, 12 Dec 2024 16:18:52 +0000
-Subject: [PATCH v2 2/7] dt-bindings: display: Fix BCM2835 HVS bindings for
- BCM2712
+Date: Thu, 12 Dec 2024 16:18:53 +0000
+Subject: [PATCH v2 3/7] dt-bindings: gpio: brcmstb: permit gpio-line-names
+ property
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241212-dt-bcm2712-fixes-v2-2-35986e04d0f4@raspberrypi.com>
+Message-Id: <20241212-dt-bcm2712-fixes-v2-3-35986e04d0f4@raspberrypi.com>
 References: <20241212-dt-bcm2712-fixes-v2-0-35986e04d0f4@raspberrypi.com>
 In-Reply-To: <20241212-dt-bcm2712-fixes-v2-0-35986e04d0f4@raspberrypi.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -106,121 +106,33 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, Dave Stevenson <dave.stevenson@raspberrypi.com>
 X-Mailer: b4 0.14.1
 
-Commit 6cfcbe548a3a ("dt-bindings: display: Add BCM2712 HVS bindings")
-added the compatible string for BCM2712, but missed out that
-the number of interrupts and clocks changed too.
+gpio-line-names is a generic property that can be supported by any
+GPIO controller, so permit it through the binding.
 
-Update to validate clock and interrupts for the variants.
+It is permitted to have a variable number of GPIOs per node based
+on brcm,gpio-bank-widths, so define an arbitrary maximum number of
+items based on current users.
 
-Fixes: 6cfcbe548a3a ("dt-bindings: display: Add BCM2712 HVS bindings")
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 ---
- .../bindings/display/brcm,bcm2835-hvs.yaml         | 83 ++++++++++++++++++----
- 1 file changed, 69 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-index f91c9dce2a44..36bf8eec88a6 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
-@@ -20,11 +20,20 @@ properties:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
+index f096f286da19..fbd69b4cecc7 100644
+--- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
+@@ -64,6 +64,10 @@ properties:
  
-   interrupts:
--    maxItems: 1
+   gpio-ranges: true
+ 
++  gpio-line-names:
 +    minItems: 1
-+    maxItems: 3
++    maxItems: 128
 +
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 3
- 
-   clocks:
--    maxItems: 1
--    description: Core Clock
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
- 
- required:
-   - compatible
-@@ -33,17 +42,63 @@ required:
- 
- additionalProperties: false
- 
--if:
--  properties:
--    compatible:
--      contains:
--        enum:
--          - brcm,bcm2711-hvs
--          - brcm,bcm2712-hvs
--
--then:
--  required:
--    - clocks
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm2711-hvs
-+
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Core Clock
-+        interrupts:
-+          maxItems: 1
-+
-+      required:
-+        - clocks
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm2712-hvs
-+
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 2
-+        clock-names:
-+          items:
-+            - const: core
-+            - const: disp
-+        interrupts:
-+          items:
-+            - description: Channel 0 End of frame
-+            - description: Channel 1 End of frame
-+            - description: Channel 2 End of frame
-+        interrupt-names:
-+          items:
-+            - const: ch0-eof
-+            - const: ch1-eof
-+            - const: ch2-eof
-+      required:
-+        - clocks
-+        - clock-names
-+        - interrupt-names
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm2835-hvs
-+
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
- 
- examples:
-   - |
+   wakeup-source:
+     type: boolean
+     description: >
 
 -- 
 2.34.1
