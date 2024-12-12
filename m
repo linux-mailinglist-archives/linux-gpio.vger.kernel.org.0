@@ -1,131 +1,187 @@
-Return-Path: <linux-gpio+bounces-13831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6FC99EF218
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 17:45:42 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9295C17A6F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 16:35:15 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2204D2288ED;
-	Thu, 12 Dec 2024 16:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M8a8uezA"
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 571A39EF15E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 17:37:52 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E90A2288CD;
-	Thu, 12 Dec 2024 16:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1123728DA4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 16:37:51 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6E022A7FC;
+	Thu, 12 Dec 2024 16:26:50 +0000 (UTC)
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1099D222D7D;
+	Thu, 12 Dec 2024 16:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734020724; cv=none; b=An1s9TrX6716RinQBroT38gkdnorw4JQXkMJgNyY6PXEmBA2xyGTSuWq7KVt+L3plLQaHhsQZbZHmEffqeUv2BySYeK9NTMPcN/eK+xNQ9aOL2Y+8pwsI7D+L9XhXp7YLxpF7CXe42YDTfBiH0nPNABERxyvfq9kyPgovaC1mNQ=
+	t=1734020810; cv=none; b=dsCkWtwd4HvP/iSzTWNp95nxH6kl3lOrlwZJ8zfklmXXOASLF+CZYz60MwKlNMxFKzBE4pzgK242iUVYwRuFGkhpC/FDznrICGtGDtwHUoDmS+RaLC6ufQwRiG3VtDCDGwYW2RevJsatxnzv7TMNYoRZdmZ+5fdOTHvlmlp2LlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734020724; c=relaxed/simple;
-	bh=jmircCLNqfQBhuh2VCOQbpQ4E46VLkw0Jv1d0IeEevU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWxOpMmaWIjXmn/1Of0Si6BWTgTiBrrPvbbVhFPdKp6l4j4nFGpFXeWB6Cw2EnAu1ohWNE9jsvJbRVZkg7Dz8Tyn920IjuozIDDY45ifQnKzDpWtWMeWzzJCB1+LDaxHti2Fg6JkQdTIpEMrnnGyGdYPt+RRPxyO66nDm+5ucNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M8a8uezA; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734020723; x=1765556723;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jmircCLNqfQBhuh2VCOQbpQ4E46VLkw0Jv1d0IeEevU=;
-  b=M8a8uezA0QeUDBHdtGWLJYrrs96aH4C1lkKscpE7ioapkn0GwKWj99Ut
-   63obqdxGzo3V1nkYoPAMYVLPXUXCFlNQA8wFUt19ZxctniOkf3PL+tXCV
-   cOehs3xJxjIaIArw16sKEHZ3ztIxIQo35uaF0B2/d56lMiEGMi6MJDTr/
-   RX56CDwCVNBwsyLH1eUARCL564nlWOlkqU6myygmKVbp9dmKh+AJEUdjH
-   xjNwbAL3HJTo9p2d+Fw9Pyk3YissF7FGPWauTRAc5bCaLOTwvQpSnGX+r
-   VRlhUcQ3seQ/yojw4NDNmWl75mqs9p70qC5NToJKKU36HyFgoIh4u7wlI
-   w==;
-X-CSE-ConnectionGUID: f7w2L+EiTVOcDzDIJGhbaw==
-X-CSE-MsgGUID: bT7KFElVSuqdBFlF86eX+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11284"; a="34368149"
-X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
-   d="scan'208";a="34368149"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 08:25:22 -0800
-X-CSE-ConnectionGUID: 2x7poQK9TiiSPVbNWMCpWQ==
-X-CSE-MsgGUID: Nvb/8M3pTEaYxgnQxD2u7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,229,1728975600"; 
-   d="scan'208";a="96163080"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2024 08:25:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tLm04-00000006xxb-3o8b;
-	Thu, 12 Dec 2024 18:25:16 +0200
-Date: Thu, 12 Dec 2024 18:25:16 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Raag Jadav <raag.jadav@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	broonie@kernel.org, pierre-louis.bossart@linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Introduce devm_kmemdup_array() helper
-Message-ID: <Z1sObNubEnsFwzOD@smile.fi.intel.com>
-References: <20241126172240.6044-1-raag.jadav@intel.com>
- <CACRpkdZqdE8gQCre=zR2cN17oKfwBSnWuVwzQsbRO7-ENVnPNg@mail.gmail.com>
- <Z0nNnsmYIil0OZpy@smile.fi.intel.com>
- <Z1Rfuo3jq7rO0cqb@black.fi.intel.com>
- <Z1r0EPC9gumruFKU@smile.fi.intel.com>
- <2024121242-saturday-aqua-9ac6@gregkh>
+	s=arc-20240116; t=1734020810; c=relaxed/simple;
+	bh=3BqDJ9IE28Vm637IKbe7D+AverMUfpFzzOLy73Ms0L0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PM3iV10ZERTnMGJCyICaEmHnHD1r/Jrr/AMhchK9GCouGEwr992r9bVkoIQG+7499UH2Fs3I2jWuafdinqh5RgXTDwr9C0+xBhXqYcXcDRXJfg2Oj8EOAmUBWt0OXgreBGyI+4v4u9b2fxsCKWthgUZfgiSARUb8x0jA1RJLIPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b6e9586b82so58918385a.1;
+        Thu, 12 Dec 2024 08:26:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734020806; x=1734625606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2gmd/BJFeq2Hao7Wbaw63l9kXbYIa+IGJrdLMUYPON4=;
+        b=E616Pp6BeICL+WZT3DtYeEyZ0jJ1CnYJtkFTzJQMmfv8EzKnKLxNKIcvHylSGNba5U
+         5GU89rahS9qdvsP57s4wjDYeljK2Pz/8K8xWbjae8eiEnfkDGeOUE3O1l4RoGQ+Kz3U1
+         DAmnhG4x2JuYP5BMtzcC+QFv3WS1j4FQ0QbdTPtIzqu2aMv7wgv8VxGsh4bqqZQWKOJC
+         n4F5gnWbl4PaULlZmOJzg3lEEKD17LLEUnJL35RBoW0uPb4tgyboi60BA6d044HRvis3
+         B04tFQbRceeWUHX1OtdLXSGxGRzbdaowcExZakEXrgk8phoKG7OAMPcDXyAGWS7ellD/
+         VtlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhIM64MmKocwKpCKcuchfQiUgCh3oVsX/Tcuw2uGDyOVqkJfn7bItu4lzNnLhk8iTgTsoedx7THX6e@vger.kernel.org, AJvYcCVurQtk8kIWj1vnOeLVhLJULVllorcJFfro7jamoLAzRMWG8B8RZohZ9belT0KJS6hBn8fDc2QhzkBLMg==@vger.kernel.org, AJvYcCWhSzdpJe6VKVS0uRwlvhLsdqAnyHkMdEgk2jl7hus4U2sVefYAntDkL2SH2mOphkOL5Nd1/VYGRb+yV+jjWKwRDBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDlWuCU0gK7p/g3tZ79DYwjgjJiLQhc85wslRFGbxoYU8i+HIF
+	hscV82rUvLf9veRvb0HReVV2zE8D0juG/VFW9l7/LF/s8Oh6YXcgXRuUIY/BySM=
+X-Gm-Gg: ASbGncvld85A6djPLmJpoo7RH1xugBszkcodFxFi9qkJxosbGf9Z8a1b5glyPyK2SiG
+	PVYIno0OVjfb1ld3MR1rAYYtZBiHsEjR29eWbpiZCCfZZneZfBoiY14RPbH3SOYOGIF6Qc9prJR
+	lV6+knqA9TZg0Bie+dJBbuySUBLqjmn0lAqECFbvnnLcYMpZUtoFr/BQ/IfoaVLmih7Qr4AHH1A
+	YxpWlLg3KmPDhqUQdq77Og18GNEueLX2F2FzF+44Jm6/4oNu601VO3Dc72Zly6mTGow7bhTrwHk
+	vGIbJDE0GcR1HsR5x1w=
+X-Google-Smtp-Source: AGHT+IGl+ZVExP5Fh4dgDfIj+1iHyCdZzI+mDeaZvywnXKlC5YnDUP8TctR2GnoRWT2UOdpES4y+UQ==
+X-Received: by 2002:a05:620a:240f:b0:7b6:d383:3cca with SMTP id af79cd13be357-7b6f89acff5mr124571285a.35.1734020806597;
+        Thu, 12 Dec 2024 08:26:46 -0800 (PST)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-85c464d9216sm1763780241.5.2024.12.12.08.26.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2024 08:26:46 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4afed12283eso397459137.1;
+        Thu, 12 Dec 2024 08:26:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVbKIDWP//Isf68+QWSVzX3VT6/ffuFX3TtznurtIOyrWSfAk+rQmVJ+NchghzYUrd32bWrYDnQOzuW@vger.kernel.org, AJvYcCW7hqtq5uzguCVghrKF3t9UUN0U+atDamWX5ITga4N0L96ua+t0CFm2i0cLVEGPoUj6NbacgD0LaKO4Hw==@vger.kernel.org, AJvYcCWxCxQQJM6LIDg8OMDD8clTOp+4vkYwsX3Qs57qnopiAd1FAOsw3w9YWJ4yyo4mbzMyugxvAWJkQIcE8nrtU/81ERw=@vger.kernel.org
+X-Received: by 2002:a05:6102:3f88:b0:4b2:48dd:aade with SMTP id
+ ada2fe7eead31-4b257f7d94amr1900641137.12.1734020806064; Thu, 12 Dec 2024
+ 08:26:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024121242-saturday-aqua-9ac6@gregkh>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20241206102327.8737-1-biju.das.jz@bp.renesas.com> <20241206102327.8737-2-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20241206102327.8737-2-biju.das.jz@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 12 Dec 2024 17:26:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVWaVscNyhsN3eKC2EqQc_Hp3kALiLso+4AOic6huMAXA@mail.gmail.com>
+Message-ID: <CAMuHMdVWaVscNyhsN3eKC2EqQc_Hp3kALiLso+4AOic6huMAXA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: renesas: Document RZ/G3E SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	Biju Das <biju.das.au@gmail.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 12, 2024 at 03:39:57PM +0100, Greg KH wrote:
-> On Thu, Dec 12, 2024 at 04:32:48PM +0200, Andy Shevchenko wrote:
-> > On Sat, Dec 07, 2024 at 04:46:18PM +0200, Raag Jadav wrote:
-> > > On Fri, Nov 29, 2024 at 04:20:14PM +0200, Andy Shevchenko wrote:
-> > > > On Fri, Nov 29, 2024 at 11:17:02AM +0100, Linus Walleij wrote:
-> > > > > On Tue, Nov 26, 2024 at 6:22 PM Raag Jadav <raag.jadav@intel.com> wrote:
-> > > > > 
-> > > > > > This series introduces a more robust and cleaner devm_kmemdup_array()
-> > > > > > helper and uses it across drivers.
-> > > > > 
-> > > > > For the series:
-> > > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > > 
-> > > > > It seems like Andy will push it to me which is excellent.
-> > > > 
-> > > > Yep, that's the plan after we get all necessary ACKs.
-> > > 
-> > > Greg, anything I can do to move this forward?
-> > 
-> > Greg, is it possible to give your Ack or comment or guidance of the preferences
-> > with the first patch?
-> 
-> $ mdfrm -c ~/mail/todo/
-> 2293 messages in /home/gregkh/mail/todo/
+Hi Biju,
 
-Oh my...
+On Fri, Dec 6, 2024 at 11:23=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+> Add documentation for the pin controller found on the Renesas RZ/G3E
+> (R9A09G047) SoC. The RZ/G3E PFC is similar to the RZ/V2H SoC but has more
+> pins(P00-PS3). The port number is alpha-numeric compared to the number on
+> the other SoCs. So add macros for alpha-numeric to number conversion.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+> v1->v2:
+>  * Fixed the warnings reported by bot.
 
-> Please be patient.
+Thanks for the update!
 
-Sure!
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yam=
+l
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yam=
+l
+
+The changes to the bindings LGTM.
+
+> diff --git a/include/dt-bindings/pinctrl/rzg2l-pinctrl.h b/include/dt-bin=
+dings/pinctrl/rzg2l-pinctrl.h
+> index c78ed5e5efb7..1b1b1114a84c 100644
+> --- a/include/dt-bindings/pinctrl/rzg2l-pinctrl.h
+> +++ b/include/dt-bindings/pinctrl/rzg2l-pinctrl.h
+> @@ -11,13 +11,38 @@
+>
+>  #define RZG2L_PINS_PER_PORT    8
+>
+> +#define RZG3E_P0               0
+> +#define RZG3E_P1               1
+> +#define RZG3E_P2               2
+> +#define RZG3E_P3               3
+> +#define RZG3E_P4               4
+> +#define RZG3E_P5               5
+> +#define RZG3E_P6               6
+> +#define RZG3E_P7               7
+> +#define RZG3E_P8               8
+> +#define RZG3E_PA               9
+> +#define RZG3E_PB               10
+> +#define RZG3E_PC               11
+> +#define RZG3E_PD               12
+> +#define RZG3E_PE               13
+> +#define RZG3E_PF               14
+> +#define RZG3E_PG               15
+> +#define RZG3E_PH               16
+> +#define RZG3E_PJ               17
+> +#define RZG3E_PK               18
+> +#define RZG3E_PL               19
+> +#define RZG3E_PM               20
+> +#define RZG3E_PS               21
+
+This maps the discontiguous alpha-numerical port name range to a
+contiguous numerical range.
+As there are corresponding holes in the register layout, I am not sure
+such a mapping is a good idea.
+What if a future variant (or a future documentation update) exposes
+the ports in between?
+
+> +
+>  /*
+>   * Create the pin index from its bank and position numbers and store in
+>   * the upper 16 bits the alternate function identifier
+>   */
+>  #define RZG2L_PORT_PINMUX(b, p, f)     ((b) * RZG2L_PINS_PER_PORT + (p) =
+| ((f) << 16))
+> +#define RZG3E_PORT_PINMUX(b, p, f)     RZG2L_PORT_PINMUX(RZG3E_P##b, p, =
+f)
+>
+>  /* Convert a port and pin label to its global pin index */
+>  #define RZG2L_GPIO(port, pin)  ((port) * RZG2L_PINS_PER_PORT + (pin))
+> +#define RZG3E_GPIO(port, pin)  RZG2L_GPIO(RZG3E_P##port, pin)
+>
+>  #endif /* __DT_BINDINGS_RZG2L_PINCTRL_H */
+
+Note that I do like the clever scheme to handle alpha-numerical
+port names. Perhaps this should be implemented for RZ/V2H, too?
+RZG2L_GPIO(10, 2) and RZG2L_GPIO(10, 3) in r9a09g057h44-rzv2h-evk.dts
+do refer to PA2 and PA3.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
