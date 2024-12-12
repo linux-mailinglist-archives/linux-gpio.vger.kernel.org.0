@@ -1,140 +1,103 @@
-Return-Path: <linux-gpio+bounces-13809-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13810-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2279EE31F
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 10:34:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55B339EE41A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 11:29:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D06E162DDF
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 09:34:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3873B163509
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 10:29:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2A9B20E33F;
-	Thu, 12 Dec 2024 09:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B8D2101B4;
+	Thu, 12 Dec 2024 10:29:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RQXHOvsN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H/Q2HDH0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2C8187870
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 09:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF85211292
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 10:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733996086; cv=none; b=po7YFGStpK5/Ni7mS1MvfRD8NxnVbn7F32P1mts5zMPcamPFqAECma+BQ2vH4tKxFqDHfZ6Bh60XyDD+d8DV/D36xiLwzxeQJ2JUC3DTkr0E+GOrbw4/MyXjcLsRvXSXapzmqxwNGbUd2DJYpmO5tAFbelq1SwHlUTvnFF4dWCg=
+	t=1733999362; cv=none; b=PCwHMHQFzG2WsZZ40f4ivBfeAw0qXBtXNCvE4WNeOZH5pi/ShJCoanLCmhqJpDv+oaF8jNG+nZx1qlPlO1TWQVCdA9bDJ7hXW/cDPtGMBBYwvWKV2zca7R3J6zAWkdCljwCaoujmemVsaHxxOi3Wnjkvn1dBA+gOTY+A3O30M+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733996086; c=relaxed/simple;
-	bh=VppiEC71iSiVaMU4csmiMBmKCcacxPVxHFurn9yQxl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gpn0ceSEca/zAZYgFqG95QnnO7euRzS5GMnwm9oJvvELhb7Ty9HJHv/ICNb7/UYyaXhpBdaKIuwXtUsoWCvJXLM/njdwDrMwvS5frE2feIg2Enx2NvgmtSo+ORSif+9aa38gM5EmNwArnNqbCA9gfzsmkR0JpsjzYZIXOYIb7lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RQXHOvsN; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30229d5b229so2956281fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 01:34:44 -0800 (PST)
+	s=arc-20240116; t=1733999362; c=relaxed/simple;
+	bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uIJBZboyVi3CD6+hjiBBxagRD5yiXy6980OrsuSsfRX2PF0z47s6Z7MGu0y2G1eyGIDIBj5byMNOC+RkeG7I5d8DzYFyGLu2surLaXG88QmjGkPxxCgnkiQX4L/jPy5AV3cehltuFgag0UsyLe++IMJ7NaFHdEygL/cLV/vc4gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H/Q2HDH0; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5401e6efffcso494338e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 02:29:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733996083; x=1734600883; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xpy/CwxbVse7VurY2aJqzrYBxP3zeCul6ZdOEgv8Rdw=;
-        b=RQXHOvsNslQl1jpCD/RJH+wazhJnF9vY1KB3VfhK1xRwXp01NTj27Qgd6EDiQa0lqJ
-         7YXLjSu1LX3AGUzsIsAT59rxfYBe8dkEdBlhfpRlq3YRXSlui3HXJGFa3Vco+Edu6o2o
-         j4ItZeTmlaSsNmVXicNcCG7RERPFe/QXakscyUbHbXT9QhhZzSCB63t+N0cKsaFBWPit
-         k1PLspP+Shc6iMZRkMNRZ/iHhrbLd18joJ1YZQEbac81ORU3bMZfw7v36XFWjalFCvRT
-         T8BaXC2AuhLJeRTXMUaIlWpMtXRfmzxdHf8DRw0Xt1T9/Z3lCFYetLnrKjCIYl1oL4eU
-         vEkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733996083; x=1734600883;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733999358; x=1734604158; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xpy/CwxbVse7VurY2aJqzrYBxP3zeCul6ZdOEgv8Rdw=;
-        b=r+MXDb2z4ROX5VL2yPRr94zl0MkH9aBFvCJZx+DJpPiZPSDVL2bGaOY+ra/KC89mRw
-         7GSSE4R3dlJkXs1EpprgH45O3aQvMDuN6j0lHI1wtcT9ne4CeK47o8fUoQ5FLTo9TgcT
-         l9WN8XxUN3xX/ycRZJj7HQ23ISh9K4csh8kh01qW56tTYWVgTvo5TFb9uEA6jaxUy8oi
-         cpsdhbwxKeZXH+oAUKpYZwK39jgEADnth++712MdwUwxCc59aHGQ/GOGVc0pJd/OxSt0
-         RdHIoAb0WSjSNhFOJYCvUoWUu7oaFH4k5ff1d6rdupWK91KyzbRsYJdmz7CyiaEFeshW
-         1DqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSzTs9c7IJR6B4XVTXd/Ks81o7J6mEM7PQ6NxemCSPGftTSLSCG3kDdEi5AFQb13GihawVtIdxWKpd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIS8Ai5i23UlybFXtadUbC4ola7N4s5mrYlvaH6dUxuOtQMY1u
-	kKZYhofTkP6uNteyVUfpK0IQL6A+Un50FaSmmdh5Z5H04zxCqTwFlrIw2h2C+r8=
-X-Gm-Gg: ASbGnctXw/fJ0Eid5z2EQyjkahv30mzFDAm1FLfLuHNXp3CnnEO/UD+OwY6F6+64GXp
-	J1X6tkwEZdjIcJG/XjRzdM9xvdvySkJqhUlsoQrN3EsuDL9rOCbyUBMesIkWqBRJ2vzCo6yOZHd
-	pEZo8tUF6Y1yPbevrSUu3kTJeUhFGdoWGf+qulllm0z+g4p9b7kVKE0FYRt2V7OHRq3dYD401cX
-	cJV+CmZJddn/b/khS9NcnfCDXhwrcFdqr1zSJXVJ641Sbi4mjLFog6ycDRZVLTK1WJIY6L/l7Ow
-	sTmDpYHPhGiD5XiY/lVf6STtCouRv0GxE7Fs
-X-Google-Smtp-Source: AGHT+IG5e9iODeyp5V5+1N/IJ6G9IYepmGYw4xB3atGT4gGgPPoEAvSwa4ZeH2rdPZSRW31u77cZEA==
-X-Received: by 2002:a2e:bcc2:0:b0:302:17e7:e17e with SMTP id 38308e7fff4ca-30249d15d89mr8746231fa.0.1733996082664;
-        Thu, 12 Dec 2024 01:34:42 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-302254022aasm11565491fa.109.2024.12.12.01.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2024 01:34:42 -0800 (PST)
-Date: Thu, 12 Dec 2024 11:34:39 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Lijuan Gao <quic_lijuang@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jingyi Wang <quic_jingyw@quicinc.com>, Konrad Dybcio <konradybcio@kernel.org>, kernel@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 0/6] Correct the number of GPIOs in gpio-ranges for
- QCS615 and QCS8300
-Message-ID: <ccsuwijfrspm2a2irycsicqepjhwai5pfvgkd5dcaf3nhmqwui@hels74qjkiva>
-References: <20241212-correct_gpio_ranges-v1-0-c5f20d61882f@quicinc.com>
+        bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
+        b=H/Q2HDH0HBRV2/sPhMvMxj4gsuUcP/qJGF/ao069FSpE5LbZa6RYcCYPYrMA0whE2T
+         l4f+tQIRstzzOOC9RhBDkdOVICe8xtmjBS662el58OVjeLVsn6vSJL+nPaBVVVbQeLE6
+         QIA57MHEjX8EAcQgISwtYEdc7WLCA4aL1oYWzvoyQWrob9356mb1Q8sWyy/BYZXFpD50
+         w1P90OaFIo0VaKoBGQTzYNEaO7KLfgMAMJkClvZr8oMgjRbXEo+Ozg7xZYKkZtVFdlc/
+         QWitARsK/YTmE0pS/vAXJBPZ/0bHwIxqOJt4k2eG5UlwabzbsvsgDaxUYaKtUjBzCitG
+         VsFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733999358; x=1734604158;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
+        b=BA+nShHraEqw6RCb8qc4RG7S28cITuBPcQhSJPUDRj5DzWut57Ee+hEczhmwMj+544
+         2hw5MQq9xLrfAuH+cL9soGS1rzBuzE4mKzeWWvXga7yDfjzcChLbHNUzGyXurDM9+pCd
+         EpxtNQ3uxrkN+jFrGUSdhblWOizGwRj+sEW0RiHklh8VDznobs2JhmfQMc7f1XyUAMmC
+         /+3zsSkB/zDIUjeqXk+0v4dzRFezxOKTD2GS5wpiuCzMBl1Y+B0SX6/ApuMEYhzeAj+n
+         m78YcXeTkyoggfyaG7texV+BO4ApBOyGw2ykUT71WHbv2bYvuai7HGXX00R1tV0UKQQH
+         ggiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFvFEiq4xVPtwL2T/Al0f0F5SlOtRhL64s7LjHpqdd/qjUzksNwA5Xh3dizZgmyz8XFxuD/DHwA8go@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr0gI7RgJFhFC60iWcLohei8PzS3sg3KD9vfwZzLGuxmdfU1QV
+	SKbRJVG/PFF0TPeGXUfV6tiZWTyU6EhqTY4xUt6UbWi1g4AEQBGj4RJv5EDYECBMAooCR6EeLqe
+	84OIcIap6L7zdlBE10tfWu98dURJz9BlcHD0reA==
+X-Gm-Gg: ASbGnctqf2vsGTRGf5YNaEOghmHC4ZP1RsW9nUb1L9HwxR0dK+S7WpkKYjtrXOU0FLd
+	KWXrIdMy51AFhNFO5HA0eNKMBZh1DNoelP4DGwQ==
+X-Google-Smtp-Source: AGHT+IF5MRQjPv1qupkMKerR3TJa8F5ojOtH623jRIzHbwh2Yva4cWRDsheROKwicK7oG1R3ozY2p7TYivltOFVglY0=
+X-Received: by 2002:a05:6512:3a96:b0:540:1ea7:44db with SMTP id
+ 2adb3069b0e04-54032c2f4a0mr306284e87.4.1733999358191; Thu, 12 Dec 2024
+ 02:29:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241212-correct_gpio_ranges-v1-0-c5f20d61882f@quicinc.com>
+References: <20241211051019.176131-1-chensong_2000@189.cn> <CAMRc=MfpwuMh-MH1UEHKky09iAs4g9=iGFPptARXzoZrVS8hdQ@mail.gmail.com>
+ <efade71b-76ce-4dfe-949e-b231b3e411f0@189.cn>
+In-Reply-To: <efade71b-76ce-4dfe-949e-b231b3e411f0@189.cn>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 12 Dec 2024 11:29:07 +0100
+Message-ID: <CAMRc=Medmy5EqTUWuQ-4YrQamOArKOK788iAY-=Cy42Od7y_Sw@mail.gmail.com>
+Subject: Re: [PATCH v2] regulator:s5m8767: Fully convert to GPIO descriptors
+To: Song Chen <chensong_2000@189.cn>
+Cc: krzk@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, lee@kernel.org, 
+	linus.walleij@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 12, 2024 at 05:23:59PM +0800, Lijuan Gao wrote:
-> The UFS_RESET pin is expected to be wired to the reset pin of the
-> primary UFS memory, it's a general purpose output pin. Reorder it and
-> expose it as a gpio, so that the UFS driver can toggle it.
+On Thu, Dec 12, 2024 at 6:55=E2=80=AFAM Song Chen <chensong_2000@189.cn> wr=
+ote:
+>
+> Or we can use devm_gpiod_get_array, it's pretty much equivalent effect
+> in s5m8767 even without fwnode specified.
+>
 
-I don't see pins being reordered. Please correct your commit messages.
+Can you use it though? I was thinking you need the fwnode variant
+because it's the child (regulator) node of the device?
 
-> 
-> The QCS615 TLMM pin controller has GPIOs 0-122, so correct the
-> gpio-rangs to 124.
-> 
-> The QCS8300 TLMM pin controller has GPIOs 0-132, so correct the
-> gpio-rangs to 134.
-> 
-> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
-> ---
-> Lijuan Gao (6):
->       dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs615
->       dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs8300
->       pinctrl: qcom: correct the number of ngpios for QCS615
->       pinctrl: qcom: correct the number of ngpios for QCS8300
->       arm64: dts: qcom: correct gpio-ranges for QCS615
->       arm64: dts: qcom: correct gpio-ranges for QCS8300
-> 
->  Documentation/devicetree/bindings/pinctrl/qcom,qcs615-tlmm.yaml  | 2 +-
->  Documentation/devicetree/bindings/pinctrl/qcom,qcs8300-tlmm.yaml | 2 +-
->  arch/arm64/boot/dts/qcom/qcs615.dtsi                             | 2 +-
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi                            | 2 +-
->  drivers/pinctrl/qcom/pinctrl-qcs615.c                            | 2 +-
->  drivers/pinctrl/qcom/pinctrl-qcs8300.c                           | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> ---
-> base-commit: 91e71d606356e50f238d7a87aacdee4abc427f07
-> change-id: 20241211-correct_gpio_ranges-ed8a25ad22e7
-> 
-> Best regards,
-> -- 
-> Lijuan Gao <quic_lijuang@quicinc.com>
-> 
+If you can, that would be great.
 
--- 
-With best wishes
-Dmitry
+Bart
 
