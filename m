@@ -1,103 +1,142 @@
-Return-Path: <linux-gpio+bounces-13810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55B339EE41A
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 11:29:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FAA09EE46E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 11:45:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3873B163509
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 10:29:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B64C91886CD6
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2024 10:45:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B8D2101B4;
-	Thu, 12 Dec 2024 10:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B081F2381;
+	Thu, 12 Dec 2024 10:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H/Q2HDH0"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JV553TnA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF85211292
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 10:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA813C9DE;
+	Thu, 12 Dec 2024 10:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733999362; cv=none; b=PCwHMHQFzG2WsZZ40f4ivBfeAw0qXBtXNCvE4WNeOZH5pi/ShJCoanLCmhqJpDv+oaF8jNG+nZx1qlPlO1TWQVCdA9bDJ7hXW/cDPtGMBBYwvWKV2zca7R3J6zAWkdCljwCaoujmemVsaHxxOi3Wnjkvn1dBA+gOTY+A3O30M+g=
+	t=1734000348; cv=none; b=WZKeFlPqV6C/SSkI/Pc8mx00Ix761uW/NTD401dBBQqxfHG70Y5MwpoLao/OJx0QxQKHLXpT7zrRQVMmIUyf9+o23B9ucvLpQs0W/KCdLNfyGjjsJEhrbslxTzNXmFa9kt1dPDOJTJ0cibfPJOBLe6nZlnwC4xW/eMK3Hz1f/pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733999362; c=relaxed/simple;
-	bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uIJBZboyVi3CD6+hjiBBxagRD5yiXy6980OrsuSsfRX2PF0z47s6Z7MGu0y2G1eyGIDIBj5byMNOC+RkeG7I5d8DzYFyGLu2surLaXG88QmjGkPxxCgnkiQX4L/jPy5AV3cehltuFgag0UsyLe++IMJ7NaFHdEygL/cLV/vc4gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H/Q2HDH0; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5401e6efffcso494338e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2024 02:29:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1733999358; x=1734604158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
-        b=H/Q2HDH0HBRV2/sPhMvMxj4gsuUcP/qJGF/ao069FSpE5LbZa6RYcCYPYrMA0whE2T
-         l4f+tQIRstzzOOC9RhBDkdOVICe8xtmjBS662el58OVjeLVsn6vSJL+nPaBVVVbQeLE6
-         QIA57MHEjX8EAcQgISwtYEdc7WLCA4aL1oYWzvoyQWrob9356mb1Q8sWyy/BYZXFpD50
-         w1P90OaFIo0VaKoBGQTzYNEaO7KLfgMAMJkClvZr8oMgjRbXEo+Ozg7xZYKkZtVFdlc/
-         QWitARsK/YTmE0pS/vAXJBPZ/0bHwIxqOJt4k2eG5UlwabzbsvsgDaxUYaKtUjBzCitG
-         VsFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733999358; x=1734604158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iHa5QT8JkD1B/JMzxQ4HqhQQvv6uKOMk6Hbk4+UNj+I=;
-        b=BA+nShHraEqw6RCb8qc4RG7S28cITuBPcQhSJPUDRj5DzWut57Ee+hEczhmwMj+544
-         2hw5MQq9xLrfAuH+cL9soGS1rzBuzE4mKzeWWvXga7yDfjzcChLbHNUzGyXurDM9+pCd
-         EpxtNQ3uxrkN+jFrGUSdhblWOizGwRj+sEW0RiHklh8VDznobs2JhmfQMc7f1XyUAMmC
-         /+3zsSkB/zDIUjeqXk+0v4dzRFezxOKTD2GS5wpiuCzMBl1Y+B0SX6/ApuMEYhzeAj+n
-         m78YcXeTkyoggfyaG7texV+BO4ApBOyGw2ykUT71WHbv2bYvuai7HGXX00R1tV0UKQQH
-         ggiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFvFEiq4xVPtwL2T/Al0f0F5SlOtRhL64s7LjHpqdd/qjUzksNwA5Xh3dizZgmyz8XFxuD/DHwA8go@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr0gI7RgJFhFC60iWcLohei8PzS3sg3KD9vfwZzLGuxmdfU1QV
-	SKbRJVG/PFF0TPeGXUfV6tiZWTyU6EhqTY4xUt6UbWi1g4AEQBGj4RJv5EDYECBMAooCR6EeLqe
-	84OIcIap6L7zdlBE10tfWu98dURJz9BlcHD0reA==
-X-Gm-Gg: ASbGnctqf2vsGTRGf5YNaEOghmHC4ZP1RsW9nUb1L9HwxR0dK+S7WpkKYjtrXOU0FLd
-	KWXrIdMy51AFhNFO5HA0eNKMBZh1DNoelP4DGwQ==
-X-Google-Smtp-Source: AGHT+IF5MRQjPv1qupkMKerR3TJa8F5ojOtH623jRIzHbwh2Yva4cWRDsheROKwicK7oG1R3ozY2p7TYivltOFVglY0=
-X-Received: by 2002:a05:6512:3a96:b0:540:1ea7:44db with SMTP id
- 2adb3069b0e04-54032c2f4a0mr306284e87.4.1733999358191; Thu, 12 Dec 2024
- 02:29:18 -0800 (PST)
+	s=arc-20240116; t=1734000348; c=relaxed/simple;
+	bh=+ef2vJvZuxSB7+uMzNNKVDg37cZ41z++pT9n0DAt504=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gon+d1cdb8vLFpvjapu9V7htln+AJxXKew5AJAGvwEGNZDPTCSVsLwEa3EV9ZvSeF0HKfalBTZio9cG4v1HABAFQaJ9e1+4+cOFx5tP10g1dDozqz0OaP7StStKi/L0crwV/e5F8gFFGp7twTA/PyFKCLayzDdDc8XqzDAcXI3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=JV553TnA; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BC4iuLg014964;
+	Thu, 12 Dec 2024 04:45:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=qC5tIgRwbkOKhKAkIN
+	p1XaVm8vYjMMo/AtWExSA8MIA=; b=JV553TnAvmsspxVrBHjmvS0ayWBd7cUAdw
+	7QAxN26E5Nak8EJNREcSbkGPG6oD2tIe7ZlY9WtFfAhM0Do2vGjeHyR3FwKLHy0O
+	u7g0EeRCDEYHrPDf4J2S4+hWrRCF3LcuwvFUjE6T185rP8j6TPNV1gqE/k4Kqs72
+	GyyAZ1+XbSv283e4gh6dRKPq8OVmCZNOyJp9i3CiFoNYhjgAC7D/o2+g+eqjWklu
+	/Z0t3wvDvUHes4YaO7KH8ubRF5LtU2gREXgAQKYlatOE/RvSudl39fTzQzuO99AK
+	pUIX6PC+oyIkNcOT+jY4YN5Fdp+c3FehrvUsDKcHINuhschI4fog==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 43cmn26g0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Dec 2024 04:45:29 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.13; Thu, 12 Dec
+ 2024 10:45:27 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.13 via Frontend Transport; Thu, 12 Dec 2024 10:45:27 +0000
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 6427D822548;
+	Thu, 12 Dec 2024 10:45:27 +0000 (UTC)
+Date: Thu, 12 Dec 2024 10:45:26 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 1/3] gpio: swnode: Add ability to specify native chip
+ selects for SPI
+Message-ID: <Z1q+xndn217uF2rr@opensource.cirrus.com>
+References: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
+ <20240326141108.1079993-2-ckeepax@opensource.cirrus.com>
+ <Z1jZliSoXziuLt1u@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211051019.176131-1-chensong_2000@189.cn> <CAMRc=MfpwuMh-MH1UEHKky09iAs4g9=iGFPptARXzoZrVS8hdQ@mail.gmail.com>
- <efade71b-76ce-4dfe-949e-b231b3e411f0@189.cn>
-In-Reply-To: <efade71b-76ce-4dfe-949e-b231b3e411f0@189.cn>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 12 Dec 2024 11:29:07 +0100
-Message-ID: <CAMRc=Medmy5EqTUWuQ-4YrQamOArKOK788iAY-=Cy42Od7y_Sw@mail.gmail.com>
-Subject: Re: [PATCH v2] regulator:s5m8767: Fully convert to GPIO descriptors
-To: Song Chen <chensong_2000@189.cn>
-Cc: krzk@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, lee@kernel.org, 
-	linus.walleij@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z1jZliSoXziuLt1u@google.com>
+X-Proofpoint-GUID: 616hYGeOH9wbeezuHTz5xjXWInlFsFbf
+X-Proofpoint-ORIG-GUID: 616hYGeOH9wbeezuHTz5xjXWInlFsFbf
+X-Proofpoint-Spam-Reason: safe
 
-On Thu, Dec 12, 2024 at 6:55=E2=80=AFAM Song Chen <chensong_2000@189.cn> wr=
-ote:
->
-> Or we can use devm_gpiod_get_array, it's pretty much equivalent effect
-> in s5m8767 even without fwnode specified.
->
+On Tue, Dec 10, 2024 at 04:15:18PM -0800, Dmitry Torokhov wrote:
+> On Tue, Mar 26, 2024 at 02:11:06PM +0000, Charles Keepax wrote:
+> > SPI devices can specify a cs-gpios property to enumerate their
+> > chip selects. Under device tree, a zero entry in this property can
+> > be used to specify that a particular chip select is using the SPI
+> > controllers native chip select, for example:
+> > 
+> >         cs-gpios = <&gpio1 0 0>, <0>;
+> > 
+> > Here the second chip select is native. However, when using swnodes
+> > there is currently no way to specify a native chip select. The
+> > proposal here is to register a swnode_gpio_undefined software node,
+> > that can be specified to allow the indication of a native chip
+> > select. For example:
+> > 
+> > static const struct software_node_ref_args device_cs_refs[] = {
+> > 	{
+> > 		.node  = &device_gpiochip_swnode,
+> > 		.nargs = 2,
+> > 		.args  = { 0, GPIO_ACTIVE_LOW },
+> > 	},
+> > 	{
+> > 		.node  = &swnode_gpio_undefined,
+> > 		.nargs = 0,
+> > 	},
+> > };
+> 
+> I am sorry, I am very late to the party, but wouldn't it all work by
+> simply setting ".node" to NULL? As far as I can see we have in
+> software_node_get_reference_args():
+> 
+> 	...
+> 
+> 	if (index * sizeof(*ref) >= prop->length)
+> 		return -ENOENT;
+> 
+> 	ref_array = prop->pointer;
+> 	ref = &ref_array[index];
+> 
+> 	refnode = software_node_fwnode(ref->node);
+> 	if (!refnode)
+> 		return -ENOENT;
+> 
+> if ref->node is NULL then software_node_fwnode(ref->node) will return
+> NULL and we'll get -ENOENT which will bubble up to
+> gpiod_get_index_optional() in SPI core.
+> 
 
-Can you use it though? I was thinking you need the fwnode variant
-because it's the child (regulator) node of the device?
+I did definitely try that at the time, and there was definitely
+some issue with that approach. I think it might have related to
+something around how the GPIO stuff structures things. Alas, it
+is long enough ago that the details are escaping me, if I manage
+to find a spare minute I will try to refresh my memory and report
+back.
 
-If you can, that would be great.
-
-Bart
+Thanks,
+Charles
 
