@@ -1,181 +1,89 @@
-Return-Path: <linux-gpio+bounces-13866-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13867-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86B0C9F1108
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 16:33:45 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3770B9F1347
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 18:09:40 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5757816ACFA
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 17:09:37 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194991E32CD;
+	Fri, 13 Dec 2024 17:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QT5McpZZ"
+X-Original-To: linux-gpio@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28485282AEB
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 15:33:44 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E894B1DFE08;
-	Fri, 13 Dec 2024 15:33:40 +0000 (UTC)
-X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1AD153803;
-	Fri, 13 Dec 2024 15:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D3E17C21E;
+	Fri, 13 Dec 2024 17:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734104020; cv=none; b=c/aL8YwCicDnMIRx8JRqODmAMdcXrvwX1aRtDVojJOliOZfvzZMxbV8pAU5y77+/cyJMn7gvyd76kL8xs7kwSvv8mvMXSKdjnovO2QnbUz/cmQ2j5mxpDSDEj6TYr3iBRqpztXPOec1mlEuKEBfcmXOg1KdZKU4Lw5lSErRvVko=
+	t=1734109775; cv=none; b=kDMuRGEZJ2A+zlRwXDoolkKflFkMwyKHZU4uXY/MviMP5DjSZfVO/j2Ndpol8so72wObOdy3fhQLuPj+yPp5XulocsXY9KtHLbRsb+r85G7z2xuJB2+9uROvvJfmups6qsDN3yy6siTY4J9/Bw2THDarsyndOArsiSQKQYpA2Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734104020; c=relaxed/simple;
-	bh=HUJKthSHQWRnPbBb9GSm51/jQjx+CT6hYN34Oc3ZxFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j4cSsQLO/7rnZBFd7r11zBAY/48O5SlKzoEAMtREl9deYo6OND/c0vZKYjtmvQt0L30yO4xCIEoQU5SkU8DolmOfe63usXLGFZ+o/xOC3usqO9FlLCDp1oXMn2oxQlrQSBZzOjIgBsmW1pSqao5SHtFByrlSi52eT8tOh9tsIXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6d918f066c1so10218896d6.2;
-        Fri, 13 Dec 2024 07:33:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734104017; x=1734708817;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8QxZXxU6nPHT+i8fbp5ti7aLfw4Z2VRpdt1v9r/Gv3M=;
-        b=hpzXunc0e5yw7e4QnBsrWVLvGUFQSR9drldHpwcOgDUwHzK4iHEUCcixpC26w+pwdo
-         elGN0asYPGEIUPQzvFUzk6LbMdrP1Drik1jlq8PztJ0P4c40equO39sYa7Z3Kmb4jGq+
-         zGeUtZAv6ol2PviUiDacPM1qEoIZV0GbsbZtQEDDWedaj+qZfyn7/8t+14XdkabRpVGo
-         r2lqpykGCj+vA0b1wTT/QuW425sfK1v9dfAnwdRSZ5+KSMvC1gjWkzfNpghLIaxsgINo
-         oOn7cZTX9RWI8njb+b6BWkw1s4O6ROzUvQZHM3wdvaxgXWwv29LrNQki/LVu5F9div1X
-         67zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+PKRwqkYGncE5r3WQvk48vA2dBDeL3bP/5QGDUkoMCJ53oMd1/ffJSJPifMNptTzWHvWQAwN5v0s2@vger.kernel.org, AJvYcCWbvwlCTC/84x2Lsb5DnGSmuWqutsu4aRWOuY7EbRsmktkhSYM8ny3INaWK31UKUhjHhGLq2YBPmxoY1bhUfRYc/sU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZCb+cPEoJW4qEFyCE5N9IKtbgbgV2PMk4y6I7Ln8QsN/xgqvP
-	st52Dvr40DlythbFiAcF7nau1tmD+rQjM891pfXWPZRLtYxw7Bzn7masn31k
-X-Gm-Gg: ASbGnctOC4g2r65eWXlxvBRytS4hEzf5kVUrsam5FQHqx8PtlPVLfzF3qqmRjT+rFoK
-	51BkBDzjHKw2/trEcdLuEAh3tDSa4rOXxTonw2lks/Zk2Uvya/c+6y7H6BVsOoiq2yx1xqzB+5d
-	hjjfOq7+iOjuuRelP+UbTnS7gu5eJoWX3Fe36BDb15A+wB0flB+YE0iHyt2kns+QFbBQw817zCi
-	47+/prL3hnK4X3lbDZNyQodNEJoNF5H7GXG5u/iqvbbjbr7pqeDDrMZUMYwphe1qHMOAiGWqXDB
-	djo6QCymavh69D6pGO3N6sI=
-X-Google-Smtp-Source: AGHT+IERpP6mjTUst0/2UgiR3uU7U0tiE9tpGHoTYKOwUEQwrhCIhMQtBIZq+5iPY1PmJFUGipJnxw==
-X-Received: by 2002:a05:6214:5011:b0:6d4:1a42:8efa with SMTP id 6a1803df08f44-6dc70f9d5c0mr46329216d6.0.1734104016782;
-        Fri, 13 Dec 2024 07:33:36 -0800 (PST)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com. [209.85.222.177])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8fc9d432fsm68547216d6.8.2024.12.13.07.33.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2024 07:33:36 -0800 (PST)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7b6c3629816so83623185a.1;
-        Fri, 13 Dec 2024 07:33:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWhvByVVmZEu1v3aRSSls1q/I2ulJMhgxLt7fnQGfBqJtyMHoNJmZqEtqA+R3Qv92BRvI4F+lpvkRkE@vger.kernel.org, AJvYcCWx+DmU8iz1pkeuAsUvKGpXBkhqE0plPIGSAE9yfS/HAXx4SsCcFFxGgnj8lLmuDj4NZYSJlbcVcwfhz9AUxdW8NMc=@vger.kernel.org
-X-Received: by 2002:a05:6214:4115:b0:6d4:10b0:c249 with SMTP id
- 6a1803df08f44-6dc8ca83d02mr51437416d6.22.1734104015457; Fri, 13 Dec 2024
- 07:33:35 -0800 (PST)
+	s=arc-20240116; t=1734109775; c=relaxed/simple;
+	bh=JZ2USEEEV7FFcVBTCgSNTmRnykylc2iH9qSCZf1QpHw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SpTjo1VncPV1ZkGYVRXqBmki29rU2LrrOf/UlOGEASP2rAeNFxZVXarp4/09rw8/27tiLKZ78iCfkBFuw8PTd3QORRnTVUmK327Vsuz8Fll5C22d7o4dD+pkohEF+vU1ccM2bO2IIv8JNfq50HUKWmo46/0h+10ZYiFwiwWHEeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QT5McpZZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26B20C4CED0;
+	Fri, 13 Dec 2024 17:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734109775;
+	bh=JZ2USEEEV7FFcVBTCgSNTmRnykylc2iH9qSCZf1QpHw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=QT5McpZZONNcg7KADmbU2DPbaBeP8mlRlKQHNkSI9YZmDWrQRRKDUevKF72qD4psW
+	 19KAfNdNGsk/0I9B+eimsCrsOB4OPh3x6D3qzkCVx/KvXYK/0MPn9LKxQPpNFKFuF8
+	 CpmTjJMCbNQ3oyXTGp524MsYj1KPoWHw9DDysKV3IDlCInt/Gpgbxh+g3LTbPQ8odV
+	 9amrJGml01xQ29W432ZegOypMgyqzLByXHRo6T7sp4BRoRG9ErZySJAjKtzvdvvunl
+	 ejTwv1LOvO+V9vcrPqXQVgH5XIm1do9dxmTivb/Dn98gqBdzvSxtPNYiJ82KAjG82G
+	 CRG5paaOHNyyQ==
+From: Lee Jones <lee@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@ucw.cz>, Thomas Richard <thomas.richard@bootlin.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-leds@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+In-Reply-To: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+Subject: Re: (subset) [PATCH 0/5] Add support for the AAEON UP board FPGA
+Message-Id: <173410977288.944644.7928182846086408038.b4-ty@kernel.org>
+Date: Fri, 13 Dec 2024 17:09:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206102327.8737-1-biju.das.jz@bp.renesas.com> <20241206102327.8737-3-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20241206102327.8737-3-biju.das.jz@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 13 Dec 2024 16:33:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX7EOVXSCuM3Y2re9pJzRJhbnF8d+_srdeAwhBu7DArdA@mail.gmail.com>
-Message-ID: <CAMuHMdX7EOVXSCuM3Y2re9pJzRJhbnF8d+_srdeAwhBu7DArdA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] pinctrl: renesas: rzg2l: Add support for RZ/G3E SoC
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-Hi Biju,
+On Wed, 11 Dec 2024 17:27:15 +0100, Thomas Richard wrote:
+> This is the revival of the AAEON UP boards FPGA.
+> The latest version was sent one year ago [1].
+> 
+> I started a new series, as I re-wrote all the drivers using the AAEON
+> DKMS driver [2] as reference. I also read all series sent to the ML to
+> collect the comments sent by the maintainers and reviewers (to not
+> reproduce the same errors).
+> 
+> [...]
 
-On Fri, Dec 6, 2024 at 11:23=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
-> Add pinctrl driver support for RZ/G3E SoC.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Applied, thanks!
 
-Thanks for your patch!
-
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -2252,6 +2343,43 @@ static struct rzg2l_dedicated_configs rzv2h_dedica=
-ted_pins[] =3D {
->         { "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
->  };
->
-> +static struct rzg2l_dedicated_configs rzg3e_dedicated_pins[] =3D {
-> +       { "WDTUDF_CA", RZG2L_SINGLE_PIN_PACK(0x5, 0,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_PUPD | PIN_CFG_NOD)) =
-},
-> +       { "WDTUDF_CM", RZG2L_SINGLE_PIN_PACK(0x5, 1,
-
-Except for Table 4.2-13, these are called WDTUDFCA and WDTUDFCM
-everywhere.
-
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_PUPD | PIN_CFG_NOD)) =
-},
-> +       { "SCIF_RXD", RZG2L_SINGLE_PIN_PACK(0x6, 0,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_PUPD)) },
-> +       { "SCIF_TXD", RZG2L_SINGLE_PIN_PACK(0x6, 1,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_PUPD)) },
-> +       { "QSD0_CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-> +       { "QSD0_CMD", RZG2L_SINGLE_PIN_PACK(0x9, 1,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_RSTN", RZG2L_SINGLE_PIN_PACK(0x9, 2,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-> +       { "QSD0_PWEN", RZG2L_SINGLE_PIN_PACK(0x9, 3,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-> +       { "QSD0_IOVS", RZG2L_SINGLE_PIN_PACK(0x9, 4,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-> +       { "QSD0_DAT0", RZG2L_SINGLE_PIN_PACK(0xa, 0,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT1", RZG2L_SINGLE_PIN_PACK(0xa, 1,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT2", RZG2L_SINGLE_PIN_PACK(0xa, 2,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT3", RZG2L_SINGLE_PIN_PACK(0xa, 3,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT4", RZG2L_SINGLE_PIN_PACK(0xa, 4,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT5", RZG2L_SINGLE_PIN_PACK(0xa, 5,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT6", RZG2L_SINGLE_PIN_PACK(0xa, 6,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-> +       { "QSD0_DAT7", RZG2L_SINGLE_PIN_PACK(0xa, 7,
-> +        (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_PUPD)) =
-},
-
-SD0_*?
-
-> +};
-> +
->  static int rzg2l_gpio_get_gpioint(unsigned int virq, struct rzg2l_pinctr=
-l *pctrl)
->  {
->         const struct pinctrl_pin_desc *pin_desc =3D &pctrl->desc.pins[vir=
-q];
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+[1/5] mfd: Add support for AAEON UP board FPGA
+      commit: 577ced9b8ac3791edfddc7c371a7f948cdd0e35c
+[2/5] leds: Add AAEON UP board LED driver
+      commit: 5885a1731d0052d5d8a8cbc9871f94fae1f3baa3
+[5/5] MAINTAINERS: Add entry for AAEON UP board FPGA drivers
+      commit: f35d82b6f63994e7d7944daa99651ab88300ce22
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Lee Jones [李琼斯]
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
