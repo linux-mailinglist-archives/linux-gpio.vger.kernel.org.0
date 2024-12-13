@@ -1,48 +1,65 @@
-Return-Path: <linux-gpio+bounces-13855-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13856-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4292E9F0984
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 11:31:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA1E69F0AC4
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 12:20:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E82D188CAF6
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 10:31:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0566616A0B0
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2024 11:20:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE231BB6B8;
-	Fri, 13 Dec 2024 10:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FECE1DDC32;
+	Fri, 13 Dec 2024 11:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="pWJbylCt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from 189.cn (ptr.189.cn [183.61.185.104])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8351B6CFD;
-	Fri, 13 Dec 2024 10:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.104
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5281B21BE;
+	Fri, 13 Dec 2024 11:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734085870; cv=none; b=J6vANZLuDZWax10EVwzwXcRH3aDtHUKfRjRODg6mcyED4Zpq19tIeCtkKdCVscz7bHGQK3xTzTx1ItKcAwmKSJ/MgJzIjcSyrWE1gWZu8TdnooASVlJCK7Md68MCqSPMwtJ4JVvyc5dwUilyCQw5WwZNHnPe6ValyMIQxocicUM=
+	t=1734088815; cv=none; b=GblkGrjCwKUw6b916PB2O6s9W0svQwAYEPkoBUVQ6U1RvsXdKVbe4TArDESv9A4N4+OIXdIr4zaknqpvPXIK0MqnHK8NedYxr4AdFL5VcrpuhmzQY9hvgpmNQcQA3PaSFobo5EcWYwQEPEtrXq48omgUzcc4BaloTv7NdVlF+JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734085870; c=relaxed/simple;
-	bh=YbczaccQQOQhzAwA1asa8/3Jw59z66MFlA9Gr62H1zc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=REGGQNypVgcRRcmpZ5lxDcaLTpicERjxwGMjT7GOfjLn5AaxMDaZP73Be6qqRlFx9LceXbHKxoM1WjeetAj7a3tLTyMEshogbR+zDpLCSRNpgyAACNz/v28DHPqxeX97AKBv2W+XcDQtUNPBpH8y8DlzBDNJJ5/QaVg11PwrVMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
-HMM_SOURCE_IP:10.158.243.18:12554.359801282
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-123.150.8.42 (unknown [10.158.243.18])
-	by 189.cn (HERMES) with SMTP id 9A021100204;
-	Fri, 13 Dec 2024 18:30:57 +0800 (CST)
-Received: from  ([123.150.8.42])
-	by gateway-153622-dep-5c5f88b874-pd459 with ESMTP id c2a65c2fa6a0433bb15426cf90653fff for krzk@kernel.org;
-	Fri, 13 Dec 2024 18:30:58 CST
-X-Transaction-ID: c2a65c2fa6a0433bb15426cf90653fff
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.42
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-Message-ID: <a06935f7-8d9a-478b-a3a0-25df3f404b44@189.cn>
-Date: Fri, 13 Dec 2024 18:30:57 +0800
+	s=arc-20240116; t=1734088815; c=relaxed/simple;
+	bh=XKgyjgUHrAsS1Rhf8ffclhHXQyzI5wvfIinpxGEBqIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oaCIULem9GAWkFjGFMKZ1WQGOTzfK6ny5HePap8eIDVY7/mm7SRZ8v+z4m8icEgxj/kVybLz2PYXJe3JXJ+nuEJ5iLyXbjzqBKAHyOc/jX8Tv6k05cgSxtkn80g5ZkX0g/WR+pZIlDbqRS/gBdUVs6iDfY0baSbIjAN7dtqVl4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=pWJbylCt; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BDAwDvD013489;
+	Fri, 13 Dec 2024 12:19:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	4mZdvhtRvGCfpQh2PJTw1zy782LwMEIbYoJwSZ47DZ8=; b=pWJbylCt/dHXMFLT
+	nup21j37+Uh+cj5yPSAwz5H3m3pYQSkvrp6h4YN5trvJK91XoCD1GgF7KXpLE6Pp
+	lY7BZpiNeETuSt0C9ZUCpPJqksMXw+F3keWTwlHto4XlzIPzg7vTANkA6uJl0+tE
+	W+HFjVirm3thC15mnxOqbL/LlG7dQiUQ4HWa/jMR5pJ9y5Ld/v4n+9W5Rek10/g8
+	ft256Ov1yLCBgsBTr8qf384ZxjJWFTdyNIOm1ybevxXTQRTH+rS+Ug2RUe3PRlq6
+	XopHThXKsnJAMxbFj1Ury/iUMvboW36R39ueCQCCp+0K3GX6y2WTNDBG3eyoMpHW
+	wJI+TQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43ftj761y4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Dec 2024 12:19:48 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C06D040047;
+	Fri, 13 Dec 2024 12:18:22 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F671264FE2;
+	Fri, 13 Dec 2024 12:16:35 +0100 (CET)
+Received: from [10.48.86.108] (10.48.86.108) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 13 Dec
+ 2024 12:16:34 +0100
+Message-ID: <6d893831-7a2e-4a9a-a519-2e257e249f0f@foss.st.com>
+Date: Fri, 13 Dec 2024 12:16:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,133 +67,168 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator:s5m8767 Fully convert to GPIO descriptors
-To: Krzysztof Kozlowski <krzk@kernel.org>, lgirdwood@gmail.com,
- broonie@kernel.org, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org
-References: <20241206051358.496832-1-chensong_2000@189.cn>
- <17a4dbd7-56cb-4c20-a913-0df5c39fc3ff@kernel.org>
- <862662aa-c5a2-4e15-b97f-ca1b4757ab25@189.cn>
- <bf80a815-a602-4bbe-a950-e8b6c1b0789a@kernel.org>
+Subject: Re: [Linux-stm32] [PATCH v4] pinctrl: stm32: Add check for
+ clk_enable()
+To: Mingwei Zheng <zmw12306@gmail.com>, <marex@denx.de>,
+        <antonio.borneo@foss.st.com>
+CC: <peng.fan@nxp.com>, <make24@iscas.ac.cn>, <linus.walleij@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Jiasheng Jiang
+	<jiashengjiangcool@gmail.com>,
+        <fabien.dessenne@foss.st.com>, <mcoquelin.stm32@gmail.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20241213010948.2623382-1-zmw12306@gmail.com>
 Content-Language: en-US
-From: Song Chen <chensong_2000@189.cn>
-In-Reply-To: <bf80a815-a602-4bbe-a950-e8b6c1b0789a@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Hi Krzysztof,
-
-I noticed that in s5m8767_set_high and s5m8767_set_low, the code looks 
-identical to each other, only order is different. Is there any problem 
-here or this way is on purpose correctly.
-
-static inline int s5m8767_set_high(struct s5m8767_info *s5m8767)
-{
-     int temp_index = s5m8767->buck_gpioindex;
-
-     gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-     gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-     gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-
-     return 0;
-}
-
-static inline int s5m8767_set_low(struct s5m8767_info *s5m8767)
-{
-     int temp_index = s5m8767->buck_gpioindex;
-
-     gpio_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-     gpio_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-     gpio_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-
-     return 0;
-}
-
-Song
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20241213010948.2623382-1-zmw12306@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
 
-
-> On 07/12/2024 07:16, Song Chen wrote:
->>>>    		}
->>>> -		pdata->buck_gpios[i] = gpio;
->>>> +
->>>> +		/* SET GPIO*/
->>>
->>> What is a SET GPIO?
->>>
->>>> +		snprintf(label, sizeof(label), "%s%d", "S5M8767 SET", i + 1);
->>>
->>> Why using "SET" as name, not the actual name it is used for? Buck DVS?
->>
->> from below snippets:
->> s5m8767_pmic_probe of drivers/regulator/s5m8767.c
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->>                       "S5M8767 SET1");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->>                       "S5M8767 SET2");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->>                       "S5M8767 SET3");
+On 12/13/24 02:09, Mingwei Zheng wrote:
+> Convert the driver to clk_bulk*() API.
+> Add check for the return value of clk_bulk_enable() to catch
+> the potential error.
 > 
+> Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested")
+> Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+> Changelog:
 > 
-> Yeah, your code is fine.
+> v3 -> v4:
+> 1. Add initialization for  pctl->clks.
+> 2. Adjust alignment.
 > 
->>
->> and arch/arm/boot/dts/samsung/exynos5250-spring.dts
->>
->>           s5m8767,pmic-buck-dvs-gpios = <&gpd1 0 GPIO_ACTIVE_LOW>, /* DVS1 */
->>                             <&gpd1 1 GPIO_ACTIVE_LOW>, /* DVS2 */
->>                             <&gpd1 2 GPIO_ACTIVE_LOW>; /* DVS3 */
->>
->>           s5m8767,pmic-buck-ds-gpios = <&gpx2 3 GPIO_ACTIVE_LOW>, /* SET1 */
->>                            <&gpx2 4 GPIO_ACTIVE_LOW>, /* SET2 */
->>                            <&gpx2 5 GPIO_ACTIVE_LOW>; /* SET3 */
->>
->>>
->>>> +		gpiod_set_consumer_name(pdata->buck_gpios[i], label);
->>>> +		gpiod_direction_output(pdata->buck_gpios[i],
->>>> +					(pdata->buck_default_idx >> (2 - i)) & 0x1);
->>>
->>> This is not an equivalent code. You set values for GPIOs 0-1 even if
->>> requesting GPIO 2 fails.
->>>
->>> On which board did you test it?
->>
->> You are right ,it's not equivalent with original code, i will fix it.
->> but i have a question here:
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[0],
->>                       "S5M8767 SET1");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[1],
->>                       "S5M8767 SET2");
->>           if (ret)
->>               return ret;
->>
->>           ret = devm_gpio_request(&pdev->dev, pdata->buck_gpios[2],
->>                       "S5M8767 SET3");
->>           if (ret)
->>               return ret;
->>
->> if it fails to request buck_gpios[2] after successfully requests
->> buck_gpios[0] and buck_gpios[1], the probe fails as well, should it call
->> gpiod_put to return gpio resource?
+> v2 -> v3:
 > 
+> 1. Convert clk_disable_unprepare to clk_bulk_disable
+> and clk_bulk_unprepare.
 > 
-> Aren't you using devm interface? Please read the API. You do not need to
-> put anything, unless you use some other interface and I missed the point
-> of the question.
+> v1 -> v2:
 > 
-> Best regards,
-> Krzysztof
+> 1. Move int ret declaration into if block.
+> ---
+>   drivers/pinctrl/stm32/pinctrl-stm32.c | 37 +++++++++++++++------------
+>   1 file changed, 21 insertions(+), 16 deletions(-)
 > 
-> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 5b7fa77c1184..427749d4f6a5 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -86,7 +86,6 @@ struct stm32_pinctrl_group {
+>   
+>   struct stm32_gpio_bank {
+>   	void __iomem *base;
+> -	struct clk *clk;
+>   	struct reset_control *rstc;
+>   	spinlock_t lock;
+>   	struct gpio_chip gpio_chip;
+> @@ -108,6 +107,7 @@ struct stm32_pinctrl {
+>   	unsigned ngroups;
+>   	const char **grp_names;
+>   	struct stm32_gpio_bank *banks;
+> +	struct clk_bulk_data *clks;
+>   	unsigned nbanks;
+>   	const struct stm32_pinctrl_match_data *match_data;
+>   	struct irq_domain	*domain;
+> @@ -1308,7 +1308,7 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
+>   	if (IS_ERR(bank->base))
+>   		return PTR_ERR(bank->base);
+>   
+> -	err = clk_prepare_enable(bank->clk);
+> +	err = clk_prepare_enable(pctl->clks[pctl->nbanks].clk);
+>   	if (err) {
+>   		dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
+>   		return err;
+> @@ -1397,7 +1397,7 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
+>   	return 0;
+>   
+>   err_clk:
+> -	clk_disable_unprepare(bank->clk);
+> +	clk_disable_unprepare(pctl->clks[pctl->nbanks].clk);
+>   	return err;
+>   }
+>   
+> @@ -1617,10 +1617,18 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>   	pctl->banks = devm_kcalloc(dev, banks, sizeof(*pctl->banks),
+> -			GFP_KERNEL);
+> +				   GFP_KERNEL);
+>   	if (!pctl->banks)
+>   		return -ENOMEM;
+>   
+> +	pctl->clks = devm_kcalloc(dev, banks, sizeof(*pctl->clks),
+> +				  GFP_KERNEL);
+> +	if (!pctl->clks)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < banks; ++i)
+> +		pctl->clks[i].id = "";
+> +
+>   	i = 0;
+>   	for_each_gpiochip_node(dev, child) {
+>   		struct stm32_gpio_bank *bank = &pctl->banks[i];
+> @@ -1631,11 +1639,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   			fwnode_handle_put(child);
+>   			return -EPROBE_DEFER;
+>   		}
+> -
+> -		bank->clk = of_clk_get_by_name(np, NULL);
+> -		if (IS_ERR(bank->clk)) {
+> +		pctl->clks[i].clk = of_clk_get_by_name(np, NULL);
+> +		if (IS_ERR(pctl->clks[i].clk)) {
+>   			fwnode_handle_put(child);
+> -			return dev_err_probe(dev, PTR_ERR(bank->clk),
+> +			return dev_err_probe(dev, PTR_ERR(pctl->clks[i].clk),
+>   					     "failed to get clk\n");
+>   		}
+>   		i++;
+> @@ -1646,8 +1653,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   		if (ret) {
+>   			fwnode_handle_put(child);
+>   
+> -			for (i = 0; i < pctl->nbanks; i++)
+> -				clk_disable_unprepare(pctl->banks[i].clk);
+> +			clk_bulk_disable_unprepare(pctl->nbanks, pctl->clks);
+>   
+>   			return ret;
+>   		}
+> @@ -1726,10 +1732,8 @@ static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
+>   int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
+>   {
+>   	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
+> -	int i;
+>   
+> -	for (i = 0; i < pctl->nbanks; i++)
+> -		clk_disable(pctl->banks[i].clk);
+> +	clk_bulk_disable(pctl->nbanks, pctl->clks);
+>   
+>   	return 0;
+>   }
+> @@ -1738,10 +1742,11 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
+>   {
+>   	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
+>   	struct stm32_pinctrl_group *g = pctl->groups;
+> -	int i;
+> +	int i, ret;
+>   
+> -	for (i = 0; i < pctl->nbanks; i++)
+> -		clk_enable(pctl->banks[i].clk);
+> +	ret = clk_bulk_enable(pctl->nbanks, pctl->clks);
+> +	if (ret)
+> +		return ret;
+>   
+>   	for (i = 0; i < pctl->ngroups; i++, g++)
+>   		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
+
+
+Tested-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 
