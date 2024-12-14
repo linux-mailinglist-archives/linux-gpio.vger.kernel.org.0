@@ -1,269 +1,204 @@
-Return-Path: <linux-gpio+bounces-13884-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13885-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0430E9F1F83
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Dec 2024 15:57:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8565A9F213B
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Dec 2024 23:26:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53A471886D2B
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Dec 2024 14:57:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E73221887BD5
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Dec 2024 22:26:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC5F1A00F4;
-	Sat, 14 Dec 2024 14:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2AE1B4150;
+	Sat, 14 Dec 2024 22:26:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VorX74xw"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ufr9PJ6x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D22F197521;
-	Sat, 14 Dec 2024 14:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAB329CEF
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Dec 2024 22:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734188222; cv=none; b=iOhJ45UCbhBn5RL6rxJ/ud2eihAHAo/lhRZMKMy4Noyo5MGn+i6i6dmuUIxQ/rB9rxbhK8rEaiXDJXCYriSWwDp0XtX+J9fvZA4qykewm+XPX0QYxgdHMKHhm5PHj7QssRgRcBCKXcPzt2nOuqscXl3/oFhwSMye35IilmKRA/s=
+	t=1734215164; cv=none; b=KqLAgwvXh1+zgL9sC61omYiOgfXL8DDlN+Gj+BUHPI/sq8TwlVhD50tsWE3Wnr1RggfxtcHtEXg0TzEouc4dgYbYK4BKA7CbQp78LLhyp+PjC/MbL3nLdWPYs8/JT6PihfbWuZ8He+2LeAOEOf8f0UBKzcM3dWkIeVDyQmgpgyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734188222; c=relaxed/simple;
-	bh=uMCyvBcblST8fT6tpNS3iuyS4bo3Z+mJv8estU8DrRg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=etZX9rexmWLUAlaLzmrupeAHGrWx8CCZXIEWtgH81amSngU0dUXVm5rPQtBTvBHEc1MdzhGnLnnbmcxXMkmRiqGr1aYLbiOIqfJDITM7xAQWJ59SUFCElmOj/AcYyboR3TlnX5lBBLEPQ1MFn04yew6erE1QyFISzXyDcuCIy84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VorX74xw; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso4888810a12.1;
-        Sat, 14 Dec 2024 06:57:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734188219; x=1734793019; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NqF8zkGZ+2VzBoyfd3d5WoB474c43oRczfanBsCjA+g=;
-        b=VorX74xwpyy2X3c2P9CM2DPN9QSPc8dXpxYQNwFBirLQH9OISmtbrH2tipTJCr7I1c
-         XIw2YfA1YheS8QQqIa/qEsU8QWIoihlPiWJi9ifubI0Hkek/A/haBntYp3edgnAr1wCd
-         wSe75XCXVM0wZSY8OByFpd9cBGw0OVnIM7xkmJQpMvKtfKPJjafDb4ZGxA+zS2a2ts/Y
-         VQ9fFgKGngV2nZm9Io8ZFnMsnah2OL3KW89XfJeCGL/E3km6Lyrow0rW2YXYmOEEK5YV
-         fmQXcz+GL9eM6qWPFJ5J7ziEo8j9DaiTOqbTSkFh8nff8xMRj9RvHR9O5lCElY1nAFYA
-         matA==
+	s=arc-20240116; t=1734215164; c=relaxed/simple;
+	bh=8gpA1dHw2n8NArQXqHK+4y2LvNdeJ3FMqOgEQItAtik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BNMPCCC4IgCPbpk3c169003GqbIq3+8vaj0zBuKTpOhZW6mxnIasXalVfVCqR3+vQsJfkuz+bgKf1M7S6mihoczaP6v+vhRxPtpRPm3Gsme0h22DJuzaELjUigJPS2tXv4qOKFGtnA4mqlIbLDwot/yvn0pTW9yZsiBqeVtVfpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ufr9PJ6x; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BEL662J021281
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Dec 2024 22:26:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4cYf+fIp6O0tYi333GxKT8sngxhGUwjhZfc52mhhGiU=; b=Ufr9PJ6xTKSHV3Sc
+	Fqaqf8oDU04FYQDH6mv4oLKe0Ai9SZoFhkqZtdnfshmtjYRpnsN3xv8fgzz+1KJu
+	Ts/0leJRSYtAJcPNGAvjE7O3c2x9pzCFkHh8PIm3e2zwG+e0hIuBAOf2kJA3lNBz
+	+dRYm5bjMmDJPh3NUS5OgqX0cB9a2kHmMwJYRE+cmlHJUpI/7LvXepDf3sJX2RE0
+	dF22vREdA9swUW5AFiK8j99Uhy2EdfBLdwd1J357UoQiI+vtpS7N9FUvmASvTLTB
+	RtTKgnIaMy0aPHehUX2/EY87NJ09t1XsR7nfSISJ15r2SiV97yJYByk3PiCsC76s
+	lj+xeA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43h309h417-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Dec 2024 22:26:00 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-467a437e5feso5671141cf.0
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Dec 2024 14:26:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734188219; x=1734793019;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NqF8zkGZ+2VzBoyfd3d5WoB474c43oRczfanBsCjA+g=;
-        b=eRkYksdd/wg9ESpeWrBumSrEb0+iNDcgU6xlS5HZnIaw9rszTa1RgmALUJyA5y2SRJ
-         bzgCknDRQtWQTKbwqPlSqlSpXBovzC9jR9RMxRmXbrs3aH1Adr17aEjshnsVal8Oesp9
-         t0DvHH6u+pykYooQlJ+NI8u0zB6wW9UxnxMbWu1mI1oQVOHAbOc5prQYXMP4phKHNIgQ
-         ZKifBrf4hXYEXpfdAhJQW28NIEZLhbyTHsvR7xhqxLPFY5LxYkfQQmwwMaMMDRDZ9zgM
-         hxL6tNUjW6IVEpkGD1SEZpsAzsf+a8Olqf86yRIPUEfhSwIbSrIv04mi6FxBxUJQDjT3
-         CCJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUs6Na5AEzYpT8ZjsuPmkjlXsjS1NzSwflOC5O9uivEB5/jdbcSLBGGr+8geK6O8npQ6iJdCGjJcgzS@vger.kernel.org, AJvYcCVAjnMtmMw47d2/i5trnDeVkB4+9aRDH5uYaUA/DmBtMM+ovCXQLvy2WpMbHfNPYHAOIRVBAjx8tjVfevdP@vger.kernel.org, AJvYcCWIKhdIKEAU7devBdIBZkuGyNmDGynnwk/JjtsYcsgpY7RsXAm/uszYlU1pEyksBXGhBZwwHoJdcnlHEEMlbmcQUgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw4ECbVd8VlxzVBu6bS3iGUckpVJAJbYjevwNzFNfXIZPIiJSg
-	IDudrgyq8YAQuAYo9c5mJYTpl5VbwrK8vNbxDc24ogJ0VWeCOfn0
-X-Gm-Gg: ASbGncu+Zm+5+3c+x4Ex4w5KDrGgt+Cu3Wa9xIFoi79Yl7ZlZyGCkYYw+dhrHCVNBvg
-	rdFkoH4FqXB24FhmFbyv/83hh5b+0GgxhcEuOIsjUMw0NtrFMA7oTYYJ0SSeF7PL/Zn7Ec2OPpv
-	YOZQ2H4HJWkVmV1LziYA9kgK0nTJI4boiAGsReDlM4oF+0/uAOn5s9LWVW6zdU500Jhh4fYKiNd
-	EyvMkRUB4wVwUxXUiQVeQbaHh7RyJx4XTW7+s2hdNPAiE3fEo1WUuWgXeicVTHaIQu8
-X-Google-Smtp-Source: AGHT+IFxNg58c28hScps000IQjmxAmucWih6Giz9E/maqKo2D7cuPoqcCZlJKfOujrTr7vMGJ+DIiw==
-X-Received: by 2002:a05:6402:5189:b0:5d0:d328:3a43 with SMTP id 4fb4d7f45d1cf-5d63c2238f0mr5933372a12.6.1734188219290;
-        Sat, 14 Dec 2024 06:56:59 -0800 (PST)
-Received: from [192.168.31.111] ([194.39.226.133])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652f35b5bsm1057698a12.89.2024.12.14.06.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Dec 2024 06:56:58 -0800 (PST)
-From: Markuss Broks <markuss.broks@gmail.com>
-Date: Sat, 14 Dec 2024 16:56:47 +0200
-Subject: [PATCH RESEND v4 2/2] arm64: dts: exynos: Add initial support for
- Samsung Galaxy S9 (SM-G960F)
+        d=1e100.net; s=20230601; t=1734215160; x=1734819960;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4cYf+fIp6O0tYi333GxKT8sngxhGUwjhZfc52mhhGiU=;
+        b=qRppTYfvG80+OKvxhwlMwrT1nIi+7OxpYrjuKYY+S3pWxP1sdOo8+Ymvb87Svjq9HU
+         UvAkHVBRelASpSHQ5Ta1FRGmxOE9jmW0AsVON2uW6WlIqTg5tpggU8r+kf4D/cuwdqOO
+         JrvgNxCLqjT0IwTLaxO5tzA/0jH3sHLtk3wkk9LfkgC2KmTiN1racWL8DOVd4ve6ZSqm
+         TFLMJED5Jb/2kcQXEamhYhQkcfVsDUrrx1rPha+Gl/XZzqt5GFuq4bkOsgoTwHX/FpE2
+         90XBxhFB+EHgRq3VI6horg4KlTU0Kf39ulATLQYyQO8Sp8vBINQLh2XPs5+ZW36t4Z3W
+         v0/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXledc3MkjTwfZlFJMCJDU7syD31owYF/8Ake+g4PMpf2YkRjHAcUsbBuCPiFmB9A5Cb7/VtEkLT5Kt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9Lw7FHwdTAP9FWN2VRpbSuXwOQYg6YcaNuNUvS/3h7sh2qRTU
+	z6Rp5rkabjcY/VmTFP3lKxJ6Y/SPYKVj19aw4yN7bpqQz82zHPF4kwXWdOL1fVUpWLgFMrKPLQ6
+	3JHAMiuKW/2J8noxUZdVVLjxXoHRh6L/TVJUyrei6CH+gqiTsipUiQovV9s4Z
+X-Gm-Gg: ASbGnctx7Attc5iggbeUfnANCeVCn18NlyJLO9qZXDFXNOS5bXBmq+x1GX3Mi/yQb6p
+	tylyGmVbv2j27XVkqr+4ebaLsw/6FzS645SqGQIpQO1lAa4Tnuyk1ASF4Jdhp37tA6L1uN/qgKy
+	E24tL47UKsDQD+XlWHbjD4wR96FNv1VtnJfkwhb9NsCM0e3YTYWW5cXWcrHkE6N+7jPwcPC1u98
+	l1TrNKRO86EvBTInn006CJ3iDDnC1SWNesB7eg3DAsG2YCCWbc05Vf4u9QlpXDY3VNfw1QA3+6/
+	7NblIjOODNjC4/lYWTJe7VI+baPXhoZLdjE=
+X-Received: by 2002:a05:622a:606:b0:460:9026:6861 with SMTP id d75a77b69052e-467a578e2cemr51182121cf.9.1734215159709;
+        Sat, 14 Dec 2024 14:25:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHy3CQjGTQldVtLkouHU5cCLTpoXg+9TRQXEIp9dtfbaLJ0YpWV2irQdO65sKCWWIcHWP2RfQ==
+X-Received: by 2002:a05:622a:606:b0:460:9026:6861 with SMTP id d75a77b69052e-467a578e2cemr51181841cf.9.1734215159274;
+        Sat, 14 Dec 2024 14:25:59 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9638ac49sm139824566b.144.2024.12.14.14.25.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Dec 2024 14:25:58 -0800 (PST)
+Message-ID: <3fa6e136-b59f-47d2-9ebd-9040f422d25f@oss.qualcomm.com>
+Date: Sat, 14 Dec 2024 23:25:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241214-exynos9810-v4-2-4e91fbbc2133@gmail.com>
-References: <20241214-exynos9810-v4-0-4e91fbbc2133@gmail.com>
-In-Reply-To: <20241214-exynos9810-v4-0-4e91fbbc2133@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Tomasz Figa <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- Markuss Broks <markuss.broks@gmail.com>, 
- Maksym Holovach <nergzd@nergzd723.xyz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1734188212; l=4455;
- i=markuss.broks@gmail.com; s=20241024; h=from:subject:message-id;
- bh=uMCyvBcblST8fT6tpNS3iuyS4bo3Z+mJv8estU8DrRg=;
- b=AJDcFzYMPwpHeA6CF5N0iaoMpemqx+KpuAauJgSprpU8ee8Y0ttV7ftg2WNTkL6PkWlqwF/+p
- jjrnRhbkW5XCpBmA5WwUsRx7dZJgkWZB+v3pXc5XRJuZagYJ1NmI0Jn
-X-Developer-Key: i=markuss.broks@gmail.com; a=ed25519;
- pk=p3Bh4oPpeCrTpffJvGch5WsWNikteWHJ+4LBICPbZg0=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 6/8] arm64: dts: qcom: Add initial support for MSM8917
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+References: <20241211-msm8917-v8-0-197acc042036@mainlining.org>
+ <20241211-msm8917-v8-6-197acc042036@mainlining.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20241211-msm8917-v8-6-197acc042036@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 2advMdc9RATZLvul9e7Xb9fatjcyFk7H
+X-Proofpoint-GUID: 2advMdc9RATZLvul9e7Xb9fatjcyFk7H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412140185
 
-Samsung Galaxy S9 (SM-G960F), codenamed starlte, is a mobile phone
-released in 2017. It has 4GB of RAM, 64GB of UFS storage, Exynos9810
-SoC and 1440x2960 Super AMOLED display.
+On 11.12.2024 6:59 PM, Barnabás Czémán wrote:
+> From: Otto Pflüger <otto.pflueger@abscue.de>
+> 
+> Add initial support for MSM8917 SoC.
+> 
+> Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
+> [reword commit, rebase, fix schema errors]
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
 
-This initial device tree enables the framebuffer pre-initialised
-by bootloader and physical buttons of the device, with more support
-to come in the future.
 
-Co-developed-by: Maksym Holovach <nergzd@nergzd723.xyz>
-Signed-off-by: Maksym Holovach <nergzd@nergzd723.xyz>
-Signed-off-by: Markuss Broks <markuss.broks@gmail.com>
----
- arch/arm64/boot/dts/exynos/Makefile               |   1 +
- arch/arm64/boot/dts/exynos/exynos9810-starlte.dts | 119 ++++++++++++++++++++++
- 2 files changed, 120 insertions(+)
+> +
+> +		cpu0: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x100>;
+> +			next-level-cache = <&l2_0>;
+> +			enable-method = "psci";
+> +			clocks = <&apcs>;
+> +			operating-points-v2 = <&cpu_opp_table>;
+> +			#cooling-cells = <2>;
+> +			power-domains = <&cpu_pd0>;
+> +			power-domain-names = "psci";
+> +		};
+> +
+> +		l2_0: l2-cache {
+> +			compatible = "cache";
+> +			cache-level = <2>;
+> +			cache-unified;
+> +		};
 
-diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-index ee73e1a2db7ea64a0b8e9067a1a264e366f59bc3..f6f4bc650a94db0bc6bc017432e2e3dbba90e8c3 100644
---- a/arch/arm64/boot/dts/exynos/Makefile
-+++ b/arch/arm64/boot/dts/exynos/Makefile
-@@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
- 	exynos7885-jackpotlte.dtb	\
- 	exynos850-e850-96.dtb		\
- 	exynos8895-dreamlte.dtb		\
-+	exynos9810-starlte.dtb		\
- 	exynos990-c1s.dtb		\
- 	exynos990-r8s.dtb               \
- 	exynos990-x1s.dtb		\
-diff --git a/arch/arm64/boot/dts/exynos/exynos9810-starlte.dts b/arch/arm64/boot/dts/exynos/exynos9810-starlte.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..fc0ddfee4cd63d2fc53cae3d7447f66d39c134e9
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos9810-starlte.dts
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-+/*
-+ * Samsung Galaxy S9 (starlte/SM-G960F) device tree source
-+ *
-+ * Copyright (c) 2024 Markuss Broks <markuss.broks@gmail.com>
-+ * Copyright (c) 2024 Maksym Holovach <nergzd@nergzd723.xyz>
-+ */
-+
-+/dts-v1/;
-+#include "exynos9810.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Samsung Galaxy S9 (SM-G960F)";
-+	compatible = "samsung,starlte", "samsung,exynos9810";
-+	chassis-type = "handset";
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer@cc000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0xcc000000 (1440 * 2960 * 4)>;
-+			width = <1440>;
-+			height = <2960>;
-+			stride = <(1440 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&key_power &key_voldown &key_volup &key_wink>;
-+		pinctrl-names = "default";
-+
-+		power-key {
-+			label = "Power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+		};
-+
-+		voldown-key {
-+			label = "Volume Down";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		volup-key {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		/* In stock firmware used for assistant. Map it as a camera button for now */
-+		wink-key {
-+			label = "Camera";
-+			linux,code = <KEY_CAMERA>;
-+			gpios = <&gpa0 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x3c800000>,
-+		      <0x0 0xc0000000 0x20000000>,
-+		      <0x0 0xe1900000 0x1e700000>,
-+		      <0x8 0x80000000 0x80000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer@cc000000 {
-+			reg = <0x0 0xcc000000 (1440 * 2960 * 4)>;
-+			no-map;
-+		};
-+	};
-+};
-+
-+&oscclk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&pinctrl_alive {
-+	key_power: key-power-pins {
-+		samsung,pins = "gpa2-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+
-+	key_voldown: key-voldown-pins {
-+		samsung,pins = "gpa0-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+
-+	key_volup: key-volup-pins {
-+		samsung,pins = "gpa0-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+
-+	key_wink: key-wink-pins {
-+		samsung,pins = "gpa0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-+	};
-+};
+By "under CPU node", I meant as a subnode ;)
 
--- 
-2.47.0
+See sm8650.dtsi for reference
 
+[...]
+
+> +
+> +			sdc1_default: sdc1-default-state {
+> +				clk-pins {
+> +					pins = "sdc1_clk";
+> +					bias-disable;
+> +					drive-strength = <16>;
+> +				};
+> +				cmd-pins {
+
+Please separate these subnodes with a newline
+
+[...]
+> +
+> +		apps_iommu: iommu@1e20000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			#iommu-cells = <1>;
+> +			compatible = "qcom,msm8917-iommu", "qcom,msm-iommu-v1";
+> +			ranges = <0 0x01e20000 0x20000>;
+
+'compatible' should come first
+
+[...]
+
+> +		intc: interrupt-controller@b000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = <0x0b000000 0x1000>,
+> +			      <0x0b002000 0x1000>;
+> +		};
+
+and 'reg' just after it
+
+Otherwise looking fairly good!
+
+Konrad
 
