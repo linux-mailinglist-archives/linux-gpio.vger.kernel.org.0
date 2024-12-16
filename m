@@ -1,119 +1,101 @@
-Return-Path: <linux-gpio+bounces-13922-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13923-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94CB39F3731
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 18:16:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17FE59F38D5
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 19:24:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38FA57A5ADC
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 17:16:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 447B518830EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 18:21:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DC3206285;
-	Mon, 16 Dec 2024 17:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6A42063E0;
+	Mon, 16 Dec 2024 18:20:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="l/TNgXT8"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="qDk+NHtl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out.smtpout.orange.fr (out-73.smtpout.orange.fr [193.252.22.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBF9204F92;
-	Mon, 16 Dec 2024 17:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E57205E3B
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 18:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734369343; cv=none; b=sFECxdHkokEQNwY7J8ioQDt4+BcP0pZWOCCOhM3c2x7eCTVEmkUUSQA0VerTqhC7rv5XJ46gl1hF1ovA9L1vr/H+cyxM3SynhWOmr6Ptss76weLhCfPx9fH8ErW3PppxN3DvGdCtevsBvsn31YjoTG167pPDabOtqJ/501bMjL4=
+	t=1734373255; cv=none; b=ltU6JGsHX6h5jeFJQW6p6y+FaCmgSlPlwxgLR+7uccDyDer9dHKkYs4np5r8KTzAOCLMyzVaxsN0cmxS5bqBLqz2NvMAUxlmhauRIpaNPb0C4H2LAKBxj6eLsIrhYZw8B9xzonYzXkzNGWPj8XenVNHU0I4atlqpfvjZvH/cbWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734369343; c=relaxed/simple;
-	bh=rPcSRu/xLQ3AacbWw5/6imPXGpyHuzRwRCOsO3qDO1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X7+dKsrYGqJkJ4rrVV7USp3lNNHv9UsiSKmzDRFr+l/nsGAnZhq6fc2BQdwgo5yYff7fgaMtz7tT5M3/2OYkSkFy4k4FN9WrAN9Rq9sCFw9JAUR+uS+Z1SjwZLSgyRQCknQPBkDRG+OaOI/0nZEGyWT11pxvRtPaaCm7gflXPjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=l/TNgXT8; arc=none smtp.client-ip=193.252.22.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id NEfTt1ynneZBxNEfetJacV; Mon, 16 Dec 2024 18:14:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1734369265;
-	bh=ta+/XtD45kiERjaQDCMe+l1Wgsriuw2kZwoHtywgXTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=l/TNgXT8UxJn7zsGoLq3KvwVaLXQarxWaXKYl3SG4WTEiPGu1wXmr0vQYRJxfk9+7
-	 ngXLjIRgIyLOOekIT3Qv1YTx3r/I9x8UyhlNQ611mtSrenxitt1R3ofhihCKauB5qC
-	 NklyoxNGTWK+g+hKREE7iv5BBH8/bTMQt+McngQrBWADIkRhfgo+C3ceWQfOGt4KQB
-	 zNTTA/D7/YJbV1ESVU8FxRrt2xDLc//6G7aszsPTojyKRZvq7eQMfwkD+4/PYD86dW
-	 oqavapDqKggTkL4YZ1+B8Dv1pQSGOeKIk0gd0WxHgdNJmt7ZOqlN0bL5kt2EbG587N
-	 Gs0tZOw6DLcew==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 16 Dec 2024 18:14:25 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <8d66cf66-5564-4272-8c3e-51b715c3d785@wanadoo.fr>
-Date: Tue, 17 Dec 2024 02:14:02 +0900
+	s=arc-20240116; t=1734373255; c=relaxed/simple;
+	bh=Zi6Ycqb0EbzuWuO2jQDrQSbot25zuIRYbx7FLP01Dx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNVyfBBEirm/v+Zz8fM/u6MpCKp32sw2SstptQ2x4Vt25cMTcPL45eS30F5h8ubZtdxg/nFxAD6bn76O2a8T2RwS6JUYdAzTpbhfUBU9zlza7upifgweFva4POJcH/G6tlqvKUu+F3VklrGQGIlolOro8NcnCzol2xt5W2Hd5Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=qDk+NHtl; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 2BEE8240101
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 19:20:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1734373246; bh=Zi6Ycqb0EbzuWuO2jQDrQSbot25zuIRYbx7FLP01Dx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=qDk+NHtlqFdcc2ewwnCGNoXBp0PPh05XY6NGywEo1fHHxvbIbEOV6/HmxEpDr4KA2
+	 fKbaYt3DFoAyAsg3KSjITQIx2UHXmOlNjQuwSGWsNVs6JlQO4nN15Dx3HOQVaJTF+o
+	 1LPsEhgMggJl8MeyJgM/MVnwohmdo9UKgweZ+RrEaA9R/em9Wr0ecdgFtV03uo4NeA
+	 KaC2ClymtHEIeE24OtGd8LWrjhjhtB6mjhWjscyLcX7l0EAPavo8klMJMx9KOvl1FK
+	 fkBSRezzmdhZpYHy9/zXWdz7zxud6IG/iAD70H11BtaS/wOLs4VQrZgqgwkb0qxf1L
+	 6y/mY+OvC8pYQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YBpCc5Wm9z6tyG;
+	Mon, 16 Dec 2024 19:20:44 +0100 (CET)
+Date: Mon, 16 Dec 2024 18:20:44 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: j.ne@posteo.net
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] gpio: 74x164: Add latch GPIO support
+Message-ID: <Z2BvfKwdSyu5kzPh@probook>
+References: <20241213-gpio74-v1-0-fa2c089caf41@posteo.net>
+ <20241213-gpio74-v1-4-fa2c089caf41@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/7] can: Add Nuvoton NCT6694 CAN support
-To: Ming Yu <a0282524688@gmail.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, tmyu0@nuvoton.com,
- lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- andi.shyti@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com,
- alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-rtc@vger.kernel.org
-References: <20241210104524.2466586-1-tmyu0@nuvoton.com>
- <20241210104524.2466586-5-tmyu0@nuvoton.com>
- <20241211-taupe-leech-of-respect-4c325a-mkl@pengutronix.de>
- <CAMZ6RqLMyW6HfTGEOHm7B8rr6=hvuxMEWfEEhxv5Nw7fgpM=WA@mail.gmail.com>
- <CAOoeyxVoqtLPceHxH=eV=QfYuh9E0QEQKaMjdB4dyk9V_JarXQ@mail.gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-In-Reply-To: <CAOoeyxVoqtLPceHxH=eV=QfYuh9E0QEQKaMjdB4dyk9V_JarXQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241213-gpio74-v1-4-fa2c089caf41@posteo.net>
 
-On 16/12/2024 at 15:58, Ming Yu wrote:
-> Dear Vincent,
+On Fri, Dec 13, 2024 at 06:32:50PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
 > 
-> Thank you for your comments,
+> The Fairchild MM74HC595 and other compatible parts have a latch clock
+> input (also known as storage register clock input), which must be
+> clocked once in order to apply any value that was serially shifted in.
 > 
-> Vincent Mailhol <mailhol.vincent@wanadoo.fr> 於 2024年12月11日 週三 下午11:25寫道：
-
-(...)
-
->>>> +     cf->len = xmit->dlc;
->>>
->>> what does xmit->dlc contain? The DLC or the length?
->>
->> +1
->>
->> Also, do not trust the device data. Even if SPI attacks are less
->> common, make sure to sanitize this length.
->>
->>   cf->len = canfd_sanitize_len(xmit->dlc);
->>
->> Or
->>
->>   cf->len = canfd_sanitize_len(xmit->dlc);
->>
->> if xmit->dlc is in fact a DLC.
->>
+> This patch adds driver support for using a GPIO that connects to the
+> latch clock.
 > 
-> Excuse me, the xmit->dlc is actual data length.
-> Does it need to be fixed?
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 
-Yes, name is xmit->len. DLC has a different meaning.
+I just noticed that this feature is unnecessary for my use-case:
+The 74HC595 doesn't have a chip-select input, but if the rising-edge
+triggered latch clock input is reinterpreted as an active-low chip
+select, it does the right thing.
+
+                     _   _       _   _
+ shift clock    ____| |_| |_..._| |_| |_________
+
+ latch clock                           * trigger
+                ___                     ________
+ chip select#      |___________________|
 
 
-Yours sincerely,
-Vincent Mailhol
 
+ -- jn
 
