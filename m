@@ -1,116 +1,106 @@
-Return-Path: <linux-gpio+bounces-13905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13906-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F41A59F2CBE
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 10:18:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 356029F2DB5
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 11:04:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C48F161426
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 09:17:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00BEB1881555
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 10:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96FAE200BBE;
-	Mon, 16 Dec 2024 09:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3BAF202C2B;
+	Mon, 16 Dec 2024 10:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JnWP9Zl2"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="piviGXt1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60CB20010B
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 09:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD93B202C26;
+	Mon, 16 Dec 2024 10:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734340657; cv=none; b=koLQGKIz7cHERI9g6GN3Le7OXMgaINnZ5P6LSllXbOpoK1BMY+c7jxw/I9pWXJC9gmDeQIxUVHoKW3OlKBjNjF+FK1an6mA5yP3cE76+GroLoyklv+3QRmxbQBlOfuGnYJmLlz6hvC82TI64kJlBr08izydcssRYdoRE+LY63XE=
+	t=1734343365; cv=none; b=ZWVoHNasvU8DfqyL8WZMt4Ku39csRElL3RL2BPmxjYijGz0ChTsieqbG6jHYtTCH9hOwMVhSzH3rB9NJn0TydS3emig+GuGKYzKBZODy3itw5P9zLr4eMj+wo+kWtpzebpB2Bop4ki6n3kJnzvR6JHaXJ/q+cRdH4vrU+6VL2DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734340657; c=relaxed/simple;
-	bh=1qR5+1H3fLvBgI1LotDXtcQetIxOlpQF0+huH0Qt/4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uqB35N9VvuUsX8zMXClRWHr1sYSv9/5UUknewINcJNG9dS5xJW37qBbOpLQt9LadnSOk84ovGbbiovxB8UQ4drC3GEMNWJ5o/Sw/wdBE/qnnGQo5XLfhfE59oRgbrvBbP2MY7iy28YJSibgW7d8NF5TjAVrGkAubuNwSXBwxsNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JnWP9Zl2; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-303489e8775so16205251fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 01:17:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1734340654; x=1734945454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1qR5+1H3fLvBgI1LotDXtcQetIxOlpQF0+huH0Qt/4E=;
-        b=JnWP9Zl2prbWhXhYSp3bdNi3H4yHDKDKTwK4gXw4cvejsv5XoACLnDpISJub6hYulP
-         GIZ+3aWl3tj/9OTB6n1rhrAV7hwAAbFU6dpWhwB2h25CG+NcS9irBEXJ9AXkYmX97CUP
-         ZJikAotjjdRhvBobpxbhrADNVC+qqtIwMOZ33rhltHd0PNk95jyJ0qFjyVXx+DAIixi7
-         h47Tl2nJvbY9ki+h2FRmZLKnmITYVrv3wRA6pvj3mGLbZM8R2zDUX/gNPbfdfmzU+juS
-         bmRuDVSssi6PYLDugrh/LSUmSFpU6IX5o4kFS54I4GXDZkgzf6Nu4NG67Z1t2IgRCsHJ
-         jiWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734340654; x=1734945454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1qR5+1H3fLvBgI1LotDXtcQetIxOlpQF0+huH0Qt/4E=;
-        b=SQmyx0aCzu9X0YS9GVdyLZ9ZYut4ifVcqCwBVLSpTqoPxas5Cb9q9gwl4L2auCoY3p
-         8cxHReH591qXrg+i/V/lWKOQu9E1A94KJjUXpM6wS0m7BWEqsLiMV7OCOzFuLVhDIwf8
-         fIDcD/8EwCuhXnh5K6ebZ7ghQCRpsANj1CVxEvcke+xZYNHcBcsAxztj8aNaer+QotNv
-         dwl2a42B/eSpiBVpXMfsORsI9BWX6q9vZ0aSL7evGP2ac2o/DkmnceE3evjwhVy6QB9b
-         KmPyArg9AbKqP4tGVIP32E61/gcHl+LP8/sWIQx+m1f7PvqZHVMg10ypfroU4IdcRzYT
-         6d5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWvHvpcbZyQlHPw5ObS1C79zdndhML9jC21xOQwMLqFzG28HQgVdwefp43o8gYYD9INOf0GPKIXVOvc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH8EAM72hUa3+oyeGRY9yizeFT+S4tAeUyDDp9kW22sYJFfdh7
-	n6ufizAWOK7MxOfhDZgAKKLaMCI1xCb2iHj5/j0mkkKAf4xDK7pNL7jYaCCWKpx7ID/eny4EsjO
-	BzuhnQAxgnKO3CbZ19j24q32GAOsNvFh7FmBg3g==
-X-Gm-Gg: ASbGncttX+boSIaVeVn2ye+doL1c+pbvlaiXXJGfkAOYh2u0/SnqBpvbsm0Q1LyKAii
-	qgvTpHRE0pnKTVJuaAudHLdf3gox5tKzgfeskPJIjrdIiMv6Xvj1tPqor7iCwSgqODq+bjg==
-X-Google-Smtp-Source: AGHT+IEOwduo8usaj8ZRTiMKvnDvI/sKvG+uXPsesp8eVxzp1U/WEzzEulhhST+phRCarmJrvrroOrMmTlHcWhwZgzA=
-X-Received: by 2002:a2e:bc09:0:b0:302:2bd8:2687 with SMTP id
- 38308e7fff4ca-30254530bc4mr33805791fa.12.1734340654051; Mon, 16 Dec 2024
- 01:17:34 -0800 (PST)
+	s=arc-20240116; t=1734343365; c=relaxed/simple;
+	bh=3Bn0XDCgvjUAcs0JJMNweqfavk9Ae8nzA9aqUXkAjNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gFRJ7mkvhC7G6D5mX+00gdXqFTaSLB/TkWBr5jkwreXbptoxqjtFuDhcXTvUCVbJjlS+Hxwi5iNB3rp8IuTaCL+V+uQEZwVNgaK4SRnCQoK9vVTHocuWW6FtaStaBNI1AKm9dQa1E3JPThydCZTvmeG+R9zJzlesxvTITHRF2wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=piviGXt1; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E2503E000F;
+	Mon, 16 Dec 2024 10:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1734343355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6bMkpsWG2STvsBYlJ3JnC7cvQAT4JZnLBQxIJKnkPHc=;
+	b=piviGXt1wejSD3QKlfGdE7ChKJIB9GG2IT2kTYeBtRKmOcwwdwCvZiP62RMjQnGwDZUTtV
+	Eh3QvwPmIAuR7X/kqpJ5KaY4siWERuhlcyIMcOxoatWbggw3NzJszvOcFcmI+RNRSSktKx
+	pgxfwjvwc7IxjBnEYY8j39D4kGAw8gA4EX6O8eptY0d413/35X0wJNzow5iE/IMwFit3lU
+	0R5I9YjmpQuNDdd2eRQGohfjB6RXP7EtjzqXT26cMvP51wLainFz28v2faVgn6+x4DuaHF
+	4IXzc8HaXBPTzIKa/GXr59XjV1tDpFS/zSwjJr2mFAS4ifjmwUUOZzLh+e7UPg==
+Message-ID: <19311182-b5d5-44e9-96f5-ee21f2178668@bootlin.com>
+Date: Mon, 16 Dec 2024 11:02:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] gpiolib: add gpiochip_add_pinlist_range() function
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
 References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
  <20241211-aaeon-up-board-pinctrl-support-v1-3-24719be27631@bootlin.com>
-In-Reply-To: <20241211-aaeon-up-board-pinctrl-support-v1-3-24719be27631@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Dec 2024 10:17:23 +0100
-Message-ID: <CAMRc=MfUDGaW1cBrsLzAZ6GORFFv5fAjEKXu7esO44v4XckheQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] gpiolib: add gpiochip_add_pinlist_range() function
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-leds@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAMRc=MfUDGaW1cBrsLzAZ6GORFFv5fAjEKXu7esO44v4XckheQ@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAMRc=MfUDGaW1cBrsLzAZ6GORFFv5fAjEKXu7esO44v4XckheQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Wed, Dec 11, 2024 at 5:27=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> Add gpiochip_add_pinlist_range() function to add a range for GPIO <-> pin
-> mapping, using a list of non consecutive pins.
-> Previously, it was only possible to add range of consecutive pins using
-> gpiochip_add_pin_range().
->
-> The struct pinctrl_gpio_range has a 'pins' member which allows to set a
-> list of pins (which can be non consecutive). gpiochip_add_pinlist_range()
-> is identical to gpiochip_add_pin_range(), except it set 'pins' member
-> instead of 'pin_base' member.
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
+On 12/16/24 10:17, Bartosz Golaszewski wrote:
+> On Wed, Dec 11, 2024 at 5:27 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>>
+>> Add gpiochip_add_pinlist_range() function to add a range for GPIO <-> pin
+>> mapping, using a list of non consecutive pins.
+>> Previously, it was only possible to add range of consecutive pins using
+>> gpiochip_add_pin_range().
+>>
+>> The struct pinctrl_gpio_range has a 'pins' member which allows to set a
+>> list of pins (which can be non consecutive). gpiochip_add_pinlist_range()
+>> is identical to gpiochip_add_pin_range(), except it set 'pins' member
+>> instead of 'pin_base' member.
+>>
+>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>> ---
+> 
+> I don't have anything against this change so in any case:
+> 
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> But may I suggest the name to be changed to
+> gpiochip_add_pin_range_sparse() for a better indication of its
+> purpose?
 
-I don't have anything against this change so in any case:
+Hi Bartosz,
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Yes for sure, I will change the name for the v2.
 
-But may I suggest the name to be changed to
-gpiochip_add_pin_range_sparse() for a better indication of its
-purpose?
+Regards,
 
-Bart
+Thomas
+
 
