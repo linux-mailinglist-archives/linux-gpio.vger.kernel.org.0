@@ -1,143 +1,413 @@
-Return-Path: <linux-gpio+bounces-13914-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13915-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A01BC9F3090
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 13:32:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CB439F3247
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 15:08:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFAC316372B
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 12:32:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC1477A2615
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 14:08:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775362054EE;
-	Mon, 16 Dec 2024 12:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27168205E13;
+	Mon, 16 Dec 2024 14:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lAOz7yPO"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bhL9TfvW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E36204F70
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 12:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFADE1C8FD7
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734352318; cv=none; b=KKtXi1AVdHh5X9pfHzG9TvNJxcA2Gku9ocLN4fmkmdi6A11+xk2xk1K03j8Fuj6cUr3bKbjwR59HbnebYm4WQZ7cHPOVPayTcbNfxc+CA+Ph4W0n8KNdntz2F+Pl0UTEA9YkfbgKn3EFg0Mb+QMDPoRJuS4KDKOE3Vcf4WDZQpg=
+	t=1734358085; cv=none; b=dty43I4Tqsu6oVE5qCiKEC3aaWVwuT94AWiiZ2x/acHez88sJQwzLjgAOgjgFJcNWqBq/SHzvkDzbY448S/+klOPBhYtfQfp/k8eInSLSqspjR/LCykilKi+9D4ogH4fHtck2pJMBXcJwlgAcCKYDrTJe83JZsalH0PMxABkM7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734352318; c=relaxed/simple;
-	bh=NOGmwuUhx41uLN0wHBW0LLXHIBm/+VxTjHL0qIfPIxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lb522tbxtb8e7/Nxa11o3gZdN9W7kxqxI3Y8y4eyjLJ1F7uoB45zC+8JVYBp4RpxllbjJP2xtCpOWHUQQcFQrTzXyC20D5HVwZ1UAxwfAnnAogHiC1Bzb586wKCSTEimlI2lR7AO8Zq+yv5F24H8RWv8xGlXhRFc98RwD8pud7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lAOz7yPO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG86xXQ008755
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 12:31:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WeqvPqxs/zm+neW3dpwcGc7WggbqVo4nB/s2S/wzmDg=; b=lAOz7yPOamfLxjv/
-	ODjMV5+2Kb003nv5eIAiAcD0qLYO56rc/VB+tbw7aRnoUGG8/Dm1/0Et8FZuYcm5
-	aoPo506w01Wt5nshlTRiNec3s4xm/Du435v9FH7MISnroT/yAwcubt80H3Bae6xU
-	NMok72cGviDIFgvgNmfeKhNTAtvqi7XI7L3pbByJXhhR11/pGYo6PLArEZDeQ8hB
-	FbjV5hP9LuDWrmriFIA0dV1E07txNVzzjLEbIpjljX6y6MomInUIZFeGBX8oCOzD
-	WACcOX451b1oLqdycuhiSLNVMGwmg9jjSXeWErLlWrAN49md/bv0HIAw/Ew3Ti8j
-	U2RfEA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43jgdj0r9f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 12:31:55 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6d8f77bf546so14114776d6.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 04:31:55 -0800 (PST)
+	s=arc-20240116; t=1734358085; c=relaxed/simple;
+	bh=KKqNSCpHid+iihTpFuSbyOay+c5TD2aBVW/EWXFXmto=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dkh93UTGT7chv+Ds7AIVyOmfCwD14m83b5AFGrMqUurDgZ5JNdkqDaUV1EaYgO8skGtcyh/FXAzr/pvIGGH15WTAisdA1PHm5JTkvRPorxVsTR2NbqSpVkV8hVkNvjurPbXZeTN5cn57zq5FhSWHQQdiRb1p24ZgAoSatd6CmH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bhL9TfvW; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5d3e9f60bf4so6745830a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 06:08:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1734358081; x=1734962881; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g23mucpDPWoIoAgdgc80DmEEwr48Eand/iJXEa98s34=;
+        b=bhL9TfvW/s0F1Z6MPnYLEJynUPZbsG0nvk2aM9Q1w6mK0Wt8R+X+/RwLbrduMHzBWK
+         7YMD1zK2D0AcD8Zq8MLj9QHAsk3/VSwFjLZ41voV4P77F5iJljIxQDwMR4REEILu9ocO
+         VRekdRnK4sFozqoW55PbL/9vqop5NRmdnI57if2rBOpGrna+EsNQr0iFAJv2WC+OQlsr
+         PzZnnEz1amUR40KmDCx2xcSTeYkgOhF2VszSNAIST9SCXoGKk2OTt3eCzud55vAJB6XY
+         mZwSVn8dtbVIWYH1bodKgMgJhjLcnmc6YsKDvpfLCOJIbce1vN5s13XZV5L2e3jCPGIq
+         gnCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734352315; x=1734957115;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WeqvPqxs/zm+neW3dpwcGc7WggbqVo4nB/s2S/wzmDg=;
-        b=Wp2Ig2Y7Jtydo04GqlDeFkCLzCUgtrNF/fLStEsXAv/6Y/RvQKqa0rbhnYeB7P6u9J
-         fd57SRre9/U4D1o7IYZkpTdcEjiiJYs4t/wFE4jyNYKCordDTUcTDA0b4AIsJcyL5gAT
-         AePXvMffyf33Q16oi8G/9aM5FzMrXVK6f2N7dumOBvrEteFvdshUpcQqhUbTnhMP8eqN
-         kbPUaYGwP7OUawojaLYTbzyzxMor9HaTBxPtX8wMik4tT9QncEjqFAAVdpoY4op6EAYZ
-         oICyilNqlVgR8mqw/YXSul120mtDW49a14fWivkPLIcyBQIbcuNcTJ9POkgQ2qjS9Gbn
-         cASw==
-X-Forwarded-Encrypted: i=1; AJvYcCX92LiGQkttraOUJTq4lrnlN3nASyhaAjyM63g1s8TJEM9smcKkQ/waZXTcJgWrB6uOoclKD+xuINVS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdWhWSGXBJGX6GOFyEVpGf+/H3v7+8et9yoUeH6ks3y3OEFlyN
-	w6/M1hMNoECuwlhA+CRHAm5lFxPSoVKHD/4QCPriZzlNIsMkiEAIcc0P5hozsa3wrhKaXr/nbvp
-	cXoLCc9Qe8bF83+bBJ4Mp5IJEx9x++j70d6F7VQy2g1XE6JGFcEYqjfL77mOK
-X-Gm-Gg: ASbGncuDUhZRl6kKtcGA1FVhZRqjMXp5iKgO0nwVkjiAWkC5RPdCAeBWwUzJX+LYiLq
-	PVEredkYpP/9jYkT3E79VvMZmmaVV0fPRn2dttPuJbWWcev2HXFWpisrq+fpF/pFTtpmbkWo2Cx
-	GIokfBgXr9lAEJmJsIxeSNhPj5yCsbJ24GzqgpISjphnlJuDFcV+mcNSIAUD3bcxUJ18R6/sjp2
-	8SfHg2YO5b3sghW2sCkcNXpjSwvm34Vyqy4/9x173aU3VaJpINNs4D/yUOt9njazk9H77h13bKQ
-	OSjCRgQ/U1nXO5iBncXBpszDVCnbwR2V8y4=
-X-Received: by 2002:a05:6214:c4f:b0:6d8:8db8:43a8 with SMTP id 6a1803df08f44-6dc9683b11fmr74596546d6.9.1734352313550;
-        Mon, 16 Dec 2024 04:31:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdrHVfyoU2etuQqyfIbiSLQe3FMVsNgCETbPhLwAWfRSOxp7xzi9URabDJLwUjep6ho8lswQ==
-X-Received: by 2002:a05:6214:c4f:b0:6d8:8db8:43a8 with SMTP id 6a1803df08f44-6dc9683b11fmr74596476d6.9.1734352313221;
-        Mon, 16 Dec 2024 04:31:53 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652ab5198sm3112039a12.8.2024.12.16.04.31.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2024 04:31:52 -0800 (PST)
-Message-ID: <ee5460db-2459-4ea5-ad35-e9520247cb98@oss.qualcomm.com>
-Date: Mon, 16 Dec 2024 13:31:50 +0100
+        d=1e100.net; s=20230601; t=1734358081; x=1734962881;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g23mucpDPWoIoAgdgc80DmEEwr48Eand/iJXEa98s34=;
+        b=Bbk9b8e92tZddVwYGvL3BSMmPxlDpBRX8eSZkEv0jaJ/mrAOQv318S56YA99Gpg2Yc
+         z3qmqk/G/IRhliKNpV91XerfAzkICCNhZAiFZb6TzwSmRhq/cZxebZv6uajxtc5uwbjz
+         NNVSU4FmTRK2w3avLxpJXuC0WLZND42I724NXANOduBtGZ9OHaeFSCr/4vgoXYHoCPoe
+         HNOltKuNp2UgcopT5EZsfvPbuT7f4vGjdBBvt7SLTOm5mWhtqMBpPRVnfw80LXt8IvTs
+         8Xlze5PAveoktggeu1FcpL44kwFWMyCMXfeVm/2AZ+oPTb4bGIzY+f1b0YGATh71LrYK
+         gweg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPsj3d+EdVy59tMDQ7atH7HWQkkwjCh6P3z1kAPSosUbw/V8EeM87UT2qpMRhp+RIFmtdk2TcGCCuj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIoXo//wmSaAPQEQ2dId6MnlsKTw1GMGdSihDFwy3SeQVd9y7p
+	vBchDeYDO2Qdz9scnF1dvwILO/XG4l022Q5jzH4sv1h1IWDhUsvF2CDwwfR7DOo=
+X-Gm-Gg: ASbGncuRDxVZ5ojiCadmmPZHgZLc/SFd+faFOTO4Cdi1iGbEjjSD1WrOmOuMYg90pDy
+	jZWaL7xF5aD2+XGn2qZMZvTTl2AiaQaYSMJvK+pxKEg5IMrZGfO8Av3TRXaaib3rYEgtu8bwS8j
+	lw5sw8JhRe0cDjyJwO1GEB9m4xqXobWeuZkttbSqAsPZXExw3SUEvMotgsM9SHccUcE2vtu0cc0
+	3QQNo9d/k6uWNYEfIpmUj4LdqcKoLzZ7NgNZUm3Lgs9j3Nr9AMy83WIdN7TFBiURQ/U4UgpQjCl
+	8ACmhdMJ2yccJMV7lwkiMbV5adiSgQ==
+X-Google-Smtp-Source: AGHT+IHJ+/eVj5EyRxoB9mvnG3pVunHQUFhMNAY2rf/VZ/yDfG/on5Zd+2ZxoFIfP5qTA0cM8Ok/Fg==
+X-Received: by 2002:a05:6402:5410:b0:5d2:d72a:77e4 with SMTP id 4fb4d7f45d1cf-5d63c3bf481mr13213986a12.28.1734358081004;
+        Mon, 16 Dec 2024 06:08:01 -0800 (PST)
+Received: from localhost (host-95-237-237-185.retail.telecomitalia.it. [95.237.237.185])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652ae1205sm3220723a12.44.2024.12.16.06.08.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2024 06:08:00 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 16 Dec 2024 15:08:40 +0100
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 08/10] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z2A0aAPotT0NvoCl@apocalypse>
+References: <cover.1733136811.git.andrea.porta@suse.com>
+ <28fe72eec1c08781770cee65032bb10a6d5994a9.1733136811.git.andrea.porta@suse.com>
+ <20241210224837.GA702616-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/8] arm64: dts: qcom: Add initial support for MSM8917
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, iommu@lists.linux.dev,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
-References: <20241215-msm8917-v9-0-bacaa26f3eef@mainlining.org>
- <20241215-msm8917-v9-6-bacaa26f3eef@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20241215-msm8917-v9-6-bacaa26f3eef@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: Gs_PfpV0HwHIDYrueSe9in530Nldx-wg
-X-Proofpoint-ORIG-GUID: Gs_PfpV0HwHIDYrueSe9in530Nldx-wg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=974
- mlxscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 impostorscore=0
- bulkscore=0 malwarescore=0 priorityscore=1501 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2412160105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210224837.GA702616-robh@kernel.org>
 
-On 15.12.2024 12:15 PM, Barnabás Czémán wrote:
-> From: Otto Pflüger <otto.pflueger@abscue.de>
+Hi Rob,
+
+On 16:48 Tue 10 Dec     , Rob Herring wrote:
+> On Mon, Dec 02, 2024 at 12:19:32PM +0100, Andrea della Porta wrote:
+> > The RaspberryPi RP1 is a PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.
+> > 
+> > Implement a bare minimum driver to operate the RP1, leveraging
+> > actual OF based driver implementations for the on-board peripherals
+> > by loading a devicetree overlay during driver probe.
+> > 
+> > The peripherals are accessed by mapping MMIO registers starting
+> > from PCI BAR1 region.
+> > 
+> > With the overlay approach we can achieve more generic and agnostic
+> > approach to managing this chipset, being that it is a PCI endpoint
+> > and could possibly be reused in other hw implementations. The
+> > presented approach is also used by Bootlin's Microchip LAN966x
+> > patchset (see link) as well, for a similar chipset.
+> > 
+> > Since the gpio line names should be provided by the user, there
+> > is an interface through configfs that allows the userspace to
+> > load a DT overlay that will provide gpio-line-names property.
+> > The interface can be invoked like this:
+> > 
+> > cat rpi-rp1-gpios-5-b.dtbo > /sys/kernel/config/rp1-cfg/gpio_set_names
 > 
-> Add initial support for MSM8917 SoC.
+> Where's the configfs support? This looks like a stale comment.
+
+Yes, you are right. Thanks for pointing that out, I've dropped that
+paragraph, since there is no gpio name support in this specific patchset
+anymore.
+
 > 
-> Signed-off-by: Otto Pflüger <otto.pflueger@abscue.de>
-> [reword commit, rebase, fix schema errors]
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
+> If this is the general purpose configfs interface for overlays, that's 
+> likely never going upstream. If you want this support, then you should 
+> load your overlay with the firmware loader instead of building it into 
+> the kernel. You can of course add that later.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+I think the best thing would be to leave the actual base overlay compiled
+inside the driver as it is now, and to prepare a secondary overlay for the
+gpio names to be loaded as a binary blob through request_firmware(). Does
+it make sense? Of course, the gpio name overlay support would be a future
+patchset of its own.
 
-Konrad
+> 
+> > and is designed to be similar to what users are already used to
+> > from distro with downstream kernel.
+> > 
+> > For reasons why this driver is contained in drivers/misc, please
+> > check the links.
+> > 
+> > This driver is heavily based on downstream code from RaspberryPi
+> > Foundation, and the original author is Phil Elwell.
+> > 
+> > Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+> > Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+> > Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+> > Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >  MAINTAINERS                   |   1 +
+> >  drivers/misc/Kconfig          |   1 +
+> >  drivers/misc/Makefile         |   1 +
+> >  drivers/misc/rp1/Kconfig      |  21 ++
+> >  drivers/misc/rp1/Makefile     |   3 +
+> >  drivers/misc/rp1/rp1-pci.dtso |   8 +
+> >  drivers/misc/rp1/rp1_pci.c    | 366 ++++++++++++++++++++++++++++++++++
+> >  drivers/misc/rp1/rp1_pci.h    |  14 ++
+> >  drivers/pci/quirks.c          |   1 +
+> >  include/linux/pci_ids.h       |   3 +
+> >  10 files changed, 419 insertions(+)
+> >  create mode 100644 drivers/misc/rp1/Kconfig
+> >  create mode 100644 drivers/misc/rp1/Makefile
+> >  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+> >  create mode 100644 drivers/misc/rp1/rp1_pci.c
+> >  create mode 100644 drivers/misc/rp1/rp1_pci.h
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index fbdd8594aa7e..d67ba6d10aa8 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19583,6 +19583,7 @@ F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+> >  F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+> >  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> >  F:	drivers/clk/clk-rp1.c
+> > +F:	drivers/misc/rp1/
+> >  F:	drivers/pinctrl/pinctrl-rp1.c
+> >  F:	include/dt-bindings/clock/rp1.h
+> >  F:	include/dt-bindings/misc/rp1.h
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 09cbe3f0ab1e..ffa4d8315c35 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -651,4 +651,5 @@ source "drivers/misc/uacce/Kconfig"
+> >  source "drivers/misc/pvpanic/Kconfig"
+> >  source "drivers/misc/mchp_pci1xxxx/Kconfig"
+> >  source "drivers/misc/keba/Kconfig"
+> > +source "drivers/misc/rp1/Kconfig"
+> >  endmenu
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> > index 40bf953185c7..3b6b07a23aac 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -74,3 +74,4 @@ lan966x-pci-objs		:= lan966x_pci.o
+> >  lan966x-pci-objs		+= lan966x_pci.dtbo.o
+> >  obj-$(CONFIG_MCHP_LAN966X_PCI)	+= lan966x-pci.o
+> >  obj-y				+= keba/
+> > +obj-$(CONFIG_MISC_RP1)		+= rp1/
+> > diff --git a/drivers/misc/rp1/Kconfig b/drivers/misc/rp1/Kconfig
+> > new file mode 100644
+> > index 000000000000..15c443e13389
+> > --- /dev/null
+> > +++ b/drivers/misc/rp1/Kconfig
+> > @@ -0,0 +1,21 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +#
+> > +# RaspberryPi RP1 misc device
+> > +#
+> > +
+> > +config MISC_RP1
+> > +	tristate "RaspberryPi RP1 PCIe support"
+> > +	depends on OF_IRQ && PCI_MSI && PCI_QUIRKS
+> > +	select OF_OVERLAY
+> > +	select PCI_DYNAMIC_OF_NODES
+> > +	help
+> > +	  Support the RP1 peripheral chip found on Raspberry Pi 5 board.
+> > +
+> > +	  This device supports several sub-devices including e.g. Ethernet
+> > +	  controller, USB controller, I2C, SPI and UART.
+> > +
+> > +	  The driver is responsible for enabling the DT node once the PCIe
+> > +	  endpoint has been configured, and handling interrupts.
+> > +
+> > +	  This driver uses an overlay to load other drivers to support for
+> > +	  RP1 internal sub-devices.
+> > diff --git a/drivers/misc/rp1/Makefile b/drivers/misc/rp1/Makefile
+> > new file mode 100644
+> > index 000000000000..508b4cb05627
+> > --- /dev/null
+> > +++ b/drivers/misc/rp1/Makefile
+> > @@ -0,0 +1,3 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +obj-$(CONFIG_MISC_RP1)		+= rp1-pci.o
+> > +rp1-pci-objs			:= rp1_pci.o rp1-pci.dtbo.o
+> > diff --git a/drivers/misc/rp1/rp1-pci.dtso b/drivers/misc/rp1/rp1-pci.dtso
+> > new file mode 100644
+> > index 000000000000..0bf2f4bb18e6
+> > --- /dev/null
+> > +++ b/drivers/misc/rp1/rp1-pci.dtso
+> > @@ -0,0 +1,8 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +
+> > +/* the dts overlay is included from the dts directory so
+> > + * it can be possible to check it with CHECK_DTBS while
+> > + * also compile it from the driver source directory.
+> 
+> I haven't tried, but I think if you set CHECK_DTBS=y, then this file 
+> will get checked. Applying it to the base DT will not though.
+
+I think we're saying the same thing here, which is that the dtso can be
+checked by passing CHECK_DTB=y but it has to be located somewhere under
+arch/*/boot/dts. Or maybe I'm misunderstandig what you mean here?
+
+> 
+> > + */
+> > +
+> > +#include "arm64/broadcom/rp1.dtso"
+> > diff --git a/drivers/misc/rp1/rp1_pci.c b/drivers/misc/rp1/rp1_pci.c
+> > new file mode 100644
+> > index 000000000000..0dd345341c6f
+> > --- /dev/null
+> > +++ b/drivers/misc/rp1/rp1_pci.c
+> > @@ -0,0 +1,366 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> > + * All rights reserved.
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/module.h>
+> > +#include <linux/msi.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include "rp1_pci.h"
+> > +
+> > +#define RP1_DRIVER_NAME		"rp1"
+> > +
+> > +#define RP1_HW_IRQ_MASK		GENMASK(5, 0)
+> > +
+> > +#define REG_SET			0x800
+> > +#define REG_CLR			0xc00
+> > +
+> > +/* MSI-X CFG registers start at 0x8 */
+> > +#define MSIX_CFG(x) (0x8 + (4 * (x)))
+> > +
+> > +#define MSIX_CFG_IACK_EN        BIT(3)
+> > +#define MSIX_CFG_IACK           BIT(2)
+> > +#define MSIX_CFG_ENABLE         BIT(0)
+> > +
+> > +/* Address map */
+> > +#define RP1_PCIE_APBS_BASE	0x108000
+> > +
+> > +/* Interrupts */
+> > +#define RP1_INT_IO_BANK0	0
+> > +#define RP1_INT_IO_BANK1	1
+> > +#define RP1_INT_IO_BANK2	2
+> > +#define RP1_INT_AUDIO_IN	3
+> > +#define RP1_INT_AUDIO_OUT	4
+> > +#define RP1_INT_PWM0		5
+> > +#define RP1_INT_ETH		6
+> > +#define RP1_INT_I2C0		7
+> > +#define RP1_INT_I2C1		8
+> > +#define RP1_INT_I2C2		9
+> > +#define RP1_INT_I2C3		10
+> > +#define RP1_INT_I2C4		11
+> > +#define RP1_INT_I2C5		12
+> > +#define RP1_INT_I2C6		13
+> > +#define RP1_INT_I2S0		14
+> > +#define RP1_INT_I2S1		15
+> > +#define RP1_INT_I2S2		16
+> > +#define RP1_INT_SDIO0		17
+> > +#define RP1_INT_SDIO1		18
+> > +#define RP1_INT_SPI0		19
+> > +#define RP1_INT_SPI1		20
+> > +#define RP1_INT_SPI2		21
+> > +#define RP1_INT_SPI3		22
+> > +#define RP1_INT_SPI4		23
+> > +#define RP1_INT_SPI5		24
+> > +#define RP1_INT_UART0		25
+> > +#define RP1_INT_TIMER_0		26
+> > +#define RP1_INT_TIMER_1		27
+> > +#define RP1_INT_TIMER_2		28
+> > +#define RP1_INT_TIMER_3		29
+> > +#define RP1_INT_USBHOST0	30
+> > +#define RP1_INT_USBHOST0_0	31
+> > +#define RP1_INT_USBHOST0_1	32
+> > +#define RP1_INT_USBHOST0_2	33
+> > +#define RP1_INT_USBHOST0_3	34
+> > +#define RP1_INT_USBHOST1	35
+> > +#define RP1_INT_USBHOST1_0	36
+> > +#define RP1_INT_USBHOST1_1	37
+> > +#define RP1_INT_USBHOST1_2	38
+> > +#define RP1_INT_USBHOST1_3	39
+> > +#define RP1_INT_DMA		40
+> > +#define RP1_INT_PWM1		41
+> > +#define RP1_INT_UART1		42
+> > +#define RP1_INT_UART2		43
+> > +#define RP1_INT_UART3		44
+> > +#define RP1_INT_UART4		45
+> > +#define RP1_INT_UART5		46
+> > +#define RP1_INT_MIPI0		47
+> > +#define RP1_INT_MIPI1		48
+> > +#define RP1_INT_VIDEO_OUT	49
+> > +#define RP1_INT_PIO_0		50
+> > +#define RP1_INT_PIO_1		51
+> > +#define RP1_INT_ADC_FIFO	52
+> > +#define RP1_INT_PCIE_OUT	53
+> > +#define RP1_INT_SPI6		54
+> > +#define RP1_INT_SPI7		55
+> > +#define RP1_INT_SPI8		56
+> > +#define RP1_INT_SYSCFG		58
+> > +#define RP1_INT_CLOCKS_DEFAULT	59
+> > +#define RP1_INT_VBUSCTRL	60
+> > +#define RP1_INT_PROC_MISC	57
+> 
+> Why all these defines which will never be used because they come from 
+> DT?
+>
+
+Right, those defines where originally designed to be included from dts, but
+previous discussion deemed interrupt numbers to be hardcoded instead of being
+specified as mnemonics. In the driver source code I just use RP1_INT_END as the
+number of interrupts but I thought that the specific interrupt numbers should
+be documented in some way or another. Since no one is currently referencing
+those defines, would it be better to just turn those in a multiline comment
+just to describe them in a more compact form?
+
+Many thanks,
+Andrea
+
+> Rob
 
