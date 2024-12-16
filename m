@@ -1,106 +1,118 @@
-Return-Path: <linux-gpio+bounces-13906-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13907-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 356029F2DB5
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 11:04:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C14989F2E30
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 11:33:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00BEB1881555
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 10:03:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A3FB1638DE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2024 10:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3BAF202C2B;
-	Mon, 16 Dec 2024 10:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 426AD20371E;
+	Mon, 16 Dec 2024 10:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="piviGXt1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dpHF1bso"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD93B202C26;
-	Mon, 16 Dec 2024 10:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F852036FC
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 10:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734343365; cv=none; b=ZWVoHNasvU8DfqyL8WZMt4Ku39csRElL3RL2BPmxjYijGz0ChTsieqbG6jHYtTCH9hOwMVhSzH3rB9NJn0TydS3emig+GuGKYzKBZODy3itw5P9zLr4eMj+wo+kWtpzebpB2Bop4ki6n3kJnzvR6JHaXJ/q+cRdH4vrU+6VL2DU=
+	t=1734345225; cv=none; b=sWYhMQvGmU+rie93tbR6imF/w32LvDyHE5pP6NvBoHen7/84u2QFhYkbbmjf1Tmib5l1qmdjEIkgHQb2QiaRyA3DGplsxC7DgKfjIIYm9F+x0gosbNyeMtOe2SppI+X9/JIpAzEEsWc7812Gcqc8XjqWnpky8KaYsY4XNsDfrW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734343365; c=relaxed/simple;
-	bh=3Bn0XDCgvjUAcs0JJMNweqfavk9Ae8nzA9aqUXkAjNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFRJ7mkvhC7G6D5mX+00gdXqFTaSLB/TkWBr5jkwreXbptoxqjtFuDhcXTvUCVbJjlS+Hxwi5iNB3rp8IuTaCL+V+uQEZwVNgaK4SRnCQoK9vVTHocuWW6FtaStaBNI1AKm9dQa1E3JPThydCZTvmeG+R9zJzlesxvTITHRF2wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=piviGXt1; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E2503E000F;
-	Mon, 16 Dec 2024 10:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1734343355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6bMkpsWG2STvsBYlJ3JnC7cvQAT4JZnLBQxIJKnkPHc=;
-	b=piviGXt1wejSD3QKlfGdE7ChKJIB9GG2IT2kTYeBtRKmOcwwdwCvZiP62RMjQnGwDZUTtV
-	Eh3QvwPmIAuR7X/kqpJ5KaY4siWERuhlcyIMcOxoatWbggw3NzJszvOcFcmI+RNRSSktKx
-	pgxfwjvwc7IxjBnEYY8j39D4kGAw8gA4EX6O8eptY0d413/35X0wJNzow5iE/IMwFit3lU
-	0R5I9YjmpQuNDdd2eRQGohfjB6RXP7EtjzqXT26cMvP51wLainFz28v2faVgn6+x4DuaHF
-	4IXzc8HaXBPTzIKa/GXr59XjV1tDpFS/zSwjJr2mFAS4ifjmwUUOZzLh+e7UPg==
-Message-ID: <19311182-b5d5-44e9-96f5-ee21f2178668@bootlin.com>
-Date: Mon, 16 Dec 2024 11:02:33 +0100
+	s=arc-20240116; t=1734345225; c=relaxed/simple;
+	bh=PYwh9Ejzktqnk/4b3X6HTET4UjWYpwtQYwse3ElACjE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ADn9VgnXBnKS8rGheJlp5lqpkrAVc9d9qM2V+RO3QjNUPnThzHXiir0/BRJQXgxh0XJ0bhYLFkDB0Vrwh1Cw8IRc6MN8s7BaMXJrhOPRz8kfJ8+9WGDbOS+5PuLrEzdnMpgmpamOPFJ5fL/1JG0LccPyR5NXhidnzsmP3rErcqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dpHF1bso; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3002c324e7eso45081561fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 02:33:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734345221; x=1734950021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=81rR1eTM9HElymQ2hIkXvkfh84mtbQHR8oN+z/vprns=;
+        b=dpHF1bsoXY5M3b7MlnEpOGGHghGom+pSsXU1kbrqQrbtRIs8cx1uhnSzks/KNBTRHJ
+         DDh91QvjfyewUjLrjskEBJ1MnZb4EWytNTwFvF4ODS+gBeWYtv5f6ftxVKezxH8bfUxr
+         YwSSlNMwi+ALqQRPr5fvgsaZqy/faIRKD0R7AXaJrYOii8bd2oIPpIsA57IDTmvJjAV6
+         X2Edqs0XGJwYI9T137tVGg+7dXjgn0dccJ+iscBzpZHBVLieHIvhQ1uxRb7jEvLX4xQ9
+         bXpsY8++GJ/vOCrO8STHTESfFnmuiZYksPnnwJz6E0lyh9iKp6Lh2y3MC2ArjmDHftQ2
+         oZSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734345221; x=1734950021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=81rR1eTM9HElymQ2hIkXvkfh84mtbQHR8oN+z/vprns=;
+        b=Lnwj2hDosaHye8KKi37gn4+fYGr6QfmXeOBLQNqb6NHe1De2WAg8cDp73i0PKd+pRw
+         xPE3jCeLvNRGPC5wKYaVTo1bE3Q5zIKbsx8DMvj/kRHswpxCVnHsW7x7mvJCatQGpt2A
+         tVO8hP/UDTBJQcn23GzZydYbAnvpeWebZOt7POOhv8kD5PWjy7rjE+YTsAUBHpZ7oEKV
+         vwdOjU9+3nXeHUJCKubddet1NMJzyYG/C2o86DRNUZ/YxQuCdhISbAbSOOXnUjwfCpjE
+         foVKG/PznfKP3079NKkXgd5l6Eqlk8sCFKsyb2Q7mmE7YBD8Lo+DHMYBRbyrU5qFED5G
+         k8uA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqvHuriWSEx0f2yJx/LA07flYz02p2mjAKzo1ivblsCroTONCKGxF7nG9UtS51jhKv33A2hI/P1pzN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3B3dDCt4WfsmSChSBjz7x+qmjfIbVHHOzjPNyk5QKxgv2iNRq
+	oNIaOeflKlDsYZnIBZxX8CSRN0UR6jUu0YhldvP87UFcOF2UVIsS0FUwennUgKl0knCJG8/t2GU
+	QH3D5FcnSC6jIQ/NfOHZ2PlYT/z1J8NvjaXsxiA==
+X-Gm-Gg: ASbGncvH9fYUaRjCBqLTT1umuY11svvmD3YI6+dzsspsXbh4XZUwm1DUlnYdIwAdsvw
+	1K+TaTxq57lLAszxeN3MUNeSKH4UypTSwTWWH
+X-Google-Smtp-Source: AGHT+IEUf3iLQlaHwj+huKVEu7Rf6ZfMRHEmd0RkbAiajFtXRNVDdgnZzJS2Enw8KLsa6+/B9ivQKuoEjmBWCEUg1Qo=
+X-Received: by 2002:a05:6512:230b:b0:540:3561:969d with SMTP id
+ 2adb3069b0e04-54099b7188fmr3706580e87.49.1734345221514; Mon, 16 Dec 2024
+ 02:33:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] gpiolib: add gpiochip_add_pinlist_range() function
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
- thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
-References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
- <20241211-aaeon-up-board-pinctrl-support-v1-3-24719be27631@bootlin.com>
- <CAMRc=MfUDGaW1cBrsLzAZ6GORFFv5fAjEKXu7esO44v4XckheQ@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAMRc=MfUDGaW1cBrsLzAZ6GORFFv5fAjEKXu7esO44v4XckheQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20241215-msm8917-v9-0-bacaa26f3eef@mainlining.org>
+In-Reply-To: <20241215-msm8917-v9-0-bacaa26f3eef@mainlining.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 16 Dec 2024 11:33:30 +0100
+Message-ID: <CACRpkdZ-ZEiGMUPObHU=kw=OUADrRGtxgMc-QC3EaBevp-Shng@mail.gmail.com>
+Subject: Re: [PATCH v9 0/8] Add MSM8917/PM8937/Redmi 5A
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
+	Dang Huynh <danct12@riseup.net>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/16/24 10:17, Bartosz Golaszewski wrote:
-> On Wed, Dec 11, 2024 at 5:27 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> Add gpiochip_add_pinlist_range() function to add a range for GPIO <-> pin
->> mapping, using a list of non consecutive pins.
->> Previously, it was only possible to add range of consecutive pins using
->> gpiochip_add_pin_range().
->>
->> The struct pinctrl_gpio_range has a 'pins' member which allows to set a
->> list of pins (which can be non consecutive). gpiochip_add_pinlist_range()
->> is identical to gpiochip_add_pin_range(), except it set 'pins' member
->> instead of 'pin_base' member.
->>
->> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->> ---
-> 
-> I don't have anything against this change so in any case:
-> 
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> But may I suggest the name to be changed to
-> gpiochip_add_pin_range_sparse() for a better indication of its
-> purpose?
+On Sun, Dec 15, 2024 at 12:15=E2=80=AFPM Barnab=C3=A1s Cz=C3=A9m=C3=A1n
+<barnabas.czeman@mainlining.org> wrote:
 
-Hi Bartosz,
+> This patch series add support for MSM8917 soc with PM8937 and
+> Xiaomi Redmi 5A (riva).
+>
+> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <barnabas.czeman@mainlining=
+.org>
+(...)
+>       dt-bindings: pinctrl: qcom: Add MSM8917 pinctrl
+(...)
+>       pinctrl: qcom: Add MSM8917 tlmm pinctrl driver
 
-Yes for sure, I will change the name for the v2.
+Is it possible for me to apply these two patches in isolation?
 
-Regards,
+I want to make sure the patches get moving.
 
-Thomas
-
+Yours,
+Linus Walleij
 
