@@ -1,252 +1,119 @@
-Return-Path: <linux-gpio+bounces-13944-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13948-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B86079F46B4
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 10:00:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 805C39F4725
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 10:18:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F05E3168F45
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:59:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8AECD7A571E
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 09:18:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA111DE891;
-	Tue, 17 Dec 2024 08:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA1E1DF253;
+	Tue, 17 Dec 2024 09:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQNmi4A7"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JxWe63ZC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F92335C0;
-	Tue, 17 Dec 2024 08:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1411DED58;
+	Tue, 17 Dec 2024 09:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734425979; cv=none; b=jK3gzj7zEUoajzAgTsHwHutn8MfuBeEtqptNM81C910s15hEOEGAJRHXLXaQH+yAMLholDr5bU7ywjz9e+vXOLdV9hyEu4+d2BOAyk0RM05FZARfl5Z6eLsEG3eAfWaIJxofZTi6Q3o+3+h+JxkWmH4nqLwaH5EWmyBf/bag4Fo=
+	t=1734426829; cv=none; b=JeuDujv+KZRIC1lroOHb0ogCzZZC7PTZ6M34PLNsdUmdBniJYe61b3oY3jBDnYWgX/otKtLc7MO7gZM1sWzJSvJvAui+f+S/MV1grbkJ3wS40pFeHfYeTFPsKdYayXxZ+qnvMb/2Ed4LPW1+yLF2g/rErxHreZIXDK3/D4w6CgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734425979; c=relaxed/simple;
-	bh=AVXvQMU1ANoXH8Md1MxDK8KYeqh1t+5stMoOVOhDvAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rm4WZZCr1iQYtj1XEVX6N+bCbtLkOh0Z2IEkYqxTsSYVoo3VpwFxuAYRYuc6Llfm7olQpULSI/jspC6gRTw/1CkHn1ScNgibD2ESN1qs4UdpBzE0huVIisTZWO686cb0zX5DJMG47MR+E0WXkIwTUnN3zOiyz6iU0BJ6ysH9Ryg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQNmi4A7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC1C5C4CED6;
-	Tue, 17 Dec 2024 08:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734425978;
-	bh=AVXvQMU1ANoXH8Md1MxDK8KYeqh1t+5stMoOVOhDvAM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SQNmi4A71lgbCeCkiTBAkcvKvAoZbn6gupoqeyX0DOfIOFzippBEShUsSlF1Q4pgs
-	 SLW2fmLa+DlEqpJs4odLiHy04bfVPx6j+JuTGzi4Gb1+FW+n5yVnMRDrYfnasc4hmS
-	 krwdufMeH/ty5hY4JoSkg/oli6L08pzd6feCJul6ppZi+99Ji2JW15DiRV2KqpVyZA
-	 ObECgb8q9Co1rq0WYd1FkI/VhzqHIf9FiP6oSIzEeEK8EZ0zGPQwcUiBNSsljeORlY
-	 ZAGiEEws2BbXgqmSxfnKB039YRSMtjBbuCV/6hlnBBgUAYIHKsy6EqmJlQe2TCxLyB
-	 i6kOEB4IKuTaA==
-Message-ID: <78b28da5-db3f-493e-8159-8bdd565728bb@kernel.org>
-Date: Tue, 17 Dec 2024 09:59:31 +0100
+	s=arc-20240116; t=1734426829; c=relaxed/simple;
+	bh=pMj3M/O8IGph5Hs+eW6Nq4KmmIec27pIQXx1+eu+nAI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fph1HVvQ75Keo0mFIkiH7CLny163cHuewiN0BcpC4+gM+kJJXlzIaRwfgfRl6ka01UIlPGuLlFcvRhW0DSj4QNU5KOzV0Mrqwg+DLT7SjGDaepkwGkgCdN8VuaDZzoD0dsTNTzppRIizGYyEtJAXWMDR3gjcwgGCpfbo3wfTZoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JxWe63ZC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BH4la4Z013531;
+	Tue, 17 Dec 2024 09:13:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=HmGZFR/8CigOfofNpThp3U
+	/9ZsAg5kWYJm0QibuUrOs=; b=JxWe63ZCMu2h5QaJ79VIi4i0nBRn+Y9n71IRcY
+	SSdpLxud6vejDLHRzjYLOu03rN3dm6VcdxJGC0UpIe/+DqnHjSQH9qk9pQ0gfwX/
+	dPOmySCq9dYkZGxwEORZhmHKYaOyx7zdzaO8h6PVz/uzC7yOLt6aTLuMSWbxfpxg
+	eG+O4NDbR+mAm3/z/UUehs/qW3DWSVZvODKCKdSnts9q7QuRNw+qjNjZIkuiYgfx
+	E6wbtu1j5ZzEwivkpD17fluvrLc5j42DTzVihYQAuUeKzyr4Vdk7N6lo7xkhKOWu
+	TfVwk22R8FVV/tOvU+8/jTDnI+4I1k3uya8Z9PEDYKh7DqWA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43k2k7gmut-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Dec 2024 09:13:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BH9DiP4006749
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Dec 2024 09:13:44 GMT
+Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 17 Dec 2024 01:13:39 -0800
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+To: <andersson@kernel.org>, <linus.walleij@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <konradybcio@kernel.org>,
+        <quic_srichara@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_varada@quicinc.com>
+Subject: [PATCH v2 0/4] Add SPI0 support for IPQ5424 
+Date: Tue, 17 Dec 2024 14:43:04 +0530
+Message-ID: <20241217091308.3253897-1-quic_mmanikan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical
- port support for RZ/V2H
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "biju.das.au" <biju.das.au@gmail.com>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-References: <20241216195325.164212-1-biju.das.jz@bp.renesas.com>
- <20241216195325.164212-2-biju.das.jz@bp.renesas.com>
- <fq3q2tk3xfwd4p72b5wzo3gbfizrknxdt6zyc5ahm2cpnrtsbk@nlukbj3yy57c>
- <TY3PR01MB11346902114D33FA66F4C3BF686042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <c57d3568-68f4-4e5a-874f-4d9f0cc1f2f3@kernel.org>
- <TY3PR01MB113469F4CE8DB86978C03E3D986042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <TY3PR01MB113469F4CE8DB86978C03E3D986042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _x7e91nJwm0Ko--WeavxaBtzY88SZ7ES
+X-Proofpoint-GUID: _x7e91nJwm0Ko--WeavxaBtzY88SZ7ES
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=675 spamscore=0
+ clxscore=1015 adultscore=0 suspectscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412170075
 
-On 17/12/2024 09:49, Biju Das wrote:
-> Hi Krzysztof Kozlowski,
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: 17 December 2024 07:51
->> Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical port support for RZ/V2H
->>
->> On 17/12/2024 08:29, Biju Das wrote:
->>> Hi Krzysztof Kozlowski,
->>>
->>> Thanks for the feedback.
->>>
->>>> -----Original Message-----
->>>> From: Krzysztof Kozlowski <krzk@kernel.org>
->>>> Sent: 17 December 2024 06:32
->>>> Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add
->>>> alpha-numerical port support for RZ/V2H
->>>>
->>>> On Mon, Dec 16, 2024 at 07:53:11PM +0000, Biju Das wrote:
->>>>> RZ/V2H has ports P0-P9 and PA-PB. Add support for defining
->>>>> alpha-numerical ports in DT using RZV2H_* macros.
->>>>
->>>> So this is only for DT? Not really a binding. Binding binds driver
->>>> implementation with DTS and you do not have here driver.
->>>
->>> Please see patch [1], see how this definition binds driver
->>> implementation with DTS
->>>
->>> [1]
->>> https://lore.kernel.org/all/20241216195325.164212-4-biju.das.jz@bp.ren
->>> esas.com/
->>
->> I don't know what is this patch, it is not part of these series addressed to me and commit msg says
->> "in DT". If you want to receive meaningful review, make it easier for reviewers.
-> 
-> The header files are part of DT bindings. So if it is wrong, why the 
-> Commit "997daa8de64ccbb" "dt-bindings: clock: add ExynosAuto v920 SoC CMU bindings"
-> is part of bindings?
+Add an SPI0 node to the IPQ5424 device tree and update the relevant
+bindings, GPIO pin mappings accordingly.
 
-I meant that driver patch you linked.
+Changes in V2:
+	- Fixed all review comments from Konrad Dybico, Krzysztof
+	  Kozlowski
+	- Detailed change logs are added to the respective patches 
 
-> 
-> 
-> 
->>
->>
->>>
->>>>
->>>> Calling it a binding makes it immutable and gives us, DT maintainers,
->>>> more work, so really no benefits at all.
->>>
->>>>
->>>> I guess other DT maintainers will ack it, I prefer to reduce number of headers.
->>>
->>> DT describes hardware. The port names are alpha numeric on hardware manual.
->>
->> We talk about binding, not DT.
-> 
-> Bu the definitions are part of bindings just like Commit "997daa8de64ccbb".
+V1 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241122124505.1688436-1-quic_mmanikan@quicinc.com/
 
-You made them part of bindings, but this is invalid as argument. How is
-this anyhow related? How is "DT describes hardware" part of binding?
+Manikanta Mylavarapu (4):
+  dt-bindings: pinctrl: qcom: update spi0 function
+  pinctrl: qcom: ipq5424: split spi0 pin group
+  arm64: dts: qcom: ipq5424: add spi0 node
+  arm64: dts: qcom: ipq5424: configure spi0 node for rdp466
 
-You said "DT describes hardware", but we do not talk here about DT, do
-we? We talk about binding.
+ .../bindings/pinctrl/qcom,ipq5424-tlmm.yaml   |  4 +-
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts   | 43 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi         | 11 +++++
+ drivers/pinctrl/qcom/pinctrl-ipq5424.c        | 34 +++++++++++----
+ 4 files changed, 82 insertions(+), 10 deletions(-)
 
 
-> 
->>
->>>
->>> For example, consider the case of  hardware pin PS1 mentioned in hardware manual.
->>>
->>> With current changes,
->>> pinmux = <RZG3E_PORT_PINMUX(S, 1, 0)>;
->>>
->>> With existing code
->>> pinmux = <RZG3E_PORT_PINMUX(28, 1, 0)>;
->>
->> Based on this pure code: still not a binding.
-> 
-> I agree. Macro converted to a number which binding care of.
-> 
->>
->>>
->>> What do you prefer here? 28 is just a number derived from hardware
->>> indices
->>
->> Let me ask rhetorical question: if 28 hardware constant is suitable for binding, then why are you not
->> defining GPIO numbers, IRQ numbers and MMIO addresses as bindings as well?
-> 
-> On RZ/G2L all ports are in numbers not an issue. But on RZ/V2H an RZ/G3E
-> hardware manual just talks about Port {0..8} {A..H}{J..M}{S}. Hardware constant 28 is just derived one.
-> 
-> A device user just refer, hardware manual and pinctrl list and put the definitions on binding.
-> He does not need to undergo mapping for alpha numeric to hardware index conversion.
+base-commit: e25c8d66f6786300b680866c0e0139981273feba
+-- 
+2.34.1
 
-You just described something entirely else than binding, so why are you
-using this as an argument?
-
-> 
-> 
->>
->>> Or actual port name PS1 as mentioned in hardware manual?
->>
->> Well, I don't know. Commit says DTS, no driver patches here in my inbox, so what do I know?
-> 
-> OK, It is just definitions, so you mean it has to merge with driver + dts patch. so it won't
-> create any confusion and we can ignore check patch warning, "binding patch should be
-> Separate patch"
-> 
-> What about then merging this patch with [2] and [3] similar to [4], 
-> 
-> [2] https://lore.kernel.org/all/20241216195325.164212-4-biju.das.jz@bp.renesas.com/
-> [3] https://lore.kernel.org/all/20241216195325.164212-6-biju.das.jz@bp.renesas.com/
-
-I am not going to keep reading all the external references you keep
-bringing or discussing why someone else did something. This patch must
-be logical and correct on its own, not because someone else made
-something somewhere.
-
-> 
-> [4] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/include/dt-bindings?h=next-20241217&id=ecc79ab919ec54c658fb14f955c76872119829b8
-
-Again, I did not see any driver using this, nothing in commit msg
-explained this except referencing that DT will use it. Maybe your
-patchset is wrongly organized? Maybe commit msg is incorrect? Not sure,
-as I said, you got such review you helped me to make.
-
-
-Best regards,
-Krzysztof
 
