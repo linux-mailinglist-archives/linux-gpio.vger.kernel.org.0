@@ -1,153 +1,181 @@
-Return-Path: <linux-gpio+bounces-13936-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13937-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C5BA9F4539
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:37:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DA879F457E
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:50:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FDAD1687E8
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:37:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 067DC188D1A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:50:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D1017ADF7;
-	Tue, 17 Dec 2024 07:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA2F192B66;
+	Tue, 17 Dec 2024 07:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="BrNdMR3h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c43vamJq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB10E208CA;
-	Tue, 17 Dec 2024 07:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F3A29;
+	Tue, 17 Dec 2024 07:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734421043; cv=none; b=XxnuZNEejyQSvdQqQk0A1PoIIsmRMlC/AH6QrTUCJmL15uZNB3Wy39Mc8X8tk+Q1YR9TRJRLZaequo4UyHDxnrR6GqBbV/87p36CdpPL4le/THjdisUoZWS/RqI0X9jUFhSyjpUHcF7cynGKtIKti3UxUpK7WR+pw4gdL6qYFws=
+	t=1734421839; cv=none; b=s5Ty4cegsUMpbi0HCSFp5q9Zn1L0MrN96/wwRpA3GoeHhVQNuOH9Tg2xUq+9YRc6TTXJBgodFPCVXFCvYBnOzt1Orb5mIyXrHA7p4ARxTvDcLbZ1OZ90lhvblgHSEvON/9iA/eJA8NQoApojGLnB4arfhxoNLcgsNzMclpVY13Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734421043; c=relaxed/simple;
-	bh=zDoqg0tW30oyc/en2/gcCsRZ/zKrXciAluzcJU9ZuRo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=b8bwVU3UMjn6Wsw1Bun54Sk7xtQgd8ggHKZhEHbijxSFNGQTQx+L7RZ8VrzVkHtrvo8PE3YtRvFxfPWEDYFw0OPCLDPUmOWZbpxrKfrzt9jwurjTfBkJyb9fVBylbV6BLJkymtTqi6vxiO8WHrcxAQcTPs/hCAmRqaiOuH93LXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=BrNdMR3h; arc=none smtp.client-ip=203.205.221.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1734421033; bh=RpPRdrku20ZffiMFApn08Rq79PrP649J/NFxsl0e6LM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BrNdMR3h8C/xz5NRcNt/NAvH6QLudE6NFx4XQWHcHwtnbeUQwpwox3/NaPvtUf/vC
-	 8lYmVS+OYN7TFuw2iKB+zIwDj0+EDYIoTPASgJDVS+BorCGjPnuYiX0moYSAxpZsmp
-	 CMaJlMDiJRnH6eOkMbs3NF6IfpdjMHK6o36fZAuk=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.34])
-	by newxmesmtplogicsvrszc25-0.qq.com (NewEsmtp) with SMTP
-	id 94B35E3C; Tue, 17 Dec 2024 15:37:11 +0800
-X-QQ-mid: xmsmtpt1734421031tqoyefvff
-Message-ID: <tencent_9A6EC60CB9E7CC86D692D68663099CEEDA06@qq.com>
-X-QQ-XMAILINFO: MYcyYH/A/+tCVe8oAgK9/Pwjlqp0ImLVsCtMnnsFShL2twKTwzHwT/W3USogOj
-	 BInncZoE3ISCbKtv1Uda9nOfDqiKNtKj2TfBRgEVNyZEmyf9TW4KuoQtWjAx2J8mmQxrjhU9Ph/t
-	 zEFSsy89v+eWw8ZL8bL7CtxjScQMjzBnJKNKynT2JZh31Fq4wFAvltmUYgsHgC9MJGTv4blbZ2l4
-	 emM901PTppdJHcSBllrVoq5fGTcCwqWdn+2ddRDwDJO8tcJHS8f92XU3THtqcb8CurfWJPWdco4C
-	 c/JaFjSpTpqstsON6g+QvRsAIGWzSB3PHaxgiyHhW3FOGBki6ZAINHeZ5iwLpy/XOfWVCKT6WiFA
-	 nn7xIL1a5aoS4dmSo5PQvsnudC28hjwqwcCik6ZDB6jRTOwiToSrJ4Nel1y5mOwsgjJ3tRzebxbO
-	 xnyQrLM1QxKaxXp/SqKuiI0pXz8vSjyUrFk852HjyGwE7p35pUdLAwquA9/exRPwy8mF3js6yFOm
-	 6OYVrc6FcVs4auB+AGOh9O4gQTiUoq+dsjX0VdEmZQ5H0IRPNkL6YLXB65P+gWQFUs7m4roqtyU8
-	 /INEVGDrWIqZ2LunZYpNwgIZXSRzspXjLMiLwgs5QwMu9PHGeS5C669GZ2wNLs0A91TZOz/weVwd
-	 XmU8r2b00F7knljI3YdltduxyZbz+E5BWbYcvqHRH8uksBZlhCRKqeJU1K1kKumQHHAHcYcumZkk
-	 1K66ZRLe6r1dfrpr+DM1jtZYugRk2MqCfLIr/hYCO08T++E8GQk02Ap68loRfr3b4X6xRQAPAjwt
-	 CxCHVy2P9nYNy5Oy+eFGa3Sd7/BF4qgGikSnGJ9pvxEig8/WSq570HoS17Zbe6/vOXdEsoVDmOy3
-	 JLreE+lnwtsttx99RyOmq0LnDNN/08xunkRRnDiZKP
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b95d0c98f01e7a95da72@syzkaller.appspotmail.com
-Cc: brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] fs/seq_file: Exit the subsequent process when seq start fails
-Date: Tue, 17 Dec 2024 15:37:12 +0800
-X-OQ-MSGID: <20241217073711.2866877-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <67610786.050a0220.37aaf.0149.GAE@google.com>
-References: <67610786.050a0220.37aaf.0149.GAE@google.com>
+	s=arc-20240116; t=1734421839; c=relaxed/simple;
+	bh=BcMdFN4uRMcdSik/tPvvQdhL8leKPo+cJVQV1nEQ6MM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pyT2sgp/rEpiKXnLpzdw4lfJsfDPU+/2NZmRLMRoGgyj49knokJiamvo8SGkaDz7cozsFPTMvVtVvfzodYsAXUb+MEqfCUNVRu7w+/rsODWjAljlEbDy4Vbeo8+FBt8JHzObzt6fQ8YnsXmNc0YTZqpw9H5WMneOC9M+xPyfnIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c43vamJq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8160C4CED7;
+	Tue, 17 Dec 2024 07:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734421838;
+	bh=BcMdFN4uRMcdSik/tPvvQdhL8leKPo+cJVQV1nEQ6MM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c43vamJqL6x64cISwBfC+DDxmCYnDvhOoNVzEeP4ryMD4BneVV77pgYZ1QQ9wmzfZ
+	 vGxB6tJmY5lmir9dbWVkPo3XPvzTjFSoksVuJjsy38CkEYJ2a6lTGNnctYiAtWVBe/
+	 iizUHCq8OgiMX636u3/rI30mLj1GSsCCTgOZ4xwUjdTtg9gt7WqhTFTfz4BEgs1UbQ
+	 TgJh6gQChrmQA6wFIJQHCDf/8W2Wo009gFsdRY14QZQdNYt7EKUSA4FnDT4OJ7EooM
+	 xL4QG2MTtv6uJKJxysqSneLEZXemBv2v8B9SO8pMQM0EBUyA7JzRl1ntFFk+39U6sk
+	 b9OvMZUGxCLFg==
+Message-ID: <c57d3568-68f4-4e5a-874f-4d9f0cc1f2f3@kernel.org>
+Date: Tue, 17 Dec 2024 08:50:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical
+ port support for RZ/V2H
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ "biju.das.au" <biju.das.au@gmail.com>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+References: <20241216195325.164212-1-biju.das.jz@bp.renesas.com>
+ <20241216195325.164212-2-biju.das.jz@bp.renesas.com>
+ <fq3q2tk3xfwd4p72b5wzo3gbfizrknxdt6zyc5ahm2cpnrtsbk@nlukbj3yy57c>
+ <TY3PR01MB11346902114D33FA66F4C3BF686042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <TY3PR01MB11346902114D33FA66F4C3BF686042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-syzbot report a null-ptr-deref in gpiolib_seq_stop. [1]
+On 17/12/2024 08:29, Biju Das wrote:
+> Hi Krzysztof Kozlowski,
+> 
+> Thanks for the feedback.
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: 17 December 2024 06:32
+>> Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical port support for RZ/V2H
+>>
+>> On Mon, Dec 16, 2024 at 07:53:11PM +0000, Biju Das wrote:
+>>> RZ/V2H has ports P0-P9 and PA-PB. Add support for defining
+>>> alpha-numerical ports in DT using RZV2H_* macros.
+>>
+>> So this is only for DT? Not really a binding. Binding binds driver implementation with DTS and you do
+>> not have here driver.
+> 
+> Please see patch [1], see how this definition binds driver implementation with DTS
+> 
+> [1] https://lore.kernel.org/all/20241216195325.164212-4-biju.das.jz@bp.renesas.com/
 
-syzbot uses "echo 2 > /proc/thread-self/fail-nth", and in the current thread,
-the second memory allocation will trigger a failure.
-That is to say, the memory allocation for priv in gpiolib_seq_start() fails,
-so m->private is not initialized, which eventually leads to a null pointer
-dereference to m->private in gpiolib_seq_stop().
+I don't know what is this patch, it is not part of these series
+addressed to me and commit msg says "in DT". If you want to receive
+meaningful review, make it easier for reviewers.
 
-Because this type of problem is recurring, it is best to handle it in the
-upper layer of the gpio driver, that is, in fs/seq_file.c, and judge the
-pointer returned after m->op->start() returns. If its value is null, exit
-the subsequent process.This failure does not affect the next execution of
-traverse(), so 0 is returned here.
 
-[1]
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 UID: 0 PID: 5829 Comm: syz-executor520 Not tainted 6.13.0-rc2-syzkaller-00362-g2d8308bf5b67 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-RIP: 0010:gpiolib_seq_stop+0x4c/0xe0 drivers/gpio/gpiolib.c:5067
-Code: 48 c1 ea 03 80 3c 02 00 0f 85 98 00 00 00 48 8b 9b e0 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2 75 60 8b
-RSP: 0018:ffffc90003e1fa58 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff88802463a018
-RDX: 0000000000000000 RSI: ffffffff84cc96be RDI: 0000000000000004
-RBP: 0000000000000000 R08: 0000000000000dc0 R09: 00000000ffffffff
-R10: ffffffff8df7c5d3 R11: 0000000000000001 R12: ffffffff8bb596a0
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffc90003e1fc40
-FS:  0000555557ff9380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055e43c381608 CR3: 0000000076408000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- traverse.part.0.constprop.0+0x2bd/0x640 fs/seq_file.c:131
- traverse fs/seq_file.c:98 [inline]
- seq_read_iter+0x934/0x12b0 fs/seq_file.c:195
- seq_read+0x39f/0x4e0 fs/seq_file.c:162
- full_proxy_read+0xfb/0x1b0 fs/debugfs/file.c:351
- vfs_read+0x1df/0xbe0 fs/read_write.c:563
- ksys_pread64 fs/read_write.c:756 [inline]
- __do_sys_pread64 fs/read_write.c:764 [inline]
- __se_sys_pread64 fs/read_write.c:761 [inline]
- __x64_sys_pread64+0x1f6/0x250 fs/read_write.c:761
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+>>
+>> Calling it a binding makes it immutable and gives us, DT maintainers, more work, so really no benefits
+>> at all.
+> 
+>>
+>> I guess other DT maintainers will ack it, I prefer to reduce number of headers.
+> 
+> DT describes hardware. The port names are alpha numeric on hardware manual.
 
-Reported-by: syzbot+b95d0c98f01e7a95da72@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b95d0c98f01e7a95da72
-Tested-by: syzbot+b95d0c98f01e7a95da72@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/seq_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+We talk about binding, not DT.
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index 8bbb1ad46335..130424bbcf7d 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -104,6 +104,9 @@ static int traverse(struct seq_file *m, loff_t offset)
- 			return -ENOMEM;
- 	}
- 	p = m->op->start(m, &m->index);
-+	if (!p && !m->private)
-+		return 0;
-+
- 	while (p) {
- 		error = PTR_ERR(p);
- 		if (IS_ERR(p))
--- 
-2.47.0
+> 
+> For example, consider the case of  hardware pin PS1 mentioned in hardware manual.
+> 
+> With current changes,
+> pinmux = <RZG3E_PORT_PINMUX(S, 1, 0)>;
+> 
+> With existing code
+> pinmux = <RZG3E_PORT_PINMUX(28, 1, 0)>;
 
+Based on this pure code: still not a binding.
+
+> 
+> What do you prefer here? 28 is just a number derived from hardware indices
+
+Let me ask rhetorical question: if 28 hardware constant is suitable for
+binding, then why are you not defining GPIO numbers, IRQ numbers and
+MMIO addresses as bindings as well?
+
+> Or actual port name PS1 as mentioned in hardware manual?
+
+Well, I don't know. Commit says DTS, no driver patches here in my inbox,
+so what do I know?
+
+Best regards,
+Krzysztof
 
