@@ -1,50 +1,52 @@
-Return-Path: <linux-gpio+bounces-13946-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13947-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73DCF9F46CE
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 10:04:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E2849F46D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 10:04:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE50B16B04D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 09:04:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43694188D21C
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 09:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7AC41DE8AB;
-	Tue, 17 Dec 2024 09:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285D81DED56;
+	Tue, 17 Dec 2024 09:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="n/L3xXmQ"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="WCfSmsEx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76A5537F8;
-	Tue, 17 Dec 2024 09:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120701DE4EB;
+	Tue, 17 Dec 2024 09:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734426270; cv=none; b=qPH9MEcQsv0re0Dv46CdiP3xEeT9DxiaRewMhIOVQWggLt6YA0OODk9hpIMosI2cvF3P8KMCtue7uCt2QOdjurMMssBoQnuZAXmAg7Uw98PO/MHLliNf8k2dM4XjA/hAaZKN3lvfb1EuuvchiaeGXVOy+fo3ZCZD5pgXkUbFdcU=
+	t=1734426270; cv=none; b=C07v23X6f13RbFRQBwuMB4ppD9Csha6ZShXrZgxzlGWlSItgG25/+Uio1VX3SRVPeAQucQd8ZgWrGC/Yz1Tk48bITFYPdDSJjrHrgzLSrVhmFzSkN4VqSDqJHsJ3MS6Ce3lY0iD8aHnqFjoYr4pLyzp7hYS/DpGUWPaCf5PYBYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734426270; c=relaxed/simple;
-	bh=bpEYxJ+W6mmb4q3K13vEGXmXtr0H2RuNcMExQtywJBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HerbaJhJRyLIca95QSo6YAy6scd7Nilfo+Qrhk+fqnhjkR61MiBefoAEaZ7bygW0Bb0NpimsRNKzCvoG1XmqtEetBR9ZQf3r3483TOlebLiiY6Z5Hq+rr9BXZHtevuJtxlp6RMXIROh5dSnasn3Xq/zr8AIBusXgJa7nzO/LX0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=n/L3xXmQ; arc=none smtp.client-ip=134.0.28.8
+	bh=b/RAI/OQ/bsYkbKf1Z1frGgVURTC5GE2ZPLlJW5Bxkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VfiQ5X9i1rdYFfCRKy/ZqsCNOT/+vHi3NL+p8KnE90sX9TBZj0iQ4O+i89WKj3YC3awC02cueYRrrVl/6IhRTpuNkuxyx5BNzJTGN2CbM0FNNQCyKwk//IzNfAYX8U2HmakdGBKCVYo+vMcrLxtPzylyC6VEIhaGKbVBwE3GruQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=WCfSmsEx; arc=none smtp.client-ip=134.0.28.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout3.routing.net (Postfix) with ESMTP id 256DD604CC;
-	Tue, 17 Dec 2024 08:54:45 +0000 (UTC)
+	by mxout3.routing.net (Postfix) with ESMTP id 027C960486;
+	Tue, 17 Dec 2024 08:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1734425685;
+	s=20200217; t=1734425686;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2pqbbdVHCcH3VANkw0WgRiMAw/2BcvXvAUXBdVOTo8Y=;
-	b=n/L3xXmQKhLKYpcTbcJzXYze9sUI5wba602cFxDR6wWF9/oLQwE8LtHnzdqQPkml14Tx9M
-	BiaHg/NlwqKyHr+k316IV4aWhEJ4MccLHpdn/tlAbJNMZxnCalnj7QPszX27OkUf369TAQ
-	o775fjdMpk1M3EQrcSWe+q/J4doqJR4=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f++gLRWPvVGgWbSsk+IhO46hRl2VKlyKFRbj5WdDWtY=;
+	b=WCfSmsExruXX1ZbcykZqKIHJFF3ZN9xMwQGRZrRKNy+xaPvEBLuCf87OUAfDG50nY82c19
+	azfR1yWSmXqq7BsVCpNK/k0B5LJFoSv246/YYWLh2ib4YmVgQFEG6SzigvWc2f30bHjtc0
+	9qiyhaiRfcdbOpSJCGXs8p0TDgSGARo=
 Received: from frank-u24.. (fttx-pool-217.61.150.187.bambit.de [217.61.150.187])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 14A511003B7;
-	Tue, 17 Dec 2024 08:54:44 +0000 (UTC)
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 1BFF91004DD;
+	Tue, 17 Dec 2024 08:54:45 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -58,77 +60,176 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v7 0/5] Add pinctrl support for mt7988
-Date: Tue, 17 Dec 2024 09:54:25 +0100
-Message-ID: <20241217085435.9586-1-linux@fw-web.de>
+	linux-mediatek@lists.infradead.org,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: [PATCH v7 1/5] pinctrl: mediatek: add support for MTK_PULL_PD_TYPE
+Date: Tue, 17 Dec 2024 09:54:26 +0100
+Message-ID: <20241217085435.9586-2-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241217085435.9586-1-linux@fw-web.de>
+References: <20241217085435.9586-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 9c7aa8e6-e3a5-43a8-993f-ab4d197c3c29
+X-Mail-ID: e9f08bd2-cc29-48ec-b289-6c729c260012
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: Daniel Golle <daniel@makrotopia.org>
 
-This series adds pinctrl driver, dt-bindings and dts node for pinctrl
-on mediatek mt7988 SoC.
+The MediaTek MT7988 SoC got some pins which only got configurable
+pull-down but unlike previous designs there is no pull-up option.
+Add new type MTK_PULL_PD_TYPE to support configuring such pins.
 
-changes in v7:
-- add const for pins and mtk_pin_soc as suggested by Christophe JAILLET in v5
-- left angelos RB because of minor change (hope this is right)
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+v5:
+- add changes suggested by angelo (pd_only), long version, tested with emmc
+---
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 73 ++++++++++++++++---
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
+ 2 files changed, 63 insertions(+), 11 deletions(-)
 
-changes in v6:
-- some fixes to binding
-- changed title and fixed typo in bpi-r4 patch
-- added RB's
-
-changes in v5:
-- rebased to 6.13-rc1
-- moved dt nodes with mutliple options to BPI-R4 board
-- changes suggested by angelo in v4
-- changed example in binding and dt node to not using const MTK_DRIVE_8mA
-
-changes in v4:
-- fixed fixed string binding error
-
-changes in v3:
-- rebase on rafals dts patches
-- update binding to have mux subnode as fixed string and conf with optional suffix
-
-changes in v2:
-  binding:
-  - drop gpio-cells description
-  - move ref in mux subnode up
-  - order uart-functions alphanumeric and fix typo
-  dts:
-  - fix indentation of reg-values
-
-Daniel Golle (2):
-  pinctrl: mediatek: add support for MTK_PULL_PD_TYPE
-  pinctrl: mediatek: add MT7988 pinctrl driver
-
-Frank Wunderlich (3):
-  dt-bindings: pinctrl: add binding for MT7988 SoC
-  arm64: dts: mediatek: mt7988: Add pinctrl support
-  arm64: dts: mediatek: mt7988a-bpi-r4: Add pinctrl subnodes for bpi-r4
-
- .../pinctrl/mediatek,mt7988-pinctrl.yaml      |  575 ++++++
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  |  189 ++
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi     |   54 +
- drivers/pinctrl/mediatek/Kconfig              |    7 +
- drivers/pinctrl/mediatek/Makefile             |    1 +
- drivers/pinctrl/mediatek/pinctrl-mt7988.c     | 1556 +++++++++++++++++
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |   73 +-
- .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |    1 +
- 8 files changed, 2445 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7988-pinctrl.yaml
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7988.c
-
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 54301fbba524..7b704cc55c9f 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -573,7 +573,7 @@ EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get_rev1);
+  */
+ static int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
+ 				const struct mtk_pin_desc *desc,
+-				u32 pullup, u32 arg)
++				u32 pullup, u32 arg, bool pd_only)
+ {
+ 	int err, pu, pd;
+ 
+@@ -587,18 +587,34 @@ static int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
+ 		pu = 0;
+ 		pd = 1;
+ 	} else {
+-		err = -EINVAL;
+-		goto out;
++		return -EINVAL;
+ 	}
+ 
+-	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PU, pu);
+-	if (err)
+-		goto out;
++	if (!pd_only) {
++		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PU, pu);
++		if (err)
++			return err;
++	}
+ 
+-	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
++	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
++}
++
++static int mtk_pinconf_bias_set_pd(struct mtk_pinctrl *hw,
++				const struct mtk_pin_desc *desc,
++				u32 pullup, u32 arg)
++{
++	int err, pd;
++
++	if (arg != MTK_DISABLE && arg != MTK_ENABLE)
++		return -EINVAL;
++
++	if (arg == MTK_DISABLE || pullup)
++		pd = 0;
++	else if (!pullup)
++		pd = 1;
++
++	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_PD, pd);
+ 
+-out:
+-	return err;
+ }
+ 
+ static int mtk_pinconf_bias_set_pullsel_pullen(struct mtk_pinctrl *hw,
+@@ -737,7 +753,7 @@ static int mtk_pinconf_bias_set_pu_pd_rsel(struct mtk_pinctrl *hw,
+ 			return err;
+ 	}
+ 
+-	return mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, enable);
++	return mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, enable, false);
+ }
+ 
+ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
+@@ -758,8 +774,14 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
+ 			return 0;
+ 	}
+ 
++	if (try_all_type & MTK_PULL_PD_TYPE) {
++		err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg, true);
++		if (!err)
++			return err;
++	}
++
+ 	if (try_all_type & MTK_PULL_PU_PD_TYPE) {
+-		err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg);
++		err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg, false);
+ 		if (!err)
+ 			return 0;
+ 	}
+@@ -878,6 +900,29 @@ static int mtk_pinconf_bias_get_pu_pd(struct mtk_pinctrl *hw,
+ 	return err;
+ }
+ 
++static int mtk_pinconf_bias_get_pd(struct mtk_pinctrl *hw,
++				const struct mtk_pin_desc *desc,
++				u32 *pullup, u32 *enable)
++{
++	int err, pd;
++
++	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_PD, &pd);
++	if (err)
++		goto out;
++
++	if (pd == 0) {
++		*pullup = 0;
++		*enable = MTK_DISABLE;
++	} else if (pd == 1) {
++		*pullup = 0;
++		*enable = MTK_ENABLE;
++	} else
++		err = -EINVAL;
++
++out:
++	return err;
++}
++
+ static int mtk_pinconf_bias_get_pullsel_pullen(struct mtk_pinctrl *hw,
+ 				const struct mtk_pin_desc *desc,
+ 				u32 *pullup, u32 *enable)
+@@ -947,6 +992,12 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
+ 			return 0;
+ 	}
+ 
++	if (try_all_type & MTK_PULL_PD_TYPE) {
++		err = mtk_pinconf_bias_get_pd(hw, desc, pullup, enable);
++		if (!err)
++			return err;
++	}
++
+ 	if (try_all_type & MTK_PULL_PU_PD_TYPE) {
+ 		err = mtk_pinconf_bias_get_pu_pd(hw, desc, pullup, enable);
+ 		if (!err)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+index 23688ca6d04e..9c271dc2b521 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+@@ -24,6 +24,7 @@
+  * turned on/off itself. But it can't be selected pull up/down
+  */
+ #define MTK_PULL_RSEL_TYPE		BIT(3)
++#define MTK_PULL_PD_TYPE        BIT(4)
+ /* MTK_PULL_PU_PD_RSEL_TYPE is a type which is controlled by
+  * MTK_PULL_PU_PD_TYPE and MTK_PULL_RSEL_TYPE.
+  */
 -- 
 2.43.0
 
