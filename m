@@ -1,181 +1,204 @@
-Return-Path: <linux-gpio+bounces-13937-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA879F457E
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:50:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE79B9F4584
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 067DC188D1A7
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:50:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D83BC7A16DA
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:53:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA2F192B66;
-	Tue, 17 Dec 2024 07:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3361CCEF8;
+	Tue, 17 Dec 2024 07:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c43vamJq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ldjJY7da"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F3A29;
-	Tue, 17 Dec 2024 07:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC578145B39
+	for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2024 07:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734421839; cv=none; b=s5Ty4cegsUMpbi0HCSFp5q9Zn1L0MrN96/wwRpA3GoeHhVQNuOH9Tg2xUq+9YRc6TTXJBgodFPCVXFCvYBnOzt1Orb5mIyXrHA7p4ARxTvDcLbZ1OZ90lhvblgHSEvON/9iA/eJA8NQoApojGLnB4arfhxoNLcgsNzMclpVY13Q=
+	t=1734421993; cv=none; b=SBrit7guYCpBzNqDA09BzYCXLUaBobR3o80gWweq7KYoqy7jr2RmwAtP2jaHdAlM6LyS7lYPTf0NsTVDtJLXImAnkO4+6lYKcsZB6plo90lHyCcF23JyW8o35WXl4xDG9WPogmGRRLBYJKTe1oxqjpdm14CJAUPPfXaigfV9lX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734421839; c=relaxed/simple;
-	bh=BcMdFN4uRMcdSik/tPvvQdhL8leKPo+cJVQV1nEQ6MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pyT2sgp/rEpiKXnLpzdw4lfJsfDPU+/2NZmRLMRoGgyj49knokJiamvo8SGkaDz7cozsFPTMvVtVvfzodYsAXUb+MEqfCUNVRu7w+/rsODWjAljlEbDy4Vbeo8+FBt8JHzObzt6fQ8YnsXmNc0YTZqpw9H5WMneOC9M+xPyfnIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c43vamJq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8160C4CED7;
-	Tue, 17 Dec 2024 07:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734421838;
-	bh=BcMdFN4uRMcdSik/tPvvQdhL8leKPo+cJVQV1nEQ6MM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c43vamJqL6x64cISwBfC+DDxmCYnDvhOoNVzEeP4ryMD4BneVV77pgYZ1QQ9wmzfZ
-	 vGxB6tJmY5lmir9dbWVkPo3XPvzTjFSoksVuJjsy38CkEYJ2a6lTGNnctYiAtWVBe/
-	 iizUHCq8OgiMX636u3/rI30mLj1GSsCCTgOZ4xwUjdTtg9gt7WqhTFTfz4BEgs1UbQ
-	 TgJh6gQChrmQA6wFIJQHCDf/8W2Wo009gFsdRY14QZQdNYt7EKUSA4FnDT4OJ7EooM
-	 xL4QG2MTtv6uJKJxysqSneLEZXemBv2v8B9SO8pMQM0EBUyA7JzRl1ntFFk+39U6sk
-	 b9OvMZUGxCLFg==
-Message-ID: <c57d3568-68f4-4e5a-874f-4d9f0cc1f2f3@kernel.org>
-Date: Tue, 17 Dec 2024 08:50:32 +0100
+	s=arc-20240116; t=1734421993; c=relaxed/simple;
+	bh=DNL2j32qUcIaV/SbZ1BjYR+4u2vMMxnSj3y1cEy9PsA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hho8qR/r6wO6bCDtDJ7dZ/DHDiDOuIyMsN0nULTTNVt4/+C3bS+Fu14myyOkUVd987sDO3BGCJ3K6K1SaLDwu1UaE+A9GZzEttres1UNvMxvCqtNV/TCoPjcd8uVETi5FGqvZEe5fkRbq5NQfcJx2fUA40Niar0kNes8fQg1wUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ldjJY7da; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734421991; x=1765957991;
+  h=date:from:to:cc:subject:message-id;
+  bh=DNL2j32qUcIaV/SbZ1BjYR+4u2vMMxnSj3y1cEy9PsA=;
+  b=ldjJY7dajN43ToDyfjAYzmS3XSLKGxM09ByHHHyhDJS9ky5PhxVsSTy1
+   f9ztTT6jGLDx2ZQJJDpcGvUuO1+J1z91/avTgSvFs8xzfDm7rNtkcEocM
+   WDDzW4lZ1Sy+UUQA6RN3QNmv3snitrHdfimOikiUDJs0f84SEEbcriUtO
+   nVajs51XG0RPyKq+dPYPreXiOg6PzFh7clvCJjvsQajMrHgwuRAC+W/xj
+   7/b5qq6OmOKjOecPprhFHr6eySLzwcgJHMwDv/kb/1g60SlIKfVGf7sQ5
+   gJjpi3wb24zJ/8MvhVcKIDH0yErvWb4kVvrDAVvnfIwWwGnI91QqSUXfy
+   A==;
+X-CSE-ConnectionGUID: vawUVqqvRb+m7HHuf2U42A==
+X-CSE-MsgGUID: Ofn2WgAtSf6bupvmrCjuHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="34126664"
+X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
+   d="scan'208";a="34126664"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2024 23:53:11 -0800
+X-CSE-ConnectionGUID: vTrr5+DGTR2wysjk9oJIJA==
+X-CSE-MsgGUID: ObpkFqtTQCqmvVhxsRhXfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
+   d="scan'208";a="102303653"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 16 Dec 2024 23:53:10 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tNSOB-000Eng-2u;
+	Tue, 17 Dec 2024 07:53:07 +0000
+Date: Tue, 17 Dec 2024 15:52:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 83a9752729c455a6bd9b7cf62198506180691931
+Message-ID: <202412171503.NLBGaVKM-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical
- port support for RZ/V2H
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "biju.das.au" <biju.das.au@gmail.com>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-References: <20241216195325.164212-1-biju.das.jz@bp.renesas.com>
- <20241216195325.164212-2-biju.das.jz@bp.renesas.com>
- <fq3q2tk3xfwd4p72b5wzo3gbfizrknxdt6zyc5ahm2cpnrtsbk@nlukbj3yy57c>
- <TY3PR01MB11346902114D33FA66F4C3BF686042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <TY3PR01MB11346902114D33FA66F4C3BF686042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 17/12/2024 08:29, Biju Das wrote:
-> Hi Krzysztof Kozlowski,
-> 
-> Thanks for the feedback.
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: 17 December 2024 06:32
->> Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical port support for RZ/V2H
->>
->> On Mon, Dec 16, 2024 at 07:53:11PM +0000, Biju Das wrote:
->>> RZ/V2H has ports P0-P9 and PA-PB. Add support for defining
->>> alpha-numerical ports in DT using RZV2H_* macros.
->>
->> So this is only for DT? Not really a binding. Binding binds driver implementation with DTS and you do
->> not have here driver.
-> 
-> Please see patch [1], see how this definition binds driver implementation with DTS
-> 
-> [1] https://lore.kernel.org/all/20241216195325.164212-4-biju.das.jz@bp.renesas.com/
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 83a9752729c455a6bd9b7cf62198506180691931  dt-bindings: gpio: brcmstb: permit gpio-line-names property
 
-I don't know what is this patch, it is not part of these series
-addressed to me and commit msg says "in DT". If you want to receive
-meaningful review, make it easier for reviewers.
+elapsed time: 1300m
 
+configs tested: 111
+configs skipped: 5
 
-> 
->>
->> Calling it a binding makes it immutable and gives us, DT maintainers, more work, so really no benefits
->> at all.
-> 
->>
->> I guess other DT maintainers will ack it, I prefer to reduce number of headers.
-> 
-> DT describes hardware. The port names are alpha numeric on hardware manual.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-We talk about binding, not DT.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20241216    gcc-13.2.0
+arc                   randconfig-002-20241216    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                          pxa168_defconfig    clang-16
+arm                   randconfig-001-20241216    clang-15
+arm                   randconfig-002-20241216    gcc-14.2.0
+arm                   randconfig-003-20241216    clang-20
+arm                   randconfig-004-20241216    clang-17
+arm                         s5pv210_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20241216    gcc-14.2.0
+arm64                 randconfig-002-20241216    clang-20
+arm64                 randconfig-003-20241216    gcc-14.2.0
+arm64                 randconfig-004-20241216    clang-15
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20241216    gcc-14.2.0
+csky                  randconfig-002-20241216    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon               randconfig-001-20241216    clang-20
+hexagon               randconfig-002-20241216    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20241216    clang-19
+i386        buildonly-randconfig-002-20241216    clang-19
+i386        buildonly-randconfig-003-20241216    clang-19
+i386        buildonly-randconfig-004-20241216    clang-19
+i386        buildonly-randconfig-005-20241216    clang-19
+i386        buildonly-randconfig-006-20241216    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20241216    gcc-14.2.0
+loongarch             randconfig-002-20241216    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                         bigsur_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20241216    gcc-14.2.0
+nios2                 randconfig-002-20241216    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20241216    gcc-14.2.0
+parisc                randconfig-002-20241216    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20241216    clang-20
+powerpc               randconfig-002-20241216    clang-20
+powerpc               randconfig-003-20241216    gcc-14.2.0
+powerpc64             randconfig-001-20241216    clang-20
+powerpc64             randconfig-002-20241216    clang-15
+powerpc64             randconfig-003-20241216    gcc-14.2.0
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                    nommu_virt_defconfig    clang-20
+riscv                 randconfig-001-20241216    clang-20
+riscv                 randconfig-002-20241216    clang-15
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20241216    gcc-14.2.0
+s390                  randconfig-002-20241216    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20241216    gcc-14.2.0
+sh                    randconfig-002-20241216    gcc-14.2.0
+sh                           se7750_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20241216    gcc-14.2.0
+sparc                 randconfig-002-20241216    gcc-14.2.0
+sparc64               randconfig-001-20241216    gcc-14.2.0
+sparc64               randconfig-002-20241216    gcc-14.2.0
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20241216    gcc-12
+um                    randconfig-002-20241216    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20241216    gcc-12
+x86_64      buildonly-randconfig-002-20241216    gcc-12
+x86_64      buildonly-randconfig-003-20241216    clang-19
+x86_64      buildonly-randconfig-004-20241216    clang-19
+x86_64      buildonly-randconfig-005-20241216    clang-19
+x86_64      buildonly-randconfig-006-20241216    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20241216    gcc-14.2.0
+xtensa                randconfig-002-20241216    gcc-14.2.0
 
-> 
-> For example, consider the case of  hardware pin PS1 mentioned in hardware manual.
-> 
-> With current changes,
-> pinmux = <RZG3E_PORT_PINMUX(S, 1, 0)>;
-> 
-> With existing code
-> pinmux = <RZG3E_PORT_PINMUX(28, 1, 0)>;
-
-Based on this pure code: still not a binding.
-
-> 
-> What do you prefer here? 28 is just a number derived from hardware indices
-
-Let me ask rhetorical question: if 28 hardware constant is suitable for
-binding, then why are you not defining GPIO numbers, IRQ numbers and
-MMIO addresses as bindings as well?
-
-> Or actual port name PS1 as mentioned in hardware manual?
-
-Well, I don't know. Commit says DTS, no driver patches here in my inbox,
-so what do I know?
-
-Best regards,
-Krzysztof
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
