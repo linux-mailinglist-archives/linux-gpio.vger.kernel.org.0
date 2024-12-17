@@ -1,101 +1,84 @@
-Return-Path: <linux-gpio+bounces-13932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 734559F44CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:08:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89DA39F44F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 08:18:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E8CD161A2F
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:08:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B4C67A540C
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 07:18:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933C317277F;
-	Tue, 17 Dec 2024 07:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3689E1957E4;
+	Tue, 17 Dec 2024 07:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rjEswCms"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68BC171092
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2024 07:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83112653;
+	Tue, 17 Dec 2024 07:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734419286; cv=none; b=bc8Px5Dcm9kitCngc07n/s73IzH5WVrXHI4sPJz97KU/fSw1cUfpuVfEEfSQCSFBbP9jRtQVUU+WgB24iisBc1s853lfmeHlZyp3vJJmmpZiCAwrabGglc4OuMqgtJcKwb+Gzx+47nwvStrZq0HXgmjEOmLwjVOZH70SUQgt1vs=
+	t=1734419908; cv=none; b=bsTpg1o63a4Xisp61tZwgZlKEaQ74DWtVLYmuImtoXImrk41gDVYQpjP8ayS35ghHu1bvahqn3rrcCrdGrcz7r3wdMPekPnsGZGkn3o1exWx3spQfMMs+QBe8EXucidyRCfH3iNl4cemMjhdnARBE0nskgSMtJQm6RCXorgZESE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734419286; c=relaxed/simple;
-	bh=0cYUGOJCMk9hzrUYNGZJvUmOELe0ky4OpSutraZO9xY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tCUSDy1i4q0JMWdv7LZzDAOf5lvUH/Dc1LYDVVsdZrS4J98V2VBbIsWzXf+sOuZKR40Ob0kgxZrNO6G/sBSpROXdOZzZFwVDhgXygHhpUzp67rIge+n+zvvMOY4+L0WxkbzM6qvvBU6JBSMyBB/Ar+cHjbftKXVaoA4iTpasz/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3abe7375ba6so101786495ab.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2024 23:08:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734419284; x=1735024084;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DRDwN1zpEWcBzT1VaG16wQzKWgPiascUQWIG+YKo2t8=;
-        b=Ka7jVzk6iOdCDYZ6/zlwNDuqHwFmngOW+g7svfUGdVuFrD9H7KJsAKS2Kq4b3Zv9Fr
-         o8Ec+upP9bbH9RAlxmO+3cPMB0dR/Xs+vvcsQ1VoYE/4F5flEcOeGzlgVVZ6+E352Li/
-         QNSQvoN/ICdiyMuQHBC13r2tRdizWgA3XYfWqJwys/wAFe/7LwY3iSsRVkn52z32hi5O
-         UnipLqUEZnSVros0eFT4JGaR/ORG5OOzlOK9je+FOMYRvNqwqzl0ADFT4HlTU/PFSO2d
-         bdpwMgh/tDozQq8H0Mf1vXjSpcCjdTQq+v7a0bKXeu+mBunkQoxWWJ1LhCvxWyEeXDat
-         iwJA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0lL4F2if9aEjw7JLwgvsRTLd0Knaq+ETgQM3Igkfdf+WW3VRlumMmz2RSg12zNNYpthMuyRFR/TfU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNq7/FsuS5rh9TYfvV1P7kcOyuMpm2AjBmlEeMBIJyAewupcDd
-	u06e07bDF2I19Abxivfw0I7jP1pvgf2NcDN6bdHwDC8WMKxj/cN3tP6VAWwKfsnj102aLcPiQ8B
-	ku2+Fdb911+5Xfa8RkZ7SXFcVWd1xbriAGV22oTy4Y7ZkwsqTAyep2wc=
-X-Google-Smtp-Source: AGHT+IH3TVKzgzi+hMwYzO8I6JCvRep3STNawVlhYQTcJYYxYeDO/5IrYAcVZ0f3Eq89idW5DxD31qNagFQCCAtYbUD/FBjFNorF
+	s=arc-20240116; t=1734419908; c=relaxed/simple;
+	bh=jvtIzZUA0+P+IAjrf+BGByRnWD+FPhJa1/w0AyEWXRc=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=if2vpv6k4AnpFDiamyMOGD3ZFnFxCfh/1gbtLS8J5sKoBkXYy23/q/QlcTkj2r8wYSMZ65w32ANcyncB75PjTDy62mvRV1VcSQSC7xM2bSE5K/WEaEjqU71clv0rsQ8uHcWftfueRkc7yEo/JbD0lrfWuNnScay1NcmGERhCVrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rjEswCms; arc=none smtp.client-ip=162.62.58.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1734419600; bh=jvtIzZUA0+P+IAjrf+BGByRnWD+FPhJa1/w0AyEWXRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=rjEswCmsFi7dHioLFzn/65AEP5M59HuXX2WZ4XekwTbXWWtQFC0PGVJq1HfNVgW/z
+	 +9plj/UDYt2dRDLbqfOI3ZmSGtixQkt/mSgUVniJk/JSkA4pOpJr3EriYIQhcqxi6r
+	 jmWjTN+9SDwVgNAQKm7U9L+SomuAlEhK+uSV1lRI=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.34])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 3501F8F8; Tue, 17 Dec 2024 15:13:16 +0800
+X-QQ-mid: xmsmtpt1734419596txbwsxq50
+Message-ID: <tencent_A3A5C98D8F1209DDBF5DFD997FCFD38D8507@qq.com>
+X-QQ-XMAILINFO: MaCrHea+JMej848cpSak67AyqtyW+jItj6JNAi3/yJy/QNtYl7g/cnSCRvIBHM
+	 B0Ujw5ZiXMHeEo2q6nuWecEC4jp0uigR3lMe8cFsJcPA/yGnYyyQnsQJ6LZa0sy5MOJY5Puxoh9f
+	 /SfPmTxL1RMcFUVjBP+ddaLZx19XFu6HvFRenxm32c9L678ilMnfb1FK12Nh6Qia1QPQPaSRgHfx
+	 T1UNgrbMmGwZ7NJjk6zkwmfgYWxlsLg/cCL5M07w5BUlSCsGY00o1qjGo/n0/MbdyGE/8i7nbTKx
+	 n/BIvnf5Upn5WMaeqT+gqS+KurRQk5QjRiJikmoCmvhoiStNwGCZHME4/uLRzpNpL6g8NgJT7D4e
+	 6NQzS5YQ2ZsIeegQK+opnDPdISdbQ0Nsd3n8t08R3BB+Q/g4TLvh7qOTs1rfAnMto76ktWvxiyKw
+	 Wl6kDW+jiVkyyxzobSnJ6mKLivPwY19KiOgZtACowB1fCyiBrE6ILVhpbqu69U+/i1L6LRN7oRV6
+	 69i4sQp2301RwBQSEQpz8t8xz18rdm2k+nCajFaZzEWEiiPh1+fdG7OY0g5tUXSfp3DzYL6Fy1oY
+	 kxNIroq1TOrHubFkT7/WEnwpv0FAL6ZwzuyQ+7IZucX066+qUcB9FsM9Zbzwv3kBZgYC5IqRlFDv
+	 ab4/vltEOhjYsxuVnB8GcenKo3wEkuMx+qvoJXllDnfHxG+whCPjEgTf4m+aRbiOikELJksLIdlU
+	 R/dYC30VliQJAZIToVmFCH3YEFqzNNwxqcCrCXxMqSbJNB7VJceSZBTlT+3Lkp8xunQOKsfLXCSC
+	 7JZ4BwIVOFPIdv45FkMNvOyEXtWDPuqzNWdlBLE/PcKpA8DYLjb4rfWYh6YMtn52EpWnk2fNp2GD
+	 4gL4aZxLM1+XFAs1hYRml6Alf6xYNrj66jrUHSBV04beJbScoVO4iFneo+mrBJQcWnp3+ySDGIKE
+	 V2/kqDZULl7hw+bKM2uycIAmJbBda6TMYLodwVphk=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+b95d0c98f01e7a95da72@syzkaller.appspotmail.com
+Cc: brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [gpio?] general protection fault in gpiolib_seq_stop
+Date: Tue, 17 Dec 2024 15:13:16 +0800
+X-OQ-MSGID: <20241217071315.2846899-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <67610786.050a0220.37aaf.0149.GAE@google.com>
+References: <67610786.050a0220.37aaf.0149.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b89:b0:3a7:dd62:e954 with SMTP id
- e9e14a558f8ab-3baccadd1edmr32269245ab.0.1734419284013; Mon, 16 Dec 2024
- 23:08:04 -0800 (PST)
-Date: Mon, 16 Dec 2024 23:08:03 -0800
-In-Reply-To: <tencent_A2CD92F8865949AE6ED1AED2CC9327C50606@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67612353.050a0220.37aaf.014c.GAE@google.com>
-Subject: Re: [syzbot] [gpio?] general protection fault in gpiolib_seq_stop
-From: syzbot <syzbot+b95d0c98f01e7a95da72@syzkaller.appspotmail.com>
-To: brgl@bgdev.pl, eadavis@qq.com, linus.walleij@linaro.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
-
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING: lock held when returning to user space in gpiolib_seq_start
-
-RBP: 00007fe66f38b090 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000005 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007fe66e775fa0 R15: 00007ffe92372dd8
- </TASK>
-================================================
-WARNING: lock held when returning to user space!
-6.12.0-syzkaller-10299-gc1f7eb90d8d5 #0 Not tainted
-------------------------------------------------
-syz.0.18/6685 is leaving the kernel with locks still held!
-1 lock held by syz.0.18/6685:
- #0: ffffffff8e96d590 (gpio_devices_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:158 [inline]
- #0: ffffffff8e96d590 (gpio_devices_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:249 [inline]
- #0: ffffffff8e96d590 (gpio_devices_srcu){.+.+}-{0:0}, at: gpiolib_seq_start+0x13e/0x270 drivers/gpio/gpiolib.c:5039
+#syz test: https://github.com/ea1davis/linux gpio/syz
 
 
-Tested on:
-
-commit:         c1f7eb90 fs/seq_file: Exit the subsequent process when..
-git tree:       https://github.com/ea1davis/linux gpio/syz
-console output: https://syzkaller.appspot.com/x/log.txt?x=12dfb4f8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e8d97faf7b870c89
-dashboard link: https://syzkaller.appspot.com/bug?extid=b95d0c98f01e7a95da72
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
 
