@@ -1,88 +1,64 @@
-Return-Path: <linux-gpio+bounces-13970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13969-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 057F89F4E63
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 15:52:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAAA49F4E54
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 15:51:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E8D818882B1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 14:51:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D2CE167740
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2024 14:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8130F1F76D3;
-	Tue, 17 Dec 2024 14:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D7D1F76BD;
+	Tue, 17 Dec 2024 14:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L68v5LnV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdLeOTsv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAB71F63CB
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2024 14:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6596A1F543A;
+	Tue, 17 Dec 2024 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734447011; cv=none; b=LxNHJeK0QcxiJ6GbvMl/bIwXnImeKRFYeuAihRr1i+hZ9DXvr0J68lkc0dKi1f6tL/Lkw6rqgWpQOrjwysRKykn0Y/dPHJfq9hr1+AFZaPyhDcaahgU+I3UIokrfkPxosifpBHvEdd9lWAqXJpSHgcxUGuQB8wFtCSoNBIgl0Eg=
+	t=1734447009; cv=none; b=bfS62tjUw5UvETPuD7XS5mZHcooH9bhKBj954UejwM8Dq4FqIK2E9/apJw2D6AIraCYYvSIB60UqiCHWsuYi6ulbkYW319KQLcJwS8i+GwYzRDFODoGpG3VNxOoObRkj5lOdO4xiN2LxN5+lX/HI8oG+cwZurbjZt5Kd4NEYzB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734447011; c=relaxed/simple;
-	bh=Ae4g+o4SrUUouyU6JTQr8W/GSuESQPuA1a0/fO2H38I=;
+	s=arc-20240116; t=1734447009; c=relaxed/simple;
+	bh=9NGVuPAtpr/g0B3E7esC9slTop2iEDfvwQjSq6UBTj8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LW2mM1Pw1rPMJ1vth4p1NQcS9SfGnl/DEMMHOzp0nkyWcFxbkCEygs3AJ+/QFMDpuq7f+pP6SxtQK18xO5pJrwxu5I1FQX4SLK8TbQj/NqQNEz27R8c/H5z6jcfxwPTBw68HR7OMWacIfvGBBMhULUTBxqxsKDuVybZ0tHFZ6rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L68v5LnV; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d3f28a4fccso8155216a12.2
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2024 06:50:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734447008; x=1735051808; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ycke3T0FtYGNg3PwgW0NCCRZfN9GJ53dRhecaGhM6c=;
-        b=L68v5LnV0muBBasJV1djRNq3ePbO4F/NY8NwNGeqUJLjSlESOKO/ciUgX2FMuNnnOw
-         zW9+8gPIArejcDVyFnnSxufRajuaBXMGSy7adf6+0001J9GY3oVZZ/GDln9aHHDuOiXx
-         XVTSwxOUu/o4ogkANdZy2kNrHE/lIbxpq14DOoOvdRu7y9CNYcnYPKLYt/JZWP9E9SZV
-         P8Lbom7ZiDj487S1DpVF1N0n1Ac7ogGD8gAKe7+MtBWgzZmVtglLAINR7Wn3sn90Fjvc
-         RGaE1z9ZIzk9Jk1KP7BDHwGKySecFAYr+oNY5FCLsYfFeYewEey+IHF9vXitstzv44gm
-         tIFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734447008; x=1735051808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Ycke3T0FtYGNg3PwgW0NCCRZfN9GJ53dRhecaGhM6c=;
-        b=xD6F44T//jI9xHcJsz7DhK5XsZOQIih+n1xBcF/01HnE3/1eZjHy7ppcWtpSWf5W5C
-         obM3VNNDQDjw+RxOOVkhylGx3ia0xEhbIEfl/e2sJKnPv1OTCTsUMIRxLqXG3TgBlHm6
-         n/HtOykpcr6EpmTo5bNvG+KaHYcYRMgkkudt8pZIjfKEHvRCnM1+chxfwyo9p8nmzXNS
-         7g+2xks+OA+Y4PYUXKpmJqy4MxlDOo/O4xuqtipJH6leWgPwZ5Jeo3XKI5KSZZ5RbV8I
-         TporfL4dOQaB+szEn7YjgQSknEv+SglC+r6tcMFwGJIXl/bMMHU3ioQ4wftvMh+96goe
-         X1Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxrVtu3ZXZMPaTxG303Hwi77wIws2RJTlXk6iczMWd+TPGV/9I3FGJlX3Rk9LO3SisI4uWId64ozK0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm9xjV8GyGSyPYfwjjkoqalStvoOcfxGgqidKVlRfhXKFANV5l
-	k8viL8hgcJ1hz6NuKligC6yqoTP4gBCtyB3+knYiZ9ckI6EcbXuWEciTai3wHS8=
-X-Gm-Gg: ASbGncujrk1EIVT3qAh0zhx0TgTNHSNMmaULSP5PbeG2B1BH2knUJ7rkWkAkrrzU/nR
-	9D4T8JfcCsCIbfIoTajy067iW3oBxWCvUinURCMZyY0NsqIGF+zB5tZb8QshSkewQitslM71hPh
-	Y+ia6woNNG0JMxt0FX3ouXOZO4DCMcfMtjCglSJZOBx/0PTrFmfiqe2priySWnh4wbMcSPx+tvs
-	JfFJqGMA3eaqkw39FrKuA/vZX71A/OZjU9yxtMPtRNqNazQKHUIbYKdzM6gvg==
-X-Google-Smtp-Source: AGHT+IGOUjQCh7pdBsXmyuaUSolYMZWmt6XwrTMde3rBi1yLvFprfTSIzhaibeECiMuEQ9oaPdmyZQ==
-X-Received: by 2002:a05:6402:50d0:b0:5d1:2534:57bf with SMTP id 4fb4d7f45d1cf-5d63c3bc37dmr13657470a12.32.1734447007937;
-        Tue, 17 Dec 2024 06:50:07 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652f33027sm4310953a12.74.2024.12.17.06.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 06:50:07 -0800 (PST)
-Date: Tue, 17 Dec 2024 17:50:04 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: gpiolib: fix refcount imbalance in
- gpiochip_setup_dev()
-Message-ID: <83a0821e-eac8-442f-bbeb-de2d439c02dd@stanley.mountain>
-References: <20241204122152.1312051-1-joe@pf.is.s.u-tokyo.ac.jp>
- <Z1GoskmQH0_FhxID@black.fi.intel.com>
- <CAMRc=Me004KgVZDVVCD1r_yDfpRjVsw2TAJCGiHd+TEiQ4xW6A@mail.gmail.com>
- <1cbec5a7-6c83-4abe-8532-041dbf891e16@pf.is.s.u-tokyo.ac.jp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqH7yTiPVtbkSmLXzcNsyd8sl9gidqPW+IjunX1B4nfuex35rKCq7rUho9kyQc3iYCg/F5gKJMpkbLJIIUs0Zy+hOsl2JtlATv9ZZX7A1Jg2UbaML4Ef9jscPYvI9v3XQS+hWTrlIzeq/jc+6uXacSj+Ql0ZXPxUXbUXediaj3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdLeOTsv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0E2C4CED3;
+	Tue, 17 Dec 2024 14:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734447009;
+	bh=9NGVuPAtpr/g0B3E7esC9slTop2iEDfvwQjSq6UBTj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TdLeOTsv2LMa1fox4cLQlpHIsi3VZIW18kv04jC0XcrDsIsG+sAKZFtoyKvJiPWDZ
+	 Tq7CEl9lgrFODQUPirKCyvKEDj+QFGkqqszrvls/MGhZt5wR1wp6jLV7qVcVqU9bx0
+	 lWC/U8h5ZT3+aCUOQkgAVDW4kLJYmKfWMzOabdi+IPMb8FodPQnAc0IlQTd0iTMv77
+	 FSQ+c73lnMt0v5UvaQgs07QPn+ofWD0GfY5QSzVLdI77rbB1HtrS3YqewlM08o3DtR
+	 bP0QvFDhuAOFxz1Z3ZJ3DWPpvB3+gsg4C8d8lvZdLxZqbE2Bk7C2vbSSvKB867Eg2j
+	 au4rHupxQggPg==
+Date: Tue, 17 Dec 2024 08:50:07 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Lijuan Gao <quic_lijuang@quicinc.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, kernel@quicinc.com,
+	Jingyi Wang <quic_jingyw@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/6] dt-bindings: pinctrl: qcom: correct gpio-ranges in
+ examples for qcs8300
+Message-ID: <173444700721.1652050.16277960371479734740.robh@kernel.org>
+References: <20241212-correct_gpio_ranges-v1-0-c5f20d61882f@quicinc.com>
+ <20241212-correct_gpio_ranges-v1-2-c5f20d61882f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,25 +67,21 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cbec5a7-6c83-4abe-8532-041dbf891e16@pf.is.s.u-tokyo.ac.jp>
+In-Reply-To: <20241212-correct_gpio_ranges-v1-2-c5f20d61882f@quicinc.com>
 
-Most static checker stuff is cleanup code.  I've written a blog entry on
-clean up code.
 
-https://staticthinking.wordpress.com/2022/04/28/free-the-last-thing-style/
+On Thu, 12 Dec 2024 17:24:01 +0800, Lijuan Gao wrote:
+> The QCS8300 TLMM pin controller have the UFS_RESET pin, which is expected
+> to be wired to the reset pin of the primary UFS memory. Include it in
+> gpio-ranges so that the UFS driver can toggle it.
+> 
+> Fixes: 5778535972e2 ("dt-bindings: pinctrl: describe qcs8300-tlmm")
+> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,qcs8300-tlmm.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-You mostly get this right, but one thing which could help is rule #6
-where ideally the cleanup in the function is copy and pasted to create
-the release function.
-
-So when you add cleanup to the error paths, check the release function
-and see what it does.  Sometimes you've seen the clean up code is missing
-in the release function.  Other times it calls wrapper like
-gpio_put_device() instead of calling put_device() directly.  The function
-calls should be in a specific order, (hopefully the reverse order of how
-they're allocated).
-
-regards,
-dan carpenter
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
 
