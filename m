@@ -1,534 +1,264 @@
-Return-Path: <linux-gpio+bounces-13982-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-13983-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 883399F61E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2024 10:37:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F6019F6644
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2024 13:56:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45D811884183
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2024 09:37:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C376E1893559
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2024 12:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B491922F1;
-	Wed, 18 Dec 2024 09:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E921ACEB8;
+	Wed, 18 Dec 2024 12:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="AFTRI0LQ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R2IMnZh0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2133.outbound.protection.outlook.com [40.107.215.133])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3925B178368;
-	Wed, 18 Dec 2024 09:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.133
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734514643; cv=fail; b=LLtK2Ez2NH06XhokHmXqR1B6ohgCAEBnDlmNf02vrSZQ5tAPfVvjEtFVuI61xD24YdlhSCoK73bQ4TTQkDQ6qdqnfQpt1Wmr09dK6Nz8C791V/KKALCrvtw5tg68xu7qZmptj03bdt9TwLKhD4pY54jkAkoDrmhBdSzbnGG1SIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734514643; c=relaxed/simple;
-	bh=q50PqQZ7Skx1iRfOaTLXkHfAmBKBZE+6v++hQgAf49k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Nj8eMZrNPqqLnLrjHJ3SbACsx+ESCXawmD69Eg4a6p4xNsaBmRVQLiEBtKU+ykdediCEfuggtcEFHii2g2t5GAqBzuzS35URv24W8GZhkyQNhq0jvYzDpb7gXRa9B66X390O9OUOgzEG/p9d1jqIK9jeWIV3yZkEGRMKmydvY8c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=AFTRI0LQ; arc=fail smtp.client-ip=40.107.215.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rgo40ZE1WTtT+9nU32i8XkNbEzvSGFu5F7Qt/ot4ZLGXbGXsvMuEklNszewHbz0gyDYaTGsZtbfyNQyiVyq2Md92qLGTNUFx5UIxx073OwIvldm+7LXnbehjU86JS5evHI6AtDI46r+yB0pqG+iahf4hAG7iwR0fUksbNcj7fSt55UcQ4AiPZkU+NmcvnhoPAm6qLs2SZVDVbmXVE240/80n8twm/4QwJU+lIXOswemMazyxpMeHLkfWDac/naGQZmBL3dRJJvV8oe3kY/Ip8D6pyVLP+pVhYnV7KMQZ7lV1yInpciaEH6/qpL7goy5GnTwZMNKPyp+nUW4lbh1H8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3TmvtIp6TKFB6qCchT2qS2F6A//YtbgrbPs/Ok7+J2I=;
- b=ADcQT+qS3+GuJE7Yr06nZXoBX/xBDC63MIi0t2fRnJiy2FohV3yuLG2meh7nLP2IUnB3x9gqp39pOXexHidxE5KsazQagmgeQBZV2uiHKih+nm899Pt2d+piD7TvVeb13wMApYGxP85Fz5aeazwGyLadFOKCnXI1kIJbAPm3k9XXEjPn392GPKndSLY0OaQFC3IuT4duris4wH4GHvs0XfAxQxzDdxTKAifsF/5ahOJN8/gIaLfcUY7m0RkkT1wYH/dmM+m2P7nvqZCsDBaB8kRuTYeqzmHzEROx3xn5tWsjzx+f9vqdMjWui7Ggne52+hqpW/7VBqvt0Wp6n+J8GQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3TmvtIp6TKFB6qCchT2qS2F6A//YtbgrbPs/Ok7+J2I=;
- b=AFTRI0LQr1F/H3JhArawVXxkVFlYRffjG3y6Dp1uy15VutFpy+uvR5nDtTOOTlSS4MWMMBYWszJLleV4A6eG9oWh0v11kzQdkPRe8+HJTGcRAmDhKL75IqZhzxckxxRLrA8N+OHPKJAJnT9jaZzQwqm4njNCMVkXHLN+tw6aIhnP8Of5u3uC0GdoMiJOs7wPPwgjBKCw30lC25HX+VuZnGyUytQcu+phjboVFNV64xnMBJYWJlUNZznGGP5HwxzvnPRUVE4QQ5q0j8C3QavCoiRW+zedYmmMPv3xUiYdi1YVCe+4PJiudQavYhcZyQNwk9M+A1s2CFWDh7ZJqCXLhQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by TYSPR03MB7978.apcprd03.prod.outlook.com (2603:1096:400:47c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
- 2024 09:37:17 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.8272.005; Wed, 18 Dec 2024
- 09:37:16 +0000
-Message-ID: <23899c54-14ad-4724-9336-2df6fb485fd6@amlogic.com>
-Date: Wed, 18 Dec 2024 17:37:11 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/3] pinctrl: Add driver support for Amlogic SoCs
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org
-References: <20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com>
- <20241211-amlogic-pinctrl-v1-2-410727335119@amlogic.com>
- <CACRpkdbuj-_sPpdfcyg3_QNtzt9r7n-0HBGBKgy-rKUMhvGo4w@mail.gmail.com>
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <CACRpkdbuj-_sPpdfcyg3_QNtzt9r7n-0HBGBKgy-rKUMhvGo4w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2P153CA0020.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::7)
- To TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26C1150980;
+	Wed, 18 Dec 2024 12:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734526586; cv=none; b=EaVq+G2Rx+guFW1jJK9VLHfvu2e+upSCNlyVAw6Zxmr3MrmuP5jt3PgmgdkKBR9hDIKmxn1lpZQduirFw3C/LICSyl9ODDGOEzZJMHptVM+ajzCQZe9gQotLjY+y/a2+PUwM0z7OyuPCSNAsVgM/PmN20RMc40iZdO1GpV2UfXw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734526586; c=relaxed/simple;
+	bh=mHp390HvuXsRP7wpYa9B4FKeCalkTIkjNJzZMfTQSx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=I/JtzRY1niL4RUGH5dLgDdUMQToqjvd7054OIunusYqx1UQX6mvltM+4QrFCeLcuXFOo01OV/DnHiXNRUvqhr7Xrjn0IBotpFqyelJbujgcPsw08CN7JbKUcXkR1fyl2fE/Inm+lo4XOCdCV/KWQL4zrJj/w6cGJ5binpnXtMbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R2IMnZh0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI5D5hK014164;
+	Wed, 18 Dec 2024 12:56:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5EFi+D8L1sliDzm+pZs/Y3qUJhXMvOXHIkiSpJAY964=; b=R2IMnZh0orlzs4SL
+	eW0O4wZHHWPWVDijHIoLvsYcMV2tLz8i+62up42gexTgKbj+K1RUlKSu+6vydKgJ
+	caMaBIamhC4QeJVyKSMhIgPUgQuFMUNlwOFvE+syE72WUCb/OaXv2m3jxr97oaOu
+	wu4KzAsAsVrU7CDyDOXFKl0Xk2i1rmoold72Lipioy14pEJ4Xbvh5P0nil6iJJGu
+	AnQxNpjvfjyn7L/w/TdlO9cOzG1fvM5wc1N+OZD3c/zLmmA8v45UKo/aHHSWmICd
+	42VA1nU/fFZ9/VGrfbyuAauYW5X+DxMyZQ7kTYMebu0nL1zzpOWSes1o2q+Nzd4H
+	RKxq4Q==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43kr1xs4jd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Dec 2024 12:56:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BICu438019784
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Dec 2024 12:56:04 GMT
+Received: from [10.64.16.135] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Dec
+ 2024 04:55:57 -0800
+Message-ID: <df1a4457-129e-452c-8089-ee1e6f9a3e12@quicinc.com>
+Date: Wed, 18 Dec 2024 20:55:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TYSPR03MB7978:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cb79692-1429-4fad-a180-08dd1f478f6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0VQYzZ4UVhIY1ZudXY2ZXBKejVFQVhIMVJ4ZU9TZjVRVjQvNzVCdStkSDdm?=
- =?utf-8?B?NFlVN2ZjdjBSYkc1eDBBRHVETmNxQXludlVhMXgxb0J6QkRwSjlET1BZamFV?=
- =?utf-8?B?Y3FsNDNKSyswT1ArQlV1T2lxaXUyTDNOMmZBUERhYjEwTmFxMEpJZUVvTm5M?=
- =?utf-8?B?dUZzVmhIRUdUbzQ0cm50Z0t5elpIcmJTTUNwcFFwQnhCcmVLZU1CTmV2T0RC?=
- =?utf-8?B?S2ZuQisxa2FRTllDWEtaRkV0SlZIQjN3MjNYRDBRUHAxbCt2eE5McXlzWkJn?=
- =?utf-8?B?SEtzZU4xQndyajYyZmlTd1FVanhvR0RxNUg3Y3BiTXZjSUdDa0RwallDdHor?=
- =?utf-8?B?Q1cxRHZVMzVvQkMyZjVpMGM3K2dzQTRVMEd4K2x0dFRLUVRFU1dsamE3RlY3?=
- =?utf-8?B?ZGExbno1YnlPYSthTlNhc09IZjFTYlNKdjVQek1EdUc1RWxqS1FyTDZQd1cx?=
- =?utf-8?B?eFdKaHhKeWtxYjErNVZZZ2tiMzJ5NVRKNzZBOTNhR3JGWUZJenlQNVdOaWxh?=
- =?utf-8?B?T2pRZFJKenZDMTlROWxMdUFkNzRibStmVmpYLzd5dlJTY0RUTkZpcEh0d0Z4?=
- =?utf-8?B?MlF0SGpUUnl1akhGQndoV1dyZG1QeCtDNXpQSG44VUh4UWdEWnBYOS9CaWM2?=
- =?utf-8?B?TlMzVHZYajBOYzdUa3cxNUNPTUQ5Q2VWWDBlYUNudVhxZXNORGlFek8xQ1VK?=
- =?utf-8?B?VE1GYmRkSVJFUUx6R053K0l6TEVsZEtnbFJvUHpTM1Z4cHFVQzNFNlNURG1Y?=
- =?utf-8?B?d0l4YkI4UVBLV3h1UmRqbnNRU21qeVUyMFJsVm9UMjkxcytWaWp6bzV5UE1U?=
- =?utf-8?B?SUlzQld5QUIxWnNPRWJsRFcra1J5ems4dXpMZXQ5cDU1cC9TTnRpQU9aT24r?=
- =?utf-8?B?NlM1VjFyM1FCeHZFVTFaT2hNcnRDWFpVVDdSaUdyTDhaTVJldStTZC9XVVdJ?=
- =?utf-8?B?ekFtQ3lEQkM5Nk13akEyaDZvNUlKWXIwZkd4aUZrT0tVZm1vV0FadWNkdTY1?=
- =?utf-8?B?ajgvY2gxMHVsTVVQSDNlWUFiK1NaSHdVTG1MK2M0T2dHQXhteGdEUzA5Q2U4?=
- =?utf-8?B?NmpxYVRVTWNIRVRxNVI1NzFQWjJJenBEVXE2L2N0dW0wQ3l1TkJDUzVUSzEr?=
- =?utf-8?B?TEJPRk1TVmR0V1B1bkJKdkVlZUp6dDlCZitKNlRGWmlSTnBrSjVUUjRkblU4?=
- =?utf-8?B?NHo1aUpQSlE1VGw4TEJsWVdmblYwY3F4U1lIZlkwdjNsbnJxVTBYcnl2NHFN?=
- =?utf-8?B?ZzF6blFHbCt5dk5oZm1WUFBLRVZoMmw2TjBFdi96amJoRElCMFVYUU12VnBW?=
- =?utf-8?B?WERzRzE3ZnNEM25WZWZjM0dVc3Y4Rk1talplQm1NWmVtUi9LNUZUOUFDbW54?=
- =?utf-8?B?anAwbXpjcjdESVRIK3g3emc1c3lxdmNKZS8xR1JnSEp0ZzdESkI4aTZ5UC9L?=
- =?utf-8?B?ZnQwMU4wL2ZMQ216NzRjUFVvZ2tSQzNST2h0Q0E2K2xETStGVm5yYWJ6bFE0?=
- =?utf-8?B?K1VESnVONzVTMENkcVpKY0RVMk1tN0JTaXd6YnRkZGlwMzByNUMzVUNOR2NX?=
- =?utf-8?B?MTRGd000dmV1cEthamlOdk5semZ5WVFNZGNiaUEwMlNIUXVwSTRQSGxTTUgx?=
- =?utf-8?B?eHFxYjRjSHpoVXVkQWt6SUpwY2NrVldSc2Zvem9SUjYvWElON3VWM1V3WGx2?=
- =?utf-8?B?eUpBd1hCQ0ViVUx2dklWRnU5ZDgyaDJKQ0k3Y3Nub0Z4RzF1TnhDN1JJQmUv?=
- =?utf-8?B?cGt3YkF1UlN0akkrUU9aa1hLMjJpeWFXMU9ZanJ2T0JyYzBFcm5WUkJVVCtr?=
- =?utf-8?B?ZXVnclFzUFp5OHJzUi9XYlBhdFQ0KzRDd1JScGRFMmZvUUY4VW5mazhlQ0Q5?=
- =?utf-8?Q?SKeH5ED+oBge/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QitNakFYY28xZnV2RFVDUnQwQVNpSUU4OVIrTDdTcmgvUEZlRk1aM2FXUktp?=
- =?utf-8?B?aldNd3hnMVhQV2d2OTJXMnNoS01OV1lSZ0dSb0JEMWtmQi9TNEU4L0lZTnFv?=
- =?utf-8?B?OVE4ZjdKcWZJeXljNkxJK3FvZ0ZwOTNmem9rKzladG5CcVlxaWh3aW9UVUQ4?=
- =?utf-8?B?bjIwR0N6ckUrcTMvdTJZYmlWVHNMSXduazFNdzJOTFQyN0dILzVqWWk1SXQw?=
- =?utf-8?B?YjBDbVBJb3dYb09OMWpuS2g4MUJQWTZzeE0yL0VwMkVoMmNZbzMxMW9nTVRk?=
- =?utf-8?B?KzdZM2VyaHFOZHFRZVNUK0NvR1pNd1h3WURNelZUeVVGSGhtRSsxSWY4ekFq?=
- =?utf-8?B?T25yaTVjd1ZvSUlseSs2SVlvTHRoTEk1ZEgvMElISFpobXBDVHJZK091cmlr?=
- =?utf-8?B?cXMrTXlqd0pTY0Q4dkpEaFowd0pjVGZhblJYZWg3cTNkWVFqdkprSUd5Zkt6?=
- =?utf-8?B?ejM0TGh6cmJTTmVLaTRNMEFpZUw4WUVUbmZqeFFHT2F0MGRrZW5IUVlGbXA2?=
- =?utf-8?B?RTNYblpHZkYrUk9FeDc3emJ2d0JlRHlpSTc5Yzl2QnoybGRDRGZ6eWkzZWNt?=
- =?utf-8?B?QmUvMDRmTWFuOFhFdUZzSmlqMGdTL2xEY3N3bjZIT3JaczhiQjVEZDRDc2NC?=
- =?utf-8?B?VmRtSzRCK1lwWkRrSUxSYURkejg3T3lMcC9YaVhXZjJsNVlkcVVwRnlqU1Zq?=
- =?utf-8?B?eVI3czdFSFN3ZVBhZmFhVjdVUGFPbkg3VmtUT0oycHorQjNYdWl5dHVNQ2JG?=
- =?utf-8?B?ekZJeWlZdzJ1WmNPelp1MFZGLzFOaWZNc21aa3FXa2E4bDJoWVZuN2pOb284?=
- =?utf-8?B?VXQyTDhwWldPRVNDbkhTZUUyYkhGTVkrZ1h6WVBERTEyaGdPK1RLeGNUVzla?=
- =?utf-8?B?bzEzelhKRnBBUjVnVUt3UWtWdjY4UytXWnA4RDFEeW5KbEE5VDVMS1dXOG92?=
- =?utf-8?B?M244b0tiZEViUHM5eUNsdFVZQlcxOXdtclVUWG1RNExYZXBWSENSclNPdHdj?=
- =?utf-8?B?aTRsR1kvZEV3K3lYMkJzNDh0ZmUwWWxmcUtEd2xodDBtR3JkU3dWNFBGRE5T?=
- =?utf-8?B?dUNaWnkrZU9qNWRYQktXeVkxUy9ydk5CbnlMSGRHYndLYnpKdEZiMUJ4bDc3?=
- =?utf-8?B?OFZuelkzU0JDc2FXZDJJNitWSXV4REJydUpDQ3YrTzQyeXNaSFVGTFBja1Z6?=
- =?utf-8?B?ZzRqcmRhTFkvZ0xKejVhNjNSWUE1Rk5WMXpoaHdTSzVsYUdoVjhPUUZIUjA1?=
- =?utf-8?B?bDI2aGJUSERUanY4V1JXOVN2SnFEZ1NSN09xMmpUM3JPK0M0YU4vZ0gxbTN6?=
- =?utf-8?B?UFFKYjlPSU84dXJEbUpsZjZtTjRaR0VTY0I4MWVrUytnTVBWaFBkUmcvcDdy?=
- =?utf-8?B?cXB3alQydGFkYmJwSk1wd09QNTgvcGNQYzYxRkNraUNiVHF0YWtvUE5iaDZw?=
- =?utf-8?B?UlJQTWtRazZRbFBEc1BTSUt1ZzB2RElFWkVTYlBNbm1hc1ZhU2dPbmxTRmth?=
- =?utf-8?B?bDFZajRnL3c4M2p5TjgvMkJIU1BybmtzNHF1Rlo3cm1ENnJJWDdMMHFYNTBP?=
- =?utf-8?B?L0hKYnRCV09iN2JLYWZqYWZBVVY4S0JMZWZDc1h0UUVjdmRFSlV4WEpIRmpp?=
- =?utf-8?B?QzdpVnoybTN1cCtRSWpmTVRFZUVKNERWMjdVcUY2TWwzNW1OQmdGbzNSRkZk?=
- =?utf-8?B?WlhtdEhRQ2lYU3p3RElScGJMOGJrMFFnN09kVkI2bDlvQ3ROOWtCVEJ5TE42?=
- =?utf-8?B?OHpHWTgzb3FYdXFYTjhmbUlTcW9selcxWmhwSy9xY3JRYUU5dGlUejdkUjV2?=
- =?utf-8?B?c0JyT0pIMFNBbFhhV0ZOczZxd1lVOXpocUdZb3lJWUhvRDJYUU1WTDMzRk1S?=
- =?utf-8?B?MU5HTTZIUVhpdU5JT2NvTk50Vi9TUXdRVFhCb3lkY3pmM1ZvWmlGOG9NVVQw?=
- =?utf-8?B?cXlaaGlYcDQ0THArUnJLR09EenlzOWdPb3l5NWFsS2xablE5bE9zTFFCdjdK?=
- =?utf-8?B?VnEweml4eEZnK24wT1FWWE01UnBHMDQ5dmQ0Qy9CYmJZaTYzdjZrMW5wYkZN?=
- =?utf-8?B?UWZZSnV1cXhtV1ZGNWpDSmo5N0wxS1c5OXBKcG9GcVRQZjVmZ043UFNOdVN2?=
- =?utf-8?B?bUZGeG1Ea3BRcnRwdkVtb1Mzd0VNeEFBR3huRjdicTlNcm9TYXNWVGhIc21n?=
- =?utf-8?B?a0E9PQ==?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb79692-1429-4fad-a180-08dd1f478f6c
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 09:37:16.7926
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dqk1Ds68aHZvMNPQ5qU/KlLQLV+eNZezDb5wyiPDzxk21FiFxbaDDc8NyKzR/OTpE6muIGbf7oEYTziT4WpfpcY6dKD9xQ4+41lXoOS4eTg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR03MB7978
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] phy: qcom: qmp-usbc: Add DP phy mode support on
+ QCS615
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Kuogee
+ Hsieh" <quic_khsieh@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon
+ Vijay Abraham I" <kishon@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, <quic_lliu6@quicinc.com>,
+        <quic_fangez@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+References: <20241129-add-displayport-support-for-qcs615-platform-v1-0-09a4338d93ef@quicinc.com>
+ <20241129-add-displayport-support-for-qcs615-platform-v1-3-09a4338d93ef@quicinc.com>
+ <CAA8EJppOR_UXoVpMt-dhfWdCz3UNfsXGdz8X9NqpaSmYj3AZDg@mail.gmail.com>
+ <5ea14162-567b-462d-be02-b73b954b7507@quicinc.com>
+ <5whv4z7u6fkfwlv5muox5dmv6fow4mga76ammapw7wph7vwv3f@xibcjdfqorgf>
+ <iqcofcntirmlwcpyfr4yabymqfcgyrij57bibf337tmxpa73t6@npkt6wquenf6>
+ <527baded-f348-48a8-81cd-3f84c0ff1077@quicinc.com>
+ <t5vcjlf44fhae4f2h75cfs3f7r6tdstw4ysmkapvvawj6xp23x@xnxqnxvyhshe>
+ <d5151b82-5f05-4826-99b4-e925c20550b4@quicinc.com>
+ <7vdaasc3flhpabnorjty5qjorlbp22honuscgpbteakgagg2tq@frqa6flk2mmv>
+From: Xiangxu Yin <quic_xiangxuy@quicinc.com>
+In-Reply-To: <7vdaasc3flhpabnorjty5qjorlbp22honuscgpbteakgagg2tq@frqa6flk2mmv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -kPUvlmlGHd-fDfNQ53Dseg79wQrHHl1
+X-Proofpoint-ORIG-GUID: -kPUvlmlGHd-fDfNQ53Dseg79wQrHHl1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 clxscore=1015 spamscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412180103
 
-Hi Linus,
-    Thanks for your reply.
 
-On 2024/12/17 22:49, Linus Walleij wrote:
-> [ EXTERNAL EMAIL ]
-> 
-> Hi Xianwei,
-> 
-> thanks for your patch!
-> 
-> On Wed, Dec 11, 2024 at 7:48 AM Xianwei Zhao via B4 Relay
-> <devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
-> 
->> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+On 12/12/2024 3:15 AM, Dmitry Baryshkov wrote:
+> On Wed, Dec 11, 2024 at 08:50:02PM +0800, Xiangxu Yin wrote:
 >>
->> Add a new pinctrl driver for Amlogic SoCs. All future Amlogic
->> SoCs pinctrl drives use this, such A4, A5, S6, S7 etc. To support
->> new Amlogic SoCs, only need to add the corresponding dts file.
 >>
->> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> On 12/11/2024 5:46 PM, Dmitry Baryshkov wrote:
+>>> On Wed, Dec 11, 2024 at 08:46:16AM +0800, Xiangxu Yin wrote:
+>>>>
+>>>>
+>>>> On 12/10/2024 11:09 PM, Dmitry Baryshkov wrote:
+>>>>> On Thu, Dec 05, 2024 at 08:31:24PM +0200, Dmitry Baryshkov wrote:
+>>>>>> On Thu, Dec 05, 2024 at 09:26:47PM +0800, Xiangxu Yin wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 11/29/2024 10:33 PM, Dmitry Baryshkov wrote:
+>>>>>>>> On Fri, 29 Nov 2024 at 09:59, Xiangxu Yin <quic_xiangxuy@quicinc.com> wrote:
+>>>>>>>>>
+>>>>>>>>> Extended DP support for QCS615 USB or DP phy. Differentiated between
+>>>>>>>>> USBC and DP PHY using the match table’s type, dynamically generating
+>>>>>>>>> different types of cfg and layout attributes during initialization based
+>>>>>>>>> on this type. Static variables are stored in cfg, while parsed values
+>>>>>>>>> are organized into the layout structure.
+>>>>>>>>
+>>>>>>>> We didn't have an understanding / conclusion whether
+>>>>>>>> qcom,usb-ssphy-qmp-usb3-or-dp PHYs are actually a single device / PHY
+>>>>>>>> or two PHYs being placed next to each other. Could you please start
+>>>>>>>> your commit message by explaining it? Or even better, make that a part
+>>>>>>>> of the cover letter for a new series touching just the USBC PHY
+>>>>>>>> driver. DP changes don't have anything in common with the PHY changes,
+>>>>>>>> so you can split the series into two.
+>>>>>>>>
+>>>>>>> Before implement DP extension, we have discussed with abhinav and krishna about whether use combo, usbc or separate phy.
+>>>>>>
+>>>>>> What is "DP extension"?
+>>>>>>
+>>>> I'm sorry confusion casued by my description. It's means extend DP implemnt for USBC phy driver.
+>>>>>>>
+>>>>>>> We identified that DP and USB share some common controls for phy_mode and orientation.
+>>>>>>> Specifically, 'TCSR_USB3_0_DP_PHYMODE' controls who must use the lanes - USB or DP,
+>>>>>>> while PERIPH_SS_USB0_USB3PHY_PCS_MISC_TYPEC_CTRL controls the orientation.
+>>>>>>> It would be more efficient for a single driver to manage these controls. 
+>>>>>>
+>>>>>> The question is about the hardware, not about the driver.
+>>>>>>
+>>>>>>> Additionally, this PHY does not support Alt Mode, and the two control registers are located in separate address spaces. 
+>>>>>>> Therefore, even though the orientation for DP on this platform is always normal and connected to the video output board, 
+>>>>>>> we still decided to base it on the USBC extension.
+>>>>>>
+>>>>>> Could you please clarify, do usb3-or-dp PHYs support DP-over-USB-C? I
+>>>>>> thought that usbc-or-dp platforms support that, but they don't
+>>>>>> support DP+USB pin configuration. Note, the question is broader than
+>>>>>> just QCS615, it covers the PHY type itself.
+>>>>>>
+>>>>>> Also, is TCSR configuration read/write or read-only? Are we supposed to
+>>>>>> set the register from OS or are we supposed to read it and thus detemine
+>>>>>> the PHY mode?
+>>>>>
+>>>>> Any updates on these two topics?
+>>>>>
+>>>> Still confirming detail info with HW & design team.
+>>>> I’ll update the information that has been confirmed so far.
+>>>> This phy support DP-over-USB-C,but it's not support alt-mode which 2 lane work for DP, other 2 lane work for USB.
+>>>> TCSR phy mode is read/write reg and we can read for determine phy mode.
+>>>
+>>> Ok, thanks for the explanation. From my point of view:
+>>>
+>>> - Implement the DP PHY to be a part of the same driver. Each device
+>>>   supported by the usbc driver should get both PHYs.
+>>>
+>>> - Make sure not to break the ABI: #phy-cells = <0> should still work and
+>>>   return USB PHY, keeping backwards compatibility. Newer devices or
+>>>   upgraded DT for old devices should return USB PHY for <... 0> and DP
+>>>   PHY for <... 1>.
+>>>
+>> Yes, currently we have implemented like your description,
+>> Each deivce shoud get both PHYs, DP PHY for <... 1> and USB PHY for <... 0>.
 > 
-> First: are we sure these new SoCs have nothing in common
-> with sunxi? Because then the sunxi code should be reused.
+> Please note the backwards compatibility clause.
 > 
-> In any way I recommend:
+For the USB node, we kept the same implementation as the original function interface, and the devicetree node definition also remains unchanged.
+In subsequent patches, I will follow Krzysztof’s suggestion to use a separate DT-binding to describe the DP PHY configuration, 
+without making changes to the USB devicetree and DT-binding implementation.
+>>> - I'm not shure how to handle the USB and DP coexistence, especially in
+>>>   your case of the USB-or-DP PHY.
+>>>
+>> For coexistence process:
+>>
+>> When we start implement DP part, usb driver team said only need config TCSR phy mode and orientation during switch in USB-C port.
+>> Based on your previous comments avout SW_PWRDN, I'm confirming with the USB team whether SW_REST/SWPWRDN/START_CTRL registers might affect DP.
 > 
-> - Renaming drivers/pinctrl/sunxi to drivers/pinctrl/amlogic
->    so we keep this sorted by actual vendor, sunxi is apparently
->    yours (AMlogic:s) isn't it?
+> Thanks!
+> 
+>> Anyway, even though the original SoC design supports DP or USB over Type-C，
+>> but on QCS615 ADP AIR platform, there are only four USB-A port which works with 'qcs615-qmp-usb3-phy' driver, and no USB-C port.
+>> DP port is mappped from usb pin to the video out sub-board.
+>> so we are unable to verify the switching case between DP and USB devices under USB-C.
+> 
+> That's also fine. We will get to that point once MSM8998 / SDM660
+> get USB-C support (the only current blocker is the support for the
+> TYPEC block of the PMI8998).
+> 
+I can't access MSM8998 / SDM660 documents now, but I have confirmed detail info about USB & DP phy design for sm6150.
+
+The 'usb-ssphy-qmp-usb3-or-dp PHY' on the current platform is essentially composed of three sub-PHYs, 
+which can even be considered as three separate PHYs: USB3 primary PHY, USB3 secondary PHY, and USB3 DP PHY.
+
+On the QCS615, the USB primary PHY is currently used to handle USB 3.0 communication for the previously mentioned four USB Type-A ports, 
+while the USB3 secondary PHY and USB3 DP PHY are used for the output of the Type-C port,
+but since the Type-C port is forcibly pin-to-pin configured to the video out board, the Type-C port will always configure as DP PHY.
+
+The internal registers of these three PHYs are independent of each other, Neither their respective SWPWR_DN nor SWRST will affect the other two PHYs.
+Additionally, there was a misunderstanding about the orientation previously.
+The USB orientation setting only affects the current PHY and does not impact the DP PHY. The DP PHY is configured in the DP_PHY_CFG_1.
+
+TSCR_PHY_MODE can specify which PHY outputs to the Type-C port, and the global reset will simultaneously reset the two associated PHYs. 
+Therefore, the correct switching process is as follows.
+When switching the inserted device:
+	1.Identify the PHY type.
+	2.Enable the regulator.
+	3.Trigger a reset.
+	4.Enable the clock.
+	5.Configure PHY type related orientation
+	6.switch the TCSR PHY mode.
+	7.Configure the registers of PHY.
+During release:
+	1.Reset.
+	2.Disable the clock.
+	3.Disable the regulator.
+
+Our current design overall complies with this process, but it lacks the configuration for DP_PHY_CFG_1.
+
+Shall we continue the discussion to clarify remain comments of the USBC driver?
+
+>> However, I'm also confirming whether anything other will affect USB and DP each other.
 > 
 
-It isn't. Sunxi is Allwinner SoCs.
-
-> - Also fix MAINTAINERS accordingly.
-> 
-
-Sending the official version will be synchronized.
-
-> - Add new driver under drivers/pinctrl/amlogic
-> 
-> - Do not change the Kconfig symbols for sunxi and
->    we should be fine.
-> >> +static int aml_dt_node_to_map(struct pinctrl_dev *pctldev,
->> +                             struct device_node *np,
->> +                             struct pinctrl_map **map,
->> +                             unsigned int *num_maps)
->> +{
->> +       struct aml_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
->> +       const struct aml_pctl_group *grp;
->> +       struct device *dev = info->dev;
->> +       struct pinctrl_map *new_map;
->> +       struct device_node *parent;
->> +       int map_num, i;
->> +
->> +       grp = aml_pctl_find_group_by_name(info, np->name);
->> +       if (!grp) {
->> +               dev_err(dev, "unable to find group for node %pOFn\n", np);
->> +               return -EINVAL;
->> +       }
->> +
->> +       if (grp->num_configs)
->> +               map_num = grp->npins + 1;
->> +       else
->> +               map_num = 1;
->> +       new_map = devm_kcalloc(dev, map_num, sizeof(*new_map), GFP_KERNEL);
->> +       if (!new_map)
->> +               return -ENOMEM;
->> +
->> +       parent = of_get_parent(np);
->> +       if (!parent) {
->> +               devm_kfree(dev, new_map);
->> +               return -EINVAL;
->> +       }
->> +
->> +       *map = new_map;
->> +       *num_maps = map_num;
->> +       new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
->> +       new_map[0].data.mux.function = parent->name;
->> +       new_map[0].data.mux.group = np->name;
->> +       of_node_put(parent);
->> +
->> +       if (grp->num_configs) {
->> +               new_map++;
->> +               for (i = 0; i < grp->npins; i++) {
->> +                       new_map[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
->> +                       new_map[i].data.configs.group_or_pin =
->> +                               pin_get_name(pctldev, grp->pins[i]);
->> +                       new_map[i].data.configs.configs = grp->configs;
->> +                       new_map[i].data.configs.num_configs = grp->num_configs;
->> +               }
->> +       }
->> +
->> +       dev_info(dev, "maps: function %s group %s num %d\n",
->> +                (*map)->data.mux.function, grp->name, map_num);
->> +
->> +       return 0;
->> +}
->> +
->> +static void aml_dt_free_map(struct pinctrl_dev *pctldev,
->> +                           struct pinctrl_map *map, unsigned int num_maps)
->> +{
->> +}
->> +
->> +static void aml_pin_dbg_show(struct pinctrl_dev *pcdev, struct seq_file *s,
->> +                            unsigned int offset)
->> +{
->> +       seq_printf(s, " %s", dev_name(pcdev->dev));
->> +}
->> +
->> +static const struct pinctrl_ops aml_pctrl_ops = {
->> +       .get_groups_count       = aml_get_groups_count,
->> +       .get_group_name         = aml_get_group_name,
->> +       .get_group_pins         = aml_get_group_pins,
->> +       .dt_node_to_map         = aml_dt_node_to_map,
->> +       .dt_free_map            = aml_dt_free_map,
->> +       .pin_dbg_show           = aml_pin_dbg_show,
->> +};
->> +
->> +static int aml_pctl_dt_calculate_pin(struct aml_pinctrl *info,
->> +                                    unsigned int bank_idx, unsigned int offset)
->> +{
->> +       struct aml_gpio_bank *bank;
->> +       int retval = -EINVAL;
->> +       int i;
->> +
->> +       for (i = 0; i < info->nbanks; i++) {
->> +               bank = &info->banks[i];
->> +               if (bank->bank_idx == bank_idx) {
->> +                       if (offset < bank->gpio_chip.ngpio)
->> +                               retval = bank->pin_base + offset;
->> +                       break;
->> +               }
->> +       }
->> +       if (retval == -EINVAL)
->> +               dev_err(info->dev, "pin [bank:%d, offset:%d] is not present\n", bank_idx, offset);
->> +
->> +       return retval;
->> +}
->> +
->> +static int aml_pctl_dt_parse_groups(struct device_node *np,
->> +                                   struct aml_pctl_group *grp,
->> +                                   struct aml_pinctrl *info, int idx)
->> +{
->> +       struct device *dev = info->dev;
->> +       struct aml_pinconf *conf;
->> +       struct property *of_pins;
->> +       unsigned int bank_idx;
->> +       unsigned int offset, npins;
->> +       int i = 0;
->> +       int ret;
->> +
->> +       of_pins = of_find_property(np, "pinmux", NULL);
->> +       if (!of_pins) {
->> +               dev_info(dev, "Missing pinmux property\n");
->> +               return -ENOENT;
->> +       }
->> +
->> +       npins = of_pins->length / sizeof(u32);
->> +       grp->npins = npins;
->> +       grp->name = np->name;
->> +       grp->pins = devm_kcalloc(dev, npins, sizeof(*grp->pins), GFP_KERNEL);
->> +       grp->pin_conf = devm_kcalloc(dev, npins, sizeof(*grp->pin_conf), GFP_KERNEL);
->> +
->> +       if (!grp->pins || !grp->pin_conf)
->> +               return -ENOMEM;
->> +
->> +       ret = pinconf_generic_parse_dt_config(np, info->pctl, &grp->configs,
->> +                                             &grp->num_configs);
-> 
-> But can't you just move this code around? grp->num_configs give the
-> number of configs, so why do you have to go and look up pinmux
-> above, can't you just use grp->num_configs instead of of_pins
-> and npins above?
-> 
-They are different.
-The of_pins(grp->npins) specifies the mux values for pin-mux register 
-and pin index in pinctrl. It can include multiple pins in groups.
-
-The grp->configs and grp->num_configs specify the configuration 
-information for all pins of this groups(such as bias-pull-up, 
-drive-strength-microamp)
-
-uart-d-pins2{
-	pinmux= <AML_PINMUX(AMLOGIC_GPIO_T, 7, AF2)>,
-         	<AML_PINMUX(AMLOGIC_GPIO_T, 8, AF2)>,
-         	<AML_PINMUX(AMLOGIC_GPIO_T, 9, AF2)>,
-         	<AML_PINMUX(AMLOGIC_GPIO_T, 10, AF2)>;
-	bias-pull-up;
-	drive-strength-microamp = <4000>;
-};
-
->> +static int aml_pctl_parse_functions(struct device_node *np,
->> +                                   struct aml_pinctrl *info, u32 index,
->> +                                   int *grp_index)
->> +{
->> +       struct device *dev = info->dev;
->> +       struct aml_pmx_func *func;
->> +       struct aml_pctl_group *grp;
->> +       int ret, i;
->> +
->> +       func = &info->functions[index];
->> +       func->name = np->name;
->> +       func->ngroups = of_get_child_count(np);
->> +       if (func->ngroups == 0)
->> +               return dev_err_probe(dev, -EINVAL, "No groups defined\n");
->> +
->> +       func->groups = devm_kcalloc(dev, func->ngroups, sizeof(*func->groups), GFP_KERNEL);
->> +       if (!func->groups)
->> +               return -ENOMEM;
->> +
->> +       i = 0;
->> +       for_each_child_of_node_scoped(np, child) {
->> +               func->groups[i] = child->name;
->> +               grp = &info->groups[*grp_index];
->> +               *grp_index += 1;
->> +               ret = aml_pctl_dt_parse_groups(child, grp, info, i++);
->> +               if (ret)
->> +                       return ret;
->> +       }
->> +       dev_info(dev, "Function[%d\t name:%s,\tgroups:%d]\n", index, func->name, func->ngroups);
->> +
->> +       return 0;
->> +}
->> +
->> +static u32 aml_bank_pins(struct device_node *np)
->> +{
->> +       u32 value;
->> +
->> +       if (of_property_read_u32(np, "npins", &value) < 0)
->> +               return 0;
->> +       else
->> +               return value;
->> +}
->> +
->> +static u32 aml_bank_reg_gpio_offset(struct device_node *np)
->> +{
->> +       u32 value;
->> +
->> +       if (of_property_read_u32(np, "reg-gpio-offset", &value) < 0)
->> +               return 0;
->> +       else
->> +               return value;
->> +}
->> +
->> +static u32 aml_bank_reg_mux_offset(struct device_node *np)
->> +{
->> +       u32 value;
->> +
->> +       if (of_property_read_u32(np, "reg-mux-offset", &value) < 0)
->> +               return 0;
->> +       else
->> +               return value;
->> +}
->> +
->> +static u32 aml_bank_bit_mux_offset(struct device_node *np)
->> +{
->> +       u32 value;
->> +
->> +       if (of_property_read_u32(np, "bit-mux-offset", &value) < 0)
->> +               return 0;
->> +       else
->> +               return value;
->> +}
->> +
->> +static u32 aml_bank_index(struct device_node *np)
->> +{
->> +       u32 value;
->> +
->> +       if (of_property_read_u32(np, "bank-index", &value) < 0)
->> +               return 0;
->> +       else
->> +               return value;
->> +}
-> 
-> Do we really need helpers for all of this? Can't you just
-> open code it, at least if it's just used in one place?
->
-  I will delete this function, I will move the logic to where it was called.
-
->> +static unsigned int aml_count_pins(struct device_node *np)
->> +{
->> +       struct device_node *child;
->> +       unsigned int pins = 0;
->> +
->> +       for_each_child_of_node(np, child) {
->> +               if (of_property_read_bool(child, "gpio-controller"))
->> +                       pins += aml_bank_pins(child);
->> +       }
->> +
->> +       return pins;
->> +}
->> +
->> +static void aml_pctl_dt_child_count(struct aml_pinctrl *info,
->> +                                   struct device_node *np)
->> +{
->> +       struct device_node *child;
->> +
->> +       for_each_child_of_node(np, child) {
->> +               if (of_property_read_bool(child, "gpio-controller")) {
->> +                       info->nbanks++;
->> +               } else {
->> +                       info->nfunctions++;
->> +                       info->ngroups += of_get_child_count(child);
->> +               }
->> +       }
->> +}
-> 
-> This looks like a weird dependency between gpio chips and
-> pins that I don't quite understand. Some comments and
-> references to the bindings will be needed so it is clear
-> what is going on.
-> 
-
-A pinctrl device contains two types of nodes. The one named GPIO bank 
-which includes "gpio-controller" property. The other one named function 
-which includes one or more pin groups.
-The pin group include pinmux property(pin index in pinctrl dev,and mux 
-vlaue in mux reg) and pin configuration properties.
-
-I will add comment in next verison.
->> +static struct regmap *aml_map_resource(struct aml_pinctrl *info,
->> +                                      struct device_node *node, char *name)
->> +{
->> +       struct resource res;
->> +       void __iomem *base;
->> +       int i;
->> +
->> +       i = of_property_match_string(node, "reg-names", name);
->> +       if (of_address_to_resource(node, i, &res))
->> +               return NULL;
->> +
->> +       base = devm_ioremap_resource(info->dev, &res);
->> +       if (IS_ERR(base))
->> +               return ERR_CAST(base);
-> 
-> This looks like reimplementation of
-> devm_platform_ioremap_resource_byname(), can't you just
-> pass your platform device here?
->
-
-I will fix it.
-
->> +static int aml_pctl_probe_dt(struct platform_device *pdev,
->> +                            struct pinctrl_desc *pctl_desc,
->> +                            struct aml_pinctrl *info)
-> 
-> Because there is clearly a platform device involved.
-> 
-> I guess I will have more comments as the series progress, but this
-> is a good starting point!
-> 
-> Yours,
-> Linus Walleij
 
