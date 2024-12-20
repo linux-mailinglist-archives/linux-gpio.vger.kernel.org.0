@@ -1,134 +1,301 @@
-Return-Path: <linux-gpio+bounces-14063-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 778919F9214
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 13:22:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7D429F921D
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 13:22:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B4801897A25
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 12:22:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E5BD1897CCF
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 12:22:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3211F2046A1;
-	Fri, 20 Dec 2024 12:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E871BCA19;
+	Fri, 20 Dec 2024 12:22:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Yq+tb1ps"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YTfoOlBG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFA31A7AE3;
-	Fri, 20 Dec 2024 12:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390C01C4612
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 12:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734697316; cv=none; b=TDIiwUUrEtm6twyomjSCct5MRfRt/tgfmLYP7tyGJs4zp4xeEktFTHJOdvfE01lI03uCkzQFBbROcerheaD7e1Pu7nDazQAmuoNnEMzaWZzeP63emPIcJxjJSyZmaBXCOh+SizanyH5ZATwo+XqSJFMZREv9avFiCAWnI/EZYp8=
+	t=1734697365; cv=none; b=TMq8h24OojTFYt7rkJpP1LJ2HfGEHZSVDmTUEvvrPGFw7y6DsLBW7xtr9CT2Z+Bii4Jef2C0zPa+JpoJ8R1l7RFXtdoYFhxbKOcfaiVnxxDcD7gSR0RpHIh20niSowgZe+939rGpG/wbpPJ0MomMI8Y/uTxsokzaeVoJAWST7Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734697316; c=relaxed/simple;
-	bh=JduFaswRmxN5tGLStvzwUiaywMEIItZVTSmKsVx9nOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rm4jRIh61FDTqFa4Wqoho1YpUA8bygGHav7a9cstSMKlhSuVDC+bbPGXdAGx77au9BuXy6CUCYnYD8s6iLuqXiGA0AboG0Jzab3zzVyaGpoHQxF9Cz88n2PtJg4pJpREJiF49Btjh0DQYiAwCcpna2SOfS5Lr4jX7ZEmu8z7lBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Yq+tb1ps; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B3BC4CECD;
-	Fri, 20 Dec 2024 12:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1734697316;
-	bh=JduFaswRmxN5tGLStvzwUiaywMEIItZVTSmKsVx9nOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yq+tb1psbAD0EEaGVo62BeRkwh9Xj1zwGjU1RnX9bPc3zuKVZ+vFaKjzZirLF0O5Q
-	 cWqZTrj/8oUOashMDH0in9idt9Jf9pCN3xfKSbuna7zWsHJDYmyLi1Jgqy+04F5+b+
-	 WkFCtRLWZn13uCsuIFDP/5NAmVeHVQ3OLBfdEu0A=
-Date: Fri, 20 Dec 2024 13:21:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
-	Simon Xue <xxm@rock-chips.com>, Lee Jones <lee@kernel.org>,
-	dri-devel@lists.freedesktop.org, Zhang Rui <rui.zhang@intel.com>,
-	Elaine Zhang <zhangqing@rock-chips.com>, linux-clk@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Andy Yan <andyshrk@163.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-pm@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jose Abreu <joabreu@synopsys.com>, Jamie Iles <jamie@jamieiles.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Frank Wang <frank.wang@rock-chips.com>, linux-mmc@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
-	Simona Vetter <simona@ffwll.ch>,
-	Finley Xiao <finley.xiao@rock-chips.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-watchdog@vger.kernel.org, David Wu <david.wu@rock-chips.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org,
-	linux-pci@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	linux-phy@lists.infradead.org, Jonas Karlman <jonas@kwiboo.se>,
-	Maxime Ripard <mripard@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-pwm@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Mark Brown <broonie@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>, Johan Jonker <jbx6244@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-serial@vger.kernel.org,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Tim Lunn <tim@feathertop.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH 00/38] rockchip: Add rk3562 support
-Message-ID: <2024122018-groove-glitzy-f3bc@gregkh>
-References: <20241220103825.3509421-1-kever.yang@rock-chips.com>
+	s=arc-20240116; t=1734697365; c=relaxed/simple;
+	bh=U62+/9q+OAASXkOaKHD5lSoMYWGibD3VibcFdBVUFDQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VzjJOXkF5rjyM1SMw6d7EAmbkfRPDa2MMfripW9bTnykTVJ/J3v+gKI+rwRBKXxLS1T50zAKFPwf3cXoq7wWNwsMJwFWrzGuX7IbvD30LygkASz99C3qH+Uf1XHMIBtxT8Z8Qwb5aWYeMu3dNOSecZ/SZYTxkkCJMjlp2lTrAgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YTfoOlBG; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53df19bf6a9so2439542e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 04:22:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734697361; x=1735302161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vVphS9qNxpidSYQzn1Jwc4zym/HE78rDG8jkas55B2g=;
+        b=YTfoOlBG0CegalpPLUiPGKBsreNghrnTL3WBC8MH60+hB6orSrTddLkwK8L7b4uExh
+         W2LHn/8M4U8ZVHZ/jZB8dX94REQk6eT37/HjwkqJylfRU5ma046pFilrNvypp7Sv2u7o
+         KBPCiE5mxNsbq5rBDWnw1fAwO1IWtlHvErbADC6+F5YBthFfRQtNQLY17mGHLn4JyhGY
+         fhyR+qJVsL1h4sdNtAzizH8sD6pRhERqmuASvj191ZVvFdocqHrgZnB6C3sLIyJOj5pF
+         zgzKgU+E6sYILDsqf7A8Tg5g/R1JEb7S+8yEgmrc0mgqgXFiumbBEpSh/qmDcfFDTZsH
+         iG5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734697361; x=1735302161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vVphS9qNxpidSYQzn1Jwc4zym/HE78rDG8jkas55B2g=;
+        b=ljQEYK/2Z5nyhAdwT0XW7deB0nZ2Va/pVSkYqgSzUNVrA8B8iwicXAy0+0qfNlnIbD
+         wRSTWDBlZrBiM+8femMHy5WG1Ezq982ZpmH5zhwloszUf7FNfFdiKXKeXauF6Bp+Dlof
+         Te9toXB2PSZZPMiuYHsPnPoSfImCIHGW7AGcooJGAZkosqwrPVNPkkxAx35RxMX9qg+s
+         g0yLRD3guBzxBBNHmkc0/o4ZYcKOmtpvx3ZLjfL5hohj2v4UKX/7a1ZlAoVLPcYBImrq
+         7yTgh9VoNiX+8gF1CkC6JBirnox5hrUVJRRWHAvwqrRiAZZKWUXDcPHS0aKlJbKvX14Z
+         eQyw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/QhpVfGewBJfiY0o1DqM9ctB0HXzjogzTOd5RE3/VQYc1RjiVXj001WIXrYM/eRmy+0AThefplyx0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzZNMelHpj7l4pkvjzKLefpcw/TluikzvWBxvo8nSph+cXIrUk
+	cdKPHAqdSoeUxpl8724+PBkRrhucbSatI0HvQkWZ8mB6mxnsjHy36WRa+k329dhBcNbFrqDbcRw
+	SKAg1TzpQtT36ka8He8pFq5L9nlZayXSEg8vHew==
+X-Gm-Gg: ASbGnctgUHeqcNitM3MilIroN0azTi5X51/OfJkXj4dM6O0JAo6L/hG0bdZ01xOJZRN
+	KVLkakuA7Fg4KG2jAVvDZJa8UqgaGcPyJ/loRfQ==
+X-Google-Smtp-Source: AGHT+IFGhittHLLqvD2aKsLjDPS3OVz2YJXvu8/X2vARIaa1xYKmHCEy9A/wEWav1aRH6YcsgDyP5OyCYnEzC/a94+g=
+X-Received: by 2002:a05:6512:318e:b0:540:2fd2:6c87 with SMTP id
+ 2adb3069b0e04-54229533e65mr864873e87.16.1734697361380; Fri, 20 Dec 2024
+ 04:22:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241220103825.3509421-1-kever.yang@rock-chips.com>
+References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+ <20241211-aaeon-up-board-pinctrl-support-v1-4-24719be27631@bootlin.com>
+In-Reply-To: <20241211-aaeon-up-board-pinctrl-support-v1-4-24719be27631@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 20 Dec 2024 13:22:30 +0100
+Message-ID: <CACRpkdZ_AwiE+HFX6TFBgscaVquKm_tegNSbTT0fhFmpkM7d_Q@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP boards
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 20, 2024 at 06:37:46PM +0800, Kever Yang wrote:
-> 
-> This patch set adds rk3562 SoC and its evb support.
-> 
-> The patch number is a little bit too big, some of them may need to split
-> out for different maintainers, please let me know which patch need to
-> split out.
+Hi Thomas,
 
-I recommend you doing the split-apart as you know the dependencies here
-the best, right?  Otherwise we all will just probably ignore them
-assuming someone else is going to review/accept them...
+thanks for your patch!
 
-thanks,
+On Wed, Dec 11, 2024 at 5:27=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-greg k-h
+> This enables the pin control support of the onboard FPGA on AAEON UP
+> boards.
+> Due to the hardware design, the driver shall control its pins in tandem
+> with their corresponding Intel SoC GPIOs.
+>
+> UP boards and UP Squared boards are supported.
+>
+> Based on the work done by Gary Wang <garywang@aaeon.com.tw>, largely
+> rewritten.
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+
+Overall this looks as a good start, some comments below.
+
+> +config PINCTRL_UPBOARD
+> +       tristate "AAeon UP board FPGA pin controller"
+> +       depends on MFD_UPBOARD_FPGA
+> +       select PINMUX
+> +       select GENERIC_PINCTRL_GROUPS
+> +       select GENERIC_PINMUX_FUNCTIONS
+
+This implements GPIO so you need:
+select GPIOLIB
+
+But I'm not sure because of some oddities, see below.
+
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+
+Questionable include, see below.
+
+> +static int __upboard_pinctrl_gpio_request_enable(struct pinctrl_dev *pct=
+ldev,
+> +                                                unsigned int offset)
+
+I'm not a fan of functions named with __inner_function() double-underscore
+convention. The reason is that double underscore is also used for
+compiler intrinsics. Can you just name it
+
+committ_upboard_pinctrl_gpio_request_enable()?
+
+> +static void __upboard_pinctrl_gpio_disable_free(struct pinctrl_dev *pctl=
+dev, unsigned int offset)
+
+Dito
+
+> +static int __upboard_pinctrl_gpio_set_direction(struct pinctrl_dev *pctl=
+dev,
+> +                                               unsigned int offset, bool=
+ input)
+
+Dito
+
+The pinmux code is very straight forward otherwise, good job!
+
+> +static int upboard_gpio_get_direction(struct gpio_chip *gc, unsigned int=
+ offset)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +       unsigned int pin =3D pctrl->pctrl_data->pin_header[offset];
+> +       int mode;
+> +
+> +       if (pctrl->gpio[offset])
+> +               return gpiod_get_direction(pctrl->gpio[offset]);
+
+See below.
+
+> +       /*
+> +        * GPIO was not requested so SoC pin is probably not in GPIO mode=
+.
+> +        * When a gpio_chip is registered, the core calls get_direction()=
+ for all lines.
+> +        * At this time, upboard_gpio_request() was not yet called, so th=
+e driver didn't
+> +        * request the corresponding SoC pin. So the SoC pin is probably =
+in function (not in
+> +        * GPIO mode).
+> +        *
+> +        * To get the direction of the SoC pin, it shall be requested in =
+GPIO mode.
+> +        * Once a SoC pin is set in GPIO mode, there is no way to set it =
+back to its
+> +        * function mode.
+> +        * Instead of returning the SoC pin direction, the direction of t=
+he FPGA pin is
+> +        * returned (only for the get_direction() called during the gpio_=
+chip registration).
+> +        */
+> +       mode =3D upboard_pinctrl_pin_get_mode(pctrl->pctldev, pin);
+
+Fair enough I guess it's the best we can do here.
+
+> +static int upboard_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +
+> +       return gpiod_get_value(pctrl->gpio[offset]);
+> +}
+> +
+> +static void upboard_gpio_set(struct gpio_chip *gc, unsigned int offset, =
+int value)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +
+> +       gpiod_set_value(pctrl->gpio[offset], value);
+> +}
+> +
+> +static int upboard_gpio_direction_input(struct gpio_chip *gc, unsigned i=
+nt offset)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +       int ret;
+> +
+> +       ret =3D pinctrl_gpio_direction_input(gc, offset);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return gpiod_direction_input(pctrl->gpio[offset]);
+> +}
+> +
+> +static int upboard_gpio_direction_output(struct gpio_chip *gc, unsigned =
+int offset, int value)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +       int ret;
+> +
+> +       ret =3D pinctrl_gpio_direction_output(gc, offset);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return gpiod_direction_output(pctrl->gpio[offset], value);
+> +}
+
+This looks dangerous and I guess also the reason you are including consumer=
+.h.
+
+Explain with a comment in the code what is going on here, like if this
+GPIO comes from a completely different hardware unit, it looks like
+a recepie for an eternal loop if it would point back to the same GPIO.
+
+All of these have the same "loop out to another hardware" feature
+that looks weird to me, but explain what's going on so I understand
+it.
+
+To me usually pin control works like this:
+
+linux gpio <-> gpio driver <-> pin control driver
+
+so the pin control driver is a pure "backend" for GPIO,
+typically implements in struct pinmux_ops:
+.gpio_request_enable()
+.gpio_disable_free()
+.gpio_set_direction()
+
+that just set up the pin in the corresponding way. If your hardware
+cannot mux back a pin from GPIO mode (as a comment says)
+I would say that gpio_disable_free() can just return -ENODEV
+or something if the pin has been put into gpio mode, maybe
+some experimentation is needed there.
+
+The corresponding GPIO driver typically uses GPIO ranges
+to access the corresponding pin. It usually call
+gpiochip_add_pin_range() to map its pins to the pin control
+driver (if e.g. device tree is not used for the ranges).
+
+What you do here is confusing to me, it looks like:
+
+linux gpio <-> this gpio shim <-> pin control <-> other gpio driver
+
+I think it is better to try to keep things separate if you can,
+the current design seems to come from an attempt to be
+"complete" and protect users from themselves, but we can
+never protect users from themselves.
+
+> +static int upboard_gpio_to_irq(struct gpio_chip *gc, unsigned int offset=
+)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +
+> +       return gpiod_to_irq(pctrl->gpio[offset]);
+> +}
+
+If you use the GPIOLIB_IRQCHIP, you do not need to define this function
+at all, it is handled by gpiolib.
+
+> +       ret =3D gpiochip_add_pinlist_range(chip, dev_name(dev), 0, pctrl-=
+>pctrl_data->pin_header,
+> +                                        pctrl->pctrl_data->ngpio);
+
+I would rather have it that the actual gpio chip (the one that write
+something into hardware registers) do this without another gpio chip
+inbetween if you see what I mean.
+
+But explain what's going on! I'm curious.
+
+Yours,
+Linus Walleij
 
