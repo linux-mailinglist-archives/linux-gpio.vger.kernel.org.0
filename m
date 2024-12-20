@@ -1,237 +1,101 @@
-Return-Path: <linux-gpio+bounces-14084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14085-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F29229F95EA
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 16:58:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93BDD9F9691
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 17:28:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A86618903A5
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 15:54:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 457B01898A64
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 16:26:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECFD218EAC;
-	Fri, 20 Dec 2024 15:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2700821A44F;
+	Fri, 20 Dec 2024 16:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMV73hYt"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tlQUqUgh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC38216397;
-	Fri, 20 Dec 2024 15:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35A21A446
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 16:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734710089; cv=none; b=pKzlaQ1be8JEWkwsAGMWm7etPoqmoeYmEL0P3NRDa0XULm8s9zh8Q5Wc2w7T96AuSJIUGvsLyOV3/gQvBKc08XgyvT7hX6PjI2Oyab0QtV90iTy8p/eT7jPmWU/b55C2zRUty27Ms947Jmq5ekzD6UST45IQv5Qa2Lj0KKvhtaE=
+	t=1734711931; cv=none; b=V4vIKeWPlUR9U+ANmKKfht59I3nq47U3OFpLHeEusYyDAJxYdAtGtxlCcKku3K4Ui2oi084Pn8L7ZVFWBVO7PLWVY4FhDFCwiviVSnEmgg9LCBaKjCJDrPi+5s9XBijaiWo+PKMrNpS7xHEKYipYhSjgHCKOLX9UOSgBS1Wk42s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734710089; c=relaxed/simple;
-	bh=nBCegtq0A5NfOXgKUOhNhCAdUczJYCehEj8+f1RmnXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUglM5KmFApbCxmtme8/iDegPe3ipwUYLyRQSJApr3E1Q0McG3Tq4LJx72ykfkafMATHa+MqAjzlLaa8B12lyafxK8s1kP4D9YK0jmDRQYXfGGtDOKFmh/FPzLBucBI5jDnHILvjfnbSj98H+guiGW2EOoS36TDiwCoEMi+M7l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMV73hYt; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734710087; x=1766246087;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nBCegtq0A5NfOXgKUOhNhCAdUczJYCehEj8+f1RmnXY=;
-  b=MMV73hYtvK4oR6hzBzJRKlICAak7zzmIhaGaR4ktnmAZ7ZOU5BuwwKg6
-   zapF0JFVkabwoppUCaqbzuoJTiWZtFQbRVf8xH2jnYy8PbJV/FJG4+UO7
-   8aW/ZjfmGmJqe9oKv2cXgULgxAeSm0npGTVlQKEUtSquJqbwgqHz5VQQI
-   Nl+N1JR7j8cOEKo7q63JCuavwekZ8o1FiIL3ZVmRLFsJzbfMM6hL1CLUE
-   LTh+YyaTnhJLGx1xTPlLECT9wOkXTxbbO1fL4G6eWbU2iyXLSQVIb0JxJ
-   upirvbJfcpcOWVfBjLG/dYGmXoYjogyUE4byo/aNowu2syiUtaD1q8xgC
-   w==;
-X-CSE-ConnectionGUID: T53sJChwQDWv6KkKUU2HGQ==
-X-CSE-MsgGUID: O55e9k4sTMqF/zPhzBXfwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="46269703"
-X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
-   d="scan'208";a="46269703"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 07:54:46 -0800
-X-CSE-ConnectionGUID: 5jkc7+XRS2S1jemaFJJbBw==
-X-CSE-MsgGUID: kb9btt2NQViRmPqhqw+FLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
-   d="scan'208";a="98603535"
-Received: from lkp-server01.sh.intel.com (HELO a46f226878e0) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 20 Dec 2024 07:54:42 -0800
-Received: from kbuild by a46f226878e0 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tOfKp-0001MN-2E;
-	Fri, 20 Dec 2024 15:54:39 +0000
-Date: Fri, 20 Dec 2024 23:54:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Subject: Re: [PATCH 5/8] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <202412202337.8jOygMaK-lkp@intel.com>
-References: <20241219-mdb-max7360-support-v1-5-8e8317584121@bootlin.com>
+	s=arc-20240116; t=1734711931; c=relaxed/simple;
+	bh=fgj3txWgGUPQ5X7pGoqJ46vP8JDLlzZfIRU5Uc33ooY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bYk/2v/t4rpVisY25jYaVp3zt7MeECBVq+87aA2QIUu4Zz2HwjVgeUolpJSrEqC28mkppKdqqNrRz5dZ2QNRKzKgpwjq544awToOW4VBM1ZlbMvmp8f7fqQPuL1BTm7wdsicrWjTXQKWvPJR6PhAQoIa4nxy0zDu3J/VAd0Pvlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tlQUqUgh; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-540254357c8so1994474e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 08:25:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1734711928; x=1735316728; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f5Z3iXKUUZkeT66nKwMJ6lOJB5Dz9GjSnNBFWJUzZeY=;
+        b=tlQUqUghSnbdVPKfYMSCUVRyEQ0fh8esw/ooksWJR/q5v5soCCqoMJR0Ijz2QTQq9F
+         EvlWJo4fXe2G7YCq2k+d+z2t537uPSGxg8tzdi4cDzqhFDSosDTrOlha0dwl9L3M72zE
+         P+MH/cTpAyyrUwmi6DED687rUSynDNRxekkIuTwAnVEABG1PXCsEwpdpJKMAK9P47/WI
+         TVc2qXjhxHcfg8yx6HvUnuoD47rF+x7sMWEJXlEG3ZriJly8CK/oV5G3U5qqR512Vvq9
+         gkQQbqMlqEjmUzLQQDxwqJsj2a9DTLBr0HmLVUOuZraQivgf1MxR2JXpR30VkgfKys2z
+         1Buw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734711928; x=1735316728;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f5Z3iXKUUZkeT66nKwMJ6lOJB5Dz9GjSnNBFWJUzZeY=;
+        b=kWSIO/OLScxHA1Y5yk1INCPfgWQj6XKjWJtb3UcCSVX1wBKua2wsMbN8c0+FdPOuSq
+         QYGm+VGySkXhCAxR7UySzDjUXhJfCMX9YKzKwl34Jh+1U5DszBwNIphqTvsWGLW4mpVA
+         cb63yaM6Fgm4iVdM3Q3Ov+5jNnFq1ma1OQs3wp6R9Oc8XIzAsQqd08ek6TKhXWZlW7Bl
+         wVu8xVbfnSUJLb+I3XA/t+oaACbACXjH9A1+s7xNkXKG9Ca6SliUerza4g0Hr3rcLmyt
+         YlXa7RR+O/jDjgX0TNh5jaxEJsd0ZYOyr//V6aUcOjx6Id2LMdbHe/P8R8I3uMN+r5BZ
+         5Wtw==
+X-Gm-Message-State: AOJu0Yzdn+nwNSZu4Adm13ho74l099ulDDsi/Q+SwgDH8mZId7v63KfH
+	EmPyhnqry0H1rmt4Bo+J0PcmEyMoEoirvfb/jCPayz7OnILbKKCz+Fj5ZUFI7pi74ZDs5oQ306L
+	DaonXodD4wJuu89GAwSHwhdBGG/ZIxqFhJktmig==
+X-Gm-Gg: ASbGnctAlLGEfuDK8yS0iGfyvgHmFbHkIcx0vri+GgA5ZFdGIfEAnRw88zAzddctiBR
+	0mHOX/d7VLrmOpnREWgwHzhRiQc7SEir0qyfjhkxbPupqYr41WK07I/Q0LRVZSE8r3/ho9Q==
+X-Google-Smtp-Source: AGHT+IEppwxsa9RTQst+gyWZvtsVUUlxg1nfTDOy83eK6eMVabx7NlEwbWhP9h1pSZ+wYgT9iKL/BvnwG51Y1T94c1c=
+X-Received: by 2002:a05:6512:2252:b0:540:1cb9:850b with SMTP id
+ 2adb3069b0e04-5422954d620mr1372159e87.31.1734711927633; Fri, 20 Dec 2024
+ 08:25:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241219-mdb-max7360-support-v1-5-8e8317584121@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 20 Dec 2024 17:25:16 +0100
+Message-ID: <CAMRc=Me-QNmJ2L1K-gGzFtVZacsDiLsNUfh3QaWPdbVzyxUduA@mail.gmail.com>
+Subject: build warning in libgpiod rust bindings with rust 1.83
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Erik Schilling <erik.schilling@linaro.org>, 
+	Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mathieu,
+Hi Viresh et al,
 
-kernel test robot noticed the following build warnings:
+I noticed the following warning when building libgpiod rust bindings
+with rust 1.83:
 
-[auto build test WARNING on 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8]
+warning: elided lifetime has a name
+  --> libgpiod/src/line_request.rs:234:26
+   |
+231 |     pub fn read_edge_events<'a>(
+   |                             -- lifetime `'a` declared here
+...
+234 |     ) -> Result<request::Events> {
+   |                          ^^^^^^ this elided lifetime gets resolved as `'a`
+   |
+   = note: `#[warn(elided_named_lifetimes)]` on by default
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-Add-MAX7360-MFD-device/20241220-002541
-base:   78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
-patch link:    https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-5-8e8317584121%40bootlin.com
-patch subject: [PATCH 5/8] gpio: max7360: Add MAX7360 gpio support
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20241220/202412202337.8jOygMaK-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241220/202412202337.8jOygMaK-lkp@intel.com/reproduce)
+Could you please take a look as I have no idea what that means?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412202337.8jOygMaK-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/gpio/gpio-max7360.c:57:41: warning: variable 'val' is uninitialized when used here [-Wuninitialized]
-      57 |                         "failed to set value %d on gpio-%d", val, pin);
-         |                                                              ^~~
-   include/linux/dev_printk.h:154:65: note: expanded from macro 'dev_err'
-     154 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                                        ^~~~~~~~~~~
-   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                                     ^~~~~~~~~~~
-   drivers/gpio/gpio-max7360.c:42:18: note: initialize the variable 'val' to silence this warning
-      42 |         unsigned int val;
-         |                         ^
-         |                          = 0
->> drivers/gpio/gpio-max7360.c:370:32: warning: cast to smaller integer type 'int' from 'const void *' [-Wvoid-pointer-to-int-cast]
-     370 |         max7360_gpio->gpio_function = (int)device_get_match_data(&pdev->dev);
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   2 warnings generated.
-
-
-vim +370 drivers/gpio/gpio-max7360.c
-
-   333	
-   334	static int max7360_gpio_probe(struct platform_device *pdev)
-   335	{
-   336		struct max7360_gpio *max7360_gpio;
-   337		unsigned int ngpios;
-   338		unsigned int outconf;
-   339		struct gpio_irq_chip *girq;
-   340		unsigned long flags;
-   341		int irq;
-   342		int ret;
-   343	
-   344		if (!pdev->dev.parent) {
-   345			dev_err(&pdev->dev, "no parent device\n");
-   346			return -ENODEV;
-   347		}
-   348	
-   349		max7360_gpio = devm_kzalloc(&pdev->dev, sizeof(struct max7360_gpio),
-   350					    GFP_KERNEL);
-   351		if (!max7360_gpio)
-   352			return -ENOMEM;
-   353	
-   354		if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
-   355			dev_err(&pdev->dev, "Missing ngpios OF property\n");
-   356			return -ENODEV;
-   357		}
-   358	
-   359		max7360_gpio->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-   360		if (!max7360_gpio->regmap) {
-   361			dev_err(&pdev->dev, "could not get parent regmap\n");
-   362			return -ENODEV;
-   363		}
-   364	
-   365		max7360_gpio->dev = &pdev->dev;
-   366		max7360_gpio->chip = max7360_gpio_chip;
-   367		max7360_gpio->chip.ngpio = ngpios;
-   368		max7360_gpio->chip.parent = &pdev->dev;
-   369		max7360_gpio->chip.base = -1;
- > 370		max7360_gpio->gpio_function = (int)device_get_match_data(&pdev->dev);
-   371	
-   372		dev_dbg(&pdev->dev, "gpio count: %d\n", max7360_gpio->chip.ngpio);
-   373	
-   374		if (max7360_gpio->gpio_function == MAX7360_GPIO_PORT) {
-   375			/* Port GPIOs: set output mode configuration (constant-current
-   376			 * or not).
-   377			 * This property is optional.
-   378			 */
-   379			outconf = 0;
-   380			ret = of_property_read_u32(pdev->dev.of_node,
-   381						   "constant-current-disable", &outconf);
-   382			if (ret && (ret != -EINVAL)) {
-   383				dev_err(&pdev->dev,
-   384					"Failed to read constant-current-disable OF property\n");
-   385				return -ENODEV;
-   386			}
-   387	
-   388		    regmap_write(max7360_gpio->regmap, MAX7360_REG_GPIOOUTM, outconf);
-   389		}
-   390	
-   391		if (max7360_gpio->gpio_function == MAX7360_GPIO_PORT &&
-   392		    of_property_read_bool(pdev->dev.of_node, "interrupt-controller")) {
-   393			/* Port GPIOs: declare IRQ chip, if configuration was provided.
-   394			 */
-   395			irq = platform_get_irq(pdev, 0);
-   396			if (irq < 0)
-   397				return dev_err_probe(&pdev->dev, irq,
-   398						     "Failed to get IRQ");
-   399	
-   400			flags = IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
-   401			ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-   402							max7360_gpio_irq, flags,
-   403							"max7360-gpio", max7360_gpio);
-   404			if (ret)
-   405				return dev_err_probe(&pdev->dev, ret,
-   406						     "Failed to register interrupt: %d\n",
-   407						     ret);
-   408	
-   409			girq = &max7360_gpio->chip.irq;
-   410			gpio_irq_chip_set_chip(girq, &max7360_gpio_irqchip);
-   411			girq->parent_handler = NULL;
-   412			girq->num_parents = 0;
-   413			girq->parents = NULL;
-   414			girq->threaded = true;
-   415			girq->default_type = IRQ_TYPE_NONE;
-   416			girq->handler = handle_simple_irq;
-   417		}
-   418	
-   419		ret = devm_gpiochip_add_data(&pdev->dev, &max7360_gpio->chip, max7360_gpio);
-   420		if (ret) {
-   421			dev_err(&pdev->dev, "unable to add gpiochip: %d\n", ret);
-   422			return ret;
-   423		}
-   424	
-   425		return 0;
-   426	}
-   427	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards
+Bartosz
 
