@@ -1,85 +1,84 @@
-Return-Path: <linux-gpio+bounces-14073-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14074-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 547149F9297
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 13:54:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 305249F929A
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 13:54:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7770416D822
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 12:54:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 426AE1894992
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 12:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B1C215706;
-	Fri, 20 Dec 2024 12:53:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F6D1C549C;
+	Fri, 20 Dec 2024 12:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NmYnYINp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Whu4t/Gi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C076F2156EF
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 12:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6861D7D07D
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 12:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734699235; cv=none; b=mr2wxmQ/H3YuT2yFbRjscqBw4L7wr1hdhIBzz2qxIPwGKKiZL4WYmQ0fY/L5pQZ+22nlpyHXS+r+1ji/y583aKIuauiUGcfOTFZeDSWhgG8KeJmqur8YUsRKsq7eSLsL+uwfArbj9RSrVEb1BUILQ69SYty5vjBbvBgwvh+AzFs=
+	t=1734699278; cv=none; b=d8v7ZmVkcZGCanl8L/1CZbfvDEe+BqxlYdV3RxyOff9sOizKRlr7t1Zwa6GQ2RXV/WOCEFgh2hvcYmYIvVLDy3FPGfivT/eNyKouAf3b9AlA2Py2lVLO3mIQ61ZKW1l2D614ypF9mEwmwGv0WWN8YMz1ZGmcFDSYtCUFRa7UCJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734699235; c=relaxed/simple;
-	bh=2ijew9uOxRboV6Jm25/29TJF8PLsjBkkwmLMTxyZQXw=;
+	s=arc-20240116; t=1734699278; c=relaxed/simple;
+	bh=1j+mQD0oE4PTClsZ4uL4jDtvx982MniklSfBe6bzTvw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NhpIuKgFcbxKY4zrONSZtcqqwj10xgkm983C14crnfUoDQ8T4E8qM8fr5SQ4e3EhepYwUOcvc2PJVStf/P42fJSR4/cG9WPRlBt9oil1gu3ha1y7jSRlncw+4jZ7yTVCsAAUIEfjEVTWDy++hUfF3INTUhMatWDQChn4/8RxmK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NmYnYINp; arc=none smtp.client-ip=209.85.167.51
+	 To:Cc:Content-Type; b=dYRMDd0P/rCnpbgcMq64Lpv6R5w5sTSiVVRYXTVjIe0SlLqliPoO0oVsp2j9SoBDoVm7VMcabr/OG8xhxtjUewcITGzRDrDVawaWelZrQCXNnTBCVsdiDpDPwjAvdLzVEQNVAleEWFl0bF0Wsu/NCBfcrU18XN8hgl1DSdJjjUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Whu4t/Gi; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5401bd6ccadso1883581e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 04:53:53 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53ffaaeeb76so1946881e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 04:54:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734699232; x=1735304032; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1734699275; x=1735304075; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2ijew9uOxRboV6Jm25/29TJF8PLsjBkkwmLMTxyZQXw=;
-        b=NmYnYINpD8+HGNtgWcMAgPUW8OnIiInTCDMaPi+Ekpy76lK9QJIR6FC7KNoLK+Cjl0
-         YGxPnlNE7lzgGFaK6QwqUdrOj5JiZ7yF2hYqwYUSJfgSA/cWztLllE/Khn+gM8qxyEM1
-         cY8CJTiPrdK11/AzuN0u5ERvn/eIxzI099FkDpiQ3Xom1JDsvYOPPObXDxi906ZL/XcJ
-         wAs3kTZT0L/V6SPi146uV+VYirx8TcipsPVKvXbk4OsIuaF5jblm7Ep51HScugvBGuvL
-         XJk78dJyLcantvu3aWY/D0/+/f9FD01TQla6cw/3OfSUK89VvYRv9fmb1l5nRzAC36HH
-         yhzw==
+        bh=1j+mQD0oE4PTClsZ4uL4jDtvx982MniklSfBe6bzTvw=;
+        b=Whu4t/GismVeO5Uz3OAiuPaalQHa4G1qtpeA4CETuwQoHghUF8TF0iFCIyUd/caM/q
+         tosJXTIgRz6TUNuELAUugI6zF80UsJEGKTAK8KHKHzYOYI4U3XazU2rzQwMm39jxx4RK
+         /6r3BhkHTYBQPde4aWtQO0zg5IziK62naF1LEiC2QcDgx+Ps77y6b8JsR8U/EKDLnFGL
+         s9Ex++CYICpKVzn3HlHWKQcGD+J6H4Ni7iqInrhUfs+hnxKroeUEC3zRcnww6bjluKFG
+         SxFmfgp7WNTsEmeoD8Wu8PqR7TCMsHkZhNWkag93IPyhup2AGEDctv1avJgbgskE2AXW
+         GC/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734699232; x=1735304032;
+        d=1e100.net; s=20230601; t=1734699275; x=1735304075;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2ijew9uOxRboV6Jm25/29TJF8PLsjBkkwmLMTxyZQXw=;
-        b=Q+Qm8awWi9SIx2pfgko6spVABYFDGoRzAZoANWlE/FYDNDFE2WOULGIg2J8gISZTfM
-         qct8LNX68qcx2rVD4bBP8jAB2SibB1u2ye724nuKMui93DXDIyFkOEQh8sGyU60wUJyz
-         D4Wh0j6259XAMR0Ebr1mzjFCl0dN9/KxxgJcgluF5ucDPxk10sLdlhRSCb5941AT7o3I
-         rteY1xgmomTrmocckK2YcLOQUd/4zScNwUput5ZCbPvGgCoy7Sw7spjEvNY05/htLVmF
-         ndZqwYg+LTaTF+dsWc/vV2VptRKXLA9L5ApUyqeWlzYhcQG1caas+ME0XsBhFXhV6QdK
-         znKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpQ+I2kmsb6nuhonr/JkBOZtcgA7R1rKKK/nTQKHvYFkFJ+8ER+P7Ap3VotH+nrfRC8uF05hwPcgP0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY4aZ++k6OQ18RmoM7cM12aJqWHF85toJnFKKOhKYodGKWFjfi
-	VaIfv/6Xlccb0C8ru+CERURNpapcEOI9t92pB+CJcr4MjEXmCIGJ8Dq9PmUD3aM1/lMadyPQeRA
-	NH60Qxj+xj/f31xCdByiqGXRIl5G9jIyFhJCnwA==
-X-Gm-Gg: ASbGncsapHLscgQyQqXwJUnIUzCSstCNb16ElWQNvK9NXqnBEj9NEOlCEHBqSHSzfCM
-	ZmGXvFj0XOKBN7Ak8S1InZDYswUlFbI47zAx2RQ==
-X-Google-Smtp-Source: AGHT+IEZWMRifc4FR4axtdKW0fCIhp1hzST627Qn6Trhpgo8gXhWYqagPER6U85jnTIy5FPQCYO/byX5x52wVAVBul4=
-X-Received: by 2002:a05:6512:3a90:b0:542:249c:2156 with SMTP id
- 2adb3069b0e04-54229530077mr854248e87.15.1734699231985; Fri, 20 Dec 2024
- 04:53:51 -0800 (PST)
+        bh=1j+mQD0oE4PTClsZ4uL4jDtvx982MniklSfBe6bzTvw=;
+        b=ee0kYIz2ISpMIt83z147kzcQBC40e1EHPKZRqG1vScJe8ML9/9iCe35t0538+MBAC0
+         zxRnJtnzOtrsbTVsaUplRDLw/z7PIRx3ZdHVW6RaT2SE+Lpcy75/74FXekBXpSMuekJB
+         lRhJjyyp0rO61krtyknVqNNRxcAped1gBGf4EKltL3r6A1HzUtfVou6n/Yohc36UjFSm
+         l7eSZ1pf4e1S+/cakfgyHPjArJgtMb2O5Wg1thiHli5I+mPASEg6+4pyV2wwJmue5fmx
+         cwIo/C2q/lBG/Qe79KFmMuvH3NCPmSuFssYwynZ7ZuVgAbAuwdQWVwwYNV8dPn3xw9J+
+         oIXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhoCUKcvMnVPWUWnU1ldSfq8ehVbF2DySNs4B3TQ4mP9D9YnP/dydI+rsOq3oRwIQHFTwQ15HBlb7E@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJQ7uCWJWV5ovzkaCSRUv0lbJLvlrXq6ozIi7S5xizNaPW2EuB
+	sw4hblmv0vGxq7S1+ekdBHpUrgYHXrnfHplhLQ8To1h9f5ivAD25DiAVDC3MMXe/luIzfciPbHf
+	FUycY+rP7g2uxnY/e+o1R70QBvizX2jK/e0ND/A==
+X-Gm-Gg: ASbGnct1Wc2brNYiGVSpEEEG20SL+HYMRS0MbeY1KDn2gxXt4/q53j4hKloHjfJl30V
+	iPdSMPXX2gXpH7+kvmKmlQ5Ivn7uWvoDRYlh+VQ==
+X-Google-Smtp-Source: AGHT+IFcH1xZcHk2FUpRWRSBLq6642KxnjygfGN7pXEuwwjA8mt67Vsha7WUfgHcl5M9YTiR9bOF59GTZCKBfngbwlk=
+X-Received: by 2002:ac2:4e16:0:b0:542:2a81:a75b with SMTP id
+ 2adb3069b0e04-5422a81a8e0mr725318e87.8.1734699274554; Fri, 20 Dec 2024
+ 04:54:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241213-gpio74-v1-0-fa2c089caf41@posteo.net> <20241213-gpio74-v1-1-fa2c089caf41@posteo.net>
-In-Reply-To: <20241213-gpio74-v1-1-fa2c089caf41@posteo.net>
+References: <20241213-gpio74-v1-0-fa2c089caf41@posteo.net> <20241213-gpio74-v1-3-fa2c089caf41@posteo.net>
+In-Reply-To: <20241213-gpio74-v1-3-fa2c089caf41@posteo.net>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 20 Dec 2024 13:53:41 +0100
-Message-ID: <CACRpkdZVxVxYReHpze7ZZmsdXbMr0s0Rhjc1Ry6CkQpB62n6bg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: fairchild,74hc595: Add On Semi
- MC74HC595A compat
+Date: Fri, 20 Dec 2024 13:54:22 +0100
+Message-ID: <CACRpkdaW-4VfbmEOkCbZdrDH621Cj8LfoDQ46U58WPRfSQxkMA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: 74x164: Add On Semi MC74HC595A compat
 To: j.ne@posteo.net
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -93,9 +92,8 @@ On Fri, Dec 13, 2024 at 6:32=E2=80=AFPM J. Neusch=C3=A4fer via B4 Relay
 
 > From: "J. Neusch=C3=A4fer" <j.ne@posteo.net>
 >
-> The On Semi MC74HC595A/MC74HCT595A is another part that is compatible wit=
-h
-> the Fairchild MM74HC595. This patch adds it to the DT binding.
+> The On Semi MC74HC595A/MC74HCT595A is another part that is compatible
+> with the Fairchild MM74HC595. This patch adds it to the driver.
 >
 > Signed-off-by: J. Neusch=C3=A4fer <j.ne@posteo.net>
 
