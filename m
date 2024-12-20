@@ -1,78 +1,80 @@
-Return-Path: <linux-gpio+bounces-14088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14089-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BA869F96CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 17:46:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C88F9F96CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 17:46:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFD63188772A
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 16:46:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1ABC718870DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 16:46:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BA2219A63;
-	Fri, 20 Dec 2024 16:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3AB21A425;
+	Fri, 20 Dec 2024 16:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vVIdOUOA"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a57QkQw+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A34F2594A8
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 16:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1A21C3040
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 16:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734713194; cv=none; b=FDHf4ixSY/2r0XrqiWHuaTe6TJByjBViVaoDAczqEo8zIj9Y1D4phPK8q1mMUR6r9Zyullpufio4tRuLkg7TgFLt0SOsrsyobGqRDlDQl1EamBCnrdDFlx7kElUNJ2oSTHbLoZDcawUqGL9Vk9OwgBHQujNH3s8qRCGst25OrYk=
+	t=1734713195; cv=none; b=YoYBUamLrY98kNxHFCFPma8uhRuhXuRoFMF7VfRrGO4dp1jnUsiC0vVSpac1ChIWKgrWvRiGHVCGI23dBSAUP73UZ4ofV69eDpK8EdvIWlZ18ydsKxEUZARaw5OKw6ty/mhCeiM6ZoU2DmqaFKbpTaebMVpEYc30K6Kb9fuYcLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734713194; c=relaxed/simple;
-	bh=ZDAaEMBchWXRD/p3Eu8/qZ4EJnFus39hCmfjRd9Xq0c=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Qd9Cs31nfTAI95T4xqwVByxv/h3gwveUiWHJUNxgy5nGOiabqcaJvkbkbqojo5oWFDeZpUiTVC9SdRdjms1jLGX+K4aZCXyw5euLjKw0G+99PTQAju2D/DFqtASUQJIgw+Af5XiG+dpaWg9sjjThChhshvveoFxIb/t5tOmbepw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vVIdOUOA; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1734713195; c=relaxed/simple;
+	bh=0kbUWR2z9wlXm8RVPEQnbnh1RvUEhAz6KQpoEXpU1o0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=X+/r4wdpgXo7+N7b9XO/G8SjcqTxRkSdyY41dL40xIBs4IzDZk4+6stpQOgdCBIyDxiS27Jy6Amc3sUtwE56gAILgLlabmOzayz8qDgrQANwwNujST/Vce7dK/0n3ib5BqYiOKzJmPcCBvHmi3r8TLOkcPPraix2yFoMiFpdZAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a57QkQw+; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361815b96cso14917365e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 08:46:31 -0800 (PST)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436345cc17bso15955765e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2024 08:46:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1734713190; x=1735317990; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9sZm88vCeDgWn5ferkc8FgvS8HVitchlk0jTBilf7BM=;
-        b=vVIdOUOA7ulDS4XtcxaS3zNKYpZP9naBwhBpmUYlqRWYRzCdVx6GXbXukbofxhKgOb
-         XrXeNPPuG/pvREDKM0pcZA9ByYKnVvQvutrrPj45Oia4Ai6vhtSYIAO5PHAwy2LtMjb6
-         aH26yBYtcALH3rnfTnNDh/KwvggF55PRam0kFUZShIrsm6rbhVab2JWMk+vo8ZHuVIuU
-         UZ4VFay0nsYW/nyoKNpuPRefXPdlnGl+T3PC+jZCk/bD2wXOxi7HsXCKm7LpBxRpm32G
-         cl+D8jiGxqyiq9JMKUYx53lzTNuXscp+qJJLa2jAtYbMdz0DBB/rLALeQQyzvyXDF/fG
-         3tNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734713190; x=1735317990;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1734713191; x=1735317991; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9sZm88vCeDgWn5ferkc8FgvS8HVitchlk0jTBilf7BM=;
-        b=Xs27gqqfoMIfH0BKp/GwbnPmT3FuCVrayD7oC8r/s5GtJsAeYj8nLCVPylpnI5h0B6
-         Uz7s4G172J9cBGnXScl3lrEuOjc/yi3rkFMmIm+YddF4R02Jy0P0ttMfFb6LM8nkUr+D
-         pWKSbd6zhiW5J0DhPc5pfhW+ztukaKzGrqxPK+2Ln+w1mWvA0DnMJrLQPNy9kxjSRRvJ
-         z8FUv+Z6cZQWMDrZ/12yCO/7HF09ppZUHMqwqz5nuBeQd5wBkLQ8jh0zQGpKrMJ8rT4k
-         5mo4DOuwdMQ8ucPI7dUV6kkoEz/ngkUAjoBAxAXPbwkVQCQ27XqTM4ngr5I01CsaFJ68
-         QD/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVhj5534Goo6RXx8wi9BctjiVmwmSKPSgdOIa9gH2/LHYHGddY+b3MSq79+YYqRPYdJNX8qkeSuVZAY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9ydOU4njtsMm6zoDTAvMYD7iVvyb8p4WbptM2ODDEc9eFKlHy
-	gHY2IrIvat1BOJ+fxERQZR+0aOFoUU5WUbQ2oSeKPOBUJ4pN9ez4wOe8JVFD1O8=
-X-Gm-Gg: ASbGncuaORDQNAQh9K7nttvOkkU9Zuqzlt+XgQURmc3y1OGVLDVi7JETMB5YektKoJa
-	wqEzN/xww/GOnOheAAPX1kB1Ku8iYCOC40zpraJFIAF7vWwAGL8X9ywmNfkNOBxiUVupXaHGMdZ
-	evPgRIkMejZgWdD0tQFWYEGFmBw/B4k21eTeBwBX0U/1chdzYvyh5U2h2jIabVFyo0rNqQCCd/V
-	DHAjE5vgaXi34CnqkzPSEaXqDTj2VHoIuwUY94mfHtGlPXZYA==
-X-Google-Smtp-Source: AGHT+IFG14KiqeejJafjly+hS0v7tyWS8Ro5IDSIo2tBeor7n07nnfeObTOnPgtvWnwD/gl3fysDOA==
-X-Received: by 2002:a5d:584e:0:b0:385:ee59:44f1 with SMTP id ffacd0b85a97d-38a221fad17mr3929059f8f.20.1734713190255;
-        Fri, 20 Dec 2024 08:46:30 -0800 (PST)
+        bh=knd5f/sdD9mpQfJK+Hl87zARM4lUQB8IaXLK2CKxR2Y=;
+        b=a57QkQw+FJkTUrfQ33CtPx1L0DfqF6MEP6rqSJAWGnSTNvDA+f8ILy2megPUfu0a1v
+         /6z+t2g1VyErtNAWLAO/S9ahGQ2++eVUM8/06is0PJ4vmhA0l3Ltc9a9/AQXAexPk4rE
+         /uhwE9bxZcUOgAYui13MH68YMPAJ4iCL+MCQI9YneXXnWMt/QnCEcfLrovphbinbgt5X
+         QyowJrbWfI6jHk0rY/E2QP1gI/wFDJfHn4ofhnjylCkb7wG0H73EhjIlC9yEYuAdmH+J
+         m4BKghrt1f6mgbiJxFhqxU7e0XvJ/EOHGWyT/KfHALTjxHw6l3fQE3pzavpr/L7MVr9i
+         awCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734713191; x=1735317991;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=knd5f/sdD9mpQfJK+Hl87zARM4lUQB8IaXLK2CKxR2Y=;
+        b=belmGr6VMX81Bl120UWpKb9lep3o8L5V+2laHTfv4tM0PLDaNKSFi+K8tnoP+5EsKd
+         pAbhWTxSgeNIBZ/vZjngKPG4mGz2UtLZASCUYGvFFYhdPpkfKaJoRI5wJYcJHjq6y0nu
+         OrrG7BJDTY9ej1x5a9EoJ1qPAPuws4cKN8YfUy9iVel5OXBkINsFurc6oN5/cIJLNxK+
+         V3ZkwUm/T5l8BfssM4Tssk4RtnF0tB0oI59rh4c+wVmaEM7bWGtXXq2ZmFgGofgCBF5b
+         6/mvrObJQXLQva2JQi/kvXKBr9QdttYQ9vsv6HLhsOwfrWwkt+ySgW1cNVE+jG5IgWn6
+         J58g==
+X-Forwarded-Encrypted: i=1; AJvYcCWz4bbb9gNrNowZ27s2VOU/lgeItQdYKYr0QEn+XexAk/qsF8an9xVAYDKS8GcKor8c8X++IkyRwGtm@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLGLq7c/xq0a+JLIetYRHW4tpLHz7AmE/oWEDDb28XDfMdh6tY
+	fkEjHh4s1BnJdMN2rUgFhEDTPUh4jrTmd6k1rU0lNMN/fY51lY4+BC3aBXiGi3U=
+X-Gm-Gg: ASbGncuvq7ctOIF0Y/LyYtKmgNuteQIMbaPzG+Ky2T/9YYkM4PmotaxbiDjCcWRRYZx
+	HhRUQECpbAyzvi5xbHpxFZaEafiZz7BbvfBHc7ze8epRZaTk5hPAc2rytXNe86LZs1J2/o0w3iZ
+	vYrmEAjXRMivK/egaGKe4TdURVZ9RPXjmaCekqvQpDBvNlrA+VUFsVdakYWO5+qs5236ASO0uSB
+	k1mbdukksgJrE3SIKWWJK+hcsjeRSDxG57PrOoCC4oPXbitRw==
+X-Google-Smtp-Source: AGHT+IG3xHO74B3nZ8rGVQ2YDyZU+rCQOrkLx6zhnN5kTGWNOiZO9R99Th13s/Zl6KrzvO894FFN7g==
+X-Received: by 2002:a5d:5f4f:0:b0:382:6f3:a20f with SMTP id ffacd0b85a97d-38a221f11ecmr3884548f8f.11.1734713191367;
+        Fri, 20 Dec 2024 08:46:31 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:72db:1014:577a:9e6b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43661200abesm50165225e9.18.2024.12.20.08.46.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43661200abesm50165225e9.18.2024.12.20.08.46.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 08:46:29 -0800 (PST)
+        Fri, 20 Dec 2024 08:46:30 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH libgpiod 0/5] doc: improvements for ReadTheDocs
-Date: Fri, 20 Dec 2024 17:46:21 +0100
-Message-Id: <20241220-improve-docs-v1-0-799b86991dec@linaro.org>
+Date: Fri, 20 Dec 2024 17:46:22 +0100
+Subject: [PATCH libgpiod 1/5] bindings: cxx: doc: remove the gpiod_cxx
+ doxygen group
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -81,9 +83,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAF2fZWcC/x3MTQqAIBBA4avIrBtIC/u5SrQonWqgVBQkiO6et
- PwW7z2QKDIlGMUDkTIn9q5AVgLMsbidkG0xqFq1UkmNfIXoM6H1JqEcyDZa992gGyhJiLTx/e8
- mOHndA3sL8/t+liDpq2gAAAA=
+Message-Id: <20241220-improve-docs-v1-1-799b86991dec@linaro.org>
+References: <20241220-improve-docs-v1-0-799b86991dec@linaro.org>
+In-Reply-To: <20241220-improve-docs-v1-0-799b86991dec@linaro.org>
 To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
  Linus Walleij <linus.walleij@linaro.org>, 
  Erik Schilling <erik.schilling@linaro.org>, 
@@ -91,140 +93,478 @@ To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6204;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11272;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ZDAaEMBchWXRD/p3Eu8/qZ4EJnFus39hCmfjRd9Xq0c=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnZZ9ktju3wmaEynb36LJ/ust4zCvbHlQ0xHUn3
- TF2iwNovSWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ2WfZAAKCRARpy6gFHHX
- cmJnD/oDpil0nA1/zTUAatjmgtDUiyiYWflP0iBWZyDtRppT3UUHBBNNFQnDCpeSTtWpf49/K3t
- eVRzkUm8hQtpfPPYKchqxfXrHBv4Y4rIh9GodhX+v2FHCXQQQk5a9nT99oBSFhgnyTa4OAahsNF
- 7RQGXIHx9ixsK92nsjpRPobTxzH+yIgiqFn7DKB66hJth4f4hvxPUR7J6/qOduepY99WdEo9X3B
- 6HEFyI9wu4S85ZZ97b1PJZAoDE4jDadjdw3ZNqtaNIc0pzb6C9LTv5rLr4X3PX4yJS9hUFF3wBc
- 9w6jc5zUbDboScVAwsWvSEYiMsvUf4CMQiClVhhUxIWfg5pa5aL4Nj0ajGozDKwW3L83EBleFyt
- krOIuEgASGxvXLVKTc52kROi8+mnxyQMhA/OgCPYTSbVtzGyynuLluxDNmEdi2DltdNmsOOy0ji
- +x6FyY9hMFVaisR9EXSgQPzQG4p9TNoWy8C3KmltVQo785Imcs3U/7voH1xc8tgVXlSMdfANcYV
- YwAMpKoFpvsN6Ir5szmdIEQun6WMJ5N8e2rroUVr8c0ZWf0VnzhI8MVLGio1DO13mpSfpRvPr77
- SHJaESTfpmaACTHNBnQJafzGX6cpYTG920M9cfgFKciHgK5mfRlahqEbp+DDq9j0NFiZSTxPTfU
- mIf33gRvrChuDcg==
+ bh=0srOWbscmu/4FhrutKp8ov6udNTa0kboULA18SAHm8w=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnZZ9kegblRAULDkTkIv7b4/ujkkbid78aM0Xer
+ SCXQWOiMDGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ2WfZAAKCRARpy6gFHHX
+ cieqD/4tEBwQUOzjblUe7hox+dMregM5K57zKZP+bFSkA8Tea4Gvji4i+JotSsxPLHZ0KnkG2NF
+ hlAVYouX0Wd1hTyRF1h4YC3hoZsUr3IQZQLD4rfMcFenxs0P3E4bB2+a1APkx5VIQVuZSPcHopj
+ xSLSrII+hiwBlOLSSlMuMyDmfuE1L/ulws+ze+K63wAeAWDsXkp28/kerRkuzvqyQuLDjRMXfH3
+ KWWySrJjIOqgjQqhJQcI2L1nfmin7IGBc4aXhJJ/c53j5qe0o/H+jdvJGd2i5RGYnb/A/LPFDaz
+ CBtJ/wYO+e5VSjbhm626r0M6g82OD/yl2/Ev+F51u0D7xGgcwUXpIO4w8y4HW/uRa6DTMMZBlvn
+ aaxQtqFzg6M/vo6wdCfm+fjk5wCou3qHxNunNHmnzYPd1AK6wz6iDJ9RVcThUX2iS5G+zjeBCUy
+ gTyHtlKux1AX8Y988kUBu1iUBly4fJGBPP7X6kLGhXSQB6YJ4t4WRlmGCtxMiOFnhA4TtBjU3pp
+ k51V7BFBCk/Bnls6CFJlPC8JYTpLR0fuEEKQDLRs+T0QtWuYRo17cjmfHFQkehfMbOvgterTCXd
+ uNWZS6StJFdyhoX+BPAYd7KLiFXGvwPT7Uo/5GoS0n+RMgkjc28suopdqzTz+1rAEX/+Q0ezbTW
+ eAuC1oBxJL6hVPQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-One thing that this project is missing is nicely looking, accessible and
-automatically updated documentation. I'd like to finally address it and
-replace our static doxygen pages with sphinx docs.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I spent some time playing with sphinx, doxygen, breathe and exhale. It
-turned out that exhale doesn't support doxygen groups and I really want
-to have them for the core C API to avoid having to manually assign each
-function to a specific module. That means we must use breathe on its own
-to integrate our existing doxygen docs with .rst.
+Groups make sense for the C API as they allow us to nicely order
+interfaces manipulating a given structure thematically but for C++ they
+make less sense as methods are already typically part of a class.
+Additionally for global functions, they seem to make it difficult for
+breathe to look up the correct symbols.
 
-First four patches in this series address some issues with C++ and
-python docs that became apparent when I started integrating sphinx.
-
-The final patch contains all the stuff sphinx needs to build us a nice
-website. If the RTD theme is available, then we're using it, otherwise
-let's fall back to the default theme.
-
-Eventually I'd like to extend the documentation with examples,
-descriptions of gpio-tools and DBus API etc. but first let's agree this
-is the way forward. For now, the docs describe libgpiod, libgpiodcxx and
-python APIs.
-
-Once this is merged, the idea is to publish it on RTD for the master
-branch and backport these changes to the v2.2.x branch so that the
-documentation for the most recent release can become available online
-too.
+Remove the gpiod_cxx group from Doxygen comments.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (5):
-      bindings: cxx: doc: remove the gpiod_cxx doxygen group
-      bindings: python: doc: update the docstring for gpiod.request_lines()
-      bindings: python: doc: make code examples appear as such in sphinx
-      bindings: python: doc: describe undocumented members
-      doc: use sphinx in conjunction with doxygen
+ bindings/cxx/gpiod.hpp                      | 6 ------
+ bindings/cxx/gpiodcxx/chip-info.hpp         | 9 ---------
+ bindings/cxx/gpiodcxx/chip.hpp              | 9 ---------
+ bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 9 ---------
+ bindings/cxx/gpiodcxx/edge-event.hpp        | 9 ---------
+ bindings/cxx/gpiodcxx/exception.hpp         | 9 ---------
+ bindings/cxx/gpiodcxx/info-event.hpp        | 9 ---------
+ bindings/cxx/gpiodcxx/line-config.hpp       | 9 ---------
+ bindings/cxx/gpiodcxx/line-info.hpp         | 9 ---------
+ bindings/cxx/gpiodcxx/line-request.hpp      | 9 ---------
+ bindings/cxx/gpiodcxx/line-settings.hpp     | 9 ---------
+ bindings/cxx/gpiodcxx/line.hpp              | 9 ---------
+ bindings/cxx/gpiodcxx/misc.hpp              | 9 ---------
+ bindings/cxx/gpiodcxx/request-builder.hpp   | 9 ---------
+ bindings/cxx/gpiodcxx/request-config.hpp    | 9 ---------
+ bindings/cxx/gpiodcxx/timestamp.hpp         | 9 ---------
+ 16 files changed, 141 deletions(-)
 
- .gitignore                                  |   2 -
- Doxyfile.in                                 | 105 ----------------------------
- Makefile.am                                 |  54 ++++++++++++--
- README                                      |  12 ++--
- bindings/cxx/gpiod.hpp                      |   6 --
- bindings/cxx/gpiodcxx/chip-info.hpp         |   9 ---
- bindings/cxx/gpiodcxx/chip.hpp              |   9 ---
- bindings/cxx/gpiodcxx/edge-event-buffer.hpp |   9 ---
- bindings/cxx/gpiodcxx/edge-event.hpp        |   9 ---
- bindings/cxx/gpiodcxx/exception.hpp         |   9 ---
- bindings/cxx/gpiodcxx/info-event.hpp        |   9 ---
- bindings/cxx/gpiodcxx/line-config.hpp       |   9 ---
- bindings/cxx/gpiodcxx/line-info.hpp         |   9 ---
- bindings/cxx/gpiodcxx/line-request.hpp      |   9 ---
- bindings/cxx/gpiodcxx/line-settings.hpp     |   9 ---
- bindings/cxx/gpiodcxx/line.hpp              |   9 ---
- bindings/cxx/gpiodcxx/misc.hpp              |   9 ---
- bindings/cxx/gpiodcxx/request-builder.hpp   |   9 ---
- bindings/cxx/gpiodcxx/request-config.hpp    |   9 ---
- bindings/cxx/gpiodcxx/timestamp.hpp         |   9 ---
- bindings/python/gpiod/__init__.py           |  15 +++-
- bindings/python/gpiod/chip.py               |   4 +-
- bindings/python/gpiod/chip_info.py          |   5 ++
- bindings/python/gpiod/edge_event.py         |   9 +++
- bindings/python/gpiod/info_event.py         |   8 +++
- bindings/python/gpiod/line.py               |  20 ++++++
- bindings/python/gpiod/line_info.py          |  12 ++++
- bindings/python/gpiod/line_settings.py      |   8 +++
- configure.ac                                |   8 ++-
- doc/.gitignore                              |   5 ++
- doc/Doxyfile                                |  12 ++++
- doc/conf.py                                 |  63 +++++++++++++++++
- doc/core_api.rst                            |  58 +++++++++++++++
- doc/core_chip_info.rst                      |  11 +++
- doc/core_chips.rst                          |  11 +++
- doc/core_edge_event.rst                     |  11 +++
- doc/core_line_config.rst                    |  11 +++
- doc/core_line_defs.rst                      |  11 +++
- doc/core_line_info.rst                      |  11 +++
- doc/core_line_request.rst                   |  11 +++
- doc/core_line_settings.rst                  |  11 +++
- doc/core_line_watch.rst                     |  11 +++
- doc/core_misc.rst                           |  11 +++
- doc/core_request_config.rst                 |  11 +++
- doc/cpp_api.rst                             |  33 +++++++++
- doc/cpp_chip.rst                            |  12 ++++
- doc/cpp_chip_info.rst                       |  12 ++++
- doc/cpp_edge_event.rst                      |  12 ++++
- doc/cpp_edge_event_buffer.rst               |  12 ++++
- doc/cpp_exceptions.rst                      |  18 +++++
- doc/cpp_info_event.rst                      |  12 ++++
- doc/cpp_line.rst                            |  24 +++++++
- doc/cpp_line_config.rst                     |  12 ++++
- doc/cpp_line_info.rst                       |  12 ++++
- doc/cpp_line_request.rst                    |  15 ++++
- doc/cpp_line_settings.rst                   |  12 ++++
- doc/cpp_misc.rst                            |  16 +++++
- doc/cpp_request_config.rst                  |  12 ++++
- doc/index.rst                               |  28 ++++++++
- doc/python_api.rst                          |  31 ++++++++
- doc/python_chip.rst                         |  12 ++++
- doc/python_chip_info.rst                    |  12 ++++
- doc/python_edge_event.rst                   |  12 ++++
- doc/python_exceptions.rst                   |  17 +++++
- doc/python_info_event.rst                   |  12 ++++
- doc/python_line.rst                         |  27 +++++++
- doc/python_line_info.rst                    |  12 ++++
- doc/python_line_request.rst                 |  12 ++++
- doc/python_line_settings.rst                |  12 ++++
- doc/python_misc.rst                         |  13 ++++
- include/gpiod.h                             |  36 ----------
- sphinx/conf.py                              |  68 ------------------
- sphinx/contents.rst                         |  24 -------
- 73 files changed, 809 insertions(+), 395 deletions(-)
----
-base-commit: 38adbae195555fae2b9d9e2a37c9507af1114757
-change-id: 20241216-improve-docs-19ed36687963
+diff --git a/bindings/cxx/gpiod.hpp b/bindings/cxx/gpiod.hpp
+index 91e41a5..606994d 100644
+--- a/bindings/cxx/gpiod.hpp
++++ b/bindings/cxx/gpiod.hpp
+@@ -8,12 +8,6 @@
+ #ifndef __LIBGPIOD_GPIOD_CXX_HPP__
+ #define __LIBGPIOD_GPIOD_CXX_HPP__
+ 
+-/**
+- * @defgroup gpiod_cxx C++ bindings
+- *
+- * C++ bindings for libgpiod.
+- */
+-
+ /**
+  * @cond
+  */
+diff --git a/bindings/cxx/gpiodcxx/chip-info.hpp b/bindings/cxx/gpiodcxx/chip-info.hpp
+index e740e94..61c0b78 100644
+--- a/bindings/cxx/gpiodcxx/chip-info.hpp
++++ b/bindings/cxx/gpiodcxx/chip-info.hpp
+@@ -19,11 +19,6 @@ namespace gpiod {
+ 
+ class chip;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Represents an immutable snapshot of GPIO chip information.
+  */
+@@ -96,10 +91,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const chip_info& chip);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_CHIP_INFO_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/chip.hpp b/bindings/cxx/gpiodcxx/chip.hpp
+index 4d67476..8a1389e 100644
+--- a/bindings/cxx/gpiodcxx/chip.hpp
++++ b/bindings/cxx/gpiodcxx/chip.hpp
+@@ -30,11 +30,6 @@ class line_request;
+ class request_builder;
+ class request_config;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Represents a GPIO chip.
+  */
+@@ -173,10 +168,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const chip& chip);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_CHIP_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+index 2482e8a..083c2e1 100644
+--- a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
++++ b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+@@ -22,11 +22,6 @@ namespace gpiod {
+ class edge_event;
+ class line_request;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Object into which edge events are read for better performance.
+  *
+@@ -120,10 +115,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const edge_event_buffer& buf);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_EDGE_EVENT_BUFFER_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/edge-event.hpp b/bindings/cxx/gpiodcxx/edge-event.hpp
+index 47c256a..acbe7af 100644
+--- a/bindings/cxx/gpiodcxx/edge-event.hpp
++++ b/bindings/cxx/gpiodcxx/edge-event.hpp
+@@ -22,11 +22,6 @@ namespace gpiod {
+ 
+ class edge_event_buffer;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Immutable object containing data about a single edge event.
+  */
+@@ -128,10 +123,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const edge_event& event);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_EDGE_EVENT_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/exception.hpp b/bindings/cxx/gpiodcxx/exception.hpp
+index 34737d2..b753af0 100644
+--- a/bindings/cxx/gpiodcxx/exception.hpp
++++ b/bindings/cxx/gpiodcxx/exception.hpp
+@@ -17,11 +17,6 @@
+ 
+ namespace gpiod {
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Exception thrown when an already closed chip is used.
+  */
+@@ -149,10 +144,6 @@ public:
+ 	~bad_mapping();
+ };
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_EXCEPTION_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/info-event.hpp b/bindings/cxx/gpiodcxx/info-event.hpp
+index 69b88b6..ee01651 100644
+--- a/bindings/cxx/gpiodcxx/info-event.hpp
++++ b/bindings/cxx/gpiodcxx/info-event.hpp
+@@ -23,11 +23,6 @@ namespace gpiod {
+ class chip;
+ class line_info;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Immutable object containing data about a single line info event.
+  */
+@@ -114,10 +109,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const info_event& event);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_INFO_EVENT_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-config.hpp b/bindings/cxx/gpiodcxx/line-config.hpp
+index 58c9d87..b3b9aba 100644
+--- a/bindings/cxx/gpiodcxx/line-config.hpp
++++ b/bindings/cxx/gpiodcxx/line-config.hpp
+@@ -21,11 +21,6 @@ class chip;
+ class line_request;
+ class line_settings;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Contains a set of line config options used in line requests and
+  *        reconfiguration.
+@@ -111,10 +106,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const line_config& config);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_LINE_CONFIG_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-info.hpp b/bindings/cxx/gpiodcxx/line-info.hpp
+index 8b10dc4..bf02ba1 100644
+--- a/bindings/cxx/gpiodcxx/line-info.hpp
++++ b/bindings/cxx/gpiodcxx/line-info.hpp
+@@ -22,11 +22,6 @@ namespace gpiod {
+ class chip;
+ class info_event;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Contains an immutable snapshot of the line's state at the
+  *        time when the object of this class was instantiated.
+@@ -167,10 +162,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const line_info& info);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_LINE_INFO_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
+index fcc4e0e..9605019 100644
+--- a/bindings/cxx/gpiodcxx/line-request.hpp
++++ b/bindings/cxx/gpiodcxx/line-request.hpp
+@@ -26,11 +26,6 @@ class edge_event;
+ class edge_event_buffer;
+ class line_config;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Stores the context of a set of requested GPIO lines.
+  */
+@@ -227,10 +222,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const line_request& request);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_LINE_REQUEST_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line-settings.hpp b/bindings/cxx/gpiodcxx/line-settings.hpp
+index 1004ccd..89d79f8 100644
+--- a/bindings/cxx/gpiodcxx/line-settings.hpp
++++ b/bindings/cxx/gpiodcxx/line-settings.hpp
+@@ -21,11 +21,6 @@ namespace gpiod {
+ 
+ class line_config;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Stores GPIO line settings.
+  */
+@@ -193,10 +188,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const line_settings& settings);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_LINE_SETTINGS_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/line.hpp b/bindings/cxx/gpiodcxx/line.hpp
+index 2810571..c58bf11 100644
+--- a/bindings/cxx/gpiodcxx/line.hpp
++++ b/bindings/cxx/gpiodcxx/line.hpp
+@@ -23,11 +23,6 @@ namespace gpiod {
+  */
+ namespace line {
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Wrapper around unsigned int for representing line offsets.
+  */
+@@ -265,10 +260,6 @@ using value_mappings = ::std::vector<value_mapping>;
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const value_mappings& mappings);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace line */
+ 
+ } /* namespace gpiod */
+diff --git a/bindings/cxx/gpiodcxx/misc.hpp b/bindings/cxx/gpiodcxx/misc.hpp
+index eab8eba..cb56b92 100644
+--- a/bindings/cxx/gpiodcxx/misc.hpp
++++ b/bindings/cxx/gpiodcxx/misc.hpp
+@@ -16,11 +16,6 @@
+ 
+ namespace gpiod {
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Check if the file pointed to by path is a GPIO chip character device.
+  * @param path Path to check.
+@@ -35,10 +30,6 @@ bool is_gpiochip_device(const ::std::filesystem::path& path);
+  */
+ const ::std::string& api_version();
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_MISC_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/request-builder.hpp b/bindings/cxx/gpiodcxx/request-builder.hpp
+index 192bd91..62597b4 100644
+--- a/bindings/cxx/gpiodcxx/request-builder.hpp
++++ b/bindings/cxx/gpiodcxx/request-builder.hpp
+@@ -22,11 +22,6 @@ class line_config;
+ class line_request;
+ class request_config;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Intermediate object storing the configuration for a line request.
+  */
+@@ -148,10 +143,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const request_builder& builder);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_REQUEST_BUILDER_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/request-config.hpp b/bindings/cxx/gpiodcxx/request-config.hpp
+index 6ebbf99..96f0262 100644
+--- a/bindings/cxx/gpiodcxx/request-config.hpp
++++ b/bindings/cxx/gpiodcxx/request-config.hpp
+@@ -23,11 +23,6 @@ namespace gpiod {
+ 
+ class chip;
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Stores a set of options passed to the kernel when making a line
+  *        request.
+@@ -105,10 +100,6 @@ private:
+  */
+ ::std::ostream& operator<<(::std::ostream& out, const request_config& config);
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_REQUEST_CONFIG_HPP__ */
+diff --git a/bindings/cxx/gpiodcxx/timestamp.hpp b/bindings/cxx/gpiodcxx/timestamp.hpp
+index fcb4d8d..dc44eb7 100644
+--- a/bindings/cxx/gpiodcxx/timestamp.hpp
++++ b/bindings/cxx/gpiodcxx/timestamp.hpp
+@@ -17,11 +17,6 @@
+ 
+ namespace gpiod {
+ 
+-/**
+- * @ingroup gpiod_cxx
+- * @{
+- */
+-
+ /**
+  * @brief Stores the edge and info event timestamps as returned by the kernel
+  *        and allows to convert them to std::chrono::time_point.
+@@ -114,10 +109,6 @@ private:
+ 	::std::uint64_t _m_ns;
+ };
+ 
+-/**
+- * @}
+- */
+-
+ } /* namespace gpiod */
+ 
+ #endif /* __LIBGPIOD_CXX_TIMESTAMP_HPP__ */
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.45.2
 
 
