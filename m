@@ -1,120 +1,237 @@
-Return-Path: <linux-gpio+bounces-14083-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14084-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F28219F93CD
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 14:59:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F29229F95EA
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 16:58:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57A3E1633A2
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 13:58:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A86618903A5
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2024 15:54:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2B1215703;
-	Fri, 20 Dec 2024 13:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECFD218EAC;
+	Fri, 20 Dec 2024 15:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdagBno1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMV73hYt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDF7CA4E;
-	Fri, 20 Dec 2024 13:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC38216397;
+	Fri, 20 Dec 2024 15:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734703049; cv=none; b=L0bS4OvGhTWgkDSK7zCSKI0/lXdSjJyLXOisFUM1rJxiZcNwed98Whw1Scyn/v66ujXzO04iBPhLIXGv8DPbROHW00+WOXHTneNI3+CZ1eN/YReQGMWVoLYth13vOtvNfF2DDQ10xpagjLGv4HK1a3bK1uQLcoD9VpjbUNJu0Lo=
+	t=1734710089; cv=none; b=pKzlaQ1be8JEWkwsAGMWm7etPoqmoeYmEL0P3NRDa0XULm8s9zh8Q5Wc2w7T96AuSJIUGvsLyOV3/gQvBKc08XgyvT7hX6PjI2Oyab0QtV90iTy8p/eT7jPmWU/b55C2zRUty27Ms947Jmq5ekzD6UST45IQv5Qa2Lj0KKvhtaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734703049; c=relaxed/simple;
-	bh=EJpXa3nx9DvueX3NwULiz5yDhd6/NS6jn7osZlKxKV4=;
+	s=arc-20240116; t=1734710089; c=relaxed/simple;
+	bh=nBCegtq0A5NfOXgKUOhNhCAdUczJYCehEj8+f1RmnXY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nfwos1ZjNSUQWYKihrvRwFqxntxa2BUNcWOubwbOjxYfBchviAUCdwVRU+4z5S3WoD5yo0kWws7GcX2oyljqmf7S12IWfa7BS9r84pvE+yC9yqVTHt/GJtfsoPOEj4pkQEVy/9XF2rnjJj2g8Z2n0PB+bhInFHqiK47jnFen2ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdagBno1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20467C4CED7;
-	Fri, 20 Dec 2024 13:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734703048;
-	bh=EJpXa3nx9DvueX3NwULiz5yDhd6/NS6jn7osZlKxKV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hdagBno1yhnGQQIxFWaQ337T0odP0fdULftIdPc4dc8DqSbo/uNpkGia03rhjJc8B
-	 LpyiR7eFmwcpuwxwGbGmrUtueeHCaXWdPStS7UG5Gtj3JLJ/cJtSQ3ioxIC/tYcxnA
-	 9Q1VkkisBOU1Gt1QU7ipsSo3jbWEgmAcxkuGLW3R8jHz9B1JQyv1UPTsd4blVQT18H
-	 SX8ZRYaQDmRrrbwpEbOu+WcKaFpgZyr1dp7rP5WkuwijRTcGWt6NjhwBpTjLYYc/pq
-	 RJmziszh5bM6et1reIp0nnUlVb/PnaevVgrFLEVp4NS58HwOddVCuR/gh464MYEc6K
-	 IiS6zmdwlO9dw==
-Date: Fri, 20 Dec 2024 13:57:24 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux@ew.tq-group.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] gpio: tqmx86: introduce tqmx86_gpio_clrsetbits()
- helper
-Message-ID: <4ea6c6b1-fe2d-445d-8e8a-b00c3c2584ad@sirena.org.uk>
-References: <cover.1733739697.git.matthias.schiffer@ew.tq-group.com>
- <a7b98f12da735f735b33200f6324360fc380e6d0.1733739697.git.matthias.schiffer@ew.tq-group.com>
- <CACRpkdbRdT1=30DNyn_=7rfqsnppfbdBr5QXCfWyM0f+FzLjgw@mail.gmail.com>
- <dc83bbd1cd960f8a5daa7ad687f419609f5e14b9.camel@ew.tq-group.com>
- <CACRpkdar+8qS6r30WwCJBjVuqc16xnruVQa3y1m1rKAnJbcN7Q@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUglM5KmFApbCxmtme8/iDegPe3ipwUYLyRQSJApr3E1Q0McG3Tq4LJx72ykfkafMATHa+MqAjzlLaa8B12lyafxK8s1kP4D9YK0jmDRQYXfGGtDOKFmh/FPzLBucBI5jDnHILvjfnbSj98H+guiGW2EOoS36TDiwCoEMi+M7l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMV73hYt; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734710087; x=1766246087;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nBCegtq0A5NfOXgKUOhNhCAdUczJYCehEj8+f1RmnXY=;
+  b=MMV73hYtvK4oR6hzBzJRKlICAak7zzmIhaGaR4ktnmAZ7ZOU5BuwwKg6
+   zapF0JFVkabwoppUCaqbzuoJTiWZtFQbRVf8xH2jnYy8PbJV/FJG4+UO7
+   8aW/ZjfmGmJqe9oKv2cXgULgxAeSm0npGTVlQKEUtSquJqbwgqHz5VQQI
+   Nl+N1JR7j8cOEKo7q63JCuavwekZ8o1FiIL3ZVmRLFsJzbfMM6hL1CLUE
+   LTh+YyaTnhJLGx1xTPlLECT9wOkXTxbbO1fL4G6eWbU2iyXLSQVIb0JxJ
+   upirvbJfcpcOWVfBjLG/dYGmXoYjogyUE4byo/aNowu2syiUtaD1q8xgC
+   w==;
+X-CSE-ConnectionGUID: T53sJChwQDWv6KkKUU2HGQ==
+X-CSE-MsgGUID: O55e9k4sTMqF/zPhzBXfwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11292"; a="46269703"
+X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
+   d="scan'208";a="46269703"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2024 07:54:46 -0800
+X-CSE-ConnectionGUID: 5jkc7+XRS2S1jemaFJJbBw==
+X-CSE-MsgGUID: kb9btt2NQViRmPqhqw+FLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,251,1728975600"; 
+   d="scan'208";a="98603535"
+Received: from lkp-server01.sh.intel.com (HELO a46f226878e0) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 20 Dec 2024 07:54:42 -0800
+Received: from kbuild by a46f226878e0 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tOfKp-0001MN-2E;
+	Fri, 20 Dec 2024 15:54:39 +0000
+Date: Fri, 20 Dec 2024 23:54:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH 5/8] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <202412202337.8jOygMaK-lkp@intel.com>
+References: <20241219-mdb-max7360-support-v1-5-8e8317584121@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J+VVPeqiqOVkO5mp"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdar+8qS6r30WwCJBjVuqc16xnruVQa3y1m1rKAnJbcN7Q@mail.gmail.com>
-X-Cookie: Body by Nautilus, Brain by Mattel.
-
-
---J+VVPeqiqOVkO5mp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20241219-mdb-max7360-support-v1-5-8e8317584121@bootlin.com>
 
-On Fri, Dec 20, 2024 at 02:43:15PM +0100, Linus Walleij wrote:
+Hi Mathieu,
 
-> I don't see why we can't add
-> unsigned in regmap_read_cantfail()
-> that always just return the value if this is a common problem for people using
-> regmap MMIO specifically? Could perhaps be restricted to mmio.
+kernel test robot noticed the following build warnings:
 
-I can't recall people ever having much problem with just ignoring the
-return value if they don't care about it.
+[auto build test WARNING on 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8]
 
-> > - I introduced a tqmx86_gpio_clrsetbits() wrapper around regmap_update_bits()
-> >   (having arguments for set and clear was more convenient than mask and value
-> >    in a few places)
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-Add-MAX7360-MFD-device/20241220-002541
+base:   78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
+patch link:    https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-5-8e8317584121%40bootlin.com
+patch subject: [PATCH 5/8] gpio: max7360: Add MAX7360 gpio support
+config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20241220/202412202337.8jOygMaK-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241220/202412202337.8jOygMaK-lkp@intel.com/reproduce)
 
-> Isn't that what regmap fields are for?
-> regmap_field_set_bits()
-> regmap_field_clear_bits()
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412202337.8jOygMaK-lkp@intel.com/
 
-The field API is more for and indirection where bitfields move about,
-but there are top level set and clear operations too.
+All warnings (new ones prefixed by >>):
 
-> > - I was still handling locking outside of regmap because we sometimes want to
-> >   protect a whole sequence of accesses or other driver state
+   drivers/gpio/gpio-max7360.c:57:41: warning: variable 'val' is uninitialized when used here [-Wuninitialized]
+      57 |                         "failed to set value %d on gpio-%d", val, pin);
+         |                                                              ^~~
+   include/linux/dev_printk.h:154:65: note: expanded from macro 'dev_err'
+     154 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                                        ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/gpio/gpio-max7360.c:42:18: note: initialize the variable 'val' to silence this warning
+      42 |         unsigned int val;
+         |                         ^
+         |                          = 0
+>> drivers/gpio/gpio-max7360.c:370:32: warning: cast to smaller integer type 'int' from 'const void *' [-Wvoid-pointer-to-int-cast]
+     370 |         max7360_gpio->gpio_function = (int)device_get_match_data(&pdev->dev);
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
 
-> So reg_sequence cannot be used in this case? (Other driver state seems
-> to imply that.)
 
-Yes, regmap_multi_reg_write() does what it says on the tin.
+vim +370 drivers/gpio/gpio-max7360.c
 
---J+VVPeqiqOVkO5mp
-Content-Type: application/pgp-signature; name="signature.asc"
+   333	
+   334	static int max7360_gpio_probe(struct platform_device *pdev)
+   335	{
+   336		struct max7360_gpio *max7360_gpio;
+   337		unsigned int ngpios;
+   338		unsigned int outconf;
+   339		struct gpio_irq_chip *girq;
+   340		unsigned long flags;
+   341		int irq;
+   342		int ret;
+   343	
+   344		if (!pdev->dev.parent) {
+   345			dev_err(&pdev->dev, "no parent device\n");
+   346			return -ENODEV;
+   347		}
+   348	
+   349		max7360_gpio = devm_kzalloc(&pdev->dev, sizeof(struct max7360_gpio),
+   350					    GFP_KERNEL);
+   351		if (!max7360_gpio)
+   352			return -ENOMEM;
+   353	
+   354		if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
+   355			dev_err(&pdev->dev, "Missing ngpios OF property\n");
+   356			return -ENODEV;
+   357		}
+   358	
+   359		max7360_gpio->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+   360		if (!max7360_gpio->regmap) {
+   361			dev_err(&pdev->dev, "could not get parent regmap\n");
+   362			return -ENODEV;
+   363		}
+   364	
+   365		max7360_gpio->dev = &pdev->dev;
+   366		max7360_gpio->chip = max7360_gpio_chip;
+   367		max7360_gpio->chip.ngpio = ngpios;
+   368		max7360_gpio->chip.parent = &pdev->dev;
+   369		max7360_gpio->chip.base = -1;
+ > 370		max7360_gpio->gpio_function = (int)device_get_match_data(&pdev->dev);
+   371	
+   372		dev_dbg(&pdev->dev, "gpio count: %d\n", max7360_gpio->chip.ngpio);
+   373	
+   374		if (max7360_gpio->gpio_function == MAX7360_GPIO_PORT) {
+   375			/* Port GPIOs: set output mode configuration (constant-current
+   376			 * or not).
+   377			 * This property is optional.
+   378			 */
+   379			outconf = 0;
+   380			ret = of_property_read_u32(pdev->dev.of_node,
+   381						   "constant-current-disable", &outconf);
+   382			if (ret && (ret != -EINVAL)) {
+   383				dev_err(&pdev->dev,
+   384					"Failed to read constant-current-disable OF property\n");
+   385				return -ENODEV;
+   386			}
+   387	
+   388		    regmap_write(max7360_gpio->regmap, MAX7360_REG_GPIOOUTM, outconf);
+   389		}
+   390	
+   391		if (max7360_gpio->gpio_function == MAX7360_GPIO_PORT &&
+   392		    of_property_read_bool(pdev->dev.of_node, "interrupt-controller")) {
+   393			/* Port GPIOs: declare IRQ chip, if configuration was provided.
+   394			 */
+   395			irq = platform_get_irq(pdev, 0);
+   396			if (irq < 0)
+   397				return dev_err_probe(&pdev->dev, irq,
+   398						     "Failed to get IRQ");
+   399	
+   400			flags = IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
+   401			ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+   402							max7360_gpio_irq, flags,
+   403							"max7360-gpio", max7360_gpio);
+   404			if (ret)
+   405				return dev_err_probe(&pdev->dev, ret,
+   406						     "Failed to register interrupt: %d\n",
+   407						     ret);
+   408	
+   409			girq = &max7360_gpio->chip.irq;
+   410			gpio_irq_chip_set_chip(girq, &max7360_gpio_irqchip);
+   411			girq->parent_handler = NULL;
+   412			girq->num_parents = 0;
+   413			girq->parents = NULL;
+   414			girq->threaded = true;
+   415			girq->default_type = IRQ_TYPE_NONE;
+   416			girq->handler = handle_simple_irq;
+   417		}
+   418	
+   419		ret = devm_gpiochip_add_data(&pdev->dev, &max7360_gpio->chip, max7360_gpio);
+   420		if (ret) {
+   421			dev_err(&pdev->dev, "unable to add gpiochip: %d\n", ret);
+   422			return ret;
+   423		}
+   424	
+   425		return 0;
+   426	}
+   427	
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmdld8MACgkQJNaLcl1U
-h9CUjAf/UrM5kQjIBPOimpk+4DrY6ExIbXwApo4w6nLW12n49FdTF1tZEKjceody
-YnDLSS+s/3SkhS9aFa+BNuMeQckllO1prHDJAZ4aQxuavbSFyIknlXOkebpgQgTC
-WPD+y4cSDit4gDFNBGUard81C2J6QhN8NeJkNvAGz3lF6zenWnwvDcknBfka/CTL
-KSuz45Xgg5s0JZLCxG0GGy3pIVvMD88AEmcP6DLn0VHKFlx52Ngc9gQi+t5bQZ8L
-82TeoLZbwUBthGmlm9Uz+BoeESV1uwbI3KUpDrMGzgmxCPhOxE4MNV9cU+ur0IXL
-Dl3LAxxvAHYtWzZblz02bEs+1x4gzw==
-=qSp+
------END PGP SIGNATURE-----
-
---J+VVPeqiqOVkO5mp--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
