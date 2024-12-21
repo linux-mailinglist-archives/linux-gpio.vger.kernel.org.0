@@ -1,165 +1,254 @@
-Return-Path: <linux-gpio+bounces-14126-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14127-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46C919FA27F
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Dec 2024 21:35:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 698759FA2F1
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Dec 2024 00:44:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4305C188C0CD
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Dec 2024 20:35:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9491F1678B2
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Dec 2024 23:44:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC62B1C5F31;
-	Sat, 21 Dec 2024 20:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D911CF8B;
+	Sat, 21 Dec 2024 23:44:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmNU7mTF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nx5eDPh+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72552183CBB;
-	Sat, 21 Dec 2024 20:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80BE1DC99F
+	for <linux-gpio@vger.kernel.org>; Sat, 21 Dec 2024 23:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734813330; cv=none; b=HnRA6zalrWqpjDEOR5swQv506Z5iBrSHpTRTNkSgnBDqafJa+AyxMTFtd/X6yf7gr2uqqHa5+S74o0z52QxjyDu7163IpMZJqF7KaceduTT93D9yiKje7E+AhRduCBVKyDb5d/0qa2/oG/uX12a63YmgWCk8AfF2KSaAkKbTs5Y=
+	t=1734824647; cv=none; b=BV5loZFVq+tBGRIVa6HELD1PaZeU0OBEtLr0wYTElxSV6/xIwAJwqO/0110WlHG8/mbEYho+ePxrAmnqg2FVscetvL275hght67XAIE448EFx/WWTVv2E4AURRwV+NH8ioQqFP3RzdOOakY/59HLNZ+vc0miF/z3b4Zj1EN8q1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734813330; c=relaxed/simple;
-	bh=ekl19ucpR2Fcoz2QsVFpdIVw86xZ3nM2uWZVPMJgU6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLC2fzLSyvDesGaIL7S7ewD6OSyfAgTrZkS24h8sHC7VuVs2/bCOCsF2gIkVwfPNn2GaMQjbNwMLgZJu+f89nkYTclr9XWZVL/ohib0zEDtOQOavb9r7FzV2Cx+wiZcfEt66xFSS5fX+OC4ZbrQ+Ol2cqWvgcq30gyrhKMQczqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmNU7mTF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD4AC4CECE;
-	Sat, 21 Dec 2024 20:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734813329;
-	bh=ekl19ucpR2Fcoz2QsVFpdIVw86xZ3nM2uWZVPMJgU6k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qmNU7mTFtc/T4SK9N3/HJnsytsAC7yoifQzQMmyabNyokhgdS03QGW4OR0dB93EUN
-	 TK+NCEBa3JYYI63ZNkZlQhUrPL9pv0mTvzkaIBt+yOVgeuLteRAm9UNOuG7rL2UKla
-	 vuAXxgUeToZuj9j/yf9Mv8jx7mJJ7Mw2pSAsZCIu3+bE+osmfXTI2zNh748DizYg7O
-	 f2LLxiQ3wKCjUBCSPpIYzCfjIqaSlAmhrGXOvKjP+qzQvtftzcdWsRRx0PRflAG+3b
-	 SdchDm5rFE5GesIA5pfK6llVQKrTjfLA6kasAPd5r/wxjdrmuE+7Y6qC5PjNacaxNU
-	 6QF2/m1FobdaA==
-Message-ID: <45f6e5e0-c145-40d9-8f0a-ffb25ecffb28@kernel.org>
-Date: Sat, 21 Dec 2024 21:35:22 +0100
+	s=arc-20240116; t=1734824647; c=relaxed/simple;
+	bh=FAxriXy1VBhEp6+drg9IByRPAx3vaKwqL5CoIFhupp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fotpXIvKm2CZJABhjhU6MjpluMKYX6v/z9c+53X7wEzfR/67qRERFkuSwsOqn+XPAl4IDiTYwrmiDhpFL0/C3iFl6oKQ34mtcjy4bStuDDX4YdPNrKz+b3MKccQPKaEMwCcp9Bds/rc5hoZ490cPz9OxVOmh/zuYukJml7EABUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nx5eDPh+; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30227c56b11so32642541fa.3
+        for <linux-gpio@vger.kernel.org>; Sat, 21 Dec 2024 15:44:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1734824644; x=1735429444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+EAY9TL3VXa9YSmXfF47DjhR+bRcu+p93fOBuspJdNo=;
+        b=nx5eDPh+cB9p4wPTx2A6sSJaSJHhkZ5H1pz+MVdmMQmPVlK15C/vrMh0OPRr0SvXk/
+         l4r0YaclAUNNIFAiBe6djeoHoVftLiJQJ5S0HLUu5F7t3C4fh0cA49QQPbwNcat6mN9T
+         nsN42beGQSl9E/uwbgoF8GBM3XM2xIrEpBB2HN2Z0NiLU9DGYth9cDoxHsf8zyKL/na4
+         AK0b432midal84SVRVnhAbo8OtK1m6UOf1EjBhnETXsd2MIa6bSHcmkjwycz9um3ORdV
+         hswaDtOKm3vNKtrjXjjej5Nrxna0e9GtWly3DC4j+kNF30cGq9JE5gd9SlbS84Znozqy
+         iDng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734824644; x=1735429444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+EAY9TL3VXa9YSmXfF47DjhR+bRcu+p93fOBuspJdNo=;
+        b=a3UHSqGq/On5UmbKSOiE9QOmCJSAOPjPOJos1QgY7kHPdIke6IA2ULQ751TskYoUR6
+         CrQVJjnYiEdU2B/yaT0gWhkXh7EzLg6AJ6oGNZ0fjmZhj2mOAUubdNwE38Z7hNcySwwN
+         ttg2kZp2317+WntLxw+YcLVSkgAMiHtAdOLLI1jwj4sXMaGos5a9DJHnrjrqPpOmgcNh
+         +RFglpXNJtNnYBQ9/mtAuImq3l9YsTGbofXgbcY+mi2EaHB0Oqt4A0BHRPrCFE/eD+R0
+         lF5t1mxhaYc5AZKpRQz3HKsIcvedxCVsfyhPeRhs6BuuzqxMbNdaBjoi/4Y4thkVE+0V
+         D2rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWb0XvJbHkuVvzho+UnY2w8z6L2+MEPMVOdo842s7+FvUmX8+phYLFio08AqunKjh8kARWHLyt81q/I@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxPK+PR6wfEyoHr3XcI7U4tVD2+YxwViqrKEBy9M+worrdY6Og
+	Cw6dvySUXndujAcgFJ63qPcCGEQVGAsWjxql2MTxKK952isLDMZ4IfP2VD6wR9O0KGRoqW4R3Nq
+	f6QXQQb8GexSMv/pZitMOjeLxfSUcyeUqK9bvgQ==
+X-Gm-Gg: ASbGncv3uAmvmyGLFRRNRWeUzrgtf0e7M6jbOa3E3IvEiTDURkBZsdUIWFrbUUDLAEs
+	lanwu3tFpkDalMQqLyiOkT6kPxE5nl5Z4s8pp
+X-Google-Smtp-Source: AGHT+IGvv1HHB3ir44LqmxfQzI5NCI5yGpRRnfZXrg8Ab09YCK/dKPLkcceMg5vvGQghPyyeYWnMhg6tQndCLvQxcQM=
+X-Received: by 2002:a05:6512:4014:b0:540:251e:b2c2 with SMTP id
+ 2adb3069b0e04-5422957b03emr2371945e87.53.1734824643653; Sat, 21 Dec 2024
+ 15:44:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] pwm: max7360: Add MAX7360 PWM support
-To: mathieu.dubois-briand@bootlin.com, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Kamel Bouhara
- <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
- linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
- <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+ <20241211-aaeon-up-board-pinctrl-support-v1-4-24719be27631@bootlin.com>
+ <CACRpkdZ_AwiE+HFX6TFBgscaVquKm_tegNSbTT0fhFmpkM7d_Q@mail.gmail.com> <9e692951-86a1-4dda-b843-58173453ffe0@bootlin.com>
+In-Reply-To: <9e692951-86a1-4dda-b843-58173453ffe0@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 22 Dec 2024 00:43:52 +0100
+Message-ID: <CACRpkdZ6kmPn9TfO40drJ+vwM2GNKfNaP21R_gEvugg+GJiF1w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP boards
+To: Thomas Richard <thomas.richard@bootlin.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/12/2024 17:21, mathieu.dubois-briand@bootlin.com wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> 
-> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-> 8 independent PWM outputs.
-> 
+Hi Thomas,
 
+thanks for your detailed reply!
 
-...
+On Fri, Dec 20, 2024 at 2:50=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id max7360_pwm_of_match[] = {
-> +	{ .compatible = "maxim,max7360-pwm", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max7360_pwm_of_match);
-> +#endif
-> +
-> +static struct platform_driver max7360_pwm_driver = {
-> +	.driver = {
-> +		.name = "max7360-pwm",
-> +		.of_match_table = of_match_ptr(max7360_pwm_of_match),
+> Yes my cover letter was a bit short, and maybe some context was missing.
 
-Better to drop of_match_ptr and #ifdef earlier, so ACPI could use it.
+The text and graphics below explain it very well, so please include them
+into the commit message so we have it there!
 
-> +	},
-> +	.probe = max7360_pwm_probe,
-> +};
-> +module_platform_driver(max7360_pwm_driver);
-> +
-> +MODULE_DESCRIPTION("MAX7360 PWM driver");
-> +MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
-> +MODULE_ALIAS("platform:max7360-pwm");
+> This FPGA acts as a level shifter between the Intel SoC pins and the pin
+> header, and also makes a kind of switch/mux.
 
+Since it's Intel we need to notify Andy to help out with this so that
+it gets done in a way that works with how he think consumers
+should interact with Intel pin control and GPIO.
 
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
+> +---------+         +--------------+             +---+
+>           |         |              |             | H |
+>           |---------|              |-------------| E |
+>           |         |              |             | A |
+> Intel Soc |---------|    FPGA      |-------------| D |
+>           |         |              |             | E |
+>           |---------|              |-------------| R |
+>           |         |              |             |   |
+> ----------+         +--------------+             +---+
+>
+>
+> For most of the pins, the FPGA opens/closes a switch to enable/disable
+> the access to the SoC pin from a pin header.
+> Each "switch", has a direction flag that shall be set in tandem with the
+> status of the SoC pin.
+> For example, if the SoC pin is in PWM mode, the "switch" shall be
+> configured in output direction.
+> If the SoC pin is set in GPIO mode, the direction of the "switch" shall
+> corresponds to the GPIO direction.
+>
+> +---------+              +--------------+             +---+
+>           |              |              |             | H |
+>           |              |      \       |             | E |
+>           |   PWM1       |       \      |             | A |
+> Intel Soc |--------------|-----   \-----|-------------| D |
+>           |              |              |             | E |
+>           |              |              |             | R |
+>           |              |    FPGA      |             |   |
+> ----------+              +--------------+             +---+
+>
+> (PWM1 pin from Intel SoC can be used as PWM, and also in GPIO mode,
+> thanks to the Intel pinctrl driver).
+>
+>
+> Few pins (PINMUX_* pins) work differently. The FPGA acts as a mux and
+> routes for example the I2C0_SDA pin or GPIOX (of the SoC) to the pin head=
+er.
+>
+> +---------+           +--------------+             +---+
+>           | I2C0_SDA  |              |             | H |
+>           |-----------|----- \       |             | E |
+>           |           |       \      |             | A |
+> Intel Soc |           |        \-----|-------------| D |
+>           | GPIOX     |              |             | E |
+>           |-----------|-----         |             | R |
+>           |           |    FPGA      |             |   |
+> ----------+           +--------------+             +---+
+>
+> The pin header looks like this:
+> +--------------------+--------------------+
+> |      3.3V          |       5V           |
+> | GPIO2 / I2C1_SDA   |       5V           |
+> | GPIO3 / I2C1_SCL   |       GND          |
+> | GPIO4 / ADC0       | GPIO14 / UART1_TX  |
+> |      GND           | GPIO15 / UART1_RX  |
+> | GPIO17 / UART1_RTS | GPIO18 / I2S_CLK   |
+> |     GPIO27         |       GND          |
+> |     GPIO22         |      GPIO23        |
+> |      3.3V          |      GPIO24        |
+> | GPIO10 / SPI_MOSI  |       GND          |
+> | GPIO9 / SPI_MISO   |      GPIO25        |
+> | GPIO11 / SPI_CLK   | GPIO8 / SPI_CS0    |
+> |      GND           | GPIO7 / SPI_CS1    |
+> | GPIO0 / I2C0_SDA   | GPIO1 / I2C0_SCL   |
+> |     GPIO5          |       GND          |
+> |     GPIO6          | GPIO12 / PWM0      |
+> | GPIO13 / PWM1      |       GND          |
+> | GPIO19 / I2S_FRM   | GPIO16 / UART1_CTS |
+> |     GPIO26         | GPIO20 / I2S_DIN   |
+> |      GND           | GPIO21 / I2S_DOUT  |
+> +--------------------+--------------------+
+>
+> The GPIOs in the pin header corresponds to the gpiochip I declare in
+> this driver.
+> So when I want to use a pin in GPIO mode, the upboard pinctrl driver
+> requests the corresponding SoC GPIO to the Intel pinctrl driver.
+> The SoC pins connected to the FPGA, are identified with "external" id.
+>
+> The hardware and the FPGA were designed in tandem, so you know for
+> example that for the GPIOX you need to request the Nth "external" GPIO.
+>
+> When you drive your GPIO, the upboard gpiochip manages in the same time
+> the direction of the "switch" and the value/direction of the
+> corresponding SoC pin.
+>
+> +------------------+         +--------------+             +---+
+>                    |---------|              |-------------| H |
+>                    |---------|   GPIOCHIP   |-------------| E |
+>    Intel gpiochip  |---------|              |-------------| A |
+>  provided by Intel |---------|    FPGA      |-------------| D |
+>   pinctrl driver   |---------|              |-------------| E |
+>                    |---------|              |-------------| R |
+>                    |---------|              |-------------|   |
+> +------------------+         +--------------+             +---+
+>
+>
+> About gpiochip_add_pinlist_range(), I added it because the FPGA pins
+> used by the gpiochip are not consecutive.
+>
+> Please let me know if it is not clear.
+> And sorry I'm not very good to make ascii art.
 
-Maybe you need it because OF table will get dropped, then it would be
-fine. But in current code it's unnecessary and copy-pasta from other
-drivers.
+I get it! We have a similar driver in the kernel already, look into:
+drivers/gpio/gpio-aggregator.c
 
+The aggregator abstraction is however just software. What you
+need here is a gpio-aggregator that adds some hardware
+control on top. But it has a very nice design using a bitmap
+to keep track of the GPIOs etc, and it supports operations
+on multiple GPIOs (many man-hours of hard coding and
+design went into that driver, ask Geert and Andy...)
 
-Best regards,
-Krzysztof
+So I would proceed like this:
+
+- The pin control part of the driver looks sound, except
+  for the way you add ranges.
+
+- The gpiochip part needs to be refactored using the
+  ideas from gpio-aggregator.c.
+
+- Look closely at aggregator and see what you can do
+  based on that code, if you can mimic how it picks up
+  and forwards all GPIO functions. Maybe part of it
+  needs to be made into a library?
+ <linux/gpio/gpio-aggregator.h>?
+  For example if you start to feel like "I would really like
+  to just call gpio_fwd_get_multiple() then this is what
+  you want to do. The library can probably still be
+  inside gpio-aggregator.c the way we do it in
+  e.g. gpio-mmio.c, just export and keep library functions
+  separately.
+
+- The way you split up gpiochip_add_pin_range() I
+  still do not understand at all, in my view you just want
+  this gpiochip to refer to the pin controller pins in the
+  same file so I don't see it. How can e.g.
+  pinctrl-sx150x.c do this trick but not your driver?
+  I might be missing something though.
+
+Yours,
+Linus Walleij
 
