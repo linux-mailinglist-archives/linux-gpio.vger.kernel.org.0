@@ -1,130 +1,116 @@
-Return-Path: <linux-gpio+bounces-14134-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14135-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD8E49FA634
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Dec 2024 15:47:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C2499FA63C
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Dec 2024 15:49:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AF787A2030
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Dec 2024 14:47:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EBD1188653C
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Dec 2024 14:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A151718FDBC;
-	Sun, 22 Dec 2024 14:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8708E18F2C1;
+	Sun, 22 Dec 2024 14:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PnhvYlfF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwOLa0NH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010CF18C930
-	for <linux-gpio@vger.kernel.org>; Sun, 22 Dec 2024 14:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4D0282EE;
+	Sun, 22 Dec 2024 14:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734878841; cv=none; b=kCq6YtCvyYghtmtHk3QLBGgt+fdVmr9D6HfdrmLRQhXtgaidmBo3Gf2cuWQqI+1aw6ypbmqIB0DwA97CL6B3uDkHZuMO9O+MmcqvtV3IezFkOClKflTLNWZtq3n2Y+zbi7eZC90ai4zi5+2yASIy0DxN4tfAJE/3xDGxX8Eysic=
+	t=1734878941; cv=none; b=EEehqnpLAQZnzztGUSfI9XwvPnYEOiUhcqLWLUO4UtmCcl/8D+YKAsVbVgvCkEQ13kX8HBQE6s0cBWCAqkI/F6nwOModGPZTgQFPrwKzOtO6M1Ea3+ZRHHF1bmY1GIv4Ya3OT3abTwS9IdUwjoqGTsnk8PUsQYkZIuXCvJRc8Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734878841; c=relaxed/simple;
-	bh=woSSopwRnElbelpPMs1jT3Qe4qW97goolW3OP2OkN1U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SxAZS7LMOIOW9WTcDjIZSgvInyjGf7YFvlL6cb07xnbiHlRLEYDSvxjSF90XvC7JVZswR2ucZYGpnt0I2UTgCGKwwDz5lwPeAvW2ib1WSRRiurBKge307B7xC/hFbE2pEtMXwEuM5lsLsQFo0IKkZvaxGc1LQyKC5u0opl/Xj0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PnhvYlfF; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa67bc91f87so57126766b.1
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Dec 2024 06:47:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734878837; x=1735483637; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KOQ/XEh+IEpTSwG/pPspXvcZX55H6TJ74NlDqWEG6xw=;
-        b=PnhvYlfFiTA+RnarSz5cOJz8WRMZW/b9KVEVHo3AHnQPtqbx9ylAyEIzoqsOisuRd9
-         KVQ6tLFKDILkO8kB5sdi1pqdFaKHUcywjKUrEMpHTtlTIGzUTgCIpYW6a46aS8vuOWxP
-         afl/dlftH3ZR2jbd6PkpWgt9s8QunIXTm4v7Y2YiKvQKFOiXuCjLygqKbHl+PJxMpLkN
-         ofFre2FP1MtF5cU+rkGUTUhUyRoCCPWz66AWjQa4HqsFHbdcwtYiTp6bPFPjRPJZeHZw
-         YIj465Bgkm3DypboLU0zQMUdP9x3JB8g+RA43utkFYPVqQpMgcmrKt7yoCoCylPQy37f
-         8sfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734878837; x=1735483637;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KOQ/XEh+IEpTSwG/pPspXvcZX55H6TJ74NlDqWEG6xw=;
-        b=klOYsftG30HfTrM9KixRwwKvP1yfNvtt+N2tcelRE0YxL3f6T4/6LPo5EMMzQRpzZN
-         qICQDU+FVoQZSkoIWz3zCq079csPS7hnl06q82trhmtQA7arOUkoff7yJEmXgT0G47+2
-         dRYRAPk0RASTbSCmA64fOzQdupVpUkwJOVoG2ygIefz1D/eKjc+0pLx+e6lcl3dsJsAz
-         P4XHWqT9/S75HJNDg6Ov9cHt3YB3+TtCBE2e9r4QR7Gc7BezWijwBltNQx07DE5tEjx8
-         A8XxOH9juKwX8ipgtqXWutSSTniwmvSIjjf0rW9m19ce9LtY1G4PAhTqXzjG22LAKF5a
-         BWXg==
-X-Forwarded-Encrypted: i=1; AJvYcCW40O1cukp0uBogr0FXMjYCEb0xUDhHLjy0vS3DlQQF3Z41PcNokkwGfzqPNYVxXVxv7QY98kIZP1cn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXU4z+SeNFgnsqyyRodjZVIBKgGNkSggRSsKnSosWUL6BbCiCn
-	/UaJfY8ctS+YuuwLnHY3TP+3d/6TBJ47JnDmunQ9bBQ4vWXgIo18PHvbYUHS8OU=
-X-Gm-Gg: ASbGnctFNRPYG+J5rB1uYBPoCRTj40fawdE/m7OPzMm+F6qrdAcQaCEZfegiUTUm4hr
-	M3oo3aGWMVnZEvMWhQ1rinEhqM6AcgudMMZx7D1Zagc+FQVxf+x8Xg1g4jswHdYYIH0W47/ontL
-	mJGyk3olsGjMXsSILXi2m/xH77x5EkLjgRMTu6leeMI1+NDmBp6Mu6mWo+K555HbfoDjH+m/YAT
-	Mq6aL8pDjWN/RDxWIIRec15NZrwdZ5ZfWmV9+Z7MC3mynKGl7bep0UnyMrBIbf7/qaKZkoCN6E7
-	v+rEJ+BE5OpOQ5g0N3cN8v9moiB1bDI=
-X-Google-Smtp-Source: AGHT+IHtQGYsCivCQdxdxbhIMcr1C6rTSuDeTm2poJaxHYzRC9Hx9uYNv/i6n4uQrNAoTdj6lsN2iQ==
-X-Received: by 2002:a05:6402:3596:b0:5d0:8e70:cf86 with SMTP id 4fb4d7f45d1cf-5d81de05c1emr3525793a12.7.1734878837303;
-        Sun, 22 Dec 2024 06:47:17 -0800 (PST)
-Received: from [127.0.1.1] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0eae3b3dsm396496866b.82.2024.12.22.06.47.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2024 06:47:16 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Tomasz Figa <tomasz.figa@gmail.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Markuss Broks <markuss.broks@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- Maksym Holovach <nergzd@nergzd723.xyz>
-In-Reply-To: <20241214-exynos9810-v4-0-4e91fbbc2133@gmail.com>
-References: <20241214-exynos9810-v4-0-4e91fbbc2133@gmail.com>
-Subject: Re: [PATCH RESEND v4 0/2] Add support for Exynos9810 SoC and
- Samsung Galaxy S9 (SM-G960F)
-Message-Id: <173487883501.18913.4157239259617984127.b4-ty@linaro.org>
-Date: Sun, 22 Dec 2024 15:47:15 +0100
+	s=arc-20240116; t=1734878941; c=relaxed/simple;
+	bh=+0JuRS1+pxAE7ViJS52geGKtFuPTzF7INi/AI1l7fkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcFHXM6lgK4swJvKspYtLfxJsKiH01qNmeT3qT0TZemA3NCqZd9xyFDbN64sL50L2m5LqURkpkv8X9lh7zQke/VBQEW2DPEZlw9H71AhA/gZxNT/HtxDEesu4RblnMrwE8IbIDZghs0B1sRJkDrYx0nuLRu/YJswNroaSegILBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwOLa0NH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BDFC4CECD;
+	Sun, 22 Dec 2024 14:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734878940;
+	bh=+0JuRS1+pxAE7ViJS52geGKtFuPTzF7INi/AI1l7fkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CwOLa0NHJg75u0bw8qHidkLoSBn5jKkmZC1XT8plBAgmnxG/sNYZiGlOccGTI5au4
+	 R5DZYXI8LnEul7stQRXMANXJTpszvPGv1tgzUoI05NzCWx/NdKT6YcqwqU2rMDXYOT
+	 SYJrVHIkcPWgafe0I9yxj+9V6OFG8/aGMMXC8xLBWx9kQZ2CEwSB66o7jMle9QuO35
+	 PMTBxpTonZtnvnVSjp107MUWp13uevi4ycI+cuMYYDiHkBpk6AIbPWB1iCoPHOafbw
+	 FKrCr2E/WL5Oa1B0/4/i/AGfxjRTAKq2wZgzClIo7/e440NCKW2b/rs9lmQGX9XD3C
+	 z9IBxv7un4sEg==
+Date: Sun, 22 Dec 2024 14:48:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 04/38] dt-bindings: pinctrl: Add rk3562 pinctrl support
+Message-ID: <20241222-moonscape-humongous-65531a3f1f3d@spud>
+References: <20241220103825.3509421-1-kever.yang@rock-chips.com>
+ <20241220103825.3509421-5-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ALomkr6kdjlU1kTz"
+Content-Disposition: inline
+In-Reply-To: <20241220103825.3509421-5-kever.yang@rock-chips.com>
 
 
-On Sat, 14 Dec 2024 16:56:45 +0200, Markuss Broks wrote:
-> This series adds initial SoC support for the Samsung Exynos 9810
-> SoC and initial board support for Samsung Galaxy S9 phone (SM-G960F),
-> codenamed starlte.
-> 
-> The Exynos 9810 SoC is also used in S9 Plus (star2lte), Note 9 (crownlte),
-> and perhaps more devices. Currently only Galaxy S9 DTS file is added but it
-> should be fairly simple to add support for other devices based on this SoC,
-> considering they're quite similar.
-> 
-> [...]
+--ALomkr6kdjlU1kTz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+On Fri, Dec 20, 2024 at 06:37:50PM +0800, Kever Yang wrote:
+> Add the compatible string for the rk3562 SoC.
+>=20
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 
-[1/2] arm64: dts: exynos: Add Exynos9810 SoC support
-      https://git.kernel.org/krzk/linux/c/698be6fe8f89b5edf533a85fba7258339c8b72d6
-[2/2] arm64: dts: exynos: Add initial support for Samsung Galaxy S9 (SM-G960F)
-      https://git.kernel.org/krzk/linux/c/63da297f0303c39025172cccafca7b55b169ec3c
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>=20
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.y=
+aml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> index 6a23d845f1f2..80a2b1934849 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -44,6 +44,7 @@ properties:
+>        - rockchip,rk3328-pinctrl
+>        - rockchip,rk3368-pinctrl
+>        - rockchip,rk3399-pinctrl
+> +      - rockchip,rk3562-pinctrl
+>        - rockchip,rk3568-pinctrl
+>        - rockchip,rk3576-pinctrl
+>        - rockchip,rk3588-pinctrl
+> --=20
+> 2.25.1
+>=20
 
+--ALomkr6kdjlU1kTz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ2gm2AAKCRB4tDGHoIJi
+0rJ+AP9jKt+goJkQoANa5w9EFvOUIPEWZxBmo2FrqduMEy2E+wD/Xk92XG4/tpD1
+TvQLAzDCEXwa95oanEMJEx9Ov5WmpQg=
+=cZw4
+-----END PGP SIGNATURE-----
+
+--ALomkr6kdjlU1kTz--
 
