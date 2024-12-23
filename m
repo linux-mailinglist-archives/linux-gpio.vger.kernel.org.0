@@ -1,126 +1,104 @@
-Return-Path: <linux-gpio+bounces-14167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14168-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D00989FB3B4
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Dec 2024 18:53:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E099FB4B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Dec 2024 20:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 566BE1665C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Dec 2024 17:53:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27A241881A44
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Dec 2024 19:35:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249BF1B87CB;
-	Mon, 23 Dec 2024 17:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C142E1C6889;
+	Mon, 23 Dec 2024 19:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="giAIkHKo"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="CueH/fD3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF138185935;
-	Mon, 23 Dec 2024 17:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E432D28DA1;
+	Mon, 23 Dec 2024 19:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734976394; cv=none; b=Gry0RUCJdPFKShLDzRVc+noJ5uCzo1OUK2NSJpDfj9fv6bsaXJPfppnoJGdKFZTnkTXN4bESwCLpBtrmWWXvI0E5UmRnNChWVBFSTxw4olScz+eeMlGkrCMIlqjEcXAKj8SRVT60PEXpEY3HCBGPRUg1BWHVtJeTiCIquv3bIYk=
+	t=1734982524; cv=none; b=lJq431Op5Lkc2JUNMXc970NsS3RAbymZanyJLgDGG0P1yjPOhuHPFQg8TO4+FPonH07p8oSKsmL+G2WH05JrH9yo0LDS6c6e3sxE/hbEn50jR6PSmsCXg2tLFtcnHHU70tnCVf8KbpJ1FfV4YTPe3UL7HyMCcRitrVcVUyRJacY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734976394; c=relaxed/simple;
-	bh=9pt2mc+Hro4IIBg9xJYmH4WsQ2sUFDkjFv56f9JI1uk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=VvmTXqdXXpahhj+CqBPHcDRRigEcjwyAXrHWEsiX+pwUC70ujD+cHeh4Vnb79zZCdBiO9neQwo43o5pAXGgFBhIksyguZhYQVROVTDireGzc1Y9k0FD2QiDonEJXJmpgOzVl7kXedWG04iiq/QtSVXcRfcscVIGbWffEA8HZ5Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=giAIkHKo; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 41C8820003;
-	Mon, 23 Dec 2024 17:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1734976383;
+	s=arc-20240116; t=1734982524; c=relaxed/simple;
+	bh=h9YOzidppOmJWphCLl255FUdTo3VTZPN4fiPiJDGkKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qMoD7zqtFKaKRbhqLA5jywF0qEOiD9pkgzXESIYTsl6uoWWfMOMU9DICyVlj17GYyrfeCuAmaiXUtLQ0hV2DCWReewGUrgAHQn2J7PaWDGjmfgJVEHLaEMIE97b7gIZ7ZYArtLJiCmIdvJ4a0v8TN5tAvNbWpZt7b35y29V9X3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=CueH/fD3; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EDF95108A88F0;
+	Mon, 23 Dec 2024 20:35:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1734982520;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Cjk9UW1eNK3gMr3FoXqpO4YXl9Ku7rP8HoF2YRA4Gwc=;
-	b=giAIkHKoW/gX+auGN1N7k0FYAV2QOsFWbzIcBhjlq3F6QW35otMOAKSfBZSld4rNQ9SEmz
-	8SQoVY0IG5XSxQ4I1YTPdNctu0BB/Tosy3O++ZAypbzBSuitSNhW5BY/D5Hpd9DnD4M6kl
-	kmamYKd2hG71PxiiZiiRoxc8rC0XkPUArnYc12yS1E7AghwdUAUR4/0NNKNLSoWrJUSS4E
-	Sz+Z+RTj7zjYoLieK2lGiGQ6gTlWiYqtY4gjBFzTT7HOI5wz9Nc44YAorKDtNCgz2RC/LZ
-	BkxaZVyjNnowJDbq7/jitj2YpCNMRSA1NAADrtGbrqxszJb0bNfC69d3Gpt52Q==
+	bh=+WLuHWjZM3VRX7nJ+Pc75I1m4HqNbbSxdu5AhUiwKyg=;
+	b=CueH/fD3YFomuQ1LDPTIrV6Y7okJdiQF7ouvXjU8mWrTaaDb1lShPFWDI3w4gTLIoDG15Z
+	buFWYSgi5vaRBeWFErPnX9r0BxPiN9/6p8CcnRlH+CQ1l1VTJqM98idg8+PYFh8b6d4rN+
+	TRz+EbhHKRqm10eL64RtQIKMrfJ2ejlUugJ6ikp7krKjXyvcAge5Y5ZByn7UDqUYJuYBTR
+	k/IUvEBsrKs9vch5/Fx6Q0MOigV4/ZjFg9dRgV9KyeHUtya6HJ67RQVRH4+//L6VpuTP3C
+	zOwOVu32xwsi/hQt5B3lLbOYasInFMiGufNsQb4I3X4t/X9ZhpyfVcHvOHKkLg==
+Message-ID: <412e65b5-dd91-4982-8b1a-423997da9a28@denx.de>
+Date: Mon, 23 Dec 2024 20:33:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Dec 2024 18:53:03 +0100
-Message-Id: <D6J9SRCAVWY8.1RY8GDZHEBG3P@bootlin.com>
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH v2 0/7] Add support for MAX7360
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
- <f5memlwoahjjvvian4hutan724msi3ojbkhdaoqvtqstnhvfqt@xkdyrpfvy2gp>
- <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
-In-Reply-To: <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] pinctrl: stm32: Add check for clk_enable()
+To: Mingwei Zheng <zmw12306@gmail.com>
+Cc: antonio.borneo@foss.st.com, linus.walleij@linaro.org,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, make24@iscas.ac.cn,
+ peng.fan@nxp.com, fabien.dessenne@foss.st.com, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jiasheng Jiang <jiashengjiangcool@gmail.com>
+References: <20241223020629.3471182-1-zmw12306@gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20241223020629.3471182-1-zmw12306@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon Dec 23, 2024 at 6:09 PM CET, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Mathieu,
->
-> On Mon, Dec 23, 2024 at 06:05:39PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Mon, Dec 23, 2024 at 05:42:32PM +0100, Mathieu Dubois-Briand wrote:
-> > > - Removing device tree subnodes for keypad, rotary encoder and pwm
-> > >   functionalities.
-> >=20
-> > How did you test the pwm? Just using sysfs? Without a node there is
-> > hardly any other usage left, because you cannot pass the pwm to e.g. a
-> > pwm-fan node. So it might be sensible to drop the nodes for keypad and
-> > rotary encoder, but I think you better keep the pwm one.
->
-> I think I was to quick here. It might just work ...
->
-> Best regards
-> Uwe
+On 12/23/24 3:06 AM, Mingwei Zheng wrote:
 
-Hi Uwe,
+[...]
 
-I also had some doubt here, keeping the node might be bit more clear but
-I thought you wanted me to drop it.
+Shouldn't the clock be enabled before calling 
+stm32_gpiolib_register_bank() ? I think the 
+clk_bulk_prepare_enable(pctl->nbanks, pctl->clks); should be around here.
 
-And yes, as you said, it does work. For reference, I test it using some
-pwm-led:
-
-pwm-leds {
-	compatible =3D "pwm-leds";
-
-	battery {
-		label =3D "battery";
-		pwms =3D <&max7360 0 2000000 0>;
-		max-brightness =3D <128>;
-		linux,default-trigger =3D "heartbeat";
-	};
-};
-
-Where &max7360 is a reference to the root node (io-expander@38 in the
-binding example).
-
-Best regards,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+> @@ -1646,15 +1628,18 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   		if (ret) {
+>   			fwnode_handle_put(child);
+>   
+> -			for (i = 0; i < pctl->nbanks; i++)
+> -				clk_disable_unprepare(pctl->banks[i].clk);
+> -
+>   			return ret;
+>   		}
+>   
+>   		pctl->nbanks++;
+>   	}
+>   
+> +	ret = clk_bulk_prepare_enable(pctl->nbanks, pctl->clks);
+> +	if (ret) {
+> +		dev_err(dev, "failed to prepare_enable clk (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+>   	dev_info(dev, "Pinctrl STM32 initialized\n");
+>   
+>   	return 0;
+Aside from that one question, this looks good, thanks !
 
