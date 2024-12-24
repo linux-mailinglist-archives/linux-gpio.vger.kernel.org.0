@@ -1,218 +1,242 @@
-Return-Path: <linux-gpio+bounces-14192-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14193-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB39A9FBA9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 09:45:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 239AB9FBAD7
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 10:00:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAA2F188440D
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 08:45:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27B0A161B29
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 09:00:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 740F01925AE;
-	Tue, 24 Dec 2024 08:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC64191F91;
+	Tue, 24 Dec 2024 09:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dFVzeQx6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFPUsrfC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6149837160
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 08:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3978C2BB15;
+	Tue, 24 Dec 2024 09:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735029902; cv=none; b=mT8REIE2hu3st0AtLY9OQlEs8XVtbwKpnvOOoIDvl9EXtAujV9VOaSo9MvQTeKiKEoYrTZB5GkiaC+hsVxODvi7z9TqkIfs33O4mTYoNUgdKChzjxMv5kjPeGpFb8YRCYiAu7LPAu7eFKjY5cLypLAB8CUSETyzipKgTxHnvfgw=
+	t=1735030824; cv=none; b=ppc8svZNEfinL5AlpFuFjlYdHfOmp8ZnlywNwqdH8aipMfVWWUIH44CJmpUFe4JqYCAwKseUQmYRRs/TcHCYveGbTTQn4H6vouZCGl7AafrLzWqNncEFcS1nx4q9bqWxZJ83SQKWF3Oi5Jys8PMpO5PWOjqEJt5u71TvXPfZbIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735029902; c=relaxed/simple;
-	bh=b3vDNvjEDSn6HydS1+jt8XmBcW5CAIUo/KGGpHNwWp0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mYu0mAqYtGIeRgNEXT5n7M0jplWVme15WoHsofB4d9Br4C2kYazRjfkgFds2FpFSIz3s6JpCFp9NCU3YvY1TmyFEovSLd3+Ivlmc7j62SO7p2ZeD5S/Yg+Um9Mmu3dNo5SlQXVVSWdHo0wEVFiqBg0gFXEGnZFQKHytB84JA86Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dFVzeQx6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BNNU2hd013625
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 08:44:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=zOVHygUGad6H+dgr/kJ0vfuDfQ1ghbja1g/
-	SWA6HPfw=; b=dFVzeQx6ii0k2TqNjC7A0n4ZkDMSe0LkJAkhrR/aNHNmUhpTcZT
-	WAUatHAXhVh8Y2opTNlATNoQXWvqyIP8tgfGNxUHmCsW6Bvfim3/C0VaQRtNpxqk
-	Tc69zVxJRCNwLzcHmRLdhfuknB7NWHyT2J+ajbj6FxSG5qZSDORxNeRUGamIYmun
-	mK61rsbOUyqGVQjNOyVEPT9GgKlLZZwVaEepf6cwlMrzm5QEVL1zHu7nJqjgko5I
-	f+OlD6HWGW9Xi9bPWfTmiuRiJ72MufaTe0Q8ByyYzat3p7jUF+rWwRG2+mhjL2g2
-	IKJSu8EOzG1sXvRP2tiO5kQ3u6PdEAw18ZQ==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43qhk61v42-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 08:44:59 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-21648ddd461so60120225ad.0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 00:44:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735029898; x=1735634698;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zOVHygUGad6H+dgr/kJ0vfuDfQ1ghbja1g/SWA6HPfw=;
-        b=IxOTShVn1Ur9UPyJr8MmAlsxl9MBaSoDexBVZsnp/ZgrqvPuX/8MGvWYVEHAKrpvQ1
-         J77hZ03TgNE/rx8NEqiQEchdjtLEFAwmlFUcUJkqSw72bPf/moq/Fu2DtwnVYnUAYzUc
-         04LSvo2KONaGXbJIC3m7Ctj7VjQIsQ0G4zhOem7208zxQPUGI/kgaQL2v4vLbU41krd3
-         hawhsLWfiMdUzPhe7N2sczZS6XPMBQR7e6XlGesTPOuFWjk+ORAINPOIzBQ4KC1Oz9jP
-         gK/DuI27pnFuYr6qJNXUBwjdEglah66wbEpJddvfVIIlMQ386B5u+WPQfv/BBvd++F/q
-         n2/Q==
-X-Gm-Message-State: AOJu0YzFcLQ6XlAF4SgCkTPSUfN3nNAAGPMFnFcwk4hA4bvlT1hwW9K3
-	qDEF7+oCEnCX7H+gbDrii0SmYPTonJ86g2d6D/qHYl7Ome30lgR7TQABfI03FTDNhw9PG43EIgR
-	AI6/4Qm4OtyQAcbdJC3ZahdhLmnlQi5uDPnLRyToFLAbpbvJVDB6nd5cfZMHk
-X-Gm-Gg: ASbGncv2QoGBluGLYFwE7puuxF6WO1cYccOQAGui4Kb359UqKV5jvQ3f9t0KgkuW4XY
-	cusYKvcl4XRGc1yJLe/8hhqVCKguhVr1aRkfSVa0vF9JKBAM4/nRdPdfWqmTlabwuKEElLZsG0x
-	ak2OSoRyD3LH6KNvtXS/oFh27/UXRuzuIrg4n3BKP4NYIDlYU4kdbajQ1BcYKRdFlaLfyBmgWku
-	NJRL8uhOAb9bW+Yb4MurobXu34TbWW8L8ZQ/Xm5HFInizwq+jq2eef6UMuWydAlTVs+4Edq+4p4
-	TayXa8gV
-X-Received: by 2002:a05:6a20:7487:b0:1e1:b023:6c98 with SMTP id adf61e73a8af0-1e5e0482bd2mr26657455637.26.1735029897755;
-        Tue, 24 Dec 2024 00:44:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFhCH2Etix+pcFQH4tLLchx6eTlRUvl7Zqan7z7//oAChJdIFWkZKWXSQRavLSylwCSSpJJuQ==
-X-Received: by 2002:a05:6a20:7487:b0:1e1:b023:6c98 with SMTP id adf61e73a8af0-1e5e0482bd2mr26657434637.26.1735029897372;
-        Tue, 24 Dec 2024 00:44:57 -0800 (PST)
-Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842abd593bcsm8430809a12.16.2024.12.24.00.44.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2024 00:44:56 -0800 (PST)
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: [PATCH] pinctrl: Fix the clean up on pinconf_apply_setting failure
-Date: Tue, 24 Dec 2024 14:14:41 +0530
-Message-Id: <20241224084441.515870-1-mukesh.ojha@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1735030824; c=relaxed/simple;
+	bh=iIFRZhvlUCHjcvWzeF5tljgi55EYFpAF+OSKsDDBICk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFCwbag0SEBJBTwwfVdH/ImVyhCgsUp9GG2yXM+IGJIFSwAwPXRmZHPrnuBZejZiC36HNsNoVVj/4b5PrlfpC8/UqOgVmsmEaB7TZTcy/0byHT4n86RSuXRAglP2XR+SLZ2anKA5sabovg5hlTyDhOI9c9VZyHnTimZYX+jG2Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFPUsrfC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9126C4CED0;
+	Tue, 24 Dec 2024 09:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735030823;
+	bh=iIFRZhvlUCHjcvWzeF5tljgi55EYFpAF+OSKsDDBICk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QFPUsrfCNbb/EuUE2bR4P/Se3TgwvsvOKwb3LzdHN80KEZ5QcTlwi+cOH4eCngI8F
+	 vcBJ8XW8kkcgAkq6qWc25fUGY/gcqT33JQ3soPtRlOeoUq0eOq8JIpAI+bhTWcJoAa
+	 kEil1r7tuKaH7bGxDN2OR9p5O/2/wVERKPJdRJjf7ia7hln1x09C1uXuMRYbzP10Fh
+	 nwWRtfkvdT5sKSRP5Z6ahyyNfAE33aPyhqcy/z6taFkxU17Q/I+zlrsFP5Jm+SXEwu
+	 fY0i9xqBHpSCHiO7YSjGcx7aECOUUW2O12D+ob947jIFaptzLj+j3/Svj4aRPFjKR+
+	 BxvbYFDn2A4Lg==
+Message-ID: <b1d541c1-296a-4b56-bea3-52e5becadf0e@kernel.org>
+Date: Tue, 24 Dec 2024 10:00:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 74QAvtFwQuuqOzlejTZUTb0KgveBYQVo
-X-Proofpoint-GUID: 74QAvtFwQuuqOzlejTZUTb0KgveBYQVo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- impostorscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- clxscore=1011 adultscore=0 mlxlogscore=980 priorityscore=1501
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412240072
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] dt-bindings: Add MAX7360 subdevices
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
+ <20241219-mdb-max7360-support-v1-2-8e8317584121@bootlin.com>
+ <58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org>
+ <D6J6JNPPZRKM.3F9YUY9CW3L2F@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <D6J6JNPPZRKM.3F9YUY9CW3L2F@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When some client does devm_pinctrl_get() followed by
-pinctrl_select_state() that does pinmux first successfully and later
-during config setting it sets the wrong drive strenght to the pin due to
-which pinconf_apply_setting fails. Currently, on failure during config
-setting is implemented as if pinmux has failed for one of the pin but
-that does not seem right and need to undo the pinmux for all the pin if
-config setting fails.
+On 23/12/2024 16:20, Mathieu Dubois-Briand wrote:
+> On Sat Dec 21, 2024 at 9:34 PM CET, Krzysztof Kozlowski wrote:
+>> On 19/12/2024 17:21, Mathieu Dubois-Briand wrote:
+>>> ---
+>>>  .../devicetree/bindings/gpio/max7360-gpio.yaml     | 96 ++++++++++++++++++++++
+>>>  .../devicetree/bindings/input/max7360-keypad.yaml  | 67 +++++++++++++++
+>>>  .../devicetree/bindings/input/max7360-rotary.yaml  | 52 ++++++++++++
+>>>  .../devicetree/bindings/pwm/max7360-pwm.yaml       | 35 ++++++++
+>>>  4 files changed, 250 insertions(+)
+>>
+>>
+>> I don't understand how this patchset was split. MFD binding cannot be
+>> empty and cannot be before child devices.
+>>
+> 
+> Ok, my bad. So I believe squashing both dt-bindings commit should fix
+> this.
+> 
+>>> diff --git a/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
+>>> new file mode 100644
+>>> index 000000000000..3c006dc0380b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
+>>> @@ -0,0 +1,96 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/gpio/max7360-gpio.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Maxim MAX7360 GPIO controller
+>>> +
+>>> +maintainers:
+>>> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>>> +
+>>> +description: |
+>>> +  Maxim MAX7360 GPIO controller, in MAX7360 MFD
+>>> +  https://www.analog.com/en/products/max7360.html
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - maxim,max7360-gpio
+>>> +      - maxim,max7360-gpo
+>>
+>> Why? What are the differences?
+>>
+> 
+> Ok, so maybe my approach here is completely wrong. I'm not sure what
+> would be the best way to describe the device here, if you have any
+> suggestion I would be happy to use it. Let me try to summarize the GPIO
+> setup of the chip.
+> 
+> First we have two series of GPIOs on the chips, which I tend to think
+> about as two separate "banks". Thus two separate subnodes of the max7360
+> node.
 
-Current commit does a bit refactor to reuse the code and tries to clean
-up mux setting on config setting failure.
+First, splitting MFD device into multiple children is pretty often wrong
+approach because it tries to mimic Linux driver design.
 
-Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
----
- drivers/pinctrl/core.c | 50 +++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 20 deletions(-)
+Such split in DT makes sense if these are really separate blocks, e.g.
+separate I2C addresses, re-usable on different designs.
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index b3eec63c00ba..4bdbf6bb26e2 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1256,6 +1256,20 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
- 				DL_FLAG_AUTOREMOVE_CONSUMER);
- }
- 
-+static void pinctrl_cond_disable_mux_setting(struct pinctrl_state *state,
-+					     struct pinctrl_setting *target_setting)
-+{
-+	struct pinctrl_setting *setting;
-+
-+	list_for_each_entry(setting, &state->settings, node) {
-+		if (target_setting && (&setting->node == &target_setting->node))
-+			break;
-+
-+		if (setting->type == PIN_MAP_TYPE_MUX_GROUP)
-+			pinmux_disable_setting(setting);
-+	}
-+}
-+
- /**
-  * pinctrl_commit_state() - select/activate/program a pinctrl state to HW
-  * @p: the pinctrl handle for the device that requests configuration
-@@ -1263,7 +1277,7 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
-  */
- static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- {
--	struct pinctrl_setting *setting, *setting2;
-+	struct pinctrl_setting *setting;
- 	struct pinctrl_state *old_state = READ_ONCE(p->state);
- 	int ret;
- 
-@@ -1274,11 +1288,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- 		 * still owned by the new state will be re-acquired by the call
- 		 * to pinmux_enable_setting() in the loop below.
- 		 */
--		list_for_each_entry(setting, &old_state->settings, node) {
--			if (setting->type != PIN_MAP_TYPE_MUX_GROUP)
--				continue;
--			pinmux_disable_setting(setting);
--		}
-+		pinctrl_cond_disable_mux_setting(old_state, NULL);
- 	}
- 
- 	p->state = NULL;
-@@ -1322,7 +1332,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- 		}
- 
- 		if (ret < 0) {
--			goto unapply_new_state;
-+			goto unapply_mux_setting;
- 		}
- 
- 		/* Do not link hogs (circular dependency) */
-@@ -1334,23 +1344,23 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- 
- 	return 0;
- 
-+unapply_mux_setting:
-+	pinctrl_cond_disable_mux_setting(state, NULL);
-+	goto restore_old_state;
-+
- unapply_new_state:
- 	dev_err(p->dev, "Error applying setting, reverse things back\n");
- 
--	list_for_each_entry(setting2, &state->settings, node) {
--		if (&setting2->node == &setting->node)
--			break;
--		/*
--		 * All we can do here is pinmux_disable_setting.
--		 * That means that some pins are muxed differently now
--		 * than they were before applying the setting (We can't
--		 * "unmux a pin"!), but it's not a big deal since the pins
--		 * are free to be muxed by another apply_setting.
--		 */
--		if (setting2->type == PIN_MAP_TYPE_MUX_GROUP)
--			pinmux_disable_setting(setting2);
--	}
-+	/*
-+	 * All we can do here is pinmux_disable_setting.
-+	 * That means that some pins are muxed differently now
-+	 * than they were before applying the setting (We can't
-+	 * "unmux a pin"!), but it's not a big deal since the pins
-+	 * are free to be muxed by another apply_setting.
-+	 */
-+	pinctrl_cond_disable_mux_setting(state, setting);
- 
-+restore_old_state:
- 	/* There's no infinite recursive loop here because p->state is NULL */
- 	if (old_state)
- 		pinctrl_select_state(p, old_state);
--- 
-2.34.1
+In this case Functional Block Diagram shows separate blocks, but still
+the same I2C block. This can be one device. This can be also two devices
+if that's easier to represent in DT.
 
+But in any case binding description should explain this.
+
+> 
+> - On one side we have what I refer to as GPIOs, here with
+>   maxim,max7360-gpio:
+>   - PORT0 to PORT7 pins of the chip.
+>   - Shared with PWM and rotary encoder functionalities. Functionality
+>     selection can be made independently for each pin. This selection is
+>     not described here. Runtime will have to ensure the same pin is not
+>     used by two drivers at the same time. E.g. we cannot have at the
+>     same time GPIO4 and PWM4.
+>   - Supports input and interrupts.
+>   - Outputs may be configured as constant current.
+>   - 8 GPIOS supported, so ngpios maximum is 8. Thinking about it now, we
+>     should probably also set minimum to 8, I don't see any reason to
+>     have ngpios set to something less.
+> 
+> On the other side, we have what I refer to as GPOs, here with
+> maxim,max7360-gpo compatible:
+>   - COL2 to COL7 pins of the chip.
+>   - Shared with the keypad functionality. Selections is made by
+>     partitioning the pins: first pins for keypad columns, last pins for
+>     GPOs. Partition is described here by ngpios and on keypad node by
+>     keypad,num-columns. Runtime will have to ensure values are coherent
+>     and configure the chip accordingly.
+>   - Only support outputs.
+>   - No support for constant current mode.
+>   - Supports 0 to 6 GPOs, so ngpios maximum is 6.
+> 
+>>> +
+>>> +  gpio-controller: true
+>>> +
+>>> +  "#gpio-cells":
+>>> +    const: 2
+>>> +
+>>> +  ngpios:
+>>> +    minimum: 0
+>>> +    maximum: 8
+>>
+>> Why this is flexible?
+>>
+> 
+> I believe this makes sense, as this keypad/gpos partition really changes
+> the actual number of GPIOS. Yet we could argue that this is just runtime
+> configuration. Tell me what you think about it, if you think this should
+> be a fixed value, I will find a way.
+
+Depends whether this is actual runtime configuration. If you configure
+keypad in DT, then the pins go away from GPIOs (especially considering
+that board might have these pins really connected to keypad). Anyway,
+explain this briefly in binding description.
+
+> 
+Best regards,
+Krzysztof
 
