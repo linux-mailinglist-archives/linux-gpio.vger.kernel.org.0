@@ -1,117 +1,385 @@
-Return-Path: <linux-gpio+bounces-14202-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14203-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 049E29FBDB8
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 13:59:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B0239FBDBE
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 14:05:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88513163832
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 12:59:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B849E164C10
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 13:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394FA1D79A6;
-	Tue, 24 Dec 2024 12:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7BC1B3936;
+	Tue, 24 Dec 2024 13:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="lCyJhxt8"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hmzS8D4R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+Received: from mail-m155106.qiye.163.com (mail-m155106.qiye.163.com [101.71.155.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79A91C3BE0
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 12:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75051DDD1
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2024 13:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735045136; cv=none; b=QQmF9Gll0iG/9koMvFRVJYIO8fd8Httdxiz9D/KvT0xlEs7vci8wMMi6fEqxgJfXOoE+H2cjXgVxtJr74aHMa8kJjJfTEj3py6KwvadLjXq/R7MYR6EsmWcj31iT2ApeLYwRESAO/V4ClJ9Qe4Jc0+LO/mYpNVPzJBMqU5i0Onw=
+	t=1735045543; cv=none; b=ogoo5cNXMKVTELLbSV/eVg9GWli9G5PAJzShPodMC2Ef5zBILYNETl276jtLVChUPSrbMuFyurz9Cc/UEp3kCibGR0SNuo9GL5YCCoiopGhU7f7s8fme3qbe3uwBkVyfEBMxJjz0L4Icu2WVOh+Khu3ivWNgWJUESpwGKaK/mJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735045136; c=relaxed/simple;
-	bh=YU3YZf97/L0qbzYrDeLMvLHqQw13/e7gCq2HUp6m9EQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UlIA8kwUQ19AV//EqfGt/4lENued9vLuT6S/fIFCmFAC01JpVhXej7aSSNDFphqnDqwpb+oFHq9CjzwYRUcRs8R2afCR3If8Rg/tTOZmskWPGCXsjHv2at7SSu24Vs+ZnTwkV+pcTVMlR/rbT9kpEGqvFlvbUn/GQDX0yOMpFgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=lCyJhxt8; arc=none smtp.client-ip=17.58.6.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1735045132;
-	bh=h3kiho8TfVhUdQIW4loxFW4A6GTk7CzgqqA6rmZLle8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
-	 x-icloud-hme;
-	b=lCyJhxt8u8AX46T2X/wvu3PmNuUXKCcKs4cLekyBu/8uAMfnysIzbGe1AlUCBV4Uf
-	 p0xefkStqlMGem4pR7zaumh1oJJUrgckAhBU5gPn3YZaqdSuC+g1hpDvQGSKVPXlUE
-	 gVVAyGn7g10BMn4kokWDpQmaCH4LETsoPF2UCml5q50IPrfFe96UG1vZSL1JZ1jjfT
-	 iQ9r04XiXcSIx0lDb1MRDBJYXuRgSi1nxnIwzLWnyg7rs3uK5Vnl7NMN6YPpri02uN
-	 JQ6jRpFZ5EFje1YrJkMdYeBe92ukQdxhfilb5OrZFswHLC6M/j99Wf06JWIPJAXXhh
-	 Fj/5wZNF7w3WQ==
-Received: from [192.168.1.25] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 297F14A033A;
-	Tue, 24 Dec 2024 12:58:41 +0000 (UTC)
-Message-ID: <5d7531da-5ae9-4c31-93c6-f2bca4c2d814@icloud.com>
-Date: Tue, 24 Dec 2024 20:58:38 +0800
+	s=arc-20240116; t=1735045543; c=relaxed/simple;
+	bh=Zr+M+YFF/t6JNccvZJB6h1naKNJY/hoBAidFqIfCrDo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iWeVcogiPoaVKIjA02KSrEUPZt1dYRYRCqYEvWIT7p3jLlMmdAla4oqJJ0zdYMs3IRR3wXCHwtzjLzAFOg9V9WTf7SuFRfktrJR4pWlg0SgCOnuV4i48gwCLNrf9jL0q37mI0HB9H1uyHq1CeVa17ireGDwHoksVPAL3hzbDHkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hmzS8D4R; arc=none smtp.client-ip=101.71.155.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 6aa78f78;
+	Tue, 24 Dec 2024 17:36:20 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linus.walleij@linaro.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH v2 2/2] pinctrl: rockchip: add rk3562 support
+Date: Tue, 24 Dec 2024 17:36:20 +0800
+Message-Id: <20241224093620.3815705-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/11] cxl/pmem: Replace match_nvdimm_bridge() with API
- device_match_type()
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>,
- Alison Schofield <alison.schofield@intel.com>
-References: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
- <20241211-const_dfc_done-v4-10-583cc60329df@quicinc.com>
- <20241223204852.000021d5@huawei.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20241223204852.000021d5@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 5BM9Ll3OJODDbXjCMiiEryY0SGhaSZXP
-X-Proofpoint-GUID: 5BM9Ll3OJODDbXjCMiiEryY0SGhaSZXP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-24_05,2024-12-24_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=791 clxscore=1015
- spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412240112
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkMeSVZCSx8aTE1PTEseGR9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a93f806460303afkunm6aa78f78
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nz46Axw*CjIQHEoVFxUSHj0h
+	PQIaCRxVSlVKTEhOS0hJQkNJSUNPVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFDQ0lNNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=hmzS8D4R0XYs/GitxAp6G2XJG97JR0805L/+AUukE8jt+rscSabtO/kVx+ZBxVsUtRs0vXR4jpwiTiC6zZqVaC9rQXHlxLRzQF5FW/fssDKKWQLx8eRFEw4iRvJAOCEpjDsUjXP9Je95XfunBktoCjJHQw3HSg7J9I+xqHyg7Bg=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=sPdm4i2gmspq8ydS+ozzIZpPwIyse6GSBJIfGwfydBA=;
+	h=date:mime-version:subject:message-id:from;
 
-On 2024/12/24 04:48, Jonathan Cameron wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> Static match_nvdimm_bridge(), as matching function of device_find_child()
->> matches a device with device type @cxl_nvdimm_bridge_type, and its task
->> can be simplified by the recently introduced API device_match_type().
->>
->> Replace match_nvdimm_bridge() usage with device_match_type().
->>
->> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> I don't see any uses of is_cxl_nvdimm_bridge() other than this one
-> Drop that as well?
-> 
-will add a optional patch to drop is_cxl_nvdimm_bridge() in next revision.
+From: Steven Liu <steven.liu@rock-chips.com>
 
-> This one is a bit of a trade off because the way is_cxl_nvdimm_bridge()
-> is identified is kind of an internal detail, but it's been true for a long
-> time so I'm fine with this change.
-> 
-> Jonathan
+Add support for the 5 GPIO banks in the rk3562.
+
+Signed-off-by: Steven Liu <steven.liu@rock-chips.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+---
+
+Changes in v2:
+- collect review tag
+
+ drivers/pinctrl/pinctrl-rockchip.c | 200 ++++++++++++++++++++++++++++-
+ drivers/pinctrl/pinctrl-rockchip.h |   3 +-
+ 2 files changed, 200 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 36d4eaf0ebd1..15145882950f 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Pinctrl driver for Rockchip SoCs
+- *
++ * Copyright (c) 2020-2024 Rockchip Electronics Co., Ltd.
+  * Copyright (c) 2013 MundoReader S.L.
+  * Author: Heiko Stuebner <heiko@sntech.de>
+  *
+@@ -2003,6 +2003,151 @@ static int rk3399_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+ 	return 0;
+ }
+ 
++#define RK3562_DRV_BITS_PER_PIN		8
++#define RK3562_DRV_PINS_PER_REG		2
++#define RK3562_DRV_GPIO0_OFFSET		0x20070
++#define RK3562_DRV_GPIO1_OFFSET		0x200
++#define RK3562_DRV_GPIO2_OFFSET		0x240
++#define RK3562_DRV_GPIO3_OFFSET		0x10280
++#define RK3562_DRV_GPIO4_OFFSET		0x102C0
++
++static int rk3562_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
++				       int pin_num, struct regmap **regmap,
++				       int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	*regmap = info->regmap_base;
++	switch (bank->bank_num) {
++	case 0:
++		*reg = RK3562_DRV_GPIO0_OFFSET;
++		break;
++
++	case 1:
++		*reg = RK3562_DRV_GPIO1_OFFSET;
++		break;
++
++	case 2:
++		*reg = RK3562_DRV_GPIO2_OFFSET;
++		break;
++
++	case 3:
++		*reg = RK3562_DRV_GPIO3_OFFSET;
++		break;
++
++	case 4:
++		*reg = RK3562_DRV_GPIO4_OFFSET;
++		break;
++
++	default:
++		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
++		break;
++	}
++
++	*reg += ((pin_num / RK3562_DRV_PINS_PER_REG) * 4);
++	*bit = pin_num % RK3562_DRV_PINS_PER_REG;
++	*bit *= RK3562_DRV_BITS_PER_PIN;
++
++	return 0;
++}
++
++#define RK3562_PULL_BITS_PER_PIN		2
++#define RK3562_PULL_PINS_PER_REG		8
++#define RK3562_PULL_GPIO0_OFFSET		0x20020
++#define RK3562_PULL_GPIO1_OFFSET		0x80
++#define RK3562_PULL_GPIO2_OFFSET		0x90
++#define RK3562_PULL_GPIO3_OFFSET		0x100A0
++#define RK3562_PULL_GPIO4_OFFSET		0x100B0
++
++static int rk3562_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
++					int pin_num, struct regmap **regmap,
++					int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	*regmap = info->regmap_base;
++	switch (bank->bank_num) {
++	case 0:
++		*reg = RK3562_PULL_GPIO0_OFFSET;
++		break;
++
++	case 1:
++		*reg = RK3562_PULL_GPIO1_OFFSET;
++		break;
++
++	case 2:
++		*reg = RK3562_PULL_GPIO2_OFFSET;
++		break;
++
++	case 3:
++		*reg = RK3562_PULL_GPIO3_OFFSET;
++		break;
++
++	case 4:
++		*reg = RK3562_PULL_GPIO4_OFFSET;
++		break;
++
++	default:
++		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
++		break;
++	}
++
++	*reg += ((pin_num / RK3562_PULL_PINS_PER_REG) * 4);
++	*bit = pin_num % RK3562_PULL_PINS_PER_REG;
++	*bit *= RK3562_PULL_BITS_PER_PIN;
++
++	return 0;
++}
++
++#define RK3562_SMT_BITS_PER_PIN		2
++#define RK3562_SMT_PINS_PER_REG		8
++#define RK3562_SMT_GPIO0_OFFSET		0x20030
++#define RK3562_SMT_GPIO1_OFFSET		0xC0
++#define RK3562_SMT_GPIO2_OFFSET		0xD0
++#define RK3562_SMT_GPIO3_OFFSET		0x100E0
++#define RK3562_SMT_GPIO4_OFFSET		0x100F0
++
++static int rk3562_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
++					   int pin_num,
++					   struct regmap **regmap,
++					   int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	*regmap = info->regmap_base;
++	switch (bank->bank_num) {
++	case 0:
++		*reg = RK3562_SMT_GPIO0_OFFSET;
++		break;
++
++	case 1:
++		*reg = RK3562_SMT_GPIO1_OFFSET;
++		break;
++
++	case 2:
++		*reg = RK3562_SMT_GPIO2_OFFSET;
++		break;
++
++	case 3:
++		*reg = RK3562_SMT_GPIO3_OFFSET;
++		break;
++
++	case 4:
++		*reg = RK3562_SMT_GPIO4_OFFSET;
++		break;
++
++	default:
++		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
++		break;
++	}
++
++	*reg += ((pin_num / RK3562_SMT_PINS_PER_REG) * 4);
++	*bit = pin_num % RK3562_SMT_PINS_PER_REG;
++	*bit *= RK3562_SMT_BITS_PER_PIN;
++
++	return 0;
++}
++
+ #define RK3568_PULL_PMU_OFFSET		0x20
+ #define RK3568_PULL_GRF_OFFSET		0x80
+ #define RK3568_PULL_BITS_PER_PIN	2
+@@ -2495,7 +2640,8 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+ 		rmask_bits = RK3588_DRV_BITS_PER_PIN;
+ 		ret = strength;
+ 		goto config;
+-	} else if (ctrl->type == RK3568) {
++	} else if (ctrl->type == RK3562 ||
++		   ctrl->type == RK3568) {
+ 		rmask_bits = RK3568_DRV_BITS_PER_PIN;
+ 		ret = (1 << (strength + 1)) - 1;
+ 		goto config;
+@@ -2639,6 +2785,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
+ 	case RK3328:
+ 	case RK3368:
+ 	case RK3399:
++	case RK3562:
+ 	case RK3568:
+ 	case RK3576:
+ 	case RK3588:
+@@ -2699,6 +2846,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+ 	case RK3328:
+ 	case RK3368:
+ 	case RK3399:
++	case RK3562:
+ 	case RK3568:
+ 	case RK3576:
+ 	case RK3588:
+@@ -2810,6 +2958,7 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+ 
+ 	data >>= bit;
+ 	switch (ctrl->type) {
++	case RK3562:
+ 	case RK3568:
+ 		return data & ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1);
+ 	default:
+@@ -2839,6 +2988,7 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
+ 
+ 	/* enable the write to the equivalent lower bits */
+ 	switch (ctrl->type) {
++	case RK3562:
+ 	case RK3568:
+ 		data = ((1 << RK3568_SCHMITT_BITS_PER_PIN) - 1) << (bit + 16);
+ 		rmask = data | (data >> 16);
+@@ -2965,6 +3115,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
+ 	case RK3328:
+ 	case RK3368:
+ 	case RK3399:
++	case RK3562:
+ 	case RK3568:
+ 	case RK3576:
+ 	case RK3588:
+@@ -4086,6 +4237,49 @@ static struct rockchip_pin_ctrl rk3399_pin_ctrl = {
+ 		.drv_calc_reg		= rk3399_calc_drv_reg_and_bit,
+ };
+ 
++static struct rockchip_pin_bank rk3562_pin_banks[] = {
++	PIN_BANK_IOMUX_FLAGS_OFFSET(0, 32, "gpio0",
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    0x20000, 0x20008, 0x20010, 0x20018),
++	PIN_BANK_IOMUX_FLAGS_OFFSET(1, 32, "gpio1",
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    0, 0x08, 0x10, 0x18),
++	PIN_BANK_IOMUX_FLAGS_OFFSET(2, 32, "gpio2",
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    0x20, 0, 0, 0),
++	PIN_BANK_IOMUX_FLAGS_OFFSET(3, 32, "gpio3",
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    0x10040, 0x10048, 0x10050, 0x10058),
++	PIN_BANK_IOMUX_FLAGS_OFFSET(4, 16, "gpio4",
++				    IOMUX_WIDTH_4BIT,
++				    IOMUX_WIDTH_4BIT,
++				    0,
++				    0,
++				    0x10060, 0x10068, 0, 0),
++};
++
++static struct rockchip_pin_ctrl rk3562_pin_ctrl __maybe_unused = {
++	.pin_banks		= rk3562_pin_banks,
++	.nr_banks		= ARRAY_SIZE(rk3562_pin_banks),
++	.label			= "RK3562-GPIO",
++	.type			= RK3562,
++	.pull_calc_reg		= rk3562_calc_pull_reg_and_bit,
++	.drv_calc_reg		= rk3562_calc_drv_reg_and_bit,
++	.schmitt_calc_reg	= rk3562_calc_schmitt_reg_and_bit,
++};
++
+ static struct rockchip_pin_bank rk3568_pin_banks[] = {
+ 	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT,
+ 					     IOMUX_SOURCE_PMU | IOMUX_WIDTH_4BIT,
+@@ -4210,6 +4404,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 		.data = &rk3368_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3399-pinctrl",
+ 		.data = &rk3399_pin_ctrl },
++	{ .compatible = "rockchip,rk3562-pinctrl",
++		.data = &rk3562_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3568-pinctrl",
+ 		.data = &rk3568_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3576-pinctrl",
+diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
+index 6ebbb0a88ce7..87a20cec8e21 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.h
++++ b/drivers/pinctrl/pinctrl-rockchip.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+- * Copyright (c) 2020-2021 Rockchip Electronics Co. Ltd.
++ * Copyright (c) 2020-2024 Rockchip Electronics Co., Ltd.
+  *
+  * Copyright (c) 2013 MundoReader S.L.
+  * Author: Heiko Stuebner <heiko@sntech.de>
+@@ -196,6 +196,7 @@ enum rockchip_pinctrl_type {
+ 	RK3328,
+ 	RK3368,
+ 	RK3399,
++	RK3562,
+ 	RK3568,
+ 	RK3576,
+ 	RK3588,
+-- 
+2.25.1
 
 
