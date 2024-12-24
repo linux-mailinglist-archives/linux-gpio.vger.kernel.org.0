@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-14220-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14221-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE0AD9FC1CE
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 20:57:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1205F9FC1DA
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 21:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58FFA16304A
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 19:57:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 597FA1883968
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 20:03:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D017018D63C;
-	Tue, 24 Dec 2024 19:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 248F91D86CE;
+	Tue, 24 Dec 2024 20:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0FyCeeO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZjYdlt1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F4716132F;
-	Tue, 24 Dec 2024 19:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB6D1465B4;
+	Tue, 24 Dec 2024 20:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735070219; cv=none; b=IEtctCJ8llHnKmjC3wcwDi3bLf8Y7fm+o/Oj111z11zVpsForKLSSKXCT9xbxnMop5DdXGf2VBUuLs/nr9HZJ65tI1RodXVM+X1HGdARLd1FmNuko0UQOg/o/vEycIdT5MCpyKIkENE7l5b7nkjXM87TVzw+YNyjXWeRqUWyy5M=
+	t=1735070585; cv=none; b=iFR7Ldvl9CDf5VFEXzQNOCoKc7C956p2UBi20CMk3+Nm7GN9mkvbvpJrFMshtfD2OOssVQsXjNybGDFPXefn69YqCcopt6OtGu5vNdzRU1FWJ4ZFHpAkNmkc3xE8DAzy0PT5D/1xtuNEI9j+pyjPkr+K7sIDfOYOtSn0iHVwVWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735070219; c=relaxed/simple;
-	bh=mjZ5CpBh6nKB4Yxeo8vN5nbbMmQydxSPB3ZEOTsKd2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U0ctOeZVV/pSFxhzAbB8DP280tLPAEuTDMCTb2wFZuyjaw3cyTgLQT8FXUwzH1Vw5rtmxPWzbhttiP+HyuNvyg/H+uk5fw2POVxRAnnIUSYK7PTOckMiKfmKPTXB+PNDbzt12JEzaQFhMlSrTWvmRxBBjQUyEHhc0cPlsmif/0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0FyCeeO; arc=none smtp.client-ip=209.85.166.51
+	s=arc-20240116; t=1735070585; c=relaxed/simple;
+	bh=kKMCgdOtt8sjk7gbDCkMPMAZShJNbICfwsSqXjYqoRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=juTIf5thmcbDfpEc+F7vH3zXnYA083iveJ3HMpuFDWhux1H1/kD4HnKG2DdFEURsiknXlG5wtbWVBH67ngWKFz6ocJOO3vskQO3pl+l4DFQosdJYrH6hyf/0+pAMc4795u9aC/UmhzWwe3Ay5a/VdLMothBN7/VjLIu3IUveCdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZjYdlt1; arc=none smtp.client-ip=209.85.166.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-844de072603so491875839f.0;
-        Tue, 24 Dec 2024 11:56:57 -0800 (PST)
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-844e55a981dso203400039f.3;
+        Tue, 24 Dec 2024 12:03:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735070217; x=1735675017; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1735070583; x=1735675383; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TpbE32YrRX7k68vHgrK8mf3gbDDES5zEOdwfZIy6I+0=;
-        b=Z0FyCeeODUkog80bDMWIOE7EnwSg1qkPObDtcM/v9B45Jnl3AJoofOmOUoCRVTnp/4
-         4ZZwn4/GIsJtEDbkeYNBVRtgKizxbTNcU2yE1SuWN4mEJMDVNuoSaUw0H0mQWLtT/BR2
-         XHNlXDZshfKBtCw5Jn5pTMcM2G3TGKC7BRX3RsJ1FJaT33UXjpbiSoLLQ6Kfw630C9iE
-         2QAUt/yHPmH2xPiCrVAz0HAIvLoo0zec5iKRJ8O+/Jzd2SeQ2cxU4pXb5MU7INbO5AAl
-         BG9JChyZ6kswJiExwMomCz1+FJrrgHtQnZeHq2diZD4lS+wMzqs/nf5oXBQBeRtbRS1b
-         XbgQ==
+        bh=poncxOnZdDcZKHqz0owUgHxjpuHE1fKkza/gUQopM84=;
+        b=BZjYdlt1k1h7+ryxPhnWqHdCjZ3VhW3t3tnSjgdsioH/nl7/bVUblnu0WqqoV1Gmmc
+         musZH7kmX1C0enNHLTCptPBKioga6rwl1zmWaVrg6I1J+Cd3ERBuAZeJHLjDLvoN6QSz
+         Fit/z2CfhOxn8ytTScZVk6o5YZ3V93LjX0GBo6gWzFEB1bZxSIcn1tvU9wp1JulJL6Qo
+         f+bCAmji3a18V5CYfXtfZayO9XzefBLxphe8sRm/fadOqMJIue/k53NqjaqcBlYZf12A
+         HMDCiq7BzkWuPFMHIiZgj7HEA8vlVlXZqSpWZrGYg5q/WDE1NtjtrsAEh8MCX2GhRQFn
+         +m4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735070217; x=1735675017;
+        d=1e100.net; s=20230601; t=1735070583; x=1735675383;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TpbE32YrRX7k68vHgrK8mf3gbDDES5zEOdwfZIy6I+0=;
-        b=W+CzT7H4ecmSQP2fOth/pAAQNV/J5j30gnSAVX0ABX3kODm4sY/6uY404ShvO1iTg5
-         aO5T1JF4e4dxhbCwp1+BS047TD19eRJgEL2VCwqx+LqsNhp85zlVDc+l4JutvNgGw5+b
-         9q3+RodEK7dLTszbL2CMdIFWF2uPN9l4HFFLmgHlm6WfhS9VmqCTb1+9JpGoy0uZubzP
-         XIE4fPJd1vJjNBSJ23cldfHGCec1TN7JBPW9qT/RWh2MrMSHGAQjRZv7xidPIRGt7nxB
-         pW9y7CuF0sl14qIz1EhTaOQ6PLP+0Sc3vdBtc+C+2FxZcVjx26Z9R7MP+zrTK3IOxZb7
-         F/Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWTxDdS1oIOGgZOxIxmHoxVHQsGurnnDWFfy0HtoOKoZ4vXRBn+ydsMsrnOaOFNZUcbKOar1NOgathZ@vger.kernel.org, AJvYcCXOj2EBoXQ0eBaT2cwrQn3mlCviFwMiLfn5dh7UmbgjfyCoMsG06PAUaU7seh9Mv3s0nXDaBwXW4G5QLIoD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsDfynTOGTLwpntw/JUVyHVEJiRjXJG8V5oX1uSZF+5Q15E1Ti
-	taFXi9wbC06mxE0GcFQShOKDY9hVdqfLXSjelPZg0EySQKvvraJT
-X-Gm-Gg: ASbGncuNMs6lDVIAbMr1AuB+mjwxtNQM/Wu4npuncRf3nFn6fOg2ue3pmu2xcpeGXRk
-	qoy84X0ytNPWmus07PJxpjJSw7s3c4ssDAEv8HuezOtMxWIITThIg+eZ/c10dDuMLT20OU68OID
-	hXAuKjn5yFvHHqq2lx6BgJstt8lJRNRaL1dQ4Xfwh1/rWqW1rUj/ZFePnU9CfZ9hgEXR2bXOwmf
-	5jGZ/ZcUhZmWgAvSqYVoH5kf9Q7jgWjXxFv515aFHV5sr0OQAGO//ET1nfcAvQCyC2u
-X-Google-Smtp-Source: AGHT+IHX4vrmb8xk5P7zI2PSaxST8v5YjWWt+HzJlZhWJGjYPjLwHvnt47dobMyGbrbLFCDBd6cTxQ==
-X-Received: by 2002:a92:c24c:0:b0:3a7:c5cb:8bf3 with SMTP id e9e14a558f8ab-3c2d277f5aamr146379315ab.9.1735070217031;
-        Tue, 24 Dec 2024 11:56:57 -0800 (PST)
+        bh=poncxOnZdDcZKHqz0owUgHxjpuHE1fKkza/gUQopM84=;
+        b=p+nKhRt6t81MFwvDrhn9w5BmhhAcj7SQqOmi4jAlXPc881/irGEaXYGSgeN7IwnkwU
+         /ay7sQerKoEvYVOyHQnaegjHpwTbgstna7NP7zkzEoZVi1lmQTY3etlGPrrfgmh2VmHX
+         p/dE2FUZchcB3y2MkFA7QdA8IboFH8wvb3fzIo0NYKlFNcycUu0urK8RuKWNoyXzGzZk
+         EdhHoqYdN4yePI0DxYmHMpkEQpPG8cRfcYOrz0ZDIfkOKQhxTKPUMGw9qRPgEN8IRJhS
+         RhNrj3jbsOp4EvAGDPDVvR9ffEiM93KrkdvTEX7yeyqIhIXWGcHOVkEEhHUUOuHtRxrv
+         CVdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGqCZCZgKBJNGBy+12lEoyzw4g3ze7+ven/Sexrv98xa/RZATWDuDal3KDB+u3vMNmGcwbOZ9lchUOHRTy@vger.kernel.org, AJvYcCXNAL4etLf80ifozzc8SDeVEZCPaXJXFlSFQr5RmwMa9qP8Og3RtX757RySs3pd6APovEAlgEqifOyA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOrK24exTGLKBvG6ojXcW2LyA3eAB3WsvxVomZdPlM5wDxW90w
+	fOq6FhHedspa7EM0l4LckotkSJffTf1rjoKhDDtQeubXxJWrsvIi
+X-Gm-Gg: ASbGnctVZrkmzErCcpq67c8ylqaUhu1gPrQWeYtKS6liopdyOm7zlB89zw0h0rPi2vV
+	Omjbr+qVVRIrDaQ98q0h4iGBolNdJkQ+BhjGWorOjhnU44MVPcUmE7ZB7lv+Yi6R6PYerBF5UxD
+	s86uDEtHV4MO1hC1CBxpBmNC/NBy/svcjrO06ChV4T209Hrkh3TG7nI7G6mZ1SrUc11M8p384b1
+	vmJm3AoHD2gNVHjW1AwGsF2icfmHnMDrHzzYJk/ltWqw2xhhTgYIilHvZ6pTp+OF17c
+X-Google-Smtp-Source: AGHT+IFCS4C7fNiL6P/tkM9845PTEQ0rb/c/Qe3WOuiYEvVQ+LydZky1ohM7JeCfVoiEmoAcbg9QqQ==
+X-Received: by 2002:a05:6e02:174d:b0:3a7:e7a9:8a78 with SMTP id e9e14a558f8ab-3c2d515168fmr129378365ab.17.1735070583459;
+        Tue, 24 Dec 2024 12:03:03 -0800 (PST)
 Received: from localhost.localdomain ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3c0de053105sm29963655ab.15.2024.12.24.11.56.55
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c1dab95sm2842435173.123.2024.12.24.12.03.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2024 11:56:56 -0800 (PST)
+        Tue, 24 Dec 2024 12:03:02 -0800 (PST)
 From: Mingwei Zheng <zmw12306@gmail.com>
 To: marex@denx.de
 Cc: antonio.borneo@foss.st.com,
@@ -84,9 +84,9 @@ Cc: antonio.borneo@foss.st.com,
 	linux-kernel@vger.kernel.org,
 	Mingwei Zheng <zmw12306@gmail.com>,
 	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH v7] pinctrl: stm32: Add check for clk_enable()
-Date: Tue, 24 Dec 2024 15:00:00 -0500
-Message-Id: <20241224200000.76661-1-zmw12306@gmail.com>
+Subject: [PATCH RESEND v7] pinctrl: stm32: Add check for clk_enable()
+Date: Tue, 24 Dec 2024 15:06:08 -0500
+Message-Id: <20241224200608.84923-1-zmw12306@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -103,6 +103,34 @@ the potential error.
 Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested")
 Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
 Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+Changelog:
+
+v6 -> v7:
+1. Move clk_bulk_prepare_enable() before calling 
+stm32_gpiolib_register_bank().
+
+v5 -> v6:
+1. Call devm_clk_bulk_get_all in stm32_pctl_probe().
+
+v4 -> v5:
+1. Move the clock handling from stm32_gpiolib_register_bank()
+and moving it to its caller.
+2. Call clk_bulk_prepare_enable() in stm32_pctl_probe() 
+and clk_bulk_disable_unprepare() for error.
+
+v3 -> v4:
+1. Add initialization for pctl->clks.
+2. Adjust alignment.
+
+v2 -> v3:
+
+1. Convert clk_disable_unprepare to clk_bulk_disable
+and clk_bulk_unprepare.
+
+v1 -> v2:
+
+1. Move int ret declaration into if block.
 ---
  drivers/pinctrl/stm32/pinctrl-stm32.c | 71 +++++++++++----------------
  1 file changed, 29 insertions(+), 42 deletions(-)
