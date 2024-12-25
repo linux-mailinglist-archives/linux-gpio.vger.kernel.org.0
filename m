@@ -1,307 +1,159 @@
-Return-Path: <linux-gpio+bounces-14221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1205F9FC1DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 21:03:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3799D9FC2F5
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 01:33:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 597FA1883968
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2024 20:03:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1CE8165077
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 00:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 248F91D86CE;
-	Tue, 24 Dec 2024 20:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZjYdlt1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2DA26116;
+	Wed, 25 Dec 2024 00:33:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB6D1465B4;
-	Tue, 24 Dec 2024 20:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F712581;
+	Wed, 25 Dec 2024 00:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735070585; cv=none; b=iFR7Ldvl9CDf5VFEXzQNOCoKc7C956p2UBi20CMk3+Nm7GN9mkvbvpJrFMshtfD2OOssVQsXjNybGDFPXefn69YqCcopt6OtGu5vNdzRU1FWJ4ZFHpAkNmkc3xE8DAzy0PT5D/1xtuNEI9j+pyjPkr+K7sIDfOYOtSn0iHVwVWU=
+	t=1735086801; cv=none; b=NFZTjFzSBZU5P0tYWaj5h/r3zl1p2sSU730CvL1NjY4ww0YmxgWmvtSQWPvCdw1V8FAF6l7fsG/63AH2OgRvJ9AXw34cDKYBjgzb8JTPpa3EV+4FK2bLezIEDXvm+RPUgWObzH65AtRj66APEvAK2A+wpiy4hSBZKQS1PyHD/sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735070585; c=relaxed/simple;
-	bh=kKMCgdOtt8sjk7gbDCkMPMAZShJNbICfwsSqXjYqoRM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=juTIf5thmcbDfpEc+F7vH3zXnYA083iveJ3HMpuFDWhux1H1/kD4HnKG2DdFEURsiknXlG5wtbWVBH67ngWKFz6ocJOO3vskQO3pl+l4DFQosdJYrH6hyf/0+pAMc4795u9aC/UmhzWwe3Ay5a/VdLMothBN7/VjLIu3IUveCdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZjYdlt1; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-844e55a981dso203400039f.3;
-        Tue, 24 Dec 2024 12:03:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735070583; x=1735675383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=poncxOnZdDcZKHqz0owUgHxjpuHE1fKkza/gUQopM84=;
-        b=BZjYdlt1k1h7+ryxPhnWqHdCjZ3VhW3t3tnSjgdsioH/nl7/bVUblnu0WqqoV1Gmmc
-         musZH7kmX1C0enNHLTCptPBKioga6rwl1zmWaVrg6I1J+Cd3ERBuAZeJHLjDLvoN6QSz
-         Fit/z2CfhOxn8ytTScZVk6o5YZ3V93LjX0GBo6gWzFEB1bZxSIcn1tvU9wp1JulJL6Qo
-         f+bCAmji3a18V5CYfXtfZayO9XzefBLxphe8sRm/fadOqMJIue/k53NqjaqcBlYZf12A
-         HMDCiq7BzkWuPFMHIiZgj7HEA8vlVlXZqSpWZrGYg5q/WDE1NtjtrsAEh8MCX2GhRQFn
-         +m4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735070583; x=1735675383;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=poncxOnZdDcZKHqz0owUgHxjpuHE1fKkza/gUQopM84=;
-        b=p+nKhRt6t81MFwvDrhn9w5BmhhAcj7SQqOmi4jAlXPc881/irGEaXYGSgeN7IwnkwU
-         /ay7sQerKoEvYVOyHQnaegjHpwTbgstna7NP7zkzEoZVi1lmQTY3etlGPrrfgmh2VmHX
-         p/dE2FUZchcB3y2MkFA7QdA8IboFH8wvb3fzIo0NYKlFNcycUu0urK8RuKWNoyXzGzZk
-         EdhHoqYdN4yePI0DxYmHMpkEQpPG8cRfcYOrz0ZDIfkOKQhxTKPUMGw9qRPgEN8IRJhS
-         RhNrj3jbsOp4EvAGDPDVvR9ffEiM93KrkdvTEX7yeyqIhIXWGcHOVkEEhHUUOuHtRxrv
-         CVdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGqCZCZgKBJNGBy+12lEoyzw4g3ze7+ven/Sexrv98xa/RZATWDuDal3KDB+u3vMNmGcwbOZ9lchUOHRTy@vger.kernel.org, AJvYcCXNAL4etLf80ifozzc8SDeVEZCPaXJXFlSFQr5RmwMa9qP8Og3RtX757RySs3pd6APovEAlgEqifOyA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOrK24exTGLKBvG6ojXcW2LyA3eAB3WsvxVomZdPlM5wDxW90w
-	fOq6FhHedspa7EM0l4LckotkSJffTf1rjoKhDDtQeubXxJWrsvIi
-X-Gm-Gg: ASbGnctVZrkmzErCcpq67c8ylqaUhu1gPrQWeYtKS6liopdyOm7zlB89zw0h0rPi2vV
-	Omjbr+qVVRIrDaQ98q0h4iGBolNdJkQ+BhjGWorOjhnU44MVPcUmE7ZB7lv+Yi6R6PYerBF5UxD
-	s86uDEtHV4MO1hC1CBxpBmNC/NBy/svcjrO06ChV4T209Hrkh3TG7nI7G6mZ1SrUc11M8p384b1
-	vmJm3AoHD2gNVHjW1AwGsF2icfmHnMDrHzzYJk/ltWqw2xhhTgYIilHvZ6pTp+OF17c
-X-Google-Smtp-Source: AGHT+IFCS4C7fNiL6P/tkM9845PTEQ0rb/c/Qe3WOuiYEvVQ+LydZky1ohM7JeCfVoiEmoAcbg9QqQ==
-X-Received: by 2002:a05:6e02:174d:b0:3a7:e7a9:8a78 with SMTP id e9e14a558f8ab-3c2d515168fmr129378365ab.17.1735070583459;
-        Tue, 24 Dec 2024 12:03:03 -0800 (PST)
-Received: from localhost.localdomain ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e68c1dab95sm2842435173.123.2024.12.24.12.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2024 12:03:02 -0800 (PST)
-From: Mingwei Zheng <zmw12306@gmail.com>
-To: marex@denx.de
-Cc: antonio.borneo@foss.st.com,
-	linus.walleij@linaro.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	make24@iscas.ac.cn,
-	peng.fan@nxp.com,
-	fabien.dessenne@foss.st.com,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Mingwei Zheng <zmw12306@gmail.com>,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH RESEND v7] pinctrl: stm32: Add check for clk_enable()
-Date: Tue, 24 Dec 2024 15:06:08 -0500
-Message-Id: <20241224200608.84923-1-zmw12306@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1735086801; c=relaxed/simple;
+	bh=cxl3ajAlJqTFZVJYcvm63By6WB5fDAr1GHfv0IxtB/Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EK65e61nlvKb2KcW6OQ9bdSXZWKqbKO2GCg2tBP8BBB007yhZq9DTOblvpsTFpbW/l/b6KFkcKbGmiMcDeBnnfTinTVAxTm3x/tfkey51Wr5mheD4c4GMhjSagjrGJ1aUDrP/e/6QEna/C7ccbdbKJ9pc45RL9JTohRzc64n9ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v3 0/3] riscv: spacemit: add gpio support for K1 SoC
+Date: Wed, 25 Dec 2024 08:32:38 +0800
+Message-Id: <20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKdSa2cC/1WQy27EIAxFfyViXSrbkOeq/1F1EcBkUDshJWnUa
+ pR/L8mM2hl2F+kcX/siZk6BZ9EVF5F4DXOIYw7qqRD21I8Dy+ByFgSkoaFGgpLvKIcpRFmh8S3
+ 5FhRZkYEpsQ/fh+z17ZoTf35l53L9/Fd2xSGsqNptgNL0c7DSLRL7XiEzG+uoW0txX+RG1ZBr0
+ A5OYbRL+pCqJwNsUSHgDcpCljaez2Hpirpx2ivNhFiaEmtjjeeaLTjAxuRX+daAacRe+xTmJaa
+ f4yQrHr2PsS3o++3X3FtWUBMbZtszvAw8LjE+xzQcnpX+WCRsH1jKLDVaa++I0LoHdtu2Xx+J6
+ haYAQAA
+X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
+ Jesse Taube <mr.bossman075@gmail.com>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3764; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=cxl3ajAlJqTFZVJYcvm63By6WB5fDAr1GHfv0IxtB/Q=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBna1K64x9Qk83DaIIseh3eAA9yHstXGjOvGDmsK
+ pH3yjgh8S2JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ2tSul8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277RahD/9uuI9FpmUE2tmQb/
+ Csw7MdmVqGup9rJ8afzNy/hVOdpx05/43R9NJrBjON+PGfwcVJXwxSE2u7BE4eG+CwwAeOGMwSH
+ HPmx/kIYpG0OuFnBgEOSLD1ZzCkY8abcvM41/UbHIOkT2JQtjUezkCEaWtlPI0TXyxEBcvJKpks
+ dgoD5cGLyzPBzR4p1xsViWXN2n0DQr0zQksIcdT5x2eEigYp+WexiZ94w61peYhaU3CBmvAArdt
+ Alo9HuZ8YUgZ/E3WogVfJGGEyq5gESxrFu1Xb/WoXe7VbncUs284z6KRKg/qPS0Wa+73f8T05g+
+ GJP1aT3AAYy5B8+p6FOOkzviMW9ekm9FBMSI5G6p+vQYU6BM7TU6YWPPFmWenI4hJres0IzZduQ
+ ousCLgQN9avMOQlMlI/bpTbIDhEdb9wTmCUz8ktnQkuxa58ziJ5r3Z565Nk78QhFOjuxf5u9z69
+ SkZk7At+v4g0s794eil/vPP45DEJdbvlFLZgneCGYoi6p07jMwl/LKUbmNHBtc494L+0VUUHzac
+ tNY5/VRoO8bu2G9rEBQZCWJ9IRyXje9o2sy3SgqZwjuQV0MMpwXV8zjFWiXmposSidV5Obhplw/
+ TSVPrSqyK0RbdIMjVN9afTF8T/pyV/qFsLBzj6Xc4fVpn18t2o7kuWD7DHvkbKekSwHw==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-Convert the driver to clk_bulk*() API.
-Add check for the return value of clk_bulk_enable() to catch
-the potential error.
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, falling edge,
+or both. There are four GPIO banks, each consisting of 32 pins.
 
-Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested")
-Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+The GPIO driver request the clock source from APBC block,
+In this series, I haven't added the clock support, but plan
+to fix it after clock driver is implemented/merged.
+
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+
+Note, this patch need two prerequisite series, basic dt[2] and pinctrl[3]
+
+This patch series has been tested on Bananapi-F3 board,
+with following GPIO cases passed:
+ 1) gpio input
+ 2) gpio output - set to high, low
+ 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
-Changelog:
+Changes in v3:
+- dt: drop ranges, interrupt-names property
+- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
 
-v6 -> v7:
-1. Move clk_bulk_prepare_enable() before calling 
-stm32_gpiolib_register_bank().
+Changes in v2:
+- address dt-bindings comments, simplify example
+- rebase to 6.13-rc3 
+- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
 
-v5 -> v6:
-1. Call devm_clk_bulk_get_all in stm32_pctl_probe().
-
-v4 -> v5:
-1. Move the clock handling from stm32_gpiolib_register_bank()
-and moving it to its caller.
-2. Call clk_bulk_prepare_enable() in stm32_pctl_probe() 
-and clk_bulk_disable_unprepare() for error.
-
-v3 -> v4:
-1. Add initialization for pctl->clks.
-2. Adjust alignment.
-
-v2 -> v3:
-
-1. Convert clk_disable_unprepare to clk_bulk_disable
-and clk_bulk_unprepare.
-
-v1 -> v2:
-
-1. Move int ret declaration into if block.
 ---
- drivers/pinctrl/stm32/pinctrl-stm32.c | 71 +++++++++++----------------
- 1 file changed, 29 insertions(+), 42 deletions(-)
+Yixun Lan (3):
+      dt-bindings: gpio: spacemit: add support for K1 SoC
+      gpio: spacemit: add support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 5b7fa77c1184..9c32ae3e5d45 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -86,7 +86,6 @@ struct stm32_pinctrl_group {
- 
- struct stm32_gpio_bank {
- 	void __iomem *base;
--	struct clk *clk;
- 	struct reset_control *rstc;
- 	spinlock_t lock;
- 	struct gpio_chip gpio_chip;
-@@ -108,6 +107,7 @@ struct stm32_pinctrl {
- 	unsigned ngroups;
- 	const char **grp_names;
- 	struct stm32_gpio_bank *banks;
-+	struct clk_bulk_data *clks;
- 	unsigned nbanks;
- 	const struct stm32_pinctrl_match_data *match_data;
- 	struct irq_domain	*domain;
-@@ -1308,12 +1308,6 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	if (IS_ERR(bank->base))
- 		return PTR_ERR(bank->base);
- 
--	err = clk_prepare_enable(bank->clk);
--	if (err) {
--		dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
--		return err;
--	}
--
- 	bank->gpio_chip = stm32_gpio_template;
- 
- 	fwnode_property_read_string(fwnode, "st,bank-name", &bank->gpio_chip.label);
-@@ -1360,26 +1354,21 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 							   bank->fwnode, &stm32_gpio_domain_ops,
- 							   bank);
- 
--		if (!bank->domain) {
--			err = -ENODEV;
--			goto err_clk;
--		}
-+		if (!bank->domain)
-+			return -ENODEV;
- 	}
- 
- 	names = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
--	if (!names) {
--		err = -ENOMEM;
--		goto err_clk;
--	}
-+	if (!names)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < npins; i++) {
- 		stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
- 		if (stm32_pin && stm32_pin->pin.name) {
- 			names[i] = devm_kasprintf(dev, GFP_KERNEL, "%s", stm32_pin->pin.name);
--			if (!names[i]) {
--				err = -ENOMEM;
--				goto err_clk;
--			}
-+			if (!names[i])
-+				return -ENOMEM;
-+
- 		} else {
- 			names[i] = NULL;
- 		}
-@@ -1390,15 +1379,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	err = gpiochip_add_data(&bank->gpio_chip, bank);
- 	if (err) {
- 		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_nr);
--		goto err_clk;
-+		return err;
- 	}
- 
- 	dev_info(dev, "%s bank added\n", bank->gpio_chip.label);
- 	return 0;
--
--err_clk:
--	clk_disable_unprepare(bank->clk);
--	return err;
- }
- 
- static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pdev)
-@@ -1621,6 +1606,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	if (!pctl->banks)
- 		return -ENOMEM;
- 
-+	ret = devm_clk_bulk_get_all(dev, &pctl->clks);
-+	if (ret < 0)
-+		return ret;
-+
- 	i = 0;
- 	for_each_gpiochip_node(dev, child) {
- 		struct stm32_gpio_bank *bank = &pctl->banks[i];
-@@ -1631,25 +1620,20 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 			fwnode_handle_put(child);
- 			return -EPROBE_DEFER;
- 		}
--
--		bank->clk = of_clk_get_by_name(np, NULL);
--		if (IS_ERR(bank->clk)) {
--			fwnode_handle_put(child);
--			return dev_err_probe(dev, PTR_ERR(bank->clk),
--					     "failed to get clk\n");
--		}
- 		i++;
- 	}
- 
-+	ret = clk_bulk_prepare_enable(banks, pctl->clks);
-+	if (ret) {
-+		dev_err(dev, "failed to prepare_enable clk (%d)\n", ret);
-+		return ret;
-+	}
-+
- 	for_each_gpiochip_node(dev, child) {
- 		ret = stm32_gpiolib_register_bank(pctl, child);
- 		if (ret) {
- 			fwnode_handle_put(child);
--
--			for (i = 0; i < pctl->nbanks; i++)
--				clk_disable_unprepare(pctl->banks[i].clk);
--
--			return ret;
-+			goto err_clk;
- 		}
- 
- 		pctl->nbanks++;
-@@ -1658,6 +1642,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	dev_info(dev, "Pinctrl STM32 initialized\n");
- 
- 	return 0;
-+
-+err_clk:
-+	clk_bulk_disable_unprepare(banks, pctl->clks);
-+	return ret;
- }
- 
- static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
-@@ -1726,10 +1714,8 @@ static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
- int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
--	int i;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_disable(pctl->banks[i].clk);
-+	clk_bulk_disable(pctl->nbanks, pctl->clks);
- 
- 	return 0;
- }
-@@ -1738,10 +1724,11 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
- 	struct stm32_pinctrl_group *g = pctl->groups;
--	int i;
-+	int i, ret;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_enable(pctl->banks[i].clk);
-+	ret = clk_bulk_enable(pctl->nbanks, pctl->clks);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < pctl->ngroups; i++, g++)
- 		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  69 ++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  12 +
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spacemit-k1.c                    | 454 +++++++++++++++++++++
+ 5 files changed, 543 insertions(+)
+---
+base-commit: 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+prerequisite-change-id: 20240626-k1-01-basic-dt-1aa31eeebcd2:v5
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+prerequisite-change-id: 20240708-02-k1-pinctrl-3a2b0ec13101:v5
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+prerequisite-patch-id: 238db182251f2f79a947d16f0112a958d0837878
+prerequisite-patch-id: 8c2cff9ceb9d062c91a34a39add45555bff2d545
+prerequisite-patch-id: b93bb35db82d199d4d30deefbc34b8413539cf32
+
+Best regards,
 -- 
-2.34.1
+Yixun Lan
 
 
