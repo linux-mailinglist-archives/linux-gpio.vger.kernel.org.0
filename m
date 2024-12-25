@@ -1,509 +1,231 @@
-Return-Path: <linux-gpio+bounces-14228-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14229-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EAE19FC384
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 05:00:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FEE99FC411
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 09:21:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D95B5164E73
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 04:00:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6DD07A1815
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2024 08:21:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A50145FE8;
-	Wed, 25 Dec 2024 03:59:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8E814265F;
+	Wed, 25 Dec 2024 08:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZcTzEqe"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="edFRq4fT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2077.outbound.protection.outlook.com [40.107.247.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCF754673;
-	Wed, 25 Dec 2024 03:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735099178; cv=none; b=KFAh4hNdoS0J06dCCbkXakJNvxaPjSCfCc+xhcWlEfSqv32RSWJni/3TWM1JHYewHwfKSNkgJPDuqZ9LyVBbxtOREBCkdVf0bcMGmS/tnp7auGtRwTdaSf8MtpS/SNRtdamfKK5oeOhgPBUx83ta4QKoWI/q2ieZ6Uoq2aa94OE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735099178; c=relaxed/simple;
-	bh=zbbwOPlb37BGyfS9OGO2S7mjVj+XoeXCTCCQlWvl5dc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aP9yt3Y+tsq9PeQODMq76pAV6oqUYJrMWvCnZ7HDyc32gQppRbHcOnD0DCVf96PKUGUXdkL7EvH7dlzdxPBJSaebltzGPENiFD69D8wbhJxwSpW1/DOOuFqZ/ErOOFxF2yo9QQHdbBk+nJAzyrjDs2jDDqggROLSQTIefBn4jO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZcTzEqe; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21683192bf9so64885775ad.3;
-        Tue, 24 Dec 2024 19:59:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735099176; x=1735703976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LNa7GOVBN/qlGQ/A5Jy7mW2Loseznek27MKpExY2eWI=;
-        b=CZcTzEqe89XMUmv65/i6A3IR/ZBvMA0XqeNtlBOj+WnMJ5cWafYnEdrBzijgcc/dpd
-         Rl0PdXqjq6oa6KcRngAscLnYG1OKLxZVrE32N7OtU0w4jUYoHVZo0TcKcLmmHW7X/l8w
-         SZNfbt6Eqf3U8O+OJU1ByIpQaq2O6MKjffgpuQwUhvJcmm7B0FotPI/1rKKlDCB3gdqA
-         htsuNcMv0LUUo8yD3MeKC3jak6KAoBIScKUrf2/zOhfV1nRLYdcSF976XnUd4UdzHdOU
-         tIMZgxI3u8vWFMl1jAnTgCM5qfTg694sQu/BnOLNSGMGmEVv2Uipl+jZocuBS90OaOLt
-         vo+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735099176; x=1735703976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LNa7GOVBN/qlGQ/A5Jy7mW2Loseznek27MKpExY2eWI=;
-        b=pp+2hMEJgUxPSUgOi1axWz3lRAeWM5nICCS2UueRYZrRn13OudP8rOtJ3+rzPiiy4b
-         2PMe7/wPhDLATLfjeUpdAH7ZkbtcEXXIWjHwY5uurk5rABNOQRqPxpyrJlrCJvfSwfiB
-         CieVZ+Boy8mLKC2pSPwHVBc8e3Gyx8kSqaCeZzpqgealu8tmS1nr/p6OhtqbxHE1l/Jt
-         wqCWO39mK47vxcASXt7ogduRjKbsU9gt1MzsLwFQ7nkEh2QlGZRMdSzmhgI1HfsGyi7X
-         A71WDc8V55X2GchO4QXtqL3E7ZiU4EljJUFngTZ9C5FhnQljw29UFkSoF3Q+CedbM4T+
-         lkzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuhypfL2pMJ+DRD8SlpOxODOnr7ywl2NzMk8VtCS52QVqpfGvpeUZyMEvcLVzDa/q918R0Mbe+02z0p/2Y@vger.kernel.org, AJvYcCW2oVovTJmKr8U9a0YqZpfaWqUrWNPQUj6DcDOXPdjtdgm072QeM2nVJ9GBqzDAb8jc4UjEC8XEDVzd@vger.kernel.org
-X-Gm-Message-State: AOJu0YztezstxNvsqF1zodAH5kKRsBr7Stg4llZmv75pUdhxzYGwLUdZ
-	k3s1Ru2D34k+Qnjlxe3gcw1liP/I7kFkThYZty5GDYfDl32cmnw8nkjOU8G/1hs=
-X-Gm-Gg: ASbGncsPNEWuf4qP/gjSn3FYkbYt8Kf/FGuH+Uft7BtjRug5nAya0/T18c2VNSCTBfW
-	WhNQ1EvuhmiOLTmgg1FPMMKxVoD0hYJJqUGoLK3d0BpBw5GYutdF50Tgjr44wptGdaKF1Imb+v6
-	3BNSBAMzJyvm4kVRN0TEaB+Vm9mSLHaCtx29IfTKHb0OOFT+IHq/ars82vy3rZp32+CoPweaYv/
-	z1BQFd+du5Ue+05aDZ4NJMYVFMfXMHWmyuoj/B8s7FyLCy3MHAJx2UFb57P7yjclFw=
-X-Google-Smtp-Source: AGHT+IEYyY5kUMG19rqFkuiDT67e/D03tlJhWls2eTVWnRg0787ha5m4RwdOviQNTAL3vQW9Ua6EyA==
-X-Received: by 2002:a17:903:244b:b0:216:34e5:6e49 with SMTP id d9443c01a7336-219e70dd211mr249397415ad.57.1735099176111;
-        Tue, 24 Dec 2024 19:59:36 -0800 (PST)
-Received: from guoguo-thinkbook.lan ([112.65.12.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc9d447fsm94256125ad.128.2024.12.24.19.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2024 19:59:35 -0800 (PST)
-From: Chuanhong Guo <gch981213@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Qingfang Deng <qingfang.deng@siflower.com.cn>,
-	Chuanhong Guo <gch981213@gmail.com>
-Subject: [PATCH 2/2] gpio: add support for GPIO controller on Siflower SoCs
-Date: Wed, 25 Dec 2024 11:58:51 +0800
-Message-ID: <20241225035851.420952-3-gch981213@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241225035851.420952-1-gch981213@gmail.com>
-References: <20241225035851.420952-1-gch981213@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCB025634;
+	Wed, 25 Dec 2024 08:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735114884; cv=fail; b=shd+vD7gses8OdLyJiJIMhzu8IS2lEZfhyoai1M4nbzUVmLhQZoKAoEeU7WYVab9ELZ8Qj833pUzczqIJxVXKy3itSNzmlAXdl1fKe4nys3l9xgHxbJD4ywbbtKp1OGlzX1Z0NFlbdC6XdTy3W/woOa78TbkZqWNsXurkfBTK2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735114884; c=relaxed/simple;
+	bh=pBDQOWh6iI+45zNi7juhRvgB4oMZ8Oq5fm588GU35AM=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=dQmeOsO69jP/3wd5zNip5mBxExZ0c8qq+3koBOQvyCDN9rH5Ku0aiquSpq87hul2JzUVCx983fYk0T9qHNCHYU2crCxgL+bUmltgeXtjzQH2sRjPE8IugrgXfcAKXOtNntmf+AbbXCGaojT91Xx++OXcYa9LN+notQrNGH1KpVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=edFRq4fT; arc=fail smtp.client-ip=40.107.247.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LOjtzf/Wf5pGLh3b4bxM4LT7tfCoSPO2aj+DCvb0SzOjcr/T067wUnqimdKC3CiboayztsUsFegHxoNoP06L5vlqdwm+RuOi+LBkUMAfvIV1ZoqEaLVTdxSQ60SULkD97aKtaMcXYcbEbkyCsN0DxwHkqRdD5S12xWSp3fkLyNQSk4xGQw73j/Nk9+SDD+w9DNfFvX2vsUrhMrAECJj8aSOvEW/dRgfE6wA0mcKxN/SZIqdbKMt42RIne/d7qsk0FsQv9l+0ElEIgJ3jCnuzDUfKghZrvNcRYi8cVXjgrktO4U7CvBpU5A5qeV6loJ2zxxxENgmawHPp1TlWHe+Oog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fFdknnh7HdY9YpgH7rLFMSBs5V/QHNvpqvEC6nvYU9s=;
+ b=clnQYntLuXBPYKaWp9wAPb23KO3JJupYDMI1hNN68iIqNg4Y6DboAlh7yM+87Ear89TcboxsILD99PRYzCDBFz8mKQeaQbxS0RnYYO0wJzXtMddmfQSk87PRU1TEeqkKBzKpG8W+Sd+kgjfpdzvU3SPRXUh4StL1uuQcFKvRwa+o7P/fV3qk6ofxap3PkEVfTiv/V/hOhzDCWQ+vaKgUz+vYFoNluM87iUp8koTZHVB9JO63DzyBIyMhEZjQyYk/rX+ZORDoqLZv2DKOm424kTXakOHWoMnY3LyLUFM6E35NaKv24ihzHelWSJoF0GXZHnfxbTsDBofWwz8k4z6/Gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fFdknnh7HdY9YpgH7rLFMSBs5V/QHNvpqvEC6nvYU9s=;
+ b=edFRq4fT7/LVOLP/TXjrx1j2mdB5ps3m5FqL04HDVOytEJdyXCbMa/TTKNfiWTfOIQLlBzEhIlVsMTImphjmgMFPiaMdVjh8dFRTHxjMviGSmRgRHvBNSyNUg9VM0KwGA3jkcRflPXLJPomFESi5D3vxEbeIW+5jyUsgSohgtn1Fw+JvnF+WckPgOjVgqgsxsELF4m9FmOMh4xPX+tTai/W5GrgWC+DVSLP3QDVl7Pz0ebvg3fNwaGGdtT7Hrn+Mvj3Izr1ElPprkwQDdr7f+ic/urTCUZiXPIqSBKdyWzx3UgaUg/9GbvXr2bdEEMtimDYEdCpmeMolT+H8fKBZFg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
+ by DB8PR04MB6985.eurprd04.prod.outlook.com (2603:10a6:10:11e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.14; Wed, 25 Dec
+ 2024 08:21:18 +0000
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8293.000; Wed, 25 Dec 2024
+ 08:21:17 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH 0/4] scmi: Bypass set fwnode to address devlink issue
+Date: Wed, 25 Dec 2024 16:20:43 +0800
+Message-Id: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFvAa2cC/x3MQQqAIBBA0avErBMay0VdJVqYjjVUFgoWSHdPW
+ r7F/xkiBaYIQ5UhUOLIpy/AugKzar+QYFsMspEdSqlENAcLd1tKO/tNaDcrbNFhTxpKdAVy/Pz
+ DcXrfD/yiLBpgAAAA
+X-Change-ID: 20241225-scmi-fwdevlink-afb5131f19ea
+To: Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Sascha Hauer <s.hauer@pengutronix.de>
+Cc: arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735114854; l=1460;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=pBDQOWh6iI+45zNi7juhRvgB4oMZ8Oq5fm588GU35AM=;
+ b=bMo8hwOpQooYEC2cTyug4SQBNhkEmbdDezbv5hdFxwgeVA5CGqX3U59U9GNKEbePJdD9uZL4O
+ 5vMVeJUf6KhD6BfB4EchbR0VgPUAndVzeOEt3t1f3yixn+QNW08HzTw
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI2P153CA0003.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::20) To DB9PR04MB8461.eurprd04.prod.outlook.com
+ (2603:10a6:10:2cf::20)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|DB8PR04MB6985:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57fbbe75-aeb6-41f4-3e3b-08dd24bd1ad9
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Tmd0c2dHZGprd2pmbUlnVXhQc1lYT3Ivb2NhVEViTTAycGl1UUNxSHJzS2Vl?=
+ =?utf-8?B?RXlsbmd1MFVxdzV2VkVCSnRjRkNQVHVLY28weEVldDNxcnJUSHRvdFppY0dh?=
+ =?utf-8?B?R3p1VmlJRDg1SWVUc1VSL3hlcEI4SHlocTg0V0h5a3RWVHpGQ3VNTzRjMlUw?=
+ =?utf-8?B?a001YVJzZElWc1JnRVdBczJ0T214RG5ENHgveGYzMGxBTGJWemNic0VabGpI?=
+ =?utf-8?B?ZWwrTVZJdmxpUE1YK0tFRkJaNXJDbG11bFIyUTRSdEtLZUg5Y2FEb056WFdY?=
+ =?utf-8?B?MkMrY3B0M0VlTkNLN2xkQkNJcEJtQk03V2o1Z0tBb1orREF3d3k4SkxtT1ZC?=
+ =?utf-8?B?UGd1dTFBQlk0bCt0Y3VtcG9ocDlkclQ1YjViL1pVS1lBQS96alI3TVdOY1ZE?=
+ =?utf-8?B?OHJPeGZKVzY3cHJiVytMdzQwS3BIblhod2hnUnJ4MVhxN3VmZlBWYlA1bXR6?=
+ =?utf-8?B?UWhIVVQzYUhhTlJYcGhMYUxSb1lwUVRwUUN2VTY5R1RKUmpKN1QvRjBTeHBa?=
+ =?utf-8?B?eXhLZnN6L05vOU84dG5SanA0UktGSVp4SkF4VVU3RHo0SkthbTFacHh4WWNt?=
+ =?utf-8?B?dlJkb1BqYkxaRTdPcEYwRzZPYm43YkM1QVFPVVJTOUQwOXdyNGtrRFQ2STlI?=
+ =?utf-8?B?N2p1ZllPdHRGQzMwRC9JenNmcDdQNkExMjZQbVZXelJzR29zaG5WTFhKb2w4?=
+ =?utf-8?B?c2gzU2wvZWZZeVFYR0Jrc0lENTYzb2h6VmxHUkY2dzNSZkthVFMvMy83Q0pH?=
+ =?utf-8?B?WWovVE9weDgza2RnbVd1OHdsdU5yOWVxdmpWb3ZscEM2SWlYSXpyaVpGclpC?=
+ =?utf-8?B?ZGxKalVxbVNhazJFbDBpZUZCWjJQMElFdVNwNFVpQ243dlE4aGlkUVUyK2xX?=
+ =?utf-8?B?QzZOZUxDd0xLVHR4VitXcmo5T0JiWTRkZUl5YXdSWklFbjVnVkhUQk1CTklm?=
+ =?utf-8?B?YWJuU1lSZktMR1JSUjJQa04wS1Z4c1FadlFldjJscWp0Nlk0ODJINFdZZGVw?=
+ =?utf-8?B?MUcySGNCWGJRdzJxZm1mVEpXYVJ5VmFaejFNTVBsUGZpTXJDNVE3TjR5N1Ix?=
+ =?utf-8?B?QnhYL2UvSFY4VTd6UEk3TXRLYkpUemRvN25qeE9HTGR5TVpEelRWTWoreGla?=
+ =?utf-8?B?QXlEVFVNMmt3Z0VyM0NpVjFjZTlqQm5HUUNkRXMzMnZPUTV3Y3hKSXRUN1VH?=
+ =?utf-8?B?V0h1ZHcwendjUDRKRnZqQnRFVldhMWx5SE9oNGJGdHZqc2M5UUI4RDRNdEsx?=
+ =?utf-8?B?eVJlRzFQeWd0NlFGSGdsbi8zd3pRVE1WeXgrdit6UEplSXhXSy9FSCtKa0xT?=
+ =?utf-8?B?YlZRdHJuTVp2d1FlM0xPL0owSW5Tc2E1SXgramhtRWlpY2xVS24rZHRPWlEv?=
+ =?utf-8?B?T0RqSE1MblhiQzRsRXNnRVRKcVlZNFRiRVRtbCtQdUhsNmNvekVmNXozSVFG?=
+ =?utf-8?B?aWZEUUNpTEtLanczWHp1bnNBQ2kzVkVBT2NyYU1RZ1NneU4wVFgyTExTU3Bs?=
+ =?utf-8?B?dzdRVzZpQUY4RkU1dmVsdHVtMUd5RmI0OC9ZQ0tQdmVEUS9DODFLdGIxRGt1?=
+ =?utf-8?B?eWY1ejdNcS8xNkNQUmhvU3YyMVVkYkJabmlTUUxzSDNUSU9OUWNLN2p3SGNN?=
+ =?utf-8?B?R1p2TjBWZm9WNGMzY1pabWd1R2t0c1ZIVUlzNjIwWGZIU2VZdjVBR2w4Rkg0?=
+ =?utf-8?B?bnNaZzJENFBNVVFkS3VNVDlid2Q3TEtYZk01SUNHeHdkS2xQZk5tNGk1Y2lx?=
+ =?utf-8?B?cnBKSWoxcm9rSFNaMGY0TjYrZit2ZDBzNzFQMGFDNit4L3Y2c1B2a3F4VlpK?=
+ =?utf-8?B?ZktzbTVmaVYrQi9YK3U1Mmk1T0JhYVZ0Y05ZMVg2ZUZ6V3k0OGdQRzNSenVB?=
+ =?utf-8?B?SjJRd0tUUHpROEEwNWlpTC9pa2ZKNmtFeGdwZDNORkgzWVZlZDhxNDZZemR2?=
+ =?utf-8?B?VFMvZjVUZi9UUXk5T0ZBRldONVNQVGVBNEk3bzdHVXluaEQraFlZYWJqcSsy?=
+ =?utf-8?B?bURnYlk1MHlBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QVFiaWlDdDVQUjU0WnNJa05KWEpKYTMwRHgwekw1VU16VlE2WEJtTUcvd1Ft?=
+ =?utf-8?B?aUlscGw4alZDblpxM0I2TFpTQ3NOM0N1Z1J6dkJzWGp2dFRvUUo3Ym9jZkE1?=
+ =?utf-8?B?NVE4VCtUeFk5MS9ORk9VMDB6bkhjUCtSTFluZm5GbWxsNVhnRFN3d2NZV0Zr?=
+ =?utf-8?B?YzNteTI0U0Y1MjczNXpPcHpqWFNHZkxaRlZIS2RaNjZETHY2M3lVbkdqQVBS?=
+ =?utf-8?B?TllmM2tmTHh2U2IwR2d5WTJHUjV4bXoveTI2WmxENldXaEIrdUoraDZtdWZH?=
+ =?utf-8?B?c1VvWWNIbldSS0JYeWlFWGMyelEvNWNxRGVTazNpemJQTHhyb1BtU25WdDdY?=
+ =?utf-8?B?TmFHMDdpcFUwaFdvVDltU3FsaTJTMWxSQnJKdWhyWWxSNm12dEoxbHFZUGcv?=
+ =?utf-8?B?cnIrOEZuTDhhY1lYbHFNbkdDVUgzOXh6dmk2bUtaZXp6NENPV0VOM3BHc2xK?=
+ =?utf-8?B?WkNmWG9tVXhyOEEvUWdRN2pmc2lwWFA0SlVNRHB3UW9TU2lickpDNm1Eem40?=
+ =?utf-8?B?aFFuZ0ZQWE84VUhhQlJIODNGRTEvUC92WCtBTjhCSkVVTmNCcmZLRHBoZ0Y4?=
+ =?utf-8?B?aXlWZk9nYXQwZjNHZ3d0YVBOZE9yb3Nkbm1KZVh2WHlmTFZtRURoRTRrSVVv?=
+ =?utf-8?B?TzFWeldSakswS2l4WTd6UFRjbGxLT2hQMlpWUytjQlZPaWJaME5kSHlsc0ZJ?=
+ =?utf-8?B?WXlBUDdvRzdtdkpoUmZFNFdabS84c3FlQ0U1UlhpQnIzN2RpTFk5YStjeEdw?=
+ =?utf-8?B?Y2I3Y052ZE9ucmxMRmtUODdsMUpISEpFUlM4WkJyQ3FZdVpCUk5zK1lkWkJl?=
+ =?utf-8?B?V2ZpcEVpdEV6VDhPY1hqNkljbjkxcGJzdFdlOU5NZ1RKRHowb1hUMlJPckxY?=
+ =?utf-8?B?Wmpvby9BVnJWbUxnRWFjOG1pZTc3TmpZc3VMV1UvdXVEbG5RK1RWbnhNTXRO?=
+ =?utf-8?B?VlNia2dFU0ZOSGIwclR1dlpWb0YvY0w1V01ERFpUbjQzbjRJcFR0T2pzY29E?=
+ =?utf-8?B?Q0pKMnh3VjZ5aHdaMlByQXFCeGVMQWdGVGFQNUhwaWZ0a256V3FaTHNBMlBR?=
+ =?utf-8?B?dmdCYnZTMHF3SGdQeTdNYXhrMzJrQWtiY3h5SlRvb3Y5ZzF5UUh2SVJ3TkRR?=
+ =?utf-8?B?eUQvOEVQRzNEZ0VxOUtOaGZsd3kvOHZMdTA5OWlqZnUxOUhubWtHcytlM0Yv?=
+ =?utf-8?B?VkVNUG94Y3JTLzNQZ1hBeGlNNzhpTkNvNzhrL2lGbEFpUXp4NkRSQ3pOSXhx?=
+ =?utf-8?B?dVlScjlYcWZRN2lqY0ZxZ2wvbzFnSEZPY3dmTWRQdDg3UitlOUJsemV5WWVD?=
+ =?utf-8?B?NENLaDZqQWs0UmswRmV5a0dxdWo1a2EzL3d2SCtNcVRHaGFyNnpxZTVMREVt?=
+ =?utf-8?B?WWh5R1E3NGN5T1JzU1ZEYmlpSmE0c3RFdWtqdnZoRVhPeG92bUlCWUprRVk0?=
+ =?utf-8?B?bEdvU0kzeEhRQUJDcFNIUjZJRmJDUkJpcW5MWGE5cGh0d3RweGJlWGxnQU1s?=
+ =?utf-8?B?SDlROEpDbEVyK3o3RFd3ZzV6eFk1K25udzNvczNpZ3QxVWVGTllqN3dtTnlx?=
+ =?utf-8?B?NEQrWUdTVG04YVF2andYOVVNOExNbm5qdFNPWkdydCs5TElWQjdzdXkwV2NI?=
+ =?utf-8?B?cG55N1pycy92cW9QR045TWJkWTNXZ1FTYUkvYWNVTWhiZUFDK1RNR2RpdlpJ?=
+ =?utf-8?B?ZTZKN0xxMnhQRFI1Sit1RCt4YVp4WjJzd2NRN3pFR2kzZkdIU1ZtWWpWVXBq?=
+ =?utf-8?B?UitXSWk4dER5RjBIL1lPZkllL0p4QVU1MmQxSFVXT3VybldCcFJ1emRxV3U0?=
+ =?utf-8?B?NGZ6T3MzT1JlWUxTUUFnV1lUZUpRK0QrZFZhZStUaC9EQ3BrYlJHeTh2alRO?=
+ =?utf-8?B?RTFPU3BoVXVzclJpbVFHRlNXWHRDTVl1OWNRZmhzWkUwUEJwRjNlSE9BakpK?=
+ =?utf-8?B?Y1dWdFcyTUFNSDZScVQwQ1BsaG9vMFk0WlpCT0F2TU9yT3JtVC9PQXBkdE5Q?=
+ =?utf-8?B?YUNlYVlFRllNY3VrOVJvK29CTFhXTnFVRXUzc21FdUNUTnlTZkE1STRwRXRn?=
+ =?utf-8?B?elFLZmRSdFFTQTZlS05nd0VjRDFGamlsSVFWZTNZMUdWcGwvaEg3TlFuekI2?=
+ =?utf-8?Q?I6lj99gBHKjtcyUHx9eRq0mBB?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57fbbe75-aeb6-41f4-3e3b-08dd24bd1ad9
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Dec 2024 08:21:17.8130
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: urUtYWnDS7Q+FQ4oai3A28U7tRLvfg5BCTJrwk1KuAqycGgvuYKj/AVK4BslLPQCHgWOMiEp9mfEQvSGEa9DvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6985
 
-From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+Current scmi drivers not work well with devlink. This patchset is a
+retry to address the issue in [1] which was a few months ago.
 
-Add a driver for the GPIO controller on Siflower SoCs.
-This controller is found on all current Siflower MIPS and RISC-V
-chips including SF19A2890, SF21A6826 and SF21H8898.
+Current scmi devices are not created from device tree, they are created
+from a scmi_device_id entry of each driver with the protocol matches
+with the fwnode reg value, this means there could be multiple devices created
+for one fwnode, but the fwnode only has one device pointer.
 
-Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+This patchset is to do more checking before setting the device fwnode.
+
+This may looks like hack, but seems no better way to make scmi works
+well with devlink.
+
+[1]: https://lore.kernel.org/arm-scmi/CAGETcx8m48cy-EzP6_uoGN7KWsQw=CfZWQ-hNUzz_7LZ0voG8A@mail.gmail.com/
+
+Cc: 
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/gpio/Kconfig         |   9 +
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-siflower.c | 353 +++++++++++++++++++++++++++++++++++
- 3 files changed, 363 insertions(+)
- create mode 100644 drivers/gpio/gpio-siflower.c
+Peng Fan (4):
+      firmware: arm_scmi: bus: Bypass setting fwnode for scmi cpufreq
+      firmware: arm_scmi: bus: Bypass setting fwnode for pinctrl
+      pinctrl: scmi: Check fwnode instead of machine compatible
+      pinctrl: freescale: scmi: Check fwnode instead of machine compatible
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index add5ad29a673..fdc9a89ffbf3 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -637,6 +637,15 @@ config GPIO_SIFIVE
- 	help
- 	  Say yes here to support the GPIO device on SiFive SoCs.
- 
-+config GPIO_SIFLOWER
-+	tristate "SiFlower GPIO support"
-+	depends on OF_GPIO
-+	depends on MIPS || RISCV || COMPILE_TEST
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  GPIO controller driver for SiFlower MIPS and RISC-V SoCs
-+	  including SF19A2890, SF21A6826 and SF21H8898.
-+
- config GPIO_SIOX
- 	tristate "SIOX GPIO support"
- 	depends on SIOX
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index af3ba4d81b58..ec400ed6dcd1 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -151,6 +151,7 @@ obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
- obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
- obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
- obj-$(CONFIG_GPIO_SIFIVE)		+= gpio-sifive.o
-+obj-$(CONFIG_GPIO_SIFLOWER)		+= gpio-siflower.o
- obj-$(CONFIG_GPIO_SIM)			+= gpio-sim.o
- obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
- obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
-diff --git a/drivers/gpio/gpio-siflower.c b/drivers/gpio/gpio-siflower.c
-new file mode 100644
-index 000000000000..bd8002ee127d
---- /dev/null
-+++ b/drivers/gpio/gpio-siflower.c
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * GPIO controller driver for Siflower MIPS and RISC-V SoCs including:
-+ *  Siflower SF19A2890
-+ *  Siflower SF21A6826
-+ *  Siflower SF21H8898
-+ *
-+ */
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/clk.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+#include <asm/div64.h>
-+
-+#define GPIO_IR(n)	(0x40 * (n) + 0x00)
-+#define GPIO_OR(n)	(0x40 * (n) + 0x04)
-+#define GPIO_OEN(n)	(0x40 * (n) + 0x08)
-+#define GPIO_IMR(n)	(0x40 * (n) + 0x0c)
-+#define GPIO_GPIMR(n)	(0x40 * (n) + 0x10)
-+#define GPIO_PIR(n)	(0x40 * (n) + 0x14)
-+#define GPIO_ITR(n)	(0x40 * (n) + 0x18)
-+#define GPIO_IFR(n)	(0x40 * (n) + 0x1c)
-+#define GPIO_ICR(n)	(0x40 * (n) + 0x20)
-+#define GPIO_GPxIR(n)	(0x4 * (n) + 0x4000)
-+
-+#define GPIOS_PER_GROUP	16
-+
-+struct sf_gpio_priv {
-+	struct gpio_chip gc;
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct reset_control *rstc;
-+	unsigned int irq[];
-+};
-+
-+#define to_sf_gpio(x)	container_of(x, struct sf_gpio_priv, gc)
-+
-+static u32 sf_gpio_rd(struct sf_gpio_priv *priv, unsigned long reg)
-+{
-+	return readl_relaxed(priv->base + reg);
-+}
-+
-+static void sf_gpio_wr(struct sf_gpio_priv *priv, unsigned long reg,
-+		       u32 val)
-+{
-+	writel_relaxed(val, priv->base + reg);
-+}
-+
-+static int sf_gpio_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+
-+	return sf_gpio_rd(priv, GPIO_IR(offset));
-+}
-+
-+static void sf_gpio_set_value(struct gpio_chip *gc, unsigned int offset,
-+			      int value)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+
-+	sf_gpio_wr(priv, GPIO_OR(offset), value);
-+}
-+
-+static int sf_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+
-+	if (sf_gpio_rd(priv, GPIO_OEN(offset)))
-+		return GPIO_LINE_DIRECTION_IN;
-+	else
-+		return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int sf_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+
-+	sf_gpio_wr(priv, GPIO_OEN(offset), 1);
-+	return 0;
-+}
-+
-+static int sf_gpio_direction_output(struct gpio_chip *gc, unsigned int offset,
-+				    int value)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+
-+	sf_gpio_wr(priv, GPIO_OR(offset), value);
-+	sf_gpio_wr(priv, GPIO_OEN(offset), 0);
-+	return 0;
-+}
-+
-+static int sf_gpio_set_debounce(struct gpio_chip *gc, unsigned int offset,
-+				u32 debounce)
-+{
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned long freq = clk_get_rate(priv->clk);
-+	u64 mul;
-+
-+	/* (ICR + 1) * IFR = debounce_us * clkfreq_mhz / 4 */
-+	mul = (u64)debounce * freq;
-+	do_div(mul, 1000000 * 4);
-+	if (mul > 0xff00)
-+		return -EINVAL;
-+
-+	sf_gpio_wr(priv, GPIO_ICR(offset), 0xff);
-+	sf_gpio_wr(priv, GPIO_IFR(offset), DIV_ROUND_UP(mul, 0x100));
-+
-+	return 0;
-+}
-+
-+static int sf_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-+			      unsigned long config)
-+{
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
-+		return sf_gpio_set_debounce(gc, offset,
-+			pinconf_to_config_argument(config));
-+	default:
-+		return gpiochip_generic_config(gc, offset, config);
-+	}
-+}
-+
-+static void sf_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned long offset = irqd_to_hwirq(data);
-+
-+	sf_gpio_wr(priv, GPIO_PIR(offset), 0);
-+}
-+
-+static void sf_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned long offset = irqd_to_hwirq(data);
-+
-+	sf_gpio_wr(priv, GPIO_IMR(offset), 1);
-+	sf_gpio_wr(priv, GPIO_GPIMR(offset), 1);
-+}
-+
-+static void sf_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned long offset = irqd_to_hwirq(data);
-+
-+	sf_gpio_wr(priv, GPIO_IMR(offset), 0);
-+	sf_gpio_wr(priv, GPIO_GPIMR(offset), 0);
-+}
-+
-+/* We are actually setting the parents' affinity. */
-+static int sf_gpio_irq_set_affinity(struct irq_data *data,
-+				    const struct cpumask *dest, bool force)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	unsigned long offset = irqd_to_hwirq(data);
-+	const struct cpumask *pdest;
-+	struct irq_desc *pdesc;
-+	struct irq_data *pdata;
-+	unsigned int group;
-+	int ret;
-+
-+	/* Find the parent IRQ and call its irq_set_affinity */
-+	group = offset / GPIOS_PER_GROUP;
-+	if (group >= gc->irq.num_parents)
-+		return -EINVAL;
-+
-+	pdesc = irq_to_desc(gc->irq.parents[group]);
-+	if (!pdesc)
-+		return -EINVAL;
-+
-+	pdata = irq_desc_get_irq_data(pdesc);
-+	if (!pdata->chip->irq_set_affinity)
-+		return -EINVAL;
-+
-+	ret = pdata->chip->irq_set_affinity(pdata, dest, force);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Copy its effective_affinity back */
-+	pdest = irq_data_get_effective_affinity_mask(pdata);
-+	irq_data_update_effective_affinity(data, pdest);
-+	return ret;
-+}
-+
-+static int sf_gpio_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned long offset = irqd_to_hwirq(data);
-+	u32 val;
-+
-+	switch (flow_type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		val = 4;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		val = 2;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		val = 6;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		val = 1;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		val = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	sf_gpio_wr(priv, GPIO_ITR(offset), val);
-+
-+	if (flow_type & IRQ_TYPE_LEVEL_MASK)
-+		irq_set_handler_locked(data, handle_level_irq);
-+	else
-+		irq_set_handler_locked(data, handle_edge_irq);
-+
-+	return 0;
-+}
-+
-+static const struct irq_chip sf_gpio_irqchip = {
-+	.name			= KBUILD_MODNAME,
-+	.irq_ack		= sf_gpio_irq_ack,
-+	.irq_mask		= sf_gpio_irq_mask,
-+	.irq_unmask		= sf_gpio_irq_unmask,
-+	.irq_set_affinity	= sf_gpio_irq_set_affinity,
-+	.irq_set_type		= sf_gpio_irq_set_type,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static void sf_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct sf_gpio_priv *priv = to_sf_gpio(gc);
-+	unsigned int irq = irq_desc_get_irq(desc);
-+	unsigned int group = irq - priv->irq[0];
-+	unsigned long pending;
-+	unsigned int n;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	pending = sf_gpio_rd(priv, GPIO_GPxIR(group));
-+	for_each_set_bit(n, &pending, GPIOS_PER_GROUP) {
-+		generic_handle_domain_irq(gc->irq.domain,
-+					  n + group * GPIOS_PER_GROUP);
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static int sf_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sf_gpio_priv *priv;
-+	struct gpio_irq_chip *girq;
-+	struct gpio_chip *gc;
-+	u32 ngpios, ngroups;
-+	int ret, i;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios);
-+	if (ret)
-+		return ret;
-+
-+	ngroups = DIV_ROUND_UP(ngpios, GPIOS_PER_GROUP);
-+	priv = devm_kzalloc(dev, struct_size(priv, irq, ngroups), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	priv->rstc = devm_reset_control_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(priv->rstc))
-+		return PTR_ERR(priv->rstc);
-+
-+	ret = reset_control_deassert(priv->rstc);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < ngroups; i++) {
-+		ret = platform_get_irq(pdev, i);
-+		if (ret < 0)
-+			return ret;
-+
-+		priv->irq[i] = ret;
-+	}
-+
-+	gc = &priv->gc;
-+	gc->label = KBUILD_MODNAME;
-+	gc->parent = dev;
-+	gc->owner = THIS_MODULE;
-+	gc->request = gpiochip_generic_request;
-+	gc->free = gpiochip_generic_free;
-+	gc->get_direction = sf_gpio_get_direction;
-+	gc->direction_input = sf_gpio_direction_input;
-+	gc->direction_output = sf_gpio_direction_output;
-+	gc->get = sf_gpio_get_value;
-+	gc->set = sf_gpio_set_value;
-+	gc->set_config = sf_gpio_set_config;
-+	gc->base = -1;
-+	gc->ngpio = ngpios;
-+
-+	girq = &gc->irq;
-+	gpio_irq_chip_set_chip(girq, &sf_gpio_irqchip);
-+	girq->num_parents = ngroups;
-+	girq->parents = priv->irq;
-+	girq->parent_handler = sf_gpio_irq_handler;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	return devm_gpiochip_add_data(dev, gc, priv);
-+}
-+
-+static void sf_gpio_remove(struct platform_device *pdev)
-+{
-+	struct sf_gpio_priv *priv = platform_get_drvdata(pdev);
-+
-+	reset_control_assert(priv->rstc);
-+}
-+
-+static const struct of_device_id sf_gpio_ids[] = {
-+	{ .compatible = "siflower,sf19a2890-gpio" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sf_gpio_ids);
-+
-+static struct platform_driver sf_gpio_driver = {
-+	.probe		= sf_gpio_probe,
-+	.remove		= sf_gpio_remove,
-+	.driver = {
-+		.name		= "siflower_gpio",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= sf_gpio_ids,
-+	},
-+};
-+module_platform_driver(sf_gpio_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Qingfang Deng <qingfang.deng@siflower.com.cn>");
-+MODULE_DESCRIPTION("GPIO driver for SiFlower SoCs");
+ drivers/firmware/arm_scmi/bus.c              | 29 +++++++++++++++++++++++++++-
+ drivers/pinctrl/freescale/pinctrl-imx-scmi.c |  7 +------
+ drivers/pinctrl/pinctrl-scmi.c               |  7 +------
+ 3 files changed, 30 insertions(+), 13 deletions(-)
+---
+base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
+change-id: 20241225-scmi-fwdevlink-afb5131f19ea
+
+Best regards,
 -- 
-2.47.1
+Peng Fan <peng.fan@nxp.com>
 
 
