@@ -1,257 +1,285 @@
-Return-Path: <linux-gpio+bounces-14235-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14236-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D358C9FC783
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 03:06:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B719FC979
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 08:49:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F40F1882D61
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 02:06:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11972163032
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 07:49:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E6928377;
-	Thu, 26 Dec 2024 02:06:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080DB1684B0;
+	Thu, 26 Dec 2024 07:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqZTAdf4"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="pHYVO+e3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2120.outbound.protection.outlook.com [40.107.117.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1554D629;
-	Thu, 26 Dec 2024 02:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735178796; cv=none; b=EqZzVuzhB1tpg14iW2cJPWiQGc0eLN3CwxMfqfY0QxAFCQKx3QbGgVQ0CMp/pquzFK2yzNsDd5yu5+8CO51p3kB73urNXTXEkPfNBZSDoIzgvYW32sDeja+0nwaFdBMczIsQK6jnmKxbBqsU6+M1gtMVbrx4dMVbtlMaoqEISgY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735178796; c=relaxed/simple;
-	bh=tazDpeDzYCN18LgkWbAGK/OqE3YfuiHFsDYSZh+HAyw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uRDhY9dHx7sJ6jtC0nuJaTvc9H92K/gMpHpA9zsyTuiEzlcgrZOvTlhGbpI8bQM9a95TWaCVvliNBwnMn23032bkDYOlEsSg2CxU92u/lc2ZelxZrzKFhKhzoaMP8I3AxNnOD1H+filzn0musWtcq2LzxN80uEnymURi0r5AZSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqZTAdf4; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e399e904940so5506358276.2;
-        Wed, 25 Dec 2024 18:06:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735178793; x=1735783593; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gkCBHoqavQ55PZKZXnXOlnXv7rNiEnW2J8MOTpYz9yQ=;
-        b=YqZTAdf4q8aiDJ61Kt+tLoR07nu33+VAYNNhXsQ4KzkX+QKFZqkn2nDlCKo8xGuJUz
-         CjpeR/Mk7jE0RxsXD2I7nYn0s7NWSgBMVNtnfTCKkV8UKFhqKKjffYQ7iKDhGSQDg3+Z
-         spKYfJjtDb52aZqNGIvvFYCJAzW+uUZJHL9r7eNAid9MyogPayDlDUse3zFaUKyq16ow
-         IbvXhDOB+ou02ETZy+XpvinGB2rfrJa2MRHvlxPRMxHWV/amZkJ+eVfcTiBo3Tgx7BK7
-         OO7Q/rwk78hFAqOZ/+OicaskDQwC+TdrkX5gK/Wk+1e/BvDi9VsGe0PB4a0kvIL07Z5A
-         bJlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735178793; x=1735783593;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gkCBHoqavQ55PZKZXnXOlnXv7rNiEnW2J8MOTpYz9yQ=;
-        b=Uk2shAfroW2z6158ba7RXJrUnntoStBRYXPvD+M9EV1NP3vTdKsQCGIMGo9sw+8X/6
-         RH8yaghBW/G5JSqQgUgf+fFSLeEeghZbXE07qd37MbBrsANiSxyq7i+HccS26AIBDzai
-         u99Ugj+LSWVsPgeAEk8h1aZ5fOsBURQBXMmJ8Y/9R+2AZFixDH8esGXydCCgQZ/yA6OQ
-         U311SrLNm3ZKOtAy05v4Tb/ju3EHBSENFH7zkYonh8kNVqSKOdKvW/V3Vl5h+2CGoSIT
-         qMR5ViqKs70N3aGmuBznQ7kO5iDdsxQXUm4QEPc4oBTzYyA513GcX9Ij1S353S5n6sNH
-         FQ9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ1jAccQKs5fNlRfymUyuQYLWpBwom9YyfjJR/1CJoHWYj/ElULq8QIQz92pcFPEp3tT3CZEAVXDE=@vger.kernel.org, AJvYcCVOxJKAKn07Z4l6fgdmCpMpd1mzWg5DranHXUWMbsHK7wWlo8nWfDxh10rVl/0P+Inhjgx6uqsI@vger.kernel.org, AJvYcCVRvMaLJHqkkd/0tz4iC5AyMMF97thYlsMMB4aIEuKM9v1xtilFchwgyzQsVm313OnsaB9njn2sj8G2@vger.kernel.org, AJvYcCVdPRtrL2oXZL2n7rlhdgBasLh3+IoK1UO8UFXjxAaChCS/Y0eAPKL/uuUdFUvDHS22tANVjmN607Q5DRX5ES0=@vger.kernel.org, AJvYcCVitAwcDsZN6dIo8mfAaUlvhBy1mbbHJxCpa+QXyn0iADYDL1yOwacSs7tryQtZ47zhI637zSSiroNapg==@vger.kernel.org, AJvYcCVprShn/44q0VvQ/cWa9rIc7GuNmjX8MURbwW/XQ53oMtsMbCejLbUMKBKMUHGzT+34e3lTVuJajpFRKBmJ@vger.kernel.org, AJvYcCWbYI6Oc3FY/Jw503yjkSp0gNH+TFuJ1nqRjtieu4MgrTIeebc4almkWhEEqwtbuANNYeH4QXtHn5Tq3mk=@vger.kernel.org, AJvYcCWjvI1EYu2mPXYDh1cuxf7d/ovRatz+oYohaIhcKms7PWZIVG5gqDe2XY3uMfdv8GDuNyl33euwa6kX@vger.kernel.org
-X-Gm-Message-State: AOJu0YydimtZeuAeWg7TPJEJNqovsNDdOKLQa0vkLiJRPdRpv2EGeZZg
-	PDLls15lRifu7gVkL1D4z3p7jpkGsTqwl7EdVcd0gx4a2Wr0G05UOGkX1xOrjZknw8oBQv97Wt1
-	4BfsQmPB258IUSi00UaBw884yqs8=
-X-Gm-Gg: ASbGncswhYBciIvPfehlV/zPWzsqhJjdKc8dlrcabkvAp75Pi15AO6/GLDH/uOL9jUA
-	VuByeclPnLLSzIXOJFtBWV2gxLSWaBOHoPVt4pGrydfNJiPgBIdDrEiQny5z1IeXRY3AVE0Q/
-X-Google-Smtp-Source: AGHT+IG5V9kgN4KFR2d/Ij736vONLybGw6IwUqTpy3TNfYr9s117zUMMGcR4U1TgSaPWAXXtzBYE3DNwyLaFV3J2yEY=
-X-Received: by 2002:a05:690c:6ac3:b0:6ef:4ba4:eca8 with SMTP id
- 00721157ae682-6f3f7f3fa78mr164105067b3.0.1735178793196; Wed, 25 Dec 2024
- 18:06:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3D168DA;
+	Thu, 26 Dec 2024 07:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735199378; cv=fail; b=qKDp5NR73mD7spxh0S2ilrUlW7Y3W9Vy8qJ/NSgNglmW8FUzLg6mxluXq3rj6w/W0ZVJ2GTKLjTISscjQcu47QB9buo0JKl/RwKnxmR5Or8QHhCF/WG40AIMibknr+jilsJH5eXj2Yuc9WZfxa6gAKBGEeLuiupjy2I3lS+MaOM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735199378; c=relaxed/simple;
+	bh=3enP0yfCBeVogwoxDWrMF5wiEsTW3rRs9bJca47z52k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gnpdsamVWKv/FWQJFxR/BkSd2T77iKk2cVjC8YPOW2Ssfhtwondfi07KUkvq9pohpe2FXuqXAXTPGzixVSgdrzFCdSNm412rrFlMrdBUXx+3Z6kRR6zXoIZfnxtFjUMIY/sX00PFye006lJa0E1k44SeMOYFDW5QdtW9urzTMK8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=pHYVO+e3; arc=fail smtp.client-ip=40.107.117.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Qwv8iqJ8K4UE1dFE09pfoUMVu42hO5ySSIRtM0eff5fmWLVzHGAOfAV2oIxd/dSVxdQOcNFU1p4VrUgDfLG+GHIjYlQgoa1LzmGv1BMe+Z9TOK/bG/1M4xrgKkFm14s2tTAL7SUwOmpwZ4iUj+tXWUx8Frn7BQ/1lQD7NdUQulQtEo/uNkxfZipt7vWcPS5I8VpfR8NbyHC6iRdGOsuZXjl77xJkwTJvY0EMBUw0vU6IzWfIlM8hSVY5LBSMlHy9X/KDvB3diJ+YiK8fSjHNalBwkW0JV1XMyV/6f08lldL6FrU73G39FAr9UME2feAtqh0OTEbwcmi5rUsd/QmhGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZuWTqFAywmtnUuYv7lQ2NMnpuX1vQ0m6HPH2pCbZv/E=;
+ b=faJIQRNa61it1ew+QoR8sTkwDazHOJLkfooVQwQq/u/7LfVvemcehLKGC2HOHR1LWp0Mo4qHgDb6/Yhc7W79y1/LlM4+RIY+jTFEW9XlXsKuJJ5JWN0lEB2XyUC2RTtk7PAIXiwZeOBzazo072Wt0R1zl+79QodWv+O/2pCmYuQ5sauz63XplRPSaJxM71+mNqcMPUpMbuGz4B+NlkXQ3JWlw3JDB851MkU4CI9C1AX3f3K6YHa60jN3rqhIFtub0JS2x0kHzmcvDRYlzz7TGXjns7CvabGhdWXCgL5BGEMcgIspRCOh/g8uY4278h80apSq9lUejIOdHLgd82mzjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZuWTqFAywmtnUuYv7lQ2NMnpuX1vQ0m6HPH2pCbZv/E=;
+ b=pHYVO+e3ltjAfHodjtfCxsRfQLcW3sC3v873pt7wX7k/VuPlk2+0cZr9Is9W6M6G4LoUdl3hKALEuZC7MN5UGwMHlLjSAEwEgWQKVP73MczYiiVTQtQQmG4+LWYZao5FAd7AF96Uu2/n63Hj7lXtZK93cjv6XsjD8+u9l9MTLvOwM/TLSW8JKvFIR0zVg8aTBe5cfXaaLzfpMVGihEkAH9lUKd6wYXTx1iREpJQlEhJ1SR6EW7/HnB0C1CC6EEc3XcRIXOjrS2uQ/jGsRQYfVdYGha/wd2VN4nByGIohAnG7jhdCBABa7X8xECJjOFQWP0IARBzmBviXxNWAs2mEpA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEZPR03MB7403.apcprd03.prod.outlook.com (2603:1096:101:12d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8293.14; Thu, 26 Dec
+ 2024 07:49:32 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.8293.000; Thu, 26 Dec 2024
+ 07:49:31 +0000
+Message-ID: <cd67acd0-2595-496d-a725-6c3e509492aa@amlogic.com>
+Date: Thu, 26 Dec 2024 15:49:28 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 2/3] pinctrl: Add driver support for Amlogic SoCs
+Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org
+References: <20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com>
+ <20241211-amlogic-pinctrl-v1-2-410727335119@amlogic.com>
+ <CACRpkdbuj-_sPpdfcyg3_QNtzt9r7n-0HBGBKgy-rKUMhvGo4w@mail.gmail.com>
+ <23899c54-14ad-4724-9336-2df6fb485fd6@amlogic.com>
+ <CACRpkdZn75ks4Gc7rm8jzkKM6y0JeQmUF3qmbJA+O+cEA9r--Q@mail.gmail.com>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <CACRpkdZn75ks4Gc7rm8jzkKM6y0JeQmUF3qmbJA+O+cEA9r--Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYCP286CA0166.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c6::17) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241210104524.2466586-1-tmyu0@nuvoton.com> <20241210104524.2466586-4-tmyu0@nuvoton.com>
- <qe7rucm65tixgnlendfdlr6iemrvs2ecun7odlbl3csofj7qjj@sl6vypb66awz>
-In-Reply-To: <qe7rucm65tixgnlendfdlr6iemrvs2ecun7odlbl3csofj7qjj@sl6vypb66awz>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Thu, 26 Dec 2024 10:06:22 +0800
-Message-ID: <CAOoeyxX475tHNqoejX=DcY2ow2+rPc=_qXuX0O5AGumLPFoQGA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] i2c: Add Nuvoton NCT6694 I2C support
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEZPR03MB7403:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10c2afc9-b507-41db-0370-08dd2581d554
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cVFnSzlmS0EvY0tjSU96K1FZZSsrV0QyZkl3SzJ6SVF3Z1RBbmxORUx1bTYx?=
+ =?utf-8?B?allud2o1ZTFrYUpKKzJHRkpKODV3ZW1KNVZmMis5ZlZrMENuUXB5OHF0WCtZ?=
+ =?utf-8?B?Kyt1bnVxSFNycWN4WldmK1FxenhtVDFjdU5JSUVrWmFDN3B6WlBSc1AwY0RS?=
+ =?utf-8?B?UHpUUFBwSTBNbGg1MXNFekpkYlBIa2pwYTA2TlI5dVAvbnNMK2k1Z1dNaU5C?=
+ =?utf-8?B?L0dOWmVLV0Y4ZzZybXhXS3VwbFh4Z2VLZTRjVkNyc1p5OHNsMXVRN3VGOUxF?=
+ =?utf-8?B?WTROMUFwV2l4bkNtcGZHS051MDY4TE5UcjNvU20yZ1NwV1l3VUlMdnhWZWhS?=
+ =?utf-8?B?QmJEWkpybmV1cUxINVlWdS9GczFPMEJDQ3l0Q2tmSk1YUWk4bEVvV2x2bU9U?=
+ =?utf-8?B?SmVPZFhNNUlqQnRMcVBFUmJaOHErM1oybSs4RUFoc0l1OHZYMlp0YWRmc3NB?=
+ =?utf-8?B?UzJOeUpnUUhFSEl6amtGVGJRK3VFanM5d1p4ZXBsdE5RUE9TUzVrcHJvZzRp?=
+ =?utf-8?B?RGFhajJrWXZJeU50QWtlSG5EZlpkalNISXkwWnBZVW5kYnZNYjdiQ2IxOXMz?=
+ =?utf-8?B?dFZwZWxGd1lDS3BHS3pvMUZPWGNXRTcwMHV5Zmw2N1BERU9teFl5bU5DTDZR?=
+ =?utf-8?B?RWlPY2VlVkZPdk1KL2dEc2NJenA4cmdMWTJHQkc0b05adjdoc3VNUFN5Yk9G?=
+ =?utf-8?B?SW1tUW9yMExjQTBJVFlpTmtna29wQWpXOGY1TElOZ2Y3YjBGaEc1YmtxZEpO?=
+ =?utf-8?B?Wlo5dEhCdXRuZmVVVGk0WHhxQ0NUdU1mZzJhYk9xQ0hMRFVad0pwTlVYNGkw?=
+ =?utf-8?B?MUJyYXdnRjNlSmhvakxqL0U3Yk51Q1BWa1hEVnhlVE8xN3JDS3kyVnZ5enk3?=
+ =?utf-8?B?d1N0TmVDMkpCV1pKMEE1RERWSlNhVFdtU1lFREI1QmlSODh6ZldZeEkvYVNI?=
+ =?utf-8?B?OUVUTUlySnZVanc5ZDBDUjFZaDY5Zkd6NUJITDdaMytjTXYwc1FMb0dXSVQ4?=
+ =?utf-8?B?MVBnTTBrMFhBTUlEc2hZYWtYR29wK05FdUNSTktHcnlVWkxiT29hR3dIYVFl?=
+ =?utf-8?B?YTMwM1JzMzYwRks5QmlCTjJhQ2lMaWVTanh3cGtNa1o5WkJLNnZjQktKYTJE?=
+ =?utf-8?B?eDdzYVo3aGtUL2p1Z0FoMVkzb2h2QitML2FXVUNwb282VTYyWnV2enJ5K3BL?=
+ =?utf-8?B?cXVtUzdhSjlRTDFhcG1ndHljQzZReisvaXA2cjZhQi9FVW82MWFEc1ZJWjU1?=
+ =?utf-8?B?SWpUNUVpaG9oMTdHZGpjMXFVUHlzTmF3a0hrdkR2WGFEZ3JZQ0J6U3BndHJT?=
+ =?utf-8?B?SFZTVzFPMzFtTklWNythK0pFa251T1VKQm5QcmRqYTZZajRoL2hPS0h1SFdE?=
+ =?utf-8?B?QmJ5ZU1GOHpVMzNLMUpoQnlLRTZZVUlWMTljQU56RkhMb1hlN2pDUmMwK3Jo?=
+ =?utf-8?B?TDN3bTd3K3poMUtVbjlZRzBEWlRQMzRQdU41NHVrcFZ6QXlXSWdvaERnZC9J?=
+ =?utf-8?B?VU15SGdqNDU4OU12SExKekVqNmVESU90Z3pGQ3lnVnFPUTFlY3c1a2N1dVhk?=
+ =?utf-8?B?Q3lNZ3d2THlKMmwzeURDR0RmVGZaT3IxL1NySTFhMWdnUGl5VXVVLzZtOG5y?=
+ =?utf-8?B?RzNuUWI3aVhVL2dyQWV6ajBoaTNicEliS3UwckdPUFdTK0laUGZnK3M1cVlT?=
+ =?utf-8?B?aGFaVUllcjFTWU8zNUxLbVRZYll5K3VoWkF2V20xWTNoOXdPNXhuUm02QzNw?=
+ =?utf-8?B?MFpZdTZPdGIvVm1ZWHNFb0FBaU51alZoMFI3dE0raytIaVJ6MHlvTXIvTk9K?=
+ =?utf-8?B?aWZGWWpHMW9aZktOSEQ0TkJqRUQ4ZUJNNk4va3ptZ2Y2NjZpUEZ5bzVpVXVW?=
+ =?utf-8?Q?OT7wgHD4mtR8W?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WmtYSnpXZzRsa29uVmVZdXZuZ2NEaDhYZlU0TU9ZTzZnVVRxckxUQmpySVg4?=
+ =?utf-8?B?N290RGN1NmR1N2JyZkV2NXJvQlJNWUxsQ24zVE9Vdld1bXVGZjJpMWRyeGlH?=
+ =?utf-8?B?QlllN1FaWmF5Snd5UFhWclZCUnh3RDF0eWdUZktxMnJhZkRhME1qdFFpNCtP?=
+ =?utf-8?B?MGNiay82NkVLbWxxY1JqZDc0TFp3eXFtandDbVQxNC9ITWowTDJxb3V2dm93?=
+ =?utf-8?B?N3RSelBJMlBhdHJxYkZXbUhYZWRYTHBxcVkwV1RYb1hhRytOWXloVjF3cTZW?=
+ =?utf-8?B?aGl0TWhkaWUwRHhvbFRvZVNvZzJuT2p1WVZRVGpveGFoWjRuYk9Oakd2dnNw?=
+ =?utf-8?B?OURuRHRNREp3eHVMTjJ1NldocWFCTWNsdDZPYnYvdEZqS01tVk9peEJUZjFv?=
+ =?utf-8?B?bmxwTk5OZWZ5T3V0RkdDd1N3dGlGeWtza2dyaXp4MzZnM3pUUEg3MHNHQVZy?=
+ =?utf-8?B?K0N2Y2dscFpZWmxVTXhSTlZuT05QeDZiMzNTREt1Y1ZoM205dFNpcnQvTXEw?=
+ =?utf-8?B?cE9NT3p3U0FDVWNtV3RVTEd6bEVwUXNmWVFxaFBDK05DbHRaekFlYWVreWpE?=
+ =?utf-8?B?dGJDRC9EaHJEbHdIQ3NETmVYcTJPcjJseFo4Q0RBOG5GS3dJVGJja2d1T0E0?=
+ =?utf-8?B?YW40TGUwdFBxVFFqN3l0ZC9LekN5RkF4c3dDNGpNaFpiRkl0WDZpeGpDc1Rs?=
+ =?utf-8?B?ekpkWHV4T3ExNEdtSUlabmpJbFI3V0lQdmV2bjVNMkVBemVtZzU3aUppTWdT?=
+ =?utf-8?B?YVpoU3pRMXJ5VVF6YXNHbGUzU1R6bjlybGhVRndsdmtJSGRJMWdCWWxZQVYw?=
+ =?utf-8?B?cENkYU5DdGNFeUN1aFp0NEFtcURPN2dTMW90NVhpUktWWVJCaHBlbmlJVVdE?=
+ =?utf-8?B?L1VtUTduZVNMNE1ybS84WFBkNDhjRWtWOGp1ZDdISjQ4dElPck1ucnQzOGJw?=
+ =?utf-8?B?WjY1TDkwWFd2RjVJUXZpOHpPNVBSR1ZVTEoxek1aaTV0dnRIeCt4SS83azhi?=
+ =?utf-8?B?RnErN21XY29Kek9mZmM4L05FK1R6azZPSWpqS05ZRURuZFVCN3VGbjcyNWUw?=
+ =?utf-8?B?MWszRFI2VGU5ZFlsOG5kWFhBRzhuRzluTXNzdHdaODFFRkg5amdrOFJjUmV6?=
+ =?utf-8?B?S2JPY3JYR21BK1J0K1l6d0JlMEpaVUJYakxVNDRiUThjbCtSVjlKdlVoYTRo?=
+ =?utf-8?B?cklXSVV6UTB0d2VOeGNsZUxkbWJ5bStvVGNnVTZ6WncvblM5QkJYTXBrUkNp?=
+ =?utf-8?B?UVY4UUQ4M21zV1dVU3d5bmNJWG9WWjRmRFY3c2tSV2pBblJmaDR1RHQ3dmtx?=
+ =?utf-8?B?VFViWjNqejJVZi9ZR1lBSjhRVGsraHNhbWZNNWRQQ1YvKzluWG1tQkFuMUhM?=
+ =?utf-8?B?TUNRWkhrRzV4Snl6OXZYOE94MzBRbmM1VG1Ld0FuM2VucVRRTEZKWU5oMGtp?=
+ =?utf-8?B?WE5rQjdkUitDUFZQNmxPTGJTeHNBWUkwNUJ0QTFQem9VOU84SjNMNnFhMmY4?=
+ =?utf-8?B?TEY2R0ZRcTRjWEhCNXV0OEZ2MHpqdWRaNXJLbkExV2lGaTBxNlM0eUoxbTBR?=
+ =?utf-8?B?UUUzZGp3a1M3ME0yMUxFcnRqNGJoR25HalNnU2hSQ0kvMzJDSDdYczJocThL?=
+ =?utf-8?B?NVRQbWlndXdLcWI5MCtHbW5EM3JDYnV1OEFVMnNDVERPdVNZaUdhNkdrbXNF?=
+ =?utf-8?B?WHRLQ0xUekpXTE9UTGVhajZPZU4wRkZsSUFyM1FzSjdiVFBDbFFzOXlYelRT?=
+ =?utf-8?B?MUNDTnVEcTF1T3RReXl4Q2paQ2xsM1JmdXlaZ0dYMFFxK2tsMGREWjl6RmJv?=
+ =?utf-8?B?NUVYTEM4QkJra1kyVlZ1WFNsS0tsYlFXVDZEckllUFpoaFpRcnZwT1NoN000?=
+ =?utf-8?B?K2l1S1N1K3JrSXhJaW5uRklacGtTMjBVUVJYS0V5YlZrNDlHQTh6VnFZOU1O?=
+ =?utf-8?B?TjRXcVgxNnFVSm5kRitnVWE2TFRoU0sxMkZkUWhkMktkTUNUWkxDSEVac2xp?=
+ =?utf-8?B?SldnMUo2MXpoSEdkSDA2dGlud05OQUJUK1JuQWUwNnFNdkg5cVpseDUzT1Zt?=
+ =?utf-8?B?TXVielBJWGVidVREZU9TVnlUakFkMVFqUzBHVHhjOVFJL0ZKV0RlRzhHaFN4?=
+ =?utf-8?B?bDRjYldoa1gvempYaGY5WldtZnZmNkhHdXg2SC9DMG51Rit2UnV0WUdtaVli?=
+ =?utf-8?B?RGc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10c2afc9-b507-41db-0370-08dd2581d554
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2024 07:49:31.7998
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tA/L9sUdhUAwQXJUz0XcYWXoOVItkcCp2uTgBlUqk6ajcbbT/2Xh5qQu0I1+I6nVnZBvuaHZwdmvkLQihULf1cTXjyqp1GnuSjvhSTYbLt8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7403
 
-Dear Andi,
+Hi Linus,
+    Thanks for your reply.
 
-Thank you for your comments,
+On 2024/12/22 17:08, Linus Walleij wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> Hi Xianwei!
+> 
+> On Wed, Dec 18, 2024 at 10:37 AM Xianwei Zhao <xianwei.zhao@amlogic.com> wrote:
+> 
+>> [Me]
+>>> In any way I recommend:
+>>>
+>>> - Renaming drivers/pinctrl/sunxi to drivers/pinctrl/amlogic
+>>>     so we keep this sorted by actual vendor, sunxi is apparently
+>>>     yours (AMlogic:s) isn't it?
+>>>
+>>
+>> It isn't. Sunxi is Allwinner SoCs.
+> 
+> My apologies. I mixed it up completely. :(
+> 
+> What do you think of the idea of a separate drivers/pinctrl/amlogic directory
+> though? I think there are already quite a few amlogic SoCs that need
+> to be supported and more will come.
+> 
 
-Andi Shyti <andi.shyti@kernel.org> =E6=96=BC 2024=E5=B9=B412=E6=9C=8826=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=888:43=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> > +#include <linux/i2c.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/mfd/nct6694.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +/* Host interface */
->
-> What does it mean "Host interface"?
->
-> > +#define NCT6694_I2C_MOD              0x03
-> > +
-> > +/* Message Channel*/
-> > +/* Command 00h */
->
-> This comments are meaningless, either make them clearer or remove
-> them.
->
-> > +#define NCT6694_I2C_CMD0_OFFSET      0x0000  /* OFFSET =3D SEL|CMD */
->
-> I find this comment quite meaningless. Can you please make it
-> clearer?
->
+ From the existing specifications of several subsequent chips, the 
+support for the new chip does not require additional files, and there 
+may be a little difference for special bank in the future chip, which 
+can be solved by private architecture.
 
-I have already updated these structures and comments following
-suggestions from other reviewers, and I plan to include the changes in
-the next patch submission.
+>>>> +       ret = pinconf_generic_parse_dt_config(np, info->pctl, &grp->configs,
+>>>> +                                             &grp->num_configs);
+>>>
+>>> But can't you just move this code around? grp->num_configs give the
+>>> number of configs, so why do you have to go and look up pinmux
+>>> above, can't you just use grp->num_configs instead of of_pins
+>>> and npins above?
+>>>
+>> They are different.
+>> The of_pins(grp->npins) specifies the mux values for pin-mux register
+>> and pin index in pinctrl. It can include multiple pins in groups.
+>>
+>> The grp->configs and grp->num_configs specify the configuration
+>> information for all pins of this groups(such as bias-pull-up,
+>> drive-strength-microamp)
+>>
+>> uart-d-pins2{
+>>          pinmux= <AML_PINMUX(AMLOGIC_GPIO_T, 7, AF2)>,
+>>                  <AML_PINMUX(AMLOGIC_GPIO_T, 8, AF2)>,
+>>                  <AML_PINMUX(AMLOGIC_GPIO_T, 9, AF2)>,
+>>                  <AML_PINMUX(AMLOGIC_GPIO_T, 10, AF2)>;
+>>          bias-pull-up;
+>>          drive-strength-microamp = <4000>;
+>> };
+> 
+> OK I get it ... I think. It's nice that you combine muxing and pin config
+> into the same node like this, it's very readable.
+> 
+> Think about if you even want to add generic helpers for this in
+> the generic code.
+> 
 
-> > +#define NCT6694_I2C_CMD0_LEN 0x90
-> > +
-> > +enum i2c_baudrate {
-> > +     I2C_BR_25K =3D 0,
-> > +     I2C_BR_50K,
-> > +     I2C_BR_100K,
-> > +     I2C_BR_200K,
-> > +     I2C_BR_400K,
-> > +     I2C_BR_800K,
-> > +     I2C_BR_1M
-> > +};
-> > +
-> > +struct __packed nct6694_i2c_cmd0 {
-> > +     u8 port;
-> > +     u8 br;
-> > +     u8 addr;
-> > +     u8 w_cnt;
-> > +     u8 r_cnt;
-> > +     u8 rsv[11];
-> > +     u8 write_data[0x40];
-> > +     u8 read_data[0x40];
-> > +};
-> > +
-> > +struct nct6694_i2c_data {
-> > +     struct nct6694 *nct6694;
-> > +     struct i2c_adapter adapter;
-> > +     unsigned char *xmit_buf;
->
-> why isn't this a nct6694_i2c_cmd0 type?
->
+I will try to add API for pinmux property to pinconf-generic.c.
 
-Fix it in v4.
-
-> > +     unsigned char port;
-> > +     unsigned char br;
-> > +};
-> > +
-> > +static int nct6694_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs=
-, int num)
-> > +{
-> > +     struct nct6694_i2c_data *data =3D adap->algo_data;
-> > +     struct nct6694_i2c_cmd0 *cmd =3D (struct nct6694_i2c_cmd0 *)data-=
->xmit_buf;
-> > +     int ret, i;
-> > +
-> > +     for (i =3D 0; i < num ; i++) {
-> > +             struct i2c_msg *msg_temp =3D &msgs[i];
-> > +
-> > +             memset(data->xmit_buf, 0, sizeof(struct nct6694_i2c_cmd0)=
-);
-> > +
-> > +             if (msg_temp->len > 64)
-> > +                     return -EPROTO;
-> > +             cmd->port =3D data->port;
-> > +             cmd->br =3D data->br;
-> > +             cmd->addr =3D i2c_8bit_addr_from_msg(msg_temp);
-> > +             if (msg_temp->flags & I2C_M_RD) {
-> > +                     cmd->r_cnt =3D msg_temp->len;
-> > +                     ret =3D nct6694_write_msg(data->nct6694, NCT6694_=
-I2C_MOD,
-> > +                                             NCT6694_I2C_CMD0_OFFSET,
-> > +                                             NCT6694_I2C_CMD0_LEN,
-> > +                                             cmd);
-> > +                     if (ret < 0)
-> > +                             return 0;
->
-> why not return ret?
->
-
-Fix it in v4.
-
-> > +
-> > +                     memcpy(msg_temp->buf, cmd->read_data, msg_temp->l=
-en);
-> > +             } else {
-> > +                     cmd->w_cnt =3D msg_temp->len;
-> > +                     memcpy(cmd->write_data, msg_temp->buf, msg_temp->=
-len);
-> > +                     ret =3D nct6694_write_msg(data->nct6694, NCT6694_=
-I2C_MOD,
-> > +                                             NCT6694_I2C_CMD0_OFFSET,
-> > +                                             NCT6694_I2C_CMD0_LEN,
-> > +                                             cmd);
-> > +                     if (ret < 0)
-> > +                             return 0;
-> > +             }
-> > +     }
-> > +
-> > +     return num;
-> > +}
-> > +
-> > +static u32 nct6694_func(struct i2c_adapter *adapter)
-> > +{
-> > +     return (I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL);
->
-> parenthesis are not needed.
->
-
-Fix it in v4.
-
-> > +}
->
-> ...
->
-> > +static struct platform_driver nct6694_i2c_driver =3D {
-> > +     .driver =3D {
-> > +             .name   =3D "nct6694-i2c",
-> > +     },
-> > +     .probe          =3D nct6694_i2c_probe,
-> > +     .remove         =3D nct6694_i2c_remove,
-> > +};
-> > +
-> > +module_platform_driver(nct6694_i2c_driver);
->
-> what I meant in v1 is to try using module_auxiliary_driver().
-> Check, e.g., i2c-ljca.c or i2c-keba.c.
->
-
-I think the NCT6694  is an MCU-based device, and the current
-implementation is as an MFD driver. Are you suggesting it should
-instead be implemented as an auxiliary device driver? If so, would
-that mean all related drivers need to be revised accordingly?
-
-Best regards,
-Ming
+>>>> +static void aml_pctl_dt_child_count(struct aml_pinctrl *info,
+>>>> +                                   struct device_node *np)
+>>>> +{
+>>>> +       struct device_node *child;
+>>>> +
+>>>> +       for_each_child_of_node(np, child) {
+>>>> +               if (of_property_read_bool(child, "gpio-controller")) {
+>>>> +                       info->nbanks++;
+>>>> +               } else {
+>>>> +                       info->nfunctions++;
+>>>> +                       info->ngroups += of_get_child_count(child);
+>>>> +               }
+>>>> +       }
+>>>> +}
+>>>
+>>> This looks like a weird dependency between gpio chips and
+>>> pins that I don't quite understand. Some comments and
+>>> references to the bindings will be needed so it is clear
+>>> what is going on.
+>>>
+>>
+>> A pinctrl device contains two types of nodes. The one named GPIO bank
+>> which includes "gpio-controller" property. The other one named function
+>> which includes one or more pin groups.
+>> The pin group include pinmux property(pin index in pinctrl dev,and mux
+>> vlaue in mux reg) and pin configuration properties.
+> 
+> OK I  guess the binding patch explains why you need several
+> separate gpio controller "bank" nodes instead of just the base
+> node being one for all of the pins (which is the most
+> common). In a way I like it because it often helps to divide
+> up GPIOs by bank.
+> 
+> Yours,
+> Linus Walleij
 
