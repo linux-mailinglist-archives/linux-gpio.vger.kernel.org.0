@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-14238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14237-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED7539FC98E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 08:57:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E5209FC98C
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 08:57:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F14A7A0887
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 07:57:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B52EB188356A
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 07:57:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1851CF5DF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1DA1CF5E2;
 	Thu, 26 Dec 2024 07:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLQqn4xu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVcsCp58"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3130C8248C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312D477F10;
 	Thu, 26 Dec 2024 07:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735199866; cv=none; b=Udr7tDnyBDRu1fs9h+Us0lTyGc/4Gjz9mau2R3hUOKUC5UDlbUZKt45tcirv7iHGpGKDVJP5lYmdtpyOktJPNQjhRFSvzAhQsCcLZ3AOZ9lnzJsGZcv/i7qJbd/0cMK99KUxGbdVSszCvDbKv/Dq623JLqsacoCuak+ySKoXGsY=
+	t=1735199866; cv=none; b=PSafBCeP/LzvkZ7hLrEx8L+nZDDVQ9Z0B/JWdUsGhzRZNfR/bjlRuJpRAyK3TTowU1i88yZHam/GHpHJ3xNc/cqi0BVCwdZe36O/+SC2TQG5dXT9uSd18eUQnM6GYCq8zRNb2OenBVd604X6Kw00ezKfLB00RjCcG64lES7OkAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735199866; c=relaxed/simple;
-	bh=8b/59hoXnXDAUbIUEYcQ6psWuniloV83ts4PS5yxSSc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=keYufqns76ibuEqrjukwC0BhiNaFMYE76dnbMpBTHL7uoo8+kGAgh9wPCwaQcmGPcm9q1A1NF/KDRzF+o1lC/Px+zQx5HF1TB6+MJ3Fi4mM5E59nswCcMzcLLC+2za35kEtpQ7BAZZB0crj9nB/GO+MiV5ZUVBwTWEWzeMcSyWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLQqn4xu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CDB3AC4CED1;
+	bh=gTOTWCKaoxxo8Ex7qfjYkUHMB9N9xobWkSvkle5f6Qg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XmZ5GHbO83/hTgPPw7AlbOU9GT3D3DzOJ8LsNZrNNOvAJiTMqx/rJfgOc8YPOv+a+yL4KG/9zCQdZGS5k1kHVPPD5tF7U4agBPwpJRwyh0vc1F0ThEe8O8lhzDrxtO6YCHNsbAoMwillAZlM9Cdc4kTWi8ApMbsU4xMGdBIMaKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVcsCp58; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D66CAC4CED4;
 	Thu, 26 Dec 2024 07:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1735199865;
-	bh=8b/59hoXnXDAUbIUEYcQ6psWuniloV83ts4PS5yxSSc=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=SLQqn4xuB6CFv8dg3bnuYbi/1C02O547k/UDrtV12F7KcRWpKUUGMe109J/G/Lqg/
-	 +rWTxvjJBw/a8ETfWImCTtHyKFvA0hPv8NwBgihKOckGKyQuUkTPgeZe8FtQz98W3L
-	 6k0/DIcmqPOjZMWq0QAjHPrZsjF4zKsvcLeqNlxeAU6ssGg3lCbta173AxGeNX0eqg
-	 mWpzL7LerxJiWkKAWRD+XrrXKjOSiJzEr7rd7ScTrkGmPEsoH7bOlqBOjhdeALrnTK
-	 hSIQqMwcmbLVzN01MWV9fBuoLvcHuup6w3Q41XZ07+fpG7bCSHmmz4YA/V2jjx7CfI
-	 OMdQwBlq5qu1g==
+	bh=gTOTWCKaoxxo8Ex7qfjYkUHMB9N9xobWkSvkle5f6Qg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=rVcsCp58otPwZmVXBO/wuFwZvl2BqGyGih+VDfA2y3X0BiGh2NtqBNaw69MlZrURk
+	 wfgyyKVGxNTNqXGFPzb4IsFDegEHx0aTuVKA74c0K2SFJP3KouHct72qrIQgzK9ZeH
+	 GWoeFuqHbNGwSE7EHGbtM/xXRhP056uSYxZWHr+fOmiB4exdw+tFL7ZUzABl6kypXP
+	 nRAcR+yDZ+9JfTYUAgAAiiSxg2JOylrwpxpY3qTTS7JLiH5eEBczO91mDBe2T+r0FX
+	 UoLYwcMLbPNB3+ROBOMk27wvRBfbhFpUmVRLNvbWG4K00gxr4UOZeGm6+89l+8L+A7
+	 jHCHlN1ZkMvuw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5924E77188;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CF6E7718D;
 	Thu, 26 Dec 2024 07:57:45 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Subject: [PATCH v2 0/5] Pinctrl: Add Amlogic pinctrl driver
-Date: Thu, 26 Dec 2024 15:57:40 +0800
-Message-Id: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
+Date: Thu, 26 Dec 2024 15:57:41 +0800
+Subject: [PATCH v2 1/5] dt-bindings: pinctrl: Add support for Amlogic SoCs
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,9 +55,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHQMbWcC/3WNwQ6CMBBEf4Xs2TXdBUU9+R+GQ9NW2AQoaUmjI
- f13K/Hq8U1m3mwQXRAX4VZtEFySKH4uwIcKzKDn3qHYwsCKG2Ii1NPoezG4yGzWMCKz02e6sLL
- KQlktwT3ltRsfXeFB4urDez9I9E3/uxKhwoZUy21dn4iu91/jaPwEXc75A8+qYYuwAAAA
+Message-Id: <20241226-amlogic-pinctrl-v2-1-cdae42a67b76@amlogic.com>
+References: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
+In-Reply-To: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -69,11 +69,11 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735199863; l=2379;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735199863; l=6815;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=8b/59hoXnXDAUbIUEYcQ6psWuniloV83ts4PS5yxSSc=;
- b=g7vOqRgzWD6wbJu6ZnJIYzXnuvYrSKYObzaPPRDDncvr3/7T5Uh2NGMiBOE6kG9mOYKexn8bu
- c9P5+f3KiSADr1WYPYvuzAxx620iDH4bbdU8mO1fDqSnc8WFlMx9Ieu
+ bh=GJhCWt6Ek9YGee2cyPccZRinuTJdUUzwSYc2PN5oozg=;
+ b=xkbnFoJvUDDa2jg2I25X+yvZSoBSM6iXsAJ96C1ix4ByiUTKxNmpoqTeih7zhKusp5jw7jX9Q
+ ysKm7M5O0ugDFAwaZvhNr0YvB023NJECeOnzyGtaUGb+sI9/A9oxxDG
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -81,58 +81,256 @@ X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
 X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 Reply-To: xianwei.zhao@amlogic.com
 
-Add pinctrl driver support for Amloigc SoCs
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Base on the previous discussion,
-https://lore.kernel.org/r/20241113-a4_pinctrl-v6-0-35ba2401ee35@amlogic.com
-The existed meson driver failed to meet the requirement of the current dt-binding.
-So we start this new pinctrl driver to solve problem.
-
-The advantage of this version: Once the source file and binding document
-are added, adding dts node will be only operation for subsequent Amlogic SoCs
-(such as A4, A5).
-
-The code in DTS file is also readable when using GPIO, as below:
-reset-gpios = <&gpiob 6 GPIO_ACTIVE_LOW>;
+Add the dt-bindings for Amlogic pin controller, and add a new
+dt-binding header file which document the GPIO bank names and
+alternative func value of all Amlogic subsequent SoCs.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
-Changes in v2:
-- Some modifications and optimizations were made to bindings according to Rob's suggestions.
-- Refined some details on functions node for bindings. 
-- Some source code optimizations were made according to Linus's suggestions.
-- Add stand API to generic to deal pinmux propertity.
-- Add private reg data to deal with for future SoCs.
-- Simplified some unused processing (previously used for extension).
-- Sync add to MAINTAINERS files.
-- Link to v1: https://lore.kernel.org/r/20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com
+ .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       | 155 +++++++++++++++++++++
+ include/dt-bindings/pinctrl/amlogic,pinctrl.h      |  68 +++++++++
+ 2 files changed, 223 insertions(+)
 
----
-Xianwei Zhao (5):
-      dt-bindings: pinctrl: Add support for Amlogic SoCs
-      pinctrl: pinconf-generic: Add API for pinmux propertity in DTS file
-      pinctrl: Add driver support for Amlogic SoCs
-      arm64: dts: amlogic: a4: add pinctrl node
-      MAINTAINERS: Add an entry for Amlogic pinctrl driver
+diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+new file mode 100644
+index 000000000000..75863d179933
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/amlogic,pinctrl-a4.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic pinmux controller
++
++maintainers:
++  - Xianwei Zhao <xianwei.zhao@amlogic.com>
++
++allOf:
++  - $ref: pinctrl.yaml#
++
++properties:
++  compatible:
++    const: amlogic,pinctrl-a4
++
++  reg:
++    minItems: 2
++
++  reg-names:
++    items:
++      - const: mux
++      - const: gpio
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#address-cells"
++  - "#size-cells"
++
++patternProperties:
++  "^gpio@[0-9a-f]+$":
++    type: object
++
++    properties:
++      reg:
++        minItems: 2
++
++      mask:
++        $ref: /schemas/types.yaml#/definitions/uint32
++
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      ngpios:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 1
++        maximum: 32
++
++      identity:
++        description: |
++          identifier are provided by the pin controller header file at:
++          <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
++
++        $ref: /schemas/types.yaml#/definitions/uint32
++
++    required:
++      - reg
++      - gpio-controller
++      - "#gpio-cells"
++      - ngpios
++      - identity
++
++    additionalProperties: false
++
++  "^func-[0-9a-z-]+$":
++    type: object
++    additionalProperties:
++      type: object
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++      description:
++        A pin multiplexing sub-node describes how to configure a set of (or a
++        single) pin in some desired alternate function mode.
++        A single sub-node may define several pin configurations.
++
++      properties:
++        pinmux:
++          description: |
++            Integer array representing pin number and pin multiplexing
++            configuration.
++            When a pin has to be configured in alternate function mode, use
++            this property to identify the pin by its global index, and provide
++            its alternate function configuration number along with it.
++            bank identifier are provided by the pin controller header file at:
++            <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
++            Integers values in "pinmux" argument list are assembled as:
++            (((BANK << 8) + PIN) << 8)  | MUX_FUNC))
++
++      required:
++        - pinmux
++
++      additionalProperties: true
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/pinctrl/amlogic,pinctrl.h>
++    apb {
++      #address-cells = <2>;
++      #size-cells = <2>;
++      periphs_pinctrl: pinctrl@8e700 {
++        compatible = "amlogic,pinctrl-a4";
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0x0 0x8e700 0x0 0x04>,
++              <0x0 0x8e704 0x0 0x60>;
++        reg-names = "mux", "gpio";
++
++        gpio@14 {
++          reg = <0x14>,<0x30>;
++          gpio-controller;
++          #gpio-cells = <2>;
++          ngpios = <10>;
++          identity = <AMLOGIC_GPIO_B>;
++        };
++
++        func-uart-b {
++          uart-b-default {
++            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 1, AF4)>;
++            bias-pull-up;
++            drive-strength-microamp = <4000>;
++          };
++
++          uart-b-pins1 {
++            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 5, AF2)>;
++            bias-pull-up;
++            drive-strength-microamp = <4000>;
++          };
++        };
++
++        func-uart-c {
++          uart-c-default {
++            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 3, AF1)>,
++                     <AML_PINMUX(AMLOGIC_GPIO_B, 2, AF1)>;
++            bias-pull-up;
++            drive-strength-microamp = <4000>;
++          };
++        };
++      };
++    };
+diff --git a/include/dt-bindings/pinctrl/amlogic,pinctrl.h b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+new file mode 100644
+index 000000000000..03db0a730e8b
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
++/*
++ * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
++ * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
++ */
++
++#ifndef _DT_BINDINGS_AMLOGIC_PINCTRL_H
++#define _DT_BINDINGS_AMLOGIC_PINCTRL_H
++
++/* define PIN modes */
++#define AF0	0x0
++#define AF1	0x1
++#define AF2	0x2
++#define AF3	0x3
++#define AF4	0x4
++#define AF5	0x5
++#define AF6	0x6
++#define AF7	0x7
++#define AF8	0x8
++#define AF9	0x9
++#define AF10	0xa
++#define AF11	0xb
++#define AF12	0xc
++#define AF13	0xd
++#define AF14	0xe
++#define AF15	0xf
++
++#define AML_PIN_ALT_FUNC_MASK	0xf
++
++/* Normal PIN bank */
++#define AMLOGIC_GPIO_A		0
++#define AMLOGIC_GPIO_B		1
++#define AMLOGIC_GPIO_C		2
++#define AMLOGIC_GPIO_D		3
++#define AMLOGIC_GPIO_E		4
++#define AMLOGIC_GPIO_F		5
++#define AMLOGIC_GPIO_G		6
++#define AMLOGIC_GPIO_H		7
++#define AMLOGIC_GPIO_I		8
++#define AMLOGIC_GPIO_J		9
++#define AMLOGIC_GPIO_K		10
++#define AMLOGIC_GPIO_L		11
++#define AMLOGIC_GPIO_M		12
++#define AMLOGIC_GPIO_N		13
++#define AMLOGIC_GPIO_O		14
++#define AMLOGIC_GPIO_P		15
++#define AMLOGIC_GPIO_Q		16
++#define AMLOGIC_GPIO_R		17
++#define AMLOGIC_GPIO_S		18
++#define AMLOGIC_GPIO_T		19
++#define AMLOGIC_GPIO_U		20
++#define AMLOGIC_GPIO_V		21
++#define AMLOGIC_GPIO_W		22
++#define AMLOGIC_GPIO_X		23
++#define AMLOGIC_GPIO_Y		24
++#define AMLOGIC_GPIO_Z		25
++
++/* Special PIN bank */
++#define AMLOGIC_GPIO_DV		26
++#define AMLOGIC_GPIO_AO		27
++#define AMLOGIC_GPIO_CC		28
++#define AMLOGIC_GPIO_TEST_N	29
++
++#define AML_PINMUX(bank, offset, mode)	(((((bank) << 8) + (offset)) << 8) | (mode))
++#define AML_PINMUX_TO_BANK(pinmux)	(((pinmux) >> 16) & 0xff)
++#define AML_PINMUX_TO_OFFSET(pinmux)	(((pinmux) >> 8) & 0xff)
++
++#endif /* _DT_BINDINGS_AMLOGIC_PINCTRL_H */
 
- .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |  155 +++
- MAINTAINERS                                        |    8 +
- arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |  133 +++
- drivers/pinctrl/Kconfig                            |   18 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/pinconf-generic.c                  |  130 +++
- drivers/pinctrl/pinconf.h                          |    4 +
- drivers/pinctrl/pinctrl-amlogic.c                  | 1047 ++++++++++++++++++++
- include/dt-bindings/pinctrl/amlogic,pinctrl.h      |   68 ++
- include/linux/pinctrl/pinconf-generic.h            |    4 +
- 10 files changed, 1568 insertions(+)
----
-base-commit: 4de5110762b94b9978fb8182a568572fb2194f8b
-change-id: 20241211-amlogic-pinctrl-22ea61820d0d
-
-Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
+2.37.1
 
 
 
