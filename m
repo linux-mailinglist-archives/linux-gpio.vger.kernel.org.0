@@ -1,167 +1,109 @@
-Return-Path: <linux-gpio+bounces-14247-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14249-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 038DD9FCE4E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:59:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AFB79FCE97
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 23:39:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1AF8F7A043D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 21:59:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41AF83A02EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A801A1BBBE0;
-	Thu, 26 Dec 2024 21:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF43D1C5CC1;
+	Thu, 26 Dec 2024 22:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tbmQcLKr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npIoxWvE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA391B21AB;
-	Thu, 26 Dec 2024 21:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB551C54A8;
+	Thu, 26 Dec 2024 22:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735250367; cv=none; b=LVQAX6G4woLzgj4sVnbz4mduUc851Z88Gng/viiLsu0xz1pURIuRtwT9+vCFcgYq2Dm2VJwTUoMeRBF0Y2twKMcLc9HDFAC3IggD66x3LkxT0O+psedusqsjkJWLltrgR65+MfCidOW9kVjA1vALmX8jz0MNo1wR6UmmUwFOSu4=
+	t=1735252742; cv=none; b=Impd/g402WP2Qatl8tM5LWtT/c++5vJ/WcficnVc8sr5RWeHnijOoRDMSp4KLihgtMmPTl/gCOYpNgmCavvVhOpGi1S2ER4VXwNRdIQie9Nr0koZeYO0fogiLY1l6xL/KTtvauHBAgEWX7HrN8GAuQSC/eJ1i58QjgXQ7j/YG7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735250367; c=relaxed/simple;
-	bh=YOJFcQUVYHvLAon8zslNiB3RMNDVOXFQDrTZMWRacwA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=INHBHOLV53BTLvYrQcuucLoM9+/QakluBieBpZgvayhd+Tvhhfmyk/DUGFHZBFErQGO+VidU/2dkNekI8TB2k8j2cbNWZ5DsvQGqQySBo6cyKL6HJTQrw0wwCUuFYHa3CpIHhy1C8It0xiFI3POl8uKf2T//qJNeEpDdez1plVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tbmQcLKr; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLx0xK1011603
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Dec 2024 15:59:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1735250341;
-	bh=VgXU2JJnzqdxhbvzpcY0jkgaaM3Y+6O185ODfuYm7OY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=tbmQcLKrAYzFVAaekz2uFqCOkrw/DVX6p2D9zDsZrlzFAdEmYb+5nujXhRePyOw+P
-	 Ljv3Q37NQtQjTXri3jDN1AspdOCszf/ngEIRQqEa6wlms8onBMH+17I9Bt6bMJ0QN4
-	 buQhuHWa3N+6Gscs+QpQtavKa3zG92muFCu5zoF4=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLx0Jr076129
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 26 Dec 2024 15:59:00 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 26
- Dec 2024 15:59:00 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 26 Dec 2024 15:59:00 -0600
-Received: from DMZ007XYY.dhcp.ti.com ([10.250.33.34])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BQLww60056047;
-	Thu, 26 Dec 2024 15:59:00 -0600
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: <m-leonard@ti.com>, <praneeth@ti.com>
-Subject: [PATCH v1 3/3] gpio tps65215: Add support for varying gpio/offset values
-Date: Thu, 26 Dec 2024 15:58:58 -0600
-Message-ID: <20241226215858.397054-4-s-ramamoorthy@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241226215858.397054-1-s-ramamoorthy@ti.com>
-References: <20241226215858.397054-1-s-ramamoorthy@ti.com>
+	s=arc-20240116; t=1735252742; c=relaxed/simple;
+	bh=ghvEWc+CY8H0nlr1RDV+hoiNH9dMWvFeMfs/OYEjr0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ebbY7776Poz+adYIiWBk6l4yY+5Xm4z/zCqou3lM6hVPXwE3XOeOhdweYFXPpLnswX+M4SrA0PZcLTC4rgQK8dADfdfht25ZzuKsQefffeiT3U/FpGlTNoAKtLQaC9RyQtr7T+kuLEDzdIP3lfsQGWKnvU1YIvSDuMuwyOW1MMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npIoxWvE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4453CC4CEE2;
+	Thu, 26 Dec 2024 22:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735252742;
+	bh=ghvEWc+CY8H0nlr1RDV+hoiNH9dMWvFeMfs/OYEjr0c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=npIoxWvEhlwQcxUAJn3Nn3nExWdThmhOt2E3wRP7AZsLMCDTOena4lCfjCB9ObV8v
+	 +8bE1nbr+FQ1W7fnOUrWuvP2oHnH7uo+IU9/7ihoPLVUd7Fuscag0H9l2Li/ZJnPUB
+	 OGwE6kkyR3nFgdyq/zE+5m+dssgj1faxr4E09/z6l+59WjBAwRhtTDgcHmseYRV1He
+	 RzosjZXEZzVzbWoO64u1m2VLhaDoy1b+yEsd9w1D9iZvpwywHLnqSy7Y0XlsFxUAfK
+	 FN0zYX+vf6/O4rB9trQPnTfNnv+pE0ETlF7UnvmPhPeR26utG/qLPpOtWbGne+xu7Y
+	 PxLL0kAPjIZrg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	iommu@lists.linux.dev,
+	Dang Huynh <danct12@riseup.net>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	=?UTF-8?q?Otto=20Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v11 0/4] Add MSM8917/PM8937/Redmi 5A
+Date: Thu, 26 Dec 2024 16:38:32 -0600
+Message-ID: <173525273259.1449028.18344250660598461023.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241221-msm8917-v11-0-901a74db4805@mainlining.org>
+References: <20241221-msm8917-v11-0-901a74db4805@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add device-specific structs to select the different PMIC .npgio and .offset
-values. With the chip_data struct values selected based on the match data,
-having a separate GPIO0_OFFSET macro is no longer needed.
 
-Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
----
- drivers/gpio/gpio-tps65219.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+On Sat, 21 Dec 2024 00:40:47 +0100, Barnabás Czémán wrote:
+> This patch series add support for MSM8917 soc with PM8937 and
+> Xiaomi Redmi 5A (riva).
+> 
+> 
 
-diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
-index 7adc1274d80e..18055c2dd35c 100644
---- a/drivers/gpio/gpio-tps65219.c
-+++ b/drivers/gpio/gpio-tps65219.c
-@@ -13,7 +13,6 @@
- #include <linux/regmap.h>
- 
- #define TPS65219_GPIO0_DIR_MASK		BIT(3)
--#define TPS65219_GPIO0_OFFSET		2
- #define TPS6521X_GPIO0_IDX			0
- 
- struct tps65219_gpio {
-@@ -21,6 +20,11 @@ struct tps65219_gpio {
- 	struct tps65219 *tps;
- };
- 
-+struct chip_data {
-+	int ngpio;
-+	int offset;
-+};
-+
- static int tps65219_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
-@@ -71,7 +75,7 @@ static void tps65219_gpio_set(struct gpio_chip *gc, unsigned int offset, int val
- 	struct device *dev = gpio->tps->dev;
- 	int v, mask, bit;
- 
--	bit = (offset == TPS6521X_GPIO0_IDX) ? TPS65219_GPIO0_OFFSET : offset - 1;
-+	bit = (offset == TPS6521X_GPIO0_IDX) ? (gpio->gpio_chip.ngpio - 1) : offset - 1;
- 
- 	mask = BIT(bit);
- 	v = value ? mask : 0;
-@@ -148,14 +152,29 @@ static const struct gpio_chip tps65219_template_chip = {
- 	.get			= tps65219_gpio_get,
- 	.set			= tps65219_gpio_set,
- 	.base			= -1,
--	.ngpio			= 3,
- 	.can_sleep		= true,
- };
- 
-+static const struct chip_data chip_info_table[] = {
-+	[TPS65219] = {
-+		.ngpio = 3,
-+		.offset = 2,
-+	},
-+	[TPS65215] = {
-+		.ngpio = 2,
-+		.offset = 1,
-+	},
-+};
-+
- static int tps65219_gpio_probe(struct platform_device *pdev)
- {
- 	struct tps65219 *tps = dev_get_drvdata(pdev->dev.parent);
- 	struct tps65219_gpio *gpio;
-+	const struct chip_data *pmic;
-+
-+	enum pmic_id chip = platform_get_device_id(pdev)->driver_data;
-+
-+	pmic = &chip_info_table[chip];
- 
- 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
- 	if (!gpio)
-@@ -164,6 +183,8 @@ static int tps65219_gpio_probe(struct platform_device *pdev)
- 	gpio->tps = tps;
- 	gpio->gpio_chip = tps65219_template_chip;
- 	gpio->gpio_chip.label = dev_name(&pdev->dev);
-+	gpio->gpio_chip.ngpio =  pmic->ngpio;
-+	gpio->gpio_chip.offset = pmic->offset;
- 	gpio->gpio_chip.parent = tps->dev;
- 
- 	return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio_chip, gpio);
+Applied, thanks!
+
+[1/4] arm64: dts: qcom: Add PM8937 PMIC
+      commit: 89f6e0251d3a84aef8380f03009ac1bf182ec206
+[2/4] arm64: dts: qcom: Add initial support for MSM8917
+      commit: 7f18b1ea7987ff232bc53a830d0aa81ea31d762f
+[3/4] dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
+      commit: 88efce82a55d61df76e2fc4bdc68459c0b3b7581
+[4/4] arm64: dts: qcom: Add Xiaomi Redmi 5A
+      commit: 26633b5820569a5e7bb29d713e978107f4a2bd94
+
+Best regards,
 -- 
-2.34.1
-
+Bjorn Andersson <andersson@kernel.org>
 
