@@ -1,189 +1,118 @@
-Return-Path: <linux-gpio+bounces-14244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D62C9FCA2F
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 11:16:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 258CC9FCE48
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:59:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 204F5162E41
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 10:16:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3EF1188309D
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 21:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464FE1CEEBA;
-	Thu, 26 Dec 2024 10:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C40341B392E;
+	Thu, 26 Dec 2024 21:59:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bf9rtxUh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q5kr6RRl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD802450F2;
-	Thu, 26 Dec 2024 10:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD0C196D8F;
+	Thu, 26 Dec 2024 21:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735208166; cv=none; b=ooRH2Lza7oB3PbjzMcZkOlwHD3jJNdUEgJXBHDTl2G/da2q+Qqpr9ybWBsNJfAz+5KU1/WyFDnTl4m5y4ZqgtPEOE/W7RbRFdCPvMr4cBy6ZZuJRAvxqmWBkccrrSL5iCvclP4NL+hpcfrXVKj41XSPr9q9yo+Um3exEFiz9TuA=
+	t=1735250365; cv=none; b=M+ZQy6WApaA3dg1uYuLR4OY1PFvRIC9YrdUhWly956eNHGuXrObeDZyFi5Ze7hGvqy9KrrVCL2oJc2r9xdMiyAVe6VdybaxSqjBg9HOI72bYcagRQEi9ZEY14UxGP4THCygKNhaWkTe0GMB7Ljfh46CeadSFbfTDplkCMM+K0IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735208166; c=relaxed/simple;
-	bh=PNysoKr4x3TzAEfHcmAw8WO9zljvb8duad9elAZ9Cfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W9VjaAQJcrvATzei1jGXL3pm0hnzWKAxjJTs/Y65TVZ7VLvfmqYBLQV0485tnoJA7mzyAnGKKkC5W0F081hG41Ypnc05hdlHjRPlJs8WSh3JNCGfH6BGJEwxJK8FbNfuvK38iDD6K8fBYzqJxOYB93FtbhCI9H74Y0CiR1WpbAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bf9rtxUh; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735208163; x=1766744163;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PNysoKr4x3TzAEfHcmAw8WO9zljvb8duad9elAZ9Cfo=;
-  b=Bf9rtxUh/zMZKBKXlhBTiuus8ljD6mFSNGJI3TPgenMWrqeYP3O/TJPP
-   cupAdv3ui2kZqPbbUqlNLbc57ZoUnPkqV+UuqFCR0FCx6jvQbqZrUTeUT
-   S3dY0PoJfxQkmzzGSsbqNDZuLqDWmLa3rb0YZkD6+Rt/2X9rztNC2JT6B
-   AGVd+Dsf4NWRoRJKgBZgEvhGq4OXd2ej4inLfjjyRmSEWlru6vneo5zSY
-   hIKI3AVbID7Ixbtan1tn12n+fnviy9BasAC7rSEIaCGHHkZOQk+/Ute47
-   ApHVPnN27U4hRzcyHk6C8BSuXzUzE6WbJV7oJ2HoeAmZUSEnN1vApX6p0
-   A==;
-X-CSE-ConnectionGUID: 9WSk4SJdTU+liyD/5XkPhA==
-X-CSE-MsgGUID: IqVDxrMBTCi/4NJwr1rmlg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11296"; a="35855076"
-X-IronPort-AV: E=Sophos;i="6.12,265,1728975600"; 
-   d="scan'208";a="35855076"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2024 02:16:02 -0800
-X-CSE-ConnectionGUID: YtWgRRzCSgS7Y0XstJNVKg==
-X-CSE-MsgGUID: SXJucXphRAa1naaBE0aT+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="100716808"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 26 Dec 2024 02:15:58 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tQkuJ-0002TS-1u;
-	Thu, 26 Dec 2024 10:15:55 +0000
-Date: Thu, 26 Dec 2024 18:15:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Subject: Re: [PATCH v2 2/5] pinctrl: pinconf-generic: Add API for pinmux
- propertity in DTS file
-Message-ID: <202412261752.6HK0iJXu-lkp@intel.com>
-References: <20241226-amlogic-pinctrl-v2-2-cdae42a67b76@amlogic.com>
+	s=arc-20240116; t=1735250365; c=relaxed/simple;
+	bh=aCyWU7dgj20LJxHT2uDSfxV/WHVg95baLNnYOfkC2YQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DvRLtJpqQuy4/QwSlHUQ1IBxhsPPc/JMxUa2d2DdsYkmxjBim1vj8ejkw/2OioLnF8hDXg7/F5UhXyXUolsX8I5wdkhRr+ocxhHNN0DFckCuTibfFR8jsU9xH3/3k7rErTgaGlfwxU9U7gg06KZH4blYumFKUuqf8WhCxQYZ4YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=q5kr6RRl; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLwxcN1038857
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Dec 2024 15:58:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1735250339;
+	bh=lOdAOlyPdWp6aSl+WMFjj0k9NMoUlu7nVnALh1LaXWI=;
+	h=From:To:CC:Subject:Date;
+	b=q5kr6RRlbZwEInh+bprX/63KeJFExg1uu71jOg/E2gQGnEKlJOe4+cY7Jfz5ZXqN5
+	 99moqzu1CAQXNVRPoQhPFs6cX3ug8HAgIIUY6VDaVh9RPAAzvEWxskiQEZ3GbZVjF0
+	 6Z6J9L6QWN+Odi1gjgwj102i5Tk9/+dSYVgXxebk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLwxNu015280
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 26 Dec 2024 15:58:59 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 26
+ Dec 2024 15:58:59 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 26 Dec 2024 15:58:59 -0600
+Received: from DMZ007XYY.dhcp.ti.com ([10.250.33.34])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BQLww5v056047;
+	Thu, 26 Dec 2024 15:58:59 -0600
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v1 0/3] Add TI TPS65215 PMIC GPIO Support
+Date: Thu, 26 Dec 2024 15:58:55 -0600
+Message-ID: <20241226215858.397054-1-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241226-amlogic-pinctrl-v2-2-cdae42a67b76@amlogic.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Xianwei,
+Happy Holidays!
 
-kernel test robot noticed the following build warnings:
+TPS65215 is a Power Management Integrated Circuit (PMIC) that has
+significant register map overlap with TPS65219. The series introduces
+TPS65215 and restructures the existing driver to support multiple devices.
 
-[auto build test WARNING on 4de5110762b94b9978fb8182a568572fb2194f8b]
+This follow-up series is dependent on:
+Commit 91462d209aaf ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
+Commit 30fafb69994a ("mfd: tps65215: Add support for TI TPS65215 PMIC")
+Commit 07c9c92bd47f ("mfd: tps65215: Remove regmap_read check")
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-pinctrl-Add-support-for-Amlogic-SoCs/20241226-155844
-base:   4de5110762b94b9978fb8182a568572fb2194f8b
-patch link:    https://lore.kernel.org/r/20241226-amlogic-pinctrl-v2-2-cdae42a67b76%40amlogic.com
-patch subject: [PATCH v2 2/5] pinctrl: pinconf-generic: Add API for pinmux propertity in DTS file
-config: arc-randconfig-001-20241226 (https://download.01.org/0day-ci/archive/20241226/202412261752.6HK0iJXu-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241226/202412261752.6HK0iJXu-lkp@intel.com/reproduce)
+TPS65219 Cleanup Series:
+GPIO: https://lore.kernel.org/all/20241217204755.1011731-1-s-ramamoorthy@ti.com/
+MFD: https://lore.kernel.org/all/20241217204935.1012106-1-s-ramamoorthy@ti.com/
+Reg: https://lore.kernel.org/all/20241217204526.1010989-1-s-ramamoorthy@ti.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412261752.6HK0iJXu-lkp@intel.com/
+- Both TPS65215 and TPS65219 have 3 Buck regulators.
+- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
+- TPS65215 and TPS65219's LDO1 are the same.
+- TPS65215's LDO2 maps to TPS65219's LDO3.
+- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
+- The remaining features are the same.
 
-All warnings (new ones prefixed by >>):
+TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
 
->> drivers/pinctrl/pinconf-generic.c:250: warning: Function parameter or struct member 'dev' not described in 'pinconf_generic_parse_dt_pinmux'
->> drivers/pinctrl/pinconf-generic.c:250: warning: Excess function parameter 'pctldev' description in 'pinconf_generic_parse_dt_pinmux'
+AM62L + TPS65215 Test Logs:
+https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
 
+Shree Ramamoorthy (3):
+  gpio: tps65215: Add TPS65215 to platform_device_id table
+  gpio: tps65215: Update GPIO0_IDX macro prefix
+  gpio tps65215: Add support for varying gpio/offset values
 
-vim +250 drivers/pinctrl/pinconf-generic.c
-
-   235	
-   236	/**
-   237	 * pinconf_generic_parse_dt_pinmux()
-   238	 * parse the pinmux properties into generic pin mux values.
-   239	 * @np: node containing the pinmux properties
-   240	 * @pctldev: pincontrol device
-   241	 * @pid: array with pin identity entries
-   242	 * @pmux: array with pin mux value entries
-   243	 * @npins: number of pins
-   244	 *
-   245	 * pinmux propertity: mux value [0,7]bits and pin identity [8,31]bits.
-   246	 */
-   247	int pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
-   248					    unsigned int **pid, unsigned int **pmux,
-   249					    unsigned int *npins)
- > 250	{
-   251		unsigned int *pid_t;
-   252		unsigned int *pmux_t;
-   253		struct property *prop;
-   254		unsigned int npins_t, i;
-   255		u32 value;
-   256		int ret;
-   257	
-   258		prop = of_find_property(np, "pinmux", NULL);
-   259		if (!prop) {
-   260			dev_info(dev, "Missing pinmux property\n");
-   261			return -ENOENT;
-   262		}
-   263	
-   264		if (!pid || !pmux || !npins) {
-   265			dev_err(dev, "paramers error\n");
-   266			return -EINVAL;
-   267		}
-   268	
-   269		npins_t = prop->length / sizeof(u32);
-   270		pid_t = devm_kcalloc(dev, npins_t, sizeof(*pid_t), GFP_KERNEL);
-   271		pmux_t = devm_kcalloc(dev, npins_t, sizeof(*pmux_t), GFP_KERNEL);
-   272		if (!pid_t || !pmux_t) {
-   273			dev_err(dev, "kalloc memory fail\n");
-   274			return -ENOMEM;
-   275		}
-   276		for (i = 0; i < npins_t; i++) {
-   277			ret = of_property_read_u32_index(np, "pinmux", i, &value);
-   278			if (ret) {
-   279				dev_err(dev, "get pinmux value fail\n");
-   280				goto exit;
-   281			}
-   282			pmux_t[i] = value & 0xff;
-   283			pid_t[i] = (value >> 8) & 0xffffff;
-   284		}
-   285		*pid = pid_t;
-   286		*pmux = pmux_t;
-   287		*npins = npins_t;
-   288	
-   289		return 0;
-   290	exit:
-   291		devm_kfree(dev, pid_t);
-   292		devm_kfree(dev, pmux_t);
-   293		return ret;
-   294	}
-   295	EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_pinmux);
-   296	
+ drivers/gpio/gpio-tps65219.c | 54 +++++++++++++++++++++++++++---------
+ 1 file changed, 41 insertions(+), 13 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
