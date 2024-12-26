@@ -1,52 +1,53 @@
-Return-Path: <linux-gpio+bounces-14237-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E5209FC98C
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 08:57:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC12D9FC991
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 08:58:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B52EB188356A
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 022E47A108D
 	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 07:57:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1DA1CF5E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65071D1F6B;
 	Thu, 26 Dec 2024 07:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVcsCp58"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHM9hmEV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312D477F10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EE116DC12;
 	Thu, 26 Dec 2024 07:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735199866; cv=none; b=PSafBCeP/LzvkZ7hLrEx8L+nZDDVQ9Z0B/JWdUsGhzRZNfR/bjlRuJpRAyK3TTowU1i88yZHam/GHpHJ3xNc/cqi0BVCwdZe36O/+SC2TQG5dXT9uSd18eUQnM6GYCq8zRNb2OenBVd604X6Kw00ezKfLB00RjCcG64lES7OkAI=
+	t=1735199866; cv=none; b=k6N6TRdvxWSP1PFZMHUyxsu8efINVgc1U7YBJolHNi4A5U3ObyIN+cQoJudQaOr2k4b/aHzb+zUuGdBaLDKZ8zfnvPWkT+UBDcVQpUHQcbnKpcU768Dxtr2OY0Rsricf97DUYa3GTLj/hjzXdUNBg+evl2P96QjUp01c0AJUXoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735199866; c=relaxed/simple;
-	bh=gTOTWCKaoxxo8Ex7qfjYkUHMB9N9xobWkSvkle5f6Qg=;
+	bh=K6RTclisC8pOFjuCf5j6GOsFvAuaxZl9SqQKXQ59HoM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XmZ5GHbO83/hTgPPw7AlbOU9GT3D3DzOJ8LsNZrNNOvAJiTMqx/rJfgOc8YPOv+a+yL4KG/9zCQdZGS5k1kHVPPD5tF7U4agBPwpJRwyh0vc1F0ThEe8O8lhzDrxtO6YCHNsbAoMwillAZlM9Cdc4kTWi8ApMbsU4xMGdBIMaKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVcsCp58; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D66CAC4CED4;
+	 In-Reply-To:To:Cc; b=pC6TAYU+3wzloR0jWxtpQ+qXQXCba4AOODwOPDM49EwD65yJjj+fraEyNZBZyUjo1KdgVEFZBVowyNp9arln5ntVT9XQRyXkVHLk7HxMBfN37midM7hu3ejETqv0kOUMpI9cL3nCfnYGvwKW7B0L2XnpA+NKirH/bl8yWTVbsRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHM9hmEV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F2A36C4CED6;
 	Thu, 26 Dec 2024 07:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735199865;
-	bh=gTOTWCKaoxxo8Ex7qfjYkUHMB9N9xobWkSvkle5f6Qg=;
+	s=k20201202; t=1735199866;
+	bh=K6RTclisC8pOFjuCf5j6GOsFvAuaxZl9SqQKXQ59HoM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rVcsCp58otPwZmVXBO/wuFwZvl2BqGyGih+VDfA2y3X0BiGh2NtqBNaw69MlZrURk
-	 wfgyyKVGxNTNqXGFPzb4IsFDegEHx0aTuVKA74c0K2SFJP3KouHct72qrIQgzK9ZeH
-	 GWoeFuqHbNGwSE7EHGbtM/xXRhP056uSYxZWHr+fOmiB4exdw+tFL7ZUzABl6kypXP
-	 nRAcR+yDZ+9JfTYUAgAAiiSxg2JOylrwpxpY3qTTS7JLiH5eEBczO91mDBe2T+r0FX
-	 UoLYwcMLbPNB3+ROBOMk27wvRBfbhFpUmVRLNvbWG4K00gxr4UOZeGm6+89l+8L+A7
-	 jHCHlN1ZkMvuw==
+	b=QHM9hmEVu8LarIgPO15pY34ElAb+GTdQBS6ZhpECk+TbvlNWSsYbxX9smh75akP3p
+	 hWXls6mbwnbPCWv9G1WAJkX5rkr0bHdn2i44GK07qfxYNYOkJVyd1J5pSCPXLlzZTz
+	 XBSenYSK0nU/dS115jmesN1KHELmusjeF3tumrnvUA+HYKJTIwTPEBHr28GL5z3skn
+	 HdJK32y2aunxZhG9YMfCUiPTBAxapbbbYGBW/YhIoLTGZeB8UeBmd2jmNZNBMnsgqL
+	 iJqKZmqp3djBHLeI2DWc5VY47sl1jKzOqAf2apFtzkMSD/NSRAjAOfvuO8LXPSe01E
+	 qt9/nBNjJfftQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CF6E7718D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBB9E7718F;
 	Thu, 26 Dec 2024 07:57:45 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Thu, 26 Dec 2024 15:57:41 +0800
-Subject: [PATCH v2 1/5] dt-bindings: pinctrl: Add support for Amlogic SoCs
+Date: Thu, 26 Dec 2024 15:57:42 +0800
+Subject: [PATCH v2 2/5] pinctrl: pinconf-generic: Add API for pinmux
+ propertity in DTS file
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241226-amlogic-pinctrl-v2-1-cdae42a67b76@amlogic.com>
+Message-Id: <20241226-amlogic-pinctrl-v2-2-cdae42a67b76@amlogic.com>
 References: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
 In-Reply-To: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -69,11 +70,11 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735199863; l=6815;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735199863; l=5888;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=GJhCWt6Ek9YGee2cyPccZRinuTJdUUzwSYc2PN5oozg=;
- b=xkbnFoJvUDDa2jg2I25X+yvZSoBSM6iXsAJ96C1ix4ByiUTKxNmpoqTeih7zhKusp5jw7jX9Q
- ysKm7M5O0ugDFAwaZvhNr0YvB023NJECeOnzyGtaUGb+sI9/A9oxxDG
+ bh=9WW//dUOTdBjl9f7lCFon2tYsUfLouYXGzujcRPmHJc=;
+ b=CgBSVVEtUaDNo/6QLDsQtGoQBwNAlgYidsVJG13UjGuHA5KxAdCM4jRt7ku9uELOVX28xcfwJ
+ Tb5PszdzVt6BBKIIM0aoCsfAmCm+QBs8uGh0pEMt02XevIoaS7Dilrb
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -83,251 +84,201 @@ Reply-To: xianwei.zhao@amlogic.com
 
 From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Add the dt-bindings for Amlogic pin controller, and add a new
-dt-binding header file which document the GPIO bank names and
-alternative func value of all Amlogic subsequent SoCs.
+When describing pin mux func through pinmux propertity,
+a standard API is added for support. The pinmux contains pin
+identification and mux values, which can include multiple
+pins. And groups configuration use other word. DTS such as:
+
+func-name {
+	group_alias: group-name{
+		pinmux= <pin_id << 8 | mux_value)>,
+			<pin_id << 8 | mux_value)>;
+		bias-pull-up;
+		drive-strength-microamp = <4000>;
+	};
+};
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       | 155 +++++++++++++++++++++
- include/dt-bindings/pinctrl/amlogic,pinctrl.h      |  68 +++++++++
- 2 files changed, 223 insertions(+)
+ drivers/pinctrl/pinconf-generic.c       | 130 ++++++++++++++++++++++++++++++++
+ drivers/pinctrl/pinconf.h               |   4 +
+ include/linux/pinctrl/pinconf-generic.h |   4 +
+ 3 files changed, 138 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-new file mode 100644
-index 000000000000..75863d179933
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/amlogic,pinctrl-a4.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic pinmux controller
-+
-+maintainers:
-+  - Xianwei Zhao <xianwei.zhao@amlogic.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    const: amlogic,pinctrl-a4
-+
-+  reg:
-+    minItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: mux
-+      - const: gpio
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+patternProperties:
-+  "^gpio@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      reg:
-+        minItems: 2
-+
-+      mask:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+      gpio-controller: true
-+
-+      "#gpio-cells":
-+        const: 2
-+
-+      ngpios:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        minimum: 1
-+        maximum: 32
-+
-+      identity:
-+        description: |
-+          identifier are provided by the pin controller header file at:
-+          <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
-+
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+    required:
-+      - reg
-+      - gpio-controller
-+      - "#gpio-cells"
-+      - ngpios
-+      - identity
-+
-+    additionalProperties: false
-+
-+  "^func-[0-9a-z-]+$":
-+    type: object
-+    additionalProperties:
-+      type: object
-+      allOf:
-+        - $ref: pincfg-node.yaml#
-+        - $ref: pinmux-node.yaml#
-+
-+      description:
-+        A pin multiplexing sub-node describes how to configure a set of (or a
-+        single) pin in some desired alternate function mode.
-+        A single sub-node may define several pin configurations.
-+
-+      properties:
-+        pinmux:
-+          description: |
-+            Integer array representing pin number and pin multiplexing
-+            configuration.
-+            When a pin has to be configured in alternate function mode, use
-+            this property to identify the pin by its global index, and provide
-+            its alternate function configuration number along with it.
-+            bank identifier are provided by the pin controller header file at:
-+            <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
-+            Integers values in "pinmux" argument list are assembled as:
-+            (((BANK << 8) + PIN) << 8)  | MUX_FUNC))
-+
-+      required:
-+        - pinmux
-+
-+      additionalProperties: true
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/amlogic,pinctrl.h>
-+    apb {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+      periphs_pinctrl: pinctrl@8e700 {
-+        compatible = "amlogic,pinctrl-a4";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0x0 0x8e700 0x0 0x04>,
-+              <0x0 0x8e704 0x0 0x60>;
-+        reg-names = "mux", "gpio";
-+
-+        gpio@14 {
-+          reg = <0x14>,<0x30>;
-+          gpio-controller;
-+          #gpio-cells = <2>;
-+          ngpios = <10>;
-+          identity = <AMLOGIC_GPIO_B>;
-+        };
-+
-+        func-uart-b {
-+          uart-b-default {
-+            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 1, AF4)>;
-+            bias-pull-up;
-+            drive-strength-microamp = <4000>;
-+          };
-+
-+          uart-b-pins1 {
-+            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 5, AF2)>;
-+            bias-pull-up;
-+            drive-strength-microamp = <4000>;
-+          };
-+        };
-+
-+        func-uart-c {
-+          uart-c-default {
-+            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 3, AF1)>,
-+                     <AML_PINMUX(AMLOGIC_GPIO_B, 2, AF1)>;
-+            bias-pull-up;
-+            drive-strength-microamp = <4000>;
-+          };
-+        };
-+      };
-+    };
-diff --git a/include/dt-bindings/pinctrl/amlogic,pinctrl.h b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
-new file mode 100644
-index 000000000000..03db0a730e8b
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-+/*
-+ * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
-+ * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 0b13d7f17b32..a4d3c12a80c4 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -233,6 +233,67 @@ static void parse_dt_cfg(struct device_node *np,
+ 	}
+ }
+ 
++/**
++ * pinconf_generic_parse_dt_pinmux()
++ * parse the pinmux properties into generic pin mux values.
++ * @np: node containing the pinmux properties
++ * @pctldev: pincontrol device
++ * @pid: array with pin identity entries
++ * @pmux: array with pin mux value entries
++ * @npins: number of pins
++ *
++ * pinmux propertity: mux value [0,7]bits and pin identity [8,31]bits.
 + */
++int pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
++				    unsigned int **pid, unsigned int **pmux,
++				    unsigned int *npins)
++{
++	unsigned int *pid_t;
++	unsigned int *pmux_t;
++	struct property *prop;
++	unsigned int npins_t, i;
++	u32 value;
++	int ret;
 +
-+#ifndef _DT_BINDINGS_AMLOGIC_PINCTRL_H
-+#define _DT_BINDINGS_AMLOGIC_PINCTRL_H
++	prop = of_find_property(np, "pinmux", NULL);
++	if (!prop) {
++		dev_info(dev, "Missing pinmux property\n");
++		return -ENOENT;
++	}
 +
-+/* define PIN modes */
-+#define AF0	0x0
-+#define AF1	0x1
-+#define AF2	0x2
-+#define AF3	0x3
-+#define AF4	0x4
-+#define AF5	0x5
-+#define AF6	0x6
-+#define AF7	0x7
-+#define AF8	0x8
-+#define AF9	0x9
-+#define AF10	0xa
-+#define AF11	0xb
-+#define AF12	0xc
-+#define AF13	0xd
-+#define AF14	0xe
-+#define AF15	0xf
++	if (!pid || !pmux || !npins) {
++		dev_err(dev, "paramers error\n");
++		return -EINVAL;
++	}
 +
-+#define AML_PIN_ALT_FUNC_MASK	0xf
++	npins_t = prop->length / sizeof(u32);
++	pid_t = devm_kcalloc(dev, npins_t, sizeof(*pid_t), GFP_KERNEL);
++	pmux_t = devm_kcalloc(dev, npins_t, sizeof(*pmux_t), GFP_KERNEL);
++	if (!pid_t || !pmux_t) {
++		dev_err(dev, "kalloc memory fail\n");
++		return -ENOMEM;
++	}
++	for (i = 0; i < npins_t; i++) {
++		ret = of_property_read_u32_index(np, "pinmux", i, &value);
++		if (ret) {
++			dev_err(dev, "get pinmux value fail\n");
++			goto exit;
++		}
++		pmux_t[i] = value & 0xff;
++		pid_t[i] = (value >> 8) & 0xffffff;
++	}
++	*pid = pid_t;
++	*pmux = pmux_t;
++	*npins = npins_t;
 +
-+/* Normal PIN bank */
-+#define AMLOGIC_GPIO_A		0
-+#define AMLOGIC_GPIO_B		1
-+#define AMLOGIC_GPIO_C		2
-+#define AMLOGIC_GPIO_D		3
-+#define AMLOGIC_GPIO_E		4
-+#define AMLOGIC_GPIO_F		5
-+#define AMLOGIC_GPIO_G		6
-+#define AMLOGIC_GPIO_H		7
-+#define AMLOGIC_GPIO_I		8
-+#define AMLOGIC_GPIO_J		9
-+#define AMLOGIC_GPIO_K		10
-+#define AMLOGIC_GPIO_L		11
-+#define AMLOGIC_GPIO_M		12
-+#define AMLOGIC_GPIO_N		13
-+#define AMLOGIC_GPIO_O		14
-+#define AMLOGIC_GPIO_P		15
-+#define AMLOGIC_GPIO_Q		16
-+#define AMLOGIC_GPIO_R		17
-+#define AMLOGIC_GPIO_S		18
-+#define AMLOGIC_GPIO_T		19
-+#define AMLOGIC_GPIO_U		20
-+#define AMLOGIC_GPIO_V		21
-+#define AMLOGIC_GPIO_W		22
-+#define AMLOGIC_GPIO_X		23
-+#define AMLOGIC_GPIO_Y		24
-+#define AMLOGIC_GPIO_Z		25
++	return 0;
++exit:
++	devm_kfree(dev, pid_t);
++	devm_kfree(dev, pmux_t);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_pinmux);
 +
-+/* Special PIN bank */
-+#define AMLOGIC_GPIO_DV		26
-+#define AMLOGIC_GPIO_AO		27
-+#define AMLOGIC_GPIO_CC		28
-+#define AMLOGIC_GPIO_TEST_N	29
+ /**
+  * pinconf_generic_parse_dt_config()
+  * parse the config properties into generic pinconfig values.
+@@ -295,6 +356,75 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
+ 
++int pinconf_generic_dt_node_to_map_pinmux(struct pinctrl_dev *pctldev,
++					  struct device_node *np,
++					  struct pinctrl_map **map,
++					  unsigned int *num_maps)
++{
++	struct device *dev = pctldev->dev;
++	struct device_node *pnode;
++	unsigned long *configs = NULL;
++	unsigned int num_configs = 0;
++	struct property *prop;
++	unsigned int reserved_maps;
++	int reserve;
++	int ret;
 +
-+#define AML_PINMUX(bank, offset, mode)	(((((bank) << 8) + (offset)) << 8) | (mode))
-+#define AML_PINMUX_TO_BANK(pinmux)	(((pinmux) >> 16) & 0xff)
-+#define AML_PINMUX_TO_OFFSET(pinmux)	(((pinmux) >> 8) & 0xff)
++	prop = of_find_property(np, "pinmux", NULL);
++	if (!prop) {
++		dev_info(dev, "Missing pinmux property\n");
++		return -ENOENT;
++	}
 +
-+#endif /* _DT_BINDINGS_AMLOGIC_PINCTRL_H */
++	pnode = of_get_parent(np);
++	if (!pnode) {
++		dev_info(dev, "Missing function node\n");
++		return -EINVAL;
++	}
++
++	reserved_maps = 0;
++	*map = NULL;
++	*num_maps = 0;
++
++	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
++					      &num_configs);
++	if (ret < 0) {
++		dev_err(dev, "%pOF: could not parse node property\n", np);
++		return ret;
++	}
++
++	reserve = 1;
++	if (num_configs)
++		reserve++;
++
++	ret = pinctrl_utils_reserve_map(pctldev, map, &reserved_maps,
++					num_maps, reserve);
++	if (ret < 0)
++		goto exit;
++
++	ret = pinctrl_utils_add_map_mux(pctldev, map,
++					&reserved_maps, num_maps, np->name,
++					pnode->name);
++	if (ret < 0)
++		goto exit;
++
++	if (num_configs) {
++		ret = pinctrl_utils_add_map_configs(pctldev, map, &reserved_maps,
++						    num_maps, np->name, configs,
++						    num_configs, PIN_MAP_TYPE_CONFIGS_GROUP);
++		if (ret < 0)
++			goto exit;
++	}
++
++exit:
++	kfree(configs);
++	if (ret)
++		pinctrl_utils_free_map(pctldev, *map, *num_maps);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pinconf_generic_dt_node_to_map_pinmux);
++
+ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		struct device_node *np, struct pinctrl_map **map,
+ 		unsigned int *reserved_maps, unsigned int *num_maps,
+diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+index a14c950bc700..a171195b3615 100644
+--- a/drivers/pinctrl/pinconf.h
++++ b/drivers/pinctrl/pinconf.h
+@@ -138,4 +138,8 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+ 				    struct pinctrl_dev *pctldev,
+ 				    unsigned long **configs,
+ 				    unsigned int *nconfigs);
++
++int pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
++				    unsigned int **pid, unsigned int **pmux,
++				    unsigned int *npins);
+ #endif
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 53cfde98433d..1bcf071b860e 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -232,4 +232,8 @@ static inline int pinconf_generic_dt_node_to_map_all(struct pinctrl_dev *pctldev
+ 			PIN_MAP_TYPE_INVALID);
+ }
+ 
++int pinconf_generic_dt_node_to_map_pinmux(struct pinctrl_dev *pctldev,
++					  struct device_node *np,
++					  struct pinctrl_map **map,
++					  unsigned int *num_maps);
+ #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
 
 -- 
 2.37.1
