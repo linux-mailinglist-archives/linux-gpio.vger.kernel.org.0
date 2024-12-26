@@ -1,60 +1,61 @@
-Return-Path: <linux-gpio+bounces-14245-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14246-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 258CC9FCE48
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:59:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 957F39FCE4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:59:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3EF1188309D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 21:59:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F1883A02F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 21:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C40341B392E;
-	Thu, 26 Dec 2024 21:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C611B4F02;
+	Thu, 26 Dec 2024 21:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q5kr6RRl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cYFkJ3mM"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD0C196D8F;
-	Thu, 26 Dec 2024 21:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A661A8F6B;
+	Thu, 26 Dec 2024 21:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735250365; cv=none; b=M+ZQy6WApaA3dg1uYuLR4OY1PFvRIC9YrdUhWly956eNHGuXrObeDZyFi5Ze7hGvqy9KrrVCL2oJc2r9xdMiyAVe6VdybaxSqjBg9HOI72bYcagRQEi9ZEY14UxGP4THCygKNhaWkTe0GMB7Ljfh46CeadSFbfTDplkCMM+K0IQ=
+	t=1735250366; cv=none; b=Kgzuc1DniAN+aY7FPPtC+kxwmHbngrGfgc9OhP189BMe8/2VWeyp8YgcaOoKaePj6zjq5OBlYFRxaHHwWeCwJbKO5PjS9tla/P0PlKeDyRE15v21Pt6cfjWnKz5gFsL1Y+OKKFkZubdc5Roic1Segavxbt7wVrxMb1n6TJptzZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735250365; c=relaxed/simple;
-	bh=aCyWU7dgj20LJxHT2uDSfxV/WHVg95baLNnYOfkC2YQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DvRLtJpqQuy4/QwSlHUQ1IBxhsPPc/JMxUa2d2DdsYkmxjBim1vj8ejkw/2OioLnF8hDXg7/F5UhXyXUolsX8I5wdkhRr+ocxhHNN0DFckCuTibfFR8jsU9xH3/3k7rErTgaGlfwxU9U7gg06KZH4blYumFKUuqf8WhCxQYZ4YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=q5kr6RRl; arc=none smtp.client-ip=198.47.23.234
+	s=arc-20240116; t=1735250366; c=relaxed/simple;
+	bh=b6afsaNxqjvKpBm7KYqGT1O9UMGaX9ccD7lJEUjfhQk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X987cr+ntmkDf6MrpeQkKBvN1tH/CTbz9R+ZVx9TqZ7nm9LMz9529aSofMQPx8uZkGk6f7QzzKPFWvkWG9vJmDCi5SvUoTnzbWYtHxV2n65J+esKJ5Fc3JP5nhdI2ubdcoJKCfXniuAMVdX62CE41TXnn7AHzYWNG8sXMYMJKYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cYFkJ3mM; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLwxcN1038857
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLx0Yr1038861
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Dec 2024 15:58:59 -0600
+	Thu, 26 Dec 2024 15:59:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1735250339;
-	bh=lOdAOlyPdWp6aSl+WMFjj0k9NMoUlu7nVnALh1LaXWI=;
-	h=From:To:CC:Subject:Date;
-	b=q5kr6RRlbZwEInh+bprX/63KeJFExg1uu71jOg/E2gQGnEKlJOe4+cY7Jfz5ZXqN5
-	 99moqzu1CAQXNVRPoQhPFs6cX3ug8HAgIIUY6VDaVh9RPAAzvEWxskiQEZ3GbZVjF0
-	 6Z6J9L6QWN+Odi1gjgwj102i5Tk9/+dSYVgXxebk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLwxNu015280
+	s=ti-com-17Q1; t=1735250340;
+	bh=X2NVU+6ADJ0x/U25xn+zj8JCYbLcy/OVZZ9gnyWUOqk=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=cYFkJ3mMervNyPwIiICMuNa1pkwd5rz8xpiM/4bdGTO5gb4/dqz7ltrgTymZN7wH5
+	 rAcqnXGIvPPbiQgIrGUxKWIo74GnVquDZkMUfjoc0nAkFHFUbmfxFr9rrzCizuv+8f
+	 dpRPGK7pY0MZYzrFx/D62VM/kgumrOCOhRI8IOq8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4BQLx0Fv076122
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 26 Dec 2024 15:58:59 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 26 Dec 2024 15:59:00 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 26
  Dec 2024 15:58:59 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Thu, 26 Dec 2024 15:58:59 -0600
 Received: from DMZ007XYY.dhcp.ti.com ([10.250.33.34])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BQLww5v056047;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4BQLww5w056047;
 	Thu, 26 Dec 2024 15:58:59 -0600
 From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
 To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
@@ -62,10 +63,12 @@ To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
         <brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
 CC: <m-leonard@ti.com>, <praneeth@ti.com>
-Subject: [PATCH v1 0/3] Add TI TPS65215 PMIC GPIO Support
-Date: Thu, 26 Dec 2024 15:58:55 -0600
-Message-ID: <20241226215858.397054-1-s-ramamoorthy@ti.com>
+Subject: [PATCH v1 1/3] gpio: tps65215: Add TPS65215 to platform_device_id table
+Date: Thu, 26 Dec 2024 15:58:56 -0600
+Message-ID: <20241226215858.397054-2-s-ramamoorthy@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241226215858.397054-1-s-ramamoorthy@ti.com>
+References: <20241226215858.397054-1-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,42 +79,71 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Happy Holidays!
+Add platform_device_id struct and use the platform_get_device_id() output
+to match which PMIC device is in use. With new name options, the gpio_chip
+.label field is now assigned to the platform_device name match.
 
-TPS65215 is a Power Management Integrated Circuit (PMIC) that has
-significant register map overlap with TPS65219. The series introduces
-TPS65215 and restructures the existing driver to support multiple devices.
+Remove MODULE_ALIAS since it is now generated by MODULE_DEVICE_TABLE.
 
-This follow-up series is dependent on:
-Commit 91462d209aaf ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
-Commit 30fafb69994a ("mfd: tps65215: Add support for TI TPS65215 PMIC")
-Commit 07c9c92bd47f ("mfd: tps65215: Remove regmap_read check")
+Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+---
+ drivers/gpio/gpio-tps65219.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-TPS65219 Cleanup Series:
-GPIO: https://lore.kernel.org/all/20241217204755.1011731-1-s-ramamoorthy@ti.com/
-MFD: https://lore.kernel.org/all/20241217204935.1012106-1-s-ramamoorthy@ti.com/
-Reg: https://lore.kernel.org/all/20241217204526.1010989-1-s-ramamoorthy@ti.com/
-
-- Both TPS65215 and TPS65219 have 3 Buck regulators.
-- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
-- TPS65215 and TPS65219's LDO1 are the same.
-- TPS65215's LDO2 maps to TPS65219's LDO3.
-- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
-- The remaining features are the same.
-
-TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
-
-AM62L + TPS65215 Test Logs:
-https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
-
-Shree Ramamoorthy (3):
-  gpio: tps65215: Add TPS65215 to platform_device_id table
-  gpio: tps65215: Update GPIO0_IDX macro prefix
-  gpio tps65215: Add support for varying gpio/offset values
-
- drivers/gpio/gpio-tps65219.c | 54 +++++++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
+index 526640c39a11..8508c8f320d0 100644
+--- a/drivers/gpio/gpio-tps65219.c
++++ b/drivers/gpio/gpio-tps65219.c
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * GPIO driver for TI TPS65219 PMICs
++ * GPIO driver for TI TPS65215/TPS65219 PMICs
+  *
+- * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2024 Texas Instruments Incorporated - http://www.ti.com/
+  */
+ 
+ #include <linux/bits.h>
+@@ -141,7 +141,6 @@ static int tps65219_gpio_direction_output(struct gpio_chip *gc, unsigned int off
+ }
+ 
+ static const struct gpio_chip tps65219_template_chip = {
+-	.label			= "tps65219-gpio",
+ 	.owner			= THIS_MODULE,
+ 	.get_direction		= tps65219_gpio_get_direction,
+ 	.direction_input	= tps65219_gpio_direction_input,
+@@ -164,20 +163,28 @@ static int tps65219_gpio_probe(struct platform_device *pdev)
+ 
+ 	gpio->tps = tps;
+ 	gpio->gpio_chip = tps65219_template_chip;
++	gpio->gpio_chip.label = dev_name(&pdev->dev);
+ 	gpio->gpio_chip.parent = tps->dev;
+ 
+ 	return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio_chip, gpio);
+ }
+ 
++static const struct platform_device_id tps6521x_gpio_id_table[] = {
++	{ "tps65219-gpio", TPS65219 },
++	{ "tps65215-gpio", TPS65215 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, tps6521x_gpio_id_table);
++
+ static struct platform_driver tps65219_gpio_driver = {
+ 	.driver = {
+ 		.name = "tps65219-gpio",
+ 	},
+ 	.probe = tps65219_gpio_probe,
++	.id_table = tps6521x_gpio_id_table,
+ };
+ module_platform_driver(tps65219_gpio_driver);
+ 
+-MODULE_ALIAS("platform:tps65219-gpio");
+ MODULE_AUTHOR("Jonathan Cormier <jcormier@criticallink.com>");
+-MODULE_DESCRIPTION("TPS65219 GPIO driver");
++MODULE_DESCRIPTION("TPS65215/TPS65219 GPIO driver");
+ MODULE_LICENSE("GPL");
 -- 
 2.34.1
 
