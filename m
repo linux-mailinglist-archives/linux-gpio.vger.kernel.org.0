@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-14322-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14323-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC0FC9FD6B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 18:42:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B0F9FD6BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 18:44:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BBDA3A2989
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 17:42:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD4501655FC
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 17:44:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0161F8694;
-	Fri, 27 Dec 2024 17:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B9F1F869E;
+	Fri, 27 Dec 2024 17:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uerjnRn9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/lIsLKI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23FD1FB3;
-	Fri, 27 Dec 2024 17:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B8C1FB3;
+	Fri, 27 Dec 2024 17:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735321342; cv=none; b=L801y9ufbTGKyalWW3C40SpLiJ4vAA2JlaqF0mB5GvZRR8D5JX6PANKQFwHGAJ6WmFX9p1IiDpcJNINkyAfHjFNfVLWOm3yqSktvveCjHtaXVgohDjC1qTi+ObxHs+poV5ydX5dtEC5ylu7fFrTKsKU7bBHtXmakSS98lbgie4w=
+	t=1735321442; cv=none; b=Hy/Ngf+abrzbnndhgo92fagxqRdSk8J+GrrU7PIwnwhmWObHUvo0IYSzoFz7h1M8ULqQZgGK3CdWzqeaXcgrfaYcWj6qWZhdQnJsQvNQsI2Lw5cNlKuoIv4kc8y1z96QsP4ex6OP3bc1pb581X2jgInxrOGcH277LMHbXjk8wY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735321342; c=relaxed/simple;
-	bh=0bFdHqCzn5f2CvXlfqGybIGbQK8L/GTLyJ6yIAZPZGs=;
+	s=arc-20240116; t=1735321442; c=relaxed/simple;
+	bh=rVom9/ZZasClWq+RMKE/v1dwwP+Hq6n5W8W09rP7IWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqTuIyWLQTrY12Cyk2+00snUpUurTqylBk5/tkx2sd01epGTZxCLgnaXS69PnriL28TmqfizkkhSWIpPQiFTd8N+Yr3olLIbd5j58krnCOlDxEVH5Hv7ZDlPXZsyIq75ekj9F8BsBSu6mb9fVyUU3zrPtb3cUfxLG1LldFkr25k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uerjnRn9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52404C4CED0;
-	Fri, 27 Dec 2024 17:42:17 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PU7W71Heos2NZ05pHge4OSsRQNayo9AamzvMHcVQ93xhwIY15uXzS/g5JDE44n1JwN/II1tdN++E9iCc3KfuIi6YZ+czbhvVlgbM5EeavIj3zUGsxMdtXb+Lbe/v/a4KJIq4LR9fxx63VxXdc5svrFCmjAr59UIy7wcMqJgT3DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/lIsLKI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0A1C4CED0;
+	Fri, 27 Dec 2024 17:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735321342;
-	bh=0bFdHqCzn5f2CvXlfqGybIGbQK8L/GTLyJ6yIAZPZGs=;
+	s=k20201202; t=1735321441;
+	bh=rVom9/ZZasClWq+RMKE/v1dwwP+Hq6n5W8W09rP7IWk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uerjnRn9qAtLEzUGvZUSOs4DGdLkb3mptAl+BnZV7M2SiEq/UIHP/l0jB2/M0W039
-	 cJliRm9pTDW4UIfHiEjFo6x8zVtR9urPmcZNvivkXRGKgTaBmSVnVtlQZyurpnuZH7
-	 ENOWgO44kAx4z4xp0qAJtcVsJNdBm7N90JE935SHx/bA/ZVe2hKaF3LcOMU7Hh1MYg
-	 Ro8u/DqH21EFFVPzpb1bZmIkCLZ0fYL8S/r9GY7DpWgmluLOItuC9q2xLHgwIS4kkJ
-	 jJhuQMuzsppKHclV2BRo23cKrw+fR8CbGdTG3n90j3sMPl80w7iYFi70InS2zL3imK
-	 WJKmnYJPtwe3g==
-Date: Fri, 27 Dec 2024 17:42:14 +0000
+	b=d/lIsLKIkBgXKQ34U15BY9lLur9y54xTZbPqCUrcmmK2ht5tdH6XqQTBo2iLHC8IT
+	 bUk77LLzfY/XK+BTYPxUmSv5IV+d7yhtyEWHZzthhrcE3Lzx08Sn/D+rQOaQFgfPkW
+	 IjCrvyFqLKyEDWzHv6y8jY4XcXEroGzvmNf7RSsK01wrFBESprsDn/GIcLt4RlEQEY
+	 UcT9GOtN6QD3rN/PaaiouEAqbPdDRkZaJbyPnaL/4/y6mDB2BpUrsrEnWz9946MTv/
+	 87rxQqBFe+U+WLGNikhg91j7MahXyIEO0XrFvFDYH7xGIEM5DZNLq0SRRg0dci09NS
+	 4z+1VI1TDGtNg==
+Date: Fri, 27 Dec 2024 17:43:54 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Parthiban Nallathambi <parthiban@linumiz.com>
 Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
@@ -64,11 +64,11 @@ Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
 	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
 	linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH RESEND 01/22] dt-bindings: iommu: sun50i: remove resets
- from required property
-Message-ID: <20241227-backward-sandfish-3734dadba8a4@spud>
+Subject: Re: [PATCH RESEND 03/22] dt-bindings: clock: sun8i de2 clock: Add
+ PLL com clock
+Message-ID: <20241227-swept-seduce-d21e6537ddfc@spud>
 References: <20241227-a133-display-support-v1-0-abad35b3579c@linumiz.com>
- <20241227-a133-display-support-v1-1-abad35b3579c@linumiz.com>
+ <20241227-a133-display-support-v1-3-abad35b3579c@linumiz.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,61 +76,71 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jmNM+Wy3mOmacT9A"
+	protocol="application/pgp-signature"; boundary="0jjBOv89hldoMdhb"
 Content-Disposition: inline
-In-Reply-To: <20241227-a133-display-support-v1-1-abad35b3579c@linumiz.com>
+In-Reply-To: <20241227-a133-display-support-v1-3-abad35b3579c@linumiz.com>
 
 
---jmNM+Wy3mOmacT9A
+--0jjBOv89hldoMdhb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 27, 2024 at 06:30:50PM +0530, Parthiban Nallathambi wrote:
-> iommu in a133/a100 does not have reset control. remove it
-> from required property to make it optional.
-
-Merge this with patch 2, making the reset required for the existing
-devices and not permitted (false) for your new devices please.
-
+On Fri, Dec 27, 2024 at 06:30:52PM +0530, Parthiban Nallathambi wrote:
+> Some platforms like A100/A133 also uses pll-com clock as additional
+> clock source for the display clock. This is not documents both in
+> user manual and DE 2.0 specification. These changes are mainly from
+> vendor BSP.
 >=20
 > Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+
+Ditto here, the new clocks are only in the new IP you're adding so this
+patch needs to get merged. When you merge them, make 2 clocks all that's
+allowed for the existing devices and 3 clocks for your new one only
+please.
+
 > ---
->  Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.yaml |=
- 1 -
->  1 file changed, 1 deletion(-)
+>  .../devicetree/bindings/clock/allwinner,sun8i-a83t-de2-clk.yaml         =
+| 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-=
-iommu.yaml b/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-io=
-mmu.yaml
-> index a8409db4a3e3..03176f68485b 100644
-> --- a/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.y=
-aml
-> +++ b/Documentation/devicetree/bindings/iommu/allwinner,sun50i-h6-iommu.y=
-aml
-> @@ -42,7 +42,6 @@ required:
->    - reg
->    - interrupts
->    - clocks
-> -  - resets
+> diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun8i-a83t=
+-de2-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun8i-a83=
+t-de2-clk.yaml
+> index 70369bd633e4..3e00905b66ca 100644
+> --- a/Documentation/devicetree/bindings/clock/allwinner,sun8i-a83t-de2-cl=
+k.yaml
+> +++ b/Documentation/devicetree/bindings/clock/allwinner,sun8i-a83t-de2-cl=
+k.yaml
+> @@ -39,11 +39,13 @@ properties:
+>      items:
+>        - description: Bus Clock
+>        - description: Module Clock
+> +      - description: PLL common clock
 > =20
->  additionalProperties: false
+>    clock-names:
+>      items:
+>        - const: bus
+>        - const: mod
+> +      - const: pll-com
 > =20
+>    resets:
+>      maxItems: 1
 >=20
 > --=20
 > 2.39.5
 >=20
 
---jmNM+Wy3mOmacT9A
+--0jjBOv89hldoMdhb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ27m9gAKCRB4tDGHoIJi
-0gDTAQCkD8Xhuyviy0vhXeZ4H+KJGL4kLQQgH/BbJQrWmtEiKgEA0tU2Y5TQpef1
-SQ6NyzqbRTQrGqT89fyibG21/6vErQs=
-=VGkJ
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ27nWgAKCRB4tDGHoIJi
+0laCAQC3f8JN+f/M1J2eeAFVurWF99YyrOoc11b9kgfjtf1thQEAtw4OLJJ4yje4
+qC320wF5zcGFYDEFFJjXa4TfgosTGww=
+=cfWT
 -----END PGP SIGNATURE-----
 
---jmNM+Wy3mOmacT9A--
+--0jjBOv89hldoMdhb--
 
