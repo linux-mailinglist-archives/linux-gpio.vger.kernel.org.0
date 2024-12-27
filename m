@@ -1,109 +1,128 @@
-Return-Path: <linux-gpio+bounces-14249-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14250-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AFB79FCE97
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 23:39:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CDC99FD10D
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 08:25:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41AF83A02EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2024 22:39:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB7D2161EBA
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 07:25:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF43D1C5CC1;
-	Thu, 26 Dec 2024 22:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9EFB145A07;
+	Fri, 27 Dec 2024 07:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npIoxWvE"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hOL8jJDb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB551C54A8;
-	Thu, 26 Dec 2024 22:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3668D13665A;
+	Fri, 27 Dec 2024 07:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735252742; cv=none; b=Impd/g402WP2Qatl8tM5LWtT/c++5vJ/WcficnVc8sr5RWeHnijOoRDMSp4KLihgtMmPTl/gCOYpNgmCavvVhOpGi1S2ER4VXwNRdIQie9Nr0koZeYO0fogiLY1l6xL/KTtvauHBAgEWX7HrN8GAuQSC/eJ1i58QjgXQ7j/YG7U=
+	t=1735284312; cv=none; b=cMyaUg3DgD5SGbuio11Q5HOO14GntH4HNS1DtdgWifEgPnZdDjsXeQ2KR/GbniJXs64n5QVYn+14foOUXTarxYBdcZiQMQOUb+CCZngD3gVcfZhQ8q0AGtxYAMSz9DWICQuxx0oBPrAqPLnC8CInSQkVEOLRoJlh0VI7u6WA2pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735252742; c=relaxed/simple;
-	bh=ghvEWc+CY8H0nlr1RDV+hoiNH9dMWvFeMfs/OYEjr0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ebbY7776Poz+adYIiWBk6l4yY+5Xm4z/zCqou3lM6hVPXwE3XOeOhdweYFXPpLnswX+M4SrA0PZcLTC4rgQK8dADfdfht25ZzuKsQefffeiT3U/FpGlTNoAKtLQaC9RyQtr7T+kuLEDzdIP3lfsQGWKnvU1YIvSDuMuwyOW1MMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npIoxWvE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4453CC4CEE2;
-	Thu, 26 Dec 2024 22:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735252742;
-	bh=ghvEWc+CY8H0nlr1RDV+hoiNH9dMWvFeMfs/OYEjr0c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=npIoxWvEhlwQcxUAJn3Nn3nExWdThmhOt2E3wRP7AZsLMCDTOena4lCfjCB9ObV8v
-	 +8bE1nbr+FQ1W7fnOUrWuvP2oHnH7uo+IU9/7ihoPLVUd7Fuscag0H9l2Li/ZJnPUB
-	 OGwE6kkyR3nFgdyq/zE+5m+dssgj1faxr4E09/z6l+59WjBAwRhtTDgcHmseYRV1He
-	 RzosjZXEZzVzbWoO64u1m2VLhaDoy1b+yEsd9w1D9iZvpwywHLnqSy7Y0XlsFxUAfK
-	 FN0zYX+vf6/O4rB9trQPnTfNnv+pE0ETlF7UnvmPhPeR26utG/qLPpOtWbGne+xu7Y
-	 PxLL0kAPjIZrg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	iommu@lists.linux.dev,
-	Dang Huynh <danct12@riseup.net>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	=?UTF-8?q?Otto=20Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v11 0/4] Add MSM8917/PM8937/Redmi 5A
-Date: Thu, 26 Dec 2024 16:38:32 -0600
-Message-ID: <173525273259.1449028.18344250660598461023.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241221-msm8917-v11-0-901a74db4805@mainlining.org>
-References: <20241221-msm8917-v11-0-901a74db4805@mainlining.org>
+	s=arc-20240116; t=1735284312; c=relaxed/simple;
+	bh=MQGxUlCth0J5+jnrABNvPAM2v/hXnFQ0CEMCOWQPDUQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MIYZkOFqH2ThuVKqKHCTAIAsy7m6BkpsuLPYQ/koXg0wAyvIKHTCUzU9cunZgdI3oDDdUyNvuCZ2NmZ2XtqwLv2Z/B8jMbdusiFY+L+LM+8zd9od3jyHXCmBtdBPX/MhKYm81SwJMNz9zGlJG3WQ5XIlfe9EOR7EnpdJsoywQ38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hOL8jJDb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BR2VeUt018877;
+	Fri, 27 Dec 2024 07:25:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Ysx3tSwuMiivqxmSkkVEwe
+	U5Nz+PhBGGTedaO8ubbZs=; b=hOL8jJDbS7laqAdU7UrF63Waea5lLjhffX5vje
+	FkNmzZpWzV2CkXguuRB4x2LN7JQeTUfVGrvJPXIFI6yGrw9sCXSKqkDSGbppzbWA
+	z08ztTjmZO2ire/WB7tBiUooV2c7To9IYmEuUz+BQgPiet3It3zQa6wSpJ0M/38J
+	bSxjc9mEhHgZkgyEAkiIK0LHZUikEnBSDwRepamZSZN7mK+kH9Gjz6VGmKbvOW4C
+	1ensbVhD5gkBwj0muZqJBVm/woiSv9eGKNeIdp/b9GeMftMsbaZB7kxTI1bZyOWn
+	D0+5X1KXnfu7csrtBZyQXLZwXWdmDR41rbGm3oNL/WMTyDHA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43skhgsfam-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Dec 2024 07:25:06 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BR7P5CJ030164
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Dec 2024 07:25:05 GMT
+Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 26 Dec 2024 23:25:01 -0800
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+To: <andersson@kernel.org>, <linus.walleij@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <konradybcio@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
+Subject: [PATCH v3 0/6] Add SPI4 support for IPQ5424
+Date: Fri, 27 Dec 2024 12:54:40 +0530
+Message-ID: <20241227072446.2545148-1-quic_mmanikan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JyaTzsoXqDmDpY-zU3I0si_HCks3Vfxy
+X-Proofpoint-GUID: JyaTzsoXqDmDpY-zU3I0si_HCks3Vfxy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=951 adultscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412270062
+
+Add SPI4 node to the IPQ5424 device tree and update the relevant
+bindings, GPIO pin mappings accordingly.
+
+Changes in V3:
+	- Rename SPI0 to SPI4 because SPI protocol runs on serial engine 4
+	- Fixed all review comments from Konrad Dybico
+	- Patch #1 to #4 added in V3 to rename SPI0 clocks, gpio pins to SPI4.  
+	- Detailed change logs are added to the respective patches
+
+V2 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241217091308.3253897-1-quic_mmanikan@quicinc.com/
+
+V1 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241122124505.1688436-1-quic_mmanikan@quicinc.com/
+
+Manikanta Mylavarapu (6):
+  dt-bindings: pinctrl: qcom: rename spi0 pins on IPQ5424
+  dt-bindings: clock: qcom: gcc-ipq5424: add spi4 clocks
+  pinctrl: qcom: ipq5424: rename spi0 pins
+  clk: qcom: ipq5424: rename spi0 clocks
+  arm64: dts: qcom: ipq5424: add spi4 node
+  arm64: dts: qcom: ipq5424: configure spi4 node for rdp466
+
+ .../bindings/pinctrl/qcom,ipq5424-tlmm.yaml   |  2 +-
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts   | 43 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi         | 11 +++++
+ drivers/clk/qcom/gcc-ipq5424.c                | 20 ++++-----
+ drivers/pinctrl/qcom/pinctrl-ipq5424.c        | 32 +++++++-------
+ include/dt-bindings/clock/qcom,ipq5424-gcc.h  |  2 +
+ 6 files changed, 83 insertions(+), 27 deletions(-)
 
 
-On Sat, 21 Dec 2024 00:40:47 +0100, Barnabás Czémán wrote:
-> This patch series add support for MSM8917 soc with PM8937 and
-> Xiaomi Redmi 5A (riva).
-> 
-> 
-
-Applied, thanks!
-
-[1/4] arm64: dts: qcom: Add PM8937 PMIC
-      commit: 89f6e0251d3a84aef8380f03009ac1bf182ec206
-[2/4] arm64: dts: qcom: Add initial support for MSM8917
-      commit: 7f18b1ea7987ff232bc53a830d0aa81ea31d762f
-[3/4] dt-bindings: arm: qcom: Add Xiaomi Redmi 5A
-      commit: 88efce82a55d61df76e2fc4bdc68459c0b3b7581
-[4/4] arm64: dts: qcom: Add Xiaomi Redmi 5A
-      commit: 26633b5820569a5e7bb29d713e978107f4a2bd94
-
-Best regards,
+base-commit: 8155b4ef3466f0e289e8fcc9e6e62f3f4dceeac2
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.34.1
+
 
