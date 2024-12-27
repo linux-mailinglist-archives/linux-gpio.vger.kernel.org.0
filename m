@@ -1,116 +1,152 @@
-Return-Path: <linux-gpio+bounces-14320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14321-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6E469FD659
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 18:06:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A129FD68B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 18:19:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73C251615C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 17:06:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1F03188592E
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Dec 2024 17:19:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E5B91F76D8;
-	Fri, 27 Dec 2024 17:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C0B1F868E;
+	Fri, 27 Dec 2024 17:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JRtP0dwr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w9oMWZXc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6531F708E
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Dec 2024 17:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2331F8675
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Dec 2024 17:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735319199; cv=none; b=t+w2Ywp1u+oK2482rLW33ZNsL6IjRxU7cGwlWGBPH68eKrVt6sKsa/clslNE9CnK5y+1ow7uTv1re2fbt/OHN+UGWr0GbJjHa2wM/e0/v6yhiUcpM5LvGgtuYEMf4frjNAbQy3C7ozofxHjJLuNgnW9/b2TjiyuzqnYo3jjFEkU=
+	t=1735319962; cv=none; b=J6i4W2PJnRIN/it3OH83avMJ6cIi8rVw+B9F1NXapPUv3+OVCMlQL4L38B0aZqHNezOOKFS8zfuTSWLPfuCeKhyfy04fHY5tymiIzpMw2V8ckcQjXpEuPbOh1wclbWnrKFfxIBOr8hTHFmEEjGaA1XxnbOQ/XQTUp4e9RZCtrmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735319199; c=relaxed/simple;
-	bh=84EOIOtj+jrmLyO5mM61/2Lu4h9xRAKSN1hU4eGSdMU=;
+	s=arc-20240116; t=1735319962; c=relaxed/simple;
+	bh=xaseaOSb4gDzo19cHSzqAn8l37pR6yYKnK4+eq6lscM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gb0HvTFJRNnTVSKtmgshuWpfvYJ1UXZVdD4Sg9oe+xZNvhGqQCnw/Dl+PfDm+6GuP1j4HpdUCo/Y1k6lRLJCTvgZzlWoHvTEUzBWNAatSd1sUVxlC2MUSgX0+pQ8buKggyZZ8iZDAaINM/e/uEeAn0mJqCEEPP9vKl40lU0vMuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JRtP0dwr; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=QSX8L0M8ulk339yLGMaAlFf1KYsVPShpjriAEUf89ZCoGnEF43o2FVwnjt1z80Hm4CHJTwskKvgtsWmXofymMB2QuouwAJ6g9y9B1vvfVzHYhs1SS1NRmyM8wQWuoIiIbiogmj+zv1xmwAuHAL64SP9+GzXQoyZ4AqRj/ZwcchQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w9oMWZXc; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-53ffaaeeb76so7988487e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Dec 2024 09:06:37 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5401bd6cdb4so7857331e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Dec 2024 09:19:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735319195; x=1735923995; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1735319958; x=1735924758; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=84EOIOtj+jrmLyO5mM61/2Lu4h9xRAKSN1hU4eGSdMU=;
-        b=JRtP0dwrzXtKV1p8C7ZMwMXVv0XqQ6G86dNwoxsAReyFxA/K3XITue6WlLouLDnXDc
-         LRRKYkbiCRpnob7QAsIdyZ3sx8G0nfNku1m2KjvEbrtf3Jd/7EJBD/PMHDE3TdnmQISL
-         TQSDyYhilknqwqsDdjqedeCAQFhdrD7ZiQOpAJoDgSvZd5ZjXx/JqEUQTOS6T1dVAj6f
-         3efv7I0Su/rhcU5ed6VU7EaS72ttPuadERXj62jgGTNdgfuImIjhCDblBuIniF0Q1jv+
-         /XLnZYehGoSqlZPCgTsB5aej3xasfqW2xj14nGTEDjEp/6R0Ff3lZeI5MmOzfchCxNbx
-         f6mQ==
+        bh=YfE1uA9z/wnOoCflN1CWK91/mj7Glf8TAJeO4IAX/hg=;
+        b=w9oMWZXcz+gs9kKNEpu1QJ+ZJOaAa2+N/SVrxyHiixdA95sxhVi2FOnCp3N8/ZZFBF
+         UYLL0D5krhm0rfxNJSaq3GP101ZTD8lY++UMWm0+ZXClq5G51+22Hqh+DluTbQZC26Tn
+         bwVU5AeBf7V6sKN1B8nJTwkavUsXk8xcZgYQsRICRRUmHCq6IqOSC02aN8+e09RBEpJ+
+         UHfcPVEopEi04O0SUDdEjV0LHheQ1BBFdzUs7Ivza2rgGOkP1JBLtMyGeQ9bzH2NgC+6
+         NCREGm+VhYbB1of7fxqwZGa8TJjMaH6iIlmQLhoAbPHlbqKTpYVWx+IQ/ePJVtzR/zEW
+         AXJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735319195; x=1735923995;
+        d=1e100.net; s=20230601; t=1735319958; x=1735924758;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=84EOIOtj+jrmLyO5mM61/2Lu4h9xRAKSN1hU4eGSdMU=;
-        b=oHRsvW/H3Y3nhixo+gbLjDpxRtyp+sbz31Q0ab7mUI4Exsl4I55E87O7luMHL5QZTs
-         8Z0LL4JhGqMgIQCqa24IuWKi74DTDIDOG7iy7+lo1uBB9zi157/xYB6Zfx7GzwIgq3zK
-         clNmSokyoMqObGf7LAzwpwsMX4gNk7q3XR9ztEn5zj0C753+i+msB/iFK4T5Hyjz6oTF
-         hMiDKwzAfojZBWDBZTc/YnFI3jYEaqOOg+t5QRHTHka0HGalyN4y2yX4xpTw7nhxNJqo
-         JAykGv1DK3NyHRjC3m7Ba96uOcSt0cpuYngzFfOT6LwfIMG+Hwemy2JyM4F0F7qKq9oH
-         or8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJZxXN7t3YxiJuK1+a5avh+9vhko6tlLMPqY2ng2osXV7UpsSAluxw0okFNxYhraFjPp/ubYwuw4+8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQpFiiIk8WWFIrsD9ERLILx0ZyB30HeXgewgoFqoLSo+ZAjG4V
-	aZ4obIHMpFCZuHrouJTT+7odDIE8uH3yuYNpHA76sc+pgANk25TWX1FZemh2g8O5ExOeimTcx88
-	yCduxRwRsaYQwmO6XcPUY1HkMxk27A66gWZsKTQ==
-X-Gm-Gg: ASbGnctpX3+/TguGKCCVD3IOlkCvjizWhlFjUgNd9OI44tRY1cR51EtN/lPwHcf5HGc
-	0cj8ffjo5ISbI5NZkxAZ72P1SA5r54yHa04Mu
-X-Google-Smtp-Source: AGHT+IEAF5Jp/QDipLuJyJQRV1ZFYVHjt8w4LULM8IF+C9aJBkOnwrc7elyqOWcRa+AO2vKIjyJhQ/+3xwflHVTRNdg=
-X-Received: by 2002:a05:6512:4385:b0:542:2972:4deb with SMTP id
- 2adb3069b0e04-54229724e47mr8311291e87.18.1735319195404; Fri, 27 Dec 2024
- 09:06:35 -0800 (PST)
+        bh=YfE1uA9z/wnOoCflN1CWK91/mj7Glf8TAJeO4IAX/hg=;
+        b=EHwaCnyxZ6R4ciUAiNHzJ3CX5zrggsHAqiHSpuuen7RhaFkzluXmVqxtR0iMowTHmp
+         YgrKZKC2bFL4xPc7nmafH75Br6sxi7DWgnRhxcuOx/FZo5+3nJQXx0egtVe4FMAOYyaS
+         Q9DKjsMjHfGB0kG2Na2A/ZXNkdRcOqsGElDT3j+oogODcMr0R4dWuWOQmbNnTObCt0Ab
+         ZcDAVxp8aIY2z1mj4fQqgeDBVz+DLe0Cs+yI0kxYy+mUmOOULS+IDS2BKFNmy2cx/KTQ
+         sfw7hPs0aXDwfsvuSqDTFL3/1ydGP0zFTuec8r6+IPUHhgESCC/kFSLsnr4gT8+1Z2Yh
+         UZiA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6yC3Sz6JnM2tRdPmvn4VkZtVLRZHscyLeFpeW5XObatrckCgF38K4QdACSGXvWMadtRH5E+7wimvn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygc6jvhpfB1/jz6fHxjkNNzPkSCtWKEhZDbreeZxHceC5nGEwm
+	5E53D3mGU7NHV856nLA93v+xA9On2gwKP/vq0ZD5krQsVp+AstsZTXwXriwSFCRkTQXArs0E2Au
+	M0bQjxF1eK6si6Q6SeWvJG1nZbv4SbIqDJ95X5Q==
+X-Gm-Gg: ASbGncu5Z5NtnCw18e+GUbNtuoW4yhD16ktNfV2DoVixVLYC5tWK2RniT98Jb1tDh1v
+	JLMVDWDxxXiSyW1wQw8PX9PzgdHXVRRVgQE3B
+X-Google-Smtp-Source: AGHT+IFzNcSWitAgqLSjOZTRtHRUbR1A89jwQ+VY2x1PRVkphXKNjTxz5Znr8iriDFxh86d6rMupXkeYXSvCWzdEP2Q=
+X-Received: by 2002:a05:6512:1246:b0:542:28a9:dcb1 with SMTP id
+ 2adb3069b0e04-5422954b10fmr7658536e87.26.1735319958460; Fri, 27 Dec 2024
+ 09:19:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
-In-Reply-To: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
+References: <20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com>
+ <20241211-amlogic-pinctrl-v1-2-410727335119@amlogic.com> <CACRpkdbuj-_sPpdfcyg3_QNtzt9r7n-0HBGBKgy-rKUMhvGo4w@mail.gmail.com>
+ <23899c54-14ad-4724-9336-2df6fb485fd6@amlogic.com> <CACRpkdZn75ks4Gc7rm8jzkKM6y0JeQmUF3qmbJA+O+cEA9r--Q@mail.gmail.com>
+In-Reply-To: <CACRpkdZn75ks4Gc7rm8jzkKM6y0JeQmUF3qmbJA+O+cEA9r--Q@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 27 Dec 2024 18:06:24 +0100
-Message-ID: <CACRpkdZFQDiLax1QtPDr5zWbhAqwWuXdC=+VtBLD-S2c1FLpAg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] scmi: Bypass set fwnode to address devlink issue
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Saravana Kannan <saravanak@google.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
+Date: Fri, 27 Dec 2024 18:19:07 +0100
+Message-ID: <CACRpkdbd5HFzRhoC7qRAb-Kd89fa9sX67aqK9AAMoif3nw9qbQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/3] pinctrl: Add driver support for Amlogic SoCs
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>, Huqiang Qin <huqiang.qin@amlogic.com>, 
+	Qianggui Song <qianggui.song@amlogic.com>, Hyeonki Hong <hhk7734@gmail.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Beniamino Galvani <b.galvani@gmail.com>, Carlo Caione <carlo@endlessm.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 25, 2024 at 9:21=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+Newcomers, latest patch set:
+https://lore.kernel.org/linux-gpio/20241226-amlogic-pinctrl-v2-0-cdae42a67b=
+76@amlogic.com/
 
-> Current scmi drivers not work well with devlink. This patchset is a
-> retry to address the issue in [1] which was a few months ago.
->
-> Current scmi devices are not created from device tree, they are created
-> from a scmi_device_id entry of each driver with the protocol matches
-> with the fwnode reg value, this means there could be multiple devices cre=
-ated
-> for one fwnode, but the fwnode only has one device pointer.
->
-> This patchset is to do more checking before setting the device fwnode.
->
-> This may looks like hack, but seems no better way to make scmi works
-> well with devlink.
->
-> [1]: https://lore.kernel.org/arm-scmi/CAGETcx8m48cy-EzP6_uoGN7KWsQw=3DCfZ=
-WQ-hNUzz_7LZ0voG8A@mail.gmail.com/
+I included some of the prior meson authors on the to line to see if
+their mail addresses still work and if they have some feedback on this.
 
-Please drive any devlink-related patches by Saravana Kannan, he's pretty
-much the only person I trust to know how to do devlinks right.
+On Sun, Dec 22, 2024 at 10:08=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+
+> > > - Renaming drivers/pinctrl/sunxi to drivers/pinctrl/amlogic
+> > >    so we keep this sorted by actual vendor, sunxi is apparently
+> > >    yours (AMlogic:s) isn't it?
+> >
+> > It isn't. Sunxi is Allwinner SoCs.
+>
+> My apologies. I mixed it up completely. :(
+
+But wait a minute. I see there is meson. And in the "meson" subdirectory
+there is stuff named "amlogic" ...
+
+$ ls -1 drivers/pinctrl/meson/
+Kconfig
+Makefile
+pinctrl-amlogic-c3.c
+pinctrl-amlogic-t7.c
+pinctrl-meson8b.c
+pinctrl-meson8.c
+pinctrl-meson8-pmx.c
+pinctrl-meson8-pmx.h
+pinctrl-meson-a1.c
+pinctrl-meson-axg.c
+pinctrl-meson-axg-pmx.c
+pinctrl-meson-axg-pmx.h
+pinctrl-meson.c
+pinctrl-meson-g12a.c
+pinctrl-meson-gxbb.c
+pinctrl-meson-gxl.c
+pinctrl-meson.h
+pinctrl-meson-s4.c
+
+> What do you think of the idea of a separate drivers/pinctrl/amlogic direc=
+tory
+> though? I think there are already quite a few amlogic SoCs that need
+> to be supported and more will come.
+
+So what about renaming the existing subdir "meson" to "amlogic"
+and put the driver there.
+
+Also I want to know if this driver and hardware shares anything with
+the existing drivers in that directory. It sometimes happen that
+developers start something from scratch despite the existence of
+prior art simply because of organizational issues, and we don't want
+that kind of situation to leak over to the kernel.
 
 Yours,
 Linus Walleij
