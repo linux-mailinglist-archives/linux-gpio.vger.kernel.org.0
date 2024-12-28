@@ -1,107 +1,123 @@
-Return-Path: <linux-gpio+bounces-14329-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14330-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE68A9FD904
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 06:18:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 344E49FD9A7
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 10:48:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E5D13A2625
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 05:18:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA78C162FBD
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 09:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABB141C64;
-	Sat, 28 Dec 2024 05:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3657C12B169;
+	Sat, 28 Dec 2024 09:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nnlv6RmS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BC979F2;
-	Sat, 28 Dec 2024 05:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8854A8633E;
+	Sat, 28 Dec 2024 09:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735363117; cv=none; b=Ia5/T8Qpy2OAJlwkoQhbYhZA+fKguj+nIG5/i8rSK334gmuU/NeLG4ltK0IRVHx3ec4Lq5MUqVXuh1J+7AWIuvzm4NI07YY/xWYeo27GPln/z/2H+bW2WOPI4E36hdtQ12teTBRZR+beNfUvEQUlf/mhuzhGXj1oCbHDen+Z3Fs=
+	t=1735379309; cv=none; b=PfF/SzRWcsSLRcVJFQ/3ACZGrgY7qek/MZ2Pe/aSL7RTlCuE9OmMW9eSSVnyjqZqENe7YwPrAFwTOINUKKPbADEoK/Tp/0p80QEsEdpjQn7UR/YzNAFqj7R8ythfgmhX7SdMdMFIwwxMdSEcd4V+iqBkMfDk/aAh0VwBYqhaQcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735363117; c=relaxed/simple;
-	bh=GVQmCyjgh9UxG5fCAHRuj2hOC72/PLm/7PRyUFcJdzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l6sCIusEBD4gy2XmwqEe0S3WfgW+2ZNmPxMSY1D/Wpxv4hHbqyEnj3Yi4HlbARxgxb+frpul00g32ihH15OCbwCUZmXhvA2Ef1+b1jI2FnPxNL514aPy16lA4fCeu7e/Qg2MZEkAercd28kRTG7VwDKyLHE1G31EVa4lhYvI7lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Sat, 28 Dec 2024 13:18:24 +0800
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: gpio: spacemit: add support for K1
- SoC
-Message-ID: <20241228051824-GYA1079860@gentoo>
-References: <20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org>
- <20241225-03-k1-gpio-v3-1-27bb7b441d62@gentoo.org>
- <CACRpkdZPD2C2iPwOX_kW1Ug8jVkdHhhc7iFycHtzj5LQ0XWNgQ@mail.gmail.com>
+	s=arc-20240116; t=1735379309; c=relaxed/simple;
+	bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pfMZp+2NLuOjq7WeFDKLyYGZil8CtSw1enePB2cC8JzjybNuSKQGC9OlJlOaQyLjhYZVZv/DODXHzSCGPvLgiW0NYWCM9atRHmqGth9+tWJ4A5eEEwuT4goRLUEKGOH868Zpu9Zneeirfpylc7p2oO3a3uS61GkK+kkLqOxaR0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nnlv6RmS; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ee76befe58so9902422a91.2;
+        Sat, 28 Dec 2024 01:48:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735379306; x=1735984106; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
+        b=Nnlv6RmSTRv/GSJSFfxWmUFIbxVK8lpGWCqiT1I0q68f7lVT3IbeUJw82+pSagN+Eb
+         FyOnfEBRtadF2593AMSsFRHnIX9DME9Yv8D/gPV20eXQmTHcm9FIiHFn188EAW3AOUF/
+         GQPx4TjEYxDJXWH8T/wHOfDlWfaObi5GEDqtuE+Q1upe5aaIiRH9QZyDQcJ57w3+QvCR
+         0YWzBKzhC/OipjNs7BKo2529EqkelroRcN8FZbg9RdnWAv+75AzDI8YYCW/85SEx9+bM
+         XXv2sKJ2BNPO21l1dpBQUMi3msPNkSJPu/U9r9oVV57o/Is8vnbYiEDbQd19U/PNmPm6
+         cXpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735379306; x=1735984106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
+        b=TKrypXEJPZSDmCYZtRmdTnvpFnBcEAIvxwYv/q6vq8GkHGbrbVcBpX87ZAXxH+lKlX
+         9xv+tZ5YDrp0rqhQlGoaCvasLvl6o/0BF9l2q0KvxkniUhRXUZg+NJP7obqY4nKQv8aX
+         wvlRMq1r2pVDR4H7vLT+ezBwCs5I6QlAZOGoPhimGtUqCD2b4GaVBAqcHNLwpOGHw8ld
+         f6wxoNFnKMR6XoMcVtB/pbhAItm6EsF88n/2BwDKXGTXtlHmkE47M02VifZjRAYjGNgJ
+         YrK97VgNMkfLTxSzXfI8BPNZq5aJPUFYFtUpvoNrRkUfPIv5JmHa5KCiYddREgfjIeCM
+         eFQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIQ1H2n+I/3IdGCN1ZyvafTOvbN8qXgrKRBwPF7dDhf5fZB7p96ACbPDkSyRLwkl9NIUPWaYjAEWKvWz2e@vger.kernel.org, AJvYcCVZ0r/Wfa+xoC2aTJi/1cdZ30GLXXqesHI5DHv6Vd8gkcYFzvfmhDI/gnzNa0rTNlelu8VSoqcVSafn@vger.kernel.org, AJvYcCVi6IZJsy1I4eCzrEuuK/pxoqNgI4wzQXfkhdBd97ce8eu78sOgCEjt1jVzw6XmfNLh3chAiIOm2qg21Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4RJYfu0wvrMsgVtSqpR3WjQz+5e4c19+eoDbQG3LsOa4D0ZJ+
+	vEA4qxoVYGsab0TwSy+1nP73SkCbZM7s7TG7Ei+2tc6LCIAg4Sa2niTBy+8s3+ptSIpdYxwRqKZ
+	0twrmGd6mhCUGSTTX7U7FIakr5wzoBg==
+X-Gm-Gg: ASbGnctxJV5hbZYgnP1ZnFcGEY9+OO7Zz9fYqwmOjJtSKFZySsYom2BqcdJZs1+gbfZ
+	UU+5wWM63fTTR5LEHlY4tgPDh4Li/EKYgMG3luLg=
+X-Google-Smtp-Source: AGHT+IFrTKOZSooS9ithv4i2QGULf7s56SwaHTCofLckzpstPzo9WY8xpi2n5YefoDo8jgufx3zLnRp/JHeYQ3OdsdY=
+X-Received: by 2002:a17:90a:d003:b0:2f2:a664:df1a with SMTP id
+ 98e67ed59e1d1-2f452debea5mr42774425a91.2.1735379305736; Sat, 28 Dec 2024
+ 01:48:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZPD2C2iPwOX_kW1Ug8jVkdHhhc7iFycHtzj5LQ0XWNgQ@mail.gmail.com>
+References: <20241207223335.17535-1-kylehendrydev@gmail.com>
+ <20241224103645.1709996-1-noltari@gmail.com> <CACRpkdb=kD=sOeUskOZEYHJGbEaDRNyQzyHWGx=dAs7HYE+31Q@mail.gmail.com>
+In-Reply-To: <CACRpkdb=kD=sOeUskOZEYHJGbEaDRNyQzyHWGx=dAs7HYE+31Q@mail.gmail.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Sat, 28 Dec 2024 10:47:50 +0100
+Message-ID: <CAKR-sGeVfd4VttzycUXMZDi=5eGYmQ8f5PfzQkgb_EF1cFqXiw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: bcm63268: add gpio function
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, kylehendrydev@gmail.com, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"open list:MIPS" <linux-mips@vger.kernel.org>, Jonas Gorski <jonas.gorski@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus:
-
-thanks for your review
-
-On 17:34 Fri 27 Dec     , Linus Walleij wrote:
-> On Wed, Dec 25, 2024 at 1:33 AM Yixun Lan <dlan@gentoo.org> wrote:
-> 
-> > The GPIO controller of K1 support basic functions as input/output,
-> > all pins can be used as interrupt which route to one IRQ line,
-> > trigger type can be select between rising edge, failing edge, or both.
-> > There are four GPIO banks, each consisting of 32 pins.
-> (...)
-> > +description:
-> > +  The controller's registers are organized as sets of eight 32-bit
-> > +  registers with each set controlling a bank of up to 32 pins.  A single
-> > +  interrupt is shared for all of the banks handled by the controller.
-> 
-> I looked at the driver and came to the conclusion that it's better to use
-> 4 different instances of the chip, one for each set of 32bit registers,
-> so these 4 GPIO controllers are instantiated separately.
-> 
-sounds good to me, I will work according to this in next version
-
-> The operating system can handle the shared interrupt, there is no
-> need to use a single device instance just because the interrupt is
-> shared.
-> 
-> DT bindings are operating system neutral, but for example in Linux
-> (if we pretend this is just one possible example) then a driver
-> handling a shared IRQ can be requested with the flag IRQF_SHARED
-> and the driver can just return IRQ_HANDLED if it handled an IRQ
-> or IRQ_NONE if it didn't handle the irq (so other instances can
-> handle it).
-> 
-agree, make sense
-
+El vie, 27 dic 2024 a las 17:17, Linus Walleij
+(<linus.walleij@linaro.org>) escribi=C3=B3:
+>
+> On Tue, Dec 24, 2024 at 11:36=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Rojas
+> <noltari@gmail.com> wrote:
+>
+> > From: Kyle Hendry <kylehendrydev@gmail.com>
+> >
+> > There is no guarantee that the bootloader will leave the pin configurat=
+ion
+> > in a known default state, so pinctrl needs to be explicitly set in some
+> > cases. This patch adds a gpio function for drivers that need it, i.e.
+> > gpio-leds.
+> >
+> > Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
+> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>
+> This looks right to me, but can we get some review from some
+> of the Broadcom people? (Hm it's MIPS so I guess that means
+> Florian.)
+>
 > Yours,
 > Linus Walleij
 
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Thanks Linus :)
+
+BTW, I think that other bcm63xx pinctrl drivers need that fix too (or
+at least bcm6362).
+Can anyone confirm it?
+
+Best regards,
+=C3=81lvaro.
 
