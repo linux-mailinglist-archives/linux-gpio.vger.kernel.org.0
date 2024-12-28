@@ -1,123 +1,103 @@
-Return-Path: <linux-gpio+bounces-14330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 344E49FD9A7
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 10:48:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6030B9FD9C5
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 11:10:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA78C162FBD
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 09:48:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17FE51883FC6
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Dec 2024 10:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3657C12B169;
-	Sat, 28 Dec 2024 09:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979B913C3D6;
+	Sat, 28 Dec 2024 10:09:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nnlv6RmS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vg9u5KZD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8854A8633E;
-	Sat, 28 Dec 2024 09:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FF235952;
+	Sat, 28 Dec 2024 10:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735379309; cv=none; b=PfF/SzRWcsSLRcVJFQ/3ACZGrgY7qek/MZ2Pe/aSL7RTlCuE9OmMW9eSSVnyjqZqENe7YwPrAFwTOINUKKPbADEoK/Tp/0p80QEsEdpjQn7UR/YzNAFqj7R8ythfgmhX7SdMdMFIwwxMdSEcd4V+iqBkMfDk/aAh0VwBYqhaQcg=
+	t=1735380593; cv=none; b=EKWsoOa6qUn4uJFlG6QvDFp7KMijNLiFEdmKY/BAQcJnOc3HzlXHmqaumFnj59gTeWlH0GRN6oXvub29SGtwMaKRrCe2uRIvVL7vMlO8EJ7iBZ90nU0npt7IdwTnej2Bh1tju3kapodrtP6w6k12ckeHuLe7T37vLI4ur6NNGHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735379309; c=relaxed/simple;
-	bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pfMZp+2NLuOjq7WeFDKLyYGZil8CtSw1enePB2cC8JzjybNuSKQGC9OlJlOaQyLjhYZVZv/DODXHzSCGPvLgiW0NYWCM9atRHmqGth9+tWJ4A5eEEwuT4goRLUEKGOH868Zpu9Zneeirfpylc7p2oO3a3uS61GkK+kkLqOxaR0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nnlv6RmS; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ee76befe58so9902422a91.2;
-        Sat, 28 Dec 2024 01:48:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735379306; x=1735984106; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
-        b=Nnlv6RmSTRv/GSJSFfxWmUFIbxVK8lpGWCqiT1I0q68f7lVT3IbeUJw82+pSagN+Eb
-         FyOnfEBRtadF2593AMSsFRHnIX9DME9Yv8D/gPV20eXQmTHcm9FIiHFn188EAW3AOUF/
-         GQPx4TjEYxDJXWH8T/wHOfDlWfaObi5GEDqtuE+Q1upe5aaIiRH9QZyDQcJ57w3+QvCR
-         0YWzBKzhC/OipjNs7BKo2529EqkelroRcN8FZbg9RdnWAv+75AzDI8YYCW/85SEx9+bM
-         XXv2sKJ2BNPO21l1dpBQUMi3msPNkSJPu/U9r9oVV57o/Is8vnbYiEDbQd19U/PNmPm6
-         cXpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735379306; x=1735984106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3nWLLd8Rw+xKEQPANeGCnqSlWq3hAdpW+DJZ4DpfgpU=;
-        b=TKrypXEJPZSDmCYZtRmdTnvpFnBcEAIvxwYv/q6vq8GkHGbrbVcBpX87ZAXxH+lKlX
-         9xv+tZ5YDrp0rqhQlGoaCvasLvl6o/0BF9l2q0KvxkniUhRXUZg+NJP7obqY4nKQv8aX
-         wvlRMq1r2pVDR4H7vLT+ezBwCs5I6QlAZOGoPhimGtUqCD2b4GaVBAqcHNLwpOGHw8ld
-         f6wxoNFnKMR6XoMcVtB/pbhAItm6EsF88n/2BwDKXGTXtlHmkE47M02VifZjRAYjGNgJ
-         YrK97VgNMkfLTxSzXfI8BPNZq5aJPUFYFtUpvoNrRkUfPIv5JmHa5KCiYddREgfjIeCM
-         eFQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIQ1H2n+I/3IdGCN1ZyvafTOvbN8qXgrKRBwPF7dDhf5fZB7p96ACbPDkSyRLwkl9NIUPWaYjAEWKvWz2e@vger.kernel.org, AJvYcCVZ0r/Wfa+xoC2aTJi/1cdZ30GLXXqesHI5DHv6Vd8gkcYFzvfmhDI/gnzNa0rTNlelu8VSoqcVSafn@vger.kernel.org, AJvYcCVi6IZJsy1I4eCzrEuuK/pxoqNgI4wzQXfkhdBd97ce8eu78sOgCEjt1jVzw6XmfNLh3chAiIOm2qg21Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4RJYfu0wvrMsgVtSqpR3WjQz+5e4c19+eoDbQG3LsOa4D0ZJ+
-	vEA4qxoVYGsab0TwSy+1nP73SkCbZM7s7TG7Ei+2tc6LCIAg4Sa2niTBy+8s3+ptSIpdYxwRqKZ
-	0twrmGd6mhCUGSTTX7U7FIakr5wzoBg==
-X-Gm-Gg: ASbGnctxJV5hbZYgnP1ZnFcGEY9+OO7Zz9fYqwmOjJtSKFZySsYom2BqcdJZs1+gbfZ
-	UU+5wWM63fTTR5LEHlY4tgPDh4Li/EKYgMG3luLg=
-X-Google-Smtp-Source: AGHT+IFrTKOZSooS9ithv4i2QGULf7s56SwaHTCofLckzpstPzo9WY8xpi2n5YefoDo8jgufx3zLnRp/JHeYQ3OdsdY=
-X-Received: by 2002:a17:90a:d003:b0:2f2:a664:df1a with SMTP id
- 98e67ed59e1d1-2f452debea5mr42774425a91.2.1735379305736; Sat, 28 Dec 2024
- 01:48:25 -0800 (PST)
+	s=arc-20240116; t=1735380593; c=relaxed/simple;
+	bh=mHJL8kWhPBXy26q8Xad6nrhF3LwdbM4ibHYxMwBQX2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AVxfTuRrNlFBOJIr5dDyL5Uy5r69c5nQ6t5gVJJ0t0U02B13nwVWviUZ5A/iWB9D9mlto37vl+P36JZPtsezIuwpYKaROaHiA8DvSf2cFTHqnRs24iC4MRvlFRrcBEEh3crrdL4KRA4/6wIlh3yzKkx14RQUuUD8NGuTh4tStJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vg9u5KZD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1548CC4CECD;
+	Sat, 28 Dec 2024 10:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735380592;
+	bh=mHJL8kWhPBXy26q8Xad6nrhF3LwdbM4ibHYxMwBQX2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vg9u5KZDPBTlKPGqXbRr0nNOtXUtXZ1twbCapIVSPWR9JSmQo2qVrIpxhh/sKLGfM
+	 TWG4Wi105aFGAxyW8IkFzAPzlHngYUU93elUGdcY5vt629zO32zIYhLE/dfoht9BQd
+	 mL0EyYchZDatJ9gt5tMS5CfDnJK8/Fqmm4dzV3SvpR5I74ZqIKo3L9U4rsoG62GLJh
+	 4wn8X4MXQccTGi5Hh64ElB+QrK6UYlVHsn9RnM4qo4MP2+peLXsBi1fAZx3xxggpog
+	 VUXfxl1eevokqSJulJPi3smIQTt7jzQbPhbKiMwP1HkLGbYubWF3qYF8k3nY7l3Ziv
+	 soUqPphVRocpw==
+Date: Sat, 28 Dec 2024 11:09:49 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+Cc: andersson@kernel.org, linus.walleij@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, quic_varada@quicinc.com, quic_srichara@quicinc.com
+Subject: Re: [PATCH v3 2/6] dt-bindings: clock: qcom: gcc-ipq5424: add spi4
+ clocks
+Message-ID: <gouyqo3dtlbwc2ipm5edxpnrfjsgojzqoyrccjflkiwwfkdpfo@mdja2sovtnxr>
+References: <20241227072446.2545148-1-quic_mmanikan@quicinc.com>
+ <20241227072446.2545148-3-quic_mmanikan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241207223335.17535-1-kylehendrydev@gmail.com>
- <20241224103645.1709996-1-noltari@gmail.com> <CACRpkdb=kD=sOeUskOZEYHJGbEaDRNyQzyHWGx=dAs7HYE+31Q@mail.gmail.com>
-In-Reply-To: <CACRpkdb=kD=sOeUskOZEYHJGbEaDRNyQzyHWGx=dAs7HYE+31Q@mail.gmail.com>
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Sat, 28 Dec 2024 10:47:50 +0100
-Message-ID: <CAKR-sGeVfd4VttzycUXMZDi=5eGYmQ8f5PfzQkgb_EF1cFqXiw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: bcm63268: add gpio function
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, kylehendrydev@gmail.com, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"open list:MIPS" <linux-mips@vger.kernel.org>, Jonas Gorski <jonas.gorski@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241227072446.2545148-3-quic_mmanikan@quicinc.com>
 
-El vie, 27 dic 2024 a las 17:17, Linus Walleij
-(<linus.walleij@linaro.org>) escribi=C3=B3:
->
-> On Tue, Dec 24, 2024 at 11:36=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Rojas
-> <noltari@gmail.com> wrote:
->
-> > From: Kyle Hendry <kylehendrydev@gmail.com>
-> >
-> > There is no guarantee that the bootloader will leave the pin configurat=
-ion
-> > in a known default state, so pinctrl needs to be explicitly set in some
-> > cases. This patch adds a gpio function for drivers that need it, i.e.
-> > gpio-leds.
-> >
-> > Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
-> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->
-> This looks right to me, but can we get some review from some
-> of the Broadcom people? (Hm it's MIPS so I guess that means
-> Florian.)
->
-> Yours,
-> Linus Walleij
+On Fri, Dec 27, 2024 at 12:54:42PM +0530, Manikanta Mylavarapu wrote:
+> SPI protocol runs on serial engine 4. Hence we need to
+> rename the spi0 clocks to spi4 clocks.
 
-Thanks Linus :)
 
-BTW, I think that other bcm63xx pinctrl drivers need that fix too (or
-at least bcm6362).
-Can anyone confirm it?
+No, you do not need. Why spi0 is incorrect?
+
+>=20
+> However, renaming spi0 to spi4 will result in the following
+> compilation error's.
+> drivers/clk/qcom/gcc-ipq5424.c:2865:3: error: =E2=80=98GCC_QUPV3_SPI0_CLK=
+=E2=80=99
+> undeclared here
+> drivers/clk/qcom/gcc-ipq5424.c:2866:3: error: =E2=80=98GCC_QUPV3_SPI0_CLK=
+_SRC=E2=80=99
+> undeclared here
+
+Then do not rename... Sorry, but that part makes no sense. You must keep
+ABI, so that's why you add new clocks.
+
+
+>=20
+> To add spi4 clocks without compilation error's, do not
+> rename the spi0 clocks. Instead, duplicate the spi0 clock
+> macros and rename them to spi4.
+>=20
+> After switching to spi4 clocks in the gcc-ipq5424 driver,
+> remove the spi0 clock macros.
+
+No. ABI.
+
 
 Best regards,
-=C3=81lvaro.
+Krzysztof
+
 
