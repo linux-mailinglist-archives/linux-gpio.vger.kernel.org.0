@@ -1,163 +1,129 @@
-Return-Path: <linux-gpio+bounces-14336-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 188409FE012
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Dec 2024 18:39:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 032539FE010
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Dec 2024 18:38:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8460A3A1863
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Dec 2024 17:39:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA618161CD0
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Dec 2024 17:37:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0573F195962;
-	Sun, 29 Dec 2024 17:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6133194A60;
+	Sun, 29 Dec 2024 17:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="KSVapUJB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5412AE8D;
-	Sun, 29 Dec 2024 17:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31C99476;
+	Sun, 29 Dec 2024 17:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735493955; cv=none; b=lPWlj8M5O6nnh3Seny8rTFFAh1W2U1trRo3Wl1ruz5YxCBqOlrcDRMv8gVgWe+4yCAqKjkpvEqC73oj9RpEsGkeRuA6u1jv9QHEuhgVqzCGNipf69FlP3v0DEblUUPxw5UDicCbJpAR7b6Vu3LittHs5ffjGfFm5hg+WNsc/xxw=
+	t=1735493875; cv=none; b=NNCo3uV1ynfYYFfSERvYYd2ah1wGtKItMbhPv+QCwjWpjYGS+khRFlq3KOvlm7I4MzGD68Yohv/JnE8lPxtci0yRUdGL6GhSIFYCLgyRdDiP2jyh3MOKV5tBD08/eKGRKLFD/iE1Pm6AaiCpIlxQgxh+jhz+Ey329SEQMDw0RsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735493955; c=relaxed/simple;
-	bh=cKldweLexAbWW3t/Oak8vMG61iSM1vlh4BkgMtXeZWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oysGjiJNjCnY1Wo1jGdIAUj2AQLyAVDwZbrbhq6aQ7N7OxWenwzzVMn+WR5PjRH0LF/jOrIvVxLa1+phw54WsIBIvpCqzRgQv9wp27O4+BD0q6KyMYboxRCV5OIjfE+yqRazFXLK5vHVazUzLwqocu8hLRfD3SKVAUEd/Zvarwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
-Received: from MUA
-	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98)
-	(envelope-from <mhej@vps-ovh.mhejs.net>)
-	id 1tRwNI-00000004nmf-3wBL;
-	Sun, 29 Dec 2024 17:42:44 +0100
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: amd: Take suspend type into consideration which pins are non-wake
-Date: Sun, 29 Dec 2024 17:42:38 +0100
-Message-ID: <e61858fe70face71226727618dfaa9d5e54da0bd.1735490511.git.mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1735493875; c=relaxed/simple;
+	bh=Q/6F0E5Wta5q4Af4lxq+d+DIoyX7o4sF6KNmSPr8BlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jaXGo6boKjPbq2E9O5eDRX8G+bBLNBmUYuCWwMHD5ZBRhAxvBqRjNRgkyXhbS3nk/UicotYspc9Z/c7iZ8Ja9N+oPZjm4PbV5hCJtsBQJ2FfNOwAPlKuIB/UyUPnumcw6AvYwfvpZPupuUNhwEJzSxfVTfh0LTY/3GsDINoOswc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=KSVapUJB; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E4757104811E4;
+	Sun, 29 Dec 2024 18:37:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1735493865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FfwoFskvac32DMGJaG2VVgg3dFe4kwMlCOX61uyPLDE=;
+	b=KSVapUJBrd09Vwg/G5+Osz47EjxrzwoxxD5bJljCnJ4m92W0MeUuf1j+hai1P7q0slT5GP
+	RUjHqtEWsRcmOt1I4s9LjHm5zamXHQRDFRQGMikQWFBE0dlNkAgIN0Knp5A6sphx2WPdCe
+	cD9FYRmBHKO+wftSdPT05Nl+L0y4hH5DoGcg4DHucURTM2Fnsl1QJJ4G47V3o4FjZrhfWL
+	OtkpJdAJh3wsPiDcyA9QWTmQWdneCSg5xlS7am2yVWQ0LBuSbVPmMtFCVV1whF7YvGZwTY
+	M4EWyP0bUsES0SioAUSu2CVz/1iUdlVavxMwoRJiy/NWH+GJBp1WoObhj9xkYg==
+Message-ID: <b2f2f1e6-a539-4d1b-876f-6715c126ac3e@denx.de>
+Date: Sun, 29 Dec 2024 18:11:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: mhej@vps-ovh.mhejs.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v7] pinctrl: stm32: Add check for clk_enable()
+To: Mingwei Zheng <zmw12306@gmail.com>
+Cc: antonio.borneo@foss.st.com, linus.walleij@linaro.org,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, make24@iscas.ac.cn,
+ peng.fan@nxp.com, fabien.dessenne@foss.st.com, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Jiasheng Jiang <jiashengjiangcool@gmail.com>
+References: <20241224200608.84923-1-zmw12306@gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20241224200608.84923-1-zmw12306@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Some laptops have pins which are a wake source for S0i3/S3 but which
-aren't a wake source for S4/S5 and which cause issues when left unmasked
-during hibernation (S4).
+On 12/24/24 9:06 PM, Mingwei Zheng wrote:
 
-For example HP EliteBook 855 G7 has pin #24 that causes instant wakeup
-(hibernation failure) if left unmasked (it is a wake source only for
-S0i3/S3).
+[...]
 
-Fix this by considering a pin a wake source only if it is marked as one
-for the current suspend type (S0i3/S3 vs S4/S5).
+> @@ -1390,15 +1379,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
+>   	err = gpiochip_add_data(&bank->gpio_chip, bank);
 
-Since I'm not sure if Z-wake pins should be included in either suspend
-category I excluded them from both, so pins with only the Z-wake flag set
-are treated as non-wake pins.
+There is one other nasty problem here -- this gpiochip_add_data() needs 
+to be undone (*) below, otherwise ...
+...
 
-Fixes: 2fff0b5e1a6b ("pinctrl: amd: Mask non-wake source pins with interrupt enabled at suspend")
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
----
- drivers/pinctrl/pinctrl-amd.c | 27 +++++++++++++++++++++------
- drivers/pinctrl/pinctrl-amd.h |  7 +++----
- 2 files changed, 24 insertions(+), 10 deletions(-)
+> +	ret = clk_bulk_prepare_enable(banks, pctl->clks);
+> +	if (ret) {
+> +		dev_err(dev, "failed to prepare_enable clk (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+>   	for_each_gpiochip_node(dev, child) {
+>   		ret = stm32_gpiolib_register_bank(pctl, child);
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index fff6d4209ad5..072d44b0fc8c 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -908,12 +908,13 @@ static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
- 	return false;
- }
- 
--static int amd_gpio_suspend(struct device *dev)
-+static int amd_gpio_suspend_common(struct device *dev, bool is_s03)
- {
- 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
- 	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
- 	unsigned long flags;
- 	int i;
-+	u32 wake_mask = is_s03 ? WAKE_SOURCE_S03 : WAKE_SOURCE_S4;
- 
- 	for (i = 0; i < desc->npins; i++) {
- 		int pin = desc->pins[i].number;
-@@ -925,11 +926,11 @@ static int amd_gpio_suspend(struct device *dev)
- 		gpio_dev->saved_regs[i] = readl(gpio_dev->base + pin * 4) & ~PIN_IRQ_PENDING;
- 
- 		/* mask any interrupts not intended to be a wake source */
--		if (!(gpio_dev->saved_regs[i] & WAKE_SOURCE)) {
-+		if (!(gpio_dev->saved_regs[i] & wake_mask)) {
- 			writel(gpio_dev->saved_regs[i] & ~BIT(INTERRUPT_MASK_OFF),
- 			       gpio_dev->base + pin * 4);
--			pm_pr_dbg("Disabling GPIO #%d interrupt for suspend.\n",
--				  pin);
-+			pm_pr_dbg("Disabling GPIO #%d interrupt for %s suspend.\n",
-+				  pin, is_s03 ? "S0idle3/S3" : "S4/S5");
- 		}
- 
- 		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-@@ -938,6 +939,16 @@ static int amd_gpio_suspend(struct device *dev)
- 	return 0;
- }
- 
-+static int amd_gpio_suspend_s03(struct device *dev)
-+{
-+	return amd_gpio_suspend_common(dev, true);
-+}
-+
-+static int amd_gpio_suspend_s45(struct device *dev)
-+{
-+	return amd_gpio_suspend_common(dev, false);
-+}
-+
- static int amd_gpio_resume(struct device *dev)
- {
- 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
-@@ -961,8 +972,12 @@ static int amd_gpio_resume(struct device *dev)
- }
- 
- static const struct dev_pm_ops amd_gpio_pm_ops = {
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(amd_gpio_suspend,
--				     amd_gpio_resume)
-+	.suspend_late = amd_gpio_suspend_s03,
-+	.resume_early = amd_gpio_resume,
-+	.freeze_late = amd_gpio_suspend_s45,
-+	.thaw_early = amd_gpio_resume,
-+	.poweroff_late = amd_gpio_suspend_s45,
-+	.restore_early = amd_gpio_resume,
- };
- #endif
- 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index 667be49c3f48..8bf9f410d7fb 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -80,10 +80,9 @@
- #define FUNCTION_MASK		GENMASK(1, 0)
- #define FUNCTION_INVALID	GENMASK(7, 0)
- 
--#define WAKE_SOURCE	(BIT(WAKE_CNTRL_OFF_S0I3) | \
--			 BIT(WAKE_CNTRL_OFF_S3)   | \
--			 BIT(WAKE_CNTRL_OFF_S4)   | \
--			 BIT(WAKECNTRL_Z_OFF))
-+#define WAKE_SOURCE_S03 (BIT(WAKE_CNTRL_OFF_S0I3) | \
-+			 BIT(WAKE_CNTRL_OFF_S3))
-+#define WAKE_SOURCE_S4  BIT(WAKE_CNTRL_OFF_S4)
- 
- struct amd_function {
- 	const char *name;
+... if this stm32_gpiolib_register_bank() fails for second or later bank 
+, then ...
+
+>   		if (ret) {
+>   			fwnode_handle_put(child);
+> -
+> -			for (i = 0; i < pctl->nbanks; i++)
+> -				clk_disable_unprepare(pctl->banks[i].clk);
+> -
+> -			return ret;
+> +			goto err_clk;
+>   		}
+>   
+>   		pctl->nbanks++;
+> @@ -1658,6 +1642,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
+>   	dev_info(dev, "Pinctrl STM32 initialized\n");
+>   
+>   	return 0;
+> +
+> +err_clk:
+> +	clk_bulk_disable_unprepare(banks, pctl->clks);
+
+... this clk_bulk_disable_unprepare() will disable all bank clocks, 
+including the clocks for the banks which got successfully registered.
+
+Before calling clk_bulk_disable_unprepare(), it is necessary to 
+unregister the GPIO chips again, i.e.:
+
+i = 0;
+for_each_gpiochip_node(dev, child) {
+   struct stm32_gpio_bank *bank = &pctl->banks[i];
+   gpiochip_remove(*bank->gpio_chip);
+}
+clk_bulk_disable_unprepare(banks, pctl->clks);
+
+Otherwise I think the patch is pretty good, thank you !
 
