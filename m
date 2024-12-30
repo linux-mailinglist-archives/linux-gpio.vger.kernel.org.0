@@ -1,195 +1,232 @@
-Return-Path: <linux-gpio+bounces-14346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14347-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 895309FE3A0
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 09:16:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4C239FE3E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 09:47:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3968016216A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 08:16:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D885161F61
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 08:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B951A0718;
-	Mon, 30 Dec 2024 08:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF54C1A2386;
+	Mon, 30 Dec 2024 08:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGDo0Bk6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGjSnuNI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDF1EAD2;
-	Mon, 30 Dec 2024 08:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F259D19F461;
+	Mon, 30 Dec 2024 08:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735546591; cv=none; b=fVXcf2/c5vIP9XnzvJMXhB7WuU2MzVOfV1IaqRGTgUOkxv67dK/bSmDYsSJz73bfVVYuCZ9YurVc25d9PCBvja53yq1ky02UzWI1VGc3mME6djnRE7Z78mgk4UQ6xDwgPNuMFMB1+yU3m3CJt4E3tOg/qj9rZO4XMl7CrxMfkKM=
+	t=1735548454; cv=none; b=QnSlzoqV4cIDNJMR6E6JJA7RKemQg4AwsmRO4sRj0TniMiRVKs2KYtf98Bj4F3avF9QZqvnhRJzyHapyXY/KmipgJ7FvBIGDTZ8QnU9yCYo/bPu7mlaaJJmWzsmRkSOe+HWkQU+Frs2IVLrnbZjE4zf/r1iUtMpVJyYpXNo7aoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735546591; c=relaxed/simple;
-	bh=AC1j63zZVQyM8qkIeO3XPkSufgkNoDUxCYl8A0p1FPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OXKYAFzUrHA6vjfqKnc76o4QdU9yxUhSPaQpGM6iYMptWFB0WPoufpUwRiXOgo4U6+eN9XU1bDWMy/t0Cj+xDT1pPbTo5dzOS/V1sHEzI+TE4MmMD29sY5rx7/meIZGeDGb81WaXiOfC3BepUJ53f54KooQFzOKPzr5bnRT+dQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGDo0Bk6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4B6C4CED0;
-	Mon, 30 Dec 2024 08:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735546590;
-	bh=AC1j63zZVQyM8qkIeO3XPkSufgkNoDUxCYl8A0p1FPs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mGDo0Bk6nZ/lgAQZjItoutEt/KlBVYThgYBnWqYGnwiJRIxTDRdLAQYe2vfw+fTpk
-	 sR+zwSSY3Tbn5GotCi0CsVKBfgz0TzIM5mjl6ZJCLeC1j+DtOyIg8ti1PmvF6UfsBc
-	 66AqFCCNHYy0jA3/KKo1JoakvVFtXrNvehYVi9KwvLo6dYxZi6ldT4+5lHzGss/HhI
-	 I4J8rPemstngywN+1Gy+g4gnqKK3kooQIo4c7stn0r+4eIGC30rbosmLQ3jvuyLsVo
-	 JoqQJUt3K3go7sc52I5h0vq+dfRHrs/eSgy0MX4dZx0Whf7kjEvTul7R+54/xYXhB3
-	 h93rs7ZPzWcGw==
-Message-ID: <4adc7827-dc5f-41ca-b091-74e86bfdefb1@kernel.org>
-Date: Mon, 30 Dec 2024 09:16:22 +0100
+	s=arc-20240116; t=1735548454; c=relaxed/simple;
+	bh=A9lAmnPj7ljs1c9NPs031aYEJ/3GWicOKL2byQaMvq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XiTg1TA79/C8UjBuqTof6FSRSbYRrFW8ndPYKz6gnkFmN4iZ+AP6yt9/tIuibVk7x6qy5wk6UT99khtWXu2//mYi4kQFHGjhMsBhX7qPuKTrOM25ugXoSiFjGJXUReIl8YmnNI2oHNZZ3WLTGGI3gfRjh9nPDLwcv85QujlTvO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGjSnuNI; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e46ebe19368so9845398276.0;
+        Mon, 30 Dec 2024 00:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735548452; x=1736153252; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wVJ2Q5DUBqO5fFi7xrKE956fBgRDsL3A9t3sMepmPuo=;
+        b=nGjSnuNIr19kKhY/lJwu4+fQTSljXoPNkCCFtEDmjwFM6a8D/ojTaMAAyatci/WqlN
+         ZQEtvEGo7p7IGfHHnirzkNNOaYjdFC7t3P4U4JAW7iUrEb49FZg25TVY8wtEQ62+vtQd
+         mcKbJCIppZI7+sx/wcWhKvZOdDOsdNoTzBL0Vf3aQ+DHUA2pLRQT4UhkRmpuxqNRQrfS
+         z6n5pqpFZFy1gm5vJ/z8qgfArPEOmJTT420uboILQj3R6XhJTmOjwA4/a6lUbus4fdY1
+         Zc1cQzb6tZqkc3TVIBJUwqW+lBHapz/62j+ctnclaQba239bL+ZkVLJrWzZIGTusAxs2
+         Gn7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735548452; x=1736153252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wVJ2Q5DUBqO5fFi7xrKE956fBgRDsL3A9t3sMepmPuo=;
+        b=vKuckw9od0veMfBDbR0UzMyjnoR4zi/D8IODikzTed4y2z0dDaB8yK/Lb/0cEdGaXR
+         gJTvHc32c2x8rUA05teZJXRppXQo3GhF1k61pU4pI4cX+exUgOgafaPL0q9eqe7MbZRO
+         nTxPYG9g4vzckDiLjhOCEvOoQMhROHmxUPZ9oUHMUmqasZqhbvjqHczOmsJqisAUpKUu
+         GyUgM4C6td6jjbN++TepmNxBlAmRVaVTf/QTn+0mfurp3c849V0Wxz+GFwpiTRM1rFma
+         oI3r1zX+aE7DekdIRBsF5p4z7+TGpkYNqemmm8QSwM8vMlsE3n/sjKloGaUyklmFRfae
+         Wnmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFfu5fSq8tLfQkSyS+w3fQa7327vB9cN/Kcg94XVAArH+sZpVP7y81siOk4o62RA/NuPkLeUkQ6bI=@vger.kernel.org, AJvYcCVoqf03UeXYk8nyKMHowgVRPM+k07pC9HknX+rZPERVBlVr4pE41Ib9HqgYbgh1jOtMPw1jziHdNwmRwQ==@vger.kernel.org, AJvYcCWDon9oaQmlftSCtnxIxHTvkm7PPQitqA1thNI8HzwY9yU7Sm7q4tmZCDR9JIGlTOBErucOUR4FD3nXGBDRh40=@vger.kernel.org, AJvYcCWF1QizAoqoz3PO5foUB2eWT1sBDscXNvYpNoz8qaI4A9UYrv0u4NavcVTmRdPwBa0B/LQ9hYc3jTIR+Jg=@vger.kernel.org, AJvYcCWKcV3BhrBDtNa/nFQDQcnrtrZ+Y7QffaiTaw5Bfh6sqzMHkpeRv7PMMYZN0IhVXK4m+q8VzRC5Jaex@vger.kernel.org, AJvYcCWfmPMQbpQpM6FRHma8cbw2X1Dq5n5OH9kUZ2bk0l+ropUu8Ld8R2iZ00Ko9CxY3dks+vndhENg@vger.kernel.org, AJvYcCXW//xWZgwDCjFdezNykiQpvdATkGPFygs8jQr12MMAPdoZHa/YYptyO6gMmkfVfvSZV8Ipnkd0mKQt@vger.kernel.org, AJvYcCXi4jkY7rJksOjrKYqCf7hyeTUefly1cRd1IwYyUAh5NupVn44ZdcwiQNIET5isU2rzSm6/aekNRPh+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJkw6m9MeejiOlICB222pNZ1WWZilVPD+kXsFX1jpe8Gu0peQx
+	0+vYcf/E5dqecHaboBmiymTRwayJ9plUfNoPMqM1cqA+MPyH4Tj/+Ho7MPhUXJ6PHrMoGNyWej5
+	rcDstGEbybs4F3Zo8+8ZTj7bK76A=
+X-Gm-Gg: ASbGncvWRUevA9EeaCj4TpjhfQoDwwG1T/4rq1dSvdaAxVVdq92GLhZzGg6t0pEqJN2
+	8HbGp/01cmDchYkfCCoBH/AqDX/55RLbhekGGyUFqcJ0D97n1amALzZy5872KXAwxOM49IpDp
+X-Google-Smtp-Source: AGHT+IHYnvruf5N4ZdJNNzu3kUNHnvHvRb+iYU8S/mpNZvyDQimOlQEF2qN1qLCXqjPYCHvT+V5Y4lRBFbE5oCVdn5w=
+X-Received: by 2002:a05:690c:5889:b0:6f4:2b4b:358e with SMTP id
+ 00721157ae682-6f42b4b3639mr106485307b3.7.1735548451881; Mon, 30 Dec 2024
+ 00:47:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: qcom: rename spi0 pins on
- IPQ5424
-To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, andersson@kernel.org,
- linus.walleij@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, konradybcio@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org
-Cc: quic_varada@quicinc.com, quic_srichara@quicinc.com
-References: <20241227072446.2545148-1-quic_mmanikan@quicinc.com>
- <20241227072446.2545148-2-quic_mmanikan@quicinc.com>
- <fbdf716d-0c4c-4f51-9f54-0f38931e26cd@kernel.org>
- <2234c9d5-f434-48cf-ba77-38e9109541eb@quicinc.com>
- <88b6e7ec-0265-4507-9ce1-a72217563e32@kernel.org>
- <ea31d59b-38da-4844-9ea5-32e51b8578fd@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ea31d59b-38da-4844-9ea5-32e51b8578fd@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241227095727.2401257-1-a0282524688@gmail.com>
+ <20241227095727.2401257-2-a0282524688@gmail.com> <b1c5b18d-efe1-41f8-9825-2a3e090c47f5@wanadoo.fr>
+ <CAOoeyxU5nM4BZhgqcRxVHVVDxzLFzVS0+z7Yi_YGpvWc87mAbQ@mail.gmail.com> <d52fbacd-cd07-4ccd-9a46-9e8ca650fc26@wanadoo.fr>
+In-Reply-To: <d52fbacd-cd07-4ccd-9a46-9e8ca650fc26@wanadoo.fr>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 30 Dec 2024 16:47:20 +0800
+Message-ID: <CAOoeyxXOa-JK1-wRn0hsD1nuTOLs-5NBv5-YswOSS1JJbGmU_A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, tmyu0@nuvoton.com, lee@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/12/2024 08:50, Manikanta Mylavarapu wrote:
-> 
-> 
-> On 12/27/2024 3:00 PM, Krzysztof Kozlowski wrote:
->> On 27/12/2024 10:18, Manikanta Mylavarapu wrote:
->>>
->>>
->>> On 12/27/2024 1:06 PM, Krzysztof Kozlowski wrote:
->>>> On 27/12/2024 08:24, Manikanta Mylavarapu wrote:
->>>>> SPI protocol runs on serial engine 4. Hence rename
->>>>> spi0 pins to spi4 like spi0_cs to spi4_cs etc.
->>>>>
->>>>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->>>>> ---
->>>>
->>>>
->>>> <form letter>
->>>> This is a friendly reminder during the review process.
->>>>
->>>> It looks like you received a tag and forgot to add it.
->>>>
->>>> If you do not know the process, here is a short explanation:
->>>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
->>>> of patchset, under or above your Signed-off-by tag, unless patch changed
->>>> significantly (e.g. new properties added to the DT bindings). Tag is
->>>> "received", when provided in a message replied to you on the mailing
->>>> list. Tools like b4 can help here. However, there's no need to repost
->>>> patches *only* to add the tags. The upstream maintainer will do that for
->>>> tags received on the version they apply.
->>>>
->>>> Please read:
->>>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
->>>>
->>>> If a tag was not added on purpose, please state why and what changed.
->>>> </form letter>
->>>>
->>>
->>> Hi Krzysztof,
->>>
->>> 	Patches #1 to #4 are newly added in V3 (to rename SPI0 to SPI4). Hence, there are no A-b/R-b
->>> 	tags associated with these patches. I mentioned this information in the cover letter.
->>> 	
->>> 	I assume you are referring to Patch #1 from the V2 series.
->>> 	Patch #1 [1] and #2 [2] from the V2 series have been merged into linux-next.
->>> 	[1] https://lore.kernel.org/linux-arm-msm/20241217091308.3253897-2-quic_mmanikan@quicinc.com/
->>> 	[2] https://lore.kernel.org/linux-arm-msm/20241217091308.3253897-3-quic_mmanikan@quicinc.com/
->>>
->>> 	Please let me know if i missed anything.
->>
->> v3 mislead me here and three different subsystems in one patchset.
->>
->> Anyway, if this is different patch then review follows - there is no ABI
->> impact explanation and this is an ABI break. What's more, entries are
->> not sorted anymore and why there is a gap? spi4, spi1 and spi10? Where
->> is spi3?
->>
->> Not sure if this renaming is useful or correct, especially considering
->> not many arguments in commit msg (e.g. datasheet?).
->>
->>
-> 
-> Hi Krzysztof,
-> 
-> 	The IPQ5424 supports two SPI instances on serial engine 4 and 5.
-> 	Previously, SPI clocks, gpio pins and DTS node names were named
-> 	according to protocol instances like spi0 and spi1.
-> 
-> 	As per the feedback received in
-> 	https://lore.kernel.org/linux-arm-msm/ca0ecc07-fd45-4116-9927-8eb3e737505f@oss.qualcomm.com/,
-> 	spi0 has been renamed to spi4 to align with the serial engine instance.
-> 
-> 	Kindly advice if it's not acceptable.
+Vincent Mailhol <mailhol.vincent@wanadoo.fr> =E6=96=BC 2024=E5=B9=B412=E6=
+=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:34=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+...
+> >> If I understand correctly, your device is an USB device, so shouldn't =
+it
+> >> be under
+> >>
+> >>   drivers/usb/mfd/nct6694.c
+> >>
+> >> ?
+> >
+> > I understand, but there is no drivers/usb/mfd/ directory, I believe my
+> > device is similar to dln2.c and viperboard.c, which is why I placed it
+> > under drivers/mfd/
+>
+> Well, at the end, this is not my tree. Maybe I am saying something silly
+> here? I am fine to defer this problem to the more relevant people. If
+> the maintainers from the linux-usb mailing list are happy like you did,
+> then so am I.
+>
 
-The advice was not about pins, though. My comments stands for commit
-msg. Nothing about ABI, nothing about datasheet...
+Understood.
 
-Best regards,
-Krzysztof
+> >> At the moment, I see no USB maintainers in CC (this is why I added
+> >> linux-usb myself). By putting it in the correct folder, the
+> >> get_maintainers.pl will give you the correct list of persons to put in=
+ copy.
+> >>
+> >
+> > Okay, I will add CC to linux-usb from now on.
+>
+> Ack.
+>
+> >> The same comment applies to the other modules. For example, I would
+> >> expect to see the CAN module under:
+> >>
+> >>   drivers/net/can/usb/nct6694_canfd.c
+> >>
+> >
+> > Understood! I will move the can driver to drivers/net/can/usb/ in v5.
+>
+> Ack.
+>
+> (...)
+>
+> >>> +int nct6694_read_msg(struct nct6694 *nct6694, u8 mod, u16 offset,
+> >>> +                  u16 length, void *buf)
+> >>> +{
+...
+>
+> If the two bytes may be used separately or in combination, then I think
+> it is better to describe this in your structure. Something like this:
+>
+>   struct nct6694_cmd_header {
+>         u8 rsv1;
+>         u8 mod;
+>         union {
+>                 __le16 offset;
+>                 struct {
+>                         u8 cmd;
+>                         u8 sel;
+>                 }; __packed
+>         } __packed;
+>         u8 hctrl;
+>         u8 rsv2;
+>         __le16 len;
+>   } __packed;
+>
+
+Sorry for forgetting to list the structure in last mail, but the
+revised structure is same as yours.
+
+> Then, your prototype becomes:
+>
+>   int nct6694_read_msg(struct nct6694 *nct6694,
+>                        struct nct6694_cmd_header *cmd_hd,
+>                        void *buf)
+>
+> If the caller needs to pass an offset:
+>
+>   void foo(struct nct6694 *nct6694, u8 mod, u16 offset, u16 length)
+>   {
+>         struct nct6694_cmd_header cmd_hd =3D { 0 };
+>
+>         cmd_hd.mod =3D mod;
+>         cmd_hd.offset =3D cpu_to_le16(offset);
+>         cmd_hd.len =3D cpu_to_le16(length);
+>
+>         nct6694_read_msg(nct6694, &cmd_hd, NULL);
+>   }
+>
+> If the caller needs to pass a cmd and sel pair:
+>
+>   void foo(struct nct6694 *nct6694, u8 mod, u8 cmd, u8 sel, u16 length)
+>   {
+>         struct nct6694_cmd_header cmd_hd =3D { 0 };
+>
+>         cmd_hd.mod =3D mod;
+>         cmd_hd.cmd =3D cmd;
+>         cmd_hd.sel =3D sel;
+>         cmd_hd.len =3D cpu_to_le16(length);
+>
+>         nct6694_read_msg(nct6694, &cmd_hd, NULL);
+>   }
+>
+> This way, no more cmd and sel concatenation/deconcatenation and no
+> conditional if/else logic.
+>
+> cmd_hd.hctrl (and other similar fields which are common to everyone) may
+> be set in nct6694_read_msg().
+>
+
+Understood, that means I need to export these four function, right?
+  - int nct6694_read_msg(struct nct6694 *nct6694, u8 mod, u8 cmd,
+                         u8 sel, u16 length, void *buf);
+  - int nct6694_read_rpt(struct nct6694 *nct6694, u8 mod, u16 offset,
+                         u16 length, void *buf);
+  - int nct6694_write_msg(struct nct6694 *nct6694, u8 mod, u8 cmd,
+                          u8 sel, u16 length, void *buf);
+  - int nct6694_write_rpt(struct nct6694 *nct6694, u8 mod, u16 offset,
+                          u16 length, void *buf);
+
+Both nct6694_read_msg() and nct6694_read_rpt() call
+nct6694_read(struct nct6694 *nct6694, struct nct6694_cmd_header
+cmd_hd, void *buf),
+then nct6694_write_msg() and nct6694_write_rpt() call
+nct6694_write(struct nct6694 *nct6694, struct nct6694_cmd_header
+cmd_hd, void *buf).
+(nct6694_read/nct6694_write is origin nct6694_read_msg/nct6694_write_msg)
+
+
+Thanks,
+Ming
 
