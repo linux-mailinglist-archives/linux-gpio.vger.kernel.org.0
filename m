@@ -1,189 +1,164 @@
-Return-Path: <linux-gpio+bounces-14349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B488D9FE563
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 11:48:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FF8C9FE63A
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 14:22:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66DC31614D1
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 10:48:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 743043A208E
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2024 13:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719FC1A725C;
-	Mon, 30 Dec 2024 10:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1503C1A9B2C;
+	Mon, 30 Dec 2024 13:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dSdfJdV0"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="piQ7o6Yt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0205B19995D;
-	Mon, 30 Dec 2024 10:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813FD1A4F2B;
+	Mon, 30 Dec 2024 13:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735555690; cv=none; b=Vx2YDBs8oiHcpHrdsvFSjKS/YwOD+gLLq9Fa6PjElktY481uOXEzW1AoS7HoElMF7DeOCcdg1PGArllevn+gzI9rjm8R3tcPiH+unK5vUNfohjySegZoQZ5KwM4FXmkP2/T6MHCcqv9prnQxwmeMWFK0hXcvUS3dhzaBJezBJeM=
+	t=1735564948; cv=none; b=RITBklVWP9PDBM3xJVcA+hcODwuUe7ONtKkvtpcbgCMGUT/BLFrmmHjxo+o0p6hU0csoCmpYwdQE9TtcOMfvKEae83rXQQnTzXBL3QyyFkOGgKcKwqW6Qe4hJVs1I4TAWSGmNyNrq14Zk8j6VaPZvR4jW02M/LCTXnQkpUJ+0Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735555690; c=relaxed/simple;
-	bh=NobdQdHmCtuB/Sj+n4FPbxrPC8pPbvLMeiXofRRbiPE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=l43MzEvxdevREyw1zUfGuVQ5kfpglVwDEnWxB+c1AEMjzUmBqHRWmaXpimvoj891mQUfsk9L/hk2dql06RaTUumcxaI0XBExwzs8yhOJ1szcO+AKyegMhvkeuhIhIhRkdlZkFcwbQghHWGMydq6tcz6ov0P620iLz/8Us76+UIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dSdfJdV0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BU1X420028167;
-	Mon, 30 Dec 2024 10:48:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XKMA1gLm8gn+bP4UZIa5voLI71re8IgNZreD1JMKVCM=; b=dSdfJdV0fEUHahEO
-	zz3Qju1tT1orLUyvy47tafNBObknYCt87R+605zO9Bs3He6WpCwSfUcji1oYM8IA
-	1OylSftUQ6g4GtNqkSsUVlwAYRVydWVaKped9gQSRLeF4lScd/bgYziwWGwQbUIJ
-	xRYSrqnsi6r7Di5N1e9C8hl3J2F7gpeo+O/olsITcivS14lql09IxMVPHhKKwRGF
-	DmDeZvH9FL44TNwhkUzv5t8+HGtVfOHTNjAqDP2kvk8972o1VhfJwOzReG1WKr7g
-	qY/dFylYuQQSjRER1DdRUIHaBBAtBncrYyQZ9o08hgJvsQrxl3GkA478d3CaQeGc
-	wiQqJg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43uhxvrym4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Dec 2024 10:48:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 4BUAlxW6003724
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Dec 2024 10:47:59 GMT
-Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 30 Dec
- 2024 02:47:54 -0800
-Message-ID: <2ed8afe0-4cf7-4d97-8de8-3c3119db3342@quicinc.com>
-Date: Mon, 30 Dec 2024 16:17:50 +0530
+	s=arc-20240116; t=1735564948; c=relaxed/simple;
+	bh=7MDc6sTNZzm6IDEBuB5yuwSOIb+gYHt54ivudUIGfk4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ptg5isyOnI9E+SvjIeEP1uiYzk/chaqzu6nGAERdULe0xbHin8zN/uI00VeLy0DBFainWfJCDBYuYycuMv3H9ePrFk6oyfoyZCuTwf5w5FmuGSB4EcxKg5GWF8LcrexAWUTmp4OuWu2gYlSBcpEd9Grt/jfYndmsOF/HFQ9Jhg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=piQ7o6Yt; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 06B2240009;
+	Mon, 30 Dec 2024 13:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1735564937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iNojBKg1C3ADFBNi40Dz7RM5uNZWDbuFFrwSiTyt55E=;
+	b=piQ7o6Ytu5rZ8XyG1wYJe3LpUEQRZM+8zNKlHd4z/nUUyERHZYw840FF1uQP7GF/JiaTDH
+	x/cAtpskHNVTpRSKdr26Og9qUZqtkJITtdyiTqaiMGbkzZ2b3Kfigg0JfEHqNkqXn2aTPV
+	sOzrodpaJ/EOh4yEwDmlOqFglsNEz1CAO0PAZHzTcxC89iDd1d/ZYycQOTHb74XZdTZNgD
+	RiEUXyHNTkCboBrGSMSpqHm6Bxa80LD4DxwEAhuup6sVa59IjK6xxbOrMlsPIGsEQt4s0I
+	1VTGiocRiqkBjLkenOCHmmuPW5D+CY5wdBlqFWn+f3yZS5oVeORUKTdPKoj0jg==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH v4 0/9] misc: Support TI FPC202 dual-port controller
+Date: Mon, 30 Dec 2024 14:22:02 +0100
+Message-Id: <20241230-fpc202-v4-0-761b297dc697@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: qcom: rename spi0 pins on
- IPQ5424
-To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <linus.walleij@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <konradybcio@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
-References: <20241227072446.2545148-1-quic_mmanikan@quicinc.com>
- <20241227072446.2545148-2-quic_mmanikan@quicinc.com>
- <fbdf716d-0c4c-4f51-9f54-0f38931e26cd@kernel.org>
- <2234c9d5-f434-48cf-ba77-38e9109541eb@quicinc.com>
- <88b6e7ec-0265-4507-9ce1-a72217563e32@kernel.org>
- <ea31d59b-38da-4844-9ea5-32e51b8578fd@quicinc.com>
- <4adc7827-dc5f-41ca-b091-74e86bfdefb1@kernel.org>
-Content-Language: en-US
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-In-Reply-To: <4adc7827-dc5f-41ca-b091-74e86bfdefb1@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: xOLZ3noFnUo4KdAUx_5_LiPzxggnDoK_
-X-Proofpoint-GUID: xOLZ3noFnUo4KdAUx_5_LiPzxggnDoK_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 clxscore=1015 bulkscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412300093
+X-B4-Tracking: v=1; b=H4sIAHuecmcC/2XM0Q6CIBiG4VtxHEeDHwTsqPtoHQhCspU4cK7mv
+ PfQVtk6+z/G804o2ehtQodiQtGOPvnQ5cF3BTJt3V0s9k3eCAhwSqjErjf5xsIRLVmVb6lQ/tx
+ H6/x9DZ3Oebc+DSE+1u5Il9dXghL1TowUE+wsByMqpU0FRx3CcPXd3oQbWiIjbCD9QshQcm65o
+ xXU0PxDtoFQfiDLkHGrhDa61KX4hfM8PwHy9KqMEAEAAA==
+X-Change-ID: 20241017-fpc202-6f0b739c2078
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Romain Gantois <romain.gantois@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-Sasl: romain.gantois@bootlin.com
 
+Hello everyone,
 
+This is version four of my series which adds support for the TI FPC202
+dual-port controller. This is an unusual kind of device which is used as a
+low-speed signal aggregator for various types of SFP-like hardware ports.
 
-On 12/30/2024 1:46 PM, Krzysztof Kozlowski wrote:
-> On 30/12/2024 08:50, Manikanta Mylavarapu wrote:
->>
->>
->> On 12/27/2024 3:00 PM, Krzysztof Kozlowski wrote:
->>> On 27/12/2024 10:18, Manikanta Mylavarapu wrote:
->>>>
->>>>
->>>> On 12/27/2024 1:06 PM, Krzysztof Kozlowski wrote:
->>>>> On 27/12/2024 08:24, Manikanta Mylavarapu wrote:
->>>>>> SPI protocol runs on serial engine 4. Hence rename
->>>>>> spi0 pins to spi4 like spi0_cs to spi4_cs etc.
->>>>>>
->>>>>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
->>>>>> ---
->>>>>
->>>>>
->>>>> <form letter>
->>>>> This is a friendly reminder during the review process.
->>>>>
->>>>> It looks like you received a tag and forgot to add it.
->>>>>
->>>>> If you do not know the process, here is a short explanation:
->>>>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
->>>>> of patchset, under or above your Signed-off-by tag, unless patch changed
->>>>> significantly (e.g. new properties added to the DT bindings). Tag is
->>>>> "received", when provided in a message replied to you on the mailing
->>>>> list. Tools like b4 can help here. However, there's no need to repost
->>>>> patches *only* to add the tags. The upstream maintainer will do that for
->>>>> tags received on the version they apply.
->>>>>
->>>>> Please read:
->>>>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
->>>>>
->>>>> If a tag was not added on purpose, please state why and what changed.
->>>>> </form letter>
->>>>>
->>>>
->>>> Hi Krzysztof,
->>>>
->>>> 	Patches #1 to #4 are newly added in V3 (to rename SPI0 to SPI4). Hence, there are no A-b/R-b
->>>> 	tags associated with these patches. I mentioned this information in the cover letter.
->>>> 	
->>>> 	I assume you are referring to Patch #1 from the V2 series.
->>>> 	Patch #1 [1] and #2 [2] from the V2 series have been merged into linux-next.
->>>> 	[1] https://lore.kernel.org/linux-arm-msm/20241217091308.3253897-2-quic_mmanikan@quicinc.com/
->>>> 	[2] https://lore.kernel.org/linux-arm-msm/20241217091308.3253897-3-quic_mmanikan@quicinc.com/
->>>>
->>>> 	Please let me know if i missed anything.
->>>
->>> v3 mislead me here and three different subsystems in one patchset.
->>>
->>> Anyway, if this is different patch then review follows - there is no ABI
->>> impact explanation and this is an ABI break. What's more, entries are
->>> not sorted anymore and why there is a gap? spi4, spi1 and spi10? Where
->>> is spi3?
->>>
->>> Not sure if this renaming is useful or correct, especially considering
->>> not many arguments in commit msg (e.g. datasheet?).
->>>
->>>
->>
->> Hi Krzysztof,
->>
->> 	The IPQ5424 supports two SPI instances on serial engine 4 and 5.
->> 	Previously, SPI clocks, gpio pins and DTS node names were named
->> 	according to protocol instances like spi0 and spi1.
->>
->> 	As per the feedback received in
->> 	https://lore.kernel.org/linux-arm-msm/ca0ecc07-fd45-4116-9927-8eb3e737505f@oss.qualcomm.com/,
->> 	spi0 has been renamed to spi4 to align with the serial engine instance.
->>
->> 	Kindly advice if it's not acceptable.
-> 
-> The advice was not about pins, though. My comments stands for commit
-> msg. Nothing about ABI, nothing about datasheet...
-> 
+The FPC202 exposes an I2C, or SPI (not supported in this series) control
+interface, which can be used to access two downstream I2C busses, along
+with a set of low-speed GPIO signals for each port. It also has I2C address
+translation (ATR) features, which allow multiple I2C devices with the same
+address (e.g. SFP EEPROMs at address 0x50) to be accessed from the upstream
+control interface on different addresses.
 
-I will update the commit message in the next version.
+I've chosen to add this driver to the misc subsystem, as it doesn't
+strictly belong in either the i2c or gpio sybsystem, and as far as I know
+it is the first device of its kind to be added to the kernel.
 
-Thanks & Regards,
-Manikanta.
+Along with the FPC202 driver itself, this series also adds support for
+dynamic address translation to the i2c-atr module. This allows I2C address
+translators to update their translation table on-the-fly when they receive
+transactions to unmapped clients. This feature is needed by the FPC202
+driver to access up to three logical I2C devices per-port, given that the
+FPC202 address translation table only has two address slots.
+
+Best Regards,
+
+Romain
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+---
+Changes in v4:
+- Fixed unbalanced refcounting in FPC202 port probing path
+- Fixed KASAN bug by setting alias_pool "shared" flag properly
+- Dropped requirement for both FPC202 ports to be described in the DT
+- Enabled dynamic translation by default, dropped support for non dynamic translation
+- Used aliased_addrs list instead of insufficient bitmap in ub960 driver
+- Added i2c_atr_destroy_c2a() function matching i2c_atr_create_c2a()
+- Fixed list corruption bug in dynamic address translation
+- Indented Kconfig entry with tabs instead of spaces
+- Link to v3: https://lore.kernel.org/r/20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com
+
+Changes in v3:
+- Described the "reg" property of downstream ports in the FPC202 bindings
+- Link to v2: https://lore.kernel.org/r/20241118-fpc202-v2-0-744e4f192a2d@bootlin.com
+
+Changes in v2:
+- Renamed port nodes to match i2c adapter bindings.
+- Declared atr ops struct as static const.
+- Free downstream ports during FPC202 removal.
+- Link to v1: https://lore.kernel.org/r/20241108-fpc202-v1-0-fe42c698bc92@bootlin.com
+
+---
+Romain Gantois (9):
+      dt-bindings: misc: Describe TI FPC202 dual port controller
+      media: i2c: ds90ub960: Replace aliased clients list with address list
+      media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+      i2c: use client addresses directly in ATR interface
+      i2c: move ATR alias pool to a separate struct
+      i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+      i2c: support per-channel ATR alias pools
+      i2c: Support dynamic address translation
+      misc: add FPC202 dual port controller driver
+
+ .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
+ MAINTAINERS                                        |   7 +
+ drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
+ drivers/media/i2c/ds90ub913.c                      |   9 +-
+ drivers/media/i2c/ds90ub953.c                      |   9 +-
+ drivers/media/i2c/ds90ub960.c                      |  61 ++-
+ drivers/misc/Kconfig                               |  11 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/ti_fpc202.c                           | 441 +++++++++++++++++++
+ include/linux/i2c-atr.h                            |  54 ++-
+ 10 files changed, 976 insertions(+), 194 deletions(-)
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20241017-fpc202-6f0b739c2078
+
+Best regards,
+-- 
+Romain Gantois <romain.gantois@bootlin.com>
+
 
