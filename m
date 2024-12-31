@@ -1,317 +1,195 @@
-Return-Path: <linux-gpio+bounces-14370-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F38F9FECC7
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 05:25:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8C309FED5B
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 07:52:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 426AD161967
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 04:25:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 951D23A2BBA
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 06:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEFC6145A0B;
-	Tue, 31 Dec 2024 04:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76884188A3A;
+	Tue, 31 Dec 2024 06:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7q0I9Nt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="K3lPR81x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BBE249E5;
-	Tue, 31 Dec 2024 04:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE388188CA9
+	for <linux-gpio@vger.kernel.org>; Tue, 31 Dec 2024 06:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735619102; cv=none; b=Obj2frzPCrfG/HIeWmg8/04yy+agdlocwcJnCZIg9KmJFbnYGp3gcPYym0JNHkDB/RJ4ku365rFchUyWIhQiGdAZ2ZXWnsUOvBNrkdfYd541aMKSmS6HlZqs9bUkUVWhAoBG9+VrI7ef50ac6qc+KJyjVlnLREUFwRp6gA8EJ+c=
+	t=1735627939; cv=none; b=mkUIxATg3IG0FbX4ZAB8i0775RJX6tvuJU+rIsYWuO96IKfn3ODriTxQSBjJ+ThxaBc4i2Fv+lz8cXt7/U0W7Zw7r0oUzJYLdeV1RGb/xr5pWWfLpQFDM2fnNAomRpaPRJncp1ym48Ua80+M1EAHPpICOvOoIXAbi9ADmidxNP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735619102; c=relaxed/simple;
-	bh=u6wh1RX0dCYDcGjW9dUKEWu5sABiLGzJ1W2ycRPDLBM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jr4BoM8PiTR0QCN3ynRecKTURv2aYV7JadViLOBkQZtiBuTSjaKEzAW87fMUNc/bpNOALj+2T6daC6yU3i5X9cdI6Ifaj8sRAwtBNgAYYnHLXLom2x/uBn8tOzsFXk1T5p9dXcLJOAGxgEB69g/8D7hMSz1zdsd8GClRJgK/xpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k7q0I9Nt; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8442ec2adc7so363453739f.2;
-        Mon, 30 Dec 2024 20:25:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735619100; x=1736223900; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8V9K9na5hi5DyccRbFjWLo7NIv+AoHV6qIzmsllDmA8=;
-        b=k7q0I9Ntiw65YG59fr2RDcdtD5Y1XMzprSXHK/RV+62XcGSDalM7wAD0cwl6MVUzoU
-         YhavNeKuXuXC/s3g7lXuXuB/SRF533GVUTLK96Dhrk7MZxEuyzED4iAcVQUdCAIdtz6t
-         VcKhvDdlRMnktSE9OcTjDrl2N4qA8iqnRuS8YK+OWl7M+iCPDGu+Rk4xBLswnhzO6QUZ
-         GlvuxI2rytSuUcviL5SNJv2xfgPhu3HhTF43qmfPRYlHt98A/pIIwhNhEpiTdoB8EqC/
-         ZMPn37LYLypJbbxH2ezgQQnOBGZKIzDCFDORVIHzcBcszJdgwZN1amsmPlOOkm5ulud7
-         8gBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735619100; x=1736223900;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8V9K9na5hi5DyccRbFjWLo7NIv+AoHV6qIzmsllDmA8=;
-        b=adbXvY6kBF/6tIaedLlQWQ4hrmMDcQ+ALFDEkI7Vk6b/zxNoN43Dtg7LRZWt4gjJbJ
-         R1FQIir0NfpfbbQCpiFescLAK6xbPSdfHGyl1JBOl7bTFtRBoP5O/tmgjmZVfm7EII80
-         JnAQs36HQU1ZPW4DBT8RMdXx4Sg9e6ecQVcUXE/y89VN1ycfszC9ezb9MwRiQeeDYMxx
-         +MSj2kJ469ds4f+OFmPXMWEtEmJPvRYszkECpUIS8ShiYYtKGFjRtdYk3dkkiNAHECYQ
-         cUQoZben2LqqnfDVX2gSX51Ig4LKGCoJi53AtwAS/jRXRSGdtX/WdBE/0WZbRWV8VwPU
-         ZV/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVwZfifCtjYFZD2h4fOpI/TqOjuX1Nezqk53gh19LPXGJVXibDPX/8EYoLUWDkOn44oonN8+ePUhVao@vger.kernel.org, AJvYcCW015uwbVc4KT5yp9NB55rTQ2SJOdy+H5XV3zwZADQOQhJCCXavYgNm4GL8SYORxmMOXebzV9NN0aBD76CC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSZ7MBNwa9tpJbPKvBjUAupZKXgHi0r59TAincpwNLH28w73hx
-	GIAeY5UKZuI7HDtqm7gV7qYMT3WaNFsLp6O/j27dC10jV26wCzqH
-X-Gm-Gg: ASbGncuFa7bvFyXna4DEgSzhwJDYVpVEco67yoSs50f373Oft9SS0BBBE3qMtpt0QE0
-	iGmUT058irxPMwpZE+IBFDhNWtBeKu2TOM2MezIhBh+D4e+l6KEDaj9wha9Va3F9Rw4FwmKfPFe
-	r95hNw9iDQSrv55u2yyvYdALBqgNxFQsBHY/B8qDGoCXH75Opdbkq/5sZUcZopMtaNJe2YNZozc
-	u5KGr50ebjwE6K/xU/gYrdfBj56IyHQuQ06ulm85jiNnxehTF4xJaikLLegCM7rOvRV
-X-Google-Smtp-Source: AGHT+IFWciUZBXof1ClsDUD8qKNSVi/Is3uvZ/OcdGpT3wvFKtaZF6hzKy2H4IWFdlhfBLpQxrowkQ==
-X-Received: by 2002:a05:6602:1503:b0:834:d7b6:4fea with SMTP id ca18e2360f4ac-8499e4cf6admr3595656639f.6.1735619099986;
-        Mon, 30 Dec 2024 20:24:59 -0800 (PST)
-Received: from localhost.localdomain ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e698e2e985sm5286933173.38.2024.12.30.20.24.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2024 20:24:58 -0800 (PST)
-From: Mingwei Zheng <zmw12306@gmail.com>
-To: marex@denx.de
-Cc: antonio.borneo@foss.st.com,
-	linus.walleij@linaro.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	make24@iscas.ac.cn,
-	peng.fan@nxp.com,
-	fabien.dessenne@foss.st.com,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Mingwei Zheng <zmw12306@gmail.com>,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH v8] pinctrl: stm32: Add check for clk_enable()
-Date: Mon, 30 Dec 2024 23:27:56 -0500
-Message-Id: <20241231042756.3166495-1-zmw12306@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1735627939; c=relaxed/simple;
+	bh=xXo+KADoHaQGw0TGa0makbceYBpXZicUv3gnes5Lv18=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Sw71E4XGAPNKlKL8ztEXEX6iM9LZkpG1OgS7e3XFcYBbt9QC9iOfMA4XdDhPakw3UuG+vRClE6bAAnH3muwIk6vglMH6QWElOnD0+UDk9anlYiWCZPGFO/BXl/nfCRTubKBra+C40+0SMqiaXNEQZBUhIFzLJPu4uCbQRPcTwvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b=K3lPR81x; arc=none smtp.client-ip=35.89.44.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
+	by cmsmtp with ESMTPS
+	id SIBftgNh509RnSW6ztAWsE; Tue, 31 Dec 2024 06:52:17 +0000
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+	by cmsmtp with ESMTPS
+	id SW6wtBDB5lDL5SW6ytQnBA; Tue, 31 Dec 2024 06:52:17 +0000
+X-Authority-Analysis: v=2.4 cv=LLtgQoW9 c=1 sm=1 tr=0 ts=677394a1
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=kofhyyBXuK/oEhdxNjf66Q==:17
+ a=IkcTkHD0fZMA:10 a=RZcAm9yDv7YA:10 a=-pn6D5nKLtMA:10 a=VwQbUJbxAAAA:8
+ a=vU9dKmh3AAAA:8 a=pbaDQQ2OCVbHVibE1FAA:9 a=QEXdDO2ut3YA:10
+ a=rsP06fVo5MYu2ilr0aT5:22 a=ZCPYImcxYIQFgLOT52_G:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:To:Subject:Cc:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/u73Um15xmTGtKDdrsLX74+vHUKU4mr/x9iAVeor0mo=; b=K3lPR81xDLiKvK3ySdyCvcwLbY
+	hPfzer/gndUsOPPobdlGPFwW425FqTxM1LbXmmEdd39ZH7tVpB1cDqKsS/BeFmvFPIy8bPJYO7cod
+	Ggj276JFjTL68ubplbMrlYhAkk9QSTy967BtN9XxMYA/8UNgqPT4/lHNlxwELxN1loiXcV9tzomCm
+	I2m544HjvFsPY7NqbcCHWyrdDscHmZSUFZ0BqZW274jujFlDaqhVb48sFlz3dV6hwmO3zhCMTX+uT
+	TEOAJ33uXMMAjYm3pd8wxCsjGfXsOgw6siJdRFdT2f2C7tB3xXRTk1++0jOX/M4181lxnJGD/CqCc
+	fkZFU3ww==;
+Received: from [122.165.245.213] (port=60114 helo=[192.168.1.5])
+	by md-in-79.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <parthiban@linumiz.com>)
+	id 1tSW6h-003DJk-0W;
+	Tue, 31 Dec 2024 12:21:59 +0530
+Message-ID: <ed2ed7da-8c01-41c5-8215-d07892da3596@linumiz.com>
+Date: Tue, 31 Dec 2024 12:21:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: parthiban@linumiz.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH RESEND 00/22] Add support for A100/A133 display
+To: Andre Przywara <andre.przywara@arm.com>
+References: <20241227-a133-display-support-v1-0-abad35b3579c@linumiz.com>
+ <314b6bbe-613e-41a6-955e-50db6e11ef8e@linumiz.com>
+ <20241230141150.3d0c3ae6@donnerap.manchester.arm.com>
+Content-Language: en-US
+From: Parthiban <parthiban@linumiz.com>
+Organization: Linumiz
+In-Reply-To: <20241230141150.3d0c3ae6@donnerap.manchester.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 122.165.245.213
+X-Source-L: No
+X-Exim-ID: 1tSW6h-003DJk-0W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.5]) [122.165.245.213]:60114
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 2
+X-Org: HG=dishared_whb_net_legacy;ORG=directi;
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKQR2S5m7ia3I0WEyiBlgxDe6RKCiL6X3QM0drs6wNyflaD/Xd2Ijoox0v+EQQWO+1iz8YF3PmnwppMVpzEFXEJNwUsrkaxeGSJoVAGsV1TV8v1pwfit
+ U4bB8fsOCu4Jw4EyQS8/daBdam7Efd4OmYQrj+CjuxFZ87zKmFeTR2SD/CgOJ2nrgURuoqkHs+Qbp/qPp27NAdJCnH9jZvSiETo=
 
-Convert the driver to clk_bulk*() API.
-Add check for the return value of clk_bulk_enable() to catch
-the potential error.
+On 12/30/24 7:41 PM, Andre Przywara wrote:
+> On Fri, 27 Dec 2024 20:06:30 +0530
+> Parthiban <parthiban@linumiz.com> wrote:
+> 
+>> On 12/27/24 6:30 PM, Parthiban Nallathambi wrote:
+>>> This series depends on [1] for the eMMC/MMC controller to work and
+>>> [2] (lined up for 6.14) which adds support for the sram nodes and
+>>> display engine extends it's usage. Idea of this series to get initial
+>>> feedback and adjust, which will be rebased for 6.14 once [2] is merged.
+>>>
+>>> This patch series adds support for A133 display pipeline based on
+>>> LVDS. dt-bindigs are organized in the start and later with code
+>>> changes.
+>>>
+>>> PHY is shared between DSI and LVDS, so to control the PHY specific
+>>> to DSI/LVDS, phy_ops set_mode is introduced. To enable the DSI
+>>> using set_mode, analog control register MIPI Enable is used, which
+>>> may not be available for A31 (shares the same driver).
+>>>
+>>> Otherwise, A133 also got hidden independent display engine i.e
+>>> mixer + tcon top to handle parallel display. But this patch series
+>>> adds only support for the 1 mixer which is documented.
+>>>
+>>> [1]: https://lore.kernel.org/linux-sunxi/20241109003739.3440904-1-masterr3c0rd@epochal.quest/
+>>> [2]: https://lore.kernel.org/linux-sunxi/20241218-a100-syscon-v2-0-dae60b9ce192@epochal.quest/
+>>>
+>>> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>  
+>> Apologize for polluting with resend again. My internal mail server got blocked due to
+>> volume count, which resulted in incomplete series again.
+> 
+> I guess an incomplete send was the reason for the original resend? Please
+> note this at the top of the cover letter then, otherwise it's not easy
+> to see why you send something again. Something like:
+> 
+> *** Re-sent due to mail server not sending out the complete series. ***
+Yes I did add that using b4 as below, but "b4 send --resend" didn't pick the
+updated cover letter though. I will check with "--reflect" next time.
 
-Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested")
-Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
-Changelog:
+EDIT:
+Due to internal mail server issue, [3] missed few patches in series.
+So am resending to hope that it will get through this time. Sorry
+to pollute.
 
-v7 -> v8:
-1. Remove all previously registered GPIO chips before disabling 
-the clocks.
+[3]: https://lore.kernel.org/linux-sunxi/20241227-a133-display-support-v1-0-13b52f71fb14@linumiz.com
+> 
+> It also helps to split up the recipients, so that everyone gets the cover
+> letter, but only the respective subsystem maintainers get the patches
+> touching their subsystem. I would CC: the DT maintainers on every patch,
+> though.
+> It's a bit more complicated to set up, but keeps the noise down for those
+> large-ish series, for instance for the IOMMU people, who presumably have
+> little interest in DT or graphics code.
+The whole series based on b4 and the list is auto prepared using
+"b4 prep --auto-to-cc".
 
-v6 -> v7:
-1. Move clk_bulk_prepare_enable() before calling 
-stm32_gpiolib_register_bank().
+Sure, I will add the dt list in all the patches. Also many thanks for your
+review and feedback.
 
-v5 -> v6:
-1. Call devm_clk_bulk_get_all in stm32_pctl_probe().
+Thanks,
+Parthiban
 
-v4 -> v5:
-1. Move the clock handling from stm32_gpiolib_register_bank()
-and moving it to its caller.
-2. Call clk_bulk_prepare_enable() in stm32_pctl_probe() 
-and clk_bulk_disable_unprepare() for error.
-
-v3 -> v4:
-1. Add initialization for pctl->clks.
-2. Adjust alignment.
-
-v2 -> v3:
-
-1. Convert clk_disable_unprepare to clk_bulk_disable
-and clk_bulk_unprepare.
-
-v1 -> v2:
-
-1. Move int ret declaration into if block.
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 76 ++++++++++++---------------
- 1 file changed, 34 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 5b7fa77c1184..32c04391e2a0 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -86,7 +86,6 @@ struct stm32_pinctrl_group {
- 
- struct stm32_gpio_bank {
- 	void __iomem *base;
--	struct clk *clk;
- 	struct reset_control *rstc;
- 	spinlock_t lock;
- 	struct gpio_chip gpio_chip;
-@@ -108,6 +107,7 @@ struct stm32_pinctrl {
- 	unsigned ngroups;
- 	const char **grp_names;
- 	struct stm32_gpio_bank *banks;
-+	struct clk_bulk_data *clks;
- 	unsigned nbanks;
- 	const struct stm32_pinctrl_match_data *match_data;
- 	struct irq_domain	*domain;
-@@ -1308,12 +1308,6 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	if (IS_ERR(bank->base))
- 		return PTR_ERR(bank->base);
- 
--	err = clk_prepare_enable(bank->clk);
--	if (err) {
--		dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
--		return err;
--	}
--
- 	bank->gpio_chip = stm32_gpio_template;
- 
- 	fwnode_property_read_string(fwnode, "st,bank-name", &bank->gpio_chip.label);
-@@ -1360,26 +1354,21 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 							   bank->fwnode, &stm32_gpio_domain_ops,
- 							   bank);
- 
--		if (!bank->domain) {
--			err = -ENODEV;
--			goto err_clk;
--		}
-+		if (!bank->domain)
-+			return -ENODEV;
- 	}
- 
- 	names = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
--	if (!names) {
--		err = -ENOMEM;
--		goto err_clk;
--	}
-+	if (!names)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < npins; i++) {
- 		stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
- 		if (stm32_pin && stm32_pin->pin.name) {
- 			names[i] = devm_kasprintf(dev, GFP_KERNEL, "%s", stm32_pin->pin.name);
--			if (!names[i]) {
--				err = -ENOMEM;
--				goto err_clk;
--			}
-+			if (!names[i])
-+				return -ENOMEM;
-+
- 		} else {
- 			names[i] = NULL;
- 		}
-@@ -1390,15 +1379,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	err = gpiochip_add_data(&bank->gpio_chip, bank);
- 	if (err) {
- 		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_nr);
--		goto err_clk;
-+		return err;
- 	}
- 
- 	dev_info(dev, "%s bank added\n", bank->gpio_chip.label);
- 	return 0;
--
--err_clk:
--	clk_disable_unprepare(bank->clk);
--	return err;
- }
- 
- static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pdev)
-@@ -1621,6 +1606,10 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	if (!pctl->banks)
- 		return -ENOMEM;
- 
-+	ret = devm_clk_bulk_get_all(dev, &pctl->clks);
-+	if (ret < 0)
-+		return ret;
-+
- 	i = 0;
- 	for_each_gpiochip_node(dev, child) {
- 		struct stm32_gpio_bank *bank = &pctl->banks[i];
-@@ -1631,25 +1620,20 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 			fwnode_handle_put(child);
- 			return -EPROBE_DEFER;
- 		}
--
--		bank->clk = of_clk_get_by_name(np, NULL);
--		if (IS_ERR(bank->clk)) {
--			fwnode_handle_put(child);
--			return dev_err_probe(dev, PTR_ERR(bank->clk),
--					     "failed to get clk\n");
--		}
- 		i++;
- 	}
- 
-+	ret = clk_bulk_prepare_enable(banks, pctl->clks);
-+	if (ret) {
-+		dev_err(dev, "failed to prepare_enable clk (%d)\n", ret);
-+		return ret;
-+	}
-+
- 	for_each_gpiochip_node(dev, child) {
- 		ret = stm32_gpiolib_register_bank(pctl, child);
- 		if (ret) {
- 			fwnode_handle_put(child);
--
--			for (i = 0; i < pctl->nbanks; i++)
--				clk_disable_unprepare(pctl->banks[i].clk);
--
--			return ret;
-+			goto err_register;
- 		}
- 
- 		pctl->nbanks++;
-@@ -1658,6 +1642,16 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	dev_info(dev, "Pinctrl STM32 initialized\n");
- 
- 	return 0;
-+
-+err_register:
-+	for (i = 0; i < pctl->nbanks; i++) {
-+		struct stm32_gpio_bank *bank = &pctl->banks[i];
-+
-+		gpiochip_remove(&bank->gpio_chip);
-+	}
-+
-+	clk_bulk_disable_unprepare(banks, pctl->clks);
-+	return ret;
- }
- 
- static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
-@@ -1726,10 +1720,8 @@ static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
- int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
--	int i;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_disable(pctl->banks[i].clk);
-+	clk_bulk_disable(pctl->nbanks, pctl->clks);
- 
- 	return 0;
- }
-@@ -1738,10 +1730,11 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
- 	struct stm32_pinctrl_group *g = pctl->groups;
--	int i;
-+	int i, ret;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_enable(pctl->banks[i].clk);
-+	ret = clk_bulk_enable(pctl->nbanks, pctl->clks);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < pctl->ngroups; i++, g++)
- 		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
--- 
-2.34.1
+> 
+> Cheers,
+> Andre
+> 
+>> I will fix the mail server issue before resending the series. Sorry.
+>>
+>> Thanks,
+>> Parthiban
+>>
+>>
+> 
+> 
 
 
