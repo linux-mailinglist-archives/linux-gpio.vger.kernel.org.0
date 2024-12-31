@@ -1,132 +1,124 @@
-Return-Path: <linux-gpio+bounces-14374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14375-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 361C49FEFC8
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 14:31:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 722C79FF107
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 18:40:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D3313A27AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 13:31:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A0CD162403
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2024 17:40:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D51419CD1B;
-	Tue, 31 Dec 2024 13:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 312AB1ACED9;
+	Tue, 31 Dec 2024 17:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eivZJbKo"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="PukRBQ5w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D79194C6A
-	for <linux-gpio@vger.kernel.org>; Tue, 31 Dec 2024 13:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F201A4E77;
+	Tue, 31 Dec 2024 17:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735651873; cv=none; b=GgSAWuvtUO/gWwYR3VmAH4EfJNBziMLuo9JhRIW0BC4eZWBKfo9N2jmhrp5u5Cnpsel1rlgmAyA87coBbO6n4rcTa8PlE+6rRbeVXXqv2Mtu2uXCAutuBidj3z2ebCF4+Jf1DSh9cSLoZBgslFCh03KRwhwk+0ZdrCb4DdqK1d4=
+	t=1735666821; cv=none; b=LgHA5TROcw/Q6dlaYbixbyQZIGJRJ8plDZuZKF4GVn8rTa6gYPqT1vf05nY5CjyKq5o/CUFB3dSywjbm5/VnTFhBfFsOEk0KPBvK+XvfhPasEn0IAps1l8xjwN0xBWB830qA70lBjVSdRMV3uic/a+IPItEqBvj57euhrPn6UzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735651873; c=relaxed/simple;
-	bh=GWaUmjUBLoV7gRAqe9HG2nbEnwr2ZKSAXA9FTUCz2jE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pm0SnBHb6MujjmvW1dIdOnspVuV2Hf6YuaTJBDjlYBOfYmcE888iXfcIgvf2cwvFjvVqTXbKoXhXgt8kU4AaRRVqrIhn0HRjqF6+p+sp2tQweL75ukPZOa2eCZt25SU36MYkAntlRWmw3mShWfJXfVLkIOzPdyN6zFF55NYOLog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eivZJbKo; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436381876e2so14916595e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Dec 2024 05:31:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735651870; x=1736256670; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ztH4Cp+TWuFNo+T9DDOJEU6MuEj49P+cJhTlURsWNmM=;
-        b=eivZJbKoCngpjwewZCKJqCz1G/HfGQxiFWW7QsTCnWNntin6qJax2i5w8Crgb6FSi1
-         WZCheAk1hco9REQ+BFzC2fyK9dNp+hczZFsiOhPY41Jdj5plvgAe7AfEWamjLONRXHib
-         kyHM1GS1+DlXP7UZwzSwxWI1g7RrJYwfZjdC35ht9mKPYpCnFXWzfZ4LzTXznZLS0H/N
-         Swfvn0CWUKQATek8vLuxARKsjs32Lg4EbvWhB1hFp5kJQGLDzwfJNiUsDd/WfA7yu3f2
-         h5b6crOQDFSy/V5gZy3sHXEiPBBmVRgd3YrJTkRzTVCCddG7CyONAsshCsWaz2dJ5QF3
-         PzKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735651870; x=1736256670;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ztH4Cp+TWuFNo+T9DDOJEU6MuEj49P+cJhTlURsWNmM=;
-        b=cWM2Pr7tThrf6AgP/eeoe9UQyzOK8OBSsWhETVIUr1tmHKYU2r68ixpeJg/bp/IIP6
-         FyXuIxlJYjJcI3m8xH+V0QS0uUX+8WSQKRQG85xPOAca/9o9uYK3egE83+r38MyhgykA
-         Kgv+H7ek2NhTPeina9wJ7ZmrEUtpoHGzNQSKCyfvCOJF18Zr4M8sNB4hlO7Hm1Zlx9jo
-         t3GOifv1agpo9N0PUsjY+FXLU1E4tv9biZ91wRS7WWP3e0By2RVARUNAsanUjhycH3B3
-         mE3m0F7nEcc1gvsCSYcC+BLNp0ehRSFUIpFUcFjc0GLxdLQdXNrwYZvMA/TqZjNHWV8x
-         0Vkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmuTWDiLRlIgChzZIV5LM9ZhDkiJ8chzBnVC7swCC3Vg4pcI6AvhFrx6PgxziPJYscgHwSHWeesHDF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxjdp8bD2/3cfpz0wvJCWCUBAhMMWxcZ6cygFZFGCImTQwmoeYN
-	D/CZsdhDsJR+Lj9bx+EYhJWypWXh3JnQUQTQGrBw2vn+rusqS59JpNN5rDFt3Q8=
-X-Gm-Gg: ASbGncsFVbhxsPdGjdypX/00mL7E56q+Fc2IBq7ltctdBdfu6VAV4OamQyCeZccpuym
-	MAFkLkvWynliIu2uheidienYY6Offxc77Ao8iTEGADsAqml1p1h6Jk8V6CVsN2Q3H73NZt9sEMz
-	CoFtOJk8jP6vMRMnTwrwUJta2KT1j212pZOetC1yXjOopTKdPcIUASubrb5saWt5w6FsywxT/fn
-	JlCi4HwYX2sRNy2tKFtQfMnlcXGoRGRgCj2K5IA+e3+cyoPsS7pqIknb1xc2gDbbZeX+Us=
-X-Google-Smtp-Source: AGHT+IHi7+HrBv4JJTi9gtZfiRBlA81Co2JS3S9Apnra+hVXLLciWPy9sGqyudamix3ncbI9k0mZwA==
-X-Received: by 2002:a05:600c:1d1f:b0:42c:c0d8:bf49 with SMTP id 5b1f17b1804b1-43667921f0fmr138879685e9.0.1735651870488;
-        Tue, 31 Dec 2024 05:31:10 -0800 (PST)
-Received: from krzk-bin.. ([178.197.223.165])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4366127c515sm390740305e9.30.2024.12.31.05.31.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2024 05:31:10 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Sylwester Nawrocki <snawrocki@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: samsung: drivers for v6.14
-Date: Tue, 31 Dec 2024 14:31:05 +0100
-Message-ID: <20241231133106.136237-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1735666821; c=relaxed/simple;
+	bh=KPKlddnHotXsfufI2OrnfgpHlQTyrgzYueZmZmkYwHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZyiOZaz/YAtC2FvduQhoOwT0D+q7TjKD186PmyhO9uwnn7/nnqdXhlyn33V8cO9xNYWAS04Vq3VojnD4q0qfPa5S2H6ZHriixBFJ0S4VwGKkowVqfEitkZaEpkSAAdfLs6J459RZa1SVh/BWeVKgGXiWpKDWdTMWYoRRLj+Pm1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=PukRBQ5w; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id Sg5EtDHCrmOLwSg5Ht72J3; Tue, 31 Dec 2024 18:31:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1735666272;
+	bh=crc3HC0D3iciYfP0aty4FRSyX4CvPSjuN6ckre/pvrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=PukRBQ5w+GRkwN2A2/quDSXLhMNZ92h/i8Gw3rxE/nOtNOiZ62nwHfqOqP4vQOyJy
+	 81r/fDlZ4WqSDiObmUVvRo58b6xkoZ2gmFpWc8uZ+4WB3EFZg3MX4QoZGHCxtoJJVp
+	 bL00+ZvQMji4t4/QKbt7h/2lmRou07KamZmWEi81A4qsAGUHVTkOonuHig5JJinU0U
+	 ODVUzzdyIYHyu5FEQU8THXHtisoovhb57fJfXsExwJFs+x6rX46tBu2NmP4qQPkaI6
+	 89UuPkD4rY7Z/23550r7jjpqvtKseChC/JnXN2a/XezHm6dwVtkhgVx7elmtjBMmUk
+	 psvXQ/jDOoA1g==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 31 Dec 2024 18:31:12 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <86521cdf-1dc6-4b37-b356-160142674285@wanadoo.fr>
+Date: Tue, 31 Dec 2024 18:31:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] pwm: max7360: Add MAX7360 PWM support
+To: mathieu.dubois-briand@bootlin.com, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kamel Bouhara
+ <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
+ <20241223-mdb-max7360-support-v2-3-37a8d22c36ed@bootlin.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20241223-mdb-max7360-support-v2-3-37a8d22c36ed@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Le 23/12/2024 à 17:42, mathieu.dubois-briand@bootlin.com a écrit :
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> 
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 
-Fixes for old issues, not critical, so not worth current RC.
+...
 
-Best regards,
-Krzysztof
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct max7360_pwm *max7360_pwm;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return dev_err_probe(&pdev->dev, -ENODEV, "no parent device\n");
+> +
+> +	chip = devm_pwmchip_alloc(pdev->dev.parent, MAX7360_NUM_PWMS,
+> +				  sizeof(*max7360_pwm));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops = &max7360_pwm_ops;
+> +
+> +	max7360_pwm = to_max7360_pwm(chip);
+> +	max7360_pwm->parent = pdev->dev.parent;
+> +
+> +	max7360_pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!max7360_pwm->regmap)
+> +		return dev_err_probe(&pdev->dev, -ENODEV,
+> +				     "could not get parent regmap\n");
+> +
+> +	ret = devm_pwmchip_add(&pdev->dev, chip);
+> +	if (ret != 0)
+> +		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip");
 
+Missing return, or done on purpose?
 
-The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
-
-  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.14
-
-for you to fetch changes up to 0ebb1e9e1b12ddcb86105a14b59ccbed76b6ce00:
-
-  pinctrl: samsung: update child reference drop comment (2024-12-02 15:11:54 +0100)
-
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v6.14
-
-Two fixes for very old issues around error handling and also one
-cleanup.
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      pinctrl: samsung: Fix irq handling if an error occurs in exynos_irq_demux_eint16_31()
-
-Javier Carrasco (2):
-      pinctrl: samsung: fix fwnode refcount cleanup if platform_get_irq_optional() fails
-      pinctrl: samsung: update child reference drop comment
-
- drivers/pinctrl/samsung/pinctrl-exynos.c  | 3 ++-
- drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+> +
+> +	return 0;
+> +}
 
