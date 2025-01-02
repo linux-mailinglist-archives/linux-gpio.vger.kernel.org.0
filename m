@@ -1,146 +1,222 @@
-Return-Path: <linux-gpio+bounces-14411-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14412-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68B09FF9C7
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 14:22:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BCED9FFC89
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 18:07:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC4F01883BFF
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 13:22:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C897E3A24B5
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 17:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63BD3FE4;
-	Thu,  2 Jan 2025 13:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OsZQRYx7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6280915E5A6;
+	Thu,  2 Jan 2025 17:07:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD43D1E51D
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Jan 2025 13:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79A15C2C8;
+	Thu,  2 Jan 2025 17:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735824145; cv=none; b=P93WZz76cZOl8ZrqrplO8iDUKsO00ONoKsYoIoT0Tkfb/O+wDr7Fv4/CXGHMXjBrLJ36auoxtr9nPrCXxxdofvo5Pf+HcZYnm7BUWFn7OWrrYNePYpzKbI8FUb4bjbG6rkWGG89XkqHBYlj/81FpUb4UbmVXgtFIVI34fGUSK9I=
+	t=1735837634; cv=none; b=gxHjIB+7OKUT2Yo8X0SjbWZSsLXlEAeQx8YRDXdIQdfLcOn3Qtt2/K0HGPaoqE4G1TGpSEULPYlbRIW5BiiupNfjR/Bh2JuGhShJWDzkEqS6UQc2pdPoB1eMA2n067YwPnIc/0eI/9GqEsioOO/fKvx66v+Q2OzZ0PWRGUbM5Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735824145; c=relaxed/simple;
-	bh=1nZjAx0qWiO+zlxHWw7IbvRLA1FxJb150cahJ+mW1cE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=icpINM9y86ZZ6Eoz1s7G7hVzMIVtjYmdMLKA28WI+4Vap4djT4iDF5PMAMwhAObO4+rB8pOrGBDEmOd+TOTNUNPs6VEup2gaK3G8eZeUSfCi1WzRaVgwBlq+8VSyZYou4gtCv25ojXhdUZ6lFkol1b8j31pr61wb/2puSHv3mFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OsZQRYx7; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5401c52000dso13061368e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Jan 2025 05:22:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1735824142; x=1736428942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NCb/5qEQt2dGN4gAAGX/1SQFE6k5JsY2Am5vmOmvaKg=;
-        b=OsZQRYx75OPd+W5mge9xowXuoCG9q9T4W3CbG7ZmYLgkYmPHegZKZqllXMhOvjS53P
-         195PSeJjdsRQuFt+CjgQymxh/lSdWAwAwl75ED2+15GbHrmyWi+9ZwW5mAfpNXRBR/Hv
-         AGOOcuMVx9SAHJ+wSg7/sDJ2U8E35utYSNuHzAuAEqT8e7xnAMIwd9pAj8ITBik/zjm/
-         9bWhmAML8xs/LiBIGbnTBC/2u8e7v6qmuw4w4agX082ALqf5WnS6r3RxxVhxsBXwsHJz
-         wij3XMDyMrMmWX34Fe6E0jkQvdeXPy8Vi0BV4YyLpgO0Qm5uDPNNJm1YyM+rFrpkq6EF
-         i0SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735824142; x=1736428942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NCb/5qEQt2dGN4gAAGX/1SQFE6k5JsY2Am5vmOmvaKg=;
-        b=NmuZctXkfX9dPne1lFmgw9AL539IPTXO7Mriog2poJ+Cq7Jwcod2RN2hW9m2icmv6D
-         Iqn0sgSbZKs1qL7imZ7iTLrDvjOfow/DD81BYqDalZ+7HxXXNaADEexkUjwkOgMDetST
-         q5XhwqUpbqWZlPu5pZmfa5xjc3WPuzJ//Henxkzg0XKE7dG8hGG2k/vL2YRAQrl9lA6N
-         v03hXh6uGNCTobQMXVEmeq/BfdWx6ndQGSVerlryDjpsvnWV1Db79mZvRzgK+iYwGxU1
-         MhJmLnY7B7FZcVFuBjd+sphiCTFGIAxB8ZlDg9ViLQdEtjs+4T9MIqqkUMTjOXZ84BLi
-         oYTA==
-X-Gm-Message-State: AOJu0YyUb4a5jU7kVpywXJFFs1/9R5com6r/1sEfRHSxPpC5eIPWd5Qc
-	u/QMpAJlbMODre8txDXa+7+h+x5G1KntT+XJAs9YA8ABsOzJ2vjWdL16gMtXsfdUJssNwvhchGu
-	bGz2XmlLTkgu1nZeXEpoS/tnoG0NsFPCMeEnwX+dBTIIrZala
-X-Gm-Gg: ASbGncvssg2DM3rWn/7Xxhvs5CSLurZJ2B3f+cMqjZaRtjcC1CDWM6zh6X4Hn8ttJ2Z
-	E2CGyAv+JSTumTC/AoMNyg/tUmYBYN/P3zIW9MlMdXKUbDkiGijj5QZTPohIfkEWu5mtoyg==
-X-Google-Smtp-Source: AGHT+IG02EaAUVpJsOHMwTEH+b2K6tT1bt3clfiJIKzv/LjGwUySesFCX7G9NNyFO9MFVBk9zUY+AmvXi4iF1yH715o=
-X-Received: by 2002:a05:6512:114d:b0:53e:391c:e983 with SMTP id
- 2adb3069b0e04-542295229d3mr16123988e87.3.1735824141807; Thu, 02 Jan 2025
- 05:22:21 -0800 (PST)
+	s=arc-20240116; t=1735837634; c=relaxed/simple;
+	bh=6yUdC46m8RGq2qReGCelQ4EVCtuq5yBzpLoyphZO7Dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kab16SJVbJTRCkNHQYhc4nErx1lkNtBjN18/Vgi78NDLl7RY8AP4LdK4wF2rAMkrC1ft3pvJltTDcgflhxclkcQ5wnYm6CLcjQNl2PwiFfE63EByTyZ9Tyaa9XcukCAJ3PKYic4568uSyswXVl/amO1dmGAO61130vU6ouV774U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16B8411FB;
+	Thu,  2 Jan 2025 09:07:40 -0800 (PST)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FE8E3F673;
+	Thu,  2 Jan 2025 09:07:08 -0800 (PST)
+Date: Thu, 2 Jan 2025 17:06:57 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Aisheng Dong <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
+ scmi cpufreq
+Message-ID: <Z3bHsUMvajaOOhgO@pluto>
+References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
+ <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
+ <20241227151306.jh2oabc64xd54dms@bogus>
+ <Z3Qy-br-wVCLpo7Q@pluto>
+ <PAXPR04MB8459AB05EEC7107D500A826688142@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241224060819.1492472-1-koichiro.den@canonical.com> <20241224060819.1492472-3-koichiro.den@canonical.com>
-In-Reply-To: <20241224060819.1492472-3-koichiro.den@canonical.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 2 Jan 2025 14:22:10 +0100
-Message-ID: <CAMRc=MddJ4gguNs2bHyQH6pFnApv6whjGgGPZP0aMEZ6C8a6_w@mail.gmail.com>
-Subject: Re: [PATCH 2/4] gpio: virtuser: fix handling of multiple conn_ids in
- lookup table
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459AB05EEC7107D500A826688142@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-On Tue, Dec 24, 2024 at 7:08=E2=80=AFAM Koichiro Den <koichiro.den@canonica=
-l.com> wrote:
->
-> Creating a virtuser device via configfs with multiple conn_ids fails due
-> to incorrect indexing of lookup entries. Correct the indexing logic to
-> ensure proper functionality when multiple gpio_virtuser_lookup are
-> created.
->
-> Fixes: 91581c4b3f29 ("gpio: virtuser: new virtual testing driver for the =
-GPIO API")
-> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> ---
->  drivers/gpio/gpio-virtuser.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
-> index a81e15a4b807..c9700c1e4126 100644
-> --- a/drivers/gpio/gpio-virtuser.c
-> +++ b/drivers/gpio/gpio-virtuser.c
-> @@ -1410,7 +1410,7 @@ gpio_virtuser_make_lookup_table(struct gpio_virtuse=
-r_device *dev)
->         size_t num_entries =3D gpio_virtuser_get_lookup_count(dev);
->         struct gpio_virtuser_lookup_entry *entry;
->         struct gpio_virtuser_lookup *lookup;
-> -       unsigned int i =3D 0;
-> +       unsigned int i =3D 0, idx;
->
->         lockdep_assert_held(&dev->lock);
->
-> @@ -1424,12 +1424,12 @@ gpio_virtuser_make_lookup_table(struct gpio_virtu=
-ser_device *dev)
->                 return -ENOMEM;
->
->         list_for_each_entry(lookup, &dev->lookup_list, siblings) {
-> +               idx =3D 0;
->                 list_for_each_entry(entry, &lookup->entry_list, siblings)=
- {
-> -                       table->table[i] =3D
-> +                       table->table[i++] =3D
->                                 GPIO_LOOKUP_IDX(entry->key,
->                                                 entry->offset < 0 ? U16_M=
-AX : entry->offset,
-> -                                               lookup->con_id, i, entry-=
->flags);
-> -                       i++;
-> +                                               lookup->con_id, idx++, en=
-try->flags);
->                 }
+On Thu, Jan 02, 2025 at 07:38:06AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting
+> > fwnode for scmi cpufreq
+> > 
+> > On Fri, Dec 27, 2024 at 03:13:06PM +0000, Sudeep Holla wrote:
+> > > On Wed, Dec 25, 2024 at 04:20:44PM +0800, Peng Fan (OSS) wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > Two drivers scmi_cpufreq.c and scmi_perf_domain.c both use
+> > > > SCMI_PROTCOL_PERF protocol, but with different name, so two
+> > scmi
+> > > > devices will be created. But the fwnode->dev could only point to
+> > one device.
+> > > >
+> > > > If scmi cpufreq device created earlier, the fwnode->dev will point
+> > > > to the scmi cpufreq device. Then the fw_devlink will link
+> > > > performance domain user device(consumer) to the scmi cpufreq
+> > device(supplier).
+> > > > But actually the performance domain user device, such as GPU,
+> > should
+> > > > use the scmi perf device as supplier. Also if 'cpufreq.off=1' in
+> > > > bootargs, the GPU driver will defer probe always, because of the
+> > > > scmi cpufreq device not ready.
+> > > >
+> > > > Because for cpufreq, no need use fw_devlink. So bypass setting
+> > > > fwnode for scmi cpufreq device.
+> > > >
+> > 
+> > Hi,
+> > 
+> > > > Fixes: 96da4a99ce50 ("firmware: arm_scmi: Set fwnode for the
+> > > > scmi_device")
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > > >  drivers/firmware/arm_scmi/bus.c | 15 ++++++++++++++-
+> > > >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/firmware/arm_scmi/bus.c
+> > > > b/drivers/firmware/arm_scmi/bus.c index
+> > > >
+> > 157172a5f2b577ce4f04425f967f548230c1ebed..12190d4dabb654845
+> > 43044b442
+> > > > 4fbe3b67245466 100644
+> > > > --- a/drivers/firmware/arm_scmi/bus.c
+> > > > +++ b/drivers/firmware/arm_scmi/bus.c
+> > > > @@ -345,6 +345,19 @@ static void __scmi_device_destroy(struct
+> > scmi_device *scmi_dev)
+> > > >  	device_unregister(&scmi_dev->dev);
+> > > >  }
+> > > >
+> > > > +static int
+> > > > +__scmi_device_set_node(struct scmi_device *scmi_dev, struct
+> > device_node *np,
+> > > > +		       int protocol, const char *name) {
+> > > > +	/* cpufreq device does not need to be supplier from devlink
+> > perspective */
+> > > > +	if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name,
+> > "cpufreq"))
+> > > > +		return 0;
+> > > >
+> > >
+> > > This is just a assumption based on current implementation. What
+> > > happens if this is needed. Infact, it is used in the current
+> > > implementation to create a dummy clock provider, so for sure with
+> > this
+> > > change that will break IMO.
+> > 
+> > I agree with Sudeep on this: if you want to exclude some SCMI device
+> > from the fw_devlink handling to address the issues with multiple SCMI
+> > devices created on the same protocol nodes, cant we just flag this
+> > requirement here and avoid to call device_link_add in
+> > driver:scmi_set_handle(), instead of killing completely any possibility of
+> > referencing phandles (and having device_link_add failing as a
+> > consequence of having a NULL supplier)
+> > 
+> > i.e. something like:
+> > 
+> > @bus.c
+> > ------
+> > static int
+> > __scmi_device_set_node(struct scmi_device *scmi_dev, struct
+> > device_node *np,
+> > 		       int protocol, const char *name) {
+> > 	if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name,
+> > "cpufreq"))
+> > 		scmi_dev->avoid_devlink = true;
+> > 
+> > 	device_set_node(&scmi_dev->dev, of_fwnode_handle(np));
+> > 	....
+> > 
+> > 
+> > and @driver.c
+> > -------------
+> > 
+> > static void scmi_set_handle(struct scmi_device *scmi_dev) {
+> > 	scmi_dev->handle = scmi_handle_get(&scmi_dev->dev);
+> > 	if (scmi_dev->handle && !scmi_dev->avoid_devlink)
+> > 		scmi_device_link_add(&scmi_dev->dev, scmi_dev-
+> > >handle->dev); }
+> > 
+> > .... so that you can avoid fw_devlink BUT keep the device_node NON-
+> > null for the device.
+> > 
+> > This would mean also restoring the pre-existing explicit blacklisting in
+> > pinctrl-imx to avoid issues when pinctrl subsystem searches by
+> > device_node...
+> > 
+> > ..or I am missing something ?
+> 
+> link_ret = device_links_check_suppliers(dev); to check fw_devlink
+> is before "ret = driver_sysfs_add(dev);" which
+> issue bus notify.
+> 
+> The link is fw_devlink, the devlink is created in 'device_add'
+>         if (dev->fwnode && !dev->fwnode->dev) {                                                     
+>                 dev->fwnode->dev = dev;                                                             
+>                 fw_devlink_link_device(dev);                                                        
 >         }
->
-> --
-> 2.43.0
->
+> The check condition is fwnode.
+> 
+> I think scmi_dev->avoid_devlink not help here.
+> 
 
-Thanks, somehow that escaped my attention, I never needed to use two
-different con_ids.
+Ah right...my bad, the issue comes from the device_links created by
+fw_devlink indirectly while walking the phandles backrefs...still...
+...cant we keep the device_node reference while keep on dropping the
+fw_node as you did:
 
-Bart
+ 	if ((protocol == SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufreq")) {
+		scmi_dev->dev.of_node = np;
+ 		return 0;
+	}
+ 
+ 	device_set_node(&scmi_dev->dev, of_fwnode_handle(np));
+ 	....
+
+...so that the fw_devlink machinery is disabled but still we create a
+device with an underlying related device_node that can be referred in a
+phandle.
+
+I wonder also if it was not even more clean to DO initialize fw_devlink
+instead, BUT add some of the existent fw_devlink/devlink flags to inhibit
+all the checks...but I am not familiar with fw_devlink so much and I
+have not experimented in these regards...so I may have just said
+something unfeasible.
+
+Thanks,
+Cristian
+
 
