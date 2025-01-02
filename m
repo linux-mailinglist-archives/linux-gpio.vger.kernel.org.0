@@ -1,118 +1,135 @@
-Return-Path: <linux-gpio+bounces-14405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0AC89FF8A2
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 12:17:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA0409FF8DE
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 12:34:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D048B1882CDA
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 11:17:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A852B3A2DA5
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 11:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371AD19993D;
-	Thu,  2 Jan 2025 11:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E5AF1A83F4;
+	Thu,  2 Jan 2025 11:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qAgP656f"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="EM43osrj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F2476026;
-	Thu,  2 Jan 2025 11:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D01C1A8F80
+	for <linux-gpio@vger.kernel.org>; Thu,  2 Jan 2025 11:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735816660; cv=none; b=QorE9n5USnFRfre0kIxfHLihnDDtv3gsvN+9cUrLCj3mFVcc0Eo5MOnQXVpg8o9ENxPvR5kC/9ekQXy5W06RfWa19bkH7f+hK7I8tgjuhOhiOx9pswd7UfqWunn94NbihP/NhM/AnrMtDtTw7N2H1bvN9vnW5xkYmbiX2WCLKyM=
+	t=1735817677; cv=none; b=IQmQjC/5au0xfjmsT2KZkHCPY3HJKXhQIHpiitPTIBDisCQ4McC3YEUfKhA2k6ynIcu0feFJcuDZ6pxCPRo7tzEC+XpOGhzhvPwUd9TslcF9oU7cul0HiMgaqnPxC5Nfq4Hp0yAdK/nHhy+hBzLQ6YP4RIdKXOlSZZvBoBSIoYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735816660; c=relaxed/simple;
-	bh=0xItSIxShYGLizEiPeNAw2E0IXnl6XenbDcDTP5neiw=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AU5tuZBgksy9ehVSTUUT9AywSyu5EQlw8juQUgmPthinefCdsynqc5qTLTxLO7Ymv72G2Y0HiBprfWw+ijxDknHll9riXGxdtp3DxxDpiTvzsvCGEX/xJ8nzOwW7TwKHCN1KRIVgVoVlRrvLuNeC2XSl/Kpn8bHzscS1dehqK9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qAgP656f; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 502A1PJ6028659;
-	Thu, 2 Jan 2025 12:17:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	0xItSIxShYGLizEiPeNAw2E0IXnl6XenbDcDTP5neiw=; b=qAgP656flRQouaIy
-	0guIhoP9E0Yyyue5L0iYG8n4UuLuxjanolFg/wSdO26j4SsjxLTMlK9ogzVvvcmv
-	83n7ThZ02ljMPZUA4PgDL9axSQJN0ZYt4u6iJAhh/I2IrnEa4QB8zp34yzZEEzWb
-	Bp5NggKq2nUNSPwRIEwbUomKdhI1WWe6l5qVAw/6nuvXPRIrj6sO8etAI9nqagI7
-	IoUiKbTX5QJZKKQnr4dUL+xzM7A68ldBT34As8vH9366pjOd+v5UOCZVktj88Zhh
-	iAYJt5yJbio0PrXb2y020wSITZhhk2E6bLUZN+AQHGtT7T7eyA9ur0YTtzCoeHr6
-	n1M8PA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43vuwmbx6b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Jan 2025 12:17:18 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4DCB540048;
-	Thu,  2 Jan 2025 12:16:04 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7FA0627607A;
-	Thu,  2 Jan 2025 12:15:18 +0100 (CET)
-Received: from [192.168.8.15] (10.252.9.169) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 2 Jan
- 2025 12:15:17 +0100
-Message-ID: <01c0ce6be637669ed07cfaf0aa6ef27fed7b8b16.camel@foss.st.com>
-Subject: Re: [PATCH v5] pinctrl: stm32: Add check for clk_enable()
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Marek Vasut <marex@denx.de>, Mingwei Zheng <zmw12306@gmail.com>
-CC: <linus.walleij@linaro.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@foss.st.com>, <make24@iscas.ac.cn>,
-        <peng.fan@nxp.com>, <fabien.dessenne@foss.st.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Date: Thu, 2 Jan 2025 12:15:15 +0100
-In-Reply-To: <9745b3ee-ae89-4edb-8ff7-b20096dbe1de@denx.de>
-References: <20241215204014.4076659-1-zmw12306@gmail.com>
-	 <9745b3ee-ae89-4edb-8ff7-b20096dbe1de@denx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1735817677; c=relaxed/simple;
+	bh=xZk5juEQTblPG6mT+mOtIaKkOYTA19ECmOyXXFnW3A4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SFtQWqWCzyTYhzKjZAqmVeHM4LBGgRsH2c6C+XBGForMZqLvNRc1UF7VI1uewt/b2TMv74Iqj5b/RtSmkbSdw5LGo2tMLa+vm+2c0jr7aXnUa+Az5beSA33LF+bcOWfV0fW1CbdTAi4rhKCheZ2yXndH/ehFEYDKUNqKJWUAYTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=EM43osrj; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aa696d3901bso1258867666b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Jan 2025 03:34:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1735817674; x=1736422474; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IJuTW2/wmv0Cni895FL84+N2QJ2H1fwMgsWcI7DGnW4=;
+        b=EM43osrjrSM15bPSCvRGvVR7Qmi1JctNay6HwZePyE0XwIjVEsfPuCmPRoykfMBIVe
+         EFejN/PzJGRW99/Zl+4S/u+k+wRbuaArdWcBNRmtNvwhsSepcY2aly2Ef/O8m0ewNfVL
+         SEMVZsV5Xrry2p7etoQBMXACAdPGCxGHSh6n8D2fim7yt4ttWzlyrWcYpYpiTjruGklM
+         MxqgaIRCBJSpPvG5wHKSVKoeoaTZqc6bd07MHoI/3p7WizITXFj1M/sp+T/esZ1fLI8C
+         WlKyll5dP+DAApSR6ScRLLXlC1jPCvJOLKbFnio75pcv1ZaahlvrvnrKU/770e6ZKOLR
+         Q1rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735817674; x=1736422474;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IJuTW2/wmv0Cni895FL84+N2QJ2H1fwMgsWcI7DGnW4=;
+        b=CiBxzCsQRwdid6a2zVkCIGLLce7R1tMgrL7V0zkp7o0XKyEjc1dzUEaM+XVMbsudf5
+         Ds1+AFw7OZe1cmsoOGwMsi2buhkwGQWYSOHpbSh7uU+uMsofjUHzy4RgLfENZDjorZj/
+         jsS83OFUD1HHkLeJl5JYnwlN9LwAdvUobvd8N/uSOsPR2t7R36wqaHkkrLQXoX5Hmj+c
+         aZdEoAmRCSRhh6Z3V2Vy7nwCu1cinG+wL0K7vjImhyhXIuHFnF2Cl03SQNh/Qw2T8mhD
+         LQ+yG/p+/t2fckG9BO75BcQb+aWToO7xHOVQyP3rfrtd6m1kDAzmxZkw2fARWIv0nixF
+         kmlg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBZTtUw79KI7ossnq8DBe3aKB619PEwDCB8MNorAI1J3EAxQ0r9APjaXW7dFBtXUdUc1l9geVC0k+0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1C9K6PiYfuWswfKt+rd0zq+TDznEbDTjX+ZnOKbXE1f9uDKw5
+	S7O9bkOlkTk+Rzs5/AFa1EYyFfftVtn2KXAaxs62/Ta+FD4ltvZscrZdcSXtRDA=
+X-Gm-Gg: ASbGnctmPOtHi12MBerFBSoY6mcD0En8oGZI/7LaNCRx0Ee0uDa0K45L1xzOgt3DaVh
+	xC8jJK6HzCBTIUyFKXMra856h90kwZosfcvLkcIG7UI3JgqdTO1+0/66JWIoXvXKVjVDpOEE3U8
+	x14a0c2fKkDSg4POrBHKke/Q6cJ63/lfLcR1XY8zgrh2BBTMtjkuIpou8f3E8iwsLz/LQFQHXoK
+	cc82SOrXmgKnEjT3DgR5bBI5dJdsr8Gp6xlUcbmlRK4kyhdVQPGsZ4JhUAfcZNkLw==
+X-Google-Smtp-Source: AGHT+IGIlULUY5OVKXjFZRKGpQ2k3iKZcvVspZWtEdWr47v7SWAFqOFAYEk9fc6/cC6JF/XKlQkXSw==
+X-Received: by 2002:a17:907:97c5:b0:aac:431:4ee7 with SMTP id a640c23a62f3a-aac2883fe8fmr4247597966b.5.1735817674243;
+        Thu, 02 Jan 2025 03:34:34 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.102])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e830daasm1761964966b.13.2025.01.02.03.34.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2025 03:34:33 -0800 (PST)
+Message-ID: <9f2025e3-5ec6-4a7d-8a4f-d04b343da912@tuxon.dev>
+Date: Thu, 2 Jan 2025 13:34:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/13] Add support for SAMA7D65
+To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, mturquette@baylibre.com, sboyd@kernel.org,
+ arnd@arndb.de
+Cc: dharma.b@microchip.com, mihai.sain@microchip.com,
+ romain.sioen@microchip.com, varshini.rajendran@microchip.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+References: <cover.1734723585.git.Ryan.Wanner@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <cover.1734723585.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-T24gTW9uLCAyMDI0LTEyLTE2IGF0IDAwOjQxICswMTAwLCBNYXJlayBWYXN1dCB3cm90ZToKPiBP
-biAxMi8xNS8yNCA5OjQwIFBNLCBNaW5nd2VpIFpoZW5nIHdyb3RlOgo+IAo+IFsuLi5dCj4gCj4g
-PiBAQCAtMTYxNywxMCArMTYwMiwxOCBAQCBpbnQgc3RtMzJfcGN0bF9wcm9iZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBy
-ZXR1cm4gLUVJTlZBTDsKPiA+IMKgwqDCoMKgwqDCoMKgwqB9Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
-cGN0bC0+YmFua3MgPSBkZXZtX2tjYWxsb2MoZGV2LCBiYW5rcywgc2l6ZW9mKCpwY3RsLT5iYW5r
-cyksCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEdG
-UF9LRVJORUwpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBHRlBfS0VSTkVMKTsKPiAKPiBQbGVhc2UgZHJvcCB0
-aGlzIG9uZSBjaGFuZ2UuCj4gCj4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKCFwY3RsLT5iYW5rcykK
-PiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9NRU07Cj4gPiDC
-oCAKPiA+ICvCoMKgwqDCoMKgwqDCoHBjdGwtPmNsa3MgPSBkZXZtX2tjYWxsb2MoZGV2LCBiYW5r
-cywgc2l6ZW9mKCpwY3RsLT5jbGtzKSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEdGUF9LRVJORUwpOwo+ID4gK8Kg
-wqDCoMKgwqDCoMKgaWYgKCFwY3RsLT5jbGtzKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHJldHVybiAtRU5PTUVNOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgZm9yIChpID0g
-MDsgaSA8IGJhbmtzOyArK2kpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGN0
-bC0+Y2xrc1tpXS5pZCA9ICIiOwo+IAo+IElzIHRoaXMgXiBhc3NpZ25tZW50IG5lY2Vzc2FyeSA/
-IElmIHNvLCB3aHkgPwoKVGhlIGV4aXN0aW5nIERUcyBkb24ndCBoYXZlIHRoZSAnY2xvY2stbmFt
-ZXMnIHByb3BlcnR5LCB3aG9zZSB2YWx1ZSBpcyB1c2VkIHRvIHNldCB0aGlzIHN0cnVjdCBjbGtf
-YnVsa19kYXRhOjppZC4KV2l0aCB0aGlzIGZpZWxkIGtlcHQgYXQgTlVMTCwgdGhlIGVycm9yIG1l
-c3NhZ2VzIGluIGNsa19idWxrX2VuYWJsZSgpIGFuZCBzaW1pbGFyIHNob3VsZCBwcmludCAnKG51
-bGwpJy4KVGhpcyBsaW5lIHNldHMgaXQgdG8gZW1wdHkgc3RyaW5nLgpJIHdvdWxkIHNheSBpdCdz
-IG5vdCBuZWNlc3NhcnksIGJ1dCBJIGRvbid0IGtub3cgaWYgaXQncyBiZXR0ZXIgdG8gaGF2ZToK
-IkZhaWxlZCB0byBlbmFibGUgY2xrICcnOiAlZCIKb3IKIkZhaWxlZCB0byBlbmFibGUgY2xrICco
-bnVsbCknOiAlZCIKCkFudG9uaW8K
 
+
+On 20.12.2024 23:07, Ryan.Wanner@microchip.com wrote:
+
+[ ... ]
+
+>   dt-bindings: atmel-sysreg: add sama7d65 RAM and PIT
+
+Was already applied from v3
+
+>   dt-bindings: clocks: atmel,at91sam9x5-sckc: add sama7d65
+>   dt-bindings: clock: Add SAMA7D65 PMC compatible string
+
+Was already applied from v3
+
+>   dt-bindings: ARM: at91: Document Microchip SAMA7D65 Curiosity
+
+Was already applied from v3
+
+>   clk: at91: sama7d65: add sama7d65 pmc driver
+
+Applied to clk-microchip
+
+>   ARM: dts: at91: Add sama7d65 pinmux
+
+Was already applied from v3
+
+>   ARM: configs: at91: sama7: add new SoC config
+
+Was apready applied from v3
+
+>   ARM: at91: add new SoC sama7d65
+
+Applied to at91-soc, thanks!
 
