@@ -1,144 +1,168 @@
-Return-Path: <linux-gpio+bounces-14398-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14399-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BA5D9FF6A3
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 08:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17E5A9FF6A5
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 08:42:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8BCBB188235D
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 07:41:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 391131881E9C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 07:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F34B81925BA;
-	Thu,  2 Jan 2025 07:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0B921922F5;
+	Thu,  2 Jan 2025 07:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G9ObIS4E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YcdnZqh4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCCF1925AF
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Jan 2025 07:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81B718FDC8
+	for <linux-gpio@vger.kernel.org>; Thu,  2 Jan 2025 07:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735803689; cv=none; b=hqgLd4GZab+hPyBYtHhBvyJ4uG1k0eOjEVNWcoxbSAiRwTZrJRGAzGjnYa2heoMRiASBQ68MRmp322NxiIGu5U7cbzxsZv11+N8ShqbiZ7zXHlA9k6UjkeHIObXJoGJ3l774ocUKNdH8iM6tV8qZ9VNp9Sc1r9sp7DhJK9Wg1xc=
+	t=1735803769; cv=none; b=GUBIC/SmVQzwz+phXwJtFmlOR/mnTyA/A7bYFz4nzcSvl9FOotoGE7M6O7Ci8WAckUJcotiLmo256NJgNHzOP6/Q3kGYoPTTmCVwA5mS3Uy/GELW1bBs9yVgbWbkZYXvmlpEF5Cf8sgZGaL0TrIrTg4cxg6RknXiApgEQWpu2n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735803689; c=relaxed/simple;
-	bh=CHQHsx+uz3hESRXD7+egl2OXhjv5MBQ3u3ICrcGsVHY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VcPnStxCwB/dJlbJ3uy6KK7/FvqGG9MmwBEVB0bwmO4FHZqBavg4JCzMGui/Jln1lumLI7oKMQYGAofZeJz5HDoEpnIc6vcUDqzFhZHkDsILhlGIHq/uM8tbyW4EXLuRlgk4ksn1oH9aGAlmtDzX30usygdIsZeJnwxOtub87Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G9ObIS4E; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1735803769; c=relaxed/simple;
+	bh=PY0Cyd/SMqMC8ywRze4w6m0ebbBMS7X0GxAb+NOsVs4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=nxX42Fny3ds2jAvyyWHohuNP0+qQUMU85dPv2zM60khAzC9UTbfZtCvqwPlozKdFkQqaTB8l6k95TSe2gqpkH/7smdHQUnZ7JSjy00VyatzmAO6duReVV4hp07whQlQ6hHfl8Mmi//xsAF7hQLx8ytS+IHvmGQ8DVoFW1dlVM/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YcdnZqh4; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso112459166b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jan 2025 23:41:27 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso15906010a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jan 2025 23:42:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735803686; x=1736408486; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ll/68bWAfkYg5zPM5PvyPirtG4JTyZk33sG1Rba4DuE=;
-        b=G9ObIS4E1QR2l26TM3MGYD9Biqa/ODX/ceNJcUthcWYqgl/zgqZSGVXw9+UFV8sImX
-         ROoTGtgSODKGI+hdSe/wnLSGIFPxuRbt94MsFfVPnMB7+GihA6bVs20ym9JH9aPZ23tN
-         vwZEeLNcqkjXZRPO6W2q6J6+KlycNsMkLmmtK/Sh8raBKjQZgt7OCn/Rh8fdDNpiY0ho
-         aaICTSJnJ2juyLjhF1g0vmIZC/kQXjUdy91sSLsSVqdqoeoN9N4tiPqYItckUxHcHfRB
-         CqiX60Ey3Ecaw9Vrx4fPRDU+ZFrQtfBExSaJvLpNjSUtmhipbEwsRuYikaAusmKmo/6P
-         xcqQ==
+        d=linaro.org; s=google; t=1735803766; x=1736408566; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=63kZif/MabJuwlHsGTSrz4RdFnsQ3fJOZ/jEV6LSH5k=;
+        b=YcdnZqh4BywVGq11rFtLpWkUSRli/BBEiDXz+VfPmivG4yX3WcisbbVAUEH2u7Ozht
+         WYfy3d333Vfh1AkwOHd+UlwKA+rzwZ18lZGr0O0R1LlD9NNz9dzPB18O6ubUSGilqrNL
+         viqiJqkCHN8/XvT1+06wQsxV7F5+WL9BF15Mm1pKoW8ZE1oXp7/mGCC/qoTRK8VwmjdL
+         YldILXbZxYiCdJ4SzyNmLqAJnB067dTvIVeoog88nCrWePl8sN025+7AMTmkjl7wBWZ9
+         NP1ZPqQB+pisScdWm9PTdFF/qaUIN/Zqdqxio3Tcni+i/75QCYz4pt2keBraP+4oTMci
+         GE3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735803686; x=1736408486;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ll/68bWAfkYg5zPM5PvyPirtG4JTyZk33sG1Rba4DuE=;
-        b=Zf0eDanoOD22MgxkrBLFWZJkXeWRGSvqc1LQNKsbF3sEzsVB94WQT549UaM7LC//bh
-         s6r4SvBXfJPsAP6pL9juQM4E/E99mnBG0IixwAtmf2hlGMA4iBSxpGSqHDUPLJiIeVty
-         rZ1pxp4JkTCRumrzswyf7+M+X5DXaYvkd3ll1nML2CeH7fg7zWFqr5/d92Z/VGWfgvNN
-         OrAu43tk5QrHjaIb32QqfOVTUNYsqjqUD5E373mZTls2XeE+ztEPeOGYAetyek0JeoqH
-         TonX0fpDPZeLGnu9aH/rXaYRPVSghp0gkuobjNFHwL2LSXaGKWzxcFoihtwK13RpHEiS
-         CQKw==
-X-Gm-Message-State: AOJu0YwYvdlAlbcBUNB6zkXVV03K1tkS6gC1mAtdOY4SxTLKBspvAXvg
-	W6bxmBxJcM2iiOfrwXAVVDEaVjgvMLhz/Wi7cU88WSc9D5MaJ7YZjUnh3FDo3KZ5G1TPJTU+6JT
-	z
-X-Gm-Gg: ASbGnctqZfls8Lg6tcJIP46oWmRSceOQ0A8+oym5dlA1LWbN+5BOEy0xCzEl6ZhbEHP
-	1nmI9lN/zvqI46o+rUYJjfxWAzF2adETs/vyegyf2+SDIpC5tSKVk47iklWrmbpxqAHfFpuUrxy
-	cl7bAYpAUK+DfE17POr9wRSx5pCcL+M2BgsH79Wv/0loxD2px/3uqGG0u97lfBqcaQt89UCfTdl
-	VX8tvqPD5VRTZHdZU2ByHAymP0dqzy0yLmFkQQCiKadNS62Dmw=
-X-Google-Smtp-Source: AGHT+IFv2X3Yp/meEBWlFe5mc4ny38Pk/NTx6wA4HTDdlwyiDR4Rosh3V3RP6jPoiX6y2/lA6rMjaA==
-X-Received: by 2002:a17:907:1c93:b0:aa6:2b8b:20c6 with SMTP id a640c23a62f3a-aac2ad8a628mr3141531366b.20.1735803686398;
-        Wed, 01 Jan 2025 23:41:26 -0800 (PST)
-Received: from [192.168.1.127] ([2001:9e8:d593:2300::f39])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80701b2absm17785949a12.81.2025.01.01.23.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2025 23:41:25 -0800 (PST)
-From: Erik Schilling <erik.schilling@linaro.org>
-Date: Thu, 02 Jan 2025 08:40:53 +0100
-Subject: [PATCH libgpiod 3/3] bindings: rust: libpgiod: fix
- clippy::empty_line_after_doc_comments lint
+        d=1e100.net; s=20230601; t=1735803766; x=1736408566;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=63kZif/MabJuwlHsGTSrz4RdFnsQ3fJOZ/jEV6LSH5k=;
+        b=MGimOwc3j3F82F4PkZMWNLLXXNHEAP1fllNfsIW5HEuaFTVh/S8EanMNjJ5/AgD9+t
+         9ubGP4SWxVwuQPYzbknrOFppBw9q16lVZ+LvIA1UU+K7k759usKp5QqIFWUw3yqKWAnX
+         xMCGQq1hdoB5iVfjDkAC692vaZMl7VBo3A3x4gmAriU+hFrQVuJDJasWfWG2t+YSphHa
+         C+h+AHppXyXTvSPn0gX0o/x6nWSy7mI7Ty7ClR89fPa7VW0qR9fKS4cDwGEWTiYT4UHv
+         xMRayWGxs0lzEFxU0kD3A7C5GXUXVxJ2hQ2dAiL+O3VwjHug2vCy/nZ4uX63ERjhUpBk
+         Elpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXN3GKMLyWtBdX9nBllVXAgr4TULukfbe4t4zG4/z0hZVGKPFUygPFgyExBZDU/r1zJAIyaskw27eKZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT20Y9xI8BDsobuT8jhXxgBlBAf4KuJcTlp9+6MGxs+/1Fq3E/
+	ybypMKXdWu/19B1d7mdPNIFbfVWInSKOHHWoym7hwxGE/7BWgRflyxKJXTa8pfc=
+X-Gm-Gg: ASbGnctUnv2jXMk5HWX5ExrbQ4wv1TTon5srqhU9/QqC3o1y+PMHxysJsxxicOxsiNH
+	RzR346a39TLJYMIbl4LnLdoxXphXt5M7KglX+ovRHb/nXMl3lVuibk1DJ1EJy6xivxh1iG54fMC
+	Lf5lMnbtUl6qQxb0B8zm9VHku1BqwpUm9PdXJ8x0vJGVq371d2wVAbBShK0eF92LV51ow0l4tyw
+	lP0e80eBUxmj4GmyPzZrmE+oVMhlPfUcnUssSc07gA=
+X-Google-Smtp-Source: AGHT+IGfjlnBi/tDDTDtAT0CXX8aM4YI9aNoVweCauWEvisopKoblQHATQBlOYT4gXFS/JVUX+yG8A==
+X-Received: by 2002:a05:6402:13d0:b0:5d9:b8b:e369 with SMTP id 4fb4d7f45d1cf-5d90b8be3famr121281a12.27.1735803766107;
+        Wed, 01 Jan 2025 23:42:46 -0800 (PST)
+Received: from localhost ([2001:9e8:d593:2300::f39])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0eae4345sm1757877266b.84.2025.01.01.23.42.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jan 2025 23:42:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250102-lifetime-fix-v1-3-313a6bc806c4@linaro.org>
-References: <20250102-lifetime-fix-v1-0-313a6bc806c4@linaro.org>
-In-Reply-To: <20250102-lifetime-fix-v1-0-313a6bc806c4@linaro.org>
-To: Linux-GPIO <linux-gpio@vger.kernel.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Erik Schilling <erik.schilling@linaro.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Kent Gibson <warthog618@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735803680; l=1331;
- i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=CHQHsx+uz3hESRXD7+egl2OXhjv5MBQ3u3ICrcGsVHY=;
- b=n9yPxdkd4YeKpC6RwolGsnVAggW/gHZnBKu4N7C9icYglmYjAH1boR2U++/pQvZZPLrYtu0cA
- 6lfc34YAvxlCpMDwZFdEUC/tbjwkkaV/ozX9X4EVGgfMmPoCO2vE4Y+
-X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
- pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 02 Jan 2025 08:42:45 +0100
+Message-Id: <D6RF2X71A2QX.3D8K6N3TPKFPU@linaro.org>
+Cc: "Viresh Kumar" <viresh.kumar@linaro.org>, "open list:GPIO SUBSYSTEM"
+ <linux-gpio@vger.kernel.org>
+To: "Kent Gibson" <warthog618@gmail.com>, "Bartosz Golaszewski"
+ <brgl@bgdev.pl>
+From: "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: build warning in libgpiod rust bindings with rust 1.83
+X-Mailer: aerc 0.18.2
+References: <CAMRc=Me-QNmJ2L1K-gGzFtVZacsDiLsNUfh3QaWPdbVzyxUduA@mail.gmail.com> <20241221020102.GA45199@rigel>
+In-Reply-To: <20241221020102.GA45199@rigel>
 
-clippy warned about this:
+Sorry! I was mostly offline over the holidays.
 
-    warning: empty line after doc comment
-      --> libgpiod/src/event_buffer.rs:15:1
-       |
-    15 | / /// An iterator over the elements of type `Event`.
-    16 | |
-       | |_
-    17 |   pub struct Events<'a> {
-       |   --------------------- the comment documents this struct
-       |
-       = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_line_after_doc_comments
-       = note: `#[warn(clippy::empty_line_after_doc_comments)]` on by default
-       = help: if the empty line is unintentional remove it
----
- bindings/rust/libgpiod/src/event_buffer.rs | 1 -
- 1 file changed, 1 deletion(-)
+On Sat Dec 21, 2024 at 3:01 AM CET, Kent Gibson wrote:
+> On Fri, Dec 20, 2024 at 05:25:16PM +0100, Bartosz Golaszewski wrote:
+> > Hi Viresh et al,
+> >
+> > I noticed the following warning when building libgpiod rust bindings
+> > with rust 1.83:
+> >
+> > warning: elided lifetime has a name
+> >   --> libgpiod/src/line_request.rs:234:26
+> >    |
+> > 231 |     pub fn read_edge_events<'a>(
+> >    |                             -- lifetime `'a` declared here
+> > ...
+> > 234 |     ) -> Result<request::Events> {
+> >    |                          ^^^^^^ this elided lifetime gets resolved=
+ as `'a`
+> >    |
+> >    =3D note: `#[warn(elided_named_lifetimes)]` on by default
+> >
+> > Could you please take a look as I have no idea what that means?
+> >
+>
+> clippy is complaining that the lifetime of the returned object is implici=
+t.
+>
+> Try:
+>
+> --- a/bindings/rust/libgpiod/src/line_request.rs
+> +++ b/bindings/rust/libgpiod/src/line_request.rs
+> @@ -231,7 +231,7 @@ impl Request {
+>      pub fn read_edge_events<'a>(
+>          &'a self,
+>          buffer: &'a mut request::Buffer,
+> -    ) -> Result<request::Events> {
+> +    ) -> Result<request::Events<'a>> {
+>          buffer.read_edge_events(self)
+>      }
+>  }
+>
+> to make it explicit.
 
-diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-index 68d6e2f9a875e6b55a2df163cc99a0b9594f51ff..13fa7ba2c8870e0a325e251c073d6d73bb8c4374 100644
---- a/bindings/rust/libgpiod/src/event_buffer.rs
-+++ b/bindings/rust/libgpiod/src/event_buffer.rs
-@@ -9,15 +9,14 @@ use super::{
-     request::{Event, Request},
-     Error, OperationType, Result,
- };
- 
- /// Line edge events
- ///
- /// An iterator over the elements of type `Event`.
--
- pub struct Events<'a> {
-     buffer: &'a mut Buffer,
-     read_index: usize,
-     len: usize,
- }
- 
- impl<'a> Events<'a> {
+Thats overall correct. Though this is an actual compiler warning and not
+coming from clippy.
 
--- 
-2.47.1
+But looking in a bit more detail I think the 'a on &self is wrong:
+
+--- a/bindings/rust/libgpiod/src/line_request.rs
++++ b/bindings/rust/libgpiod/src/line_request.rs
+@@ -230,7 +230,7 @@ impl Request {
+     /// This function will block if no event was queued for the line.
+     pub fn read_edge_events<'a>(
+-        &'a self,
++        &self,
+         buffer: &'a mut request::Buffer,
+-    ) -> Result<request::Events> {
++    ) -> Result<request::Events<'a>> {
+         buffer.read_edge_events(self)
+     }
+
+The lifetime is needed because the returned event reference is linked
+to the lifetime of the buffer. With the &'a self the compiler will add a
+<'a> to the return value.
+
+But there is no dependency on the Request reference that extends longer
+than this function call. Instead we want to explicitly break up the tie
+to the &self and tie it to the buffer instead!
+
+Sent a patch: https://lore.kernel.org/r/20250102-lifetime-fix-v1-1-313a6bc8=
+06c4@linaro.org/
+
+- Erik
 
 
