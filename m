@@ -1,130 +1,102 @@
-Return-Path: <linux-gpio+bounces-14400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F8D9FF733
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 10:04:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 275CA9FF77E
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 10:35:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 868377A133F
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 09:04:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 493D41881BE8
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 09:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AF8195FE5;
-	Thu,  2 Jan 2025 09:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B1FC19E804;
+	Thu,  2 Jan 2025 09:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="to/xHWBC"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TiiAF6VW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out.smtpout.orange.fr (out-67.smtpout.orange.fr [193.252.22.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761333D68;
-	Thu,  2 Jan 2025 09:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A889119D086;
+	Thu,  2 Jan 2025 09:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735808663; cv=none; b=U97s+8IMLWPqow0ZbXopnoSIxNxubu5ZZzDq1+GQ+qn1EyAaCQEXeZrEJtL72dxcT51YTQMz0Qt/gkIX0wAkSUku9y+SKDlL7ghnupOg6Eiio9Ybb1PT/JpXH1tjNIQUrJ8O/OLKkT4GxXdrU7Zm6ZiionrosO1BPB2JsCDI/i0=
+	t=1735810497; cv=none; b=VCtCygLF2Ywu82xAlFegXzjt6hJrDinJ/rrl8Z+84IkNWvGJ4UOIwVDztOApK+dg3Et23UVCZ5KhPxPxWVLei9nunc9mfCkJgvcmB+pygTU0PxWV5+4lsm4x10gHdTXl8ZKhS7gw+FAVnjfKwzm7HDpUruoVHHFT1X3gxcyLXrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735808663; c=relaxed/simple;
-	bh=zghEmGBMc39NZbTdkZhdcwAKGgolK8rFK+hu7TmAzP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jkvJfshkbABCa1Gn+GcwnWt4K2GkIUAWzWpMkLMtU5Wncd9RcEVLQOBfNpFLKX4LsrftcjkwKkphISAZ6q03BiNrldNsn8icYlRhuIGGwKgb+Nzf329dshRk3qNQ6BgRyyAaWQdeWmg8nAfX9Qk/7YgrJThCo+lHR9FFltwiQhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=to/xHWBC; arc=none smtp.client-ip=193.252.22.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id TH7UtHho2v8EoTH7ZtzYi9; Thu, 02 Jan 2025 10:04:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1735808652;
-	bh=39nmaAXlbtXxpI44yh3hY9JN+QCD/Pdn8DUS9Q3fxLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=to/xHWBCunZGAPM3qDXj2KMhg9rv0ZHaJ9AdPbNG69HGM5jyjIW6/U9/+NxQuQcmq
-	 Mz7JqqlYDWn/3hGN4UpLLODWsA5EG1Vk3PmG47guje3kKKO/OSw/y+TO4L+xpgjk6D
-	 Iv2lUKbd5rCILZwyx1qtyf8cfzzaKbNomR52QHcdi5hwBYJhIAhRyx3jrRBafaTYEq
-	 4UjYgMVhsEVw64d3/dyX/ip/+RyUHACZ9swuz4zBl5SEg2BtYCcq9EYR0PzkAnU30m
-	 KAgb6kFrgroBU9ZgR8LiUYXpqyaEUZfydeyDcUAALrzeBWfQX2aAcSm++Ee20nwO92
-	 m78dDF/2o2tew==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 02 Jan 2025 10:04:12 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <1fdb892b-a1e9-4199-a538-d5b98f283096@wanadoo.fr>
-Date: Thu, 2 Jan 2025 18:03:55 +0900
+	s=arc-20240116; t=1735810497; c=relaxed/simple;
+	bh=c9rKsDiha9fDzMuda3rAARdYRSPn+SADWPbuqHkSGHc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=Dv3/cB1ywrYXmGbzfBFSsFyY4vv1bKd1G+Voh3kWvjtJtsyQEjrdtguUC6FNSa+Of2XI1/M1Yc6z4t8bhYR3VoSIKXiaQxFUJPWSjQEYSoDARPs7P2BRkN/wY9QtxdmnT2hl3mnI9vOYPzZaP/C/fNrzcoxiQZA90fZm9Wkkm3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TiiAF6VW; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8E22420003;
+	Thu,  2 Jan 2025 09:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1735810486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c9rKsDiha9fDzMuda3rAARdYRSPn+SADWPbuqHkSGHc=;
+	b=TiiAF6VWtPQVkrPAtL9JJV9BDB/vJsfLqzPNQtIO+wziyhGWec66ocbGpw17yolmpeoSED
+	U+eRaNjQGVGJ3catMlDCBujqSGIrbyG9XX7Dq7MzE2Nw233fIbckgh9aJTKNKoZPJc7bDb
+	7zqeQqkJftEc86xlkQsjsAAb0vJ//pfb+Ftekn7SIDBDo7hK6G6BWrsoUcRHo1LyquEHOF
+	izQEXGfej+M52B1712QJGKk72JWsIqpcNowKwmtTcTPK3lwfJeWYt30U0SNc5Z/vI0+nzR
+	ZlW0SRnp2WjEAJ3KvO8dN8Am5cBcZahPVxeVBIa8p644pc0rqtqEguJqzBx2nw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] can: Add Nuvoton NCT6694 CAN support
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, tmyu0@nuvoton.com,
- lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- andi.shyti@kernel.org, mkl@pengutronix.de, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
- jdelvare@suse.com, alexandre.belloni@bootlin.com
-References: <20241227095727.2401257-1-a0282524688@gmail.com>
- <20241227095727.2401257-5-a0282524688@gmail.com>
- <41f77d39-bce3-4e3b-98c8-f248b723a24c@wanadoo.fr>
- <CAOoeyxU0ex9_-a-uWda9hFbQa3MkFtNdAFan8C-899Z2pGYy7g@mail.gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAOoeyxU0ex9_-a-uWda9hFbQa3MkFtNdAFan8C-899Z2pGYy7g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 02 Jan 2025 10:34:45 +0100
+Message-Id: <D6RHGOGA0PL5.147OW8IBT7NKY@bootlin.com>
+Subject: Re: [PATCH v2 6/7] input: misc: Add support for MAX7360 rotary
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
+ <20241223-mdb-max7360-support-v2-6-37a8d22c36ed@bootlin.com>
+ <d3174dce-868c-4a42-9a5c-2b947ae88d18@wanadoo.fr>
+In-Reply-To: <d3174dce-868c-4a42-9a5c-2b947ae88d18@wanadoo.fr>
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 02/01/2025 at 14:40, Ming Yu wrote:
-> Dear Vincent,
-> 
-> Thank you for your comments,
-> 
-> Vincent Mailhol <mailhol.vincent@wanadoo.fr> 於 2024年12月30日 週一 下午1:56寫道：
->>
->>> +config CAN_NCT6694
->>> +     tristate "Nuvoton NCT6694 Socket CANfd support"
->>> +     depends on MFD_NCT6694
->>
->> I think it would be better to do a
->>
->>         select MFD_NCT6694
->>
->> here.
->>
->> Then, make MFD_NCT6694 an hidden configuration in a similar fashion as
->> MFD_CORE. Alone, CONFIG_MFD_NCT6694 does nothing, so better to hide it
->> from the end user.
->>
->> The comment also applies to the other patches.
->>
-> 
-> I understand, but I noticed that in the Kconfig files of other
-> modules, the dependency is written in the form:
-> config CAN_NCT6694
->         tristate "Nuvoton NCT6694 Socket CANfd support"
->         depends on MFD_NCT6694
-> (e.g. CAN_JANZ_ICAN3, GPIO_DLN2, ...)
-> Do you think changing it to select MFD_NCT6694 would be better?
+On Tue Dec 31, 2024 at 6:49 PM CET, Christophe JAILLET wrote:
+> Le 23/12/2024 =C3=A0 17:42, Mathieu Dubois-Briand a =C3=A9crit=C2=A0:
+> > Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+> > supporting a single rotary switch.
+> >=20
+> > Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
+>
+>
+> ...
+>
+>
+> CJ
 
-That's a fair point. Looking at the examples you provided, your approach
-makes sense. Please ignore my comment here.
+Hi Christophe,
 
+Thanks a lot for all your comments. I've integrated fixes for all of
+them, to be shipped with the next version.
 
-Yours sincerely,
-Vincent Mailhol
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
