@@ -1,203 +1,165 @@
-Return-Path: <linux-gpio+bounces-14414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14415-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E39C9FFC9B
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 18:09:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D202F9FFDB5
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 19:17:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5474F3A2655
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 17:08:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A3D01617B7
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 18:17:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8488A1714A1;
-	Thu,  2 Jan 2025 17:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366AE1B4120;
+	Thu,  2 Jan 2025 18:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGo/jLtU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MICIcgJE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60320155398
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Jan 2025 17:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D721118CC08;
+	Thu,  2 Jan 2025 18:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735837738; cv=none; b=K/2VtwQebhtO/7KNLCvgg1NN2t1IjfIPb/1fLhhwag2jwShQ27ql4PHx97gt0+TbRBni21/pfj4T3VFheAJjywzww/MBkLOdCRfKxHzeBM6asQCCxPAKQHVM0ySvcw7+jLwBrgOmgR/wgfkzdMliI/1IYwqwGhMd55X++rvgn8o=
+	t=1735841849; cv=none; b=tejf8ANPDkODnX5qKAwxoddqRjmL+U/bBqgcE2WCLc9DKZ/h3cbUBTkUIBFkgAQiW1c8b7eZAVTZ9bEPJvoWBTGUs5Y6h5AfR+wCd+Zuhxk07WajdfzFPufNnUOaZPk5GEIHNDri20bLLgE0xo/6/GQ47SMezGdYKOBXVzsYNcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735837738; c=relaxed/simple;
-	bh=+y5Qc+QXv7zgXZUMBU94HWxeMoxlUPT0oDvG4yRqs34=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=bHoeJINme0FDvnvL26Aj0/yxwNSMa1VjK/JypELtftCFvGvzfgfku1eWq3ABmD/jjI0f6iH4v17H0G2DWS+etT0pxKwEokU3KDyO71nUfYNTdBAdyLs+2fvWCGnGsvjWH0reK0YAX6w0AFXU2VW0gPbJBXL5ScP4gIDzEvcz5TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IGo/jLtU; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaee0b309adso1238137366b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Jan 2025 09:08:56 -0800 (PST)
+	s=arc-20240116; t=1735841849; c=relaxed/simple;
+	bh=56KyMH36kkt8ZIoRmqH2Gmj+Cu5YZ7EcdIm5YbsdOdw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2xT/nvuEADO0RvWJJH4j8WCy23wKR/GIRXzz781bHVD+P88COBUkjexiRsnV4QF6tqkM49m6h+ixhyDS4V3NjJD4WvLH7y9i06qpFzhxxaZ5zLE8Yln4hRQX+Oy1eGT6jj+j8VzkGJAXvcEVS9Vz+3Xrl61rZ9r2EdJ5XOFb4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MICIcgJE; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21619108a6bso147268015ad.3;
+        Thu, 02 Jan 2025 10:17:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735837735; x=1736442535; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t3MmTSLB1GLUjxn+FytU8mYbpXiYXxZJahOFpLuXkQM=;
-        b=IGo/jLtUkRVo8Aej7BSpT99SD0CqtyHUNKnlUWai4LWXYahxDUehOKGUqX5Wa6c9Bh
-         /ZZSPHZ6HdH+h0zqQHrdzz9M24KoYQQ9uGAIaKcpNKGzB26+GLgHP0ec6orleGY3cm4T
-         qjo4WfvvEfCwPo0VADubMXC2yeSmf8T6Xdqs+RDWJw69tzEae1eE9rmSYkzWHx0w/4Um
-         9zXSGRTT6X9ZwXsW1Dv/lNlFnDsP4yOaEv3YfQRlsDsOQv/re4OgR5vzixyTQMx63W0O
-         jgyf0mESeILmdXXU0xAIkZ0GdRnmvwg9KVLDoeV0ZRrQwdcsshfe0s83zPaaLne/sW57
-         8qEg==
+        d=gmail.com; s=20230601; t=1735841846; x=1736446646; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KcsYGT2jr/Cwk+E0bZ78S9/+2iE2NBGtFjNzzo30vdQ=;
+        b=MICIcgJEOZmP/BRp7qCOoAdpJq2JvRaMGK9YhSgx25d5Fz1yNQr0lePr4dUcAqtmoe
+         DnzwMvt+gZPenrtzo+yWWSQrcyeZiEBOwPGZ4+bcUs/FkUqh/d+3M3GgN7/IsPF3xbm1
+         5izJFNrVwAUrBomHVDRB8ezEwq3qcLWsRYU6oz+M5FNcGJInC/pUycCZu8HnF0lXTCNK
+         7Sz0okHfRD4rCPnt0BK3sGZdmwGqkgeS8+JibIQ5bxlsEcB8S93T4zIPWvyEvIGb4+qP
+         ztJxOQOJVnlYXMb6iBdK1JrFrDWSbRDdNHx8NSmnxTULHmZKUah1iHkvuVXzK4g0pTjg
+         R8Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735837735; x=1736442535;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=t3MmTSLB1GLUjxn+FytU8mYbpXiYXxZJahOFpLuXkQM=;
-        b=MHHQbjAMvUDdTA7vnEzTncPAyfFq3Ia5/hfjmRo9ovVDn498W4aywSfeu7DS+RtZ3r
-         QcweLW2CLhxi5ZwbO6IqsgFdS4fcKvkBDBqhHbKi93VNDXfCOPF6uqCrPNshZN5ERlyN
-         hSv4aS9dyAqXa1qYoh1LREm5+RAaPJ8afhUrhykOLX6lgaSvDdkPJHV8z9PQon9hgf1H
-         IE0d9qKqFfV3bl1j6pawv7acM3jXoIhWcQP7ShRVQjfS4yzXuNkXX0vcTmtb+4c4AvIu
-         LOlqmCWaQWflQdW81RywoAEBU7sehc0AgVzKap4kYj+sMXaNpkJR2spP/5k54yuJ4Iex
-         fYTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVz9s/XJpokmFr7CL9z1B1H9SVyIQHiOUfBdG52oy4ojwy/fpW77KE2YsY+mCz1MqhFOgvNo/5enT3r@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOsXdYIRlioYGyZYk3ZlRt3kIHhzFgmXnT4YfCFYaNR4jYPqrA
-	kEpFvBgH+NaAMWCT52OFRYVkhW7cfYz1PqqqLoKpdjz76+QnAn+s6nEv1x7rO3I=
-X-Gm-Gg: ASbGncvJ/xrnBrGcKby2x3NVllkxbUNgrZ8UU1FAEnCKEsN8wVU1bj8vzo6k+pvOE8w
-	X89m9I6tVfGVUo9FvGnmqqIBCI2jf2mwKaGIyjuCU07iBCUSE9Aiwhuc0OZJBBjEJbsZ4dp5UXM
-	YEJNFfTNVqC2lN5avdWQuPEF0nvKoiD/eZfRBtznPhBj1IWC4DN1wqXt6cgXG02yqRs219+zp8s
-	priy8Z4g5wI1bO5MJqvcmuQFWHKE1PUSrHhOe+Z49Y=
-X-Google-Smtp-Source: AGHT+IGalCo0RjrtWUZhSEBvUVdgwvZnAZU9mHrUPXJXon3dRVa1ZUTtcJRF0xOPppg6ZGet8iO+Dg==
-X-Received: by 2002:a17:907:7288:b0:aa6:a9fe:46dd with SMTP id a640c23a62f3a-aac346507b2mr3276921566b.38.1735837734609;
-        Thu, 02 Jan 2025 09:08:54 -0800 (PST)
-Received: from localhost ([2001:9e8:d59a:5d00::f39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e895d31sm1809052366b.61.2025.01.02.09.08.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2025 09:08:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1735841846; x=1736446646;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KcsYGT2jr/Cwk+E0bZ78S9/+2iE2NBGtFjNzzo30vdQ=;
+        b=eInCkkKDMgR921AAh66JotGpRnwnvUg6vkEHlZ2LUVO3s34qQb2pubweqVOLyccWh4
+         vlvBQifSpYnhUJE63d5snsDASS3MHaYVwHRvzrlEtl1ioVYC4SWb6eXBw9BgN4/WK2Ek
+         PE2imIe4GGyjvZnEWHHjLMtBhj5RpDu0HnB9LsvGOr7yi82q8piyubM+uZ7Gx8u1lOKZ
+         vvRxH0uQbCvVjTYzE9SI3hn++yW/2P+RQSj7D1Oxl9R0ARSILYBKDaoMY6BpOan/1/AB
+         J3LQnHePvBmK7xww6LW5wN6IUnXKfEnDs52Fo9eUjv17z5QuVu/NuNlPTSh12wq4BlF+
+         So8w==
+X-Forwarded-Encrypted: i=1; AJvYcCU+7DnxyDdnNRrLgP1uwUWjz7DbzFnKXttYC8+ZtRftIBu6TPamzCE2wqPMHXF5OXSorQKbF/P7h8AY@vger.kernel.org, AJvYcCU7T+A1o24m1ROEHUyARpwW/Y61mhNWvSH2OQdXDOwxnxXn/PQ7eKBf6snNQju/hffli74Dwikw5A==@vger.kernel.org, AJvYcCUK8hKIlL0DBPQRfZdVvmxWkzh78+jeHKE7blZH7ykl8llbbVVPWHkbqRw0eocB1tQQ1J9+HWW01A2xSg==@vger.kernel.org, AJvYcCUM5rODagHZnjEayEtNAOeO7HsEAqVxa4veY+UQARi1oKwBRxdbC//kKKajqefV4XS2lZQhylLLfApgQS/1/Un/Qw==@vger.kernel.org, AJvYcCUwE01hKDW0w05LoNMNRsTbnwHuadKTnlV8J4Tlf6os535/BkAzb+8TFUYnDzRXIZ7RvmR1le2EFxBYJhuj@vger.kernel.org, AJvYcCUzbiUpJqAHpF0ydPvklpRUhuP6o/ti1qc7m6Rn5xGRRCNZifiTN7B5esil/r9ErR7J3aMO9WLO6xEKsA2J@vger.kernel.org, AJvYcCV5ptXYlMNx11DGCIPpxQG0ewUhjSM3VkLOTeuFJV2n/IgtdsJQqDzLGMONr7CZI3xuSlW2AW1Q97uuS9E=@vger.kernel.org, AJvYcCVe0RhVbsTwk26oJ+WdqwcPCEzt2ez0uZ7vS4/Kq8ZoA12eJ3lHIvJLNtXMahXCIgdQN188X1/IF9mtrkE=@vger.kernel.org, AJvYcCW0SoZ9oYvZsy/wdDu3jEZxYOz4XRUcBDtTZxfrMKLRtW0ppO2tB3madZQkLvKPDpTG1Uk+oIuRCMASRqM=@vger.kernel.org, AJvYcCWB7W4X4GSh
+ 3t8/eTCGSjIwGN2D2TgAEwJpX7bT40z4cRMT01NCYriVjEhKX1+CCPQjMqHZuBNEwGmY@vger.kernel.org, AJvYcCWg8R9Fi9Fc6l7gV9YigTgovvV+MNb+ckzdNkmcZ6E7kDKkQWowlXt7l+dJA7iXDWzWsq2A8lAB6vfZgQw=@vger.kernel.org, AJvYcCWiWcIEv7SEhsqh6nU11fVOku+bmus81pvwdEweMA+IqHC7fmpjot8r6Vap5biuhm5hUnYx3HtqXJcOew==@vger.kernel.org, AJvYcCXMiMrq/r9TNkZvnqplrz7FP9EzDh/6rIluBINPPILGobc5SRWnPnUz9NDC6XK0jRvZUEM/Y+remTf6@vger.kernel.org, AJvYcCXo+/PkazWtQkFxb+tp/l5BuP5iRhETNdHBrG2/gbMbMjCi4SJXAmzjhOzffYAQoS7YV9FPaJ5i@vger.kernel.org, AJvYcCXtgfPuBAY+hhtHvmAFFq+FeXSxRhTFXxbuo/4GjgKQVhRnzCCnxVSs28t9G5ixMH/k2iBe1/SjarCg@vger.kernel.org, AJvYcCXzBZbs/h6iJ4wSCMvpaOCmWcAknkfX4ve87b9mJR9Kn/CpoH5nSYvaCfwQDV/EvrO3IZkEiZqy/gCFMw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+zheiDoesdeAkJ7MZDUyl6Hqdh9mOdiZvJJXex6L/g4aewH12
+	V8cRuOuX6fKt2PqIBo61qo+iBbiIerdaLsLbO54Dj3q3nCGvMKnqMHJpRg==
+X-Gm-Gg: ASbGncsNx027htFcKzSVIknAx/B+CFdENdF9nT8Whw9tqCIuuZwYljbQREgZF3wce9/
+	yN8H8bYffR3CHAlVMQHRZAOserfvR2FScwKrGyzwBm6/GO5d0NmOgvuk/TXjDED/0FM8cAjuvaA
+	BvcLz5fmp+1FttDU85GMmJLOxBvG+17gqEeXPyhwWcnFsbXII72YdzR5GvplQ1KJAyA8cuj0URq
+	zcVkItEcZm8Rbd9OEL4IhEJdnajXc7B4D5LOlH7h8vePghFUS/izV3PBgog
+X-Google-Smtp-Source: AGHT+IGUftEvjzgeM5eRfZJQJDkV96dM36oyQ3FUyp6cKSKianTN7IVhYXtyu9gI0RnxWUv7Qt/Czg==
+X-Received: by 2002:a05:6a21:78a5:b0:1e1:a0b6:9882 with SMTP id adf61e73a8af0-1e5e046331fmr66924613637.17.1735841845904;
+        Thu, 02 Jan 2025 10:17:25 -0800 (PST)
+Received: from smc-140338-bm01 ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad816305sm24535993b3a.31.2025.01.02.10.17.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 10:17:25 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 2 Jan 2025 18:17:22 +0000
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-serial@vger.kernel.org, netdev@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Alison Schofield <alison.schofield@intel.com>
+Subject: Re: [PATCH v4 01/11] libnvdimm: Replace namespace_match() with
+ device_find_child_by_name()
+Message-ID: <Z3bYMiOG0u3Jtv3h@smc-140338-bm01>
+References: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
+ <20241211-const_dfc_done-v4-1-583cc60329df@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 02 Jan 2025 18:08:53 +0100
-Message-Id: <D6RR4E5JUME3.21P9OBSIQH21V@linaro.org>
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- <linux-gpio@vger.kernel.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Vincent Fazio"
- <vfazio@xes-inc.com>, "Kent Gibson" <warthog618@gmail.com>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Phil Howard" <phil@gadgetoid.com>, "Viresh
- Kumar" <viresh.kumar@linaro.org>
-From: "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [PATCH libgpiod 5/5] doc: use sphinx in conjunction with
- doxygen
-X-Mailer: aerc 0.18.2
-References: <20241220-improve-docs-v1-0-799b86991dec@linaro.org>
- <20241220-improve-docs-v1-5-799b86991dec@linaro.org>
-In-Reply-To: <20241220-improve-docs-v1-5-799b86991dec@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241211-const_dfc_done-v4-1-583cc60329df@quicinc.com>
 
-On Fri Dec 20, 2024 at 5:46 PM CET, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Integrate the API documentation generated with doxygen for the core C
-> API and C++ bindings into sphinx using breathe. Integrate python docs
-> with sphinx using autodoc and the import mock feature which allows us to
-> avoid having to build the C extension.
->
-> Update configure.ac to check for sphinx-build in addition to doxygen and
-> make the main Makefile trigger a sphinx build on `make doc` (although
-> the docs can also be generated without starting the build system by
-> running: `sphinx-build ./doc/ doc/sphinx-output`).
->
-> Create a tree of .rst documents with branches for libgpiod, libgpiodcxx
-> and python APIs.
->
-> Move the introduction text from the main header into the relevant .rst
-> file.
->
-> Remove obsolete Doxyfile.in and create a static Doxygen under doc/ where
-> all the documentation now lives.
->
-> Update .gitignore where needed.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Dec 11, 2024 at 08:08:03AM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> Simplify nd_namespace_store() implementation by
+> using device_find_child_by_name().
+> 
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 > ---
->  .gitignore                    |   2 -
->  Doxyfile.in                   | 105 ------------------------------------=
-------
->  Makefile.am                   |  54 ++++++++++++++++++++--
->  README                        |  12 ++---
->  configure.ac                  |   8 +++-
->  doc/.gitignore                |   5 ++
->  doc/Doxyfile                  |  12 +++++
->  doc/conf.py                   |  63 +++++++++++++++++++++++++
->  doc/core_api.rst              |  58 +++++++++++++++++++++++
->  doc/core_chip_info.rst        |  11 +++++
->  doc/core_chips.rst            |  11 +++++
->  doc/core_edge_event.rst       |  11 +++++
->  doc/core_line_config.rst      |  11 +++++
->  doc/core_line_defs.rst        |  11 +++++
->  doc/core_line_info.rst        |  11 +++++
->  doc/core_line_request.rst     |  11 +++++
->  doc/core_line_settings.rst    |  11 +++++
->  doc/core_line_watch.rst       |  11 +++++
->  doc/core_misc.rst             |  11 +++++
->  doc/core_request_config.rst   |  11 +++++
->  doc/cpp_api.rst               |  33 +++++++++++++
->  doc/cpp_chip.rst              |  12 +++++
->  doc/cpp_chip_info.rst         |  12 +++++
->  doc/cpp_edge_event.rst        |  12 +++++
->  doc/cpp_edge_event_buffer.rst |  12 +++++
->  doc/cpp_exceptions.rst        |  18 ++++++++
->  doc/cpp_info_event.rst        |  12 +++++
->  doc/cpp_line.rst              |  24 ++++++++++
->  doc/cpp_line_config.rst       |  12 +++++
->  doc/cpp_line_info.rst         |  12 +++++
->  doc/cpp_line_request.rst      |  15 ++++++
->  doc/cpp_line_settings.rst     |  12 +++++
->  doc/cpp_misc.rst              |  16 +++++++
->  doc/cpp_request_config.rst    |  12 +++++
->  doc/index.rst                 |  28 +++++++++++
->  doc/python_api.rst            |  31 +++++++++++++
->  doc/python_chip.rst           |  12 +++++
->  doc/python_chip_info.rst      |  12 +++++
->  doc/python_edge_event.rst     |  12 +++++
->  doc/python_exceptions.rst     |  17 +++++++
->  doc/python_info_event.rst     |  12 +++++
->  doc/python_line.rst           |  27 +++++++++++
->  doc/python_line_info.rst      |  12 +++++
->  doc/python_line_request.rst   |  12 +++++
->  doc/python_line_settings.rst  |  12 +++++
->  doc/python_misc.rst           |  13 ++++++
->  include/gpiod.h               |  36 ---------------
->  sphinx/conf.py                |  68 ---------------------------
->  sphinx/contents.rst           |  24 ----------
->  49 files changed, 733 insertions(+), 249 deletions(-)
+>  drivers/nvdimm/claim.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
+> index 030dbde6b0882050c90fb8db106ec15b1baef7ca..9e84ab411564f9d5e7ceb687c6491562564552e3 100644
+> --- a/drivers/nvdimm/claim.c
+> +++ b/drivers/nvdimm/claim.c
+> @@ -67,13 +67,6 @@ bool nd_attach_ndns(struct device *dev, struct nd_namespace_common *attach,
+>  	return claimed;
+>  }
+>  
+> -static int namespace_match(struct device *dev, void *data)
+> -{
+> -	char *name = data;
+> -
+> -	return strcmp(name, dev_name(dev)) == 0;
+> -}
+> -
+>  static bool is_idle(struct device *dev, struct nd_namespace_common *ndns)
+>  {
+>  	struct nd_region *nd_region = to_nd_region(dev->parent);
+> @@ -168,7 +161,7 @@ ssize_t nd_namespace_store(struct device *dev,
+>  		goto out;
+>  	}
+>  
+> -	found = device_find_child(dev->parent, name, namespace_match);
+> +	found = device_find_child_by_name(dev->parent, name);
 
-Tested-by: Erik Schilling <erik.schilling@linaro.org>
+Looks good to me.
+Just one general question.
+The function device_find_child checks parent and parent->p, but
+device_find_child_by_name only checks parent although they share the
+code except the match function. Why that?
 
-> diff --git a/README b/README
-> index 80ad939..8d8fe79 100644
-> --- a/README
-> +++ b/README
-> @@ -333,14 +333,12 @@ bindings use the standard tests module layout and t=
-he #[test] attribute.
->  DOCUMENTATION
->  -------------
-> =20
-> -All API symbols exposed by the core C API and C++ bindings are documente=
-d with
-> -doxygen markup blocks. Doxygen documentation can be generated by executi=
-ng
-> -'make doc' given that the doxygen executable is available in the system.
-> +The project uses sphinx to automatically generate the documentation. The=
- system
-> +needs to provide doxygen and sphinx-build programs. With those in place,=
- the
-> +build can be invoked with 'make doc'. This generates documentation for t=
-he core
-> +C API as well as C++ and python bindings.
+Fan
+>  	if (!found) {
+>  		dev_dbg(dev, "'%s' not found under %s\n", name,
+>  				dev_name(dev->parent));
+> 
+> -- 
+> 2.34.1
+> 
 
-I also lacked the `breathe` package. Maybe worth mentioning here?
-
-- Erik
+-- 
+Fan Ni (From gmail)
 
