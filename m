@@ -1,349 +1,401 @@
-Return-Path: <linux-gpio+bounces-14389-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14390-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F279FF575
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 02:30:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 564149FF63E
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 06:25:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 543153A2581
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 01:30:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E7D61882194
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 05:25:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12874522F;
-	Thu,  2 Jan 2025 01:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E9D18E743;
+	Thu,  2 Jan 2025 05:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKaTAGMo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from 189.cn (ptr.189.cn [183.61.185.104])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B46E3C38;
-	Thu,  2 Jan 2025 01:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.104
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2177518C932;
+	Thu,  2 Jan 2025 05:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735781420; cv=none; b=Roo8frQI1VsZZgXfTN2LYirfG9qsfcipkRCD3f+3KX4ezKrUReVEUmS1SE5JInKuCLynShOg8BCHg/F/KYv7nKMdX9D3Teo3O9Of6R5hhAAA+T5dKkS18Kqqf02jlok/Y305XLu/bPwXtmyCtn4r0tacmJnJ9BER4pNVJ2yY+xE=
+	t=1735795540; cv=none; b=faQaCFko8wa1kSJao2GSXvGXk1t9oRZArILeYkE1FiZHgDbqO5agtWXdHfew53cWXEq5E2VJmK48Lae3oBh81t2Cb3vMR7C7b+EnBm3BpZkqEuOxf1aozkAL5UIxUeTpQdmOT72H9gI8bjrIoMNaFpJcqXGSBOuNzb1fjw/zarw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735781420; c=relaxed/simple;
-	bh=xDDgwG3j6nWpMTY27UZcR3A7l4IAPXtG5qKiWGEzskc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dh4CfcihUu2TPg4lEP/U1EOt9dRX1YZmFE27CvwX6Qv9OLdXxeKy874apRFlKS7gTEn+i+cPZc6uEPIR6U9jbPLr/ZCSBYXkSdI4eK6HP2wQNGbj7OvxwvVxwtEMLxNETjE4tgqGAxyrSgCL3xrE8O9CKILe39+NrVesgJi/+0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
-HMM_SOURCE_IP:10.158.243.220:56388.1357920828
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-123.150.8.42 (unknown [10.158.243.220])
-	by 189.cn (HERMES) with SMTP id 5DEEF10055C;
-	Thu,  2 Jan 2025 09:25:55 +0800 (CST)
-Received: from  ([123.150.8.42])
-	by gateway-153622-dep-5c5f88b874-f78lq with ESMTP id 4e6ba08f48154a32b125ee86f8cad7b1 for brgl@bgdev.pl;
-	Thu, 02 Jan 2025 09:25:56 CST
-X-Transaction-ID: 4e6ba08f48154a32b125ee86f8cad7b1
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.42
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-Message-ID: <ec5531e5-6fae-431e-bc58-73bb816d477d@189.cn>
-Date: Thu, 2 Jan 2025 09:25:53 +0800
+	s=arc-20240116; t=1735795540; c=relaxed/simple;
+	bh=Q//K6I4nzjNGxPD97emwJD2ctUE9Xa4kN8p9z0uID4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m7lgOPSC0TzI7VyJAP7Qg3/qfN4lOYZ1UDU7uL8NtWl0GHS+FdfU6wpElo2PgaJs1iQQgnun7tKyjWEiJmKo8Nsaha2whxd/rH+zw1gF4BBhuoqJQvK+rU2HfbFCwBeJcDeoHWF08FDunBojcrmFOzS3l9AAf4fypM78hR52RQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QKaTAGMo; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e39f43344c5so13619437276.1;
+        Wed, 01 Jan 2025 21:25:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735795538; x=1736400338; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZhBBFXFHI0KOxJH7yHdQXw7rf9jQtRYxyRgMxQ8lPqg=;
+        b=QKaTAGMowVIwqrpu/3UlscpUBpVhBVf12z9SPIhdbY2AVnNa2BCCoWQDDUypMrFh4b
+         zchI/zqBbZh+zmZcm5qF+RaAS4GdezKQCelTM4eqQa4Z7oSE2F/A9ltNbQC8qljERxSI
+         Su79iAHLT7Ww442ps0qKH2sdNsCns538ymYGWfZVb/zwFiyHs4kyN++vzsPw7bghssFh
+         Xf9iX8S8CBBKsxLBmAzdxoQJofafpfDXxire75xHfZDJYognAEz7SWW/XOJWX7zPYUyJ
+         B4CQlXiJGtLkDa4q30KB7njVAfagi9iPZWx4FfyiXa86zpICan8iMoCu+S07uQEWKKFe
+         sKxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735795538; x=1736400338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZhBBFXFHI0KOxJH7yHdQXw7rf9jQtRYxyRgMxQ8lPqg=;
+        b=vVVrlxquVPksmfv9zN0J5UdH7h3stKOha4bU01ipbL63qv4P4jSkl4e/kQXvRD1dUX
+         kJoAjpOp46pi2ob81V0+MQ2vQDbU5IZGbsrLK37i5qDmwbOP5Q9z4qamLV7DUxa3azum
+         VewbE/JOXXB+jnFluHqY0ra0g3lFs7n/LikFyr1DdXfthoiSvr9qKr4leWpX+WqUKVZ8
+         UKWunOcuM0WCvA/6asQmVTl/CxzhFdbRRO0qX7Q8wHe5NWhyBKiG4bcdV3fUtpCR5W6I
+         aDN/mboJBBGk8UMXwkg+0ph595Vhbqa2eTudUU11l+1zJfe5En7oL8Atf+tmu3DQgg3e
+         6H4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCdkoxBeRLhE5tKmssaSAdgI8c71sD4Sda5ay8igGCRWkHXaK6QKkp0VP3x4iRMHrjYe+6U16XV9RZKg==@vger.kernel.org, AJvYcCULxBdhuVMZERRIHS+1rsUSffXmI7SA3+6iOnFalNc1cKicK2iy8H2W+71d/lb6CpvFIGmlSOdgnqVW@vger.kernel.org, AJvYcCVh6TpRfmLBrHvV4kT0gRa6R7+ojc+jLWuXsnoyPgqkRrUFeaQrdFyqE3Zc9JYj4KJdSnRpTZbCpg/W@vger.kernel.org, AJvYcCVk9Kx3TjauuQwTJ6R8Ym2plrSTHphzTz6ms2fFYuePr92jH+ix0S212BNIbsPFu0B8qCpDHHwWkMM=@vger.kernel.org, AJvYcCWc43sM2/al97YNfJE7saH/1BdkUG5+t2t4CBwKvnf11lc1zJkuDrSt1KjXuHiC9XvgupD76V0X1XISJ81sAlA=@vger.kernel.org, AJvYcCWsXWNxJx1IPs06UuOrIQNs7AW6i7I2j9XuwxCWLNbeZm+qANXbY88qivoUR2Qo410qtK0w1IP8@vger.kernel.org, AJvYcCXiCB2r3k1Cy/Ot6z0u8aT9eyj88N1PKlpwxbS33jddYLkwz+4/iGZ5YmyXnKT777CuoE4To7y9SvJU458=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlL+I1i0k6ndsHj72e4PMDIasRJaYQs7YlVZlVZPEysJS7pMh8
+	T44bl+M9liGle65kX8Tmn9RQqtWnTNZ+rIBBztohLSvvpy73vN7XgrCjv6q2h6QltjxqTH0LbSF
+	dahTEzx/LrkLfCa6WfRE3rwGmJgM=
+X-Gm-Gg: ASbGncuYnHH1hA80ApkBAtRPkyhUNseHoWMuoUIQ/0XdXpD6IRSMlYA+fl0cl0Q6NQP
+	PCGT9sdHbX+5Ot8TFo5N4VWb/E0UQe8h/9YXV/mZLT5R2pEOmqjZA9sZYZxDgBDtVHUc6yMfd
+X-Google-Smtp-Source: AGHT+IHyaJPa9I6OK/q4UXT+geYapq2hPHXI5a5QZlIeSO9e/MEMKuiOWPqbgXQhPr74iHp0oMtLA4AFUQqi4/IZ2H8=
+X-Received: by 2002:a05:690c:6a83:b0:6ee:66d2:e738 with SMTP id
+ 00721157ae682-6f3f80cda17mr371878997b3.2.1735795537923; Wed, 01 Jan 2025
+ 21:25:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] drivers:gpio: introduce variants of gpiod_get_array
-To: brgl@bgdev.pl, linus.walleij@linaro.org, corbet@lwn.net
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20241217085302.835165-1-chensong_2000@189.cn>
-Content-Language: en-US
-From: Song Chen <chensong_2000@189.cn>
-In-Reply-To: <20241217085302.835165-1-chensong_2000@189.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20241227095727.2401257-1-a0282524688@gmail.com>
+ <20241227095727.2401257-5-a0282524688@gmail.com> <a25ea362-142f-4e27-8194-787d9829f607@wanadoo.fr>
+In-Reply-To: <a25ea362-142f-4e27-8194-787d9829f607@wanadoo.fr>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Thu, 2 Jan 2025 13:25:27 +0800
+Message-ID: <CAOoeyxW7=mLCcthVcQKnf7ikxEdQ09SzmOT5puD-AuhgpRHLkQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] can: Add Nuvoton NCT6694 CAN support
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, tmyu0@nuvoton.com, lee@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear maintainers,
+Dear Vincent,
 
-It has been a while after this patch was sent. I'm not sure if i 
-followed the idea suggested by Bart correctly, see [1], any comment will 
-be appreciated.
+Thank you for your comments,
+
+Vincent Mailhol <mailhol.vincent@wanadoo.fr> =E6=96=BC 2024=E5=B9=B412=E6=
+=9C=8827=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:59=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> > +
+> > +struct __packed nct6694_can_event_channel {
+> > +     u8 err;
+> > +     u8 status;
+> > +     u8 tx_evt;
+> > +     u8 rx_evt;
+> > +     u8 rec;
+> > +     u8 tec;
+> > +     u8 reserved[2];
+> > +};
+> > +
+> > +struct __packed nct6694_can_event {
+> > +     struct nct6694_can_event_channel evt_ch[2];
+> > +};
+>
+> Remove this intermediate struct...
+>
+> > +struct __packed nct6694_can_frame {
+> > +     u8 tag;
+> > +     u8 flag;
+> > +     u8 reserved;
+> > +     u8 length;
+> > +     __le32 id;
+> > +     u8 data[64];
+> > +};
+> > +
+> > +union nct6694_can_tx {
+> > +     struct nct6694_can_frame frame;
+> > +     struct nct6694_can_setting setting;
+> > +};
+> > +
+> > +union nct6694_can_rx {
+> > +     struct nct6694_can_event event;
+>
+> ... and instead, dircectly declare the array here:
+>
+>         struct nct6694_can_event event[2];
+>
+
+Okay! Fix it in v5.
+
+> > +     struct nct6694_can_frame frame;
+> > +     struct nct6694_can_information info;
+> > +};
+> > +
+> > +struct nct6694_can_priv {
+> > +     struct can_priv can;    /* must be the first member */
+> > +     struct can_rx_offload offload;
+> > +     struct net_device *ndev;
+> > +     struct nct6694 *nct6694;
+> > +     struct mutex lock;
+> > +     struct sk_buff *tx_skb;
+> > +     struct workqueue_struct *wq;
+> > +     struct work_struct tx_work;
+> > +     union nct6694_can_tx *tx;
+> > +     union nct6694_can_rx *rx;
+> > +     unsigned char can_idx;
+> > +     bool tx_busy;
+>
+> tx_busy is only set when the network queue is stopped, right? Isn't it
+> possible to use netif_tx_queue_stopped() instead of tx_busy?
+>
+
+Yes, I'll make the modification in v5.
+
+> > +};
+> > +
+...
+> > +static void nct6694_can_handle_state_change(struct net_device *ndev,
+> > +                                         u8 status)
+> > +{
+> > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > +     enum can_state new_state =3D priv->can.state;
+> > +     enum can_state rx_state, tx_state;
+> > +     struct can_berr_counter bec;
+> > +     struct can_frame *cf;
+> > +     struct sk_buff *skb;
+> > +
+> > +     nct6694_can_get_berr_counter(ndev, &bec);
+> > +     can_state_get_by_berr_counter(ndev, &bec, &tx_state, &rx_state);
+> > +
+> > +     if (status & NCT6694_CAN_EVT_STS_BUS_OFF)
+> > +             new_state =3D CAN_STATE_BUS_OFF;
+> > +     else if (status & NCT6694_CAN_EVT_STS_ERROR_PASSIVE)
+> > +             new_state =3D CAN_STATE_ERROR_PASSIVE;
+> > +     else if (status & NCT6694_CAN_EVT_STS_WARNING)
+> > +             new_state =3D CAN_STATE_ERROR_WARNING;
+
+The procedure for handling state changes is incorrect. I'll fix it in
+the next patch.
+(e.g.)
+switch (status) {
+case NCT6694_CAN_EVT_STS_BUS_OFF):
+    new_state =3D CAN_STATE_BUS_OFFF;
+    break;
+...
+}
+
+> > +
+> > +     /* state hasn't changed */
+> > +     if (new_state =3D=3D priv->can.state)
+> > +             return;
+> > +
+> > +     skb =3D alloc_can_err_skb(ndev, &cf);
+> > +
+> > +     tx_state =3D bec.txerr >=3D bec.rxerr ? new_state : 0;
+> > +     rx_state =3D bec.txerr <=3D bec.rxerr ? new_state : 0;
+> > +     can_change_state(ndev, cf, tx_state, rx_state);
+> > +
+> > +     if (new_state =3D=3D CAN_STATE_BUS_OFF) {
+> > +             can_bus_off(ndev);
+> > +     } else if (skb) {
+> > +             cf->can_id |=3D CAN_ERR_CNT;
+> > +             cf->data[6] =3D bec.txerr;
+> > +             cf->data[7] =3D bec.rxerr;
+> > +     }
+> > +
+> > +     nct6694_can_rx_offload(&priv->offload, skb);
+> > +}
+> > +
+> > +static void nct6694_handle_bus_err(struct net_device *ndev, u8 bus_err=
+)
+> > +{
+> > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > +     struct can_frame *cf;
+> > +     struct sk_buff *skb;
+> > +
+> > +     if (bus_err =3D=3D NCT6694_CAN_EVT_ERR_NO_ERROR)
+> > +             return;
+> > +
+> > +     priv->can.can_stats.bus_error++;
+> > +
+> > +     skb =3D alloc_can_err_skb(ndev, &cf);
+> > +     if (skb)
+> > +             cf->can_id |=3D CAN_ERR_PROT | CAN_ERR_BUSERROR;
+> > +
+> > +     switch (bus_err) {
+> > +     case NCT6694_CAN_EVT_ERR_CRC_ERROR:
+> > +             netdev_dbg(ndev, "CRC error\n");
+> > +             ndev->stats.rx_errors++;
+> > +             if (skb)
+> > +                     cf->data[3] |=3D CAN_ERR_PROT_LOC_CRC_SEQ;
+> > +             break;
+> > +
+> > +     case NCT6694_CAN_EVT_ERR_STUFF_ERROR:
+> > +             netdev_dbg(ndev, "Stuff error\n");
+> > +             ndev->stats.rx_errors++;
+> > +             if (skb)
+> > +                     cf->data[2] |=3D CAN_ERR_PROT_STUFF;
+> > +             break;
+> > +
+> > +     case NCT6694_CAN_EVT_ERR_ACK_ERROR:
+> > +             netdev_dbg(ndev, "Ack error\n");
+> > +             ndev->stats.tx_errors++;
+> > +             if (skb) {
+> > +                     cf->can_id |=3D CAN_ERR_ACK;
+> > +                     cf->data[2] |=3D CAN_ERR_PROT_TX;
+> > +             }
+> > +             break;
+> > +
+> > +     case NCT6694_CAN_EVT_ERR_FORM_ERROR:
+> > +             netdev_dbg(ndev, "Form error\n");
+> > +             ndev->stats.rx_errors++;
+> > +             if (skb)
+> > +                     cf->data[2] |=3D CAN_ERR_PROT_FORM;
+> > +             break;
+> > +
+> > +     case NCT6694_CAN_EVT_ERR_BIT_ERROR:
+> > +             netdev_dbg(ndev, "Bit error\n");
+> > +             ndev->stats.tx_errors++;
+> > +             if (skb)
+> > +                     cf->data[2] |=3D CAN_ERR_PROT_TX | CAN_ERR_PROT_B=
+IT;
+> > +             break;
+> > +
+> > +     default:
+> > +             break;
+> > +     }
+>
+> Aren't you missing something here? You are populating a can frame but
+> you are returning without using it.
+>
+
+Sorry for forgetting to process rx offload function, I'll add
+nct6694_can_rx_offload() here in the v5.
+
+> > +}
+> > +
+...
+> > +static void nct6694_can_tx(struct net_device *ndev)
+> > +{
+> > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > +     struct nct6694_can_frame *frame =3D &priv->tx->frame;
+> > +     struct net_device_stats *stats =3D &ndev->stats;
+> > +     struct sk_buff *skb =3D priv->tx_skb;
+> > +     struct canfd_frame *cfd;
+> > +     struct can_frame *cf;
+> > +     u32 txid;
+> > +     int err;
+> > +
+> > +     memset(frame, 0, sizeof(*frame));
+> > +
+> > +     if (priv->can_idx =3D=3D 0)
+> > +             frame->tag =3D NCT6694_CAN_FRAME_TAG_CAN0;
+> > +     else
+> > +             frame->tag =3D NCT6694_CAN_FRAME_TAG_CAN1;
+> > +
+> > +     if (can_is_canfd_skb(skb)) {
+> > +             cfd =3D (struct canfd_frame *)priv->tx_skb->data;
+> > +
+> > +             if (cfd->flags & CANFD_BRS)
+> > +                     frame->flag |=3D NCT6694_CAN_FRAME_FLAG_BRS;
+> > +
+> > +             if (cfd->can_id & CAN_EFF_FLAG) {
+> > +                     txid =3D cfd->can_id & CAN_EFF_MASK;
+> > +                     frame->flag |=3D NCT6694_CAN_FRAME_FLAG_EFF;
+> > +             } else {
+> > +                     txid =3D cfd->can_id & CAN_SFF_MASK;
+> > +             }
+> > +             frame->flag |=3D NCT6694_CAN_FRAME_FLAG_FD;
+> > +             frame->id =3D cpu_to_le32(txid);
+> > +             frame->length =3D cfd->len;
+> > +
+> > +             memcpy(frame->data, cfd->data, cfd->len);
+> > +     } else {
+> > +             cf =3D (struct can_frame *)priv->tx_skb->data;
+> > +
+> > +             if (cf->can_id & CAN_RTR_FLAG)
+> > +                     frame->flag |=3D NCT6694_CAN_FRAME_FLAG_RTR;
+> > +
+> > +             if (cf->can_id & CAN_EFF_FLAG) {
+> > +                     txid =3D cf->can_id & CAN_EFF_MASK;
+> > +                     frame->flag |=3D NCT6694_CAN_FRAME_FLAG_EFF;
+> > +             } else {
+> > +                     txid =3D cf->can_id & CAN_SFF_MASK;
+> > +             }
+> > +             frame->id =3D cpu_to_le32(txid);
+> > +             frame->length =3D cf->len;
+> > +
+> > +             memcpy(frame->data, cf->data, cf->len);
+>
+> Don't copy the payload if the frame is a remote frame.
+>
+
+Fix it in the v5.
+
+> > +             }
+>         ^^^^^^^^
+>
+> Bad indentation. Did you run script/checkpatch.pl before sending?
+>
+
+I already ran the script, but I'm not sure why it didn't report this error.
+I'll fix it in the next patch.
+
+> > +     err =3D nct6694_write_msg(priv->nct6694, NCT6694_CAN_MOD,
+> > +                             NCT6694_CAN_DELIVER(1),
+> > +                             sizeof(*frame),
+> > +                             frame);
+> > +     if (err) {
+> > +             netdev_err(ndev, "%s: Tx FIFO full!\n", __func__);
+> > +             can_free_echo_skb(ndev, 0, NULL);
+> > +             stats->tx_dropped++;
+> > +             stats->tx_errors++;
+> > +             netif_wake_queue(ndev);
+> > +     }
+> > +}
+> > +
+...
+> > +static int nct6694_can_set_mode(struct net_device *ndev, enum can_mode=
+ mode)
+> > +{
+> > +     switch (mode) {
+> > +     case CAN_MODE_START:
+> > +             nct6694_can_clean(ndev);
+> > +             nct6694_can_start(ndev);
+> > +             netif_wake_queue(ndev);
+> > +             break;
+>
+> Nitpick: here, directly return 0...
+>
+> > +     default:
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +
+> > +     return 0;
+>
+> ... and then remove that line.
+>
+
+Fix it in v5.
+
+> > +}
+> > +
 
 Best regards,
-
-Song
-
-[1]:https://lore.kernel.org/lkml/CAMRc=MfpwuMh-MH1UEHKky09iAs4g9=iGFPptARXzoZrVS8hdQ@mail.gmail.com/
-
-在 2024/12/17 16:53, Song Chen 写道:
-> This patch introduces another two variants of gpiod_get_array,
-> fwnode_gpiod_get_array and devm_fwnode_gpiod_get_array, to
-> return GPIO descriptor array to comsumers.
-> 
-> Unlike gpiod_get_array, which calls dev_fwnode(dev) to get
-> firmware node in gpiod_get_index, new variants allow consumers
-> to pass firmware node by themselves.
-> 
-> It's applicable to below circumstance:
-> 
-> fwnode_for_each_child_node(fw_parent, fw_child)
-> or for_each_child_of_node
-> 	struct gpio_descs *array = devm_fwnode_gpiod_get_array(
-> 				dev, fw_child,...).
-> 	or fwnode_gpiod_get_array
-> 
-> Signed-off-by: Song Chen <chensong_2000@189.cn>
-> ---
->   drivers/gpio/gpiolib-devres.c | 43 ++++++++++++++++
->   drivers/gpio/gpiolib.c        | 96 +++++++++++++++++++++++++++++------
->   include/linux/gpio/consumer.h | 28 ++++++++++
->   3 files changed, 151 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-> index 08205f355ceb..f8b2a3fe02ba 100644
-> --- a/drivers/gpio/gpiolib-devres.c
-> +++ b/drivers/gpio/gpiolib-devres.c
-> @@ -192,6 +192,49 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
->   }
->   EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index);
->   
-> +/**
-> + * devm_fwnode_gpiod_get_array - Resource-managed gpiod_get_array_by_fwnode()
-> + * @dev:	GPIO consumer
-> + * @fwnode:	firmware node containing GPIO reference
-> + * @con_id:	function within the GPIO consumer
-> + * @flags:	optional GPIO initialization flags
-> + *
-> + * Managed gpiod_get_array_by_fwnode(). GPIO descriptors returned from this function are
-> + * automatically disposed on driver detach. See gpiod_get_array_by_fwnode() for detailed
-> + * information about behavior and return values.
-> + *
-> + * Returns:
-> + * The GPIO descriptors corresponding to the function @con_id of device
-> + * dev, %-ENOENT if no GPIO has been assigned to the requested function,
-> + * or another IS_ERR() code if an error occurred while trying to acquire
-> + * the GPIOs.
-> + */
-> +struct gpio_descs *devm_fwnode_gpiod_get_array(struct device *dev,
-> +							 struct fwnode_handle *fwnode,
-> +						     const char *con_id,
-> +						     enum gpiod_flags flags)
-> +{
-> +	struct gpio_descs **dr;
-> +	struct gpio_descs *descs;
-> +
-> +	dr = devres_alloc(devm_gpiod_release_array,
-> +			  sizeof(struct gpio_descs *), GFP_KERNEL);
-> +	if (!dr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	descs = gpiod_get_array_by_fwnode(dev, fwnode, con_id, flags);
-> +	if (IS_ERR(descs)) {
-> +		devres_free(dr);
-> +		return descs;
-> +	}
-> +
-> +	*dr = descs;
-> +	devres_add(dev, dr);
-> +
-> +	return descs;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_array);
-> +
->   /**
->    * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
->    * @dev: GPIO consumer
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 679ed764cb14..dbb39e6bb568 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4469,6 +4469,33 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
->   }
->   EXPORT_SYMBOL_GPL(fwnode_gpiod_get_index);
->   
-> +/**
-> + * fwnode_gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
-> + * @fwnode:	handle of the firmware node
-> + * @con_id:	function within the GPIO consumer
-> + * @flags:	GPIO initialization flags
-> + *
-> + * This function can be used for drivers that get their configuration
-> + * from opaque firmware.
-> + *
-> + * The function properly finds the corresponding GPIOs using whatever is the
-> + * underlying firmware interface and then makes sure that the GPIO
-> + * descriptors are requested before they are returned to the caller.
-> + *
-> + * Returns:
-> + * On successful request the GPIO descriptors are configured in accordance with
-> + * provided @flags.
-> + *
-> + * In case of error an ERR_PTR() is returned.
-> + */
-> +struct gpio_descs *fwnode_gpiod_get_array(struct fwnode_handle *fwnode,
-> +					 const char *con_id,
-> +					 enum gpiod_flags flags)
-> +{
-> +	return gpiod_get_array_by_fwnode(NULL, fwnode, con_id, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(fwnode_gpiod_get_array);
-> +
->   /**
->    * gpiod_count - return the number of GPIOs associated with a device / function
->    * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-> @@ -4731,21 +4758,8 @@ static void gpiochip_free_hogs(struct gpio_chip *gc)
->   		gpiochip_free_own_desc(desc);
->   }
->   
-> -/**
-> - * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
-> - * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-> - * @con_id:	function within the GPIO consumer
-> - * @flags:	optional GPIO initialization flags
-> - *
-> - * This function acquires all the GPIOs defined under a given function.
-> - *
-> - * Returns:
-> - * The GPIO descriptors corresponding to the function @con_id of device
-> - * dev, -ENOENT if no GPIO has been assigned to the requested function,
-> - * or another IS_ERR() code if an error occurred while trying to acquire
-> - * the GPIOs.
-> - */
-> -struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
-> +static struct gpio_descs *__gpiod_get_array(struct device *dev,
-> +						struct fwnode_handle *fwnode,
->   						const char *con_id,
->   						enum gpiod_flags flags)
->   {
-> @@ -4766,7 +4780,12 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
->   		return ERR_PTR(-ENOMEM);
->   
->   	for (descs->ndescs = 0; descs->ndescs < count; descs->ndescs++) {
-> -		desc = gpiod_get_index(dev, con_id, descs->ndescs, flags);
-> +		if (fwnode)
-> +			desc = gpiod_find_and_request(dev, fwnode, con_id, descs->ndescs,
-> +					  flags, NULL, false);
-> +		else
-> +			desc = gpiod_get_index(dev, con_id, descs->ndescs, flags);
-> +
->   		if (IS_ERR(desc)) {
->   			gpiod_put_array(descs);
->   			return ERR_CAST(desc);
-> @@ -4858,8 +4877,53 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
->   			*array_info->invert_mask);
->   	return descs;
->   }
-> +
-> +/**
-> + * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
-> + * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-> + * @con_id:	function within the GPIO consumer
-> + * @flags:	optional GPIO initialization flags
-> + *
-> + * This function acquires all the GPIOs defined under a given function.
-> + *
-> + * Returns:
-> + * The GPIO descriptors corresponding to the function @con_id of device
-> + * dev, -ENOENT if no GPIO has been assigned to the requested function,
-> + * or another IS_ERR() code if an error occurred while trying to acquire
-> + * the GPIOs.
-> + */
-> +struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
-> +						const char *con_id,
-> +						enum gpiod_flags flags)
-> +{
-> +	return __gpiod_get_array(dev, NULL, con_id, flags);
-> +}
->   EXPORT_SYMBOL_GPL(gpiod_get_array);
->   
-> +/**
-> + * gpiod_get_array_by_fwnode - obtain multiple GPIOs from a multi-index GPIO function
-> + * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-> + * @fwnode: Firmware node to lookup
-> + * @con_id:	function within the GPIO consumer
-> + * @flags:	optional GPIO initialization flags
-> + *
-> + * This function acquires all the GPIOs defined under a given function.
-> + *
-> + * Returns:
-> + * The GPIO descriptors corresponding to the function @con_id of device
-> + * dev, -ENOENT if no GPIO has been assigned to the requested function,
-> + * or another IS_ERR() code if an error occurred while trying to acquire
-> + * the GPIOs.
-> + */
-> +struct gpio_descs *__must_check gpiod_get_array_by_fwnode(struct device *dev,
-> +						struct fwnode_handle *fwnode,
-> +						const char *con_id,
-> +						enum gpiod_flags flags)
-> +{
-> +	return __gpiod_get_array(dev, fwnode, con_id, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(gpiod_get_array_by_fwnode);
-> +
->   /**
->    * gpiod_get_array_optional - obtain multiple GPIOs from a multi-index GPIO
->    *                            function
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-> index db2dfbae8edb..7143bf7045ce 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -80,6 +80,10 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
->   struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
->   							const char *con_id,
->   							enum gpiod_flags flags);
-> +struct gpio_descs *__must_check gpiod_get_array_by_fwnode(struct device *dev,
-> +						struct fwnode_handle *fwnode,
-> +						const char *con_id,
-> +						enum gpiod_flags flags);
->   void gpiod_put(struct gpio_desc *desc);
->   void gpiod_put_array(struct gpio_descs *descs);
->   
-> @@ -175,11 +179,18 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
->   					 const char *con_id, int index,
->   					 enum gpiod_flags flags,
->   					 const char *label);
-> +struct gpio_descs *fwnode_gpiod_get_array(struct fwnode_handle *fwnode,
-> +					 const char *con_id,
-> +					 enum gpiod_flags flags);
->   struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
->   					      struct fwnode_handle *child,
->   					      const char *con_id, int index,
->   					      enum gpiod_flags flags,
->   					      const char *label);
-> +struct gpio_descs *devm_fwnode_gpiod_get_array(struct device *dev,
-> +					      struct fwnode_handle *fwnode,
-> +					      const char *con_id,
-> +						  enum gpiod_flags flags);
->   
->   #else /* CONFIG_GPIOLIB */
->   
-> @@ -548,6 +559,14 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
->   	return ERR_PTR(-ENOSYS);
->   }
->   
-> +static inline
-> +struct gpio_descs *fwnode_gpiod_get_array(struct fwnode_handle *fwnode,
-> +					 const char *con_id,
-> +					 enum gpiod_flags flags)
-> +{
-> +	return ERR_PTR(-ENOSYS);
-> +}
-> +
->   static inline
->   struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
->   					      struct fwnode_handle *fwnode,
-> @@ -558,6 +577,15 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
->   	return ERR_PTR(-ENOSYS);
->   }
->   
-> +static inline
-> +struct gpio_descs *devm_fwnode_gpiod_get_array(struct device *dev,
-> +					      struct fwnode_handle *fwnode,
-> +					      const char *con_id,
-> +						  enum gpiod_flags flags)
-> +{
-> +	return ERR_PTR(-ENOSYS);
-> +}
-> +
->   #endif /* CONFIG_GPIOLIB */
->   
->   static inline
+Ming
 
