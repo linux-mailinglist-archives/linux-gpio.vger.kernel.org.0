@@ -1,131 +1,153 @@
-Return-Path: <linux-gpio+bounces-14391-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14392-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B627D9FF654
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 06:41:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4549B9FF661
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 07:00:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D7FC162146
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 05:41:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18B733A2983
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2025 06:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC72191489;
-	Thu,  2 Jan 2025 05:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D9D190067;
+	Thu,  2 Jan 2025 06:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e60WxBbY"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LwGnUVsJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C548D54F8C;
-	Thu,  2 Jan 2025 05:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084CC18BBB0;
+	Thu,  2 Jan 2025 06:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735796467; cv=none; b=b1BcidgEz+zSmzli++nh7ScNinjOodkTzYFC9oW2GE0ldqhiSqZv+FHwMR/B61D1JT7wTBQmDYrAk2ai1VBpx3WKI7UURlsn6SOFVAb2mntP3DNlaEe3S7+SHxxWNAklVCF9hGNX4C/+5LDEy/nkHAyClf7zHgwBb8R7Fqu4x2E=
+	t=1735797650; cv=none; b=bjT95iG/CX0OmgAFHyf27XIA817lEYVVT5yvHTa3qeRinEbclKuH3WRE0vzI0C/PsFlTyXcElw6QgodckxUD7QYicveVInBDS+yrrTmkdLeNWUBPOnkfN+kEuv/KRNTjo5UVNqOGwujuKhcWXJ4Y7YKnvYnJPhK92+kXloeKENQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735796467; c=relaxed/simple;
-	bh=x0GqOPflz3JU1F/JYbbkfOfzkYbLKZumeQJnrDyofl4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BE3f6hQWZP7CiB4A8639kWR0j/9hwG0FAhXhyQEXMJUmZzLV3mQsUq7DsLfrem2Wp8fr3HTQvZnMMcbO3MAYBH0dsY2H1n38/ykPK93leGehLIcyn0F1X+hXmi/R7hpQqbn8N4Tqy8QiyvdXfVLlx07J7EuwLWhn5nw8ogmRzd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e60WxBbY; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e3f78f5fc07so11327449276.2;
-        Wed, 01 Jan 2025 21:41:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735796465; x=1736401265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ASYw2YvvCKSoHOSnhWWZWXnYT66q6f5Arwrbz5nE6n0=;
-        b=e60WxBbY2J/XD/sTMG+GUy13XQ5pFmkdpOY+OpllbgZ81S48CdnttZzjED37XjlxNn
-         pxBEa7psZ/mMwIq49UMmV4n8sq86cMbSv6dDe2Gl2iVFhkeAxzfRxsPMaqkvVT3OOUXI
-         eQ3szalg4n5qZETB0eFhm5yKaJe6EdDWg71CZytvy2rJ4vFEx5V0mwmswVkQb7ySfugp
-         89L+qPCmadAqYnWO9z3VTYH8qVmO0EvwMWxu88CyPA/PK6HLENMWH931dGovWWABrsxP
-         8BgV7g5D/FuuK2lPaVA9zBCHriE80XTVy0qAeEce+L54iV2bUbOEhak0uLZHHiV6GxK2
-         O+dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735796465; x=1736401265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ASYw2YvvCKSoHOSnhWWZWXnYT66q6f5Arwrbz5nE6n0=;
-        b=VTlpjWSmCWoHjbqqd8zB3ajM8Cj9wxXUK+Dp4tDkEOTJdYvn42cDoCWSth2/3NDw1t
-         IbGDe/glviKd/JjALafYj6WTSL7MwXIL2rsb6gkGbCQK3UtOsEEkOwNS1WVkzv3jnIC3
-         1z1Uul20hYlec/5Nf9KRv6gWcPO1tpedKgLuv80eyJQbzJp91/NsSBBWpXgD3tM+oeZH
-         Dim2QAoSbPwFpc7xCiOiW09ecFwGnv80siQsfQ+czq/LtO95nVsjNOkmBQgLQSbkheYk
-         kkyFFPDjcWEGwbSJHPf8j6m5EZ74u78ktvSVKxEW5zw53TPTcwV4fS9XwZT8v6xwbGYY
-         OKQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJQyEU4snbIVEk1KEK9Nw+h4rEQrXtcSxYQkjr3KF1xavKSRrEju8rBgRzn9Zy2/+kSoTx3HwnW2Q8Tw==@vger.kernel.org, AJvYcCUPplk9C6on+5MtOlvdjLn6Ynlo9bsfPqIbndfcmgG/m0Y5mzVDjhtbcyfIX6c1sUvSbcv3WLCm/hKoW7s=@vger.kernel.org, AJvYcCUd5i+IB6aI10OefpRc+K0MRdc8VQ43qY6xzYfzpztwQOgZnHvBNUcrH1KopQluY91Tun8sH/oJSsuVZKzcU+Q=@vger.kernel.org, AJvYcCVmy1+Qob+GA+QFS/WzeZ5b+GtpUP1gM3rF74GJOaJ4twc7GtiYy/6DO226xVI2feHBlcluNMlfjMg=@vger.kernel.org, AJvYcCW6Z+N6gZ8CeiTxlFi/YaWRwm6EPaIksyDi0mL5UsxNW8t8/JwEizwd9dJsrMh8r6xEt8vJhv9WGWGP@vger.kernel.org, AJvYcCWuqS5G6rgypeJoCtxMmeVVkndBQmDe+FUStQKDZ0EKx1gObT6yO/fOB+H0qXR081J6GV3Suwwn@vger.kernel.org, AJvYcCXPl24bJwendWlV+6pBKor5cUDA8tm9hXgN7axmK/nL/71yAJfjrHGebsWk6dzmV4xlO2R3qzbur6ES@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW76Qpdioc070fz2MUL47nTW/qsfpWb6bU0IuOxCpmQa2WbH+H
-	fHTWZ3NwmQus9Kry8C4NmeduJZkZNOOgwmD4oxqHY7uABQvFgaEi75H249bdl3cJdnlG6rTElzk
-	Q0DY6cEx4beRnjjZnuf9ZcbPatdA=
-X-Gm-Gg: ASbGnctnZqDXeMIA8sDbBoWnMqMkLDKsVcjOzjjMCUVxLnksLOetTHOcRqFIbr2PG2K
-	t3iAAQp9FlISyDaBn6pyAk0ff+AuoZK4CShPz7PXxMuzauy4pygqKyYMxq2KfpRRGJyWGnmpM
-X-Google-Smtp-Source: AGHT+IH4op97zYxM0yElb80n1mWB5vje2idEq4j1aO+EgRYFQsMF+lHBsn3B3CF0kwlTajDY4BtnNpv7SKTe7hWMtDQ=
-X-Received: by 2002:a05:690c:3502:b0:6ef:799c:955b with SMTP id
- 00721157ae682-6f3f8242796mr265511177b3.41.1735796464603; Wed, 01 Jan 2025
- 21:41:04 -0800 (PST)
+	s=arc-20240116; t=1735797650; c=relaxed/simple;
+	bh=1j+nQVCRBb0ZXcBR5aiDWLhAShxV+R8AkpGmpbArYFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TkbshyvjwPGU/VC9eu97S7kHu58i5uqy/Lyi54/CcO7QIsJaDBDp5Lv3DpQVkRDPA4ckSQg7ZSz+njZF0UeyFy+fkG00/aLs5o4JLp/ghD+fGyVCEde/lN9vPgx37bYr+uxXDJ+pfI/lNCA8YCsA83NYOviH3COXB1xjALdFfB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LwGnUVsJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 501NUAca024114;
+	Thu, 2 Jan 2025 06:00:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TLlTj0pJpdNKsYrqYblAC2KBuxwDhA53hXofnmX3pis=; b=LwGnUVsJCx0B+rmt
+	M+LGma0Jl1hv6oKd17jqgsgesLLdu7WCc/E+phFtYlSkL5kScRligi1Ya4aZID5X
+	Fr0gF3ZzAg67aL6pyg9YqBrWP2ZfNd3q/VwF3LzfDhJPwNuqo3FHW68tYE0/7XDi
+	qyU/ORH+GHIpSUa+DLPbqnJUlvHWY8SAalthDPI5Ac0Yas2W6sd4PoGRmzykp17r
+	hTF2pLjx2FD5kSjkbqikioWUghxVg/AmEnr35OjqnI1yHBDd1cWjUPZZPH+eM+Cx
+	mp/v3joJUWgbzt9c/jU18SCYV0vDig6bwdqyDk5yiEDJbw/EoD5SqQXikj+2RaR/
+	74yF9Q==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 43w1wyhfgc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jan 2025 06:00:37 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50260axn006540
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 2 Jan 2025 06:00:36 GMT
+Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 1 Jan 2025
+ 22:00:31 -0800
+Message-ID: <dc0b0eef-dcdf-4ed2-a835-d9ca9c5b2c9d@quicinc.com>
+Date: Thu, 2 Jan 2025 11:30:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241227095727.2401257-1-a0282524688@gmail.com>
- <20241227095727.2401257-5-a0282524688@gmail.com> <41f77d39-bce3-4e3b-98c8-f248b723a24c@wanadoo.fr>
-In-Reply-To: <41f77d39-bce3-4e3b-98c8-f248b723a24c@wanadoo.fr>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Thu, 2 Jan 2025 13:40:53 +0800
-Message-ID: <CAOoeyxU0ex9_-a-uWda9hFbQa3MkFtNdAFan8C-899Z2pGYy7g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] can: Add Nuvoton NCT6694 CAN support
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, tmyu0@nuvoton.com, lee@kernel.org, 
-	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
-	mkl@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] Add SPI4 support for IPQ5424
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Kathiravan Thirumoorthy
+	<quic_kathirav@quicinc.com>,
+        <andersson@kernel.org>, <linus.walleij@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <konradybcio@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+CC: <quic_varada@quicinc.com>, <quic_srichara@quicinc.com>
+References: <20241227072446.2545148-1-quic_mmanikan@quicinc.com>
+ <e673dbdf-9b16-4c64-a3e0-cf5bb31e2b82@quicinc.com>
+ <d4875732-ec24-4e35-9a7b-af05c6ee7d4b@oss.qualcomm.com>
+ <fbf019aa-e8f9-4169-9543-f85d2a17ce7f@oss.qualcomm.com>
+ <52fa8219-0485-4fc6-8f3f-5759649057cf@quicinc.com>
+ <34ab59a1-b735-44d1-918a-1b82954a4423@oss.qualcomm.com>
+Content-Language: en-US
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+In-Reply-To: <34ab59a1-b735-44d1-918a-1b82954a4423@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: surYKO7nS5ValIXdjJ76uyfZQuzd3pLy
+X-Proofpoint-ORIG-GUID: surYKO7nS5ValIXdjJ76uyfZQuzd3pLy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ spamscore=0 impostorscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2501020051
 
-Dear Vincent,
 
-Thank you for your comments,
 
-Vincent Mailhol <mailhol.vincent@wanadoo.fr> =E6=96=BC 2024=E5=B9=B412=E6=
-=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:56=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> > +config CAN_NCT6694
-> > +     tristate "Nuvoton NCT6694 Socket CANfd support"
-> > +     depends on MFD_NCT6694
->
-> I think it would be better to do a
->
->         select MFD_NCT6694
->
-> here.
->
-> Then, make MFD_NCT6694 an hidden configuration in a similar fashion as
-> MFD_CORE. Alone, CONFIG_MFD_NCT6694 does nothing, so better to hide it
-> from the end user.
->
-> The comment also applies to the other patches.
->
+On 12/30/2024 9:06 PM, Konrad Dybcio wrote:
+> On 30.12.2024 4:34 PM, Kathiravan Thirumoorthy wrote:
+>>
+>>
+>> On 12/30/2024 7:28 PM, Konrad Dybcio wrote:
+>>> On 30.12.2024 2:54 PM, Konrad Dybcio wrote:
+>>>> On 30.12.2024 7:51 AM, Kathiravan Thirumoorthy wrote:
+>>>>>
+>>>>>
+>>>>> On 12/27/2024 12:54 PM, Manikanta Mylavarapu wrote:
+>>>>>> Add SPI4 node to the IPQ5424 device tree and update the relevant
+>>>>>> bindings, GPIO pin mappings accordingly.
+>>>>>>
+>>>>>> Changes in V3:
+>>>>>>      - Rename SPI0 to SPI4 because SPI protocol runs on serial engine 4
+>>>>>
+>>>>> Do we really need to do this? If so, it will not align with the HW documentation and will lead to the confusion down the line. IMHO, we should stick with the convention followed in the HW documentation.
+>>>>
+>>>> +1, the clocks are called SPI0/SPI1 internally
+>>>
+>>> Ok, I looked at a bit more documentation and it looks like
+>>> somebody just had fun naming things..
+>>>
+>>> SPI0 is on SE4 and SPI1 is on something else, with no more
+>>> clock provisions for that protocol.. Which is not usually the
+>>> case.
+>>
+>>
+>> IPQ5424 has one QUPV3 instance with 6 SEs. SE0-SE4 are Mini core and SE5 is FW core.
+>>
+>> SE0 and SE1 are for 4-wire UART and 2-wire UART respectively. SE2 and SE3 are for I2C protocol. SE4 is for SPI.
+>>
+>> Since SE5 is FW based (some RDPs use this SE for I2C). In GCC block, clocks for this instance is named after SPI as SPI1.
+> 
+> Thanks for the explanation.
+> 
+> Manikanta, please refer to this in the commit message as well
+> 
 
-I understand, but I noticed that in the Kconfig files of other
-modules, the dependency is written in the form:
-config CAN_NCT6694
-        tristate "Nuvoton NCT6694 Socket CANfd support"
-        depends on MFD_NCT6694
-(e.g. CAN_JANZ_ICAN3, GPIO_DLN2, ...)
-Do you think changing it to select MFD_NCT6694 would be better?
 
-Best regards,
-Ming
+Thank you, Konrad and Kathiravan, for your valuable insights.
+I will incorporate the aforementioned information into the commit message, revert the 'renaming spi0 to spi4',
+and include both spi0 and spi1 in the next version.
+
+Thanks & Regards,
+Manikanta.
 
