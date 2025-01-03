@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-14470-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14471-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33FC8A00AF4
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 16:00:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B57AA00AF5
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 16:00:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDED4163BF8
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 15:00:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18710163C0E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 15:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947471FAC42;
-	Fri,  3 Jan 2025 15:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A43BF1FA8F5;
+	Fri,  3 Jan 2025 15:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mnFBJu6/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqVGZQWj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8DC1FA8FF
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jan 2025 15:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE4C1FAC3D
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Jan 2025 15:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735916433; cv=none; b=Ilu3pnnf5dnKJWytxXAydnBmPdApDan3mklF/uvYSFDNX7OlChueSnatm3OkVy+mqGYTZc3JkmIYFnnBzFpYPmt8yu8C368P/yh7aOMpGQclLb3dlL/ylim2Xr0qlZizgdOTeAz+WN0iBL/ZY+OGXHdcrnSpDLyjVzKRZokVRYU=
+	t=1735916435; cv=none; b=QPQzWlk8BxA1KsvNuI+nrhBefmyDcd0M71j0HwvAxpdQyKvcBOTrPFtwIAAdWliLgZCHUF+Ma5Kmwe8RpOm3qqsQ/Nq1Bs6pAKdmLqKyvkv6nC27mAiRODQq8L0XiBY+amsHrzBu+X2ro3m7FMmM1UBwD2/M9w+A09aVrsldPiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735916433; c=relaxed/simple;
-	bh=g/WJuBL8UjLqo0EUOJQ3gr62AB70Cy7sObWBDQ8yDTg=;
+	s=arc-20240116; t=1735916435; c=relaxed/simple;
+	bh=DJKvnVXuYC+eJwpALJsvAw70oCOlYp8/LbRRHrdJ8jY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j9eQ1r0svOtjB9f/CWp4ARTAd5B+vGvAfNTF3j/sgtATFmPuvHzpF9t2QDubxyK24K8bT6m/xsQLKPWs7gN0Cc74CgbP2YQMVwrARs7cJN2ZdpwINgcJlLOP73x0nQkd7HqpMspcYEtEX6ymXbZ96mwOLrHR4QpeCIsEqsgelCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mnFBJu6/; arc=none smtp.client-ip=209.85.208.54
+	 In-Reply-To:To:Cc; b=AVvmFkEDbQcxZ4TYnR2UWkg2I8pMlkG2Janj65ZKV9A8nac4GcehIq9yODPE63dvOwlgcBExtCCtr9R3PH4RJVwClQKYylgoHLEAGhQfi248oNOVw754Eu48P2GM1xISbwq6x/qTVwsaGMU3dKm+Vu4qypmb1KNNKh8lYXRNlm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fqVGZQWj; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3f57582a2so23448825a12.1
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2025 07:00:30 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d3d0205bd5so18414926a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2025 07:00:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735916429; x=1736521229; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1735916430; x=1736521230; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TjGu/26j65+bOKpNxK05ee3qx04QgcB6ZhLfS51NiIw=;
-        b=mnFBJu6/ClQwGoD/phd4ZBA0l7oYGtHE3wvRe83znP2nv9teFneyD0t3vuffJZoOMU
-         aI4oMhJbpPvrv3DyW2zzmObEt+pHuiow5/CM52IkPrW6PPbzYD1PvJL98J8TrZ4OaaLc
-         aZAG7KVC0/fxg89mk5DTeSGnIlkp5gcbLWcseGbFgfl3lwW2hPivf+qI+1SnjAW5/WhW
-         nxBZQBItOJkXnWyP2qVIRS1DbVHlUCyqivODZfT4GjB5ZZUU8i811hNBKeHvo33xG/dN
-         2CCK0/mEg9geHapDS+JdSPnx9vHF2YkiqMCp2nikcVoPMEirJ7aeQ21InnRhWA4j0NT2
-         a3Mw==
+        bh=wfkfkC74ZztoDGnVsg2h6JBMGya/+7qO61kKfLeH23Y=;
+        b=fqVGZQWj9YQOhKbIK3mutkS1DGzdiRHppdjTO5hrNgSO92G/Wxlf4VCEiiHXj+ViAZ
+         cCu3JiEyju2W8xE+SP/7T1U0xgVcQ4WHiwcwwgjY1UszB8t5leDvUsMkK2UwNFuYMWSZ
+         04u1i5cOIWQc+Nq8xRhX9nTMnTUZQvezDhbGavSvztzPyCdhcx1F8CvR9q/QnYvW0h5j
+         BBfRp8AKacNPgcsvW9WpcvOBPnBs5UjvB1785OdQURY32aKUYRuBoFbIb+TtCr5RaNiB
+         PDCj9uBI7RzpR+mg4yN2xRqP1gQsZs70HNvd7fjgBQ9Cs74Vpbz1IZCW9ryWDc4BA4nr
+         FuXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735916429; x=1736521229;
+        d=1e100.net; s=20230601; t=1735916430; x=1736521230;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TjGu/26j65+bOKpNxK05ee3qx04QgcB6ZhLfS51NiIw=;
-        b=HycR6NiUsxaDqyZ1oGMOZ1/WIMgJTogUpk8o50hu3tQcVUWKAiooj+HUqfqJgE36ah
-         yK3RTt67565pgTwOfNuPX4DNJIz3yyggsikqqyKLucyP1nxg5x1XkMtqVs9YaUlnfWHY
-         wZGo62sRIhfOzWCgucppl83ZiMNhtHPjrHVJv8mJWb8Ly8n+PCUACpgdtfMgOkvWwS21
-         KnNBMFJQpbBI7yqVwGEEkLUz6SwTKVx4R3VZzoNz5IsOi7xiGerKU86EZRCVD+Slzz4q
-         wohOO6xeKLvevVk2r7z6/g9XqEDqVLztck5D6NxRlpM50VQkw7GlbslZ4DvyF4nVBHLe
-         bQsQ==
-X-Gm-Message-State: AOJu0YyAqUn6utrEFyNgCLDv4MmP+bKXzS33yOzAe5gk36n9/0GgLh/Z
-	Y4zJmubUe2dJ3pzUjUddUfeXEePyLOCIx3AOSjfwmM281Fowio1GRa3/ywBJQWg=
-X-Gm-Gg: ASbGncszk2525ProUZwNkwrlCGchrbNHgAp1KGZjUrxm8Ey1Rh0ZiCOwQpkLNsRTFbP
-	3itAKK7gmlwd9XmHeUNhOaPV98LSE4xDbuNjNT3IVeKmcTGw38vr/M1ANuaQ37m4ugnh3jGSwTP
-	jPDl0jfXTXSgOfQaKc3UdLPQCs7ehv8fTbMgzinAeiGHGSA4IS1N68ARrnZH75Vov+VbtyXk5ZC
-	xx8MF4sakEcoICbTsR8bFO9de41QVPx/IqT1xw0lFfacscNgwo=
-X-Google-Smtp-Source: AGHT+IHLVNoVhJemiYFq+h9hgMbENG4CWMrkLkgRdfPxHsXawExOos+ZE1brwUvrOvi/m1FP3rL2Ig==
-X-Received: by 2002:a17:907:2d92:b0:aa6:bedc:2e4c with SMTP id a640c23a62f3a-aac08101008mr5045424766b.3.1735916428747;
-        Fri, 03 Jan 2025 07:00:28 -0800 (PST)
+        bh=wfkfkC74ZztoDGnVsg2h6JBMGya/+7qO61kKfLeH23Y=;
+        b=lZAgjqo9NfELrMi9vwvCT/6ws4RM8at0P92Pwk1ZvRs/sr9eokv1Jb0cD3lBhEerLU
+         7cFiVcTxUSgG3c5v2viokAGRfopTDrXIeHGZT+rf5zBGRr2gJY87haeW2XK4McNrbDJ2
+         bzP1uZ+2zteqoinYDzyJDTKPUukgE5SYvZup5T7ArRnW3qhB2YbVejLebpOkWp8RhdTV
+         K4xCAffUXbkPwxvTxmSnTYn56sOdxDN8wv1ma6hHa2OEpkJNDcn01ndamBQ3mn+2VT+B
+         PdKuhdd5ytravNdPpomuPUYLUHtCugvhprTpu8VZExUQFz7zYswIipxNT8LaInYSxKJ1
+         J09g==
+X-Gm-Message-State: AOJu0YzcSwJ/X0iAPcdKsasx+M5G1LxomwYkDZvz0VKTVM8EuOC0LUYh
+	o6TnZ4+2tjMndNMo/q4Y+ACMD0oi2tPjVpKCV2GBLiF7sBFzVOGoaJ8fJy7YcPw=
+X-Gm-Gg: ASbGncskqs8ScCYEKNqxkAq+hwVLdrqIOnMGlojyNCQVLp9SlHAGPs3ksT+0Foz1aIh
+	geTAQk8O6bD7tBbti73wJxFNwaMchqRAZauJZjfy7OJlICFK2dETMZcVN6lWCGDsnH7DsjqcmKa
+	TzQumAqlAks35qeNI/tsq5i8uBRDvxCICFkt/rbNyA1kZOUNHnN+cQcaLkPKvAGy0Uy/KNyt5gV
+	bx5A1Zbp19+eNvpFZKqtozB0CVwkKRhOfk3InH9pwBSBFIOkBM=
+X-Google-Smtp-Source: AGHT+IHu3waNJhzA/vLTQvYJusSxaIi5YCSUjAwQVylJ8izgBt+NN4ETavLTL3YILLtSBjcM8BrLAQ==
+X-Received: by 2002:a17:907:36ce:b0:aa6:7165:504b with SMTP id a640c23a62f3a-aac2d41ebc3mr5271049466b.31.1735916429770;
+        Fri, 03 Jan 2025 07:00:29 -0800 (PST)
 Received: from [192.168.1.127] ([2001:9e8:d5a1:be00::35e])
         by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aaf4a841749sm693078166b.137.2025.01.03.07.00.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2025 07:00:28 -0800 (PST)
+        Fri, 03 Jan 2025 07:00:29 -0800 (PST)
 From: Erik Schilling <erik.schilling@linaro.org>
-Date: Fri, 03 Jan 2025 16:00:16 +0100
-Subject: [PATCH libgpiod v2 2/3] bindings: rust: libgpiod: turn standalone
- doc comment into normal comment
+Date: Fri, 03 Jan 2025 16:00:17 +0100
+Subject: [PATCH libgpiod v2 3/3] bindings: rust: libpgiod: fix
+ clippy::empty_line_after_doc_comments lint
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,7 +82,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250103-lifetime-fix-v2-2-63902dc8cae1@linaro.org>
+Message-Id: <20250103-lifetime-fix-v2-3-63902dc8cae1@linaro.org>
 References: <20250103-lifetime-fix-v2-0-63902dc8cae1@linaro.org>
 In-Reply-To: <20250103-lifetime-fix-v2-0-63902dc8cae1@linaro.org>
 To: Linux-GPIO <linux-gpio@vger.kernel.org>, 
@@ -90,63 +90,54 @@ To: Linux-GPIO <linux-gpio@vger.kernel.org>,
 Cc: Erik Schilling <erik.schilling@linaro.org>, 
  Viresh Kumar <viresh.kumar@linaro.org>, Kent Gibson <warthog618@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1735916426; l=1949;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1735916426; l=1392;
  i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=g/WJuBL8UjLqo0EUOJQ3gr62AB70Cy7sObWBDQ8yDTg=;
- b=8/WGEd67ISqHggMWSHzUYYlQbjGZicf5Y4EcPVUVLPWW/um7DIfcCskxrhdRO05G2Jkk9xmMk
- ueZJmx+4wp6CBA71N7z2/oR1BcIGmGzy9IGN7xDY9f8PnmG9ZjK4AS8
+ bh=DJKvnVXuYC+eJwpALJsvAw70oCOlYp8/LbRRHrdJ8jY=;
+ b=9wuqAMAvu3gZe61jC3Y98EbABHppZdkLqGOnu6+ZC8hrYVeY2QxW8KXxEjEwrzSDh7xOsMXOl
+ GmGesxIrKURCmI0P3kVhOVI+MPgzpxOQUL0Ytl8SFDIX6TNLwBEkegT
 X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
  pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
 
-This was complained about by clippy:
+clippy warned about this:
 
     warning: empty line after doc comment
-       --> libgpiod/src/lib.rs:461:1
-        |
-    461 | / /// Various libgpiod-related functions.
-    462 | |
-        | |_
-    ...
-    467 |   pub fn is_gpiochip_device<P: AsRef<Path>>(path: &P) -> bool {
-        |   ----------------------------------------------------------- the comment documents this function
-        |
-        = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_line_after_doc_comments
-        = help: if the empty line is unintentional remove it
-    help: if the documentation should include the empty line include it in the comment
-        |
-    462 | ///
-        |
-
-The comment more seems to be of structural matter and should not be tied
-to the function immediately below it. So lets turn it into a normal
-non-doc comment.
+      --> libgpiod/src/event_buffer.rs:15:1
+       |
+    15 | / /// An iterator over the elements of type `Event`.
+    16 | |
+       | |_
+    17 |   pub struct Events<'a> {
+       |   --------------------- the comment documents this struct
+       |
+       = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#empty_line_after_doc_comments
+       = note: `#[warn(clippy::empty_line_after_doc_comments)]` on by default
+       = help: if the empty line is unintentional remove it
 
 Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 ---
- bindings/rust/libgpiod/src/lib.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bindings/rust/libgpiod/src/event_buffer.rs | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
-index fd95ed2ac3fe0bac2042ca58f66263408013457c..c03831bce62b287c08804e2d9d96aea7320dec7c 100644
---- a/bindings/rust/libgpiod/src/lib.rs
-+++ b/bindings/rust/libgpiod/src/lib.rs
-@@ -454,15 +454,15 @@ pub mod line {
-                 GPIOD_EDGE_EVENT_FALLING_EDGE => EdgeKind::Falling,
-                 _ => return Err(Error::InvalidEnumValue("EdgeEvent", kind as i32)),
-             })
-         }
-     }
+diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
+index 68d6e2f9a875e6b55a2df163cc99a0b9594f51ff..13fa7ba2c8870e0a325e251c073d6d73bb8c4374 100644
+--- a/bindings/rust/libgpiod/src/event_buffer.rs
++++ b/bindings/rust/libgpiod/src/event_buffer.rs
+@@ -9,15 +9,14 @@ use super::{
+     request::{Event, Request},
+     Error, OperationType, Result,
+ };
+ 
+ /// Line edge events
+ ///
+ /// An iterator over the elements of type `Event`.
+-
+ pub struct Events<'a> {
+     buffer: &'a mut Buffer,
+     read_index: usize,
+     len: usize,
  }
  
--/// Various libgpiod-related functions.
-+// Various libgpiod-related functions.
- 
- /// Check if the file pointed to by path is a GPIO chip character device.
- ///
- /// Returns true if the file exists and is a GPIO chip character device or a
- /// symbolic link to it.
- pub fn is_gpiochip_device<P: AsRef<Path>>(path: &P) -> bool {
-     // Null-terminate the string
+ impl<'a> Events<'a> {
 
 -- 
 2.47.1
