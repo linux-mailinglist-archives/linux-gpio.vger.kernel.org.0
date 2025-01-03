@@ -1,168 +1,265 @@
-Return-Path: <linux-gpio+bounces-14456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4219A005D2
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 09:35:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35FA1A007D2
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 11:28:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0B60162E8D
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 08:35:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 466B618838EB
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2025 10:28:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC221CDA09;
-	Fri,  3 Jan 2025 08:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99BB11E04BE;
+	Fri,  3 Jan 2025 10:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKzrB/j3"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="REsXMrLt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAFA1946B9
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jan 2025 08:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32631CEEBB;
+	Fri,  3 Jan 2025 10:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735893341; cv=none; b=h5qxDGUSXFKkcwziB1NfwHsbFIUMzSoJPU/rzrLIqUHYopRGqu3Ft0n5On41BYH+ir/+WS+/i6X0QdHoW8UYg/Rguf5ZxDJeDRUbmg2voqwCdt6yzPPBCDpXR/YA9I2EZhngXTl5pP3CRcwCdYj1e8dvrg5e/+LJVsCnH618Hbw=
+	t=1735900119; cv=none; b=Io944goiilLOpu+Cy0MhctQJ8x4XaXt/Ykh7NWHqJwk5fs7qRkUyyHvekxyEb4FCI84qVbiXahA4ul7V1cRhpW7rTfhH4jMADT8l1I/Zu48NRV30owM5h2APHjPlmh483a/OKHshlxhCc5I/01oYqSNV4R/VPpk6awFnv8o+xkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735893341; c=relaxed/simple;
-	bh=m6o9aISv6L3EEBwD7nPuVZXQzsoBVQIjPOkdAPOO2+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VM1hcgAVbju+pECKLTODqWQEqPEM5b6/teYjBH/nIdEzeeMsyAWNfgH/94v/2O3RnHFYuH7uJLJzS0TiAwIaoplglrTsaZCvEMwfYnjtxYV4Ix4RbGrfgFu5wCf86ASLCeJ7Dac/VCU+FyfRomTV9KKxb6PeDpvFHlQR4/HnKDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKzrB/j3; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ee534d6800so2444308a91.2
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2025 00:35:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735893339; x=1736498139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0mNSE5l1moO/1n7caacSdxfwOs3Hhsbfh6K+K68U36Y=;
-        b=YKzrB/j3/mUVb4IVfGjXDfr262+bwV53mOD2Nfkv+collNXLmcKZ9nasc89sv2VZiR
-         VEaJyq5SSKxqqVLLSoaS0/mGKODwLAvjv3Gz8ciPgsCuOX1/Ua5+VdIFD+p5TNq9sfJ+
-         mdLxnmJB7w2IuoaS2FqtI81+2gLgaMnXhCqruDIjhQGT8C57f54yce0BHOKcfUhOGeLh
-         rsyzoyO5whq21xo5qxmn5FCVl3fOl8uvbmpURKHRr89N4ghhktvU7wZn0fakWXORe+Mq
-         FJq3FwgILLAddmnApOo/SIJ9UFtUNfWNmTDtH19Ds4F2AqJY7ahWZVC+SuHR18nJSYOr
-         tsOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735893339; x=1736498139;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0mNSE5l1moO/1n7caacSdxfwOs3Hhsbfh6K+K68U36Y=;
-        b=H0aaF2bOkDTPPkaEd87zCXczCfuQnFDeLijUUT672J60u7YVUlSoyiw0V1YoMXT0mK
-         QwjeeuxwvynG/oXpjOkr6a5POLvtj6eIRQMH2Kjg1X5xdhvIUrdHrmA9/iQifVvufo85
-         V9TezRPaI1KwjV6eang4XpaKwOgfw+pbMnmF4kv/VStmpw8skutDswRIVz5Xh/88QTwj
-         xvtrsW8yBelOifKzN4dlvHUga2O9XgYp/ZoPoKxnb0UVS2HQB7r67FMcJWJakg6QGzmC
-         MsiBfsGK6Ui4S7ZNlQLa6VxhlPJKl9RJzDSAXwwK/wuR0s28HRO0qRHLx/DhvwCdfvZZ
-         07xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBWxViAXensvh61cLUOwhNA41+bTF5Z8ZhzXyBvXct544AfqoGPp1Rq18yJC09rBfdaJYC7tvceEgl@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKoNkJbdB53fFQpyfYBsEM7W+RvMIg+cVoz1IuhniE2CPD2nWL
-	gt2TOVKaB+hD7arED6k2B0UVcxBS4mrIX54DoLPT2VAnLGAvM9dm
-X-Gm-Gg: ASbGncsWNl1dp6cp6KCqnOZ7jJPsHGg2fOuwEE0dgELKnHdV2tG+bcOqOSROs29Yr2c
-	JEh30Be3CuMhvIIfvJ7z/3++TS6S9lEx1WcwmlO6JMYE9xPdJeTaefQ3pC7LYXvt0fdkZPMBhSK
-	eyknhHwe2RsE4LKwcbt+VKkdujDvckpmPgoD5I5tlWIqSmskh5wWprvaeQMowdSbqA4pOc3jrdf
-	6ehAx4TE3kibzRNZWQsLZMNPRh7IZ/BQ18JE6XW6oYaCyr4cTu02IsUFz/UixycmsllzQ==
-X-Google-Smtp-Source: AGHT+IHRV/PrvU4It40AKrowU5SGQvvYdkKFhMC4R60rhuMGOLgJUiRFHyCQsx08hnHqoCcTPaqexQ==
-X-Received: by 2002:a05:6a00:6f4b:b0:726:380a:282f with SMTP id d2e1a72fcca58-72abdd3c245mr27376891b3a.2.1735893339150;
-        Fri, 03 Jan 2025 00:35:39 -0800 (PST)
-Received: from localhost.localdomain ([45.78.50.120])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad836d22sm25727340b3a.77.2025.01.03.00.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2025 00:35:38 -0800 (PST)
-From: hlleng <a909204013@gmail.com>
-To: info@metux.net,
-	vireshk@kernel.org,
-	linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev
-Cc: hlleng <a909204013@gmail.com>
-Subject: [PATCH] drivers:gpio: support multiple virtio-gpio controller instances
-Date: Fri,  3 Jan 2025 16:35:20 +0800
-Message-ID: <20250103083520.1764441-1-a909204013@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	s=arc-20240116; t=1735900119; c=relaxed/simple;
+	bh=B7blojn5rbAezvzsMCvgQ8xG6Mx88XXqhOOEDgfP4Do=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=U3v+560PJ7xzMuIPFqcaJkLQ+IuZTQ/ulkDGZ9b1iDpLIJnmYoaR7Rkn3/X648BUpTH8Y5vpe8f3fExO1xo0ODQ0b0kWZBypLO0VokZRYbsj1deRmgSQrj3YRhfD3YbPO9/LHVegRxWHfUvlF3QcdFp+O+KzY3bVbv5IUHw7S6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=REsXMrLt; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 816EF1C0007;
+	Fri,  3 Jan 2025 10:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1735900115;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f3Wh5ZGxwy9Oxb9gEOEr8Ee42zTZOwgzqqGrJbszgPE=;
+	b=REsXMrLtIrbQCeLg7Mh3E2R4rAyD/7a8Q3VvRGnYKJSlpLYaE3FhLjDY38QkbeHh1pNbHk
+	+cyEt++wp60Hg2Rk49qukhToqdwz6E8y0xopMo7wUDVbx6h+qrk2xNPEQ4froT1BaxAVtJ
+	5INktUk4OFHbyG70i0ITDDzEvLDb+N+JODcz92bNFPEQMgYpudPp7bd0PPvM+EXW3AQSwj
+	HG19H/BOmYspBOpROAsc0CNvm8Hef5+utlFBlEuP4pGPdJ3CKsw1/R25pvZkqi9oUOEiD7
+	2+QxrVtcLtoeRZ1K+p1hloaEd/xzlUa+cZxOeJCVCgsO+jFbmNojZ8UHru61Dg==
+Message-ID: <7e96dd60-8f72-48f9-a393-5a8a7e5c6b18@bootlin.com>
+Date: Fri, 3 Jan 2025 11:28:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP
+ boards
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+ <20241211-aaeon-up-board-pinctrl-support-v1-4-24719be27631@bootlin.com>
+ <CACRpkdZ_AwiE+HFX6TFBgscaVquKm_tegNSbTT0fhFmpkM7d_Q@mail.gmail.com>
+ <9e692951-86a1-4dda-b843-58173453ffe0@bootlin.com>
+ <CACRpkdZ6kmPn9TfO40drJ+vwM2GNKfNaP21R_gEvugg+GJiF1w@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CACRpkdZ6kmPn9TfO40drJ+vwM2GNKfNaP21R_gEvugg+GJiF1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Modify the virtio-gpio driver to support multiple virtual GPIO controller
-instances. The previous static global irq_chip structure caused conflicts
-between multiple virtio-gpio device instances as they shared the same
-interrupt controller configuration.
+On 12/22/24 00:43, Linus Walleij wrote:
+> Hi Thomas,
+> 
+> thanks for your detailed reply!
+> 
+> On Fri, Dec 20, 2024 at 2:50 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+> 
+>> Yes my cover letter was a bit short, and maybe some context was missing.
+> 
+> The text and graphics below explain it very well, so please include them
+> into the commit message so we have it there!
+> 
+>> This FPGA acts as a level shifter between the Intel SoC pins and the pin
+>> header, and also makes a kind of switch/mux.
+> 
+> Since it's Intel we need to notify Andy to help out with this so that
+> it gets done in a way that works with how he think consumers
+> should interact with Intel pin control and GPIO.
+> 
+>> +---------+         +--------------+             +---+
+>>           |         |              |             | H |
+>>           |---------|              |-------------| E |
+>>           |         |              |             | A |
+>> Intel Soc |---------|    FPGA      |-------------| D |
+>>           |         |              |             | E |
+>>           |---------|              |-------------| R |
+>>           |         |              |             |   |
+>> ----------+         +--------------+             +---+
+>>
+>>
+>> For most of the pins, the FPGA opens/closes a switch to enable/disable
+>> the access to the SoC pin from a pin header.
+>> Each "switch", has a direction flag that shall be set in tandem with the
+>> status of the SoC pin.
+>> For example, if the SoC pin is in PWM mode, the "switch" shall be
+>> configured in output direction.
+>> If the SoC pin is set in GPIO mode, the direction of the "switch" shall
+>> corresponds to the GPIO direction.
+>>
+>> +---------+              +--------------+             +---+
+>>           |              |              |             | H |
+>>           |              |      \       |             | E |
+>>           |   PWM1       |       \      |             | A |
+>> Intel Soc |--------------|-----   \-----|-------------| D |
+>>           |              |              |             | E |
+>>           |              |              |             | R |
+>>           |              |    FPGA      |             |   |
+>> ----------+              +--------------+             +---+
+>>
+>> (PWM1 pin from Intel SoC can be used as PWM, and also in GPIO mode,
+>> thanks to the Intel pinctrl driver).
+>>
+>>
+>> Few pins (PINMUX_* pins) work differently. The FPGA acts as a mux and
+>> routes for example the I2C0_SDA pin or GPIOX (of the SoC) to the pin header.
+>>
+>> +---------+           +--------------+             +---+
+>>           | I2C0_SDA  |              |             | H |
+>>           |-----------|----- \       |             | E |
+>>           |           |       \      |             | A |
+>> Intel Soc |           |        \-----|-------------| D |
+>>           | GPIOX     |              |             | E |
+>>           |-----------|-----         |             | R |
+>>           |           |    FPGA      |             |   |
+>> ----------+           +--------------+             +---+
+>>
+>> The pin header looks like this:
+>> +--------------------+--------------------+
+>> |      3.3V          |       5V           |
+>> | GPIO2 / I2C1_SDA   |       5V           |
+>> | GPIO3 / I2C1_SCL   |       GND          |
+>> | GPIO4 / ADC0       | GPIO14 / UART1_TX  |
+>> |      GND           | GPIO15 / UART1_RX  |
+>> | GPIO17 / UART1_RTS | GPIO18 / I2S_CLK   |
+>> |     GPIO27         |       GND          |
+>> |     GPIO22         |      GPIO23        |
+>> |      3.3V          |      GPIO24        |
+>> | GPIO10 / SPI_MOSI  |       GND          |
+>> | GPIO9 / SPI_MISO   |      GPIO25        |
+>> | GPIO11 / SPI_CLK   | GPIO8 / SPI_CS0    |
+>> |      GND           | GPIO7 / SPI_CS1    |
+>> | GPIO0 / I2C0_SDA   | GPIO1 / I2C0_SCL   |
+>> |     GPIO5          |       GND          |
+>> |     GPIO6          | GPIO12 / PWM0      |
+>> | GPIO13 / PWM1      |       GND          |
+>> | GPIO19 / I2S_FRM   | GPIO16 / UART1_CTS |
+>> |     GPIO26         | GPIO20 / I2S_DIN   |
+>> |      GND           | GPIO21 / I2S_DOUT  |
+>> +--------------------+--------------------+
+>>
+>> The GPIOs in the pin header corresponds to the gpiochip I declare in
+>> this driver.
+>> So when I want to use a pin in GPIO mode, the upboard pinctrl driver
+>> requests the corresponding SoC GPIO to the Intel pinctrl driver.
+>> The SoC pins connected to the FPGA, are identified with "external" id.
+>>
+>> The hardware and the FPGA were designed in tandem, so you know for
+>> example that for the GPIOX you need to request the Nth "external" GPIO.
+>>
+>> When you drive your GPIO, the upboard gpiochip manages in the same time
+>> the direction of the "switch" and the value/direction of the
+>> corresponding SoC pin.
+>>
+>> +------------------+         +--------------+             +---+
+>>                    |---------|              |-------------| H |
+>>                    |---------|   GPIOCHIP   |-------------| E |
+>>    Intel gpiochip  |---------|              |-------------| A |
+>>  provided by Intel |---------|    FPGA      |-------------| D |
+>>   pinctrl driver   |---------|              |-------------| E |
+>>                    |---------|              |-------------| R |
+>>                    |---------|              |-------------|   |
+>> +------------------+         +--------------+             +---+
+>>
+>>
+>> About gpiochip_add_pinlist_range(), I added it because the FPGA pins
+>> used by the gpiochip are not consecutive.
+>>
+>> Please let me know if it is not clear.
+>> And sorry I'm not very good to make ascii art.
+> 
+> I get it! We have a similar driver in the kernel already, look into:
+> drivers/gpio/gpio-aggregator.c
+> 
+> The aggregator abstraction is however just software. What you
+> need here is a gpio-aggregator that adds some hardware
+> control on top. But it has a very nice design using a bitmap
+> to keep track of the GPIOs etc, and it supports operations
+> on multiple GPIOs (many man-hours of hard coding and
+> design went into that driver, ask Geert and Andy...)
+> 
+> So I would proceed like this:
+> 
+> - The pin control part of the driver looks sound, except
+>   for the way you add ranges.
+> 
+> - The gpiochip part needs to be refactored using the
+>   ideas from gpio-aggregator.c.
+> 
+> - Look closely at aggregator and see what you can do
+>   based on that code, if you can mimic how it picks up
+>   and forwards all GPIO functions. Maybe part of it
+>   needs to be made into a library?
+>  <linux/gpio/gpio-aggregator.h>?
+>   For example if you start to feel like "I would really like
+>   to just call gpio_fwd_get_multiple() then this is what
+>   you want to do. The library can probably still be
+>   inside gpio-aggregator.c the way we do it in
+>   e.g. gpio-mmio.c, just export and keep library functions
+>   separately.
 
-Fix this by:
-1. Remove the static global vgpio_irq_chip structure
-2. Dynamically allocate a dedicated irq_chip for each virtio-gpio instance
-3. Use device-specific names for each instance's irq_chip
+Hi Linus,
 
-Signed-off-by: hlleng <a909204013@gmail.com>
----
- drivers/gpio/gpio-virtio.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+Ok I think I understand what you expect.
+I started to look at the gpio-aggregator code, play a bit with it, and
+refactor it to use it from my driver.
 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index 93544ff62513..ac39da17a29b 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -350,19 +350,6 @@ static void virtio_gpio_irq_bus_sync_unlock(struct irq_data *d)
- 	mutex_unlock(&vgpio->irq_lock);
- }
- 
--static struct irq_chip vgpio_irq_chip = {
--	.name			= "virtio-gpio",
--	.irq_enable		= virtio_gpio_irq_enable,
--	.irq_disable		= virtio_gpio_irq_disable,
--	.irq_mask		= virtio_gpio_irq_mask,
--	.irq_unmask		= virtio_gpio_irq_unmask,
--	.irq_set_type		= virtio_gpio_irq_set_type,
--
--	/* These are required to implement irqchip for slow busses */
--	.irq_bus_lock		= virtio_gpio_irq_bus_lock,
--	.irq_bus_sync_unlock	= virtio_gpio_irq_bus_sync_unlock,
--};
--
- static bool ignore_irq(struct virtio_gpio *vgpio, int gpio,
- 		       struct vgpio_irq_line *irq_line)
- {
-@@ -542,6 +529,7 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 	struct virtio_gpio_config config;
- 	struct device *dev = &vdev->dev;
- 	struct virtio_gpio *vgpio;
-+	struct irq_chip *gpio_irq_chip;
- 	u32 gpio_names_size;
- 	u16 ngpio;
- 	int ret, i;
-@@ -591,13 +579,26 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 		if (!vgpio->irq_lines)
- 			return -ENOMEM;
- 
-+		gpio_irq_chip = devm_kzalloc(dev, sizeof(*gpio_irq_chip), GFP_KERNEL);
-+		if (!gpio_irq_chip)
-+			return -ENOMEM;
-+
-+		gpio_irq_chip->name = dev_name(dev);
-+		gpio_irq_chip->irq_enable = virtio_gpio_irq_enable;
-+		gpio_irq_chip->irq_disable = virtio_gpio_irq_disable;
-+		gpio_irq_chip->irq_mask = virtio_gpio_irq_mask;
-+		gpio_irq_chip->irq_unmask = virtio_gpio_irq_unmask;
-+		gpio_irq_chip->irq_set_type = virtio_gpio_irq_set_type;
-+		gpio_irq_chip->irq_bus_lock = virtio_gpio_irq_bus_lock;
-+		gpio_irq_chip->irq_bus_sync_unlock = virtio_gpio_irq_bus_sync_unlock;
-+
- 		/* The event comes from the outside so no parent handler */
- 		vgpio->gc.irq.parent_handler	= NULL;
- 		vgpio->gc.irq.num_parents	= 0;
- 		vgpio->gc.irq.parents		= NULL;
- 		vgpio->gc.irq.default_type	= IRQ_TYPE_NONE;
- 		vgpio->gc.irq.handler		= handle_level_irq;
--		vgpio->gc.irq.chip		= &vgpio_irq_chip;
-+		vgpio->gc.irq.chip		= gpio_irq_chip;
- 
- 		for (i = 0; i < ngpio; i++) {
- 			vgpio->irq_lines[i].type = VIRTIO_GPIO_IRQ_TYPE_NONE;
--- 
-2.45.1
+My main issue is about the request of the SoC GPIOs done by the aggregator.
+If from my driver I call the aggregator library to create a gpiochip,
+the SoC pins will be requested. So the SoC pins will be set in GPIO
+mode, and the pins will never be in function mode.
+There is no way to set the pins back to function mode (even if the GPIO
+is free).
 
+I tried to add a feature in the aggregator to defer the request of the gpio.
+So at the beginning of each ops the gpio_desc is checked. If it is
+valid, the gpio can be used. Otherwise, the gpio is requested.
+For example:
+
+gpio_fwd_get() {
+	if (!gpio_desc_is_valid(desc))
+		desc = request_gpio()
+
+	return gpiod_get_value(desc)
+}
+
+But when a gpiochip is registered, the core calls get_direction() or
+direction_input(), so all GPIOs are requested and it does not solve my
+problem.
+
+I expect to register a gpiochip without setting all pins in GPIO mode at
+probe time (like all pinctrl driver do).
+But I did not find a solution.
+
+Best Regards,
+
+Thomas
 
