@@ -1,174 +1,551 @@
-Return-Path: <linux-gpio+bounces-14503-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14504-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA93A013A7
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 10:35:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 433DFA014E8
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 14:04:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A11273A35EF
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 09:35:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8990163D9D
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 13:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6427817D355;
-	Sat,  4 Jan 2025 09:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E89F81B2194;
+	Sat,  4 Jan 2025 13:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KcgXkfqt"
+	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="didoeQsI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B0814F9CC
-	for <linux-gpio@vger.kernel.org>; Sat,  4 Jan 2025 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DFF8467;
+	Sat,  4 Jan 2025 13:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735983305; cv=none; b=AxHt8of8redMEB9M8TyOPolXZfBRefEEPp6hAFSNzz4wH+vzqqqu9ajWI6U/9SeqmQjQCFlra3cNONDRSebpgWyIAV5NWk77vItUevmOctPq9NngWf9t69+ul++xyx1YLgT34S1qRuhv6p5MyJ7np7Xwm5YBCmuus5FIGRu+PoA=
+	t=1735995879; cv=none; b=pwso/R7/qulxV5iAquKTYTyrduSkL6sc/Em6MqIvMNHYww1ehEy5VLnYDRDWbIMiwU/3vKkqWhJPZb2thlu9fGppiat46mSZqwUhLofd6ZGMp1b5KJL+v9AWDmMl4LAFYeaeSwW448HdAFYGPVBVtdWO4MimysXA2Y490Ns0m8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735983305; c=relaxed/simple;
-	bh=9DwfVlPZKedN44pI/T1zeAy34WnuQkbQQOxuWVdvv6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PKdV9kKZDZqEj3NCS7jxTEwlmFX4oupaZdYbspB863F20RrT8Kt7LUoy7Ajbom58MIHWY7nhbH4Tck94iT5wY2uX3eI0/+EguBbOrdOYLZw4+v77y2WZNEwCmhLNpzODEnaq/Y99SM9e1VEisvgJLehu+BA1pqvvcXesd0RGwX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KcgXkfqt; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436230de7a3so20192765e9.0
-        for <linux-gpio@vger.kernel.org>; Sat, 04 Jan 2025 01:35:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1735983302; x=1736588102; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfwQCCBu63aZTVhOZ4c/EiZehZjukgRMOTrP7C2cC/8=;
-        b=KcgXkfqtFlWEMPOmx3XxrpTS4chEjRubyosorVXlcY6cJ7ChzvQVkjMFlqrC/68z5+
-         yvjl1OzSmAYin5QZusFAQHA+pRiV65eajxYqW3n0QWRiEDESvqZCE9M2MdDHwyguph7Y
-         VdtFts7euxW4CRUqgA0ym4Qz7JFYaKaLLu9R7Ljvj4HJXO29vpPN9F/jkhgSaFWg4z24
-         BBWc73WHihu5JpKTvi8dxyNCzw+MOEVGh97ZXBJCCMoMMePSUBhOSb9P62uO+3wk5TWh
-         8wMNcSC6Dw2PtO3X4akn/vJ7nss/a5RohpHVmi6COu9BnysjmQ572/u7NQc78EBwPQC8
-         im+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735983302; x=1736588102;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tfwQCCBu63aZTVhOZ4c/EiZehZjukgRMOTrP7C2cC/8=;
-        b=bIbB6eb64cX3/drcvcDcaZrh0pmVe8d+xVzZggIvRgmj0PgKIEL/ZHVIAsrGMU3c/s
-         qpxiRJIxQ+GzPXQAfC6Q2kBEAF574qP7S826TFAJtaLinXPwiGLXIFN2lxi8F3NUv+mF
-         MAoftekHeEBXrGpBC1/NfDdTIHsmrFj2QP260CPBbbR3WmitMsEyy5ab7WDwPWhw3UgB
-         u/Cj2eSdL8orQ87SRyZpSN5AXpqmU7fPyYHt/QmBWMYRlosL8zCP2JVHZtUo09I3sp+7
-         gzuCW4Cgs0XVtzZbRNBkjoLhdbuAbwlRxPAMnonuDn9yPYVksJAd9EszGckBtWUjmJTL
-         QNRg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/ua+CTG9ybZzKW9uZAuQmbu521m/o5Oq2VqPR10YUt1JEtLpdrRbIUtqPkrCPhgfnvsUhs5VkB01H@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOGlT8K+nvJN0gA55JPOlIEcXIZjq0JqyX95VnrzadA4YHW+33
-	8xrx4kH9mVZkEoIWUedTcq825jg0kxgQGtujoFQ40uszt18D2toB0fUrzdUQN/A=
-X-Gm-Gg: ASbGncuAGJF6vv7zzZNtmIzPGv2PgH0vfrtl0L0ElTRZYKPfUqbi1R2MvlcwtG0fY75
-	UM2XdTON+bWt/+Or/6zPar6UeUsITgEoVTN+PqHH5bY4RXJrgxK11sAwOqcDZQecwZehF9QqSs0
-	s985QL+rY6FmNd9xvFKIBH8lgbJV+eI/9c0ny7NXF1EXjEZahgYZjeZU66tViSTKdY884xEUiWB
-	2pioxblTITVLa4ATyA5EshKV6zeH1fAGQ+rSy66oR+/0W7bFguLxXZATSSkoJUg9IQHY7J26iSd
-X-Google-Smtp-Source: AGHT+IG3FGlzh0yaJot++IsAzOuMcup0/rVdO0ni0icMoCmRYddvSjFlUUcahxyyoJSviClT6wmdLA==
-X-Received: by 2002:a05:600c:3ba8:b0:430:52ec:1e2a with SMTP id 5b1f17b1804b1-43668b8fd2amr168430765e9.7.1735983301759;
-        Sat, 04 Jan 2025 01:35:01 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.165])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436612899f0sm508109245e9.38.2025.01.04.01.35.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jan 2025 01:35:01 -0800 (PST)
-Message-ID: <d34f1e9f-7a27-4a72-b706-12e3175432ac@linaro.org>
-Date: Sat, 4 Jan 2025 10:34:59 +0100
+	s=arc-20240116; t=1735995879; c=relaxed/simple;
+	bh=jQzPD7Wbs85PLOU6wzbQBN+0SQDMYAT0MOc7nWbpWh4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=gdI6/JeHcp7WS5mcrqYE6SaiEs+yWC3SCpNtOBNjI9k6EfiZSjkbCifcw6QHBKT2hpqtWTzrCNcc6rQXveke25YpfbI0TtkEzxy/Be0wqt779y52Sqyg/U1BYSxER7QUUjeRNAGAaQkesDGRXJnFg3Ktn7LqFy0MJzJ5QXCpbc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=didoeQsI; arc=none smtp.client-ip=173.249.15.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
+dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
+	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References;
+	bh=BMwAkJW9A3If4jFqx00/CrS7KUv1THV3LlGOUwQhk+8=;
+	b=didoeQsIJ5ZaSO3qlM59NpFvr9TPvY834cKE/qbUo+bzkGboQ8uL92S9IsjVN8AZU7fFEL8K3kiMtStJg8CRV8DeLTzcXGhaferxynLS+fzyv4GXxpt61q6GLTYbCQXZ9lWTLqpqt1oz1NzYTAqmA2hEFNsWZ/NlecnqPCTXQgw=
+Received: from webmail.netcube.li (WIN-IJ7TS3MJ5LT [127.0.0.1])
+	by mail.netcube.li with ESMTPA
+	; Sat, 4 Jan 2025 14:03:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: vendor-prefixes: Add NetCube Systems
- Austria name
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Lukas Schmid <lukas.schmid@netcube.li>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>, Maxime Ripard
- <mripard@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Sat, 04 Jan 2025 14:03:41 +0100
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Maxime Ripard <mripard@kernel.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] ARM: dts: sunxi: add support for NetCube Systems
+ Kumquat
+In-Reply-To: <bed2886fa15d4f72cf34e468e8bfd2153cb1494c.camel@aosc.io>
 References: <20250103204523.3779-1-lukas.schmid@netcube.li>
- <20250103204523.3779-2-lukas.schmid@netcube.li>
- <pvbpqlejn6r7yjzufdmialyvjlmitusltb3ljhwstxbtoglf6q@7tvjz6neolnp>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <pvbpqlejn6r7yjzufdmialyvjlmitusltb3ljhwstxbtoglf6q@7tvjz6neolnp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20250103204523.3779-5-lukas.schmid@netcube.li>
+ <20250103235723.6a893773@minigeek.lan>
+ <bed2886fa15d4f72cf34e468e8bfd2153cb1494c.camel@aosc.io>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <083add26c987bfbfedcda3ddbe5b9880@netcube.li>
+X-Sender: lukas.schmid@netcube.li
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 04/01/2025 10:30, Krzysztof Kozlowski wrote:
-> On Fri, Jan 03, 2025 at 08:45:17PM +0000, Lukas Schmid wrote:
->> Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
->>
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
+Am 2025-01-04 06:12, schrieb Icenowy Zheng:
+> 在 2025-01-03星期五的 23:57 +0000，Andre Przywara写道：
+>> On Fri,  3 Jan 2025 20:45:20 +0000
+>> Lukas Schmid <lukas.schmid@netcube.li> wrote:
+>> 
+>> (CC:ing Icenowy for a question about the RTC below ...)
+>> 
+>> > NetCube Systems Kumquat is a board based on the Allwinner V3s SoC,
+>> > including:
+>> >
+>> > - 64MB DDR2 included in SoC
+>> > - 10/100 Mbps Ethernet
+>> > - USB-C DRD
+>> > - Audio Codec
+>> > - Isolated CAN-FD
+>> > - ESP32 over SDIO
+>> > - 8MB SPI-NOR Flash for bootloader
+>> > - I2C EEPROM for MAC addresses
+>> > - SDIO Connector for eMMC or SD-Card
+>> > - 8x 12/24V IOs, 4x normally open relays
+>> > - DS3232 RTC
+>> > - QWIIC connectors for external I2C devices
+>> >
+>> > Signed-off-by: Lukas Schmid <lukas.schmid@netcube.li>
+>> > ---
+>> >  arch/arm/boot/dts/allwinner/Makefile          |   2 +
+>> >  .../allwinner/sun8i-v3s-netcube-kumquat.dts   | 290
+>> > ++++++++++++++++++
+>> >  arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi    |   6 +
+>> >  3 files changed, 298 insertions(+)
+>> >  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v3s-netcube-
+>> > kumquat.dts
+>> >
+>> > diff --git a/arch/arm/boot/dts/allwinner/Makefile
+>> > b/arch/arm/boot/dts/allwinner/Makefile
+>> > index 48666f73e638..d799ad153b37 100644
+>> > --- a/arch/arm/boot/dts/allwinner/Makefile
+>> > +++ b/arch/arm/boot/dts/allwinner/Makefile
+>> > @@ -199,6 +199,7 @@ DTC_FLAGS_sun8i-h3-nanopi-r1 := -@
+>> >  DTC_FLAGS_sun8i-h3-orangepi-pc := -@
+>> >  DTC_FLAGS_sun8i-h3-bananapi-m2-plus-v1.2 := -@
+>> >  DTC_FLAGS_sun8i-h3-orangepi-pc-plus := -@
+>> > +DTC_FLAGS_sun8i-v3s-netcube-kumquat := -@
+>> >  dtb-$(CONFIG_MACH_SUN8I) += \
+>> >         sun8i-a23-evb.dtb \
+>> >         sun8i-a23-gt90h-v4.dtb \
+>> > @@ -261,6 +262,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>> >         sun8i-v3s-anbernic-rg-nano.dtb \
+>> >         sun8i-v3s-licheepi-zero.dtb \
+>> >         sun8i-v3s-licheepi-zero-dock.dtb \
+>> > +       sun8i-v3s-netcube-kumquat.dtb \
+>> >         sun8i-v40-bananapi-m2-berry.dtb
+>> >  dtb-$(CONFIG_MACH_SUN9I) += \
+>> >         sun9i-a80-optimus.dtb \
+>> > diff --git a/arch/arm/boot/dts/allwinner/sun8i-v3s-netcube-
+>> > kumquat.dts b/arch/arm/boot/dts/allwinner/sun8i-v3s-netcube-
+>> > kumquat.dts
+>> > new file mode 100644
+>> > index 000000000000..e5d2a716eb69
+>> > --- /dev/null
+>> > +++ b/arch/arm/boot/dts/allwinner/sun8i-v3s-netcube-kumquat.dts
+>> > @@ -0,0 +1,290 @@
+>> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> > +/*
+>> > + * Copyright (C) 2025 Lukas Schmid <lukas.schmid@netcube.li>
+>> > + */
+>> > +
+>> > +/dts-v1/;
+>> > +#include "sun8i-v3s.dtsi"
+>> > +
+>> > +#include <dt-bindings/input/input.h>
+>> > +#include <dt-bindings/leds/common.h>
+>> > +#include <dt-bindings/gpio/gpio.h>
+>> > +
+>> > +/{
+>> > +       model = "NetCube Systems Kumquat";
+>> > +       compatible = "netcube,kumquat", "allwinner,sun8i-v3s";
+>> > +
+>> > +       aliases {
+>> > +               serial0 = &uart0;
+>> > +               ethernet0 = &emac;
+>> > +               rtc0 = &ds3232;
+>> > +       };
+>> > +
+>> > +       chosen {
+>> > +               stdout-path = "serial0:115200n8";
+>> > +       };
+>> > +
+>> > +       /* 40 MHz Crystal Oscillator on PCB */
+>> > +       clk_can0: clock-can0 {
+>> > +               compatible = "fixed-clock";
+>> > +               #clock-cells = <0>;
+>> > +               clock-frequency  = <40000000>;
+>> > +       };
+>> > +
+>> > +       gpio-keys {
+>> > +               compatible = "gpio-keys";
+>> > +               autorepeat;
+>> > +
+>> > +               key-user {
+>> > +                       label = "GPIO Key User";
+>> > +                       linux,code = <KEY_PROG1>;
+>> > +                       gpios = <&pio 1 2 (GPIO_ACTIVE_LOW |
+>> > GPIO_PULL_UP)>; /* PB2 */
+>> > +               };
+>> > +       };
+>> > +
+>> > +       leds {
+>> > +               compatible = "gpio-leds";
+>> > +
+>> > +               led-heartbeat {
+>> > +                       gpios = <&pio 4 4 GPIO_ACTIVE_HIGH>; /* PE4
+>> > */
+>> > +                       linux,default-trigger = "heartbeat";
+>> > +                       color = <LED_COLOR_ID_GREEN>;
+>> > +                       function = LED_FUNCTION_HEARTBEAT;
+>> > +               };
+>> > +
+>> > +               led-mmc0-act {
+>> > +                       gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6
+>> > */
+>> > +                       linux,default-trigger = "mmc0";
+>> > +                       color = <LED_COLOR_ID_GREEN>;
+>> > +                       function = LED_FUNCTION_DISK;
+>> > +               };
+>> > +       };
+>> > +
+>> > +       /* XC6206-3.0 Linear Regualtor */
+>> > +       reg_vcc3v0: regulator-3v0 {
+>> > +               compatible = "regulator-fixed";
+>> > +               regulator-name = "vcc3v0";
+>> > +               regulator-min-microvolt = <3000000>;
+>> > +               regulator-max-microvolt = <3000000>;
+>> > +               vin-supply = <&reg_vcc3v3>;
+>> > +       };
+>> > +
+>> > +       /* EA3036C Switching 3 Channel Regulator - Channel 2 */
+>> > +       reg_vcc3v3: regulator-3v3 {
+>> > +               compatible = "regulator-fixed";
+>> > +               regulator-name = "vcc3v3";
+>> > +               regulator-min-microvolt = <3300000>;
+>> > +               regulator-max-microvolt = <3300000>;
+>> > +               vin-supply = <&reg_vcc5v0>;
+>> > +       };
+>> > +
+>> > +       /* K7805-1000R3 Switching Regulator supplied from main
+>> > 12/24V terminal block */
+>> > +       reg_vcc5v0: regulator-5v0 {
+>> > +               compatible = "regulator-fixed";
+>> > +               regulator-name = "vcc5v0";
+>> > +               regulator-min-microvolt = <5000000>;
+>> > +               regulator-max-microvolt = <5000000>;
+>> > +       };
+>> > +};
+>> > +
+>> > +&mmc0 {
+>> > +       pinctrl-names = "default";
+>> > +       pinctrl-0 = <&mmc0_pins>;
+>> > +       vmmc-supply = <&reg_vcc3v3>;
+>> > +       bus-width = <4>;
+>> > +       broken-cd;
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&mmc1 {
+>> 
+>> what's connected here? Are both MMC ports on headers/connectors, and
+>> it's up to the user to connect some SDIO device or an SD/eMMC
+>> card/slot? Or is this port connected to the ESP32?
+>> 
+>> > +       pinctrl-names = "default";
+>> > +       pinctrl-0 = <&mmc1_pins>;
+>> > +       vmmc-supply = <&reg_vcc3v3>;
+>> > +       bus-width = <4>;
+>> > +       broken-cd;
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&usb_otg {
+>> 
+>> I think traditionally referenced nodes in the board .dts files are
+>> ordered by label name, so usb_otg is but-last. Yes, this is in
+>> contrast
+>> to nodes in the SoC .dtsi file, which are ordered by MMIO addresses.
+>> 
+>> > +       extcon = <&tusb320 0>;
+>> > +       dr_mode = "otg";
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&usbphy {
+>> > +       usb0_id_det-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&ehci {
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&ohci {
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&rtc {
+>> > +       status = "disabled";
+>> 
+>> Please can you explain a bit more what's going on here? I saw you
+>> mentioning in the cover letter that you brought the "disabled" back,
+>> but I still don't see how this is working when the CCU and the
+>> pinctrl
+>> nodes reference the RTC clocks? So what is broken, exactly? Is this
+>> some bug in the SoC? Or don't you supply the SoC's VCC_RTC, so the
+>> calendar is not working when the board is not powered - in contrast
+>> to
+>> the external RTC?
 > 
+> Maybe a lack of crystal? But I can understand nothing here, and a
+> detailed explaination is needed.
 > 
-> Repeating again one of my comments:
-> 
-> Please run scripts/checkpatch.pl and fix reported warnings. After that,
-> run also 'scripts/checkpatch.pl --strict' and (probably) fix more
-> warnings. Some warnings can be ignored, especially from --strict run,
-> but the code here looks like it needs a fix. Feel free to get in touch
-> if the warning is not clear.
-> 
-> Please implement all comments.
 
-My bad, I did not write that hint earlier.
+I have tried to enable the RTC, but I get a "RTC still busy" from the
+sunxi-rtc module. The RTC Power is connected, and the 32kHz Crystal is 
+also
+on Board. If the RTC's driver wouldn't throw the error I have no issue 
+with
+leaving the rtc enabled. It would however loose it's memory after power
+cycle as the Battery is only connected to the DS3232+, hence the alias 
+to
+rtc0
 
-Anyway, your patchset - all four patches - has multiple issues so you
-need to fix all of them before posting next version.
+>> 
+>> > +};
+>> > +
+>> > +&pio {
+>> > +       vcc-pb-supply = <&reg_vcc3v3>;
+>> > +       vcc-pc-supply = <&reg_vcc3v3>;
+>> > +       vcc-pe-supply = <&reg_vcc3v3>;
+>> > +       vcc-pf-supply = <&reg_vcc3v3>;
+>> > +       vcc-pg-supply = <&reg_vcc3v3>;
+>> > +
+>> > +       gpio-reserved-ranges = <0 32>, <42 22>, <68 28>, <96 32>,
+>> > <153 7>, <167 25>, <198 26>;
+>> 
+>> As mentioned in the reply to the previous patch, this doesn't look
+>> right here. Why do you need this, exactly?
+> 
+> Ah? I don't think there's any tradition on Allwinner platforms to
+> reserve any GPIOs, except if you have another firmware running on
+> another processor (e.g. AR100) that needs some GPIO.
+> 
+> My previous sight of such property is on Qualcomm smartphones, where a
+> few GPIOs are reserved for "Trusted" thingy.
+> 
 
-Best regards,
-Krzysztof
+My intention here was to have the GPIOs which are not accessible on the 
+SoC's
+package disabled so that stuff like libgpiod cannot try to access them. 
+The
+gpiodetect tool did show me them as 'used' when I added the 
+reserved-ranges,
+so I thought the driver does understand this tag.
+
+>> 
+>> > +       gpio-line-names = "", "", "", "", // PA
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "CAN_nCS", "CAN_nINT", "USER_SW", "PB3",
+>> > // PB
+>> > +                         "USB_ID", "USBC_nINT", "I2C0_SCL",
+>> > "I2C0_SDA",
+>> > +                         "UART0_TX", "UART0_RX", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "SPI_MISO", "SPI_SCK", "FLASH_nCS",
+>> > "SPI_MOSI", // PC
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "", // PD
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "Q12", "Q11", "Q10", "Q9", // PE
+>> > +                         "LED_SYS0", "I1", "Q1", "Q2",
+>> > +                         "I2", "I3", "Q3", "Q4",
+>> > +                         "I4", "I5", "Q5", "Q6",
+>> > +                         "I6", "I7", "Q7", "Q8",
+>> > +                         "I8", "UART1_TXD", "UART1_RXD",
+>> > "ESP_nRST",
+>> > +                         "ESP_nBOOT", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "SD_D1", "SD_D0", "SD_CLK", "SD_CMD", //
+>> > PF
+>> > +                         "SD_D3", "SD_D2", "LED_SYS1", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "ESP_CLK", "ESP_CMD", "ESP_D0", "ESP_D1",
+>> > // PG
+>> > +                         "ESP_D2", "ESP_D3", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "",
+>> > +                         "", "", "", "";
+>> > +};
+>> > +
+>> > +&lradc {
+>> > +       vref-supply = <&reg_vcc3v0>;
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&codec {
+>> > +       allwinner,audio-routing =
+>> > +               "Headphone", "HP",
+>> > +               "Headphone", "HPCOM",
+>> > +               "MIC1", "Mic",
+>> > +               "Mic", "HBIAS";
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&uart0 {
+>> > +       pinctrl-0 = <&uart0_pb_pins>;
+>> > +       pinctrl-names = "default";
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&uart1 {
+>> > +       pinctrl-0 = <&uart1_pe_pins>;
+>> > +       pinctrl-names = "default";
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&i2c0 {
+>> > +       pinctrl-0 = <&i2c0_pins>;
+>> > +       pinctrl-names = "default";
+>> > +       status = "okay";
+>> > +
+>> > +       ds3232: rtc@68 {
+>> > +               compatible = "dallas,ds3232";
+>> > +               reg = <0x68>;
+>> > +       };
+> 
+> If you're afraid of the non-running internal RTC superseding this
+> external RTC, you can use an alias rtc0 = &ds3232 to force the ext. one
+> to be the first.
+> 
+
+Yes exactly, I already have an alias to this rtc as rtc0
+
+>> > +
+>> > +       eeprom0: eeprom@50 {
+>> > +               compatible = "atmel,24c02";             /* actually
+>> > it's a 24AA02E48 */
+>> > +               pagesize = <16>;
+>> > +               read-only;
+>> > +               reg = <0x50>;
+>> > +               vcc-supply = <&reg_vcc3v3>;
+>> > +
+>> > +               #address-cells = <1>;
+>> > +               #size-cells = <1>;
+>> > +
+>> > +               eth0_macaddress: macaddress@fa {
+>> > +                       reg = <0xfa 0x06>;
+>> > +               };
+>> > +       };
+>> > +
+>> > +       tusb320: typec@60 {
+>> > +               compatible = "ti,tusb320";
+>> > +               reg = <0x60>;
+>> > +               interrupt-parent = <&pio>;
+>> > +               interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>;
+>> > +       };
+>> > +};
+>> > +
+>> > +&emac {
+>> > +       allwinner,leds-active-low;
+>> > +       nvmem-cells = <&eth0_macaddress>;               /* custom
+>> > nvmem reference */
+>> > +       nvmem-cell-names = "mac-address";               /* see
+>> > ethernet-controller.yaml */
+>> > +       status = "okay";
+>> > +};
+>> > +
+>> > +&spi0 {
+>> > +       #address-cells = <1>;
+>> > +       #size-cells = <0>;
+>> > +       pinctrl-names = "default";
+>> > +       pinctrl-0 = <&spi0_pins>;
+>> 
+>> Those two lines look redundant, as they are already specified in the
+>> .dtsi file.
+>> 
+>> > +       cs-gpios = <0>, <&pio 1 0 GPIO_ACTIVE_LOW>; /* PB0 */
+>> > +       status = "okay";
+>> > +
+>> > +       flash@0 {
+>> > +               #address-cells = <1>;
+>> > +               #size-cells = <1>;
+>> > +               compatible = "jedec,spi-nor";
+>> 
+>> I think traditionally we have the compatible first, and #a-c and #s-c
+>> last in the node.
+>> And do you have anything partitioned in there? If not, you wouldn't
+>> need the #a-c and #s-c properties, I think.
+>> 
+>> > +               reg = <0>;
+>> > +               label = "firmware";
+>> > +               spi-max-frequency = <40000000>;
+>> > +       };
+>> > +
+>> > +       can@1 {
+>> > +               compatible = "microchip,mcp2518fd";
+>> > +               reg = <1>;
+>> > +               clocks = <&clk_can0>;
+>> > +               interrupt-parent = <&pio>;
+>> > +               interrupts = <1 1 IRQ_TYPE_LEVEL_LOW>;  /* PB1 */
+>> > +               spi-max-frequency = <20000000>;
+>> > +               vdd-supply = <&reg_vcc3v3>;
+>> > +               xceiver-supply = <&reg_vcc3v3>;
+>> > +       };
+>> > +};
+>> > \ No newline at end of file
+>> 
+>> Please add a newline at the end.
+> 
+> Well maybe this file is written with some non-Unix-traditional editor,
+> well Linux is something Unix-traditional, and for these editors manual
+> insertion of an empty line will be needed (on Unix-traditional things
+> e.g. Vim, no empty lines should be presented at all.)
+> 
+>> 
+>> > diff --git a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+>> > b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+>> 
+>> I don't know for sure if people want SoC .dtsi patches separately?
+>> 
+>> Cheers,
+>> Andre
+>> 
+>> > index 9e13c2aa8911..f909b1d4dbca 100644
+>> > --- a/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+>> > +++ b/arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi
+>> > @@ -416,6 +416,12 @@ uart0_pb_pins: uart0-pb-pins {
+>> >                                 function = "uart0";
+>> >                         };
+>> >  
+>> > +                       /omit-if-no-ref/
+>> > +                       uart1_pe_pins: uart1-pe-pins {
+>> > +                               pins = "PE21", "PE22";
+>> > +                               function = "uart1";
+>> > +                       };
+>> > +
+>> >                         uart2_pins: uart2-pins {
+>> >                                 pins = "PB0", "PB1";
+>> >                                 function = "uart2";
+>> 
+>> 
 
 
