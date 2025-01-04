@@ -1,160 +1,136 @@
-Return-Path: <linux-gpio+bounces-14507-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14508-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02E58A01562
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 15:50:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD13BA0159D
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 16:45:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7F5F3A183F
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 14:50:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B7101881477
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2025 15:45:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574111C3BE3;
-	Sat,  4 Jan 2025 14:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD841CDA19;
+	Sat,  4 Jan 2025 15:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="dDe3Onzq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGbp3s53"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165901BD9DC
-	for <linux-gpio@vger.kernel.org>; Sat,  4 Jan 2025 14:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B0F1487E9;
+	Sat,  4 Jan 2025 15:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736002224; cv=none; b=sWEZf3KTrEH459lXJAyT99wfAkPWUpxLXlrB7Y5sBplCdXLoIiuFV/57xxpivry2lQHDuleXpqjEByutO8INPj3SNK2pk/2hui+m5VtIyPefYJOWYoiaV1X60tHLHnUoobH2caeWzNECzMNOqTYoxJHOP9g0qrXNGArTNJ3Zdqw=
+	t=1736005510; cv=none; b=tpsJJyT12qhIc9m5h6BUnbajbkyZui7reR1WNhNnM6E2JfsR+XGQVGWdkPGPl7U6ac/MqCa+VMU7JanD/QgaCS/tp1wqHsdtq4lT8hesDrTPr9Wx+OHeBxbNAha5PRd2WF+QWp3moz26N8HmaqAb5nN7ZC++bZLclv/tBHlKL5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736002224; c=relaxed/simple;
-	bh=4bf4pavVpF+pyI0is+w3RLenY4A2F6NwCECyY2dkxh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3tdPy64KWyX8buNIyYyNA00/lb913hHMVxKpG0YYX3NV3gUVKcQi9o/jHIJ0SLdCpp+zA16yiKq1nTMHJf0fbcILJNA9SQm4pV4JiX/lFtjCBR5prRHjY5FCEHYJM8ciO8qLcTKghTb4XvLNI1pkxq3APzsxEBSPpEbbs98Kuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=dDe3Onzq; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 6942024002A
-	for <linux-gpio@vger.kernel.org>; Sat,  4 Jan 2025 15:50:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1736002220; bh=4bf4pavVpF+pyI0is+w3RLenY4A2F6NwCECyY2dkxh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=dDe3OnzqTTueKGDMPE2BtSNuXMEgWS439/KUkggBc1vNsiQ+XueyT53Eiu4wKRA3W
-	 WYB+Sg+2HjSTXkNsfQ/Hc/l348OZqCdcI/jAV99NDs4BpYG7u2wl3283aLB0+FdRgr
-	 Wad64+Wv4Bu9c0rvAPdH5eFXiOElRboLbIJqvJwkajfl1OaLHm7GTSTNHGWaGJv2FR
-	 BhJlDQfQTHMlTHg8cfeoZ5VK9q6B6i66no0L9Td9E4Y6RUSegX8fuHfPgSOEp6Mq2c
-	 lOZczDEeH2fVuBbmDqlcoWOzGRcFTSpPB4EVxtF44+D5IiHgubIM+FA6A8g9IYvO6E
-	 848VJaaVjrkgA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YQNf04cSFz6twh;
-	Sat,  4 Jan 2025 15:50:16 +0100 (CET)
-Date: Sat,  4 Jan 2025 14:50:16 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: j.ne@posteo.net, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Frank Li <Frank.Li@nxp.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 14/19] powerpc: mpc83xx: Switch to of_platform_populate
-Message-ID: <Z3lKqLXphxeI1Gvo@probook>
-References: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
- <20250102-mpc83xx-v1-14-86f78ba2a7af@posteo.net>
- <CAL_JsqKU0AQ+ym_iDZSN5hNUTMF0bgjqu-aAVtG792Mw_eZTbg@mail.gmail.com>
+	s=arc-20240116; t=1736005510; c=relaxed/simple;
+	bh=9K4DoA4/eNp8pTk7iODtQSs3B/9Q7iO/42kwKf2Gk6M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eUm4qXEmWNb/eGv4DV88gx5BeRoZjObRIhva/pzQ8o57dCSCG9sAz7kAtDudedPPTIIHBDT4U+w6QARoFOw7jqLUii3J89mWMwLrXSAFbrh4um/snpTnn0j77j/IvMCmeJvBwGSgA77c0uMxNC9/sL2uR9Xp+C2ChseqyI5SGF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LGbp3s53; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ee86a1a92dso14916269a91.1;
+        Sat, 04 Jan 2025 07:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736005508; x=1736610308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9K4DoA4/eNp8pTk7iODtQSs3B/9Q7iO/42kwKf2Gk6M=;
+        b=LGbp3s53W5kT7yVwKFQLSJYX4R544WjkiFew2tZq9ivJFRRGu4RpXTAzyQu10Ebr22
+         Rt52PJhFNoJeIYSXXFDXXjptN5+RL7tn9uMWilFfxpG9scrB1u9udBXX97vUSzwxd1h5
+         l0lXJzG83CYBphsfe3EIwy+8iDJl/TolMoD6yOUsjcpvFCk3oB6LM35Ip7orMRBurUFd
+         92oJre3JauRQkCGK893hsMYFRR+BS6SLnjbMKxmxqziROMveWP1MFcqAKXbK9q7SXCgI
+         fsB+hRH0ZZmsDnLotRg+KJiDS+c3sGmTfa1xhol/jzfVf9BKnP/T0liYoB+LFvMlOLH0
+         FTnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736005508; x=1736610308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9K4DoA4/eNp8pTk7iODtQSs3B/9Q7iO/42kwKf2Gk6M=;
+        b=E+JXrS0SMB7GQBn9T62o1ofva3Oobc+ctCKtTZizsV0U9mDszUpiGcUAjlq2/tmrzS
+         sBsSSFkQwL6rHs81AKZXgMZquCqJj81HpQ7NavOynP4p2e780QtWwZtNs43t9FLMLkRY
+         2Wrcg34wNhLdTR4j5rkyz4nlfwMKxIca1M83jMqxW1G0z3lulTeslp42pT7DbQo2nvtB
+         2XkTllC+8QRT8wJsj4MYliEdRegetQCc9g/08i/zOcEoBTTtPEXp1ot2IGwR1ToNS/Ex
+         i32SfPqXjnUoCej+7Cfm8m5HbkwGLD0kQUQ5QuWifGfyhq5JXR1GHpVKjkNd3GNKie9r
+         53LA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtZhfoy8RbP75MBl+6drNQ9UOMmO8YKwBflaZBU114+u1H4yBlQKETOjoItE5ojwkT9smpxHfdg013M5RF@vger.kernel.org, AJvYcCWrU4yabCLUppuNQyCERPe0CLTtnsKw5iHatliAWB1fK2NdEDWN9rYUtUsoJMjmSGQKeUNo3ghe22xf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2ljfc0A9FK9yp4xD4j1ukXyDFuYZw3jdmdWupiYgonMbS4Kti
+	WtN1R6nx7TT6+zrcaNsaL/7CD0EywIgb17gf8/5mPvPfskLXZ8y5CIFkT06dy1Ws9HEoYVK94IQ
+	gDocQxG40tcW1jAtVSeLTEB210k4=
+X-Gm-Gg: ASbGncsojf6FppO7qA47UncW+6p3vZ5oi8jl9Mt/OcM+jnHdM8ZDHv4YE9rR5OCGTU4
+	AEYwIDgA5KL183g7BWygK2Ke/ZOtqb06FLw4RIyE=
+X-Google-Smtp-Source: AGHT+IGHuAsjJFky8YE/Q4ytPMpZgiAd7l0PVMXKnjIBR6qe5MY2JkbOUmyQdtdddfecriOUwB/W523m7e86gUNaGd4=
+X-Received: by 2002:a17:90b:534e:b0:2ee:7a4f:9265 with SMTP id
+ 98e67ed59e1d1-2f452e22c53mr85072579a91.15.1736005508135; Sat, 04 Jan 2025
+ 07:45:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKU0AQ+ym_iDZSN5hNUTMF0bgjqu-aAVtG792Mw_eZTbg@mail.gmail.com>
+References: <20241207223335.17535-1-kylehendrydev@gmail.com>
+ <20241224103645.1709996-1-noltari@gmail.com> <CAOiHx=kvsCx0cd5C8eza-V7H+ML2ff5zB=vjM6zDmb0A7d16+A@mail.gmail.com>
+ <07a21d3f-539e-4609-bc60-ff320935db8a@gmail.com>
+In-Reply-To: <07a21d3f-539e-4609-bc60-ff320935db8a@gmail.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Sat, 4 Jan 2025 16:44:31 +0100
+Message-ID: <CAKR-sGesWUbxQY6SmeW4mGM_89=SkNMbL=TJJQtAiDKMjC6y+g@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: bcm63268: add gpio function
+To: Kyle Hendry <kylehendrydev@gmail.com>
+Cc: Jonas Gorski <jonas.gorski@gmail.com>, linus.walleij@linaro.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 02, 2025 at 12:51:47PM -0600, Rob Herring wrote:
-> On Thu, Jan 2, 2025 at 12:32 PM J. Neuschäfer via B4 Relay
-> <devnull+j.ne.posteo.net@kernel.org> wrote:
+El vie, 3 ene 2025 a las 4:04, Kyle Hendry (<kylehendrydev@gmail.com>) escr=
+ibi=C3=B3:
+>
+> On 2024-12-30 08:42, Jonas Gorski wrote:
+> > Hi,
 > >
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
+> > On Tue, Dec 24, 2024 at 11:41=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Roj=
+as
+> > <noltari@gmail.com> wrote:
+> >> From: Kyle Hendry <kylehendrydev@gmail.com>
+> >>
+> >> There is no guarantee that the bootloader will leave the pin configura=
+tion
+> >> in a known default state, so pinctrl needs to be explicitly set in som=
+e
+> >> cases. This patch adds a gpio function for drivers that need it, i.e.
+> >> gpio-leds.
+> >>
+> >> Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
+> >> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 > >
-> > Quoting from drivers/of/platform.c:
+> > bcm63268-pinctrl implements pinmux_ops::gpio_request_enable(), which
+> > should automatically set any requested GPIO pin to the GPIO function,
+> > so explicitly requesting the gpio function for a pin should not be
+> > needed. Is this not enough?
 > >
-> > > of_platform_populate() - [...]
-> > > Similar to of_platform_bus_probe(), this function walks the device
-> > > tree and creates devices from nodes.  It differs in that it follows
-> > > the modern convention of requiring all device nodes to have a
-> > > 'compatible' property, and it is suitable for creating devices which
-> > > are children of the root node (of_platform_bus_probe will only create
-> > > children of the root which are selected by the @matches argument).
+> > Best Regards,
+> > Jonas
 > >
-> > This is useful for new board ports because it means that the C code does
-> > not have to anticipate every node that is placed directly under the root.
 > >
-> > As a consequence, the of_bus_ids list can be much shorter, and I've
-> > trimmed it to the necessary parts:
-> >
-> >  - device-type = "soc" and compatible = "simple-bus" for the SoC bus
-> >  - compatible = "gianfar" for the Ethernet controller (TSEC), which
-> >    may contain an MDIO bus, which needs to be probed, as a subnode
-> >
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> >  arch/powerpc/platforms/83xx/misc.c | 6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-> > index 1135c1ab923cc120f377a0d98767fef686cad1fe..bf522ee007bbb1429233355f668fc8563d8ca4e2 100644
-> > --- a/arch/powerpc/platforms/83xx/misc.c
-> > +++ b/arch/powerpc/platforms/83xx/misc.c
-> > @@ -94,18 +94,14 @@ void __init mpc83xx_ipic_init_IRQ(void)
-> >
-> >  static const struct of_device_id of_bus_ids[] __initconst = {
-> >         { .type = "soc", },
-> 
-> of_platform_populate() won't work on this match unless there's a
-> compatible in the node, too. Can we use compatible instead or are
-> there a bunch of them?
+> I assumed that as well, but nothing I tried worked with gpio-leds.
+> gpiochip_generic_request() does call gpio_request_enable(), but gpio-leds
+> uses devm_fwnode_gpiod_get() which looks like a different code path. The
+> only place it seems to be configuring the gpio is in create_gpio_led()
+> where it needs a pinctl node in the device tree. That's just my reading
+> of the code, though. I haven't set up a ftrace to verify it.
+>
+> Best Regards,
+> Kyle
 
-In arch/powerpc/boot/dts, I can find the following cases of device_type
-= "soc" without compatible = "simple-bus":
-
-- arch/powerpc/boot/dts/tqm8xx.dts           (MPC8xx)
-- arch/powerpc/boot/dts/mpc885ads.dts        (MPC8xx)
-- arch/powerpc/boot/dts/mpc866ads.dts        (MPC8xx)
-- arch/powerpc/boot/dts/ep88xc.dts           (MPC8xx)
-- arch/powerpc/boot/dts/kuroboxHG.dts        (MPC82xx)
-- arch/powerpc/boot/dts/kuroboxHD.dts        (MPC82xx)
-- arch/powerpc/boot/dts/storcenter.dts       (MPC82xx)
-- arch/powerpc/boot/dts/asp834x-redboot.dts  (MPC83xx!)
-- arch/powerpc/boot/dts/ksi8560.dts          (MPC85xx)
-
-i.e. there is one affected devicetree. I can simply patch that one in
-the next iteration.
-
-> 
-> > -       { .compatible = "soc", },
-> >         { .compatible = "simple-bus" },
-> >         { .compatible = "gianfar" },
-> > -       { .compatible = "gpio-leds", },
-> > -       { .type = "qe", },
-> > -       { .compatible = "fsl,qe", },
-> 
-> Better still would be if we could move the remaining ones to the
-> default table and just call of_platform_default_populate().
-
-of_platform_default_populate does sound preferable.
-
-I'll investigate why exactly the "gianfar" match is necessary and how to
-fix it in the corresponding driver (I don't think it's general enough to
-warrant being listed in of_default_bus_match_table).
-
+As Kyle pointed out it's not enough and gpio_request_enable() doesn't
+get called from gpio-leds.
+I will try to investigate this and report back.
 
 Best regards,
- jn
+=C3=81lvaro.
 
