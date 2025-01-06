@@ -1,114 +1,102 @@
-Return-Path: <linux-gpio+bounces-14526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 576C5A020B9
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 09:32:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DB7BA02191
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 10:15:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D64DF3A1FE4
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 08:32:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D5031639EA
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 09:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99DE8199EA3;
-	Mon,  6 Jan 2025 08:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56551D63EA;
+	Mon,  6 Jan 2025 09:15:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994F51D88D3
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jan 2025 08:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from 189.cn (ptr.189.cn [183.61.185.102])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003291D8DEE;
+	Mon,  6 Jan 2025 09:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.61.185.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736152317; cv=none; b=NJCaT6QyF+dV497Vq6TkbZ2JSB0kL18N+FnQU49rXo5iJ0kWKInPxgIQvOHArNxuRy2tW2OqXS+Sf/ou0Y5uQCKv3gg7KC02WlevNkQf2of5DWjbmsC325BEZfuYhz8TXKeX6aUHM7mOJQ1O5rvp9GLAFoDD5NvmNVrZs6aTfWs=
+	t=1736154914; cv=none; b=CqfqZJxVkXUfp2kcDuZWDobENz3WAfokTCV/X3QkqTQMmjz1no6vGGZIOLS+ZEKGiILaxrkPPq2+JH0BEPLdzf4fYa6BxjjvMHoaeg5RtWq3xSY1xFs7FREEqiUPWMaRZ2L1uFIw+Lf988XxWrfeWcXU7Gn5OUzkKidBOlUkHUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736152317; c=relaxed/simple;
-	bh=mdW1Dhp8mTPIbOJSIufuNdW74kuICsBuLYeqGtO4PG4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eynLuZNymRI+p8YROm4++zvKh6XwrVftwZVGczNGbnYDTAdF7Gps2MUfxs4alockV9fHTw+WubUHnadIvwouXKOIzBMkMEIKPtqStWy6EpmTPKesS3dyDViJ/oJsJ+hDWrvvJlh9xDe4Tak9b123z8bbHCxfCjcsQCwncizF6kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tUiVn-0003Dn-TL; Mon, 06 Jan 2025 09:30:59 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tUiVj-0078KE-2q;
-	Mon, 06 Jan 2025 09:30:56 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tUiVk-0008wh-1m;
-	Mon, 06 Jan 2025 09:30:56 +0100
-Message-ID: <ee93bdca7fddb03a1d1e8997ce21a9cb7339ae63.camel@pengutronix.de>
-Subject: Re: [PATCH RESEND 09/22] iommu: sun50i: make reset control optional
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Parthiban Nallathambi <parthiban@linumiz.com>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Michael Turquette <mturquette@baylibre.com>,  Stephen
- Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Vinod
- Koul <vkoul@kernel.org>,  Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: iommu@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-phy@lists.infradead.org
-Date: Mon, 06 Jan 2025 09:30:56 +0100
-In-Reply-To: <20241227-a133-display-support-v1-9-abad35b3579c@linumiz.com>
-References: <20241227-a133-display-support-v1-0-abad35b3579c@linumiz.com>
-	 <20241227-a133-display-support-v1-9-abad35b3579c@linumiz.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1736154914; c=relaxed/simple;
+	bh=Mxkrwt14fM4pwO4vEkcq1UxQWVbFPvDfuuaBuvnGlhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MDRrvdFGdxUuk1kgnKgE6EzQN875HvxyGR/dvhh223HMCoTaG7+drUOpb0mMBG8VguWC9PKMJUH1pRn9H6xuccQIe0QTxOWeFRdXHr7qUG9IpoDYQbVRr8EAPLcUtXqGDM9LYv41JIC8YCJ5oZfk0SNwCjh08cQ4wuAJcUj79+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn; spf=pass smtp.mailfrom=189.cn; arc=none smtp.client-ip=183.61.185.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=189.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=189.cn
+HMM_SOURCE_IP:10.158.243.18:1666.1653008831
+HMM_ATTACHE_NUM:0000
+HMM_SOURCE_TYPE:SMTP
+Received: from clientip-123.150.8.42 (unknown [10.158.243.18])
+	by 189.cn (HERMES) with SMTP id D2E751001EF;
+	Mon,  6 Jan 2025 17:11:29 +0800 (CST)
+Received: from  ([123.150.8.42])
+	by gateway-153622-dep-5c5f88b874-pd459 with ESMTP id a2fb0e8641834e57994da1618bc59e83 for brgl@bgdev.pl;
+	Mon, 06 Jan 2025 17:11:29 CST
+X-Transaction-ID: a2fb0e8641834e57994da1618bc59e83
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+Message-ID: <e8e3ad94-1a43-4439-91d9-15ad91aaea9b@189.cn>
+Date: Mon, 6 Jan 2025 17:11:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] drivers:gpio: introduce variants of gpiod_get_array
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linus.walleij@linaro.org, corbet@lwn.net, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20241217085302.835165-1-chensong_2000@189.cn>
+ <ec5531e5-6fae-431e-bc58-73bb816d477d@189.cn>
+ <CAMRc=McNWBNCbCsNPvqUHrMtwfveeMCy5am+yNxVKUficat_VA@mail.gmail.com>
+Content-Language: en-US
+From: Song Chen <chensong_2000@189.cn>
+In-Reply-To: <CAMRc=McNWBNCbCsNPvqUHrMtwfveeMCy5am+yNxVKUficat_VA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fr, 2024-12-27 at 18:30 +0530, Parthiban Nallathambi wrote:
-> A133/A100 SoC doesn't have reset control from the CCU. Get reset
-> control line optionally.
->=20
-> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
-> ---
->  drivers/iommu/sun50i-iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iommu/sun50i-iommu.c b/drivers/iommu/sun50i-iommu.c
-> index 8d8f11854676..2ba804d682dc 100644
-> --- a/drivers/iommu/sun50i-iommu.c
-> +++ b/drivers/iommu/sun50i-iommu.c
-> @@ -1030,7 +1030,7 @@ static int sun50i_iommu_probe(struct platform_devic=
-e *pdev)
->  		goto err_free_cache;
->  	}
-> =20
-> -	iommu->reset =3D devm_reset_control_get(&pdev->dev, NULL);
-> +	iommu->reset =3D devm_reset_control_get_optional(&pdev->dev, NULL);
->  	if (IS_ERR(iommu->reset)) {
->  		dev_err(&pdev->dev, "Couldn't get our reset line.\n");
->  		ret =3D PTR_ERR(iommu->reset);
+Hi Bart,
 
-With dt-bindings changed to require resets on those platforms that do,
+在 2025/1/4 04:41, Bartosz Golaszewski 写道:
+> On Thu, Jan 2, 2025 at 2:25 AM Song Chen <chensong_2000@189.cn> wrote:
+>>
+>> Dear maintainers,
+>>
+>> It has been a while after this patch was sent. I'm not sure if i
+>> followed the idea suggested by Bart correctly, see [1], any comment will
+>> be appreciated.
+>>
+>> Best regards,
+>>
+>> Song
+>>
+>> [1]:https://lore.kernel.org/lkml/CAMRc=MfpwuMh-MH1UEHKky09iAs4g9=iGFPptARXzoZrVS8hdQ@mail.gmail.com/
+>>
+> 
+> I've been meaning to respond and it fell off my radar. We typically
+> don't add new calls without users so I'd love to see this patch in
+> conjunction with a conversion of some driver to using it in order to
+> prove that the change makes sense
+> 
+> Bart
+> 
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+yes, agree, i planned to send a patchset with this one and s5m8767 
+together, but i had a question and haven't got any response from 
+Krzysztof yet. Maybe i was off his radar as well.
 
-regards
-Philipp
+I will send another mail to see how he thinks, you are in that thread, 
+please join the discussion.
+
+Many thanks
+
+Song
 
