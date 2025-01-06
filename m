@@ -1,48 +1,42 @@
-Return-Path: <linux-gpio+bounces-14532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33A43A0222E
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 10:51:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABEFBA02235
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 10:52:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B63C13A2786
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 09:51:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DD2A160494
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 09:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2CD1D6182;
-	Mon,  6 Jan 2025 09:51:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ScJ1hj1M"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83741D6182;
+	Mon,  6 Jan 2025 09:52:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765E1CCEF8;
-	Mon,  6 Jan 2025 09:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199C51CCEF8;
+	Mon,  6 Jan 2025 09:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736157096; cv=none; b=pB7LgDhheFH5DwKcnq3HIbLgZtI8+6OaySMJ5tgi4cNABUiMh31dXEUTJvfW8y6iEOegkPFv3hggwcILWl3Tw8Mx0cZscCdaoS2dmpEfYEOtxkP7RIzp058Sy8pFpfsSJwgJpsAUwiLJZ+icH9FMhGhi4UoBncBHP2TAETSWh44=
+	t=1736157129; cv=none; b=t707QA1nMnkBK/wQAJqip1BsJrLh0xLlbupJnKmgzE3z0AJSqWJzNrtn6w52OdWFt8l0a/I8Kl18V7GFOPEPXRX6mkemJF2JBAWyTUUOCMMr/yFe4uMKokM+wiCB3/235zb/SburCARtqMXj9su8lBxPK9L5BszkiUDrt2OieXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736157096; c=relaxed/simple;
-	bh=dBWjb1IT3V9uRUOR70yQApnZqiLFvWlOCWrBKkDOirk=;
+	s=arc-20240116; t=1736157129; c=relaxed/simple;
+	bh=W7p4MwwbuQqv1bdpw4mZxlelegPBY2En6spNHf7ULfs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mIvZU2DtyqCuihAAtqfUPawv/Rv4qsx6CRtkqGw1aqxK5HL15YuYEZ94tQnZOcBVrXGP3PELPNEEL4lk/sjedT7konkQZYTC1Ybcjhru9MnI5k0mbKlSpS/DdiijkxTuume1g4RL+Tf6EdNuB+nKSvwsqQNaqonDPlTN/rUkQdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ScJ1hj1M; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D17454CE;
-	Mon,  6 Jan 2025 10:50:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1736157034;
-	bh=dBWjb1IT3V9uRUOR70yQApnZqiLFvWlOCWrBKkDOirk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ScJ1hj1MsKpNMgTiaL1l4T4fnWA/j1Ab/vbSi1Km4vAhqBqKMU2IRcJne4pLkNOuL
-	 JSM8XyIkkRpUVDMKjbNTS06emkLdpgFXTBCE5KbbCnkdY2aX6/4S0rkQyfVoN/ApL4
-	 OvbCm54yozXtzx0UToCYhqi4sjhaMhSvxTNEdHPw=
-Message-ID: <f63b7744-b86e-4dbe-aa49-10614a025b7e@ideasonboard.com>
-Date: Mon, 6 Jan 2025 11:51:20 +0200
+	 In-Reply-To:Content-Type; b=c728QdlMMufq15q4WE9vUrEWvzxJs6G0DeDFONPZ7dR97nVS60oTsVUP5DYnO0ZDLxFBJHOGlv04MJMX2GyGI2hZhqzdl9UpGDMmqAqT0hX1udR6NsG/nslU9Hb9JllZeqPxgrowKXkp6AsAsQN5tZQuX+okSj+mPZxrUcGcnKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
+Received: from MUA
+	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98)
+	(envelope-from <mhej@vps-ovh.mhejs.net>)
+	id 1tUjmC-00000005Hjt-2LIq;
+	Mon, 06 Jan 2025 10:52:00 +0100
+Message-ID: <36e47f2c-a8d4-4ad2-8f7e-60fa0b2787e8@maciej.szmigiero.name>
+Date: Mon, 6 Jan 2025 10:51:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,359 +44,144 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/9] i2c: use client addresses directly in ATR
- interface
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Andi Shyti
- <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>,
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20241230-fpc202-v4-0-761b297dc697@bootlin.com>
- <20241230-fpc202-v4-4-761b297dc697@bootlin.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20241230-fpc202-v4-4-761b297dc697@bootlin.com>
+Subject: Re: [PATCH] pinctrl: amd: Take suspend type into consideration which
+ pins are non-wake
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <e61858fe70face71226727618dfaa9d5e54da0bd.1735490511.git.mail@maciej.szmigiero.name>
+ <73486a76-d24d-40f0-ac32-792b80aca6d9@amd.com>
+Content-Language: en-US, pl-PL
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
+ 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
+Disposition-Notification-To: "Maciej S. Szmigiero"
+ <mail@maciej.szmigiero.name>
+In-Reply-To: <73486a76-d24d-40f0-ac32-792b80aca6d9@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Sender: mhej@vps-ovh.mhejs.net
 
-Hi,
-
-On 30/12/2024 15:22, Romain Gantois wrote:
-> The I2C Address Translator (ATR) module defines mappings from i2c_client
-> structs to aliases. However, only the physical address of each i2c_client
-> struct is actually relevant to the workings of the ATR module. Moreover,
-> some drivers require address translation functionality but do not allocate
-> i2c_client structs, accessing the adapter directly instead. The SFP
-> subsystem is an example of this.
+On 6.01.2025 04:18, Mario Limonciello wrote:
+> On 12/29/2024 10:42, Maciej S. Szmigiero wrote:
+>> Some laptops have pins which are a wake source for S0i3/S3 but which
+>> aren't a wake source for S4/S5 and which cause issues when left unmasked
+>> during hibernation (S4).
+>>
+>> For example HP EliteBook 855 G7 has pin #24 that causes instant wakeup
+>> (hibernation failure) if left unmasked (it is a wake source only for
+>> S0i3/S3).
 > 
-> Replace the "i2c_client" field of the i2c_atr_alias_pair struct with a u16
-> "addr" field. Rewrite helper functions and callbacks as needed.
+> On your machine do you know what pin 24 is connected to?
+
+Yes, it's connected to WWAN modem, since this GPIO pin triggers wake notify
+to this modem's parent PCIe port:
+ From \_SB.GPIO._EVT:
+Case (0x18)
+{
+	MSTP (0x3918)
+	Notify (\_SB.PCI0.GP12, 0x02) // Device Wake
+}
+
+WWAN modem is _SB.PCI0.GP12.PWAN, there's no other device under _SB.PCI0.GP12.
+
+Will add this note to v2 commit message.
+
+> If not, can you run https://gitlab.freedesktop.org/drm/amd/-/blob/master/scripts/amd_s2idle.py and share the text report it generates to me?
 > 
-> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
-> ---
->   drivers/i2c/i2c-atr.c         | 52 ++++++++++++++++---------------------------
->   drivers/media/i2c/ds90ub960.c | 24 ++++++++++----------
->   include/linux/i2c-atr.h       | 20 ++++++++---------
->   3 files changed, 41 insertions(+), 55 deletions(-)
+> I'll see if I can make sense in that report what it's most likely connected to.
 > 
-> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-> index f21475ae592183a45b5e46a20e7a0699fb88132c..894787246846b9965deb03a7ec7eb600b102ddad 100644
-> --- a/drivers/i2c/i2c-atr.c
-> +++ b/drivers/i2c/i2c-atr.c
-> @@ -21,16 +21,16 @@
->   #define ATR_MAX_SYMLINK_LEN 11	/* Longest name is 10 chars: "channel-99" */
->   
->   /**
-> - * struct i2c_atr_alias_pair - Holds the alias assigned to a client.
-> + * struct i2c_atr_alias_pair - Holds the alias assigned to a client address.
->    * @node:   List node
-> - * @client: Pointer to the client on the child bus
-> + * @addr:   Address of the client on the child bus.
->    * @alias:  I2C alias address assigned by the driver.
->    *          This is the address that will be used to issue I2C transactions
->    *          on the parent (physical) bus.
->    */
->   struct i2c_atr_alias_pair {
->   	struct list_head node;
-> -	const struct i2c_client *client;
-> +	u16 addr;
->   	u16 alias;
->   };
->   
-> @@ -97,27 +97,13 @@ struct i2c_atr {
->   	struct i2c_adapter *adapter[] __counted_by(max_adapters);
->   };
->   
-> -static struct i2c_atr_alias_pair *
-> -i2c_atr_find_mapping_by_client(const struct list_head *list,
-> -			       const struct i2c_client *client)
-> -{
-> -	struct i2c_atr_alias_pair *c2a;
-> -
-> -	list_for_each_entry(c2a, list, node) {
-> -		if (c2a->client == client)
-> -			return c2a;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->   static struct i2c_atr_alias_pair *
->   i2c_atr_find_mapping_by_addr(const struct list_head *list, u16 phys_addr)
->   {
->   	struct i2c_atr_alias_pair *c2a;
->   
->   	list_for_each_entry(c2a, list, node) {
-> -		if (c2a->client->addr == phys_addr)
-> +		if (c2a->addr == phys_addr)
->   			return c2a;
->   	}
->   
-> @@ -313,8 +299,8 @@ static void i2c_atr_release_alias(struct i2c_atr *atr, u16 alias)
->   	dev_warn(atr->dev, "Unable to find mapped alias\n");
->   }
->   
-> -static int i2c_atr_attach_client(struct i2c_adapter *adapter,
-> -				 const struct i2c_client *client)
-> +static int i2c_atr_attach_addr(struct i2c_adapter *adapter,
-> +			       u16 addr)
->   {
->   	struct i2c_atr_chan *chan = adapter->algo_data;
->   	struct i2c_atr *atr = chan->atr;
-> @@ -334,14 +320,14 @@ static int i2c_atr_attach_client(struct i2c_adapter *adapter,
->   		goto err_release_alias;
->   	}
->   
-> -	ret = atr->ops->attach_client(atr, chan->chan_id, client, alias);
-> +	ret = atr->ops->attach_addr(atr, chan->chan_id, addr, alias);
->   	if (ret)
->   		goto err_free;
->   
-> -	dev_dbg(atr->dev, "chan%u: client 0x%02x mapped at alias 0x%02x (%s)\n",
-> -		chan->chan_id, client->addr, alias, client->name);
-> +	dev_dbg(atr->dev, "chan%u: addr 0x%02x mapped at alias 0x%02x\n",
-> +		chan->chan_id, addr, alias);
+> Just want to make sure we're not papering over an issue in another component by making this change.
 
-This, and the dev_dbg() below, sound a bit odd to my ear. But I'm not 
-sure what would be a good print... "added alias 0x12 for address 0x34"?
+I think if firmware wants some pins as a wake source just for S4/S5
+then it still should be respected.
 
-Other than that, the patch looks fine.
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
->   
-> -	c2a->client = client;
-> +	c2a->addr = addr;
->   	c2a->alias = alias;
->   	list_add(&c2a->node, &chan->alias_list);
->   
-> @@ -355,16 +341,16 @@ static int i2c_atr_attach_client(struct i2c_adapter *adapter,
->   	return ret;
->   }
->   
-> -static void i2c_atr_detach_client(struct i2c_adapter *adapter,
-> -				  const struct i2c_client *client)
-> +static void i2c_atr_detach_addr(struct i2c_adapter *adapter,
-> +				u16 addr)
->   {
->   	struct i2c_atr_chan *chan = adapter->algo_data;
->   	struct i2c_atr *atr = chan->atr;
->   	struct i2c_atr_alias_pair *c2a;
->   
-> -	atr->ops->detach_client(atr, chan->chan_id, client);
-> +	atr->ops->detach_addr(atr, chan->chan_id, addr);
->   
-> -	c2a = i2c_atr_find_mapping_by_client(&chan->alias_list, client);
-> +	c2a = i2c_atr_find_mapping_by_addr(&chan->alias_list, addr);
->   	if (!c2a) {
->   		 /* This should never happen */
->   		dev_warn(atr->dev, "Unable to find address mapping\n");
-> @@ -374,8 +360,8 @@ static void i2c_atr_detach_client(struct i2c_adapter *adapter,
->   	i2c_atr_release_alias(atr, c2a->alias);
->   
->   	dev_dbg(atr->dev,
-> -		"chan%u: client 0x%02x unmapped from alias 0x%02x (%s)\n",
-> -		chan->chan_id, client->addr, c2a->alias, client->name);
-> +		"chan%u: addr 0x%02x unmapped from alias 0x%02x\n",
-> +		chan->chan_id, addr, c2a->alias);
->   
->   	list_del(&c2a->node);
->   	kfree(c2a);
-> @@ -405,7 +391,7 @@ static int i2c_atr_bus_notifier_call(struct notifier_block *nb,
->   
->   	switch (event) {
->   	case BUS_NOTIFY_ADD_DEVICE:
-> -		ret = i2c_atr_attach_client(client->adapter, client);
-> +		ret = i2c_atr_attach_addr(client->adapter, client->addr);
->   		if (ret)
->   			dev_err(atr->dev,
->   				"Failed to attach remote client '%s': %d\n",
-> @@ -413,7 +399,7 @@ static int i2c_atr_bus_notifier_call(struct notifier_block *nb,
->   		break;
->   
->   	case BUS_NOTIFY_DEL_DEVICE:
-> -		i2c_atr_detach_client(client->adapter, client);
-> +		i2c_atr_detach_addr(client->adapter, client->addr);
->   		break;
->   
->   	default:
-> @@ -506,7 +492,7 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
->   	if (max_adapters > ATR_MAX_ADAPTERS)
->   		return ERR_PTR(-EINVAL);
->   
-> -	if (!ops || !ops->attach_client || !ops->detach_client)
-> +	if (!ops || !ops->attach_addr || !ops->detach_addr)
->   		return ERR_PTR(-EINVAL);
->   
->   	atr = kzalloc(struct_size(atr, adapter, max_adapters), GFP_KERNEL);
-> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-> index 0510427ac4e9214132bcdf3fa18873ec78c48a5e..52d6879986ed4fcbe8ce3d75e04018b336beabf9 100644
-> --- a/drivers/media/i2c/ds90ub960.c
-> +++ b/drivers/media/i2c/ds90ub960.c
-> @@ -1025,8 +1025,8 @@ static int ub960_ind_update_bits(struct ub960_data *priv, u8 block, u8 reg,
->    * I2C-ATR (address translator)
->    */
->   
-> -static int ub960_atr_attach_client(struct i2c_atr *atr, u32 chan_id,
-> -				   const struct i2c_client *client, u16 alias)
-> +static int ub960_atr_attach_addr(struct i2c_atr *atr, u32 chan_id,
-> +				 u16 addr, u16 alias)
->   {
->   	struct ub960_data *priv = i2c_atr_get_driver_data(atr);
->   	struct ub960_rxport *rxport = priv->rxports[chan_id];
-> @@ -1047,23 +1047,23 @@ static int ub960_atr_attach_client(struct i2c_atr *atr, u32 chan_id,
->   		goto out_unlock;
->   	}
->   
-> -	rxport->aliased_addrs[reg_idx] = client->addr;
-> +	rxport->aliased_addrs[reg_idx] = addr;
->   
->   	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ID(reg_idx),
-> -			   client->addr << 1);
-> +			   addr << 1);
->   	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ALIAS(reg_idx),
->   			   alias << 1);
->   
->   	dev_dbg(dev, "rx%u: client 0x%02x assigned alias 0x%02x at slot %u\n",
-> -		rxport->nport, client->addr, alias, reg_idx);
-> +		rxport->nport, addr, alias, reg_idx);
->   
->   out_unlock:
->   	mutex_unlock(&rxport->aliased_addrs_lock);
->   	return ret;
->   }
->   
-> -static void ub960_atr_detach_client(struct i2c_atr *atr, u32 chan_id,
-> -				    const struct i2c_client *client)
-> +static void ub960_atr_detach_addr(struct i2c_atr *atr, u32 chan_id,
-> +				  u16 addr)
->   {
->   	struct ub960_data *priv = i2c_atr_get_driver_data(atr);
->   	struct ub960_rxport *rxport = priv->rxports[chan_id];
-> @@ -1073,13 +1073,13 @@ static void ub960_atr_detach_client(struct i2c_atr *atr, u32 chan_id,
->   	mutex_lock(&rxport->aliased_addrs_lock);
->   
->   	for (reg_idx = 0; reg_idx < UB960_MAX_PORT_ALIASES; reg_idx++) {
-> -		if (rxport->aliased_addrs[reg_idx] == client->addr)
-> +		if (rxport->aliased_addrs[reg_idx] == addr)
->   			break;
->   	}
->   
->   	if (reg_idx == UB960_MAX_PORT_ALIASES) {
->   		dev_err(dev, "rx%u: client 0x%02x is not mapped!\n",
-> -			rxport->nport, client->addr);
-> +			rxport->nport, addr);
->   		goto out_unlock;
->   	}
->   
-> @@ -1088,15 +1088,15 @@ static void ub960_atr_detach_client(struct i2c_atr *atr, u32 chan_id,
->   	ub960_rxport_write(priv, chan_id, UB960_RR_SLAVE_ALIAS(reg_idx), 0);
->   
->   	dev_dbg(dev, "rx%u: client 0x%02x released at slot %u\n", rxport->nport,
-> -		client->addr, reg_idx);
-> +		addr, reg_idx);
->   
->   out_unlock:
->   	mutex_unlock(&rxport->aliased_addrs_lock);
->   }
->   
->   static const struct i2c_atr_ops ub960_atr_ops = {
-> -	.attach_client = ub960_atr_attach_client,
-> -	.detach_client = ub960_atr_detach_client,
-> +	.attach_addr = ub960_atr_attach_addr,
-> +	.detach_addr = ub960_atr_detach_addr,
->   };
->   
->   static int ub960_init_atr(struct ub960_data *priv)
-> diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-> index 4d5da161c22516b3294e73702ace7a4546cdd588..14c1f9175c0db6a8a9c6ef5d771ae68361132a76 100644
-> --- a/include/linux/i2c-atr.h
-> +++ b/include/linux/i2c-atr.h
-> @@ -20,20 +20,20 @@ struct i2c_atr;
->   
->   /**
->    * struct i2c_atr_ops - Callbacks from ATR to the device driver.
-> - * @attach_client: Notify the driver of a new device connected on a child
-> - *                 bus, with the alias assigned to it. The driver must
-> - *                 configure the hardware to use the alias.
-> - * @detach_client: Notify the driver of a device getting disconnected. The
-> - *                 driver must configure the hardware to stop using the
-> - *                 alias.
-> + * @attach_addr: Notify the driver of a new device connected on a child
-> + *               bus, with the alias assigned to it. The driver must
-> + *               configure the hardware to use the alias.
-> + * @detach_addr: Notify the driver of a device getting disconnected. The
-> + *               driver must configure the hardware to stop using the
-> + *               alias.
->    *
->    * All these functions return 0 on success, a negative error code otherwise.
->    */
->   struct i2c_atr_ops {
-> -	int (*attach_client)(struct i2c_atr *atr, u32 chan_id,
-> -			     const struct i2c_client *client, u16 alias);
-> -	void (*detach_client)(struct i2c_atr *atr, u32 chan_id,
-> -			      const struct i2c_client *client);
-> +	int (*attach_addr)(struct i2c_atr *atr, u32 chan_id,
-> +			   u16 addr, u16 alias);
-> +	void (*detach_addr)(struct i2c_atr *atr, u32 chan_id,
-> +			    u16 addr);
->   };
->   
->   /**
+>>
+>> Fix this by considering a pin a wake source only if it is marked as one
+>> for the current suspend type (S0i3/S3 vs S4/S5).
+>>
+>> Since I'm not sure if Z-wake pins should be included in either suspend
+>> category I excluded them from both, so pins with only the Z-wake flag set
+>> are treated as non-wake pins.
 > 
+> Z only makes sense at runtime.  As long as it's restored to previous value after exiting suspend or hibernate that should be totally fine.
+
+Ack.
+
+>>
+>> Fixes: 2fff0b5e1a6b ("pinctrl: amd: Mask non-wake source pins with interrupt enabled at suspend")
+>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+>> ---
+>>   drivers/pinctrl/pinctrl-amd.c | 27 +++++++++++++++++++++------
+>>   drivers/pinctrl/pinctrl-amd.h |  7 +++----
+>>   2 files changed, 24 insertions(+), 10 deletions(-)
+>>
+(..)
+>> diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+>> index 667be49c3f48..8bf9f410d7fb 100644
+>> --- a/drivers/pinctrl/pinctrl-amd.h
+>> +++ b/drivers/pinctrl/pinctrl-amd.h
+>> @@ -80,10 +80,9 @@
+>>   #define FUNCTION_MASK        GENMASK(1, 0)
+>>   #define FUNCTION_INVALID    GENMASK(7, 0)
+>> -#define WAKE_SOURCE    (BIT(WAKE_CNTRL_OFF_S0I3) | \
+>> -             BIT(WAKE_CNTRL_OFF_S3)   | \
+>> -             BIT(WAKE_CNTRL_OFF_S4)   | \
+>> -             BIT(WAKECNTRL_Z_OFF))
+>> +#define WAKE_SOURCE_S03 (BIT(WAKE_CNTRL_OFF_S0I3) | \
+>> +             BIT(WAKE_CNTRL_OFF_S3))
+>> +#define WAKE_SOURCE_S4  BIT(WAKE_CNTRL_OFF_S4)
+> 
+> Since s03 doesn't make sense and s0i3 is wrong for s3 and s3 is wrong for s0i3 as a personal preference I would just call it
+> 
+> WAKE_SOURCE_SUSPEND
+> WAKE_SOURCE_HIBERNATE
+> 
+
+Will change them accordingly.
+
+Thanks,
+Maciej
 
 
