@@ -1,111 +1,114 @@
-Return-Path: <linux-gpio+bounces-14525-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14526-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51073A02003
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 08:41:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 576C5A020B9
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 09:32:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AA93163655
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 07:41:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D64DF3A1FE4
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 08:32:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2DBB194A54;
-	Mon,  6 Jan 2025 07:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99DE8199EA3;
+	Mon,  6 Jan 2025 08:31:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C891E511;
-	Mon,  6 Jan 2025 07:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994F51D88D3
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Jan 2025 08:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736149275; cv=none; b=PqS6VPVjnAo3BtAUuPq5rB4QBpZzmUn++CICpzo1E8dpKJvoNmunr1g0h8phC2/rRlHrsmAjUfJKsvhKZvPFbrLvCZbYpr/mT0ziP1MVIiGX7ebn/kLMqYnqxbN+p8bqeXeZzAL3ntL8RDE7h7RRSJLdk00D04jx7Z57fHMoLjo=
+	t=1736152317; cv=none; b=NJCaT6QyF+dV497Vq6TkbZ2JSB0kL18N+FnQU49rXo5iJ0kWKInPxgIQvOHArNxuRy2tW2OqXS+Sf/ou0Y5uQCKv3gg7KC02WlevNkQf2of5DWjbmsC325BEZfuYhz8TXKeX6aUHM7mOJQ1O5rvp9GLAFoDD5NvmNVrZs6aTfWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736149275; c=relaxed/simple;
-	bh=Bc0Af2iaSeEWl74r0shKj+7+Gy9ECNaYA6mveKyD7WI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MB4cBkXno725RiMfd/t3LB3hsmf+ZqaUEKXj2NSK9f8n/TOOm4UsJYMLU813sV/mDA6Ryoh2jffUq40HSWp4G33tJK4qGMX9rGwNd0tETLIw7lNPWIIIoiMdTcu4hkAe2DKr7ViN6XTqLpVxnYcPHWHCUFLdRTcJaZoAU2LjgxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-05 (Coremail) with SMTP id zQCowACnrSkHiXtnhbibBQ--.6936S2;
-	Mon, 06 Jan 2025 15:41:01 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: kumaravel.thiagarajan@microchip.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] misc: microchip: pci1xxxx: Fix possible double free in error handling path
-Date: Mon,  6 Jan 2025 15:40:53 +0800
-Message-Id: <20250106074053.312243-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1736152317; c=relaxed/simple;
+	bh=mdW1Dhp8mTPIbOJSIufuNdW74kuICsBuLYeqGtO4PG4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eynLuZNymRI+p8YROm4++zvKh6XwrVftwZVGczNGbnYDTAdF7Gps2MUfxs4alockV9fHTw+WubUHnadIvwouXKOIzBMkMEIKPtqStWy6EpmTPKesS3dyDViJ/oJsJ+hDWrvvJlh9xDe4Tak9b123z8bbHCxfCjcsQCwncizF6kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tUiVn-0003Dn-TL; Mon, 06 Jan 2025 09:30:59 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tUiVj-0078KE-2q;
+	Mon, 06 Jan 2025 09:30:56 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tUiVk-0008wh-1m;
+	Mon, 06 Jan 2025 09:30:56 +0100
+Message-ID: <ee93bdca7fddb03a1d1e8997ce21a9cb7339ae63.camel@pengutronix.de>
+Subject: Re: [PATCH RESEND 09/22] iommu: sun50i: make reset control optional
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Parthiban Nallathambi <parthiban@linumiz.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Michael Turquette <mturquette@baylibre.com>,  Stephen
+ Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Vinod
+ Koul <vkoul@kernel.org>,  Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: iommu@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-phy@lists.infradead.org
+Date: Mon, 06 Jan 2025 09:30:56 +0100
+In-Reply-To: <20241227-a133-display-support-v1-9-abad35b3579c@linumiz.com>
+References: <20241227-a133-display-support-v1-0-abad35b3579c@linumiz.com>
+	 <20241227-a133-display-support-v1-9-abad35b3579c@linumiz.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACnrSkHiXtnhbibBQ--.6936S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr48ZryUGry8tF4xWF15Jwb_yoW8Wry8pa
-	9xX3W7Zry8twsxKr48Za4UtF1fAw40ka45WrZFkw1a93ZxJF9IyFWv9r9F9w1DWrWUt3Wf
-	tF1UKrWUGa1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-	648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUvg4fUUUUU=
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-When auxiliary_device_add() returns error and then calls
-auxiliary_device_uninit(), the callback function
-gp_auxiliary_device_release() calls kfree() to free memory. Do not
-call kfree() again in the error handling path.
+On Fr, 2024-12-27 at 18:30 +0530, Parthiban Nallathambi wrote:
+> A133/A100 SoC doesn't have reset control from the CCU. Get reset
+> control line optionally.
+>=20
+> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+> ---
+>  drivers/iommu/sun50i-iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iommu/sun50i-iommu.c b/drivers/iommu/sun50i-iommu.c
+> index 8d8f11854676..2ba804d682dc 100644
+> --- a/drivers/iommu/sun50i-iommu.c
+> +++ b/drivers/iommu/sun50i-iommu.c
+> @@ -1030,7 +1030,7 @@ static int sun50i_iommu_probe(struct platform_devic=
+e *pdev)
+>  		goto err_free_cache;
+>  	}
+> =20
+> -	iommu->reset =3D devm_reset_control_get(&pdev->dev, NULL);
+> +	iommu->reset =3D devm_reset_control_get_optional(&pdev->dev, NULL);
+>  	if (IS_ERR(iommu->reset)) {
+>  		dev_err(&pdev->dev, "Couldn't get our reset line.\n");
+>  		ret =3D PTR_ERR(iommu->reset);
 
-Fix this by skipping the redundant kfree().
+With dt-bindings changed to require resets on those platforms that do,
 
-Found by code review.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Cc: stable@vger.kernel.org
-Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-index 32af2b14ff34..fbd712938bdc 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-@@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- err_aux_dev_add_1:
- 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
-+	goto err_aux_dev_add_0;
- 
- err_aux_dev_init_1:
- 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
-@@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- err_aux_dev_add_0:
- 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
-+	goto err_ret;
- 
- err_aux_dev_init_0:
- 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
--- 
-2.25.1
-
+regards
+Philipp
 
