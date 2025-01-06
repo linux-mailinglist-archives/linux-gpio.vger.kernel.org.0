@@ -1,130 +1,132 @@
-Return-Path: <linux-gpio+bounces-14547-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14548-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7121A0314F
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:23:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 742EEA0323A
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 22:43:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84DEE163EAB
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 20:23:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E99163A3627
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:43:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6EA1DF26B;
-	Mon,  6 Jan 2025 20:23:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 385081E04A9;
+	Mon,  6 Jan 2025 21:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cy507WVq"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iowIDloh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC19FBF6
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jan 2025 20:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D6F188A0D;
+	Mon,  6 Jan 2025 21:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736195017; cv=none; b=UysvF7NwqdshOcOkFzLekKmJ0PkHoFPZI13q/KGsthL3Hr50opYJdTmSQrO4/Jxfd/Av9ddcbi6eesFz87FPaNrxnOqsuW7onCAW4IqduSa36ab+hEbigS6aUlz6bXiy7pDtFR93klXwY4ERIWgBxBalJZp/hRPbYOExdu+bweY=
+	t=1736199809; cv=none; b=msvLrCE8dvk9CVVelY6i/geUFipBrkLBu12b3j4s0N1UMjwlVrLMnft0Emok9gpszaSj8LoHOBBaiY+BO3EERqtsH6PjulEBMLLw+Rwt2QiPRy54NvjpLBg65+mObifkny6mbXsEO3CCaG6h1/EqTcgAK+cHPC51U70zyM7XmjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736195017; c=relaxed/simple;
-	bh=oloSoCpL+vTs6hRSB6u1qL5TlfX3tfKLCkUfIBOyPNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LhHp8NY2NglWyrY79/Jphw09a/45ct4wO9ZEQoDrR9f+ngR1H3IO9YhJk/W4ZcZN2UFmPA/grRlmgre9F4ixidlE8WCJKlYhEsTbyjCPRjOIdtq1ebIC+xnfSArgYEBjbTiHHth761EYyqVpgPAKIjIYLhYkWwovTgawSfcF2e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cy507WVq; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43634b570c1so106231155e9.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2025 12:23:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736195014; x=1736799814; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nh6giEYIA/meByuU7DxkCeD78i3wvwoOcPOobfQbLGE=;
-        b=cy507WVqyEKOsFmXneyCRgh6hOceo/ee7d+W6LotcWfENy+ixMUBkMdpJdCTuJgTJ9
-         GhF/h9PWsWouCtVh7Ut5UZRLnbF9knYF6q32B3oYgnAkcG96rp2kgu6qa6gqICRF8nAq
-         VTkciP+GJuECBRDzv+QidErPsOpo/cId7/sTFitQxL6qAvwGM5y/WqfksE/6UYIqlglv
-         itgWl30P1IOLnr0AIVeSkYsBjSJ1R5QfYs0GogXS0ME2QyPy5mXL34Xj5JOcE6FL3x7N
-         jicEN/M/1bZJB9eEDJMb+EVGetR2foHrJj1HnifZxqv2eBOHhyNYxuyPnmtK0KgGB/e6
-         vyew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736195014; x=1736799814;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nh6giEYIA/meByuU7DxkCeD78i3wvwoOcPOobfQbLGE=;
-        b=asc0o95B3sGsiSq3RcUZm0qGSeSmeyK+9wt8mW9uWX8I8lebf83MC+37SVJdJvT2YT
-         bhq7VL05Hi4+MXjFcaANhePC0fcqxRqrz/Bfq0AlL2AhT1l97jMURungIqwJTiJiRAye
-         RfaCUZzA3PR84wJtLrI1xozas/zSOvn13aO4aPtRuxAnkkBuh6AiRvbwSzJHb7MZdo6g
-         mRaFw20Xmp7DzwNxbQmIKvo1GtNibOi2wwDN5/T5bKG0fRKEvxC59nOFitwf0Q1CwAvZ
-         WRoqqFjykeoVjdSH3V5l/zGmf3/Hxvy5ZvIaocBkUONibr/lXatCT4xmIcj/nuDSLmMU
-         ZQMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHi0GtxIeVaV3aWXUvDND891OBcmtoSSDwPsQUfDx/9TDz2j786QcDE19BSPSLoP+MX2zspMLtgZX5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd80sZetcOte7B2L5kWfulN6mK55yZA2dNWAixlY+a+tivae+0
-	yyX+BcqOsVNpKzFALwGzwoGTEOLBcUM2eCFL7DMzemEmE42QrIVWPK4FEZ7FpgA=
-X-Gm-Gg: ASbGncvTPLK4p5W4u8ugtmpAAbBiumtB4A4P/yvBiG6P3gvUthm2VDTOXPhoib6tE+M
-	8WWFB7/GDF4cYJEqhxvV8jZxCH4YyFSHxU/OQuM8VkKfAw8IZgM2SkuipLUPMvicsG5azm5c0gc
-	QFCP8zKJdGIfRK1SH0XnV3aZqFBgxvvjwadHzKghnrE10kGC0kwep4uig0HKO+cSY4PghSXaHTP
-	c3+RpLNi2GJF5BeRY4O21FINQ3tjN+GzPx2V5jA+9T2t+pA7AV30A==
-X-Google-Smtp-Source: AGHT+IG5MF7x6loZ2YU8l7YFeeisPs11ZQvCeOUqElgSEpjCa2qSR+5vvj/MXT5V88O23KvWA1y/Iw==
-X-Received: by 2002:a7b:cd98:0:b0:42c:de2f:da27 with SMTP id 5b1f17b1804b1-4366b2f9323mr450859345e9.2.1736195014045;
-        Mon, 06 Jan 2025 12:23:34 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6d7c:e1c5:e9:58a5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43656b11495sm609463555e9.19.2025.01.06.12.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 12:23:33 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Frank Li <Frank.Li@nxp.com>,
-	=?UTF-8?q?J=2E=20Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: (subset) [PATCH 00/19] powerpc: MPC83xx cleanup and LANCOM NWAPP2 board
-Date: Mon,  6 Jan 2025 21:23:32 +0100
-Message-ID: <173619500923.255677.11065404025961122002.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
-References: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
+	s=arc-20240116; t=1736199809; c=relaxed/simple;
+	bh=O0MQ2l63dfHE7WM1suoTpwLA1O7Xfa/0PKd9qMjqFEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJFgAgMW0xOO2YpepaPOPhHpNAvX/HJgh//+cXuCFPEiqZByuQsF9aVZo/eWvJ4sge5fqguIPQQ/1BUJeiCn5kMpKOZsPZ6FI9u3UPUWBxFIPu6yrXRRqadiMyx+c6ixhQ4K4xAeAttXldZa0NavlCYfxN0kEmcqrHvl8HV5MXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iowIDloh; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id UujktaFspoTrQUujntr9Qg; Mon, 06 Jan 2025 22:34:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1736199258;
+	bh=PcGDZ20MbLYfZ7EGFNqqr0gNwlImKeN5cu0DsZ7P7vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=iowIDlohTttzH2sFgYMmwPrmnRlT+5GB954fxcD3g9XT1Jfp8T4QVPpdSDMcHy9aj
+	 7GSuWLgsK0oXxV1PJ0wExZmY0CioAJZnA+F4+yVhybbdcAWfZcRj33k7oLILj07DkY
+	 Ndd5RcHrQossS84+4RDuZ+RxNSz6dtAEWxjpLeF4H54GWg8QDUaSTaz6YqwDdNwq6a
+	 qMtjCnWJsB93DwwBNRxmVBdvpyTcjKw3kMZK5o04QmX7sq+3ES19JzdDL/aDR2se5a
+	 JjPiK+riSPP/L9m+e4wU8Bb4rFq7HnhvPeZ9WHgXN18/wU6G14LnGLLiIQXjaj73ok
+	 z/0QiDs74rKxg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 06 Jan 2025 22:34:18 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <955f3abf-81b8-4471-82eb-b969dc5d7c9e@wanadoo.fr>
+Date: Mon, 6 Jan 2025 22:34:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] misc: microchip: pci1xxxx: Fix possible double free in
+ error handling path
+To: Ma Ke <make24@iscas.ac.cn>, kumaravel.thiagarajan@microchip.com,
+ arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250106074053.312243-1-make24@iscas.ac.cn>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250106074053.312243-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Thu, 02 Jan 2025 19:31:41 +0100, J. Neuschäfer wrote:
-> This patchset adds a devicetree for the LANCOM NWAPP2 board based on the
-> MPC8314E platform, and slightly modernizes the MPC83xx platform support
-> in the process.
+Le 06/01/2025 à 08:40, Ma Ke a écrit :
+> When auxiliary_device_add() returns error and then calls
+> auxiliary_device_uninit(), the callback function
+> gp_auxiliary_device_release() calls kfree() to free memory. Do not
+> call kfree() again in the error handling path.
 > 
-> This board is nominally end-of-life, but available to hobbyists.
-> A U-Boot port is also in the making.
+> Fix this by skipping the redundant kfree().
 > 
-> [...]
+> Found by code review.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>   drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> index 32af2b14ff34..fbd712938bdc 100644
+> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> @@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+>   
+>   err_aux_dev_add_1:
+>   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
+> +	goto err_aux_dev_add_0;
+>   
+>   err_aux_dev_init_1:
+>   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
+> @@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+>   
+>   err_aux_dev_add_0:
+>   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
+> +	goto err_ret;
+>   
+>   err_aux_dev_init_0:
+>   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
 
-Applied, thanks!
+Hi,
 
-[11/19] dt-bindings: gpio: fsl,qoriq-gpio: Add compatible string fsl,mpc8314-gpio
-        commit: e083b304bb0c2c8c9fc1c2adb63eed6233babfe8
-[13/19] gpio: mpc8xxx: Add MPC8314 support
-        commit: 401239e1ec9757bf508240e49f5d5da9ea75e5f7
+This is strange because the nearly same patch is in -next since June 
+2024 ([1])
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+It is also in Linux since at least 6.10 ([2])
+
+In [1] and [2], there is also a new err_ret label, which is not part of 
+your patch.
+
+On which tree are you working?
+Is your patch compile tested?
+
+CJ
+
+
+[1]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c?id=086c6cbcc563c81d55257f9b27e14faf1d0963d3
+
+[2]: 
+https://elixir.bootlin.com/linux/v6.10/source/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c#L116
 
