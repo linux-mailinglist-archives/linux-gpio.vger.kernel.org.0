@@ -1,313 +1,111 @@
-Return-Path: <linux-gpio+bounces-14524-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14525-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79EF7A01F48
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 07:40:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51073A02003
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 08:41:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0B2A3A3ED9
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 06:39:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AA93163655
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 07:41:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619951AAA09;
-	Mon,  6 Jan 2025 06:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kempniu.pl header.i=kernel@kempniu.pl header.b="WI5eGfgw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2DBB194A54;
+	Mon,  6 Jan 2025 07:41:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender-op-o11.zoho.eu (sender-op-o11.zoho.eu [136.143.169.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38DBA936
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jan 2025 06:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736145586; cv=pass; b=qkBbRd0XNyXlDC9k8kyD2msLDFrpIbOvdQ4PjjXEDq3HN95Z1to46Y1KOpb+BmgdBdrMZaYug3X/XGleX8ONCJ2fVWqutowUHa5KcXqQkHm8mEW2VejZzyMiby3DKyyitlOGxG+kGyGL/c1lc2wUQ9nLAj/IVLn5YbCzKackJaU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736145586; c=relaxed/simple;
-	bh=L7GLmwygcEJeKpuwtLXat/1wvfMBgCE+5N0v2GZ9QN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofKAFbeOZ1GIuNVMji29bdOYaQWm6USMAYMiiEEKuS1HbxmckLJxgsPbPfB+/0CcpoKGbe96sWQSHNjnEeHzWnsAX8rU2mNnoUhCOqyjnkOFakX8TvWo5F+JqAhQjFvKu06Dq9rWbQu5eT5V4rrXfzW5BPDKKxmiEMYnPBm4e9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kempniu.pl; spf=pass smtp.mailfrom=kempniu.pl; dkim=pass (1024-bit key) header.d=kempniu.pl header.i=kernel@kempniu.pl header.b=WI5eGfgw; arc=pass smtp.client-ip=136.143.169.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kempniu.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kempniu.pl
-ARC-Seal: i=1; a=rsa-sha256; t=1736145528; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=Bs/W7ScE0hMa+c1ids2HiEEMNXoBUNpl+cZDPfVlvDoN/LjQGbmqeBj8R8CuFyXO7v47Bm45ScWOqgKG9VTe3ZZU5hBxoufYhNFzitMRlBmItnAuN5DGarCSSOKjH+nFU5Q5Fj4VYckYeLJFjfVXV81mdBUKZYmL7RJPEQabrzM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1736145528; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=LV5pMFf/JUB62o97t1fb8NbfRnUSaIY5yrC+NOWH5Ag=; 
-	b=VJ+Uc10VTe8+++GwIW1xha6/VU9gJLOK1GfNbYh4aLXM5saRS8W/oc16OBmSWmG6KET0AVqEUIllmyVy6x+B5cVxOuVxmc4k2l+zTyl5BrhgErteT4/eq6hjl8tDZ1Qnj/T7POYYNEEANA/LKnXbv3vDSW+XHlD6Why94vrcMkc=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=kempniu.pl;
-	spf=pass  smtp.mailfrom=kernel@kempniu.pl;
-	dmarc=pass header.from=<kernel@kempniu.pl>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1736145528;
-	s=zmail; d=kempniu.pl; i=kernel@kempniu.pl;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
-	bh=LV5pMFf/JUB62o97t1fb8NbfRnUSaIY5yrC+NOWH5Ag=;
-	b=WI5eGfgw3sXxuDDaSRxaGLlfpjITa9hQrZKYwyr66imI3eqFTMVcleLEHpN32th4
-	krsDDX9K5dYxdjDiSBzhjlQzYzoHlNvwDbruspnbzIf0irE4w9+pyCgtrBemOZhYKNE
-	10Ejy9DyKvdMHpu78cFvKz4jVe/p/KpoezB21ehk=
-Received: by mx.zoho.eu with SMTPS id 1736145524364162.27989875496212;
-	Mon, 6 Jan 2025 07:38:44 +0100 (CET)
-Date: Mon, 6 Jan 2025 07:38:42 +0100
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kalle Valo <kvalo@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alban Bedel <albeu@free.fr>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-	linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ath9k: Obtain system GPIOS from descriptors
-Message-ID: <Z3t6coHFgd9PBCeb@larwa.hq.kempniu.pl>
-References: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C891E511;
+	Mon,  6 Jan 2025 07:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736149275; cv=none; b=PqS6VPVjnAo3BtAUuPq5rB4QBpZzmUn++CICpzo1E8dpKJvoNmunr1g0h8phC2/rRlHrsmAjUfJKsvhKZvPFbrLvCZbYpr/mT0ziP1MVIiGX7ebn/kLMqYnqxbN+p8bqeXeZzAL3ntL8RDE7h7RRSJLdk00D04jx7Z57fHMoLjo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736149275; c=relaxed/simple;
+	bh=Bc0Af2iaSeEWl74r0shKj+7+Gy9ECNaYA6mveKyD7WI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MB4cBkXno725RiMfd/t3LB3hsmf+ZqaUEKXj2NSK9f8n/TOOm4UsJYMLU813sV/mDA6Ryoh2jffUq40HSWp4G33tJK4qGMX9rGwNd0tETLIw7lNPWIIIoiMdTcu4hkAe2DKr7ViN6XTqLpVxnYcPHWHCUFLdRTcJaZoAU2LjgxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowACnrSkHiXtnhbibBQ--.6936S2;
+	Mon, 06 Jan 2025 15:41:01 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: kumaravel.thiagarajan@microchip.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] misc: microchip: pci1xxxx: Fix possible double free in error handling path
+Date: Mon,  6 Jan 2025 15:40:53 +0800
+Message-Id: <20250106074053.312243-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
-X-ZM-MESSAGEID: 1736143631011003900
-X-ZohoMail-Sender: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?=
-X-ZM-MESSAGEID: 1736144744012003600
-X-ZohoMailClient: External
+X-CM-TRANSID:zQCowACnrSkHiXtnhbibBQ--.6936S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr48ZryUGry8tF4xWF15Jwb_yoW8Wry8pa
+	9xX3W7Zry8twsxKr48Za4UtF1fAw40ka45WrZFkw1a93ZxJF9IyFWv9r9F9w1DWrWUt3Wf
+	tF1UKrWUGa1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUvg4fUUUUU=
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Hi Linus,
+When auxiliary_device_add() returns error and then calls
+auxiliary_device_uninit(), the callback function
+gp_auxiliary_device_release() calls kfree() to free memory. Do not
+call kfree() again in the error handling path.
 
-> The ath9k has an odd use of system-wide GPIOs: if the chip
-> does not have internal GPIO capability, it will try to obtain a
-> GPIO line from the system GPIO controller:
-> 
->   if (BIT(gpio) & ah->caps.gpio_mask)
->         ath9k_hw_gpio_cfg_wmac(...);
->   else if (AR_SREV_SOC(ah))
->         ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
-> 
-> Where ath9k_hw_gpio_cfg_soc() will attempt to issue
-> gpio_request_one() passing the local GPIO number of the controller
-> (0..31) to gpio_request_one().
-> 
-> This is somewhat peculiar and possibly even dangerous: there is
-> nowadays no guarantee of the numbering of these system-wide
-> GPIOs, and assuming that GPIO 0..31 as used by ath9k would
-> correspond to GPIOs 0..31 on the system as a whole seems a bit
-> wild.
-> 
-> Register all 32 GPIOs at index 0..31 directly in the ATH79K
-> GPIO driver and associate with WIFI if and only if we are probing
-> ATH79K wifi from the AHB bus (used for SoCs).
+Fix this by skipping the redundant kfree().
 
-I don't know how likely it is today that this patch will get merged, but
-it turned out to be useful for fixing an OpenWRT issue [1][2].  However,
-the patch required some tweaking in order to make it work, so I assumed
-it cannot hurt to provide some feedback on it.
+Found by code review.
 
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes in v2:
-> - Define all the descriptors directly in the ATH79K
->   GPIO driver in case the driver want to request them directly.
-> - Link to v1: https://lore.kernel.org/r/20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org
-> ---
->  drivers/gpio/gpio-ath79.c           | 47 ++++++++++++++++++++++++++++++++++++-
->  drivers/net/wireless/ath/ath9k/hw.c | 29 ++++++++++++-----------
->  drivers/net/wireless/ath/ath9k/hw.h |  3 ++-
->  3 files changed, 63 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-> index f0c0c0f77eb0..f83ce0595ea8 100644
-> --- a/drivers/gpio/gpio-ath79.c
-> +++ b/drivers/gpio/gpio-ath79.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/gpio/driver.h>
-> +#include <linux/gpio/machine.h> /* For WLAN GPIOs */
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/gpio-ath79.h>
->  #include <linux/of.h>
-> @@ -222,6 +223,46 @@ static const struct of_device_id ath79_gpio_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, ath79_gpio_of_match);
->  
-> +#if IS_ENABLED(CONFIG_ATH9K_AHB)
-> +/*
-> + * This registers all of the ath79k GPIOs as descriptors to be picked
-> + * directly from the ATH79K wifi driver if the two are jitted together
-> + * in the same SoC.
-> + */
-> +#define ATH79K_WIFI_DESCS 32
-> +static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-> +						const char *label)
-> +{
-> +	struct gpiod_lookup_table *lookup;
-> +	int i;
-> +
-> +	/* Create a gpiod lookup using gpiochip-local offsets + 1 for NULL */
-> +        lookup = devm_kzalloc(dev,
-> +			      struct_size(lookup, table, ATH79K_WIFI_DESCS + 1),
-> +			      GFP_KERNEL);
-> +
-> +	if (!lookup)
-> +		return -ENOMEM;
-> +
-> +	lookup->dev_id = "ath9k";
+Cc: stable@vger.kernel.org
+Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Since the devm_gpiod_get_index() call in ath9k_hw_gpio_cfg_soc() passes
-ah->dev as the first argument, "ath9k" is not the string that
-gpiod_find_lookup_table() will use for matching the lookup table;
-instead, it will be the wireless device's name, e.g. "18100000.wmac" on
-my router (which is built on Atheros 9344).  This causes
-devm_gpiod_get_index() to return -ENOENT [3].
-
-> +
-> +	for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
-> +		lookup->table[i] = (struct gpiod_lookup)
-> +			GPIO_LOOKUP_IDX(label, 0, NULL, i,
-
-This sets the chip_hwnum member of every registered lookup table entry
-to 0 (second GPIO_LOOKUP_IDX() argument), which causes all 32 GPIOs
-registered here to be erroneously mapped to the GPIO chip's first line.
-I believe the second argument for GPIO_LOOKUP_IDX() should also be 'i'
-here - or at least that is what made the patch work for me (after fixing
-the lookup table matching issue).
-
-> +					GPIO_ACTIVE_HIGH);
-> +	}
-> +
-> +	gpiod_add_lookup_table(lookup);
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-> +						const char *label)
-> +{
-> +}
-> +#endif
-> +
->  static int ath79_gpio_probe(struct platform_device *pdev)
->  {
->  	struct ath79_gpio_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> @@ -291,7 +332,11 @@ static int ath79_gpio_probe(struct platform_device *pdev)
->  		girq->handler = handle_simple_irq;
->  	}
->  
-> -	return devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
-> +	err = devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
-> +	if (err)
-> +		return err;
-> +
-> +	return ath79_gpio_register_wifi_descriptors(dev, ctrl->gc.label);
->  }
->  
->  static struct platform_driver ath79_gpio_driver = {
-> diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-> index 5982e0db45f9..ee6705836746 100644
-> --- a/drivers/net/wireless/ath/ath9k/hw.c
-> +++ b/drivers/net/wireless/ath/ath9k/hw.c
-> @@ -20,7 +20,7 @@
->  #include <linux/time.h>
->  #include <linux/bitops.h>
->  #include <linux/etherdevice.h>
-> -#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <asm/unaligned.h>
->  
->  #include "hw.h"
-> @@ -2727,19 +2727,25 @@ static void ath9k_hw_gpio_cfg_output_mux(struct ath_hw *ah, u32 gpio, u32 type)
->  static void ath9k_hw_gpio_cfg_soc(struct ath_hw *ah, u32 gpio, bool out,
->  				  const char *label)
->  {
-> +	enum gpiod_flags flags = out ? GPIOD_OUT_LOW : GPIOD_IN;
-> +	struct gpio_desc *gpiod;
->  	int err;
->  
-> -	if (ah->caps.gpio_requested & BIT(gpio))
-> +	if (ah->gpiods[gpio])
->  		return;
->  
-> -	err = gpio_request_one(gpio, out ? GPIOF_OUT_INIT_LOW : GPIOF_IN, label);
-> -	if (err) {
-> +	/* Obtains a system specific GPIO descriptor from another GPIO controller */
-> +	gpiod = devm_gpiod_get_index(ah->dev, NULL, gpio, flags);
-
-Since using the resource-managed version of gpiod_get_index() requires
-providing a valid pointer to a struct device as the first argument and
-the name of that device is not going to be "ath9k", some other means of
-matching this call with the lookup table registered in
-ath79_gpio_register_wifi_descriptors() needs to be devised.
-
-I resorted to the NULL-matching fallback in gpiod_find_lookup_table(),
-which enables a lookup table with dev_id set to NULL to be matched for a
-gpiod_get_index() call with dev also set to NULL, coupled with setting
-con_id in all the lookup table entries and in the gpiod_get_index() call
-to a matching string, e.g.:
-
-	// in ath79_gpio_register_wifi_descriptors()
-
-	for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
-		lookup->table[i] = (struct gpiod_lookup)
-			GPIO_LOOKUP_IDX(label, i, "ath9k", i,
-					GPIO_ACTIVE_HIGH);
-
-	// in ath9k_hw_gpio_cfg_soc()
-
-	gpiod = gpiod_get_index(NULL, "ath9k", gpio, flags);
-
-This requires manually releasing the GPIO descriptor when the wireless
-driver is done with it (because we're losing the benefits of using
-resource-managed functions), so...
-
-> +
-> +	if (IS_ERR(gpiod)) {
-> +		err = PTR_ERR(gpiod);
->  		ath_err(ath9k_hw_common(ah), "request GPIO%d failed:%d\n",
->  			gpio, err);
->  		return;
->  	}
->  
-> -	ah->caps.gpio_requested |= BIT(gpio);
-> +	gpiod_set_consumer_name(gpiod, label);
-> +	ah->gpiods[gpio] = gpiod;
->  }
->  
->  static void ath9k_hw_gpio_cfg_wmac(struct ath_hw *ah, u32 gpio, bool out,
-> @@ -2800,11 +2806,6 @@ void ath9k_hw_gpio_free(struct ath_hw *ah, u32 gpio)
->  		return;
->  
->  	WARN_ON(gpio >= ah->caps.num_gpio_pins);
-> -
-> -	if (ah->caps.gpio_requested & BIT(gpio)) {
-> -		gpio_free(gpio);
-> -		ah->caps.gpio_requested &= ~BIT(gpio);
-> -	}
-
-...ath9k_hw_gpio_free() would still need a bit like this:
-
-	if (ah->gpiods[gpio]) {
-		gpiod_put(ah->gpiods[gpio]);
-		ah->gpiods[gpio] = NULL;
-	}
-
-I don't know if such an approach is appropriate, but it did at least
-make the patch work for me.
-
-Hope this helps,
-
-[1] https://github.com/openwrt/openwrt/pull/17402#issuecomment-2566157016
-[2] https://github.com/openwrt/openwrt/pull/17402#issuecomment-2566763575
-[3] https://github.com/openwrt/openwrt/pull/17445#issuecomment-2569439459
-
+diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+index 32af2b14ff34..fbd712938bdc 100644
+--- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
++++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+@@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 
+ err_aux_dev_add_1:
+ 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
++	goto err_aux_dev_add_0;
+ 
+ err_aux_dev_init_1:
+ 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
+@@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 
+ err_aux_dev_add_0:
+ 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
++	goto err_ret;
+ 
+ err_aux_dev_init_0:
+ 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
 -- 
-Best regards,
-Michał Kępień
+2.25.1
+
 
