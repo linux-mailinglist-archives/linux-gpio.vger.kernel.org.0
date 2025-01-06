@@ -1,55 +1,63 @@
-Return-Path: <linux-gpio+bounces-14548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 742EEA0323A
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 22:43:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D0B5A03246
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 22:50:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E99163A3627
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:43:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC4C71885DC2
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 385081E04A9;
-	Mon,  6 Jan 2025 21:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC901E00AC;
+	Mon,  6 Jan 2025 21:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iowIDloh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QtZtl8tp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D6F188A0D;
-	Mon,  6 Jan 2025 21:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6BE145A11;
+	Mon,  6 Jan 2025 21:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736199809; cv=none; b=msvLrCE8dvk9CVVelY6i/geUFipBrkLBu12b3j4s0N1UMjwlVrLMnft0Emok9gpszaSj8LoHOBBaiY+BO3EERqtsH6PjulEBMLLw+Rwt2QiPRy54NvjpLBg65+mObifkny6mbXsEO3CCaG6h1/EqTcgAK+cHPC51U70zyM7XmjY=
+	t=1736200208; cv=none; b=hFh5fRrthtgZ/f31qKQKd6Bwo+Xo1QgMZgio9xoo/Xh1uhCS21Oe4EZxEM0PBz8Eam+OWdNPB0hZjZfrZkEWdMjndl+Fxz+4ZlEpo1S+t3ozECTGitjyUfTX385OuM6ZObIv3LZEH7JMQi+miv6m1ZaP7VqeRfemMQfE2ZfcOn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736199809; c=relaxed/simple;
-	bh=O0MQ2l63dfHE7WM1suoTpwLA1O7Xfa/0PKd9qMjqFEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DJFgAgMW0xOO2YpepaPOPhHpNAvX/HJgh//+cXuCFPEiqZByuQsF9aVZo/eWvJ4sge5fqguIPQQ/1BUJeiCn5kMpKOZsPZ6FI9u3UPUWBxFIPu6yrXRRqadiMyx+c6ixhQ4K4xAeAttXldZa0NavlCYfxN0kEmcqrHvl8HV5MXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iowIDloh; arc=none smtp.client-ip=80.12.242.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id UujktaFspoTrQUujntr9Qg; Mon, 06 Jan 2025 22:34:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1736199258;
-	bh=PcGDZ20MbLYfZ7EGFNqqr0gNwlImKeN5cu0DsZ7P7vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=iowIDlohTttzH2sFgYMmwPrmnRlT+5GB954fxcD3g9XT1Jfp8T4QVPpdSDMcHy9aj
-	 7GSuWLgsK0oXxV1PJ0wExZmY0CioAJZnA+F4+yVhybbdcAWfZcRj33k7oLILj07DkY
-	 Ndd5RcHrQossS84+4RDuZ+RxNSz6dtAEWxjpLeF4H54GWg8QDUaSTaz6YqwDdNwq6a
-	 qMtjCnWJsB93DwwBNRxmVBdvpyTcjKw3kMZK5o04QmX7sq+3ES19JzdDL/aDR2se5a
-	 JjPiK+riSPP/L9m+e4wU8Bb4rFq7HnhvPeZ9WHgXN18/wU6G14LnGLLiIQXjaj73ok
-	 z/0QiDs74rKxg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 06 Jan 2025 22:34:18 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <955f3abf-81b8-4471-82eb-b969dc5d7c9e@wanadoo.fr>
-Date: Mon, 6 Jan 2025 22:34:12 +0100
+	s=arc-20240116; t=1736200208; c=relaxed/simple;
+	bh=XOW72s4FUHoEbescdgyaVenvB/rQKCguEeedpDF6WTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=l/MAKjGTTAK/RDPpfXBv1/IqGBv1hYoJcoCia3Mt8pf6Ne9zbENfWJY9uur8UY5gU9QluH+SU/dCYdsrvy5QahpT7S2+Ld4WKC2HFGx0SQmwA8Li28PMCxesbyMz683s6TZTXG//KXcNKX1zPrPePdTRCgPzHZdAtP5+x1WD8Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QtZtl8tp; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 506Lndju094535;
+	Mon, 6 Jan 2025 15:49:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1736200179;
+	bh=q563fYULJ72FmkFCv4sufd3uD0Ub5PR3kVbBDaajo/4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=QtZtl8tpMZLXTFviSAhuUL5HYoExEAPEQhUo5LEGnzD1u/OQwRsizq+hq9bgDI8ES
+	 o1okf658XDunlVEgdNz8XitGdFVBtlsNTN1ZWJDoXnTY+QkMduhAtd1Sm8KIcEHvtb
+	 ahvOqscXK46FFuCFqInVVbrjH0fvxpUiUOwZtyHk=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 506LndiI003578
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 6 Jan 2025 15:49:39 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 6
+ Jan 2025 15:49:39 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 6 Jan 2025 15:49:39 -0600
+Received: from [10.250.35.198] ([10.250.35.198])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 506Lnc97035985;
+	Mon, 6 Jan 2025 15:49:38 -0600
+Message-ID: <d3db0f31-bfc6-465c-a4d6-1db71aed2cd6@ti.com>
+Date: Mon, 6 Jan 2025 15:49:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,76 +65,121 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] misc: microchip: pci1xxxx: Fix possible double free in
- error handling path
-To: Ma Ke <make24@iscas.ac.cn>, kumaravel.thiagarajan@microchip.com,
- arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250106074053.312243-1-make24@iscas.ac.cn>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250106074053.312243-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Le 06/01/2025 à 08:40, Ma Ke a écrit :
-> When auxiliary_device_add() returns error and then calls
-> auxiliary_device_uninit(), the callback function
-> gp_auxiliary_device_release() calls kfree() to free memory. Do not
-> call kfree() again in the error handling path.
-> 
-> Fix this by skipping the redundant kfree().
-> 
-> Found by code review.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->   drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> index 32af2b14ff34..fbd712938bdc 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> @@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
->   
->   err_aux_dev_add_1:
->   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
-> +	goto err_aux_dev_add_0;
->   
->   err_aux_dev_init_1:
->   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
-> @@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
->   
->   err_aux_dev_add_0:
->   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
-> +	goto err_ret;
->   
->   err_aux_dev_init_0:
->   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
+Subject: Re: [PATCH v2 3/3] gpio tps65215: Add support for varying gpio/offset
+ values
+To: Roger Quadros <rogerq@kernel.org>, <aaro.koskinen@iki.fi>,
+        <andreas@kemnade.info>, <khilman@baylibre.com>, <tony@atomide.com>,
+        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>, <christophe.jaillet@wanadoo.fr>
+References: <20250103225407.196068-1-s-ramamoorthy@ti.com>
+ <20250103225407.196068-4-s-ramamoorthy@ti.com>
+ <a34f42fb-30e0-426b-8efe-9be0c0494fe7@kernel.org>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <a34f42fb-30e0-426b-8efe-9be0c0494fe7@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 Hi,
 
-This is strange because the nearly same patch is in -next since June 
-2024 ([1])
+On 1/4/2025 12:27 PM, Roger Quadros wrote:
+>
+> On 04/01/2025 00:54, Shree Ramamoorthy wrote:
+>> Add device-specific structs to select the different PMIC .npgio and .offset
+>> values. With the chip_data struct values selected based on the match data,
+>> having a separate GPIO0_OFFSET macro is no longer needed.
+>>
+>> Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+>> ---
+>>  drivers/gpio/gpio-tps65219.c | 27 ++++++++++++++++++++++++---
+>>  1 file changed, 24 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
+>> index 70a4410c473a..14286dd5fdfb 100644
+>> --- a/drivers/gpio/gpio-tps65219.c
+>> +++ b/drivers/gpio/gpio-tps65219.c
+>> @@ -13,7 +13,6 @@
+>>  #include <linux/regmap.h>
+>>  
+>>  #define TPS65219_GPIO0_DIR_MASK		BIT(3)
+>> -#define TPS65219_GPIO0_OFFSET		2
+>>  #define TPS6521X_GPIO0_IDX			0
+>>  
+>>  struct tps65219_gpio {
+>> @@ -21,6 +20,11 @@ struct tps65219_gpio {
+>>  	struct tps65219 *tps;
+>>  };
+>>  
+>> +struct tps65219_chip_data {
+>> +	int ngpio;
+>> +	int offset;
+>> +};
+>> +
+>>  static int tps65219_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+>>  {
+>>  	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
+>> @@ -71,7 +75,7 @@ static void tps65219_gpio_set(struct gpio_chip *gc, unsigned int offset, int val
+>>  	struct device *dev = gpio->tps->dev;
+>>  	int v, mask, bit;
+>>  
+>> -	bit = (offset == TPS6521X_GPIO0_IDX) ? TPS65219_GPIO0_OFFSET : offset - 1;
+>> +	bit = (offset == TPS6521X_GPIO0_IDX) ? (gpio->gpio_chip.ngpio - 1) : offset - 1;
+> shouldn't this be
+> 	bit = (offset == TPS6521X_GPIO0_IDX) ? (gpio->gpio_chip.offset - 1) : offset - 1;
 
-It is also in Linux since at least 6.10 ([2])
+Thank you for catching this! I have applied to the change for the next version sent out.
 
-In [1] and [2], there is also a new err_ret label, which is not part of 
-your patch.
+>>  
+>>  	mask = BIT(bit);
+>>  	v = value ? mask : 0;
+>> @@ -148,14 +152,29 @@ static const struct gpio_chip tps65219_template_chip = {
+>>  	.get			= tps65219_gpio_get,
+>>  	.set			= tps65219_gpio_set,
+>>  	.base			= -1,
+>> -	.ngpio			= 3,
+>>  	.can_sleep		= true,
+>>  };
+>>  
+>> +static const struct tps65219_chip_data chip_info_table[] = {
+>> +	[TPS65215] = {
+>> +		.ngpio = 2,
+>> +		.offset = 1,
+>> +	},
+>> +	[TPS65219] = {
+>> +		.ngpio = 3,
+>> +		.offset = 2,
+>> +	},
+>> +};
+>> +
+>>  static int tps65219_gpio_probe(struct platform_device *pdev)
+>>  {
+>>  	struct tps65219 *tps = dev_get_drvdata(pdev->dev.parent);
+>>  	struct tps65219_gpio *gpio;
+>> +	const struct tps65219_chip_data *pmic;
+>> +
+>> +	enum pmic_id chip = platform_get_device_id(pdev)->driver_data;
+>> +
+> unnecessary newline?
+>
+>> +	pmic = &chip_info_table[chip];
+>>
+> here too?
 
-On which tree are you working?
-Is your patch compile tested?
+I have reorganized the above section to have the variable declarations separate
+from the chunk of code assigning values. Thanks for reviewing!
 
-CJ
-
-
-[1]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c?id=086c6cbcc563c81d55257f9b27e14faf1d0963d3
-
-[2]: 
-https://elixir.bootlin.com/linux/v6.10/source/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c#L116
+>>  	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>>  	if (!gpio)
+>> @@ -164,6 +183,8 @@ static int tps65219_gpio_probe(struct platform_device *pdev)
+>>  	gpio->tps = tps;
+>>  	gpio->gpio_chip = tps65219_template_chip;
+>>  	gpio->gpio_chip.label = dev_name(&pdev->dev);
+>> +	gpio->gpio_chip.ngpio =  pmic->ngpio;
+>> +	gpio->gpio_chip.offset = pmic->offset;
+>>  	gpio->gpio_chip.parent = tps->dev;
+>>  
+>>  	return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio_chip, gpio);
 
