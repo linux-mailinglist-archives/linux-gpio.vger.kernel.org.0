@@ -1,115 +1,137 @@
-Return-Path: <linux-gpio+bounces-14545-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14546-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 168E4A03128
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:10:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05F3AA03138
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 21:16:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 920251886371
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 20:10:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DE6A3A47AF
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 20:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D381DF99C;
-	Mon,  6 Jan 2025 20:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD4B71DFE37;
+	Mon,  6 Jan 2025 20:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puK09+u6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bol9V1FU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3E21D5CF4;
-	Mon,  6 Jan 2025 20:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B5F1DFE22
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Jan 2025 20:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736194230; cv=none; b=Itp0rk5zRYZOjbUt6G4ZxhfJXc9h9R/FlEMnglUzBxv1tsXnuNbPNaLU1tZzD+e+dVx+8TTu6CrkUPHNPi5fB5mzwykFj8a4anxhxu23l9PHDg8C2Fegzg3Wd8wlw/wcgbsB2oUGvQS8C36sjE6p7S53rXMKwdN1O0dGQh4x/hc=
+	t=1736194603; cv=none; b=uxeO+c4CImA3d6L2DGcS5LjYtjO4Wb44T0znLKbqiMTgukbmnzvsT/MFlCE/TQZms9H/WdDzCt7yqC+tRLsEETzcWTOKHzNWjCliV+gQQHL+HhAIPDgcZmMcVnANXh+7V3Br+ZQ+QyK2zUFd8EE3ZY5r4/GQkj97MJRXNVtz4JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736194230; c=relaxed/simple;
-	bh=GySwZvwHq/rQKcdNFGju7/mc17U4Z+zs03kdm5nnP8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9GczMncrz44UJLZXIjSa3tTH+lOnsMOpN/mpvQq0QgTOWLNm8d6FQwFOZiGrVSq6xu8EaLc5du1UgD4i4ucviAv0FLZn9nee/I9fjOuZ9hhzEzFhuRxNB8FVfFxGJYabfHkmao8XUMGL2V1DEs/GM0SmvXhJh2HUrCHjNedcxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puK09+u6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41B8C4CED2;
-	Mon,  6 Jan 2025 20:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736194229;
-	bh=GySwZvwHq/rQKcdNFGju7/mc17U4Z+zs03kdm5nnP8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=puK09+u6w1nNc+80ZSC6EBo9hxb1uaOz7+CX9s9J/B/qPTv1+VYbqp7AxIds4MdrP
-	 I4BVa8JSACW+mpHB40KYK5HemQ0qGD7vpVWhxlraL855BeyEtcJ/+WGOYV4vEBTAxW
-	 L1KFEks++sQ2C47SAX9WD2IKrS+u0ETYyWCUMG3Cr9JyCym/ubxkU1a1aypgR/1KEn
-	 VTp1Xj/FZdnMVsE6k8brGBEHk4NV/FwC4fNuuNrIRaDPkLubstbCAqu7hf9wSbOoXe
-	 H+gM8ayTSD+wtl2NA6Zon/1R4OpHzTakAO8W9nXd0jqi5AmiHsAxDDARj4o+0qeFOp
-	 6KW/yPV9gM5gQ==
-Date: Mon, 6 Jan 2025 20:10:23 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 1/9] dt-bindings: misc: Describe TI FPC202 dual port
- controller
-Message-ID: <20250106-reabsorb-polygon-dc16642f6725@spud>
-References: <20241230-fpc202-v4-0-761b297dc697@bootlin.com>
- <20241230-fpc202-v4-1-761b297dc697@bootlin.com>
+	s=arc-20240116; t=1736194603; c=relaxed/simple;
+	bh=YkYtqqCKRl8vK7tB/jQwPp5JWB7DeGIJrEhPyVWKKn4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lf658OaV6MTIk3RhMlLV0XvpfbxksdpWSgcCw6QJlhFmT4nzLLhy/TfxS+8sO+sxjXeh+HMLONsYYzmUJikCV0e8hc68sOx6kVH6pJqu9iQJk5JJ9YsPphPlFjrjtb19LvB06oMvv4A4Icgb7SlBNj7cTJILk95PbwW9UdukHGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bol9V1FU; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5401bd6ccadso14667183e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2025 12:16:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736194599; x=1736799399; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2d+Fdw+gn8d5UEQDtXsCn8NjpoB5BbsA0G5XapaHkLs=;
+        b=bol9V1FUx0yZL/+x07fnzatSnFGaiiiR9iJBAs+A7gNXiMvNpaQ1Hv77ooRH5x531y
+         ho1JEQCI6XZskxikvRCaA124yuXklQa7Mfl451DQWbStQsYFOm4BV877QtMQxDNO4D57
+         4MxPufB1PX8RWUDNw5A1khqCoAfIq0Ry+YDlbqNHMf2krpEf+FOzRm6h5wYhRSAfOPju
+         YEBTXKc53h+T5IUQVjUO0OwFcGMCfJTXR7anFbXwcM/V6lHUq0B52NfBu0LrHmEDn7xf
+         2rjk5CGVhuyKSML56VpI0Kmd5FwzYzhd2GE7QjkorhpnKheU6HjSvby9dJE5IRS1Hj0E
+         TyXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736194599; x=1736799399;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2d+Fdw+gn8d5UEQDtXsCn8NjpoB5BbsA0G5XapaHkLs=;
+        b=JquXTybe/8XZ1Q8vs1fwggT7acKSRA6YdKcogieBc5zd9KYM1ddXYsRGJ8d9RRr0DO
+         1iNFc47ioPeaWeZC/6O4H8Ox6Kgpe6DMvtkAlCeSCtig5S1Gt7jKXf5cTxvq0c+bJGZ1
+         HUgGDBu34i723+B6Ty2w247lFPmHKitL5bDS5mOMlgVE3PCeXoZaW2fvn2dcgVczSB7c
+         8T2p0WEM+InI3Gd+0tfBYTKpB5T1fv3tanzIPDaTwW02YCRnwBk1ZQ8v5GF3RfPGDSfp
+         KCZ3r2XYXcXWAKJuNaZ75H5D771NzKQe5PouchKKH2cRS5zz5e52PUx/Ehd0z8U3N6Gd
+         6Lwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXOPEdgZCoJ71LM2iG++ZnzzUoJLooZRm4FZGWXnkyEkVwGPuZ6SqKTc6nvAqumC2JsOCDmPfg8jXC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXyzBUygrbJt/Wu4z8lYuyJAX2SmniLqBZphnri2HU6ZmR34mJ
+	te/q1W6E8g4dRVurLPiTZEwQKBTQi6WZ8a4HEHnO+pv1Cg6EbxBbcOechiY+N8hpmJE9q+ycW8S
+	RBd+FwTHByWVHDT+Jo30Sdnl8H2mxz7YiNaiSgA==
+X-Gm-Gg: ASbGncvuKPgrj8NbBIZFO2DIxH2417OpFrLH2Gw/YEjgQGBpVpY54MpkJaKdQuQeW6f
+	oTmT/HzfVWElowapl4eUHeOgS3m9VB+4cuiLexklfVl9LyFh4QwzdrVXcQ47U6w7+v68=
+X-Google-Smtp-Source: AGHT+IG5tBWpb7Rg63s3EUJvmIccVdw+1ODSCXEJ90/LYEJp9bT5bcWd70KaJ6AJVVK0Fhqy5kuobakOnOkuMInUY1A=
+X-Received: by 2002:a05:6512:1110:b0:542:21ec:ff02 with SMTP id
+ 2adb3069b0e04-542295405e0mr17537866e87.32.1736194598036; Mon, 06 Jan 2025
+ 12:16:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x2ndQYfNbQ223Djg"
-Content-Disposition: inline
-In-Reply-To: <20241230-fpc202-v4-1-761b297dc697@bootlin.com>
+References: <20241224-gpio74-v2-0-bbcf14183191@posteo.net> <173593634037.257292.1488097273042214180.b4-ty@linaro.org>
+ <CAMuHMdUqvTrSsiGuJ=VvNqsQm4eQs9rNTU8VBg+FzHJZxRnXow@mail.gmail.com>
+In-Reply-To: <CAMuHMdUqvTrSsiGuJ=VvNqsQm4eQs9rNTU8VBg+FzHJZxRnXow@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 6 Jan 2025 21:16:27 +0100
+X-Gm-Features: AbW1kvbwV2i84p6yzPEy6vFTkfU_fVy3ia34sQ0a_M5WWwzr-4QtSHi0m1keVnk
+Message-ID: <CAMRc=McAm3A1movK-8q67UbKuPb8FQzVwD_me7Q6x-gei2PA_A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] gpio: 74HC595 / 74x164 shift register improvements
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.ne@posteo.net>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 6, 2025 at 10:19=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Bartosz,
+>
+> CC spi
+>
+> On Fri, Jan 3, 2025 at 9:33=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > On Tue, 24 Dec 2024 09:02:09 +0100, J. Neusch=C3=A4fer wrote:
+> > > This patchset adds a compatible string for another part, and clarifie=
+s
+> > > the role of the latch clock pin on 74x164-compatible shift registers.
+> >
+> > Applied, thanks!
+> >
+> > [1/3] dt-bindings: gpio: fairchild,74hc595: Add On Semi MC74HC595A comp=
+at
+> >       commit: 0ba6cec7acbb666d28998780683deb83a3e677e3
+> > [2/3] gpio: 74x164: Add On Semi MC74HC595A compat
+> >       commit: b1468db9d865deb5271c9a20d05201b1c0636895
+>
+> Do we really need to document and add driver support for all variants?
+> I can easily come up with a list of tens or perhaps even hundreds
+> of xx74yy595z parts that are all compatible, as far as software is
+> concerned.  As SPI was invented by Motorola, the original part is
+> probably named MC74595 or MC74LS595 (yes, ON Semiconductor bought the
+> logic division of Motorola).
+>
+> Perhaps we need a separate vendor prefix for the 74xx-series[1]?
+> The xx-prefix and z-suffix don't matter; the yy-infix for semiconductor
+> technology rarely matters (there are a few exceptions, though, mostly
+> pinout, which doesn't matter for software).
+>
 
---x2ndQYfNbQ223Djg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I missed the fact that Rob actually responded to patch 1/3 with a
+similar suggestion (fallback, instead of a full compatible).
 
-On Mon, Dec 30, 2024 at 02:22:03PM +0100, Romain Gantois wrote:
-> +required:
-> +  - compatible
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - reg
+I can drop this series from my queue if it needs more rework.
 
-nit: this should be after compatible, like it is in the property
-definitions.
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-> +  - "#address-cells"
-> +  - "#size-cells"
-
-
-
---x2ndQYfNbQ223Djg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ3w4rwAKCRB4tDGHoIJi
-0n9XAQC0d63BP3SE13K/FHLL58blt3sV1piP1mi8Hh+3IcBdlAD/T7hYSgVqKvjb
-ZY9sAbpGaFYqrlEFoh2+mO1zOi9KuAw=
-=ZduG
------END PGP SIGNATURE-----
-
---x2ndQYfNbQ223Djg--
+Bartosz
 
