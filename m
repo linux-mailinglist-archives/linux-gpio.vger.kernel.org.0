@@ -1,122 +1,130 @@
-Return-Path: <linux-gpio+bounces-14552-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14553-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80915A03480
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 02:26:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CDFBA0378C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 07:00:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EC051885954
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 01:26:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FC31163822
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 06:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D319126AF3;
-	Tue,  7 Jan 2025 01:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A61B1D935C;
+	Tue,  7 Jan 2025 06:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAfq5GcT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE2218641;
-	Tue,  7 Jan 2025 01:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F40C1A840A
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Jan 2025 06:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736213192; cv=none; b=d/0ihyDmoHpWtNBe2TduB1OOMWnIbWaejziVS5YWKOZ51prCgixbKQ8DVykLh/J2jO7JsJebGejj2uISrWJDKRrQoay6i1ubv6fo3anqAu7yhIwP9kDfwyWNahU6CnmbDowVRvnVg7CYWaDvtfXsWCJEqLPqAe1AILbtDj1z33I=
+	t=1736229652; cv=none; b=BB5wrLpGKKE5HakAM3J8zvUs0JATTRYpTl5mOsGmz87cQwe5Vqxw5Zv9C5nmhItzuYQ0vu85YIq0k6hyiO0fbtNo0WJjelweDYRRg2zq9sEGXtXncBM1k/aZZ5IPu1S1IH9i46cUr/BX+wLenAcBnmzmFWLi5XY//G5iGpnEfJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736213192; c=relaxed/simple;
-	bh=O5GuwLNuBmNK+ii9vKvjPOmc8Fqv8knVgE1r1JSl750=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I6iWRw/vvTQJfc2tNqXB90wW0LAYJQpTGaMcsfnBEe6HtAJ17R3FlE6xInGKmJzyxF1gLxHqyrUfPIbTEJsSG7mI3QiInjKSF+ODFqKLesgJo5EgxuK81RJh4PegnHGWO1SvaiyaYSUZ5jgCIjVfgNPwQ+hzfSEiXOV53Q7pM0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-01 (Coremail) with SMTP id qwCowAD3_la1gnxnyq3eBQ--.45780S2;
-	Tue, 07 Jan 2025 09:26:21 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: kumaravel.thiagarajan@microchip.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] misc: microchip: pci1xxxx: Fix possible double free in error handling path
-Date: Tue,  7 Jan 2025 09:26:11 +0800
-Message-Id: <20250107012611.645565-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1736229652; c=relaxed/simple;
+	bh=pcTS2IIvM5b/ePXGvpNyGCKS7Bb0XTsBiAqUhzDkKDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sIIyutPd6Yb/wxcCmjYSOPFxmxTgcy82/TCfAQOYlw52nMEUU/Ptnec3WVCi905HMgI3BT93XwjdgOQEQ+ovxkI+VKG/rNlV+WtFtvzRUf47lWyw2V93OtLFw8kdROiHqt3ViJgqEozxiyjdlDzPtej2pVTyzRvxltkoaN/K9GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cAfq5GcT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2166022c5caso194306705ad.2
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2025 22:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736229648; x=1736834448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1LqtCCFqO+EmbQDGZfil95JY56xLKJrZ75mF8dLQMY=;
+        b=cAfq5GcTwzxQp2wB8zU96KA6NVEo4cBpFig/Ck3YYSV57k7p5hjZQwrzQud0WPKyej
+         SNBL2g7I2dzsThX+lJZsxv6Fc6eZwO7bZ4mSHhWAP5GvMnV3uZXtSeuJEl824sWaRPxp
+         IJVYRptbJcHhjmvKyeVko8435sinAvUl4JGK7UPLkDRB1SXo8ArF/a8zisUeDAalzveW
+         CQBGL5mQJ/CRa3+FGNKM9PV8SJPlfSKgMEkD99MRdh+vaShvppLOYyZv5lpGrmCyQwLr
+         fjxCiKvtj6+dbaXtuJUJcrlwqEmzjATOWw2Z7rXfU5lLepckVe3uHY7JX6HZizZ/XvSb
+         nIRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736229648; x=1736834448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q1LqtCCFqO+EmbQDGZfil95JY56xLKJrZ75mF8dLQMY=;
+        b=MDJLZXewSYR1Qp0B3Fuf/79PZxDimEBcy5GcDUYq9JKTfBqI4GP8zu1WyQF8tfi1cd
+         gzoU5WPkzvZxuDq9h5wdJpho7XsD7zkoJnLI7+ky7+0hUawj/DToR2N7eECZe+xqh1bh
+         hjktyQmvCxjJH9XmBcs9y7nVqjFVDR2kNBkzRpVSxquUbO/17QMnDvyA/9KplfuamctM
+         OxDGJ6hfU07/ejlP0zNnm03853vXhQiy0+wq2Qqnolu91h7AudrgWZYTmRw1iGfdCqZz
+         Q1vN4fumaLfopFsLrL9nNSmOJEs1f/Hh79p99cdqwxnbbBDNTipEDezOtWcEJFgr1YRZ
+         nKBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKlxbYyxl+Bkp660lDcmVohK2s4KlzwTR54WWrx7w24XMp1xGEQ7BBeHGgl7EjSdQ54G5hzBpBPX9P@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUT3BBNYKgCLFdcGlWcSS09lWMFgq5ruvXhJD7N0/7AR87HP80
+	B9FXDYqIOvNCuoHXJx/7tL2ntW95OwqssooMuU48oeXVpOogR8LpB8Wh/T3zAP4=
+X-Gm-Gg: ASbGncuz3Sa/TSbNN5gpoerCKn9wM1yyZqpFH7q6sQTTNwPkMwihg6oeRP9n5wjsL+b
+	PdGocHfKhghUFsY1EMSHQeKae2yNIxfkP7+AsWKYDPq2xsSXNxrpVxP1jPSaxMUvYz5G64no6KC
+	YKx+wV+hXIv05SpQfFi6xeG/bLX44/Kxe2pKDMhM1Yb2dh2Ox2Seo7991zAs3T1LNS1tI0flYnJ
+	nCW3AnzJ2HN1la3AQDpzy/DUbjdMFnYxAUGko1Np6VVxGxmLCSLBVx5S2k=
+X-Google-Smtp-Source: AGHT+IEV0SW8UbkPJKhQiSFE3WXE7urmJef0CRVNx98DBDbQuc5ZLOE88pPCGk4dWb4wb3Z1ikREsw==
+X-Received: by 2002:a05:6a20:1596:b0:1e1:9f57:eab4 with SMTP id adf61e73a8af0-1e5e04609b4mr93184649637.16.1736229648586;
+        Mon, 06 Jan 2025 22:00:48 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842aba72f7csm29716122a12.4.2025.01.06.22.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2025 22:00:47 -0800 (PST)
+Date: Tue, 7 Jan 2025 11:30:44 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: hlleng <a909204013@gmail.com>
+Cc: info@metux.net, vireshk@kernel.org, linux-gpio@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: Re: [PATCH] drivers:gpio: support multiple virtio-gpio controller
+ instances
+Message-ID: <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
+References: <20250103083520.1764441-1-a909204013@gmail.com>
+ <20250106043508.x3pwt3jzh37t265f@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAD3_la1gnxnyq3eBQ--.45780S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr48ZryUGry8tF4xWF15Jwb_yoW8Cryfpa
-	9xta47XrW8t39xKr48Za4jyF1Skw40ka45WrW2kw1a9asxAFyayFW09r9F9w1DWrWUt3WS
-	yF17KrWUGa1DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbE1v3UUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250106043508.x3pwt3jzh37t265f@vireshk-i7>
 
-When auxiliary_device_add() returns error and then calls
-auxiliary_device_uninit(), the callback function
-gp_auxiliary_device_release() calls kfree() to free memory. Do not
-call kfree() again in the error handling path.
+On 06-01-25, 10:05, Viresh Kumar wrote:
+> On 03-01-25, 16:35, hlleng wrote:
+> > Modify the virtio-gpio driver to support multiple virtual GPIO controller
+> > instances. The previous static global irq_chip structure caused conflicts
+> > between multiple virtio-gpio device instances as they shared the same
+> > interrupt controller configuration.
+> 
+> What is the conflict you are getting since all it has is callbacks only, I
+> wonder why do we need to duplicate it.
 
-Fix this by skipping the redundant kfree().
+Ahh, so irq chip should be shared actually..
 
-Found by code review.
+static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
+{
+        ...
 
-Cc: stable@vger.kernel.org
-Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v2:
-- modified the patch omitted.
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 3 +++
- 1 file changed, 3 insertions(+)
+	/* Check if the irqchip already has this hook... */
+	if (irqchip->irq_enable == gpiochip_irq_enable ||
+		irqchip->irq_mask == gpiochip_irq_mask) {
+		/*
+		 * ...and if so, give a gentle warning that this is bad
+		 * practice.
+		 */
+		chip_info(gc,
+			  "detected irqchip that is shared with multiple gpiochips: please fix the driver.\n");
+		return;
+	}
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-index 32af2b14ff34..de75d89ef53e 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-@@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- err_aux_dev_add_1:
- 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
-+	goto err_aux_dev_add_0;
- 
- err_aux_dev_init_1:
- 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
-@@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- err_aux_dev_add_0:
- 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
-+	goto err_ret;
- 
- err_aux_dev_init_0:
- 	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
-@@ -127,6 +129,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
- err_ida_alloc_0:
- 	kfree(aux_bus->aux_device_wrapper[0]);
- 
-+err_ret:
- 	return retval;
- }
- 
+        ...
+}
+
+For your patch:
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
 -- 
-2.25.1
-
+viresh
 
