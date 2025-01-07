@@ -1,176 +1,197 @@
-Return-Path: <linux-gpio+bounces-14583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14584-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51C75A04C97
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 23:45:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBA7CA04CAD
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 23:54:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B1CB16691B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 22:45:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 285973A4297
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 22:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB191DD539;
-	Tue,  7 Jan 2025 22:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BECA1E0DF5;
+	Tue,  7 Jan 2025 22:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="NED0+7Ze"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbKyO1Q4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B983218DF81
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jan 2025 22:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB1986330;
+	Tue,  7 Jan 2025 22:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736289951; cv=none; b=f+MWmTnQ1CPepp30ItRaFVf57K4UndzfP9pTkif4nE3TJH9JPRbXzcGp3uxBD8jN1mqLZK0FwvuffFKkOvrjoe++LMTa8lsjMHsf/mqArWOts+YXck8ImwSTpZGCEMSf6O4d1q5UDPqjdIIKXeBUgTsIuzZefCWi1cbGY4QDDFQ=
+	t=1736290473; cv=none; b=t7GcfOymDd8eXm8CenzXHW5jAjTMXiUEEEGVjX/FCaLqogOYO6ZCRGhX4opUMGX8cxNWt2vNNQ8L1GPFxERYgCIhfjBM+j1WxPfHIDrjwOi/jE2SYeqxZGHIFMZzvHLAxCi4+GVogBQSzJzmJM6c9g7o/MWreTamYTVCn2t4L0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736289951; c=relaxed/simple;
-	bh=0p7I6CjwprjKUPF85iarFF3/An5PH4d3rFnUVpXCKjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NFCVML9/PROjCAXiLS630ziIBk2QnxOVbxSnHfMdwqi5MS/mCOf+0jKc3g0r99xJgktaeHE8lsf6ls+EaEoEoKPYFof5LCagU35cCqC9Zy0/0gozlFNE5tJ1O+99r5SdYuDJ7dwQAq6cOpJUvrnvy3Yb5IJ1Ve8LPeQWtiFdC+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=NED0+7Ze; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 3B019240027
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jan 2025 23:45:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1736289942; bh=0p7I6CjwprjKUPF85iarFF3/An5PH4d3rFnUVpXCKjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=NED0+7Zef0TlyRwcDOcxyomiAje/XlK64U5Isxg5aOeL8X9Liz8niSLE6ZnPkXXXt
-	 y+rkSZgKeB59X49tFTC8BwOpFWgDJpcgEl8VOn19kTfSrlqmJLz8Hl05foLpILl5Gp
-	 oCFXU53bh2eh5mug3HfK35IOrV4Q27i5qEEXnim1YkXzQtCjwWhM2noQXAI2Bgqr5w
-	 KsFh39G/+TsFiBc6dtKKLhWzzF0MKCC/dVtRl90eoN+S4p9Q2fx8r2C9SQ1pk7vQJz
-	 IkSbdZ0LscoGj4sVWTrCtx0ueYR9OKzw9ucpzYOVErxqrfVBwxHGjywToOVpxDNtLi
-	 1fIjeHFpUFAjg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YSR374WRgz6tvZ;
-	Tue,  7 Jan 2025 23:45:39 +0100 (CET)
-Date: Tue,  7 Jan 2025 22:45:39 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: j.ne@posteo.net, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Frank Li <Frank.Li@nxp.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 01/19] powerpc: Generalize MPC831x platform support
-Message-ID: <Z32uk8VJqhlogY50@probook>
-References: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
- <20250102-mpc83xx-v1-1-86f78ba2a7af@posteo.net>
- <0b66e94d-7116-4916-b897-06b1199752b4@csgroup.eu>
+	s=arc-20240116; t=1736290473; c=relaxed/simple;
+	bh=O9TJbmQGiBS3wg5CEtqr6UcvZN/r2lDkUlDh/A83J7o=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=lkwYaFWhZGSSHVzX446iD4GTs0w96pWpCZWsxuTVkGZtP13H1bzdAIkxuMtOqVPrshPrejZpZi5hFx0ENzz6BnCB0DfxzKGSggQ8zcKD7n+CROekxGtCh3nrvU+p+ClxlQn+8D0CCBiVWFJTxWT05pNo66WBvSEyLS8StxrxkK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbKyO1Q4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D78DC4CED6;
+	Tue,  7 Jan 2025 22:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736290472;
+	bh=O9TJbmQGiBS3wg5CEtqr6UcvZN/r2lDkUlDh/A83J7o=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=tbKyO1Q4VjERyhut+hU/vQIG+F7w69M3Vy6s9YBLMnD+LqHjuhmQedWM/wnD6PByi
+	 LNZpwHWbRs468sWPfU8ffysRsKa8+zR0VikgXG4yS/LhRB2h6OjX4lKq7AFdLY7hVh
+	 39oas5HW1nkTZa5EKBRDAztXXu9WUarhIoFYmVBVFpOuqDeb9gpZCdK+e4972sSnze
+	 NrYdVputvAgP4M/t5seLAR79ujHFWj5lgm2WFLex4HqJ2pG914plcnYx3+1YoRHqoB
+	 fi4EAwybIl7102DOFK/Xb6e9iSKpPJYbhp3IQKLvsMEWY1kU1FQooOZGlD+VwbHrvR
+	 0WLqcioHhz/Kg==
+Date: Tue, 07 Jan 2025 16:54:31 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b66e94d-7116-4916-b897-06b1199752b4@csgroup.eu>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-clk@vger.kernel.org, dharma.b@microchip.com, 
+ alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, 
+ mturquette@baylibre.com, linux-serial@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, conor+dt@kernel.org, mihai.sain@microchip.com, 
+ linux-kernel@vger.kernel.org, krzk+dt@kernel.org, 
+ varshini.rajendran@microchip.com, claudiu.beznea@tuxon.dev, 
+ romain.sioen@microchip.com, linux-spi@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, arnd@arndb.de, sboyd@kernel.org
+To: Ryan.Wanner@microchip.com
+In-Reply-To: <20250107160850.120537-1-Ryan.Wanner@microchip.com>
+References: <20250107160850.120537-1-Ryan.Wanner@microchip.com>
+Message-Id: <173629037004.1994496.1652835527993929123.robh@kernel.org>
+Subject: Re: [PATCH v5 0/5] Add support for SAMA7D65
 
-On Mon, Jan 06, 2025 at 02:50:31PM +0100, Christophe Leroy wrote:
+
+On Tue, 07 Jan 2025 09:07:22 -0700, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> 
+> This series adds support for the SAMA7D65 SoC.
+> 
+> V2 of this series [1].
+> V3 of this series [2].
+> V4 of this series [4].
+> 
+> For the pinctrl and pit64 timers those will have DTB warnings due to
+> those bindings not being in the .yaml format.
+> 
+> Changes v1->v2:
+> - V1 set was sent incorrectly as multiple seprate patches v2 took all
+>   those patches and put them in 1 thread.
+> 
+> Changes v2->v3:
+> - Correct the patch order to follow correct practice.
+> - Correct flexcom dt-binding commit messge to reflect the changes in the
+>   coding style.
+> - Add missing SoB tags to patches.
+> - Moved export clocks to DT patch to be included with the clock binding
+>   patch.
+> - Separate Kconfig changes and defconfig changes into different patches
+>   and removed unused Kconfig params.
+> - Correct confusing SoB and Co-developed chain.
+> - Removed unsued nodes in DTSI file and sorted includes
+>   alphanumerically.
+> - Fix incorrect dts formatting.
+> - Separate dts and pinmux changes into two patches.
+> - Combine PLL and MCK changes into core clock driver patch.
+> - Correct formatting in main clock driver.
+> - MMC dt-binding changes are applied for next so have been removed from
+>   the set [3].
+> 
+> Changes v3->v4:
+> - Collect all tags from maintainers.
+> - Correct compile error on 11/13 and correct location of vendor specific
+>   properties.
+> - Add USB and UTMI selections to 12/13 to prevent compile errors due to
+>   functions in the clock driver that use the USB clock system.
+> - Add "microchip,sama7g5-pinctrl" compatible string as a fall back in
+>   9/13.
+> - Add missing kfree() to 8/13 to correctly handle error case.
+> - Replace bad spacing with correct tab formatting on 7/13.
+> 
+> Changes from v4->v5:
+> - Remove patches that have been applied [5].
+> - Update pinctrl dt-binding to use fallback formatting.
+> 
+> Note:
+> - For the SDHCI DTB error that patch has been removed do to it being
+> applied see [3].
+> - There are DTB errors on microchip,sama7d65-pit64b and
+>   microchip,sama7d65-pinctrl, this is due to those bindings being .txt
+>   files.
+> 
+> 1) https://lore.kernel.org/linux-arm-kernel/cover.1732030972.git.Ryan.Wanner@microchip.com/T/#m9691b4d58b62f36f6cbac1d06883c985766c2c0d
+> 2) https://lore.kernel.org/linux-arm-kernel/cover.1733505542.git.Ryan.Wanner@microchip.com/T/#m3b52978236907198f727424e69ef21c8898e95c8
+> 3) https://lore.kernel.org/linux-arm-kernel/cover.1732030972.git.Ryan.Wanner@microchip.com/T/#mccf6521c07e74e1c7dc61b09ae0ebdbbdde73a28
+> 4) https://lore.kernel.org/linux-arm-kernel/70d429086fd8e858d79ca2824ad8cc4a09e3fe5d.1734723585.git.Ryan.Wanner@microchip.com/T/#m918b8db23c8d30981263846a02dafc085e17de14
+> 5) https://lore.kernel.org/linux-arm-kernel/70d429086fd8e858d79ca2824ad8cc4a09e3fe5d.1734723585.git.Ryan.Wanner@microchip.com/T/#m69b8f11536e3b0ca3d69d125d0670c90412d4317
 > 
 > 
-> Le 02/01/2025 à 19:31, J. Neuschäfer via B4 Relay a écrit :
-> > [Vous ne recevez pas souvent de courriers de devnull+j.ne.posteo.net@kernel.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > 
-> > The Reference Design Boards (RDB) don't have the same relevance they had
-> > then the MPC831x platform was new; if any work is done today, then
-> > likely based on used production boards, which are more readily available
-> > than NXP's discontinued devboards.
-> > 
-> > To further reduce the focus on RDBs, add DT compatible strings for all
-> > four MPC8314/5 variants.
 > 
-> Seems like this patch does more than adding DT compatible strings.
-
-I'll move the addition of DT compatibles to a new patch.
-
+> Dharma Balasubiramani (2):
+>   dt-bindings: serial: atmel,at91-usart: add microchip,sama7d65-usart
+>   dt-bindings: pinctrl: at91-pio4: add microchip,sama7d65-pinctrl
 > 
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-[...]
-> > diff --git a/arch/powerpc/platforms/83xx/Kconfig b/arch/powerpc/platforms/83xx/Kconfig
-> > index d355ad40995fdc0fc3b4355126c65c761c21c296..944ec44a1fa6044b03ac71c295e891cd411ce444 100644
-> > --- a/arch/powerpc/platforms/83xx/Kconfig
-> > +++ b/arch/powerpc/platforms/83xx/Kconfig
-> > @@ -18,12 +18,12 @@ config MPC830x_RDB
-> >          help
-> >            This option enables support for the MPC8308 RDB and MPC8308 P1M boards.
-> > 
-> > -config MPC831x_RDB
-> > -       bool "Freescale MPC831x RDB"
-> > +config MPC831x
+> Romain Sioen (2):
+>   dt-bindings: ARM: at91: Document Microchip SAMA7D65 Curiosity
+>   ARM: dts: microchip: add support for sama7d65_curiosity board
 > 
-> That looks confusing. We already have CONFIG_PPC_MPC831x
-
-Fair enough. How about CONFIG_MPC831x_BOARDS?
-
+> Ryan Wanner (1):
+>   ARM: dts: microchip: add sama7d65 SoC DT
 > 
-> > +       bool "Freescale MPC831x boards"
-> >          select DEFAULT_UIMAGE
-> >          select PPC_MPC831x
-> >          help
-> > -         This option enables support for the MPC8313 RDB and MPC8315 RDB boards.
-> > +         This option enables support for all MPC831x-based boards.
-> > 
-> >   config MPC832x_RDB
-> >          bool "Freescale MPC832x RDB"
-> > diff --git a/arch/powerpc/platforms/83xx/Makefile b/arch/powerpc/platforms/83xx/Makefile
-> > index 6fc3dba943dade4f63da090b520b0c35bb46a091..92fb0b34913e1113d3e6eac49acbb1c32fb06ab7 100644
-> > --- a/arch/powerpc/platforms/83xx/Makefile
-> > +++ b/arch/powerpc/platforms/83xx/Makefile
-> > @@ -6,7 +6,7 @@ obj-y                           := misc.o
-> >   obj-$(CONFIG_SUSPEND)          += suspend.o suspend-asm.o
-> >   obj-$(CONFIG_MCU_MPC8349EMITX) += mcu_mpc8349emitx.o
-> >   obj-$(CONFIG_MPC830x_RDB)      += mpc830x_rdb.o
-> > -obj-$(CONFIG_MPC831x_RDB)      += mpc831x_rdb.o
-> > +obj-$(CONFIG_MPC831x)          += mpc831x.o
-> >   obj-$(CONFIG_MPC832x_RDB)      += mpc832x_rdb.o
-> >   obj-$(CONFIG_MPC834x_ITX)      += mpc834x_itx.o
-> >   obj-$(CONFIG_MPC836x_RDK)      += mpc836x_rdk.o
-> > diff --git a/arch/powerpc/platforms/83xx/mpc831x_rdb.c b/arch/powerpc/platforms/83xx/mpc831x.c
-> > similarity index 65%
-> > rename from arch/powerpc/platforms/83xx/mpc831x_rdb.c
-> > rename to arch/powerpc/platforms/83xx/mpc831x.c
-> > index 5c39966762e4264d2ef91b2c4ef75fdf2c2c5d65..7250fc11c7ee80b266f39d0b3aebb0deb777c129 100644
-> > --- a/arch/powerpc/platforms/83xx/mpc831x_rdb.c
-> > +++ b/arch/powerpc/platforms/83xx/mpc831x.c
-> > @@ -1,8 +1,8 @@
-> >   // SPDX-License-Identifier: GPL-2.0-or-later
-> >   /*
-> > - * arch/powerpc/platforms/83xx/mpc831x_rdb.c
-> > + * arch/powerpc/platforms/83xx/mpc831x.c
+>  .../devicetree/bindings/arm/atmel-at91.yaml   |   7 +
+>  .../pinctrl/atmel,at91-pio4-pinctrl.txt       |   3 +-
+>  .../bindings/serial/atmel,at91-usart.yaml     |   1 +
+>  arch/arm/boot/dts/microchip/Makefile          |   3 +
+>  .../dts/microchip/at91-sama7d65_curiosity.dts |  89 +++++++++++
+>  arch/arm/boot/dts/microchip/sama7d65.dtsi     | 145 ++++++++++++++++++
+>  6 files changed, 247 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+>  create mode 100644 arch/arm/boot/dts/microchip/sama7d65.dtsi
 > 
-> Please remove the file name from the file.
-
-Will do.
-
-> >    *
-> > - * Description: MPC831x RDB board specific routines.
-> > + * Description: MPC831x board specific routines.
+> --
+> 2.43.0
 > 
-> s/board/boards ?
-
-No, the "board" in "board specific" doesn't get pluralized when there
-are multiple boards. How about the following?
-
-      * Description: MPC831x specific routines.
+> 
+> 
 
 
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Best regards,
-J. Neuschäfer
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y microchip/at91-sama7d65_curiosity.dtb' for 20250107160850.120537-1-Ryan.Wanner@microchip.com:
+
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/pinctrl@e0014000: failed to match any schema with compatible: ['microchip,sama7d65-pinctrl', 'microchip,sama7g5-pinctrl']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/pinctrl@e0014000: failed to match any schema with compatible: ['microchip,sama7d65-pinctrl', 'microchip,sama7g5-pinctrl']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/timer@e1800000: failed to match any schema with compatible: ['microchip,sama7d65-pit64b', 'microchip,sam9x60-pit64b']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/timer@e1800000: failed to match any schema with compatible: ['microchip,sama7d65-pit64b', 'microchip,sam9x60-pit64b']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/timer@e1804000: failed to match any schema with compatible: ['microchip,sama7d65-pit64b', 'microchip,sam9x60-pit64b']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/timer@e1804000: failed to match any schema with compatible: ['microchip,sama7d65-pit64b', 'microchip,sam9x60-pit64b']
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: flexcom@e2020000: compatible: 'oneOf' conditional failed, one must be fixed:
+	['microchip,sama7d65-flexcom', 'atmel,sama5d2-flexcom'] is too long
+	'atmel,sama5d2-flexcom' was expected
+	'microchip,sam9x7-flexcom' was expected
+	'microchip,sama7g5-flexcom' was expected
+	from schema $id: http://devicetree.org/schemas/mfd/atmel,sama5d2-flexcom.yaml#
+arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/flexcom@e2020000: failed to match any schema with compatible: ['microchip,sama7d65-flexcom', 'atmel,sama5d2-flexcom']
+
+
+
+
+
 
