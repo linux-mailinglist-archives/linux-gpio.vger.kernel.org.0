@@ -1,93 +1,52 @@
-Return-Path: <linux-gpio+bounces-14550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68CCFA03273
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 23:04:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84909A03476
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 02:20:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D9B37A25EA
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2025 22:04:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 058473A243A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 01:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93771E0DE3;
-	Mon,  6 Jan 2025 22:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmJIQJsI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 386287D07D;
+	Tue,  7 Jan 2025 01:19:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08E21DFE00;
-	Mon,  6 Jan 2025 22:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0FE33086;
+	Tue,  7 Jan 2025 01:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736201052; cv=none; b=TUF2CbwxFPJabs6rMRTRlLiNBM249rGo+ydjO6UGw8TV1RDAkbEDL2nWAdqfebW+Kmth9asUyUa3/+lNZZdmU1NKpbxxuSaSwqjGQtHmDaUyvWzKBCzQnUm7/BMb4SIgo+oVnSbWSNNBMlsvPqBR2rkEeVCySyRYqzDKXkatR94=
+	t=1736212788; cv=none; b=I8DIoO+g/wT7/nULE9AU1F1wGInhW44w4T95CZUdIO9L2WkYA9LdGKlszqxFSkJ0Ez894m7mZXL7lC1Z+9FPtvXh0em3Nd4LNOSK+pkKSKigO6hGiEtbxojOidkmQOze/8V/F2O+Ewce+m6Sq/I2fjyDp7GoBRR5uHaNzEOnLtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736201052; c=relaxed/simple;
-	bh=at9np1z8Ck7wyx0Uk5qFx/MFfX+3ExRo99H/VjaKBlQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tOW3B3EK8GG1sNw//gL7kGz+G70DICT0pacEbMj4fWh6cY4myUz4kTr6o5uGOnGACEpe5t2MpjKKAmjGh9UcP3nNn/fpdgShRrk99huimNymemEC2ktvotRHgWc6ag9wO2JEZz/my/e+sDz1kTpgSpqkfijQZiXHnKedzrjpTww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KmJIQJsI; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7b6ea711805so1673338185a.1;
-        Mon, 06 Jan 2025 14:04:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736201048; x=1736805848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gE972PSUI18MWZ+RwXKg9FgJGGHphELoFtgsgAWfKDc=;
-        b=KmJIQJsIdohcgCLn8sIFJFjsWZXLn3np0Jlf1fxRY9JlhPv2rKuMLUjATTF02njWoF
-         EC30jH98zSxoUEQBeArSmOdlIyZ+PZq2fVL2XzAi0f+OrKssT3N4NgYrhTuME4879Ra8
-         V9GYBgPpBaS1uZIMF3AYlmGkKkX1p4taIjo5Y1nw4MHbpVaEKe8rvu57pS7DSYzw5uWh
-         AK1bEO0qi3+Mtz2CN9OHMKXs70h5QOjZ82/D+pYwm6fpRMqyQ+qFPjbsPirjlJ56AEGG
-         INwlrND6cBxbYoe15e1urCqQqzzsTGAMIrCaa/oxtQEjLr0RxQk7i3Nw5sMYFoz1UXj3
-         mdvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736201048; x=1736805848;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gE972PSUI18MWZ+RwXKg9FgJGGHphELoFtgsgAWfKDc=;
-        b=E5NKTIuCjOIz0qhzUNAnRt5987JvXThKXxWtZrUzVcCgQS0CnSzsZhp+TIH/wGOtaZ
-         IBd6YGWQjRXyFeW7N969GG/zX0UUSjwDlKCZdkPiWMk4bPfWGuW14c7AD06W0r44X5MJ
-         HShglJfp0t/CN5SM97vg6Y8Q1Ks0+lV0KO8jxFZEEdfCEW4+I07ZfGZLOHi3VgZSnRP1
-         e/CNaByd/5ezyw36ifybUba60VT+GRaIPfXI8GRg4Vm0EtinPtZ+l4nvt6w9JqoZxo4y
-         dgPQE36LmA243BZbFKIleJ26J0r0HdwD9Hm/4VHActFI8d81hxv+IQFff8WNpbDDv+EB
-         wXqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWW7YwBB6NsuTLbq3R8xqP3pLzXCnZBfEh9h7US1UnJBBdDpOzAawR2bmNyuTajbJFmZVWpFgKFtzT5mZsU@vger.kernel.org, AJvYcCXJP6NrkT979IdcBjm84cTFndVxnagIXXqBdi9XkdDEWYrddkMittB4H/jC5qgZkOw0g0p8k4Bj96Pl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpVLnw/CxwtdedOT3s75QiUtrAYK8o1r/gZzAJz3JvhB11k4C0
-	IEgY7vyPj1CIcOt3rPaexjCeW/etVSXk25UAyJIXPq44DTYssY+G
-X-Gm-Gg: ASbGncv2kUUHOhN6Js7qLgR1dyTACLAK5emzdQLIiFB+wUgUTPKq+LRE82kmIIGbvwl
-	p39hvIFqqeSlGxcENUR0Q9HHXmHdMzkwef6YjAS1cJBuRImIO0hAneYSUTrCJw+oEUiHoYqdoiY
-	xC95eWJqS4RJpfmM9qfrV078vQyvtjU7XA1gNQMCoAazqJUnAUXmZNw5GoDVeaobmmsus5uywgq
-	9KaGgc5MkKwsPCmKk+NMIIg5idPkMrkBp7Acn2LaRT4CaZx/DyKkTuLkmzhuIwHO+Fh
-X-Google-Smtp-Source: AGHT+IGn0g8TEC3Aj/0e3OGDC3eL91fHDnZHW118aKg0tjM+B8b8FsO0SH7lTvnA8lvipg/jwXVjnQ==
-X-Received: by 2002:a05:620a:19a0:b0:7b1:52a9:ae1d with SMTP id af79cd13be357-7b9ba716a1bmr10201657485a.6.1736201047754;
-        Mon, 06 Jan 2025 14:04:07 -0800 (PST)
-Received: from localhost.localdomain ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac30d378sm1541912685a.56.2025.01.06.14.04.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 14:04:06 -0800 (PST)
-From: Mingwei Zheng <zmw12306@gmail.com>
-To: antonio.borneo@foss.st.com
-Cc: marex@denx.de,
-	linus.walleij@linaro.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	make24@iscas.ac.cn,
-	peng.fan@nxp.com,
-	fabien.dessenne@foss.st.com,
+	s=arc-20240116; t=1736212788; c=relaxed/simple;
+	bh=3nWmlmHVyEXXnKNprV/iXE8Bft9TELC7KR4IOBSPD+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EEVg79GopD0ZGspLogOAajV6CTqYPGLVlwTRZYdjXtbjYP9fHWF8vICrSjAzgEAklePBzlfKW4m8Da2e7zaDwULkk2teU56KbIBwLbT4+WBVaWUdoKDswF3A2RQ9fLLr6tlldgSEYi54tS9m7StKD7jSMXUO6ejFxraqg/5JNPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-01 (Coremail) with SMTP id qwCowAA3PNAVgXxnc2veBQ--.14999S2;
+	Tue, 07 Jan 2025 09:19:30 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: christophe.jaillet@wanadoo.fr
+Cc: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	kumaravel.thiagarajan@microchip.com,
 	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Mingwei Zheng <zmw12306@gmail.com>,
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Subject: [PATCH v10] pinctrl: stm32: Add check for clk_enable()
-Date: Mon,  6 Jan 2025 17:06:59 -0500
-Message-Id: <20250106220659.2640365-1-zmw12306@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	make24@iscas.ac.cn,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] misc: microchip: pci1xxxx: Fix possible double free in error handling path
+Date: Tue,  7 Jan 2025 09:19:17 +0800
+Message-Id: <20250107011917.642951-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <955f3abf-81b8-4471-82eb-b969dc5d7c9e@wanadoo.fr>
+References: <955f3abf-81b8-4471-82eb-b969dc5d7c9e@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,233 +54,88 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAA3PNAVgXxnc2veBQ--.14999S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF17uw1fKr4rJryrWry8Zrb_yoW5JF4fpa
+	9xX3WavrWUtw4xKr4xZ3WUtF13Aw40ka45Wr4DKw1Y9a9xJryIyFyv9r9F9w1DWFWUt3WI
+	yF1UKrWUG3WDuaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWI
+	evJa73UjIFyTuYvjfUY3kuUUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Convert the driver to clk_bulk*() API.
-Add check for the return value of clk_bulk_enable() to catch
-the potential error.
+Christophe JAILLET<christophe.jaillet@wanadoo.fr> wrote:
+> Ma Ke <make24@iscas.ac.cn> writes:
+> > When auxiliary_device_add() returns error and then calls
+> > auxiliary_device_uninit(), the callback function
+> > gp_auxiliary_device_release() calls kfree() to free memory. Do not
+> > call kfree() again in the error handling path.
+> > 
+> > Fix this by skipping the redundant kfree().
+> > 
+> > Found by code review.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
+> > Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> > ---
+> >   drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> > index 32af2b14ff34..fbd712938bdc 100644
+> > --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> > +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+> > @@ -111,6 +111,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+> >   
+> >   err_aux_dev_add_1:
+> >   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
+> > +	goto err_aux_dev_add_0;
+> >   
+> >   err_aux_dev_init_1:
+> >   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[1]->aux_dev.id);
+> > @@ -120,6 +121,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+> >   
+> >   err_aux_dev_add_0:
+> >   	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
+> > +	goto err_ret;
+> >   
+> >   err_aux_dev_init_0:
+> >   	ida_free(&gp_client_ida, aux_bus->aux_device_wrapper[0]->aux_dev.id);
+> 
+> Hi,
+> 
+> This is strange because the nearly same patch is in -next since June 
+> 2024 ([1])
+> 
+> It is also in Linux since at least 6.10 ([2])
+> 
+> In [1] and [2], there is also a new err_ret label, which is not part of 
+> your patch.
+> 
+> On which tree are you working?
+> Is your patch compile tested?
+> 
+> CJ
 
-Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled when LEVEL IRQ requested")
-Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
-Changelog:
+Thank you for your response. I discovered the aforementioned bug in 
+Linux kernel v6.4.16 (the latest v6.4). It appears that the fix was 
+not completed in the latest version of v6.4. I have also checked the 
+link you mentioned and saw that the issue has been fixed in v6.10. I 
+realize that I omitted the final jump patch in the patch v1 submitted,
+and I will perfect it in patch v2. Thank you for your suggestion.
+--
+Regards,
 
-v9 -> v10:
-1. Move the id assignment into pctl->clks[i].clk assignment loop.
-2. Remove empty lines.
-
-v8 -> v9:
-1. Revert changes from v5 to v6.
-2. Add assignment for clk id to avoid NULL pointer dereference.
-
-v7 -> v8:
-1. Remove all previously registered GPIO chips before disabling 
-the clocks.
-
-v6 -> v7:
-1. Move clk_bulk_prepare_enable() before calling 
-stm32_gpiolib_register_bank().
-
-v5 -> v6:
-1. Call devm_clk_bulk_get_all in stm32_pctl_probe().
-
-v4 -> v5:
-1. Move the clock handling from stm32_gpiolib_register_bank()
-and moving it to its caller.
-2. Call clk_bulk_prepare_enable() in stm32_pctl_probe() 
-and clk_bulk_disable_unprepare() for error.
-
-v3 -> v4:
-1. Add initialization for pctl->clks.
-2. Adjust alignment.
-
-v2 -> v3:
-
-1. Convert clk_disable_unprepare to clk_bulk_disable
-and clk_bulk_unprepare.
-
-v1 -> v2:
-
-1. Move int ret declaration into if block.
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 76 +++++++++++++--------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 5b7fa77c1184..03f3f707d275 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -86,7 +86,6 @@ struct stm32_pinctrl_group {
- 
- struct stm32_gpio_bank {
- 	void __iomem *base;
--	struct clk *clk;
- 	struct reset_control *rstc;
- 	spinlock_t lock;
- 	struct gpio_chip gpio_chip;
-@@ -108,6 +107,7 @@ struct stm32_pinctrl {
- 	unsigned ngroups;
- 	const char **grp_names;
- 	struct stm32_gpio_bank *banks;
-+	struct clk_bulk_data *clks;
- 	unsigned nbanks;
- 	const struct stm32_pinctrl_match_data *match_data;
- 	struct irq_domain	*domain;
-@@ -1308,12 +1308,6 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	if (IS_ERR(bank->base))
- 		return PTR_ERR(bank->base);
- 
--	err = clk_prepare_enable(bank->clk);
--	if (err) {
--		dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
--		return err;
--	}
--
- 	bank->gpio_chip = stm32_gpio_template;
- 
- 	fwnode_property_read_string(fwnode, "st,bank-name", &bank->gpio_chip.label);
-@@ -1360,26 +1354,20 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 							   bank->fwnode, &stm32_gpio_domain_ops,
- 							   bank);
- 
--		if (!bank->domain) {
--			err = -ENODEV;
--			goto err_clk;
--		}
-+		if (!bank->domain)
-+			return -ENODEV;
- 	}
- 
- 	names = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
--	if (!names) {
--		err = -ENOMEM;
--		goto err_clk;
--	}
-+	if (!names)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < npins; i++) {
- 		stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
- 		if (stm32_pin && stm32_pin->pin.name) {
- 			names[i] = devm_kasprintf(dev, GFP_KERNEL, "%s", stm32_pin->pin.name);
--			if (!names[i]) {
--				err = -ENOMEM;
--				goto err_clk;
--			}
-+			if (!names[i])
-+				return -ENOMEM;
- 		} else {
- 			names[i] = NULL;
- 		}
-@@ -1390,15 +1378,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	err = gpiochip_add_data(&bank->gpio_chip, bank);
- 	if (err) {
- 		dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_nr);
--		goto err_clk;
-+		return err;
- 	}
- 
- 	dev_info(dev, "%s bank added\n", bank->gpio_chip.label);
- 	return 0;
--
--err_clk:
--	clk_disable_unprepare(bank->clk);
--	return err;
- }
- 
- static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pdev)
-@@ -1621,6 +1605,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	if (!pctl->banks)
- 		return -ENOMEM;
- 
-+	pctl->clks = devm_kcalloc(dev, banks, sizeof(*pctl->clks),
-+				  GFP_KERNEL);
-+	if (!pctl->clks)
-+		return -ENOMEM;
-+
- 	i = 0;
- 	for_each_gpiochip_node(dev, child) {
- 		struct stm32_gpio_bank *bank = &pctl->banks[i];
-@@ -1632,24 +1621,27 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 			return -EPROBE_DEFER;
- 		}
- 
--		bank->clk = of_clk_get_by_name(np, NULL);
--		if (IS_ERR(bank->clk)) {
-+		pctl->clks[i].clk = of_clk_get_by_name(np, NULL);
-+		if (IS_ERR(pctl->clks[i].clk)) {
- 			fwnode_handle_put(child);
--			return dev_err_probe(dev, PTR_ERR(bank->clk),
-+			return dev_err_probe(dev, PTR_ERR(pctl->clks[i].clk),
- 					     "failed to get clk\n");
- 		}
-+		pctl->clks[i].id = "pctl";
- 		i++;
- 	}
- 
-+	ret = clk_bulk_prepare_enable(banks, pctl->clks);
-+	if (ret) {
-+		dev_err(dev, "failed to prepare_enable clk (%d)\n", ret);
-+		return ret;
-+	}
-+
- 	for_each_gpiochip_node(dev, child) {
- 		ret = stm32_gpiolib_register_bank(pctl, child);
- 		if (ret) {
- 			fwnode_handle_put(child);
--
--			for (i = 0; i < pctl->nbanks; i++)
--				clk_disable_unprepare(pctl->banks[i].clk);
--
--			return ret;
-+			goto err_register;
- 		}
- 
- 		pctl->nbanks++;
-@@ -1658,6 +1650,15 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	dev_info(dev, "Pinctrl STM32 initialized\n");
- 
- 	return 0;
-+err_register:
-+	for (i = 0; i < pctl->nbanks; i++) {
-+		struct stm32_gpio_bank *bank = &pctl->banks[i];
-+
-+		gpiochip_remove(&bank->gpio_chip);
-+	}
-+
-+	clk_bulk_disable_unprepare(banks, pctl->clks);
-+	return ret;
- }
- 
- static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
-@@ -1726,10 +1727,8 @@ static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
- int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
--	int i;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_disable(pctl->banks[i].clk);
-+	clk_bulk_disable(pctl->nbanks, pctl->clks);
- 
- 	return 0;
- }
-@@ -1738,10 +1737,11 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- {
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(dev);
- 	struct stm32_pinctrl_group *g = pctl->groups;
--	int i;
-+	int i, ret;
- 
--	for (i = 0; i < pctl->nbanks; i++)
--		clk_enable(pctl->banks[i].clk);
-+	ret = clk_bulk_enable(pctl->nbanks, pctl->clks);
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < pctl->ngroups; i++, g++)
- 		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
--- 
-2.34.1
+Ma Ke
 
 
