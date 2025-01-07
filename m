@@ -1,130 +1,109 @@
-Return-Path: <linux-gpio+bounces-14553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CDFBA0378C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 07:00:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D26AA03C4D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 11:27:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FC31163822
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 06:00:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1217188242F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 10:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A61B1D935C;
-	Tue,  7 Jan 2025 06:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27AC61E3DD1;
+	Tue,  7 Jan 2025 10:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAfq5GcT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQpqp19/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F40C1A840A
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jan 2025 06:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F2F156F3F;
+	Tue,  7 Jan 2025 10:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736229652; cv=none; b=BB5wrLpGKKE5HakAM3J8zvUs0JATTRYpTl5mOsGmz87cQwe5Vqxw5Zv9C5nmhItzuYQ0vu85YIq0k6hyiO0fbtNo0WJjelweDYRRg2zq9sEGXtXncBM1k/aZZ5IPu1S1IH9i46cUr/BX+wLenAcBnmzmFWLi5XY//G5iGpnEfJU=
+	t=1736245662; cv=none; b=KAmiPvSiWXxg/t/C5+y6VD60B5UzoQ5F0S7cXsuvbOidE9f0KANP15bO6txUq4Wd5dbL6LsZil8oOZZQoNtYhQ4a+CoSSDZKsYOg6TXlqGxUx81QEu9hXyAYTfNpmivYYbVWR0asBBTr9yOmAULbHtPNkJ8p9e16Hkvnyr0ZpO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736229652; c=relaxed/simple;
-	bh=pcTS2IIvM5b/ePXGvpNyGCKS7Bb0XTsBiAqUhzDkKDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIIyutPd6Yb/wxcCmjYSOPFxmxTgcy82/TCfAQOYlw52nMEUU/Ptnec3WVCi905HMgI3BT93XwjdgOQEQ+ovxkI+VKG/rNlV+WtFtvzRUf47lWyw2V93OtLFw8kdROiHqt3ViJgqEozxiyjdlDzPtej2pVTyzRvxltkoaN/K9GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cAfq5GcT; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2166022c5caso194306705ad.2
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2025 22:00:49 -0800 (PST)
+	s=arc-20240116; t=1736245662; c=relaxed/simple;
+	bh=5eAz1pH/WnNTbmVbiYH4X02PPs/YmzknBQRnrWr6ndg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=seg53NJcBPm2PrBsgBhKji5aDjp9WuNV6BTeBdiyS6BOpPOC8zOFE1xHMb/+w5YFumuILn92dono/DdkPEtIU9Pt3QD2axKZFWQfloAFSde8tzSSP2x0pYCY3zz4RokyvjLKG7CoQ0sXgfASr2pLPygzvWqWSFYjvg+IyrTu6xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQpqp19/; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436345cc17bso110894755e9.0;
+        Tue, 07 Jan 2025 02:27:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736229648; x=1736834448; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1LqtCCFqO+EmbQDGZfil95JY56xLKJrZ75mF8dLQMY=;
-        b=cAfq5GcTwzxQp2wB8zU96KA6NVEo4cBpFig/Ck3YYSV57k7p5hjZQwrzQud0WPKyej
-         SNBL2g7I2dzsThX+lJZsxv6Fc6eZwO7bZ4mSHhWAP5GvMnV3uZXtSeuJEl824sWaRPxp
-         IJVYRptbJcHhjmvKyeVko8435sinAvUl4JGK7UPLkDRB1SXo8ArF/a8zisUeDAalzveW
-         CQBGL5mQJ/CRa3+FGNKM9PV8SJPlfSKgMEkD99MRdh+vaShvppLOYyZv5lpGrmCyQwLr
-         fjxCiKvtj6+dbaXtuJUJcrlwqEmzjATOWw2Z7rXfU5lLepckVe3uHY7JX6HZizZ/XvSb
-         nIRg==
+        d=gmail.com; s=20230601; t=1736245660; x=1736850460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UZ9HnyvZEmwZVbqJr6qGWdtCh1jTGR0FCRMcMwfoz6U=;
+        b=RQpqp19/Gi80YU+0skOR7eAdAZ1ISnjXTEy0mntK5mRDzZnfb92jvg4TqXs+83YP9q
+         lcChriK4Bnp67uG3D9tiNqd8JRapBTmDne3eppLj569TTmd7eLTzyMXPRd5zX40G9p3W
+         2ZwD4Amp6xuWTKiOMB8FmIVus8Ho3Hzx/koiLhP2iwjFPUMYxi85gTlFpTxucd7xPVHd
+         ajBZgsuVk4oRJQ8SmP5r+e5vc74lJBfTfHatJt/ca0lkFKxhtbvdeT595D9qutAuFBWf
+         fS7qdoi+e17xX9mz1ZE/RMxKutbiOyypt+J/V2ZgQDjtkfKZ5kvUJ9N5n9z8nQgZwexS
+         mABw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736229648; x=1736834448;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q1LqtCCFqO+EmbQDGZfil95JY56xLKJrZ75mF8dLQMY=;
-        b=MDJLZXewSYR1Qp0B3Fuf/79PZxDimEBcy5GcDUYq9JKTfBqI4GP8zu1WyQF8tfi1cd
-         gzoU5WPkzvZxuDq9h5wdJpho7XsD7zkoJnLI7+ky7+0hUawj/DToR2N7eECZe+xqh1bh
-         hjktyQmvCxjJH9XmBcs9y7nVqjFVDR2kNBkzRpVSxquUbO/17QMnDvyA/9KplfuamctM
-         OxDGJ6hfU07/ejlP0zNnm03853vXhQiy0+wq2Qqnolu91h7AudrgWZYTmRw1iGfdCqZz
-         Q1vN4fumaLfopFsLrL9nNSmOJEs1f/Hh79p99cdqwxnbbBDNTipEDezOtWcEJFgr1YRZ
-         nKBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKlxbYyxl+Bkp660lDcmVohK2s4KlzwTR54WWrx7w24XMp1xGEQ7BBeHGgl7EjSdQ54G5hzBpBPX9P@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUT3BBNYKgCLFdcGlWcSS09lWMFgq5ruvXhJD7N0/7AR87HP80
-	B9FXDYqIOvNCuoHXJx/7tL2ntW95OwqssooMuU48oeXVpOogR8LpB8Wh/T3zAP4=
-X-Gm-Gg: ASbGncuz3Sa/TSbNN5gpoerCKn9wM1yyZqpFH7q6sQTTNwPkMwihg6oeRP9n5wjsL+b
-	PdGocHfKhghUFsY1EMSHQeKae2yNIxfkP7+AsWKYDPq2xsSXNxrpVxP1jPSaxMUvYz5G64no6KC
-	YKx+wV+hXIv05SpQfFi6xeG/bLX44/Kxe2pKDMhM1Yb2dh2Ox2Seo7991zAs3T1LNS1tI0flYnJ
-	nCW3AnzJ2HN1la3AQDpzy/DUbjdMFnYxAUGko1Np6VVxGxmLCSLBVx5S2k=
-X-Google-Smtp-Source: AGHT+IEV0SW8UbkPJKhQiSFE3WXE7urmJef0CRVNx98DBDbQuc5ZLOE88pPCGk4dWb4wb3Z1ikREsw==
-X-Received: by 2002:a05:6a20:1596:b0:1e1:9f57:eab4 with SMTP id adf61e73a8af0-1e5e04609b4mr93184649637.16.1736229648586;
-        Mon, 06 Jan 2025 22:00:48 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-842aba72f7csm29716122a12.4.2025.01.06.22.00.47
+        d=1e100.net; s=20230601; t=1736245660; x=1736850460;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UZ9HnyvZEmwZVbqJr6qGWdtCh1jTGR0FCRMcMwfoz6U=;
+        b=JgPMfsaA14UZd4ecb6WuEmmOVkv7k6sca7eXiZSAAilHdRPU+r9sU25v5T8mxdfweN
+         zLfdH6SoYE25U9beibllcETjv63DBpAC5EXeRRNHRKsqwdjtHbYvVeyD7q8HEhpZiulS
+         C447WVO2FXYzL/nH/jzWd0wLYdrk9xBFj1kQdN43I5HNSdG2D1ePD9zD9DLAQloqG/7t
+         1cNY0dmgyUmihPCsa8Ic+zeoIkABSkz7hd5ecVNz6tnwhOYx85N4maVLeli98ajKa/uL
+         ovurU148/vaZmBjVSMtdU84ey73wmC79CctVJ++MSiQlTDTFASRRK9u1nEbzg9yD2hWe
+         mjwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlSpiVrvsBvhCZMKmTDXFw4tWxHMjTqVkD0+4q6eK7YHJcOIWPwvimv3poLpVzNl0TUibsLHnMRoyecJii@vger.kernel.org, AJvYcCWyheMMjQ/wPjdd3XYK+11vYvhsobZwUyU/83powCc0bGevtMHDP7cYPPkEIesWmRN3CaxRBeLUG7Ne@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRzfViZN3rhTDquock9IMJ/V7YK3s4IeOhuhC8c3uzPqHav3Ks
+	QKobyS80oetKtA3oZstis2LOf00YNmmOvMXUHt0LSgLRTzdoRvmz
+X-Gm-Gg: ASbGnct3xDX94eao+m4hqYrBEwqCSqBtukG9iLkyaMM+RFSMDBo461rhA9cnkCneUro
+	hEdwWMgvUlJQwWdWT9Uj0PS3YEPXRjIDpaqyHD/7IkaSpQzfEF5380FE7TcKsiR0ipHoVIgEzYa
+	Is2KhadXO4b76nq44FVhgk2NGQQLlL0ZgfG+L3Qx/QlgaqO8LG3GSKQBnhiDioDy5d6DK9Uc7Jv
+	VSlpX4RGUNsYQNQTM5UneVGRehEna07pjI2Csa5HRoJzKroRvw=
+X-Google-Smtp-Source: AGHT+IFME+jwo9DyY+io9y9+//1b2CbVz7HQ36V3InqvjficR+WyexJalQnsLAJTKmmcxWfMXai87Q==
+X-Received: by 2002:a05:600c:3b02:b0:434:f609:1af7 with SMTP id 5b1f17b1804b1-43668547462mr514804625e9.4.1736245659378;
+        Tue, 07 Jan 2025 02:27:39 -0800 (PST)
+Received: from skynet.lan ([213.99.223.27])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436611ea3d5sm598711065e9.5.2025.01.07.02.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 22:00:47 -0800 (PST)
-Date: Tue, 7 Jan 2025 11:30:44 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: hlleng <a909204013@gmail.com>
-Cc: info@metux.net, vireshk@kernel.org, linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH] drivers:gpio: support multiple virtio-gpio controller
- instances
-Message-ID: <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
-References: <20250103083520.1764441-1-a909204013@gmail.com>
- <20250106043508.x3pwt3jzh37t265f@vireshk-i7>
+        Tue, 07 Jan 2025 02:27:38 -0800 (PST)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: jonas.gorski@gmail.com,
+	kylehendrydev@gmail.com,
+	florian.fainelli@broadcom.com,
+	linus.walleij@linaro.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH 0/2] pinctrl: bcm63xx: properly request gpios
+Date: Tue,  7 Jan 2025 11:27:33 +0100
+Message-Id: <20250107102735.317446-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250106043508.x3pwt3jzh37t265f@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 06-01-25, 10:05, Viresh Kumar wrote:
-> On 03-01-25, 16:35, hlleng wrote:
-> > Modify the virtio-gpio driver to support multiple virtual GPIO controller
-> > instances. The previous static global irq_chip structure caused conflicts
-> > between multiple virtio-gpio device instances as they shared the same
-> > interrupt controller configuration.
-> 
-> What is the conflict you are getting since all it has is callbacks only, I
-> wonder why do we need to duplicate it.
+Add gpio_chip request/free functions to gpio-regmap and use them on bcm63xx in
+order to properly call gpio_request_enable when requesting a gpio.
 
-Ahh, so irq chip should be shared actually..
+Álvaro Fernández Rojas (2):
+  gpio: regmap: add request/free gpio_chip functions
+  pinctrl: bcm63xx: implement gpio_regmap request/free
 
-static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
-{
-        ...
-
-	/* Check if the irqchip already has this hook... */
-	if (irqchip->irq_enable == gpiochip_irq_enable ||
-		irqchip->irq_mask == gpiochip_irq_mask) {
-		/*
-		 * ...and if so, give a gentle warning that this is bad
-		 * practice.
-		 */
-		chip_info(gc,
-			  "detected irqchip that is shared with multiple gpiochips: please fix the driver.\n");
-		return;
-	}
-
-        ...
-}
-
-For your patch:
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+ drivers/gpio/gpio-regmap.c            |  2 ++
+ drivers/pinctrl/bcm/pinctrl-bcm63xx.c | 14 ++++++++++++++
+ include/linux/gpio/regmap.h           |  4 ++++
+ 3 files changed, 20 insertions(+)
 
 -- 
-viresh
+2.39.5
+
 
