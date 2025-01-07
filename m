@@ -1,211 +1,819 @@
-Return-Path: <linux-gpio+bounces-14562-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14563-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B03A4A03D6C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 12:16:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0F32A03E00
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 12:38:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 170D73A3C52
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 11:16:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69D911880A5E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 11:38:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587491E47C8;
-	Tue,  7 Jan 2025 11:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CAC1E0DE5;
+	Tue,  7 Jan 2025 11:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="jpsBThWJ"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IeZyf/bD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011033.outbound.protection.outlook.com [52.101.125.33])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C761E4929;
-	Tue,  7 Jan 2025 11:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736248587; cv=fail; b=mGqP42twBUn0kVQnEzePpMA9S6SguS/vgKt5ibYd+ZbrR+xMl4WV+sR6oYJloPEvEyHJi91EYf+pEs7CRFMr5bm0mzUH/U6TSkwdFTEt7pjCboRSBOwaa6calvBRT3dyVj4RN5TQSPwWf4IMYPEMX2WijqWr2k9jeJXgD2ChMj4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736248587; c=relaxed/simple;
-	bh=80yifQWiVLOXAv4ti6InITaksC4DOqij8KHK9LABzUA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WX+PHxugwjG9O0ZlV0r1RzMphjimrGugyoGlUXS7pGE9awDNUEcuGg2jrUhpOvPjUGza866v4bMfPMNOWRuktqm2uu0kGllW2Z0C2ZyY45OYt1KdPxtuRADSNFlzI84iKbAJ6iIh3zOhCb4rYWp1SgeRAqe4e3ZSHfmko+fi3QE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=jpsBThWJ; arc=fail smtp.client-ip=52.101.125.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xkHTGoxGkiiaRasd0YokOxspZju5B4Zz6R/MOeZbvVOu8dFhFquY8XLMwJ5S1XHfQdZucwRbKR+jJwF9TeO1gwKzPi3Cl0Jra+yVLyiAD0eiyFAq1/NIurVDXshIiGh63mEQWy0AR2BPCdPbtzrtteZQZ9yCw+2MyRdqU7Sw0b1DoC0D8EdyXgFqMGHgCwxL+JzYn1P+NIyOM8jIp5z9L7NbQ0FA+nzZ/zInjd9FCjrjr8RfhalSOHrpJNFqWsQW38PZji6uymGEpMmdhWyzSRTud4x/o7T2+iXzG6m54DZD0oxS7w4pS/1Bmp635HRN0llipflTtDYiXRXsHuRgQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=80yifQWiVLOXAv4ti6InITaksC4DOqij8KHK9LABzUA=;
- b=ftSfsTP9icslUyFAolZCib4G78/M5rTaggAQq0QJ45+r6xsO1eK4MElr3xQc9X+nannLcGR27DacnnTF8SVYF3PouupPQlv/rIwtvoDFDfxAbgYa0kDqa9iWq2AaK22EbgQK1u296mykfEUCb1Syi3OCiDyp951+gPSEaUnV7blhArIvP6krLTsTyDtE2XS2ezteYQLhc1Oc+CQmMSQrztTRNP/0s+jHHktNOc9cZFACTO97pdZ9h82CPOHwo7+EdNxl/RnmyRG+uM0x7LDxHUtFRlOSx6uTxCecgu/oI6U3xgaIdJ5aPE1FBxVmWABC4Xk6HJ1Cm2D0aSnINpWIYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=80yifQWiVLOXAv4ti6InITaksC4DOqij8KHK9LABzUA=;
- b=jpsBThWJoy/0fyMw0dXsxu+gPdJ6r+Yp19K4z48cRmWmrMJxaSjhH3QE8HUDKlZ04ZqwQfkDtzB8jVU1zFM7JyXOyPm9gSBsseB/yO49qpXEaXO8za3yrn+GDh2+6wpj2cri1hLb76QEZeRpNmTiMGSLypONvH4TBgn0MOMtG20=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYCPR01MB10510.jpnprd01.prod.outlook.com (2603:1096:400:307::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.18; Tue, 7 Jan
- 2025 11:16:20 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.8314.018; Tue, 7 Jan 2025
- 11:16:20 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prabhakar Mahadev
- Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
-	<biju.das.au@gmail.com>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add alpha-numerical
- port support for RZ/V2H
-Thread-Topic: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Add
- alpha-numerical port support for RZ/V2H
-Thread-Index: AQHbT/Q3WD6tdQXPjkGBdqOWiVuV17MFfr8AgAXMM5A=
-Date: Tue, 7 Jan 2025 11:16:20 +0000
-Message-ID:
- <TY3PR01MB113465EEACE66870D4E7529DB86112@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20241216195325.164212-1-biju.das.jz@bp.renesas.com>
- <20241216195325.164212-2-biju.das.jz@bp.renesas.com>
- <CAMuHMdVcDc1YK70WT9YF+tTR5Qxk8Wq1v+moPG9xK5EgnYyhag@mail.gmail.com>
-In-Reply-To:
- <CAMuHMdVcDc1YK70WT9YF+tTR5Qxk8Wq1v+moPG9xK5EgnYyhag@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYCPR01MB10510:EE_
-x-ms-office365-filtering-correlation-id: 6109aea7-8e5a-41c4-e204-08dd2f0cb696
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?SkIvL0t3M0hsejhVVUdRUFlLdUJoV0JlZEJxRTFmckFQT1NoN1lFM3pCYmR3?=
- =?utf-8?B?M2ZOR2ljSnBPaEJ2NlA2YUFaeSszZHpLeFNqRTVPUFBENGVmL08vVk42bnNn?=
- =?utf-8?B?UTZIRldqTWU3TFh3cDgvS3U5VjZDVGVnQkQ3c2VnNzdIZHZPemYzOFl5a2Rv?=
- =?utf-8?B?NTNFNDhBZkhndkpTUEQ1SldQNkl4NjdrOCt4eVJFOHp2NVpCZlptc2hUakhV?=
- =?utf-8?B?aDlHTWF0SFJHQjJVdGRrei9ucG9wOWlpZmx6eEFkaXhyeHNZWTVLbzJnVU9o?=
- =?utf-8?B?WU1Lb3lpSHIzT1R4TVg2a2dDMTFIZWkvUnhodVNWaHQ0ajYrdnYxNG5jYmdJ?=
- =?utf-8?B?SUIzeFo1TGc5RjdHbkEyaWFMZ1JDRjVNMXNnbkJUTCtlajRBOWsyak9aMGUv?=
- =?utf-8?B?cDQ5TERiM080cWNDQ1ErYW9GT1Q1eW95ZVp2dGI1Y2JORzBNS1h3ampQdnk1?=
- =?utf-8?B?UnVaajBpV3FiZ3FLblZkK1BCYzE0RVR2NEgwZmM1b0R4S2ZraXRzT2dqQVhC?=
- =?utf-8?B?elpUeHZiVzNtdHlwcnNES0ZxZzZ3ZUtkVFhReElPOHFicTYvY0sweXNBOW52?=
- =?utf-8?B?NjY0RlU3UmR5TjE4YUVqbE1JUmMyN0hkRGNJZithOHp0QUd6UDlrdjB1Z2lO?=
- =?utf-8?B?MERaUHB6UzVpMjZaVmYyRExzcEFvU3BzMTR6NFRFMzRmNHU4cjFHVlNXWjYx?=
- =?utf-8?B?cm5TWXUxSHVqNzlHcHN4U3NLOVM3TTFmUFNKeGYzV1NqL3ByLzg0MG5wR1J0?=
- =?utf-8?B?NVdhcUtmZHRNT2YxY2VRdEs4eHVtdmdTQlNBWjBEV0IyMUpqVHk1SytkNmFu?=
- =?utf-8?B?eEIvdjRGTHdLbWNoOEdDZk94aWhQVUxEN1h1UWtiZG05Vjg4U0dreGxvRzZG?=
- =?utf-8?B?SGszeVQrQi9Wa1lwanVlY1I0akhGajdxdktrSzF5VFZ2ODArYkdmQlR5VUxQ?=
- =?utf-8?B?WFBkZXlyMnlkS1c0YVd3RlpFMjNVVWdEUHVWbWxQTHF4aWhvLzE0ZlV4S1ha?=
- =?utf-8?B?ZGgwWDlVSGxNNG9MVDhoRHlvU1dpSmJwWGVLa1BIYWdXQVR2YlJ2TVRkM1Fv?=
- =?utf-8?B?bnljRy93MGpBV1pNck9XaWRpbHRJSHlLUkdCNXdwRzhBVXdzNWxYV1NEZXZT?=
- =?utf-8?B?QkJuRWhKbm9lMDIvV25LU2VjMEFLVjJZOUdZZlBwRVFPNVh2RXFwMmd5QVpO?=
- =?utf-8?B?RzFJa3JwNStTTXUrM0xXUDZsUHlTVDd6YXp6ZFZ2ZGNJWGZ3UmlETWpjb1VR?=
- =?utf-8?B?OGxpR1l0bWVrbEpiYmlXb3ZTQlZHSStCUUtlaERRV0UreW1GYkVkdjZteHA3?=
- =?utf-8?B?VHI0RFEzL0ZSbjJoRVdUcnpSYVlxWitaMC84bTE3aUhLemQ4THRPR0h1UHht?=
- =?utf-8?B?VWNPWGVsZDNOL2l5Zm1xWlhVWUdvOGo5VkF4T0ZSOXRwcHB2TmMyd3VPU3c4?=
- =?utf-8?B?bFl6VnNCL3lvdk00eFNCdDlXMGpFa2dZWHVrNE5MekNCS1g1bHQ4WTBoQkdG?=
- =?utf-8?B?SkdDVkNVeTN0Nm1ZVml3S2JLejZyd0FpdE5JTi9tY2FNbU5ZWHplLzROK29U?=
- =?utf-8?B?empCNFdBcEtmbmFrYjBVS0tWVHI4bWVsN0JFU1AxYkRmZFhWdUxyT3N0RE52?=
- =?utf-8?B?b1htMTFYQTdHbXpySUlCMXZiV1N6UE1aU2FBVWhZbVZIVXl6Q1lvR05qZmdR?=
- =?utf-8?B?N1JjRlZkTElmdTB6TkR0LzN6WWNGbE5neU5yVjVEYVF1Qkx6SVpXc3RQTm1j?=
- =?utf-8?B?MW5oZGhTYk1FZ3ZzYkZ2ajNmR0lkUEJmSXpLemExMHBtMCtKSW9sd0tGVmJE?=
- =?utf-8?B?aHpoSmJvVzg1RGJEYnYzYkI5aFRBMkRRamlpY1lYRzBFaUczNDZhRG81VVFq?=
- =?utf-8?B?R3ErWnpNaWkzVEE4TnZEUlc1MmRaR0gvTVRpYlViQVFpOSs3NkFPOVVwVGxH?=
- =?utf-8?Q?cTc5iAhfqOAU5oeOUphchOuAR3W89KcJ?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Zm9ZOVJ3L2hDZ3dOS1RrK0YrbFlBdE5wa0V3YXl1SWJEcTFlKy8zSk1pd0Jz?=
- =?utf-8?B?cGlRWW9qMmxPRnd3c0lBSzVYL0VISkVXaDNtekpTTmt0QUZ6U2YrZG9WT2tO?=
- =?utf-8?B?eHl3UDVqT3JGMU41MFFZRS9yUXJ4NXlSMDhWcEFCTmVQU3JVNjgybkIzaGdR?=
- =?utf-8?B?OWZ0WVlKb2U4TkljeTNlYUxuZEdnWlRhQU1MVlhNbWJMMmZDT2hodFcwNzRl?=
- =?utf-8?B?Rm5LWnVNbU9uNjh6S3VkNk16SDlaN3hmWHlzYy8yd1lYSlM1cVZJdFNUSXRh?=
- =?utf-8?B?UDVHRWhGWXdHbXlKQmRSR0xyS1Z5bWlqMEpDaXhwRXJIVXFSTWc1RXpVMCto?=
- =?utf-8?B?V3JpYlBqdXM0S296OTJIVDFJTm0zYUN3MWFEL3FqSlhpTTkySzk0emhYYUhZ?=
- =?utf-8?B?YmxrdVpxczZ2NGk5OFZTOGk5ZHZlcTE1dkVndk1PTS9zUElSdVpvUk9RTEVR?=
- =?utf-8?B?QTZTRFQzakk5T0lZZnBXRTJDcm9xMDNFL2Q0TlN5Sk5MQm1PTTZhcS9pV3RY?=
- =?utf-8?B?bW84K3JFMkJlY09UMTByeGZ4Qk5PVDl1anJqYlQ0RUVhekxnYTRMVm9VT2Ji?=
- =?utf-8?B?d0RkS25uQUVCdUdVdWtmaDhxdFlvNERVaWptODRqUzB3d0R2UEZhNnNlQkhV?=
- =?utf-8?B?RmtINUpja2RaTElIUlFIRmlEU2lLazlic3JjVE9xN0ltd1VDVlN2K0lJRDVs?=
- =?utf-8?B?dUowL2luVjFWOGNEcFUyQWNHOEYxZWIrN3VlQWI0NjJkS1ZuVlBrSFBDb3NO?=
- =?utf-8?B?Tms4R3Rma3VoRk80SFNnMk5CNjRDTDFOVXEvMjNNT0RTUWNyS1QxMEFZRTl0?=
- =?utf-8?B?YXN0WWw4Y1YwODF0WWNlcGtaVE1lOTlybzVJS2RiWnRqbVQ0elF0ei95Tmc2?=
- =?utf-8?B?bGMxaWpTamFjTFYvN0JDUnNhOWp6UmlKV3J6bklScUJscjZkWHB0UUFmN1Ar?=
- =?utf-8?B?bnI1QStYMTdwVjNtc0ZmNjJUa3NZa2NOUmsveFJyRkxMVTZLZ1c3MEpHdkQz?=
- =?utf-8?B?S1YzaGNwM0hrT24zcUhkQWpaMjB1ZGE1ZFdCQ3UxeUxQVjhES2dBTXllWmZj?=
- =?utf-8?B?QkJrL0MzQnFCODlSYmNNN1I1MEY0TlNwaDhYYlhHQzBPVXBDTkkycFhCalZt?=
- =?utf-8?B?Vk9jT3FQd0FXVjJ0cUtscHF2MVZmZ0ZCeGJoSHRUL0hGbnhkRUJyYVZXTWIx?=
- =?utf-8?B?eElPSHA0Mkw0ZkE3RWZsNFdaMzh2aG5pY1pKK1h3QmcyWXdRTGdYd3kxV2pv?=
- =?utf-8?B?Tm1mODVheEpYNU9vbGtrd2tGTXhvVUd4dk11MlQ1eDVWelpySFRqL2h3UVU1?=
- =?utf-8?B?bkxBeFVaTVZ0djc0c01aVjUrODJSTjBOeExtSWJlTGZzb2MydVViK3hXeVBI?=
- =?utf-8?B?cFNUbkMrYWp0c2RhOTRtczN2K1ZFZzl0WDNnNWlhYmVJU2M0RU5TQUNYZFQr?=
- =?utf-8?B?VDF1RkxibmVway9RMW1QWGhVcXViRUZ3S1lQZXRmRmd1Tys1WHV6RWUzSW9z?=
- =?utf-8?B?blBoaFY4cXZQVXc5VGsxOWpRMGlmcFd4QWY1d1ZPNFgzTDI3blNFKzJ0RG9B?=
- =?utf-8?B?cDFDcEtka3hkaW9ycFFpZDVtYzJTaUkweXIrSUZ2TGo2Y3poTTc2RmpOLzJW?=
- =?utf-8?B?a1g5SktjaStyaVVjNUtsbytLcnl5Um5rZnBZenExS2w1Qm5MbldzQmQ1QUlZ?=
- =?utf-8?B?bVYwTmhlc0JZRHpSdzJZSVQ3NkxuMU11cGR1Zy9kQ1pWQldjUWhWVUFaR25Z?=
- =?utf-8?B?WGsrMzlHcWRzd28rakJwZWhYb0lzTUFmRnlhWUZmNWFHZUxSUmRSa01wR3ZW?=
- =?utf-8?B?L1Y3am4wRzJnSDhRUDdZb3FlaHl3VUdod1U2REJzZWt5RkE1Qy94eDU5Nk5n?=
- =?utf-8?B?c3pGRW0zZ0tRcjRudU4wS09PRGhzd2VqMWtCV3k3UkVMaUt2Qk5wd3BVWXk1?=
- =?utf-8?B?R0dkMmovZVFwd2xoUjlERHN1ZGlreHV2Tk12TDIwWCt5OTc2SkN1R0hYNzlq?=
- =?utf-8?B?OWxjTnpyQUdNU0hDVVAxZnI2TEwyRXFIVDdWZE9nd0ZUSnlBVnBwZVdRRkg1?=
- =?utf-8?B?ZE9EamxwRGdOMnpkQ0xTcWtSODVVbHdXanZ2NklHTGdZbjZrQ2pSTDlwTzNv?=
- =?utf-8?B?YUJ1dFVhTDA3MDkweUN4bjljVXBJRUNmUTFZU1JWQ0xpRmp6NlA0dUM5Uk1O?=
- =?utf-8?B?SEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A251B1EBA08;
+	Tue,  7 Jan 2025 11:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736249827; cv=none; b=bx70NqChRbt5uF3FdzXtSq1ppD5Y2Gp0aTQQ0uPBnxXPLVjRNYq8dKFQlimBzxTMvt1G47Wk/BkanrAOVoapgv2Zeu9uTYJo0e0bE0wXDRO8/Qjg46bN2EKCErxGJqOAiTbw/lFBZ3it6PMoXvkQkAvmjJVuPHXDMUqsFyRI1M0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736249827; c=relaxed/simple;
+	bh=GGLKyK1ZNQVKw0hhkM1qxEKzL7oE8j28dQnfR4akS8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dt6aXn1oX+1MVZPawQfWWr5YJ2eCZOjvztjJA62kIqSkbS5KRTod32gB612jvQnzpEj5Itk5NsJJAx7itG/ser47OZD4bfO5Qc5JAgcNP45jNJ3l2g7eZdB1WeGIEUOYzHA+ZFuP+legbzZkRGIE79Xvetqh/VHRbHlKQ9S9YiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IeZyf/bD; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1736249816;
+	bh=GGLKyK1ZNQVKw0hhkM1qxEKzL7oE8j28dQnfR4akS8o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IeZyf/bDJD4gD6kyn4pc+hm6JXM72KMqrqpgDs6L1Y58akbFTjjAaPqmMISR7PFP1
+	 51fU+3LXD8vDrcRXL0R8b2xBIfHohgtW+ZgxdhtG9wx4ovFLvDgtc8rn2cDEaWBoNj
+	 Bh3tWyx79GUD8yfa9/ZE9y9ZoQOL3m8UhETSyBo1Grw2jzNsVPpn83EEUrprC6h/Sd
+	 pwlH4x7aWdaR7wI+MbUDXtpcwUBS+bDzcGyizn+Y43ibnOWNdjFoVG+/2GJ3/k4zOE
+	 GCLjfE236osgncqtr1KwPLce22G41KQqHtbL0CVEiAr49nz8XQ7vlTLJt+pn0UAyKP
+	 TJblY21KgiJ8w==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1887B17E1560;
+	Tue,  7 Jan 2025 12:36:55 +0100 (CET)
+Message-ID: <2082773e-f320-4661-bcd2-27cec60752a9@collabora.com>
+Date: Tue, 7 Jan 2025 12:36:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6109aea7-8e5a-41c4-e204-08dd2f0cb696
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2025 11:16:20.5464
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kKOfrM8jt9XLV4Qv4EzzqzmFXt+xWwaZqnBeVDwLDfzQ3KdS9557k/c5ObvbMi4hbLtN2YiyHjF/ZqkZMeik+sNwb1U11moNzD/eduK6w9g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10510
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: mediatek: add eint new design for mt8196
+To: =?UTF-8?B?Q2hoYW8gQ2hhbmcgKOW4uOa1qSk=?= <ot_chhao.chang@mediatek.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "sean.wang@kernel.org" <sean.wang@kernel.org>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ =?UTF-8?B?WmhlbmduYW4gQ2hlbiAo6ZmI5b6B5Y2XKQ==?=
+ <Zhengnan.Chen@mediatek.com>, =?UTF-8?B?Q2h1bmh1aSBMaSAo5p2O5pil6L6JKQ==?=
+ <chunhui.li@mediatek.com>, =?UTF-8?B?V2VuYmluIE1laSAo5qKF5paH5b2sKQ==?=
+ <Wenbin.Mei@mediatek.com>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ =?UTF-8?B?WW9uZyBNYW8gKOavm+WLhyk=?= <yong.mao@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ =?UTF-8?B?SGFua3MgQ2hlbiAo6Zmz5b2l5bu3KQ==?= <Hanks.Chen@mediatek.com>,
+ =?UTF-8?B?UWluZ2xpYW5nIExpICjpu47mmbTkuq4p?= <Qingliang.Li@mediatek.com>,
+ =?UTF-8?B?QXhlIFlhbmcgKOadqOejiik=?= <Axe.Yang@mediatek.com>
+References: <20241024141517.10312-1-ot_chhao.chang@mediatek.com>
+ <127675b8-51c5-4c32-8bd1-ecbed96cdaa0@collabora.com>
+ <2d385d533e8f0f23cedad22d4ef46ed4f6550f31.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <2d385d533e8f0f23cedad22d4ef46ed4f6550f31.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMDMgSmFudWFyeSAy
-MDI1IDE4OjQzDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMS83XSBkdC1iaW5kaW5nczogcGlu
-Y3RybDogcmVuZXNhczogQWRkIGFscGhhLW51bWVyaWNhbCBwb3J0IHN1cHBvcnQgZm9yIFJaL1Yy
-SA0KPiANCj4gSGkgQmlqdSwNCj4gDQo+IE9uIE1vbiwgRGVjIDE2LCAyMDI0IGF0IDg6NTPigK9Q
-TSBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFJaL1Yy
-SCBoYXMgcG9ydHMgUDAtUDkgYW5kIFBBLVBCLiBBZGQgc3VwcG9ydCBmb3IgZGVmaW5pbmcNCj4g
-PiBhbHBoYS1udW1lcmljYWwgcG9ydHMgaW4gRFQgdXNpbmcgUlpWMkhfKiBtYWNyb3MuDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+
-DQo+ID4gLS0tDQo+ID4gdjMtPnY0Og0KPiA+ICAqIEFkZGVkIG5ldyBoZWFkZXIgZmlsZSB3aXRo
-IHNlcGFyYXRlIFJaVjJIX1AqIGRlZmluaXRpb25zLg0KPiANCj4gVGhhbmtzIGZvciB0aGUgdXBk
-YXRlIQ0KPiANCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5n
-cy9waW5jdHJsL3JlbmVzYXMscjlhMDlnMDU3LXBpbmN0cmwuaA0KPiA+IEBAIC0wLDAgKzEsMzEg
-QEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNE
-LTItQ2xhdXNlKSAqLw0KPiA+ICsvKg0KPiA+ICsgKiBUaGlzIGhlYWRlciBwcm92aWRlcyBjb25z
-dGFudHMgZm9yIFJlbmVzYXMgUlovVjJIIGZhbWlseSBwaW5jdHJsIGJpbmRpbmdzLg0KPiA+ICsg
-Kg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMjQgUmVuZXNhcyBFbGVjdHJvbmljcyBDb3JwLg0K
-PiA+ICsgKg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpZm5kZWYgX19EVF9CSU5ESU5HU19SWlYy
-SF9QSU5DVFJMX0ggI2RlZmluZQ0KPiA+ICtfX0RUX0JJTkRJTkdTX1JaVjJIX1BJTkNUUkxfSA0K
-PiANCj4gPiArI2VuZGlmIC8qIF9fRFRfQklORElOR1NfUlpWMkhfUElOQ1RSTF9IICovDQo+IA0K
-PiBfX0RUX0JJTkRJTkdTX1BJTkNUUkxfUkVORVNBU19SOUEwOUcwNTdfUElOQ1RSTF9IX18NCg0K
-DQo+IA0KPiBXaWxsIGZpeCB0aGF0IHdoaWxlIGFwcGx5aW5nLCBzbw0KDQpUaGFua3MgZm9yIGZp
-eGluZyBpdC4NCg0KQ2hlZXJzLA0KQmlqdQ0K
+Il 26/12/24 10:13, Chhao Chang (常浩) ha scritto:
+> Hi  Angelo，
+> Based on your question, the reply is as follows.
+> 
+
+Please don't top-post.
+
+> I
+> Have you tested this change on other MediaTek SoCs?
+>>> I tested the change in 8195, and the EINT function was normal.
+> 
+
+You tested it only on MT8195, yes - MT8195 and MT8188 will not break entirely, but
+all of the other currently supported SoCs will break (example: mt8173, mt8183,
+mt2701 and others).
+
+> II
+>> + static const unsigned int debounce_time[] = { 156, 313, 625, 1250,
+>> + 20000, 40000, 80000, 160000, 320000, 640000 };
+> Every SoC has its own debounce time, and this will break all currently
+> supported MediaTek SoCs.
+>>> We will leave the old IC unchanged and use a unique debounce time for the new IC.
+
+Yes, please.
+
+> 
+> III
+>> +EXPORT_SYMBOL_GPL(dump_eint_pin_status);
+> Why do you need to export this function?
+>>> some other kernel module maybe need dump pin status for debug.
+
+Sure, but that's not the right way.
+
+> 
+> IV
+> eint_pin_status_show
+> Controlling pinctrl from userspace? Isn't there a generic facility to do this?
+>>> This interface is used when debug, E.G.
+> adb shell "cat /sys/bus/platform/drivers/mt8196-pinctrl/eintc_status"
+> adb shell "echo X > /sys/bus/platform/drivers/mt8196-pinctrl/eint_pin_status"
+> adb shell "cat /sys/bus/platform/drivers/mt8196-pinctrl/eint_pin_status"
+> We have use this interface for many smartphone chips, any suggestion for optimize it?
+
+Debug - For anything that is not already shown by the generic debug from the
+pinctrl, pinmux, gpiochip APIs:
+struct pinctrl_ops -> pin_dbg_show
+struct gpio_chip -> dbg_show
+struct pinctrl_desc -> custom_conf_items, custom_params
+
+and there's more, just look into the headers.
+
+You don't need this function as everything can be handled in API.
+
+> 
+> V
+>> + global_eintc = eint;
+> No global variables please. Makes no sense.
+>>> we should get the pointer of struct mtk_eint in eint_pin_status_store/eint_pin_status_show, but struct device_driver can't transfer the pointer directly, is there a better solution?
+> 
+
+If you use the debugging facilities provided by the API, you won't have this
+problem in the first place...!
+Also, setting pins from userspace can also be done without custom functions: again,
+just look in the headers and read the documentation.
+
+> VI
+>> + ph = of_get_property(eint->dev->of_node, "mediatek,eint", NULL);
+> I'm not really sure that you really need this property, as the eint was declared
+> inside of the main pinctrl node for the SoC, and I'm mostly sure that you can keep
+> doing the same with eintv2.
+>>> mediatek,eint This attribute will be defined under the PINCTRL node, E.G.
+>                   pio: pinctrl@10005000<mailto:pinctrl@10005000> {
+>                           compatible = "mediatek,mt8189-pinctrl";
+>                           reg = <0 0x10005000 0 0x1000>；
+>                           gpio-controller;
+>                           #gpio-cells = <2>;
+>                           gpio-ranges = <&pio 0 0 182>;
+>                           interrupt-controller;
+>                           #interrupt-cells = <2>;
+> 
+>                mediatek,eint = <&eint>;
+> 
+> };
+> 
+
+Yeah you don't need that. The eint driver is "internal" to the pinctrl one, so
+you can grab that reference inside of the driver code instead.
+
+You're using this to grab drivers handle, it's software - but devicetree describes
+the hardware, not the SW.
+
+> VII
+>> + ret = of_property_read_u32(node, "mediatek,total-pin-number",
+>> +    &eint->total_pin_number);
+> This is not for devicetree.
+> This is a SoC property and must be specified per-SoC as platform data.
+>>> We will define this platform data under the EINT node corresponding to IC DTS, E.G.
+>                   eint: apirq@11ce0000<mailto:apirq@11ce0000> {
+>                           compatible = "mediatek,mt8196-eint";
+>                           reg = <0 0x11ce0000 0 0x1000>,
+>                                   <0 0x11de0000 0 0x1000>,
+>                                   <0 0x11e60000 0 0x1000>,
+>                                   <0 0x1c01e000 0 0x1000>,
+>                                   <0 0x11f00000 0 0x1000>;
+> reg-name = "eint-e", "eint-s", "eint-w", "eint-c",
+
+
+There's a standard property for this - it's "reg-names".
+
+>                           interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
+>                           mediatek,instance-num = <5>;
+>                           mediatek,total-pin-number = <210>;
+>                  mediatek,pins = <0 0 0 1>,<1 0 1 1>,<2 0 2 1>,<3 0 3 1>;
+> };
+> 
+> 
+> VIII
+>> + if (ret)
+>> + eint->instance_number = 1;
+> Can one SoC have variable instance numbers? I don't think so.
+> That goes to platform data.
+>>> this check is for legacy single instance eint, maybe no "mediatek,instance-num" in dts; for multi-instance eint, there should "mediatek,instance-num" in dts.
+
+instance_number = count of eint instances in "reg" or in "reg-names"
+
+You don't need a custom property for that - you can just count the number of
+instances that you have defined in reg-names, or in reg.
+
+> 
+> 
+> IX
+>> + for (i = 0; i < eint->instance_number; i++) {
+>> + ret = of_property_read_string_index(node, "reg-name", i,
+>> +    &(eint->instances[i].name));
+> That reg-name is not a standard property; besides, you don't need to parse names,
+> as you can restrict the order in bindings you can just parse by knowing the
+> number of declared register spaces.
+>>> yes, it's not standard, we get instance number by "mediatek,instance-num", then parsing instance name by "reg-name" and instance base by "reg" Sequentially.
+
+The standard one is "reg-names", and there is no valid reason to use a custom one
+in this case.
+
+Please use standard properties when possible.
+
+>                   eint: apirq@11ce0000<mailto:apirq@11ce0000> {
+>                           compatible = "mediatek,mt8196-eint";
+>                           reg = <0 0x11ce0000 0 0x1000>,
+>                                   <0 0x11de0000 0 0x1000>,
+>                                   <0 0x11e60000 0 0x1000>,
+>                                   <0 0x1c01e000 0 0x1000>,
+>                                   <0 0x11f00000 0 0x1000>;
+> reg-name = "eint-e", "eint-s", "eint-w", "eint-c",
+>                           interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
+>                           mediatek,instance-num = <5>;
+>                           mediatek,total-pin-number = <210>;
+>                  mediatek,pins = <0 0 0 1>,<1 0 1 1>,<2 0 2 1>,<3 0 3 1>;
+> };
+> 
+> X
+>> + matrix_number = of_property_count_u32_elems(node, "mediatek,pins") / 4;
+> So basically this means that if a SoC has 200 EINT pins, you'll have 200 values
+> in devicetree?!
+> That's another thing for platform data instead.
+>>> Yes, we will define this platform data under the EINT node corresponding to IC DTS, e.g.
+
+Define that as platform data into the driver, not in DT.
+
+>                   eint: apirq@11ce0000<mailto:apirq@11ce0000> {
+>                           compatible = "mediatek,mt8196-eint";
+>                           reg = <0 0x11ce0000 0 0x1000>,
+>                                   <0 0x11de0000 0 0x1000>,
+>                                   <0 0x11e60000 0 0x1000>,
+>                                   <0 0x1c01e000 0 0x1000>,
+>                                   <0 0x11f00000 0 0x1000>;
+> reg-name = "eint-e", "eint-s", "eint-w", "eint-c",
+>                           interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
+>                           mediatek,instance-num = <5>;
+>                           mediatek,total-pin-number = <210>;
+>                  mediatek,pins = <0 0 0 1>,<1 0 1 1>,<2 0 2 1>,<3 0 3 1>;
+> .....More than 200 PINs are omitted here
+> };
+> 
+> 
+> XI
+>> + ret = of_property_read_u32_index(node, "mediatek,pins",
+>> +  offset, &id);
+> Same, that's platform data!
+>>> Same, We will define this platform data under the EINT node corresponding to IC DTS.
+
+Not in DT. Define in the driver.
+
+> 
+> XII
+>> +#if defined(MTK_EINT_DEBUG)
+> No. You either use a dev_dbg() or you just avoid this print.
+> Please remove the MTK_EINT_DEBUG definition entirely.
+>>> We will remove MTK_EINT_DEBUG
+> 
+> 
+>> + ret |= driver_create_file(eint->dev->driver,
+>> +   &driver_attr_eint_pin_status);
+> OR'ing return values is never a good idea.
+>>> It is used to determine whether the Eint node has related attributes. Is there a better solution?
+
+ret = your_call();
+if (ret)
+	return ret;
+
+ret = another_call();
+if (ret)
+	return ret;
+
+...etc
+
+> 
+> XIII
+> Linus, that's something like the fourth time that he pushes variations of this
+> patch which do break all MediaTek SoCs in a way or another, leaving only MT8196
+> hopefully-functional.
+>>> Current Design supports previous ICs.
+
+Not entirely. At least the debounce_time breaks old SoCs :-)
+
+Regards,
+Angelo
+
+> 
+> 
+> Best regards，
+> Chhao Chang
+> 
+> 
+> 
+> 
+> On Thu, 2024-10-24 at 17:55 +0200, AngeloGioacchino Del Regno wrote:
+> Il 24/10/24 16:15, chang hao ha scritto:
+> From: Chhao Chang <ot_chhao.chang@mediatek.com<mailto:ot_chhao.chang@mediatek.com>>
+> 
+> eint is divided from the original base address into base addresses
+> in five directions: east, south, west, north, and center.
+> Stores a limited number of eint numbers in each direction.
+> 
+> Signed-off-by: Chhao Chang <ot_chhao.chang@mediatek.com<mailto:ot_chhao.chang@mediatek.com>>
+> ---
+>    drivers/pinctrl/mediatek/mtk-eint.c           | 830 +++++++++++++-----
+>    drivers/pinctrl/mediatek/mtk-eint.h           |  75 +-
+>    .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |  50 +-
+>    3 files changed, 722 insertions(+), 233 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 27f0a54e12bf..0bb017eb1893 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -17,16 +17,13 @@
+>    #include <linux/irqdomain.h>
+>    #include <linux/module.h>
+>    #include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+>    #include <linux/platform_device.h>
+> 
+>    #include "mtk-eint.h"
+> 
+> -#define MTK_EINT_EDGE_SENSITIVE           0
+> -#define MTK_EINT_LEVEL_SENSITIVE          1
+> -#define MTK_EINT_DBNC_SET_DBNC_BITS   4
+> -#define MTK_EINT_DBNC_MAX   16
+> -#define MTK_EINT_DBNC_RST_BIT   (0x1 << 1)
+> -#define MTK_EINT_DBNC_SET_EN   (0x1 << 0)
+> +static struct mtk_eint *global_eintc;
+> +struct mtk_eint_pin pin;
+> 
+> Noupe, don't introduce these globals.
+> 
+> 
+>    static const struct mtk_eint_regs mtk_generic_eint_regs = {
+>     .stat      = 0x000,
+> @@ -47,6 +44,10 @@ static const struct mtk_eint_regs mtk_generic_eint_regs = {
+>     .dbnc_ctrl = 0x500,
+>     .dbnc_set  = 0x600,
+>     .dbnc_clr  = 0x700,
+> + .event     = 0x800,
+> + .event_set = 0x840,
+> + .event_clr = 0x880,
+> + .raw_stat  = 0xa00,
+>    };
+> 
+>    const unsigned int debounce_time_mt2701[] = {
+> @@ -64,60 +65,145 @@ const unsigned int debounce_time_mt6795[] = {
+>    };
+>    EXPORT_SYMBOL_GPL(debounce_time_mt6795);
+> 
+> -static void __iomem *mtk_eint_get_offset(struct mtk_eint *eint,
+> +/*
+> + * Return the iomem of specific register ofset and decode the coordinate
+> + * (instance, index) from global eint number.
+> + * If return NULL, then it must be either out-of-range or do-not-support.
+> + */
+> +static void __iomem *mtk_eint_get_ofset(struct mtk_eint *eint,
+> 
+> You're replacing this with a typo....
+> 
+>      unsigned int eint_num,
+> -  unsigned int offset)
+> +  unsigned int ofset,
+> 
+> and you're typoing offset on purpose again?! :-\
+> 
+> +  unsigned int *instance,
+> +  unsigned int *index)
+>    {
+> - unsigned int eint_base = 0;
+>     void __iomem *reg;
+> 
+> - if (eint_num >= eint->hw->ap_num)
+> - eint_base = eint->hw->ap_num;
+> + if (eint_num >= eint->total_pin_number ||
+> +     !eint->pins[eint_num].enabled) {
+> + WARN_ON(1);
+> + return NULL;
+> + }
+> 
+> - reg = eint->base + offset + ((eint_num - eint_base) / 32) * 4;
+> + *instance = eint->pins[eint_num].instance;
+> + *index = eint->pins[eint_num].index;
+> + reg = eint->instances[*instance].base + ofset + (*index / MAX_BIT * REG_OFSET);
+> 
+>     return reg;
+>    }
+> 
+> +/*
+> + * Generate helper function to access property register of a dedicate pin.
+> + */
+> 
+> ...and you don't need this (sorry, ugly!) macro either, as this is only
+> helping you to create a mass-duplication situation here.
+> 
+> If you need a helper, write *one* function that retrieves the data for you
+> from a chosen register.
+> 
+> +#define DEFINE_EINT_GET_FUNCTION(_NAME, _OFSET) \
+> +static unsigned int mtk_eint_get_##_NAME(struct mtk_eint *eint, \
+> +    unsigned int eint_num) \
+> +{ \
+> + unsigned int instance, index; \
+> + void __iomem *reg = mtk_eint_get_ofset(eint, eint_num, \
+> + _OFSET, \
+> + &instance, &index); \
+> + unsigned int bit = BIT(index & 0x1f);\
+> +\
+> + if (!reg) { \
+> + dev_err(eint->dev, "%s invalid eint_num %d\n", \
+> + __func__, eint_num); \
+> + return 0;\
+> + } \
+> +\
+> + return !!(readl(reg) & bit); \
+> +}
+> +
+> +DEFINE_EINT_GET_FUNCTION(stat, eint->comp->regs->stat);
+> +DEFINE_EINT_GET_FUNCTION(mask, eint->comp->regs->mask);
+> +DEFINE_EINT_GET_FUNCTION(sens, eint->comp->regs->sens);
+> +DEFINE_EINT_GET_FUNCTION(pol, eint->comp->regs->pol);
+> +DEFINE_EINT_GET_FUNCTION(dom_en, eint->comp->regs->dom_en);
+> +DEFINE_EINT_GET_FUNCTION(event, eint->comp->regs->event);
+> +DEFINE_EINT_GET_FUNCTION(raw_stat, eint->comp->regs->raw_stat);
+> +
+> +int dump_eint_pin_status(unsigned int eint_num)
+> 
+> I don't think that this is necessary... also because, there's already irq/debugfs.c
+> for debugging. If you really need debug, hook it to the right APIs.
+> 
+> +{
+> +       unsigned int stat, raw_stat, mask, sens, pol, dom_en, event;
+> +
+> +       if (eint_num < 0 || eint_num > global_eintc->total_pin_number)
+> +               return ENODEV;
+> +
+> +       stat = mtk_eint_get_stat(global_eintc, eint_num);
+> +       raw_stat = mtk_eint_get_raw_stat(global_eintc, eint_num);
+> +       mask = mtk_eint_get_mask(global_eintc, eint_num);
+> +       sens = mtk_eint_get_sens(global_eintc, eint_num);
+> +       pol = mtk_eint_get_pol(global_eintc, eint_num);
+> +       dom_en = mtk_eint_get_dom_en(global_eintc, eint_num);
+> +       event = mtk_eint_get_event(global_eintc, eint_num);
+> +       dev_info(global_eintc->dev, "%s eint_num:%u=stat:%u,raw:%u, \
+> +        mask:%u, sens:%u,pol:%u,dom_en:%u,event:%u\n",
+> +        __func__, eint_num, stat, raw_stat, mask, sens,
+> +        pol, dom_en, event);
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dump_eint_pin_status);
+> +
+>    static unsigned int mtk_eint_can_en_debounce(struct mtk_eint *eint,
+>          unsigned int eint_num)
+>    {
+>     unsigned int sens;
+> - unsigned int bit = BIT(eint_num % 32);
+> - void __iomem *reg = mtk_eint_get_offset(eint, eint_num,
+> - eint->regs->sens);
+> + unsigned int instance, index;
+> + void __iomem *reg = mtk_eint_get_ofset(eint, eint_num,
+> + eint->comp->regs->sens,
+> + &instance, &index);
+> + unsigned int bit = BIT(index & 0x1f);
+> 
+> I'm not sure why you can't use BIT(eint_num % 32) anymore.
+> 
+> Even though your EINT is split in 5, that should be still aligned the same as
+> the "old" EINT.
+> 
+> +
+> + if (!reg) {
+> 
+> That won't ever happen, because you're already checking that in callers of
+> this function, hence this check is redundant, or looks like it is anyway.
+> 
+> + dev_err(eint->dev, "%s invalid eint_num %d\n",
+> + __func__, eint_num);
+> + return 0;
+> + }
+> 
+>     if (readl(reg) & bit)
+>     sens = MTK_EINT_LEVEL_SENSITIVE;
+>     else
+>     sens = MTK_EINT_EDGE_SENSITIVE;
+> 
+> - if (eint_num < eint->hw->db_cnt && sens != MTK_EINT_EDGE_SENSITIVE)
+> + if (eint->pins[eint_num].debounce &&
+> +     sens != MTK_EINT_EDGE_SENSITIVE)
+>     return 1;
+>     else
+>     return 0;
+>    }
+> 
+> -static int mtk_eint_flip_edge(struct mtk_eint *eint, int hwirq)
+> +static int mtk_eint_flip_edge(struct mtk_eint *eint, int eint_num)
+> 
+> Why are you changing the parameter name from hwirq to eint_num?!
+> 
+>    {
+>     int start_level, curr_level;
+> - unsigned int reg_offset;
+> - u32 mask = BIT(hwirq & 0x1f);
+> - u32 port = (hwirq >> 5) & eint->hw->port_mask;
+> - void __iomem *reg = eint->base + (port << 2);
+> + unsigned int reg_ofset;
+> + unsigned int instance, index, mask, port;
+> + void __iomem *reg;
+> 
+> - curr_level = eint->gpio_xlate->get_gpio_state(eint->pctl, hwirq);
+> + reg = mtk_eint_get_ofset(eint, eint_num, MTK_EINT_NO_OFSET,
+> +   &instance, &index);
+> +
+> + if (!reg) {
+> + dev_err(eint->dev, "%s invalid eint_num %d\n",
+> + __func__, eint_num);
+> + return 0;
+> + }
+> +
+> + mask = BIT(index & 0x1f);
+> + port = index >> REG_GROUP;
+> + reg = eint->instances[instance].base + port * REG_OFSET;
+> +
+> 
+> 
+> ..snip..
+> 
+> @@ -403,7 +572,20 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
+> 
+>    int mtk_eint_do_suspend(struct mtk_eint *eint)
+>    {
+> - mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
+> + unsigned int i, j, port;
+> +
+> + for (i = 0; i < eint->instance_number; i++) {
+> + struct mtk_eint_instance inst = eint->instances[i];
+> 
+> Just register five different instances if they really have to be separated,
+> which I don't believe they do, anyway.
+> 
+> You should really read what mtk_eint_hw is for.
+> 
+> +
+> + for (j = 0; j < inst.number; j += MAX_BIT) {
+> + port = j >> REG_GROUP;
+> + writel_relaxed(~inst.wake_mask[port],
+> +        inst.base + port*REG_OFSET + eint->comp->regs->mask_set);
+> + writel_relaxed(inst.wake_mask[port],
+> +        inst.base + port*REG_OFSET + eint->comp->regs->mask_clr);
+> + }
+> + }
+> + dsb(sy);
+> 
+>     return 0;
+>    }
+> 
+> ..snip..
+> 
+> @@ -420,27 +615,45 @@ EXPORT_SYMBOL_GPL(mtk_eint_do_resume);
+>    int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
+>       unsigned int debounce)
+>    {
+> - int virq, eint_offset;
+> - unsigned int set_offset, bit, clr_bit, clr_offset, rst, i, unmask,
+> + int virq, eint_ofset;
+> + unsigned int set_ofset, bit, clr_bit, clr_ofset, rst, i, unmask,
+>          dbnc;
+> + static const unsigned int debounce_time[] = { 156, 313, 625, 1250,
+> + 20000, 40000, 80000, 160000, 320000, 640000 };
+> 
+> This is another mtk_eint_hw array that you're carelessly hardcoding inside of the
+> eint driver.
+> 
+>     struct irq_data *d;
+> + unsigned int instance, index;
+> + void __iomem *reg;
+> 
+> - if (!eint->hw->db_time)
+> - return -EOPNOTSUPP;
+> + /*
+> +  * Due to different number of bit field, we only decode
+> +  * the coordinate here, instead of get the VA.
+> +  */
+> + reg = mtk_eint_get_ofset(eint, eint_num, MTK_EINT_NO_OFSET,
+> +   &instance, &index);
+> +
+> + if (!reg) {
+> + dev_err(eint->dev, "%s invalid eint_num %lu\n",
+> + __func__, eint_num);
+> + return 0;
+> + }
+> 
+>     virq = irq_find_mapping(eint->domain, eint_num);
+> - eint_offset = (eint_num % 4) * 8;
+> + eint_ofset = (index % REG_OFSET) * DB_GROUP;
+>     d = irq_get_irq_data(virq);
+> 
+> - set_offset = (eint_num / 4) * 4 + eint->regs->dbnc_set;
+> - clr_offset = (eint_num / 4) * 4 + eint->regs->dbnc_clr;
+> + reg = eint->instances[instance].base;
+> + set_ofset = (index / REG_OFSET) * REG_OFSET + eint->comp->regs->dbnc_set;
+> + clr_ofset = (index / REG_OFSET) * REG_OFSET + eint->comp->regs->dbnc_clr;
+> 
+>     if (!mtk_eint_can_en_debounce(eint, eint_num))
+>     return -EINVAL;
+> 
+> - dbnc = eint->num_db_time;
+> - for (i = 0; i < eint->num_db_time; i++) {
+> - if (debounce <= eint->hw->db_time[i]) {
+> + /*
+> +  * Check eint number to avoid access out-of-range
+> +  */
+> + dbnc = ARRAY_SIZE(debounce_time) - 1;
+> 
+> And here, you carelessly break every other supported MediaTek SoC.
+> 
+> + for (i = 0; i < ARRAY_SIZE(debounce_time); i++) {
+> + if (debounce <= debounce_time[i]) {
+>     dbnc = i;
+>     break;
+>     }
+> 
+> ..snip..
+> 
+> +
+> +int mtk_eint_do_init_v2(struct mtk_eint *eint)
+> +{
+> + int i, virq, matrix_number = 0;
+> + struct device_node *node;
+> + unsigned int ret, size, ofset;
+> + unsigned int id, inst, idx, support_deb;
+> +
+> + const phandle *ph;
+> +
+> + ph = of_get_property(eint->dev->of_node, "mediatek,eint", NULL);
+> 
+> No, a SoC always has the same eint controller(s), always mapped to the same pins.
+> 
+> This is not something for devicetree - but rather something that was already
+> resolved in the past, when `struct mtk_eint_hw` was introduced.
+> 
+> You should just look at how this driver works upstream and implement support for
+> the new EINT in there.... not by copy-pasting something from downstream to upstream
+> and expecting it to be accepted.
+> 
+> + if (!ph) {
+> + dev_err(eint->dev, "Cannot find EINT phandle in PIO node.\n");
+> + return -ENODEV;
+> + }
+> +
+> + node = of_find_node_by_phandle(be32_to_cpup(ph));
+> + if (!node) {
+> + dev_err(eint->dev, "Cannot find EINT node by phandle.\n");
+> + return -ENODEV;
+> + }
+> +
+> + ret = of_property_read_u32(node, "mediatek,total-pin-number",
+> +    &eint->total_pin_number);
+> 
+> eint_hw->ap_num is the same thing as this.
+> 
+> + if (ret) {
+> + dev_err(eint->dev,
+> +        "%s cannot read total-pin-number from device node.\n",
+> +        __func__);
+> + return -EINVAL;
+> + }
+> +
+> + dev_info(eint->dev, "%s eint total %u pins.\n", __func__,
+> + eint->total_pin_number);
+> +
+> + ret = of_property_read_u32(node, "mediatek,instance-num",
+> +    &eint->instance_number);
+> + if (ret)
+> + eint->instance_number = 1; // only 1 instance in legacy chip
+> +
+> + size = eint->instance_number * sizeof(struct mtk_eint_instance);
+> + eint->instances = devm_kzalloc(eint->dev, size, GFP_KERNEL);
+> + if (!eint->instances)
+>     return -ENOMEM;
+> 
+> - eint->dual_edge = devm_kcalloc(eint->dev, eint->hw->ap_num,
+> -        sizeof(int), GFP_KERNEL);
+> - if (!eint->dual_edge)
+> + size = eint->total_pin_number * sizeof(struct mtk_eint_pin);
+> + eint->pins = devm_kzalloc(eint->dev, size, GFP_KERNEL);
+> + if (!eint->pins)
+>     return -ENOMEM;
+> 
+> + for (i = 0; i < eint->instance_number; i++) {
+> + ret = of_property_read_string_index(node, "reg-name", i,
+> +     &(eint->instances[i].name));
+> + if (ret) {
+> + dev_info(eint->dev,
+> +  "%s cannot read the name of instance %d.\n",
+> +  __func__, i);
+> + }
+> +
+> + eint->instances[i].base = of_iomap(node, i);
+> + if (!eint->instances[i].base)
+> + return -ENOMEM;
+> + }
+> +
+> + matrix_number = of_property_count_u32_elems(node, "mediatek,pins") / ARRAY_0;
+> + if (matrix_number < 0) {
+> + matrix_number = eint->total_pin_number;
+> + dev_info(eint->dev, "%s eint in legacy mode, assign the matrix number to %u.\n",
+> +  __func__, matrix_number);
+> + } else
+> + dev_info(eint->dev, "%s eint in new mode, assign the matrix number to %u.\n",
+> +  __func__, matrix_number);
+> +
+> + for (i = 0; i < matrix_number; i++) {
+> + ofset = i * REG_OFSET;
+> +
+> + ret = of_property_read_u32_index(node, "mediatek,pins",
+> +    ofset, &id);
+> 
+> So basically this means that if a SoC has 200 EINT pins, you'll have 200 values
+> in devicetree?!
+> 
+> + ret |= of_property_read_u32_index(node, "mediatek,pins",
+> +    ofset+FIRST, &inst);
+> + ret |= of_property_read_u32_index(node, "mediatek,pins",
+> +    ofset+SECOND, &idx);
+> + ret |= of_property_read_u32_index(node, "mediatek,pins",
+> +    ofset+THIRD, &support_deb);
+> +
+> + /* Legacy chip which no need to give coordinate list */
+> + if (ret) {
+> + id = i;
+> + inst = 0;
+> + idx = i;
+> + support_deb = (i < MAX_BIT) ? 1 : 0;
+> + }
+> +
+> + eint->pins[id].enabled = true;
+> + eint->pins[id].instance = inst;
+> + eint->pins[id].index = idx;
+> + eint->pins[id].debounce = support_deb;
+> +
+> + eint->instances[inst].pin_list[idx] = id;
+> + eint->instances[inst].number++;
+> +
+> 
+> ..snip..
+> 
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
+> index 6139b16cd225..aa17a6073029 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.h
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.h
+> @@ -11,6 +11,25 @@
+> 
+>    #include <linux/irqdomain.h>
+> 
+> +#define MAX_PIN 999
+> +#define MTK_EINT_EDGE_SENSITIVE           0
+> +#define MTK_EINT_LEVEL_SENSITIVE          1
+> +#define MTK_EINT_DBNC_SET_DBNC_BITS       4
+> +#define MTK_EINT_DBNC_RST_BIT             (0x1 << 1)
+> +#define MTK_EINT_DBNC_SET_EN              (0x1 << 0)
+> +#define MTK_EINT_NO_OFSET                 0
+> +#define MAX_BIT                           32
+> 
+> MAX_BIT==32? Ok, so I was right in saying that the new eint is just the old one
+> but with more than one instance.
+> 
+> +#define REG_OFSET                         4
+> +#define REG_GROUP                         5
+> +#define REG_VAL                           0xFFFFFFFF
+> 
+> 
+> +#define DB_GROUP                          8
+> +#define FIRST                             1
+> +#define SECOND                            2
+> +#define THIRD                             3
+> +#define ARRAY_0                           4
+> +
+> +//#define MTK_EINT_DEBUG
+> 
+> Those definitions are either cryptic or unneeded.
+> And I'll stop my review here.
+> 
+> To be clear, the response is a huge "NACK"; you really have to redo everything
+> from scratch, but this time, just implement support for the new design on the base
+> of this upstream driver.
+> 
+> Regards,
+> Angelo
+
+
+
 
