@@ -1,222 +1,96 @@
-Return-Path: <linux-gpio+bounces-14574-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14576-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5CD2A04588
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 17:09:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39F58A046AC
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 17:40:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A3CC7A299C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 16:09:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9C4E18885A3
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 16:40:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B091F5407;
-	Tue,  7 Jan 2025 16:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08DF91F76B2;
+	Tue,  7 Jan 2025 16:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rkBYUO8r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aReApzZl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEA11F4712;
-	Tue,  7 Jan 2025 16:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786891F75B5;
+	Tue,  7 Jan 2025 16:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736266123; cv=none; b=a16GeEr1x7Y1Wncrv0cIXC5G5htppqEJfeZcwnc49vR7TC8mxjNFbHkJmVlzhOT+JK90gTPZcISpSKTG24nLa9ZPBoqnGr3sunVMIrG2Q4Pl0tOm8bvHg8ubcfU2tcprekQ6VEAvcDXTVAwetKvdw99SeuqDsHthCExmuBPXzpM=
+	t=1736267955; cv=none; b=tskAmG+Sl1dKorcB8DYz19jboeUI+nDhSlY+zLGgH0Ssbx0fmy6wiSBn2MwPzPOMgAgUDhkf158zAtD+6J3oRHSU6o45Jlt/ulzKxS+97HePtkP9onD1Va2t27o+Rj2Q8TSQB0vJLlY/FGs9BDSA2dZKzkjhHPLi5iFy+r6jyG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736266123; c=relaxed/simple;
-	bh=PvMZTBsd/zyFDw280jKFb87067d4CpMhzJa4SZI+9ds=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YANvBZ0oq/n2aIa8HhVX3IOovGYyPs+AA9zm45eoFOJvRpKH5TCU2xgn81/vAe5eLaPuTQBZKRe+0QwgWcknX2PepP29zyjD/rm0SR+TkXn0rzlWAmrLw0Vi4bIiFrVnUA1YR71wRbIMsMiUoA4H/YLYPFNJiTJI3+hkuT+epK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=rkBYUO8r; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1736266120; x=1767802120;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PvMZTBsd/zyFDw280jKFb87067d4CpMhzJa4SZI+9ds=;
-  b=rkBYUO8rQh5bCExjn0gw3wRoyA2bqGF5wLI9nhokLRkXW8i9t4deGE9A
-   c7xuVAAuyAGaDDGMTocXNtt3XT+1MFRhljRV7fhxA0lHgec4+RFgz4fnQ
-   cv6c6HANJPoW1tiOvE+Du42iKhGN9ZkiesVom5T0DMkdRs7omg3jBD9xK
-   ZNMSjCK74VMipqyKzAuLcc/0C1W9ERatVp8o79CwoTsb2SrzETHKQBEt5
-   4R1PGCZEN91oiLQHJp/obg1hZ7IK1tnmy/F8D1bG/spHiBrJkkXJCyXOy
-   iSXvOUWaunpKBdCsodJpA5gpuninBnevSl+Vi850MiEKoTYQLJc34Pbpz
-   A==;
-X-CSE-ConnectionGUID: lqpfnJzJQpCXzb9QKpQeRA==
-X-CSE-MsgGUID: lkEXHdiKQIKQ2alr2emajQ==
-X-IronPort-AV: E=Sophos;i="6.12,296,1728975600"; 
-   d="scan'208";a="40091256"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Jan 2025 09:08:27 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 7 Jan 2025 09:08:18 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 7 Jan 2025 09:08:18 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<arnd@arndb.de>
-CC: <dharma.b@microchip.com>, <mihai.sain@microchip.com>,
-	<romain.sioen@microchip.com>, <varshini.rajendran@microchip.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-mmc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-serial@vger.kernel.org>
-Subject: [PATCH v5 5/5] ARM: dts: microchip: add support for sama7d65_curiosity board
-Date: Tue, 7 Jan 2025 09:07:27 -0700
-Message-ID: <20250107160850.120537-6-Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250107160850.120537-1-Ryan.Wanner@microchip.com>
-References: <20250107160850.120537-1-Ryan.Wanner@microchip.com>
+	s=arc-20240116; t=1736267955; c=relaxed/simple;
+	bh=9HemNwXCla1HurzEoi/CnptD9OsC5NaOru+Ac77BG70=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cyL7WXtHTGMbTWMV+24FNOeKBE48kRDoItUrTHhuX89ZdnSwspluhoKjfdk/DM/4NxtxSxGLhbS0mueYj2gb6ruTfsDCmsTigaBMXuT7BIT4RnXyV0rQg5CNElt0Z2IwCUBHWXDEpBpBTGRYUFplbJZ3jV026Clo+wvcPmzyQWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aReApzZl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F75C4CEDE;
+	Tue,  7 Jan 2025 16:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736267955;
+	bh=9HemNwXCla1HurzEoi/CnptD9OsC5NaOru+Ac77BG70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aReApzZlze75+vx7Qnx7rrd64DTjsFwrzqUYqvjDC/xnxlSHPre5LgR12Hdua3phD
+	 h7lOlx2IYr3A+2DFC2iuw++JkxFlUicPQCnShoefTKV3K2NjfG1R78ZA5K7vUCAhg4
+	 h7grMGrio88ePMuhhUvlrrQxS6JPVY7DF5e57YqyHxxYlHr1sv7skmszQcXUCC08fb
+	 0TEUhfu0Kqinst3IC+c+y/kUd3GgFxnlLcDG49sYTvYugDPdTgJbgovL1SGvULgv3R
+	 CXoij+OizVuru0LqP66FTmYBIP7mvIuec84svfVZpPhyo8StgvC68w/OCCoxpML1X8
+	 rwNR2AqIMHUUw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jingyi Wang <quic_jingyw@quicinc.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lijuan Gao <quic_lijuang@quicinc.com>
+Cc: kernel@quicinc.com,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v2 0/6] Correct the number of GPIOs in gpio-ranges for QCS615 and QCS8300
+Date: Tue,  7 Jan 2025 10:38:45 -0600
+Message-ID: <173626793401.69400.2278973364367185634.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241219-correct_gpio_ranges-v2-0-19af8588dbd0@quicinc.com>
+References: <20241219-correct_gpio_ranges-v2-0-19af8588dbd0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Romain Sioen <romain.sioen@microchip.com>
 
-Add device tree support for the SAMA7D65 Curiosity board.
-Update the Makefile to include the new device tree file.
+On Thu, 19 Dec 2024 15:59:42 +0800, Lijuan Gao wrote:
+> The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+> through the GPIO framework. It is expected to be wired to the reset pin
+> of the primary UFS memory so that the UFS driver can toggle it.
+> 
+> The UFS_RESET pin is exported as GPIOs in addtion to the real GPIOs. The
+> QCS615 TLMM pin controller has GPIOs 0-122, so correct the gpio-rangs to
+> 124. The QCS8300 TLMM pin controller has GPIOs 0-132, so correct the
+> gpio-rangs to 134.
+> 
+> [...]
 
-uart6 is related to flexcom6, hence not sorted in alphabetical order.
+Applied, thanks!
 
-Signed-off-by: Romain Sioen <romain.sioen@microchip.com>
-Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
- arch/arm/boot/dts/microchip/Makefile          |  3 +
- .../dts/microchip/at91-sama7d65_curiosity.dts | 89 +++++++++++++++++++
- 2 files changed, 92 insertions(+)
- create mode 100644 arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
+[5/6] arm64: dts: qcom: correct gpio-ranges for QCS615
+      commit: 80c82827327d80bde8fc96ebd4e637d0454062db
+[6/6] arm64: dts: qcom: correct gpio-ranges for QCS8300
+      commit: c57c39ee522d873db2cb23486581a8269c389cfe
 
-diff --git a/arch/arm/boot/dts/microchip/Makefile b/arch/arm/boot/dts/microchip/Makefile
-index 470fe46433a9..79cd38fdc7da 100644
---- a/arch/arm/boot/dts/microchip/Makefile
-+++ b/arch/arm/boot/dts/microchip/Makefile
-@@ -12,6 +12,7 @@ DTC_FLAGS_at91-sama5d2_xplained := -@
- DTC_FLAGS_at91-sama5d3_eds := -@
- DTC_FLAGS_at91-sama5d3_xplained := -@
- DTC_FLAGS_at91-sama5d4_xplained := -@
-+DTC_FLAGS_at91-sama7d65_curiosity := -@
- DTC_FLAGS_at91-sama7g54_curiosity := -@
- DTC_FLAGS_at91-sama7g5ek := -@
- dtb-$(CONFIG_SOC_AT91RM9200) += \
-@@ -90,6 +91,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
- 	at91-sama5d4_xplained.dtb \
- 	at91-sama5d4ek.dtb \
- 	at91-vinco.dtb
-+dtb-$(CONFIG_SOC_SAMA7D65) += \
-+	at91-sama7d65_curiosity.dtb
- dtb-$(CONFIG_SOC_SAMA7G5) += \
- 	at91-sama7g54_curiosity.dtb \
- 	at91-sama7g5ek.dtb
-diff --git a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-new file mode 100644
-index 000000000000..ef6a56db8acb
---- /dev/null
-+++ b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ *  at91-sama7d65_curiosity.dts - Device Tree file for SAMA7D65 Curiosity board
-+ *
-+ *  Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries
-+ *
-+ *  Author: Romain Sioen <romain.sioen@microchip.com>
-+ *
-+ */
-+/dts-v1/;
-+#include "sama7d65-pinfunc.h"
-+#include "sama7d65.dtsi"
-+#include <dt-bindings/mfd/atmel-flexcom.h>
-+#include <dt-bindings/pinctrl/at91.h>
-+
-+/ {
-+	model = "Microchip SAMA7D65 Curiosity";
-+	compatible = "microchip,sama7d65-curiosity", "microchip,sama7d65",
-+		     "microchip,sama7d6", "microchip,sama7";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	aliases {
-+		serial0 = &uart6;
-+	};
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+};
-+
-+&flx6 {
-+	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
-+	status = "okay";
-+};
-+
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart6_default>;
-+	status = "okay";
-+};
-+
-+&main_xtal {
-+	clock-frequency = <24000000>;
-+};
-+
-+&pioa {
-+	pinctrl_sdmmc1_default: sdmmc1-default {
-+		cmd-data {
-+			pinmux = <PIN_PB22__SDMMC1_CMD>,
-+				 <PIN_PB24__SDMMC1_DAT0>,
-+				 <PIN_PB25__SDMMC1_DAT1>,
-+				 <PIN_PB26__SDMMC1_DAT2>,
-+				 <PIN_PB27__SDMMC1_DAT3>;
-+			slew-rate = <0>;
-+			bias-disable;
-+		};
-+
-+		ck-cd-rstn-vddsel {
-+			pinmux = <PIN_PB23__SDMMC1_CK>,
-+				 <PIN_PB21__SDMMC1_RSTN>,
-+				 <PIN_PB30__SDMMC1_1V8SEL>,
-+				 <PIN_PB29__SDMMC1_CD>,
-+				 <PIN_PB28__SDMMC1_WP>;
-+			slew-rate = <0>;
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_uart6_default: uart6-default {
-+		pinmux = <PIN_PD18__FLEXCOM6_IO0>,
-+			<PIN_PD19__FLEXCOM6_IO1>;
-+		bias-disable;
-+	};
-+};
-+
-+&sdmmc1 {
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sdmmc1_default>;
-+	status = "okay";
-+};
-+
-+&slow_xtal {
-+	clock-frequency = <32768>;
-+};
+Best regards,
 -- 
-2.43.0
-
+Bjorn Andersson <andersson@kernel.org>
 
