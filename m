@@ -1,153 +1,119 @@
-Return-Path: <linux-gpio+bounces-14556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39904A03C51
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 11:28:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EEDEA03CAA
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 11:40:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A61AB3A54E9
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 10:28:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AABF7A307A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 10:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849591E8839;
-	Tue,  7 Jan 2025 10:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyyUhiKr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36B841E5726;
+	Tue,  7 Jan 2025 10:39:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F71A1E47C4;
-	Tue,  7 Jan 2025 10:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D5E1E9B39;
+	Tue,  7 Jan 2025 10:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736245665; cv=none; b=H6CZA2W+FbFcAPlvc5xk1eePEk7SighTC3GD+g46DGFQAgz6CnQClZZwcW6t7KRIZzBXNxsThKcsAcAxrPNcSpbrG5r+u8PCSzbg3sO+vxms53JuMXdqjg+0PCnR+46QXwkKViHaoSUOvwwI+2XW/Er+b9DnrbZSS6dP2NP8p3o=
+	t=1736246362; cv=none; b=jlPxWLE9WFbgOa0g8jSr+g/qi8xaA87CpUcs4J1XI30XucrnqgbxFZGWp54rn/pJqODY4waTR3W9sZx0o+pbGCnzOI0v74VXbb7Uo9hWaJsbxA2wC+cvh5Fskun5NsxWmvsNLwYVGe+PiatUYeqFDODTDNLFtzch6K8Z9bTXVd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736245665; c=relaxed/simple;
-	bh=cGqXAvBKjHldE5wjPw0icjxXqxd19A6GvXP+eKa/IR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WjlEcKzqtlly7AY7yO8EhlmxMo00pD+uLuv5b0w4M3O9VWLeXx46F3qyVjjCgNKjuh7aCztG4Vzczyf0+/opQR7lLmHlp8C6sPbKrOOfTIFLFUFvVp0nH73GBwrzN1yvRAevE4/RnU32suRoUPZQzRy4eykZOMLCFg/sBH8JwnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MyyUhiKr; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso12947967f8f.1;
-        Tue, 07 Jan 2025 02:27:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736245662; x=1736850462; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2QVGdUnSb3wHEFLqL+2JggAjxwQDMbWS6MssaUao6QY=;
-        b=MyyUhiKrR27MiWWvylEyJAvuful+wFQOMq2PqzLGwHdc7y7i7g1fKuzs4qVln8Slgq
-         e3DLo8ub7fHTCWBmepY3cdKDFIF3uDBJ09eK5LmV+TJVvXjP0IBKL2h8WoNk31zUceGy
-         FcrRcJQIGBzU56wSpo14q91LTN0iZt8360zmEXLrOUgzz3kzT3ZTdv0y8l1eIevjk45q
-         XTxROnd1MqOc96ondAUK8/x7JoAhnP+vdyGxdJ2QrsM4U7+1JeRvgN+85uXuJLZ8JJ+Z
-         qlWzj1gKxYtKa2JGKLq46t+sSgCPxRq0Jf5nRx0ahNLrE0/9MozHLvC32padLKyqkKNS
-         6fYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736245662; x=1736850462;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2QVGdUnSb3wHEFLqL+2JggAjxwQDMbWS6MssaUao6QY=;
-        b=AGVQ90t0OrZi7Je9pYI4nCheQQz3DskwxwOr0xgUVonSfQ5yswmUeOvde02PUXCUTs
-         RPCNB7HXKOryLmEkIgqkuQRvKTz5v9KoLP5aaLgHah8/BDNWo2qxQ8/OFiWRulFAwAae
-         AGAjFzXwqcCqib0FPu0ZAAI2n/ds9SSjL8Sf5WDJUC57WpHjw+QpEOtJgYAWcek/fS5C
-         bj2fw6lGnUMxzZWQeqlKvFE17qTp5mz/Na56HMkIz9V2fzIFRh4HkYI6jLOYPRL04BwP
-         MdYnMx9XUXGs6zhI2pvovaz/CLXuqVvPskJMm1V3htx6EuAh/J/c4eW6LYZiwg+eJnoW
-         61vw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGSpJoiyj98pHIuCGMWES8MsszSKv261rJvYFp+8+SG5sV1Pb5tUNGrdcbsrsQU/FSNi4NuRG5n2yh6Xh0@vger.kernel.org, AJvYcCUNI/5cELTH8Yoojc6dK8JDc7+suZhnFEcXZHUkiPIaGbOgeg3f8Xa3PBm+vl7sTsvGMXAWprmksiiz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdPjlWJSgvESXaJ9pGRVG5FQGmxOfhiGYCWjBIfo2uunoFysdF
-	HqarmnINkEeVdctE3KGGPGI+z5sx+rgiXdtarBJJwkDq+kryAapg
-X-Gm-Gg: ASbGncsr7wMt/pu2NbOYmDS2fe6i3Lb9m3enVCnzr1lfuZado5jYdfuER+VURl4KsG4
-	tiQLvxD+LYTo2kLdObC2ctq8zhmpVPk4nTnIWjWkfMwhWmfNYDI02GWHLnpWILffVvqPyhrwMzL
-	8IV4fRmEYsoLurecXg97APTEcmX4h7CBrz3KrzS7pL8mnPjCzKZMPS0t3sbV9P4le1iOublGIHp
-	Sz7PyCvyfGi2Zj3FC4TNgldXtiMUuOhDqc+ROPkjTZFvUe61GM=
-X-Google-Smtp-Source: AGHT+IEle+fYL1GvOAul2ZRgkmHc+vS1DJX3SBs792BbqFnxqg8EEnvU3kQmaPV7llvUbI7DNVsD+Q==
-X-Received: by 2002:a05:6000:4b0b:b0:386:37f5:99e7 with SMTP id ffacd0b85a97d-38a22201897mr53365613f8f.33.1736245661717;
-        Tue, 07 Jan 2025 02:27:41 -0800 (PST)
-Received: from skynet.lan ([213.99.223.27])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436611ea3d5sm598711065e9.5.2025.01.07.02.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 02:27:41 -0800 (PST)
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-To: jonas.gorski@gmail.com,
-	kylehendrydev@gmail.com,
-	florian.fainelli@broadcom.com,
-	linus.walleij@linaro.org,
-	bcm-kernel-feedback-list@broadcom.com,
+	s=arc-20240116; t=1736246362; c=relaxed/simple;
+	bh=LEocVp7Sn0lF5nlR2i78xyP4ZP0H/jxp/rTifcxwcHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BG26jv20JzEnTgbQrMHDaFeAp2GbSnbzvaocmW06TvBB9gjn/EkgvThY/Qzd0WVfugxm2Pg2R7XTNjv1LFxQ1gaxMTexsGXth7CoiZb+EyTBoWKIC7Kv7zHPGObwbEB+OmBInF9O75tYu5fGuUgRy83XAewymJ3WCS/gzj541wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.63])
+	by gateway (Coremail) with SMTP id _____8CxC+JNBH1nGDFfAA--.55676S3;
+	Tue, 07 Jan 2025 18:39:09 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.63])
+	by front1 (Coremail) with SMTP id qMiowMDxfcdLBH1n0PIXAA--.37103S2;
+	Tue, 07 Jan 2025 18:39:08 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [PATCH 2/2] pinctrl: bcm63xx: implement gpio_regmap request/free
-Date: Tue,  7 Jan 2025 11:27:35 +0100
-Message-Id: <20250107102735.317446-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250107102735.317446-1-noltari@gmail.com>
-References: <20250107102735.317446-1-noltari@gmail.com>
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	stable@vger.kernel.org,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Subject: [PATCH] gpio: loongson: Fix Loongson-2K2000 ACPI GPIO register offset
+Date: Tue,  7 Jan 2025 18:38:56 +0800
+Message-ID: <20250107103856.1037222-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxfcdLBH1n0PIXAA--.37103S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFWUCw48GFW8Xw17GFWrtFc_yoW8Xw4fp3
+	y3ua4rKr15JF17C39xZF9rAay8uas0yFZFgF42k3s3XF9Ivw1qqrW5AF909a17AryrAFy5
+	XrWfKFW7ua1DCrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU4s2-UUUUU
 
-Implement pinctrl gpio request/free functions on gpio_regmap, which ensures
-calling gpio_request_enable on bcm63xx pinctrl drivers when a gpio is
-requested.
+Since commit 3feb70a61740 ("gpio: loongson: add more gpio chip
+support"), the Loongson-2K2000 GPIO is supported.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+However, according to the firmware development specification, the
+Loongson-2K2000 ACPI GPIO register offsets in the driver do not match
+the register base addresses in the firmware, resulting in the registers
+not being accessed properly.
+
+Now, we fix it to ensure the GPIO function works properly.
+
+Cc: stable@vger.kernel.org
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>
+Fixes: 3feb70a61740 ("gpio: loongson: add more gpio chip support")
+Co-developed-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm63xx.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/gpio/gpio-loongson-64bit.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm63xx.c b/drivers/pinctrl/bcm/pinctrl-bcm63xx.c
-index 59d2ce8462d8..4abd52613dfe 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm63xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm63xx.c
-@@ -6,10 +6,12 @@
-  * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
-  */
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 6749d4dd6d64..7f4d78fd800e 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -237,9 +237,9 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
+ static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
+ 	.label = "ls2k2000_gpio",
+ 	.mode = BIT_CTRL_MODE,
+-	.conf_offset = 0x84,
+-	.in_offset = 0x88,
+-	.out_offset = 0x80,
++	.conf_offset = 0x4,
++	.in_offset = 0x8,
++	.out_offset = 0x0,
+ };
  
-+#include <linux/gpio/driver.h>
- #include <linux/gpio/regmap.h>
- #include <linux/mfd/syscon.h>
- #include <linux/mod_devicetable.h>
- #include <linux/of.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- 
- #include "pinctrl-bcm63xx.h"
-@@ -32,6 +34,16 @@ static int bcm63xx_reg_mask_xlate(struct gpio_regmap *gpio,
- 	return 0;
- }
- 
-+static int bcm63xx_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return pinctrl_gpio_request(chip, offset);
-+}
-+
-+static void bcm63xx_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	pinctrl_gpio_free(chip, offset);
-+}
-+
- static const struct of_device_id bcm63xx_gpio_of_match[] = {
- 	{ .compatible = "brcm,bcm6318-gpio", },
- 	{ .compatible = "brcm,bcm6328-gpio", },
-@@ -57,6 +69,8 @@ static int bcm63xx_gpio_probe(struct device *dev, struct device_node *node,
- 	grc.reg_dir_out_base = BCM63XX_DIROUT_REG;
- 	grc.reg_set_base = BCM63XX_DATA_REG;
- 	grc.reg_mask_xlate = bcm63xx_reg_mask_xlate;
-+	grc.request = bcm63xx_request;
-+	grc.free = bcm63xx_free;
- 
- 	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &grc));
- }
+ static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
 -- 
-2.39.5
+2.43.5
 
 
