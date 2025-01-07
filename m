@@ -1,120 +1,133 @@
-Return-Path: <linux-gpio+bounces-14567-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14568-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29044A0440D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 16:18:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12EB6A0453A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 16:54:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 592721885B11
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 15:18:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2BCD1887AAE
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2025 15:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231AF1F191A;
-	Tue,  7 Jan 2025 15:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ABF21F3D2D;
+	Tue,  7 Jan 2025 15:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8Ri8Ior"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BjYz3ER9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1879E145355
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jan 2025 15:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87B91F2C23;
+	Tue,  7 Jan 2025 15:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736263114; cv=none; b=jym1QjluxhVbRn+/p9uPku1ck6t26O5HKFDtyfOYYMCmgfCnOJKPM+XTbq7XeatX3kGiW968akVLt7cyvvFNIzO1T5ET5xpWP3+sNKsBfb9mvJj9/Dn0G+RMmqAzn8Hoq7zKlw2tJPozuEVWNZckYFCze0IuxzsdsaAeuCYCVo0=
+	t=1736265273; cv=none; b=fVTnGMPKRnqSeGAhFJnKHaILbSb4oUB9FyChJxEu0UShwP17xk0ebtK7u29i/7RXVzNxEaF1dUFUjEsSWsFSgYLNBVkKtWVfJzSCFUET28OUL1CV+NLDhWTBBoPsX2jvgFJq5ADstxZmPjrp2jAlNv6DTmuet2WA0Rp59r4b+p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736263114; c=relaxed/simple;
-	bh=PdMW3GYI2Bo2OUkuuYIC/9GjU5fuFWWd5LLYxnYnFuQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Alh2lHlNa2pPbAoCVhPUwD53QddYw7WvUY0Y8XLnYrSa9UMk/kVxoZUw0WLYRYThp0K1Ov8qVdkpcCiqIshU1otMDYx3ytDLoI24AJ/krADxklbpbhtOOXARKEeJmyGVex366vZQi+5ftV4zn7EhLkq/XkC/NWLTpxYpnUSTevQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y8Ri8Ior; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5401b7f7141so13767076e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2025 07:18:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736263110; x=1736867910; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wd/OIh9+XuLROZNqgy3qFc0I67rLSdyN4Q7q2BFezNE=;
-        b=y8Ri8IorufrZx/P6HkRF/kzQbn4zCgj+Y+44oeQ/Ts36w8qRdXCLHQrkDlm70LHQNJ
-         3V3MBtk772Lv4NVafEQz+rNCsQ7HJg6AFzjqUvtL18aarwpZoOm8TVSIhyxlSqicgEe5
-         DlyLYkFXPrFl8J2NGPH1UJj+Xzc7i1U2KJWimvLyUsT/M2Jnr4iJUPmXHAyOIcYLW/gK
-         TJejfB8LeftHPwbQNwa5xPH5Zx2Un4ZQmS1o1SpvJ6YgZnQ4ezTCj1EU3GzKwIw8ZD1f
-         W8poHW/ipeZbU6ktojw/XqDopO+1a14IUuxcoq7PrHTcpbsFPkrpSQJjWg7pd3St4Ihx
-         Om7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736263110; x=1736867910;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wd/OIh9+XuLROZNqgy3qFc0I67rLSdyN4Q7q2BFezNE=;
-        b=hFBb3yLLuTqy/oy6W6og42QMVLe4ovskfCIMr1AOMA0v7qLg1PQXoGqLiCCfDK/IGR
-         PZ7XXt6Z74tudIGoZCS7pVip9ryhaR1Kns4v0SLCaoR8oEtgk8OwdSY/5TG9IkzxWJc9
-         fFgIcVNXsXENIpYBnue0f99IZTnErXPNOXk4+IV7sWU97LirQLo8S6yK/IGG+Sn4fL+1
-         Hijw77MVybWRRVrEmTSoVwsTGCLtw3Q9HnP+6EJN/i3k02HeQONS5pTokTT9zFU0eb7e
-         DQhEF4wFBx9audjMq9rHdQDbXcjNCeLU/x+3BMTBnapLS8OvhnO4cFbmkm2HCVPqCuPE
-         BSeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtP22S3IJ5biqpYW4qfmc9OmuZEl84DMniePPEAwVsweokIzK1dPxsDAEWQRcDN13XuDcxr8TsHDLG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR3ocT5tNo5tVfRvRhqlcLdvb5PuW+Tz0xHaiiLxwjqB8oLsYb
-	ag6Ti5yRRnTRfMGhQNyhhYCzqw6r3+VjjPMJznT2HrvA3IcEnFZV1VF+5nQUNrbKy8TmQ6+PNXm
-	7EW0ihf4GyCyxH15lGhYXIB1KHYrpZhvYUEy2Pg==
-X-Gm-Gg: ASbGnculoUISmQXKbj0pivc4vhmOALsuCX8BeIfa3iHOt6PYVlTOHI38u4yTJhKrSOI
-	O/QwfxYxbUuYlz/UetwhcQcFmuVFyaxOCX8dC
-X-Google-Smtp-Source: AGHT+IFfSJ/IVHhrJ2qR+8hDDFjdqdHa8DoOmF81YVHP8qeEB0D4AktjBUg7IrZZHNZ63UvWGjpkKeBdKSBO3q3o3/Q=
-X-Received: by 2002:a05:6512:3b08:b0:53e:39c2:f02b with SMTP id
- 2adb3069b0e04-54229562a86mr17756761e87.42.1736263109745; Tue, 07 Jan 2025
- 07:18:29 -0800 (PST)
+	s=arc-20240116; t=1736265273; c=relaxed/simple;
+	bh=ZColaJchYHQUTdC5l9KMK7U/n6WVO4E0FvLAa+1L3dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m5p2I3meJqgCYs/7HKUEormGVx2hgxbufCFyVk1CcyGu8IdZjhLb3DC2VsAhOh5JUbvauh5EcHVMumGJHNoLbtqhtaQERKF13xfgqpgqKXDMLo7rm2TXrKDfC9cCGPDfoZk8Rq68IiXji1v1pmRC/FynHroIUly/f0N65dkqKbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BjYz3ER9; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1736265268;
+	bh=ZColaJchYHQUTdC5l9KMK7U/n6WVO4E0FvLAa+1L3dw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BjYz3ER91eASynnII7vjuVazUWx/msHDd8cWnDw6W2GpHsDj4j0kDonsibm+9nWZh
+	 HQwp1Ng+Vt+3yUoaZtWChzzKW1Onl7QUZvgcRKLQcJVhsOu1OSutY/r3A+Umw8kTTv
+	 1Xjks+cmkmdhd7AojIOEBuoHpEOfDtN6Fd2ClUGyq33nS5y5znS6T38Cl6S72CFx6S
+	 hn7EsbmlV5ByIj/r5klIO5Y8Rv5eAr4lU52ZmrFXWJ4iCRp+ntePNbcfJVl07/iydz
+	 NV9xXNw/92084VEFe9J86tEs31eHLXbvIdQvg6ZNZOEvf3mSTOLa9L+4QoI9s3pOTv
+	 IJEbLjlE+5zuQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9081B17E159F;
+	Tue,  7 Jan 2025 16:54:27 +0100 (CET)
+Message-ID: <ee926982-be21-4292-984b-57e0d777d3f9@collabora.com>
+Date: Tue, 7 Jan 2025 16:54:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com> <20241226-amlogic-pinctrl-v2-2-cdae42a67b76@amlogic.com>
-In-Reply-To: <20241226-amlogic-pinctrl-v2-2-cdae42a67b76@amlogic.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 7 Jan 2025 16:18:18 +0100
-Message-ID: <CACRpkdYrUDK9RsJ0VzksUNAyZ=grdQLAkMN1_BjeqQumY8bjSw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] pinctrl: pinconf-generic: Add API for pinmux
- propertity in DTS file
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] v1 pinctrl: mtk-eint: add eint new design for mt8196
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: chang hao <ot_chhao.chang@mediatek.com>, matthias.bgg@gmail.com,
+ sean.wang@kernel.org, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20241203131302.16022-1-ot_chhao.chang@mediatek.com>
+ <CACRpkdZy7HgkT-FFJh=ubXhdcBRa-vbaNmHC32E3djZdHnwdYg@mail.gmail.com>
+ <47ca3129-245f-481f-9ca1-ed9d8db6e990@collabora.com>
+ <CACRpkdarstoQW+ZBi+MWxEff_=h8bPo9+fwy=LW2uhWRuQ6YSQ@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CACRpkdarstoQW+ZBi+MWxEff_=h8bPo9+fwy=LW2uhWRuQ6YSQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 26, 2024 at 8:57=E2=80=AFAM Xianwei Zhao via B4 Relay
-<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
+Il 07/01/25 16:11, Linus Walleij ha scritto:
+> On Thu, Dec 19, 2024 at 1:39 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+> 
+>> Il 17/12/24 14:45, Linus Walleij ha scritto:
+>>> Hi Chang,
+>>>
+>>> thanks for your patch!
+>>>
+>>> On Tue, Dec 3, 2024 at 2:13 PM chang hao <ot_chhao.chang@mediatek.com> wrote:
+>>>
+>>>> From: Chhao Chang <ot_chhao.chang@mediatek.com>
+>>>>
+>>>> Change 1: change EINT from 1 address to 5 addresses,
+>>>> Eint number is stored on each base.
+>>>> Change 2: Compatible with 1 address design
+>>>>
+>>>> Signed-off-by: Chhao Chang <ot_chhao.chang@mediatek.com>
+>>>
+>>> This patch looks good to me, as preparation for mt8196,
+>>> but can one of the Mediatek experts please
+>>> review it? If nothing happens I will just apply it I guess...
+>>>
+>>
+>> Linus, that's something like the fourth time that he pushes variations of this
+>> patch which do break all MediaTek SoCs in a way or another, leaving only MT8196
+>> hopefully-functional.
+> 
+> That's unfortunate, and I see there is some annoyance building
+> up.
+> 
+> The maintainers are here to protect the code and the change
+> would have anyway just been reverted soon if it breaks stuff.
+> 
+> How can we get this contribution on a better path?
+> 
+> Chhao: maybe you can split your idea into smaller changes
+> that can be reviewed and tested one by one?
+> 
 
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->
-> When describing pin mux func through pinmux propertity,
-> a standard API is added for support. The pinmux contains pin
-> identification and mux values, which can include multiple
-> pins. And groups configuration use other word. DTS such as:
->
-> func-name {
->         group_alias: group-name{
->                 pinmux=3D <pin_id << 8 | mux_value)>,
->                         <pin_id << 8 | mux_value)>;
->                 bias-pull-up;
->                 drive-strength-microamp =3D <4000>;
->         };
-> };
->
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Splitting would be nice, but I'm not sure it's really doable... besides,
+there's only one way to get this right: testing on older platforms!
 
-There are some build errors, but I really like the path taken with
-the utility function here!
+Even just one done manually, like MT8173, would be fine - the others can be
+tested in KernelCI as we do have many MTK SoCs in the lab.
+Then it's just about following the review process and adding the suggested
+changes - nothing in particular.
 
-Yours,
-Linus Walleij
+Besides, I'm sorry for the very (maybe too much!) "strong" reply :-)
+
+Cheers,
+Angelo
+
+> Yours,
+> Linus Walleij
+
+
 
