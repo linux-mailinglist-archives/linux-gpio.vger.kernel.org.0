@@ -1,146 +1,137 @@
-Return-Path: <linux-gpio+bounces-14591-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14592-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1CA1A0574E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 10:49:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5413A0581D
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 11:26:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB50F7A32A1
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 09:49:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AFE23A1FD6
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 10:26:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F8A1F76C3;
-	Wed,  8 Jan 2025 09:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E2D1F76D6;
+	Wed,  8 Jan 2025 10:26:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kwA3r2N/"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="JyNJPPs3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEEC1F76AE
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jan 2025 09:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28EC1A76BC;
+	Wed,  8 Jan 2025 10:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736329746; cv=none; b=gizTdUlyVf2vJyKxMRra1EkO5c9PHakK/BpTwTRvrGprX+1tcqzsJDLkXRhEEyUtz7PufF4Bt5vp/EInx60kPtLaWHreKWXKE8sMe4v4gLCFslu/pmUT69V08TTCXCRxeYvUPo/s49fCZ/zWzNFcIRPfbl4LX8JmSwQTSVb52rE=
+	t=1736331981; cv=none; b=tpe4//BqoIiPUG2p4cqMZGTGlTwDiJnGTBWlDMta6PnvzjmnpHGW0MnRhuHLYT+jW2Nl/TNdtSPBPccPWwWEadEPeEBNTBb9UaROzbuZqoFEIX3uHo+dIniUnQ2J4qXvew/GTpX/pSVDXMAdDIrU8+hLuN+Avm7uCIJE9BqAC/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736329746; c=relaxed/simple;
-	bh=Fo1dtitRBIlNxPyuabqbIsGyrCsxtml4L/zmDIMa8Vs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jLU6JRAVMA2l3s1NEniFs98M6BIBvDROHN909v2Y/vio7E98hjqsIieaPC5PEyogTAMLBIlDK2b1Yw3vpSDHohACLIMw7IMmfALaX1MQdjOX8MQoJj+3Wa1J51hDZIVe35t686aTceZx/8qerRh2K0SeR5RaKlKROGlJBNYxQrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kwA3r2N/; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf57c2e0beso1419639766b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2025 01:49:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1736329740; x=1736934540; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LkjTFh/KUYJwqwm49fCfmXfd56o5yi04XLgl07ms458=;
-        b=kwA3r2N/0tkxBcp0JeVxlE/YQiYLLfC+nFoIqdmihfeqzV4IJI8Lo3rqwtxnkqrh5A
-         vQk8g0FdSR0F9ViCaJ4zWsOiQ/JoWQ3cN63/OhHrR5SNKVLcoQvm7j21RH9E/qxsQIOO
-         xvDtq3pjufkCTWLUQuFT1mDqwNrhk3WuNF9cyfKszLpcZacpdLDwXKn1CTGh8pI5UZY6
-         kuqjDUkk+F1mNyK/DW2k56LPmWt4zydrJkhCoOTpf6BDU0tqHT7M+vmV7uF5K6GB9Bd0
-         /KfmsWz4ZlFuKDYj035cqT9jLMtZ99uv1pn8HljkpvDtpGHK5vl4tj1xDlRkMOSTaWji
-         hPhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736329740; x=1736934540;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LkjTFh/KUYJwqwm49fCfmXfd56o5yi04XLgl07ms458=;
-        b=ToGJnFP5XQsJMREBj1YCdj94CZ2D00N9qzLW6F9uzy9w5mrwag4rMagnDYCMOPO+vD
-         zLTtaNwLBS7rRN7Q6Wy25Jd/u3Ha1fpbKcoYLYD5Dx3g0TC6il9KYP2dCT3zMMtcUCQh
-         dvSEkGwLjj40fImk9oS56d1HXyPbhJjVKCMlPoe8espYsxaoNQtTt01k6ymjkKqGPkhS
-         +6FUUOosvhr/aWIg6n07XvV9j4gneoMmSftX1hIw0G2WAtw7fTLa44BlJXQFrpdLPX/6
-         lLW2wirfiS0G/UREGqXL3B85LMbUuNhQCAQxE97pEe97ex4j5FOKdjJOvZhUcazExx57
-         SotQ==
-X-Gm-Message-State: AOJu0YxjQ9LbLmPHil6xzAPQi+r1uLFME4mv4Vx1Xt5ErSKVPjLaQSYc
-	4gkrmkjPp15EsgbIMDV7xWNvswP3pIWH9c46zETLZIqAuGWeY7yuGWXSbUi5YYE=
-X-Gm-Gg: ASbGncs+EAUeoSy2NnqFwYVAcxLkvQ7f5kVCBhQr23B0EoKAmTe0bvMKZlwswJoYdCW
-	oLtPEyjKUdJxS4bqx5/2sJ9VQJygky3V9+t0eL+XSvW3LZ6U+6TISsSGq8zrln8YXJpdF1aRQpH
-	q8fSTkso5Ztc3xVxdc2VV1mL1AG0FRZzJDi3wAgcY9Z3M00ECvHQ2oo4mu+DrEAoDrytXXy1gtY
-	GHw8hANlUteDSEqRtGRRZYH1aitUbqFY+HrcwDbJm8judbtOGZv7a1xH1bU8w0khXiaDXfzYD78
-	mZoZu7rAo04=
-X-Google-Smtp-Source: AGHT+IHVgJYaTP5uWse6iAj+m5zpohyVnMcsze3pHQF7WwzrPftcXL/eyKDy5K3QQucykTLg5G64tw==
-X-Received: by 2002:a17:907:8690:b0:aac:742:28e2 with SMTP id a640c23a62f3a-ab2ab6a8df6mr142681166b.6.1736329740046;
-        Wed, 08 Jan 2025 01:49:00 -0800 (PST)
-Received: from localhost (p5dc68ca2.dip0.t-ipconnect.de. [93.198.140.162])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e89514esm2475655866b.74.2025.01.08.01.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2025 01:48:59 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Mun Yew Tham <mun.yew.tham@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: altera: Drop .mapped_irq from driver data
-Date: Wed,  8 Jan 2025 10:48:51 +0100
-Message-ID: <20250108094851.3683769-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1736331981; c=relaxed/simple;
+	bh=chijzTtaQDYSe59Qk/cEIUSToILH++h6HTHM/pUexJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qMXMQlruZHMK7rQlNl215KbZkuEoxOgkick+7eQDkN6FPnn85ZbfQdLRtxz4zVq9Q0muy7aLf9ET2Mt1SP+eZ3qfGGymKafzuF+BquXgJZmJNwXFby9kNHEX+lxtRyHIDJuZ6C/US2WCoJWxZGcHEuZURo6PqHXK5xl9lchtqTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=JyNJPPs3; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 1CD3BA06F4;
+	Wed,  8 Jan 2025 11:26:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=5k6M2RuQIS/K7VktQVPX
+	xrJUmMz72+TB1VtxOat357I=; b=JyNJPPs3zEuh0sZ8darPvT07MFmECxotMthI
+	6qQY48cXktxSc03R5ghM43yaPX2TUhz0Buxqaqwv2P7FYUGj9mWCeOcGdPReYbYW
+	g76qpLBmygMY7DzhKqwNvz9Qd/jNQNIIkB2aGpRbRpGONHMixFgEraWzA/Yx2FYp
+	9JGez52O8UcMCVEA4ReyrR38L9ASldD1RtpUklYNo6DOny52tRJTVXt2MYtDWOh6
+	9SAeZT+DfJqSRLVqf2aRCI0JNIniwFJRcfeEoIra8QpXpJgN+YxekPuKBwnaU+Gc
+	/l75p6iXCtgvTUhnHqqxlpMX5VmMvmu7MSle5wGpcPj7YGD9EmDV2fuFvZaXme+8
+	gjJi11Bd5gDQtAh1USjp0q1TmBbGfRkqhCI+XBD0RQB7aBhvb5mi2vvHNQZscK4N
+	rR31rfdAvZezqtWW70lj8YEm57NSVRX4mjDRLbmWtV1i3DGc+uNOTMID4r0GvdCo
+	3ubOmCL8eTnpncSPOhwcUJFuLxXl2S5hrRz4pWd+f0+vm2qbUdCVJbRz9XlhAGhX
+	Siy3uaYOiwS+XuDkhNZqAHYo6N6hudF87/vjMVeVSh573/uV/8AlSC0A2E98fWPt
+	jJbQIzuXFXN5WK0tUkDzt9uYEP1GStzT1kioGCOWZ2LwT7t7Zaf8B7YnJ/X71hJk
+	ZVDGqZU=
+Message-ID: <192e97dd-698a-4434-bd32-c1181ec85ba3@prolan.hu>
+Date: Wed, 8 Jan 2025 11:26:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1881; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=Fo1dtitRBIlNxPyuabqbIsGyrCsxtml4L/zmDIMa8Vs=; b=owGbwMvMwMXY3/A7olbonx/jabUkhvQ6Lxbv/2ox/993HH5/+nGjSR/PkgLpdsHYafL/mIrWb DGZ8/9wJ6MxCwMjF4OsmCKLfeOaTKsqucjOtf8uwwxiZQKZwsDFKQATaa5g/19VzzUlJyKB07r4 r+oczrnP37yLiHr9VH1mg2pu8/14Y3m/+dsudRVGtDQXbvVSOLWJQXVbp+TaTBPGHVnFUY838q1 7cEVYJtTil8OPjRM2NfcZmAQUFBssufPpx70Z+e/ZV6xmnlt880zg/LVe3ZVp5R1XYxg2avYeZe 9UOnfnQlpiw9Q2/ngN8wmpfMHLfusG70sLubWo1rDF8qeL3VUl3s1z+JR6jLPzbnX4l84QKKgJ+ PCS7ZXa1+hpWiahN8R92FUFLRbem/Dn9f3eLzv1xO2ig6dGn1MpDby6Ia6oaY+a0w7v9Uef9x2w 8Z15iGG5IQ+/Zd3uoivBp41Dj6XtCgiTZbu7ypJzWf4lAA==
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] gpio: 74HC595 / 74x164 shift register improvements
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Geert Uytterhoeven
+	<geert@linux-m68k.org>
+CC: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>, =?UTF-8?Q?J=2E_Neusch=C3=A4fer?=
+	<j.ne@posteo.net>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	<linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-spi
+	<linux-spi@vger.kernel.org>
+References: <20241224-gpio74-v2-0-bbcf14183191@posteo.net>
+ <173593634037.257292.1488097273042214180.b4-ty@linaro.org>
+ <CAMuHMdUqvTrSsiGuJ=VvNqsQm4eQs9rNTU8VBg+FzHJZxRnXow@mail.gmail.com>
+ <CAMRc=McAm3A1movK-8q67UbKuPb8FQzVwD_me7Q6x-gei2PA_A@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAMRc=McAm3A1movK-8q67UbKuPb8FQzVwD_me7Q6x-gei2PA_A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852657267
 
-struct altera_gpio_chip::mapped_irq is only used in the driver's probe
-function. So it's enough if mapped_irq is a local variable, and can be
-dropped from driver data.
+Hi all,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/gpio/gpio-altera.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 2025. 01. 06. 21:16, Bartosz Golaszewski wrote:
+> On Mon, Jan 6, 2025 at 10:19 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> Do we really need to document and add driver support for all variants?
+>> I can easily come up with a list of tens or perhaps even hundreds
+>> of xx74yy595z parts that are all compatible, as far as software is
+>> concerned.  As SPI was invented by Motorola, the original part is
+>> probably named MC74595 or MC74LS595 (yes, ON Semiconductor bought the
+>> logic division of Motorola).
 
-diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
-index 73e660c5e38a..4c52fa2d3568 100644
---- a/drivers/gpio/gpio-altera.c
-+++ b/drivers/gpio/gpio-altera.c
-@@ -39,7 +39,6 @@ struct altera_gpio_chip {
- 	void __iomem *regs;
- 	raw_spinlock_t gpio_lock;
- 	int interrupt_trigger;
--	int mapped_irq;
- };
- 
- static void altera_gpio_irq_unmask(struct irq_data *d)
-@@ -235,6 +234,7 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 	int reg, ret;
- 	struct altera_gpio_chip *altera_gc;
- 	struct gpio_irq_chip *girq;
-+	int mapped_irq;
- 
- 	altera_gc = devm_kzalloc(&pdev->dev, sizeof(*altera_gc), GFP_KERNEL);
- 	if (!altera_gc)
-@@ -271,8 +271,8 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(altera_gc->regs))
- 		return dev_err_probe(dev, PTR_ERR(altera_gc->regs), "failed to ioremap memory resource\n");
- 
--	altera_gc->mapped_irq = platform_get_irq_optional(pdev, 0);
--	if (altera_gc->mapped_irq < 0)
-+	mapped_irq = platform_get_irq_optional(pdev, 0);
-+	if (mapped_irq < 0)
- 		goto skip_irq;
- 
- 	if (device_property_read_u32(dev, "altr,interrupt-type", &reg)) {
-@@ -296,7 +296,7 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_bad_irq;
--	girq->parents[0] = altera_gc->mapped_irq;
-+	girq->parents[0] = mapped_irq;
- 
- skip_irq:
- 	ret = devm_gpiochip_add_data(dev, &altera_gc->gc, altera_gc);
+I second this, no point of having a new compatible which is a guaranteed 
+1:1 equivalent of an already existing one. Especially true if the only 
+change was that a different company bought the IP. By the same logic, I 
+could start to sumbit patches to change all `fsl,` compatible-s to 
+`nxp,`; `atmel,`, `maxim,`, `smsc,` etc. to `microchip,`; `ralink,` to 
+`mediatek,` and so on. There would be no end.
 
-base-commit: 7b4b9bf203da94fbeac75ed3116c84aa03e74578
--- 
-2.45.2
+>> Perhaps we need a separate vendor prefix for the 74xx-series[1]?
+
+I don't think that is the case. Rather, we should document that the 
+existing binding/compatible should be used for all such simple cases (it 
+is called _compatible_ for a reason, after all, and not 
+`exact-part-number`).
+
+>> The xx-prefix and z-suffix don't matter; the yy-infix for semiconductor
+>> technology rarely matters (there are a few exceptions, though, mostly
+>> pinout, which doesn't matter for software).
+>>
+> 
+> I missed the fact that Rob actually responded to patch 1/3 with a
+> similar suggestion (fallback, instead of a full compatible).
+> 
+> I can drop this series from my queue if it needs more rework.
+
+I think you can keep 3/3 (the one commenting the use of `latch` as CS). 
+The rest can be replaced by another commit commenting on what it means 
+to be `fairchild,74hc595`:
+
+* tri-state output
+* 8-bit output
+* OE pin (or latch or whatever it happens to be called in their chosen 
+manufacturer's datasheet)
+* SRCLR does not seem to be used by the driver, so we can probably skip 
+that...
+
+And telling people NOT to add a new compatible if their part satisfies 
+these.
+
+Bence
 
 
