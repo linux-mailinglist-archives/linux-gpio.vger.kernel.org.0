@@ -1,181 +1,130 @@
-Return-Path: <linux-gpio+bounces-14588-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14589-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C58EA05369
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 07:50:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACDC7A05550
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 09:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD6A3A4F8B
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 06:50:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD8C03A288A
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 08:28:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 601081A8404;
-	Wed,  8 Jan 2025 06:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27641DFD85;
+	Wed,  8 Jan 2025 08:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JE4LJ276"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9681A2396;
-	Wed,  8 Jan 2025 06:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B31D13B288;
+	Wed,  8 Jan 2025 08:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736319006; cv=none; b=aER5oJm+fqkev7A8S/YXt2s2r3tVpP/Oh7llcc5cvg0+kAEIFxwxzNUpfzaEZk1qCemeU/vXQahkYJvfsmxr0QqBZxyjZJ3pLViSq7d1yxydfW+YpcnI1kUurIYsQ5i+Ht2onx4O0WyclSofmFcUxTwHh9DhYgGCT/V1lR1UuPg=
+	t=1736324890; cv=none; b=q8yUB+dmXo+VPkPIynQW3iQlWVHY6e09FoGKeatnGHQEpCLzA8lheluaorqYgIgLu4F/YHfc/RZ3qHG+0qAzZo5Lx0kb5LgGezV+W8EZzBXI9QjfaSCBgq3SkKFiwPdyAmD29nuWsyxQlU/Tf9AMBmtj6q0WmuRNXFJ4kdLkEZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736319006; c=relaxed/simple;
-	bh=D/tq161aMHc2DYLmuD4sPosxjAcF6kyg+0pfcbuMqfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ahPHv5gsQcp74S8VltWP1dymbiANvHeJduDToqjqdbyJj+snGHBVmq6X8iKVLBLzxm0yaLmkXe/f47m9jaWA9ThzNpsfoM0PAL5WNT2YdttmfdhRbc94Lah3TRX8oqDFt1tIz7sSd1sw1lGz0mI5rvq97KSI0h8ZAncSriUu4GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4YSdXw6RjBz9sPd;
-	Wed,  8 Jan 2025 07:38:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id U78Fjo-CcYje; Wed,  8 Jan 2025 07:38:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4YSdXw59tPz9rvV;
-	Wed,  8 Jan 2025 07:38:40 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 955858B768;
-	Wed,  8 Jan 2025 07:38:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id IuATmTbrlDCX; Wed,  8 Jan 2025 07:38:40 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CF7368B767;
-	Wed,  8 Jan 2025 07:38:39 +0100 (CET)
-Message-ID: <2311c126-804a-4aee-bddb-abf4929b1073@csgroup.eu>
-Date: Wed, 8 Jan 2025 07:38:38 +0100
+	s=arc-20240116; t=1736324890; c=relaxed/simple;
+	bh=QljudXw3ihE/DLa17ZBwP9SrShKjfS0N3iJrBeglYT4=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
+	 In-Reply-To; b=qS6a39RhmlaCpUIvlnCrsdqyVswqQZSBIzFj5k6Q2DoQ6/Hc8Tu/qTU/9qnZEVRbxyQkzMnRQkZ5eDIIjJk7CN/OUssgI1kShjoJtGF75wJNGPAsUmHHq1SOqiqty4cfwYNMOWGsyToBvEkBaoqzPwC2NDFhMEoBCrSgEcj4V18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JE4LJ276; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97A04C4CEE0;
+	Wed,  8 Jan 2025 08:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736324889;
+	bh=QljudXw3ihE/DLa17ZBwP9SrShKjfS0N3iJrBeglYT4=;
+	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
+	b=JE4LJ276DLZQkwylsQsmpthi8pqrSiBBKb1X0gaS60zopziL+lLnioX/X1trjvh63
+	 SQLcMrlmjCXnRqcuAO4BnvqNC9ntmjXXn7Nc7QL9l5b7W+m54lF4/bJs4oR6c5zgaY
+	 UyEr+fROrRbQmI4HPCnE/8DP710pAqs+JgGZlb2LIj2kXlb2FA14siRltLRMaj20Kk
+	 JV/L73fTgl2D0zdQqEs3NTX75ADHMd9iraPjG5RFPPJi/phFvSqOC2uhiPcSoFH3FP
+	 QxmH4sreH8y+Ib3c6QkVcoVZv4cGZxsSyRiIkbKH7Z5EogCc3L+QLYaSVmcMiMB5Ok
+	 nL1XElx4TYUGA==
+Content-Type: multipart/signed;
+ boundary=d709b24d24a9630d89a6a0877c9a8973a0d3762b4169a824cfee7ddbf9af;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Wed, 08 Jan 2025 09:28:05 +0100
+Message-Id: <D6WJSWR2776G.31DIV7I8QR42J@kernel.org>
+Cc: =?utf-8?q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ <jonas.gorski@gmail.com>, <kylehendrydev@gmail.com>,
+ <florian.fainelli@broadcom.com>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Sander Vanheule" <sander@svanheule.net>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: regmap: Use generic request/free ops
+X-Mailer: aerc 0.16.0
+References: <20250107201621.12467-1-sander@svanheule.net>
+In-Reply-To: <20250107201621.12467-1-sander@svanheule.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/19] powerpc: Generalize MPC831x platform support
-To: =?UTF-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Frank Li <Frank.Li@nxp.com>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
- <20250102-mpc83xx-v1-1-86f78ba2a7af@posteo.net>
- <0b66e94d-7116-4916-b897-06b1199752b4@csgroup.eu> <Z32uk8VJqhlogY50@probook>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <Z32uk8VJqhlogY50@probook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+
+--d709b24d24a9630d89a6a0877c9a8973a0d3762b4169a824cfee7ddbf9af
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+
+Hi,
+
+On Tue Jan 7, 2025 at 9:16 PM CET, Sander Vanheule wrote:
+> Set the gpiochip request and free ops to the generic implementations.
+> This way a user can provide a gpio-ranges property defined for a pinmux,
+> easing muxing of gpio functions. Provided that the pin controller
+> implementents the pinmux op .gpio_request_enable(), pins will
+> automatically be muxed to their GPIO function when requested.
+>
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
+
+Sounds fine, although I don't have time to test it right now. I'd
+appreciate if Linus could give a short comment, too.
+
+Acked-by: Michael Walle <mwalle@kernel.org>
+
+-michael
+
+> ---
+> =C3=81lvaro has submitted a similar patch today. My implementation's impa=
+ct
+> is more limited, but I hadn't gotten around to submitting it yet.
+>
+> For the original (short) discussion, see:
+> https://lore.kernel.org/linux-gpio/20250107102735.317446-1-noltari@gmail.=
+com/T/#t
+>
+>  drivers/gpio/gpio-regmap.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+> index f716eb069b25..82da0f1d78c3 100644
+> --- a/drivers/gpio/gpio-regmap.c
+> +++ b/drivers/gpio/gpio-regmap.c
+> @@ -270,6 +270,8 @@ struct gpio_regmap *gpio_regmap_register(const struct=
+ gpio_regmap_config *config
+>  	chip->label =3D config->label ?: dev_name(config->parent);
+>  	chip->can_sleep =3D regmap_might_sleep(config->regmap);
+> =20
+> +	chip->request =3D gpiochip_generic_request;
+> +	chip->free =3D gpiochip_generic_free;
+>  	chip->get =3D gpio_regmap_get;
+>  	if (gpio->reg_set_base && gpio->reg_clr_base)
+>  		chip->set =3D gpio_regmap_set_with_clear;
 
 
+--d709b24d24a9630d89a6a0877c9a8973a0d3762b4169a824cfee7ddbf9af
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Le 07/01/2025 à 23:45, J. Neuschäfer a écrit :
-> [Vous ne recevez pas souvent de courriers de j.ne@posteo.net. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> On Mon, Jan 06, 2025 at 02:50:31PM +0100, Christophe Leroy wrote:
->>
->>
->> Le 02/01/2025 à 19:31, J. Neuschäfer via B4 Relay a écrit :
->>> [Vous ne recevez pas souvent de courriers de devnull+j.ne.posteo.net@kernel.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
->>>
->>> From: "J. Neuschäfer" <j.ne@posteo.net>
->>>
->>> The Reference Design Boards (RDB) don't have the same relevance they had
->>> then the MPC831x platform was new; if any work is done today, then
->>> likely based on used production boards, which are more readily available
->>> than NXP's discontinued devboards.
->>>
->>> To further reduce the focus on RDBs, add DT compatible strings for all
->>> four MPC8314/5 variants.
->>
->> Seems like this patch does more than adding DT compatible strings.
-> 
-> I'll move the addition of DT compatibles to a new patch.
-> 
->>
->>>
->>> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
->>> ---
-> [...]
->>> diff --git a/arch/powerpc/platforms/83xx/Kconfig b/arch/powerpc/platforms/83xx/Kconfig
->>> index d355ad40995fdc0fc3b4355126c65c761c21c296..944ec44a1fa6044b03ac71c295e891cd411ce444 100644
->>> --- a/arch/powerpc/platforms/83xx/Kconfig
->>> +++ b/arch/powerpc/platforms/83xx/Kconfig
->>> @@ -18,12 +18,12 @@ config MPC830x_RDB
->>>           help
->>>             This option enables support for the MPC8308 RDB and MPC8308 P1M boards.
->>>
->>> -config MPC831x_RDB
->>> -       bool "Freescale MPC831x RDB"
->>> +config MPC831x
->>
->> That looks confusing. We already have CONFIG_PPC_MPC831x
-> 
-> Fair enough. How about CONFIG_MPC831x_BOARDS?
+-----BEGIN PGP SIGNATURE-----
 
-Yes that would be more explicit.
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ343FhIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/jUtgF+IRdx/SGeGgifNWi4eGsC/s9K2Pcn4kgv
+q3YemTvNq4LklgMVNmvn7Xqc2ryA6HIvAX4jbr3wYP/VB3Q0sT5QTO2iPa3AI15N
+z3G3kS+h3+RBDyGF6fU4CWap8ZwF4USWeWs=
+=LG6U
+-----END PGP SIGNATURE-----
 
-> 
->>
->>> +       bool "Freescale MPC831x boards"
->>>           select DEFAULT_UIMAGE
->>>           select PPC_MPC831x
->>>           help
->>> -         This option enables support for the MPC8313 RDB and MPC8315 RDB boards.
->>> +         This option enables support for all MPC831x-based boards.
->>>
->>>    config MPC832x_RDB
->>>           bool "Freescale MPC832x RDB"
->>> diff --git a/arch/powerpc/platforms/83xx/Makefile b/arch/powerpc/platforms/83xx/Makefile
->>> index 6fc3dba943dade4f63da090b520b0c35bb46a091..92fb0b34913e1113d3e6eac49acbb1c32fb06ab7 100644
->>> --- a/arch/powerpc/platforms/83xx/Makefile
->>> +++ b/arch/powerpc/platforms/83xx/Makefile
->>> @@ -6,7 +6,7 @@ obj-y                           := misc.o
->>>    obj-$(CONFIG_SUSPEND)          += suspend.o suspend-asm.o
->>>    obj-$(CONFIG_MCU_MPC8349EMITX) += mcu_mpc8349emitx.o
->>>    obj-$(CONFIG_MPC830x_RDB)      += mpc830x_rdb.o
->>> -obj-$(CONFIG_MPC831x_RDB)      += mpc831x_rdb.o
->>> +obj-$(CONFIG_MPC831x)          += mpc831x.o
->>>    obj-$(CONFIG_MPC832x_RDB)      += mpc832x_rdb.o
->>>    obj-$(CONFIG_MPC834x_ITX)      += mpc834x_itx.o
->>>    obj-$(CONFIG_MPC836x_RDK)      += mpc836x_rdk.o
->>> diff --git a/arch/powerpc/platforms/83xx/mpc831x_rdb.c b/arch/powerpc/platforms/83xx/mpc831x.c
->>> similarity index 65%
->>> rename from arch/powerpc/platforms/83xx/mpc831x_rdb.c
->>> rename to arch/powerpc/platforms/83xx/mpc831x.c
->>> index 5c39966762e4264d2ef91b2c4ef75fdf2c2c5d65..7250fc11c7ee80b266f39d0b3aebb0deb777c129 100644
->>> --- a/arch/powerpc/platforms/83xx/mpc831x_rdb.c
->>> +++ b/arch/powerpc/platforms/83xx/mpc831x.c
->>> @@ -1,8 +1,8 @@
->>>    // SPDX-License-Identifier: GPL-2.0-or-later
->>>    /*
->>> - * arch/powerpc/platforms/83xx/mpc831x_rdb.c
->>> + * arch/powerpc/platforms/83xx/mpc831x.c
->>
->> Please remove the file name from the file.
-> 
-> Will do.
-> 
->>>     *
->>> - * Description: MPC831x RDB board specific routines.
->>> + * Description: MPC831x board specific routines.
->>
->> s/board/boards ?
-> 
-> No, the "board" in "board specific" doesn't get pluralized when there
-> are multiple boards. How about the following?
-> 
->        * Description: MPC831x specific routines.
-
-Ok
-
-Christophe
+--d709b24d24a9630d89a6a0877c9a8973a0d3762b4169a824cfee7ddbf9af--
 
