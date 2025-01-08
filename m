@@ -1,155 +1,151 @@
-Return-Path: <linux-gpio+bounces-14593-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14594-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 977A3A05B04
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 13:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DAE31A05CBB
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 14:27:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CFBB3A32E9
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 12:08:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31F563A6A88
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 13:27:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F121F8AF6;
-	Wed,  8 Jan 2025 12:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130561FBE87;
+	Wed,  8 Jan 2025 13:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S7d8Cst0"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NyaLbDRP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35701F8F17
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jan 2025 12:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5831F2C44;
+	Wed,  8 Jan 2025 13:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736338132; cv=none; b=Td2XMj8MyMLFL85R7JpECneguZ3bmq0sZj8OXv8oeiqHBB/bPXx5DRF2AjACs6fkn4nUIMa5Ydw7gI7yISb9BvlhoTumA1/vBbtbFS8+XYkcPm4eB5vL0dbgw/GaJlSPPyxEJywozsUVtMraxKxZzhHRchjpsxeiITeYsX0KBaE=
+	t=1736342873; cv=none; b=HzakFMXuWfYPv+OwGnFRnPkDEed+wk/Bcsuc1+pD8KKc3fBwJFI54TDSNXGbm1Oa/zYZpjsaVo+S1KjCaK7QNsIjJIbqlPqDmSMx3bqy+LlHE4LuF5NOtRGiHyNlDX2JRtdE61Atl1Y3iUxgu4JIC3IXo2v16PhVFa32WlbLBys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736338132; c=relaxed/simple;
-	bh=Q1GTUTmKjX8jfhiEVy0rIQ1l7Rafq0ylK8yASgB6NQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U+Hh1giCL9S6sUsA6Kzno0KkKH7xMwt6AOZoiSsha1qjUyiORuYzO9wPuyEPRrbHbezfXDTrWSVs/MbBwyUOuX+bdbTMQTkYjqRrLnecwXV4P9ZNLp2fY3VgYSSis+kQOM83nkTJOcNz5evUpJutXp+90wepGJSVAcCHEz5ajvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S7d8Cst0; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53e3778bffdso18294154e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2025 04:08:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736338129; x=1736942929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WHYq9u3fK0PbCc5B7zHvSgROeh3nh7BEAUFJXMqDAtE=;
-        b=S7d8Cst0yPy3WaaIMzeRk+2dPoNgZlcinadmx3b/h3xpKcAuaj8ykoFIiux6b18iwW
-         t4YrljB6n4dqj5E0muBuRtEw1NZip+OIitAGdZ2rRfAuYiav+Jtd5WNw4cx8QWr//iwS
-         kTPZgK/WzWBaQChGrPPC35QLilbpMjTBJqGek0MLBT8rlLoDX26CyVz0x+jgxIgb+ImJ
-         ZSyQ2KwmZOiE4QttFrW0XYgRKi6yEP09knLZzoCsDYuEn6jcw2LKb1JgDK5CWVKutUh6
-         6R0R8TZRlfaEZsGryUwXHN3OJAAg8iollbyH3WkLJbr7GJOtc2XpcTa6OTAT57Nm8PBc
-         8N0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736338129; x=1736942929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WHYq9u3fK0PbCc5B7zHvSgROeh3nh7BEAUFJXMqDAtE=;
-        b=K6VYZt0ICQEl2XsUx9fLYjKK4NAhTKrF64T7BoF4HboZGUtjOvEfZnlLob+uBQXBYx
-         apbXU5XdfLpEQCt/RFr2U1RfkJjn/c2HBRBHMjF1TVIomc8va9LzhMCq+7CyawziU/X5
-         QzcfDT5Npg7Kk8WmQmLyZwY+ZaaYmKXjFNNwqHVcr/omwjHBrys7IRBqZfB5DrL6Rl3h
-         TiHATIbI6n9xynhK0f3VIE6S8SCNAa8+xyWja0DZK4SsLV2PlBvMyvK3MszEv7M8UwzS
-         IZ7zYKRnlOeuflrhAi30ez6hvInyGHfrHt4wEJ+VPaJkZzuoZF52FV9a88Sn2YQwyeT7
-         YF/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVcGRGn1q54wLjhLboZbt042y3Q9Tody5yyluqHUWgOzlweNBWVL0nf9hSMlTrLz8XTnLHNMqFidIkl@vger.kernel.org
-X-Gm-Message-State: AOJu0YybHQIg78FIZjj7LozVqfhxlHjKvSPoIJVxHP6Vu+MPXbEl2j/T
-	OIHndlt9dRJTuvQN/5o20B1DQEpJS8uVlVp68+0VItPAxHCj+xoz0wKn9ic0UswdJ3X4+yLafEq
-	049d7Lrk1vceB8uAgjr7sXaALReDApVB/lOPEGpP5vic6LwUYHQU=
-X-Gm-Gg: ASbGncv/xU8NMBQ4qFS1zsmzb9IBm6WFkowKJkjVb2LQC2DqulyEdEE4TFSB4ANlQvZ
-	26jeIQyxF10owJHyRmEBH3otHJpL2DnLim/XOxvanLx4J835uMVA+4BYvQfs/lmA+eU218Q==
-X-Google-Smtp-Source: AGHT+IFa3R2ndq55NhKWU1ao89iSflN8dGnIqgIJvNfkd7iWWkr+SCY7vOTKmYqjO3DLDzwPCXA/s7eaAZV3KmJo5mQ=
-X-Received: by 2002:a05:6512:138c:b0:540:2188:763c with SMTP id
- 2adb3069b0e04-542845b0b55mr753264e87.37.1736338128530; Wed, 08 Jan 2025
- 04:08:48 -0800 (PST)
+	s=arc-20240116; t=1736342873; c=relaxed/simple;
+	bh=K3vKch6pwTZcFhHb3zmyX67q0tEfzd/HAjj6PSe+e7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a3L+DsN/bLn4mSj6lxBc1xmse+IqH0yvlqB54eTnD//mSRAwhQK/XpeeEl1QZfbeYC3jnvd8Cpw/uGt+kfHCbAF9yV70Dzz79ygEOm71znddeBdkxfCMTYlJQU9q+0+71/x+2TQil1m0gGKIPtn2NYcvgnZL6alxkmRdLWjiCn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NyaLbDRP; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B195E40005;
+	Wed,  8 Jan 2025 13:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1736342868;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZrbytonOxInlQhTuoGN3sUJ1B7TmgLdiBbBf/qnlJJg=;
+	b=NyaLbDRP15Uw7ie3FAjz5w+HVy+/bmmd6ALlpvc9RtKEZ307L+GirMYw+l2VxuhHwwT8pX
+	ie6y5SU5Xy8kwDFG4+/02WOAhvtstQ7ze1W/qUwgNAgrhyJ8eHcqYomN76ZAsSYf0wIvfX
+	HTUqq85mMLfq2i68C6v+rjVzvt4wSBsVaX+ll0aQf2qSRk8cI1FgMj4NYZ2D2d0vfDr6G5
+	TVkHh5j4lAGOm6PK4JKrXnfO0Nh+9B0pqNDqxG2FAbcKJsVgAZ3sbScARWUbf+LgwB9z9B
+	V24VF0lZlLnBGnksSVOVTgPdCb0wh7/xQfxMSSxkwsI1R0pt7aevYXw23alIVw==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject:
+ Re: [PATCH v4 2/9] media: i2c: ds90ub960: Replace aliased clients list with
+ address list
+Date: Wed, 08 Jan 2025 14:27:36 +0100
+Message-ID: <2762571.mvXUDI8C0e@fw-rgant>
+In-Reply-To: <7a6fd045-3513-4979-9210-8e30361022e3@ideasonboard.com>
+References:
+ <20241230-fpc202-v4-0-761b297dc697@bootlin.com>
+ <20241230-fpc202-v4-2-761b297dc697@bootlin.com>
+ <7a6fd045-3513-4979-9210-8e30361022e3@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241224-gpio74-v2-0-bbcf14183191@posteo.net> <173593634037.257292.1488097273042214180.b4-ty@linaro.org>
- <CAMuHMdUqvTrSsiGuJ=VvNqsQm4eQs9rNTU8VBg+FzHJZxRnXow@mail.gmail.com>
- <CAMRc=McAm3A1movK-8q67UbKuPb8FQzVwD_me7Q6x-gei2PA_A@mail.gmail.com> <192e97dd-698a-4434-bd32-c1181ec85ba3@prolan.hu>
-In-Reply-To: <192e97dd-698a-4434-bd32-c1181ec85ba3@prolan.hu>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 8 Jan 2025 13:08:37 +0100
-X-Gm-Features: AbW1kvZnk6_fgKN1eHWtfPj2SS6UYja6sVBaHC9BI-DUFwEoYlH6fNeZYLCvfd8
-Message-ID: <CAMRc=MewCR=W=_0RKFZR0gW2mvkMD-pKBWpXCeqOY4j8CXBSXw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] gpio: 74HC595 / 74x164 shift register improvements
-To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>, 
-	=?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.ne@posteo.net>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart12584284.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-GND-Sasl: romain.gantois@bootlin.com
+
+--nextPart12584284.O9o76ZdvQC
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 08 Jan 2025 14:27:36 +0100
+Message-ID: <2762571.mvXUDI8C0e@fw-rgant>
+In-Reply-To: <7a6fd045-3513-4979-9210-8e30361022e3@ideasonboard.com>
+MIME-Version: 1.0
 
-On Wed, Jan 8, 2025 at 11:26=E2=80=AFAM Cs=C3=B3k=C3=A1s Bence <csokas.benc=
-e@prolan.hu> wrote:
->
-> Hi all,
->
-> On 2025. 01. 06. 21:16, Bartosz Golaszewski wrote:
-> > On Mon, Jan 6, 2025 at 10:19=E2=80=AFAM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> >> Do we really need to document and add driver support for all variants?
-> >> I can easily come up with a list of tens or perhaps even hundreds
-> >> of xx74yy595z parts that are all compatible, as far as software is
-> >> concerned.  As SPI was invented by Motorola, the original part is
-> >> probably named MC74595 or MC74LS595 (yes, ON Semiconductor bought the
-> >> logic division of Motorola).
->
-> I second this, no point of having a new compatible which is a guaranteed
-> 1:1 equivalent of an already existing one. Especially true if the only
-> change was that a different company bought the IP. By the same logic, I
-> could start to sumbit patches to change all `fsl,` compatible-s to
-> `nxp,`; `atmel,`, `maxim,`, `smsc,` etc. to `microchip,`; `ralink,` to
-> `mediatek,` and so on. There would be no end.
->
-> >> Perhaps we need a separate vendor prefix for the 74xx-series[1]?
->
-> I don't think that is the case. Rather, we should document that the
-> existing binding/compatible should be used for all such simple cases (it
-> is called _compatible_ for a reason, after all, and not
-> `exact-part-number`).
->
-> >> The xx-prefix and z-suffix don't matter; the yy-infix for semiconducto=
-r
-> >> technology rarely matters (there are a few exceptions, though, mostly
-> >> pinout, which doesn't matter for software).
-> >>
-> >
-> > I missed the fact that Rob actually responded to patch 1/3 with a
-> > similar suggestion (fallback, instead of a full compatible).
-> >
-> > I can drop this series from my queue if it needs more rework.
->
-> I think you can keep 3/3 (the one commenting the use of `latch` as CS).
-> The rest can be replaced by another commit commenting on what it means
-> to be `fairchild,74hc595`:
->
+Hi Tomi,
 
-J. Neusch=C3=A4fer: do you want to send a follow-up for this?
+On lundi 6 janvier 2025 10:34:10 heure normale d=E2=80=99Europe centrale To=
+mi=20
+Valkeinen wrote:
+> Hi,
+>=20
+> On 30/12/2024 15:22, Romain Gantois wrote:
+=2E..
+> > @@ -1031,17 +1031,17 @@ static int ub960_atr_attach_client(struct i2c_a=
+tr
+> > *atr, u32 chan_id,>=20
+> >   	struct device *dev =3D &priv->client->dev;
+> >   	unsigned int reg_idx;
+> >=20
+> > -	for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_clients);
+> > reg_idx++) { -		if (!rxport->aliased_clients[reg_idx])
+> > +	for (reg_idx =3D 0; reg_idx < UB960_MAX_PORT_ALIASES; reg_idx++) {
+>=20
+> Any reason to drop the use of ARRAY_SIZE()? Usually when dealing with
+> fixed size arrays, it's nicer to use ARRAY_SIZE().
 
-Bart
+No reason in particular, I just thought it was more explicit to use ARRAY_S=
+IZE=20
+but I'll keep the UB960_MAX_PORT_ALIASES since you think it's nicer.
 
-> * tri-state output
-> * 8-bit output
-> * OE pin (or latch or whatever it happens to be called in their chosen
-> manufacturer's datasheet)
-> * SRCLR does not seem to be used by the driver, so we can probably skip
-> that...
->
-> And telling people NOT to add a new compatible if their part satisfies
-> these.
->
+Thanks,
+
+=2D-=20
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart12584284.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmd+fUkACgkQ3R9U/FLj
+286cKw/9GhzDSwcSpgGMmFby1lU9mmX18t6BSx1U9pic2TrlaD9TSE1oisI9vGj4
+wNYw5SVl0tvlVNnYGgpOIohecJbW9Oq1yFSyDCiCKTr+kSUooNqMOj9Iqy1lDtBn
+1ntBEu938RStiwhhYqb5hloFTODwLY+S16OroeeOa8/9GC0ueC6IDoetccfFlD+m
+KztldSKL+rJJyEBbMBUoHSiHgDaUXBz3D+YRSmDzl+yH2mFh7y+0nvZV8JgYJ6UG
+VlkqqZCXKzVCze/cyjs1yRJDlYLMFUIEQMHfUEhTpVzUd+oZZzr0fSlIcKgoQoO0
+PyzhB3nZcd1GRTB99akoSvZOa4ovr8R7W5kn+5PajYVihMBStYPTF1nj4gNXusFx
+vuFttK+ITt9mxV0tVLOwNvtAIGQQinz2m3fhQWW/xWlnj4dI/FqjRqF04LgD4EeL
+/dg2M6qkkBbEqzGFCX5hWrDYtGRS2rcezNXX0ybLOmD1R/gtHllzXOaKgeBPxvOj
+QmClb3hf+9ZVpS1uZST5wByvfJSMV6s/+qf9jSYJ1T+rbFFhbbHr2bvjMI+T/lLP
+/yJ5KymRwT3h9MYnz0hgnHsudnTomCQtbspL3TDVl6a8RayKhdtsZwFU6gwNpmj6
+i78QJwjPWd8ttk8ItnbP1ubuqxz/2Oiot+ECzgd0K2xIIcwoXb0=
+=L+BG
+-----END PGP SIGNATURE-----
+
+--nextPart12584284.O9o76ZdvQC--
+
+
+
 
