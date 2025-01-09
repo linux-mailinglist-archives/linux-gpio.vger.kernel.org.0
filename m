@@ -1,592 +1,498 @@
-Return-Path: <linux-gpio+bounces-14609-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14611-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F5C0A06167
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 17:15:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC45A06B20
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 03:33:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8051D164E19
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2025 16:15:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E268A1887EE7
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 02:33:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4298F1FF1AC;
-	Wed,  8 Jan 2025 16:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1756113C9C4;
+	Thu,  9 Jan 2025 02:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AQQPVv15"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="jhfmprFi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2113.outbound.protection.outlook.com [40.107.255.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14BF1FF1D9;
-	Wed,  8 Jan 2025 16:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736352865; cv=none; b=ArQWSSdzAZ645W/rusDPK2spIna3eiqX69poUoF93uq74XW5rGkYJtP9cgLvEDfbR13WpNQKcdr/hoATqDZg6AT8Qi2T2DJxFIe/ux0ssw2dSrk+PZJXpx/GtZMv8Afsa0DURI1jo/v4LxR0BSbF2BlfJPdfXOMCfwRgJei45VA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736352865; c=relaxed/simple;
-	bh=WNfXDPdSG6eniawazYH+PzGVkHaLuuiwwHqC0ol1kFE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VlfAeFK0atVFdwWEskUkYvBR+IxSDqJZv7WBZoTbtDVlBoNKxnSXTOvzOIm0/VC0VIpLkwBT4UpsvIN2Ui6J+GNgkoZllewDzVcy6odS0AlsRoD+0v/jv73skcV/EkugGk6iBWuiknlpjFvDdNc1NoL7r94BwIPeTY27n3HRP9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AQQPVv15; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 148FD60011;
-	Wed,  8 Jan 2025 16:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1736352860;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AeFWjpwRRSFYTDdyfQNzPckQyxB6BcLqkMuH3YbTxvQ=;
-	b=AQQPVv15j/ZGyM8rnMRIHa3WW+jI6hewlz7jyDWmVeXJQwr+vJ5vCyEvrtORviRS3uxLiu
-	CRxd+qxUVwm3VnBpWpZRs3I4CEYTOYMUpgMpU2nGlsxBrSJ/3tx1mHMynyJsuatgMYqMRX
-	5+czA6863kyItJHy7iDblk4Vb19kxG9nR6VeNftOQrufyofPl6sVbA96vhkoEiORfBgdsW
-	NVILDSd2wqJXn71hw26NC66udmqRg0QJFvOdSDdJHeYCj6ivn5h9EuIpQ2DPCzh/fLpErq
-	927P+/ttxjfIneSZvqJ3mwNsUyMhmXnDIkMmTMtr6hIo17YH4Gy0Yt0DTTib4g==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Wed, 08 Jan 2025 17:14:10 +0100
-Subject: [PATCH v5 9/9] misc: add FPC202 dual port controller driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FAB81732;
+	Thu,  9 Jan 2025 02:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736389983; cv=fail; b=W8wHyyCM5/dTwc86LPT32RRBoNULAyiUKNjJQFKtjAJxBX6cTcBS3e7dgbZ74nrFbINiQKE3RYaXg2L1ngxYiC8MHxFYtAvv1FRalzGokQXs9PrL7x4xoSD9n2jJ1NTK4PIq4WbqVdBkeFsdCejrnDCxFzDoZx3xMcdEZQi2HHs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736389983; c=relaxed/simple;
+	bh=79haj9UGCHs/uoxGzRErU7Wv5GiZaeFvZ62KMg3VDPE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b8woo6nRMlMxY+92TuTILVye/UeOIJ/Dp6XgWL6IKtDTBZ6iSbJUt4KAELK2tCgONo7e+grdSTCZN/nIG+56nSBwpVIpA9ljM189qOLZhroTPbio20+gsmI/YiYu7lybmUNxNs94EzPca/B6mXWAJnQGObBjo4Az319H4noJL4U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=jhfmprFi; arc=fail smtp.client-ip=40.107.255.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GFQRRjJ/xOllgtJCsjOejhXX6GxM7R5z/poEIpcEcscL7eFem1tiZGeFEPy+vzpDTikkjUdNZOGsMzIhIKhba/xh7WWBhmZJ19wfL7rTeTET/RysILh/KzQUX6MD6SO5cXYxnkAQqbRVGICn72NOB25wqzDHouY4pGtfY3nUux+yVz3Z8Bm0f2iD1okJaenJj3pPZFTDy5K6QV6aDQbWZ9fQEPosM5jdbnFBv9H86onpZled+a1zNkJ+tvenTSwwP5B3/WhJ1+Egc+tcZXGexnzB+hZVTL5zFcw0ENEVniAyTiVjn7qhpE50Y04nTMU3NzLdvhFHiX7+9sOKSPmkOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rGMzp78C09ETjvzu/jCvVd+/cb/9tclMNdfhak5fr0M=;
+ b=m02uZBs6LXZwgcoYMhglEd6frLsQNDiMdhFWY4WIpDYxRQqa/vJIFvl8SEfnZNBrfcE+YOV8ARFnOQhuvUyP4Dsjo/TsFWduuLBGRWXeB2WV9+ROeKoEGRcfmK3ZNLieyHP9D4o5bnenJ7TAeqdyjjoyEi0aOrY74I2Q6wEmPlQQhmLv/htW3u/JlFrJkxsn1Et+uo661+ytMpTO1nuv1tfp6RRICyVuAmmOe2MId6mnDNPjKE6GHuZauAODnvx92sgc3YD7IdS01SB/gf/tUFvhYFB0f3PH+RWZ7fa7dNzlfJXDZ2rkkN1cJq5uzhZETCzbiHbd7aBTMmSu+DPflQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rGMzp78C09ETjvzu/jCvVd+/cb/9tclMNdfhak5fr0M=;
+ b=jhfmprFi6FdolWYvF5H1nDVFebpQsIHeepKskY+1lWl358rmAJk2rzLniQgA+cYKAjtgjNpCujG9Kf0u7zK1riNz9GchSPhuS1GioD0GKR4m4SFVBLkOvOqg14G9eBWsTOh90Ay05yvoZBfkpoc+PjV2smEcaokvc94fLxWKxHPAe2/j3UyfqEBE+gEJAfQcWXoZP5cqdCqF5WOkAjec1aURiB/PePsN8Z2xjoBZw8VEWyAs7Isfbo/22DGp6gfI2Vh9t7cJq9662poFKmZURFwS97AYDX2D+4JUnv7hFE2htEcS/Q3gIKcXyUxhK2UDPsALXBCbEWLBdjMQBnEsrg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEYPR03MB7814.apcprd03.prod.outlook.com (2603:1096:101:178::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.17; Thu, 9 Jan
+ 2025 02:32:57 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.8314.015; Thu, 9 Jan 2025
+ 02:32:57 +0000
+Message-ID: <8ae1ee73-d710-40d2-bc70-605680421fb8@amlogic.com>
+Date: Thu, 9 Jan 2025 10:32:52 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add support for Amlogic SoCs
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+References: <20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com>
+ <20241226-amlogic-pinctrl-v2-1-cdae42a67b76@amlogic.com>
+ <20250102212422.GA554486-robh@kernel.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250102212422.GA554486-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:4:195::17) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250108-fpc202-v5-9-a439ab999d5a@bootlin.com>
-References: <20250108-fpc202-v5-0-a439ab999d5a@bootlin.com>
-In-Reply-To: <20250108-fpc202-v5-0-a439ab999d5a@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-Sasl: romain.gantois@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEYPR03MB7814:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84b328bd-b87f-41be-d63a-08dd3055ed6a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YUVWQ1BGMDIrY0FxUTBrNFBlSGREUmRsQjgwdG1DNTBOOXNxeU1GOGxkTTVi?=
+ =?utf-8?B?Q3FwVmVsWngydk5mcDBoTzViUzQ0emU3Yyt2aFAxNXdjUmk5UUlyUVhBaGUz?=
+ =?utf-8?B?R2oxekRINTZBU0FPdzVxVzQ4SFAyS05rNTdKRGc3Z2lSdUIwMkRDak5IS0NB?=
+ =?utf-8?B?ZFdZcFcvTHJaNzJRSXNqUVREV3hKeVZtTk1nbVVGWnhJa3hlSCt5VHpyWVVu?=
+ =?utf-8?B?VWx5Q2EwWWJZUmliKzJuYzFiM1R1bUFBUC8vOXpjUTRZMElkQkFYMU80Q25Z?=
+ =?utf-8?B?VUw4V1htQnVQYmJuRW9RbXc1Z3oyWXdGRmVJRHA2SG1Xck1nTUdxak10c3g5?=
+ =?utf-8?B?MTYrcGhnc21jT3JBRkZ3ZjAydmhJZlk0bjFNVHlNaVlMbjMxdmdoR3hMUU1J?=
+ =?utf-8?B?MGwzQVpmT2QzT0dLTVFYOUNtSHlaclZ3WUZOWjhPRDZ4SE4zS3VnTUJRTFlZ?=
+ =?utf-8?B?blUwQ2dTZGFrOFBMSmM4NEZWS1dkSHFuVXljd2c4eTM3ZUtkeWhtalFrSWhp?=
+ =?utf-8?B?SExPdHZzTTM1WXZBTCt1b3FJNGVMMkc4clp6M043MUc3UmUwd1QwRHF2RitN?=
+ =?utf-8?B?cDQ5ZG9VcmZQdXJIQ0w2R2VQeUFBRTJ1YURmb3lLQlk1MmdpcTlsK3p4WENX?=
+ =?utf-8?B?SDNvcUtRSUhDOXBLQkpBNWRHLzYwOWlGbHpKeVM1RVFJeUpiRFFQbDZSNTY4?=
+ =?utf-8?B?UUczNFNFZGVMUTQ0RXRmVytkRnhTRUtYVDZJTXFjK0NoMTN0RmZCbC84NG9W?=
+ =?utf-8?B?OURXOU5VQ3pmWi9VMWpzV3MyeXBJWWQ0SWM2MHFtSzJIRFdmdWN5NnhhT0Zv?=
+ =?utf-8?B?ck81eEplZ0FXVkxSUUpxT1dJNlduV0RVUFVrSVI5NnBZRmg2VUFJUTdkeStQ?=
+ =?utf-8?B?RjVkK01LSGNuZGd2NzNzM1oxaUxDejJOVjkxcjlpck9pbk9McDMwN1pnOGZ6?=
+ =?utf-8?B?bWs3UmJnTzJnRGJ6RjRodEdjRUplL0Uwd05TUE1wVlZ2NEtjWmZUSEEySzhx?=
+ =?utf-8?B?ZDY5Zysvd2JxWFduek9MVlhGTmkxd0gvMWN0UWZjeFNoMEtNRjJ1Qjg4cDFl?=
+ =?utf-8?B?MTI2blNqK2Q0NXlWWUJOZjhLeUFNN1JMVGVpVDRPdFpDdFBITk1BWVh3Qnls?=
+ =?utf-8?B?T2FiQkcwZ1dMek8wSkw5blVpVTRLSmZnTThiT2l2SXlHK2REanNSdncxYjFQ?=
+ =?utf-8?B?bFF2b01ndEdNMEdVeThsR00rODhMdXF3R0Q5UHU5Yy9mUUp3ektSSWo4SklJ?=
+ =?utf-8?B?Ty85UDhBTVZTQnI3RWZ2NS90a2NCKytOM3VMVG1xeFpDYUZwMGV5cDNMcG1u?=
+ =?utf-8?B?NjE1bEhXZDVaTFBVR05zbUFoSHlwajc3cG5VbzE0UjRkM29pZ1k4eHdwS3hx?=
+ =?utf-8?B?VG1SYzJuUkZCdVcvTzFRRERVdVZyc2x4YWdJb1NtVGZDUzhkVUM3UHp6dmFo?=
+ =?utf-8?B?cHluVGd3a1dnNHdhS3Y3L0MyZUtCTFZCajJFWWFTUXV2VHpndWs5TFZJR1ds?=
+ =?utf-8?B?Q3ArWi9OcFgzRmJMeUN2YjN1WExCQzhTems2eHFFR0x6Q1dOVWdtMm1tTlFK?=
+ =?utf-8?B?NURSeHNWdVdtRm5qeGJONUlkdHFUcXFDZStCY0JPQmMxYmdkaXVyRlhBb3Bu?=
+ =?utf-8?B?YVVKWEdLZnk0cUhmYnA1Nk9iNlQ5VWRMRUR4Q010TFV6UzNlbnd3dmJQc3Zs?=
+ =?utf-8?B?QjkyeTdIcXlFTFJBNURKSkxQUWFNbXZ5aWN3aWlycG1oOUEvaHhOemdzTm9i?=
+ =?utf-8?B?dWZTMmZtVFlGeTU1ZlZ3emJkSDRGZlpSbE15aUxXUDE4M0pQSXBkdWErYnpH?=
+ =?utf-8?B?WkV3dUd1N0t3Q0JjNU5tZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Z0gvekUvRnl3MjdYY1NSMUlMc2dLMWc1Um95bE9nbm9aVkp5REtsbnlGeUtF?=
+ =?utf-8?B?Z3A1ZmdvcjVLck5Ia2NpRFJ0Sm42YUNvMjRiZ294T2gvamJzc2VwSUdwWWpI?=
+ =?utf-8?B?MWRnVnh4d3lxeGdsUzVPVkxFanB1OUJPS3lVdHBLeUk2U1BhbDgxTlBJK1d6?=
+ =?utf-8?B?bkNqQ3J0Tkh4VHBCdm9RYUU0KzBieCtMeC9qemtkZU4vMHcva0Z2R0VDcGF3?=
+ =?utf-8?B?Zkg1SmpDSEdBMDA3eEFacFBIUnZtaHJHKzBpbVJwemRPcmJ2QkwvWStJaXRM?=
+ =?utf-8?B?NWE2RUE3TWxGZjBuR2hjMWsydzFDZ0JFT2lzczlKaENhUWdraVdtMmlEUVJM?=
+ =?utf-8?B?bXF0akMyZXpBWjZCRC9NbWN1NFd4TTU4anpBeEdYZklCQmxOYzl4Q1RuUUVw?=
+ =?utf-8?B?a1RxaW9xU2E4L1kyTzBCYjBKVEx6Y29IR2QvRWY5aHd0Vk1mQjhQMER6UjFU?=
+ =?utf-8?B?cjZ4T0dxZlZxUm9GcWs2MURYYlJ0YTRjUGpsK0JlV0d2eGNnTzR4am5FbU9w?=
+ =?utf-8?B?cjBRY3JlWlFsRm5DN1BBWWp4aHlWaE1jZFpneWVuZjdWb0lLRGdFdWR4N3Ni?=
+ =?utf-8?B?NW41TzNPM05Cc3gzTU4rTU1PV0ZTcDMrTzd1Z0hnUi9telhIZXYrSC9TVTVV?=
+ =?utf-8?B?d2ZMWWN3VmFIbHVUZHRDVC9rYWtxV1U3cVNBeEZQSkNibDFvRUt2cUl1MmpX?=
+ =?utf-8?B?SUI5OXZtZm5mQ3VQY0hxcTVjVzYvV3c4MnN6cVU2MHRwaEFaY0o2SlVpampV?=
+ =?utf-8?B?d2srdW1EcDRROWRBc2t3SFQ2VURXWmFNME1lbDRVQmZ0c2xSWkJraCtIMHEz?=
+ =?utf-8?B?blpiMnR3MFUxRzhFRy9PbUtzRTZpUlVOWmpYR3psQXFzMWdCTFVTNDBPYjhs?=
+ =?utf-8?B?aFUwTklRZ2NMZHFyL1FDN0kxM0JFMXBXdGRVTXg4b2tBMjZMSTVnSzVUWTBD?=
+ =?utf-8?B?ZjN4U0NKUkExbjJ4MUdmVkNiZ2o2Qy82YmdJZDJUM3RoSldJem5ZRWhOREJF?=
+ =?utf-8?B?VVhlQjJtUWZhU3dGYUErQndEQ0pWTmlsSXliaFRsaUpDd29FWmpHcVloUitw?=
+ =?utf-8?B?ZWw4bjMyTVlaMmJWcmErYXVaS1hMZWExT2dSVFhaU2RLcXdBZFlEVzlteW9F?=
+ =?utf-8?B?dCsrVjh4NXZ0UFdWMmJ3Z1JHRTh2blBiaSswcjk4bVkybUhxR1V4ZWNLdFVB?=
+ =?utf-8?B?K3B5cUo0d0p1MDJWSUFaK1BrZlhtdkdEd0V1UWozZjE0K0lMQVE3MzdKMDVY?=
+ =?utf-8?B?UFpVMVhMN3BEaVZPRHNubS95bmJLNVhmaHJjcFFndU5oQ0NYZXpLU2QzdDQx?=
+ =?utf-8?B?eFd2LzZuT3dia2h4S002YkxNWXF1YUxnSDZUVkRsRHg3ak1NU3Ftb05uM0VZ?=
+ =?utf-8?B?T0d0Q3p2QldzcVFFVEZhOVpXb0ZUR29FZkRFbFRQcFVucGFJWlNaMk92MEpx?=
+ =?utf-8?B?WlV3bWtjcVhWRTZpSTB4MjlNNVBkdHo3OGtaR1htUDlHR0oyN3ZjUXJTY29P?=
+ =?utf-8?B?YXlUbDV0R0RPZnFhRjhGaWl0M2laSUozZnhkSHVJNFh3RTBoME1lYnpibUs4?=
+ =?utf-8?B?TzRuVGFQWlA1Vnl5VE05VTVHM3ExU3BqMkt5Mk5JZFV0ZnBGLzN2enRWbVZh?=
+ =?utf-8?B?L0tUSTJDUDJmUktsZFBGK2pONWdLanFCMXZuT2VWMlJ6MFB1a2xHLzlrUTJy?=
+ =?utf-8?B?Qlp6aWtPdW1IZ0lXemFOTTVtMmpHNjJoeGo4QnFhVlBLTDdDV1l0bHZscitR?=
+ =?utf-8?B?Z1pxZ2R2WVVTZmNGaGYyeEYxMHk1U0VWamp1RU0wQTY2K1FSbTVZQ2V5MmMr?=
+ =?utf-8?B?dGZKK21mMXR6MnhKVmVyTE94STNTWS9qNmZVMGhjdDZYYm9YbjJyZmNkVncy?=
+ =?utf-8?B?OUpQRGhWSVFSRldaWjVQTy9KMFNhblVIbS9BWEgxUkxXMWtRcENLRzNFMWtB?=
+ =?utf-8?B?TEFhQ1RTMXA1L2NTN0poQy85K1ozR2x3bTJWbFpiQk93K2xSVmRHYm5VOVkw?=
+ =?utf-8?B?bWc4RVhVekhlWlZGdDI3REhUVnk3QVgySlV5SjBDWTZ1aFRodGR5dUJvbG9a?=
+ =?utf-8?B?WGdkbEFDZ3RNU0NDRkRZK1huSXVxcytqY0dkU0M3Um5mQVRkUGM2NUVodUIw?=
+ =?utf-8?B?N1p1N2dZQ2g5OHM5ajVDQTNlRW85THVFNmcxSnNjdlRvWXRyWWVuTCsvaFBK?=
+ =?utf-8?B?S3c9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84b328bd-b87f-41be-d63a-08dd3055ed6a
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 02:32:57.1821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GKhFscyFUYPlJ6xuKqguTZgHD1jWTd5KIqliS17fVsGI3+f3nbXPvOzAIrrsB2elay/q0U9noR+cKNKe8jbtpat7VodDxUzJlixomW0KUOE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7814
 
-The TI FPC202 dual port controller serves as a low-speed signal aggregator
-for common port types such as SFP, QSFP, Mini-SAS HD, and others.
+Hi Rob,
+    Thanks for your reply.
 
-It aggregates GPIO and I2C signals across two downstream ports, acting as
-both a GPIO controller and an I2C address translator for up to two logical
-devices per port.
+On 2025/1/3 05:24, Rob Herring wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> On Thu, Dec 26, 2024 at 03:57:41PM +0800, Xianwei Zhao wrote:
+>> Add the dt-bindings for Amlogic pin controller, and add a new
+>> dt-binding header file which document the GPIO bank names and
+>> alternative func value of all Amlogic subsequent SoCs.
+>>
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> ---
+>>   .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       | 155 +++++++++++++++++++++
+>>   include/dt-bindings/pinctrl/amlogic,pinctrl.h      |  68 +++++++++
+>>   2 files changed, 223 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+>> new file mode 100644
+>> index 000000000000..75863d179933
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+>> @@ -0,0 +1,155 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/amlogic,pinctrl-a4.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Amlogic pinmux controller
+>> +
+>> +maintainers:
+>> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> +
+>> +allOf:
+>> +  - $ref: pinctrl.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,pinctrl-a4
+>> +
+>> +  reg:
+>> +    minItems: 2
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: mux
+>> +      - const: gpio
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+> 
+> The addresses in 'reg' below are MMIO, right? If so, #size-cells can't
+> be 0 and you also need 'ranges' here.
+> 
 
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- MAINTAINERS              |   1 +
- drivers/misc/Kconfig     |  11 ++
- drivers/misc/Makefile    |   1 +
- drivers/misc/ti_fpc202.c | 440 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 453 insertions(+)
+Will add ranges here, reg and reg-names move into gpio object.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ef5c0d395b3668167dddbd27237a2177f85571e..865ef413b38c293e1c7b1405322fafe9df81ea96 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23502,6 +23502,7 @@ M:	Romain Gantois <romain.gantois@bootlin.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/misc/ti,fpc202.yaml
-+F:	drivers/misc/ti_fpc202.c
- 
- TI FPD-LINK DRIVERS
- M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 09cbe3f0ab1e56f85852c0cb50cfc03cae659d2b..3c7e82e86e4ae83eff84999d123cd8c0f018323c 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -114,6 +114,17 @@ config RPMB
- 
- 	  If unsure, select N.
- 
-+config TI_FPC202
-+	tristate "TI FPC202 Dual Port Controller"
-+	select GPIOLIB
-+	depends on I2C_ATR
-+	help
-+	  If you say yes here you get support for the Texas Instruments FPC202
-+	  Dual Port Controller.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called fpc202.
-+
- config TIFM_CORE
- 	tristate "TI Flash Media interface support"
- 	depends on PCI
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 40bf953185c773afa91f7784a286ae0752bb0b53..ba47db46a5ff2559de597447ce7e2d88e26efa61 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_ATMEL_SSC)		+= atmel-ssc.o
- obj-$(CONFIG_DUMMY_IRQ)		+= dummy-irq.o
- obj-$(CONFIG_ICS932S401)	+= ics932s401.o
- obj-$(CONFIG_LKDTM)		+= lkdtm/
-+obj-$(CONFIG_TI_FPC202)         += ti_fpc202.o
- obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
- obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
- obj-$(CONFIG_PHANTOM)		+= phantom.o
-diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..e251d8e0a640f05d59e5b20665d8a8237b8c2724
---- /dev/null
-+++ b/drivers/misc/ti_fpc202.c
-@@ -0,0 +1,440 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ti_fpc202.c - FPC202 Dual Port Controller driver
-+ *
-+ * Copyright (C) 2024 Bootlin
-+ *
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/i2c-atr.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+
-+#define FPC202_NUM_PORTS 2
-+#define FPC202_ALIASES_PER_PORT 2
-+
-+/*
-+ * GPIO: port mapping
-+ *
-+ * 0: P0_S0_IN_A
-+ * 1: P0_S1_IN_A
-+ * 2: P1_S0_IN_A
-+ * 3: P1_S1_IN_A
-+ * 4: P0_S0_IN_B
-+ * ...
-+ * 8: P0_S0_IN_C
-+ * ...
-+ * 12: P0_S0_OUT_A
-+ * ...
-+ * 16: P0_S0_OUT_B
-+ * ...
-+ * 19: P1_S1_OUT_B
-+ *
-+ */
-+
-+#define FPC202_GPIO_COUNT 20
-+#define FPC202_GPIO_P0_S0_IN_B  4
-+#define FPC202_GPIO_P0_S0_OUT_A 12
-+
-+#define FPC202_REG_IN_A_INT    0x6
-+#define FPC202_REG_IN_C_IN_B   0x7
-+#define FPC202_REG_OUT_A_OUT_B 0x8
-+
-+#define FPC202_REG_OUT_A_OUT_B_VAL 0xa
-+
-+#define FPC202_REG_MOD_DEV(port, dev) (0xb4 + ((port) * 4) + (dev))
-+#define FPC202_REG_AUX_DEV(port, dev) (0xb6 + ((port) * 4) + (dev))
-+
-+/*
-+ * The FPC202 doesn't support turning off address translation on a single port.
-+ * So just set an invalid I2C address as the translation target when no client
-+ * address is attached.
-+ */
-+#define FPC202_REG_DEV_INVALID 0
-+
-+/* Even aliases are assigned to device 0 and odd aliases to device 1 */
-+#define fpc202_dev_num_from_alias(alias) ((alias) % 2)
-+
-+struct fpc202_priv {
-+	struct i2c_client *client;
-+	struct i2c_atr *atr;
-+	struct gpio_desc *en_gpio;
-+	struct gpio_chip gpio;
-+
-+	/* Lock REG_MOD/AUX_DEV and addr_caches during attach/detach */
-+	struct mutex reg_dev_lock;
-+
-+	/* Cached device addresses for both ports and their devices */
-+	u8 addr_caches[2][2];
-+
-+	/* Keep track of which ports were probed */
-+	DECLARE_BITMAP(probed_ports, FPC202_NUM_PORTS);
-+};
-+
-+static void fpc202_fill_alias_table(struct i2c_client *client, u16 *aliases, int port_id)
-+{
-+	u16 first_alias;
-+	int i;
-+
-+	/*
-+	 * There is a predefined list of aliases for each FPC202 I2C
-+	 * self-address.  This allows daisy-chained FPC202 units to
-+	 * automatically take on different sets of aliases.
-+	 * Each port of an FPC202 unit is assigned two aliases from this list.
-+	 */
-+	first_alias = 0x10 + 4 * port_id + 8 * ((u16)client->addr - 2);
-+
-+	for (i = 0; i < FPC202_ALIASES_PER_PORT; i++)
-+		aliases[i] = first_alias + i;
-+}
-+
-+static int fpc202_gpio_get_dir(int offset)
-+{
-+	return offset < FPC202_GPIO_P0_S0_OUT_A ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int fpc202_read(struct fpc202_priv *priv, u8 reg)
-+{
-+	int val;
-+
-+	val = i2c_smbus_read_byte_data(priv->client, reg);
-+	return val;
-+}
-+
-+static int fpc202_write(struct fpc202_priv *priv, u8 reg, u8 value)
-+{
-+	return i2c_smbus_write_byte_data(priv->client, reg, value);
-+}
-+
-+static void fpc202_set_enable(struct fpc202_priv *priv, int enable)
-+{
-+	if (!priv->en_gpio)
-+		return;
-+
-+	gpiod_set_value(priv->en_gpio, enable);
-+}
-+
-+static void fpc202_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return;
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B_VAL);
-+	if (ret < 0) {
-+		dev_err(&priv->client->dev, "Failed to set GPIO %d value! err %d\n", offset, ret);
-+		return;
-+	}
-+
-+	val = (u8)ret;
-+
-+	if (value)
-+		val |= BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	else
-+		val &= ~BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	fpc202_write(priv, FPC202_REG_OUT_A_OUT_B_VAL, val);
-+}
-+
-+static int fpc202_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	u8 reg, bit;
-+	int ret;
-+
-+	if (offset < FPC202_GPIO_P0_S0_IN_B) {
-+		reg = FPC202_REG_IN_A_INT;
-+		bit = BIT(4 + offset);
-+	} else if (offset < FPC202_GPIO_P0_S0_OUT_A) {
-+		reg = FPC202_REG_IN_C_IN_B;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_IN_B);
-+	} else {
-+		reg = FPC202_REG_OUT_A_OUT_B_VAL;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	}
-+
-+	ret = fpc202_read(priv, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(((u8)ret) & bit);
-+}
-+
-+static int fpc202_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_OUT)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int fpc202_gpio_direction_output(struct gpio_chip *chip, unsigned int offset,
-+					int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return -EINVAL;
-+
-+	fpc202_gpio_set(chip, offset, value);
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = (u8)ret | BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	return fpc202_write(priv, FPC202_REG_OUT_A_OUT_B, val);
-+}
-+
-+/*
-+ * Set the translation table entry associated with a port and device number.
-+ *
-+ * Each downstream port of the FPC202 has two fixed aliases corresponding to
-+ * device numbers 0 and 1. If one of these aliases is found in an incoming I2C
-+ * transfer, it will be translated to the address given by the corresponding
-+ * translation table entry.
-+ */
-+static int fpc202_write_dev_addr(struct fpc202_priv *priv, u32 port_id, int dev_num, u16 addr)
-+{
-+	int ret, reg_mod, reg_aux;
-+	u8 val;
-+
-+	guard(mutex)(&priv->reg_dev_lock);
-+
-+	reg_mod = FPC202_REG_MOD_DEV(port_id, dev_num);
-+	reg_aux = FPC202_REG_AUX_DEV(port_id, dev_num);
-+	val = addr & 0x7f;
-+
-+	ret = fpc202_write(priv, reg_mod, val);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The FPC202 datasheet is unclear about the role of the AUX registers.
-+	 * Empirically, writing to them as well seems to be necessary for
-+	 * address translation to function properly.
-+	 */
-+	ret = fpc202_write(priv, reg_aux, val);
-+
-+	priv->addr_caches[port_id][dev_num] = val;
-+
-+	return ret;
-+}
-+
-+static int fpc202_attach_addr(struct i2c_atr *atr, u32 chan_id,
-+			      u16 addr, u16 alias)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+
-+	dev_dbg(&priv->client->dev, "attaching address 0x%02x to alias 0x%02x\n", addr, alias);
-+
-+	return fpc202_write_dev_addr(priv, chan_id, fpc202_dev_num_from_alias(alias), addr);
-+}
-+
-+static void fpc202_detach_addr(struct i2c_atr *atr, u32 chan_id,
-+			       u16 addr)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+	int dev_num, reg_mod, val;
-+
-+	for (dev_num = 0; dev_num < 2; dev_num++) {
-+		reg_mod = FPC202_REG_MOD_DEV(chan_id, dev_num);
-+
-+		mutex_lock(&priv->reg_dev_lock);
-+
-+		val = priv->addr_caches[chan_id][dev_num];
-+
-+		mutex_unlock(&priv->reg_dev_lock);
-+
-+		if (val < 0) {
-+			dev_err(&priv->client->dev, "failed to read register 0x%x while detaching address 0x%02x\n",
-+				reg_mod, addr);
-+			return;
-+		}
-+
-+		if (val == (addr & 0x7f)) {
-+			fpc202_write_dev_addr(priv, chan_id, dev_num, FPC202_REG_DEV_INVALID);
-+			return;
-+		}
-+	}
-+}
-+
-+static const struct i2c_atr_ops fpc202_atr_ops = {
-+	.attach_addr = fpc202_attach_addr,
-+	.detach_addr = fpc202_detach_addr,
-+};
-+
-+static int fpc202_probe_port(struct fpc202_priv *priv, struct device_node *i2c_handle, int port_id)
-+{
-+	u16 aliases[FPC202_ALIASES_PER_PORT] = { };
-+	struct device *dev = &priv->client->dev;
-+	struct i2c_atr_adap_desc desc = { };
-+	int ret = 0;
-+
-+	desc.chan_id = port_id;
-+	desc.parent = dev;
-+	desc.bus_handle = of_node_to_fwnode(i2c_handle);
-+	desc.num_aliases = FPC202_ALIASES_PER_PORT;
-+
-+	fpc202_fill_alias_table(priv->client, aliases, port_id);
-+	desc.aliases = aliases;
-+
-+	ret = i2c_atr_add_adapter(priv->atr, &desc);
-+	if (ret)
-+		return ret;
-+
-+	set_bit(port_id, priv->probed_ports);
-+
-+	ret = fpc202_write_dev_addr(priv, port_id, 0, FPC202_REG_DEV_INVALID);
-+	if (ret)
-+		return ret;
-+
-+	return fpc202_write_dev_addr(priv, port_id, 1, FPC202_REG_DEV_INVALID);
-+}
-+
-+static void fpc202_remove_port(struct fpc202_priv *priv, int port_id)
-+{
-+	i2c_atr_del_adapter(priv->atr, port_id);
-+	clear_bit(port_id, priv->probed_ports);
-+}
-+
-+static int fpc202_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *i2c_handle;
-+	struct fpc202_priv *priv;
-+	int ret, port_id;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->reg_dev_lock);
-+
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+
-+	priv->en_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->en_gpio)) {
-+		ret = PTR_ERR(priv->en_gpio);
-+		dev_err(dev, "failed to fetch enable GPIO! err %d\n", ret);
-+		goto destroy_mutex;
-+	}
-+
-+	priv->gpio.label = "gpio-fpc202";
-+	priv->gpio.base = -1;
-+	priv->gpio.direction_input = fpc202_gpio_direction_input;
-+	priv->gpio.direction_output = fpc202_gpio_direction_output;
-+	priv->gpio.set = fpc202_gpio_set;
-+	priv->gpio.get = fpc202_gpio_get;
-+	priv->gpio.ngpio = FPC202_GPIO_COUNT;
-+	priv->gpio.parent = dev;
-+	priv->gpio.owner = THIS_MODULE;
-+
-+	ret = gpiochip_add_data(&priv->gpio, priv);
-+	if (ret) {
-+		priv->gpio.parent = NULL;
-+		dev_err(dev, "failed to add gpiochip err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	priv->atr = i2c_atr_new(client->adapter, dev, &fpc202_atr_ops, 2);
-+	if (IS_ERR(priv->atr)) {
-+		ret = PTR_ERR(priv->atr);
-+		dev_err(dev, "failed to create i2c atr err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	i2c_atr_set_driver_data(priv->atr, priv);
-+
-+	bitmap_zero(priv->probed_ports, FPC202_NUM_PORTS);
-+
-+	for_each_child_of_node(dev->of_node, i2c_handle) {
-+		ret = of_property_read_u32(i2c_handle, "reg", &port_id);
-+		if (ret) {
-+			if (ret == -EINVAL)
-+				continue;
-+
-+			dev_err(dev, "failed to read 'reg' property of child node, err %d\n", ret);
-+			goto unregister_chans;
-+		}
-+
-+		if (port_id > FPC202_NUM_PORTS) {
-+			dev_err(dev, "port ID %d is out of range!\n", port_id);
-+			ret = -EINVAL;
-+			goto unregister_chans;
-+		}
-+
-+		ret = fpc202_probe_port(priv, i2c_handle, port_id);
-+		if (ret) {
-+			dev_err(dev, "Failed to probe port %d, err %d\n", port_id, ret);
-+			goto unregister_chans;
-+		}
-+	}
-+
-+	dev_info(&client->dev, "%s FPC202 Dual Port controller found\n", client->name);
-+
-+	goto out;
-+
-+unregister_chans:
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	i2c_atr_delete(priv->atr);
-+disable_gpio:
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+destroy_mutex:
-+	mutex_destroy(&priv->reg_dev_lock);
-+out:
-+	return ret;
-+}
-+
-+static void fpc202_remove(struct i2c_client *client)
-+{
-+	struct fpc202_priv *priv = i2c_get_clientdata(client);
-+	int port_id;
-+
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	mutex_destroy(&priv->reg_dev_lock);
-+
-+	i2c_atr_delete(priv->atr);
-+
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+}
-+
-+static const struct of_device_id fpc202_of_match[] = {
-+	{ .compatible = "ti,fpc202" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fpc202_of_match);
-+
-+static struct i2c_driver fpc202_driver = {
-+	.driver = {
-+		.name = "fpc202",
-+		.of_match_table = fpc202_of_match,
-+	},
-+	.probe = fpc202_probe,
-+	.remove = fpc202_remove,
-+};
-+
-+module_i2c_driver(fpc202_driver);
-+
-+MODULE_AUTHOR("Romain Gantois <romain.gantois@bootlin.com>");
-+MODULE_DESCRIPTION("TI FPC202 Dual Port Controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(I2C_ATR);
+>> +
+>> +required:
+> 
+> Move after 'patternProperties'.
+> 
+Will do.
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +
+>> +patternProperties:
+>> +  "^gpio@[0-9a-f]+$":
+>> +    type: object
+>> +
+>> +    properties:
+>> +      reg:
+>> +        minItems: 2
+> 
+> You need to describe what each entry is:
+> 
+> items:
+>    - description: foo
+>    - description: bar
+> 
+Will add description in next version
+>> +
+>> +      mask:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +      gpio-controller: true
+>> +
+>> +      "#gpio-cells":
+>> +        const: 2
+>> +
+>> +      ngpios:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Don't need a type here.
+> 
 
--- 
-2.47.1
+Will drop ngpios, use gpio_rangs instead.
 
+>> +        minimum: 1
+>> +        maximum: 32
+>> +
+>> +      identity:
+> 
+> Needs a better name. This is the bank number?
+> 
+
+named 'bank-number'.
+
+> But shouldn't you be able to use gpio-ranges here:
+> 
+> gpio-ranges = <&periphs_pinctrl 0 (bank# << 8) (value of npgios)>;
+> 
+> And do you really need ngpios if you have the value here?
+> 
+>> +        description: |
+>> +          identifier are provided by the pin controller header file at:
+>> +          <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
+>> +
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +    required:
+>> +      - reg
+>> +      - gpio-controller
+>> +      - "#gpio-cells"
+>> +      - ngpios
+>> +      - identity
+>> +
+>> +    additionalProperties: false
+>> +
+>> +  "^func-[0-9a-z-]+$":
+>> +    type: object
+>> +    additionalProperties:
+> 
+> Define a pattern for the node names instead. We only allow anything for
+> existing bindings.
+>
+
+Will use patternProperies
+
+>> +      type: object
+>> +      allOf:
+>> +        - $ref: pincfg-node.yaml#
+>> +        - $ref: pinmux-node.yaml#
+>> +
+>> +      description:
+>> +        A pin multiplexing sub-node describes how to configure a set of (or a
+>> +        single) pin in some desired alternate function mode.
+>> +        A single sub-node may define several pin configurations.
+>> +
+>> +      properties:
+>> +        pinmux:
+>> +          description: |
+>> +            Integer array representing pin number and pin multiplexing
+>> +            configuration.
+>> +            When a pin has to be configured in alternate function mode, use
+>> +            this property to identify the pin by its global index, and provide
+>> +            its alternate function configuration number along with it.
+>> +            bank identifier are provided by the pin controller header file at:
+>> +            <include/dt-bindings/pinctrl/amlogic,pinctrl.h>
+>> +            Integers values in "pinmux" argument list are assembled as:
+>> +            (((BANK << 8) + PIN) << 8)  | MUX_FUNC))
+>> +
+>> +      required:
+>> +        - pinmux
+>> +
+>> +      additionalProperties: true
+> 
+> No, not allowed to be true except on common schemas.
+> 
+
+This object  I will only save
+      allOf:
+        - $ref: pincfg-node.yaml#
+        - $ref: pinmux-node.yaml#
+others(description, properties,required,  additionalProperties) will be 
+dropped.
+
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>> +    apb {
+>> +      #address-cells = <2>;
+>> +      #size-cells = <2>;
+>> +      periphs_pinctrl: pinctrl@8e700 {
+>> +        compatible = "amlogic,pinctrl-a4";
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        reg = <0x0 0x8e700 0x0 0x04>,
+>> +              <0x0 0x8e704 0x0 0x60>;
+>> +        reg-names = "mux", "gpio";
+>> +
+>> +        gpio@14 {
+>> +          reg = <0x14>,<0x30>;
+>> +          gpio-controller;
+>> +          #gpio-cells = <2>;
+>> +          ngpios = <10>;
+>> +          identity = <AMLOGIC_GPIO_B>;
+>> +        };
+>> +
+>> +        func-uart-b {
+>> +          uart-b-default {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 1, AF4)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +
+>> +          uart-b-pins1 {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 5, AF2)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +        };
+>> +
+>> +        func-uart-c {
+>> +          uart-c-default {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 3, AF1)>,
+>> +                     <AML_PINMUX(AMLOGIC_GPIO_B, 2, AF1)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> diff --git a/include/dt-bindings/pinctrl/amlogic,pinctrl.h b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+>> new file mode 100644
+>> index 000000000000..03db0a730e8b
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+>> @@ -0,0 +1,68 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+>> +/*
+>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
+>> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_AMLOGIC_PINCTRL_H
+>> +#define _DT_BINDINGS_AMLOGIC_PINCTRL_H
+>> +
+>> +/* define PIN modes */
+>> +#define AF0  0x0
+>> +#define AF1  0x1
+>> +#define AF2  0x2
+>> +#define AF3  0x3
+>> +#define AF4  0x4
+>> +#define AF5  0x5
+>> +#define AF6  0x6
+>> +#define AF7  0x7
+>> +#define AF8  0x8
+>> +#define AF9  0x9
+>> +#define AF10 0xa
+>> +#define AF11 0xb
+>> +#define AF12 0xc
+>> +#define AF13 0xd
+>> +#define AF14 0xe
+>> +#define AF15 0xf
+> 
+> There's no need for defines in the form "FOOn n".
+> 
+
+Will do.
+
+>> +
+>> +#define AML_PIN_ALT_FUNC_MASK        0xf
+>> +
+>> +/* Normal PIN bank */
+>> +#define AMLOGIC_GPIO_A               0
+>> +#define AMLOGIC_GPIO_B               1
+>> +#define AMLOGIC_GPIO_C               2
+>> +#define AMLOGIC_GPIO_D               3
+>> +#define AMLOGIC_GPIO_E               4
+>> +#define AMLOGIC_GPIO_F               5
+>> +#define AMLOGIC_GPIO_G               6
+>> +#define AMLOGIC_GPIO_H               7
+>> +#define AMLOGIC_GPIO_I               8
+>> +#define AMLOGIC_GPIO_J               9
+>> +#define AMLOGIC_GPIO_K               10
+>> +#define AMLOGIC_GPIO_L               11
+>> +#define AMLOGIC_GPIO_M               12
+>> +#define AMLOGIC_GPIO_N               13
+>> +#define AMLOGIC_GPIO_O               14
+>> +#define AMLOGIC_GPIO_P               15
+>> +#define AMLOGIC_GPIO_Q               16
+>> +#define AMLOGIC_GPIO_R               17
+>> +#define AMLOGIC_GPIO_S               18
+>> +#define AMLOGIC_GPIO_T               19
+>> +#define AMLOGIC_GPIO_U               20
+>> +#define AMLOGIC_GPIO_V               21
+>> +#define AMLOGIC_GPIO_W               22
+>> +#define AMLOGIC_GPIO_X               23
+>> +#define AMLOGIC_GPIO_Y               24
+>> +#define AMLOGIC_GPIO_Z               25
+>> +
+>> +/* Special PIN bank */
+>> +#define AMLOGIC_GPIO_DV              26
+>> +#define AMLOGIC_GPIO_AO              27
+>> +#define AMLOGIC_GPIO_CC              28
+>> +#define AMLOGIC_GPIO_TEST_N  29
+>> +
+>> +#define AML_PINMUX(bank, offset, mode)       (((((bank) << 8) + (offset)) << 8) | (mode))
+>> +#define AML_PINMUX_TO_BANK(pinmux)   (((pinmux) >> 16) & 0xff)
+>> +#define AML_PINMUX_TO_OFFSET(pinmux) (((pinmux) >> 8) & 0xff)
+>> +
+>> +#endif /* _DT_BINDINGS_AMLOGIC_PINCTRL_H */
+>>
+>> --
+>> 2.37.1
+>>
 
