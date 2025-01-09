@@ -1,164 +1,138 @@
-Return-Path: <linux-gpio+bounces-14617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14618-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B60EBA070F5
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 10:08:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56161A070FD
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 10:09:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 567E2188A911
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 09:08:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 597B716476F
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2025 09:09:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B5C21506F;
-	Thu,  9 Jan 2025 09:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380C3215180;
+	Thu,  9 Jan 2025 09:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F0+lqWCi"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="oj5sSXdF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D1C2080C2
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Jan 2025 09:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2F2214A6D
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Jan 2025 09:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736413698; cv=none; b=UbTjOxfndCloHHTNpXBBSfU+Wm/vbKCebSo3RSSEtNJc3jM2mwfmncF8O7KI/n9uMSvNZrLFL/TeMOS63FqAi1Dgw/9fG0YymH/B5m7ppGaRDcC8W4vcdMh6tXRWFud/ijGBL65WFYAGyk0IulZbCXz4AmkqQorwR7O6fnu8esM=
+	t=1736413794; cv=none; b=i+mSdnF+sez3gtzdLSCCZICXV75mOvAc9+4vRoSzgn3wbsvmhCT0Smz52yvptrJMnnMt6ZtO6tBZ/U6L4c/33lUGXRurmEwbDGbheEcPlxHB1sYRrsJA97QnsFO6+a8sS3Wj6FLH0nFvYTVgej9J4X/+ufsKn41ATNWtwlUf/gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736413698; c=relaxed/simple;
-	bh=0sZIgtv+cl3PjxKdZGyFZfPmJNrQN6QgI8Ejw0FZLMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cf+s2BI513wFoUYdDdkULaB223y5M0btESurhEmu2uC7Cl5+Ta92Zt1wrwcP/bh9WeOXq/sjiECGMll8bUae01usBrORDoxvKO/Wp1TUFOyeeuBohWLGiN4JKPuql/+WPwPmZmGhkdHDVQMHrwbxNbbqj5L/3PPuti8azvRTeT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F0+lqWCi; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43623f0c574so5231785e9.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2025 01:08:13 -0800 (PST)
+	s=arc-20240116; t=1736413794; c=relaxed/simple;
+	bh=QfTgaoKC6k5LZg8mj2xJfLsTnj4oGukAD029k6OgTLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FQm1KuM0KFOgQaeoLS+BjwNAZ4p2MTuPjxJR3ErUpbNPOpDi0sEeq+IhltnBl3/gdkbsziCKVfGKBx0FIIMhGfd3xbGWlhb8dYTa1LKT/Zw9DRv+JTysD9z8psNpkKKuXjyjDaQG6Fl+WKVYVW9GbAttziJ+6B6YPOd8Nrun8I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=oj5sSXdF; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38789e5b6a7so330838f8f.1
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2025 01:09:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1736413692; x=1737018492; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DcRFUcqovUliypjUptmEP8CepSC3HfNizCbt+t31wfg=;
-        b=F0+lqWCiwliRmY6WxvtOMSPYocVv4jkEaodhM5Q6Oz8rLiyczg1tL4ETzIQmcUxprw
-         mOWzgEnws9rrTAeJbOoOgQIJfrrQDUp8oBe/GI3fRwa+a5fvorClVpBTTQF4Yc+u6KRv
-         SRDZ4pUq8o3ce66Pvc2UU78Khj24sptqFQEIylzWdJATr7acn1ejuS3W9N76Sgl0AB6e
-         4Cq37DPPGYIZMARsWC+Bcbq3993YMcuUTzGJskeYF+r84XbOSPXimiM7z56t0KdQ5Bi+
-         x7QUxtyuqYr2Lc/4lTUAt9K8YwPjDSk6hTrdcDg/Yx2vayvTneWr+XJzxuHvj8i0Bkho
-         /vwQ==
+        d=tuxon.dev; s=google; t=1736413791; x=1737018591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eDrWR7h2raxJC/jFcGE7XFAhit/WhKwllzn4v6e25aw=;
+        b=oj5sSXdFHoL2tb7GWncbFmSriWZwpkWSzRXxuM3cpKiFFDqo4mko3QzDJasppHiiP9
+         rICD/WGXVk4e/gmNIlP5LzuWnW4oebvQeTYyTsSXjSm4rHnyuWyLl67usPE0syfeIxmI
+         W9iIos95jWnmCMuYEmlpa7C/8FSeUFSQx7lmve7jDVqMKiAkzvC10eolsuXjucpsO+Iy
+         4tQ4d1CwglC0AC5KiFFNBUTBCN1TFd0n+4CdYMQGs6P4c3QBoHI4WRCPk/zaSegVo2yF
+         XDt7RkUHXWleJ4OH+r58smEIwSc8p6+QIfLKkqJ2whdSh3+GydBkqmVviWr7vJ+TS89P
+         8cvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736413692; x=1737018492;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DcRFUcqovUliypjUptmEP8CepSC3HfNizCbt+t31wfg=;
-        b=pf2pZ+tlgLB5aWuIldArADHAokqXFy7Amf5QS9bTkaJ+NAYxDmPREk/++t1ZIcsXu8
-         0G7ie6Aes7vsF9zNcva8zUczAqDBKERlUFyZ3LGuHUmIbyP7NygACALgYSwbsPkT4TcO
-         xAI/EBniOQk0oFeZ17H7Gb1kOGskMJHIK3/C5vfDytcVkQsOmg2urBjfcv9eRb44FzB3
-         Pe34C7L53dkiOh6n/UnMxTAOEAwMAmyuoMGyOjGJKQRzyBeCorZSk0/LIIcfql136sX9
-         Bt9Lzw+qMb02RZAbJAFCz23PpVbNn6BrJwS3842/PsX4AtIzwp/u4nVsOXqehdA73D8V
-         g0Qg==
-X-Gm-Message-State: AOJu0YyYvCmIoth3LE22KEAoP7SIvMp1ghx3AlOjs4uZd1O+Df57r4fE
-	h5XNUK4L5jCDbkqFEsLKPciHajfSzTVXlkxZOhdgWsYYkU0Lknbm6g8+Ml0qQKmxksZX8Hr38o4
-	C
-X-Gm-Gg: ASbGncu+NmLh/CJuaHF3qicr1RY03uhLNVPalHll43QIMHJsnvmN/c9OyDF0hSAeToZ
-	I3W6ROq5oaUcH1WmegkOsVHy5aSHFhaoPkcE7Ukl5WkQACCxmf94YeBXzryn0iG55pCtt3H4qdA
-	px1f3HWztumfU2eZ0ZZYVvVfvkeOpgr/JMrFbAbgyhuy+FYavEKHjJq9K+dhbZyoOotgin16HOF
-	tWcpAT/NKibN1I6mcMd/5JPkReuvyKoa18HRYhXHS24c0FFuzij32qArN9t/sob0O2V9EHToB5Y
-	Gxk7KtfXZWnWAi+sO5XaLuiovXzY+ZAc0i3ZYHGCg8NYMQ==
-X-Google-Smtp-Source: AGHT+IHLKjGwRSzUUFHBhbLQJ/fLVnPnyVb+T5wkE6gEAHs9UQAKN3zX09BPGxrsdiUSotXyFzVm3w==
-X-Received: by 2002:a05:600c:1d14:b0:436:5fc9:309d with SMTP id 5b1f17b1804b1-436e26f6d80mr57492895e9.30.1736413692059;
-        Thu, 09 Jan 2025 01:08:12 -0800 (PST)
-Received: from localhost (p200300f65f14c30058a71578dcf3a238.dip0.t-ipconnect.de. [2003:f6:5f14:c300:58a7:1578:dcf3:a238])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e2e89dfesm48419915e9.32.2025.01.09.01.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 01:08:11 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Mun Yew Tham <mun.yew.tham@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: [PATCH v2] gpio: altera: Drop .mapped_irq from driver data
-Date: Thu,  9 Jan 2025 10:08:03 +0100
-Message-ID: <20250109090802.3763275-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1736413791; x=1737018591;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eDrWR7h2raxJC/jFcGE7XFAhit/WhKwllzn4v6e25aw=;
+        b=LIChR5QIWxTbxRGpilCi03dJwG9VLM+Xh3V/VY+10ZmoH7Y/2NsgyIbHqwcVN5aEfN
+         8awV1+4rMKvSadZaN2+f1PAjZqH/Rx4UvKmugEq7c3tBKa+zyGJJULlBDVBSLgDz7F+w
+         ucKKdDxbdM4367e/VLt++ujTA1soHCQ7oXo4KXVjehM9EU6g6d9I4cEhqGQTHPVIWGiY
+         Zl75pL9VU6oSzA7IW4CwTQ3O1k3OJ3obtzoh/+LpJeWPLPZ4eLcbNCIrwfRx8LcHaiEp
+         nPrJsXzI03lzab6+1J0Db2rxsLEDIpmCJEBaKSnKzq40Yt9kVezYjs4B/kdH+2jy3H/B
+         oHfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQVNRZ2KXyhGkAyAYGarnJJ7bnNnUrkotCOJuEw7LO9KADgYymEfw2NsyU5tqGpqTb+k2uoyyO74U5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsXGZOkbSrPIY+4iMcpZ0CCZ/b2LHcXfs10vSRYPrhFH4yLxG0
+	nvdUVtTvjymv+8v4m8GHDNdJQzGiK5+vzc+mZTNUuD15o1x2REgqLpnODooaH20=
+X-Gm-Gg: ASbGnctiwZgwQNtpT6i0X8+YRpanDR5tkf9iLAFCI6fRIz0sFbBmRAlwhtLDOIikWI+
+	f6vqOAOwIfdmYzXPvEMR/qu2ylbJugkQmHE6XLSB12KuF1JAFR96u1lKBJQ0xOQIgibs0Xe0Xpj
+	FRJGT8eE8Ym+rwVtzSBDN0FmpmW1c9sT7bd6P4OTx6luKOPrJSJDIxSPJ2GQ8+q/PcB4jzs0zDe
+	E7peEPUL9rnXs16fgzDOgwUhnUgC9TFybZyU0aCIwk5/o4MwcpHLiI82RoYO4hI3A==
+X-Google-Smtp-Source: AGHT+IGRJU00RisG9i0trOMKvJFYFliD2nOh14yfkZLJb8Z2MdvVwSvtyYD5ZhP9DVJTYxjtT/tgUQ==
+X-Received: by 2002:a05:6000:2cf:b0:385:e961:6589 with SMTP id ffacd0b85a97d-38a87303d73mr5153466f8f.20.1736413790761;
+        Thu, 09 Jan 2025 01:09:50 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.102])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e37d447sm1227370f8f.4.2025.01.09.01.09.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2025 01:09:50 -0800 (PST)
+Message-ID: <36471228-4383-4b01-bbe2-0ec490617f6c@tuxon.dev>
+Date: Thu, 9 Jan 2025 11:09:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] dt-bindings: pinctrl: at91-pio4: add
+ microchip,sama7d65-pinctrl
+To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, mturquette@baylibre.com, sboyd@kernel.org,
+ arnd@arndb.de
+Cc: dharma.b@microchip.com, mihai.sain@microchip.com,
+ romain.sioen@microchip.com, varshini.rajendran@microchip.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250107160850.120537-1-Ryan.Wanner@microchip.com>
+ <20250107160850.120537-4-Ryan.Wanner@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250107160850.120537-4-Ryan.Wanner@microchip.com>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2371; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=0sZIgtv+cl3PjxKdZGyFZfPmJNrQN6QgI8Ejw0FZLMY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnf5Hza1N+zs66eUmwPJ9F7RUU7DsfRIKpmcAtM qHFMlZwYzyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ3+R8wAKCRCPgPtYfRL+ TgEOB/0aKXtw+7u8+8awrXHh7h+MnnB20iBCDfmbZ+O8QPlLUq7eJt4BB+WEbp+rWC1jm41zU+S vi6ldDkTaM69nCNwytkbnicfuNjNXOlQdLKeZXlgLj+SxYwgDaEhx5JUjnCyE95UeTk0J9UGnrM KVNRR9HKjKDWUXhqmlRYlLgJ0CnWnkFMkI0CXVzqn4gwblSPqu2ZAELX2lOtkDOewXfnHfebjqO sxR2Izt4fV3UqQma/67sI/I6PjwVboYJpy08+sR6jAKW2DuP9SsR2OTcFfPeSstiTHvbJoM6aaJ cAOglDU2MraeMkZp8ae0KY8rehFMt+ZpMwCrc55jEuMhBYkI
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-struct altera_gpio_chip::mapped_irq is only used in the driver's probe
-function. So it's enough if mapped_irq is a local variable, and can be
-dropped from driver data.
+Hi, Ryan,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+On 07.01.2025 18:07, Ryan.Wanner@microchip.com wrote:
+> From: Dharma Balasubiramani <dharma.b@microchip.com>
+> 
+> Add pinctrl bindings for microchip sama7d65 SoC.
+> 
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt    | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> index 774c3c269c40..4b9f3373503d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> @@ -6,7 +6,8 @@ configure it.
+>  Required properties:
+>  - compatible:
+>  	"atmel,sama5d2-pinctrl"
+> -	"microchip,sama7g5-pinctrl"
+> +	 "microchip,sama7d65-pinctrl", "microchip,sama7g5-pinctrl"
 
-changes since (implicit) v1, available at
-https://lore.kernel.org/linux-gpio/20250108094851.3683769-2-u.kleine-koenig@baylibre.com:
+Looks like you have one space in front of the line
 
- - Drop the kdoc entry for mapped_irq to please the kernel test robot
+> +	 "microchip,sama7g5-pinctrl"
 
-Best regards
-Uwe
+Same here. And this change should not be needed.
 
- drivers/gpio/gpio-altera.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
-index 73e660c5e38a..17ab039c7413 100644
---- a/drivers/gpio/gpio-altera.c
-+++ b/drivers/gpio/gpio-altera.c
-@@ -32,14 +32,12 @@
- *			  will be blocked until the current one completes.
- * @interrupt_trigger	: specifies the hardware configured IRQ trigger type
- *			  (rising, falling, both, high)
--* @mapped_irq		: kernel mapped irq number.
- */
- struct altera_gpio_chip {
- 	struct gpio_chip gc;
- 	void __iomem *regs;
- 	raw_spinlock_t gpio_lock;
- 	int interrupt_trigger;
--	int mapped_irq;
- };
- 
- static void altera_gpio_irq_unmask(struct irq_data *d)
-@@ -235,6 +233,7 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 	int reg, ret;
- 	struct altera_gpio_chip *altera_gc;
- 	struct gpio_irq_chip *girq;
-+	int mapped_irq;
- 
- 	altera_gc = devm_kzalloc(&pdev->dev, sizeof(*altera_gc), GFP_KERNEL);
- 	if (!altera_gc)
-@@ -271,8 +270,8 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(altera_gc->regs))
- 		return dev_err_probe(dev, PTR_ERR(altera_gc->regs), "failed to ioremap memory resource\n");
- 
--	altera_gc->mapped_irq = platform_get_irq_optional(pdev, 0);
--	if (altera_gc->mapped_irq < 0)
-+	mapped_irq = platform_get_irq_optional(pdev, 0);
-+	if (mapped_irq < 0)
- 		goto skip_irq;
- 
- 	if (device_property_read_u32(dev, "altr,interrupt-type", &reg)) {
-@@ -296,7 +295,7 @@ static int altera_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_bad_irq;
--	girq->parents[0] = altera_gc->mapped_irq;
-+	girq->parents[0] = mapped_irq;
- 
- skip_irq:
- 	ret = devm_gpiochip_add_data(dev, &altera_gc->gc, altera_gc);
-
-base-commit: 7b4b9bf203da94fbeac75ed3116c84aa03e74578
--- 
-2.45.2
+>  - reg: base address and length of the PIO controller.
+>  - interrupts: interrupt outputs from the controller, one for each bank.
+>  - interrupt-controller: mark the device node as an interrupt controller.
 
 
