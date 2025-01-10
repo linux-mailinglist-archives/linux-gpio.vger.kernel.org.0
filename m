@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-14666-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14667-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C0E3A09506
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 16:22:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C287A09591
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 16:28:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE4EC188E50D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 15:22:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D66C27A0525
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 15:28:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A672116E7;
-	Fri, 10 Jan 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD715211A1F;
+	Fri, 10 Jan 2025 15:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aB4C4JNL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hym/avwP"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF0520E035;
-	Fri, 10 Jan 2025 15:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70206211A27;
+	Fri, 10 Jan 2025 15:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736522526; cv=none; b=O2qQpEmNpMuBb1j2Mgt1uqMd7BTrC4p7PI1IFEbvigYphbvzTi6SQgKppHN8tCHNQG+Vh8NYBIU+bpTwogZfSqQmrQtXWYnC38/dMgsTuPGfOOorEMzGFty/llUFYAaoVTXLEGa/doEoebfobVNsSCGgWGXlJwJZK0SfqFp0/Xg=
+	t=1736522676; cv=none; b=I//GYS7tPIQHnQZvNpzp+lb5apYuY19ipaSd38/csZsGc2XaPB1Q8FkUp4vxoF68vKf6Uk+oZ3MVHw5jex5ZPY3kpR5GIrjwBxBdg0YleAfPeTVGLM4yFFlOS1umecqw5fSsSV0AM5MRMLY7ACacWSTohR/DVU+stcVAzPtMOmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736522526; c=relaxed/simple;
-	bh=Fj00BHfPbhz9xYd23W9IG8d0T8QnHNrRgZzPleQcUUc=;
+	s=arc-20240116; t=1736522676; c=relaxed/simple;
+	bh=jorlm+xDAVk8B2sOdzLzRlCm30bRxtIDYEa4t02Ylw4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nELuc4K60lJhMkPOA9ey/ZtMRP3rYMMJoWcz5dVg5+8uLt6AJWwqafeFSbDxjfZGcuEEglhNN6HCw20jLeiM9T/Zi/0WqMR/7dMLoPn5qAejS7DJGNOM64HYxLI7+yZ+lZAqYuJFqebrFNrqUGPWvM8JdOxVJsGnqbkHmAiGKAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aB4C4JNL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58C0C4CED6;
-	Fri, 10 Jan 2025 15:22:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=lH4UIz6I0e+IXhy6PK1CxGnP8bbyDpltlj7pls5xCVjaePjTo0Li7zEGJ9etkrEtAivaIF6q2upWHWS1eNEuHz0d0bOwCsOqZnQDsS7Rp953hBtbEFqThVtwcL0Xg5HyPGI2tGEHIqVu3nDISeeKXya8iblvelg8hDiKlO24MBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hym/avwP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CCEC4CEE0;
+	Fri, 10 Jan 2025 15:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736522526;
-	bh=Fj00BHfPbhz9xYd23W9IG8d0T8QnHNrRgZzPleQcUUc=;
+	s=k20201202; t=1736522675;
+	bh=jorlm+xDAVk8B2sOdzLzRlCm30bRxtIDYEa4t02Ylw4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aB4C4JNLquV3y0plgp5rugjHfALR4F9VUzHi+V3oat9n9czJM3fqwL53aqlLPyY5U
-	 boPAfZ/OXXW97/Lv8N1a5Na/5l5wf0Clc68Zpk19QoGrHXV0w4iqnl4WNiAaT1aqXQ
-	 zFj60DKhOtw/Nh/nm4o2kKdsMSRHJhFu79hrI4wwyiMMAjcXBw1eH0jx2YuWgkwGFp
-	 COf74RxS6vxNSnHvANSHzgwxrTPbZtg8OWcBO8ZJSijx3vYxBQNqnC/fdVSENH0ahd
-	 DVVVg8rvuGgDloUsfhf0r6787qUJ4N5RdAjx+iRs/rqh8S0qAW4G6sh/UFEXq9xVWT
-	 0kunsBCBaXv2Q==
-Message-ID: <e1c8ebd5-b01d-4338-a465-889853d1ef9f@kernel.org>
-Date: Fri, 10 Jan 2025 16:21:58 +0100
+	b=Hym/avwPN/kU+pinShJ3oJwHYpvcDD4wzc0qTrCjKAowF3FHTIyCKy/+6HzWxcUJt
+	 nSg03OWO5XqskSJLzAFfsNquEVJnQ7W49WfdsRjfHX4+L3JUTaw8ySeIzWR6pxgU6u
+	 TCSyQ1rQzUBlP2KZ5wmwKgKxUCsevW7Ibctl0CaroXsgXZQT14TR14Ql490OJcWUmv
+	 I2H82O5axK29nwqRsxBdqx9FUMBn4qaD6tG3tBLkWB6KiD/w3G94KEg5eyBm4KuG6G
+	 6UjVc7B4QqU3PjvYd9C65/0ev3Co+j0DDHxHgONj1o1JZTwfFplhbz1cSboJMucw0p
+	 cRgBpxR2v0DsA==
+Message-ID: <b1e0fa68-6f55-4c21-8d61-f8d58d932afc@kernel.org>
+Date: Fri, 10 Jan 2025 16:24:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/19] powerpc: dts: Add MPC8314E devicetree
+Subject: Re: [PATCH 16/19] powerpc: dts: Add LANCOM NWAPP2 board devicetree
 To: j.ne@posteo.net, Michael Ellerman <mpe@ellerman.id.au>,
  Nicholas Piggin <npiggin@gmail.com>,
  Christophe Leroy <christophe.leroy@csgroup.eu>,
@@ -62,7 +62,7 @@ To: j.ne@posteo.net, Michael Ellerman <mpe@ellerman.id.au>,
 Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20250102-mpc83xx-v1-0-86f78ba2a7af@posteo.net>
- <20250102-mpc83xx-v1-10-86f78ba2a7af@posteo.net>
+ <20250102-mpc83xx-v1-16-86f78ba2a7af@posteo.net>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,41 +108,112 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250102-mpc83xx-v1-10-86f78ba2a7af@posteo.net>
+In-Reply-To: <20250102-mpc83xx-v1-16-86f78ba2a7af@posteo.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 02/01/2025 19:31, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
+>  arch/powerpc/boot/dts/Makefile          |   1 +
+>  arch/powerpc/boot/dts/lancom-nwapp2.dts | 276 ++++++++++++++++++++++++++++++++
+>  2 files changed, 277 insertions(+)
 > 
-> The MPC8314E is a variant of the MPC8315E without SATA controllers.
-> 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
->  arch/powerpc/boot/dts/mpc8314e.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/powerpc/boot/dts/mpc8314e.dtsi b/arch/powerpc/boot/dts/mpc8314e.dtsi
+> diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
+> index 6aee895d5baaa2c978d4b1c82a6d198d9e166ea2..43e20d8b776b1716a91e6ec8e135c0a45c8e8c77 100644
+> --- a/arch/powerpc/boot/dts/Makefile
+> +++ b/arch/powerpc/boot/dts/Makefile
+> @@ -6,5 +6,6 @@ dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(src)/%.dts,%.dtb, $(wildcard $(src)/*.
+>  
+>  dtb-$(CONFIG_MPC831x) += \
+>  	kmeter1.dtb \
+> +	lancom-nwapp2.dtb \
+>  	mpc8313erdb.dtb \
+>  	mpc8315erdb.dtb
+> diff --git a/arch/powerpc/boot/dts/lancom-nwapp2.dts b/arch/powerpc/boot/dts/lancom-nwapp2.dts
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..65a96a485dded5d4918d96b38778399d2f348190
+> index 0000000000000000000000000000000000000000..d46d94c27ecb91db32c8acb4136cb6e8d0df52f5
 > --- /dev/null
-> +++ b/arch/powerpc/boot/dts/mpc8314e.dtsi
-> @@ -0,0 +1,7 @@
+> +++ b/arch/powerpc/boot/dts/lancom-nwapp2.dts
+> @@ -0,0 +1,276 @@
 > +// SPDX-License-Identifier: GPL-2.0-or-later
 > +// Copyright 2024 J. Neuschäfer
-> +#include "mpc8315e.dtsi"
+> +//
+> +// LANCOM NWAPP2, marketed as:
+> +// - LANCOM L-321agn Wireless (R2)
+> +// - LANCOM L-322agn dual Wireless (R2)
+> +// - LANCOM L-322E Wireless
+> +#include "mpc8314e.dtsi"
 > +
-> +/* MPC8314E does not support SATA */
-> +/delete-node/ &sata0;
-> +/delete-node/ &sata1;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	compatible = "lancom,nwapp2", "fsl,mpc8314e";
+
+Missing bindings. Please run scripts/checkpatch.pl and fix reported
+warnings. After that, run also `scripts/checkpatch.pl --strict` and
+(probably) fix more warnings. Some warnings can be ignored, especially
+from --strict run, but the code here looks like it needs a fix. Feel
+free to get in touch if the warning is not clear.
 
 
-You should not delete nodes. That's not really maintainable code. Either
-this is in base DTSI or it does not. If it does exist, then this delete
-is incorrect.
+> +	model = "LANCOM NWAPP2";
+> +
+> +	memory {
+> +		reg = <0x00000000 0x08000000>;	// 128MB at 0
+> +	};
 
-If it does not delete, you are not supposed to include other SoC/device
-which is not the subset of this one, so your includes are not correct.
+...
+
+> +
+> +	led-power-top {
+> +		label = "multicolor:power-top";
+> +		compatible = "leds-group-multicolor";
+> +		color = <LED_COLOR_ID_MULTI>;
+> +		function = LED_FUNCTION_POWER;
+> +		leds = <&led_power_top_red>, <&led_power_top_green>;
+> +	};
+> +
+> +	led-wlan-top {
+> +		label = "multicolor:wlan-top";
+> +		compatible = "leds-group-multicolor";
+> +		color = <LED_COLOR_ID_MULTI>;
+> +		leds = <&led_wlan_top_red>, <&led_wlan_top_green>;
+> +	};
+> +};
+> +
+> +&gpio {
+> +	gpio-line-names =
+> +		/*  0 -  7 */ "DEBUG#", "RESET_BTN#", "", "EXP_LATCH", "", "", "", "PCIE_RST#",
+> +		/*  8 - 15 */ "", "", "BOARD_RST", "", "", "", "", "",
+> +		/* 16 - 23 */ "", "", "WDT_TOGGLE", "", "", "", "PHY_RST#", "",
+> +		/* 24 - 31 */ "", "", "", "", "", "", "", "";
+> +};
+> +
+> +&localbus {
+> +	status = "okay";
+> +	ranges = <0x0 0x0 0xfe000000 0x00008000>;
+> +
+> +	nand@0,0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "fsl,mpc8315-fcm-nand",
+
+Compatible is always the first property.
+
+> +			     "fsl,elbc-fcm-nand";
+> +		reg = <0x0 0x0 0x2000>;
+
+reg follows.
+
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+
+
 
 Best regards,
 Krzysztof
