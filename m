@@ -1,169 +1,165 @@
-Return-Path: <linux-gpio+bounces-14660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEC63A092B9
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 14:59:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B158A09304
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 15:10:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A88B6164D4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 13:59:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 998AF188B1E6
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 14:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D26120FAA9;
-	Fri, 10 Jan 2025 13:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtSc7DoK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA36120FAA7;
+	Fri, 10 Jan 2025 14:10:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4216E20FA9E;
-	Fri, 10 Jan 2025 13:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA2E207A15;
+	Fri, 10 Jan 2025 14:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736517544; cv=none; b=n/kZPan/KR9DqqfpRDUILgSVYP/MEMel/dgT0exgbZE028XYITSjUCf2UpcNiDhbbhQCzYeaGo5cfhxbPBbhKmsPpNDAiAsRP62/MrPlOgO5Id1oaTbcdSX+zYiqK/IrUr+3ymxSTT7b2rAPATDNKVQOm3/mJgDZ0fCszMnZ2ao=
+	t=1736518207; cv=none; b=CZVrg9zkUe3xwLJAJpx/eiF/ST1jQFCKVBdacyg+x9UQuj6CQTR5jegzoNQ7+LX4kUeYiTbd+jMw7nf6LA2cALYUtLXYdF3l1khBXWCu6so0H8FQ22hOd7Gz4hz4z8zYK0omONllLGnlHHS+IQd40PD8q8nNvx+jA/NYlrEmgss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736517544; c=relaxed/simple;
-	bh=g7wxpqcSQJrcO2+CyoWI6wsntd8vQcmKdFcJ3jJ7Gto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FETT9k3IsXUHt67RsqzYmLvg7giidLaUyjFRnWtPGimJIZ9DFhhiSWKFYaHkrtKwdg/HyCbd1539s8OinWSQ0AWdkvbd6sOq+cR2CYbHFpz1k06HNlyfMMOZHu9qO/y2yPssyROGeKF2vRJV60NHFU/ZqzndaT2ar2ppr52Kao8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtSc7DoK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE7DC4CED6;
-	Fri, 10 Jan 2025 13:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736517543;
-	bh=g7wxpqcSQJrcO2+CyoWI6wsntd8vQcmKdFcJ3jJ7Gto=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qtSc7DoKJaJxVmUrLBQwq48v+ML5dD9Ga2+pU723ktjwlMZcKLgkHhlcyOXDZUuEe
-	 qK8ewFruiXPXBpCoEmKdqMgA2DXJ94pw8IEY8nGAznJ3xE0lQMsw/R7ANS4L2atzdU
-	 QQse0NzArfLlWtSoMphmG3sWlXakNCM31W84vEItXJA6h3rtEeQurmXhtzbEUvQk7v
-	 GZHD9+zNNPISrFQhdCNOMDaieDZnj+IIUv24yxWd/oY4hgBgoEXuIdrXyFCGKGpK2U
-	 LxadZwWtcr2cXnOIcHNp3dX4MBQhK9a72dgHjr2+kGwXScL6DLfF7Rl7pM1kPWEEjA
-	 my9wCAUEhljwA==
-Message-ID: <ff57cf8d-626e-4d35-a18f-1a89b4d9fa3e@kernel.org>
-Date: Fri, 10 Jan 2025 14:58:52 +0100
+	s=arc-20240116; t=1736518207; c=relaxed/simple;
+	bh=VrJW/Msg9cKcKQeHP0xMzAnaj+mPc/7eBP8bzgfg2pY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BAae2KOZyrJRqtgxSyqiiUKkDLKboawQRZuoL2VbSycmElK8q85rOSHzSPYWvG0gTrDOhxxXMH+FjEPLmAfmJStTfdednS3TRzBB6buWdteCQ7CO2FI/5HNTi6S42wJvDZoh9EFZSwFI2wM4jjTNkhgeVrwRzxxc8ZLI5Dx8iyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6dccccd429eso15577756d6.3;
+        Fri, 10 Jan 2025 06:10:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736518203; x=1737123003;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GDyk57/J8HQ3yVwzMvPhMpXmN7YUAwR/lulQQxt0euo=;
+        b=IFBdL/vrb5GMhPIDa4ucaDCmVO+FuUSYV8f6aUJgmJLAwm0IdrLR5fzbJAAUKVRkgK
+         Lw9uFlsiuxSCa2Ojl65hOO3Vv5AC2SZJecFKAr4Srwrfk5V5yhuvSegK5Npo0WWIh8VO
+         daf8jgEftd6pSAGqtzgjb66H+vKnXqox7n6er1KrnFbsmedhMq4icy1q7P4HCcxJfe+b
+         KxovdFw/wCIL22Fxkt1R1waHrm4g/QzypSk14xMopzZpWVQOXg/uQ1P/cyywPXDa1Ik+
+         AyDLfDfTyb5WXesW+yOrrs3wR3UNfkIIQAscH6Jct7Qt2pnd48r/aA061Y+lUFiprQIf
+         CABw==
+X-Forwarded-Encrypted: i=1; AJvYcCUw/YVy7dLJbbpy0aPJeMbEKttucRddVIyHtrOAZQ3/vuWSoK5Z1OmkAyMjJ5chUXp1WpgRpb3wxoZu@vger.kernel.org, AJvYcCUwaQHjKk1wZeZpTIjBTwvVgPgRlzeLRb//5rKqNs5E10b76CVMxOT+b9PbZAN2oE0TG0PmKYmInNGFPg==@vger.kernel.org, AJvYcCVo8+3fK515xIG+rJbd94O2G3lrJuu9OthzKQ2DwAVaB+mGXTgajCsX25quJsgRNCNXwOW97lcQKY4G2Qza@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxK5T5BQPRm+s7V0pFehXAleVWQ3jpvQuM4IOiwaeR2gSV6k6H
+	I25USIJ0Mve9HpbpKVslLgbkBBigGralN0WA8qEYTAYDGe3zW6BLi5do2xW/
+X-Gm-Gg: ASbGncsiy0JFntzzzyNXurvQWbMQtCx4gzSRVArLn8BSDQviDC0F5klNkbIGC8jImBx
+	gWyDTYwH3jcEANudweRUjXCShmcD9nbk3yB7NkOWOJ1j9j9EVrcIEDAj2jXgWE2RUNeS47Xy1IE
+	m3L6KUyq4XkxmI2GlZ6RID5rsNQGUcehXNkuJk/RFXLFqTwlP8CgPeECYZJ8BncICo0siu3GNa5
+	wC/8VuBOaPs3vqrqXt12QpqQO+usP3IxsnS+KN5Xo+BvvECxmrQFflB+JbwpNC7D16/tZfQ3V1a
+	Crv8Mv280/FuJb2GUoXe0xw=
+X-Google-Smtp-Source: AGHT+IHy+H/vYgNkSdCvHfdbX7xnIJDqe3JLN4r5wVQVnoHFYNff/u5iu6OlwaMMhAzGiE+1PKpzvw==
+X-Received: by 2002:a05:6214:3112:b0:6d8:a1b4:b591 with SMTP id 6a1803df08f44-6df9b232915mr201071566d6.23.1736518201654;
+        Fri, 10 Jan 2025 06:10:01 -0800 (PST)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com. [209.85.160.181])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dfad85f658sm9524546d6.5.2025.01.10.06.10.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 06:10:01 -0800 (PST)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46792996074so19120311cf.0;
+        Fri, 10 Jan 2025 06:10:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV2ox5VTusqHJYm+2X572uXhPsI7NKXXYCog89ybUYIPyTwXE0zC7ZfZXyDKqAv5N3TN0Hat2CIwy8wT8RN@vger.kernel.org, AJvYcCWdaiPnZKjpsddXHVUDKhlh3wGsi9DRE4gAPmXroi45Hfd+4sAGYTHmXG64K40JhPgahb8JYGIasjTt@vger.kernel.org, AJvYcCX8iDphDKU20IJbcIw2LGSOhnNbx8c28WZjyK3t40NesAko547YUEbB2BiHZA3gYdwAmuJSxenaI+1eMQ==@vger.kernel.org
+X-Received: by 2002:ac8:7d8f:0:b0:467:45b7:c495 with SMTP id
+ d75a77b69052e-46c7108f867mr165009211cf.15.1736518201275; Fri, 10 Jan 2025
+ 06:10:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/12] ARM: dts: sun8i: add DTSI file for V853
-To: Andras Szemzo <szemzo.andras@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-13-szemzo.andras@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250110123923.270626-13-szemzo.andras@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250110130025.55004-1-brgl@bgdev.pl> <de6b70f2-8fd6-4e2a-a6c1-466698be8a6b@prolan.hu>
+ <CAMRc=MckJfEBK_ZUZ31hh7SMdbr4a-vZLtTGDCFttGK65wbXdA@mail.gmail.com>
+In-Reply-To: <CAMRc=MckJfEBK_ZUZ31hh7SMdbr4a-vZLtTGDCFttGK65wbXdA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 10 Jan 2025 15:09:49 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWhEZ0No8mXdymE8O8+rMCkD2SXAifZwReb1BbfYASOeQ@mail.gmail.com>
+X-Gm-Features: AbW1kva3r81VnGwR0hoVjKuOvjAbpVCjw3rRXMh10wLDbHLY9-8QeHpWdyHl4p0
+Message-ID: <CAMuHMdWhEZ0No8mXdymE8O8+rMCkD2SXAifZwReb1BbfYASOeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpio: 74x164: use a compatible fallback and don't
+ extend the driver
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?SiAuIE5ldXNjaMOkZmVy?= <j.ne@posteo.net>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/01/2025 13:39, Andras Szemzo wrote:
-> V853/V851 is a new SoC by Allwinner. Add a basic dtsi file for it.
-> 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
-> ---
->  arch/arm/boot/dts/allwinner/sun8i-v853.dtsi | 673 ++++++++++++++++++++
->  1 file changed, 673 insertions(+)
->  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
-> new file mode 100644
-> index 000000000000..4ecc97c7e7c0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
+Hi Bartosz,
 
-Impossible to build and test.
+On Fri, Jan 10, 2025 at 2:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Fri, Jan 10, 2025 at 2:32=E2=80=AFPM Cs=C3=B3k=C3=A1s Bence <csokas.be=
+nce@prolan.hu> wrote:
+> > On 2025. 01. 10. 14:00, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > There were other suggested solutions (for instance: just use the
+> > > existing compatible for the On Semi variant) but I figured the most
+> > > common approach is to use a fallback value for 100% compatible models
+> > > and this is what Rob suggested as well.
+> > >
+> > > This reverts the driver change and makes the "onnn,74hc595a" compatib=
+le
+> > > use "fairchild,74hc595" as fallback.
+> >
+> > Is there any reason to introduce a new compatible name at all? Does som=
+e
+> > pre-existing, widely-used DT blob use it in the wild already? If not,
+> > then I don't think it's necessary; for any new boards, their DT's
+> > authors should just use the pre-existing names.
+>
+> I don't have a strong opinion on this and will defer to DT maintainers
+> but a similar case I'm familiar with is the at24 EEPROM driver where
+> we've got lots of 1:1 compatible chips and we tend to add new
+> compatibles to DT bindings (with fallbacks to associated atmel models)
+> just for the sake of correct HW description in DTS.
 
-Please submit complete work, so one which can be actually built (DTSI,
-DTS and bindings).
+At24 EEPROMs differ from '595 shift registers in that they provide an
+API with multiple commands, and some commands or parameter bits may
+differ among different implementations (but usually these differences
+are called quirks).
 
-> @@ -0,0 +1,673 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+All '595 (I'm deliberately writing it like that) shift registers
+should be 100% compatible, modulo some electrical specifications
+(voltage levels, maximum speed, power consumption, ...).
 
-Odd license, why would we ever want GPLv3 or even GPLv4?
+Interestingly, the driver is called gpio-74x164.c, while no '164
+compatible value is present. Most important difference is that the
+'164 lacks the output latch, which is used as chip-select with SPI[1].
 
-> +// Copyright (C) 2024 Andras Szemzo <szemzo.andras@gmail.com>
-> +
-> +#include <dt-bindings/clock/sun6i-rtc.h>
-> +#include <dt-bindings/clock/sun8i-v853-r-ccu.h>
-> +#include <dt-bindings/reset/sun8i-v853-r-ccu.h>
-> +#include <dt-bindings/clock/sun8i-v853-ccu.h>
-> +#include <dt-bindings/reset/sun8i-v853-ccu.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/allwinner,sun8i-v853-ppu.h>
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	osc24M: osc24M-clk {
+> > I'm especially against introducing a new, vendor-specific (On Semi, in
+> > this case) name; if we really want to introduce a new compatible, at
+> > least make it as generic as possible, i.e. `generic,74x595`, or even
+> > `generic,spi-shift-register-output`.
+>
+> If anything, that would have to be the fallback that the driver knows.
+> The first string in the compatible property has to have an actual
+> vendor (I think, I'll let DT maintainers correct me).
 
-Only lowercase node names.
+For the inverse operation (parallel in, serial out), there's just
+"pisosr-gpio".
 
-Best regards,
-Krzysztof
+[1] https://www.ovaga.com/blog/transistor/74hc164-vs-74hc595#simple-list-it=
+em-2
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
