@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-14648-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14649-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFBDBA09153
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 14:00:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1379BA09158
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 14:00:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCF0B188565D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 13:00:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B348B3A1619
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 13:00:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D2620DD4E;
-	Fri, 10 Jan 2025 13:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD4620E031;
+	Fri, 10 Jan 2025 13:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="r/dECvPx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HMf6eD4n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349B720B80D
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jan 2025 13:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388E720D507
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jan 2025 13:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736514038; cv=none; b=etMs2YfMaaBhR/g8iK1brTkaC6QKlGfnpWGphe/0XHNxm3wb7ypjwhzzOP/B1bIdaT6eWbLv6w9YW/Uis1Cs/BYnprcuDdLEhr/MVGolMc3K4As2wiw/VAUz+HzOBd/RCh+OBf9xArQHWf7ZWKqhaV2e8yrrh0Bu+dF+cye3Z1Q=
+	t=1736514039; cv=none; b=Phzxu0whP3J4tswB+vt2tVYbw6tEqVDI7iTXH8pVvfCy25crwnOVR2fZMyXn1JXe1OjegSnkWnfMiz5HUpcaW+gR/Kf8XL47NsjqDUdKPQANB+KZYGNqx99DVJeQyco5AJ8+AklxePxs6wfAZinL2SolW+0tu9nMxWqzQoQb6a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736514038; c=relaxed/simple;
-	bh=Ox0b+t8m6a7nsdtijT2HhmYrccXzYcL5Kx6tcfsgmzE=;
+	s=arc-20240116; t=1736514039; c=relaxed/simple;
+	bh=NI94rkazrHFiOl0XdQvbczTPb0hren50HBQrX3tChuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oa9i/0J9PsJ8uyKSI7gSjBGOVbX4PCZibA3zskGhn2vNNW/95nyN2ZUIy8eTlRD0Fv3gDpPgrq+DKZ1ffigd8Bya1Gv76kqWdanbDeyw9sU/8HwsQLTzP4Ttx/L77dOGAzXFf0/tKPL7k+5AEN3qa/nKaeS9oMu47uRMavNoRNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=r/dECvPx; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=BJ6jdjq8EgWzXy2GBIiJ93q+sRXDR+yFSt4Bo8oZW4mdWwjX+MVaLtrnvNHjKYFENJbddCLhK1btLoSf5E/ggcvl0I5ldNk4DXGOJB8nFCCQmiP7Qv14Sf99fmfGdoILQUe/SpyW0zwTCcfRRyinhx6ZRLQGhYVWSIFtjk2YFBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HMf6eD4n; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4361b6f9faeso13128855e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jan 2025 05:00:36 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-385df53e559so1609976f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jan 2025 05:00:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736514035; x=1737118835; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736514036; x=1737118836; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UumBL8EipTk8x3xnWxwvytHrJarKXZ95qoxDRHZZGmU=;
-        b=r/dECvPxzlgH+eUJHTTCJqP9HTd2e5jNEV3LTvfvyBZwuOshbRm/TkUXYWWr/19ulA
-         ixqu3KauKwViACzYGDFHJUvN3brDIPo2UnK7DtbYOM6qJchpg+dWtFDIH5gLzAYEnBFm
-         zpHljJQt/37I8AZTRMPvkgZtmAxF2l5s3vYm43g/fCRTpyGJCchjTfciY8DpAQI7Djlj
-         x/cILZk1lZVHBrNIgEc8qRr1+rVYBA83CTmEL1q1+TXGehUJKAhy47FdLW/3o2Af//Cm
-         /5T81N2t2xIFFMk7QrE5VJCDjiBBOEVDG1+GlFFPuRwdD1oQ59TJMX1inBQQZ3jHIUxm
-         fveg==
+        bh=mDCD62Pui8+0UkwiGsBc4nPgO3uBLewidrJs9+oBlXo=;
+        b=HMf6eD4nprPWZDSj/opVtLIXWW5ofyOxBAYyqTKnMk1F+Vst0jl8y12ArINzO/pnXg
+         GAaq0PwPoRa/8XjJKI0w4sOOTb7oj48k7v7IRcxUY616vwTmFRC7bW6rUy5axKRFE5qj
+         vYSlFVTtBTLVEDBSTpFBb4Zwqa63MAocDhx2/lhMw3QbLgfiY2PDSAqWs/ujsnNUi2ej
+         qDNYPs7hBUenHY6GjXTpgpRBi9QJdjnp66k2UdIgFtZafdmZET8ZsWR+fjzhCd0C6yFv
+         YaG70R+2zmv2c48J9Thpf92xUiKMQAKg5SHP+ZVmaxpPxcUWSMbEwKgnu7D18mMFFxjX
+         C31w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736514035; x=1737118835;
+        d=1e100.net; s=20230601; t=1736514036; x=1737118836;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UumBL8EipTk8x3xnWxwvytHrJarKXZ95qoxDRHZZGmU=;
-        b=W1ZPSIqExlCUoucjuzTBKgdqk+aD0K5/NZTeK7C5T/KytCVDxMjSfewOKPPebyGQ2b
-         +e+PYQp1f/SFJYItGWyf/XbrNKgLtp/36q6Dspg0YSFHJv/mKWHSWeIOL9k9wjWJ+N8l
-         RRzhNkHVOV+B3Pq8xprHjLyKShyYdnpfIygMopCDhsvWXY7j0W6AtJKTq967e3MGjOya
-         yjrpCUfBSjIBMhWMEUvXYULrQrA7Fd1wAOfjNVdnA0kMnUaLHYg5kLE2H4pG6UE4w8/h
-         /erLl1nQS0VIgkhQ7i3zXwg+lUFJwkoVmZ4bD4Wp0tI5X+Jm10jR/MSiKvXVL6lw0LFN
-         kYuA==
-X-Gm-Message-State: AOJu0YxExRfuhuikVCUSTu8LFAxvdJ60Apzy9C7Sj/6sQvgo5izHDLFx
-	ijtxncWcgE+RYwujf+TicOpkZIswGj03FYtEeYWz1VkcZwU8yhxmLLFRgs5/ruE=
-X-Gm-Gg: ASbGncuV/vx75xbHJHzhf9EfDqRcmpfB+9hGcNLXGu44qYvuu2Z3vrV6atpNTFzxnKT
-	w+xhvFCKei7BKLe1p+1VQr2GBL+vvmRFxRsOMUJELsGfQKyGyEZeUZSpViuUa1RLM8070AmHN+F
-	QscHYPhZMPN5fo4vKldAnheZg+utdP3Bcu+ZgstoqDHNjK9pxtbzyMyXhBhDr5jaQ3aKfyXOpHN
-	r6NnO2KUcuLJypVoHp9P+8PnZ0wfw6qc6Jncw1RMWDMV8UJlYwWL8A=
-X-Google-Smtp-Source: AGHT+IHu+3YW9KFmIbdwXeSMENWMKFjtkxFiR3VHsAUnnkL2+C4k2bV8dvw7WIeaSgTQI82r7Xq/fQ==
-X-Received: by 2002:a05:600c:83ca:b0:42c:b8c9:16c8 with SMTP id 5b1f17b1804b1-436e9d7b51bmr54548015e9.10.1736514035335;
-        Fri, 10 Jan 2025 05:00:35 -0800 (PST)
+        bh=mDCD62Pui8+0UkwiGsBc4nPgO3uBLewidrJs9+oBlXo=;
+        b=P225DotJflJwQSU3zL4ty3FLfMF4tAk6Gnl039pWr51WAy2O/5dQnfBf242VncAmEX
+         Ghu++6nQgUJCtGLp0GUdTL64uf4ztFNeH1NI8Lc8MEeg7JsN4ySTC+o1KSV6HS8uFq3e
+         Uh922PX/2IntOzZbZTfVfyULhpANAoPIr/piQqWqjkJmKyXcdBvlZtwCmGZSwaEaPgum
+         gBaan4Qs4j7jxG24j6YBIEbbv8VIPFQhw4auCGPGrspdm0eLdyyh4xQQ5GCXYIu/Dpqy
+         mLeZwxNwU5QYRV88CWvXRbWip2AY4gC00Phoy0DC9cDGUSRknCT0hUQkjrSDCbclfGBv
+         R9gw==
+X-Gm-Message-State: AOJu0YzzOxZvioJPsxicXTl5mfoStjDPOM/rd2JcQ7qK4uo3wlj4yMSr
+	adCQj9DtTeALxfEPvGxErMSKIsBLEo9PyyKoBFbc0IW3lrAIhbHPWUtVVsaVVFk=
+X-Gm-Gg: ASbGncvxsLpc+RfZWogp8Tn69MiJxNogJSZrrUwuLa4nap9dFa6/L6DZRl/fnTPZwtT
+	t1iHWRXKMlXDNv6Vj9Jpz+XXM8bTnQb10FB2jP+3bd+KC/IP8OSWnZhaRimYB60tAgRlOLlUVSI
+	OcM118OIYo6r4m/nusKAI9cN4W4fa4K450T9N2I4RZJ1vulfu+cbwwyZ4ArSL99gzKuaFKNh2sX
+	F4n6BwkV4qtAAMPynyABDTwAN3TDjLvXHPbvzGWtDwgB5o5xLlZByY=
+X-Google-Smtp-Source: AGHT+IG/Z301PbNUmfwGgNeewmZnvFfB+D5Qh8Yoe/mPcCOg5S5xly8CpbeGJdRKhVQh5rwbALv9ZA==
+X-Received: by 2002:a5d:598d:0:b0:38a:624b:e7fe with SMTP id ffacd0b85a97d-38a872d121bmr9293319f8f.7.1736514036429;
+        Fri, 10 Jan 2025 05:00:36 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5581:e96f:97e:b3a7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e37c2esm51360745e9.28.2025.01.10.05.00.34
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e37c2esm51360745e9.28.2025.01.10.05.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 05:00:34 -0800 (PST)
+        Fri, 10 Jan 2025 05:00:35 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -84,9 +84,9 @@ Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 1/2] Revert "gpio: 74x164: Add On Semi MC74HC595A compat"
-Date: Fri, 10 Jan 2025 14:00:24 +0100
-Message-ID: <20250110130025.55004-2-brgl@bgdev.pl>
+Subject: [PATCH 2/2] dt-bindings: gpio: fairchild,74hc595: use a fallback for Semi MC74HC595A
+Date: Fri, 10 Jan 2025 14:00:25 +0100
+Message-ID: <20250110130025.55004-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250110130025.55004-1-brgl@bgdev.pl>
 References: <20250110130025.55004-1-brgl@bgdev.pl>
@@ -100,36 +100,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This reverts commit b1468db9d865deb5271c9a20d05201b1c0636895.
+This model is 1:1 compatible with fairchild,74hc595 so use the latter as
+a fallback instead of adding a new stand-alone compatible.
 
-There's no need to add a new compatible to the driver code, we can
-handle it with a DT fallback.
-
+Fixes: 0ba6cec7acbb ("dt-bindings: gpio: fairchild,74hc595: Add On Semi MC74HC595A compat")
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-74x164.c | 2 --
- 1 file changed, 2 deletions(-)
+ .../devicetree/bindings/gpio/fairchild,74hc595.yaml    | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index 2ce00e90ea56..fca6cd2eb1dd 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -165,7 +165,6 @@ static void gen_74x164_remove(struct spi_device *spi)
+diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+index a209c5b4f6e0..da462dddb140 100644
+--- a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
++++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+@@ -28,10 +28,12 @@ maintainers:
  
- static const struct spi_device_id gen_74x164_spi_ids[] = {
- 	{ .name = "74hc595" },
--	{ .name = "74hc595a" },
- 	{ .name = "74lvc594" },
- 	{},
- };
-@@ -174,7 +173,6 @@ MODULE_DEVICE_TABLE(spi, gen_74x164_spi_ids);
- static const struct of_device_id gen_74x164_dt_ids[] = {
- 	{ .compatible = "fairchild,74hc595" },
- 	{ .compatible = "nxp,74lvc594" },
--	{ .compatible = "onnn,74hc595a" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, gen_74x164_dt_ids);
+ properties:
+   compatible:
+-    enum:
+-      - fairchild,74hc595
+-      - nxp,74lvc594
+-      - onnn,74hc595a
++    oneOf:
++      - const: fairchild,74hc595
++      - const: nxp,74lvc594
++      - items:
++          - const: onnn,74hc595a
++          - const: fairchild,74hc595
+ 
+   reg:
+     maxItems: 1
 -- 
 2.45.2
 
