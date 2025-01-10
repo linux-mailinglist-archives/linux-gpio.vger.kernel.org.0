@@ -1,86 +1,85 @@
-Return-Path: <linux-gpio+bounces-14632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB552A08FC3
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 12:52:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6412DA09090
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 13:35:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E79A816A062
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 11:52:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BAC53AD556
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2025 12:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED2320B21D;
-	Fri, 10 Jan 2025 11:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjOzUl/H"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7501E20D506;
+	Fri, 10 Jan 2025 12:33:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A7C1AAA1F;
-	Fri, 10 Jan 2025 11:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C052063C9;
+	Fri, 10 Jan 2025 12:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736509961; cv=none; b=oEJ6UeGdaNeNBnr2I/XsIIpflk6gllyC9ackpLvhuTYd/lmzPRl9GRzMy2ZjhZ+ULYoZEUm/suP3Bk0r1PZsNxFdRf4Aa3x3cgcmmUn1VwMWerCK7de1Gz1FysPzWozfIWFdD2H25v7RCsdO3AqOgCAsu0mXvE6qCzQpxBs3jwE=
+	t=1736512387; cv=none; b=ovBd0gnmc6iXO7x8lfpwOwES1iGvmXZFDTlj01cNAjGAbIxcBNOYZUouQROs7d1/qoJ0gbpskT3ZSsnHdNuGEoxUviM6FjuOTTygPv4MXiP7LNocWr3CNI0WyxZ3ffpiCnr/k4ay4VAMv4tl8ilB/H8LCRSt+xEP7vGWjDDeVIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736509961; c=relaxed/simple;
-	bh=irs1FvnIO6qCqT7BmKzCmQ3HOa49SITWpMtwxkvpPz4=;
+	s=arc-20240116; t=1736512387; c=relaxed/simple;
+	bh=3eCtxnuOyDNNjas3Y6+ge+hPqvTIXWygLh+ZfBqBYNw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TLr+dt/Mv6HeqcIek1P1tvIh0ysqjgfUHzjw4KW5qnKiRPo6Mi7AUZLbVzpeKe+jXvnZ52e74YJJFtYjYFl7jO253kJer1mJs9Ple9j6Vc+ziDsjD6cotAl8HizR95w+aB5ZHKmyWcsP/5EQkiSsttI00O+t9N6uQWGeenmSFdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fjOzUl/H; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=UbGnAxDgdE4aHfv0KaRjrU0PkpTBaWrhdSBc6EWuCHvJjesqSEjVtL9sKhurH9Mz3UPgzt4/PNkmmohXj7fUgNCdfyKBimXYG5Z9xlXxDQknmSNsnRaavEZPKxOy13pgI2fl60y8/XF1L/FHohEIbU6huyQkmGFysapBlNsOmPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5187f0b893dso702294e0c.3;
-        Fri, 10 Jan 2025 03:52:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736509958; x=1737114758; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dFLnMS0a3ayQ7FFuu69iCX1f+HyFrRYfXz6JEVkSm0Y=;
-        b=fjOzUl/HzJHbP6sIJ04Ay2/eDHceySmdypZqXShZHvVrsOgAKS/8QILcGNahVFffgk
-         Y1HCHbZgfa/lrOIOhgCzz0mMMEUupkyEtFzt1Cn0MNpNSB9O8AB30KuOBxYTW8Ly5SyZ
-         m+MplllFWlkXFBGPEWyMalXhVw0aOADJNhJysqZTgjhysJteFl+gxgLkfnWUVN5AFtO3
-         ky5I+sBLrtYG3miQTcDthQuM78whhaocsFsQkAOigDJ0uP/xOSm0ZB8zzWmLbUFG7aK+
-         GDsDE8LoJW3NPrt2I6vbVigCC/NQfta1nzcbRt7TgBVbej+sIhWACglBJdQtfM6wzOGH
-         ZbCA==
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4b60c221587so812009137.3;
+        Fri, 10 Jan 2025 04:33:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736509958; x=1737114758;
+        d=1e100.net; s=20230601; t=1736512384; x=1737117184;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dFLnMS0a3ayQ7FFuu69iCX1f+HyFrRYfXz6JEVkSm0Y=;
-        b=Cvjn8L5JnUXorG+WiMaqq8XoQZ2XdKg1YEWsHomjgDjDn6N6E9qX5RegZG26pWMKsi
-         tT0/oooaVvFkvLSgwV+JUIN3ZApRJJQWdS1ecTHj37Acq67vPYRkHJo1iinMUn2/xgOV
-         daxxK+wvq9irDHRyJuETnMNifmN75patMhxH8q72sQrmJ6nwbxxPE8X8YORTKxSwTpJS
-         5KB5k9pc90kU+0KzcRiuxWGR0b4A4UMdQQjtL9HmSeCT1xmm7q2eLOFu2EJfqSmyd+y3
-         E/6bmv0k57RuLJQu/9TsCLyG1QI5jQqU1a5vsXoNZ4+bKpvWOMWVQV+kAn5256a2SwOE
-         R52A==
-X-Forwarded-Encrypted: i=1; AJvYcCUIHlVmTSizpCuR2psLTo3WIdqfo7B98+djbyIg6qxx5VeoTqv/CEjNdCT4oOneKVbxTIml7ClxFKu57dRn@vger.kernel.org, AJvYcCXJ4XAK9MfvsPk7+Bn7/+hRuJpA4w3i2gqBQpThDkyS4S2mUmwxvMc0bvEPuJaQdweb9qVO8eGAS0qV@vger.kernel.org, AJvYcCXrVaHGNwNx01jMsygMZSUNqwXuvDTDf9S6TK5cIwWiew+YJmRvO1trZIgND2aXvTbyX7Cw7rYGLvhJ3Ivd4Yd4XJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3xawlrgfiXO39gkzBdrMvjgq3FI+R+pxv6jkbdDDxTHcJoSRl
-	YRizqmaJhB4mOUyLkLgIlWT7P9RT/Xe0BC1D5iJ565YcFm+PJqhKOZlLM3xKVvew8fLw7/ZTwhK
-	d03l4nO6TUO1/LIYIHJjcPg4Lwec=
-X-Gm-Gg: ASbGncu/KQo9kzEvNw5pyDH1I+j4QOvaxwvumh+pd9ct+42+/tXO5rqqRnLjjDNKB/Q
-	DrNUb6UDc4pMjd7LCYUTNCy0vTdQE9ct6dHXCkqg=
-X-Google-Smtp-Source: AGHT+IGi+V1spNKX6o1pzJCZNlvvGaLpbNn/Ro/E4fhybXRoFp42dyQOiVa9tEJAg+NlwNdAo0qBogZBoqdRl/ZCLxw=
-X-Received: by 2002:a05:6122:4589:b0:517:4fca:86d4 with SMTP id
- 71dfb90a1353d-51c6c4b24bfmr9248281e0c.11.1736509958311; Fri, 10 Jan 2025
- 03:52:38 -0800 (PST)
+        bh=vu9iXVSggU03D9/r+Bo4xPbYj9RK/9WnPGtp6YB2g5U=;
+        b=GJD2WSkqfFSFI++TgAnhu9RxquAS8eMImTz0sALHjWG8DLUXYW+Zo9jrcQOPMXfkT5
+         Bezpnf0OAcFgkD7aooU8i5DL8n6VX4bqL9UeuvpppH7/JlTsSD46WapAOPHeLoAIOg94
+         sQBIPNjXMrY9rSGEuPUQkEtjJvLygR+iUaX0dF6yz31FtBtUWGtbVhVulC4B6/3MXADX
+         LK7/1NFE8Ym5NxcVzz5qf0Q9QB/72+8bOLNXip3QvYvrx/INOmYTDQgcO2LLiL9wirlQ
+         5yDPbJndDgVoPupJ44Jpgzb7d1DD75fDXGgWdQ3bNqjH7lyBfj/RkwW2CTi6dpkMJQZZ
+         uFeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1/9JRrqSNcdGwY1eC2JBMHK7GvOK3sj7og1Xcxvr4X0LK6K0PU4Y2VTdL67jXqOil1//KU5G5yGKysejiescr9Ow=@vger.kernel.org, AJvYcCV0LYeleVQzHOxPbvVz8Vm0veoekQ68GSrL0J1f783/YS0hw1BzNDVYifOq/nPmPuOjFkLmTv3n21Nn@vger.kernel.org, AJvYcCXOMXCY/r0RJ8agRbNSdcwA/V094NzezeALmyAoedeQUn+eerWkxV/Le3tL+xe2TAt4b4uApcIL1yt4dMJL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUF29YFjmLGEXa9zsLU5LsibgWTbzmO7p51mX2xQpqw7+tFYrZ
+	sj6FLaVGhXlvDlJ9+rOgyQLuiIprKLi5Q5ayowTi05aOdteqL14+blSv7BeT
+X-Gm-Gg: ASbGncvSSeaX7FPRtbUPMpbdYgqo6nXUBEHSiM0T0bPV+NNiqD7nqQtJihb5+FY2rTx
+	NiBojtFIEC9+NTkIpZ6vhfBRPzY/tXgbNIzOkW2TefAnNw/5k8Fl47WRromNcCwzIuGdJKwX7Tw
+	OEMbfOeA1Icvba7N0ab1Xnf7tZuwQD1VNOYbxySbyKfEkW+2W4yEfd9DalIVdi2ZlR7kRsWN6G4
+	hD3T3KYZTDnU4BoqqQ4Hhnb7rIQJhSq2zC4n0/nUfqch/bf8Kk78qwtAIwhYCidNxZaV26jPAor
+	z7IxH70mkAjGHaLqn2M=
+X-Google-Smtp-Source: AGHT+IH+kCmRjlrFdMKYI85x5G/AcbQawCk4QABNX+N3hd7+wV5LwKLEhnDmRg08VXa9mx2UA4wBRA==
+X-Received: by 2002:a05:6102:38cd:b0:4b2:5d10:58f2 with SMTP id ada2fe7eead31-4b3d0e0f279mr9622760137.14.1736512383680;
+        Fri, 10 Jan 2025 04:33:03 -0800 (PST)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b608f4a5ddsm2271595137.11.2025.01.10.04.33.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 04:33:03 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4afeccfeda2so1230163137.1;
+        Fri, 10 Jan 2025 04:33:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUXHHRBy8K6+nUG1Nm9SGIfz/r1YQ3icc2hPXrco38txVFdrHa4UvJLotSRJFwnGkJoHsQMv50w2odnxs9Hs3jSKio=@vger.kernel.org, AJvYcCW4oL23nAGMyzFXJBsO1FPfNPBopme1bzUqu0iSSNSfnH7PNbtKybg2QONoCezYpCHAlRigzsMgGNltJo7/@vger.kernel.org, AJvYcCXR2FB0I+dSvNkIsBmdp/zWZr8PClUKdPRyfsh8ax/WmtaCqoWtuHRjopyh0pLyb6GU5Haq7q/Tcqwg@vger.kernel.org
+X-Received: by 2002:a05:6102:2923:b0:4b2:4877:2de4 with SMTP id
+ ada2fe7eead31-4b3d0e10229mr9826896137.15.1736512383328; Fri, 10 Jan 2025
+ 04:33:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250107105947.321847-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWHYDV=R6pVCXc-Upwi=egW1UYO0XJePE7JC4WGbaW=1A@mail.gmail.com>
-In-Reply-To: <CAMuHMdWHYDV=R6pVCXc-Upwi=egW1UYO0XJePE7JC4WGbaW=1A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 10 Jan 2025 11:52:12 +0000
-X-Gm-Features: AbW1kvaOW_4wMDM13gPsWFDtKm7aJPfrkWpsKwv-jbbiBmPFlxMhdtwPu4V6Ygs
-Message-ID: <CA+V-a8szu6-XeCQU0_6EM64YB_rsZOqpjimfRfmGT02enEToKg@mail.gmail.com>
+References: <20250107105947.321847-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWHYDV=R6pVCXc-Upwi=egW1UYO0XJePE7JC4WGbaW=1A@mail.gmail.com> <CA+V-a8szu6-XeCQU0_6EM64YB_rsZOqpjimfRfmGT02enEToKg@mail.gmail.com>
+In-Reply-To: <CA+V-a8szu6-XeCQU0_6EM64YB_rsZOqpjimfRfmGT02enEToKg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 10 Jan 2025 13:32:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXon=0UJyKNuud6+cBcjAqweTgYwnN-OpJT=jct_iHjaA@mail.gmail.com>
+X-Gm-Features: AbW1kvbofti7DqB_mXR1tu6kX6Krj2N78L-rWC9S24bfTtePSPc5SMZxtswI5kI
+Message-ID: <CAMuHMdXon=0UJyKNuud6+cBcjAqweTgYwnN-OpJT=jct_iHjaA@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Use configurable PFC mask
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Biju Das <biju.das.jz@bp.renesas.com>, 
@@ -89,93 +88,66 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Hi Prabhakar,
 
-Thank you for the review.
-
-On Fri, Jan 10, 2025 at 11:30=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for your patch!
->
-> On Tue, Jan 7, 2025 at 11:59=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, Jan 10, 2025 at 12:52=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Fri, Jan 10, 2025 at 11:30=E2=80=AFAM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Tue, Jan 7, 2025 at 11:59=E2=80=AFAM Prabhakar <prabhakar.csengg@gma=
+il.com> wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Make the PFC mask for the PFC_mx register configurable to address
+> > > differences between SoCs in the RZ/G2L family and RZ/V2H.
 > >
-> > Make the PFC mask for the PFC_mx register configurable to address
-> > differences between SoCs in the RZ/G2L family and RZ/V2H.
->
-> "and the RZ/V2h family", as RZ/G3E is also affected.
->
-> > On RZ/G2L family SoCs, the PFC_mx mask is `0x7` (3 bits), while on RZ/V=
-2H
-> > it is `0xf` (4 bits). The previous implementation hardcoded the PFC mas=
-k
-> > as `0x7`, which caused incorrect behavior when configuring PFC register=
-s
-> > on RZ/V2H.
+> > "and the RZ/V2h family", as RZ/G3E is also affected.
 > >
-> > To resolve this, introduce a `pfcmask` field in the `rzg2l_hwcfg` struc=
-ture
-> > to make the mask value configurable based on the SoC. Update PFC-relate=
-d
-> > logic to use `hwcfg->pfcmask` instead of a hardcoded value. Additionall=
-y,
-> > update hardware configuration definitions to include the appropriate ma=
-sk
-> > values (`0x7` for RZ/G2L family and `0xf` for RZ/V2H).
->
-> i understand this means that SD1_CD has always been broken:
->
-Yea, but since the TF-A configured it we didnt see an issue.
-
->     arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts:
->         pinmux =3D <RZV2H_PORT_PINMUX(9, 4, 14)>; /* SD1_CD */
->
-> and this should be queued as a fix, and backported to v6.12?
->
-Agreed.
-
-> > Fixes: 9bd95ac86e70 ("pinctrl: renesas: rzg2l: Add support for RZ/V2H S=
-oC")
-> > Reported-by: Hien Huynh <hien.huynh.px@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -159,7 +159,6 @@
-> >  #define PWPR_REGWE_B           BIT(5)  /* OEN Register Write Enable, k=
-nown only in RZ/V2H(P) */
+> > > On RZ/G2L family SoCs, the PFC_mx mask is `0x7` (3 bits), while on RZ=
+/V2H
+> > > it is `0xf` (4 bits). The previous implementation hardcoded the PFC m=
+ask
+> > > as `0x7`, which caused incorrect behavior when configuring PFC regist=
+ers
+> > > on RZ/V2H.
+> > >
+> > > To resolve this, introduce a `pfcmask` field in the `rzg2l_hwcfg` str=
+ucture
+> > > to make the mask value configurable based on the SoC. Update PFC-rela=
+ted
+> > > logic to use `hwcfg->pfcmask` instead of a hardcoded value. Additiona=
+lly,
+> > > update hardware configuration definitions to include the appropriate =
+mask
+> > > values (`0x7` for RZ/G2L family and `0xf` for RZ/V2H).
 > >
-> >  #define PM_MASK                        0x03
-> > -#define PFC_MASK               0x07
->
-> What about just changing this to 0x0f instead? The bitfields are
-> 4-bit wide anyway, and reserved bits on RZ/G2L are documented to be
-> read as zero, and ignored when written.  Sole impact would be that
-> specifying invalid functions 8-15 in an RZ/G2L DTS would no longer be
-> masked by software.
->
-agreed let's make PFC_MASK to 0x0f and keep the changes simple.
-
-> >  #define IEN_MASK               0x01
-> >  #define IOLH_MASK              0x03
-> >  #define SR_MASK                        0x01
->
-> > @@ -505,7 +507,7 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l=
-_pinctrl *pctrl,
+> > i understand this means that SD1_CD has always been broken:
 > >
-> >         /* Set pin to 'Non-use (Hi-Z input protection)'  */
-> >         reg =3D readw(pctrl->base + PM(off));
-> > -       reg &=3D ~(PM_MASK << (pin * 2));
-> > +       reg &=3D ~(hwcfg->pfcmask << (pin * 2));
+> Yea, but since the TF-A configured it we didnt see an issue.
 >
-> Oops, this should not be replaced?
->
-Arghh!
+> >     arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts:
+> >         pinmux =3D <RZV2H_PORT_PINMUX(9, 4, 14)>; /* SD1_CD */
+> >
+> > and this should be queued as a fix, and backported to v6.12?
+> >
+> Agreed.
 
-Cheers,
-Prabhakar
+If there is currently no issue, there is no reason to hurry, and
+queuing for v6.14 (+ backporting) should be fine.
+Postponing to v6.15 might cause issues if a new user of functions 8-15
+is added to DTS in the next cycle.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
