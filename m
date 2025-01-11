@@ -1,67 +1,60 @@
-Return-Path: <linux-gpio+bounces-14681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D867A0A2D4
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 11:34:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 488AAA0A2F3
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 11:50:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330FE169926
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 10:34:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A70C188C240
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 10:51:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83685191489;
-	Sat, 11 Jan 2025 10:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4907D1917EB;
+	Sat, 11 Jan 2025 10:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEt9SZVA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc4rA1m5"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C3C24B229;
-	Sat, 11 Jan 2025 10:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF79214E2C2;
+	Sat, 11 Jan 2025 10:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736591685; cv=none; b=hrnBkh3HfWev0beZAIc1Tza755rbEKlxwYp2bT3VhjGsdh0W51UPh6i/1RliPJdhYqmTZOFFBFCa//rF7VTdOJBZXst71M5kBqSawjbOI4J/N/i/UllPMR562rw2IWa6KbQp3La8MMqYR/eEVuWtMgmePePv6SIDIXDYc37W7R0=
+	t=1736592651; cv=none; b=G7CTta6k0zFZXqxR3XcPsRE81Mt83F7li9ybgLpQv1lDoEIo7yzzkh6E6T3hzwP/QgCQlkAZzjYWCEIcUcxBAx7f3zblriIwHiRhdF1BUt/kTI3T676peIGTWF2WKOeIoGOQlzUFhW2iCZ1+lsDThFEfpvKedv8ZWDyTxTk3Qlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736591685; c=relaxed/simple;
-	bh=fZZO1bOwQFo1CHWDq8ozMF5xVNRUoFfXSFD36dQXts0=;
+	s=arc-20240116; t=1736592651; c=relaxed/simple;
+	bh=6H7mqgtjDqxxpuJcQGmQRoaOPqsjXHlYEEshni72eCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=blXYU9TrL5CHgTCjyCRRdXdQRUa2cBIe7Bu+xF7viuUVIo1cZraI9fTEZ2d5tLUHPnQRtv9bliz73mexzdNLoaRY3AxwHVXcTElSbHIV7osjiX3cUzv+vK3+9gBhYvCg6tyot9ZmEDV3W6fxy8dJcopJn3wBdSkl014haQyVd7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEt9SZVA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E9DC4CED2;
-	Sat, 11 Jan 2025 10:34:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=So8vyyWc1h/V7p/KriKzyjzRBw9IbdIwQqEIKQ17Bba0KMc7Lnw625C24vkimvmR5QhZOo8+0El3wIyC1ReVh8ghivoQp/i6479gv2ZziG0Vb04QQHUw6BaFtwKJdiz/uvTJAXt/8xaC9q7pLkw/Xt02IuuebjvMg5ItpSqQZv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc4rA1m5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4AEDC4CED2;
+	Sat, 11 Jan 2025 10:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736591684;
-	bh=fZZO1bOwQFo1CHWDq8ozMF5xVNRUoFfXSFD36dQXts0=;
+	s=k20201202; t=1736592650;
+	bh=6H7mqgtjDqxxpuJcQGmQRoaOPqsjXHlYEEshni72eCc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eEt9SZVAcsDhaE3khNvA4RArfSbaSsdZOo02A1OVG5A5LcKCD+z/U6fppXTQnqBcE
-	 DHTRPht/9CbH5fTgCV3RP2aC2aQnBbtAIAjchoW4TwDAKODiQJSlsuqZpKC6KVCVB8
-	 vhmVPlbpWSIzLNt/7ti308tHeIgRKluU/U5Q6CLJofPbYiIbZz1wcqrI32gn6N9bRx
-	 Krd1Lnc5GIRl6hEvhc+YqLzIzLiHcFHl3cXCK//sX4UpFDXyDT7yWYTLR1eUkFbM85
-	 ghKuyTqPhlWMDEqCucRvvKEwgNnkFOTsPkMWLYaGkmQkVaywRIYxjtg6DNc3QczD4q
-	 N5qcXnanbMiTQ==
-Date: Sat, 11 Jan 2025 11:34:42 +0100
+	b=gc4rA1m5Wev8AnaZqamLaO5ITJaCk0d/45hpUM4zSEl+lneqjxzGRuMOOPDvhO2QS
+	 LZ5ncqg8W57AkHh1hrmrwp9lrarvqWn2o7ncuAl3ySRGkZbuA7GUACTYjRNj0vigue
+	 ePOAM+Egqm+Px9dV9Q82+yFwDBm8TuskmKMtv5jpWheUFnmrugw/O3gGeYAQHhThD9
+	 b0eoUv3OMyEsqJfyqsH2puqNbo5WpbDlkxt761u54QMyi86iNHUhH20S3ncYLXVFB7
+	 8xRthH1PyFJksJFhtFjpMYFPCEIhM3zNPRPnaxLpb0680LKdgVOY3dc7SDc8nHdNcn
+	 7dmBEEzeevfnQ==
+Date: Sat, 11 Jan 2025 11:50:47 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Maxime Ripard <mripard@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 06/12] dt-bindings: clk: sunxi-ng: add V853 CCU
- clock/reset
-Message-ID: <tttj7va4hzpqugah4rhm2u5kganuix5iy7373h62b3rgfwvdbt@53vexrsfmskk>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-7-szemzo.andras@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
+	J =?utf-8?Q?=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>, =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>, 
+	"Geert Uytterhoeven via gmail . com" <geert@linux-m68k.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: gpio: fairchild,74hc595: use a fallback
+ for Semi MC74HC595A
+Message-ID: <2pe3fr5fbt6ifbttknplrkiqhq4gv7qn5pcz7um36hdlcmwud3@jqray4yn75gk>
+References: <20250110130025.55004-1-brgl@bgdev.pl>
+ <20250110130025.55004-3-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,36 +63,43 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250110123923.270626-7-szemzo.andras@gmail.com>
+In-Reply-To: <20250110130025.55004-3-brgl@bgdev.pl>
 
-On Fri, Jan 10, 2025 at 01:39:17PM +0100, Andras Szemzo wrote:
-> As the device tree needs the clock/reset indices, add them to DT binding
-> headers.
+On Fri, Jan 10, 2025 at 02:00:25PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+> This model is 1:1 compatible with fairchild,74hc595 so use the latter as
+> a fallback instead of adding a new stand-alone compatible.
+> 
+> Fixes: 0ba6cec7acbb ("dt-bindings: gpio: fairchild,74hc595: Add On Semi MC74HC595A compat")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  include/dt-bindings/clock/sun8i-v853-ccu.h   | 132 +++++++++++++++++++
-
-Please use full compatible as filename.
-
->  include/dt-bindings/clock/sun8i-v853-r-ccu.h |  16 +++
->  include/dt-bindings/reset/sun8i-v853-ccu.h   |  62 +++++++++
->  include/dt-bindings/reset/sun8i-v853-r-ccu.h |  14 ++
->  4 files changed, 224 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sun8i-v853-ccu.h
->  create mode 100644 include/dt-bindings/clock/sun8i-v853-r-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun8i-v853-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun8i-v853-r-ccu.h
+>  .../devicetree/bindings/gpio/fairchild,74hc595.yaml    | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/include/dt-bindings/clock/sun8i-v853-ccu.h b/include/dt-bindings/clock/sun8i-v853-ccu.h
-> new file mode 100644
-> index 000000000000..a405b982f914
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/sun8i-v853-ccu.h
-> @@ -0,0 +1,132 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> index a209c5b4f6e0..da462dddb140 100644
+> --- a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> @@ -28,10 +28,12 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - fairchild,74hc595
+> -      - nxp,74lvc594
+> -      - onnn,74hc595a
+> +    oneOf:
+> +      - const: fairchild,74hc595
+> +      - const: nxp,74lvc594
 
-BTW, also checkpatch warns about this...
+Keep enum for these two, preferred pattern.
+
+> +      - items:
+> +          - const: onnn,74hc595a
+> +          - const: fairchild,74hc595
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
