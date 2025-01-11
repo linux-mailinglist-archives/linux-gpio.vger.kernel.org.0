@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-14685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 498E8A0A325
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 11:56:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4F3EA0A32C
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 12:00:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF7923A578B
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 10:56:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7EC5188906C
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 11:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A13CF191F95;
-	Sat, 11 Jan 2025 10:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EB018FDDF;
+	Sat, 11 Jan 2025 11:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMsqKf7p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDk7p+jC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5854A14E2C2;
-	Sat, 11 Jan 2025 10:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED92C24B249;
+	Sat, 11 Jan 2025 11:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736592972; cv=none; b=QfwKSpsPX2lZAFOo/5uo5rh3ggXPbNFeHbNjYVIXQZ1+JEtTUkdQ2Plj9WnDQ7nHlmofMwvTcSW4MKI7bdq9mDJFKpP5Lc6GB5ncOZCo8cOQN3I/fv/0uw8zOP3rjy78cktFqc35Xwti7xBVbHdZTWioQbObvUJi0T8mObqLLys=
+	t=1736593244; cv=none; b=oYpQBhPc8Q1UO8WJi2lW6jxKJf4XYTp+eQjq1KH6+noD5iyfp1F0SxAr6BMLntm/ziOwy7iV6IrQNrW6qORSGsXmdRD9d/SH9uCNTC6Pe6ms2zIneGlGjGrFgRsIoDl1LO+Zu5UE7dWNeB3xsU1HRaBkLPDLRzhaLhm3rWkjC7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736592972; c=relaxed/simple;
-	bh=t4awZR4yoBZ9BIa6hLUNYMIX2g00LtrbAKm2XM1Jqjw=;
+	s=arc-20240116; t=1736593244; c=relaxed/simple;
+	bh=8iT/gzGH38ArVzH1eYk/cuM0mceP6qrn9tr57pN3r7Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pEorSXowRAHbIKoHu68XGajf9Ar088LX+QY5Z88xyUc9yVPbKhT9UJ2nYKcZA9oBL4qhEcVzAPglXb7nrjNsgCJM6/XqnNKHgOVJxmenXyTvniN1qjaWyUOOSDjuN1vhD1V4Rv9bEw/F1t2wIPLaHsM3nWkN10Wf/+ZmPZ0eAZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMsqKf7p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11915C4CED2;
-	Sat, 11 Jan 2025 10:56:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=WLc49N+NC52RYujcDDSLuO+D+yVQaZLu02vNvW6gzhMAYbxSZV1FBj48fIwPeYlIpXFieJhsri1dk5lt6uPhNtWE1TKstrZREqQXgQb/e0XGrrhUaIpUOCaDeS6i6jR959o4PCFB4KDg156zFeKZ7Voiv2KL0xI/cAYx/dWTp1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDk7p+jC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A61C4CED2;
+	Sat, 11 Jan 2025 11:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736592972;
-	bh=t4awZR4yoBZ9BIa6hLUNYMIX2g00LtrbAKm2XM1Jqjw=;
+	s=k20201202; t=1736593243;
+	bh=8iT/gzGH38ArVzH1eYk/cuM0mceP6qrn9tr57pN3r7Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HMsqKf7p4UDr8grLVWeioJ2dDyzEgAnw1Xwu/7BZW3XZPexzy5fTX7OYoRGJjDT4V
-	 JhdLOjqD5ucMacf3Yloh8krikTSDTszoHpadxa8NNYf5hVIyxFjoXYPESOelO/Z2XE
-	 S6872DBX0HnxyJpun39SKF1GLHWbZMa0B8kRZQm9dnbA8wdqro5TMFlmz5SxTo54Jp
-	 aZYDeWWhiL59KlIj/nZ8JO5VkU7FrXNh+X0iQEDINjTJGtgp7Wex98XIfjysYEJYBM
-	 AfD4pk8/LPW4EX3lKAQ0PJR7UaLfS/4PRT7aqjkhxAFDFQ1AXsNLDo7JsNiJHXeFAc
-	 CnuabeAg6fr9A==
-Message-ID: <75cf4aa1-e9ab-4c61-a577-b7b866f161c7@kernel.org>
-Date: Sat, 11 Jan 2025 11:56:05 +0100
+	b=mDk7p+jCadbjEWZqHzIDIjFruNvZr2JXbsitSaWKUDNdcoBGB8pVJFBfjgomCz7yA
+	 aSSxZVqnoZ7NRsYT+3cg8R/f5p56Ww34dVacRARGL9yAEbSxy0wa0jmccXBOUBJMH7
+	 6iBzQwwEgFetCIq1w1HCE1JA4S74MrF0vET7014A66t5x45H7nMtEGX0W51MieNTTf
+	 j8EY5lk1GjAJ4MVzVIXRzS/wsmqfv0MLhZEO1Zm8FtYC2mCpdnOb843gfbJ7GM3y7c
+	 7EonyqSVPPsQsYhlAhDcCWdbqhIQCVCm/9vaSK0dEaOJsarj0wYm1sETFBhaIF5cuU
+	 yFFU1ciiDuhTA==
+Message-ID: <9bb482aa-a392-45c2-a21f-d08e5ce3a6e0@kernel.org>
+Date: Sat, 11 Jan 2025 12:00:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,20 +52,23 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 0/2] gpio: 74x164: use a compatible fallback and don't
  extend the driver
-To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
  =?UTF-8?B?SiAuIE5ldXNjaMOkZmVy?= <j.ne@posteo.net>,
- "Geert Uytterhoeven via gmail . com" <geert@linux-m68k.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20250110130025.55004-1-brgl@bgdev.pl>
  <de6b70f2-8fd6-4e2a-a6c1-466698be8a6b@prolan.hu>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <CAMRc=MckJfEBK_ZUZ31hh7SMdbr4a-vZLtTGDCFttGK65wbXdA@mail.gmail.com>
+ <CAMuHMdWhEZ0No8mXdymE8O8+rMCkD2SXAifZwReb1BbfYASOeQ@mail.gmail.com>
+ <CAMRc=Me+syDKW6sycGZ86rBJysaccsm3QUYd1+5cnfzRCo6P7A@mail.gmail.com>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -109,30 +112,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <de6b70f2-8fd6-4e2a-a6c1-466698be8a6b@prolan.hu>
+In-Reply-To: <CAMRc=Me+syDKW6sycGZ86rBJysaccsm3QUYd1+5cnfzRCo6P7A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10/01/2025 14:32, Csókás Bence wrote:
-> Hi,
-> 
-> On 2025. 01. 10. 14:00, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 10/01/2025 15:14, Bartosz Golaszewski wrote:
+>> At24 EEPROMs differ from '595 shift registers in that they provide an
+>> API with multiple commands, and some commands or parameter bits may
+>> differ among different implementations (but usually these differences
+>> are called quirks).
 >>
->> There were other suggested solutions (for instance: just use the
->> existing compatible for the On Semi variant) but I figured the most
->> common approach is to use a fallback value for 100% compatible models
->> and this is what Rob suggested as well.
+>> All '595 (I'm deliberately writing it like that) shift registers
+>> should be 100% compatible, modulo some electrical specifications
+>> (voltage levels, maximum speed, power consumption, ...).
 >>
->> This reverts the driver change and makes the "onnn,74hc595a" compatible
->> use "fairchild,74hc595" as fallback.
+>> Interestingly, the driver is called gpio-74x164.c, while no '164
+>> compatible value is present. Most important difference is that the
+>> '164 lacks the output latch, which is used as chip-select with SPI[1].
+>>
+>>>> I'm especially against introducing a new, vendor-specific (On Semi, in
+>>>> this case) name; if we really want to introduce a new compatible, at
+>>>> least make it as generic as possible, i.e. `generic,74x595`, or even
+>>>> `generic,spi-shift-register-output`.
+>>>
+>>> If anything, that would have to be the fallback that the driver knows.
+>>> The first string in the compatible property has to have an actual
+>>> vendor (I think, I'll let DT maintainers correct me).
+>>
+>> For the inverse operation (parallel in, serial out), there's just
+>> "pisosr-gpio".
+>>
 > 
-> Is there any reason to introduce a new compatible name at all? Does some 
+> Ok, I admit I don't know the correct next step. I'll wait for
+> Krzysztof, Rob or Conor to chime in (on the subject of representing
+> reality - the actual manufacturer - in DTS) and then possibly just
+> remove patches 1-2 from my tree.
+> 
 
-
-Yes, DT bindings preference, see writing bindings. I assume of course
-this is a separate device. You cannot use other compatible "foo" for
-some other device "bar".
+Well, folks, I don't know the exact device, so maybe there is no point
+in a new compatible if there is a claim all devices have same interface
+and documenting all of them would result in 1000 redundant
+compatibles... but OTOH, that's what we still do with jedec,spi and
+at24, so if we can add specific compatibles for these, we can do same
+also here.
 
 Best regards,
 Krzysztof
