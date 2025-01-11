@@ -1,288 +1,157 @@
-Return-Path: <linux-gpio+bounces-14680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E8E2A0A260
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 10:41:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07A2DA0A2D7
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 11:35:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2E297A3080
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 09:41:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA10E188C1FB
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jan 2025 10:35:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2729A1885B4;
-	Sat, 11 Jan 2025 09:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EA11917CD;
+	Sat, 11 Jan 2025 10:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JB8uxI4f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rt/RYUat"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB40185920;
-	Sat, 11 Jan 2025 09:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8D7190482;
+	Sat, 11 Jan 2025 10:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736588480; cv=none; b=o424MQs8XYgJXw6yQxc614obK6yBYYvRtmpA2rVJ0vzOzUK+TC3WasLauH7QGa7UV1SveCpFzw1AvjhkbJyq7ZoswWtgac4qeJZJBNf5kRiBjKVlMUaHsRjwChwfeEXTLBFqGNmBykot2Ow5snGnjDOwfbhep9KQK4TYdJ6dfcE=
+	t=1736591716; cv=none; b=hBkS4TlIzRNO+UtBkRYBNUARI4VHvhh03WEBLjXSIkF26w8+Pc6tG086ZlMe5XJlezZ4PF5lwjaZPS6phs8Ktynpp7EjoW6fqHhRNiWWwRDMR0tSaxqNaWJ4KjKblcYnvwqfFsG7WE3slRI6VZFoJC0b3uEmomJ1cR2sgmAAvpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736588480; c=relaxed/simple;
-	bh=N2CiOKl4IO7VYA0htePZV6dQy45186pHAoS2+zEndyY=;
+	s=arc-20240116; t=1736591716; c=relaxed/simple;
+	bh=4BeJTqqm28Qv5oKR0dD1hGxB/DuI9FfILfZRugCKv8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRZGT063+BKCurcmAVrkIYs/6sUMqC1HFXiZM14zocwL7IuXuIjWXbd/zTWZauOBs6F3z60WIE28V7tN9Y9KDZmu0QU8aTK1UHYgad+M4gYYwMJdX26oOebJtwlOZ6h79fZVrF0AVfKXtmKxHKE3OPV+kOLXEGlzhnLl+kWmmKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JB8uxI4f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F75C4CED2;
-	Sat, 11 Jan 2025 09:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736588480;
-	bh=N2CiOKl4IO7VYA0htePZV6dQy45186pHAoS2+zEndyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JB8uxI4fL6BuzX4kp/L0rMg5AOp7YyL7Mhx0P7zggTV00JqJhkNBUEomUB/YKeeeR
-	 cbnmiezAeb2+52k6SJXWLmoMW0CFF3UWyCGAROdDKUaWOa/N7OpVAiiJRagflEzdjk
-	 e6DUwOtDZSIRblUgTJl2ghCHnyi/cah9nt8o/E/7u76ldJJvOGK+IfKc5qMoSl8tkL
-	 H5zB6zrEtkG7meoOiHjyBrS96cBzw/02J3PY80jtTGsBrW5x8NpffpzV4AmBx4wTss
-	 qvtDM2ePDGf1qj+3i+RxBSU2kzMzcw2eLh5cOXSbDP1zcSs1tQAi3+f1a9cBpF2QS1
-	 c6WlqQBMyRxCw==
-Date: Sat, 11 Jan 2025 10:41:16 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
-	wenbin.mei@mediatek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, Guodong Liu <guodong.liu@mediatek.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: mediatek: add support for
- mt8196
-Message-ID: <dnjtaapqbn6zy55k5ky7zltswkbg7cjh2xwlnrmqdiz7tfm6rc@wbepc5koem6e>
-References: <20250110104703.13625-1-ot_cathy.xu@mediatek.com>
- <20250110104703.13625-2-ot_cathy.xu@mediatek.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKhQ8oW72BCjFwB+BnTc3xCwQE0HgiomAHbb78+RTwALaaDg6gEjSbNp5iovaYQ5mZu0yRL0TJwvvha35gevw6gO2+rmAGp04x+dJv9+jgy+I+u6bYLJWW2rXy2FW1EwmY/WFIL3OBnFQzV7dwGEe4RgLENBF0s5LZL2/xtEdyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rt/RYUat; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736591714; x=1768127714;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4BeJTqqm28Qv5oKR0dD1hGxB/DuI9FfILfZRugCKv8I=;
+  b=Rt/RYUatEkqFk0PURw+eHPZVP5ZXnpuGsS1jArM2H/TcPJZNtGnFhmye
+   2Ntyam4U0C4YssqYjwG7LiOSN24Extn+vIJpWk7z5X2KWgoe2jpcQk1O8
+   52AclS07ZISdLVVF4KwHZAga7ppEOPvqtRnR8PGcgU+IGrW83o7J2TpKh
+   NMgszGYhCZJ2dbsHli+Wvmo/slufafMpxnFJqvb7uDc6H1OLVoMTcZLTJ
+   Vpqx6ZOvNkg3k5kFJmOHNI/09QOWknCgH3kMWSJKitUNGTer5MQXms7m7
+   MmRaQFsZUMeYQQovoQO2BogkbhRtWc4L3vzkE6lzsY3u9flDxKZqb0BrB
+   A==;
+X-CSE-ConnectionGUID: QcSkjCh0SVGK6sWud3RiRQ==
+X-CSE-MsgGUID: 1hwKWwPuScafVx7c/CQT3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="37112095"
+X-IronPort-AV: E=Sophos;i="6.12,306,1728975600"; 
+   d="scan'208";a="37112095"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2025 02:35:13 -0800
+X-CSE-ConnectionGUID: pGD7UTJTQc2Da3Y2xbpPoA==
+X-CSE-MsgGUID: CUAO05POTmibjKRUAVNYcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,306,1728975600"; 
+   d="scan'208";a="108970921"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 11 Jan 2025 02:32:32 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tWYn7-000KUR-1E;
+	Sat, 11 Jan 2025 10:32:29 +0000
+Date: Sat, 11 Jan 2025 18:31:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cathy Xu <ot_cathy.xu@mediatek.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>,
+	wenbin.mei@mediatek.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Guodong Liu <guodong.liu@mediatek.com>,
+	Cathy Xu <ot_cathy.xu@mediatek.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: mediatek: add mt8196 driver
+Message-ID: <202501111834.dc1JHSLT-lkp@intel.com>
+References: <20250110104703.13625-3-ot_cathy.xu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250110104703.13625-2-ot_cathy.xu@mediatek.com>
+In-Reply-To: <20250110104703.13625-3-ot_cathy.xu@mediatek.com>
 
-On Fri, Jan 10, 2025 at 06:42:28PM +0800, Cathy Xu wrote:
-> 1.Add pinctrl file on MediaTek mt8196.
+Hi Cathy,
 
-Where? What is pinctrl file?
+kernel test robot noticed the following build errors:
 
-> 2.Add the new binding document for pinctrl on MediaTek mt8196.
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next robh/for-next krzk-dt/for-next pinctrl-samsung/for-next linus/master v6.13-rc6 next-20250110]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Look at git history how commit msgs are written for such changes.
+url:    https://github.com/intel-lab-lkp/linux/commits/Cathy-Xu/dt-bindings-pinctrl-mediatek-add-support-for-mt8196/20250110-184846
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20250110104703.13625-3-ot_cathy.xu%40mediatek.com
+patch subject: [PATCH v2 2/2] pinctrl: mediatek: add mt8196 driver
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250111/202501111834.dc1JHSLT-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501111834.dc1JHSLT-lkp@intel.com/reproduce)
 
-> 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
-> ---
->  .../pinctrl/mediatek,mt8196-pinctrl.yaml      |  266 +++
->  include/dt-bindings/pinctrl/mt8196-pinfunc.h  | 1572 +++++++++++++++++
->  2 files changed, 1838 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/mt8196-pinfunc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..abeb0d942cc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8196-pinctrl.yaml
-> @@ -0,0 +1,266 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/mediatek,mt8196-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MT8196 Pin Controller
-> +
-> +maintainers:
-> +  - Lei Xue <lei.xue@mediatek.com>
-> +  - Cathy Xu <ot_cathy.xu@mediatek.com>
-> +
-> +description:
-> +  The MediaTek's MT8196 Pin controller is used to control SoC pins.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8196-pinctrl
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description:
-> +      Number of cells in GPIO specifier, should be two. The first cell is the
-> +      pin number, the second cell is used to specify optional parameters which
-> +      are defined in <dt-bindings/gpio/gpio.h>.
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  gpio-line-names: true
-> +
-> +  reg:
-> +    items:
-> +      - description: gpio registers base address
-> +      - description: rt group io configuration registers base address
-> +      - description: rm1 group io configuration registers base address
-> +      - description: rm2 group io configuration registers base address
-> +      - description: rb group io configuration registers base address
-> +      - description: bm1 group io configuration registers base address
-> +      - description: bm2 group io configuration registers base address
-> +      - description: bm3 group io configuration registers base address
-> +      - description: lt group io configuration registers base address
-> +      - description: lm1 group io configuration registers base address
-> +      - description: lm2 group io configuration registers base address
-> +      - description: lb1 group io configuration registers base address
-> +      - description: lb2 group io configuration registers base address
-> +      - description: tm1 group io configuration registers base address
-> +      - description: tm2 group io configuration registers base address
-> +      - description: tm3 group io configuration registers base address
-> +
-> +  reg-names:
-> +    items:
-> +      - const: iocfg0
-> +      - const: iocfg_rt
-> +      - const: iocfg_rm1
-> +      - const: iocfg_rm2
-> +      - const: iocfg_rb
-> +      - const: iocfg_bm1
-> +      - const: iocfg_bm2
-> +      - const: iocfg_bm3
-> +      - const: iocfg_lt
-> +      - const: iocfg_lm1
-> +      - const: iocfg_lm2
-> +      - const: iocfg_lb1
-> +      - const: iocfg_lb2
-> +      - const: iocfg_tm1
-> +      - const: iocfg_tm2
-> +      - const: iocfg_tm3
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501111834.dc1JHSLT-lkp@intel.com/
 
-Are you sure these are separate address spaces?
+All errors (new ones prefixed by >>):
 
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    description: The interrupt outputs to sysirq.
-> +    maxItems: 1
-> +
-> +  mediatek,rsel-resistance-in-si-unit:
-> +    type: boolean
-> +    description:
-> +      We provide two methods to select the resistance for I2C when pull up or
-> +      pull down. The first is by RSEL definition value, another one is by
-> +      resistance value(ohm). This flag is used to identify if the method is
-> +      resistance(si unit) value.
+   In file included from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/umh.h:4,
+                    from include/linux/kmod.h:9,
+                    from include/linux/module.h:17,
+                    from drivers/pinctrl/mediatek/pinctrl-mt8196.c:7:
+>> drivers/pinctrl/mediatek/pinctrl-mt8196.c:1753:37: error: 'mtk_eint_pm_ops' undeclared here (not in a function); did you mean 'mtk_eint_regs'?
+    1753 |                 .pm = pm_sleep_ptr(&mtk_eint_pm_ops),
+         |                                     ^~~~~~~~~~~~~~~
+   include/linux/kernel.h:48:44: note: in definition of macro 'PTR_IF'
+      48 | #define PTR_IF(cond, ptr)       ((cond) ? (ptr) : NULL)
+         |                                            ^~~
+   drivers/pinctrl/mediatek/pinctrl-mt8196.c:1753:23: note: in expansion of macro 'pm_sleep_ptr'
+    1753 |                 .pm = pm_sleep_ptr(&mtk_eint_pm_ops),
+         |                       ^~~~~~~~~~~~
 
-What is the point of choosing it? This is one hardware, one SoC, so how
-different boards can have different units? No, just use Ohms
 
-> +
-> +# PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '^pins':
-> +        type: object
-> +        $ref: /schemas/pinctrl/pincfg-node.yaml
-> +        additionalProperties: false
-> +        description:
-> +          A pinctrl node should contain at least one subnode representing the
-> +          pinctrl groups available on the machine. Each subnode will list the
-> +          pins it needs, and how they should be configured, with regard to muxer
-> +          configuration, pullups, drive strength, input enable/disable and input
-> +          schmitt.
-> +
-> +        properties:
-> +          pinmux:
-> +            description:
-> +              Integer array, represents gpio pin number and mux setting.
-> +              Supported pin number and mux varies for different SoCs, and are
-> +              defined as macros in dt-bindings/pinctrl/mt8196-pinfunc.h
-> +              directly, for this SoC.
-> +
-> +          drive-strength:
-> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +
-> +          drive-strength-microamp:
-> +            enum: [125, 250, 500, 1000]
+vim +1753 drivers/pinctrl/mediatek/pinctrl-mt8196.c
 
-Why duplicating properties? No, use only one.
+  1748	
+  1749	static struct platform_driver mt8196_pinctrl_driver = {
+  1750		.driver = {
+  1751			.name = "mt8196-pinctrl",
+  1752			.of_match_table = mt8196_pinctrl_of_match,
+> 1753			.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
+  1754		},
+  1755		.probe = mtk_paris_pinctrl_probe,
+  1756	};
+  1757	
 
-> +
-> +          bias-pull-down:
-> +            oneOf:
-> +              - type: boolean
-> +              - enum: [100, 101, 102, 103]
-> +                description: mt8196 pull down PUPD/R0/R1 type define value.
-> +              - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> +                description: mt8196 pull down RSEL type define value.
-> +              - enum: [75000, 5000]
-> +                description: mt8196 pull down RSEL type si unit value(ohm).
-> +            description: |
-> +              For pull down type is normal, it doesn't need add RSEL & R1R0
-> +              define and resistance value.
-> +              For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
-> +              set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> +              "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" &
-> +              "MTK_PUPD_SET_R1R0_11" define in mt8196.
-> +              For pull down type is RSEL, it can add RSEL define & resistance
-> +              value(ohm) to set different resistance by identifying property
-> +              "mediatek,rsel-resistance-in-si-unit". It can support
-> +              "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001" &
-> +              "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" &
-> +              "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101" &
-> +              "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111" define in
-> +              mt8196. It can also support resistance value(ohm) "75000" & "5000"
-> +              in mt8196.
-> +
-> +          bias-pull-up:
-> +            oneOf:
-> +              - type: boolean
-> +              - enum: [100, 101, 102, 103]
-> +                description: mt8196 pull up PUPD/R0/R1 type define value.
-> +              - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> +                description: mt8196 pull up RSEL type define value.
-> +              - enum: [1000, 1500, 2000, 3000, 4000, 5000, 10000, 75000]
-> +                description: mt8196 pull up RSEL type si unit value(ohm).
-
-Same problems.
-
-> +++ b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
-> @@ -0,0 +1,1572 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +/*
-> + * Copyright (C) 2025 Mediatek Inc.
-> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
-> + */
-> +
-> +#ifndef __MT8196_PINFUNC_H
-> +#define __MT8196_PINFUNC_H
-> +
-> +#include <dt-bindings/pinctrl/mt65xx.h>
-> +
-> +#define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
-> +#define PINMUX_GPIO0__FUNC_DMIC1_CLK (MTK_PIN_NO(0) | 1)
-> +#define PINMUX_GPIO0__FUNC_SPI3_A_MO (MTK_PIN_NO(0) | 3)
-> +#define PINMUX_GPIO0__FUNC_FMI2S_B_LRCK (MTK_PIN_NO(0) | 4)
-> +#define PINMUX_GPIO0__FUNC_SCP_DMIC1_CLK (MTK_PIN_NO(0) | 5)
-> +#define PINMUX_GPIO0__FUNC_TP_GPIO14_AO (MTK_PIN_NO(0) | 6)
-
-You got comment, so respond to it. Sending the same and expecting
-different results is fast way to get a grumpy response.
-
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
