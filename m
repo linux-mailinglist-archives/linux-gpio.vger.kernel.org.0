@@ -1,169 +1,211 @@
-Return-Path: <linux-gpio+bounces-14689-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14690-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFA96A0A821
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jan 2025 10:58:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D86AA0ADA6
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 04:00:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B49051616F3
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jan 2025 09:58:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F3D718864CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 03:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57CE919C56C;
-	Sun, 12 Jan 2025 09:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8169913777E;
+	Mon, 13 Jan 2025 03:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msrmVdeE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B6D2556E;
-	Sun, 12 Jan 2025 09:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52C279E1;
+	Mon, 13 Jan 2025 03:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736675885; cv=none; b=mV0z1BopwkcLdwhdEUallgAu7yfxSzgDxoEKUf7ND35WfUQkmV5FP4MIMgM/Wah2rwXFwbrwwAQKcyNv1Pw4sHx3yWKczwz+pA0Rt2yKGgFCNqdZj7zdw1w2ZKZA0jQWjgPeQ8nr0huwNhEiFko9ovRTR18LwMU43Kp+XcSel4E=
+	t=1736737222; cv=none; b=rWGLD+Ik/ca036BVBdCx88tt91VWpGZS7Y+8s8b4RMTsFTiQ4jyxNzcL2lC0g3Ancgu4qVFuIwOHZiGkRUHcaZHBJgARK5q8RfU4nwcHM3do0AfX0zBWu9zJaWIgTxbAHuBIwcAF1IFn3MudHDb52M3yPGzWZMDDLS9hPBq3k8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736675885; c=relaxed/simple;
-	bh=7KvxSnuhFDti2Uwn58Kvz8CvZuCBtinYZAF2+ZUyI8g=;
+	s=arc-20240116; t=1736737222; c=relaxed/simple;
+	bh=vWDv9c+Hb5NFBDqnLC3anS0jUC4B07QypVbhZL/BxTk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C3enYSJ29hR1ko6shSzMca3Y/rDcjk+yjPlMVeBWeEUH/iyPuOdxnUNISJzxO7YvDbIYAZcVFTDxeGavanUD8vjV89neWsFWktRoZzKi/n2retsnuqcZckCP66CpiG8wu4yV4MegbjCQIzKXxzdnjvjfT7g0v4XMKnYODDMmmKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=pmf+eAJtbIH/LRS8V24RLS3He/IwgfqZL506ztWHylZCrB4fqg/SgCTwMuMrCtb8UqXLm2a2njhg0oVVqYt+7B0Lp0S+QIq73hrZKFXldmyZSsqrhgUQA2V0rRRo9bY5GkvZNtpDiUlUJnWcBwy2FtlLvLbYMqhX8qTPJPBOCJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msrmVdeE; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-85c5adbca8eso876310241.0;
-        Sun, 12 Jan 2025 01:58:02 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e3983426f80so5878731276.1;
+        Sun, 12 Jan 2025 19:00:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736737219; x=1737342019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7vHUyb9eNg2JqWHIeEtx4JxxlaEahhQgvricUcB0kaU=;
+        b=msrmVdeEXhgI6OED5WasaszCm5FJkvfwO3V8oini06lN/Mojp3sV8ykJybQRGFQWuS
+         Ew4rAU1R1AUK5pgbno5Nb9RR+bIkn0OW4uJHmQ7s4+rWo6lPX85smR7wyx5j77HZ9aMq
+         twY7tS0SH6tJqpETq5PeX0L7Kg+L3Gvn6n6nY3cNWnkgziJiZ/GHE427Oj8YzvkBuyz/
+         GVJY80AGg0t+ybgFyfDcoiM6yi5Tt089NLddd9HtHC2v4QDZ3BKyQjQZiPwTRSDOxO0H
+         pn6tFJ8vrNY7+q0LNx/aAirs4YN6unnNSLhHvcsZXTepPJAN2MAPfpXycAhj4NpfjnXN
+         Pvug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736675881; x=1737280681;
+        d=1e100.net; s=20230601; t=1736737219; x=1737342019;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hGQgXmcbcDqcC6F+f/Zsoz3bex/Dx3mFUEHUnu43fxU=;
-        b=RD+1BHTv5JtchvswHHKpwDPQghrPkOi2qQrGaQBLpJ2He6jzrHZiCYLbLSuPZU8MB6
-         EBqMxQp3UqkudMCQtCqF3FAswlBNHMYvGI4FtvoklIc3BrkRadGLE67EgTjEYWZrv+5T
-         bES0tYp3CuWjvXHW7dMhmIcHVXuahIM1GZFOoFig+Acqlz6MwzwZQoWmyO+f3B3gQBsd
-         dWNxZ5URmMcPc/CKB3gRmA3bmVHlubI1Ye6FcdOgaqOK1K9vLmVXGRXeK5G1wb+XbrXX
-         gRyZYX5IWaYBJw1xsyDHKGN3wz4cQ0VUROynuQom9OdlBVy1k55lq8zFtzo3zWNdHTnJ
-         sXGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJZq88AdFZSyuPFk51y2NLRWX1NKD47HBgK1wjnKBCZtNS8tJDK4DztpP7/ac33Q+Z8aIxBBe6+Vpx@vger.kernel.org, AJvYcCWl0oKxuvEguQvbtX22j05KwFjBYm0ntUpRB3reEjwry4A3mgOFVokvzE/GP00rt60PM62m9ZbyMm+Kp33t@vger.kernel.org, AJvYcCXN4UvPRyd9pinxG24ogaeo+QV15Snzt4iA8tpDr3K5DPywEX6+cXh/mXM/foaKvLVDSXegwheDpQb9FA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5+dN+bKyizlb/oebvnpTBfSsHD2wg3uVR0D11/MpeCGwGp3KK
-	HzLPcpQYJZoCl1Sey7cwyP/8a1Roey1iBo6pYLAanaZ42tu2DjQnzmfhXj7O
-X-Gm-Gg: ASbGnctx4sApkkK4h0AmDGLGcf5MlaNhEPOhjLOkTCQR5ZJcAG2yxP2fBU4zdbCsbZ6
-	crrb2EspBI3vHMuGqBztqrxiDmRDv0TWNNAL5Z5AkVDiXijl10wVQbn8qdu6Y71UhEA34Hj6luf
-	QH7ykgMPpwVeWjTJ7YjdP/9eb4NkKJB/LdOvAGJztOu56m3H60OW1oXOuuaKQPgh985xK5pVuvs
-	RLdJAcW9SJFWeJ6cy5YpFb7Kp4YNoYRB3jioIcOmufb/O/vfR7yQ3+cNS4dsT/9x10n4iK1+M8u
-	F8HuNIAA7n2KsDyQn8Y=
-X-Google-Smtp-Source: AGHT+IEiVZYWy+QRXeGnCp5hR2vn172ISOgEr9YGptE6aWuYnLCfvdapztLQ7ylhbgpn5YSPo7suFQ==
-X-Received: by 2002:a05:6102:1606:b0:4af:af20:516a with SMTP id ada2fe7eead31-4b3d0ef6e26mr14043577137.1.1736675881074;
-        Sun, 12 Jan 2025 01:58:01 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4b6091da46csm3765220137.28.2025.01.12.01.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jan 2025 01:58:00 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-85c5d4f3d58so819259241.3;
-        Sun, 12 Jan 2025 01:58:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU86oXsRni3jf+0gpzEW3GSylqMuHwSPeejZ4jYqtE7QComlYzIzmfII2HoRGE3qnH5ouuPwbCfsdSKXNiN@vger.kernel.org, AJvYcCW3/MgV2mrKt57nChwGvE3GCunOWMGVg6RHFCDkwbG/5EHbo+m6TrKoQsQTuITSyxZx9AwvHGWwnLXY4w==@vger.kernel.org, AJvYcCWyGamQ55l4iHwJevzFQEzzkCAYavW5Uwu+9Esn1jj+kc3AuJcXUujyP/CBurh0NdttFuKDtOxp8THy@vger.kernel.org
-X-Received: by 2002:a05:6102:2928:b0:4b2:bcea:dce2 with SMTP id
- ada2fe7eead31-4b3d0f1475cmr15316078137.10.1736675880496; Sun, 12 Jan 2025
- 01:58:00 -0800 (PST)
+        bh=7vHUyb9eNg2JqWHIeEtx4JxxlaEahhQgvricUcB0kaU=;
+        b=qTHphbfIIT1Iq8UwDKRHQ574R1okZ5Z2hcmXyK/XKLbBxk293ek3NIvwHiYEZkdrkV
+         mDKlYRl7iwi15/lr4/bfr2t2f3OAh1SjXJMMIU7lfylitsgKmYZZcdTX0KiRrUojYn+m
+         ZsLR8sAgP8VXyitGejHPZrPve5gDE7o4aS4g7nbqR1ubSAoa3dNUa9Y9ZZ4B4oQuxRDV
+         KUbzrdwi8ugQyHhO/lOrR3cJ/r9KUr3kAM5h4o5HAJW1l2rE53rs0OfjaFl17Whtubse
+         jqrTWs+YEPqegIF3irgAaWl3c1h1xH368c9mc0SGfFBxO8MKyCQVuoxpE3Qj4PsGmoAx
+         UYhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK0CiXomYykw0fdYj25dDmuoz/DZ4uJO3K2AxyvWTU8flJhvikoOuw9IBPC0ybs/6dyjgORcr/@vger.kernel.org, AJvYcCW0ApG1ciJhKM3IKFIVaRBORJuiwNEbF8++CiaFhPEizgTZcR3fwFxpmu/v0dYxgiQYQ08bJBfXlXlZ+H83@vger.kernel.org, AJvYcCW6EaLrO+tG32JQ0cue501tXWsg4XFhspq3VfT/Kba979fUmpClYRfKlTIk4gl7RifjG5EGhYqreHj+@vger.kernel.org, AJvYcCWMmIrFgET8eIEZlM1xmwg7b73IWmYEzR5ajuUQLOtuqeKNwdaFddDaEDpuhyJEFDRo1SpLo1rufE7Dk536ZAg=@vger.kernel.org, AJvYcCWO+oeLv2sCLPYF6YY2NyFoJfy9kMEMoJ3RejC7We6Ihj74u8nqlX9Slin68afjb0DV87ogDvkEZVwW@vger.kernel.org, AJvYcCWTdxm8p1omKnHHmheTqjL4KsjoQFY/8u3ZWOhgQh24MxzIABD6NgS2ZYgHIV9On3utXfGl9F5cK99sreA=@vger.kernel.org, AJvYcCX20F3YL8xNuL17QBGXdtMQBbKB0AYtjkbbvA+2M78HpK1rqJ5godFBk/fGSYflfzYWfL9oa7XPc3YftA==@vger.kernel.org, AJvYcCXcKAb20c0Lj9IQ0urOd6JsQ3dDTXJbz/FVxlUt5o4TuGW2GWcY3PkPA4U5GJ+ptk9WTukgx65oTCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxobPcfGrskszvDhj9vf0VjY4IUM9aypLXs2avVgcBTYruQ9wj
+	LxtFSMwhhUXvo4qZIPdlv1kWHt3wMZ3vUbgBuyRqYYJDJxzSIUOrOFe2ZGEwUh3hZL4Zd1BEVPd
+	haJYYAgbSONTloICF8jkoCr0T/qo=
+X-Gm-Gg: ASbGncubp5jZFm15NToKBfk87nrjcXQn9k0H3umDmqmj2WsUvn7eB3GNyJggPD3RGxW
+	cPsN4i9M5JtDr0qFhlTPPD8k4sXoiJDcUX2XkNd85rJHDD4/0ni8b+HDHxdYf3w/5Dkr+M08=
+X-Google-Smtp-Source: AGHT+IGsfoH84Emy/3VAy+2ciT/LDM53GHF7kLpSuNtlkY+mcbIYtSqMBLpJAo2tp5wPRRi4KWOuDrwlzY99kXjwbZU=
+X-Received: by 2002:a25:2104:0:b0:e47:f4e3:87e3 with SMTP id
+ 3f1490d57ef6-e54edf25ca4mr10429337276.11.1736737218579; Sun, 12 Jan 2025
+ 19:00:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110130025.55004-1-brgl@bgdev.pl> <de6b70f2-8fd6-4e2a-a6c1-466698be8a6b@prolan.hu>
- <CAMRc=MckJfEBK_ZUZ31hh7SMdbr4a-vZLtTGDCFttGK65wbXdA@mail.gmail.com>
- <CAMuHMdWhEZ0No8mXdymE8O8+rMCkD2SXAifZwReb1BbfYASOeQ@mail.gmail.com>
- <CAMRc=Me+syDKW6sycGZ86rBJysaccsm3QUYd1+5cnfzRCo6P7A@mail.gmail.com> <9bb482aa-a392-45c2-a21f-d08e5ce3a6e0@kernel.org>
-In-Reply-To: <9bb482aa-a392-45c2-a21f-d08e5ce3a6e0@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 12 Jan 2025 10:57:48 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVrQms38kXjr4df3kJfcoNFm3oEm2Zr0XNuucZwg_VbxA@mail.gmail.com>
-X-Gm-Features: AbW1kvZgNoRTqnFF6xxRZKbWKyO1yeLjtXB3D2BYpXY_T3LDYUQjIy-YEw4ooQc
-Message-ID: <CAMuHMdVrQms38kXjr4df3kJfcoNFm3oEm2Zr0XNuucZwg_VbxA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpio: 74x164: use a compatible fallback and don't
- extend the driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?SiAuIE5ldXNjaMOkZmVy?= <j.ne@posteo.net>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20241227095727.2401257-1-a0282524688@gmail.com>
+ <20241227095727.2401257-7-a0282524688@gmail.com> <20250106135135.GN4068@kernel.org>
+In-Reply-To: <20250106135135.GN4068@kernel.org>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 13 Jan 2025 11:00:07 +0800
+X-Gm-Features: AbW1kvZmveBm_1ZsSzbrQ6SCqOa0J-Y9vxXUkcqQ9J4x_X6pa8sZdwCwcoEMWQw
+Message-ID: <CAOoeyxWvRzHRVLW-U=nemfUpoF5pcO_bDmvg4U-wVqkFp=V=Yg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] hwmon: Add Nuvoton NCT6694 HWMON support
+To: Simon Horman <horms@kernel.org>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+Dear Simon,
 
-On Sat, Jan 11, 2025 at 12:00=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
-> On 10/01/2025 15:14, Bartosz Golaszewski wrote:
-> >> At24 EEPROMs differ from '595 shift registers in that they provide an
-> >> API with multiple commands, and some commands or parameter bits may
-> >> differ among different implementations (but usually these differences
-> >> are called quirks).
-> >>
-> >> All '595 (I'm deliberately writing it like that) shift registers
-> >> should be 100% compatible, modulo some electrical specifications
-> >> (voltage levels, maximum speed, power consumption, ...).
-> >>
-> >> Interestingly, the driver is called gpio-74x164.c, while no '164
-> >> compatible value is present. Most important difference is that the
-> >> '164 lacks the output latch, which is used as chip-select with SPI[1].
-> >>
-> >>>> I'm especially against introducing a new, vendor-specific (On Semi, =
-in
-> >>>> this case) name; if we really want to introduce a new compatible, at
-> >>>> least make it as generic as possible, i.e. `generic,74x595`, or even
-> >>>> `generic,spi-shift-register-output`.
-> >>>
-> >>> If anything, that would have to be the fallback that the driver knows=
-.
-> >>> The first string in the compatible property has to have an actual
-> >>> vendor (I think, I'll let DT maintainers correct me).
-> >>
-> >> For the inverse operation (parallel in, serial out), there's just
-> >> "pisosr-gpio".
-> >
-> > Ok, I admit I don't know the correct next step. I'll wait for
-> > Krzysztof, Rob or Conor to chime in (on the subject of representing
-> > reality - the actual manufacturer - in DTS) and then possibly just
-> > remove patches 1-2 from my tree.
+Thank you for your comments,
+
+Simon Horman <horms@kernel.org> =E6=96=BC 2025=E5=B9=B41=E6=9C=886=E6=97=A5=
+ =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:51=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Well, folks, I don't know the exact device, so maybe there is no point
-> in a new compatible if there is a claim all devices have same interface
-> and documenting all of them would result in 1000 redundant
-> compatibles... but OTOH, that's what we still do with jedec,spi and
-> at24, so if we can add specific compatibles for these, we can do same
-> also here.
+...
+> > +static int nct6694_pwm_read(struct device *dev, u32 attr, int channel,
+> > +                         long *val)
+> > +{
+> > +     struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
+> > +     unsigned char pwm_en;
+> > +     int ret;
+> > +
+> > +     guard(mutex)(&data->lock);
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_pwm_enable:
+> > +             pwm_en =3D data->hwmon_en.pwm_en[channel / 8];
+> > +             *val =3D !!(pwm_en & BIT(channel % 8));
+> > +
+> > +             return 0;
+> > +     case hwmon_pwm_input:
+> > +             ret =3D nct6694_read_msg(data->nct6694, NCT6694_RPT_MOD,
+> > +                                    NCT6694_PWM_IDX(channel),
+> > +                                    sizeof(data->rpt->fin),
+> > +                                    &data->rpt->fin);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             *val =3D data->rpt->fin;
+>
+> Hi Ming Yu,
+>
+> *val is host byte order, but fin is big endian.
+> Elsewhere in this patch this seems to be handled using,
+> which looks correct to me:
+>
+>                 *val =3D be16_to_cpu(data->rpt->fin);
+>
+> Flagged by Sparse.
+>
 
-Except that we don't for jedec,spi, unfortunately[1].
+Yes, it needs to be fixed to be16_to_cpu(). I'll make the modification
+in the next patch.
 
-At24 and jedec,spi use a complex programming API, with lots of room
-for deviation and extension. '595 is a pure hardware part[2]: it is
-just a shift register (driven by SPI clock and MOSI) with a latch
-(driven by deasserting SPI chip select), without room for deviation.
-Anything that behaves differently is not a jelly-bean '595 part.
+> > +
+> > +             return 0;
+> > +     case hwmon_pwm_freq:
+> > +             *val =3D NCT6694_FREQ_FROM_REG(data->hwmon_en.pwm_freq[ch=
+annel]);
+> > +
+> > +             return 0;
+> > +     default:
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +}
+>
+> ...
+>
+> > +static int nct6694_fan_write(struct device *dev, u32 attr, int channel=
+,
+> > +                          long val)
+> > +{
+> > +     struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
+> > +     int ret;
+> > +
+> > +     guard(mutex)(&data->lock);
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_fan_enable:
+> > +             if (val =3D=3D 0)
+> > +                     data->hwmon_en.fin_en[channel / 8] &=3D ~BIT(chan=
+nel % 8);
+> > +             else if (val =3D=3D 1)
+> > +                     data->hwmon_en.fin_en[channel / 8] |=3D BIT(chann=
+el % 8);
+> > +             else
+> > +                     return -EINVAL;
+> > +
+> > +             return nct6694_write_msg(data->nct6694, NCT6694_HWMON_MOD=
+,
+> > +                                      NCT6694_HWMON_CONTROL,
+> > +                                      sizeof(data->msg->hwmon_ctrl),
+> > +                                      &data->hwmon_en);
+> > +     case hwmon_fan_min:
+> > +             ret =3D nct6694_read_msg(data->nct6694, NCT6694_HWMON_MOD=
+,
+> > +                                    NCT6694_HWMON_ALARM,
+> > +                                    sizeof(data->msg->hwmon_alarm),
+> > +                                    &data->msg->hwmon_alarm);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> > +             val =3D clamp_val(val, 1, 65535);
+> > +             data->msg->hwmon_alarm.fin_ll[channel] =3D (u16)cpu_to_be=
+16(val);
+>
+> cpu_to_be16() returns a 16bit big endian value.
+> And, AFAIKT, the type of data->msg->hwmon_alarm.fin_ll[channel] is __be16=
+.
+>
+> So the cast above seems both unnecessary and misleading.
+>
+> Also flagged by Sparse,
+>
 
-[1] "[PATCH] dt-bindings: mtd: jedec,spi-nor: Document support for
-more MT25QU parts'
-    https://lore.kernel.org/all/363186079b4269891073f620e3e2353cf7d2559a.16=
-69988238.git.geert+renesas@glider.be
+Understood. Fix it in v5.
 
-[2] Ignoring the rumor that all Microchip I/O expanders are actually
-    pre-programmed PIC microcontrollers ;-)
+> ...
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+Ming
 
