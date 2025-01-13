@@ -1,211 +1,167 @@
-Return-Path: <linux-gpio+bounces-14690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14691-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D86AA0ADA6
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 04:00:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B3CDA0AF92
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 08:02:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F3D718864CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 03:00:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73B10164B3A
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 07:02:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8169913777E;
-	Mon, 13 Jan 2025 03:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67548231A30;
+	Mon, 13 Jan 2025 07:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msrmVdeE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OA8AXTXd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52C279E1;
-	Mon, 13 Jan 2025 03:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899C218CBFE;
+	Mon, 13 Jan 2025 07:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736737222; cv=none; b=rWGLD+Ik/ca036BVBdCx88tt91VWpGZS7Y+8s8b4RMTsFTiQ4jyxNzcL2lC0g3Ancgu4qVFuIwOHZiGkRUHcaZHBJgARK5q8RfU4nwcHM3do0AfX0zBWu9zJaWIgTxbAHuBIwcAF1IFn3MudHDb52M3yPGzWZMDDLS9hPBq3k8w=
+	t=1736751747; cv=none; b=j9oC8qNXMzLdpO33sqt0DQsFFknAmzM3tCKnG+DOvYWQ+gtMKvhGWqIhqWtd0ytIE6qaM1Uj8FPuIJti/1rgfG6DaoJxgZ9NwAF2updQeDmqmOx4Qu9erEClnH3tI6LevDPe4hSnDSIfBrKMiFWSzkrKa9XGR4W4hSrTigZLZtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736737222; c=relaxed/simple;
-	bh=vWDv9c+Hb5NFBDqnLC3anS0jUC4B07QypVbhZL/BxTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pmf+eAJtbIH/LRS8V24RLS3He/IwgfqZL506ztWHylZCrB4fqg/SgCTwMuMrCtb8UqXLm2a2njhg0oVVqYt+7B0Lp0S+QIq73hrZKFXldmyZSsqrhgUQA2V0rRRo9bY5GkvZNtpDiUlUJnWcBwy2FtlLvLbYMqhX8qTPJPBOCJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msrmVdeE; arc=none smtp.client-ip=209.85.219.172
+	s=arc-20240116; t=1736751747; c=relaxed/simple;
+	bh=1e2l0XBBDnEwZNKCub8vHrKY4QTagSun6GLAncKYEM4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=HXynyM1g+lyBh7FA5PRJZ9FDFi+5KevDkIj7oWs+LAIAzKzwx8ywEuTQ6UQwDZnMwkTFsVrRk8xKUtKFWRKLBisCbfocdCAhutUMX5hFeglS1rJeR+XDTpcWx7brTvg1C7l/+pThv20Vnl2MU1ROdrsU2DTqxpEI0h05I5GzBcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OA8AXTXd; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e3983426f80so5878731276.1;
-        Sun, 12 Jan 2025 19:00:19 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso6456941a12.0;
+        Sun, 12 Jan 2025 23:02:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736737219; x=1737342019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1736751744; x=1737356544; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7vHUyb9eNg2JqWHIeEtx4JxxlaEahhQgvricUcB0kaU=;
-        b=msrmVdeEXhgI6OED5WasaszCm5FJkvfwO3V8oini06lN/Mojp3sV8ykJybQRGFQWuS
-         Ew4rAU1R1AUK5pgbno5Nb9RR+bIkn0OW4uJHmQ7s4+rWo6lPX85smR7wyx5j77HZ9aMq
-         twY7tS0SH6tJqpETq5PeX0L7Kg+L3Gvn6n6nY3cNWnkgziJiZ/GHE427Oj8YzvkBuyz/
-         GVJY80AGg0t+ybgFyfDcoiM6yi5Tt089NLddd9HtHC2v4QDZ3BKyQjQZiPwTRSDOxO0H
-         pn6tFJ8vrNY7+q0LNx/aAirs4YN6unnNSLhHvcsZXTepPJAN2MAPfpXycAhj4NpfjnXN
-         Pvug==
+        bh=mp3/qUQXLESraR4kRpn8DKp75/AqUs49Ij3IlmcsjIg=;
+        b=OA8AXTXdk7BAwO+RXvltFyKsu36Mj5CxHWEqm90gOXCdcZwFqIiiPL+6Pp3nIUrfvs
+         Bc1u3pLfHDv0wUmZ5O6pW7gHuoa63tWJVrD5yRZOlYEZr13vT5tke2jv/GWU41mmtPQH
+         lT8GxWCUrVc7CJ0RGqqpSBos9q7CkjHyIbNZ/LCoR3pZOIRPJri8F9wpyiG+kSpIJJTL
+         aVbCKw8x8Vot77Lv5RESjnyKfgYxJZCOHf/DVR7bFsquw1yb41MWFn+OxkqhuLPzdIvi
+         rVvNhwzu1PHHxalbqua4Ylq5haedgESxST66cqcSqldxerv+jzS9NZt35knDFtHmY6QR
+         5zLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736737219; x=1737342019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1736751744; x=1737356544;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7vHUyb9eNg2JqWHIeEtx4JxxlaEahhQgvricUcB0kaU=;
-        b=qTHphbfIIT1Iq8UwDKRHQ574R1okZ5Z2hcmXyK/XKLbBxk293ek3NIvwHiYEZkdrkV
-         mDKlYRl7iwi15/lr4/bfr2t2f3OAh1SjXJMMIU7lfylitsgKmYZZcdTX0KiRrUojYn+m
-         ZsLR8sAgP8VXyitGejHPZrPve5gDE7o4aS4g7nbqR1ubSAoa3dNUa9Y9ZZ4B4oQuxRDV
-         KUbzrdwi8ugQyHhO/lOrR3cJ/r9KUr3kAM5h4o5HAJW1l2rE53rs0OfjaFl17Whtubse
-         jqrTWs+YEPqegIF3irgAaWl3c1h1xH368c9mc0SGfFBxO8MKyCQVuoxpE3Qj4PsGmoAx
-         UYhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUK0CiXomYykw0fdYj25dDmuoz/DZ4uJO3K2AxyvWTU8flJhvikoOuw9IBPC0ybs/6dyjgORcr/@vger.kernel.org, AJvYcCW0ApG1ciJhKM3IKFIVaRBORJuiwNEbF8++CiaFhPEizgTZcR3fwFxpmu/v0dYxgiQYQ08bJBfXlXlZ+H83@vger.kernel.org, AJvYcCW6EaLrO+tG32JQ0cue501tXWsg4XFhspq3VfT/Kba979fUmpClYRfKlTIk4gl7RifjG5EGhYqreHj+@vger.kernel.org, AJvYcCWMmIrFgET8eIEZlM1xmwg7b73IWmYEzR5ajuUQLOtuqeKNwdaFddDaEDpuhyJEFDRo1SpLo1rufE7Dk536ZAg=@vger.kernel.org, AJvYcCWO+oeLv2sCLPYF6YY2NyFoJfy9kMEMoJ3RejC7We6Ihj74u8nqlX9Slin68afjb0DV87ogDvkEZVwW@vger.kernel.org, AJvYcCWTdxm8p1omKnHHmheTqjL4KsjoQFY/8u3ZWOhgQh24MxzIABD6NgS2ZYgHIV9On3utXfGl9F5cK99sreA=@vger.kernel.org, AJvYcCX20F3YL8xNuL17QBGXdtMQBbKB0AYtjkbbvA+2M78HpK1rqJ5godFBk/fGSYflfzYWfL9oa7XPc3YftA==@vger.kernel.org, AJvYcCXcKAb20c0Lj9IQ0urOd6JsQ3dDTXJbz/FVxlUt5o4TuGW2GWcY3PkPA4U5GJ+ptk9WTukgx65oTCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxobPcfGrskszvDhj9vf0VjY4IUM9aypLXs2avVgcBTYruQ9wj
-	LxtFSMwhhUXvo4qZIPdlv1kWHt3wMZ3vUbgBuyRqYYJDJxzSIUOrOFe2ZGEwUh3hZL4Zd1BEVPd
-	haJYYAgbSONTloICF8jkoCr0T/qo=
-X-Gm-Gg: ASbGncubp5jZFm15NToKBfk87nrjcXQn9k0H3umDmqmj2WsUvn7eB3GNyJggPD3RGxW
-	cPsN4i9M5JtDr0qFhlTPPD8k4sXoiJDcUX2XkNd85rJHDD4/0ni8b+HDHxdYf3w/5Dkr+M08=
-X-Google-Smtp-Source: AGHT+IGsfoH84Emy/3VAy+2ciT/LDM53GHF7kLpSuNtlkY+mcbIYtSqMBLpJAo2tp5wPRRi4KWOuDrwlzY99kXjwbZU=
-X-Received: by 2002:a25:2104:0:b0:e47:f4e3:87e3 with SMTP id
- 3f1490d57ef6-e54edf25ca4mr10429337276.11.1736737218579; Sun, 12 Jan 2025
- 19:00:18 -0800 (PST)
+        bh=mp3/qUQXLESraR4kRpn8DKp75/AqUs49Ij3IlmcsjIg=;
+        b=UeoJQoT01AQe+J0DU84NZ4fDS2xE5eaI1swqe3SRqYeJ2zsusoH764HR4Mlqy7DDyH
+         ni3c0eBra0vXohN6RRX1rHxACoKQXlvfzp+34Hb9N2OERWENP7PpRvu+61jrtlIeFs1X
+         WsZjP+wIPftAHFcNuxQVR784y4S9460L+hgGD1XpyiS/2XKTVfHgt/UQ+U4I9P9Y/L/1
+         I0DpLystcBTjpEDBmmvoPAAA7StsJDRBW6T4Jq2B27nj3HHJGB+GK/391zTMGC0VirAb
+         4yeHn1sm8hTwN0raGqjLoPMvk1hkmL2zzK4cevDzSYkop98CJm4uV/QIOC2vZ8Xje9zZ
+         mYWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtZipD+ctsu9uogaQT/KlLzwyx/XGHDXGDgwYsSd1N6nOzwB0mHXzdHNq9FUUkp7NURl+vKGwx0dBN@vger.kernel.org, AJvYcCW2w//5btNvB6MCEc2HR/iYDoGzLJD39mxJ/WxjvWc7YcJsM65/NAUQElj2r6p21H0O5IXbHsf1JgAN@vger.kernel.org, AJvYcCWLW/TiJBXitYBO0J+arwACgM0DjRnAGb/lxEGTEO35lq+mqQXvCO2vHMv5haxZ0EZCn/0jdSwsg+2iPA==@vger.kernel.org, AJvYcCWP6EaLSH3v29xg8eeICWrujzdQFll42cZSwli/LwZWMEmVZUgT+e6VCZfrgim8lWRkp1qF48JCTvo=@vger.kernel.org, AJvYcCXaVuycnCgCuy8S+aAkXYVl7W70FHooHY8Wtb7qMrauG7aqBNs+VNOeJV3zbG22zo96MCuKCIJQPv6E0D5g@vger.kernel.org
+X-Gm-Message-State: AOJu0YwII+4pULLNPFQ6QS1nOUSHGPm3TneLlA5a/+tnv8uwX63MPc4o
+	5MykQ86Pf3dVQsVGF4uQPJYK1kmvINkecUEEGMIsgBbR0BszOhOiTFnNmcwV
+X-Gm-Gg: ASbGncvDuzqocV0wL85xt7MqVYzIjJ32Dr6MODBX+LPGRqHe0ZJOteiB/LjxWHpbP27
+	FPYwSd5cULNTzRbRDgNBug4UWKMBLC/vmJrhepijVJgdvzdf0JMnocQN4I0Rne3ttPMecYh3hLr
+	ESpE/kY+HaXHC8qJLi0KKoNa7dYOplwF9Tb9+dISRs8FvHl6uk1YrDN8pPxw/5wKor5OyCTu6er
+	kj0zhTNJ0zbTYkL6a7YYOhtSsRFpUwPs/TfNcVa3lGbe+DRvxFDLU3LOB+7J2saqPwEl/T3B7rZ
+	Gq4keSI0V0iMdWmrV+QF1KS5
+X-Google-Smtp-Source: AGHT+IEdbQkU8UjVmzUUdbYKBPe34Hd3H6alrK+lAeP3uFioAdztQzne4JSDv6lfgqNHpEvaeL0MQQ==
+X-Received: by 2002:a17:907:94c2:b0:aa6:824c:4ae5 with SMTP id a640c23a62f3a-ab2abc9f6e0mr1698225066b.56.1736751743583;
+        Sun, 12 Jan 2025 23:02:23 -0800 (PST)
+Received: from smtpclient.apple (185.174.17.62.zt.hu. [185.174.17.62])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9060bccsm455865966b.22.2025.01.12.23.02.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 Jan 2025 23:02:23 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241227095727.2401257-1-a0282524688@gmail.com>
- <20241227095727.2401257-7-a0282524688@gmail.com> <20250106135135.GN4068@kernel.org>
-In-Reply-To: <20250106135135.GN4068@kernel.org>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Mon, 13 Jan 2025 11:00:07 +0800
-X-Gm-Features: AbW1kvZmveBm_1ZsSzbrQ6SCqOa0J-Y9vxXUkcqQ9J4x_X6pa8sZdwCwcoEMWQw
-Message-ID: <CAOoeyxWvRzHRVLW-U=nemfUpoF5pcO_bDmvg4U-wVqkFp=V=Yg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] hwmon: Add Nuvoton NCT6694 HWMON support
-To: Simon Horman <horms@kernel.org>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [PATCH 06/12] dt-bindings: clk: sunxi-ng: add V853 CCU
+ clock/reset
+From: =?utf-8?B?QW5kcsOhcyBTemVtesWR?= <szemzo.andras@gmail.com>
+In-Reply-To: <tttj7va4hzpqugah4rhm2u5kganuix5iy7373h62b3rgfwvdbt@53vexrsfmskk>
+Date: Mon, 13 Jan 2025 08:02:11 +0100
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Maxime Ripard <mripard@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linux-riscv@lists.infradead.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <E7DD6AE5-833C-41AC-8B7F-2772BEB065EF@gmail.com>
+References: <20250110123923.270626-1-szemzo.andras@gmail.com>
+ <20250110123923.270626-7-szemzo.andras@gmail.com>
+ <tttj7va4hzpqugah4rhm2u5kganuix5iy7373h62b3rgfwvdbt@53vexrsfmskk>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: Apple Mail (2.3776.700.51)
 
-Dear Simon,
+Thanks for your comments for the whole series!
+Not everything is clear for me yet, but I=E2=80=99ll clarify with sunxi =
+community, and
+fix it based on your suggestions.
 
-Thank you for your comments,
+> On 11 Jan 2025, at 11:34, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>=20
+> On Fri, Jan 10, 2025 at 01:39:17PM +0100, Andras Szemzo wrote:
+>> As the device tree needs the clock/reset indices, add them to DT =
+binding
+>> headers.
+>>=20
+>> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+>> ---
+>> include/dt-bindings/clock/sun8i-v853-ccu.h   | 132 =
++++++++++++++++++++
+>=20
+> Please use full compatible as filename.
+>=20
+>> include/dt-bindings/clock/sun8i-v853-r-ccu.h |  16 +++
+>> include/dt-bindings/reset/sun8i-v853-ccu.h   |  62 +++++++++
+>> include/dt-bindings/reset/sun8i-v853-r-ccu.h |  14 ++
+>> 4 files changed, 224 insertions(+)
+>> create mode 100644 include/dt-bindings/clock/sun8i-v853-ccu.h
+>> create mode 100644 include/dt-bindings/clock/sun8i-v853-r-ccu.h
+>> create mode 100644 include/dt-bindings/reset/sun8i-v853-ccu.h
+>> create mode 100644 include/dt-bindings/reset/sun8i-v853-r-ccu.h
+>>=20
+>> diff --git a/include/dt-bindings/clock/sun8i-v853-ccu.h =
+b/include/dt-bindings/clock/sun8i-v853-ccu.h
+>> new file mode 100644
+>> index 000000000000..a405b982f914
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/sun8i-v853-ccu.h
+>> @@ -0,0 +1,132 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>=20
+> BTW, also checkpatch warns about this...
+>=20
+> Best regards,
+> Krzysztof
+>=20
 
-Simon Horman <horms@kernel.org> =E6=96=BC 2025=E5=B9=B41=E6=9C=886=E6=97=A5=
- =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:51=E5=AF=AB=E9=81=93=EF=BC=9A
->
-...
-> > +static int nct6694_pwm_read(struct device *dev, u32 attr, int channel,
-> > +                         long *val)
-> > +{
-> > +     struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
-> > +     unsigned char pwm_en;
-> > +     int ret;
-> > +
-> > +     guard(mutex)(&data->lock);
-> > +
-> > +     switch (attr) {
-> > +     case hwmon_pwm_enable:
-> > +             pwm_en =3D data->hwmon_en.pwm_en[channel / 8];
-> > +             *val =3D !!(pwm_en & BIT(channel % 8));
-> > +
-> > +             return 0;
-> > +     case hwmon_pwm_input:
-> > +             ret =3D nct6694_read_msg(data->nct6694, NCT6694_RPT_MOD,
-> > +                                    NCT6694_PWM_IDX(channel),
-> > +                                    sizeof(data->rpt->fin),
-> > +                                    &data->rpt->fin);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             *val =3D data->rpt->fin;
->
-> Hi Ming Yu,
->
-> *val is host byte order, but fin is big endian.
-> Elsewhere in this patch this seems to be handled using,
-> which looks correct to me:
->
->                 *val =3D be16_to_cpu(data->rpt->fin);
->
-> Flagged by Sparse.
->
-
-Yes, it needs to be fixed to be16_to_cpu(). I'll make the modification
-in the next patch.
-
-> > +
-> > +             return 0;
-> > +     case hwmon_pwm_freq:
-> > +             *val =3D NCT6694_FREQ_FROM_REG(data->hwmon_en.pwm_freq[ch=
-annel]);
-> > +
-> > +             return 0;
-> > +     default:
-> > +             return -EOPNOTSUPP;
-> > +     }
-> > +}
->
-> ...
->
-> > +static int nct6694_fan_write(struct device *dev, u32 attr, int channel=
-,
-> > +                          long val)
-> > +{
-> > +     struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
-> > +     int ret;
-> > +
-> > +     guard(mutex)(&data->lock);
-> > +
-> > +     switch (attr) {
-> > +     case hwmon_fan_enable:
-> > +             if (val =3D=3D 0)
-> > +                     data->hwmon_en.fin_en[channel / 8] &=3D ~BIT(chan=
-nel % 8);
-> > +             else if (val =3D=3D 1)
-> > +                     data->hwmon_en.fin_en[channel / 8] |=3D BIT(chann=
-el % 8);
-> > +             else
-> > +                     return -EINVAL;
-> > +
-> > +             return nct6694_write_msg(data->nct6694, NCT6694_HWMON_MOD=
-,
-> > +                                      NCT6694_HWMON_CONTROL,
-> > +                                      sizeof(data->msg->hwmon_ctrl),
-> > +                                      &data->hwmon_en);
-> > +     case hwmon_fan_min:
-> > +             ret =3D nct6694_read_msg(data->nct6694, NCT6694_HWMON_MOD=
-,
-> > +                                    NCT6694_HWMON_ALARM,
-> > +                                    sizeof(data->msg->hwmon_alarm),
-> > +                                    &data->msg->hwmon_alarm);
-> > +             if (ret)
-> > +                     return ret;
-> > +
-> > +             val =3D clamp_val(val, 1, 65535);
-> > +             data->msg->hwmon_alarm.fin_ll[channel] =3D (u16)cpu_to_be=
-16(val);
->
-> cpu_to_be16() returns a 16bit big endian value.
-> And, AFAIKT, the type of data->msg->hwmon_alarm.fin_ll[channel] is __be16=
-.
->
-> So the cast above seems both unnecessary and misleading.
->
-> Also flagged by Sparse,
->
-
-Understood. Fix it in v5.
-
-> ...
-
-Best regards,
-Ming
 
