@@ -1,188 +1,172 @@
-Return-Path: <linux-gpio+bounces-14693-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14694-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BFB7A0B0EB
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 09:21:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D43AA0B0F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 09:22:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55167166351
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 08:21:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B5811887763
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 08:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17244233156;
-	Mon, 13 Jan 2025 08:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63B7B233141;
+	Mon, 13 Jan 2025 08:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rr6SUMaX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OAxeDN1l"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEBB23236F;
-	Mon, 13 Jan 2025 08:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8289A23237C
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 08:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736756483; cv=none; b=eCL+4CmnvrzYv7bxvp7Vvfl28c+CUqJ6jtzUZYAyIT1SbxNgX1UagaSKV2PSIiKtGODHx2Bjiyvdyt1UTEahfE4LUacmfPwuH94JUG7huFMwacIs2PisXMQ6T4JCnVdQwZJpkgwI9BSqbgXLb+G1nop63muaIVw+VUqPGwwcS3s=
+	t=1736756542; cv=none; b=nwXJMuau2AeIRb/1UVEVBOV7HZVm+JmIhOKv2Zk2jlDjZS9MaGgDfCZJ7PMLOg20CRSyZRWvdBSyuEiiIoAHfmyGUK8pSx21VGJ4IENDdogdzR6Q0g80v63ZpeUJcA8Qfrc96PHsS5zuMDHj27x+RN8UIJUZYXzXrtTXrDq0LEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736756483; c=relaxed/simple;
-	bh=IUwQT37Q5694N5OlGBsritmBKUoU/caZrqNKpv5TSTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=peeeIEPHeAHsygJcCUutVNDvL6rrGPOVymDnEf2SQK8fxkzlcH7XFJfhDCwiUpjMZV8G9l90PQ0G19KEDxReCui8V5p2u3KCG7Wq+TiykhfP32rHnQmufJMk4bcI/8ppzUIHO1kPnuV0ef2lLI4xKF5qXhRH5NbmbDQ0tpkGFHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rr6SUMaX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B38EC4CED6;
-	Mon, 13 Jan 2025 08:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736756483;
-	bh=IUwQT37Q5694N5OlGBsritmBKUoU/caZrqNKpv5TSTE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Rr6SUMaXT2aCGEE9bCvykrGWWIX1Y1VLQ5cWQyPPPQlVkJCI51myzrYxLfCO4vYl7
-	 17IndjbH51OpMRrtxus+AyAVkp5zjOHBMuIp6Ki9TxffSXeAImhpUM/KrBBD4hQWC1
-	 qcAsJyhWg+g034H97T+MwMM/CAbE7rMwXN9NK5JgpypNdN7dcwO4AJM31+eGw/Z2Zt
-	 lgLqsrmBMbp28T4a2/SgjNNLmf7ttjfcGVnkadVSOwqcMX0RlPl8BuN9aJMuY0y/JC
-	 PqyC/UrZWgyjeQ0NKoMtIRil+6utW+E+xtOsDrVFV2Aiiabhuhth2HeOahxqvdis/i
-	 rpkNgYHRx6PJQ==
-Message-ID: <fef71e03-489f-4503-9d1b-d61051d45dde@kernel.org>
-Date: Mon, 13 Jan 2025 09:21:10 +0100
+	s=arc-20240116; t=1736756542; c=relaxed/simple;
+	bh=YURCukiWphcO8E6TR3Dg5L7aYgHDbbFS6wjV7IvJoEc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EXtHLBz1gH3LbwWPYopd/Z1+pll1SIiCATojIsENLtzC7ShHpDPe13N0LeEq6kC99vikbNrm0EQMuV21ttAoWYxyv0orujtHLeSrmrtk/vR9LkkqcsUj0O1I6KI/lx8kl8+4woSXL9wwgypOAQkStRGQR46bLW1Wl1ZSTkQL+r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OAxeDN1l; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-305f529a987so30004101fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 00:22:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736756539; x=1737361339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LYZnAapdMVIwTLso2tw2X7Yx3EGSsdzYujFlr9hYQ8s=;
+        b=OAxeDN1lBzAiWHVrgTHOVYXfG9zX0L9k6DwrGRvFK2GWxhUP+Uguw1wLAUV7EBxDn6
+         ASFPdKWL4Ho12ymNlqMjXVSlceDJCz/9WDZKHvxeFzW+Uut928AnPU2knWc/RN+LyadQ
+         9FP0Wd6fmhk88xP8hxN+Zn8o82t1/b7jTNVTVF8oUcM1t+2+2pDDxJpdehxYkrQYlG9+
+         GK5PU//9Sx8JzvDscSKFP6W6ZZgjJqZIirWwN9pgXZlvoOTbuQbajpq1BzH5zJ/EMxyj
+         uVaomJxsyxqwX6vJyUmDmPzXmsyMOqD0nRAkcXZ9qfCeH++/bdDYJK7tcJ6lQMDz+2HQ
+         MxFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736756539; x=1737361339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LYZnAapdMVIwTLso2tw2X7Yx3EGSsdzYujFlr9hYQ8s=;
+        b=lgcmEZESPSRn/d5CywOn14m8rafhjq9pvoEQ9eyKI3x3JLLaAYZ3HBfi7YD4rBhovB
+         9Gj4m4SxfDhNZN4RdjkWYzxryYeg9NYZbs4v4GYw3LzN6Atta8v85mNGUTdzaaztGN96
+         DcQ90qN1C/X40q/FX2jbmmr40HsttUjlLl3yu0IlG/0mHC2QhS9XJq9L3AKEfeIlvCi4
+         GAacT8/ji0K1S8g1O+oIIrMwuT7zkwtUOo+YFh17bPADcOWeiiy3LbpNjBTZNpQV7YCo
+         DB20YAMDngs+BmXFLPCbXmFbdzGSjbAS8PgGK7fDdIva29yQRU7c8+JUYzMrkzxIpGZt
+         apqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaPfUprezAeolnrXV9ralzGa6j1tUNkv0Fur84Lc+PehF30I89X6pC2KArdmBQVz/UKIfwJu5o1YUJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZBaVPRvbdOWBokf4LOhkUcJb3deQUoxA7K+tvLZS9MxGKn3Up
+	mgRnJ7vsTaRkCtx5c90xGu9yNtpU3mF5uDPE5m8wjfn8Na9d1F/I8yRl+MiC3xlv9EwZdPM5rI6
+	Bw0eabc+AkJEsv/tHfh2yNWI86jnuWK+DD8CGBg==
+X-Gm-Gg: ASbGncua5WpT4RVtMNDPTqWpcuAUhmgmDq/Bz4n5LGVJum6wnNSUIsJtjLjo6gVOe05
+	ZhOO4Mo+fh1Y1qYi42li8qpPm7BVht5cB8WXzTw7aJTMpU+c914LwtCgj8iBMhRteh8yAuQ==
+X-Google-Smtp-Source: AGHT+IEPAuj/r28iaeMyBZpjY1aQFXNvxQmMGY3smzgjt3L/D7oNBwT431xJOlepY3Uk8zu6dFezCj4uBd/f2TxSEQw=
+X-Received: by 2002:a2e:bc1d:0:b0:302:497a:9e5b with SMTP id
+ 38308e7fff4ca-305f455e958mr57605411fa.2.1736756537139; Mon, 13 Jan 2025
+ 00:22:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/12] dt-bindings: clk: sunxi-ng: add V853 CCU
- clock/reset
-To: wens@csie.org
-Cc: Andras Szemzo <szemzo.andras@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-7-szemzo.andras@gmail.com>
- <de280eed-bcc8-4802-9734-5e95ad1f6611@kernel.org>
- <CAGb2v65arvBMg+reReVqK-Y6dL+CSrSx4618msiRKcNf=Vk1=A@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CAGb2v65arvBMg+reReVqK-Y6dL+CSrSx4618msiRKcNf=Vk1=A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250110130025.55004-1-brgl@bgdev.pl> <de6b70f2-8fd6-4e2a-a6c1-466698be8a6b@prolan.hu>
+ <CAMRc=MckJfEBK_ZUZ31hh7SMdbr4a-vZLtTGDCFttGK65wbXdA@mail.gmail.com>
+ <CAMuHMdWhEZ0No8mXdymE8O8+rMCkD2SXAifZwReb1BbfYASOeQ@mail.gmail.com>
+ <CAMRc=Me+syDKW6sycGZ86rBJysaccsm3QUYd1+5cnfzRCo6P7A@mail.gmail.com>
+ <9bb482aa-a392-45c2-a21f-d08e5ce3a6e0@kernel.org> <CAMuHMdVrQms38kXjr4df3kJfcoNFm3oEm2Zr0XNuucZwg_VbxA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVrQms38kXjr4df3kJfcoNFm3oEm2Zr0XNuucZwg_VbxA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 13 Jan 2025 09:22:05 +0100
+X-Gm-Features: AbW1kvYPWQMfCphyDw8T05mTaqv_dHFihKqwRJp1JclVUwQo-74yiMDflHGsLNI
+Message-ID: <CAMRc=Meqnr9wMu5kUNEbisBJntZf6KuQp_QspOnDPyqqX9VM3w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpio: 74x164: use a compatible fallback and don't
+ extend the driver
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?SiAuIE5ldXNjaMOkZmVy?= <j.ne@posteo.net>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13/01/2025 09:06, Chen-Yu Tsai wrote:
-> On Fri, Jan 10, 2025 at 9:56 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 10/01/2025 13:39, Andras Szemzo wrote:
->>> As the device tree needs the clock/reset indices, add them to DT binding
->>> headers.
->>>
->>> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
->>
->> That's never a separate commit from the binding.
->>
->>
->> ...
->>
->>> --- /dev/null
->>> +++ b/include/dt-bindings/clock/sun8i-v853-r-ccu.h
->>> @@ -0,0 +1,16 @@
->>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->>> +/* Copyright(c) 2020 - 2023 Allwinner Technology Co.,Ltd. All rights reserved.
->>> + *
->>> + * Copyright (C) 2023 rengaomin@allwinnertech.com
->>> + */
->>> +#ifndef _DT_BINDINGS_CLK_SUN8I_V85X_R_CCU_H_
->>> +#define _DT_BINDINGS_CLK_SUN8I_V85X_R_CCU_H_
->>> +
->>> +#define CLK_R_TWD            0
->>> +#define CLK_R_PPU            1
->>> +#define CLK_R_RTC            2
->>> +#define CLK_R_CPUCFG         3
->>> +
->>> +#define CLK_R_MAX_NO         (CLK_R_CPUCFG + 1)
->>
->> Nope, drop. Not a binding.
->>
->>> +
->>> +#endif
->>> diff --git a/include/dt-bindings/reset/sun8i-v853-ccu.h b/include/dt-bindings/reset/sun8i-v853-ccu.h
->>> new file mode 100644
->>> index 000000000000..89d94fcbdb55
->>> --- /dev/null
->>> +++ b/include/dt-bindings/reset/sun8i-v853-ccu.h
->>> @@ -0,0 +1,62 @@
->>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->>
->> Odd license. Did you copy the file with such license from the downstream?
-> 
-> AFAIK all the existing sunxi clock / reset binding header files are
-> dual licensed. OOTH all the YAML files are GPL 2.0 only.
-> 
-> IIRC we started out GPL 2.0 only, but then figured that the header files
-> couldn't be shared with non-GPL projects, so we changed those to dual
-> license.
-> 
-> Hope that explains the current situation. Relicensing the whole lot
-> to just MIT or BSD is probably doable.
-That's not what the comment is about. Dual license, as expressed by
-submitting bindings/patches and enforced by checkpatch are expected. But
-not GPLv3, GPLv4 and GPLv10.
+On Sun, Jan 12, 2025 at 10:58=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Krzysztof,
+>
+> On Sat, Jan 11, 2025 at 12:00=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> > On 10/01/2025 15:14, Bartosz Golaszewski wrote:
+> > >> At24 EEPROMs differ from '595 shift registers in that they provide a=
+n
+> > >> API with multiple commands, and some commands or parameter bits may
+> > >> differ among different implementations (but usually these difference=
+s
+> > >> are called quirks).
+> > >>
+> > >> All '595 (I'm deliberately writing it like that) shift registers
+> > >> should be 100% compatible, modulo some electrical specifications
+> > >> (voltage levels, maximum speed, power consumption, ...).
+> > >>
+> > >> Interestingly, the driver is called gpio-74x164.c, while no '164
+> > >> compatible value is present. Most important difference is that the
+> > >> '164 lacks the output latch, which is used as chip-select with SPI[1=
+].
+> > >>
+> > >>>> I'm especially against introducing a new, vendor-specific (On Semi=
+, in
+> > >>>> this case) name; if we really want to introduce a new compatible, =
+at
+> > >>>> least make it as generic as possible, i.e. `generic,74x595`, or ev=
+en
+> > >>>> `generic,spi-shift-register-output`.
+> > >>>
+> > >>> If anything, that would have to be the fallback that the driver kno=
+ws.
+> > >>> The first string in the compatible property has to have an actual
+> > >>> vendor (I think, I'll let DT maintainers correct me).
+> > >>
+> > >> For the inverse operation (parallel in, serial out), there's just
+> > >> "pisosr-gpio".
+> > >
+> > > Ok, I admit I don't know the correct next step. I'll wait for
+> > > Krzysztof, Rob or Conor to chime in (on the subject of representing
+> > > reality - the actual manufacturer - in DTS) and then possibly just
+> > > remove patches 1-2 from my tree.
+> >
+> > Well, folks, I don't know the exact device, so maybe there is no point
+> > in a new compatible if there is a claim all devices have same interface
+> > and documenting all of them would result in 1000 redundant
+> > compatibles... but OTOH, that's what we still do with jedec,spi and
+> > at24, so if we can add specific compatibles for these, we can do same
+> > also here.
+>
+> Except that we don't for jedec,spi, unfortunately[1].
+>
+> At24 and jedec,spi use a complex programming API, with lots of room
+> for deviation and extension. '595 is a pure hardware part[2]: it is
+> just a shift register (driven by SPI clock and MOSI) with a latch
+> (driven by deasserting SPI chip select), without room for deviation.
+> Anything that behaves differently is not a jelly-bean '595 part.
+>
+> [1] "[PATCH] dt-bindings: mtd: jedec,spi-nor: Document support for
+> more MT25QU parts'
+>     https://lore.kernel.org/all/363186079b4269891073f620e3e2353cf7d2559a.=
+1669988238.git.geert+renesas@glider.be
+>
+> [2] Ignoring the rumor that all Microchip I/O expanders are actually
+>     pre-programmed PIC microcontrollers ;-)
 
-Best regards,
-Krzysztof
+It's late into the cycle and as it's not clear whether we really need
+the new compatible or not, I removed the two patches from my queue.
+Let's revisit it in the next release.
+
+Bartosz
 
