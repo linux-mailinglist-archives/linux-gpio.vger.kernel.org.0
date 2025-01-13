@@ -1,109 +1,116 @@
-Return-Path: <linux-gpio+bounces-14716-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14717-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D217CA0B9F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 15:42:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DAE2A0BA2C
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 15:47:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB6C77A337A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 14:42:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E8E51888707
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2025 14:46:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9369722CA02;
-	Mon, 13 Jan 2025 14:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6AD22C9E9;
+	Mon, 13 Jan 2025 14:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aNaS91gf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pPO8LK3Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59C722C9FD
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 14:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C53922C9E0
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 14:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736779128; cv=none; b=VegoseqQdp+gmIQ3dNrTJH310cyNQmtVh0spIOJpIIK4BIKO0AUFqHJjJqCwzsDBINto5wj+D4OCmwSFQ6Ny9qA+dlUD9Nhf3FGDmRyYupvqMMtuj2BEf46AkJV4nYzRe1AiaOerFLGI8Ff0FccCrqwk9JB2rhPzb1Ml42I0278=
+	t=1736779357; cv=none; b=NolAcGEH+ds7lZLD0oSPFFY7lIihT/NAx8N+8LwGjaXXXfmW6DjP1+2h7loSOd19XFs13ZF2bQOrTwr9cgAz/qGmYLbsFpuGt6Vk7qq5Bs7zf+fn95nq+/7f3368s1mxyZ8uHnNz/NEQJOa0BSxRe7ovBIvl3OpSnm1e7zqiM24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736779128; c=relaxed/simple;
-	bh=etW4QO+bN3eNzf3uXi9QAs/Mz/k9BPf+/ef3MGUELS8=;
+	s=arc-20240116; t=1736779357; c=relaxed/simple;
+	bh=7W2mhWlK4BTLc7JxE1Pn3ZSLtHFOTiBo+aWyoKQ1jUU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gbgqr33szEAf8BXnYT0W1Yl/RDbQQaHBwqYy9IK4QRrjFT0xV/U0ehG0vhjRospMlyatzuldldGeyertPxJVPQ9/r1a8rFu2LRVwIkGGi0edxZ1OFmyReRETlAvsjNfl9v7Wt5ovQUKsZgkqXvnBd7X4Hz63xYU+0Zyi6HUOgCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aNaS91gf; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=j0IsfnYiqLJFdNVIhtZVWQMrfmroV734DfDgJuLJ9UxZfW4TIDPJeZqezvUfn8Zweonejozz0Kmnmw4M9iovPTvV+0mTIjsrcD4LNhZihPVStUpPKGfgDh3ROWQtdYQDJu03aBdnqD6rWPPsuIm0FJKONA6vIcDcdofFM/jd75A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pPO8LK3Z; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-304d760f12aso35151531fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 06:38:46 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3003c82c95cso32013721fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2025 06:42:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736779125; x=1737383925; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1736779353; x=1737384153; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=etW4QO+bN3eNzf3uXi9QAs/Mz/k9BPf+/ef3MGUELS8=;
-        b=aNaS91gfgS5i7t7LiI8CjMe47MP7G8YRBm0iMt80ns4SsvXaQ1Oam2hFsvPZHQ0Ilx
-         pz6MY/W/OtL3XkxPd0UcwOpwEzpF11Z4bpYFdYfUxaMhXsX8TdLNOMXz4xSW9bPS/R8L
-         K0uziaUM/1fYrhprjUGKU8LeakGfnAOQHbYRERuZavuK5UXht/HFBehjr0J32y+gIu1+
-         3w3W48FdmvzTCs5zMiasE0vXU7EJHnHBR9cSKPue/aIA3qlMvdZAb7PAf8aAxMD22Pbz
-         49Ba37rZatDyfdmNrWkC4Uvj8ilh6+QQjLToENugAb2DDWZ9J6HwMT+eZuk+UB6ixGGJ
-         iuvQ==
+        bh=7W2mhWlK4BTLc7JxE1Pn3ZSLtHFOTiBo+aWyoKQ1jUU=;
+        b=pPO8LK3ZHzhtuzWp7Qv6FslshKIVbUM9moWsnJxDXjErWmnt9WSQFmRanC8GmWavj2
+         VWSa5I9ZVwtm4vnlKG4WwMGhGfKi3CzMScEtVkKmfOKeesesTBqZFAxtt1BeLKekdl4t
+         sdJPeCGdFJG54YLJWLf5zKoCe9cKY0Zr3sjpenN5V6Df8/zklwLsDIi9euf3priKIIpe
+         p5OmycaxzSZdxrf+N0k6b/ZuVxWIOaj+8tCAfx9tDzB/srwOxSuri2oPWS2Olu9b0oai
+         2Aq7zlEGugacFCP/BEON1yX5ScuMAaPeduSXKL/J1140IHm2vRqiTPhN3x/zRCEQOdle
+         fTfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736779125; x=1737383925;
+        d=1e100.net; s=20230601; t=1736779353; x=1737384153;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=etW4QO+bN3eNzf3uXi9QAs/Mz/k9BPf+/ef3MGUELS8=;
-        b=DMT7X9qTheZ1LP8B5ScOEzX6/nl6E5TA9kCtSgQ688Hj/S8UEumgvQlb26atY7v9fF
-         nYik8sdSBu1qlRZGk/y0d7PIu8n/nZiqhcTtUIYaiahJdeNwjzMnprJEDEgpxCov4NA0
-         LLYDZBt2Cd3pIsya/voz7MvnNVsHJgIExZuG1d3yMH2V1NcoHF2SzP0JhT4thHkqwJAQ
-         dJJRr2mrKYQtJKkMYyYhbtXAR8cbMF6/s72TM20y44vlM1bwX+xR+Tng5PimWvELxVc5
-         6MmIH0mAf6S06oqKmvfhl8KeEpd1LXo6pSxU+F9u+Ut2ruUl3lJNrPGscRs7Y5vw90tu
-         HSFw==
-X-Gm-Message-State: AOJu0YzVZTLVtD61WmuQ881sR626Xf5MClVbM8WkMdzzJoKMc6XCic+3
-	5EAsw21qYcloSm1+9ejUHkFUIjR4xt2IVczmqG3YUBrzac65ay7JHcRPSTWEiIPHc/xKquxqFpD
-	KZC3nhgomYn3WF4gXElmSjvhdLArEh776N1j53g==
-X-Gm-Gg: ASbGnctR6cYqirf652gsl/IhUWCVoVD/T1gkOEUzcsYOh7SDGm2Kzk3WpLBcGjd+0Pd
-	IYbt5zpIFe9zkA7DhdKxWByMOxajLsaM0K5SY
-X-Google-Smtp-Source: AGHT+IGzCUYOpPPOhBhAZHC8EUM0F04TI3O4DJz57YgK5vUdYy/lw+v266gYlSZwVjWwmk6cJNHYDHwrZ57XcjPmMDg=
-X-Received: by 2002:a05:651c:e10:b0:300:25f6:9b3d with SMTP id
- 38308e7fff4ca-305f45513camr34405761fa.10.1736779124866; Mon, 13 Jan 2025
- 06:38:44 -0800 (PST)
+        bh=7W2mhWlK4BTLc7JxE1Pn3ZSLtHFOTiBo+aWyoKQ1jUU=;
+        b=g85VBE8FQPDZGVQDLZuwSFLLE0polz06mwFhVPc1PbeTgcCpKyI4BBtOymFn9tvshH
+         rsj+ZbWOL6IzpYGkCqM3vyoHrOpfWF2uu0wWy/JlOgXItWV5+PofupWZTqmhPI/YFIvA
+         am9213E6QctBz2KAUyMRoMvdrp583bwEN+bjVSo4MvQ8QtGJbQTepERnxGQG8OnzVnjk
+         fOXuKu/+DUbZNRxEaEV+PVQcI6RUiM5dIcLK0NjboMjLY9Q2gMJdWxTvq0xJNdtB2gdq
+         qbOc2cx/BovW7a9hONcxodrvaa7u2hL6KvFYtcNMFfKYqIHvTaJBRxpFxTh4L+78AmVc
+         Exkw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc4UxCNpQcdoLLl4/71jRlQXkR3GqGN/hfbWsClB/i/ZokmVwMijwaif9cvluvtMIIytSoCo2R4sWu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSHQskz8iDXxqc7/xH53mAeQVzqscueaDyoCh1j/DiPvfHD6+R
+	s2p/EYdgZ3t5WHDqoqrl/ceLmdzlZ6UqcXVTXyUsmiCroRlnO6rjWBBiUTIVZWA6epeilZklXU/
+	5Sfwf5hYps3QJRn2IvtgPqQ+/hy2TFqmaIVmTgg==
+X-Gm-Gg: ASbGncvo2qlnvVVUs4va+gaUxByS0zb2ZXxCFDAoinx4AvRRK12CTEb1O2u5EheTZWA
+	G5OZU3BSg8/vfy7LCCNG9W5ue7xpJYFm4/Z33
+X-Google-Smtp-Source: AGHT+IENOE2ll5qeBQdJ80yylesb06tRQDSUG+UU61Vm3q3uDxQQ0+DlCXsReKBTut8XEJ7ObVreQKDUPla+i1+OZQk=
+X-Received: by 2002:a2e:bea4:0:b0:302:4135:7d99 with SMTP id
+ 38308e7fff4ca-305f455e7b4mr69133281fa.4.1736779353384; Mon, 13 Jan 2025
+ 06:42:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241225035851.420952-1-gch981213@gmail.com> <20241225035851.420952-2-gch981213@gmail.com>
- <CACRpkdZ8Yve3EPB6E1nrPi0se=rgush60Q=Vce4Ux2w1QW3w_w@mail.gmail.com> <CAJsYDVJXLjd6ih4C5k+e-jAJ4DvKOPcJ3OwBQX+S=AmohzENmg@mail.gmail.com>
-In-Reply-To: <CAJsYDVJXLjd6ih4C5k+e-jAJ4DvKOPcJ3OwBQX+S=AmohzENmg@mail.gmail.com>
+References: <20250108-fpc202-v5-0-a439ab999d5a@bootlin.com> <20250108-fpc202-v5-9-a439ab999d5a@bootlin.com>
+In-Reply-To: <20250108-fpc202-v5-9-a439ab999d5a@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Jan 2025 15:38:33 +0100
-X-Gm-Features: AbW1kvZU2Xi3XuAy-EodJ7InSqEEs-QfCPtUrrUh6asbwUu-RocMagbXqSmZ6ZQ
-Message-ID: <CACRpkdYi_+aQ5L-c4=w9MK-6Uh0e9dX0nnU6LcZcHd90j97q7w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: add binding doc for siflower,sf19a2890-gpio
-To: Chuanhong Guo <gch981213@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+Date: Mon, 13 Jan 2025 15:42:22 +0100
+X-Gm-Features: AbW1kvaddZgkHI_ZE8MDKIDy3uHycNLLq64wY8GBa-n8x8phy3UrJ9DEp0n2mjk
+Message-ID: <CACRpkdYgJ_rbrTWh0HS-F8DJJ6u48uqr-zQ555o3Q4mYnFhjXg@mail.gmail.com>
+Subject: Re: [PATCH v5 9/9] misc: add FPC202 dual port controller driver
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Qingfang Deng <qingfang.deng@siflower.com.cn>
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Kory Maincent <kory.maincent@bootlin.com>, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 29, 2024 at 4:06=E2=80=AFAM Chuanhong Guo <gch981213@gmail.com>=
- wrote:
+On Wed, Jan 8, 2025 at 5:14=E2=80=AFPM Romain Gantois
+<romain.gantois@bootlin.com> wrote:
 
-> I don't know how one reset could be shared across multiple platform
-> devices so I don't think this kind of split is possible.
+> The TI FPC202 dual port controller serves as a low-speed signal aggregato=
+r
+> for common port types such as SFP, QSFP, Mini-SAS HD, and others.
+>
+> It aggregates GPIO and I2C signals across two downstream ports, acting as
+> both a GPIO controller and an I2C address translator for up to two logica=
+l
+> devices per port.
+>
+> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 
-In general I don't think shared reset lines in silicon is
-any problem whatsoever, they are reference counted,
-just like clocks or regulators, and there is a flag
-RESET_CONTROL_FLAGS_BIT_SHARED
-especially for this purpose.
-
-You might have to fix the reset driver, or fix up the way
-they are defined in the device tree, I don't know how,
-but certainly it is possible. If in doubt consult the reset
-controller maintainer. (Philipp.)
+From a GPIO point of view this looks good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
