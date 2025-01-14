@@ -1,111 +1,157 @@
-Return-Path: <linux-gpio+bounces-14776-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14777-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01B58A106D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 13:38:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05E7AA10749
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 14:02:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFD0918872E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 12:38:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49CD3A6E7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 13:02:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910FC236A73;
-	Tue, 14 Jan 2025 12:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718D0236EC6;
+	Tue, 14 Jan 2025 13:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y33ZH2eK"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LbPiOzlq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885DA236A61
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 12:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A26C236EB3;
+	Tue, 14 Jan 2025 13:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736858307; cv=none; b=CMrOjY4pamtNVdCpixExvGsQH7bzzdjKvkOFDtNHkoidDHTpQ9rpehq20PCbpO9mj/cq4wo+Cvt56nsOlBk2VZPul6UG01chEY3gNhhG8K8Sb9FdRwycU5uncongDpmALtQ/wXWdyQSHMR0TQuFmkzCdNVWr2zMFB63aQ79HmGY=
+	t=1736859751; cv=none; b=LdpsjMKgPp8T9FC7vBQMl8qNgc9ismlbcQ4slHOcgL962wTM6okTEd8BIWQ8GHlv4YGbb02ewyTToNXM7TlYXQnxbhoUXrhD5vu6mEPS+DXUG3MImB3NQv4vm3mDWgB650wpkh1U4Y+ACxh5X0kTeKyVsRMxFCOqsQ3f25oAxGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736858307; c=relaxed/simple;
-	bh=FOy+fpUcZjo3NQOA4lzsuRXkHenykO5B1X4kehGjluI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d9yQGKQPLZXs6udJL50cc/viGYkZTYTsJ+ux106wkUQ90Y/t34nxwK/5eKLA0IEhkA1C8YVL0zjn5YvI4IGAFxk+Pk43JC1yoo5txKkZRLWD78JPUH+Eazox5QPtaov/jI12DtsK5uXm+Lr9MD3P/ZIV7DGFzed3HBiF08bhX40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y33ZH2eK; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5401be44b58so5522539e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 04:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736858304; x=1737463104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FOy+fpUcZjo3NQOA4lzsuRXkHenykO5B1X4kehGjluI=;
-        b=Y33ZH2eKghe/9kGMTVzUlqsuu/1JbuSmT1LaSncIGPHEOU9g/gBmuzvE575ckLx0wW
-         1hxzmeetoQHo5jCpScBMYzTlUXW5gjqUfi68j427418LuRPkzh1h3QBj1Pbwb2u1ER4I
-         P4sj58CM4M5DKPtYphrYzXjcjxRWtZ/amQZZQnBCymSQZ73v7VXg4gl+h3+hhhOiLgsG
-         teOO7+yqb3Bt6SXelufjNThbNVsN7FCqnpUuiRSdnUIvfXNFist9/Td1sUAv+L5J9X/v
-         whKrRiavVdxdfgmlc9w48X2SA0IEpcx82Hla4HGimDiSCeNKVHy8THXOohI9MUYIjlv7
-         zzfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736858304; x=1737463104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FOy+fpUcZjo3NQOA4lzsuRXkHenykO5B1X4kehGjluI=;
-        b=UQcfDuggKfbfQE9vwjFpPrEgNlKvdG0gg4SesvWDXR1IDekc4TKeiTZ8othYqdveMa
-         ZipotOyG4OIRFFJjSyuSzKV7GH7o2fOFgXRyIeGYEpk2kv/sBqn9IPjywFBiAhLHEHWy
-         MAL/mFqQ3uwGDx5zPs1xiDdKDjiFSmNRjTqCMsAPwMkYVj13C2W/BqI+XJrcp59akRYg
-         6W8E2DhhQdob3OCjkuedPCFJIuV1/UDdEBuZ/Ty7FACyrtZWsQFdLsfFBUXNGH6fnvOp
-         /UxB0QYDOVvfuXhalaneZENTQBa1+BtGV4xlNcV39DFGyL0hV30nnnoetuHNNuHS4toM
-         iX2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVL8L9K8pzAwQdD/L9KYQfj8CaHRuccmuI9vUziU6TmRvtV1X8q8xzx+47SoWLeiCrbwBlHXtRTbNNB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAnmzQ3h5BANSBmV8c+djW8W70uunrQfK5t6SZeQBahkqiKeyw
-	K3iyMsWhDcrmoB09oXRQN1Wx/Bb3/ibIaZI9zCg223LX3CvC8IF607BGzFFKUHX7/Ve7yByCJtQ
-	MeZMbHJrx+YDyWt6Ega4AC46FHu/K02qWNLTtpg==
-X-Gm-Gg: ASbGncs4mbG0sFNpZw9c1UlSfSZZ65NOSVnU9nAjMZJf6e6wO6zfOWa/y4rBQqjIJXv
-	mLASXYhJ8mqnIUmRzZprZK1umaf839nisbcfO
-X-Google-Smtp-Source: AGHT+IGcvU/U3n3KiVK8Pas9Rl6/CCuxSKRYPHEejh00b9yg8f2JKHdOjjfDGEy+haFbClEH/nX0/RcLgiFJCruBWNo=
-X-Received: by 2002:a05:6512:b03:b0:540:2fd2:6c87 with SMTP id
- 2adb3069b0e04-542845ba92amr8849466e87.16.1736858303656; Tue, 14 Jan 2025
- 04:38:23 -0800 (PST)
+	s=arc-20240116; t=1736859751; c=relaxed/simple;
+	bh=AA+nLKTJ9G19sEotsK0fooLH6CtrjmfqCp5x8ReVJmg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=hc9UVrq0HC0Y2AHiYNWUXCaYMItFQfp6bgKUKLwbTGRu2jMtoGOvKLlH81nV5wjt+RH29uo61ALczphfiK1Pguy7DpmPQMCCzkiJSvtfLxPY6x1iUX9Yh6ofePzYKFp0QzZclYNAyt/vCbt+MYlKgNQqFitwxd8w0UxEyZwzghU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LbPiOzlq; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D77A60003;
+	Tue, 14 Jan 2025 13:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1736859740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y4tNhYxMV5qxeGa31gl/wwt8loSJo/cJhQFWwxvcrC0=;
+	b=LbPiOzlqgfjA+x/iz0pT7pIJaygL//AWTmm6jgkrOImtC2JtWblLZqESpURvFF8DDOsCIl
+	o5SKJY6oijCEb7sYlJUkAmywKWSCGmNOjmX4MY3GRm/QYF0zjf0KCoFsRg9yUJWNyPBOZT
+	q0C9335cUddIGjpsP1iKwNkIrO7uOeDKhrI1YwtKDP3dxev9OsGk4iVzsATdy3Yqm/2BII
+	dyG1LovtYPy7L88EbpKf8sAOiBFtb/4O25ssBS2wBEcMJKj3PS9jfDjcf3mVNiYd2DzsmT
+	drK3DGIeJx99RtDfjBybNVDh/wdg2zmP5mSuYEIWbXWAYqqDKP3ERImI9niBmw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250106220659.2640365-1-zmw12306@gmail.com>
-In-Reply-To: <20250106220659.2640365-1-zmw12306@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Jan 2025 13:38:12 +0100
-X-Gm-Features: AbW1kvbmhkHMhFNltkPbxNdF01Aj3zGBI5__ealYxb0W8ke6YgJlZ3LsL-hjuu4
-Message-ID: <CACRpkdYG6EO2x60Hj2tN3ucOQsA1c_x2hh5gd4frr=D5V=Lbgg@mail.gmail.com>
-Subject: Re: [PATCH v10] pinctrl: stm32: Add check for clk_enable()
-To: Mingwei Zheng <zmw12306@gmail.com>
-Cc: antonio.borneo@foss.st.com, marex@denx.de, mcoquelin.stm32@gmail.com, 
-	alexandre.torgue@foss.st.com, make24@iscas.ac.cn, peng.fan@nxp.com, 
-	fabien.dessenne@foss.st.com, linux-gpio@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Jiasheng Jiang <jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 14 Jan 2025 14:02:18 +0100
+Message-Id: <D71TE4TEJKDF.1QRNYB2TKOMYJ@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: mfd: gpio: Add MAX7360
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-1-9519b4acb0b1@bootlin.com>
+ <gerivs3f3gd3a227tu3ojn6wi6l2fbtwvw4q6n4k5aaqqupyya@xojqkp6nkrkb>
+In-Reply-To: <gerivs3f3gd3a227tu3ojn6wi6l2fbtwvw4q6n4k5aaqqupyya@xojqkp6nkrkb>
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon, Jan 6, 2025 at 11:04=E2=80=AFPM Mingwei Zheng <zmw12306@gmail.com> =
-wrote:
-
-> Convert the driver to clk_bulk*() API.
-> Add check for the return value of clk_bulk_enable() to catch
-> the potential error.
+On Tue Jan 14, 2025 at 9:11 AM CET, Krzysztof Kozlowski wrote:
+> On Mon, Jan 13, 2025 at 01:42:25PM +0100, Mathieu Dubois-Briand wrote:
+> > +
+> > +  rotary-debounce-delay-ms:
+> > +    description: Rotary encoder debounce delay in ms
+> > +    minimum: 0
+> > +    maximum: 15
+> > +    default: 0
+> > +
+> > +  linux,axis:
+> > +    description: The input subsystem axis to map to this rotary encode=
+r.
 >
-> Fixes: 05d8af449d93 ("pinctrl: stm32: Keep pinctrl block clock enabled wh=
-en LEVEL IRQ requested")
-> Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> Missing type. I guess you wanted to reference rotary encoder schema,
+> next to input and matrix-keymap?
+>
 
-Patch applied!
+I'm not sure I fully understood your suggestion. Do you mean adding a
+reference to rotary-encoder.yaml, at the root of the document? Like:
 
-Lots of iterations but the end result looks really good.
+allOf:
+  - $ref: /schemas/input/matrix-keymap.yaml#
+  - $ref: /schemas/input/input.yaml#
+  - $ref: /schemas/input/rotary-encoder.yaml#
 
-Yours,
-Linus Walleij
+I did base the schema of the rotary encoder part on rotary-encoder.yaml,
+but I believe we cannot reference it directly: it adds some properties
+that do not make sense here (gpios, rotary-encoder,steps...) and also
+some of them are mandatory.
+
+Yet I see that I'm not referring to any type here. Also I did not
+specify the default value. Would the following be OK?
+
+  linux,axis:
+    description: The input subsystem axis to map to the rotary encoder.
+    $ref: /schemas/types.yaml#/definitions/uint32
+    default: 0
+
+> > +      COL2 to COL7 general purpose output pins configuration.
+> > +      Allows to use unused keypad columns as outputs.
+> > +      The MAX7360 has 8 column lines and 6 of them can be used as GPOs=
+. Value
+> > +      of ngpios must be coherent with the value of keypad,num-columns,=
+ as their
+> > +      sum must not exceed the number of physical lines.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-names
+> > +  - linux,keymap
+> > +  - linux,axis
+> > +  - "#pwm-cells"
+>
+> gpio and gpo nodes are optional? How would the driver behave? I assume
+> you need to define the partition between GPIOs, especially that 'ngpios'
+> are a required property in their schema.
+>
+
+No, you are right. In my mind it was optional, but current driver
+implementation will complain if the gpo node is missing. I could make it
+optional in the code, but it's probably better to make it required in
+the device tree, so the hardware is correctly described.
+
+> >=20
+> > --=20
+> > 2.39.5
+> >=20
+
+I have fixed the other points listed in your mail. Thanks for your review.
+
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
