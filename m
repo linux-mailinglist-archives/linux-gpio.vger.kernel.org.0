@@ -1,160 +1,149 @@
-Return-Path: <linux-gpio+bounces-14788-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14789-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0579BA10A6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 16:12:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AD5CA10B5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 16:46:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2FC87A20BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 15:12:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4527718857AB
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 15:45:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FF2815C15C;
-	Tue, 14 Jan 2025 15:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A0E1C3BEC;
+	Tue, 14 Jan 2025 15:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Dq3OjX15"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGOzwNp6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF40523244D;
-	Tue, 14 Jan 2025 15:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629121C1F0C;
+	Tue, 14 Jan 2025 15:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736867531; cv=none; b=X8fHUOUbWPtLTbbSZdPohB1HuWHgEjtFQy3eeau3sXE9puXJTffrYfCNov+L8k6vSStnqWb0rvQtmmFih9L2KldTjGjpdoAt9eJ/2GSqLFUwqz2NbpjMfMzMdDdtL4bGeHLhdBqdi5OwBu9G6/uyLC2pYTle8NWdoa3KbbrUBfQ=
+	t=1736869487; cv=none; b=h1PiProw/riHwELjcAdmnJqTEdrUsiIvQ5JVVFEkxIPd3QU502Z3JNhkEl2yPlKsPMbcIGv/nUWDlG7PcE1ghYg92SUvNUAbkv5ZIdEEpNmfeZV1z+odgmtB/ihwyjN/+Ee8qEmQCDzLMM9Jm1OxzK+wkBIzwnBrqFEJiNpt9eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736867531; c=relaxed/simple;
-	bh=DL8gwF1GJ20n33ml1FHEg/aAAglXZ3TF9OFCcZ0ipiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F7tXeACVQIsxbLJWHS+B8MIRwMqcTXe/0OQIhHCt243V5kovoJAd6urQxLR8C2nu2sQZaA7qcTcRSd65Vb1m9uWj4cYUvMVC0bC/yfEUiJtfm8et5CtOgUZaqnUHsv2KrThI0XfSX9mnaTN9ez10xD/bb5+QdrvorSd8NKmvxNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Dq3OjX15; arc=none smtp.client-ip=193.252.22.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id XiZytlY9xyfdlXia3tQ2B1; Tue, 14 Jan 2025 16:11:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1736867519;
-	bh=XV4Id1xvYHlaSYqAm96ChNINwUN4AO6c7LrvEBY8Mp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Dq3OjX15koJsiFaPGJLMkr02s81/arOSIzSYmgnER7lakEeU8cyCDas42c5HdzPY/
-	 rtU5LMqs+bYPOYqAV7IFYKn9+JamBu8kD18TyYPEwZkmIszlDF5cQ5vQf4R/rv4kwD
-	 vb0jr8Hq7oB2aH0ZobATJjChAg69ptArkMXzbqk8F+A2qVdSQBnTlyylL+dEf9dBSG
-	 QVNFHAQ5klUnx/5p8OSiqTnxmkhXW+q9SooGiQEd30YcNb3/Oru9AeNc8xRvCv2NZb
-	 Gz4hFOD0eu2DbzgtBIWV4Xwk/Xt3nlEipG7y0KH/9b8+7eUZSemzie93loGr+DV/Cb
-	 JJXOMvikfVx1w==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 14 Jan 2025 16:11:59 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <6e349f0f-6509-4a3b-bb75-e2381e9205c6@wanadoo.fr>
-Date: Wed, 15 Jan 2025 00:11:41 +0900
+	s=arc-20240116; t=1736869487; c=relaxed/simple;
+	bh=LtubRmGEaJ9lk7gruPEYicCWYL2k020zFZErGoSKgKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZStjzk0pTErcfZpvAEMlXRa7dg0fSyiQt3cdsf1AHpR2+5cHChWL3IlY5dphmW8wSJHk+fGveVHHlgyszEgXrFOxnzy45mgcg1mcN7s7Fn2b82T774VraYmHRU9rN2zpxLD+oO2Kr6HNRYA+yU+um+2r/gGGiG24nrsjU+h5D+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGOzwNp6; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e3a1cfeb711so8358060276.0;
+        Tue, 14 Jan 2025 07:44:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736869484; x=1737474284; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNi0/jozEuL+9HXocQhbgYuX2QuWiq8swjBKC6BNVDg=;
+        b=BGOzwNp6RaMJ/uYZZJobeSScai+IjHVo75LBJ1PfhPMjtdHGaTKpsb6w2WyB42K5CK
+         ZrYz20/2z9gVJkZctb0Kzil4j8KsJdA8xproa6k1XF6s6f1r56kbvpHQJ+xaJeJwCeVl
+         oTtc44kPdMgGHE1jQ0bkjDc7uexwButi1wrDhEtp5g/NZJZoRn1QZ1oTJRdlmr/1oVSQ
+         d8hbZtntFqFylRXKuuRIfmV4q3rwXcmbHKoQXzEsBH9Yi1VPHWQd1xXc1JGEtUMz4EKg
+         UqlupXQlph5pWEv368f9+60xfeYFBLAesPCqjCoI35tVVkQtUJTOrDXaXSN6sBHeEhAs
+         YOtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736869484; x=1737474284;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PNi0/jozEuL+9HXocQhbgYuX2QuWiq8swjBKC6BNVDg=;
+        b=rvuUUo+mfpcYYqbT0r+k+sd9aOFpOsaX30atPVkiBW5vwiMB5Kf+Df2UF0TGozpevU
+         8mLO7DFX/QvOMTsGLksINtWk/V2dbbtBwfp/G/mL/5Pvn3ib0KFF3IrUyOPV7PEvOsM6
+         v+KrVD9Vmd+RyHKd93YZCbII5+XxEBLnA2i5CmQDSxE2RcY9AGrJS590vWlhcPaWZ8ij
+         e6DRaNIZw/1oapgbk68Sh7UHexa50dAs6RkI1KqMR892migKOfA03K9kEv+j3pOjMhTr
+         QDjUPzscJDkQlqtq4632cnauTv5e+w7KsShvM6LoHEy8uSDpObIyMuI2pxe8EiNEICNb
+         XNNw==
+X-Forwarded-Encrypted: i=1; AJvYcCV98ZnipAn/5CEhmvW1QFTdSaZFn0Zxxw41dorjHFgoq94eWDeaZaQdFApNmQ1ysfTCvjKLHzu53Hi5uZjx@vger.kernel.org, AJvYcCXO1vfZ/GaUgmvlH3QXH2895UqiJZZsqQ6b60voFmLpyL0yA9OIHfqcU8K1DLBseWaKhk/4NLHF4q5Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyDxkOLeGLknTdS9YnlIJArrenP3R5mplhRAcP3EoSCU9e2yrX
+	x48qS3U9pvLsydbD3ldlOkJy8srfwVOZVThFbuNarj4pqijN7/Z7GA8J/mrS9ievsntTK7Vzq0V
+	D9q3ACU/uAN2pxmKAsubYxiN3Olk=
+X-Gm-Gg: ASbGncttunT9NCKSf52dZ4na9DNHTF3pZ65UrGXcXIzsn43xtHVSCksNwFw2uVxEElK
+	CKyPwgWoNe8uaTJYBgzCUQciqoCVmwzorRRrXgrs=
+X-Google-Smtp-Source: AGHT+IGq6JzjQYkHF2BSm9oBvsJyEMXLtwOGv4ySg90Sw36Ka5oKGJe5o09IZClBJ/ix5XvYAf9so1uuVESwBX/NG8Q=
+X-Received: by 2002:a05:690c:9c03:b0:6ef:641a:2a90 with SMTP id
+ 00721157ae682-6f5312be4bcmr197072807b3.32.1736869484290; Tue, 14 Jan 2025
+ 07:44:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/7] can: Add Nuvoton NCT6694 CAN support
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org,
- brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
- linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20250114033010.2445925-1-a0282524688@gmail.com>
- <20250114033010.2445925-5-a0282524688@gmail.com>
- <CAMZ6RqLHEoukxDfV33iDWXjM1baK922QnWSkOP01VzZ0S_9H8g@mail.gmail.com>
- <CAOoeyxW=k35-bkeqNmhyZwUxjy=g3irTBS5mbXLxqp1Stx-Zfg@mail.gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAOoeyxW=k35-bkeqNmhyZwUxjy=g3irTBS5mbXLxqp1Stx-Zfg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <e407b7b58c966ee35e023618ad428a21f979e761.camel@alliedtelesis.co.nz>
+ <20250113220221.13545-1-koute102030@gmail.com> <CAHp75VeLyacKo3rY5iyq+kZnLjEQsBN2eOJExHrqHuesaVyTQQ@mail.gmail.com>
+In-Reply-To: <CAHp75VeLyacKo3rY5iyq+kZnLjEQsBN2eOJExHrqHuesaVyTQQ@mail.gmail.com>
+From: work work <lakabd.work@gmail.com>
+Date: Tue, 14 Jan 2025 16:44:33 +0100
+X-Gm-Features: AbW1kvarBylcNkpzCmezAivuMHPavfMZOSRPpngjfHe8_zBdKsBtevmKSFkWr5o
+Message-ID: <CAHN=yabQB5jYDd9iQ7s1dMWTScRf3c_zuNtXL8U283+vvenfNA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: mark.tomlinson@alliedtelesis.co.nz, brgl@bgdev.pl, 
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Abderrahim LAKBIR <abderrahim.lakbir@actia.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/01/2025 at 19:46, Ming Yu wrote:
-> Dear Vincent,
-> 
-> Thank you for your reply,
-> I'll add comments to describe these locks in the next patch,
-> 
-> Vincent Mailhol <mailhol.vincent@wanadoo.fr> 於 2025年1月14日 週二 下午4:06寫道：
+Le mar. 14 janv. 2025 =C3=A0 10:37, Andy Shevchenko
+<andy.shevchenko@gmail.com> a =C3=A9crit :
+>
+> On Tue, Jan 14, 2025 at 12:03=E2=80=AFAM lakabd <lakabd.work@gmail.com> w=
+rote:
+> >
+....
 
-(...)
+> > +                             /* Store irq_mask for later use when chec=
+king pending IRQs */
+> > +                             bitmap_or(chip->unmasked_interrupts, chip=
+->unmasked_interrupts, chip->irq_mask, gc->ngpio);
+>
+> This solution has a flaw. Where is any code that clears this new
+> bitmap? The code starts with 0 (obviously) and step by step it gets
+> saturated to all-1s.
+>
 
->>> +static int nct6694_can_get_berr_counter(const struct net_device *ndev,
->>> +                                       struct can_berr_counter *bec)
->>> +{
->>> +       struct nct6694_can_priv *priv = netdev_priv(ndev);
->>> +       struct nct6694_can_event *evt = priv->rx->event;
->>> +       struct nct6694_cmd_header cmd_hd;
->>> +       u8 mask = NCT6694_CAN_EVENT_REC | NCT6694_CAN_EVENT_TEC;
->>> +       int ret;
->>> +
->>> +       guard(mutex)(&priv->lock);
->>> +
->>> +       cmd_hd = (struct nct6694_cmd_header) {
->>> +               .mod = NCT6694_CAN_MOD,
->>> +               .cmd = NCT6694_CAN_EVENT,
->>> +               .sel = NCT6694_CAN_EVENT_SEL(priv->can_idx, mask),
->>> +               .len = cpu_to_le16(sizeof(priv->rx->event))
->>> +       };
->>> +
->>> +       ret = nct6694_read_msg(priv->nct6694, &cmd_hd, evt);
->>> +       if (ret < 0)
->>> +               return ret;
->>
->> You are holding the priv->lock mutex before calling
->> nct6694_read_msg(). But nct6694_read_msg() then holds the
->> nct6694->access_lock mutex. Why do you need a double mutex here? What
->> kind of race scenario are you trying to prevent here?
->>
-> 
-> I think priv->lock need to be placed here to prevent priv->rx from
-> being assigned by other functions, and nct6694->access_lock ensures
-> that the nct6694_read_msg() transaction is completed.
-> But in this case, cmd_hd does not need to be in priv->lock's scope.
+Yes indeed, and actually the new bitmap is not necessary at all
+because what we need does already exist which is chip->irq_mask (I
+noticed it just now!).
+chip->irq_mask is updated whenever a pin is masked or unmasked via
+pca953x_irq_mask() and pca953x_irq_unmask().
 
-So, the only reason for holding priv->lock is because priv->rx is shared
-between functions.
+The solution should look like this:
 
-struct nct6694_can_event is only 8 bytes. And you only need it for the
-life time of the function so it can simply be declared on the stack:
+diff --git a/gpio-pca953x.c b/gpio-pca953x.c
+index 272febc..29e8c20 100644
+--- a/gpio-pca953x.c
++++ b/gpio-pca953x.c
+@@ -842,11 +842,6 @@ static bool pca953x_irq_pending(struct
+pca953x_chip *chip, unsigned long *pendin
+  int ret;
 
-  	struct nct6694_can_event evt;
+  if (chip->driver_data & PCA_PCAL) {
+- /* Read the current interrupt status from the device */
+- ret =3D pca953x_read_regs(chip, PCAL953X_INT_STAT, trigger);
+- if (ret)
+- return false;
+-
+  /* Check latched inputs and clear interrupt status */
+  ret =3D pca953x_read_regs(chip, chip->regs->input, cur_stat);
+  if (ret)
+@@ -855,7 +850,7 @@ static bool pca953x_irq_pending(struct
+pca953x_chip *chip, unsigned long *pendin
+  /* Apply filter for rising/falling edge selection */
+  bitmap_replace(new_stat, chip->irq_trig_fall, chip->irq_trig_raise,
+cur_stat, gc->ngpio);
 
-and with this, no more need to hold the lock. And the same thing also
-applies to the other functions.
+- bitmap_and(pending, new_stat, trigger, gc->ngpio);
++ bitmap_and(pending, new_stat, chip->irq_mask, gc->ngpio);
 
-Here, by trying to optimize the memory for only a few bytes, you are
-getting a huge penalty on the performance by putting locks on all the
-functions. This is not a good tradeoff.
+  return !bitmap_empty(pending, gc->ngpio);
+  }
 
->>> +       bec->rxerr = evt[priv->can_idx].rec;
->>> +       bec->txerr = evt[priv->can_idx].tec;
->>> +
->>> +       return 0;
->>> +}
-
-
-Yours sincerely,
-Vincent Mailhol
-
+--
+Best Regards
+Abderrahim LAKBIR
 
