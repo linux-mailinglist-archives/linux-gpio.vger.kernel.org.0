@@ -1,224 +1,230 @@
-Return-Path: <linux-gpio+bounces-14741-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14742-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF62A0FF17
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 04:15:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE4C7A0FF39
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 04:30:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FA62188560F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 03:15:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB65416941B
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 03:30:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D8522FE0B;
-	Tue, 14 Jan 2025 03:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72ACD233556;
+	Tue, 14 Jan 2025 03:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aIfHKxpG";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="Q4x72Ad1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3bJwUrK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEAA1E535;
-	Tue, 14 Jan 2025 03:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736824537; cv=fail; b=XoXeMNGGzY4Q//mGXxi4bmv3T6kseFTWtwXmll2aUdHODNthd7NWm4BtjocHffv466JgHfxSsLHiFzZhKU/gkQMO997hbCn+FAEU5lzkjd08o34n/8FhowR4D4sPPFrDnBIU4f/U7DuNblotcuINpjDiQi/oSv6F+uFnAHSkcAc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736824537; c=relaxed/simple;
-	bh=UEaA3xjRpNYqQVETSR5UXBBD5fwJs0bt8qxlV7xbs2M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Nmo22/xkMHt2umwFulmiaVppBYqTUwqkft5zqbIVQWDiu76UNxos1lO/ibV41ok6TiO5vO9p/6wRVmInFkBap5DdWmpuLQPzH1aqBIIqnLw4uR/eiVKShfwMS/xk2OsfbVKoBpkvbFhLXMNU3NiWexCpca7WIwxIUs848rIV+kM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=aIfHKxpG; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=Q4x72Ad1; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: ae749cfed22311ef99858b75a2457dd9-20250114
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=UEaA3xjRpNYqQVETSR5UXBBD5fwJs0bt8qxlV7xbs2M=;
-	b=aIfHKxpGtFogDKjPowK9HqG8rZ7JQSD+mT+z362WEy/huMh57mQiPwN34rOWRHwNdq0wYe14XrhGig36oHDGG4FPbSQ0w8F0JNWnxwyeRDbHKHAG7a8Sfd5y4jX9gRJErWy7wC9yYjj2Z2kBag//5ttZ+ItDV6Pbpw0ZdgI3CEA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:b63bf8c8-0585-480f-b2a0-902965630a9f,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:a85cd637-e11c-4c1a-89f7-e7a032832c40,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
-	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ae749cfed22311ef99858b75a2457dd9-20250114
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <ot_cathy.xu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 137243302; Tue, 14 Jan 2025 11:00:16 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 14 Jan 2025 11:00:15 +0800
-Received: from SEYPR02CU001.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 14 Jan 2025 11:00:15 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zMR/4HMFsydPDhpZWXeiZiaa0BYe0ggTdn4w85zIx74pOEYHHNqJaKJVUBXYk7KHLQ+egkzBJDq5dYIo2z4anlEziaNySrCyDo+DCdrPy6gksW7mH2QJIpy30mVdfZm04WD4QEGAEEpIYRqwqI0OuLCV7UZcGLCeET+2jalEJ7k1nG0qzskygFvOJAA2XIT/HF0bNNJHIcp9Uo6izXYf8cLjwD+r76MnGUKQkS6QoqFYOL7Iyr0x2bYFhmZCxslGSMIhl7161fw6a+22ra7HGs2vAvd590+9TdZmaruaUMLAmGaYfj4wQyj4fZqo2GtfFf3fxvnO+5OiC6UVBZL/2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UEaA3xjRpNYqQVETSR5UXBBD5fwJs0bt8qxlV7xbs2M=;
- b=phv37Vt7T1Tifwa87skjdYjltIBi15TO0KfUiJAsNfEgOXiRIfPFgm7rB122rRK8G9JOH4Tl+lMotqf7wWrR+VgctwL3AXrtg+Tdgbg2eT4B3VcsaQBQhK4eb3+lIkXmVQL7diK9TWaH0hMZi5vv8Gmp+0uR4P7c1g20UHmgNm+est+TMdYi9AIqCQ6sfc+tzPxXoK/NDtvXId0fMB2JBcwS+WyuzfISeXnmIdM5WLgFAwbc+OyIWghI+oOcj9qkEURoKbBERVb0VtK2GbpPz0e12hW7bp+tyMyI7EXnEigxZqCJfeO0Pi73oIBoxwYoudomNJF8QznpDqzv+AepMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC87233537;
+	Tue, 14 Jan 2025 03:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736825427; cv=none; b=TFm1E0bdttFYdXkjyG4SZrjI1CP55lPGGWseY1Xa5hKZ/k16orrrtLwgiVeD5gjdvpepT3rxgdHRw58eBK8/HRXzYLD2ZSTIwGm4sNjBGgIgpXal6zeretQ++8uSJ3NZLcrqrPk1OmNppe9SE4UrwUBTT1hFUCQBwkTDQXi5sv4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736825427; c=relaxed/simple;
+	bh=Ef35RqrMk4muXxQ5u0byNehgJOEAcpGRQhaYOwCGwfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oq/GtlUUVvyssSxEZjtm0XQRHs2iGPNg2sHsm/pgwZkfW7vbjsIn8ogsFLhHZALQoNDCbNr78gTBVzVaYbEQCh8Nob5HENFtfnSywymoFiGUxvkfjzldfwe47XLfai94WqhRo2qYIOQKD2LIIQDMSS+etwEEs195y+V3GYwNniA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3bJwUrK; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-215770613dbso60256235ad.2;
+        Mon, 13 Jan 2025 19:30:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UEaA3xjRpNYqQVETSR5UXBBD5fwJs0bt8qxlV7xbs2M=;
- b=Q4x72Ad1ZI1NbX77c2ECy9q4zgP7VXpBzLpt2eM0girkWKYDrSCshGYIcEapGMvrSg5rNqMlGnW0/TeMxLssZ/TkG6gA/Qn3vDyO3ffHdZS3MYHN3Rc/0X4s/PjgUOyexzj+BE3MBxOUCrfg8s/5R8VxUlDxIzfLSLqq1XRdjz4=
-Received: from PSAPR03MB5688.apcprd03.prod.outlook.com (2603:1096:301:88::14)
- by KL1PR03MB8473.apcprd03.prod.outlook.com (2603:1096:820:12c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.17; Tue, 14 Jan
- 2025 03:00:12 +0000
-Received: from PSAPR03MB5688.apcprd03.prod.outlook.com
- ([fe80::d976:8c60:38aa:d1dc]) by PSAPR03MB5688.apcprd03.prod.outlook.com
- ([fe80::d976:8c60:38aa:d1dc%6]) with mapi id 15.20.8335.012; Tue, 14 Jan 2025
- 03:00:12 +0000
-From: =?utf-8?B?Q2F0aHkgWHUgKOiuuOWNjuWptyk=?= <ot_cathy.xu@mediatek.com>
-To: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "sean.wang@kernel.org"
-	<sean.wang@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "frank-w@public-files.de"
-	<frank-w@public-files.de>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org"
-	<linux-mediatek@lists.infradead.org>,
-	=?utf-8?B?R3VvZG9uZyBMaXUgKOWImOWbveagiyk=?= <Guodong.Liu@mediatek.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: Aw: [PATCH] pinctrl: mediatek: Add pinctrl driver
-Thread-Topic: Aw: [PATCH] pinctrl: mediatek: Add pinctrl driver
-Thread-Index: AQHbNGv90ceBiMFMO0Kz/ALR4pUu7rMV+AGA
-Date: Tue, 14 Jan 2025 03:00:12 +0000
-Message-ID: <9028b6d6c8cf35dbc388943649e6e1ded6625f0f.camel@mediatek.com>
-References: <20241111074030.25673-1-ot_cathy.xu@mediatek.com>
-	 <trinity-090addc5-80b8-4d9f-8f01-ed2c519e0d3d-1731351635476@trinity-msg-rest-gmx-gmx-live-67cd9ff8f8-qxw8q>
-In-Reply-To: <trinity-090addc5-80b8-4d9f-8f01-ed2c519e0d3d-1731351635476@trinity-msg-rest-gmx-gmx-live-67cd9ff8f8-qxw8q>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PSAPR03MB5688:EE_|KL1PR03MB8473:EE_
-x-ms-office365-filtering-correlation-id: 410449b9-256f-43fe-4e8e-08dd34479065
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?S0NuelhzUDlPd29EeFBabjJmL2M4Tzd5UTdTRVdUSUoxSDdIb2p2ZngvTkQ4?=
- =?utf-8?B?elNRdGI4eTVhODB2OUVTTDdQUkY5aDl6Wlg1UmdWOEY2Q2J1TXlDajZwa3dF?=
- =?utf-8?B?NGVMY0YvODlGNTdvM3Z3WktmMTVIdE9laU5aMElzTEZydXJ0dFBHbUMvcDlU?=
- =?utf-8?B?L0FNWDJydDVGVnBxOG5aZi9Pa0RvWi9JaW1MWFhHSytYNXpnRjB3aE9pSmhy?=
- =?utf-8?B?VjlMd0FPeTA3ZktOQldleE5mMEVRcU92dVRIVERZckNoSUpZUXhQWmRMdVRX?=
- =?utf-8?B?U0FPZU00ZkIwcy9uQTR1Wm00QTFqTFpvQjlOTHZubmFjTHV1MXIrd1Uvbk1R?=
- =?utf-8?B?TUVsQnBLZ0JDMXVjRVpGZ1ozWDA0U0hkT1lTU1h6STduT0RFeSt0VEFFUVdw?=
- =?utf-8?B?TGNFR2NaWFRnbUNEZTN2K0JkNjVDYStYK1c0dGZ0UnlqRmtVOFhVS3VUU0Jl?=
- =?utf-8?B?c0l3WHp1cXg2OUFZa1FEbHR3Yy9xUC9OWWJaOXREWmFRclgzdGZubVgxWnl4?=
- =?utf-8?B?WVZGU0VYUEhUTXk4SVRVVWdiUFhZK21VNWFPdjBBQ2REY0txQ2JSL2VjZ2RK?=
- =?utf-8?B?ZFFaR0VZd0g4SlFUK2ZGS2dRL25vS2VJSmJWdTVmbWxTT1VqblBmNmNyaW5m?=
- =?utf-8?B?RjJ3a2pMVHdRcnlyWVVGN0pGMk9JYzdmVGxZazVnUGpFbXdaYTIwalZ6a0lO?=
- =?utf-8?B?ZllzMkp0RnNoZkZ2eE8rVXI4U1JIaHpRYVdxY1NPbXJSYWpTNzgvTDRCMEtV?=
- =?utf-8?B?SXNwVGFMYjVuSmJ2QkZ2cFFYaWY0SktzVllCMEpYKzBVek9KeGpObUFONUtl?=
- =?utf-8?B?Rk4wZ3FNdFlFazlVMkRPWVVackoreXRPZGsxSHMyWFJvMVFlSVBtamg5Qy9q?=
- =?utf-8?B?YmNhUUZmUUJOZnBBcFJSNWNjVTNPVzBuUGZFRkFBWmdRS3RJS2RWUVV3d21z?=
- =?utf-8?B?dk9HeHZMWk1DeFhtcit2Mm5VaUJvb29jbisydmlnQmZYOW5JS2tzS3RrMVJq?=
- =?utf-8?B?KzBST2NZeU1ZQVZkcGJ0TEljVTZUZ3pXdzI5MXlMV1QxL0V4cCtTMUdGcEZ1?=
- =?utf-8?B?OC82WWs5UlZDeStvbzJPU3lscmJNY1grOWgxUVl0bU90R0Ura2RDaTh6Tmpv?=
- =?utf-8?B?N2VHbGMyMHJjVGdYVThqUG9yQ0RRZjhycngzTGV6NXI0MnlzbHVwT2VFaG5I?=
- =?utf-8?B?ZlZZbFQrYzF3SU1oK0ZaUjlFcGt5NEJ1WnhrQTR4ZENqTG5Oa3RQVFVySmtC?=
- =?utf-8?B?c3FtRFcrRjlwcjhBallXUGQyS1RVWkJDT2ZVdWRibFArNkYzbXNvV0dmei9O?=
- =?utf-8?B?L0o5cVgwZ1Zicm15ZWFnN2xhZXlpOEprYkhwczExZVh3dUoxZktad1VjTHEr?=
- =?utf-8?B?QVYwT2lWTmZiUWxqdVBrbEZWVlB6VEc4RHBNenhQMmkxUHFYclUyc1J5bjJx?=
- =?utf-8?B?dkxjbUZ3RXZpckFrUEhrYUxKSklaaTVnSlFJS1k0dFBMRFA2ZVFWc0JMMms4?=
- =?utf-8?B?NzYweExaKzZjL29Ia2VJK1RCenJDbTc2WnhGa1MwQSt5K1NIdUZuUTRkbjJH?=
- =?utf-8?B?WkhncmlEbjNXVVZ6dlRIOGpaaVBOeWd3TElEQW1meFFZNFNidnNRckRNZTNJ?=
- =?utf-8?B?c0NUa29nYkRDUWlQVDhzMzdJK2h0dElrZ2Z2NzVsNVVHZThRKzlWamZjdXBO?=
- =?utf-8?B?THVTV2kxRk16ZmxXMjF1Sngxd0dQUUZPNEUxYm9PK3dTSzhrQndSVnNPT1Y2?=
- =?utf-8?B?MTJRRk9hdEFRcFEwS2F3bXF2RXg3ck5YZ3IxTXpINTM1Q1VaSS8wT1YwSEY3?=
- =?utf-8?B?ZWpNK25sdVgydDMrTUNIQis5THg5R2wxOU4xbm5meGlRWjc5T0liLzFhUTZN?=
- =?utf-8?B?bGFsaU90M1JyVTNFcXF2YVJqcThTUW1HMWh5UUh3TEhzODBsdDgzUHV3RjBE?=
- =?utf-8?Q?bMgomn5PxBK2jDaEt/WLqPJMxVh0L3Kl?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR03MB5688.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Sk9IYXNRNjlPWi9kKzArZWUxa3VaZm1IWFVvK2QzQmliRlo3Y2F4UUJLdDZ2?=
- =?utf-8?B?OVI4WkJPelRzdHNHZ24vM1gwTWhjaHJ5eWhDZ0dzOERPT01qWFRyRHZzNi9k?=
- =?utf-8?B?Z09JM0pKQktlbC9MdmdZSE8rK2ZxSTRDMXpVbFB3L1l1Zk51TFE2TitMdVMr?=
- =?utf-8?B?TkhFbW9ZSHlQMi9QbVkwVkcwS29Wc0J1TVYvRVcyWXhwZ0UzVFNQaWN4VTJn?=
- =?utf-8?B?blY3V3ZQMWZiQy8vOG01R3JIYnJ3UDhWWGVYTUtETDkraHdtQnYyMUQwaGtG?=
- =?utf-8?B?M2R6YnluTytBYWJjeTNYV3FWMTBiaUpPNHc2VkhqS211L2tqOGJHdEtTcUR3?=
- =?utf-8?B?LzBRM0tDc1BpSDVmc21WLzYwQjdXT2plVDhsTnlDN3VpclE5d1NmSmJ6MG14?=
- =?utf-8?B?YWl4NDZLaFAvMjZuZFI3UFNkOVNmRXJNVUJ0RWtxTG5EWDVIZXhrM1ZYMlFK?=
- =?utf-8?B?TkhrWjZBeDNnUytCUGNRMG5YTlRFWjVBSml6aU94SmxIeHlhQ0JBTENiWTZ1?=
- =?utf-8?B?S3pRR2JzQUFHbG51QXNtQ3ltdWtrbVBaUUIvUDVwQU1sQmN0bDRIcDNWV280?=
- =?utf-8?B?NDJRSjY2R0ZpUkJBbzY2ZHlwOE80dEJWWjkzSW1jUGMyUVFBVjd3UUNFc1NR?=
- =?utf-8?B?VHh6SkRpeVZkY1k0cEcvK2piaW1HWk54U1NUcXNlYU0zN1dvUk5XRnk1dGIz?=
- =?utf-8?B?Nnp4VDBrQ1BYRlpVVGRCVzJScmRnWjJ4OEdBSUx5Vm85SGxXdHZWQ0c1dTdP?=
- =?utf-8?B?dlQvT0kyc2dpR2hCSHFMYm1VQ0Y2eDhsd2MweXFDOExLNXp6YXg4bW8yMnB5?=
- =?utf-8?B?TU5QWVc3alNoUnZNdnQ5NUVHS3lvcWp4Sys0bDF2ZFRjcmZlNXQ3WlVSb0M1?=
- =?utf-8?B?cGFuK1pHancvT0lxVmNJY0pEaTBjWmNvcmdiZ2Vhb1VjLysvclRLOHpCdVlX?=
- =?utf-8?B?MCtETnovWkxhWW9BdnBzSytwVm1qdkFNMDFiY3FoNVdOSE0rY3IxNW1ISi9R?=
- =?utf-8?B?bEliUStYWEJFY1VrQjBQZG9NMm1JVDdUaU9CQnI3UEw5ZEFSY0RreThxM1F4?=
- =?utf-8?B?S28wL0xoL254ZmVkeDBRdWFzUGhhSVo0VXJ1VWIyZDJpNE1mK0xVa2RzcDhB?=
- =?utf-8?B?TFRQOGVOOTIwZGJjZDE2QmtHbitZVEtyTWw3OGhldElSZlI1SzV1QkphRFVy?=
- =?utf-8?B?bys0MjJDQnZVWlNNOFFFK2ZQc1M1VTBEd09Zd3VncXU3RmRodklGOUNQZW1O?=
- =?utf-8?B?NUVPSXBZQ3B4RDM5K0N5NkVOd1JCN3hnSkJ6RGlrV1REUjBWM1BtU2p2eGNI?=
- =?utf-8?B?TUhCZWsxVWVjNHZpWUxFWHNJNSsvMjdMYzFSZG0yWkI2TkpBS3NuMU8rcW9M?=
- =?utf-8?B?YWc0N3JXNFlKRXMwc3NnY01sOXc2dVBqUytCQTNKR0hlVlhDMERERDFMQmNH?=
- =?utf-8?B?TVpocjZHTDdJRkkxaUZsOHovaGFwK3E4M0I5OFV1QkxxeGVSNndlWWJRN0Yx?=
- =?utf-8?B?eUFqeDdsQ3I3NGVuRVZtZjNaZ0FpQm5IRDRFK25hcWsxTWdlbklkaGVaUEpR?=
- =?utf-8?B?alhJZUwyT0tDRVdjQUJ0RE9aN0Vwb2Z5elFvRXNKTTFZQkcvbFJtaEhldURz?=
- =?utf-8?B?UE1mMVNYRlI1YnNFN2lMVlBGMlZVNG5aaDFJMjN6RkcrRnZKZWt3aVRDalFk?=
- =?utf-8?B?aXNSOGFyT0tpdFhMajZJajRYS0NYSlVnMDA0SU9FcnNvL1FZNUY1aWFKNXNY?=
- =?utf-8?B?Mkg1NDRsclVFQklyVkgrMFRZVlFvZTJsZEVrczdXZXR3ekR1SzNIS0lRZk1r?=
- =?utf-8?B?UzhZUzViWmpxaUkzclU4bHBmbGREU0swT2xvQ2duVlF4SFdjU2xiWDlUYlRQ?=
- =?utf-8?B?UVFPQjZjNU9hVW43Mk8zbGR6WDB4aGVLZG84WVhEazdQUlNSVmxjM1dHNWRv?=
- =?utf-8?B?U0FVRy9Nc3Z0UVF3WVdKRC85UUI5bkZiaHd6VTF0NnN3UVFJcHV5NXBsYmhY?=
- =?utf-8?B?TzF0OWNiSXRDZFh5Yno1eEtKWENiYVp3cVdLQmlnRjlRMFFrY1NXeHh4SGN2?=
- =?utf-8?B?a1RhbTVQQlhVYm9rSlZjd1IvcUpyRjJ3ekhsQTJrRHJ4bDd2ekQ5THdTRmoy?=
- =?utf-8?B?NWRpVlhMZWZEV21VcDlRRkVIN2hRdmhXOGlESDBVbExycU5wb0dPdE5wQTZ4?=
- =?utf-8?B?Ync9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7CFF46C94AF1F2428C37A1EBBCAD9222@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1736825425; x=1737430225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xMpGT/l+/EFBoJd+JG0JgyTN5GRFrvAL5apyVj++7q4=;
+        b=Q3bJwUrKR8UsF2oHozfrl+haE3y+EADAC7DH+4FcErEnd1O+x4hpnBYzO3y/OEQiq1
+         WD4LUg6TK0Cj03S1oYgigInLFtQVjn6zJ/qlF7GVKhKVUd0FPm/aj1uVAKKU8uYQVhrH
+         URCgVKf7khrNpSKs000cNBMRrYC50krlUSK5a5gnp9UlST6YBtfHERDA5YC1kU4cOOAy
+         CX41yjl7Qw9npqaiK7oHT4XJtcsulYlwLaUr4Tdec9vt2AUdH2VIxs58zCz2glNZktTY
+         2PwI9RwIjRR5RCECk5fMH4XuusfVQyVex/W9H4nJXuzV0m4mKMIw5IOl2DXJ3k0QgD9Q
+         QQ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736825425; x=1737430225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xMpGT/l+/EFBoJd+JG0JgyTN5GRFrvAL5apyVj++7q4=;
+        b=HGRGehcUbkMcHByz/jCBCwMnGVU9QBJwjv2tKol8RsGKMy5yNNfBpMSYyE7dsfiIEC
+         HVb5MRZ6W3i19DiECLM8g7p5564FntEnR43tubX1Z0Q1DUo/wul6sqOD1zaFjNElFi7K
+         LaA640iu64SX0yCW4iH5KTgxSXCp3dH18Sjheemc2SetYZWGyLEsmEe06RC5r8UULF2y
+         QkBRTjEjI/3y4iHyiVGxpWhpsDwtu89/g13FtP5yI983RMq0Acmrklzxm8hboxzg9Imh
+         eh0dHF9DEbEAcdJvZeH09svGnnSasDXAgb6qlnqiwmIyoAh5xNmvSWNBt6TBdrA3qxpQ
+         ChOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8GkVRArHBJNj/jchVtnf8Z4jHW0fra7dfmz6chr/V0rEyO5aAJUQFhoCr7zY8IubFN64XdD957kj58Q==@vger.kernel.org, AJvYcCUF+WyxmCkdQjFjdbAOuOPqn92dZM1PGIEG8suVUBbeyPQtEmsb5k1w9pnG5vr2K7Da44X8CnMgeoDr@vger.kernel.org, AJvYcCUV56IAEncjbthCaaYD9QTpNCY2GUUJuizdWGywwKlOVPVawdqwPdzSt1kFvElhmEHBbjFua2o1S2uk@vger.kernel.org, AJvYcCWEVYtelgYyd4K0sFRq1Gs/UTBbfG0V24msWATD1kkTjeg0IhYjjVIls7klj9TuNdrrIjo4O7E2@vger.kernel.org, AJvYcCXOq/SJHtJlPXc9vf9qQxAybUmROOKoG9HgLrAmWNeYVaP6d2Q6v3Aq/m1njzwGe8f9Wjvb49E9lYA=@vger.kernel.org, AJvYcCXnnM6IF6wDWrHwn9crLvVOwDijkqY8aNCXUO4nZiMC5JKXbz5AW/ikt0sYBbPU6gUc+Z7frIAnW7Pc/wX3V6A=@vger.kernel.org, AJvYcCXxeFVBCkGV4BpPF6SiqhDGDx7Bx8EfzxiZkYiwfGP/Ae9b7/r9UTDUyDuvSj2tbpIMgxphhL72kl09@vger.kernel.org, AJvYcCXyQhn7ZsisZJyh+Rn1kRUKAdTP2inWNWLtQa5tWB3uWANLnDTKnXnJ5wBFU5DUbRqZyf/bn6JDKVXRwu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD3KAIIJ00NF+Yu8YTDMkrcYO/5LOCuPVustGboyhfewODBhVe
+	L5XLfhDvApZ6T4fmaQnrhOA7fMQmAUB1vclGeNP24ZsXuE2Tj40W
+X-Gm-Gg: ASbGncurxKjOo20df72PC9EWcowY7jJHnQmE5uMls1tSgaZgHfUdjTfN2jWeydpJQKs
+	UCE3wKRFA7zEYBAW+4E3mCFIqJY2nodP1ThigAefnHqh3k3xhoOnsCIzkig1smlI9TDGrRuPnyq
+	jvQBQeVcOflpX6hSSkL5a2AJ9WOYXSUkLMbOWQtfF5E30ld4lRQm/pK8OeAZEm7ZnsZ0mWwd+oD
+	c0+dK4sfDhSbADflkrMVKWlntuLvS0GlwjW81g9RwLkF00jrJm5ENSsWzKaEpmqOt2WkywST8Lb
+	6SrdIqV7rcLmvwG0r4k9h2+x
+X-Google-Smtp-Source: AGHT+IHymbK8ftuug40W3gDlkalOaJKWqQ0iYlh9ybRQrL1/7XhIH4sUclKPww3UNhiL0Qjcyy0V3Q==
+X-Received: by 2002:aa7:9a87:0:b0:725:ead7:fcae with SMTP id d2e1a72fcca58-72d21fb1d57mr33227559b3a.18.1736825424531;
+        Mon, 13 Jan 2025 19:30:24 -0800 (PST)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d40658b71sm6595400b3a.85.2025.01.13.19.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2025 19:30:24 -0800 (PST)
+From: Ming Yu <a0282524688@gmail.com>
+To: tmyu0@nuvoton.com,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <a0282524688@gmail.com>
+Subject: [PATCH v5 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Tue, 14 Jan 2025 11:30:03 +0800
+Message-Id: <20250114033010.2445925-1-a0282524688@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PSAPR03MB5688.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 410449b9-256f-43fe-4e8e-08dd34479065
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2025 03:00:12.5982
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IcLwyGl4EEdNE0oFwxul37zOmf68K0vRT1GXpSBIJQG+kooH6LKFW10+ndi5O+k70G1OyzXNcTFWAgnKa/DL7181Orss2kSNZjDP5fOA2uc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8473
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDI0LTExLTExIGF0IDE5OjAwICswMDAwLCBGcmFuayBXdW5kZXJsaWNoIHdyb3Rl
-Og0KPiBFeHRlcm5hbCBlbWFpbCA6IFBsZWFzZSBkbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBh
-dHRhY2htZW50cyB1bnRpbA0KPiB5b3UgaGF2ZSB2ZXJpZmllZCB0aGUgc2VuZGVyIG9yIHRoZSBj
-b250ZW50Lg0KPiANCj4gDQo+ICZndDsgR2VzZW5kZXQ6IE1vbnRhZywgMTEuIE5vdmVtYmVyIDIw
-MjQgdW0gMDg6NDANCj4gJmd0OyBWb246IG90OTA3MjgwIDxvdF9jYXRoeS54dUBtZWRpYXRlay5j
-b20+DQo+ICZndDsgQmV0cmVmZjogW1BBVENIXSBwaW5jdHJsOiBtZWRpYXRlazogQWRkIHBpbmN0
-cmwgZHJpdmVyDQo+ICZndDsNCj4gJmd0OyBGcm9tOiBHdW9kb25nIExpdSA8Z3VvZG9uZy5saXVA
-bWVkaWF0ZWsuY29ycC1wYXJ0bmVyLmdvb2dsZS5jb20+DQo+ICZndDsNCj4gJmd0OyBBZGQgcGlu
-Y3RybCBkcml2ZXIgZm9yIG10ODE5Ng0KPiANCj4gSGkNCj4gDQo+IHlvdSBzaG91bGQgYWRkIHlv
-dXIgU29DIHRvIGNvbW1pdC0vcGF0Y2gtdGl0bGUgdG9vLg0KICBUaGFuayB5b3UgZm9yIHlvdXIg
-cmV2aWV3LiBJdCB3aWxsIGJlIGZpeGVkIGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gcmVnYXJk
-cyBGcmFuaw0KPiA8L2d1b2RvbmcubGl1QG1lZGlhdGVrLmNvcnAtcGFydG5lci5nb29nbGUuY29t
-PjwNCj4gL290X2NhdGh5Lnh1QG1lZGlhdGVrLmNvbT4NCg==
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
+
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
+
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
+
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+			    Receive bulk-in pipe to read response packet
+			    Receive bulk-in pipe to read data packet
+
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
+
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
+
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
+
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
+
+
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CAN support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  13 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 458 ++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 947 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 157 +++++
+ drivers/mfd/Kconfig                 |  10 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 388 ++++++++++++
+ drivers/net/can/usb/Kconfig         |  10 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 856 +++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 286 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 295 +++++++++
+ include/linux/mfd/nct6694.h         | 109 ++++
+ 23 files changed, 3590 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
+
+-- 
+2.34.1
+
 
