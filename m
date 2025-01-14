@@ -1,154 +1,123 @@
-Return-Path: <linux-gpio+bounces-14779-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14780-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43C47A107DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 14:32:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E0A4A107F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 14:35:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6DE21888A05
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 13:32:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B31F163EFD
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 13:35:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAA4234CE7;
-	Tue, 14 Jan 2025 13:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C98620F982;
+	Tue, 14 Jan 2025 13:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tOSH2xHT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ohd/sM6f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3161C5F22
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 13:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C7323244B
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 13:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736861531; cv=none; b=PcLSU5G+FvbfOLsBbAS9y+ho+fm5LfQivVo6SB3CrfDIYPUez495pZ8bRneHfArvGn5vfwbRVAPbrOOVG9nL7KDV9bjUkfyhjxV5Z+vQtVSzAF/M0UVnjhu68VJtapsvEqjWANrOWglBItEsLfReP/C/M29DWnIVOKNZFxRrUX4=
+	t=1736861730; cv=none; b=PZVihS0ExnFEj4QyRz3xIoJuR9hpS6Y6f+BtIbYMAuxJURexosbEgTAywiKwWPSjePB3lnYyWMXG8IpP54788ty1Rn/yhEoxS8k/YKuE5QrCmhTVFhvjVz7jDRWs4bmFbq2vqExGYpsvAbXq3K3e/miwmbTR6c3XWnhADIGfeNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736861531; c=relaxed/simple;
-	bh=C/n5ueEHMAubjla/enKlwcyP9Db0+La1s6xIRdKq9lA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DSlXvFMb9fgfx4IYHWD40EbenHG7fMKC7CtK88aocJGDDiKUqcqTbYi6FlM1CEVN7Zqw+9UosbMP0kfa8qGa9qMCUWoUcjNoabAnzrZChQ+aN6FyNIkNq3SRwXxgBQXUSoV9dkHs2HaXHAuOKGHotyW4NwJO1963ke1kQEZKpK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tOSH2xHT; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3862a921123so3177202f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 05:32:09 -0800 (PST)
+	s=arc-20240116; t=1736861730; c=relaxed/simple;
+	bh=OGs8Hc9IWWzDksFLp2i0aEV2PzIcvKtjUvmP8qDGIAc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QeyEidBJbSFgu/boocpA5qJANqsrW0oAa+3Wvt149fBbc83/l3PmQtVcMouWXqdCB4aAozUMCjSGB33K7JCrwGkDFc1mBXLVvx6qkpV/mCYAz0Lyf8Se9HkZavi4znoyCj9+NgrWphDSHyv49j9ybO3/jjge/ZR/rBUTKSSEOFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ohd/sM6f; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-304d760f118so40038481fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2025 05:35:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736861528; x=1737466328; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1736861727; x=1737466527; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TlqTUnZXimSv0OpNMeG8KSN6cDTihkE7gFuE8ClySV4=;
-        b=tOSH2xHTd4HbCDjcMTlz/6HWT+Cqk/+ZBHwvSHyBA/MkG/Ap52G0zmjOnMW/qOF5EC
-         D0p08yvgNO5ehIQflM2mHC/8rEREmPTsrNoRgVc2lXHTmnhhE07JslDiT5OGK5EGXLMQ
-         lx7tw56SwXP/OYkakvBHpZ4LbyboSVTKwnnqkW3kkhtZ6IS4FSRbBR0L5WwpskQVuJ2+
-         v5beJv8CdE1zBnewnmo3F9y7aQOPMN3bXpGPYD659XMAG2jt7YAS9b2nvHJM5X/EJc0l
-         mJVvmx+sDuup909Qg1cdF/sxqQ83v7dzx0pHxTLlEMMpxrLpXOtCFqrJmym+ek3aTOsm
-         Y8EA==
+        bh=OGs8Hc9IWWzDksFLp2i0aEV2PzIcvKtjUvmP8qDGIAc=;
+        b=Ohd/sM6fwMjm07V+BzAT2mg/Y0aVu2DxRowEf4yacckX3jvgUsaBuI8YwG+4cYIxbI
+         pSU9qdIYp6KmiWTCMnVPoGiiVVm7AF49gUQBLWuaU60R6tpdrptDsvcvU2AWYGxs3tra
+         8t/JVWsNs8i2bySL5uFov/WkmSbvvyEzGnRx6gLwBNm6Ue+xpjqIuZC+N91Iphb3EFWz
+         neVteWeGE4MaprPSDXF3EgStFOlFUa+ykRBtZqIMU6E6kYwjkCLlZvN6LqyxfY/GQJwn
+         U9fJL23uCNTKkQUkxHtOH7cgtY2nUMkx9ux3Z3+L6CmJhvWxbfE4aveK+vZknKeUCxs7
+         H20A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736861528; x=1737466328;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1736861727; x=1737466527;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TlqTUnZXimSv0OpNMeG8KSN6cDTihkE7gFuE8ClySV4=;
-        b=vfSX/maj+dhXIqNsTLOTiYr4Ugx/khTaaAj3zL9DqUsT+iZVACSvvYlgCwSkjg+J63
-         MCIfFkNVppG15A+n6jp9FcdDLWdi+Z0p0pD4wjvI/2Alcf651vb+BaZyJMeQY+xWr3vo
-         R4e70kPJrzTHYLz4YD12iQAHaSmLFck2COS1xv9geKUVwYwYXad9zhl4LKHzTNlkX1nQ
-         tUb5xXKhI61AB5tr9s5I1NnMfg/tjeDXRRWELrf/8kEpdvQyH6l4B7pZkWY6F7kfJNNv
-         Dgahlztt0wByYsonqfY2HFAePY0DGNAW3edLECa8V8lG3I2uuBSeUOhiuP1yoQ3+WL36
-         P9Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCXeDmV/fw0vq+aeVXJTXa732G4oaWAljjYWN+7qAHgyhoxVoIYcQhPle9/MxlgYT89nBj6IUGaCLaWY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0ylmGjxXNhnsAas1zlcYUwa6EhtwaKQyD/zsZnn2nmqJLzu7L
-	OSFl70aIR9ZglhI40AMfPhDs//h/J1//wDC4Z1auctOR/1bHJyROc7hwvcbaNVQ=
-X-Gm-Gg: ASbGnctrhqIBPmzdfk/mxIWF9MFS9/4iUCU+WJL4OVGc/facE4lxfeejcqaBwnLlA/W
-	PPmPgZowUfegA7xdXQ077oN401B5ZdDfaVLLTR6hCam63zShU9Aaw+QIZ8MebOELvnMvwfDvnQ8
-	f3mvrHBI6YoqXcHaUVewCUfgDRJrtafxXB6Bug9ETaLFve6FKdGFXRXq6mOg+dFWY/KNDbVQkC2
-	jUabUeCIUdUXmkNu+lWHZOSyee9FC/dfbz+DijmpPBNLFm7Ih+rYZz9
-X-Google-Smtp-Source: AGHT+IGX7/UMGlqtT7zZvRfxlsgQa+uEneORt172vk0+CI+jGXB6Xgxav5wRl12bJyoriN3HKN0zhQ==
-X-Received: by 2002:a05:6000:4020:b0:385:e3c1:50d5 with SMTP id ffacd0b85a97d-38a87338fa8mr25876636f8f.48.1736861527841;
-        Tue, 14 Jan 2025 05:32:07 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a8b0:e23c:79c1:dc2b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38c7aesm15154949f8f.53.2025.01.14.05.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 05:32:07 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Robert Hancock <hancock@sedsystems.ca>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] gpio: xilinx: Convert gpio_lock to raw spinlock
-Date: Tue, 14 Jan 2025 14:32:06 +0100
-Message-ID: <173686152290.39040.17367940998093783534.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250110163354.2012654-1-sean.anderson@linux.dev>
-References: <20250110163354.2012654-1-sean.anderson@linux.dev>
+        bh=OGs8Hc9IWWzDksFLp2i0aEV2PzIcvKtjUvmP8qDGIAc=;
+        b=LthIAWzMo9bUkz+x8p8u9G/a2aZMP3rbYyLk6H6MHHuJTdWjBi5EFHfIHoF62hPOWn
+         ZFGpI28Ye3gkidm5LUY/X4hYT0o+6AmYz0MI03r4gqh/G8NZCy9HRH2OppJw8SYF62uC
+         UtNK/aSYhdqjG9+tQwuBCE3SaVIzeLTEx9ciBrfkiSW2GhDGZA2ZKbeHIWsHfzaxuIF5
+         YFz7g6qR4IJRLAw6Ve2BMh8F8tBnPq1Ch3MO9GpMyDlK56vYjpSsH4Rx07IuMsJM1BYh
+         6qYawYVyuFg81YXND6kWSLcco0NQvQ6KnMIiJa2knGZW5cep3XumgHHukvNtZXKo/lMy
+         immQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ySOVq5YXjad/5YB0ppbPoeJ5Ks+pLZLKxps0zs4o3w+uR1I4uJNF/+Lwr/upZcEvilPUYrvY5hJU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2zqoqXPHUMUmFVzWkfSxkvcWrjzQ2lvgoGGZVaFAT7BYq+aG7
+	5PlgGD8C58j0KKJPZiBT1aAhpjzYyouOxAGB37BYNtga9BiCCHHNSUcQZV7xsBiWXjTRQ89ZXoA
+	xZQjW+X6rS3cMoJnfXR8xdzvlow5I7KtE+OAAAA==
+X-Gm-Gg: ASbGncubYxsxVO528BI4Q3dpIedKVfVVoU2mdgRc1L6K+Wu/PZE9IePj0RaXL1zb5CO
+	m01ba0EXYZ8q8aIRxhhorvBvAi/2rK+tGsIhe
+X-Google-Smtp-Source: AGHT+IG7Hggf4gHs1sBOINfllEm+fWCjJrV3nbiC6u53gxsntmmds1ddpINilGP1960h7CCebrmf239bkNUwC8sCGGY=
+X-Received: by 2002:a05:651c:2222:b0:302:1861:6dff with SMTP id
+ 38308e7fff4ca-305f454ff85mr87745811fa.9.1736861727092; Tue, 14 Jan 2025
+ 05:35:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <d4b2d076366fdd08a0c1cd9b7ecd91dc95e07269.1736184752.git.mail@maciej.szmigiero.name>
+In-Reply-To: <d4b2d076366fdd08a0c1cd9b7ecd91dc95e07269.1736184752.git.mail@maciej.szmigiero.name>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Jan 2025 14:35:16 +0100
+X-Gm-Features: AbW1kvYAJnzRu51j3qTmHBMTwwZ-0eBN7XtFz0GtoWTLyxew_rXiWIITgL-wUUA
+Message-ID: <CACRpkdZVihBHrYEEq+_-X9HstKsN0x_RWjUmLm68Q3B=6d+Dvg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: amd: Take suspend type into consideration
+ which pins are non-wake
+To: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jan 6, 2025 at 6:41=E2=80=AFPM Maciej S. Szmigiero
+<mail@maciej.szmigiero.name> wrote:
 
+> Some laptops have pins which are a wake source for S0i3/S3 but which
+> aren't a wake source for S4/S5 and which cause issues when left unmasked
+> during hibernation (S4).
+>
+> For example HP EliteBook 855 G7 has pin #24 that causes instant wakeup
+> (hibernation failure) if left unmasked (it is a wake source only for
+> S0i3/S3).
+> GPIO pin #24 on this platform is likely dedicated to WWAN XMM7360
+> modem since this pin triggers wake notify to WWAN modem's parent PCIe
+> port.
+>
+> Fix this by considering a pin a wake source only if it is marked as one
+> for the current suspend type (S0i3/S3 vs S4/S5).
+>
+> Since Z-wake pins only make sense at runtime these were excluded from
+> both of suspend categories, so pins with only the Z-wake flag set are
+> effectively treated as non-wake pins.
+>
+> Fixes: 2fff0b5e1a6b ("pinctrl: amd: Mask non-wake source pins with interr=
+upt enabled at suspend")
+> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 
-On Fri, 10 Jan 2025 11:33:54 -0500, Sean Anderson wrote:
-> irq_chip functions may be called in raw spinlock context. Therefore, we
-> must also use a raw spinlock for our own internal locking.
-> 
-> This fixes the following lockdep splat:
-> 
-> [    5.349336] =============================
-> [    5.353349] [ BUG: Invalid wait context ]
-> [    5.357361] 6.13.0-rc5+ #69 Tainted: G        W
-> [    5.363031] -----------------------------
-> [    5.367045] kworker/u17:1/44 is trying to lock:
-> [    5.371587] ffffff88018b02c0 (&chip->gpio_lock){....}-{3:3}, at: xgpio_irq_unmask (drivers/gpio/gpio-xilinx.c:433 (discriminator 8))
-> [    5.380079] other info that might help us debug this:
-> [    5.385138] context-{5:5}
-> [    5.387762] 5 locks held by kworker/u17:1/44:
-> [    5.392123] #0: ffffff8800014958 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work (kernel/workqueue.c:3204)
-> [    5.402260] #1: ffffffc082fcbdd8 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work (kernel/workqueue.c:3205)
-> [    5.411528] #2: ffffff880172c900 (&dev->mutex){....}-{4:4}, at: __device_attach (drivers/base/dd.c:1006)
-> [    5.419929] #3: ffffff88039c8268 (request_class#2){+.+.}-{4:4}, at: __setup_irq (kernel/irq/internals.h:156 kernel/irq/manage.c:1596)
-> [    5.428331] #4: ffffff88039c80c8 (lock_class#2){....}-{2:2}, at: __setup_irq (kernel/irq/manage.c:1614)
-> [    5.436472] stack backtrace:
-> [    5.439359] CPU: 2 UID: 0 PID: 44 Comm: kworker/u17:1 Tainted: G        W          6.13.0-rc5+ #69
-> [    5.448690] Tainted: [W]=WARN
-> [    5.451656] Hardware name: xlnx,zynqmp (DT)
-> [    5.455845] Workqueue: events_unbound deferred_probe_work_func
-> [    5.461699] Call trace:
-> [    5.464147] show_stack+0x18/0x24 C
-> [    5.467821] dump_stack_lvl (lib/dump_stack.c:123)
-> [    5.471501] dump_stack (lib/dump_stack.c:130)
-> [    5.474824] __lock_acquire (kernel/locking/lockdep.c:4828 kernel/locking/lockdep.c:4898 kernel/locking/lockdep.c:5176)
-> [    5.478758] lock_acquire (arch/arm64/include/asm/percpu.h:40 kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5851 kernel/locking/lockdep.c:5814)
-> [    5.482429] _raw_spin_lock_irqsave (include/linux/spinlock_api_smp.h:111 kernel/locking/spinlock.c:162)
-> [    5.486797] xgpio_irq_unmask (drivers/gpio/gpio-xilinx.c:433 (discriminator 8))
-> [    5.490737] irq_enable (kernel/irq/internals.h:236 kernel/irq/chip.c:170 kernel/irq/chip.c:439 kernel/irq/chip.c:432 kernel/irq/chip.c:345)
-> [    5.494060] __irq_startup (kernel/irq/internals.h:241 kernel/irq/chip.c:180 kernel/irq/chip.c:250)
-> [    5.497645] irq_startup (kernel/irq/chip.c:270)
-> [    5.501143] __setup_irq (kernel/irq/manage.c:1807)
-> [    5.504728] request_threaded_irq (kernel/irq/manage.c:2208)
-> 
-> [...]
+Patch applied!
+Right now it will be for the merge window (v6.14-rc1) but you can
+ask the stable maintainers to backport it, sometimes they pick
+patches with a Fixes: tag on their own.
 
-Applied, thanks!
-
-[1/1] gpio: xilinx: Convert gpio_lock to raw spinlock
-      commit: 9860370c2172704b6b4f0075a0c2a29fd84af96a
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Yours,
+Linus Walleij
 
