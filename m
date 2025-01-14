@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-14760-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14761-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A51A10349
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 10:50:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC484A1034F
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 10:52:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96FA41888DED
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 09:50:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0E381888EDB
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2025 09:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E90C22DC44;
-	Tue, 14 Jan 2025 09:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBFA724635A;
+	Tue, 14 Jan 2025 09:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9ZmFhmL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AI5R0IG3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8484B1D5CFE;
-	Tue, 14 Jan 2025 09:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEE222DC29;
+	Tue, 14 Jan 2025 09:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736848192; cv=none; b=m9aUdWHjjAcwvr+AFk1yjNwICu9s9wfRRduENdglZodlzeKSPtRlAZaFpi2YeoOuwpDudT0EUA9mw6ILu91+RSML+gAt/u4I6BUORqmBd8BSbiJ4jwynvDW1EluIREF1skj6/FkaKgjbmoRHSumY8nZg4wQVbe276OCadWBuA6Q=
+	t=1736848316; cv=none; b=YgEaALpY5HeCoz4ySJQz0gJzpLWiaZZCGjYwuojmyQcpFbLVCUHT7DTZXRtTpsHSvzSlLEFsdVmnP71ZDNN83qkxwOMr4fqFWKCIFGD62fFHtBxGRzAm463eo/5ANXlF0lanPZ1k8hANx7E5FJrbS2uVtec9z4dWg4kh/di/clM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736848192; c=relaxed/simple;
-	bh=3XUEIKXhj11O+kUNhaFonLT84lykcMgjTfyuLIRbQb0=;
+	s=arc-20240116; t=1736848316; c=relaxed/simple;
+	bh=4vhKhJFrC6JYbngxiOyCcDr7JeL3UGoiHu/Elu/1nCA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KgdZxBtEm5Mix9k33J3XTfaggU4fTfxs3TXFd+M79IiRKX8RHPb+MHg7lhPDxDt/X7MogtC/wkkcEz7Jrl7NBNP97ZLFWFmOfRUqv5FpXYuOuLU0SjT4vN14+n6O8r9LCBmloiDR6lY4qVET7Ht3HgRzVjLnImBvH8HOKJAoMwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9ZmFhmL; arc=none smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=icT9dv4qCyLVm/D7gqDOsHHjubRLSHvarX/3MfnR1I+EsVhQsWGsxg/qgPOvvkcmTrucgZWVxZLGhJLnyGWUsor8MPU/IBnxTQf2GnxxHa3Cj3imk7KuHlygo4TsQrfL6f9JjK5Xw/zudi2d3iVySkyfwo7eVQx/CUky31Biwfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AI5R0IG3; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso919590266b.3;
-        Tue, 14 Jan 2025 01:49:50 -0800 (PST)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d7e527becaso8794826a12.3;
+        Tue, 14 Jan 2025 01:51:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736848189; x=1737452989; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736848313; x=1737453113; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iwP1tti+yLWvcbErin2Brt+AMboascV0NwMOTqURVnc=;
-        b=H9ZmFhmLmCritM09/PgNTI3MiweDOe9V7wSF1pjrblSevxVbGhq0G+PPa1V3gCh/M7
-         bTMOd0a5pwa4LnfL6xlGSYmPgTg/c8v0G6R9zGn9xgSOOgPi7jXGSWXA2SrphlcTXs9S
-         s3WlG8RCW4fzAvSALF0KcBJ5sfm+gWh6myeYDWkPTcTICRl9Jy5fNMfAZNip35irMVnO
-         qlqvcvilPx58SiF0hKQiOkjMJURbRe2Svd2fyHCka7xfysjWioGWVjyR5JhUCY7MaChU
-         Bst0JcCEWOz3esBXkRiykwR2Vn5jtItQEf4/K3V8R3pnJX+NZvablALfqz3HyN6gsqeq
-         3nyQ==
+        bh=4vhKhJFrC6JYbngxiOyCcDr7JeL3UGoiHu/Elu/1nCA=;
+        b=AI5R0IG3Wp56qDCPtHCxiz5c2BtXQjR+WK6AtGw/CNHOOiMqCqZ4AAtEt4BRQ/rO2p
+         rNTFfF2Tf5+OE+gVCZ0nFtWZbleuOfh95a2RwTrQq2oV6XsLuizoQLhOu3piRgRQgYYJ
+         wMq38uMneIUFZfm/OpU77TtGQ00m5BarMNv1rfvuKgJo2BZVqJMdxyyMo36UJLA15C/t
+         T7hNzA43xymf+VNHu4lcRinuvdQPU+ftUYofV9d75xdEkXKOaSDq7dx9wTHTesqqGF9W
+         o6Y4kCY0znSvQofSReXOut1CN56o834Tvn1/4fd46i9110v3oLUCwDzrQm4ysnmqB43J
+         xRwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736848189; x=1737452989;
+        d=1e100.net; s=20230601; t=1736848313; x=1737453113;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iwP1tti+yLWvcbErin2Brt+AMboascV0NwMOTqURVnc=;
-        b=TLyI+eqzR3yvHJdxVafuXfJ/16UWADGKNYI+yuXicUZTYwv4BZCkWxRBSxcGGt4AjW
-         Qq5T2Jh1GVfg4ZBai9NK3zNinUIFSBy2jdYhx1q8acC2vciCtOwtBRI538gwEDPSZGm+
-         JEW86A6UU3/MinJ16wrXgjrrjIK6C9QGmO3zHzasQrx1XV0/6OmPKIvdwdsQ0HqV73nY
-         SlODljAaykwLlyjH6fevBj/OvkwCj1B+7Yzbvqo+QfRcZ5ZnZP4amayx2NZSAfuqTkzq
-         uikWzzp2g9qTaKTkA78bcyP/cB1iScNnsZQ5Ebdqxwaj11b5Udx3mGr5NkwQ73Qk4wlh
-         bpwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxJYd9SK10W6EZYqCA9qsvZ2VY2VxdqtsDeXbHHMsoonoNpVT5cTbBGg7kc/gZWuJxlY8fpNuGmrhms3Tf@vger.kernel.org, AJvYcCWSIz0WA472P2fhyFBUVm6LAIEVBATpmtb7sLMwZc4KYNi7EvR15oMwrU9ixcgeDvjaBUYmeM94oB4N@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRNWGbJiblrMQ9ewgLaI7Bu8A5FD3ha+B3Dr3LCiOXIcCmVtPv
-	ZWEuQP53weXTlFdKnADBbcFXMovWKjpM9yj4m0ueFuzJdGXRbHjrjNmOH+9FfvWvWFEX1o9Y0ca
-	rjXFSaIyE2lm8V/Ny9ZkIFPZsmDk=
-X-Gm-Gg: ASbGncvoTRZ6Bk3B1k01ugzLfgNs3gDajNd+sopu+2WcnY/A+ulv4YDOAFwprNXgbQL
-	0W+PJtZUEalQBVE7ZwmV+G/eugjp8aiydVLUiAg==
-X-Google-Smtp-Source: AGHT+IHSE0X0c/RAV6RHPYce2+Lu6HtvF4f8pJXDO50RUlRMfR3JVOivMCp53pLKP3YuDBdiRYv5612VS1G8WhdmTEU=
-X-Received: by 2002:a17:907:3e9f:b0:aae:bd4c:22c0 with SMTP id
- a640c23a62f3a-ab2ab70aeccmr2153858366b.19.1736848188749; Tue, 14 Jan 2025
- 01:49:48 -0800 (PST)
+        bh=4vhKhJFrC6JYbngxiOyCcDr7JeL3UGoiHu/Elu/1nCA=;
+        b=kOIZb95IvTAWm+W1TE1y1wc4w4ew7AlTvgVspuSRcHBVcD7UEhq2u6LaNzmDTElaeh
+         DyiRHX05J7dhxvsbDrDJeY66COInwkiFoELgvk0A2e73wEEjOtoP+bu9SPbmyIxYodfm
+         upXzZuGt/5JMIjNnhfgD4YWFpnxt1V/91y4Xc43BNXre5i6GeGyeNJ0EiQZ3/vkCfG3Z
+         QrC2vUxubB6jnupulAQ1GDiHShzMiVnTCf0Y8+myQlDKaWejSI00xqSVhAN9bz0xOGri
+         JFkOJGURgD/FEs5RiPzZqsuLOzvzHOKF0zUSPIUPoAb/gPL4sX8VUvH4Ty2U+UL1RGeX
+         lSzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIX4Q4VgDT1pF44t9pm4icsvOgtj2/uXt9JM4iEa2hG57Nza/TnPmYn65bVQe18WOnf2yNO0OY4Wt5@vger.kernel.org, AJvYcCVqEU+ghPnrsmb7Fg1JGh77XpuRngP/0rRcQfe6D/sz0PopajzVK06FC3XlICc4KTkw93EsbueMeTp1JQUd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvQ2WAWsmjnOkTPcS+Ex5M7LM79Wr5HqIwAOcy6HRPyFa4h+Hq
+	H3kq1reBxFsN566+G40VufsBuNHueEs1zVonLwUXu0DqO/8E9hm+VoKgWL79OftMcXQSiP4CGt5
+	fFRs5CUWTgPG5mpQmOyVU+qmUrY8=
+X-Gm-Gg: ASbGncs33yrwSERVr3gAdkZgxW5YcpqTcy2URDAyY9tymcifPA3tyak1epL82O6ygZF
+	XvNFXGcWYGkg3MamkkMK+p+yfqCup/l2lQOm9dw==
+X-Google-Smtp-Source: AGHT+IErJxrzE/fPLNIE9OFTXNlcCjKKB7eMnozUt0cKWjd3vc1cA5OjHKMV2NdK/m8kjackNKlo5HDJSzrjCAOUsv4=
+X-Received: by 2002:a05:6402:4415:b0:5d0:abb8:7a3 with SMTP id
+ 4fb4d7f45d1cf-5d972e000c5mr61231608a12.6.1736848313193; Tue, 14 Jan 2025
+ 01:51:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,14 +74,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
- <20250113-b4-imx-gpio-base-warning-v1-1-0a28731a5cf6@pengutronix.de>
-In-Reply-To: <20250113-b4-imx-gpio-base-warning-v1-1-0a28731a5cf6@pengutronix.de>
+ <20250113-b4-imx-gpio-base-warning-v1-3-0a28731a5cf6@pengutronix.de>
+In-Reply-To: <20250113-b4-imx-gpio-base-warning-v1-3-0a28731a5cf6@pengutronix.de>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 14 Jan 2025 11:49:12 +0200
-X-Gm-Features: AbW1kvaXInedzCQDKle5HtOug-2PYAvJssuAdg06rMQek_Ee7DEA41pCoh3PZGI
-Message-ID: <CAHp75VcnB37ET8mW=m5sXwP4qDQDUPKL0yRy8n49m++zShqPMA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpiolib: add opt-out for existing drivers with static
- GPIO base
+Date: Tue, 14 Jan 2025 11:51:17 +0200
+X-Gm-Features: AbW1kvaodGOQwkiNEnvsBKGVicOgrqCop4aPxft-hJqem49G8vNcWLLBKL5YFKM
+Message-ID: <CAHp75Vf9HyLioEe+tN4VPMCMNveS1KODZSS3E7pH9a7hPyDLdw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: mxc: remove dead code after switch to DT-only
 To: Ahmad Fatoum <a.fatoum@pengutronix.de>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
@@ -95,30 +94,19 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2025 at 12:20=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix=
+On Tue, Jan 14, 2025 at 12:19=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix=
 .de> wrote:
 >
-> Some drivers have had deterministic GPIO numbering for most of
-> their existence, e.g. the i.MX GPIO since commit 7e6086d9e54a
-> ("gpio/mxc: specify gpio base for device tree probe"), more than
-> 12 years ago.
+> struct platform_device::id was only set by board code, but since i.MX
+> became a devicetree-only platform, this will always be -1
+> (PLATFORM_DEVID_NONE).
 >
-> Reverting this to dynamically numbered will break existing setups in
-> the worst manner possible: The build will succeed, the kernel will not
-> print warnings, but users will find their devices essentially toggling
-> GPIOs at random with the potential of permanent damage.
->
-> As these concerns won't go away until the sysfs interface is removed,
-> let's add a new struct gpio_chip::legacy_static_base member that can be
-> used by existing drivers that have been grandfathered in to suppress
-> the warning currently being printed:
->
->   gpio gpiochip0: Static allocation of GPIO base is deprecated,
->   use dynamic allocation.
+> Note: of_alias_get_id() returns a negative number on error and base
+> treats all negative errors the same, so we need not add any additional
+> error handling.
 
-Warning is harmless and still a good reminder for the stuff that needs
-more love.
-NAK.
+This one is good,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 --=20
 With Best Regards,
