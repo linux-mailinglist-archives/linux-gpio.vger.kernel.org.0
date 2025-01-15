@@ -1,593 +1,155 @@
-Return-Path: <linux-gpio+bounces-14832-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14833-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 235B3A11DCA
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 10:28:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9D0CA11E5A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 10:43:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4375B1881D99
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 09:28:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30D157A25B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 09:43:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D54FC243873;
-	Wed, 15 Jan 2025 09:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55BD51EEA52;
+	Wed, 15 Jan 2025 09:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dM3rrIIN"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="C6gJ6kMX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C730242243;
-	Wed, 15 Jan 2025 09:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68833248163;
+	Wed, 15 Jan 2025 09:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736933178; cv=none; b=uZObZcixjw11ag8ymwCdG04w3hTIPczcfMcd9RK7vceGRWzCHWdhU1/a83ypF4ka/476Oq2rpS1v3bFlralt+05ZAtbqA9k+CWB5ABC4wVd+I89XL1VqHHNBzGgrikex+UO0nDVMUemo0IIcTZ829qAgBW9tWA0t/l1XXywYxLA=
+	t=1736934225; cv=none; b=DHlec9uzZl8gFhrCH//kGYXgjomFfdEAaOUsBy91JLFJGbxhyx8EzGVqGhvbsohZmWe4G1vi7he2FbM8solxMwTxukzWryKiSmWzwav8Vtc2vkvaHk/0HdPadMI0z6TVoL32EFluRuI2yXM0Q7sM5k4j9JRzYqnLffuQYfIP8sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736933178; c=relaxed/simple;
-	bh=34F956lz7/twA0gsIXXg018rpd53zWWXWodaHPKcJOs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oSONeEk7lBCm3R5Y1j7N3lPr42lKsWIt5Df7TzXJC7IR8DMR0uO0Icc/UjhBQi0AcYF1ywiu2gQRtGBU2SFykBSd0ILtGQORb5o0cvh97THgBFKLP5cqNFBd4cbr4MdCCgQTE3WQ6IGBeiDn/qMhu7H28Hu55uONVWjm+Fqd9Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dM3rrIIN; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F0E67FF80A;
-	Wed, 15 Jan 2025 09:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1736933174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y+6fBkvzXwILuqk7WfTbRnQEw6uyRNDFY8eJx9IM6Jw=;
-	b=dM3rrIINnl0MGMZzSH14waZZzdmh24uuKvlRQF4JYkVRuCmXmEJZrUcd4k/wG7IJOpCaBD
-	FNU9P2g9c0ImgSZX5hgFRYZek1qHXseD4Fc1yH2a3nnhK/a3YgXOLU09Pb8JNX6/UDeJdK
-	kwma3nefTV84FakeG5mzafTdPlKJ2e1KTgYnXCU//a95l3pp+U4VbxftcErSXhubGfigq+
-	umdZpV/JIveZDyv98vdXP1RNCSy6nFjkX1H7ylP0G0lK8WvP5jm38fBk+akQ5Ydh5E47AI
-	cBP8l6w5taXpM/gH9KHJh3jVH869mVfbUHtAvhfIzvPujG4D2Nxn0lyYmrMphg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Wed, 15 Jan 2025 10:25:46 +0100
-Subject: [PATCH v6 9/9] misc: add FPC202 dual port controller driver
+	s=arc-20240116; t=1736934225; c=relaxed/simple;
+	bh=ROpiUW4nfnLvf/oMZJYn+0lH6XwPLhFaln2Q/2PDHgY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=I4rFCINm6MxxZgXsj8I94HnZ62crbdxPDKrHBlxfsM3zDi5QuU2hDrMMlIhhez7rUwkmpScJlCiXThlIWAMjeHybSUX2N2FF52XTviPFnVqDcVqv5nCSlZwicWtzAoZRZilRoJLNuSOXK1y179bL/cL57m4T+WsKhYpk4EkIMas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=C6gJ6kMX; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F4KQfu027304;
+	Wed, 15 Jan 2025 10:43:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ROpiUW4nfnLvf/oMZJYn+0lH6XwPLhFaln2Q/2PDHgY=; b=C6gJ6kMX9GRMYrRv
+	J+drCTKmogjD+SS+6zgBHoc8JZY8k6MgXz1lUo7GJj+gm1IZlIkKMEMu0FYue3/F
+	one8F5Sfvh2rFNhZQrRM8tEB4nDdFU9RbFqXk2GoociJMPQOJPyFPVKU2c5LenO2
+	BPSgqEXUd2yERQD34otXyuBXOYxpz24xSj39ByPImUiIDZOGDx3eqxUCkHQTDjqc
+	EKkEgwjRpVCKQjGGTPcVebvrMYv7VUcGssIBHT0Y5kMo8o2DTbX466jp2GFRY6ua
+	BiVVxkcUxTncCo+ZS+27FdTYZsYGTqydWHXSnO4N4ngiusIqzchMQ5gR5BkBXaIQ
+	6l4FUA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4465weh74g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 10:43:13 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 353C040045;
+	Wed, 15 Jan 2025 10:41:09 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F0E0C2481B7;
+	Wed, 15 Jan 2025 10:39:44 +0100 (CET)
+Received: from [192.168.8.15] (10.252.20.5) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 15 Jan
+ 2025 10:39:41 +0100
+Message-ID: <e60d2c600133df2202bf3187eeeb9c31bc6c8f32.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH] pinctrl: Use str_enable_disable-like
+ helpers
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Ray Jui
+	<rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        "Broadcom
+ internal kernel review list" <bcm-kernel-feedback-list@broadcom.com>,
+        "Linus
+ Walleij" <linus.walleij@linaro.org>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans Ulli Kroll
+	<ulli.kroll@googlemail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        "Sylwester
+ Nawrocki" <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <linux-sound@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>
+Date: Wed, 15 Jan 2025 10:39:33 +0100
+In-Reply-To: <20250114203602.1013275-1-krzysztof.kozlowski@linaro.org>
+References: <20250114203602.1013275-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250115-fpc202-v6-9-d47a34820753@bootlin.com>
-References: <20250115-fpc202-v6-0-d47a34820753@bootlin.com>
-In-Reply-To: <20250115-fpc202-v6-0-d47a34820753@bootlin.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-Sasl: romain.gantois@bootlin.com
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-15_03,2025-01-15_02,2024-11-22_01
 
-The TI FPC202 dual port controller serves as a low-speed signal aggregator
-for common port types such as SFP, QSFP, Mini-SAS HD, and others.
+On Tue, 2025-01-14 at 21:36 +0100, Krzysztof Kozlowski wrote:
+> Replace ternary (condition ? "enable" : "disable") syntax with helpers
+> from string_choices.h because:
+> 1. Simple function call with one argument is easier to read.=C2=A0 Ternar=
+y
+> =C2=A0=C2=A0 operator has three arguments and with wrapping might lead to=
+ quite
+> =C2=A0=C2=A0 long code.
+> 2. Is slightly shorter thus also easier to read.
+> 3. It brings uniformity in the text - same string.
+> 4. Allows deduping by the linker, which results in a smaller binary
+> =C2=A0=C2=A0 file.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> =C2=A0drivers/pinctrl/bcm/pinctrl-nsp-gpio.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 3 ++-
+> =C2=A0drivers/pinctrl/cirrus/pinctrl-lochnagar.c |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/nomadik/pinctrl-abx500.c=C2=A0=C2=A0 |=C2=A0 5 +++-=
+-
+> =C2=A0drivers/pinctrl/nomadik/pinctrl-nomadik.c=C2=A0 |=C2=A0 7 ++++---
+> =C2=A0drivers/pinctrl/pinctrl-amd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/pinctrl-gemini.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 11 ++++++-----
+> =C2=A0drivers/pinctrl/pinctrl-stmfx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A0drivers/pinctrl/qcom/pinctrl-msm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/qcom/pinctrl-spmi-gpio.c=C2=A0=C2=A0 |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/qcom/pinctrl-spmi-mpp.c=C2=A0=C2=A0=C2=A0 |=C2=A0 3=
+ ++-
+> =C2=A0drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c=C2=A0=C2=A0 |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c=C2=A0=C2=A0=C2=A0 | 10 ++++=
+------
+> =C2=A0drivers/pinctrl/samsung/pinctrl-exynos.c=C2=A0=C2=A0 |=C2=A0 3 ++-
+> =C2=A0drivers/pinctrl/stm32/pinctrl-stm32.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 5 +++--
 
-It aggregates GPIO and I2C signals across two downstream ports, acting as
-both a GPIO controller and an I2C address translator for up to two logical
-devices per port.
+For pinctrl-stmfx and for pinctrl-stm32:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
- MAINTAINERS              |   1 +
- drivers/misc/Kconfig     |  11 ++
- drivers/misc/Makefile    |   1 +
- drivers/misc/ti_fpc202.c | 440 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 453 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ef5c0d395b3668167dddbd27237a2177f85571e..865ef413b38c293e1c7b1405322fafe9df81ea96 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23502,6 +23502,7 @@ M:	Romain Gantois <romain.gantois@bootlin.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/misc/ti,fpc202.yaml
-+F:	drivers/misc/ti_fpc202.c
- 
- TI FPD-LINK DRIVERS
- M:	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 09cbe3f0ab1e56f85852c0cb50cfc03cae659d2b..3c7e82e86e4ae83eff84999d123cd8c0f018323c 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -114,6 +114,17 @@ config RPMB
- 
- 	  If unsure, select N.
- 
-+config TI_FPC202
-+	tristate "TI FPC202 Dual Port Controller"
-+	select GPIOLIB
-+	depends on I2C_ATR
-+	help
-+	  If you say yes here you get support for the Texas Instruments FPC202
-+	  Dual Port Controller.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called fpc202.
-+
- config TIFM_CORE
- 	tristate "TI Flash Media interface support"
- 	depends on PCI
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 40bf953185c773afa91f7784a286ae0752bb0b53..df5a97ebfaa15b50e23caa90b466a127c6dd64fa 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_ATMEL_SSC)		+= atmel-ssc.o
- obj-$(CONFIG_DUMMY_IRQ)		+= dummy-irq.o
- obj-$(CONFIG_ICS932S401)	+= ics932s401.o
- obj-$(CONFIG_LKDTM)		+= lkdtm/
-+obj-$(CONFIG_TI_FPC202)		+= ti_fpc202.o
- obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
- obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
- obj-$(CONFIG_PHANTOM)		+= phantom.o
-diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..e251d8e0a640f05d59e5b20665d8a8237b8c2724
---- /dev/null
-+++ b/drivers/misc/ti_fpc202.c
-@@ -0,0 +1,440 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ti_fpc202.c - FPC202 Dual Port Controller driver
-+ *
-+ * Copyright (C) 2024 Bootlin
-+ *
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/i2c-atr.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+
-+#define FPC202_NUM_PORTS 2
-+#define FPC202_ALIASES_PER_PORT 2
-+
-+/*
-+ * GPIO: port mapping
-+ *
-+ * 0: P0_S0_IN_A
-+ * 1: P0_S1_IN_A
-+ * 2: P1_S0_IN_A
-+ * 3: P1_S1_IN_A
-+ * 4: P0_S0_IN_B
-+ * ...
-+ * 8: P0_S0_IN_C
-+ * ...
-+ * 12: P0_S0_OUT_A
-+ * ...
-+ * 16: P0_S0_OUT_B
-+ * ...
-+ * 19: P1_S1_OUT_B
-+ *
-+ */
-+
-+#define FPC202_GPIO_COUNT 20
-+#define FPC202_GPIO_P0_S0_IN_B  4
-+#define FPC202_GPIO_P0_S0_OUT_A 12
-+
-+#define FPC202_REG_IN_A_INT    0x6
-+#define FPC202_REG_IN_C_IN_B   0x7
-+#define FPC202_REG_OUT_A_OUT_B 0x8
-+
-+#define FPC202_REG_OUT_A_OUT_B_VAL 0xa
-+
-+#define FPC202_REG_MOD_DEV(port, dev) (0xb4 + ((port) * 4) + (dev))
-+#define FPC202_REG_AUX_DEV(port, dev) (0xb6 + ((port) * 4) + (dev))
-+
-+/*
-+ * The FPC202 doesn't support turning off address translation on a single port.
-+ * So just set an invalid I2C address as the translation target when no client
-+ * address is attached.
-+ */
-+#define FPC202_REG_DEV_INVALID 0
-+
-+/* Even aliases are assigned to device 0 and odd aliases to device 1 */
-+#define fpc202_dev_num_from_alias(alias) ((alias) % 2)
-+
-+struct fpc202_priv {
-+	struct i2c_client *client;
-+	struct i2c_atr *atr;
-+	struct gpio_desc *en_gpio;
-+	struct gpio_chip gpio;
-+
-+	/* Lock REG_MOD/AUX_DEV and addr_caches during attach/detach */
-+	struct mutex reg_dev_lock;
-+
-+	/* Cached device addresses for both ports and their devices */
-+	u8 addr_caches[2][2];
-+
-+	/* Keep track of which ports were probed */
-+	DECLARE_BITMAP(probed_ports, FPC202_NUM_PORTS);
-+};
-+
-+static void fpc202_fill_alias_table(struct i2c_client *client, u16 *aliases, int port_id)
-+{
-+	u16 first_alias;
-+	int i;
-+
-+	/*
-+	 * There is a predefined list of aliases for each FPC202 I2C
-+	 * self-address.  This allows daisy-chained FPC202 units to
-+	 * automatically take on different sets of aliases.
-+	 * Each port of an FPC202 unit is assigned two aliases from this list.
-+	 */
-+	first_alias = 0x10 + 4 * port_id + 8 * ((u16)client->addr - 2);
-+
-+	for (i = 0; i < FPC202_ALIASES_PER_PORT; i++)
-+		aliases[i] = first_alias + i;
-+}
-+
-+static int fpc202_gpio_get_dir(int offset)
-+{
-+	return offset < FPC202_GPIO_P0_S0_OUT_A ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int fpc202_read(struct fpc202_priv *priv, u8 reg)
-+{
-+	int val;
-+
-+	val = i2c_smbus_read_byte_data(priv->client, reg);
-+	return val;
-+}
-+
-+static int fpc202_write(struct fpc202_priv *priv, u8 reg, u8 value)
-+{
-+	return i2c_smbus_write_byte_data(priv->client, reg, value);
-+}
-+
-+static void fpc202_set_enable(struct fpc202_priv *priv, int enable)
-+{
-+	if (!priv->en_gpio)
-+		return;
-+
-+	gpiod_set_value(priv->en_gpio, enable);
-+}
-+
-+static void fpc202_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return;
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B_VAL);
-+	if (ret < 0) {
-+		dev_err(&priv->client->dev, "Failed to set GPIO %d value! err %d\n", offset, ret);
-+		return;
-+	}
-+
-+	val = (u8)ret;
-+
-+	if (value)
-+		val |= BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	else
-+		val &= ~BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	fpc202_write(priv, FPC202_REG_OUT_A_OUT_B_VAL, val);
-+}
-+
-+static int fpc202_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	u8 reg, bit;
-+	int ret;
-+
-+	if (offset < FPC202_GPIO_P0_S0_IN_B) {
-+		reg = FPC202_REG_IN_A_INT;
-+		bit = BIT(4 + offset);
-+	} else if (offset < FPC202_GPIO_P0_S0_OUT_A) {
-+		reg = FPC202_REG_IN_C_IN_B;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_IN_B);
-+	} else {
-+		reg = FPC202_REG_OUT_A_OUT_B_VAL;
-+		bit = BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+	}
-+
-+	ret = fpc202_read(priv, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return !!(((u8)ret) & bit);
-+}
-+
-+static int fpc202_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_OUT)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int fpc202_gpio_direction_output(struct gpio_chip *chip, unsigned int offset,
-+					int value)
-+{
-+	struct fpc202_priv *priv = gpiochip_get_data(chip);
-+	int ret;
-+	u8 val;
-+
-+	if (fpc202_gpio_get_dir(offset) == GPIO_LINE_DIRECTION_IN)
-+		return -EINVAL;
-+
-+	fpc202_gpio_set(chip, offset, value);
-+
-+	ret = fpc202_read(priv, FPC202_REG_OUT_A_OUT_B);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = (u8)ret | BIT(offset - FPC202_GPIO_P0_S0_OUT_A);
-+
-+	return fpc202_write(priv, FPC202_REG_OUT_A_OUT_B, val);
-+}
-+
-+/*
-+ * Set the translation table entry associated with a port and device number.
-+ *
-+ * Each downstream port of the FPC202 has two fixed aliases corresponding to
-+ * device numbers 0 and 1. If one of these aliases is found in an incoming I2C
-+ * transfer, it will be translated to the address given by the corresponding
-+ * translation table entry.
-+ */
-+static int fpc202_write_dev_addr(struct fpc202_priv *priv, u32 port_id, int dev_num, u16 addr)
-+{
-+	int ret, reg_mod, reg_aux;
-+	u8 val;
-+
-+	guard(mutex)(&priv->reg_dev_lock);
-+
-+	reg_mod = FPC202_REG_MOD_DEV(port_id, dev_num);
-+	reg_aux = FPC202_REG_AUX_DEV(port_id, dev_num);
-+	val = addr & 0x7f;
-+
-+	ret = fpc202_write(priv, reg_mod, val);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The FPC202 datasheet is unclear about the role of the AUX registers.
-+	 * Empirically, writing to them as well seems to be necessary for
-+	 * address translation to function properly.
-+	 */
-+	ret = fpc202_write(priv, reg_aux, val);
-+
-+	priv->addr_caches[port_id][dev_num] = val;
-+
-+	return ret;
-+}
-+
-+static int fpc202_attach_addr(struct i2c_atr *atr, u32 chan_id,
-+			      u16 addr, u16 alias)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+
-+	dev_dbg(&priv->client->dev, "attaching address 0x%02x to alias 0x%02x\n", addr, alias);
-+
-+	return fpc202_write_dev_addr(priv, chan_id, fpc202_dev_num_from_alias(alias), addr);
-+}
-+
-+static void fpc202_detach_addr(struct i2c_atr *atr, u32 chan_id,
-+			       u16 addr)
-+{
-+	struct fpc202_priv *priv = i2c_atr_get_driver_data(atr);
-+	int dev_num, reg_mod, val;
-+
-+	for (dev_num = 0; dev_num < 2; dev_num++) {
-+		reg_mod = FPC202_REG_MOD_DEV(chan_id, dev_num);
-+
-+		mutex_lock(&priv->reg_dev_lock);
-+
-+		val = priv->addr_caches[chan_id][dev_num];
-+
-+		mutex_unlock(&priv->reg_dev_lock);
-+
-+		if (val < 0) {
-+			dev_err(&priv->client->dev, "failed to read register 0x%x while detaching address 0x%02x\n",
-+				reg_mod, addr);
-+			return;
-+		}
-+
-+		if (val == (addr & 0x7f)) {
-+			fpc202_write_dev_addr(priv, chan_id, dev_num, FPC202_REG_DEV_INVALID);
-+			return;
-+		}
-+	}
-+}
-+
-+static const struct i2c_atr_ops fpc202_atr_ops = {
-+	.attach_addr = fpc202_attach_addr,
-+	.detach_addr = fpc202_detach_addr,
-+};
-+
-+static int fpc202_probe_port(struct fpc202_priv *priv, struct device_node *i2c_handle, int port_id)
-+{
-+	u16 aliases[FPC202_ALIASES_PER_PORT] = { };
-+	struct device *dev = &priv->client->dev;
-+	struct i2c_atr_adap_desc desc = { };
-+	int ret = 0;
-+
-+	desc.chan_id = port_id;
-+	desc.parent = dev;
-+	desc.bus_handle = of_node_to_fwnode(i2c_handle);
-+	desc.num_aliases = FPC202_ALIASES_PER_PORT;
-+
-+	fpc202_fill_alias_table(priv->client, aliases, port_id);
-+	desc.aliases = aliases;
-+
-+	ret = i2c_atr_add_adapter(priv->atr, &desc);
-+	if (ret)
-+		return ret;
-+
-+	set_bit(port_id, priv->probed_ports);
-+
-+	ret = fpc202_write_dev_addr(priv, port_id, 0, FPC202_REG_DEV_INVALID);
-+	if (ret)
-+		return ret;
-+
-+	return fpc202_write_dev_addr(priv, port_id, 1, FPC202_REG_DEV_INVALID);
-+}
-+
-+static void fpc202_remove_port(struct fpc202_priv *priv, int port_id)
-+{
-+	i2c_atr_del_adapter(priv->atr, port_id);
-+	clear_bit(port_id, priv->probed_ports);
-+}
-+
-+static int fpc202_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *i2c_handle;
-+	struct fpc202_priv *priv;
-+	int ret, port_id;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->reg_dev_lock);
-+
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+
-+	priv->en_gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->en_gpio)) {
-+		ret = PTR_ERR(priv->en_gpio);
-+		dev_err(dev, "failed to fetch enable GPIO! err %d\n", ret);
-+		goto destroy_mutex;
-+	}
-+
-+	priv->gpio.label = "gpio-fpc202";
-+	priv->gpio.base = -1;
-+	priv->gpio.direction_input = fpc202_gpio_direction_input;
-+	priv->gpio.direction_output = fpc202_gpio_direction_output;
-+	priv->gpio.set = fpc202_gpio_set;
-+	priv->gpio.get = fpc202_gpio_get;
-+	priv->gpio.ngpio = FPC202_GPIO_COUNT;
-+	priv->gpio.parent = dev;
-+	priv->gpio.owner = THIS_MODULE;
-+
-+	ret = gpiochip_add_data(&priv->gpio, priv);
-+	if (ret) {
-+		priv->gpio.parent = NULL;
-+		dev_err(dev, "failed to add gpiochip err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	priv->atr = i2c_atr_new(client->adapter, dev, &fpc202_atr_ops, 2);
-+	if (IS_ERR(priv->atr)) {
-+		ret = PTR_ERR(priv->atr);
-+		dev_err(dev, "failed to create i2c atr err %d\n", ret);
-+		goto disable_gpio;
-+	}
-+
-+	i2c_atr_set_driver_data(priv->atr, priv);
-+
-+	bitmap_zero(priv->probed_ports, FPC202_NUM_PORTS);
-+
-+	for_each_child_of_node(dev->of_node, i2c_handle) {
-+		ret = of_property_read_u32(i2c_handle, "reg", &port_id);
-+		if (ret) {
-+			if (ret == -EINVAL)
-+				continue;
-+
-+			dev_err(dev, "failed to read 'reg' property of child node, err %d\n", ret);
-+			goto unregister_chans;
-+		}
-+
-+		if (port_id > FPC202_NUM_PORTS) {
-+			dev_err(dev, "port ID %d is out of range!\n", port_id);
-+			ret = -EINVAL;
-+			goto unregister_chans;
-+		}
-+
-+		ret = fpc202_probe_port(priv, i2c_handle, port_id);
-+		if (ret) {
-+			dev_err(dev, "Failed to probe port %d, err %d\n", port_id, ret);
-+			goto unregister_chans;
-+		}
-+	}
-+
-+	dev_info(&client->dev, "%s FPC202 Dual Port controller found\n", client->name);
-+
-+	goto out;
-+
-+unregister_chans:
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	i2c_atr_delete(priv->atr);
-+disable_gpio:
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+destroy_mutex:
-+	mutex_destroy(&priv->reg_dev_lock);
-+out:
-+	return ret;
-+}
-+
-+static void fpc202_remove(struct i2c_client *client)
-+{
-+	struct fpc202_priv *priv = i2c_get_clientdata(client);
-+	int port_id;
-+
-+	for_each_set_bit(port_id, priv->probed_ports, FPC202_NUM_PORTS)
-+		fpc202_remove_port(priv, port_id);
-+
-+	mutex_destroy(&priv->reg_dev_lock);
-+
-+	i2c_atr_delete(priv->atr);
-+
-+	fpc202_set_enable(priv, 0);
-+	gpiochip_remove(&priv->gpio);
-+}
-+
-+static const struct of_device_id fpc202_of_match[] = {
-+	{ .compatible = "ti,fpc202" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fpc202_of_match);
-+
-+static struct i2c_driver fpc202_driver = {
-+	.driver = {
-+		.name = "fpc202",
-+		.of_match_table = fpc202_of_match,
-+	},
-+	.probe = fpc202_probe,
-+	.remove = fpc202_remove,
-+};
-+
-+module_i2c_driver(fpc202_driver);
-+
-+MODULE_AUTHOR("Romain Gantois <romain.gantois@bootlin.com>");
-+MODULE_DESCRIPTION("TI FPC202 Dual Port Controller driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(I2C_ATR);
-
--- 
-2.47.1
-
+Antonio
 
