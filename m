@@ -1,213 +1,217 @@
-Return-Path: <linux-gpio+bounces-14847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A884A12711
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:17:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B221A12765
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:27:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0505B3A182C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 15:17:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC14D1640FE
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 15:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A254B1459E0;
-	Wed, 15 Jan 2025 15:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRXBPmZf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909F01553BB;
+	Wed, 15 Jan 2025 15:26:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4D612AAE2;
-	Wed, 15 Jan 2025 15:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC9B145B2E;
+	Wed, 15 Jan 2025 15:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954253; cv=none; b=bIVsZbAjjQlUSUJSTCNABy/I5VaC6UI4rxPuM1KgewMsd7BCS4cGzsX2EzhuahPf74q67W5Q3czWxkp+wS3R2qwCQZrjplsajqFsVCJZrsDusDHo0hO8QdtzV1VVEJD0oWjoF4B/OQOI2+7UbPllizJANYI9ybajP8xpdW2wbY0=
+	t=1736954812; cv=none; b=pGNLCXTN7TOpICSKl4Wpjtfa/kAzYPVg/3q4LgQAG3/t8Z3IInSKFt/AFEFB1FbGxX0t7+pXWFkGTdYh82AjQWxQDJc7OZRyLBZTH0qPia6gXYnM9fz6yg6Oc109Hi1E2HF63CuGIXqIG9HmT09a+HfgDsTAEUYZl/iFgtpcc/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954253; c=relaxed/simple;
-	bh=Uif1glbP6fdYuWDq3VFY/NUU+QWzrN3dw23Wecy6Pzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KXsMiKl/sU0jvfvlGzeqoAH/FJZOotQUtasRQikc/Gij9aiepFbX8zDIU8lHs8219cEM0JNbGIRSP0OKGkZTEIcwJTFNP+waRpbq4zTg1Y9eSu1zR7p64bCVEUc/5dDD33I0cv2UIcf1Xapv9i0IVHV7ApgL3I0m6vM9G+xMoQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRXBPmZf; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5401c52000fso5820962e87.2;
-        Wed, 15 Jan 2025 07:17:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736954250; x=1737559050; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uww07cUdp7duxGiMrR7iOp8DgfbxO1hObNoJqUTt4uE=;
-        b=dRXBPmZfoktjRRAB42Pj/gtvtML1KsM33IZXkz+qI+WqCxcOYMrcDzKfIhPeyV1Gee
-         vI10csG5OjYrSPSwiNQ10FqYp3//DY2xvbT6nzr/0FytpzXIHqBDE7MBGZ5QgghlRxTq
-         /D/Eo2q2GIEkt8RSLnDr3JuawHYOaXcx+bw9PfawXkFhdEn+5jIb4cSuQyL07Cov+ibZ
-         QFF/zLSA+v/I0PuRrVhY4o1RZGdV1LaND1z50HPKfioHwATMMeBmU5eeYxsfK9K8hgRY
-         o4GoGw5uzQq1IVNn4loDoKbzDu/IYZuPDrEEOXHTE9BnBlOD4mZOumM5wMIJnTF81xv/
-         nC7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736954250; x=1737559050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uww07cUdp7duxGiMrR7iOp8DgfbxO1hObNoJqUTt4uE=;
-        b=o0TxAdpom7hxm6iJX12nvlAfsPbyWjTtl5uipUAr3mvOVbxc60B2bmMvAVWuXw0ZgF
-         iTpLv2D0zLILzIY32x4VuQ3D+O5nVwLGYMXxWMDpOl3IeiBni+XTGSTKsXtSgrZAPAnw
-         XslBnc4pBFu2wVtKqfGq60PbwVKBre8d1JSv47lGS+JVVCPvaq4XIUWJtjYqjxDGfich
-         MuitrjftFhjptu8S+t8GFI4sOwEX+yVF6Q8pckTUUZt6ppze+vreC7G3ZwtxMcR5a00A
-         +qNn/9t+eiw43tpf9SFhcV0Rf1YGONJ5gbgR9KqNhEnWCcUD203/BlWCl2tjMr7LfBhq
-         SPug==
-X-Forwarded-Encrypted: i=1; AJvYcCW3xucsht5ioiG3kdkV0dmDLIzRXfHWugsIx/SHzPDwNbxbZ+rS3KuyZx4wV5IGgq0wnomwP+XB2EA6@vger.kernel.org, AJvYcCXaX1x1lwXyev3DAySjCE74FY+IkzNBeRc5knmJ6Qs2AaQWt9Fcd6DexM3ItMcM3/o2VyVt1A9lFyIF3DG1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys1GJErVOusJOL1P/C+YRh+qGFQkFQIh1E3ue1etUgJGRqauMj
-	g0tpJ+TdHg7+TOSGjUkO5QfI6/z1te0Dei4muL1G9mTcFNmr9zy/nD9VZzqg4qdgG3UmfSFut10
-	CJj1SQLfTA9TewlDtpZVlg3qrIns=
-X-Gm-Gg: ASbGncvbrUDQEI+L3ivgtOSceuM2tul73nU08/m/w0DfcA1xYTnnNg9bckdnBJk/d0t
-	I2E+Z3X+vAr6JsVLBaC5tagz2I4OdqKZIz/iZsKsM
-X-Google-Smtp-Source: AGHT+IHGJenQer00L8FQdCDyLhA9ljuwUu/NbZxKPmPHZwEXGy2YYYib0yUljfuUi7FMmKfhxtEzdPm1wl4o71fhPWE=
-X-Received: by 2002:a05:6512:4029:b0:53e:2900:89b4 with SMTP id
- 2adb3069b0e04-54284820222mr11108397e87.49.1736954249510; Wed, 15 Jan 2025
- 07:17:29 -0800 (PST)
+	s=arc-20240116; t=1736954812; c=relaxed/simple;
+	bh=JBcCp53Gsobb/CU+JgBt3NsWKZtsmKsbDhO8bGTGg5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fpetO5zbJqroMhWZa8321nN6dui2SY81VEnYb+y2qrp/Yj4aLvFSYequOi4wA/Zkj7Pm8frkgbjqzfsnC1XleioOdzGuCS4kL7BtYunPoqD3dAbebjh7UmxLUIj/rWoH6geELyuuqA8sNTVUJj6Kswu7gDYzRZU9mSXPZ445O8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE6FF11FB;
+	Wed, 15 Jan 2025 07:27:11 -0800 (PST)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FF323F73F;
+	Wed, 15 Jan 2025 07:26:39 -0800 (PST)
+Date: Wed, 15 Jan 2025 15:26:35 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andras Szemzo <szemzo.andras@gmail.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
+ Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 03/12] pinctrl: sunxi: add driver for Allwinner V853.
+Message-ID: <20250115152635.1b89e7f4@donnerap.manchester.arm.com>
+In-Reply-To: <CACRpkda0nx3SQtdjmXdCEbVJSWM10TM=p-6JbDjbiYcOSF5PxQ@mail.gmail.com>
+References: <20250110123923.270626-1-szemzo.andras@gmail.com>
+	<20250110123923.270626-4-szemzo.andras@gmail.com>
+	<20250114141954.2785879a@donnerap.manchester.arm.com>
+	<CACRpkda0nx3SQtdjmXdCEbVJSWM10TM=p-6JbDjbiYcOSF5PxQ@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
- <CAHp75Ve8d96Uw1obJVwRPyRE5E0eC8qU7uXe-UKuZeB-3XLPcA@mail.gmail.com>
- <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de> <CAHp75VfOhAmkpB_nhQE8m25p=3P2wvTfOnQFEsLR5KEktLy4vQ@mail.gmail.com>
- <43ecfb45-d96b-46e5-95e1-2ece32532e74@pengutronix.de>
-In-Reply-To: <43ecfb45-d96b-46e5-95e1-2ece32532e74@pengutronix.de>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 15 Jan 2025 17:16:53 +0200
-X-Gm-Features: AbW1kvaECDnmeWgZSodqxxBJzlN_QPL7YCb8AhABJXAcNlpFGDGQ5vdnnE27s7o
-Message-ID: <CAHp75VfZHZ7Xx1SnryBX683B=gm70SE_bvhivn+ecUePebQLdA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] gpio: mxc: silence warning about GPIO base being
- statically allocated
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Haibo Chen <haibo.chen@nxp.com>, 
-	Catalin Popescu <catalin.popescu@leica-geosystems.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 15, 2025 at 9:03=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix.=
-de> wrote:
-> On 14.01.25 20:43, Andy Shevchenko wrote:
-> > On Tue, Jan 14, 2025 at 11:55=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutr=
-onix.de> wrote:
-> >> On 14.01.25 10:46, Andy Shevchenko wrote:
-> >>> On Tue, Jan 14, 2025 at 12:19=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengu=
-tronix.de> wrote:
-> >>>>
-> >>>> The i.MX GPIO driver has had deterministic numbering for the GPIOs
-> >>>> for more than 12 years.
-> >>>>
-> >>>> Reverting this to dynamically numbered will break existing setups in=
- the
-> >>>> worst manner possible: The build will succeed, the kernel will not p=
-rint
-> >>>> warnings, but users will find their devices essentially toggling GPI=
-Os
-> >>>> at random with the potential of permanent damage. We thus want to ke=
-ep
-> >>>> the numbering as-is until the SysFS API is removed and script fail
-> >>>> instead of toggling GPIOs dependent on probe order.
->
-> Please read my cover letter / commit messages. I do nowhere object to dep=
-recation
-> and removal of the sysfs interface. But I strongly disagree that a necess=
-ary step
-> towards that is having Linux start toggling random GPIOs after an update =
-on
-> platforms that behaved consistently for >10 years.
->
-> Can you explain why we can't remove the hardcoded base at the same time t=
-hat
-> sysfs support is removed for good?
+On Wed, 15 Jan 2025 11:23:50 +0100
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Because (if follow your logic!) it won't ever happen until all the
-platforms that are using the non-dynamic bases are being removed as
-well.
+Hi Linus,
 
-Otherwise this situation isn't anyhow different to the broken platform
-as you described.
+thanks for the reply, I was hoping to get some insight and discuss this!
 
-> >>> While I understand the issue this tends to get never fixed until the
-> >>> entire support of iMX boards will be dropped.
-> >>
-> >> i.MX is an actively developed and widely used platform. Why should sup=
-port
-> >> be dropped?
+> On Tue, Jan 14, 2025 at 3:20=E2=80=AFPM Andre Przywara <andre.przywara@ar=
+m.com> wrote:
+> > Andras Szemzo <szemzo.andras@gmail.com> wrote: =20
+>=20
+> > > The V853 family has multiple package variants, from BGA to QFN88.
+> > > The latter has co-packaged DRAM and fewer pins, and less features (pi=
+n muxes).
+> > > All family members can be supported by a single driver, as the availa=
+ble pins
+> > > with allowed muxes is the same across the devices. =20
 > >
-> > Exactly, Which means "tend to get never fixed".
->
-> Imagine ReiserFS deprecation strategy involved shipping an update that
-> just corrupted your existing file system and developers insisted on calli=
-ng
-> it a fix, as ReiserFS is going to be removed anyway.
-
-It's not the same. If you still want to compare, then it means that
-what I suggest is to move from Reiser to say XFS.
-
-> >>> Personally I do not like
-> >>> this series at all. Rather let's try to go the hard way and understan=
-d
-> >>> what's going on to fix the current issues.
-> >>
-> >> /sys/class/gpio is deprecated and when it is finally removed, this ser=
-ies can
-> >> be reverted again. The alternatives are either do nothing and live wit=
-h 6 kernel
-> >> warnings cluttering every boot or show users the finger as described i=
-n
-> >> the cover letter.
-> >>
-> >> Do you see a different path forward?
+> > It depends a bit on the outcome of the discussion on the A523 pinctrl
+> > driver [1], but I think we should use the same approach here (and for
+> > every "new" Allwinner SoC coming up, really): put the pinmux value in t=
+he
+> > DT, and get rid of this entire table altogether:
+> > [1]
 > >
-> > Yes, try to write your scripts based on the libgpiod or the tools
-> > provided by the project. I.o.w. follow the warning that SYSFS will be
-> > removed at some point and prepare yourself for that. If some kernel
-> > work needs to be done, contribute.
->
-> I have been using libgpiod for many years, but have in the past used sysf=
-s
-> or been involved with projects using sysfs. I agree that these projects
-> need to switch to the GPIO character device and that they will be eventua=
-lly
-> broken. Yet, I still get warnings despite doing everything correctly IMO =
-and no,
-> I don't want to fix a warning by doing negligent stuff like jumble GPIO n=
-umbers,
-> with the reason that it's going to be broken for good in the future anywa=
-y.
->
-> To reiterate, my issue is with the manner of breakage:
->
->   - broken, because /sys/class/gpio doesn't exist: good
->   - broken, because script executes successfully, but toggles arbitrary p=
-ins: bad
+> > The SoC specific pinctrl driver would then be very small ([2]), so this
+> > pinctrl support patch here would actually become much smaller.
+> >
+> > Just feel a bit sorry for you having created this table, in a tedious a=
+nd
+> > eye-straining exercise - been there, done that ;-) =20
+>=20
+> It's pretty stressful for the pin control maintainer as well.
+>=20
+> From the subsystems point of view, groups matches to functions by
+> strings is the best. ("fun1") + ("group1", "group2"):
+>=20
+> pio: pinctrl@1c20800 {
+>                         compatible =3D "allwinner,sun8i-r40-pinctrl";
+> (...)
+>                         i2c0_pins: i2c0-pins {
+>                                 pins =3D "PB0", "PB1";
+>                                 function =3D "i2c0";
+>                         };
+>=20
+> abstract, strings, nice. The driver handles the particulars.
 
-I understand that, but what the series is trying to do is to put on
-hold _any_ sysfs removal activity along with reducing test coverage
-and motivation to fix the certain platform to work with dynamic base.
+What bugs me about this it that this has quite some seemingly redundant
+information (Who would have thought that the i2c0 pins use function
+"i2c0"?), but misses out on the actual 4 bits(!) of information.
+So the A523 version [1] just *adds* this one property:
+		allwinner,pinmux =3D <2>;
 
-So, prepare your scripts not to toggle arbitrary numbers then and use libgp=
-iod.
+[1]https://lore.kernel.org/linux-sunxi/20241111005750.13071-5-andre.przywar=
+a@arm.com/
 
-P.S. I think this discussion goes nowhere. Talk to the GPIO
-maintainers for the matter, I'm not preventing you to put on hold GPIO
-development for _this_ platform, but I'm strongly against that because
-of your platform others should also be on hold, hence my NAK for that
-gpiolib patch.
+And we keep all your beloved strings ;-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+> That is like so because we are designing for users which are
+> let's say customization engineers. If these engineers jump from
+> project to project matching function strings to group strings will
+> be a common way to set up pins, and easy to understand and
+> grasp, and it makes the DTS very readable.
+
+That's an interesting view, and I see the point of it being easy to read,
+but this is partly because it doesn't convey too much actual information,
+does it, as it requires another lookup or two.
+And the pinctrl group nodes are actually in the .dtsi file, which are
+typically written once during the initial SoC enablement, and new board
+.dts files normally just reference the existing pingroup nodes. So anyone
+dealing with just a new board is not bothered by this.
+Also in my experience most people have no problems in understanding the
+concept of pinmuxing and that there is a selector number, also where to
+find this.
+
+> Then there are the engineers creating the pin control drivers,
+> and they want everything to be convinient for *them*, and they
+> think an opaque hex digit in the DTS is perfect at times, thus
+> pinmux =3D <0xdeadbeef>;
+>=20
+> Mediatek and STM32 made a compromise by using pinmux
+> and adding some macros to define them so it looks more
+> pleasant:
+>=20
+>       i2c0_pins_a: i2c0-default {
+>                 pins-i2c0 {
+>                         pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+>                                  <MT7623_PIN_76_SCL0_FUNC_SCL0>;
+
+Well, I don't really get why they don't use the (MTK_PIN_NO(75) | 1)
+definition directly, seems to be more telling to me?
+So the plan for sunxi would be: <SUNXI_PINMUX(PORTC, 23, MUX_1)>, ...
+And this would not be really "opaque", since it has a fixed known mapping:
+	(port << 16) | (pin << 8) | (mux << 0))
+I find this both technically elegant, because it combines all the
+information into just one compact cell, but also readable by outsiders,
+thanks to the macro.
+
+But please note that using the generic pinmux is just an idea at this
+point, last time I checked this would require significant rework in the
+sunxi pinctrl driver.
+Just adding the "allwinner,pinmux" property on the other hand is a
+comparably easy addition, hence my patch, as a compromise.
+
+>                         bias-disable;
+>                 };
+>         };
+>=20
+> At least the bias control is using strings, this is nice.
+>=20
+> So I'm mostly fine with that as well, but it can be pretty
+> heavy on people coming from the outside, asking us questions
+> like "on MT7689 how do you mux pin nnnn to function yyy"???
+> Well I don't know? Some MT7689_PIN* macro I guess?
+
+MTK_PIN_NO(nnn, yyy)?
+
+> If it was just strings I would know what the
+> expected behaviour and looks would be at least, then the driver
+> could be buggy or missing things but that's clearly cut. That's
+> why I prefer the strings.
+
+My main arguments against the current (string-based) approach:
+- They require the mapping table to be in every DT user, so not only the
+  Linux kernel, but also U-Boot, FreeBSD, you name it...
+https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pinctrl/sunxi/pi=
+nctrl-sunxi.c?ref_type=3Dheads#L236-768
+https://cgit.freebsd.org/src/tree/sys/arm/allwinner/h6/h6_padconf.c
+- The tables are getting quite large, and they pollute the single image
+  Linux kernel, with tons of very specific information for a number of very
+  pitiful Allwinner SoCs. At the moment the tally is at 145KB of code+data
+  for the existing arm64 SoCs, with the newer SoCs ever growing (H616 alone
+  is 27KB, A523 would be quite larger even, I guess 40K). The new A523
+  specific pinctrl support adds 872 Bytes.
+- Most of the mappings are untested at pinctrl driver commit time, since we
+  don't have the device drivers ready yet - by a margin. The new approach
+  would add the pinmux values when we need them and can test them.
+- The comments in the table give away that something is not quite right:
+                  SUNXI_FUNCTION(0x2, "i2c0")),         /* SDA */
+  This is just a comment, so has no relevance for the code, but it's not
+  meant for humans either. Yet we try to make this correct and maintain
+  it. Odd.
+
+Cheers,
+Andre
 
