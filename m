@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-14852-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14853-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EED6A12930
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 17:52:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 023D9A12941
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 17:56:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCE4E1888D4B
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:52:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 440A87A26C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:56:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8850119067A;
-	Wed, 15 Jan 2025 16:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85437198A2F;
+	Wed, 15 Jan 2025 16:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XDQ3VaVz"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nHjUu6Ye"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798BB70816
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 16:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29A01953A9
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 16:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736959950; cv=none; b=DqRZkf6b5aqkkFGm/jZ3wtvfTWeMX8axUepz3yB/PAqifJBgk2/4HnNuEKWH0HtYyi5Wkhe9yoVxrKqjFC0CVJlaNPGnmshoZgeaYJhVamK16A4YcxO3unrcAMEEwVLIB8+EIeQK/ZSoBJzzmwxLtuZ4c7Xy8opFZ6D95lWONe4=
+	t=1736960165; cv=none; b=lOVPIMY7iryoVoQMJ0b5YuopmYw/YUK83RGoks8D5BPk6hxE1cmMNokN/ZRHmJXp/B/htMlLDDma8MVJ0EO7ra8yj71p6TXE+zNPaiufjodPaKKwnzB0LyFs8UXOf+tstGb9ej0kiEobgTRZSKiDYU8W2fG2m5es4Q+AZK0AaY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736959950; c=relaxed/simple;
-	bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
+	s=arc-20240116; t=1736960165; c=relaxed/simple;
+	bh=RSfkRbCWqIamZDO8E8ElkZP3AhnUl+QQuRPa3vEfpEw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kM7T90b1Q1xWNUgs3PzBZKOa/+w/9ebW7mr5TZt/UCPvhoEB4JftCldnzUeVmcsXDa0UjxwmKAhtbHb5T0vAa1VgS5IHP2qsrRw8rctmD5Iyc1lRuF1ckS0OJGuupcQn9awY8LoKiPQfJAiKFiTMA5YjqoIF9brGDQiT50O/HjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XDQ3VaVz; arc=none smtp.client-ip=209.85.208.175
+	 To:Cc:Content-Type; b=fBmBTugIy7S5NMnu1WEz3NAQiaoBSgM/40wPzAv+o4kMYu+UA+qCMwU9pTyYG83SvprYxrYhzDzLqsntyVx+zCxxB/aFt+Y1bOCADIgLOfaFqmQagcvh92vXPHUlk8R7czOQY20cIGG4Fy9z/ihJq0NjG/rZmkU67bP/BHDvDkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nHjUu6Ye; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30229d5b21cso55794021fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 08:52:27 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3003c0c43c0so67545261fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 08:56:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736959945; x=1737564745; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736960162; x=1737564962; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
-        b=XDQ3VaVzzYjFblncRLXjmmjSoD07aozbGJd4uZ63kgOe+2h+jrvR5vzTgC2mHpZpUb
-         yltqZmUZm5VLRMI/1w6miwaplhFlapmsjZZbH06HBSLUM0PHwROkgEtAiGCFrynk260i
-         rVH9hCEYw4VoH+0QLbuVq5ED+z53npL0QMrJIDhFEjog+LmsvAlLmF1dq20HDaTFbuf6
-         QkdQhb4anmAvSlKFEeZDVQ0bDtYoZfjw5LNyPWxUrQ1M0qoH8bZOMzopiaCM6YoVA4OS
-         Yq8dXzkU/Fr+XOZlHeDfLbXhEdW9sjNPJeyJ5hg5nxLoO29SHGKtucvljUcevFuj5Mzh
-         IlqA==
+        bh=xdDOl+2ekFWaRdVJqcysp5umnfHOOWv97QkbmEKnRbk=;
+        b=nHjUu6YeqQ4czKxXhuIArLW29ybB3CtTlbSrFgN3xJpCt5yi0ZNUFpCkJy3f2tyCKd
+         zbFwAsFQJrCdKo/fNcSy8keiYdWCX362OZcVjYGN4zUvaavgeqArqzm4C029IgERvF+8
+         z4JC/aD4wavJj7OQNzj2sLdKqTiVVtp5NfPy6K62rq3FkQt00MffoDuuGm5G9fEBiJaT
+         0srO65+bNX9t3r17ui8PKWwxj5EB+VLWe2JVHBmhSGC53iUw1O93G5WUia62J2Q1jdhV
+         NnOlpFoBR5JfGTQegKL7+q0ychW+OWcjq9SofCyrW2NKHZ+eDe9axJbC6kGM8rfZe58J
+         KsbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736959945; x=1737564745;
+        d=1e100.net; s=20230601; t=1736960162; x=1737564962;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
-        b=kgzTQeg081ivrSkhmNugddotKU0Mlo1uTQVAgVKOTpHIfiKU3D/mX1BU0WMX8SFCzq
-         W/BB40IdhGpoqivE6eAAAL4YVH1r2EC84Nt+6rG+csZ0h76D5+jBzBrn8o40JMB6lHWo
-         BhMQCfuWswf9EaU6Rt4OxHiH9kzh6drgd+6eFC0qW4efeQYfCPE02zyvy/Ww/uRlp8Cx
-         O/J52xrzB5uxuzitEVspRbvUATV/tU8DifQ9ub3kaSRLf2VN6RzwglR+JetwxKbfH9w6
-         bwDxIN4QcoZdH0biKdAgnkksmrWMmi0HhwQQ+bRQOYsDZCnYX+oV/SXBLaTeyzFjbUXf
-         RBjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWD6l7TaQ8IqiiOOR/+J6oCvn0J8vx3/2hPsSYn1k9W/fNlBYaAP2sqeCArCTgfPujOVwXk5u7nZjM6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTqvL0IItj4oLphwD5UV2i83YeCuvdTed9gpMIq14TqreF9GfR
-	Tai/biIsZ/ZHjxklvrbl7HiKj9dI3YRGZNITGjJ/iPw/ig+tjTLFk3PE3Q48vOhOpDO+GxB/pj7
-	SuEVYFNSS32P4GGsLF6qDQkHMcEVI0Yo7v24NzQ==
-X-Gm-Gg: ASbGncsuBEDPhyVmkODj8x/vw4lccqy2oi1lMz6ZcNXNlqAq98JJkYVgmV/5+fhci6D
-	RBVadmL6139+4Qr+Q/iATk1oUOiZkAj7znq71VHdTK9EUVSxjg60Nk3jW568ta2piPNqGuA==
-X-Google-Smtp-Source: AGHT+IFbudLF97M9SY4kT51eRu7G8hIOTmWNuILKuPS/5RISLBhUaMA8RaVyreeevht06KYG4u13lDLUp7DnHNKW1lE=
-X-Received: by 2002:a05:651c:501:b0:305:d86a:4f01 with SMTP id
- 38308e7fff4ca-305f45db5d9mr86648231fa.31.1736959945548; Wed, 15 Jan 2025
- 08:52:25 -0800 (PST)
+        bh=xdDOl+2ekFWaRdVJqcysp5umnfHOOWv97QkbmEKnRbk=;
+        b=mb9+WPtjA8fRmZ251YESrv5YPKSIut2w0UaKHZ2EjU68fLsTmsKH9KDvALE8ts5kTH
+         qTrdFbYARbM7BuNsAYDOOQnf8eZir0OKnQ1hxSZxv5yK6bLvi3anBHJZCXToBX/dvxjC
+         UMfVrqQowUZ8dCBm3U5Yt58lPzfn+WGnZE6gc4yi1XICJHqLiJdPWbvXcUoFutRazric
+         T2eCKlDBqNZt9YINbf4JR3rv6A/YE0pIRMY/LZw/48JoeNItfZvYiIJvyMW+072BwxaV
+         jg53OEAoTBHFSSjS/By2ypBJG+6nrzCUSE47sHjG9FSf4bQ/805dq7/L+eb0wAKfqNuL
+         Jotw==
+X-Forwarded-Encrypted: i=1; AJvYcCVv7DMLn86Am5NVQOj7e3H/qRdDdep+y+SGQw97YOhR0fQYvDWq1v/A03rZYRHiEI/0ObQB+sn4uaiZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbySN9sfqtS4cH4keQGHl3t40fi/oIHx6EwBjNsZmr6yeOwJXW
+	V5xfhpqXE21ZKIG/XUBJyQepC5myrpUtIWc3q+AvgWCNAj19Naw3ftAt7bGBHOdceyoFU8hWg3K
+	4RGGNwAedoJ5XB5vXzz95Br9WzRR7SCiPYFc6vg==
+X-Gm-Gg: ASbGncvzirGwnOmVg99N+uLLAkEEIPcmFIcFAQaSGZr+9QlsjCHM901uqB08usPPuuv
+	EPSdhuafHZLtauLpi8MYP8Z8JeD0tY7iPK7FNVwjZNBPOrH9GOSghjizCa+38i3ezlTbwaA==
+X-Google-Smtp-Source: AGHT+IGVCtsxu4Nxc8II+Al+gawBhAtzB4MYz+9Ecl8oqi13xJMRfbsu1WNLIppYV5ME9m0nmbvdoGhE02xkVmEh7JE=
+X-Received: by 2002:a05:651c:508:b0:302:2cdf:7fbb with SMTP id
+ 38308e7fff4ca-305f4531690mr91529781fa.6.1736960161839; Wed, 15 Jan 2025
+ 08:56:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,19 +74,18 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
- <CAHp75Ve8d96Uw1obJVwRPyRE5E0eC8qU7uXe-UKuZeB-3XLPcA@mail.gmail.com> <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de>
-In-Reply-To: <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de>
+ <20250113-b4-imx-gpio-base-warning-v1-3-0a28731a5cf6@pengutronix.de>
+In-Reply-To: <20250113-b4-imx-gpio-base-warning-v1-3-0a28731a5cf6@pengutronix.de>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 15 Jan 2025 17:52:14 +0100
-X-Gm-Features: AbW1kvab1-KFmYpbsyzdNL2AKyeg7H-EBh1b21mZES0GH7vaSk2m90tKHAwUVsA
-Message-ID: <CAMRc=MdYB_XHCaurs1mO+KGX7rB5zFT3zCi=UbNY0rSbMEJdWw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] gpio: mxc: silence warning about GPIO base being
- statically allocated
+Date: Wed, 15 Jan 2025 17:55:51 +0100
+X-Gm-Features: AbW1kvYbGBKWyTqAigHygOqZRSa-0z8NaBAPzFESViEk5Er4NeXPKYxQ6sb6LgU
+Message-ID: <CAMRc=MfZncRy_Qx_Yi_QjqX2cszv9X9st5Yk87Q7R3Hug2S9KQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: mxc: remove dead code after switch to DT-only
 To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, 
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Whitcroft <apw@canonical.com>, 
+	Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Shawn Guo <shawnguo@kernel.org>, 
 	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Haibo Chen <haibo.chen@nxp.com>, 
 	Catalin Popescu <catalin.popescu@leica-geosystems.com>, linux-gpio@vger.kernel.org, 
@@ -95,59 +94,46 @@ Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@li
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2025 at 10:55=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix=
+On Mon, Jan 13, 2025 at 11:19=E2=80=AFPM Ahmad Fatoum <a.fatoum@pengutronix=
 .de> wrote:
 >
-> Hi Andy,
+> struct platform_device::id was only set by board code, but since i.MX
+> became a devicetree-only platform, this will always be -1
+> (PLATFORM_DEVID_NONE).
 >
-> On 14.01.25 10:46, Andy Shevchenko wrote:
-> > On Tue, Jan 14, 2025 at 12:19=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutr=
-onix.de> wrote:
-> >>
-> >> The i.MX GPIO driver has had deterministic numbering for the GPIOs
-> >> for more than 12 years.
-> >>
-> >> Reverting this to dynamically numbered will break existing setups in t=
-he
-> >> worst manner possible: The build will succeed, the kernel will not pri=
-nt
-> >> warnings, but users will find their devices essentially toggling GPIOs
-> >> at random with the potential of permanent damage. We thus want to keep
-> >> the numbering as-is until the SysFS API is removed and script fail
-> >> instead of toggling GPIOs dependent on probe order.
-> >
-> > While I understand the issue this tends to get never fixed until the
-> > entire support of iMX boards will be dropped.
+> Note: of_alias_get_id() returns a negative number on error and base
+> treats all negative errors the same, so we need not add any additional
+> error handling.
 >
-> i.MX is an actively developed and widely used platform. Why should suppor=
-t
-> be dropped?
+> Fixes: 0f2c7af45d7e ("gpio: mxc: Convert the driver to DT-only")
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> ---
+>  drivers/gpio/gpio-mxc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> > Personally I do not like
-> > this series at all. Rather let's try to go the hard way and understand
-> > what's going on to fix the current issues.
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 4cb455b2bdee71ba4eb20c93567c3b8db100dbb2..619b6fb9d833a4bb94a93b420=
+9f01b49ad1cbdb0 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -490,8 +490,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>         port->gc.request =3D mxc_gpio_request;
+>         port->gc.free =3D mxc_gpio_free;
+>         port->gc.to_irq =3D mxc_gpio_to_irq;
+> -       port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * =
+32 :
+> -                                            pdev->id * 32;
+> +       port->gc.base =3D of_alias_get_id(np, "gpio") * 32;
 >
-> /sys/class/gpio is deprecated and when it is finally removed, this series=
- can
-> be reverted again. The alternatives are either do nothing and live with 6=
- kernel
-> warnings cluttering every boot or show users the finger as described in
-> the cover letter.
+>         err =3D devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
+>         if (err)
 >
-> Do you see a different path forward?
+> --
+> 2.39.5
 >
 
-I recently wrote a user-space compatibility layer for sysfs[1]. While
-right now it doesn't support static base numbers, I'm very open to
-adding it except that I wasn't sure how to approach it.
+This looks like I can pick it up separately from the rest? Is that right?
 
-Is this of any use to you and could it help you switch to libgpiod
-without changing your user-space set-up (given the support for static
-GPIO numbering)? If so, how would you like to see this implemented? A
-config file at /etc that would list chip labels and their desired GPIO
-base?
-
-Bartosz
-
-[1] https://github.com/brgl/gpiod-sysfs-proxy
+Bart
 
