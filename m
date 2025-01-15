@@ -1,160 +1,143 @@
-Return-Path: <linux-gpio+bounces-14834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFA0CA11E5F
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 10:44:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923FFA11E91
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 10:50:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17E7B188DBA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 09:44:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1C5216A418
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 09:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417D01EEA5D;
-	Wed, 15 Jan 2025 09:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2761EEA3E;
+	Wed, 15 Jan 2025 09:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChmP4M75"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DImkJAVv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CC41EEA3C;
-	Wed, 15 Jan 2025 09:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E5C248171;
+	Wed, 15 Jan 2025 09:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736934246; cv=none; b=B2Qj9rUqc50Smae2HGGmBQycJUsJwBk1LZWaLKa5BI012Yo1FMz/V/XttMDMoLWp0xtCbRTymHX0nKOSngivoHQIFc3weC/PBdqOOlSW1xLXapDHOB0ZRmt9XDImy+MQXXt8RWbDz7PIeHZgfGSKRBhzQkQ3bRd4Dtjr9VqcLNs=
+	t=1736934613; cv=none; b=jHt79AyTM+Hczd9LdNBlpcV1wsmeXrmeF1hiSdveGMXaIodQR1WiVhYMPqRjxhCS/MMOBT8ej5UU1MUYnsR/kx0quT9tyd0+mp6xiNbJjS2B/ZypQ1CytNCJ91Z5I3qqMzYgPTu/zVhyobyIRDn/ZPHH4HC1jm6FIXUM+2nZ7cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736934246; c=relaxed/simple;
-	bh=evuBwWPduzBTPe1URAVhuzT1Z4DxtnCak0sjLrDRhqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fFkHh7fsU3kPKx3VcWDkfq0xkE7GqZFauQpaQVsuRTUZVIwvuqRrg8Eemrx7mawR0cHMUe4seIr/bvrQoDDoLwGHLwxJU+raMn4bfy+rzKUWUaVz1qAznl/FOMHEQOZt+1akfnbfUWFZHJUhT3rxB3YIxX9qiIGWZvc+gw2JsCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChmP4M75; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D856DC4CEE1;
-	Wed, 15 Jan 2025 09:43:59 +0000 (UTC)
+	s=arc-20240116; t=1736934613; c=relaxed/simple;
+	bh=FAroUXyBDLBEfp+R9giXYoiTywuzUZWagD49ZuybGCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACmRF2WuJEwYc3y8SFZjAGzS4XGfGyt5clPvfX5bRUtASALL7V1d3NE+qm5LotUFsYxqHbi53VZzIvEIn1jU89DlkZCZiY4cQvbGRWiMQNJZZIcgfo0cJPdlsoypa9xuqo3HJrMak3Gs5OqnEq3++hSp9QTp3vl0HLABAgCMLnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DImkJAVv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A693C4CEE1;
+	Wed, 15 Jan 2025 09:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736934245;
-	bh=evuBwWPduzBTPe1URAVhuzT1Z4DxtnCak0sjLrDRhqg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ChmP4M75/02N36SakWLqFvGy284jj55WAqmJoPW+hUbUaeWAJP+oLw3WjTCEYbSUy
-	 Ng5hlDjgU2oHxGqpNc8WRpVymc8S/oLeeyY+TsPleMLoliy9Vq+T2sRzwEcKHQIRsp
-	 KFPIIKP9DoAQNUUYCJ9jqYsDlAOYOj+u+PYqoxIUaFVEJa/+8A122UkF8OnppELGQI
-	 T/2wPFym+OXDKoIuUXDPD1QFbzRFqYRUbObzV34ey2SWB2OgGtZ3JJ672+4eExeGHP
-	 FMHsJWZwIzlQ61QtdctHcV8QiiZXTnEW1pJD3FgR8UXYqbSxgrMI8DrlEo1g4erRTn
-	 Gq6GsUo3NezxQ==
-Message-ID: <e0a4d575-b4c2-4b4e-b272-1e67472f723f@kernel.org>
-Date: Wed, 15 Jan 2025 10:43:58 +0100
+	s=k20201202; t=1736934613;
+	bh=FAroUXyBDLBEfp+R9giXYoiTywuzUZWagD49ZuybGCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DImkJAVvNmB4HstzP6QyZuwro7ZkhI2z7+UN/VI+l4a53L1EiD7SlRf2B5GDtl0c7
+	 28gPdouUlyGvnv2eVpRRjaD8ImWpK0C8W5Cxw47OM7yjjOWfZ4lhDlZ5jkUt71a55j
+	 LD+ONvpoPXR5ZYd/GYr1/3TqSVKll2Mq9SJKuoFzubYGHhlBjZThjYrYD3QVCbVIf2
+	 MFOIVbBpBxUaAqqL0Chf3SxqbMQA0aKgmhFZ95iVyVFadd+g1hYBq5eemjSR1Xktwt
+	 hQ0U3rvJUG0FcPoi3L1CLsHB1I9pzk0PfTL15FKgqik8v6xJsp44WjTJLEKyrcURQW
+	 jiouujojobUUQ==
+Date: Wed, 15 Jan 2025 10:50:09 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Cathy Xu <ot_cathy.xu@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
+	wenbin.mei@mediatek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, Guodong Liu <guodong.liu@mediatek.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: mediatek: add support for
+ mt8196
+Message-ID: <nmyxygrya6cpalmirsunvkx32uox3kjxd4l5ggdhjtj7edyizz@yodolm5ktboo>
+References: <20250115063555.32492-1-ot_cathy.xu@mediatek.com>
+ <20250115063555.32492-2-ot_cathy.xu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/12] ARM: dts: sun8i: add DTSI file for V853
-To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>,
- Andras Szemzo <szemzo.andras@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-13-szemzo.andras@gmail.com>
- <ff57cf8d-626e-4d35-a18f-1a89b4d9fa3e@kernel.org>
- <81cbb273-a4b4-424c-9d25-f53ebc8ea82a@prolan.hu>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <81cbb273-a4b4-424c-9d25-f53ebc8ea82a@prolan.hu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250115063555.32492-2-ot_cathy.xu@mediatek.com>
 
-On 15/01/2025 10:09, Csókás Bence wrote:
-> Hi,
-> 
-> On 2025. 01. 10. 14:58, Krzysztof Kozlowski wrote:
->> On 10/01/2025 13:39, Andras Szemzo wrote:
->>> +// Copyright (C) 2024 Andras Szemzo <szemzo.andras@gmail.com>
->>> +
->>> +#include <dt-bindings/clock/sun6i-rtc.h>
->>> +#include <dt-bindings/clock/sun8i-v853-r-ccu.h>
->>> +#include <dt-bindings/reset/sun8i-v853-r-ccu.h>
->>> +#include <dt-bindings/clock/sun8i-v853-ccu.h>
->>> +#include <dt-bindings/reset/sun8i-v853-ccu.h>
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +#include <dt-bindings/power/allwinner,sun8i-v853-ppu.h>
->>> +
->>> +/ {
->>> +	#address-cells = <1>;
->>> +	#size-cells = <1>;
->>> +
->>> +	osc24M: osc24M-clk {
->>
->> Only lowercase node names.
-> 
-> I don't agree. It is customary to write oscillator names with casing in 
+On Wed, Jan 15, 2025 at 02:35:38PM +0800, Cathy Xu wrote:
+> +
+> +        properties:
+> +          pinmux:
+> +            description:
+> +              Integer array, represents gpio pin number and mux setting.
+> +              Supported pin number and mux varies for different SoCs, and are
+> +              defined as macros in dt-bindings/pinctrl/mt8196-pinfunc.h
+> +              directly, for this SoC.
+> +
+> +          drive-strength:
+> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +
+> +          bias-pull-down:
+> +            oneOf:
+> +              - type: boolean
+> +              - enum: [100, 101, 102, 103]
+> +                description: mt8196 pull down PUPD/R0/R1 type define value.
+> +              - enum: [200, 201, 202, 203, 204, 205, 206, 207]
+> +                description: mt8196 pull down RSEL type define value.
 
-It is not customary in Linux kernel and DT bindings/DTS. See DTS coding
-style, see the clock bindings and preferred node naming.
+Not much improved.
 
-This is the DTS submitted to Linux kernel, thus it is bound by the rules
-expressed in the kernel.
+
+> +            description: |
+> +              For pull down type is normal, it doesn't need add RSEL & R1R0.
+> +              For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
+> +              set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
+> +              "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" &
+> +              "MTK_PUPD_SET_R1R0_11" define in mt8196.
+> +              For pull down type is PD/RSEL, it can add RSEL define to set
+> +              different resistance. It can support
+> +              "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001" &
+> +              "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" &
+> +              "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101" &
+> +              "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111" define in
+> +              mt8196.
+
+> diff --git a/include/dt-bindings/pinctrl/mt8196-pinfunc.h b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
+> new file mode 100644
+> index 000000000000..bf0c8374407c
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
+> @@ -0,0 +1,1572 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Copyright (C) 2025 Mediatek Inc.
+> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
+> + */
+> +
+> +#ifndef __MT8196_PINFUNC_H
+> +#define __MT8196_PINFUNC_H
+> +
+> +#include <dt-bindings/pinctrl/mt65xx.h>
+> +
+> +#define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
+> +#define PINMUX_GPIO0__FUNC_DMIC1_CLK (MTK_PIN_NO(0) | 1)
+> +#define PINMUX_GPIO0__FUNC_SPI3_A_MO (MTK_PIN_NO(0) | 3)
+> +#define PINMUX_GPIO0__FUNC_FMI2S_B_LRCK (MTK_PIN_NO(0) | 4)
+> +#define PINMUX_GPIO0__FUNC_SCP_DMIC1_CLK (MTK_PIN_NO(0) | 5)
+> +#define PINMUX_GPIO0__FUNC_TP_GPIO14_AO (MTK_PIN_NO(0) | 6)
+
+I do not see how you resolved my comment from v1. In v2 I reminded about
+it, so you responded that yopu will change something, but I do not see
+any changes.
+
+So explain: how did you resolve my comment?
+
+These two examples where you claim you will change something, but send
+the same. I skipped the rest of the patch.
 
 Best regards,
 Krzysztof
+
 
