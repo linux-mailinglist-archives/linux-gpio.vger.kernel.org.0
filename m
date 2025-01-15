@@ -1,121 +1,129 @@
-Return-Path: <linux-gpio+bounces-14817-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14818-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51496A11A52
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 08:05:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD2C5A11A70
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 08:08:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF5051664CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 07:05:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE9DB163678
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 07:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65A8F22FDE0;
-	Wed, 15 Jan 2025 07:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhBWUNQO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83822309AE;
+	Wed, 15 Jan 2025 07:07:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27BE23243D;
-	Wed, 15 Jan 2025 07:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C9A22F392
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 07:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736924718; cv=none; b=icT+ePPv8txNGwPAG+W1Vz4jxh9Pi+Uve5Kyuvu5x1u5UpYjdxJMKtlDJ+HVCyNindwZlFUgDIzVkqEQ3ACWnR7flzXX+Iwcuj+NZ1nTBZwIBy6EQjm+4GLqVZZiPHXmo79YbMIHQC3BLC7wLJOg/sVwcXpWxtNraSw7AT1xwNI=
+	t=1736924869; cv=none; b=jUZTlj8MukJnHFQExjTRwaNBDtPr67DHIMSSMhQ2X4mVc6SH8I6Gk85DPySao7Uq1WzI9cF2JlFGJJEjV8mqWl12keYz1I2H2Wx8b51msaw3nomBlh+BixlMW5N5ttm5qNJd66/Xvl9WNEkAQh1LL93CKb+1+V8mIjBHnz0g9YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736924718; c=relaxed/simple;
-	bh=ESrP+R+vbzb0KV3PE778NNDH+LI5asYGq+gEf/u9+bI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UhriFju11QHGwh1ui1XEp1vwKYBIOctojKfD35Ul27YTo6yKzGKIDYkHFBP+QFTg1iOQswcWtwusPffjv/237ghZpo+BiXUwpGm09rgOE9nFmiZNIxL57DivwUImEK/iqJxHGWO48J7fEhLtNieGdaUwNO1s8t960XetjqOH8PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhBWUNQO; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e54d268bc3dso11347362276.1;
-        Tue, 14 Jan 2025 23:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736924715; x=1737529515; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ESrP+R+vbzb0KV3PE778NNDH+LI5asYGq+gEf/u9+bI=;
-        b=VhBWUNQO8NHoScnUwS8Uxv3XIZee++JodIxuHyYMBJCZ/2vX/sFLCilMyVjdRk7P4V
-         IfQ1wgAeZFMWssR87P5gyADyRYcsAbMKs4De5PeiuXO7orK+c2gb1PToBj9QP4MOnUuT
-         Q6EOMH0q+AxQe6vKRblKFDTK622i0olyQBiQt1l+hG9JdcQyGhQI5z5FBrYr/XD7gPrd
-         52gbcntrn0m8xLOrZLTRjVNKP08lpCOT5kHrdrRnvSNGnkgFxbD+sEOKu9TUFkIgeyf4
-         maSjK1EIeA2+krQjtDKUT1XQxdHpoi/75NI0aTwnaLPJ1i3M+6OhNBS9ii8+H7pq2uJO
-         Ph+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736924715; x=1737529515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ESrP+R+vbzb0KV3PE778NNDH+LI5asYGq+gEf/u9+bI=;
-        b=ef4uko9cRRnKqsx85wySy/3CMVTJj10p5yd7jpneH2X4RO5jnlKLXW0ELPUIzBnRM+
-         1jhbwag4ugUkPl/BdwKJZTYm9muLJxjvtzapUEKyYuGPbZ8obYFl21t+m1r3/thncavt
-         jqexqd+AcbvrSH6JcN9ddRrlf2Ral9MEd+JjezmFlhGlDhp5qv3kj6jtNLIWzzay/W6u
-         U3/v3G0I4GODxLrUa49h3SAMS+uahHwNC5vmSrM1xa/nC9Ewz5n5K0dqVNhFX8zX52aI
-         oddrrLXDvbAk5ioI9xhiHsnABV+v9jV8zvsyZ4EBE5ZvMF+yyes9yX9Y3Bk5Of1l0S47
-         7Ogw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyBTqN/gvqabMXTWkQ1fMq4DP88Zex4o7DrYA2eXPmmzZ+U9ux6f8ZHk7AqE6Bui9zIu+rLDiz@vger.kernel.org, AJvYcCVFFAu6SL4S5sKyDwgMtR9mgQnXtAHJhv2uebTHSfFuAfFEAa9KgnqvNWKCHSHaBUvvQkguXWV9DUVZ@vger.kernel.org, AJvYcCVpBfuJDRG+OrKRH2mFc65MNMYdL24R/VuG6UMv+npD7bURF00CfiW1c9hxXm2exfAs57rAATTdrDVM@vger.kernel.org, AJvYcCVx8bwOeSfPVk0KRzmy2d5phchIK7kTkftG9eYj40AOQt2epnWt3U691o7pGk2MD60z4nKmSzPkkaOes1hA6/A=@vger.kernel.org, AJvYcCWEJ4SG0rZ66Kj7TnneXMBG8GuLH/WoQst0Frsc4GdYbv1YyEbvP/qJtde8mKVsHXY1BbkxfwVeoI+fKKc=@vger.kernel.org, AJvYcCWKAEqvDaU5UMWuYohjZ+/422mcNy79BL1x28R0Jr17AdsTZ6prbzEg6OSPOvgK8YHWxjWX4oQS1GJTwsyO@vger.kernel.org, AJvYcCWVY3bmESKINm6soiyX3yQfUdGxYpDwEK7eHRrr5R41HZq68uFS/CESvQtwzZmkwoYiO5KKo0oV1gMc@vger.kernel.org, AJvYcCWe9B7uCpI8uAWqHeqfpyXDCIVAdh+kPI4UvD7YkaJ288VOk2epsAOq4b+F1Vzu6a5zTgpIwfRUXuGILA==@vger.kernel.org, AJvYcCX9FecU/olgUbYyWsXdRnlszy7ltbetqxaDgfu1xZxIF/1EVkjTuHEJqz2JFxryDXjeRHnFBkoZv6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQJztWEF56D9aA1or0RBOl804YVRrBE0qu3RUMsYKiqh17tfgc
-	i+12gbMfRLNIAqejWqDw5Z/1mtMvYwo1FSZDFqgMTqNgMBiQVOyachF+vq1WQnmCRXw5U2oCf1W
-	UeEs1lyONs6V6HXaXXxPUMDyCWKk=
-X-Gm-Gg: ASbGnctrT9sR8O1HGYuPgiYikdutzjBn8ji/r7xYvAD8pf7mwsiIpXJ6yBhM2l3bxKL
-	r1WDtkW+BYIFQzf2hLl7YFqMS1ANkPB4O8MnHH+nRL8hEDy4uNQMbNGFln8q7FdYZERFdhpE=
-X-Google-Smtp-Source: AGHT+IFIsyVRJmpHZBjotMVCSRPbd3gEaCIIHHy4FjD1w9/Fs7vwaZor8NBHQG4IdMBq2/3+m2DX7k9Rk0mcGAJ2tJA=
-X-Received: by 2002:a05:6902:1891:b0:e57:8df4:523e with SMTP id
- 3f1490d57ef6-e578df4612cmr601583276.41.1736924715583; Tue, 14 Jan 2025
- 23:05:15 -0800 (PST)
+	s=arc-20240116; t=1736924869; c=relaxed/simple;
+	bh=20ODciCJkVPGXL8bl1J5Gnel9mKRBsQcgJ/dHp+VnpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=diHS45sWGCDfx078XAv1H7YoMJtnMfB0sw9lVdd+CfKwEToLvhzeHcp1vFLBYIAWRnJgRY+3oYXL/jGeSfyjvDK5Kk2RyR7H377K/v4kFRg8nPn6vTgxTgMcO/ADbt0pCmTf/7cJIRdJGiXssJPeIU4I6ZqK0nrXFdbu6cvO2t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tXxV5-0002m7-Tw; Wed, 15 Jan 2025 08:07:39 +0100
+Message-ID: <40531a5e-993f-4532-b071-6f233d6923f8@pengutronix.de>
+Date: Wed, 15 Jan 2025 08:07:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250114033010.2445925-1-a0282524688@gmail.com>
- <20250114033010.2445925-3-a0282524688@gmail.com> <CAMRc=MeEye9i2Z=Y8bHt2ruCS6JJRxmGiLvAUt6E7BJ2K4wosg@mail.gmail.com>
-In-Reply-To: <CAMRc=MeEye9i2Z=Y8bHt2ruCS6JJRxmGiLvAUt6E7BJ2K4wosg@mail.gmail.com>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Wed, 15 Jan 2025 15:05:04 +0800
-X-Gm-Features: AbW1kvbY0w-UuJw15CFDA2VEYiv0cNht8IhrNUen9V2_54YGXuldzphdX2Xup68
-Message-ID: <CAOoeyxXxmO7Hvd4==TY-NuUwY_tv7xfjG-Cd4H4stfL6Wmoorg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] gpio: Add Nuvoton NCT6694 GPIO support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] gpiolib: add opt-out for existing drivers with static
+ GPIO base
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Whitcroft <apw@canonical.com>,
+ Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Haibo Chen <haibo.chen@nxp.com>,
+ Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
+ <20250113-b4-imx-gpio-base-warning-v1-1-0a28731a5cf6@pengutronix.de>
+ <CAHp75VcnB37ET8mW=m5sXwP4qDQDUPKL0yRy8n49m++zShqPMA@mail.gmail.com>
+ <97baffcd-35cc-49a0-95e9-d1ceac966dc3@pengutronix.de>
+ <CAHp75VfAmqzKxgXTc9TqeFOeGSr_D3NmCa0M7+4Zf37CofrHeg@mail.gmail.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <CAHp75VfAmqzKxgXTc9TqeFOeGSr_D3NmCa0M7+4Zf37CofrHeg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Dear Bartosz,
+On 14.01.25 20:38, Andy Shevchenko wrote:
+> On Tue, Jan 14, 2025 at 12:06 PM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>> On 14.01.25 10:49, Andy Shevchenko wrote:
+>>> On Tue, Jan 14, 2025 at 12:20 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>
+>>>> Some drivers have had deterministic GPIO numbering for most of
+>>>> their existence, e.g. the i.MX GPIO since commit 7e6086d9e54a
+>>>> ("gpio/mxc: specify gpio base for device tree probe"), more than
+>>>> 12 years ago.
+>>>>
+>>>> Reverting this to dynamically numbered will break existing setups in
+>>>> the worst manner possible: The build will succeed, the kernel will not
+>>>> print warnings, but users will find their devices essentially toggling
+>>>> GPIOs at random with the potential of permanent damage.
+>>>>
+>>>> As these concerns won't go away until the sysfs interface is removed,
+>>>> let's add a new struct gpio_chip::legacy_static_base member that can be
+>>>> used by existing drivers that have been grandfathered in to suppress
+>>>> the warning currently being printed:
+>>>>
+>>>>   gpio gpiochip0: Static allocation of GPIO base is deprecated,
+>>>>   use dynamic allocation.
+>>>
+>>> Warning is harmless and still a good reminder for the stuff that needs
+>>> more love.
+>>> NAK.
+>>
+>> A warning is a call-to-action and it's counterproductive to keep tricking
+>> people into removing the static base and breaking other users' scripts.
+> 
+> Are you prepared to say the same when the entire GPIO SYSFS will be
+> removed? Because that's exactly what I referred to in the reply to the
+> cover letter as an impediment to move forward.
 
-Understood!
+No. But this gives me an idea: We could make the warning dependent
+on CONFIG_GPIO_SYSFS and add a comment to the i.MX code suggesting
+users do that instead. What do you think?
+
+>> I don't understand what love you think this will spawn with regards
+>> to the i.MX GPIO driver. Can you explain?
+> 
+> To fix the bugs you found. If it's not the GPIO driver a culprit, we
+> need to find the real one and fix that.
+
+Again: jumbling GPIOs with potential hardware harm as a result is not a fix.
+
+Cheers,
+Ahmad
 
 
-Thanks,
-Ming
-
-Bartosz Golaszewski <brgl@bgdev.pl> =E6=96=BC 2025=E5=B9=B41=E6=9C=8814=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=888:12=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, Jan 14, 2025 at 4:30=E2=80=AFAM Ming Yu <a0282524688@gmail.com> w=
-rote:
-> >
-> > This driver supports GPIO and IRQ functionality for NCT6694 MFD
-> > device based on USB interface.
-> >
-> > Signed-off-by: Ming Yu <a0282524688@gmail.com>
-> > ---
->
-> Please pick up review tags when resending.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
