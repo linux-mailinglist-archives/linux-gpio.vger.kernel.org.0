@@ -1,217 +1,642 @@
-Return-Path: <linux-gpio+bounces-14848-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14849-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B221A12765
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:27:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C768A127C4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:43:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC14D1640FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 15:27:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A10717A274F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 15:43:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909F01553BB;
-	Wed, 15 Jan 2025 15:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B126015539A;
+	Wed, 15 Jan 2025 15:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/icKybp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC9B145B2E;
-	Wed, 15 Jan 2025 15:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCDA15252D;
+	Wed, 15 Jan 2025 15:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954812; cv=none; b=pGNLCXTN7TOpICSKl4Wpjtfa/kAzYPVg/3q4LgQAG3/t8Z3IInSKFt/AFEFB1FbGxX0t7+pXWFkGTdYh82AjQWxQDJc7OZRyLBZTH0qPia6gXYnM9fz6yg6Oc109Hi1E2HF63CuGIXqIG9HmT09a+HfgDsTAEUYZl/iFgtpcc/g=
+	t=1736955778; cv=none; b=TJrSKXgKB0DedE+eMQDJRHofHY0PtinFCa+5LmlW3ChCR8wRcjDWy9bTwBKJTOcnzkAAOeqeCIAZvOI1OAXmaDmcdr6ysnAgrfOfrGyEBQTJSwdb/KJH7s6XuQnpuLNEBoxInivd4BXoRPuIYuv3PPCLpwcv9VxgwAvMOIzf0C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954812; c=relaxed/simple;
-	bh=JBcCp53Gsobb/CU+JgBt3NsWKZtsmKsbDhO8bGTGg5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fpetO5zbJqroMhWZa8321nN6dui2SY81VEnYb+y2qrp/Yj4aLvFSYequOi4wA/Zkj7Pm8frkgbjqzfsnC1XleioOdzGuCS4kL7BtYunPoqD3dAbebjh7UmxLUIj/rWoH6geELyuuqA8sNTVUJj6Kswu7gDYzRZU9mSXPZ445O8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE6FF11FB;
-	Wed, 15 Jan 2025 07:27:11 -0800 (PST)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FF323F73F;
-	Wed, 15 Jan 2025 07:26:39 -0800 (PST)
-Date: Wed, 15 Jan 2025 15:26:35 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andras Szemzo <szemzo.andras@gmail.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
- Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
- Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 03/12] pinctrl: sunxi: add driver for Allwinner V853.
-Message-ID: <20250115152635.1b89e7f4@donnerap.manchester.arm.com>
-In-Reply-To: <CACRpkda0nx3SQtdjmXdCEbVJSWM10TM=p-6JbDjbiYcOSF5PxQ@mail.gmail.com>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
-	<20250110123923.270626-4-szemzo.andras@gmail.com>
-	<20250114141954.2785879a@donnerap.manchester.arm.com>
-	<CACRpkda0nx3SQtdjmXdCEbVJSWM10TM=p-6JbDjbiYcOSF5PxQ@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1736955778; c=relaxed/simple;
+	bh=AoUSmS04+jSKHiw+nRZOkVIe43RbMUyGJ7BLj93Yw9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mRoO75c9alsPNUyIJbGn7E8o5R5jxXwIcYP6nbxfamgOBdkWEWt8iGRSemXqJMKCDu9N9Dj9M4R5eBVgHTCOHS7ijnqIq1R+BjEEEPNRW1KV+U6cqG40yatsrpxprNOYVNHSdF5+HjCz2XS0PDWnsWir6+AzH3UfiBP77flTC5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/icKybp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1B1C4CED1;
+	Wed, 15 Jan 2025 15:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736955777;
+	bh=AoUSmS04+jSKHiw+nRZOkVIe43RbMUyGJ7BLj93Yw9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U/icKybpe8VQCqvm3g7ZsvWegVU3uD63KeyKCe6bHa1qxOyks9VFSN+wxiaIWjKaE
+	 mjkUTs+xsghCIS/Q2sUPYbJJPZ/mBsq//g4jrub5lhY73ovHikQejTsrnuxIu+nZM8
+	 wTtVY2Ppj0L6Pz/iHKo+cbJWWjGSi9GA5PGlzaCkj4ShBp5D3hcsiQlWETYCzqc+fV
+	 rrKkHO4YmVoRAqy9c/Go0un4/2j2wFpHwih4K4e9uuGtVehPF9vNTMPgg2Ejlhw8YG
+	 4fMuCba/dAYJIuVqkTH1/oNx3UG/6bAKP99PDbqBk904Dxf/DqJfnyr+M0/NduNaEV
+	 Dn2dFqRPmPWDw==
+Date: Wed, 15 Jan 2025 15:42:52 +0000
+From: Lee Jones <lee@kernel.org>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/7] mfd: Add max7360 support
+Message-ID: <20250115154252.GK6763@google.com>
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-2-9519b4acb0b1@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250113-mdb-max7360-support-v3-2-9519b4acb0b1@bootlin.com>
 
-On Wed, 15 Jan 2025 11:23:50 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, 13 Jan 2025, mathieu.dubois-briand@bootlin.com wrote:
 
-Hi Linus,
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> 
+> Add core driver to support MAX7360 i2c chip, multi function device
+> with keypad, gpio, pwm, gpo and rotary encoder submodules.
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> ---
+>  drivers/mfd/Kconfig         |  12 ++
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/max7360.c       | 296 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max7360.h | 109 ++++++++++++++++
+>  4 files changed, 418 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index ae23b317a64e..c1ddda480922 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2414,5 +2414,17 @@ config MFD_RSMU_SPI
+>  	  Additional drivers must be enabled in order to use the functionality
+>  	  of the device.
+>  
+> +config MFD_MAX7360
+> +	tristate "Maxim MAX7360 Support"
 
-thanks for the reply, I was hoping to get some insight and discuss this!
+What is it?
 
-> On Tue, Jan 14, 2025 at 3:20=E2=80=AFPM Andre Przywara <andre.przywara@ar=
-m.com> wrote:
-> > Andras Szemzo <szemzo.andras@gmail.com> wrote: =20
->=20
-> > > The V853 family has multiple package variants, from BGA to QFN88.
-> > > The latter has co-packaged DRAM and fewer pins, and less features (pi=
-n muxes).
-> > > All family members can be supported by a single driver, as the availa=
-ble pins
-> > > with allowed muxes is the same across the devices. =20
-> >
-> > It depends a bit on the outcome of the discussion on the A523 pinctrl
-> > driver [1], but I think we should use the same approach here (and for
-> > every "new" Allwinner SoC coming up, really): put the pinmux value in t=
-he
-> > DT, and get rid of this entire table altogether:
-> > [1]
-> >
-> > The SoC specific pinctrl driver would then be very small ([2]), so this
-> > pinctrl support patch here would actually become much smaller.
-> >
-> > Just feel a bit sorry for you having created this table, in a tedious a=
-nd
-> > eye-straining exercise - been there, done that ;-) =20
->=20
-> It's pretty stressful for the pin control maintainer as well.
->=20
-> From the subsystems point of view, groups matches to functions by
-> strings is the best. ("fun1") + ("group1", "group2"):
->=20
-> pio: pinctrl@1c20800 {
->                         compatible =3D "allwinner,sun8i-r40-pinctrl";
-> (...)
->                         i2c0_pins: i2c0-pins {
->                                 pins =3D "PB0", "PB1";
->                                 function =3D "i2c0";
->                         };
->=20
-> abstract, strings, nice. The driver handles the particulars.
+> +	depends on I2C
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	help
+> +	  Say yes here to add support for Maxim MAX7360.
 
-What bugs me about this it that this has quite some seemingly redundant
-information (Who would have thought that the i2c0 pins use function
-"i2c0"?), but misses out on the actual 4 bits(!) of information.
-So the A523 version [1] just *adds* this one property:
-		allwinner,pinmux =3D <2>;
+60 chars is an odd place to break.
 
-[1]https://lore.kernel.org/linux-sunxi/20241111005750.13071-5-andre.przywar=
-a@arm.com/
+> +	  This driver provides common support for accessing
+> +	  the device; additional drivers must be enabled in
+> +	  order to use the functionality of the device.
+> +
+>  endmenu
+>  endif
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index e057d6d6faef..6cd55504106d 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -163,6 +163,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
+>  obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
+>  
+>  obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
+> +obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
+>  obj-$(CONFIG_MFD_MAX77541)	+= max77541.o
+>  obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
+>  obj-$(CONFIG_MFD_MAX77650)	+= max77650.o
+> diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
+> new file mode 100644
+> index 000000000000..e2751b4f68b2
+> --- /dev/null
+> +++ b/drivers/mfd/max7360.c
+> @@ -0,0 +1,296 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Maxim MAX7360 Core Driver
+> + *
+> + * Copyright (C) 2024 Kamel Bouhara
+> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +static DEFINE_SPINLOCK(request_lock);
+> +
+> +struct max7360_mfd {
 
-And we keep all your beloved strings ;-)
+Drop references to "mfd".
 
-> That is like so because we are designing for users which are
-> let's say customization engineers. If these engineers jump from
-> project to project matching function strings to group strings will
-> be a common way to set up pins, and easy to understand and
-> grasp, and it makes the DTS very readable.
+> +	struct regmap *regmap;
+> +	unsigned int requested_ports;
+> +	struct device *dev;
 
-That's an interesting view, and I see the point of it being easy to read,
-but this is partly because it doesn't convey too much actual information,
-does it, as it requires another lookup or two.
-And the pinctrl group nodes are actually in the .dtsi file, which are
-typically written once during the initial SoC enablement, and new board
-.dts files normally just reference the existing pingroup nodes. So anyone
-dealing with just a new board is not bothered by this.
-Also in my experience most people have no problems in understanding the
-concept of pinmuxing and that there is a selector number, also where to
-find this.
+Pop dev at the top.
 
-> Then there are the engineers creating the pin control drivers,
-> and they want everything to be convinient for *them*, and they
-> think an opaque hex digit in the DTS is perfect at times, thus
-> pinmux =3D <0xdeadbeef>;
->=20
-> Mediatek and STM32 made a compromise by using pinmux
-> and adding some macros to define them so it looks more
-> pleasant:
->=20
->       i2c0_pins_a: i2c0-default {
->                 pins-i2c0 {
->                         pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
->                                  <MT7623_PIN_76_SCL0_FUNC_SCL0>;
+> +};
+> +
+> +#define GPO_COMPATIBLE "maxim,max7360-gpo"
+> +#define GPIO_COMPATIBLE "maxim,max7360-gpio"
 
-Well, I don't really get why they don't use the (MTK_PIN_NO(75) | 1)
-definition directly, seems to be more telling to me?
-So the plan for sunxi would be: <SUNXI_PINMUX(PORTC, 23, MUX_1)>, ...
-And this would not be really "opaque", since it has a fixed known mapping:
-	(port << 16) | (pin << 8) | (mux << 0))
-I find this both technically elegant, because it combines all the
-information into just one compact cell, but also readable by outsiders,
-thanks to the macro.
+Please use the raw strings instead.
 
-But please note that using the generic pinmux is just an idea at this
-point, last time I checked this would require significant rework in the
-sunxi pinctrl driver.
-Just adding the "allwinner,pinmux" property on the other hand is a
-comparably easy addition, hence my patch, as a compromise.
+> +static const struct mfd_cell max7360_cells[] = {
+> +	{
+> +		.name           = MAX7360_DRVNAME_PWM,
 
->                         bias-disable;
->                 };
->         };
->=20
-> At least the bias control is using strings, this is nice.
->=20
-> So I'm mostly fine with that as well, but it can be pretty
-> heavy on people coming from the outside, asking us questions
-> like "on MT7689 how do you mux pin nnnn to function yyy"???
-> Well I don't know? Some MT7689_PIN* macro I guess?
+Raw strings please.
 
-MTK_PIN_NO(nnn, yyy)?
+> +	},
+> +	{
+> +		.name           = MAX7360_DRVNAME_GPO,
+> +		.of_compatible	= GPO_COMPATIBLE,
+> +	},
+> +	{
+> +		.name           = MAX7360_DRVNAME_GPIO,
+> +		.of_compatible	= GPIO_COMPATIBLE,
+> +	},
+> +	{
+> +		.name           = MAX7360_DRVNAME_KEYPAD,
+> +	},
+> +	{
+> +		.name           = MAX7360_DRVNAME_ROTARY,
+> +	},
+> +};
+> +
+> +static const struct regmap_range max7360_volatile_ranges[] = {
+> +	{
+> +		.range_min = MAX7360_REG_KEYFIFO,
+> +		.range_max = MAX7360_REG_KEYFIFO,
+> +	}, {
+> +		.range_min = 0x48,
+> +		.range_max = 0x4a,
+> +	},
+> +};
+> +
+> +static const struct regmap_access_table max7360_volatile_table = {
+> +	.yes_ranges = max7360_volatile_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
+> +};
+> +
+> +static const struct regmap_config max7360_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0xff,
+> +	.volatile_table = &max7360_volatile_table,
+> +	.cache_type = REGCACHE_RBTREE,
 
-> If it was just strings I would know what the
-> expected behaviour and looks would be at least, then the driver
-> could be buggy or missing things but that's clearly cut. That's
-> why I prefer the strings.
+A lot of these are being replaced with REGCACHE_MAPLE.
 
-My main arguments against the current (string-based) approach:
-- They require the mapping table to be in every DT user, so not only the
-  Linux kernel, but also U-Boot, FreeBSD, you name it...
-https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pinctrl/sunxi/pi=
-nctrl-sunxi.c?ref_type=3Dheads#L236-768
-https://cgit.freebsd.org/src/tree/sys/arm/allwinner/h6/h6_padconf.c
-- The tables are getting quite large, and they pollute the single image
-  Linux kernel, with tons of very specific information for a number of very
-  pitiful Allwinner SoCs. At the moment the tally is at 145KB of code+data
-  for the existing arm64 SoCs, with the newer SoCs ever growing (H616 alone
-  is 27KB, A523 would be quite larger even, I guess 40K). The new A523
-  specific pinctrl support adds 872 Bytes.
-- Most of the mappings are untested at pinctrl driver commit time, since we
-  don't have the device drivers ready yet - by a margin. The new approach
-  would add the pinmux values when we need them and can test them.
-- The comments in the table give away that something is not quite right:
-                  SUNXI_FUNCTION(0x2, "i2c0")),         /* SDA */
-  This is just a comment, so has no relevance for the code, but it's not
-  meant for humans either. Yet we try to make this correct and maintain
-  it. Odd.
+Are you sure you shouldn't be using that too?
 
-Cheers,
-Andre
+> +};
+> +
+> +static int max7360_set_gpos_count(struct max7360_mfd *max7360_mfd)
+
+Pass the dev pointer around instead.
+
+> +{
+> +	/*
+> +	 * Max7360 COL0 to COL7 pins can be used either as keypad columns,
+
+MAX?
+
+> +	 * general purpose output or a mix of both.
+> +	 * Get the number of pins requested by the corresponding drivers, ensure
+> +	 * they are compatible with each others and apply the corresponding
+> +	 * configuration.
+> +	 */
+
+What are you documenting here?
+
+Comments should go with their code snippets.
+
+> +	struct device_node *np;
+
+np usually implies our own node.
+
+> +	u32 gpos = 0;
+> +	u32 columns = 0;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	np = of_get_compatible_child(max7360_mfd->dev->of_node, GPO_COMPATIBLE);
+
+Why don't you do all of this in the GPO driver?
+
+> +	if (np) {
+> +		ret = of_property_read_u32(np, "ngpios", &gpos);
+> +		if (ret < 0) {
+> +			dev_err(max7360_mfd->dev, "Failed to read gpos count\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = device_property_read_u32(max7360_mfd->dev,
+> +				       "keypad,num-columns", &columns);
+> +	if (ret < 0) {
+> +		dev_err(max7360_mfd->dev, "Failed to read columns count\n");
+> +		return ret;
+> +	}
+> +
+> +	if (gpos > MAX7360_MAX_GPO ||
+> +	    (gpos + columns > MAX7360_MAX_KEY_COLS)) {
+> +		dev_err(max7360_mfd->dev,
+> +			"Incompatible gpos and columns count (%u, %u)\n",
+> +			gpos, columns);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
+> +	 * timings and gpos/keypad columns repartition. Only the later is
+> +	 * modified here.
+> +	 */
+> +	val = FIELD_PREP(MAX7360_PORTS, gpos);
+> +	ret = regmap_write_bits(max7360_mfd->regmap, MAX7360_REG_DEBOUNCE,
+> +				MAX7360_PORTS, val);
+> +	if (ret) {
+> +		dev_err(max7360_mfd->dev,
+> +			"Failed to write max7360 columns/gpos configuration");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int max7360_port_pin_request(struct device *dev, unsigned int pin, bool request)
+
+This whole function is rough.  What are you trying to achieve?
+
+> +{
+> +	struct i2c_client *client;
+> +	struct max7360_mfd *max7360_mfd;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	client = to_i2c_client(dev);
+> +	max7360_mfd = i2c_get_clientdata(client);
+> +
+> +	spin_lock_irqsave(&request_lock, flags);
+> +	if (request) {
+> +		if (max7360_mfd->requested_ports & BIT(pin))
+> +			ret = -EBUSY;
+> +		else
+> +			max7360_mfd->requested_ports |= BIT(pin);
+> +	} else {
+> +		max7360_mfd->requested_ports &= ~BIT(pin);
+> +	}
+> +	spin_unlock_irqrestore(&request_lock, flags);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(max7360_port_pin_request);
+> +
+> +static int max7360_mask_irqs(struct max7360_mfd *max7360_mfd)
+> +{
+> +	unsigned int i;
+
+Use `for (int i;` instead.
+
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	/*
+> +	 * GPIO/PWM interrupts are not masked on reset: mask the during probe,
+> +	 * avoiding repeated spurious interrupts if the corresponding drivers
+> +	 * are not present.
+> +	 */
+> +	for (i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
+> +		ret = regmap_write_bits(max7360_mfd->regmap,
+> +					MAX7360_REG_PWMCFG + i,
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
+> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
+> +		if (ret) {
+> +			dev_err(max7360_mfd->dev,
+> +				"failed to write max7360 port configuration");
+
+You can use 100-chars to avoid the line break.
+
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/* Read gpio in register, to ack any pending IRQ.
+
+GPIO, ACK
+
+> +	 */
+
+Wrong format.
+
+> +	ret = regmap_read(max7360_mfd->regmap, MAX7360_REG_GPIOIN, &val);
+> +	if (ret) {
+> +		dev_err(max7360_mfd->dev, "Failed to read gpio values: %d\n",
+
+GPIO
+
+> +			ret);
+
+No wrap needed.
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max7360_reset(struct max7360_mfd *max7360_mfd)
+> +{
+> +	int err;
+> +
+> +	/*
+> +	 * Set back the default values.
+> +	 * We do not use GPIO reset function here, as it does not work reliably.
+
+Why?  What's wrong with it?
+
+> +	 */
+> +	err = regmap_write(max7360_mfd->regmap, MAX7360_REG_GPIODEB, 0x00);
+> +	if (err) {
+> +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
+
+Use a goto to only print this out once.
+
+> +		return err;
+> +	}
+> +
+> +	err = regmap_write(max7360_mfd->regmap, MAX7360_REG_GPIOCURR, MAX7360_REG_GPIOCURR_FIXED);
+> +	if (err) {
+> +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
+> +		return err;
+> +	}
+> +
+> +	err = regmap_write(max7360_mfd->regmap, MAX7360_REG_GPIOOUTM, 0x00);
+> +	if (err) {
+> +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
+> +		return err;
+> +	}
+> +
+> +	err = regmap_write(max7360_mfd->regmap, MAX7360_REG_PWMCOM, 0x00);
+> +	if (err) {
+> +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
+> +		return err;
+> +	}
+> +
+> +	err = regmap_write(max7360_mfd->regmap, MAX7360_REG_SLEEP, 0);
+> +	if (err) {
+> +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max7360_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct regmap *regmap;
+> +	struct max7360_mfd *max7360_mfd;
+> +	int err;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(dev, PTR_ERR(regmap),
+> +				     "Failed to initialise regmap\n");
+> +
+> +	max7360_mfd = devm_kzalloc(dev, sizeof(*max7360_mfd), GFP_KERNEL);
+> +	if (!max7360_mfd)
+> +		return -ENOMEM;
+> +
+> +	max7360_mfd->regmap = regmap;
+> +	max7360_mfd->dev = dev;
+> +	i2c_set_clientdata(client, max7360_mfd);
+> +
+> +	err = max7360_reset(max7360_mfd);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to reset device\n");
+> +
+> +	err = max7360_set_gpos_count(max7360_mfd);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to set GPOS pin count\n");
+> +
+> +	/*
+> +	 * Get the device out of shutdown mode.
+> +	 */
+
+Single line comment please.
+
+> +	err = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
+> +				MAX7360_GPIO_CFG_GPIO_EN,
+> +				MAX7360_GPIO_CFG_GPIO_EN);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to set device out of shutdown\n");
+
+This doesn't read well.
+
+> +	err = max7360_mask_irqs(max7360_mfd);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "could not mask interrupts\n");
+
+Some messages start with an uppercase char, others do not.
+
+I suggest you use one for consistency.
+
+> +	err =  devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> +				    max7360_cells, ARRAY_SIZE(max7360_cells),
+> +				    NULL, 0, NULL);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to register child devices\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id max7360_dt_match[] = {
+> +	{ .compatible = "maxim,max7360" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, max7360_dt_match);
+> +
+> +static struct i2c_driver max7360_driver = {
+> +	.driver = {
+> +		.name = "max7360",
+> +		.of_match_table = max7360_dt_match,
+> +	},
+> +	.probe = max7360_probe,
+> +};
+> +module_i2c_driver(max7360_driver);
+> +
+> +MODULE_DESCRIPTION("Maxim MAX7360 MFD core driver");
+
+There is no such thing as an MFD driver.  What does it do?
+
+> +MODULE_AUTHOR("Kamel Bouhara <kamel.bouhara@bootlin.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
+> new file mode 100644
+> index 000000000000..2665a8e6b0f0
+> --- /dev/null
+> +++ b/include/linux/mfd/max7360.h
+> @@ -0,0 +1,109 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+
+'\n'
+
+> +#ifndef __LINUX_MFD_MAX7360_H
+> +#define __LINUX_MFD_MAX7360_H
+
+'\n'
+
+> +#include <linux/bitfield.h>
+> +#include <linux/device.h>
+> +
+> +#define MAX7360_MAX_KEY_ROWS	8
+> +#define MAX7360_MAX_KEY_COLS	8
+> +#define MAX7360_MAX_KEY_NUM	(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
+> +#define MAX7360_ROW_SHIFT	3
+> +
+> +#define MAX7360_MAX_GPIO 8
+> +#define MAX7360_MAX_GPO 6
+> +#define MAX7360_PORT_PWM_COUNT	8
+> +#define MAX7360_PORT_RTR_PIN	(MAX7360_PORT_PWM_COUNT - 1)
+
+'\n'
+
+> +/*
+> + * MAX7360 registers
+> + */
+> +#define MAX7360_REG_KEYFIFO	0x00
+> +#define MAX7360_REG_CONFIG	0x01
+> +#define MAX7360_REG_DEBOUNCE	0x02
+> +#define MAX7360_REG_INTERRUPT	0x03
+> +#define MAX7360_REG_PORTS	0x04
+> +#define MAX7360_REG_KEYREP	0x05
+> +#define MAX7360_REG_SLEEP	0x06
+> +
+> +/*
+> + * MAX7360 registers
+> + */
+
+How is this different to the ones above?
+
+> +#define MAX7360_REG_GPIOCFG	0x40
+> +#define MAX7360_REG_GPIOCTRL	0x41
+> +#define MAX7360_REG_GPIODEB	0x42
+> +#define MAX7360_REG_GPIOCURR	0x43
+> +#define MAX7360_REG_GPIOOUTM	0x44
+> +#define MAX7360_REG_PWMCOM	0x45
+> +#define MAX7360_REG_RTRCFG	0x46
+> +#define MAX7360_REG_GPIOIN	0x49
+> +#define MAX7360_REG_RTR_CNT	0x4A
+> +#define MAX7360_REG_PWMBASE	0x50
+> +#define MAX7360_REG_PWMCFG	0x58
+> +
+> +#define MAX7360_REG_PORTCFGBASE 0x58
+> +
+> +/*
+> + * Configuration register bits
+> + */
+> +#define MAX7360_FIFO_EMPTY	0x3f
+> +#define MAX7360_FIFO_OVERFLOW	0x7f
+> +#define MAX7360_FIFO_RELEASE	BIT(6)
+> +#define MAX7360_FIFO_COL	GENMASK(5, 3)
+> +#define MAX7360_FIFO_ROW	GENMASK(2, 0)
+> +
+> +#define MAX7360_CFG_SLEEP	BIT(7)
+> +#define MAX7360_CFG_INTERRUPT	BIT(5)
+> +#define MAX7360_CFG_KEY_RELEASE	BIT(3)
+> +#define MAX7360_CFG_WAKEUP	BIT(1)
+> +#define MAX7360_CFG_TIMEOUT	BIT(0)
+> +
+> +#define MAX7360_DEBOUNCE	GENMASK(4, 0)
+> +#define MAX7360_DEBOUNCE_MIN	9
+> +#define MAX7360_DEBOUNCE_MAX	40
+> +#define MAX7360_PORTS		GENMASK(8, 5)
+> +
+> +#define MAX7360_INTERRUPT_TIME_MASK GENMASK(4, 0)
+> +#define MAX7360_INTERRUPT_FIFO_MASK GENMASK(7, 5)
+> +
+> +#define MAX7360_PORT_CFG_INTERRUPT_MASK BIT(7)
+> +#define MAX7360_PORT_CFG_INTERRUPT_EDGES BIT(6)
+> +
+> +#define MAX7360_REG_GPIOCURR_FIXED 0xC0
+> +
+> +/*
+> + * Autosleep register values (ms)
+> + */
+> +#define MAX7360_AUTOSLEEP_8192	0x01
+> +#define MAX7360_AUTOSLEEP_4096	0x02
+> +#define MAX7360_AUTOSLEEP_2048	0x03
+> +#define MAX7360_AUTOSLEEP_1024	0x04
+> +#define MAX7360_AUTOSLEEP_512	0x05
+> +#define MAX7360_AUTOSLEEP_256	0x06
+> +
+> +#define MAX7360_GPIO_CFG_RTR_EN		BIT(7)
+> +#define MAX7360_GPIO_CFG_GPIO_EN	BIT(4)
+> +#define MAX7360_GPIO_CFG_GPIO_RST	BIT(3)
+> +
+> +#define MAX7360_ROT_DEBOUNCE	GENMASK(3, 0)
+> +#define MAX7360_ROT_DEBOUNCE_MIN 0
+> +#define MAX7360_ROT_DEBOUNCE_MAX 15
+> +#define MAX7360_ROT_INTCNT	GENMASK(6, 4)
+> +#define MAX7360_ROT_INTCNT_DLY	BIT(7)
+> +
+> +#define MAX7360_INT_INTI	0
+> +#define MAX7360_INT_INTK	1
+> +
+> +#define MAX7360_INT_GPIO   0
+> +#define MAX7360_INT_KEYPAD 1
+> +#define MAX7360_INT_ROTARY 2
+> +
+> +#define MAX7360_NR_INTERNAL_IRQS	3
+> +
+> +#define MAX7360_DRVNAME_PWM	"max7360-pwm"
+> +#define MAX7360_DRVNAME_GPO	"max7360-gpo"
+> +#define MAX7360_DRVNAME_GPIO	"max7360-gpio"
+> +#define MAX7360_DRVNAME_KEYPAD	"max7360-keypad"
+> +#define MAX7360_DRVNAME_ROTARY	"max7360-rotary"
+
+Nope.
+
+> +
+> +int max7360_port_pin_request(struct device *dev, unsigned int pin, bool request);
+> +
+> +#endif
+> 
+> -- 
+> 2.39.5
+> 
+
+-- 
+Lee Jones [李琼斯]
 
