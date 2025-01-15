@@ -1,169 +1,153 @@
-Return-Path: <linux-gpio+bounces-14851-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14852-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C83AFA1291C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 17:46:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EED6A12930
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 17:52:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36A5B3A7397
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:45:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCE4E1888D4B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 16:52:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9135196C7C;
-	Wed, 15 Jan 2025 16:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8850119067A;
+	Wed, 15 Jan 2025 16:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VVjKTBR3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XDQ3VaVz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5951BBBC5;
-	Wed, 15 Jan 2025 16:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798BB70816
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 16:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736959533; cv=none; b=NLAPtHuImYotzoXfyDKinmI/DtNpj0XOgEJexBwZcTOJtD4ffd6hmgdZYmSNuloKsfZGCsdR/5p9bkBs0Cz1U8d/xkTu+CdFBlZodVKCKIjwxpuFj1tBBh4t1wyJKoJvCsBSBYDjR8i5grcIvUjVimHKLN4IEMf/8+yLNxiOaQU=
+	t=1736959950; cv=none; b=DqRZkf6b5aqkkFGm/jZ3wtvfTWeMX8axUepz3yB/PAqifJBgk2/4HnNuEKWH0HtYyi5Wkhe9yoVxrKqjFC0CVJlaNPGnmshoZgeaYJhVamK16A4YcxO3unrcAMEEwVLIB8+EIeQK/ZSoBJzzmwxLtuZ4c7Xy8opFZ6D95lWONe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736959533; c=relaxed/simple;
-	bh=FvS7/9I2GnMN906sdtqPLHpRpFYIqgyNF/PPN97ma84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQ4T6gRtgylSE2ZX1c8D5tN5cD81LNQxOHhiyFmjtXu0MFaYIGT7Jf+AWMXX7Xzv6TB0rCSdBfK/EUEVm7c13nP18o14YH3gC0Sj7av96Wn6HLuMNm9jE6b9+Jnty3io4/jwyGiCJcuQRchGKg2BOjVCHGGGBnMl+toJhuuxm3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=VVjKTBR3; arc=none smtp.client-ip=193.252.22.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id Y6VrtDFe4QUNRY6VwtCvLc; Wed, 15 Jan 2025 17:45:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1736959520;
-	bh=p50mlgWffUEX45aXIchC5f+eGOCl4aumziWGcWmIY94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=VVjKTBR3UYceUdiNxKUVv5cm9EplKoT4EwGxOwTg/k8XmfEebeb4pjAIrHvSnLXVr
-	 gyjG3tM8eGKe4g7wECKnaackaaCzSxrXvd6ag3f2EtHFA9SCZ5tiYxtFNXwd1cmf27
-	 Gmb3A6pLlnsNRU2NznSAWQzXI86ZM7hruXaPn7NR4b4uNsuS1TgZxWhuZSsQ9MGBah
-	 h5+wpyLhmQ2+wn4vJ0KRa0NO15jjfayygMaHOl1DnxgSQJsQabAAqijlfvoJ54x0G8
-	 jfdJSteMXvFyrYB8y4Zqv6IqrKM6w8oZu/eoNUigDz1Wq7hBjcZ6Rz2+2TQL1VLoWB
-	 rvljtw20fSjew==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 15 Jan 2025 17:45:20 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <cef1b9bf-59f6-484d-861e-82b405653ca1@wanadoo.fr>
-Date: Thu, 16 Jan 2025 01:45:02 +0900
+	s=arc-20240116; t=1736959950; c=relaxed/simple;
+	bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kM7T90b1Q1xWNUgs3PzBZKOa/+w/9ebW7mr5TZt/UCPvhoEB4JftCldnzUeVmcsXDa0UjxwmKAhtbHb5T0vAa1VgS5IHP2qsrRw8rctmD5Iyc1lRuF1ckS0OJGuupcQn9awY8LoKiPQfJAiKFiTMA5YjqoIF9brGDQiT50O/HjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XDQ3VaVz; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30229d5b21cso55794021fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 08:52:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1736959945; x=1737564745; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
+        b=XDQ3VaVzzYjFblncRLXjmmjSoD07aozbGJd4uZ63kgOe+2h+jrvR5vzTgC2mHpZpUb
+         yltqZmUZm5VLRMI/1w6miwaplhFlapmsjZZbH06HBSLUM0PHwROkgEtAiGCFrynk260i
+         rVH9hCEYw4VoH+0QLbuVq5ED+z53npL0QMrJIDhFEjog+LmsvAlLmF1dq20HDaTFbuf6
+         QkdQhb4anmAvSlKFEeZDVQ0bDtYoZfjw5LNyPWxUrQ1M0qoH8bZOMzopiaCM6YoVA4OS
+         Yq8dXzkU/Fr+XOZlHeDfLbXhEdW9sjNPJeyJ5hg5nxLoO29SHGKtucvljUcevFuj5Mzh
+         IlqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736959945; x=1737564745;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ScUqTDWnzQduLboZQZn5qJxxt7JOhe69U+tproLSWEk=;
+        b=kgzTQeg081ivrSkhmNugddotKU0Mlo1uTQVAgVKOTpHIfiKU3D/mX1BU0WMX8SFCzq
+         W/BB40IdhGpoqivE6eAAAL4YVH1r2EC84Nt+6rG+csZ0h76D5+jBzBrn8o40JMB6lHWo
+         BhMQCfuWswf9EaU6Rt4OxHiH9kzh6drgd+6eFC0qW4efeQYfCPE02zyvy/Ww/uRlp8Cx
+         O/J52xrzB5uxuzitEVspRbvUATV/tU8DifQ9ub3kaSRLf2VN6RzwglR+JetwxKbfH9w6
+         bwDxIN4QcoZdH0biKdAgnkksmrWMmi0HhwQQ+bRQOYsDZCnYX+oV/SXBLaTeyzFjbUXf
+         RBjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD6l7TaQ8IqiiOOR/+J6oCvn0J8vx3/2hPsSYn1k9W/fNlBYaAP2sqeCArCTgfPujOVwXk5u7nZjM6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTqvL0IItj4oLphwD5UV2i83YeCuvdTed9gpMIq14TqreF9GfR
+	Tai/biIsZ/ZHjxklvrbl7HiKj9dI3YRGZNITGjJ/iPw/ig+tjTLFk3PE3Q48vOhOpDO+GxB/pj7
+	SuEVYFNSS32P4GGsLF6qDQkHMcEVI0Yo7v24NzQ==
+X-Gm-Gg: ASbGncsuBEDPhyVmkODj8x/vw4lccqy2oi1lMz6ZcNXNlqAq98JJkYVgmV/5+fhci6D
+	RBVadmL6139+4Qr+Q/iATk1oUOiZkAj7znq71VHdTK9EUVSxjg60Nk3jW568ta2piPNqGuA==
+X-Google-Smtp-Source: AGHT+IFbudLF97M9SY4kT51eRu7G8hIOTmWNuILKuPS/5RISLBhUaMA8RaVyreeevht06KYG4u13lDLUp7DnHNKW1lE=
+X-Received: by 2002:a05:651c:501:b0:305:d86a:4f01 with SMTP id
+ 38308e7fff4ca-305f45db5d9mr86648231fa.31.1736959945548; Wed, 15 Jan 2025
+ 08:52:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/7] can: Add Nuvoton NCT6694 CAN support
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-usb@vger.kernel.org, tmyu0@nuvoton.com, lee@kernel.org,
- linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
- mkl@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com,
- alexandre.belloni@bootlin.com
-References: <20250114033010.2445925-1-a0282524688@gmail.com>
- <20250114033010.2445925-5-a0282524688@gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250114033010.2445925-5-a0282524688@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
+ <CAHp75Ve8d96Uw1obJVwRPyRE5E0eC8qU7uXe-UKuZeB-3XLPcA@mail.gmail.com> <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de>
+In-Reply-To: <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 15 Jan 2025 17:52:14 +0100
+X-Gm-Features: AbW1kvab1-KFmYpbsyzdNL2AKyeg7H-EBh1b21mZES0GH7vaSk2m90tKHAwUVsA
+Message-ID: <CAMRc=MdYB_XHCaurs1mO+KGX7rB5zFT3zCi=UbNY0rSbMEJdWw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpio: mxc: silence warning about GPIO base being
+ statically allocated
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Haibo Chen <haibo.chen@nxp.com>, 
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/01/2025 at 12:30, Ming Yu wrote:
+On Tue, Jan 14, 2025 at 10:55=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix=
+.de> wrote:
+>
+> Hi Andy,
+>
+> On 14.01.25 10:46, Andy Shevchenko wrote:
+> > On Tue, Jan 14, 2025 at 12:19=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutr=
+onix.de> wrote:
+> >>
+> >> The i.MX GPIO driver has had deterministic numbering for the GPIOs
+> >> for more than 12 years.
+> >>
+> >> Reverting this to dynamically numbered will break existing setups in t=
+he
+> >> worst manner possible: The build will succeed, the kernel will not pri=
+nt
+> >> warnings, but users will find their devices essentially toggling GPIOs
+> >> at random with the potential of permanent damage. We thus want to keep
+> >> the numbering as-is until the SysFS API is removed and script fail
+> >> instead of toggling GPIOs dependent on probe order.
+> >
+> > While I understand the issue this tends to get never fixed until the
+> > entire support of iMX boards will be dropped.
+>
+> i.MX is an actively developed and widely used platform. Why should suppor=
+t
+> be dropped?
+>
+> > Personally I do not like
+> > this series at all. Rather let's try to go the hard way and understand
+> > what's going on to fix the current issues.
+>
+> /sys/class/gpio is deprecated and when it is finally removed, this series=
+ can
+> be reverted again. The alternatives are either do nothing and live with 6=
+ kernel
+> warnings cluttering every boot or show users the finger as described in
+> the cover letter.
+>
+> Do you see a different path forward?
+>
 
-(...)
+I recently wrote a user-space compatibility layer for sysfs[1]. While
+right now it doesn't support static base numbers, I'm very open to
+adding it except that I wasn't sure how to approach it.
 
-> +static void nct6694_can_clean(struct net_device *ndev)
-> +{
-> +	struct nct6694_can_priv *priv = netdev_priv(ndev);
-> +
-> +	if (priv->tx_skb || netif_queue_stopped(ndev))
-> +		ndev->stats.tx_errors++;
-> +	dev_kfree_skb(priv->tx_skb);
+Is this of any use to you and could it help you switch to libgpiod
+without changing your user-space set-up (given the support for static
+GPIO numbering)? If so, how would you like to see this implemented? A
+config file at /etc that would list chip labels and their desired GPIO
+base?
 
-Use:
+Bartosz
 
-  	can_flush_echo_skb(ndev);
-
-(related to the following comments).
-
-> +	priv->tx_skb = NULL;
-> +}
-
-(...)
-
-> +static void nct6694_can_tx_work(struct work_struct *work)
-> +{
-> +	struct nct6694_can_priv *priv = container_of(work,
-> +						     struct nct6694_can_priv,
-> +						     tx_work);
-> +	struct net_device *ndev = priv->ndev;
-> +
-> +	guard(mutex)(&priv->lock);
-> +
-> +	if (priv->tx_skb) {
-> +		if (priv->can.state == CAN_STATE_BUS_OFF) {
-
-Just stop the queue when the can bus is off so that you do not have do
-check the bus status each time a frame is sent.
-
-> +			nct6694_can_clean(ndev);
-> +		} else {
-> +			nct6694_can_tx(ndev);
-> +			can_put_echo_skb(priv->tx_skb, ndev, 0, 0);
-> +			priv->tx_skb = NULL;
-> +		}
-> +	}
-> +}
-> +
-> +static netdev_tx_t nct6694_can_start_xmit(struct sk_buff *skb,
-> +					  struct net_device *ndev)
-> +{
-> +	struct nct6694_can_priv *priv = netdev_priv(ndev);
-> +
-> +	if (can_dev_dropped_skb(ndev, skb))
-> +		return NETDEV_TX_OK;
-> +
-> +	if (priv->tx_skb) {
-> +		netdev_err(ndev, "hard_xmit called while tx busy\n");
-> +		return NETDEV_TX_BUSY;
-> +	}
-> +
-> +	netif_stop_queue(ndev);
-> +	priv->tx_skb = skb;
-
-Here, you can directly do:
-
-  	can_put_echo_skb(skb, ndev, 0, 0);
-
-The skb remains accessible under priv->can.echo_skb[0]. With this, you
-can remove the priv->tx_skb field.
-
-> +	queue_work(priv->wq, &priv->tx_work);
-> +
-> +	return NETDEV_TX_OK;
-> +}
-
-
-Yours sincerely,
-Vincent Mailhol
-
+[1] https://github.com/brgl/gpiod-sysfs-proxy
 
