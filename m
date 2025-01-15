@@ -1,122 +1,105 @@
-Return-Path: <linux-gpio+bounces-14820-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14821-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E46A9A11B4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 08:52:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B3B3A11BC1
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 09:22:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A70316892C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 07:52:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C6D016574C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2025 08:22:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC5C72361F3;
-	Wed, 15 Jan 2025 07:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uvx066fL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DFDE20FAB6;
+	Wed, 15 Jan 2025 08:22:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90419234CEA;
-	Wed, 15 Jan 2025 07:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B211EBFE8
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 08:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736927514; cv=none; b=FhWsXpaQtEgmnSe7INiHv7jAhi7oqr5xgMdh0q4haRqILBCcIonYEb0+GIDvhSaD5OjsBWcgF4OnmpGaNSEHq8rW6XjVGSTwPg4b0AL+SG9RASVU6rwyPQdp3UUAsxnsEjvjUTIZkvBEkiK6Ap6eplvedS8z1gWqc1IGi5VKoK8=
+	t=1736929355; cv=none; b=MDoNGHpiBvzu0ik5ZeHvFdBHYUfKKHUU3kJCnJq7n/SW8cK9mjhnO1Lh2em42Qwh3HHGBi4oiFbdgpYqGPiERwoJv4gxENqjubKDMCsC7iUzSacTx6kBjIVckbYDePPDpwu+CZGQb4VxclPhmidHsWYywj/gdzzxG+7dN+Pje8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736927514; c=relaxed/simple;
-	bh=S+Nj9hWyHRIvjq4/IofNhfaffIn9jAcgTDLhxg1rvvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uvfv3MvOH+gPhzWGM/Qeexx0DdrrzK19AcsThyetIuKXSgSoY/oWbfZhHyb7d3aebPEb9wGb5CZuWH7ywhGewNXDqIDTeKHgJ1Ls4+qu7ZxNyr7HRrnRnKbVZARF0f2E6Tuv5c12lPBa57AixP4oV1Q+9BJRg2hdLAz9zO0v3ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uvx066fL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6238DC4CEE1;
-	Wed, 15 Jan 2025 07:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736927514;
-	bh=S+Nj9hWyHRIvjq4/IofNhfaffIn9jAcgTDLhxg1rvvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uvx066fLqOkq2FDBqACzgccc8KScMXLxd3zQL2qcA9RJrLq4iZ/CHhD78v5CxM1Yk
-	 Djx0jQGp96X5lQlvUP/UMAnHU6y8YWZWhkQ0jiP83h6FUNw8+AGjQi08OFNboPk2Hs
-	 0AO8kCkJFJuAOQC0W49As/pvzkQ89cPY+6YkcOt6MHq9EegqjowGZfWmoGY1v4uHLY
-	 AmaiUoDl8d4P1UklxcvjU9PA2McMP6jve23VVlvkHcY3PJ9YU7EkpQXB3qUuPF9B2e
-	 ocVh3yQEiLF2ZYFdFtwfkeyqbU2AmmaF7GBaUKjISO7EjPfLW/kIUsqxgw2Hii+OH4
-	 s+dpNfCHXZOhQ==
-Date: Wed, 15 Jan 2025 07:51:50 +0000
-From: Vinod Koul <vkoul@kernel.org>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 10/12] dt-bindings: phy: allwinner: add v853 usb phy
-Message-ID: <Z4dpFqffMJ31ml2y@vaman>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-11-szemzo.andras@gmail.com>
+	s=arc-20240116; t=1736929355; c=relaxed/simple;
+	bh=Rd7lNU9y4AuP69qNaW527V9DXUPmiFQLmoG5T66xt08=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gdo3vDdKdDpKxj0PZMGzez+hn+pTLeLtqcMF+TbO25wu4hbphusl7NWA1AkszYySx6R9jLjrpE39mZrErKMEWkfPPZFrTG/YJPSKr4BD4WsUl9y1xWH4T7VrT2eab7HE7JFA5lgvZr/t9r3iq43bUoUAvQjeNV4Lr3iHVUe5rjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4YXzWQ41bdz4wyhm
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2025 09:22:26 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:6d1:f8d8:e962:cd35])
+	by xavier.telenet-ops.be with cmsmtp
+	id 1LNK2E0051NY9Yg01LNKoq; Wed, 15 Jan 2025 09:22:19 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tXyfG-0000000CWql-0tN3;
+	Wed, 15 Jan 2025 09:22:19 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tXyfK-00000003PzV-4C2Z;
+	Wed, 15 Jan 2025 09:22:19 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.14 (take three)
+Date: Wed, 15 Jan 2025 09:22:13 +0100
+Message-ID: <cover.1736928826.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110123923.270626-11-szemzo.andras@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 10-01-25, 13:39, Andras Szemzo wrote:
-> Document Allwinner v853 USB phy.
-> 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
-> ---
->  .../phy/allwinner,sun8i-v853-usb-phy.yaml     | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
-> new file mode 100644
-> index 000000000000..773c3f476db8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/allwinner,sun8i-v853-usb-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner V853 USB PHY
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <mripard@kernel.org>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 1
-> +
-> +  compatible:
-> +    const:
-> +	- allwinner,sun8i-v853-usb-phy
+	Hi Linus,
 
-Does this really need a new binding document, if so why... Cant this be
-added to one of the existing docs which driver uses?
+The following changes since commit 829356da700bbe07e13b4403997bf8c5aac64660:
 
--- 
-~Vinod
+  pinctrl: renesas: rzg2l: Add support for RZ/G3E SoC (2025-01-03 21:09:19 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.14-tag3
+
+for you to fetch changes up to accabfaae0940f9427c782bfee7340ce4c15151c:
+
+  pinctrl: renesas: rzg2l: Fix PFC_MASK for RZ/V2H and RZ/G3E (2025-01-14 09:22:48 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.14 (take three)
+
+  - Fix PFC_MASK for RZ/V2H and RZ/G3E.
+
+This late PR is a fix for an issue which does not show up yet (because
+the boot loader does the right configuration), but which may show up
+when more device support is added to the DTS.  Hence it is better to fix
+it sooner rather than later.
+
+Thanks for pulling!
+----------------------------------------------------------------
+Lad Prabhakar (1):
+      pinctrl: renesas: rzg2l: Fix PFC_MASK for RZ/V2H and RZ/G3E
+
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
