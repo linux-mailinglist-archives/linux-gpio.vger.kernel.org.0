@@ -1,149 +1,110 @@
-Return-Path: <linux-gpio+bounces-14888-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14889-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89AB3A15159
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:12:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 201A6A151A5
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:23:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6FA83AAAEB
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 14:11:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 667833A3487
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 14:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6EB520101D;
-	Fri, 17 Jan 2025 14:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE90478F34;
+	Fri, 17 Jan 2025 14:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c0FTmAFJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ds8ChA0V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1121FF609;
-	Fri, 17 Jan 2025 14:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E51A20B20;
+	Fri, 17 Jan 2025 14:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737123095; cv=none; b=mZTE8P1iC3Pc9qQLF+zkza8b3LeAz1z5TA8EHs/NaaNARAKdcMTCBbDemoNsArtccxQdzunNSIg0G38+vTyXZ02Bhlg1+B06+b262LmF2v0vVBKnswcuLyeAo3CdaJPa49P3Qn/JIMYOE6BOeCJMMJYuERDXXA5oCKR64pfNx64=
+	t=1737123791; cv=none; b=YfsZpFKcWysm0//mRB31aZ6bUXTfo9AUff98Rc3ZD91SAnecsl7p6rTtzJeWPrJQpeXlt75wOUA/Ovtffx2snQM4nPdIPrLN/tWBqSe3Ai0dgxr7mgS9YUg7Feh4OxNM8ThuT4UO0ciMWYYViG4YSK8ce0DxOwsKGdwi/8DO1m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737123095; c=relaxed/simple;
-	bh=Me246SJL54xrtLrgLYOve0FHhr6a7dzhnL3mtYfwI74=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=h3uVkKTMhWwv+5gXyR2VZ+Bh8fmG7AS6lb4DbDBWiSHiFhRR574NC75RxWsPlbbjaHX/vuh7HxGhQMozXraxGQdJ4oRmKLmU60Hb8dkog+v6/KQlbhM0mZtExTU50HldkOqpOt8mvgVC6u7QyNfStFH7c4Kge6JHKWwXOg4eTgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c0FTmAFJ; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 553F920004;
-	Fri, 17 Jan 2025 14:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737123091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yzZDikjR9clIGnmTv+VoIvPOgnUMRodTCnVhk/mabBU=;
-	b=c0FTmAFJBk1PJzrL0vgS1Y0BNK/05UH3P9A0IdreLuGCB2+cYOy455TZAyjTEleeRDCA2E
-	1XvGrX/KERV+3R7j3D62t4b09RJ503YWvq18lh6+LgQX8DSYMy7BHdEYD+eEiMLkdLKu/j
-	5I0pCYj0egriASFgZxo/M9ubZDYMO+6SLmMScOjeD2pguwG8Y8RbhxhGx5uiObGqIe5cEu
-	HYByuO5PdrESQ8+TUc5bOFt8l17cpgsLwSkAV63XULLTwkxgGD7E+OEhYs8Q/oP9BVfAUJ
-	OUtuyWQJOGx+AMvK8uMEW9YPDbD05R2S/ZcFFkpbDeDW2F8aY5bypA5tCmP4dw==
+	s=arc-20240116; t=1737123791; c=relaxed/simple;
+	bh=ObaX/brm+Wu71o72rOPaIkQG9913isA31L8Nsh93Y1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bdOLIVRp5/StFezVnV1TGzViQ+mzL718E30DHDpMBkxu5vTWyDPI2POe7VSZvBz0Db/bY3u4UA8HU0OaSW+35CO1wDRwILSb0/xqXGlFD0M18+XneZu45a0wTy0HRU4T2yXfQEHJbfwPjGw03zM/2UUhkAR4ViP6nDHesECdj04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ds8ChA0V; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737123790; x=1768659790;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ObaX/brm+Wu71o72rOPaIkQG9913isA31L8Nsh93Y1E=;
+  b=ds8ChA0VahE6HpDuANlEf7l5/QbvfNQZ6srFDurWSyCq9+rSnvPBaHL8
+   c4kuz2xTID6k+5cpkx+73yO9xDCfxdhW95VTnzUBlaLsdTa0matn3AyRe
+   +IH9V+xGxxE2pBiTTwZwnjd5MdqivbK/NSVgrHLMvqVKA97NdrshU//pT
+   QYOOc8S0yHIE+yY+uC3TdtCq2hoWsWW+mGGi2Z0/5f3zjxpsI7aiOsm71
+   FFDx9BoFDT+h6xRaV7DZU6WmbKg0X/cS9g7tZIFZgIvLw3QTeZ2ssUQLt
+   90jKBlv6XGVoDhGis7IbagP5eLLbYt60HwvaETm59sRc9JOog6cVbjMTS
+   Q==;
+X-CSE-ConnectionGUID: JsqvT9ejTaKa2tcAC75Ysg==
+X-CSE-MsgGUID: qBLCdNH8S/uoHyt7gGq19A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="37792817"
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="37792817"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 06:23:09 -0800
+X-CSE-ConnectionGUID: px3c6aCTQ4uhlDru1f2vFg==
+X-CSE-MsgGUID: cLGDraj2SI63XNKuljk+2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="105671220"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Jan 2025 06:23:08 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1DBFF2F2; Fri, 17 Jan 2025 16:23:07 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 00/16] pinctrl: cy8c95x0: Bugfixes and cleanups
+Date: Fri, 17 Jan 2025 16:21:44 +0200
+Message-ID: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jan 2025 15:11:29 +0100
-Message-Id: <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
-Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-3-9519b4acb0b1@bootlin.com>
- <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
-In-Reply-To: <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Jan 17, 2025 at 10:33 AM CET, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Mathieu,
->
-> On Mon, Jan 13, 2025 at 01:42:27PM +0100, mathieu.dubois-briand@bootlin.c=
-om wrote:
-> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-...
-> > +static int max7360_pwm_apply(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> > +			     const struct pwm_state *state)
-> > +{
-> > +	struct max7360_pwm *max7360_pwm;
-> > +	u64 duty_steps;
-> > +	int ret;
-> > +
-> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> > +		return -EINVAL;
-> > +
-> > +	if (state->period !=3D MAX7360_PWM_PERIOD_NS) {
-> > +		dev_warn(&chip->dev,
-> > +			 "unsupported pwm period: %llu, should be %u\n",
-> > +			 state->period, MAX7360_PWM_PERIOD_NS);
-> > +		return -EINVAL;
->
-> Please don't emit error messages in .apply(). Also a driver is supposed
-> to round down .period, so any value >=3D MAX7360_PWM_PERIOD_NS should be
-> accepted.
->
-> Also note that you might want to implement the waveform callbacks
-> instead of .apply() and .get_state() for the more modern abstraction
-> (with slightly different rounding rules).
->
+This a set of the bugfixes and cleanups I have collected so far while
+testing the driver on Intel Galileo Gen 1 last year.
 
-Sure, I just switched to the waveform callbacks, it was quite
-straightforward.
+Andy Shevchenko (16):
+  pinctrl: cy8c95x0: Respect IRQ trigger settings from firmware
+  pinctrl: cy8c95x0: Rename PWMSEL to SELPWM
+  pinctrl: cy8c95x0: Enable regmap locking for debug
+  pinctrl: cy8c95x0: Fix off-by-one in the regmap range settings
+  pinctrl: cy8c95x0: Remove incorrectly set fields in regmap
+    configuration
+  pinctrl: cy8c95x0: Avoid accessing reserved registers
+  pinctrl: cy8c95x0: Use better bitmap APIs where appropriate
+  pinctrl: cy8c95x0; Switch to use for_each_set_clump8()
+  pinctrl: cy8c95x0: Transform to cy8c95x0_regmap_read_bits()
+  pinctrl: cy8c95x0: Remove redundant check in
+    cy8c95x0_regmap_update_bits_base()
+  pinctrl: cy8c95x0: Replace 'return ret' by 'return 0' in some cases
+  pinctrl: cy8c95x0: Initialise boolean variable with boolean values
+  pinctrl: cy8c95x0: Get rid of cy8c95x0_pinmux_direction() forward
+    declaration
+  pinctrl: cy8c95x0: Drop unneeded casting
+  pinctrl: cy8c95x0: Separate EEPROM related register definitios
+  pinctrl: cy8c95x0: Fix comment style
 
-> > +static int max7360_pwm_get_state(struct pwm_chip *chip, struct pwm_dev=
-ice *pwm,
-> > +				 struct pwm_state *state)
-> > +{
-...
-> > +	state->duty_cycle =3D mul_u64_u64_div_u64(val, MAX7360_PWM_PERIOD_NS,
-> > +						MAX7360_PWM_MAX_RES);
->
-> You have to round up here. I would expect that the checks in the core
-> (with PWM_DEBUG=3D1) help you catching this type of error. In your case
-> changing the configuration to
->
-> 	.period =3D 2000000,
-> 	.duty_cycle =3D 234379,
->
-> should yield some hint in the kernel log.
->
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 235 ++++++++++++++---------------
+ 1 file changed, 113 insertions(+), 122 deletions(-)
 
-Thanks for the reproduce steps: I saw the bug and fixed it. Also
-MAX7360_PWM_MAX_RES had to be set to 255 and not 256...
-
-> > +	return 0;
-> > +}
->
-> Best regards
-> Uwe
-
-I also fixed all other points mentioned in your mail. Thanks again for your=
- review.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
 
