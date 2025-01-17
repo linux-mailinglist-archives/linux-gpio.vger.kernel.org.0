@@ -1,141 +1,123 @@
-Return-Path: <linux-gpio+bounces-14914-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14915-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81519A1531E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:48:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67B7DA154AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 17:48:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A60A51671BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:48:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0BD3A8D16
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC5A198A06;
-	Fri, 17 Jan 2025 15:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F40819DF81;
+	Fri, 17 Jan 2025 16:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pj7UM1Qu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GpHGS9Nv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15FF33062;
-	Fri, 17 Jan 2025 15:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F99166F29;
+	Fri, 17 Jan 2025 16:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737128877; cv=none; b=c2mtGVeCw55hK7PzoT9WSQ/7zOLkDq5eP8zc6OqrhxIE9wa6SLDHFIKZ1WDwUsV5W1eb4ZZga0HeFJZNs1FPupx6rva/gTjnixtlbG5kzIjtI0aICQXXhH+E0EBTyTXcyeUZmiMljBf4z8A8MZgd5zoPzV8wp5c8XtU/YZOaOCY=
+	t=1737132484; cv=none; b=iydHWk+B4lg2PqXJNjJZoT+Kr9vOVM531W47eTiTN9dydUuZulFNq1FvZ4VaXh8UzuerxcWt4MpgqzvDmsvCl29A+9An3wSgaAhUqpyKf7NlGRKI1R6pF3WBQaqzB+p+XewY4hDwP4lawGHcv8+YbMt1uCx73kVkE1YaHvkfxTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737128877; c=relaxed/simple;
-	bh=Qj10ZHIZvLsm79+pV9p3pc1UU7z132gm/dpFPIHy5BQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=tLTvfSMQvLDhQpbu7mA+jcihFoZrQQo3J/QzNhH9ScI2NmNph/W2keSfwu04tlk52mWBuGEi8yrm5mVOkeit/dSjjoOlxCOyMgI7BET8xVqoX6w+q3IYa/MdV4+DiM+GiMx5meW4g6npwWvAzdV0hXyWgvRUnDDhczOa7Iu5tlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pj7UM1Qu; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A357440008;
-	Fri, 17 Jan 2025 15:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737128866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gUbim1SaJlo0edxSD2KaiF57Zvw18iMPt4AJUuoV9w8=;
-	b=pj7UM1Qutxasd+MYyXB0JIGh9axUAiFYcUVfzust2lf1Wwe84jYQPLfgHSRRwK1dT8PJTT
-	y8d2q5vIai1jYvCQxqJntKigYbK0UZ+4ZdhfN2c8HaCgI34XV7S8T3735Q8FMa4b9fGN86
-	lmgf6HVea6YD2lQg2nHnAJ3lZAPY/F2eVPo+p2Ui7ucm9XxP739da8D0kExZ8Rsnz1zzly
-	ScmxO/R/tBDGdjMcGjRHcn267g0cxMjvoCKLy2unfBjfQdVPQys1QskdfdaWdJMoiieQ63
-	o7h0ysOxPW04oyJF5bT2pOWH77M0jKvvCKaOyREPFnSa3F98m1CEC5myZXqVDw==
+	s=arc-20240116; t=1737132484; c=relaxed/simple;
+	bh=6/7wOBOlKIx7Aw6q1Wdi9reBcqduNru80rB6lPsZ5qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XicYCE6h7Oye5pz1/fVe2Bb+KbWnRfOWghCu+4crAR2/SQdqLSUWuEIZ3SIVndUFwJxlA1EDwMpijxNeWu6zryZfINCDHLSVVcHBNAdJo0bFer+CCuwRUQ8E6j5UvdEff7Izi+rFNEU+nV/G0FiYNH+eXnAaiDqLmcJsmdLNVWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GpHGS9Nv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737132482; x=1768668482;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=6/7wOBOlKIx7Aw6q1Wdi9reBcqduNru80rB6lPsZ5qI=;
+  b=GpHGS9Nv68KmkaHBCWjVX4ISCj50zf3KuYVeQxcTBOvlpsnYT09oIOwl
+   y0XmnyPmu9hU+RdmD0MdN7K/iTZNM1OyrgTy65bE8LKY7hyBVkxdQb33P
+   Cjba2Iw/xSzBPFdcF8KfXfO96oaEa4j2nUfsRZbovF7Brjda2kOu4J3wy
+   kS7XkgeB3eoU0j8RzlwAZu7mkj67g0ihq17ccjyXXbyzvFfx31RBfc47N
+   RvoW98RO4jnkFe4Nz4IqpV+XnRi5cjNHwhTNrldrlsdbjOQRhI6H3AMNn
+   4vYpLP5iuKEVr1ESZK4lMyhj23vIvpvNNUO+3hq1TQHxqDQnRSkT0Jr+X
+   g==;
+X-CSE-ConnectionGUID: yupcsFc4Qd69qURpY76NZQ==
+X-CSE-MsgGUID: 0xnC9ECfT5KCRNKzNh+PXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="48232420"
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="48232420"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 08:48:02 -0800
+X-CSE-ConnectionGUID: /cfuOKI6QHeooPJLcuyF5w==
+X-CSE-MsgGUID: jnLzHVH1TWiSex0YJaiIcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
+   d="scan'208";a="110843128"
+Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 08:48:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tYpVl-0000000294C-3rwP;
+	Fri, 17 Jan 2025 18:47:57 +0200
+Date: Fri, 17 Jan 2025 18:47:57 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 05/16] pinctrl: cy8c95x0: Remove incorrectly set
+ fields in regmap configuration
+Message-ID: <Z4qJvRjR50FweaoV@smile.fi.intel.com>
+References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+ <20250117142304.596106-6-andriy.shevchenko@linux.intel.com>
+ <CALNFmy2qGCt8OTb3qx+0PsPivbfY89gWe74Moeeu7r7hCp_UaA@mail.gmail.com>
+ <Z4pzoNInabOHWjK5@smile.fi.intel.com>
+ <Z4pz-gmfermTjZ77@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jan 2025 16:47:45 +0100
-Message-Id: <D74GSFVY17UV.GMN119MAVAK0@bootlin.com>
-Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-3-9519b4acb0b1@bootlin.com>
- <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
- <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
- <v4bf6bharih6zgz52ya5twfyf47wh3fu56ovic5gjxak2jhufy@q3eudujjwrhm>
-In-Reply-To: <v4bf6bharih6zgz52ya5twfyf47wh3fu56ovic5gjxak2jhufy@q3eudujjwrhm>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4pz-gmfermTjZ77@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri Jan 17, 2025 at 3:40 PM CET, Uwe Kleine-K=C3=B6nig wrote:
-> On Fri, Jan 17, 2025 at 03:11:29PM +0100, Mathieu Dubois-Briand wrote:
-> > On Fri Jan 17, 2025 at 10:33 AM CET, Uwe Kleine-K=C3=B6nig wrote:
-> > > Hello Mathieu,
-> > >
-> > > On Mon, Jan 13, 2025 at 01:42:27PM +0100, mathieu.dubois-briand@bootl=
-in.com wrote:
-> > > > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > ...
-> > > > +static int max7360_pwm_apply(struct pwm_chip *chip, struct pwm_dev=
-ice *pwm,
-> > > > +			     const struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7360_pwm *max7360_pwm;
-> > > > +	u64 duty_steps;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (state->period !=3D MAX7360_PWM_PERIOD_NS) {
-> > > > +		dev_warn(&chip->dev,
-> > > > +			 "unsupported pwm period: %llu, should be %u\n",
-> > > > +			 state->period, MAX7360_PWM_PERIOD_NS);
-> > > > +		return -EINVAL;
-> > >
-> > > Please don't emit error messages in .apply(). Also a driver is suppos=
-ed
-> > > to round down .period, so any value >=3D MAX7360_PWM_PERIOD_NS should=
- be
-> > > accepted.
-> > >
-> > > Also note that you might want to implement the waveform callbacks
-> > > instead of .apply() and .get_state() for the more modern abstraction
-> > > (with slightly different rounding rules).
-> > >
-> >=20
-> > Sure, I just switched to the waveform callbacks, it was quite
-> > straightforward.
->
-> sounds great. Note that the detail in rounding that is different for
-> waveforms is that a value that cannot be round down to a valid value
-> (because it's too small) is round up. This is a bit ugly in the drivers
-> but simplifies usage considerably. So you never return -EINVAL because
-> the values don't fit.
->
+On Fri, Jan 17, 2025 at 05:15:06PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 17, 2025 at 05:13:36PM +0200, Andy Shevchenko wrote:
+> > On Fri, Jan 17, 2025 at 04:01:43PM +0100, Patrick Rudolph wrote:
+> > > Hi Andy,
+> > > On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > We don't provide defaults for the regmap, we shouldn't provide
+> > > > the number of them either.
+> > > The intention is to read back the defaults from HW to initialize the
+> > > regmap cache.
+> > > The defaults are applied at each POR from the device's internal EEPROM.
+> > > See regcache_hw_init() for details.
+> > 
+> > Yes, I was looking a lot and that code and it doesn't work as intended.
+> > I can reproduce the issue, but it's real issue and I don't think we need
+> > to read back anything from the HW forcibly. It will be done naturally, no?
+> 
+> I think I now remember, it has a NULL pointer dereference.
 
-Sorry, I'm not sure I got it right. Does this affect the three members
-of pwm_waveform (period_length_ns, duty_offset_ns, duty_length_ns) ? So
-on this device where the period is fixed and I cannot define an offset,
-does that mean I will silently accept any value for period_length_ns and
-duty_offset_ns ?
+Hmm... I have just tested and no issues found so far. I'm now puzzled what was
+that when I tested this the first time a few months ago...
 
-Best regards,
-Mathieu
+Okay, let's say I will drop this patch in v2. Can you look at the rest of
+the series?
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks for review!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
