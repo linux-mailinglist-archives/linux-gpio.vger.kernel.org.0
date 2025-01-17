@@ -1,113 +1,129 @@
-Return-Path: <linux-gpio+bounces-14911-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14912-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D948A1529E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:17:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 77537A152C6
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:22:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44DAD1890121
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:16:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF8CA18848ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:22:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1970C19CCF4;
-	Fri, 17 Jan 2025 15:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6F118A6BD;
+	Fri, 17 Jan 2025 15:22:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxBkmetL"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m3IUwG8O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11A719CC08;
-	Fri, 17 Jan 2025 15:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16982B9B9;
+	Fri, 17 Jan 2025 15:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737126912; cv=none; b=ACq2Z8Q0oSvHTzgeRcfdl6Z7F6UGRMFVINKza9oJd0hvsi/eQLuSJjSfkdvo+EhhxMm/kaCkEPE386NyhOjqDf/OslJgOA3BSCHMLPSThuO8QfjFc8QiQ2tijOomIVvyJ8ylU0N/IdPic4A+sBnVwUoZfOappIUCK75yvIimY4o=
+	t=1737127365; cv=none; b=pH0iCZROn61iwUJPTEV9YSDOKp7KX/GG7/v1vvWkt9dJGiowChYDmhtHet7nHLB4TAW4fDJ7NFumhJfpY17JJHx5FSt8qtLQr5yZmCtteocPzAVZ9HtGR9C1O0qk6YVN/N21Xvvk9W/IJ8Tn+/mdHCJxSlMGEsj9d78zl1Smwjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737126912; c=relaxed/simple;
-	bh=tYuE6+LWJ+KU8JbMTTiL+iu8GQW9wbrNplldv7CtS6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tTnSEld/gnUrzn03Gq2pIJhZh9RiGZknU06ulW59FmNJdqkoMkh/hI/UyzwnUlNAfm6JJCs+gOPPGfxT9zDDn0YIZqrVwyn7CmjvwcDo8McbLdNwHWd42CZWdNaMxLtCp7/Y+vnFh7xADhSne5OCJstgF5In0gOP7kuoH88aD48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxBkmetL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737126911; x=1768662911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=tYuE6+LWJ+KU8JbMTTiL+iu8GQW9wbrNplldv7CtS6g=;
-  b=kxBkmetLuhtH0kMLispm8Pu1FR2cruAzfkSaTt/kGFjL4+1vX/mp/cN9
-   3Kutb8o1xFA5CpgMgvP51GnsYSQ81o0+DMV8MqKKhAI9zF0TFZ6rLcceK
-   XRTjm16hugj6xDFzU/Y5dVsGM60gWHgDUmwoWfuMuWkM4puf/jxb0imDw
-   S5JZEKK3q/V7f59gBciEgEzp2oOH3W0w5228WyHcYLVM35AK6F/Z1RjWq
-   FiDP2ARfP3SiUaqNEl0lQ0Wue2mwc21dDOAbkfP9yFeiM4YtOgZ3OQAeS
-   uJ7+dAMr/TuNkAS+2W1TpwmyKEzrlICqOEl0RqtaRHwQTLihgbgY0CsV6
-   A==;
-X-CSE-ConnectionGUID: QIvnRXvtQCa9QVVHj6s6rw==
-X-CSE-MsgGUID: 61XDmXwfTb+5Kna8oWRDuQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="25155517"
-X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="25155517"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:15:10 -0800
-X-CSE-ConnectionGUID: s/7xQBf1TJ2DKMJSKpXG8A==
-X-CSE-MsgGUID: L0QbOaoXSwOgxosIruzLWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="105680740"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.154])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 07:15:09 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tYo3u-000000026i6-2Gp6;
-	Fri, 17 Jan 2025 17:15:06 +0200
-Date: Fri, 17 Jan 2025 17:15:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 05/16] pinctrl: cy8c95x0: Remove incorrectly set
- fields in regmap configuration
-Message-ID: <Z4pz-gmfermTjZ77@smile.fi.intel.com>
-References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
- <20250117142304.596106-6-andriy.shevchenko@linux.intel.com>
- <CALNFmy2qGCt8OTb3qx+0PsPivbfY89gWe74Moeeu7r7hCp_UaA@mail.gmail.com>
- <Z4pzoNInabOHWjK5@smile.fi.intel.com>
+	s=arc-20240116; t=1737127365; c=relaxed/simple;
+	bh=7PhJw7mo1SQ6wUmL3zAzxLF+Z/WrZMp16H0K1GB6vKU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=YPL9EPxJeUwV8HlLr9tIyY7I/fESrK3cQ2tGLvZ0FkM7ziW0uH2yygzqt2A7pmI/ZPyygpkKk1PY75dlVi5pMm9o68yk8RU5dKlYPTNPQWEPDXGhMOlg/tjmXMPsUXnZBdxirfz3FT2nFg5zY/vHauG9jOD5D45eB1EuKLMUDBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m3IUwG8O; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A67D2240002;
+	Fri, 17 Jan 2025 15:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1737127354;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7PhJw7mo1SQ6wUmL3zAzxLF+Z/WrZMp16H0K1GB6vKU=;
+	b=m3IUwG8ObNkRRt1Rm94xVayR7ZciAse9i7TSiTRmMRWLgy1Xf8Zm5jP26Mag1xLiZqQqtI
+	v8sSO596nmwLIpsqKkrqvswM3sAQAUyEXwgrJs5ysC/kenJouaWZ37Wdsg3EunIE4VLykw
+	3G8zkazykLuE6RgXmqpnK8A3kr9tG7kYiKjwPDZ3i9SaRUvgGKDOn4gIi2IqEEpKXd4/4X
+	KtQXovFgzG863SAy7bRG/Li2IUMpp0ciMRQ3SXSQNL+uX8MDz8pn9cYajQe8HEwrgBwycN
+	SGmAflr2CYNUsviPsEhrlzV9JmIsRqsQi2hjmVEzc8rwD2n5sg7KZp/K6j1noA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4pzoNInabOHWjK5@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 17 Jan 2025 16:22:33 +0100
+Message-Id: <D74G95A3DHG3.OD522T88GX83@bootlin.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Linus Walleij" <linus.walleij@linaro.org>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+ <CACRpkdb5rmUK06uW3M2Lsy4Wam8JvrjmGM83cJa-V3LZwTX9dg@mail.gmail.com>
+In-Reply-To: <CACRpkdb5rmUK06uW3M2Lsy4Wam8JvrjmGM83cJa-V3LZwTX9dg@mail.gmail.com>
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Fri, Jan 17, 2025 at 05:13:36PM +0200, Andy Shevchenko wrote:
-> On Fri, Jan 17, 2025 at 04:01:43PM +0100, Patrick Rudolph wrote:
-> > Hi Andy,
-> > On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > We don't provide defaults for the regmap, we shouldn't provide
-> > > the number of them either.
-> > The intention is to read back the defaults from HW to initialize the
-> > regmap cache.
-> > The defaults are applied at each POR from the device's internal EEPROM.
-> > See regcache_hw_init() for details.
-> 
-> Yes, I was looking a lot and that code and it doesn't work as intended.
-> I can reproduce the issue, but it's real issue and I don't think we need
-> to read back anything from the HW forcibly. It will be done naturally, no?
+On Tue Jan 14, 2025 at 3:33 PM CET, Linus Walleij wrote:
+> On Mon, Jan 13, 2025 at 1:43=E2=80=AFPM Mathieu Dubois-Briand
+> My most generic feedback is if you have looked at using
+> select GPIO_REGMAP for this driver?
+>
+> The regmap utility library is very helpful, look how other driver
+> selecting GPIO_REGMAP gets default implementations
+> from the library just git grep GPIO_REGMAP drivers/gpio/
+>
 
-I think I now remember, it has a NULL pointer dereference.
+I tried to switch to GPIO_REGMAP and I really like it overall, as it
+does simplify a lot the code. However, I identified two features that I
+was not able to port so far: the request()/free() callbacks and the
+interrupts.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So for the request()/free() callbacks, I cannot add them anymore, as
+they are set on the gpio_chip structure, and this structure is hidden
+behind the gpio_regmap structure. I could easily modify the
+gpio_regmap_config structure and gpio_regmap_register() to allow to
+provide these callbacks, but is this acceptable? Or should I switch to a
+different way to prevent concurrent use of the same pin? I saw you
+mentioned the possibility of defining pin control.
 
+On the IRQ side, before switching to GPIO_REGMAP, I was able to define
+the IRQ configuration using the irq member of the gpio_chip structure.
+This does create the IRQ domain for me in a quite straightforward way.
+Again, I will not be able to do that anymore, as the gpio_chip structure
+is hidden.=20
+
+I saw I can specify my own irq_domain in gpio_regmap_config, so that
+would be a way, but I was wondering if there is any way to have
+something as easy as previously.
+
+I had a quick look at existing drivers using GPIO_REGMAP and providing
+IRQ support: I believe they are all using REGMAP_IRQ. And I believe I
+cannot use REGMAP_IRQ here, as if I understood correctly, I would need
+to have a register telling me exactly on which GPIO I have a pending
+interrupt and I don't have such a thing: all I know is there was an
+interrupt related to the GPIOs, and then I have to compare each GPIO
+with the previous known state to know which pin is affected.
+
+Do you have any thought about this?
+
+Best regards,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
