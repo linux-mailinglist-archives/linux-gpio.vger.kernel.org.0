@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-14916-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14917-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABAFCA154B7
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 17:48:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58354A154C1
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 17:49:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D6B33A99E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:48:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1F91188065B
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:49:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 714CF1A071C;
-	Fri, 17 Jan 2025 16:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43B119F11B;
+	Fri, 17 Jan 2025 16:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DsTKbvYe"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NQIcfOII"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98C319F48D
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 16:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AE819DF66
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 16:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737132499; cv=none; b=pBouh01DWVYJ+MJvSzs9267DlxnTHQQE8UlE50KJp/JrffwH3d+4J1Kgn+BAqHWNKaHgVxD9+stLBs1dEgv38Kf7va2HM5GpZprWQ7nYgsTY46Fx15fOQl5vAKN0gm+ZbwhWL8i8fY3rv1onIKuKIhVo8PKdjkuQtBc0JXB9yXM=
+	t=1737132527; cv=none; b=Kg4Y3VAB6nPMmaF9oXUC47QE798ZLLx7vIY17ABejn3nawalHNirCEpcYh4Bn2EfIlLngm62dCRmn27Z2HKc4XHDYp+58SXqJFlXlgDKmEfFoyjTyJjYUFC0NAW7Ge4oSQn9Ww4nCgIh4tjATTtwEzcEmCYliTlqMboYw4lO1HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737132499; c=relaxed/simple;
-	bh=gYb1kqdV6OoJpnxC34fRTLu5PUOWyFCJa6cz1JOnhMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SMwxiHCzs1g+21CF0crDgGzC6RoVudF8fVPVw81bUsLfQ6nL1gDqMFKCH6v7mnCCRlUCrikyHOYdqImuN5An4iNxSmAydztj4ogtvlU0M6DAeaF7J1PVKPkXsFfp6XI3KejLEp3WDWiYRVMxixyo2I5LsUoX0rH7UbpQ/Vpr8eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DsTKbvYe; arc=none smtp.client-ip=209.85.210.54
+	s=arc-20240116; t=1737132527; c=relaxed/simple;
+	bh=3OnRQg1PgHXP18jZMKFrCaYN+Ax26f2xIcEUu4yoq4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JYkmd+EmNpwIgitzRzv6QvlqcN/ofez8Vx+qkVnxl6654miFG2WyIRoWSmI7aIQj7CkM+02WZ1I2ii7K8eNit85tiRNnm40izGpxCiWiJ5s4VIFArlHFoTeV7MjMxLZPVaToM8TmhNZ4jOF8ahKTWvCLqJyjIAeBm37WXWHbMEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NQIcfOII; arc=none smtp.client-ip=209.85.161.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-71e2bc5b90fso1262696a34.0
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 08:48:15 -0800 (PST)
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5f2dee7d218so992867eaf.2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 08:48:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737132495; x=1737737295; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1737132525; x=1737737325; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Q5B/dY6oMiz81FjN8mBPvGWEx24pGyjt+FkzOK2nI8=;
-        b=DsTKbvYeVd1gb9+7g1PhPNO6ysQs0QLf/6RNU8zgzTZoeYNG8vLtlq0gwEpSS9KoF9
-         +t3SY3QrY0JcQDtYUv4jgU3ck3UQLP7ZGp/+NxJFIhxYRzVUCYdY2EFPNajSGy3iEX5l
-         dz3OGDqvBVDmHz3dPcuwbWwluEwtVWH/JCLVg=
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOCqJban+aQHMwjTjERLufzbSg8fwywobEIblWBoTV8=;
+        b=NQIcfOIIAqCQ82TefnbF4cMqDrEamWNia+LdLOhin5NOPKMkpynG5hIkIsJgNyVJer
+         zvGc45tkY0TK+kLhhFx5VwlBucNvlmjaP4Vw85hGkr0BW+iP5vM0MULGalqTcz3FT4W5
+         Ghh5yg11Xb3gIGHvY8rDsSZpFltt40sE3uga8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737132495; x=1737737295;
+        d=1e100.net; s=20230601; t=1737132525; x=1737737325;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Q5B/dY6oMiz81FjN8mBPvGWEx24pGyjt+FkzOK2nI8=;
-        b=iGXvQTDTGGPacmzy1AlzgOm+YPPJZdX8JqdvvgkAJdHkDtRbLgX783t92+1slCA+8U
-         wYVhKf7PDWM8BFGbugFT4/W/ilSj2cQcFw1BfwyIV/PhPfBSPa8uEFAOW8guN/x3Zgok
-         lg1uN8bXU809E+zHlshh2Cv6FkV5eN//pYmH2YNX5ATiX/z/iyG8hLR+nYR9jcx17myX
-         HbzLqdt3cyAMu5GWMY3052uRz+4em7kl7dNQ78KqUjSAQNY3Ey9cqlFCBGislQp1AU3d
-         aax1Pegioosw0QkY/E9qWD94bu3BwBgHikNk7fYuCYiFACxrtuNEzD9qjMkON/XreSmx
-         ZqHw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8StJkRP143fOz2VOb6sruzt7bf72OxniXqcU+uAwvClm9XlDiYkC6NkR+vgYYXWFabXlSs0MLolTJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwB4dybB7q5rWKaqTNN6LhWHDFsda2rDdZhiSoUnbJjLFHOccP
-	T85tV1/wqR8TRVYBxwpRosM29TRzQ+e5b40GY/rkY9yV2x3N94f8OJ7RgUFMSw==
-X-Gm-Gg: ASbGncut+WDCZWumdSve+nYvODu5a1e1I6LjF0hHwyM1etOExY6iTW9MoH1wUN13HuZ
-	PM8pDWIUJk+9qRqS5w/44k/SoegogRnArCuX4YwkTv163/JD66oUIqGSlKMcZL9QNXuRp1cOA3s
-	w4q8lylrZfYHQIXYejTpHneZx+NStDsKquDCzzCQix6LhdQ7kCeukUTr1FBZ1jgTAA8Lz6iTzp5
-	1SDUVKgIcx4X2XSDLjxYVY+NaGE1aZevJqonK2M/QkQdVabS5sGQzYI1oI/i5AjVNJtbcxJxIAL
-	QH30FQGw2a1jUK5Ir3klSVdu3jIXuwY=
-X-Google-Smtp-Source: AGHT+IF6HBKuramUxfZ03WLrKRxT9Rq7V91iMfxEsBjw1iYwzz4R/iPVpQvLNQeC9Tgu4MJd9+8z1w==
-X-Received: by 2002:a05:6830:6999:b0:71d:f239:c0b5 with SMTP id 46e09a7af769-7249daff60amr1950245a34.18.1737132494750;
-        Fri, 17 Jan 2025 08:48:14 -0800 (PST)
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nOCqJban+aQHMwjTjERLufzbSg8fwywobEIblWBoTV8=;
+        b=j/14Y1queVmzgK+GgQmyikKctGt/wOcFH1yFGn9KuizaJBYO7iap6DSaIs9GHghwic
+         y6lKmmOciQKm6MDAd1tod0CQxv9hz22OU8H3fp+pNrU//WEaCFkKKsibIes61uK43YQF
+         RgPQop1tFlvxBTMSvIpEHYPfixKpsSozgrBzPfixMa43mbLeZkzCk8KmKNPaRkryYxzy
+         koyvCUfv83znzIQBOHrzTF5zhoJcrkKH3Slyroa3aGyoksPi5/zf1xw/jNfsbpkx3y1q
+         UywkNNdjEoV1C80czoakrmufDRyiYbL+hLeXYztePvm9WrmGkx2oa1CHEfJ7FJvM3EWN
+         yQLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUZbMdpbWJeGSnHCAZ6DG33/8NPxmYagfKOON6K1CuMBk4vPiPrPl34U2bMABIBTciU3SM5QyVcqr8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRU7D/uYQeFNsEvn6AbI5qZ4/W0oUCrzK58IIw96yaBFtZ8q+H
+	Bcj9f+rGI7d8EBuo0usUT/Tote2CWJGqiqoaOLhak9WqMoKCggqEGhOGgIH7mQ==
+X-Gm-Gg: ASbGnctraffcSoyar3qbn8Oeft21FHOdVxC9gi3/CV2091wGrBHJbeifQcUU4L3KeWn
+	84/Rbba5N4CManBocwIu8dr6QUSTvXfgAxrfTl6RPBT2L9QCEofJmIeIo8/YYb0LA3kt/ZATUxf
+	x2Z2RVZEvWYj58dxeXRbP0dO5et3GK9VQFnbnTWVeWWyL4ZNrk/sedQBqWgP4wwgESYeHe0GWx/
+	nn6Qm3IIaWdKkU9q8bg9HMJQRNpTQoU100cWRr4+RIXEG5USnr7FTCWmLGXh4kgdJtgHZE0HoCX
+	WnhGeBXjlcP4IahZ8xWObwT71/mu+9Y=
+X-Google-Smtp-Source: AGHT+IG+6zYsqMlXLOdK8WwBvGm4UwEaIHYSed7gkXBUcfoUUtYImtV/aSwwsZEDs0sAd2E6PHPHDg==
+X-Received: by 2002:a05:6820:8c1:b0:5f6:aa5c:8a6d with SMTP id 006d021491bc7-5fa3885aee0mr2294294eaf.4.1737132524952;
+        Fri, 17 Jan 2025 08:48:44 -0800 (PST)
 Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7249b3be2e2sm1021115a34.31.2025.01.17.08.48.11
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fa35fe1acfsm823090eaf.30.2025.01.17.08.48.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 08:48:13 -0800 (PST)
-Message-ID: <cb4c8ce4-db43-4cf9-94e2-2f4d04057d8d@broadcom.com>
-Date: Fri, 17 Jan 2025 08:48:10 -0800
+        Fri, 17 Jan 2025 08:48:43 -0800 (PST)
+Message-ID: <ca1f1710-1859-4464-8b7c-a105437c5026@broadcom.com>
+Date: Fri, 17 Jan 2025 08:48:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,8 +79,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 02/10] dt-bindings: pinctrl: Add RaspberryPi RP1
- gpio/pinctrl/pinmux bindings
+Subject: Re: [PATCH v6 03/10] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
 To: Andrea della Porta <andrea.porta@suse.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -105,9 +105,8 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  Herve Codina <herve.codina@bootlin.com>,
  Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <cover.1736776658.git.andrea.porta@suse.com>
- <585d04509edca5c8b786fee9383471e0b3ea35a3.1736776658.git.andrea.porta@suse.com>
+ <c687b606c5ae6a4397dbf12c874c690da5e4b344.1736776658.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -142,19 +141,22 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <585d04509edca5c8b786fee9383471e0b3ea35a3.1736776658.git.andrea.porta@suse.com>
+In-Reply-To: <c687b606c5ae6a4397dbf12c874c690da5e4b344.1736776658.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 1/13/2025 6:58 AM, Andrea della Porta wrote:
-> Add device tree bindings for the gpio/pin/mux controller that is part of
-> the RP1 multi function device, and relative entries in MAINTAINERS file.
+> Common YAML schema for devices that exports internal peripherals through
+> PCI BARs. The BARs are exposed as simple-buses through which the
+> peripherals can be accessed.
+> 
+> This is not intended to be used as a standalone binding, but should be
+> included by device specific bindings.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
