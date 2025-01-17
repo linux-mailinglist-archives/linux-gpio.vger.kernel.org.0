@@ -1,228 +1,123 @@
-Return-Path: <linux-gpio+bounces-14881-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14882-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5ACFA14DC0
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 11:38:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89421A14DCD
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 11:40:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EB38188ADB1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 10:38:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED5C31887562
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 10:40:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D57D71FC11C;
-	Fri, 17 Jan 2025 10:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mI3SylOo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE4201FCCEC;
+	Fri, 17 Jan 2025 10:39:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FD1F76AD;
-	Fri, 17 Jan 2025 10:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6225C1F91FF;
+	Fri, 17 Jan 2025 10:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737110313; cv=none; b=AknHxFfzG6/v3wlZp7YKalANeOCOR9WtlySczRQUx7MKsgCv9cOs4xWBHfhM/JeEPDbcembz9zLSvd/NLtOdLdMpcJMB1Lzj26KYFNgiEVAYLLfq935jCKFcSIctuUmfLPScbxSTJ2dQiZLAquRYyO2JiZZtYeKmAq95AJMghu8=
+	t=1737110395; cv=none; b=MvacyTsIV0BYd3riVdQft3YOkMZJKRqpnz4jZYRfuHnpJRTZ1cmI4H4gP+a3/IJGTxr7SJGPfu0/57XQhSQqcvrP5G40IYx7HfuUYVYQL56rNLmUM+D7hx8g/Dp5CAsZtwivWCV0pTboOcBJ8GO4TFfYbkP1Xsx47u/PqBHUPZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737110313; c=relaxed/simple;
-	bh=kVtggdSW98bJORlZYnpdBDvmyfatrIrOsHKYOjQdcg0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=twUp3ikmxHJEPlTRHUU11cghWqyobFbe4+GQHNN+y9c9RWK+aADuMppCDn+/SiZIhXOZYcYNiFxxPySSYBrdf5teH22537XnLNRI3KSdkZdctcOvSv2NRGX8nf3UnDPSheERzFULgDDono6/JsisikldT4l3amE77MuhN/9qL5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mI3SylOo; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF76CFF808;
-	Fri, 17 Jan 2025 10:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737110308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zjGnIYbv6jLQCj2OibAy1kloN5lKwcFpRZ7BkKxb2m4=;
-	b=mI3SylOolo/uYot+pulW1bc3DvAvLtyvq+Q0dgQut4sjdvUhJEOsPCINGrW6+deX43bgHr
-	YFyuJyOUgjtIG4lyH747+xphSOXW5nQ56EtWtCrmlwIzzWdup7mFJGvG84e65Y3PBe671Q
-	9gbj4C9OWfxeZIZdxD4V0wRaw13FCGnYBgFPs9TwmAK/Pxj6/aOJ2GVu0EnVoshNm2v+7e
-	TVwTdMzmFQx9dlY9WM6YqmcEd6gpk1eZoQucYWwoVjtMq2N/7W0JWo+rycUEm4M8i9h/9W
-	oi98hSBotDEK/7hcOznKafcVbQpryhy2+f6lz0hHZhjS99SMAnEllYHH4OLMlg==
+	s=arc-20240116; t=1737110395; c=relaxed/simple;
+	bh=YXW+x9GgzgdecKu3CzDdV0DGCreYczj3I9qa8OAff9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TYhpkpqLJsIEr7ZGrOzHCr4Dcr2h6SacQJwRKgf3fyxKW6S6v94sLKGTf8dJeU+YmeADJ1yuS9bItA66hdLeBKgGmOUn203JHsd3RqnSImG20OhWcSWfHLr7UhET3imYKX8In90o+kcAGUE3/mpEGkMfj6JkuucL0KhkVeGDB0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3403D1476;
+	Fri, 17 Jan 2025 02:40:21 -0800 (PST)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D2753F7B4;
+	Fri, 17 Jan 2025 02:39:49 -0800 (PST)
+Date: Fri, 17 Jan 2025 10:39:41 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andras Szemzo <szemzo.andras@gmail.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Maxime Ripard <mripard@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@baylibre.com>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 10/12] dt-bindings: phy: allwinner: add v853 usb phy
+Message-ID: <20250117103941.7f9bda7b@donnerap.manchester.arm.com>
+In-Reply-To: <Z4dpFqffMJ31ml2y@vaman>
+References: <20250110123923.270626-1-szemzo.andras@gmail.com>
+	<20250110123923.270626-11-szemzo.andras@gmail.com>
+	<Z4dpFqffMJ31ml2y@vaman>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jan 2025 11:38:27 +0100
-Message-Id: <D74A7MIVLFS2.HYUXZ072NCTQ@bootlin.com>
-To: "Lee Jones" <lee@kernel.org>
-Subject: Re: [PATCH v3 2/7] mfd: Add max7360 support
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-2-9519b4acb0b1@bootlin.com>
- <20250115154252.GK6763@google.com>
-In-Reply-To: <20250115154252.GK6763@google.com>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed Jan 15, 2025 at 4:42 PM CET, Lee Jones wrote:
-> On Mon, 13 Jan 2025, mathieu.dubois-briand@bootlin.com wrote:
->
-> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> >=20
-> > Add core driver to support MAX7360 i2c chip, multi function device
-> > with keypad, gpio, pwm, gpo and rotary encoder submodules.
-> >=20
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.c=
-om>
-> > Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
->
+On Wed, 15 Jan 2025 07:51:50 +0000
+Vinod Koul <vkoul@kernel.org> wrote:
+
+> On 10-01-25, 13:39, Andras Szemzo wrote:
+> > Document Allwinner v853 USB phy.
+> > 
+> > Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
 > > ---
-...
-> > +static int max7360_set_gpos_count(struct max7360_mfd *max7360_mfd)
-> > +{
-> > +	/*
-> > +	 * Max7360 COL0 to COL7 pins can be used either as keypad columns,
-> > +	 * general purpose output or a mix of both.
-> > +	 * Get the number of pins requested by the corresponding drivers, ens=
-ure
-> > +	 * they are compatible with each others and apply the corresponding
-> > +	 * configuration.
-> > +	 */
-> > +	struct device_node *np;
-> > +	u32 gpos =3D 0;
-> > +	u32 columns =3D 0;
-> > +	unsigned int val;
-> > +	int ret;
+> >  .../phy/allwinner,sun8i-v853-usb-phy.yaml     | 89 +++++++++++++++++++
+> >  1 file changed, 89 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
+> > new file mode 100644
+> > index 000000000000..773c3f476db8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
+> > @@ -0,0 +1,89 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/allwinner,sun8i-v853-usb-phy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +	np =3D of_get_compatible_child(max7360_mfd->dev->of_node, GPO_COMPATI=
-BLE);
->
-> Why don't you do all of this in the GPO driver?
->
-
-I first did this here, so the configuration was still done if the GPO
-driver was missing. But on a second thought, we can just set the GPO
-count to 0 here, and let the GPO driver handle all of this.
-
-I will move this function to the GPO driver.
-
-> > +	if (np) {
-> > +		ret =3D of_property_read_u32(np, "ngpios", &gpos);
-> > +		if (ret < 0) {
-> > +			dev_err(max7360_mfd->dev, "Failed to read gpos count\n");
-> > +			return ret;
-> > +		}
-> > +	}
+> > +title: Allwinner V853 USB PHY
 > > +
-> > +	ret =3D device_property_read_u32(max7360_mfd->dev,
-> > +				       "keypad,num-columns", &columns);
-> > +	if (ret < 0) {
-> > +		dev_err(max7360_mfd->dev, "Failed to read columns count\n");
-> > +		return ret;
-> > +	}
+> > +maintainers:
+> > +  - Chen-Yu Tsai <wens@csie.org>
+> > +  - Maxime Ripard <mripard@kernel.org>
 > > +
-> > +	if (gpos > MAX7360_MAX_GPO ||
-> > +	    (gpos + columns > MAX7360_MAX_KEY_COLS)) {
-> > +		dev_err(max7360_mfd->dev,
-> > +			"Incompatible gpos and columns count (%u, %u)\n",
-> > +			gpos, columns);
-> > +		return -EINVAL;
-> > +	}
+> > +properties:
+> > +  "#phy-cells":
+> > +    const: 1
 > > +
-> > +	/*
-> > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad deboun=
-ce
-> > +	 * timings and gpos/keypad columns repartition. Only the later is
-> > +	 * modified here.
-> > +	 */
-> > +	val =3D FIELD_PREP(MAX7360_PORTS, gpos);
-> > +	ret =3D regmap_write_bits(max7360_mfd->regmap, MAX7360_REG_DEBOUNCE,
-> > +				MAX7360_PORTS, val);
-> > +	if (ret) {
-> > +		dev_err(max7360_mfd->dev,
-> > +			"Failed to write max7360 columns/gpos configuration");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int max7360_port_pin_request(struct device *dev, unsigned int pin, boo=
-l request)
->
-> This whole function is rough.  What are you trying to achieve?
->
+> > +  compatible:
+> > +    const:
+> > +	- allwinner,sun8i-v853-usb-phy  
+> 
+> Does this really need a new binding document, if so why... Cant this be
+> added to one of the existing docs which driver uses?
 
-Some pins can be used either for PWM, rotary encoder or GPIO. The goal
-here is to allow corresponding drivers to request the pin, making sure
-only one driver use a given pin at some point.
+The USB-PHY bindings don't differ too much on a first glance, but still
+enough in nasty details (number of PHYs supported, number of clocks
+required, etc.) to make a joint binding basically unreadable (we tried
+that). That's why we opted to have separate bindings.
+Now I believe it's worth to look for the closest existing binding, and
+just put the compatible in there, in the hope we don't need much else, and
+that it still stays readable.
 
-> > +{
-> > +	struct i2c_client *client;
-> > +	struct max7360_mfd *max7360_mfd;
-> > +	unsigned long flags;
-> > +	int ret =3D 0;
-> > +
-> > +	client =3D to_i2c_client(dev);
-> > +	max7360_mfd =3D i2c_get_clientdata(client);
-> > +
-> > +	spin_lock_irqsave(&request_lock, flags);
-> > +	if (request) {
-> > +		if (max7360_mfd->requested_ports & BIT(pin))
-> > +			ret =3D -EBUSY;
-> > +		else
-> > +			max7360_mfd->requested_ports |=3D BIT(pin);
-> > +	} else {
-> > +		max7360_mfd->requested_ports &=3D ~BIT(pin);
-> > +	}
-> > +	spin_unlock_irqrestore(&request_lock, flags);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(max7360_port_pin_request);
-...
-> > +static int max7360_reset(struct max7360_mfd *max7360_mfd)
-> > +{
-> > +	int err;
-> > +
-> > +	/*
-> > +	 * Set back the default values.
-> > +	 * We do not use GPIO reset function here, as it does not work reliab=
-ly.
->
-> Why?  What's wrong with it?
->
-
-I was going to update this comment to add details, but after some extra
-testing, this was wrong actually. Reset function of the chip is working
-correctly, it was just a caching issue. I will rework the whole
-function.
-
-> > +	 */
-> > +	err =3D regmap_write(max7360_mfd->regmap, MAX7360_REG_GPIODEB, 0x00);
-> > +	if (err) {
-> > +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
-> > --=20
-> > 2.39.5
-> >=20
-
-Thanks for your review. I fixed all other points listed in your mail.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Cheers,
+Andre
 
