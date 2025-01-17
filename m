@@ -1,123 +1,149 @@
-Return-Path: <linux-gpio+bounces-14887-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14888-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C6C3A14F29
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 13:32:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89AB3A15159
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:12:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE7CA1889F21
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 12:32:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6FA83AAAEB
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 14:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6321FF1A9;
-	Fri, 17 Jan 2025 12:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6EB520101D;
+	Fri, 17 Jan 2025 14:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="e3p4+L1V"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c0FTmAFJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932801FC0FD
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 12:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1121FF609;
+	Fri, 17 Jan 2025 14:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737117125; cv=none; b=foVc7tSjj50M1vIC0uq5bRyqjUOVVFvq4T0yn4g8Bw5xphm+Qkb923zHgd8b0LijC7MqHejQirzfdDB1JmY6DT/fgZE7/60duNhQ0DEOdvU1FpeG4bfX9q+5aIOuUtyTYv1w1erXn/ku+EWl8ZpvEnBH7f1/VrahMaqkT05qx0s=
+	t=1737123095; cv=none; b=mZTE8P1iC3Pc9qQLF+zkza8b3LeAz1z5TA8EHs/NaaNARAKdcMTCBbDemoNsArtccxQdzunNSIg0G38+vTyXZ02Bhlg1+B06+b262LmF2v0vVBKnswcuLyeAo3CdaJPa49P3Qn/JIMYOE6BOeCJMMJYuERDXXA5oCKR64pfNx64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737117125; c=relaxed/simple;
-	bh=uJirGmB0QOJSNknDPt47QznF2XNlHY/g4f9DYHLWMLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s4A4s4JmUZ3QTgTZvcOYWoBxVC0TPLv55lFn1Zud6uL5de1KbHHK6NbKWO5EVQCOgDfJDIgIXkLbB5PwfLdcTLErtW2MFBynITyBnXpt47E5Trof7qKMv/3ZFDPI/TFni8uy2RuDTDqds6cy+x9XolhGsanYIFK8uWSYfx7L97A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=e3p4+L1V; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso13525575e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 04:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1737117121; x=1737721921; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBZOHkGxEIIkCGyd59Ho/yAUy7rqsxs5mv7oFXfqW5I=;
-        b=e3p4+L1VrVSthNPcJQ2PZ09WwsIJmjNAOcFKyo+l0FVpdfIxUnBbNWJYf+60bFF9gc
-         LcF8MWIFBvYRXkQ09gkavakeuS5gUEXBS+v95dNuClOUAzptBCE4GJdgQcC990Q1svmm
-         aTXiGKSbH5xMLAsno+kNTUIQuECsTTAoWfA+ehQOEnbrnaPe0I70fiuHGsBExxSN67uH
-         VjqI3n29rZGKPKuhDAuSmdts2JMOUH0/KFM3T3b3zwN2AOQVvkm5ONSEtf1B2oGR0qyP
-         rSV7BhR2eF7aNDOCi6lI7NDaC7Daf6ELfHq8HweLDUBiC5RWZqMBu4pV9VtgIorGaeUi
-         EaEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737117121; x=1737721921;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sBZOHkGxEIIkCGyd59Ho/yAUy7rqsxs5mv7oFXfqW5I=;
-        b=NTqeVHvVFzqmd6ASQWaA8qCqUQiXPYFkHWSbF94/YmborR2fGob1g5jWuKBvEC6TmG
-         6rKODFPkX1WVbN2d6zKeQIAVKeFUWT4aLMX88BcAPVMIJY4MX0UMISExD14SCyB9Lw1C
-         iJCO2h62lzR/Ez1Hqblp17UOndjJ40tOKH9r/AuddXH1hGTrVYLE0ux4pSwKhjLurPkr
-         tsDK1r+wDnAhwBRxW6MHzlz89sIebqZE+iHE8IvBXqjXlfQXPG4D0SNMlq9UhDTBVWwM
-         mxk/2prO7OSie4Gunug6xdUXrXxYwF1aPY+W4zG2LselLDBXzYouLiGLqH/A/aikJ/HX
-         OPnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpa6lmKmt6K1X/wpzJ7NBcCarQSaiqPXoWyZfgGAXAmgjFom3zSziHFDIgEp3yZAOsUpeQRPZ2Pz/+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7gbJU0v4AwP6gjBzwBq151HXwEgfbHLp/Z5sDbIgMOdlfuOpj
-	LAF8CLPAVORhfqMP8BzC+cDZOd/ZNeOvnF3dPVaBTh4p3MZEjqu/1XiDuY92uiA=
-X-Gm-Gg: ASbGncvO25ZHKc/Aw7t36mfqgPrUhSDRRElBZlmwGArJpEaR61ZJIJkQHsQ0+mOqIWP
-	16W8jysb14kSusVSK5jW0aEBJyLpybAwzqvUPtsTpkXyyVuQltbrjlt5QzceRbkP+u8HC1Isb/G
-	qCjGB6IvXeKO36WieblbDZThVVW2MYK40G+7IchdbQl6xgENUbeUoATHNDRjjFb+/VwR8Zd8LML
-	47OksySXui/G3n02dhAWJU4wpSta4GGJtiDa9f78a9D1Y0Ucjm5OzNI
-X-Google-Smtp-Source: AGHT+IHpmX/L6g3owd8YDWZTtdKOtlpzA7oOb0L8Lcc7zMEQGd9T+/LLPoaB8smqyDDBcTbwFQaNfg==
-X-Received: by 2002:a05:600c:4f48:b0:42c:b16e:7a22 with SMTP id 5b1f17b1804b1-438913cb740mr27450355e9.12.1737117120862;
-        Fri, 17 Jan 2025 04:32:00 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:351e:46f5:2a03:6deb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322ac88sm2464459f8f.54.2025.01.17.04.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 04:32:00 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.13
-Date: Fri, 17 Jan 2025 13:31:59 +0100
-Message-ID: <20250117123159.38472-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1737123095; c=relaxed/simple;
+	bh=Me246SJL54xrtLrgLYOve0FHhr6a7dzhnL3mtYfwI74=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=h3uVkKTMhWwv+5gXyR2VZ+Bh8fmG7AS6lb4DbDBWiSHiFhRR574NC75RxWsPlbbjaHX/vuh7HxGhQMozXraxGQdJ4oRmKLmU60Hb8dkog+v6/KQlbhM0mZtExTU50HldkOqpOt8mvgVC6u7QyNfStFH7c4Kge6JHKWwXOg4eTgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c0FTmAFJ; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 553F920004;
+	Fri, 17 Jan 2025 14:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1737123091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yzZDikjR9clIGnmTv+VoIvPOgnUMRodTCnVhk/mabBU=;
+	b=c0FTmAFJBk1PJzrL0vgS1Y0BNK/05UH3P9A0IdreLuGCB2+cYOy455TZAyjTEleeRDCA2E
+	1XvGrX/KERV+3R7j3D62t4b09RJ503YWvq18lh6+LgQX8DSYMy7BHdEYD+eEiMLkdLKu/j
+	5I0pCYj0egriASFgZxo/M9ubZDYMO+6SLmMScOjeD2pguwG8Y8RbhxhGx5uiObGqIe5cEu
+	HYByuO5PdrESQ8+TUc5bOFt8l17cpgsLwSkAV63XULLTwkxgGD7E+OEhYs8Q/oP9BVfAUJ
+	OUtuyWQJOGx+AMvK8uMEW9YPDbD05R2S/ZcFFkpbDeDW2F8aY5bypA5tCmP4dw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 17 Jan 2025 15:11:29 +0100
+Message-Id: <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
+Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-3-9519b4acb0b1@bootlin.com>
+ <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
+In-Reply-To: <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri Jan 17, 2025 at 10:33 AM CET, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Mathieu,
+>
+> On Mon, Jan 13, 2025 at 01:42:27PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+...
+> > +static int max7360_pwm_apply(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct max7360_pwm *max7360_pwm;
+> > +	u64 duty_steps;
+> > +	int ret;
+> > +
+> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
+> > +
+> > +	if (state->period !=3D MAX7360_PWM_PERIOD_NS) {
+> > +		dev_warn(&chip->dev,
+> > +			 "unsupported pwm period: %llu, should be %u\n",
+> > +			 state->period, MAX7360_PWM_PERIOD_NS);
+> > +		return -EINVAL;
+>
+> Please don't emit error messages in .apply(). Also a driver is supposed
+> to round down .period, so any value >=3D MAX7360_PWM_PERIOD_NS should be
+> accepted.
+>
+> Also note that you might want to implement the waveform callbacks
+> instead of .apply() and .get_state() for the more modern abstraction
+> (with slightly different rounding rules).
+>
 
-Linus,
+Sure, I just switched to the waveform callbacks, it was quite
+straightforward.
 
-Please pull one remaining driver fix for this cycle from the GPIO tree.
+> > +static int max7360_pwm_get_state(struct pwm_chip *chip, struct pwm_dev=
+ice *pwm,
+> > +				 struct pwm_state *state)
+> > +{
+...
+> > +	state->duty_cycle =3D mul_u64_u64_div_u64(val, MAX7360_PWM_PERIOD_NS,
+> > +						MAX7360_PWM_MAX_RES);
+>
+> You have to round up here. I would expect that the checks in the core
+> (with PWM_DEBUG=3D1) help you catching this type of error. In your case
+> changing the configuration to
+>
+> 	.period =3D 2000000,
+> 	.duty_cycle =3D 234379,
+>
+> should yield some hint in the kernel log.
+>
 
-Thanks,
-Bartosz
+Thanks for the reproduce steps: I saw the bug and fixed it. Also
+MAX7360_PWM_MAX_RES had to be set to 255 and not 256...
 
-The following changes since commit 5bc55a333a2f7316b58edc7573e8e893f7acb532:
+> > +	return 0;
+> > +}
+>
+> Best regards
+> Uwe
 
-  Linux 6.13-rc7 (2025-01-12 14:37:56 -0800)
+I also fixed all other points mentioned in your mail. Thanks again for your=
+ review.
 
-are available in the Git repository at:
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.13
-
-for you to fetch changes up to 9860370c2172704b6b4f0075a0c2a29fd84af96a:
-
-  gpio: xilinx: Convert gpio_lock to raw spinlock (2025-01-14 14:04:38 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.13
-
-- convert regular spinlock to raw spinlock in gpio-xilinx to avoid a
-  lockdep splat
-
-----------------------------------------------------------------
-Sean Anderson (1):
-      gpio: xilinx: Convert gpio_lock to raw spinlock
-
- drivers/gpio/gpio-xilinx.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
 
