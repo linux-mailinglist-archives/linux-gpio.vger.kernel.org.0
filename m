@@ -1,178 +1,181 @@
-Return-Path: <linux-gpio+bounces-14875-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14876-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8132CA14A1A
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 08:27:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1758AA14B51
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 09:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC5F41887385
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 07:27:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 736203A2A7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 08:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B47D1F7915;
-	Fri, 17 Jan 2025 07:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105011F8EE5;
+	Fri, 17 Jan 2025 08:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hp6RfAG0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3Gr3JTF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E1C1F78FD;
-	Fri, 17 Jan 2025 07:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94521F76BD;
+	Fri, 17 Jan 2025 08:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737098824; cv=none; b=D+RIIi/n84aFsPWEiLzCCQBWFu7Yr5XMiOI66wBNUAkEFg56BsudwkIsbLJhjP+MB6xA9Xjmw8J3sFUwRLcAmsS4SXChrWBs+ej8cqPoCCEOJ4GUR4f88Xyu7onxjKskhOcH8yf7aH1baCKjf4KH7fp3Lwb1+WTK6FuDisDfJFU=
+	t=1737103271; cv=none; b=KOGmAL7iPVUjnLYl/3wi/auncOMk7hU1JZgEcoArHKmO8vsIr7t6bp7CnLuHitmCxF6Nj2Ioa87VkYDSXHhhYUcBrYqq5vEulFzyoj87KHsgEQUae7Z0C7ggQzMRl/WJCnhBES6FvVko85e1VtiUgGlU1Po21Mt65HWm7G02r8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737098824; c=relaxed/simple;
-	bh=8ZoHB3c7Wja3OoOz4RgpQxXimVh8mCkNOGXye7svh3s=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=kNjo0rSgJEKFr5EuUR4dgPPxq8RbYjZDvkKrGbBhytuVxHUyxqtx9mFybuQrFVlxCuTpnDvBCsaembIIE9DJMXlxH1USCoJ0EH1EYCOr415JgkLY3+3YO+j9G1+ucjcY2/SWzSLzRWu62G9YipDAQDEGUdURMGK6SJktGKobRso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hp6RfAG0; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d3d143376dso2669994a12.3;
-        Thu, 16 Jan 2025 23:27:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737098820; x=1737703620; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F24Ywam/p+ofkibybtKEAiJQBVKXbmYXTkvfrfJmGwk=;
-        b=hp6RfAG0/y9XnzfTkyQtULRRVpkaXRCARYDnOM7u8M5ObDVEz9KWUTSw0ssvcBwZ3q
-         aqQjzKfalnJde5VSaA3md5J5Lzods8XdvUcH31GPygt8KRMXTYs8cc7iH3oLrvHnWpDa
-         0vt2Nwp8xx6c2jtm7tgm/hRkguzDzNWA42g53LNEwdvgF+cCNNs3RiOpKYn+cgLxHNCz
-         jVkX2MZiPmuQX32N8PZQ3X+y21UpSgdTcvRxchMZZSd9VaX2uiAl4okp0m6EVMWRwHc+
-         8Upj8SyyVRjfJhsvjhktty/400Z9GJNwDW04H9Zo0Oo+nJyBhdV07fne3nLeYf8cZoGM
-         q4ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737098820; x=1737703620;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F24Ywam/p+ofkibybtKEAiJQBVKXbmYXTkvfrfJmGwk=;
-        b=oheogE3wI9m/3ZJpQ9OlhD8Bdq2KwSP77tizIxKsckxSF3ICZfSNmjT2wAgFvcGSk1
-         lo30wzeEaJqcfFPyuBW4dvVtb9wm0kW9a3LNyYjGCN/RzEOLCCYXnbHyr6PxaReuaZoJ
-         nomJvT3D77ijzL1ObMFdKhD53Z0QbURa6PVxekvOwogp07Nr8+XZczZyAFUVe1m2quhu
-         GkdfC4RzncloN2xZYEgbsO80qhdgERmIFHtQqHdNwegIKw+1ECief83Nvzp7sGC7jqCN
-         sdBNIiGrDg2H7NXjiyTMbP9Q+19dhOaYqW5rUjDceTnol4PEmIwH5bXTfwB4WtC0QO3g
-         6y3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUReP1EKKOpXB+BXv8TWxnURibxeSdJ/odSSVBy/DdmyUPXcSgslYxXhvMLHL3jGYy91JyL0GuHNVbSDbpZ@vger.kernel.org, AJvYcCUWUaNoxL08Kp+PjK7uZQxkjgUaeNF72YbL3dF+ekT4bfhjNVFWgEnEresAtlVCOdhhMLhNQjFx+p3EaQ==@vger.kernel.org, AJvYcCUaCZ2pMf/NHKVFnx+9TiLCghwy1Ty/Nza64S9Z3mABLK8OYuzUmEYVZDU35wVA1qlZrjDs5V6wIxlL@vger.kernel.org, AJvYcCUlKPDTt5Xsm8mNM0Sr5jMhDpHVWaXiwXiwdF+2drw5aEMBENR5+qbtn0MZtPaFaffZZ0SBi31YIxI7@vger.kernel.org, AJvYcCXOvU8MbflDTks5r6mRA0yRbH/+7+MNWabGGEeRJGUwxhaVaDWVpA597SLw6JFnn5qEejLW3QZeEEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz81y5PX99gbzs1WZdAntbqwXb3I+ZrtAvtEhhXt5+zFPxCj0yQ
-	v6yYNK2l4gdsF5zdC0X4Da+N2uBqHVdTkK7A9UATiXh7kcI31tgW
-X-Gm-Gg: ASbGnctPHAqtR3fWaC+FKYWyIfXKtTqXaBTzwZ9sWaHZChWr9klZw4c9gz9NtWaQr4A
-	IFmvKVN+XvMrl0Bq0QFy8kwCGc06kayg8w4DEXlbBEetnFaAxzzLn6CbvqgVuho+rKWZ8C1z3JX
-	8cx7JXKgUM2quF8fzU1nU3HuvC8Zcgtao2SIriGNVpYs5pLsIOwW4QnwZ0QkdLn0gHCLBbZGP6I
-	xm8reJNs2NaLqUicqT0vrY2HMDjIOtQheTyHKdHVQfXaz99IXEbW+JwS8TpgV/8urIuYPv0buPZ
-	9rl8vAf//ykFlffQZGM=
-X-Google-Smtp-Source: AGHT+IEJ47ULSJP3koS5kB9oV3dzXmmnz2xu5B2PxtVsCDw5X7zWmfzS9Fwll8RLJEa/W2eN3Ozjlw==
-X-Received: by 2002:a05:6402:26c2:b0:5d2:7199:ae5 with SMTP id 4fb4d7f45d1cf-5db7d2e3014mr1246401a12.5.1737098819744;
-        Thu, 16 Jan 2025 23:26:59 -0800 (PST)
-Received: from smtpclient.apple (185.174.17.62.zt.hu. [185.174.17.62])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5db73edccd4sm1072439a12.77.2025.01.16.23.26.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2025 23:26:59 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1737103271; c=relaxed/simple;
+	bh=kGwC5vFFwzp3w+dyxaz6e/ANo3uETs7cf9+OazoI00A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rI4UNq2TDvXcsm/yfIaEoBdYmSZmW5Prhdcake+iXFjvv7wwTv2QNDCvC2VUZAN+YkZYrpxfxFYVmghpNQFOD+aEO8EYY0VzsSDU7XUzrejkERreiYBWPdZ7KEqAjcAAZYW18qp+ptjmTC14CK5Lg03uWhs3HDKb57rNXN6cxwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3Gr3JTF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B44C4CEDD;
+	Fri, 17 Jan 2025 08:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737103270;
+	bh=kGwC5vFFwzp3w+dyxaz6e/ANo3uETs7cf9+OazoI00A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n3Gr3JTF8hmWPXIiNSO1Avv80+CZsRG+ZZdaKq+av8p12+FcomDCLDZJnEZ6KOSul
+	 7S7Y4XKsiK9ATHyhow6VsigSFfS2WIOTRVlbuuoAXRxSmTgPr4XJR1J8XuPkkp5nlL
+	 Yiv+1424bVYMLa8qgXrZDlb/ogzSIhEblC4Azmzmh6CohwGAnDRt21jHVHZnMeLqQo
+	 QMqpi7MX+uggyXaGmZ3Y3ODNPv0UGPq4Srh3LlO8P/KKGxlvAD/2qmEU37GSixr8lj
+	 wiclioW1A1FmJ589KM53EHUR7FK/v3c+KnHS5A3wi51R8J1tqrxNPtywdZd05wKUY9
+	 ENIBGMAEE2VeA==
+Date: Fri, 17 Jan 2025 09:41:07 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v3 4/5] arm64: dts: amlogic: a4: add pinctrl node
+Message-ID: <20250117-fascinating-ape-of-upgrade-0c298b@krzk-bin>
+References: <20250115-amlogic-pinctrl-v3-0-2b8536457aba@amlogic.com>
+ <20250115-amlogic-pinctrl-v3-4-2b8536457aba@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH 10/12] dt-bindings: phy: allwinner: add v853 usb phy
-From: =?utf-8?B?QW5kcsOhcyBTemVtesWR?= <szemzo.andras@gmail.com>
-In-Reply-To: <Z4dpFqffMJ31ml2y@vaman>
-Date: Fri, 17 Jan 2025 08:26:46 +0100
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maxime Ripard <mripard@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org,
- linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2D99DF28-4CC0-443D-8E5F-A2AC12EE47B7@gmail.com>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-11-szemzo.andras@gmail.com> <Z4dpFqffMJ31ml2y@vaman>
-To: Vinod Koul <vkoul@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250115-amlogic-pinctrl-v3-4-2b8536457aba@amlogic.com>
 
+On Wed, Jan 15, 2025 at 02:42:02PM +0800, Xianwei Zhao wrote:
+> Add pinctrl device to support Amlogic A4 and add uart pinconf.
+> 
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi | 133 ++++++++++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> index de10e7aebf21..8eb95580d64a 100644
+> --- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> @@ -5,6 +5,7 @@
+>  
+>  #include "amlogic-a4-common.dtsi"
+>  #include <dt-bindings/power/amlogic,a4-pwrc.h>
+> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>  / {
+>  	cpus {
+>  		#address-cells = <2>;
+> @@ -48,3 +49,135 @@ pwrc: power-controller {
+>  		};
+>  	};
+>  };
+> +
+> +&apb {
+> +	periphs_pinctrl: pinctrl {
+> +		compatible = "amlogic,pinctrl-a4";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		gpiox: gpio@4100 {
+> +			reg = <0 0x4100 0 0x40>,
+> +			      <0 0x400c 0 0xc>;
 
+One line
 
-> On 15 Jan 2025, at 08:51, Vinod Koul <vkoul@kernel.org> wrote:
->=20
-> On 10-01-25, 13:39, Andras Szemzo wrote:
->> Document Allwinner v853 USB phy.
->>=20
->> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
->> ---
->> .../phy/allwinner,sun8i-v853-usb-phy.yaml     | 89 =
-+++++++++++++++++++
->> 1 file changed, 89 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml =
-b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
->> new file mode 100644
->> index 000000000000..773c3f476db8
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/phy/allwinner,sun8i-v853-usb-phy.yaml
->> @@ -0,0 +1,89 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: =
-http://devicetree.org/schemas/phy/allwinner,sun8i-v853-usb-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Allwinner V853 USB PHY
->> +
->> +maintainers:
->> +  - Chen-Yu Tsai <wens@csie.org>
->> +  - Maxime Ripard <mripard@kernel.org>
->> +
->> +properties:
->> +  "#phy-cells":
->> +    const: 1
->> +
->> +  compatible:
->> +    const:
->> +	- allwinner,sun8i-v853-usb-phy
->=20
-> Does this really need a new binding document, if so why... Cant this =
-be
-> added to one of the existing docs which driver uses?
->=20
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_X>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 18>;
+> +		};
+> +
+> +		gpiot: gpio@4140 {
+> +			reg = <0 0x4140 0 0x40>,
+> +			      <0 0x402c 0 0xc>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_T>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 23>;
+> +		};
+> +
+> +		gpiod: gpio@4180 {
+> +			reg = <0 0x4180 0 0x40>,
+> +			      <0 0x4040 0 0x8>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_D>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
+> +		};
+> +
+> +		gpioe: gpio@41c0 {
+> +			reg = <0 0x41c0 0 0x40>,
+> +			      <0 0x4048 0 0x4>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_E>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
+> +		};
+> +
+> +		gpiob: gpio@4240 {
+> +			reg = <0 0x4240 0 0x40>,
+> +			      <0 0x4000 0 0x8>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_B>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
+> +		};
+> +
+> +		gpioao: gpio@8e704 {
+> +			reg = <0 0x8e704 0 0x16>,
+> +			      <0 0x8e700 0 0x4>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_AO>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_AO<<8) 7>;
+> +		};
+> +
+> +		test_n: gpio@8e744 {
+> +			reg = <0 0x8e744 0 0x20>;
+> +			reg-names = "gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			bank-number = <AMLOGIC_GPIO_TEST_N>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
+> +		};
+> +
+> +		func-uart-a {
+> +			uart_a_default: group-uart-a-pins1 {
+> +				pinmux= <AML_PINMUX(AMLOGIC_GPIO_X, 11, 1)>,
 
-Yes, that was my first intention too, but didn=E2=80=99t know how to do =
-it propery, but I=E2=80=99ll remove it
-and add to one of the existing doc.
+Missing space before '='. Follow DTS coding style.
 
-> --=20
-> ~Vinod
+Best regards,
+Krzysztof
 
 
