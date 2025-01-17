@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-14917-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14918-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58354A154C1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 17:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B128BA154CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 17:50:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1F91188065B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:49:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A44F1881C7F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 16:50:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43B119F11B;
-	Fri, 17 Jan 2025 16:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC6119DF81;
+	Fri, 17 Jan 2025 16:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NQIcfOII"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FsjXtR70"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AE819DF66
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 16:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8C519E98C
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 16:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737132527; cv=none; b=Kg4Y3VAB6nPMmaF9oXUC47QE798ZLLx7vIY17ABejn3nawalHNirCEpcYh4Bn2EfIlLngm62dCRmn27Z2HKc4XHDYp+58SXqJFlXlgDKmEfFoyjTyJjYUFC0NAW7Ge4oSQn9Ww4nCgIh4tjATTtwEzcEmCYliTlqMboYw4lO1HE=
+	t=1737132602; cv=none; b=LRFCVmOiMszJbzPSFMMORcZsfu60OjB/cmlShYNhyWcQcUPKg3noGhe/rapN9ZcYtCS4iHC1znauRpqqPLnKYNVGlYpXB7sAM8aQY+t8RxPSeQz+uv2g5i9Z2uBO/4tbhGaRf50Rm1nJellaOhAJTpLsPsJm0YrW9ibJKI48RaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737132527; c=relaxed/simple;
-	bh=3OnRQg1PgHXP18jZMKFrCaYN+Ax26f2xIcEUu4yoq4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JYkmd+EmNpwIgitzRzv6QvlqcN/ofez8Vx+qkVnxl6654miFG2WyIRoWSmI7aIQj7CkM+02WZ1I2ii7K8eNit85tiRNnm40izGpxCiWiJ5s4VIFArlHFoTeV7MjMxLZPVaToM8TmhNZ4jOF8ahKTWvCLqJyjIAeBm37WXWHbMEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NQIcfOII; arc=none smtp.client-ip=209.85.161.54
+	s=arc-20240116; t=1737132602; c=relaxed/simple;
+	bh=FpxuBLNIQsGFKYYcEXAmg4dEIgJueftMuOKYIHyVmmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TiTp1HuTTwRGH30qGXplLmgy+Xmtu8WGiMDKNltbGoIsw2FAjEXi3Nr6F2xerkysajDmjd7MqrxAL+9tPOcNYsJextqouV8dhlxaGpcUxRr3qMUoCmMd+mUt/LCiVXK4JdcBtm1lc4wDzhHXSvaNY4ffxPPQwmHWqYIHaMxafI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FsjXtR70; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5f2dee7d218so992867eaf.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 08:48:45 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21a7ed0155cso38131365ad.3
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2025 08:50:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1737132525; x=1737737325; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1737132600; x=1737737400; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nOCqJban+aQHMwjTjERLufzbSg8fwywobEIblWBoTV8=;
-        b=NQIcfOIIAqCQ82TefnbF4cMqDrEamWNia+LdLOhin5NOPKMkpynG5hIkIsJgNyVJer
-         zvGc45tkY0TK+kLhhFx5VwlBucNvlmjaP4Vw85hGkr0BW+iP5vM0MULGalqTcz3FT4W5
-         Ghh5yg11Xb3gIGHvY8rDsSZpFltt40sE3uga8=
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbR8kLFTS4yK7aY/EmxJd5Q7gBcao7ndUZr1nGBUT5c=;
+        b=FsjXtR70cc9ILN3uyQ4f0I4rHHvhbzx3eqkgfjVkVADeKy7sOqMcCXakpws1vL19zk
+         Wvb87WJL1n8ryj7rg3bq4vM8J1V2ntwOjmCVbMeylG2XGh9VAOmjz99SC/w0uuNwEUCP
+         RSA8zmGYA0Wrdz/UgyL1NEhuUzcR9P1PMKQkw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737132525; x=1737737325;
+        d=1e100.net; s=20230601; t=1737132600; x=1737737400;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nOCqJban+aQHMwjTjERLufzbSg8fwywobEIblWBoTV8=;
-        b=j/14Y1queVmzgK+GgQmyikKctGt/wOcFH1yFGn9KuizaJBYO7iap6DSaIs9GHghwic
-         y6lKmmOciQKm6MDAd1tod0CQxv9hz22OU8H3fp+pNrU//WEaCFkKKsibIes61uK43YQF
-         RgPQop1tFlvxBTMSvIpEHYPfixKpsSozgrBzPfixMa43mbLeZkzCk8KmKNPaRkryYxzy
-         koyvCUfv83znzIQBOHrzTF5zhoJcrkKH3Slyroa3aGyoksPi5/zf1xw/jNfsbpkx3y1q
-         UywkNNdjEoV1C80czoakrmufDRyiYbL+hLeXYztePvm9WrmGkx2oa1CHEfJ7FJvM3EWN
-         yQLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUZbMdpbWJeGSnHCAZ6DG33/8NPxmYagfKOON6K1CuMBk4vPiPrPl34U2bMABIBTciU3SM5QyVcqr8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRU7D/uYQeFNsEvn6AbI5qZ4/W0oUCrzK58IIw96yaBFtZ8q+H
-	Bcj9f+rGI7d8EBuo0usUT/Tote2CWJGqiqoaOLhak9WqMoKCggqEGhOGgIH7mQ==
-X-Gm-Gg: ASbGnctraffcSoyar3qbn8Oeft21FHOdVxC9gi3/CV2091wGrBHJbeifQcUU4L3KeWn
-	84/Rbba5N4CManBocwIu8dr6QUSTvXfgAxrfTl6RPBT2L9QCEofJmIeIo8/YYb0LA3kt/ZATUxf
-	x2Z2RVZEvWYj58dxeXRbP0dO5et3GK9VQFnbnTWVeWWyL4ZNrk/sedQBqWgP4wwgESYeHe0GWx/
-	nn6Qm3IIaWdKkU9q8bg9HMJQRNpTQoU100cWRr4+RIXEG5USnr7FTCWmLGXh4kgdJtgHZE0HoCX
-	WnhGeBXjlcP4IahZ8xWObwT71/mu+9Y=
-X-Google-Smtp-Source: AGHT+IG+6zYsqMlXLOdK8WwBvGm4UwEaIHYSed7gkXBUcfoUUtYImtV/aSwwsZEDs0sAd2E6PHPHDg==
-X-Received: by 2002:a05:6820:8c1:b0:5f6:aa5c:8a6d with SMTP id 006d021491bc7-5fa3885aee0mr2294294eaf.4.1737132524952;
-        Fri, 17 Jan 2025 08:48:44 -0800 (PST)
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CbR8kLFTS4yK7aY/EmxJd5Q7gBcao7ndUZr1nGBUT5c=;
+        b=ljsnRov/BDASIqhHcINmit/6IftYpXeGvXzlw2yR6e+k6/oqy8gxcbyJIw3nMWnf6k
+         lznW4969hfxxlzhHdnEB80YU4BgS0HXau86hmcUSShUCYdJho1PNjlugeTkJZ1mhTKIs
+         L+86nLqXT81/AyWX0uGFq8HglyaDQmdiq6AhWz5F6gdGeLsHwNNuqgAwcbkZLiu1Bw/R
+         KlPGMuIMri8dsCjnWOXfdkYSr/qZj44NicABwJU8wAURZ44GswyHskHmlEsTByqbHphx
+         nbFluUUmda76VfvpmRv6rTceVaAHF10O/xdkm/JrFrgQNLNGAX931NgMqhQPTrR4VgiU
+         FSbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzWhq3MgqYD3feCS0Gh+qqErGOcwgrDG+x3SPWYcEs/e+64WGcfsC2QakF0snuE6FzxZk/QfV2va4d@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsgiCgY02aRjgpwUb3eVBrzixDsdgYQwjbgxL71VtO0kvXjQhq
+	HZiDWQgc8h2PXdvvEU68sYsrdmgaQVNEsrP3uV2hn52FlF5oot4kLvVdurWkVQ==
+X-Gm-Gg: ASbGncu+cHqbQaYCIBY/L30owq/JdDx+kYdd0j+F3DK3WqDJ0DY9n2g9/JVVlWLRX3Y
+	+K+UMzOul5AOuOv7g3A4SX+lkWP4FHnq1AoD99STvRJBe914mlIEMLhOL8uD8foSeJ4Hpbf9qgI
+	JXJGX086PSggPosgaqzyfC/Vwe1HHe+K0ImVpBURgTKnymgPnNzlzgM6xhycLRvkwN5UzgXis10
+	djyoXrcSjCg4cwuccRZJ8NuAjeV6gxWRF1yGJuWab6aM7FnbRZnzL1zoAoUvSTRaA5vvZD5KwI7
+	Qnh0NheEW3M5obRS2/hQYmjMY7pqUiw=
+X-Google-Smtp-Source: AGHT+IFaKYsJ5THFTqoF+Nj6i6KUhfHBV6KaSHY9X55z10j/BSWwcRP/2s3vh+3Yy/A7L88yCp2qCg==
+X-Received: by 2002:a17:902:d48a:b0:212:67a5:ab2d with SMTP id d9443c01a7336-21c35604a08mr63652045ad.44.1737132599690;
+        Fri, 17 Jan 2025 08:49:59 -0800 (PST)
 Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fa35fe1acfsm823090eaf.30.2025.01.17.08.48.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21c2d3aca04sm18337615ad.135.2025.01.17.08.49.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 08:48:43 -0800 (PST)
-Message-ID: <ca1f1710-1859-4464-8b7c-a105437c5026@broadcom.com>
-Date: Fri, 17 Jan 2025 08:48:41 -0800
+        Fri, 17 Jan 2025 08:49:58 -0800 (PST)
+Message-ID: <a70e8c45-97a8-4fb6-9b27-4f9ed020211c@broadcom.com>
+Date: Fri, 17 Jan 2025 08:49:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,8 +79,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 03/10] dt-bindings: pci: Add common schema for devices
- accessible through PCI BARs
+Subject: Re: [PATCH v6 01/10] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
 To: Andrea della Porta <andrea.porta@suse.com>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
  <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -105,8 +105,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  Herve Codina <herve.codina@bootlin.com>,
  Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <cover.1736776658.git.andrea.porta@suse.com>
- <c687b606c5ae6a4397dbf12c874c690da5e4b344.1736776658.git.andrea.porta@suse.com>
+ <ae94e78443099cb6c48528ac8b18daaaae41419a.1736776658.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -141,22 +142,49 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <c687b606c5ae6a4397dbf12c874c690da5e4b344.1736776658.git.andrea.porta@suse.com>
+In-Reply-To: <ae94e78443099cb6c48528ac8b18daaaae41419a.1736776658.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 1/13/2025 6:58 AM, Andrea della Porta wrote:
-> Common YAML schema for devices that exports internal peripherals through
-> PCI BARs. The BARs are exposed as simple-buses through which the
-> peripherals can be accessed.
-> 
-> This is not intended to be used as a standalone binding, but should be
-> included by device specific bindings.
+> Add device tree bindings for the clock generator found in RP1 multi
+> function device, and relative entries in MAINTAINERS file.
 > 
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   .../clock/raspberrypi,rp1-clocks.yaml         | 58 ++++++++++++++++++
+>   MAINTAINERS                                   |  6 ++
+>   .../clock/raspberrypi,rp1-clocks.h            | 61 +++++++++++++++++++
+>   3 files changed, 125 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+>   create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> new file mode 100644
+> index 000000000000..b2670cf7403a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RaspberryPi RP1 clock generator
+> +
+> +maintainers:
+> +  - Andrea della Porta <andrea.porta@suse.com>
+> +
+> +description: |
+> +  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
+> +  VIDEO), and each PLL output can be programmed though dividers to generate
+> +  the clocks to drive the sub-peripherals embedded inside the chipset.
+
+typo: though -> through
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
