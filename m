@@ -1,107 +1,152 @@
-Return-Path: <linux-gpio+bounces-14905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14906-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EBE8A151C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:26:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34AB7A151FE
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 15:40:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07160188D91D
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 14:26:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 629291692D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2025 14:40:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D6919EED2;
-	Fri, 17 Jan 2025 14:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E2D215E5B8;
+	Fri, 17 Jan 2025 14:40:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LeWZhI37"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qA6BXZKL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322E919CC0C;
-	Fri, 17 Jan 2025 14:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA9470825;
+	Fri, 17 Jan 2025 14:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737123800; cv=none; b=kWw4M+uL9GpW6Whplu4HfkkLbIIz+mE+lJ+K8jOhysdkJsSeU6KQcZUT9qrkKxrYYXfyBftrkbyMcsuVkHBzQR0cxQZAtTy18m/C6QAJoxqlwjSBppvxMYRKMxDkjWgg6Ap9ZVj/hYBveuVPxO5ALQKzpBSYmXplj5tBb88e/8s=
+	t=1737124819; cv=none; b=S4qRWp+8Xp0k57GmkUKmguZp8l1T1k8N4qbPm9g0xDfyNFAdoYnb9yUUcCGtVrEAYIlJ4RvoNFStdr3fUAdBelNuURuvFErzFnmZYKf4TgtTMVJjl/oEy6DPcYe2dXcmWVwz1wiFlvXH/qBqy/M64LZtd9nQ6XEUpFzoUoJOh+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737123800; c=relaxed/simple;
-	bh=iimgZOs9g8vQE0CqP6Y63dqla7aGMw++DUMSU6qigeQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h2xNXnCLS9zLwPfTjdfNMRLtxgx2SzE1YlUi+AxqRSh0Te0OKpOK3sH0LTCJtDofRJeLpUC6I5yLmeYaKlCFy6wZMvO78PhiwIz8T55oPXaElyst0nCTO6Lp/e9jEzxAUDc7p5nQQaFyYIh29Ql4rZ0Hs0qCJBLHsoN3huZC3nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LeWZhI37; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737123799; x=1768659799;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iimgZOs9g8vQE0CqP6Y63dqla7aGMw++DUMSU6qigeQ=;
-  b=LeWZhI37w1SRxUSTlU8AxN1G7UBp8wP1/DxNrCv8myS7efWzw6c8sjXa
-   uDnv60QeObTs5rruuJMk3nsPGiE7pVNJiJo5kLIygvr0AN9TvJnxrMk+T
-   8uUdpPJDMMfUv4AzwaZHJ40VdaGDZ72x+/R9VYVyrPFIg0KOhfgIm371q
-   BnR8vGNnVvX7zJSfpnMGnL9QI71rjlpXBeHcO+NZHdx2NZCXSRfHB+2iX
-   fRgQj3W/IXOMAOlsdGtRoEgN9653jkBiFCEkwr9+vEw93iIjfk1FPoo63
-   47a8m1W2CsId1oqeJtpPInYiutzBtQFoxNyXD8ZzZH+xPX5DQsKOQ8dhQ
-   g==;
-X-CSE-ConnectionGUID: ay836z5XRX+5GIgI205gag==
-X-CSE-MsgGUID: tQtdK6s6R1KP2G8sTGo6Iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="37792856"
-X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="37792856"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 06:23:14 -0800
-X-CSE-ConnectionGUID: XyNwdmJgRJ20wPIbCprzyg==
-X-CSE-MsgGUID: 62kDm0XmRw60sQ2LzYaJQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,212,1732608000"; 
-   d="scan'208";a="105671235"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 17 Jan 2025 06:23:12 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DE224725; Fri, 17 Jan 2025 16:23:07 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 16/16] pinctrl: cy8c95x0: Fix comment style
-Date: Fri, 17 Jan 2025 16:22:00 +0200
-Message-ID: <20250117142304.596106-17-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
-References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1737124819; c=relaxed/simple;
+	bh=ztDKhBkIzxT+MjV61TU9CzfLHD1NVtR+EdIQ0BKaqNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l5Ot5KotfWiOQoUtV5l/PqnPVBB/TXbi1eIxOzHptcYSsFP87a8vyi9SYjt6k0r3x7TwCci9WHVcLLeu8cv5hQLOvRYqP9GEL02Iz0DKmDOPku78PcjYvBGyA5YkV8dUGxHUfVXx/2/+fgBuhj035/oaPvIwYuftpR0vwcqvy9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qA6BXZKL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32EDC4CEDD;
+	Fri, 17 Jan 2025 14:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737124819;
+	bh=ztDKhBkIzxT+MjV61TU9CzfLHD1NVtR+EdIQ0BKaqNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qA6BXZKLmI6jhTfunyY7oj61mvuarIenGdaCai7Oo7pki+UECldWFgLN/XJqH+U0j
+	 kwBv/AZBAHZpUGka9Wz1KAhLEcu/g4gtnScO5IZEqJm4Fn1ZzsAT5WDQflXFLAHWaf
+	 w5eIQdZEcNhFeLgVmyHmCXQiNFTzP+GDOLhTuw6BO2DUfvCsYxkHnJii1AuqZNIDdf
+	 47FZ4tnjYar0hmOAc5j8RVwbRkPd6v4K9SWJczFy+Ns93P7QUKsAQ1xnm2wwnb3KfF
+	 HgCaldeaKEfC5l87mvlnVoIck0HiyIBR8IaLutd8jZpYxywm/1TAa51OoVa4aRL7h3
+	 TUiPfyiPVov/w==
+Date: Fri, 17 Jan 2025 15:40:16 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <v4bf6bharih6zgz52ya5twfyf47wh3fu56ovic5gjxak2jhufy@q3eudujjwrhm>
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-3-9519b4acb0b1@bootlin.com>
+ <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
+ <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qts6aw34gcdrduzd"
+Content-Disposition: inline
+In-Reply-To: <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
 
-One comment style is not aligned with the rest. Fix that.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--qts6aw34gcdrduzd
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 6ee21e697e43..b0e3d675dc8d 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -501,7 +501,8 @@ static int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
- 	if (ret < 0)
- 		return ret;
- 
--	/* Mimic what hardware does and update the cache when a WC bit is written.
-+	/*
-+	 * Mimic what hardware does and update the cache when a WC bit is written.
- 	 * Allows to mark the registers as non-volatile and reduces I/O cycles.
- 	 */
- 	if (cy8c95x0_wc_register(reg) && (mask & val)) {
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+On Fri, Jan 17, 2025 at 03:11:29PM +0100, Mathieu Dubois-Briand wrote:
+> On Fri Jan 17, 2025 at 10:33 AM CET, Uwe Kleine-K=F6nig wrote:
+> > Hello Mathieu,
+> >
+> > On Mon, Jan 13, 2025 at 01:42:27PM +0100, mathieu.dubois-briand@bootlin=
+=2Ecom wrote:
+> > > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ...
+> > > +static int max7360_pwm_apply(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > > +			     const struct pwm_state *state)
+> > > +{
+> > > +	struct max7360_pwm *max7360_pwm;
+> > > +	u64 duty_steps;
+> > > +	int ret;
+> > > +
+> > > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (state->period !=3D MAX7360_PWM_PERIOD_NS) {
+> > > +		dev_warn(&chip->dev,
+> > > +			 "unsupported pwm period: %llu, should be %u\n",
+> > > +			 state->period, MAX7360_PWM_PERIOD_NS);
+> > > +		return -EINVAL;
+> >
+> > Please don't emit error messages in .apply(). Also a driver is supposed
+> > to round down .period, so any value >=3D MAX7360_PWM_PERIOD_NS should be
+> > accepted.
+> >
+> > Also note that you might want to implement the waveform callbacks
+> > instead of .apply() and .get_state() for the more modern abstraction
+> > (with slightly different rounding rules).
+> >
+>=20
+> Sure, I just switched to the waveform callbacks, it was quite
+> straightforward.
 
+sounds great. Note that the detail in rounding that is different for
+waveforms is that a value that cannot be round down to a valid value
+(because it's too small) is round up. This is a bit ugly in the drivers
+but simplifies usage considerably. So you never return -EINVAL because
+the values don't fit.
+
+> Thanks for the reproduce steps: I saw the bug and fixed it. Also
+> MAX7360_PWM_MAX_RES had to be set to 255 and not 256...
+
+A good test (for a driver doing .apply/.get_state) is a sequence of
+increasing settings. So something like:
+
+	for p in range(1000, 10000):
+	    pwm_apply(period=3Dp, duty_cycle=3D0, ...)
+
+and also do the same for duty_cycle and also try decreasing series.
+
+Best regards
+Uwe
+
+--qts6aw34gcdrduzd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmeKa84ACgkQj4D7WH0S
+/k7OrAgAit3HCpMmHe0bRa+mj+PgWFq0h5PoGyeUiXpaxTnD+RHAQF4CRL2ZQs8u
+QkJrJzDL6/WsXHQ+BHbqSZzN5ZQsuP0gQSTDmrYXBI+FSLiBJ4K9ywXPfIMOJ/ui
+PCNuYZHiMPsjkj6K2b8IFg8pREloOXVeI1RzYJzST29dfacfPGCNsv4wb/Mcc0az
+Y3lMW+kwIydAv2IkL+L8C17ve8I8mT4qHJ8YrRyPmuFZlBHilujYtpVbkwOXAwUb
+nmCEqvrwN8EcBD1rrVurECecUzTo5me39AKZk3a4m5vyr4X6yjcSZNtct5yQFLDq
+mgASIK3WEUgllRlsgBrnPctVovtDhQ==
+=JwG4
+-----END PGP SIGNATURE-----
+
+--qts6aw34gcdrduzd--
 
