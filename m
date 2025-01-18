@@ -1,86 +1,154 @@
-Return-Path: <linux-gpio+bounces-14928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14929-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555B8A15B30
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2025 04:14:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0CEEA15C19
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2025 10:13:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F7C83A91E9
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2025 03:14:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F25C118836D0
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2025 09:13:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1D18634F;
-	Sat, 18 Jan 2025 03:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B1917C224;
+	Sat, 18 Jan 2025 09:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SH+nbyF5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4397BAEC;
-	Sat, 18 Jan 2025 03:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D791632D3;
+	Sat, 18 Jan 2025 09:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737170076; cv=none; b=kvAdaD5xne1ZDyYmVaMQ3MST86lb+EO3K81gSTyxOVdj7IIM1X8Bpw+Y8AkUp9UlGE1sV6YECj4Hn9hv1fg3di+Sj3ZQKEIrQV8YzwQTtPL4IB8o1R603BEvxltIq3OdeqJ6OvSSNAFGFk/ZmPnmUaNxYttRdO65r8Xr2h5+tkg=
+	t=1737191594; cv=none; b=tYYp+iSzghvqxGs9BZTqvodPwsA6VtJTMz+oZ4HMA6TbI0TYeflu8t3hf8/84o0RaMcqSc9dgeR08A9UJ3STNRAu9I5RZ3/nZgD5ojMa4uvowfymlkUiMk2NyVehJ063ODgGBElFJFBfnei7O1/aR14d9MuaTSC+xpBFP2TqB2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737170076; c=relaxed/simple;
-	bh=sE/V5thDQjRxU95DQy94FsY26DU9FBg2rxmLYhwApcw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vArTn3yZ/5rs+yyD502ujj9HU+a78eLWKbiGRvf16Sw0+3+fvSnJqbULU+3Zxtj6wOQQ5xIqA+x6CdMQRu5I4KjHmu3GeA9oUwp75UAXrSS65S/08zoMOuCisMvQO5bcWi4tQeankDcFhEbLMksHqD8szMrEl46d9f/RXUUpOGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YZh5X5GmkzjYCG;
-	Sat, 18 Jan 2025 10:54:24 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 518031401E9;
-	Sat, 18 Jan 2025 10:58:19 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 18 Jan
- 2025 10:58:18 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <linus.walleij@linaro.org>, <yuehaibing@huawei.com>
-CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] pinctrl: pistachio: Remove dead code in pistachio_gpio_register()
-Date: Sat, 18 Jan 2025 11:11:45 +0800
-Message-ID: <20250118031145.243104-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1737191594; c=relaxed/simple;
+	bh=MUQ5voLVemt+kelhaaFIJwaMgdhz0IGii3dF1Sgvl/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rl5JU914yfDFLo6yhaTJk211yEa/EhdabVkeEp7KxNVIsGKVfvN11aqoiJTOhfzRFeaqxTKd1qNBEvrQkN5f3cHYcbKGvMicT1pcpXaB//yRu2M3anRXi1U7t/pmg3JIxqSD+mw4kWsJrULhQqkxYfNDyore6PPLM2bpCu7dZRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SH+nbyF5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 376C1C4CED1;
+	Sat, 18 Jan 2025 09:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737191593;
+	bh=MUQ5voLVemt+kelhaaFIJwaMgdhz0IGii3dF1Sgvl/4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SH+nbyF5pfP92lYbAZViosCRfe7m0iFRe41lx1vaCB/jhLDZZfxXCWExWGRjP6Tt1
+	 QjbcNFNuHMQH8PToGCoKQqszn4kDKxXSIrGdSxDMO2fI+EsmLNuBJ76SEILgtc6JHv
+	 0orsSQ7Dqh1vnWe8m+mUaUHyIatpIMWbptRZldVSjhFccFzi+tzM9hhkyFptHrQxaZ
+	 kYaCuZ5Ei0jd5nLt19HaTDQd34JqE9+XCXL1mLQc8Vy0qMBy2XxptrYdmwDOckJkYH
+	 J0L6a1tSil/RDsl9URsnB12IjSI6GwHAFpXvh0nfgqm6dB8atpQ1t2EWlgsxsRRsUD
+	 1F1IclRR/HriA==
+Message-ID: <76ab492e-ae9c-46eb-bf2e-d794863baf8d@kernel.org>
+Date: Sat, 18 Jan 2025 10:13:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: mediatek: add support for
+ mt8196
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Cathy Xu <ot_cathy.xu@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>,
+ wenbin.mei@mediatek.com, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Guodong Liu <guodong.liu@mediatek.com>
+References: <20250110104703.13625-1-ot_cathy.xu@mediatek.com>
+ <20250110104703.13625-2-ot_cathy.xu@mediatek.com>
+ <dnjtaapqbn6zy55k5ky7zltswkbg7cjh2xwlnrmqdiz7tfm6rc@wbepc5koem6e>
+ <66218a3c-04c5-42ea-ba9c-e0fbc72ed16f@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <66218a3c-04c5-42ea-ba9c-e0fbc72ed16f@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-fwnode_irq_get() was changed to not return 0, so this check is dead code now.
+On 13/01/2025 14:20, AngeloGioacchino Del Regno wrote:
+>>> +
+>>> +        properties:
+>>> +          pinmux:
+>>> +            description:
+>>> +              Integer array, represents gpio pin number and mux setting.
+>>> +              Supported pin number and mux varies for different SoCs, and are
+>>> +              defined as macros in dt-bindings/pinctrl/mt8196-pinfunc.h
+>>> +              directly, for this SoC.
+>>> +
+>>> +          drive-strength:
+>>> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
+>>> +
+>>> +          drive-strength-microamp:
+>>> +            enum: [125, 250, 500, 1000]
+>>
+>> Why duplicating properties? No, use only one.
+>>
+> 
+> The problem here is not entirely about duplicating properties, and I'm not
+> sure that the reason is actually acceptable (but being this a special case
+> the `description` field would be mandatory to have IMO!!).
+> 
+> So, the reason for this separation is that the drive-strength-microamp does
+> activate a special feature in the controller called "advanced drive strength
+> mode", which is switching to different shunts that will decrease the power
+> efficiency of the chip (by an ignorable amount, if that's one pin - but if
+> that goes to something like 100 pins, it's not ignorable anymore).
+> 
+> I'd be happy if we could let them retain both properties after putting a
+> clear description of what's happening and why there are two of them.
+It would be fine then, but please add some sort of description to these
+fields documenting that difference.
 
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- drivers/pinctrl/pinctrl-pistachio.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
-index 53408344927a..8c50e0091b32 100644
---- a/drivers/pinctrl/pinctrl-pistachio.c
-+++ b/drivers/pinctrl/pinctrl-pistachio.c
-@@ -1393,12 +1393,6 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 			dev_err(pctl->dev, "Failed to retrieve IRQ for bank %u\n", i);
- 			goto err;
- 		}
--		if (!ret) {
--			fwnode_handle_put(child);
--			dev_err(pctl->dev, "No IRQ for bank %u\n", i);
--			ret = -EINVAL;
--			goto err;
--		}
- 		irq = ret;
- 
- 		bank = &pctl->gpio_banks[i];
--- 
-2.34.1
-
+Best regards,
+Krzysztof
 
