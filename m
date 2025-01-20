@@ -1,1117 +1,282 @@
-Return-Path: <linux-gpio+bounces-14943-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14944-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 791C9A16B11
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 11:55:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E968A16C77
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 13:42:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C0CF7A26F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 10:55:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F7951889836
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 12:42:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EAA51C2335;
-	Mon, 20 Jan 2025 10:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1801E0B67;
+	Mon, 20 Jan 2025 12:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8eua7+4"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="geCnwOdj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB65D1B87CA;
-	Mon, 20 Jan 2025 10:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4D1DF993;
+	Mon, 20 Jan 2025 12:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737370491; cv=none; b=c7EtcYRHRjCzl+jrW2hKwNtAPFQErycvVsovT9ZL919ykM+qTxzE18YfcVPLJ0KBDNwhvBWACSLJSCIEaIaibMuquHQojmq1bHFA8a7+drbuEGqXYRVqcoqnxTuNpkyFqUUar9XqVN3MO8yRVp5onnQurSOoJsqExi2LqHVtfWg=
+	t=1737376932; cv=none; b=e1aofXXgz2uuI0ltXIX5Jisl9hxSum1A/1GXIoWVw2kZCku9HXfupaIsL8rOVgP3Hjs/eAAtkb8xIyHLt1x/eM23H2PvbWbBa9aGENZnL9G4hRD7YZcP6ut7RIgkdHeWO5iUlIje+mv4tB3M/zmjVvzpocA5neUOTgj39v+cVis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737370491; c=relaxed/simple;
-	bh=r6C51u+gCX/5goFNLJ9mAzdiixcXdSV0hpGNrdl+ce4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VFJQeFBq/qRI9leCnvLA9h9k/evoKf61WbXtAy4m/DNBbUrNBpmQVhf5k1+8hd2wGyfseUwEIBkvexYFT1qHjcp/zShRa47V5TMXElnDk8zUhISNAHJEnduZg1JsstV0rhxK/hPDD3bNsGshhI7/9Mo19euW0lPMzvKatbyukQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8eua7+4; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2340171f8f.0;
-        Mon, 20 Jan 2025 02:54:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737370487; x=1737975287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZAX3Sjpxb6oQ6j2BvFefxhVSpgJex7rin6i104p1qxA=;
-        b=Z8eua7+4juwpYB/bwfLVmTId0Hr/nmmrKEaEnAM8SFnFfROzkVrYc6/IJbJ6WZSgQL
-         B0WBcTVg3XAYVhrh1AUsntWqYaJV6eSZ+5YnZYlv2DzYFcE+gA808S8ym+94gPmenotQ
-         Fd05otjvbODhhKTx/e21FiZAWb3t25s7mNmwUppfv6c0caactKtUmgJ9sqSKYnhg/+xH
-         PwLvjCek9r/5/SZvbUAy/tX40gaD+r16dMqiaJeNBmpP3sVAzTF3+B3Nq52njBQcu/bC
-         tczP0MkTr3ANGcDvvySt85sxAoCBkEQlecvT4ewEj80WEFzVqL3Kf9Zg0jzcIlEEzq5H
-         VS7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737370487; x=1737975287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZAX3Sjpxb6oQ6j2BvFefxhVSpgJex7rin6i104p1qxA=;
-        b=h7VuC8lbMtYC+EF2fA+V0A0NSKqU9BmgseCpe7m05suc+P0bR71zVC2RFw0r0QDCTf
-         9vmfImB5cZiCJk4OLomRq+oUMpsxx4iqEINKbg6oPOLdyqyPmANmeq1FkhP39Uyu7zDe
-         jZ8h5tY2KHMoSsCcRD1m3oAFB1pkzaI2YnaeqpbupPXAGsFwQWVBilJN2uEuupO4q4go
-         TuYwXxdiRmK/N8xMjjvn04J8tw0oyGDOqR1+TrKBKQkrqmfXY7bSIiYDYJwKMBZR/wn4
-         lw0CUXpHBEhJ8/yP2t+B4gkP2+UqKenD0XoPpeX7NXY5u2W7/2otpNfJDD9t7vqa7VE+
-         3LBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1xmB68aMOFQbgUIHU29MXdUNqLPQ9K4Xt9Xxzy1BBdhKB7nEmSDpqwaPN3DNba2HdG3ZMmQEnry2tSp+p@vger.kernel.org, AJvYcCVLTzGoQo/W/K7tI9x0kcUAS31nXXGqBqxHM5wxjYj+4tYUih/sR2tDtyxgel8tLWNyr9tDA7EPk+aW@vger.kernel.org, AJvYcCXbUlkN90f1fUgHgWpmhfOomuPt0J/4ip5rHfBPOjE92GSvBtmO/tNJHsaJOtlO8fTKa+FslUE0G/o7/g==@vger.kernel.org, AJvYcCXcaFQ0GrNv6rTQZ7xmZ6aq6ZF1wDpveOArj61mQq82Db3lYXYco8Dco9yzSF3NwR6iSvgSC369iIP6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfcandVDePMNKmaFLAr6zuxO0rG+Vt0RKAbC41mKOhxlDvkM2R
-	LMDfr+ziwQGYoeVPOIZzwC4cV/CucGdOJ4Kc12BrdUa8yru2cTZM
-X-Gm-Gg: ASbGncvMOydxfw9ctQbmlZeQbhBQw/XRhML57qeOSqemX8bgDBSlutApYeQgp3zvAPX
-	J8OZ3mFAZwKjbWv2rFxvLdoN0LT+tvrrHwVHn3g78yCSgDAPNwmrad2ZEtXNiQxeQunwy8izeFn
-	/vSPx/yCvOyt60Jj9UvsJn83eB4AaTviFaNlosEu48sF8ShoXYp4Iclepch2UIc1kn4vNkkKouo
-	WLCNHL9DjsXPcnzCOZKnDJhC4xY+iAq/6i3oOr8rV5af7QroedFMwsglKKpaaS5Rz7AD3P/gqfa
-	P/D70A==
-X-Google-Smtp-Source: AGHT+IEaxxZJakUkLpwqr3Dz2xQ4nD/6k6K8zinMZ3+ojHxsG4ohMWrO9yokOt/ze3uP67WRc/UTrg==
-X-Received: by 2002:a5d:588a:0:b0:387:8752:5691 with SMTP id ffacd0b85a97d-38bf57c0879mr9983627f8f.47.1737370486631;
-        Mon, 20 Jan 2025 02:54:46 -0800 (PST)
-Received: from demon-pc.localdomain ([86.121.79.71])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf321537dsm10222411f8f.13.2025.01.20.02.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 02:54:46 -0800 (PST)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH 2/2] iio: amplifiers: add ADA4255 driver
-Date: Mon, 20 Jan 2025 12:54:25 +0200
-Message-ID: <20250120105429.183004-2-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250120105429.183004-1-demonsingur@gmail.com>
-References: <20250120105429.183004-1-demonsingur@gmail.com>
+	s=arc-20240116; t=1737376932; c=relaxed/simple;
+	bh=4buDT01o+ogkMLuBe/lVOY9SSe5oxu1NeJw/qESAoWE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hJ0vMqMhiFYEvnAU2Mtpzl6GcGMDP/23aMict9H3n28G7NA055ZlB0w594KnqzcbNfflvUgO6ZU/2k2mT/PBe4W79s5mG3nG2/PgmOaAWoWRKR93vTl/lofdkA9S94+LlHHqi0QaP5OUGuVha/JOKJI9RtV5QdIMvZj1shoMq8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=geCnwOdj; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1737376928;
+	bh=4buDT01o+ogkMLuBe/lVOY9SSe5oxu1NeJw/qESAoWE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=geCnwOdjgZ1CvL2aCSZU72KpP7iYX76xdIjm45dgqCiR2nqRUzCFf442ZYJ3i8vmj
+	 ADTCelvCDXcwXyeHiY04tqxrRHrDphkMHmK0cdZ2DPYG4GHC+pwDazBRQrU4Ow+1bG
+	 qHX3xu38aWVbcFnh42zqPHphrQFEpQNjvkfeuuwXIaaW/3DLxKE+w4S3yUFHDQ+que
+	 xFFgtYX+jMZJTJj0cMNVicZd8mZslwCZEMrtPC3oBemDjhANLZ6efVAoPfcDXTH07U
+	 Qte/P6404Ye+rvePMwsOlggg7bx6MuZenkUMUlpfnGCxj9lvBePR3oJhBQgKN30KeF
+	 jBqFqelOLz31g==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7CA0A17E0FAA;
+	Mon, 20 Jan 2025 13:42:07 +0100 (CET)
+Message-ID: <e7d49bda-8aaa-4897-8117-ab889fb27be0@collabora.com>
+Date: Mon, 20 Jan 2025 13:42:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: mediatek: add support for
+ mt8196
+To: =?UTF-8?B?Q2F0aHkgWHUgKOiuuOWNjuWptyk=?= <ot_cathy.xu@mediatek.com>,
+ "krzk@kernel.org" <krzk@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ =?UTF-8?B?TGVpIFh1ZSAo6Jab56OKKQ==?= <Lei.Xue@mediatek.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ =?UTF-8?B?V2VuYmluIE1laSAo5qKF5paH5b2sKQ==?= <Wenbin.Mei@mediatek.com>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+ =?UTF-8?B?R3VvZG9uZyBMaXUgKOWImOWbveagiyk=?= <Guodong.Liu@mediatek.com>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "sean.wang@kernel.org" <sean.wang@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>
+References: <20250115063555.32492-1-ot_cathy.xu@mediatek.com>
+ <20250115063555.32492-2-ot_cathy.xu@mediatek.com>
+ <nmyxygrya6cpalmirsunvkx32uox3kjxd4l5ggdhjtj7edyizz@yodolm5ktboo>
+ <f7ba63c8afcef1d1925d51e35e4b81f0d0e773ff.camel@mediatek.com>
+ <d04bc250-2104-4e02-9bf8-5785f4444c8d@kernel.org>
+ <d11076d3eb2f92018fd3e26cae665a47f71ca838.camel@mediatek.com>
+ <b212d05d-de3b-41b2-bc48-c6b79ae54a8b@kernel.org>
+ <bec17d1e215a11daa1fdede78c8070c8e1763c72.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <bec17d1e215a11daa1fdede78c8070c8e1763c72.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The ADA4255 is a  precision programmable gain instrumentation amplifier
-(PGIA) with integrated bipolar charge pumps.
+Il 20/01/25 10:17, Cathy Xu (许华婷) ha scritto:
+> On Thu, 2025-01-16 at 11:20 +0100, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On 16/01/2025 09:18, Cathy Xu (许华婷) wrote:
+>>> On Thu, 2025-01-16 at 08:28 +0100, Krzysztof Kozlowski wrote:
+>>>> External email : Please do not click links or open attachments
+>>>> until
+>>>> you have verified the sender or the content.
+>>>>
+>>>>
+>>>> On 16/01/2025 03:20, Cathy Xu (许华婷) wrote:
+>>>>>>> +          bias-pull-down:
+>>>>>>> +            oneOf:
+>>>>>>> +              - type: boolean
+>>>>>>> +              - enum: [100, 101, 102, 103]
+>>>>>>> +                description: mt8196 pull down PUPD/R0/R1
+>>>>>>> type
+>>>>>>> define value.
+>>>>>>> +              - enum: [200, 201, 202, 203, 204, 205, 206,
+>>>>>>> 207]
+>>>>>>> +                description: mt8196 pull down RSEL type
+>>>>>>> define
+>>>>>>> value.
+>>>>>>
+>>>>>> Not much improved.
+>>>>>
+>>>>>    I have removed the content related to 'resistance value', we
+>>>>> use
+>>>>> 'RSEL' instead of 'resistance value'.
 
-With its integrated charge pumps, the ADA4255 internally produces the
-high voltage bipolar supplies needed to achieve a wide input voltage
-range (38V typical with VDDCP = 5V) without lowering input impedance.
+This is wrong.
 
-The charge pump topology of the ADA4255 allows channels to be isolated
-with only low voltage components, reducing complexity, size, and
-implementation time in industrial and process control systems.
+>>>>
+>>>> So the value in Ohms was removed? I assume above do not have
+>>>> known
+>>>> value
+>>>> in Ohms?
+>>>
+>>>    Yes, value in Ohns was removed, no code have knowm value.
+>>
+>> Does the hardware have known value in Ohms?
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
- MAINTAINERS                      |   1 +
- drivers/iio/amplifiers/Kconfig   |  12 +
- drivers/iio/amplifiers/Makefile  |   1 +
- drivers/iio/amplifiers/ada4255.c | 937 +++++++++++++++++++++++++++++++
- 4 files changed, 951 insertions(+)
- create mode 100644 drivers/iio/amplifiers/ada4255.c
+It does.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index be46db0866011..f16c0ba60e53f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1411,6 +1411,7 @@ L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/amplifiers/adi,ada4255.yaml
-+F:	drivers/iio/amplifiers/ada4255.c
- 
- ANALOG DEVICES INC ADF4377 DRIVER
- M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
-index 55eb16b32f6c9..4fad09f8bddd3 100644
---- a/drivers/iio/amplifiers/Kconfig
-+++ b/drivers/iio/amplifiers/Kconfig
-@@ -36,6 +36,18 @@ config ADA4250
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ada4250.
- 
-+config ADA4255
-+	tristate "Analog Devices ADA4255 Instrumentation Amplifier"
-+	depends on SPI
-+	select REGMAP_SPI
-+	help
-+	  Say yes here to build support for Analog Devices AD4254 and
-+	  ADA4255 SPI Instrumentation Amplifiers. The driver provides
-+	  direct access via sysfs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ada4255.
-+
- config HMC425
- 	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
- 	depends on GPIOLIB
-diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
-index 2126331129cf6..3a43a42106d23 100644
---- a/drivers/iio/amplifiers/Makefile
-+++ b/drivers/iio/amplifiers/Makefile
-@@ -6,4 +6,5 @@
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_AD8366) += ad8366.o
- obj-$(CONFIG_ADA4250) += ada4250.o
-+obj-$(CONFIG_ADA4255) += ada4255.o
- obj-$(CONFIG_HMC425) += hmc425a.o
-diff --git a/drivers/iio/amplifiers/ada4255.c b/drivers/iio/amplifiers/ada4255.c
-new file mode 100644
-index 0000000000000..8d25ffa7baa6c
---- /dev/null
-+++ b/drivers/iio/amplifiers/ada4255.c
-@@ -0,0 +1,937 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2022 Analog Devices, Inc.
-+ * Author: Cosmin Tanislav <cosmin.tanislav@analog.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+
-+#include <linux/iio/iio.h>
-+
-+#define ADA4255_GAIN_MUX_REG			0x00
-+#define ADA4255_GAIN_G4_MASK			BIT(7)
-+#define ADA4255_GAIN_G3_0_MASK			GENMASK(6, 3)
-+
-+#define ADA4255_RESET_REG			0x01
-+#define ADA4255_RESET_MASK			BIT(0)
-+
-+#define ADA4255_SYNC_CFG_REG			0x02
-+#define ADA4255_SYNC_CLK_CP_SEL_MASK		BIT(7)
-+#define ADA4255_SYNC_CLK_OUT_SEL_MASK		BIT(6)
-+#define ADA4255_SYNC_MASK			GENMASK(2, 0)
-+
-+#define ADA4255_GPIO_DATA_REG			0x05
-+
-+#define ADA4255_INPUT_MUX_REG			0x06
-+
-+#define ADA4255_GPIO_DIR_REG			0x08
-+
-+#define ADA4255_SF_CFG_REG			0x0c
-+#define ADA4255_INT_CLK_OUT_MASK		BIT(5)
-+#define ADA4255_EXT_CLK_IN_MASK			BIT(4)
-+
-+#define ADA4255_TEST_MUX_REG			0x0e
-+#define ADA4255_GAIN_G5_MASK			BIT(7)
-+
-+#define AD4255_EX_CURRENT_CFG_REG		0x0f
-+#define AD4255_EX_CURRENT_SEL_MASK		BIT(6)
-+#define AD4255_EX_CURRENT_MASK			GENMASK(3, 0)
-+
-+#define ADA4255_IN_GAINS_NUM			12
-+#define ADA4255_OUT_GAINS_NUM			3
-+#define ADA4255_GAINS_NUM			(ADA4255_IN_GAINS_NUM * \
-+						 ADA4255_OUT_GAINS_NUM)
-+
-+#define ADA4255_GPIO_NUM			7
-+#define ADA4255_GPIO_MASK(x)			BIT(x)
-+#define ADA4255_GPIO4_OFFSET			4
-+
-+#define ADA4255_CLK_FREQ_HZ_MIN			800000
-+#define ADA4255_CLK_FREQ_HZ_MAX			1200000
-+#define ADA4255_CLK_DIVIDER_MAX			5
-+
-+#define ADA4255_NAME				"ada4255"
-+
-+#define ada4255_from_clk_hw(hw) \
-+	container_of(hw, struct ada4255_state, int_clk_hw)
-+
-+struct ada4255_chip_info {
-+	const char			*name;
-+	bool				has_charge_pump;
-+};
-+
-+struct ada4255_state {
-+	struct spi_device		*spi;
-+	struct regmap			*regmap;
-+	struct clk			*mclk;
-+	const struct ada4255_chip_info	*chip_info;
-+
-+	/*
-+	 * Synchronize consecutive regmap operations.
-+	 */
-+	struct mutex			lock;
-+	struct gpio_chip		gc;
-+	struct notifier_block		ext_clk_nb;
-+	struct clk_hw			int_clk_hw;
-+
-+	bool				gpio4_clk_en;
-+	bool				int_clk_out_en;
-+};
-+
-+/*
-+ * The following table is generated by iterating through all the available
-+ * output gains (1 / 1, 5 / 4, 11 / 8), and available input gains (1 / 16
-+ * through 128, in powers of 2), and multiplying them together.
-+ */
-+static const unsigned int ada4255_gain_tbl[ADA4255_GAINS_NUM][2] = {
-+	{   0,  62500000 },
-+	{   0,  78125000 },
-+	{   0,  85937500 },
-+	{   0, 125000000 },
-+	{   0, 156250000 },
-+	{   0, 171875000 },
-+	{   0, 250000000 },
-+	{   0, 312500000 },
-+	{   0, 343750000 },
-+	{   0, 500000000 },
-+	{   0, 625000000 },
-+	{   0, 687500000 },
-+	{   1 },
-+	{   1, 250000000 },
-+	{   1, 375000000 },
-+	{   2 },
-+	{   2, 500000000 },
-+	{   2, 750000000 },
-+	{   4 },
-+	{   5 },
-+	{   5, 500000000 },
-+	{   8 },
-+	{  10 },
-+	{  11 },
-+	{  16 },
-+	{  20 },
-+	{  22 },
-+	{  32 },
-+	{  40 },
-+	{  44 },
-+	{  64 },
-+	{  80 },
-+	{  88 },
-+	{ 128 },
-+	{ 160 },
-+	{ 176 },
-+};
-+
-+/*
-+ * G5 bit is stored in a separate register compared to the rest of the gain
-+ * bits. G4 is functionally grouped together with G5, while being stored in
-+ * the same register as the G3 to G0 bits.
-+ * Keep a table containing all the gain bit values for the corresponding
-+ * gains for simplicity.
-+ */
-+static const unsigned int ada4255_gain_reg_tbl[ADA4255_GAINS_NUM][3] = {
-+	{ 0, 0, 0 },
-+	{ 1, 0, 0 },
-+	{ 0, 1, 0 },
-+	{ 0, 0, 1 },
-+	{ 1, 0, 1 },
-+	{ 0, 1, 1 },
-+	{ 0, 0, 2 },
-+	{ 1, 0, 2 },
-+	{ 0, 1, 2 },
-+	{ 0, 0, 3 },
-+	{ 1, 0, 3 },
-+	{ 0, 1, 3 },
-+	{ 0, 0, 4 },
-+	{ 1, 0, 4 },
-+	{ 0, 1, 4 },
-+	{ 0, 0, 5 },
-+	{ 1, 0, 5 },
-+	{ 0, 1, 5 },
-+	{ 0, 0, 6 },
-+	{ 1, 0, 6 },
-+	{ 0, 1, 6 },
-+	{ 0, 0, 7 },
-+	{ 1, 0, 7 },
-+	{ 0, 1, 7 },
-+	{ 0, 0, 8 },
-+	{ 1, 0, 8 },
-+	{ 0, 1, 8 },
-+	{ 0, 0, 9 },
-+	{ 1, 0, 9 },
-+	{ 0, 1, 9 },
-+	{ 0, 0, 10 },
-+	{ 1, 0, 10 },
-+	{ 0, 1, 10 },
-+	{ 0, 0, 11 },
-+	{ 1, 0, 11 },
-+	{ 0, 1, 11 },
-+};
-+
-+static const unsigned int ada4255_ch_input_mux_tbl[] = {
-+	0b01100000, 0b00011000
-+};
-+
-+static const unsigned int ada4255_excitation_current_ua_tbl[] = {
-+	0, 100, 200, 300, 400, 500, 600, 700, 800,
-+	900, 1000, 1100, 1200, 1300, 1400, 1500
-+};
-+
-+static const unsigned int ada4255_clk_cp_sel_hz_tbl[] = {
-+	16000000, 8000000
-+};
-+
-+static const unsigned int ada4255_int_clk_rate_hz_tbl[] = {
-+	1000000, 125000,
-+};
-+
-+static int _ada4255_find_tbl_index(const unsigned int *tbl, unsigned int tbl_len,
-+				   unsigned int val, unsigned int *index)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < tbl_len; i++)
-+		if (val == tbl[i]) {
-+			*index = i;
-+			return 0;
-+		}
-+
-+	return -EINVAL;
-+}
-+
-+#define ada4255_find_tbl_index(tbl, val, index)	\
-+	_ada4255_find_tbl_index(tbl, ARRAY_SIZE(tbl), val, index)
-+
-+static int ada4255_gpio_set_output(struct ada4255_state *st, unsigned int offset,
-+				   bool output)
-+{
-+	return regmap_update_bits(st->regmap, ADA4255_GPIO_DIR_REG,
-+				  ADA4255_GPIO_MASK(offset),
-+				  output ? ADA4255_GPIO_MASK(offset) : 0);
-+}
-+
-+static int ada4255_gpio_init_valid_mask(struct gpio_chip *gc,
-+					unsigned long *valid_mask,
-+					unsigned int ngpios)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+
-+	assign_bit(ADA4255_GPIO4_OFFSET, valid_mask, !st->gpio4_clk_en);
-+
-+	return 0;
-+}
-+
-+static int ada4255_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, ADA4255_GPIO_DIR_REG, &val);
-+	if (ret)
-+		return ret;
-+
-+	return val & ADA4255_GPIO_MASK(offset) ? GPIO_LINE_DIRECTION_OUT
-+					       : GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int ada4255_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+
-+	return ada4255_gpio_set_output(st, offset, false);
-+}
-+
-+static int ada4255_gpio_direction_output(struct gpio_chip *gc, unsigned int offset,
-+					 int value)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+
-+	return ada4255_gpio_set_output(st, offset, true);
-+}
-+
-+static int ada4255_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, ADA4255_GPIO_DATA_REG, &val);
-+	if (ret)
-+		return ret;
-+
-+	return val & ADA4255_GPIO_MASK(offset);
-+}
-+
-+static void ada4255_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct ada4255_state *st = gpiochip_get_data(gc);
-+	struct device *dev = &st->spi->dev;
-+	int ret;
-+
-+	ret = regmap_update_bits(st->regmap, ADA4255_GPIO_DATA_REG,
-+				 ADA4255_GPIO_MASK(offset),
-+				 value ? ADA4255_GPIO_MASK(offset) : 0);
-+	if (ret)
-+		dev_err(dev, "Failed to set GPIO %u output value, err: %d\n",
-+			offset, ret);
-+}
-+
-+static int ada4255_set_gain(struct ada4255_state *st, int val, int val2)
-+{
-+	ssize_t tbl_len = ARRAY_SIZE(ada4255_gain_tbl);
-+	unsigned int i, g5, g4, g3_0;
-+	int ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(ada4255_gain_tbl); i++)
-+		if (val == ada4255_gain_tbl[i][0] &&
-+		    val2 == ada4255_gain_tbl[i][1])
-+			break;
-+
-+	if (i == tbl_len)
-+		return -EINVAL;
-+
-+	g5 = ada4255_gain_reg_tbl[i][0];
-+	g4 = ada4255_gain_reg_tbl[i][1];
-+	g3_0 = ada4255_gain_reg_tbl[i][2];
-+
-+	mutex_lock(&st->lock);
-+
-+	ret = regmap_update_bits(st->regmap, ADA4255_TEST_MUX_REG,
-+				 ADA4255_GAIN_G5_MASK,
-+				 FIELD_PREP(ADA4255_GAIN_G5_MASK, g5));
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_update_bits(st->regmap, ADA4255_GAIN_MUX_REG,
-+				 ADA4255_GAIN_G4_MASK | ADA4255_GAIN_G3_0_MASK,
-+				 FIELD_PREP(ADA4255_GAIN_G4_MASK, g4) |
-+				 FIELD_PREP(ADA4255_GAIN_G3_0_MASK, g3_0));
-+
-+out:
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
-+static int ada4255_get_gain(struct ada4255_state *st, int *val, int *val2)
-+{
-+	ssize_t tbl_len = ARRAY_SIZE(ada4255_gain_reg_tbl);
-+	unsigned int i, gain, test_gain, g5, g4, g3_0;
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+
-+	ret = regmap_read(st->regmap, ADA4255_GAIN_MUX_REG, &gain);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read(st->regmap, ADA4255_TEST_MUX_REG, &test_gain);
-+
-+out:
-+	mutex_unlock(&st->lock);
-+
-+	if (ret)
-+		return ret;
-+
-+	g5 = FIELD_GET(ADA4255_GAIN_G5_MASK, test_gain);
-+	g4 = FIELD_GET(ADA4255_GAIN_G4_MASK, gain);
-+	g3_0 = FIELD_GET(ADA4255_GAIN_G3_0_MASK, gain);
-+
-+	for (i = 0; i < ARRAY_SIZE(ada4255_gain_reg_tbl); i++)
-+		if (g5 == ada4255_gain_reg_tbl[i][0] &&
-+		    g4 == ada4255_gain_reg_tbl[i][1] &&
-+		    g3_0 == ada4255_gain_reg_tbl[i][2])
-+			break;
-+
-+	if (i == tbl_len)
-+		return -EINVAL;
-+
-+	*val = ada4255_gain_tbl[i][0];
-+	*val2 = ada4255_gain_tbl[i][1];
-+
-+	return IIO_VAL_INT_PLUS_NANO;
-+}
-+
-+static int ada4255_get_ch_en(struct ada4255_state *st, unsigned int ch, int *val)
-+{
-+	unsigned int ch_val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, ADA4255_INPUT_MUX_REG, &ch_val);
-+	if (ret)
-+		return ret;
-+
-+	*val = ch_val == ada4255_ch_input_mux_tbl[ch];
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int ada4255_set_ch_en(struct ada4255_state *st, unsigned int ch, int val)
-+{
-+	unsigned int ch_val = val ? ada4255_ch_input_mux_tbl[ch] : 0;
-+	int current_val;
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+
-+	ret = ada4255_get_ch_en(st, ch, &current_val);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (current_val == val) {
-+		ret = 0;
-+		goto out;
-+	}
-+
-+	ret = regmap_write(st->regmap, ADA4255_INPUT_MUX_REG, ch_val);
-+
-+out:
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
-+static const struct regmap_config ada4255_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int ada4255_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long info)
-+{
-+	struct ada4255_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return ada4255_get_gain(st, val, val2);
-+	case IIO_CHAN_INFO_ENABLE:
-+		return ada4255_get_ch_en(st, chan->channel, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ada4255_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long info)
-+{
-+	struct ada4255_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return ada4255_set_gain(st, val, val2);
-+	case IIO_CHAN_INFO_ENABLE:
-+		return ada4255_set_ch_en(st, chan->channel, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ada4255_read_avail(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      const int **vals, int *type, int *length,
-+			      long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		*vals = (const int *)ada4255_gain_tbl;
-+		*length = ARRAY_SIZE(ada4255_gain_tbl) * 2;
-+		*type = IIO_VAL_INT_PLUS_NANO;
-+
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ada4255_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				     struct iio_chan_spec const *chan,
-+				     long info)
-+{
-+	switch (info) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return IIO_VAL_INT_PLUS_NANO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ada4255_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-+			      unsigned int write_val, unsigned int *read_val)
-+{
-+	struct ada4255_state *st = iio_priv(indio_dev);
-+
-+	if (read_val)
-+		return regmap_read(st->regmap, reg, read_val);
-+
-+	return regmap_write(st->regmap, reg, write_val);
-+}
-+
-+static const struct iio_info ada4255_info = {
-+	.read_raw = ada4255_read_raw,
-+	.write_raw = ada4255_write_raw,
-+	.read_avail = ada4255_read_avail,
-+	.write_raw_get_fmt = ada4255_write_raw_get_fmt,
-+	.debugfs_reg_access = &ada4255_reg_access,
-+};
-+
-+#define ADA4255_CHAN(_channel) {						\
-+	.type = IIO_VOLTAGE,							\
-+	.output = 1,								\
-+	.indexed = 1,								\
-+	.channel = _channel,							\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
-+	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_HARDWAREGAIN),	\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_ENABLE),			\
-+}
-+
-+static const struct iio_chan_spec ada4255_channels[] = {
-+	ADA4255_CHAN(0),
-+	ADA4255_CHAN(1),
-+};
-+
-+static int ada4255_get_ext_clk_div(unsigned long rate, unsigned int *divider)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i <= ADA4255_CLK_DIVIDER_MAX; i++) {
-+		unsigned long scaled_rate = DIV_ROUND_CLOSEST(rate, 1 << i);
-+
-+		if (scaled_rate >= ADA4255_CLK_FREQ_HZ_MIN &&
-+		    scaled_rate <= ADA4255_CLK_FREQ_HZ_MAX)
-+			break;
-+	}
-+
-+	if (i > ADA4255_CLK_DIVIDER_MAX)
-+		return -EINVAL;
-+
-+	*divider = i;
-+
-+	return 0;
-+}
-+
-+static int ada4255_set_ext_clk_sync(struct ada4255_state *st,
-+				    unsigned int divider)
-+{
-+	return regmap_update_bits(st->regmap, ADA4255_SYNC_CFG_REG,
-+				  ADA4255_SYNC_MASK,
-+				  FIELD_PREP(ADA4255_SYNC_MASK, divider));
-+}
-+
-+static int ada4255_ext_clk_rate_change(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct ada4255_state *st = container_of(nb, struct ada4255_state,
-+						ext_clk_nb);
-+	struct clk_notifier_data *cnd = data;
-+	unsigned long rate = cnd->new_rate;
-+	unsigned int divider;
-+	int ret;
-+
-+	if (action != PRE_RATE_CHANGE && action != POST_RATE_CHANGE)
-+		return NOTIFY_OK;
-+
-+	ret = ada4255_get_ext_clk_div(rate, &divider);
-+	if (ret)
-+		return notifier_from_errno(ret);
-+
-+	if (action == POST_RATE_CHANGE) {
-+		ret = ada4255_set_ext_clk_sync(st, divider);
-+		if (ret)
-+			return notifier_from_errno(ret);
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+#define ada4255_clk_abs_diff(a, b) abs((long)(a) - (long)(b))
-+
-+static long ada4255_int_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long *parent_rate)
-+{
-+	long closest_rate = ada4255_int_clk_rate_hz_tbl[0];
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ada4255_int_clk_rate_hz_tbl); i++) {
-+		unsigned int new_rate = ada4255_int_clk_rate_hz_tbl[i];
-+
-+		if (ada4255_clk_abs_diff(rate, new_rate) <
-+		    ada4255_clk_abs_diff(rate, closest_rate))
-+			closest_rate = new_rate;
-+	}
-+
-+	return closest_rate;
-+}
-+
-+static int ada4255_int_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+				    unsigned long parent_rate)
-+{
-+	struct ada4255_state *st = ada4255_from_clk_hw(hw);
-+	unsigned int i;
-+	int ret;
-+
-+	ret = ada4255_find_tbl_index(ada4255_int_clk_rate_hz_tbl, rate, &i);
-+	if (ret)
-+		return rate;
-+
-+	return regmap_update_bits(st->regmap, ADA4255_SYNC_CFG_REG,
-+				 ADA4255_SYNC_CLK_OUT_SEL_MASK,
-+				 FIELD_PREP(ADA4255_SYNC_CLK_OUT_SEL_MASK, i));
-+}
-+
-+static unsigned long ada4255_int_clk_recalc_rate(struct clk_hw *hw,
-+						 unsigned long parent_rate)
-+{
-+	struct ada4255_state *st = ada4255_from_clk_hw(hw);
-+	struct device *dev = &st->spi->dev;
-+	unsigned int i = 0;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, ADA4255_SYNC_CFG_REG, &i);
-+	if (ret)
-+		dev_err(dev, "Failed to read internal clock rate: %d\n", ret);
-+
-+	i = FIELD_GET(ADA4255_INT_CLK_OUT_MASK, i);
-+
-+	return ada4255_int_clk_rate_hz_tbl[i];
-+}
-+
-+static int ada4255_int_clk_is_enabled(struct clk_hw *hw)
-+{
-+	return ada4255_from_clk_hw(hw)->int_clk_out_en;
-+}
-+
-+static int ada4255_set_int_clk_out_en(struct ada4255_state *st, bool en)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(st->regmap, ADA4255_SF_CFG_REG,
-+				 ADA4255_INT_CLK_OUT_MASK,
-+				 FIELD_PREP(ADA4255_INT_CLK_OUT_MASK, en));
-+	if (ret)
-+		return ret;
-+
-+	st->int_clk_out_en = en;
-+
-+	return 0;
-+}
-+
-+static int ada4255_int_clk_prepare(struct clk_hw *hw)
-+{
-+	struct ada4255_state *st = ada4255_from_clk_hw(hw);
-+
-+	return ada4255_set_int_clk_out_en(st, true);
-+}
-+
-+static void ada4255_int_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct ada4255_state *st = ada4255_from_clk_hw(hw);
-+	struct device *dev = &st->spi->dev;
-+	int ret;
-+
-+	ret = ada4255_set_int_clk_out_en(st, false);
-+	if (ret)
-+		dev_err(dev, "Failed to disable internal clock: %d\n", ret);
-+}
-+
-+static const struct clk_ops ada4255_int_clk_ops = {
-+	.round_rate = ada4255_int_clk_round_rate,
-+	.set_rate = ada4255_int_clk_set_rate,
-+	.recalc_rate = ada4255_int_clk_recalc_rate,
-+	.is_enabled = ada4255_int_clk_is_enabled,
-+	.prepare = ada4255_int_clk_prepare,
-+	.unprepare = ada4255_int_clk_unprepare,
-+};
-+
-+static void ada4255_clk_disable_unprepare(void *clk)
-+{
-+	clk_disable_unprepare(clk);
-+}
-+
-+static int ada4255_setup_ext_clk(struct ada4255_state *st)
-+{
-+	struct device *dev = &st->spi->dev;
-+	unsigned int divider;
-+	unsigned long rate;
-+	int ret;
-+
-+	ret = clk_prepare_enable(st->mclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, ada4255_clk_disable_unprepare,
-+				       st->mclk);
-+	if (ret)
-+		return ret;
-+
-+	rate = clk_get_rate(st->mclk);
-+	if (!rate)
-+		return -EINVAL;
-+
-+	ret = ada4255_get_ext_clk_div(rate, &divider);
-+	if (ret)
-+		return ret;
-+
-+	ret = ada4255_set_ext_clk_sync(st, divider);
-+	if (ret)
-+		return ret;
-+
-+	st->ext_clk_nb.notifier_call = ada4255_ext_clk_rate_change;
-+	ret = clk_notifier_register(st->mclk, &st->ext_clk_nb);
-+	if (ret)
-+		return ret;
-+
-+	ret = ada4255_gpio_set_output(st, ADA4255_GPIO4_OFFSET, true);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(st->regmap, ADA4255_SF_CFG_REG,
-+				 ADA4255_EXT_CLK_IN_MASK,
-+				 FIELD_PREP(ADA4255_EXT_CLK_IN_MASK, 1));
-+	if (ret)
-+		return ret;
-+
-+	st->gpio4_clk_en = true;
-+
-+	return 0;
-+}
-+
-+static int ada4255_setup_int_clk(struct ada4255_state *st)
-+{
-+	struct device *dev = &st->spi->dev;
-+	struct device_node *of_node = dev_of_node(dev);
-+	struct clk_init_data init;
-+	const char *clk_name;
-+	struct clk *clk;
-+	int ret;
-+
-+	if (!of_node)
-+		return 0;
-+
-+	ret = ada4255_gpio_set_output(st, ADA4255_GPIO4_OFFSET, false);
-+	if (ret)
-+		return ret;
-+
-+	clk_name = of_node->name;
-+	of_property_read_string(of_node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = &ada4255_int_clk_ops;
-+
-+	st->int_clk_hw.init = &init;
-+	clk = devm_clk_register(dev, &st->int_clk_hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	st->gpio4_clk_en = true;
-+
-+	return of_clk_add_provider(of_node, of_clk_src_simple_get, clk);
-+}
-+
-+static int ada4255_setup(struct ada4255_state *st)
-+{
-+	struct device *dev = &st->spi->dev;
-+	unsigned int i;
-+	int ret = 0;
-+	u32 val;
-+
-+	st->mclk = devm_clk_get_optional(dev, "mclk");
-+	if (IS_ERR(st->mclk))
-+		return dev_err_probe(dev, PTR_ERR(st->mclk),
-+				     "Failed to get mclk\n");
-+
-+	if (st->mclk)
-+		ret = ada4255_setup_ext_clk(st);
-+	else
-+		ret = ada4255_setup_int_clk(st);
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = device_property_read_u32(dev, "adi,excitation-current-microamp", &val);
-+	if (!ret) {
-+		ret = ada4255_find_tbl_index(ada4255_excitation_current_ua_tbl,
-+					     val, &i);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_update_bits(st->regmap, AD4255_EX_CURRENT_CFG_REG,
-+					 AD4255_EX_CURRENT_MASK,
-+					 FIELD_PREP(AD4255_EX_CURRENT_MASK, i));
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_update_bits(st->regmap, AD4255_EX_CURRENT_CFG_REG,
-+					 AD4255_EX_CURRENT_SEL_MASK,
-+					 FIELD_PREP(AD4255_EX_CURRENT_SEL_MASK, 1));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = device_property_read_u32(dev, "adi,charge-pump-freq-hz", &val);
-+	if (!ret) {
-+		if (!st->chip_info->has_charge_pump)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "Unsupported charge pump function\n");
-+
-+		ret = ada4255_find_tbl_index(ada4255_clk_cp_sel_hz_tbl, val, &i);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_update_bits(st->regmap, ADA4255_SYNC_CFG_REG,
-+					 ADA4255_SYNC_CLK_CP_SEL_MASK,
-+					 FIELD_PREP(ADA4255_SYNC_CLK_CP_SEL_MASK, i));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ada4255_setup_gpio_chip(struct ada4255_state *st)
-+{
-+	struct device *dev = &st->spi->dev;
-+
-+	st->gc = (struct gpio_chip) {
-+		.owner = THIS_MODULE,
-+		.label = st->chip_info->name,
-+		.base = -1,
-+		.ngpio = ADA4255_GPIO_NUM,
-+		.parent = dev,
-+		.can_sleep = true,
-+		.init_valid_mask = ada4255_gpio_init_valid_mask,
-+		.get_direction = ada4255_gpio_get_direction,
-+		.direction_input = ada4255_gpio_direction_input,
-+		.direction_output = ada4255_gpio_direction_output,
-+		.get = ada4255_gpio_get,
-+		.set = ada4255_gpio_set,
-+	};
-+
-+	return devm_gpiochip_add_data(dev, &st->gc, st);
-+}
-+
-+static int ada4255_reset(struct ada4255_state *st)
-+{
-+	int ret;
-+
-+	ret = regmap_write(st->regmap, ADA4255_RESET_REG,
-+			   FIELD_PREP(ADA4255_RESET_REG, 1));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * A full calibration occurs after a soft reset and it takes
-+	 * approximately 85ms.
-+	 * See datasheet page 29, Section OUTPUT RIPPLE CALIBRATION
-+	 * CONFIGURATION.
-+	 */
-+	fsleep(85000);
-+
-+	return 0;
-+}
-+
-+static int ada4255_probe(struct spi_device *spi)
-+{
-+	static const char * const regulator_names[] = {
-+		"avdd",
-+		"dvdd",
-+		"vddcp",
-+		"vocm",
-+	};
-+	struct device *dev = &spi->dev;
-+	struct iio_dev *indio_dev;
-+	struct ada4255_state *st;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+	st->spi = spi;
-+	st->chip_info = spi_get_device_match_data(spi);
-+	if (!st->chip_info)
-+		return -EINVAL;
-+
-+	indio_dev->info = &ada4255_info;
-+	indio_dev->name = st->chip_info->name;
-+	indio_dev->channels = ada4255_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(ada4255_channels);
-+
-+	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulator_names),
-+					     regulator_names);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-+
-+	st->regmap = devm_regmap_init_spi(spi, &ada4255_regmap_config);
-+	if (IS_ERR(st->regmap))
-+		return PTR_ERR(st->regmap);
-+
-+	ret = ada4255_reset(st);
-+	if (ret)
-+		return ret;
-+
-+	ret = ada4255_setup(st);
-+	if (ret)
-+		return ret;
-+
-+	ret = ada4255_setup_gpio_chip(st);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct ada4255_chip_info ada4254_chip_info_data = {
-+	.name = "ada4254",
-+};
-+
-+static const struct ada4255_chip_info ada4255_chip_info_data = {
-+	.name = "ada4255",
-+	.has_charge_pump = true,
-+};
-+
-+static const struct spi_device_id ada4255_id[] = {
-+	{ "ada4254", (kernel_ulong_t)&ada4254_chip_info_data },
-+	{ "ada4255", (kernel_ulong_t)&ada4255_chip_info_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, ada4255_id);
-+
-+static const struct of_device_id ada4255_of_match[] = {
-+	{
-+		.compatible = "adi,ada4254",
-+		.data = &ada4254_chip_info_data,
-+	},
-+	{
-+		.compatible = "adi,ada4255",
-+		.data = &ada4255_chip_info_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ada4255_of_match);
-+
-+static struct spi_driver ada4255_driver = {
-+	.driver = {
-+			.name = ADA4255_NAME,
-+			.of_match_table = ada4255_of_match,
-+		},
-+	.probe = ada4255_probe,
-+	.id_table = ada4255_id,
-+};
-+
-+module_spi_driver(ada4255_driver);
-+
-+MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com");
-+MODULE_DESCRIPTION("Analog Devices ADA4255");
-+MODULE_LICENSE("GPL");
--- 
-2.48.1
+> 
+>    What do you mean by 'hardware'? When writing to the rsel register,
+> the value written is 0-7.
+> 
 
+Hardware means "the pin controller of the mt8196 SoC" :-)
+
+Anyway.
+
+The RSEL registers' function is to select a specific resistance value to
+pullup/down a pin, or a group of pins.
+
+Devicetree bindings require to specify values in known units, so in device tree
+you *need* to specify the RSEL resistance in Ohms.
+
+You cannot specify RSEL register value in device-tree. That's unacceptable.
+
+Regards,
+Angelo
+
+>>
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> +            description: |
+>>>>>>> +              For pull down type is normal, it doesn't
+>>>>>>> need
+>>>>>>> add
+>>>>>>> RSEL & R1R0.
+>>>>>>> +              For pull down type is PUPD/R0/R1 type, it
+>>>>>>> can
+>>>>>>> add
+>>>>>>> R1R0 define to
+>>>>>>> +              set different resistance. It can support
+>>>>>>> "MTK_PUPD_SET_R1R0_00" &
+>>>>>>> +              "MTK_PUPD_SET_R1R0_01" &
+>>>>>>> "MTK_PUPD_SET_R1R0_10"
+>>>>>>> &
+>>>>>>> +              "MTK_PUPD_SET_R1R0_11" define in mt8196.
+>>>>>>> +              For pull down type is PD/RSEL, it can add
+>>>>>>> RSEL
+>>>>>>> define to set
+>>>>>>> +              different resistance. It can support
+>>>>>>> +              "MTK_PULL_SET_RSEL_000" &
+>>>>>>> "MTK_PULL_SET_RSEL_001" &
+>>>>>>> +              "MTK_PULL_SET_RSEL_010" &
+>>>>>>> "MTK_PULL_SET_RSEL_011" &
+>>>>>>> +              "MTK_PULL_SET_RSEL_100" &
+>>>>>>> "MTK_PULL_SET_RSEL_101" &
+>>>>>>> +              "MTK_PULL_SET_RSEL_110" &
+>>>>>>> "MTK_PULL_SET_RSEL_111"
+>>>>>>> define in
+>>>>>>> +              mt8196.
+>>>>>>> diff --git a/include/dt-bindings/pinctrl/mt8196-pinfunc.h
+>>>>>>> b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..bf0c8374407c
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/include/dt-bindings/pinctrl/mt8196-pinfunc.h
+>>>>>>> @@ -0,0 +1,1572 @@
+>>>>>>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>>>>>>> */
+>>>>>>> +/*
+>>>>>>> + * Copyright (C) 2025 Mediatek Inc.
+>>>>>>> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
+>>>>>>> + */
+>>>>>>> +
+>>>>>>> +#ifndef __MT8196_PINFUNC_H
+>>>>>>> +#define __MT8196_PINFUNC_H
+>>>>>>> +
+>>>>>>> +#include <dt-bindings/pinctrl/mt65xx.h>
+>>>>>>> +
+>>>>>>> +#define PINMUX_GPIO0__FUNC_GPIO0 (MTK_PIN_NO(0) | 0)
+>>>>>>> +#define PINMUX_GPIO0__FUNC_DMIC1_CLK (MTK_PIN_NO(0) | 1)
+>>>>>>> +#define PINMUX_GPIO0__FUNC_SPI3_A_MO (MTK_PIN_NO(0) | 3)
+>>>>>>> +#define PINMUX_GPIO0__FUNC_FMI2S_B_LRCK (MTK_PIN_NO(0) |
+>>>>>>> 4)
+>>>>>>> +#define PINMUX_GPIO0__FUNC_SCP_DMIC1_CLK (MTK_PIN_NO(0) |
+>>>>>>> 5)
+>>>>>>> +#define PINMUX_GPIO0__FUNC_TP_GPIO14_AO (MTK_PIN_NO(0) |
+>>>>>>> 6)
+>>>>>>
+>>>>>> I do not see how you resolved my comment from v1. In v2 I
+>>>>>> reminded
+>>>>>> about
+>>>>>> it, so you responded that yopu will change something, but I
+>>>>>> do
+>>>>>> not
+>>>>>> see
+>>>>>> any changes.
+>>>>>>
+>>>>>> So explain: how did you resolve my comment?
+>>>>>>
+>>>>>> These two examples where you claim you will change something,
+>>>>>> but
+>>>>>> send
+>>>>>> the same. I skipped the rest of the patch.
+>>>>>
+>>>>>    Thank you for your patient response, here is my explanation
+>>>>> for
+>>>>> you
+>>>>> question:
+>>>>>
+>>>>>    In v1, I undertand that you meant I didn't sent a real
+>>>>> binding,
+>>>>> and
+>>>>
+>>>>
+>>>> The comment is under specific lines, so I said these defines are
+>>>> not
+>>>> a
+>>>> real binding. You sent them again, but they are still not
+>>>> bindings,
+>>>> because they are not used in the driver. Maybe the usage is
+>>>> convoluted,
+>>>> so which part of implementation are these connecting with DTS?
+>>>> IOW,
+>>>> which part of driver relies on the binding?
+>>>
+>>>    I got you. This binding define many macros, which will be used
+>>> for
+>>> 'pinmux' setting in the DTS. The usage like this:
+>>>
+>>>    adsp_uart_pins: adsp-uart-pins {
+>>>                  pins-tx-rx {
+>>>                          pinmux =
+>>> <PINMUX_GPIO35__FUNC_O_ADSP_UTXD0>,
+>>>                                   <PINMUX_GPIO36__FUNC_I1_ADSP_URXD0
+>>>> ;
+>>>                  };
+>>>          };
+>>
+>>
+>> That's DTS, not driver, so not a binding. Drop the header from
+>> bindings.
+> 
+>    Sorry, I don't quite understand the relationship between binding and
+> driver. Driver will parse this macro to get gpio number and function.
+> 
 
