@@ -1,181 +1,143 @@
-Return-Path: <linux-gpio+bounces-14946-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14947-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEB9EA16E43
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 15:17:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23A39A170FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 18:07:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E47C1889B08
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 14:17:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 269CE7A167D
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 17:07:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4681E0E0A;
-	Mon, 20 Jan 2025 14:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356F41494CC;
+	Mon, 20 Jan 2025 17:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="scZCuBwa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sc8kcL9J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DF01E515
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2025 14:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FD41EBFEB;
+	Mon, 20 Jan 2025 17:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737382645; cv=none; b=qh+ZnnQoG1bgifAwlnlxqnhL/BvB5KiUr2uwnp3W6xCRuBEdQRQ1+5urWbx48RT+DSAPgj0TPg/Zij4Dia0+DD387xloE/R14PoSxyTDeoZYbCOYeiEs36+zl76gIyXCUQjv4yRAPx5lWlLFkCA1O2PWgpKF5mu2Kfop2SIe+Mo=
+	t=1737392862; cv=none; b=S/n2IFAAMbGLOYA+sDnbkfYWND+WMoNNIwKA4v/jh4m87PrtFvxdMEiGhmbAIOz4Y2kj27wl7OySiLC9P/M8RvKtevCVAUuZHnMsNsT+SJah/1N+qTfzkLXUfRe0K3YVbTtyvTw1ERuCBaRjzDgwfveIYmyAnebj2BdyP6yinWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737382645; c=relaxed/simple;
-	bh=OPpKtYSb1Cy7c4OX0qOiA8OaUUijqIClYobv9UVC2xI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uEIQL64atixbdEk2wwrQevPCuQ98StGNSal0lH+RSMz5AYwr3IYTjLpqPxyXhrXJWjkHm92lnCfFW3nby21koOpbMQt8BFr8tOJTpxFC5UjFQZ/ODDNSxD70arEGnXpu+vR848ZL8Y9vqoap0AZGJIGZrH1AwMpaySij8uVDKWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=scZCuBwa; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361815b96cso31248875e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2025 06:17:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1737382642; x=1737987442; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IPzc2cHCUsOgr5cNjKJfbuppxSeFh0k+XfLt8CnA8VI=;
-        b=scZCuBwaA36JTTUrW08o0aCewk4rwcoC0c3EOLuGUlCOjJlCjY4mT7SAFRnDiV/zTC
-         3KunjV0fZFZodcZdQgNwyYUe1+J9eH5NhCOqXjyzU6uNAJEyQx2PxIn8OyB/DoT61Sm0
-         AFy0y/2JcYwytLCUM1ptG88MBH2ZcgPO9tmZ5iBBZ4mqpD4Um57Cv0oHe/nN652iXs53
-         E9U+c56tErIzcFtfblteAMALfDXrd87YwJXV8jSpY823nduF9WG6wvetC+uBYkxhTHpz
-         IeRw6TwEinzJHFrY3Gb8NupFgt/HUYS/4ffSufmPIWMDGiUVcBFbu+rJcv6TZUotyK0K
-         bW2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737382642; x=1737987442;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IPzc2cHCUsOgr5cNjKJfbuppxSeFh0k+XfLt8CnA8VI=;
-        b=cjMATKZB13ADXHF1fwatdzm+3ZXTvOZtqOd+DvGzEOSBAnhfcL4krE2J3n3dtP0Gm9
-         RZ0kxWfKGKhZiwITTHbjXcU3LmTYPSVSI3St4qvjfwNoy/bc64DCgrwizXCgt7tu7H4E
-         rKpVypkIRZkWPLJ6FytUo7aQ/83gcI6Pepv6XGZ9rdDvKS+Rw0G1Ybf5LvPDIkV2nC6F
-         zvdtHtcqorjW4oOTyYwBtZBmtoecS3q5O14dvo7rwvK3zkwhJwSGHzgSoIjxs1pF7w4z
-         DGaw7I9ogL/dw0F4mKBdX+hhG1UISiIDHY6Iv9Mi4N+gJNY4pWNvHhwaBxUdyYCcwrsA
-         f/Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8fDd0Z89AzhHVhWeVDu5wTpWMZEplDvmqaX8rF3cITptGvmBjrlMdD+0XP6EwEfFOkNC+pNft67j4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/KVp1UvKRHDpu+HsyUrMSIDW0uCDQwZ0Z12aPUMoeLn0TDXQX
-	3lACI9SJsv5KB8qQsXNdjVEulrpMBtWm6CtdBsItlcKYyz3pvN49PMmBHNkMOb0=
-X-Gm-Gg: ASbGnctTXQvPDkaItvP2cq4DM13KWw5KkE9tIR4fxDO9EIuA3cWFA5Vb71wRlWA+kB1
-	Pv/rKhU+JkGh6WZNe69cX61MoIl1aARVZRFgKAMuZOf84VAU7A1a1dc/4bBPpv9fLYe8hVdaiuM
-	eVg7SEC1GORTnOBy2v2vIRK4ouCs3fXVj4r2V7I/XLZD4qP8qGngqnorY+7CaraJV27IovyneQW
-	Hqcpt6iuE/wlQdBC/bIc4p6ipt3cYkYMUwNsAVJyCgGHf4gaFD4QfMgP8iFaF2Dccd5/w==
-X-Google-Smtp-Source: AGHT+IFkZNToEgZTRCIB8RdJ81C/axao23VMMSB0C4P+toKaF0hefOy0kRgccnadxOVKDFE/WBUeUA==
-X-Received: by 2002:a05:600c:1f10:b0:434:ff9d:a370 with SMTP id 5b1f17b1804b1-438912d1d49mr133599235e9.0.1737382642016;
-        Mon, 20 Jan 2025 06:17:22 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1e6f:aa81:b243:8253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c753c60csm197829235e9.36.2025.01.20.06.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 06:17:21 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio updates for v6.14-rc1
-Date: Mon, 20 Jan 2025 15:17:17 +0100
-Message-ID: <20250120141718.329518-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1737392862; c=relaxed/simple;
+	bh=TA6gQCSQC2cRk1mZEHlp4Hew2mvEXcoPur0MMbOMe0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uHiG2AcoOSteMB+le6ucs3bBjy7RtdLHfnF+Kap4cxf1+WChngiWEEMMMNQATR2/PoapfnVkAB2xewF+NJMgaW105bVhCwS8d6ip2kUnHHC3tswqpzyzaRD4Qmoue9Ri4fbxSpsJ/rI7O/fAzoLgzeyLbUbCytBo4UhKcjMfdU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sc8kcL9J; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737392861; x=1768928861;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=TA6gQCSQC2cRk1mZEHlp4Hew2mvEXcoPur0MMbOMe0o=;
+  b=Sc8kcL9JG6AVIRBS1IpT2kb8mmfVq6B2dfv9JIUBOIpHdcJj8ri9ITdx
+   NidHOLF354MKiPWc37eBVd0eExoVgUEG94ynb4fXFWN8oeNypZgKXZ7nx
+   J1CU1X1Yp9IR+FQr9+5pINtya2AcJfUv9DQI2JaoE/VrbwkGiRGeAI495
+   sAeA493xHXQVl4E9G/+YNRxnmB2qSOKlcJIxefk8bWzokFj2ymg7L13tD
+   QhgM3jYgq3mETTkL/9gmQ6ZWNM8w5k1+aHryXLlYHnlS8JFKrcXmRbgB4
+   i/o+NunNpdMDS7WchI7VvD4Ksmj6+er6adyqoKcqvGLL0Btz9yfQAstt9
+   w==;
+X-CSE-ConnectionGUID: jfqNBCdETzmOm7z5qPqDhA==
+X-CSE-MsgGUID: w0T/gOXqR96EWyUXrTrDEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="37821196"
+X-IronPort-AV: E=Sophos;i="6.13,219,1732608000"; 
+   d="scan'208";a="37821196"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2025 09:07:40 -0800
+X-CSE-ConnectionGUID: Ac9brgF6S6STqGH535utkg==
+X-CSE-MsgGUID: ER6BqF4sR/qeBBB7f9+7LA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="107478833"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2025 09:07:37 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tZvFN-00000003V7c-3w45;
+	Mon, 20 Jan 2025 19:07:33 +0200
+Date: Mon, 20 Jan 2025 19:07:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
+	broonie@kernel.org, pierre-louis.bossart@linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Introduce devm_kmemdup_array() helper
+Message-ID: <Z46C1bZ4AMLvKTn0@smile.fi.intel.com>
+References: <20241126172240.6044-1-raag.jadav@intel.com>
+ <CACRpkdZqdE8gQCre=zR2cN17oKfwBSnWuVwzQsbRO7-ENVnPNg@mail.gmail.com>
+ <Z0nNnsmYIil0OZpy@smile.fi.intel.com>
+ <Z1Rfuo3jq7rO0cqb@black.fi.intel.com>
+ <Z1r0EPC9gumruFKU@smile.fi.intel.com>
+ <2024121242-saturday-aqua-9ac6@gregkh>
+ <Z1sObNubEnsFwzOD@smile.fi.intel.com>
+ <Z4kcxQWeL09VARfK@smile.fi.intel.com>
+ <Z4pwksY3Bs4taZd3@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4pwksY3Bs4taZd3@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Jan 17, 2025 at 05:00:34PM +0200, Raag Jadav wrote:
+> On Thu, Jan 16, 2025 at 04:50:45PM +0200, Andy Shevchenko wrote:
+> > On Thu, Dec 12, 2024 at 06:25:16PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Dec 12, 2024 at 03:39:57PM +0100, Greg KH wrote:
+> > > > On Thu, Dec 12, 2024 at 04:32:48PM +0200, Andy Shevchenko wrote:
+> > > > > On Sat, Dec 07, 2024 at 04:46:18PM +0200, Raag Jadav wrote:
+> > > > > > On Fri, Nov 29, 2024 at 04:20:14PM +0200, Andy Shevchenko wrote:
+> > > > > > > On Fri, Nov 29, 2024 at 11:17:02AM +0100, Linus Walleij wrote:
+> > > > > > > > On Tue, Nov 26, 2024 at 6:22 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > > > > > > > 
+> > > > > > > > > This series introduces a more robust and cleaner devm_kmemdup_array()
+> > > > > > > > > helper and uses it across drivers.
+> > > > > > > > 
+> > > > > > > > For the series:
+> > > > > > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > > > > > > 
+> > > > > > > > It seems like Andy will push it to me which is excellent.
+> > > > > > > 
+> > > > > > > Yep, that's the plan after we get all necessary ACKs.
+> > > > > > 
+> > > > > > Greg, anything I can do to move this forward?
+> > > > > 
+> > > > > Greg, is it possible to give your Ack or comment or guidance of the preferences
+> > > > > with the first patch?
+> > > > 
+> > > > $ mdfrm -c ~/mail/todo/
+> > > > 2293 messages in /home/gregkh/mail/todo/
+> > > 
+> > > Oh my...
+> > > 
+> > > > Please be patient.
+> > > 
+> > > Sure!
+> > 
+> > Raaj, care to send a v3 after merge window closes?
+> 
+> Sure, and perhaps add a few more users which I found with my improved
+> grepping skills.
 
-Linus,
+Okay, thanks! I will drop myself from this thread then. Waiting for v3...
 
-Thanks to little activity in December, this PR is really tiny. Just a few
-updates to drivers and device-tree bindings. Details are in the signed
-tag.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Please pull,
-Bartosz Golaszewski
 
-The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
-
-  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.14-rc1
-
-for you to fetch changes up to b0fa00fe38f673c986633c11087274deeb7ce7b0:
-
-  gpio: regmap: Use generic request/free ops (2025-01-13 09:20:25 +0100)
-
-----------------------------------------------------------------
-gpio updates for v6.14-rc1
-
-Driver improvements:
-- support a new model in gpio-mpc8xxx
-- refactor gpio-tqmx86 and add support for direction setting
-- allow building gpio-omap with COMPILE_TEST=y
-- use gpiochip_get_data() instead of dev_get_drvdata() in gpio-twl6040
-- drop unued field from driver data in gpio-altera
-- use generic request/free callbacks in gpio-regmap for better integration
-  with pinctrl
-- use dev_err_probe() where applicable in gpio-pca953x
-- use existing dedicated GPIO defines in gpio-tps65219 instead of custom
-  ones
-
-DT bindings:
-- document a new model in fsl,qoriq-gpio
-- explain the chip's latch clock pin and how it works like chip-select
-  in fairchild,74hc595
-- enable the gpio-line-names property for gpio-brcmstb
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpio: omap: allow building the module with COMPILE_TEST=y
-
-Dave Stevenson (1):
-      dt-bindings: gpio: brcmstb: permit gpio-line-names property
-
-J. Neuschäfer (3):
-      dt-bindings: gpio: fairchild,74hc595: Document chip select vs. latch clock
-      dt-bindings: gpio: fsl,qoriq-gpio: Add compatible string fsl,mpc8314-gpio
-      gpio: mpc8xxx: Add MPC8314 support
-
-Luca Ceresoli (1):
-      gpio: pca953x: log an error when failing to get the reset GPIO
-
-Matthias Schiffer (5):
-      gpio: tqmx86: add macros for interrupt configuration
-      gpio: tqmx86: consistently refer to IRQs by hwirq numbers
-      gpio: tqmx86: use cleanup guards for spinlock
-      gpio: tqmx86: introduce tqmx86_gpio_clrsetbits() helper
-      gpio: tqmx86: add support for changing GPIO directions
-
-Rosen Penev (1):
-      gpio: twl4030: use gpiochip_get_data
-
-Sander Vanheule (1):
-      gpio: regmap: Use generic request/free ops
-
-Shree Ramamoorthy (1):
-      gpio: tps65219: Use existing kernel gpio macros
-
-Uwe Kleine-König (1):
-      gpio: altera: Drop .mapped_irq from driver data
-
- .../bindings/gpio/brcm,brcmstb-gpio.yaml           |   4 +
- .../bindings/gpio/fairchild,74hc595.yaml           |  17 ++
- .../devicetree/bindings/gpio/fsl,qoriq-gpio.yaml   |   1 +
- drivers/gpio/Kconfig                               |   4 +-
- drivers/gpio/gpio-altera.c                         |   9 +-
- drivers/gpio/gpio-mpc8xxx.c                        |   1 +
- drivers/gpio/gpio-pca953x.c                        |   3 +-
- drivers/gpio/gpio-regmap.c                         |   2 +
- drivers/gpio/gpio-tps65219.c                       |  12 +-
- drivers/gpio/gpio-tqmx86.c                         | 206 ++++++++++++---------
- drivers/gpio/gpio-twl6040.c                        |   6 +-
- 11 files changed, 160 insertions(+), 105 deletions(-)
 
