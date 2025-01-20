@@ -1,151 +1,174 @@
-Return-Path: <linux-gpio+bounces-14948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14949-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDFABA17108
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 18:11:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCD63A174AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 23:35:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFA3016A7DE
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 17:11:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C80603A0372
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2025 22:35:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2415B1EC012;
-	Mon, 20 Jan 2025 17:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B784C1EF08E;
+	Mon, 20 Jan 2025 22:35:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrFdY0Gy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OU6cQOIa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9DA1EBFFA;
-	Mon, 20 Jan 2025 17:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E0716F0E8
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2025 22:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737393090; cv=none; b=hoBimdxDabY1wOb+tGLehx925NGnM0UrKmbCTWRC3up6awbVBEoxzmeGtotcg2Mmtc8DtkoV08nDlQ3Ft0IsdceA9xBQFLv88xXsrDAbjyyfw4DACAW0IDpIgw2fGy8AVnpc9D3Pz3JS3MsWiCUPZ3FtW2ktEmml939pXdm6Y8o=
+	t=1737412521; cv=none; b=K5rmyLAH0QnUBG/Ffr4i3E9a+vbdd26fY1/PTGvux5AH1hYXIVwZbFZAqhN6FfPmadxp8HrvcwM53g0n/fuvUB1AGqvZuecqLe6XvcZWkMIFDVA51F6yDpVmJACgHi5moQI1sasnHVJhz/269PnaqoaiUJMGsCnCenyO48C2RwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737393090; c=relaxed/simple;
-	bh=O74p5TZpWyGoKGNkzS03E5QcgM+cZnZkS2SpM4WXris=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lvk9vD/dbMlYaefTNr/cLvW7+4xQp9FPUYYS2wbrGCGIRmY8fiXlYqnam5Gwz4PsZ7BMhQETPAGEc5sZdV4o6VHbCPYTdTelvApK87/uo2GrZK0/VMuqDujsN3WhTknnVTDHSPiV81O0+xkE0Ka4HZPL7H7jOfTexQ9mLQIV748=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrFdY0Gy; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737393089; x=1768929089;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=O74p5TZpWyGoKGNkzS03E5QcgM+cZnZkS2SpM4WXris=;
-  b=HrFdY0GyglP4zCfGYyqzMplz8SfaMGUTwd4OAQsU5I8EgCyluxuWACPz
-   qiMP5OZ7QeADE3tPTC7E/tk0ZOZO/CA/PB1rIo/2HYxbmbZqoWxg2q8Qw
-   vsIDuVQRbw6CaVY0hJr9ubTvAyeK9ERPdYUHtwrBJ9dDnBzBytkmDB7eU
-   njRbVPU8NpnSC1TZd1YpFzPcPIiKZ5QHK8vdmbVpxwXU07ByYccvYPpZ/
-   KaWEG+n6FSN/39KjH74W2/M0QIgpwsP0B1gKHfaDwhfSP6YtAFK+q4cD4
-   jV7+JziM8oQ3aHSMOdULexwsyh1oVcvzPmJdFJcmN4wQAut8zr9II/UWj
-   Q==;
-X-CSE-ConnectionGUID: QvyORyiuT+2uZ1qoyIBT6A==
-X-CSE-MsgGUID: PrJrSq/aRBC8p8SzS5InBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11321"; a="37709850"
-X-IronPort-AV: E=Sophos;i="6.13,219,1732608000"; 
-   d="scan'208";a="37709850"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2025 09:11:28 -0800
-X-CSE-ConnectionGUID: hb2/Ca7pSQuieqy9JrnIow==
-X-CSE-MsgGUID: Nk+orQD7T5yUQuqtdlh16g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,219,1732608000"; 
-   d="scan'208";a="106596640"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2025 09:11:26 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tZvJ4-00000003VDC-2vrY;
-	Mon, 20 Jan 2025 19:11:22 +0200
-Date: Mon, 20 Jan 2025 19:11:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	broonie@kernel.org, pierre-louis.bossart@linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Introduce devm_kmemdup_array() helper
-Message-ID: <Z46DunMGRKQcxtnz@smile.fi.intel.com>
-References: <20241126172240.6044-1-raag.jadav@intel.com>
- <CACRpkdZqdE8gQCre=zR2cN17oKfwBSnWuVwzQsbRO7-ENVnPNg@mail.gmail.com>
- <Z0nNnsmYIil0OZpy@smile.fi.intel.com>
- <Z1Rfuo3jq7rO0cqb@black.fi.intel.com>
- <Z1r0EPC9gumruFKU@smile.fi.intel.com>
- <2024121242-saturday-aqua-9ac6@gregkh>
- <Z1sObNubEnsFwzOD@smile.fi.intel.com>
- <Z4kcxQWeL09VARfK@smile.fi.intel.com>
- <Z4pwksY3Bs4taZd3@black.fi.intel.com>
- <Z46C1bZ4AMLvKTn0@smile.fi.intel.com>
+	s=arc-20240116; t=1737412521; c=relaxed/simple;
+	bh=p6ultcYuOGIaS+90ZuOgp1U3g3GGKtVgVLTtyGNHkb4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bI/stHnkPKgGoBYZZ7LoZlxRZlu2CypzUD7MG11ILvPpxOywsZAKv3JBStqZO1CgVesdnDoVA0PC2qxlh5gI4QUm+UWsUGbv3ZaGnGTGEGgezCy+s/kE2DwMpklb+aQQQFhyUAdELqaQpaNbIMWsTSfeYrVVN1N3zDebHiyF+pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OU6cQOIa; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-385d7b4da2bso4516243f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2025 14:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737412518; x=1738017318; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8wu2BkrTWsrVM/jC7rXUdRwtSDgmdRo69fIzQbnk08=;
+        b=OU6cQOIavB/2nPijDscu3sT/ix9EokFfjbp/JbvZVH+zyOgXV6PURhBlOde+cbdf35
+         6CK2V1Fr2pF3QI2mIxIJbxSCs62TpOElIwanmqOJOt46CoeW9sEBDni3SBhAb3D/XDxX
+         qI99VdwC9Nx/ZfCqkpUu+wwsk1U3CL1Qv4LeE6CrdU31Ah0at7dfGJTATLRIiZhrEYjK
+         E2KyLn4XwhDBN5p26IPrUnSXttqQgBSm1+PzNTl9PPcu0d2ZpZioFr9opKi0F6UA2cLi
+         BF9Sm1QtcPyrrCMPNE8MDYyevW2oKabEaF0UC2cKATjIHuq+xzH72tNMFh9eD6G9ha8h
+         ftEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737412518; x=1738017318;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F8wu2BkrTWsrVM/jC7rXUdRwtSDgmdRo69fIzQbnk08=;
+        b=lN2duAXd0xd8WhfXw5Bf3LAx2O3bWcbYhc9o2rkRhLurO1OzX+dW8kYC5WnL6GsOz3
+         HET/E52ZJiM8uoimQNaX7BTMkBNKIS1TLvSoakPKvVIX+LH92Rxm2XeBBd7FGCXol9GD
+         cRU2I+9Jd4WHlU8wLatH2TufveZEu3maoPlnRK1rN4KAm4hmybKex0/Jj5JqJjndeH0c
+         zJhjf14UGIMHT/mbi9nc0i5cLF9TTU8virx20HZGr/bHQJ6BfS+trohxVh2RnOLcc9AK
+         dz/LJ6VfSm3AIK58zq0zmupfiah8nQ8wan3yqE1ANRGuCcFi5ntp4ZCTA49Cn/gEVQS/
+         C8oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXziAi8ig9zzQWNHamWIw2/DErAtGzh3H9yK4gt64/hmQuGviLFC/ywmuCv6PZsfTL84RU9thsBwd4o@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6mhwVuJ2Pl8hX1Rjyf8nL61JIWTqIUqQEb9YCihmUmstUimg3
+	efWGXED/q7EOFzSBKzzi0ABTEGilY+EfFwblW3fECW6NXl4KMlWGlvUUQ1HS2us=
+X-Gm-Gg: ASbGncu0ruq3uWRBYdZFTEn2DljSqF3nhg95oUPCi2E2rKjL+JKpcIXNabjpwPWeCRs
+	CfQMCkznSZUoxguq53MJwQamJ3ZUUuGXNYHt8ssRp0DZLUkiqSruZkUhL27heOljqGstD/vpHxp
+	6/3+ASNqBGc+22ffoW6GU2v0uwaiKPjSTx9FjgB8IPWv8/gk4g6WhbUvTTqRQA6xQgpiKfVVXhw
+	fZrKkxe/9A3r8aBhme04G6FZyutk/pzFHxSmRdZLrQe1gPoZW3wjATILJ2oytMwDY78WoGqsqm3
+	ir/HDdbxl+/xpOwUGBXDINg=
+X-Google-Smtp-Source: AGHT+IGjA+UZ6VbJB1NhP66f0b8U22Yqxx053HN3nMFKIp59HvosUtcTmoxMU8ZEOp2wVF7sdQd2BQ==
+X-Received: by 2002:a05:6000:1786:b0:385:d7f9:f16c with SMTP id ffacd0b85a97d-38bf57be11bmr14588226f8f.46.1737412517766;
+        Mon, 20 Jan 2025 14:35:17 -0800 (PST)
+Received: from gpeter-l.roam.corp.google.com ([145.224.66.48])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf327e19fsm11889267f8f.93.2025.01.20.14.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2025 14:35:17 -0800 (PST)
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 0/3] samsung: pinctrl: Add support for eint_fltcon_offset
+ and filter selection on gs101
+Date: Mon, 20 Jan 2025 22:34:52 +0000
+Message-Id: <20250120-pinctrl-fltcon-suspend-v1-0-e77900b2a854@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z46C1bZ4AMLvKTn0@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIzPjmcC/x3MSwqAMAwA0atI1gb6UQSvIi6kjRqQWBoVQby7x
+ eVbzDyglJkU+uqBTBcr71Jg6wrCOslCyLEYnHGtsc5gYglH3nDejrAL6qmJJKLz3k/Wd6GJDZQ
+ 4ZZr5/sfD+L4fR8B8wmgAAAA=
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ andre.draszik@linaro.org, tudor.ambarus@linaro.org, willmcvicker@google.com, 
+ semen.protsenko@linaro.org, kernel-team@android.com, 
+ jaewon02.kim@samsung.com, Peter Griffin <peter.griffin@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2136;
+ i=peter.griffin@linaro.org; h=from:subject:message-id;
+ bh=p6ultcYuOGIaS+90ZuOgp1U3g3GGKtVgVLTtyGNHkb4=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBnjs+jPcUF/omEh0iZxoatiVZ0QBh0tMxpn8fEx
+ eli4RojWgOJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCZ47PowAKCRDO6LjWAjRy
+ unZjEACM3Q+inY9K8M9Tp0UGpnFBDb1Om5fcxGoH+8e6ZyTY9OUcbJULx8z+0WQEqcV44nvO5nA
+ NcQ+v5P7NnT9OvnmDkuok7mlCiAFw9P9A2QGi63McQQPUN5dodeY4/rQFoGqNH/zn+fBS9dvuOC
+ NVvk6vSAkIRdPWUq96jTKLLDwAVXcDAAZ2s8oQj/A8sSsdSnpfkhHSkexTP+wuB1sFwEEN3t/q5
+ 6uOfQaissUXDtii0hyAA2g6sGKk7WW5HeRBmUy9rRBMA81lsfhQwTEC9klChIDLVwhP1AX+5rut
+ 6EB4XL9wQY9Gjqa1rtLB3GKbBiJoWFLGiNzOVtKR/XQyd0vFD6LlMluik5tEhyuk0IeW9Gac9rp
+ 3Qt783KtavMg9+IREI1/khN1oiLcT3bmBzijk999FRtRo9jbJwoZ6dVWffWdXLDI0Svt2IPIE+8
+ NATM0IqvlZzmuDKiiNoE73fr8rhgHiWe4GgDr71gqrPP5Pk0r2ENbK0wixJ8ekz2f4c45PsH9mz
+ 8eMICLF5JvZ/vMVwylujyX6d2m0/PveI9UvACrS93lSRjiDk8JB877w3NGe7TVzAWAQsto1zB+T
+ qTfKe1JxShfo5PZ8t0X0eDhtmf58NxffPA0TZRrPyjDrwb1EtMDVQxYcvoOePmZtwMhkcMuvCRe
+ zseNbj++u5vbapQ==
+X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
+ fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-On Mon, Jan 20, 2025 at 07:07:33PM +0200, Andy Shevchenko wrote:
-> On Fri, Jan 17, 2025 at 05:00:34PM +0200, Raag Jadav wrote:
-> > On Thu, Jan 16, 2025 at 04:50:45PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Dec 12, 2024 at 06:25:16PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Dec 12, 2024 at 03:39:57PM +0100, Greg KH wrote:
-> > > > > On Thu, Dec 12, 2024 at 04:32:48PM +0200, Andy Shevchenko wrote:
-> > > > > > On Sat, Dec 07, 2024 at 04:46:18PM +0200, Raag Jadav wrote:
-> > > > > > > On Fri, Nov 29, 2024 at 04:20:14PM +0200, Andy Shevchenko wrote:
-> > > > > > > > On Fri, Nov 29, 2024 at 11:17:02AM +0100, Linus Walleij wrote:
-> > > > > > > > > On Tue, Nov 26, 2024 at 6:22 PM Raag Jadav <raag.jadav@intel.com> wrote:
-> > > > > > > > > 
-> > > > > > > > > > This series introduces a more robust and cleaner devm_kmemdup_array()
-> > > > > > > > > > helper and uses it across drivers.
-> > > > > > > > > 
-> > > > > > > > > For the series:
-> > > > > > > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > > > > > > 
-> > > > > > > > > It seems like Andy will push it to me which is excellent.
-> > > > > > > > 
-> > > > > > > > Yep, that's the plan after we get all necessary ACKs.
-> > > > > > > 
-> > > > > > > Greg, anything I can do to move this forward?
-> > > > > > 
-> > > > > > Greg, is it possible to give your Ack or comment or guidance of the preferences
-> > > > > > with the first patch?
-> > > > > 
-> > > > > $ mdfrm -c ~/mail/todo/
-> > > > > 2293 messages in /home/gregkh/mail/todo/
-> > > > 
-> > > > Oh my...
-> > > > 
-> > > > > Please be patient.
-> > > > 
-> > > > Sure!
-> > > 
-> > > Raaj, care to send a v3 after merge window closes?
-> > 
-> > Sure, and perhaps add a few more users which I found with my improved
-> > grepping skills.
-> 
-> Okay, thanks! I will drop myself from this thread then. Waiting for v3...
+Hi folks,
 
-One more thing, can you embed the following into your series?
+This series fixes support for correctly saving and restoring fltcon0
+and fltcon1 registers on gs101 for non-alive banks where the fltcon
+register offset is not at a fixed offset (unlike previous SoCs).
+This is done by adding a eint_fltcon_offset and providing GS101
+specific pin macros that take an additional parameter (similar to
+how exynosautov920 handles it's eint_con_offset).
 
-20241203195340.855879-1-andriy.shevchenko@linux.intel.com
+Additionally the SoC specific suspend and resume callbacks are
+re-factored so that each SoC variant has it's own callback containing
+the peculiarities for that SoC.
 
-It would be easier to handle and avoid conflicts.
+Finally support for filter selection on alive banks is added, this is
+currently only enabled for gs101. The code path can be excercised using
+`echo mem > /sys/power/state`
 
+regards,
+
+Peter
+
+To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Alim Akhtar <alim.akhtar@samsung.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: andre.draszik@linaro.org
+Cc: tudor.ambarus@linaro.org
+Cc: willmcvicker@google.com
+Cc: semen.protsenko@linaro.org
+Cc: kernel-team@android.com
+Cc: jaewon02.kim@samsung.com
+
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+Peter Griffin (3):
+      pinctrl: samsung: add support for eint_fltcon_offset
+      pinctrl: samsung: add dedicated SoC eint suspend/resume callbacks
+      pinctrl: samsung: Add filter selection support for alive bank on gs101
+
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 150 ++++++------
+ drivers/pinctrl/samsung/pinctrl-exynos.c       | 318 ++++++++++++++++---------
+ drivers/pinctrl/samsung/pinctrl-exynos.h       |  39 ++-
+ drivers/pinctrl/samsung/pinctrl-samsung.c      |  13 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h      |  16 +-
+ 5 files changed, 338 insertions(+), 198 deletions(-)
+---
+base-commit: b3f72f6c7d65a8953fd80ce0b376b47fa263e34b
+change-id: 20250120-pinctrl-fltcon-suspend-2333a137c4d4
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Peter Griffin <peter.griffin@linaro.org>
 
 
