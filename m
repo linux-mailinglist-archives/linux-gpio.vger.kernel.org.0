@@ -1,167 +1,130 @@
-Return-Path: <linux-gpio+bounces-14969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84390A17CDA
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 12:17:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9262FA17CE4
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 12:20:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3D5C3AB532
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 11:16:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D186A1605E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 11:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BB1F1C07F1;
-	Tue, 21 Jan 2025 11:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3FFA1F12E9;
+	Tue, 21 Jan 2025 11:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="quzr7SW4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0D61ABED7
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Jan 2025 11:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D101BBBEA
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Jan 2025 11:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737458219; cv=none; b=FKnWslBMPd3N87s8a9u9s1UI0/XuVuDZ2rkuTLKmAEa33kzwqMc9i/ov9T0PKdJZWCY9J94wvjn2PTTlYLgPnYhuOqrQFaL231OZiUWFO9jHF3a/eCPZ24sOg7zPqcJ+UeOHgvmFa3vxJxMbXjFHeI0yCgIC2NkrwW7BhJ7gzXY=
+	t=1737458450; cv=none; b=l5rSmWzzRlJ/REulQpk6ARt4lk5DcEg0Y6jjBFMcksTpVeXFBPXIq13p7QP4QMTW6D6Z60iHLnwfCsiMrTrW9UdmJnPutv2EgWjMxibnhS5ewrC7DvzrCYqSrq0qPjlqXZnRUzzSNqDwYxdADOVTvojnhr9FjZ2vrvftFkBQubM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737458219; c=relaxed/simple;
-	bh=8yKxH0g/pG8RGcNLDmVG/8uOXwMa3rxyM6mR14fJvpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NgaVMjzWLkSUaAwwFyEEBUMcWW9u/XCZFmYnrjzqaLqbu1D1rcf4ekh8S30MQcZHEw2pUzjb5UppLd/BhP6ZYm5nrqTL3FKkbUQq8rF2GQ+pggbs6wrbm4Mrfu69DcvihVsd6F/RoRKO8eiJbvldDHQ3FlI3UalGv8v2iXk+aqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1taCFV-0001Dr-Vy; Tue, 21 Jan 2025 12:16:50 +0100
-Message-ID: <591d482c-cf1b-4875-b18d-8560f66e00d0@pengutronix.de>
-Date: Tue, 21 Jan 2025 12:16:48 +0100
+	s=arc-20240116; t=1737458450; c=relaxed/simple;
+	bh=qjTQpidvcCkYdy/tnoHQ2fn95+J5qhGDadqKW7PFyV0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=b4TpMdxJ74H2C6y053Mns1g+SK8HUy7Fhu+Ox1AOhI4UIKycJBtUTp4N6iNwjBdssNlbVSWVj5vrOchfnhyDzGmpCwnJUfbKG3C5ZY1jR/FFIe1bPpeKYW/Po8mUDE8DiOcAGD+Gn6GCiP6/9z/3okbZsDB6o3XypeMdoPeg5FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=quzr7SW4; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-436249df846so37307685e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jan 2025 03:20:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737458447; x=1738063247; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y7zIFb2biPGgp9ksv7Po3u3QL1cwm6u7lkcvFCycA2I=;
+        b=quzr7SW4Q7iD5Rxt0rLBJ7BIx4yJyPty9IqT7YWkE3SGFOTJbN/DPMLfCEIxw57tsu
+         4PdRzrhCT8Jlm8K/r4JocylE55Fkp803Skrs40RotbnPxpikKqD9PK2HJjHSDU9AtyZB
+         eZfZlbo0FShh0z6oEONeGqvY+Rb4ycIHzQrnngQbeIi2zULQJWNtRZuXLyR1d7ENkwQY
+         P042tAtMms6GKObHf3Gn04NYq6hYuVPVTZIFMCrQlles2w2htUWwEv7oL5Y3M41apAs5
+         W39k5HsrKmd7Ap/zR4c5YpKQ6eqvsTT1Z/G07OJKB6lYv23U2CXuxxz5vcMw2N87xwjs
+         oqUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737458447; x=1738063247;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7zIFb2biPGgp9ksv7Po3u3QL1cwm6u7lkcvFCycA2I=;
+        b=skaPQ9BwuBlj5Xe+MMGC3kuxmUL9f0IHA2e0vAySNnpmDTdh1Th/Rz+EyTk4f1uMHQ
+         tzMgT8FI7gkwPXnBZ3huBPx/tchJLJ8zDb4sR4TRtTsKpXbPqbBGpYJAUcVepGav/tAS
+         568BWx4/tzxwKcR/IEtT2zlWzMShfdb0KzHgd/WXpei69PIG6JCQGMcpkmWSMxEqMvuS
+         M3by+uxhLfA8W5tbPQqFfHNqATN2KFciYZUT+xoKGBF7LHsO8Ms6NFY7vQcev/s+nJ3C
+         1OfJv+T9U9ehAqzefJxJzL6GYefDZK1Z8r4QZMjaf0Dafu9IVdGfi3lSEGb9eUQZH/VQ
+         WGrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTOxTmxiQp7oB66sLBUwSdA0oCL5jnj0KVSWndBJsie1ZBN+F1F/DjLj9Gey6biggZ0XY1KN+IR3W5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxXUqhYh0oNZaV2+92aIeY1xVMovA7kERRjVRpySYoDbBzwmwg
+	sc93HjUSvqXYIBUI5y8Z9h/7Yo5qT6x7XNwWC13jlrB6od9bp1RYvRX1XobVqTw=
+X-Gm-Gg: ASbGncts50U5HTCB2Sy8KKE2tZzPHrOQ8KhfE0gKkDcS9vtnRQXZ4cv2smQrU3v8YZT
+	PocW1mVDlFToSMdAOOrUzgl5O+HhN+HgR6RTZcAgAOo/8mjSlQ5aYFlUyKqUVinUo6hGrHNj4X/
+	WLUNsK5uuOXnzB3PEtRSUjAhRaJ6gYXYsztH1dOq+c1F55uHVhiiel1UFtzIYrUGfbD6AS3ubKE
+	70QQsxk52CQ6xoZIU9gZLGSOv+pOU2KzJQAHUhnnGVV55hMc2+Yg23Wf0wZhgOTQMDrfYvuNA==
+X-Google-Smtp-Source: AGHT+IE0y+tu0fWyAhJdzk7OF8kSuvMPYyFJRvvseEP3YUChEAoRqL2VBPrLKjVbpVCv/r4cnPgqGw==
+X-Received: by 2002:a05:600c:1547:b0:434:a04f:2557 with SMTP id 5b1f17b1804b1-438913c7fbcmr154303575e9.4.1737458447389;
+        Tue, 21 Jan 2025 03:20:47 -0800 (PST)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c7499942sm234080805e9.6.2025.01.21.03.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 03:20:47 -0800 (PST)
+Message-ID: <4ac64a481d80785973d038b9292a05781e70a670.camel@linaro.org>
+Subject: Re: [PATCH 2/3] pinctrl: samsung: add dedicated SoC eint
+ suspend/resume callbacks
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski
+ <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+  linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ tudor.ambarus@linaro.org, willmcvicker@google.com,
+ semen.protsenko@linaro.org,  kernel-team@android.com,
+ jaewon02.kim@samsung.com
+Date: Tue, 21 Jan 2025 11:20:45 +0000
+In-Reply-To: <20250120-pinctrl-fltcon-suspend-v1-2-e77900b2a854@linaro.org>
+References: <20250120-pinctrl-fltcon-suspend-v1-0-e77900b2a854@linaro.org>
+	 <20250120-pinctrl-fltcon-suspend-v1-2-e77900b2a854@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1-4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] gpio: mxc: silence warning about GPIO base being
- statically allocated
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Whitcroft <apw@canonical.com>,
- Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Fabio Estevam <festevam@gmail.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Dario Binacchi <dario.binacchi@amarulasolutions.com>,
- Haibo Chen <haibo.chen@nxp.com>,
- Catalin Popescu <catalin.popescu@leica-geosystems.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
- <CAHp75Ve8d96Uw1obJVwRPyRE5E0eC8qU7uXe-UKuZeB-3XLPcA@mail.gmail.com>
- <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de>
- <CAHp75VfOhAmkpB_nhQE8m25p=3P2wvTfOnQFEsLR5KEktLy4vQ@mail.gmail.com>
- <43ecfb45-d96b-46e5-95e1-2ece32532e74@pengutronix.de>
- <CAHp75VfZHZ7Xx1SnryBX683B=gm70SE_bvhivn+ecUePebQLdA@mail.gmail.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <CAHp75VfZHZ7Xx1SnryBX683B=gm70SE_bvhivn+ecUePebQLdA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Hi Peter,
 
-On 15.01.25 16:16, Andy Shevchenko wrote:
-> On Wed, Jan 15, 2025 at 9:03 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->> Please read my cover letter / commit messages. I do nowhere object to deprecation
->> and removal of the sysfs interface. But I strongly disagree that a necessary step
->> towards that is having Linux start toggling random GPIOs after an update on
->> platforms that behaved consistently for >10 years.
->>
->> Can you explain why we can't remove the hardcoded base at the same time that
->> sysfs support is removed for good?
-> 
-> Because (if follow your logic!) it won't ever happen until all the
-> platforms that are using the non-dynamic bases are being removed as
-> well.
->
-> Otherwise this situation isn't anyhow different to the broken platform
-> as you described.
+On Mon, 2025-01-20 at 22:34 +0000, Peter Griffin wrote:
+> gs101 needs it's own suspend/resume callbacks to use the newly
+> added eint_fltcon_offset for saving & restoring fltcon0 & fltcon1
+> registers. It also differs to previous SoCs in that fltcon1
+> register doesn't always exist for each bank.
+>=20
+> exynosautov920 also has dedicated logic for using eint_con_offset
+> and eint_mask_offset for saving & restoring it's registers.
+>=20
+> Refactor the existing platform specific suspend/resume callback
+> so that each SoC variant has their own callback containing the
+> SoC specific logic.
+>=20
+> Additionally we now call drvdata->suspend() & drvdata->resume()
+> from within the loop that iterates the banks in
+> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
 
-Sorry, it's not clear to me why non-dynamic-bases can't be removed
-at the same time that SysFS itself is removed. Can you explain?
+Maybe split this patch in two:
+* first to do the refactoring plus adding exynosautov920_pinctrl_suspend()
+  and exynosautov920_pinctrl_resume()
+* second to add gs101_pinctrl_suspend() / gs101_pinctrl_resume()
 
->>>> i.MX is an actively developed and widely used platform. Why should support
->>>> be dropped?
->>>
->>> Exactly, Which means "tend to get never fixed".
->>
->> Imagine ReiserFS deprecation strategy involved shipping an update that
->> just corrupted your existing file system and developers insisted on calling
->> it a fix, as ReiserFS is going to be removed anyway.
-> 
-> It's not the same. If you still want to compare, then it means that
-> what I suggest is to move from Reiser to say XFS.
+This way, it's obvious which part is the bugfix and which part is the
+preparation and I believe it'd be easier to read.
 
-I made a chart.
+Cheers,
+Andre'
 
-Starting position is that both ReiserFS and GPIO SysFS are going to be removed.
-
-                +------------------------------------------------------------------------+
-                | File System                       | GPIO                               |
-+---------------+-----------------------------------+------------------------------------+
-| Sensible      | Use XFS. ReiserFS will be         | Use libgpiod. /sys/class/gpio will |
-|               | removed in future.                | be removed in future               |
-+---------------+-----------------------------------+------------------------------------+
-| User-hostile  | Mounting will jumble your inodes  | Booting will jumble your GPIOs     |
-|               | and possibly corrupt your FS.     | and possibly brick your board.     |
-+---------------+-----------------------------------+------------------------------------+
-
-I believe the second row is bad and I don't want it for i.MX
-users (or any users for that matter).
-
->> To reiterate, my issue is with the manner of breakage:
->>
->>   - broken, because /sys/class/gpio doesn't exist: good
->>   - broken, because script executes successfully, but toggles arbitrary pins: bad
-> 
-> I understand that, but what the series is trying to do is to put on
-> hold _any_ sysfs removal activity along with reducing test coverage
-> and motivation to fix the certain platform to work with dynamic base.
-
-Why can't consumers of the static base be removed and then when none
-are left, the base goes away too. Why does it have to be the other
-way round?
-
-> So, prepare your scripts not to toggle arbitrary numbers then and use libgpiod.
-
-The SoC's own GPIO controllers have had deterministic numbering
-for a long time. What would make them arbitrary is setting the base
-to -1.
-
-> P.S. I think this discussion goes nowhere. Talk to the GPIO
-> maintainers for the matter, 
-
-I believe that's what I am doing now?
-
-> I'm not preventing you to put on hold GPIO
-> development for _this_ platform, but I'm strongly against that because
-> of your platform others should also be on hold, hence my NAK for that
-> gpiolib patch.
-
-Can you explain or point me at resources to understand why a static base
-is blocking GPIO development subsystem-wide?
-
-Thanks,
-Ahmad
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
