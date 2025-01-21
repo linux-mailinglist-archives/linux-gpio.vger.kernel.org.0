@@ -1,30 +1,31 @@
-Return-Path: <linux-gpio+bounces-14953-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14954-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08560A1764B
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 04:39:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E91CFA1764F
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 04:39:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D14D87A3B4D
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 03:39:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 661DD3AAC90
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 03:39:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1867C17A5BE;
-	Tue, 21 Jan 2025 03:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01923185955;
+	Tue, 21 Jan 2025 03:39:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE548F58;
-	Tue, 21 Jan 2025 03:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2478F58;
+	Tue, 21 Jan 2025 03:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737430744; cv=none; b=tAWvKxtYCCToo2iC/ELJCRQfqk5RJh0eN8VefSkO0mZ3huOIoGJhlwbX+NbrOQZX2lG5xF2jp6rhtHBeThObov0MIhZCG5B5BZ7uzf57g6llQgAX3vZWJMK3rDNTBrzuuek0oV5qfFVKNnWQP5Ekp/u8SyqbIOMcX/kdP2nDnUo=
+	t=1737430751; cv=none; b=GXu59ZtRAi+NjhogrQfY3XEFYMr8/eQ62tNF6KuntNVW0hI++EfkLc2O7LrsWD6ZvtE7Vg1oFcJVtLuKGcurhmbysz4uBebhceYHlpmTWw6SboW3zaXc7NrcDTG79nWw1DObtA37/UWyMUZ1BPTaHNwLy4k9FMlx9QB6mGybWTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737430744; c=relaxed/simple;
-	bh=cW9ltewJeTOGIc+huI01BZ5b49aReSytJfBf7xeiGMU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bC1a9+RW695zSvTYz63kojWTBFzWjIhjCQLLEnSjLzIlc2MCoStKzi2LJ+JbC89+oRICdeW4rNO4xJ/jny12xNVoJPEmHQErDbGBDWPFIEUCLcS/0UTsHO84WmTHXCV1jtpASLQQwBL9s6Pk9t0MIAKLH0dIFz/IyJJDvDklWY4=
+	s=arc-20240116; t=1737430751; c=relaxed/simple;
+	bh=DscMYv3enzAGZGUA7P5eEREoN3GC1937aMOucAj7ncY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WPqVAVhdqjR8n28K242DyWpCUZZVUjiXH9/YRDJlVhMYMsczGoMaB/R4JtXujZglwA03hOTz7J8eFu/7SiG1IDsiSrUtVkt4xTjHJt5AuxXdbJyAW4J7kGb4z+xA7nvcZKGH6pz4jYggSqTRKY4TU9TvEVKzTWJ5ZxDqCALL5+k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
@@ -33,12 +34,11 @@ Received: from [127.0.0.1] (unknown [116.227.99.159])
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 0EA35342F65;
-	Tue, 21 Jan 2025 03:38:56 +0000 (UTC)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 33A45342F94;
+	Tue, 21 Jan 2025 03:39:02 +0000 (UTC)
 From: Yixun Lan <dlan@gentoo.org>
-Subject: [PATCH v4 0/4] riscv: spacemit: add gpio support for K1 SoC
-Date: Tue, 21 Jan 2025 11:38:10 +0800
-Message-Id: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
+Date: Tue, 21 Jan 2025 11:38:11 +0800
+Subject: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1 SoC
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -47,12 +47,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKIWj2cC/2XOQWrDMBCF4asErasyM5IlK6veo3RhWSNHlFiJ7
- JqW4LtXcaDEdPkGvp+5iYlL4kkcDzdReElTymMd+uUg+lM3DixTqFsQkIaWWglKfqIcLilLgz4
- 6ig4U9aKCS+GYvrfY+8djF75+1eb8OArfTSz7fD6n+XhQwVIwoLrYWartBpAdWMMcDDI0CpVyH
- Ftxb53SNOfys/254BbbXnKgn19aUII0YIk9c98xvA08zjm/5jJsnYX+LBK6naVqqdVax0CEffh
- n1ZOlZmfV3Vrvrdcag6GdXdf1F5nB+6ZpAQAA
-X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+Message-Id: <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
+References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
+In-Reply-To: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -66,89 +63,158 @@ Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2853; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=cW9ltewJeTOGIc+huI01BZ5b49aReSytJfBf7xeiGMU=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnjxbARUufveWx5vLgRnoT4kGy+jV68rvs26ofq
- IOn5h+eMk+JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ48WwF8UgAAAAAAuAChp
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3628; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=DscMYv3enzAGZGUA7P5eEREoN3GC1937aMOucAj7ncY=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnjxbDAodos70mhPrcP1Vp9XEVKplA4pnbbJSoH
+ dI2fCaMeKiJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ48Ww18UgAAAAAAuAChp
  c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277UjrD/wNliGIyE9tgkWm+i
- bSR18VfQyitKEGYo6EAFDDrTkYoPXjrMeUBvyaDwBKpwaPqvrCnhbiJ7VwYpUSMB6jZHKLQPmdS
- dNly9r2wSLUAJGrqW9A9aqmqnF6rcIWJ6wjejDCfgZtRZO0u0YQMxq24qaM96eQ+X68zMIi6avJ
- yLMtrXwC+3cqpXeF3hPNCHM7qvny61oLxV1PGts1NWA3DFiggyUAJBBxlJw5HGbghB/N+6AHfrh
- 9QUM8d/ggZ2mRCYvh1aZiB600LEGJLZBw8b098tKw4ds4wIJB23IBnaiyghS5eQcaMnLpyRjHL0
- f9DUclC30pA56j0+GZcSdViXkS6/T0mA5NvupVnRR5qnvwFO3AA41Nm3J5zH++fcvI2udelMCUp
- bV/1oqeS8fZ5H439CI85uZCEwja4MfDZHV9Xebo/O28YdsGpBXCnMz+8vE0Ir50lnBT7axPLJaK
- hlrHCpYqxjmCIy9CeIteoyGfrL93cVPrUd7sKl1Kop+kKY/4d2csR6bVschN34L9YsmxpHGLIkt
- Tkdva81Ov2XNLJXLxx7K08A6SwZye0/tJ293bUfMOI7MPbZ8pl4UP191yPhB63vNrzm/mIO6i9O
- HwwrtiyvPOvvR4lpgIgfNFOAPE39FtVSMxf1AJdlnEVGe/qJFTA95Tq4CPktDG0k0BGA==
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277bwwD/4lcyKHl+9mOfUuIW
+ jZKw+CqCZN4yJzCiC4RFJT368Vz66M+JAx4AeCWTO3NDLjUYc1OV4mNFTuIilyqatz+rgNJm1Xx
+ 6uLVGgkdVYrfcY0kxW8lGaTUyeBjCFFsTOFDzeYk5vvvXxHHLUc/1NUrdQytYUmhy6TG/dpZPhA
+ ljUC+xWAQ3Igeb7R7PxmaB1iBkfUl0x0gnuydWkRxWVyht+heHatYr5Qysbig+GdLPSl7BxEkvf
+ aqQLZkg3gSWx8uw70PHrnbWECj1hctShLDFbBb+0oX7odbd6zk0h5JYn5Cb39xm61qWb/3txFgt
+ G65+hVz07/pcrgp5g0RFkZ1EejTzZPy5yNAsiuoHo33dk4v+KzhXd4mhNYGG34J9hzHdtZzm+vL
+ OKDpLPQLPq3pa21w/+fhjItCQaFv3NhCVHGPVfCONuOETOhyNnN/yiFx1Rth5GdIN/rW5DOT+Ni
+ 58lw4ajBKiemFcKUiapVX/tLpU1K+E9BHnXp2wq6/RzuPDctqa1FCgzXfLdOJx+SMB7KNWCTbTI
+ DzUAobBb9skFXes1EOzPCrws250jkpaSPyrQxUoncvn6oGb4XQK+OS7VJ/n+XRX7UvOZu2abB3g
+ IXqqG306Z+/k51XNUXGGeKWs7WwoHPPtJXoVxhOkF/CyBgK3SeonMr0Fb8kqNtMtUzkQ==
 X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
  fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-The gpio controller of K1 support basic GPIO functions,
-which capable of enabling as input, output. It can also be used
-as GPIO interrupt which able to detect rising edge, falling edge,
-or both. There are four GPIO ports, each consisting of 32 pins and
-has indepedent register sets, while still sharing IRQ line and clocks.
+The GPIO controller of K1 support basic functions as input/output,
+all pins can be used as interrupt which route to one IRQ line,
+trigger type can be select between rising edge, failing edge, or both.
+There are four GPIO ports, each consisting of 32 pins.
 
-The GPIO controller request the clock source from APBC block,
-In this series, I haven't added the clock support, but plan
-to fix it after clock driver is merged.
-
-Due to first three GPIO ports has interleave register settings, some
-resources (IRQ, clock) are shared by all pins, so all GPIO ports have
-been organized as sub nodes in the device tree.
-
-The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
-
-Note, this patch is based on 'for-next' branch of SpacemiT's SoC tree [4],
-due to there is DT dependency.
-
-This patch series has been tested on Bananapi-F3 board,
-with following GPIO cases passed:
- 1) gpio input
- 2) gpio output - set to high, low
- 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
-
-Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
-Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
-Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
-Link: https://github.com/spacemit-com/linux [4]
 Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
-Changes in v4:
-- gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
-- gpio interrupt: convert to generic gpio irqchip
-- Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 116 +++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
 
-Changes in v3:
-- dt: drop ranges, interrupt-names property
-- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd9459061aecfcba84e6a3c5052fbcddf6c61150
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
+@@ -0,0 +1,116 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/spacemit,k1-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SpacemiT K1 GPIO controller
++
++maintainers:
++  - Yixun Lan <dlan@gentoo.org>
++
++description:
++  The controller's registers are organized as sets of eight 32-bit
++  registers with each set of port controlling 32 pins.  A single
++  interrupt line is shared for all of the pins by the controller.
++  Each port will be represented as child nodes with the generic
++  GPIO-controller properties in this bindings file.
++
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
++
++  compatible:
++    const: spacemit,k1-gpio
++
++  reg:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^gpio-port@[0-9a-f]+$":
++    type: object
++    properties:
++      compatible:
++        const: spacemit,k1-gpio-port
++
++      reg:
++        maxItems: 1
++
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-ranges: true
++
++      interrupts:
++        maxItems: 1
++
++      interrupt-controller: true
++
++      "#interrupt-cells":
++        const: 2
++        description:
++          The first cell is the GPIO number, the second should specify interrupt
++          flag. The controller does not support level interrupts, so flags of
++          IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_LEVEL_LOW should not be used.
++          Refer <dt-bindings/interrupt-controller/irq.h> for valid flags.
++
++    required:
++      - compatible
++      - reg
++      - gpio-controller
++      - "#gpio-cells"
++
++    dependencies:
++      interrupt-controller: [ interrupts ]
++
++    additionalProperties: false
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    gpio: gpio@d4019000 {
++      compatible = "spacemit,k1-gpio";
++      reg = <0xd4019000 0x800>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      port0: gpio-port@0 {
++        compatible = "spacemit,k1-gpio-port";
++        reg = <0>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-parent = <&plic>;
++        interrupts = <58>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-ranges = <&pinctrl 0 0 32>;
++      };
++
++      port1: gpio-port@4 {
++        compatible = "spacemit,k1-gpio-port";
++        reg = <4>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-parent = <&plic>;
++        interrupts = <58>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-ranges = <&pinctrl 0 32 32>;
++      };
++    };
++...
 
-Changes in v2:
-- address dt-bindings comments, simplify example
-- rebase to 6.13-rc3 
-- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
-
----
-Yixun Lan (4):
-      dt-bindings: gpio: spacemit: add support for K1 SoC
-      gpio: spacemit: add support for K1 SoC
-      riscv: dts: spacemit: add gpio support for K1 SoC
-      riscv: dts: spacemit: add gpio LED for system heartbeat
-
- .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 116 ++++++++
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
- arch/riscv/boot/dts/spacemit/k1.dtsi               |  55 ++++
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-spacemit-k1.c                    | 295 +++++++++++++++++++++
- 6 files changed, 485 insertions(+)
----
-base-commit: 3d72d603afa72082501e9076eed61e0531339ef8
-change-id: 20240828-03-k1-gpio-61bf92f9032c
-
-Best regards,
 -- 
-Yixun Lan
+2.48.0
 
 
