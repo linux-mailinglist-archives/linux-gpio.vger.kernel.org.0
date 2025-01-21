@@ -1,102 +1,121 @@
-Return-Path: <linux-gpio+bounces-14986-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14987-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8152EA1830C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 18:37:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0B72A1861B
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 21:26:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F0831887E48
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 17:37:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA824188BAB0
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2025 20:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D79681F542B;
-	Tue, 21 Jan 2025 17:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 262EF1F7572;
+	Tue, 21 Jan 2025 20:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ooj2ZU11"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VAfLXoWF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D5A1509BF;
-	Tue, 21 Jan 2025 17:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16121F543E;
+	Tue, 21 Jan 2025 20:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737481046; cv=none; b=KicGmvZjv8aahv1uYtHpYnPOL7MgtConOke10EH52dVqgfzEMUbftllkIc/JBZVR8HIx5SQXDy/YEJ5+zNnZgaI2kW6ysnVc2TTTTlUYZLBX5FakJNBBKQ1+uS3bNzEwcVDtGQwgtdjP3O0thmResu2nzBR0sVAAcsKXY7IHiIA=
+	t=1737491155; cv=none; b=Mg+VvB7Gws20XiGugUSBBTHPL02bzvC68XwefLY8J/DuzjlbJUixbeDGw3BIBfWP0bKS6+4CUH2EV6XwncwEQaKdvXPElLDZy2QfdMnoiucdBWo+xNnUwqF5Kd6i8yoODcuxyZasZB7/jT8a6vMTYoSObyL4QXd+npkxfWXE4lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737481046; c=relaxed/simple;
-	bh=M0dAojh5b0bEXayBAowkpRAjqHmf9Q6ZScrftwswwTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JUW58dp+6pooqnPed9DmlvzX/19CdeCTJn5+Mzmr2wr68qq0b/4F8hEJsrZExWCB0tMWmGO1dxSAAL+DFUaYFi4kdU1uC2AXlQmZqAyaHfKVYRn52bGq5WltiGDQXmpqUx4tWZAWnxULjDOIOQax19VO3ZINjFMncooq481tGFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ooj2ZU11; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394BDC4CEDF;
-	Tue, 21 Jan 2025 17:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737481046;
-	bh=M0dAojh5b0bEXayBAowkpRAjqHmf9Q6ZScrftwswwTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ooj2ZU11ai2s9ftPZHHkfIlBuW1FZcU07KKEMHxYkCS9z6T31BZGY2tYUgahgwSqg
-	 lycHOyrSN3bcDcW89GXbpz5F0ZyuKnPjWvnxu3m9HamPPOTD8Mu29vZAAk2B48qOte
-	 B/HCUEcVN0R2Iq1SWs03hMd/EucQPsmuPOcgTkmpcK8h/EeWZlPvA+IOdJmmJwtGqo
-	 vMs0Pz/k/yj70L2IE0x2iOikrjjn8efwDqTyPivztNLFPNUXQIZ8iqmHG/Jn3DPp0G
-	 bebXvXkxbd0jN+s9ozvtACyD3kBw/VtOOiyKuXnjx1YIH9aHliytsbbxkXMmARbXr5
-	 PzNI1AMKUMpTw==
-Date: Tue, 21 Jan 2025 17:37:21 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: amplifiers: add ADA4255
-Message-ID: <20250121-subfloor-untimely-825e3aa54dbf@spud>
-References: <20250120105429.183004-1-demonsingur@gmail.com>
+	s=arc-20240116; t=1737491155; c=relaxed/simple;
+	bh=OeQYxBNSvninRamTPoDFwD/3XDpLYxGP+p+rn0x3lmU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=BKvcmJc3Aaam6gQcGVDHBHI8pv6gCSsNr94fTofnc4tWBWoFTxekZVRKpb4FSmALeYrWlY7rwQBXgzOwvZRWcB3XbQMUo+owhyKAUHILdObbUgjucg1NyJPP24e56tknzVfOlIWwbMRGGtLEZHgkpEZ7NB37HwQfSgMfT4hXxl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VAfLXoWF; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50LKPBof885622
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 21 Jan 2025 14:25:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1737491111;
+	bh=+baiWO3XSuOuVQ0nf47EOojWyPz6NENRXK3GNxWuHbQ=;
+	h=Date:From:Subject:To:CC:References:In-Reply-To;
+	b=VAfLXoWFcLmGB8u3V5zyqGR/6UZlpbhWoKMC30IQFBFIPx/Nlq5K2xnYPC5S1Felf
+	 aTUFbJ6hvf77bLGvTyTeztCxj8lrDdFwfQ740m+fUXoOXdeUR+Esch9cW7VGHgPZOl
+	 xXURb+MqUQb+2O5l+x9CZEKj9IcPjKYkU/Hr7Qe4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50LKPAVi092337
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 21 Jan 2025 14:25:10 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 21
+ Jan 2025 14:25:10 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 21 Jan 2025 14:25:10 -0600
+Received: from [10.250.42.221] ([10.250.42.221])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50LKPAHg002934;
+	Tue, 21 Jan 2025 14:25:10 -0600
+Message-ID: <0c502117-fdea-46c0-99f4-10b0173483b1@ti.com>
+Date: Tue, 21 Jan 2025 14:25:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xDB1p92nrrQXPlio"
-Content-Disposition: inline
-In-Reply-To: <20250120105429.183004-1-demonsingur@gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Subject: Re: [PATCH v1 1/1] gpio: tps65214: Add support for TI TPS65214 PMIC
+To: Krzysztof Kozlowski <krzk@kernel.org>, <aaro.koskinen@iki.fi>,
+        <andreas@kemnade.info>, <khilman@baylibre.com>, <rogerq@kernel.org>,
+        <tony@atomide.com>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>, <christophe.jaillet@wanadoo.fr>
+References: <20250116223840.430054-1-s-ramamoorthy@ti.com>
+ <20250116223840.430054-2-s-ramamoorthy@ti.com>
+ <08ecd393-d5c9-4426-a488-d4fea7067358@kernel.org>
+Content-Language: en-US
+In-Reply-To: <08ecd393-d5c9-4426-a488-d4fea7067358@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hi,
 
---xDB1p92nrrQXPlio
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 1/17/25 3:27 AM, Krzysztof Kozlowski wrote:
+> On 16/01/2025 23:38, Shree Ramamoorthy wrote:
+>>  /*
+>> - * GPIO driver for TI TPS65215/TPS65219 PMICs
+>> + * TI TPS65214/TPS65215/TPS65219 PMIC GPIO Driver
+>>   *
+>>   * Copyright (C) 2024 Texas Instruments Incorporated - http://www.ti.com/
+>>   */
+>> @@ -156,6 +156,10 @@ static const struct gpio_chip tps65219_template_chip = {
+>>  };
+>>  
+>>  static const struct tps65219_chip_data chip_info_table[] = {
+>> +	[TPS65214] = {
+>> +		.ngpio = 2,
+>> +		.offset = 1,
+> So that's the same as TPS65215? Why do you keep duplicating entries?
 
-On Mon, Jan 20, 2025 at 12:54:24PM +0200, Cosmin Tanislav wrote:
-> +  avdd-supply: true
-> +  dvdd-supply: true
-> +  vddcp-supply: true
-> +  vocm-supply: true
+Thanks for reviewing! I will register TPS65214 as "tps65215-gpio" in the
+MFD driver to minimize changes. This will eliminate the tps65215 gpio series,
+since only the description changes are left.
 
-> +required:
-> +  - compatible
-> +  - reg
+>> +	},
+>>  	[TPS65215] = {
+>>  		.ngpio = 2,
+>>  		.offset = 1,
+> Best regards,
+> Krzysztof
 
-Why are the supplies not marked as required? I would imagine that at
-least the first two are needed for operation?
+-- 
+Best,
+Shree Ramamoorthy
+PMIC Software Engineer
 
---xDB1p92nrrQXPlio
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ4/bUAAKCRB4tDGHoIJi
-0viTAP4jNbUKhNwSyi2+KDRTyegc9eE9ZVUR+5I0BLg4zIJ27gD/bHv/O0eZbWkD
-fyKlQEEjnaQ8W5YG0ZYAuUEFV/H7rwY=
-=C7gC
------END PGP SIGNATURE-----
-
---xDB1p92nrrQXPlio--
 
