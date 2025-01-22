@@ -1,135 +1,114 @@
-Return-Path: <linux-gpio+bounces-15005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FAD3A1928B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 14:31:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6598A192FC
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 14:52:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CF451882D26
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 13:31:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AE4C3AA8AF
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 13:51:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F262139DD;
-	Wed, 22 Jan 2025 13:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E67D92135D5;
+	Wed, 22 Jan 2025 13:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vv/Y+178"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kWFYFfZK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104AF335C7
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Jan 2025 13:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECB31E4AB;
+	Wed, 22 Jan 2025 13:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737552652; cv=none; b=g8rM79qg9jBqATxwc5DJy8edaLWG1+lOsqfqPzC6oSPv7rEVYB5LmWEdZHbdNWQFxdVDS+hs+jJr8CKOAzu0FME3ZGYCmsw1/EDKO6ncBqU5WLo0/18J53iZ5Wa9J2Ndl1Wc320g6jJeMU/u77ZZcezHsavXje1Rzv0uHoGE5Rg=
+	t=1737553910; cv=none; b=ozU5ASIQ68VJ4yuPV6VaaY2dCpi0s1XoNmIZaM0n+6Op1D4OTyY5MLUHq2CFejUc8cHRfFjVc9PzidIt/wn5nyZIlxG0uLkjatTZXBHVAawGVgPL2k6Gi3k+iU/ugEaogO2aBKBJ0X2RjVA5MnjV/CxudVFhqd20HWWmGDxPnqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737552652; c=relaxed/simple;
-	bh=MT1Qd4GfkNXwqWLqiWPdrTymaf6z71RpZBpS8qzx2Bk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZ9XaXT1oqAk1xHh4+alwNdQ7IKijo2bAm/PiCzzBHuXZCrSDpUXlOHeecz82WDwyJE0kKwAfIQJ2Mu3hKY0ScY3gf65tS7Yfh8h6fXcO8S5XLbvZLdLuy9uNvNFYsFShRDorCdM/A7hJbAFB2/tmNEundbSTnwszMbMIwhovAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vv/Y+178; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54026562221so6944630e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Jan 2025 05:30:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737552648; x=1738157448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MT1Qd4GfkNXwqWLqiWPdrTymaf6z71RpZBpS8qzx2Bk=;
-        b=vv/Y+178v6T/33PtFV1XX+V/CPi6mqf84bJy9c+E1vOtjZQp8QPy9+s7upo8Xw2ViH
-         JZ03icyH7aLJjEBJ1VUWjaj5uR6bORmRJmIXpxP1yQ9q1keAiD6WWPAIsDT5mUIUngnr
-         8Ms5Kh5OLncFqXSSqTUCGWP54Q8Le2dDiCCgmqjkyGuEfu0MxAOqaqC9cJWWI+7oauv8
-         xcnEHzpFNOkDHROQuXAqMiUN90vuD5aBwchQeOtlGDbD0pbhU/LCTlat89sVwzs5gcOy
-         5mlYVxK07KatnsL4GDNQ+JtkXl9WjdkHOYjoED/Lp+5TurSuSQoMs5MIccLDqTwzmoAL
-         R/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737552648; x=1738157448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MT1Qd4GfkNXwqWLqiWPdrTymaf6z71RpZBpS8qzx2Bk=;
-        b=KqJAq1QQPOsw6QW1PtI+gOO4SdADyiw5qvS7FHYK4AKlSOxLNzKKEhwCIdBgMKux3i
-         mrf/7FsjRDUMEQPC0dpPTgWLR6wwf+VZN0kA/6/hCnFnOW2BeipzS/ZahwjUvuOba8bI
-         a2eCzNCZUw8NMXd8amNr+TSfZcQi4LaOX2BY8FDqYcu3s4wYwgnd3CBxXzVXN2IgJD+m
-         dqrJIB0xsA/vj2FlwYYJ0xwDjpDfiCUtEi4LqNDQXG/QAFj1mcKT6wrv3m6RyVoS/BOK
-         Pjn2+TYM6zhvRPBmhUVofJ5VD1YyuZ2SNA02kH20LaEMkzjfJyMp2lF/j3ik8lqpsdbS
-         xVvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBrpVHevQdHpvCJRu5JxvoPZTGc5elZmzMNV4m7S9eNwGFm5aHAUWh8KWqsr5SNWmBR+vvNKD5+QOR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPAXBGwq4CFMmnZqIYrv6j+EV9sA7pdCvV9du5Ce/5G8bsLauk
-	cRPtjA4WpI3u8UHS/61dsatdrTXSTJSeQsQNPCLvcwpPBMPFbWT/BTb8yynlKSBdaCxagyS2+G3
-	vqBLRdnuI0DnQFlwOatHW8N64r137OnQVTY/y/w==
-X-Gm-Gg: ASbGncsX3GyJwJCU0MEQG05Nt7qcLwftDlJWexS+SctwL4/gvmlRTA6S1aI4KULbouP
-	C1DH4A8rm9ERbkPGjhdZLYKcE1VFNfy5Xl94Srbl8I0zRf0gQjA==
-X-Google-Smtp-Source: AGHT+IGs/n7Ljor2d3ADarC6NG+9NmWSbVqt5BnALy/+iVRtZ9CeuWAGeuayEWCsA+u7d2kSrA4qXict3/8+PKzO1MM=
-X-Received: by 2002:a05:6512:ad5:b0:542:8d45:cb3e with SMTP id
- 2adb3069b0e04-5439c241016mr8306080e87.18.1737552647836; Wed, 22 Jan 2025
- 05:30:47 -0800 (PST)
+	s=arc-20240116; t=1737553910; c=relaxed/simple;
+	bh=U52YDAKd2fl7onoKSd+k8uVkpwYIMyG1MPiVziIhZck=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NOya1oCvBoHDKljJJrWVzudwuivu7XVFVEtjtHgoDSif9SJ26ZDExZR7UhsOEeG8jQz+Zij5hztsHsLgLbE1MYJwiRWX+NEiTQHipuooVMPFpx7Dwki0HYe5DrtC62Yn7abe3165giegMV+uBK3Wk7d0vc7MVGffsfPbAwLgDTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=kWFYFfZK; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 02adf73ed8c811efbd192953cf12861f-20250122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jv2yDZtHcpSll2NLJ4TWnj6kWytYEK0xigOiSIN3QPQ=;
+	b=kWFYFfZKJ3WRuGl47YcW5NFG9PImD+uW6f6BBv5qA7WenMBkeKscomph1xKMRy6dlagrITq2geDi6mqFu/+vIAh0xt1qzEqajfuKWJQjqSIsuSTpli7K+wXqi9GpiWmKp9WHqeT3AfuehLhzVfRuGbyd4Avq0uC9HNDaapdZDeI=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:4b878fb9-3dde-4272-87a3-796980be440a,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:60aa074,CLOUDID:0a84883d-da39-4471-8a46-23da908abe46,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 02adf73ed8c811efbd192953cf12861f-20250122
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+	(envelope-from <ot_chhao.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1359005992; Wed, 22 Jan 2025 21:51:42 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 22 Jan 2025 21:51:40 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Wed, 22 Jan 2025 21:51:40 +0800
+From: Hao Chang <ot_chhao.chang@mediatek.com>
+To: Sean Wang <sean.wang@kernel.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>,
+	Qingliang Li <qingliang.li@mediatek.com>,
+	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Hao
+ Chang" <ot_chhao.chang@mediatek.com>
+Subject: [PATCH v2 0/3] pinctrl: mediatek: add support for multi-instance EINT
+Date: Wed, 22 Jan 2025 21:51:22 +0800
+Message-ID: <20250122135135.15234-1-ot_chhao.chang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-4-szemzo.andras@gmail.com> <20250114141954.2785879a@donnerap.manchester.arm.com>
- <CACRpkda0nx3SQtdjmXdCEbVJSWM10TM=p-6JbDjbiYcOSF5PxQ@mail.gmail.com>
- <20250115152635.1b89e7f4@donnerap.manchester.arm.com> <CACRpkdYVTedEon0X-izvaDTGF6yRhD2s=Z6NEM=zBf4vD-T0Pg@mail.gmail.com>
- <20250117145228.2fc8a64e@donnerap.manchester.arm.com>
-In-Reply-To: <20250117145228.2fc8a64e@donnerap.manchester.arm.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 22 Jan 2025 14:30:36 +0100
-X-Gm-Features: AbW1kvbmavQU6KJ-WzCpG2eI69ENGFRQZ6H5c_O0ajyC4q6k3ZeKpvUjD-d9bk8
-Message-ID: <CACRpkdZ29=mCqLku4Obq+E5j6kS4NZchwCtrTeCt0qUctn6Czg@mail.gmail.com>
-Subject: Re: [PATCH 03/12] pinctrl: sunxi: add driver for Allwinner V853.
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Andras Szemzo <szemzo.andras@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, Jan 17, 2025 at 3:52=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
-com> wrote:
+Change in v2:
+1)Remove debug code
+2)Remove instance structure
+3)Change from providing mapping table by device tree to providing it by
+pinctrl
+4)Use eint hw structure as the basis for private data
+---
+This patch depends on
+[v3,2/2] pinctrl: mediatek: add mt8196 driver
+[v3,1/2] dt-bindings: pinctrl: mediatek: add support for mt8196
 
-> That is actually a good argument: At the moment I am happy with my
-> proposal (the allwinner,pinmux =3D <number>; property), but that seems li=
-ke
-> standard #15 then.
-> So would biting the bullet and adopting the Apple/STM32 way then be more
-> sustainable?
+Please also accept this patch together with [1]
+to avoid build and dt binding check error.
+[1]https://patchwork.kernel.org/project/linux-mediatek/list/?series=&submitter=215008&state=&q=v3&archive=&delegate=
+---
+ot_chhao.chang (3):
+  pinctrl: mediatek: add support for multi-instance EINT
+  pinctrl: mediatek: update EINT base retrieval method
+  pinctrl: mediatek: adapt to multi-base design
 
-I suppose...
+ drivers/pinctrl/mediatek/mtk-eint.c           | 219 ++++++++++-------
+ drivers/pinctrl/mediatek/mtk-eint.h           |  22 +-
+ drivers/pinctrl/mediatek/pinctrl-mt8196.c     |   1 +
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |  45 ++--
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |   1 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 232 ++++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-paris.h      |   7 +
+ 7 files changed, 418 insertions(+), 109 deletions(-)
 
-> On the other hand: the allwinner,pinmux solution has the advantage of bei=
-ng
-> already written and proven working, also it stays very close to the
-> existing description/binding - so implementations like U-Boot could just
-> keep on using the "function" string.
->
-> I am a bit torn here... I don't think I will find the solitude to
-> implement this "Apple" approach in the next few weeks.
+-- 
+2.34.1
 
-I think whatever the Allwinner maintainers agree is the best should
-be what you go for. It is a lot of hobbyist maintainers in this space
-and for them the bar should be lower.
-
-If you have buy-in from the other maintainers, then go for that
-solution.
-
-Yours,
-Linus Walleij
 
