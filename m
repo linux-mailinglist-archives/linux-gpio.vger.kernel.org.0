@@ -1,119 +1,123 @@
-Return-Path: <linux-gpio+bounces-14998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-14999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96F5A19171
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 13:37:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7B68A191AD
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 13:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89DA6188C6C4
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 12:37:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EE23164D14
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 12:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00783212B2D;
-	Wed, 22 Jan 2025 12:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C45E212B2B;
+	Wed, 22 Jan 2025 12:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k3inm/AL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cfg3LGES"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D357B211492;
-	Wed, 22 Jan 2025 12:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F81192D7E
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Jan 2025 12:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737549454; cv=none; b=iZN8FK3RkQy0HOym8+WmN8J+IAmcNmzRvBeRgGygI7Ii7mm2VL07otpwmUrV7dZ8e/8D5ULjpM/Bja1UA+4t4xvNHpKL5vtDgTAkTAbGYQggdOFrITCn3kj7tvo+XlhwFZCZ3q5XQPcTFlecnQxtuBuUfZ9jlifLKEKpihaIrhc=
+	t=1737550001; cv=none; b=AyxpkQ/JpwmCps7Ua88Ckx9foZ5JtJLdFLBXU5DVLwrhjkykNL+2r7MwVYnUJNx2F2lShc138SWeTihzJ4q3ysZO5+oHSwF+TGEVq5bgL/LUei0B6ixoZMha94oU3DkaugX+BqYGQUypHZPUHgerArgFD3ef4f6dQboBSyYOxb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737549454; c=relaxed/simple;
-	bh=yw+CkbfuSTyi5N2mW6c4l4yTGpu8cv8oyOlx69RwAvs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
-	 References:In-Reply-To; b=dJ9dlpinDLxfcPQ3+dcvUs7T46CvmqC6C28YP7LkbpQBijF8vEV9O65629wti+aWuhxEV2fJiOB4X+Pl0ew69/JeGDvBRR79EDkuO6rBy6+xn5Il7BdMycAiXUW42U3HBSE1b+enfnTrxDQe60glugdL2s0zvNV/W2eJcer/284=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k3inm/AL; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 376F81BF208;
-	Wed, 22 Jan 2025 12:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737549449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yw+CkbfuSTyi5N2mW6c4l4yTGpu8cv8oyOlx69RwAvs=;
-	b=k3inm/ALBopY8of/E8nd33qIgu6HcNQRrm2s8SQGeRt0YtG79fZ2pL0QF37ewyKfuHPPLG
-	mmpEyLMhk+1lRop7FfJlluwKxs2hrEb8YsLulZgaeZKWhxvogpPdXQNQAjS0XN29BIONny
-	E4yTX8CH3Lm8Efy7Tj2pJyyvSY7RJA8wchnfVPuDMx/Oo84ZP2uJhsTV7MYsU0KhV34/lL
-	+VFXk0tmvD18k+XG9tkVdEQYQxdjBAq1jW//YQgRmf8HAEwgcRYvhjJ01ClT7jsssWxhl/
-	9uThq0xhmcpw7aYmwRXbKHaGYRB41gMi6k7qspFr+t/5EItF1pTQeYHWwR0c5w==
+	s=arc-20240116; t=1737550001; c=relaxed/simple;
+	bh=/l5whfi/TU9X0sa+oH+QdXFEULZ2Ua5U0SDwwNs4V3g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qjMWfxpA4YvZBbT4m21/mSFjyYJKjnkGzgjHt0iEXUAZgk87ClTq0UnQfWfYs4ti4ZX6Q8JWB52matjwYlxfRbO9nc0QjKHzKzKM7PoagxNkp7A306Mg35SFiBpcUkWecInH6a3xWAzBSbqPssQVlx3jiPF53eoEkn7ba8Jc6Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cfg3LGES; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5401b7f7141so6155509e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Jan 2025 04:46:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737549997; x=1738154797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/l5whfi/TU9X0sa+oH+QdXFEULZ2Ua5U0SDwwNs4V3g=;
+        b=Cfg3LGEShUc3rw8cU4nv+DvNMmoW5z7SAcCp3MY/fEU1BGOlbXk/VoO2YHM2G3hIB8
+         aWCJBFZ0gS72aiuEXU5a+jEXjcPEAJ/eV4ce5dXs/X9l7wpGPrIK46En1nDVBDDkxQnI
+         wxcPtN6s5+nrfX4v9XBBI6bYGQsedA84rcnGBOO4vsI2YzyO3RlLrKbt9qULacZnKNy7
+         g3koae2j/UobVWdD+w9HD6Uk/rQZe40JfwuQJhRDOrKTelkCm9K/TZTH8fwlrBGc5w/6
+         o9zf4NWT+Sq1gZ8kS3p//E9rENeTQMn1TTAbi7cDa41ONBbGjF0ts46gPUY8lSDXPz4B
+         I4Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737549997; x=1738154797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/l5whfi/TU9X0sa+oH+QdXFEULZ2Ua5U0SDwwNs4V3g=;
+        b=XlWt9YKJpE1IGNTlIJAtrJAMlIqVuIQKMv/0xt+QyOV9czdHt192Z/1iXJXs530cNS
+         9oDPw2vdpjlSYHxa2hyVvCg/Ngdfx+EE7Uc4CAev5z24OfNEL9uBjNogkEmK1ngA6g+p
+         apH2c4vGcFQCU6o1a5vnuoQsPK9df8Ul1AJZHNz4i2dfs+D34OFJA4zhNrWW9exUXjpU
+         SMx0YA6LRi5Ovuup9/voAlq7sJ7lLz07nyV5v5mA1KFWYsVL5IrpgwwyKaK5nyu4Pgpj
+         G3YbpDtN5ebrQIY8xBJJl4msUujnRWBtw0pDhlJEP1LjbdifS4qyz1e8UE+Dr9wxT7BT
+         2+8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXq0BVO4mSGuvIeyJuaHCWJ3Od9e8VzYLQzxdNZdBpFLYUEvVHiAUa5TwuPS21fuuaj+zjXQMmbQnlP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVCWErDMyrhvYyDxtgWCeSo6FNYR7rLYFRQiZbfS321nLEU7Dk
+	rLvgLk5e24Xs+ABUSGqnm7oPo5uMuXewd+GbwDoOjuR/Qo5nQQYHRItXd7WW31iobx6zboEHc2c
+	8DCx/P9cDmNfC/I9G+eVQ+7VCqG5oRCLbaF0Itg==
+X-Gm-Gg: ASbGnctKGjjoOZ2dHKA+kI9dlJ9xJCOOLhkCZCvYZkzKgZ/qD5tQLbshrztQ4LY2hSf
+	j13ijRA8HVYlcdNvN0o9fAyplsIpfaQtYXBWe6tQppqIHQVV9Tg==
+X-Google-Smtp-Source: AGHT+IGjgBjlUgcB69dmTOIvKwbj+e3IlkuTbyMESMsoE1KC978GwGKsLt3VXVNdUncN8HG6HGcGVIwgM9KDeYaU3+Y=
+X-Received: by 2002:a05:6512:32c7:b0:540:3566:5760 with SMTP id
+ 2adb3069b0e04-5439c265ce7mr7014426e87.35.1737549997295; Wed, 22 Jan 2025
+ 04:46:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20241211-aaeon-up-board-pinctrl-support-v1-0-24719be27631@bootlin.com>
+ <20241211-aaeon-up-board-pinctrl-support-v1-4-24719be27631@bootlin.com>
+ <CACRpkdZ_AwiE+HFX6TFBgscaVquKm_tegNSbTT0fhFmpkM7d_Q@mail.gmail.com>
+ <9e692951-86a1-4dda-b843-58173453ffe0@bootlin.com> <CACRpkdZ6kmPn9TfO40drJ+vwM2GNKfNaP21R_gEvugg+GJiF1w@mail.gmail.com>
+ <7e96dd60-8f72-48f9-a393-5a8a7e5c6b18@bootlin.com> <Z4Tg-uTVcOiYK2Dr@smile.fi.intel.com>
+ <b50444f7-4dd1-4440-af36-783b1b4f8625@bootlin.com> <Z4jNZPcDd89-HfAd@smile.fi.intel.com>
+ <e273428e-3ebd-4116-b317-9aae0c8c603b@bootlin.com>
+In-Reply-To: <e273428e-3ebd-4116-b317-9aae0c8c603b@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 22 Jan 2025 13:46:26 +0100
+X-Gm-Features: AbW1kva2F4OTmtr3bQVZTVKt9Nl064Bf0-XTMMAcP_pBnbx-PDZEjOCq98BucjQ
+Message-ID: <CACRpkdapanuq=_f6xKFGdVnksEe=3EWY=AxDORwVKacv68nYOQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP boards
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
+	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 22 Jan 2025 13:37:28 +0100
-Message-Id: <D78LVHBIKPGH.33YJLSO35BN5Z@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH v3 3/7] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-3-9519b4acb0b1@bootlin.com>
- <f22l3uqgt65utxehv2zmozqixjkktp4trpr42xr5arvp6o5zcf@g5iriaeskqa5>
- <D74EQQNADWDP.FQ5XFK8TB5XH@bootlin.com>
- <v4bf6bharih6zgz52ya5twfyf47wh3fu56ovic5gjxak2jhufy@q3eudujjwrhm>
- <D74GSFVY17UV.GMN119MAVAK0@bootlin.com>
- <vljrtytihjud6v4xnyolrnbopep45ga2kagygoruryqwvpubmt@s76ht4taazpx>
-In-Reply-To: <vljrtytihjud6v4xnyolrnbopep45ga2kagygoruryqwvpubmt@s76ht4taazpx>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon Jan 20, 2025 at 3:13 PM CET, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Mathieu,
->
-> On Fri, Jan 17, 2025 at 04:47:45PM +0100, Mathieu Dubois-Briand wrote:
-> > On Fri Jan 17, 2025 at 3:40 PM CET, Uwe Kleine-K=C3=B6nig wrote:
-> > > sounds great. Note that the detail in rounding that is different for
-> > > waveforms is that a value that cannot be round down to a valid value
-> > > (because it's too small) is round up. This is a bit ugly in the drive=
-rs
-> > > but simplifies usage considerably. So you never return -EINVAL becaus=
-e
-> > > the values don't fit.
-> >=20
-> > Sorry, I'm not sure I got it right. Does this affect the three members
-> > of pwm_waveform (period_length_ns, duty_offset_ns, duty_length_ns) ? So
-> > on this device where the period is fixed and I cannot define an offset,
-> > does that mean I will silently accept any value for period_length_ns an=
-d
-> > duty_offset_ns ?
->
-> Yes. The fromhw callback obviously always fills the respective constants
-> into .period_length_ns and .duty_offset_ns and the tohw callback
-> essentially only looks at .duty_length_ns.
->
-> Best regards
-> Uwe
+On Thu, Jan 16, 2025 at 1:21=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Ok, thanks! I will make these changes for the next version.
+> For the pinconf / pinmux, the FPGA is just a voltage translator. It is
+> transparent. The only relevant thing for the FPGA is the direction to
+> set for the switch of each pin. And the drivers knows which directions
+> to apply during the probe. This direction will only change in GPIO mode,
+> but in GPIO mode we know which direction to set.
 
-Best regards,
-Mathieu
+Just a thought:
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Maybe the lowest impact is to just patch in the extra operations
+directly in the existing Intel pin control/GPIO driver in
+drivers/pinctrl/intel?
 
+I don't know how this is detected by the system (I guess some
+ACPI magic since it's Intel, in DT we can detect the top-level
+board) but it can certainly be done and
+probably replaced with compiled-out stubs if not used.
+
+This might not be what Andy desires though, I think he has
+the final word on how this should be engineered.
+
+Yours,
+Linus Walleij
 
