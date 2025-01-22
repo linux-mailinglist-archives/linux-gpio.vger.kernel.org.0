@@ -1,136 +1,79 @@
-Return-Path: <linux-gpio+bounces-15012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41EAEA19876
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 19:32:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2C6DA19900
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 20:07:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3163188B3BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 18:32:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DFCE16CEAB
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 19:07:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA19121578C;
-	Wed, 22 Jan 2025 18:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDFBB215F63;
+	Wed, 22 Jan 2025 19:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gK+7ow7r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjWKjtOV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798F4215777;
-	Wed, 22 Jan 2025 18:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3752153F1;
+	Wed, 22 Jan 2025 19:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737570759; cv=none; b=XfK2QmooaJ8616Wt7S/1i3PXpRQVSF77STdOg7p8uo0tJc0IFTS+IbxllsDhpAjDXxLAFSZQeogeiF8fNkLu2KNnGa9ZL0+/BNVCoze2mmXT+2RCS7Zosa0rzEnNPwIO1efqo44w2VWhHXZwXMeBXrnR7KePvFVbpLt4T/2Hhiw=
+	t=1737572796; cv=none; b=qnOylLqr72NSuZ1Dl3mVbbpt0DWcL9JUaDFbZOesvfAx6j+WxB/dQZS9oO9HgETS+CVEnjhbaSVly6B0R/SbR2S0FHEDPuHHq2RTXVrrduRlMQfAKL46FxXiLEFWnhiCXHLJQojkSDMd1Eyj3QvoPjW2KHeAXHP1iZQAkxYFttU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737570759; c=relaxed/simple;
-	bh=Iis+QU1tjZAJEHmlk0WnMQoa/BLWtdN140rjfcxdt14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4oHJ/lkc12CUpL2xUgAgtYnGDieViwl+O0cB2fwxLk4aUDqJuy5xG0EtTuHXTIkWDUuQ8ijE7782cx9f9CbHlM3MpUbwt9X4VCEOAGZF+jGmiKItxz5oX61PeqW9ibgDtJ83d6HeXBCODwlAnh7yjfoTJ1ixScW2s4T5gmarsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gK+7ow7r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CC6C4CED2;
-	Wed, 22 Jan 2025 18:32:35 +0000 (UTC)
+	s=arc-20240116; t=1737572796; c=relaxed/simple;
+	bh=0j5qW41gQKfynv5pjvnUD7orMQofPX9Juqb/XHX15pY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nTtEDyYN0YQOUUQSemSIGTeIUq2npClrgVTpmwp1UxR3peba7HZct6/ZSlnJl2JlryBBeSUjTJWUB95BPl/fkv0azcZ+VZD8fKLidJT94pD89M50KEdnFwltc4LLy1X+FEKY7+kupx6w1lGkNeci2DZGUr1qpDONzZByK1yDrTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjWKjtOV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE1AC4CED2;
+	Wed, 22 Jan 2025 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737570758;
-	bh=Iis+QU1tjZAJEHmlk0WnMQoa/BLWtdN140rjfcxdt14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gK+7ow7ruuizrO8T11TJcO7Ay3+QJe5i+3QPNghJVS2wooa2QnTAh5XvpwCuGBFh+
-	 LZ2cdeq+XuJXxBLDqwKVGnWGQew6Y8Sglm97+m/Y5GD6hklG1L3hmx+hwXPtJZQmBA
-	 WbQi6VrrPGcSuQk6ZBfTXzZLSZLyK9RSTfncpSxF2moZ8B6t9C0d3Zfx7FxMFxMURL
-	 dvYfVfk2DLVBaUy4EBVDIpJ4N0z6qID/i0xQg6trDVXW1WcS0CTEEnAUbnLndm244+
-	 4noqvIz1jNSqw4q2d54UXBd4W42NNNMyEIJiwjs243EVlzv6xWiFvct0YVvn1AOhCC
-	 a7u916y10GK7g==
-Date: Wed, 22 Jan 2025 18:32:33 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Alisa-Dariana Roman <alisadariana@gmail.com>
-Cc: Alisa-Dariana Roman <alisa.roman@analog.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add AD7191
-Message-ID: <20250122-gravel-angelfish-495977611060@spud>
-References: <20250122132821.126600-1-alisa.roman@analog.com>
- <20250122132821.126600-2-alisa.roman@analog.com>
+	s=k20201202; t=1737572796;
+	bh=0j5qW41gQKfynv5pjvnUD7orMQofPX9Juqb/XHX15pY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=pjWKjtOVy2WIiczZdCl8GdIqnmxYQqEXbHwCRvUAzvprvojsGybNN6ZSqT6hmNfv0
+	 1BS8mCJZyioPlAqsd8WrgR/yQZYqYYyCJkPeyqb3U1dchNZOT30MWXgzgWxMi8KSxx
+	 xi/6N8sDjPHdmbduMw97YpFymXvMDiPE/xYpvc3/ksV9xkM8Dg8vC1Oub8+GecQmZD
+	 8WBX4YJRN7j4Sl1gq2yrG54gYy++r2TNnJyMv4A/8DURplZcNqVUloOcuCpit8eovk
+	 YPeT6dunqoscweHeGVRvDtjL4mEdy5asL5j1mxOlAJPsmUDvMS+L7W0E7WxgOtJEPw
+	 cQWyp68iWlbOg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D00380AA62;
+	Wed, 22 Jan 2025 19:07:02 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio updates for v6.14-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250120141718.329518-1-brgl@bgdev.pl>
+References: <20250120141718.329518-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250120141718.329518-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.14-rc1
+X-PR-Tracked-Commit-Id: b0fa00fe38f673c986633c11087274deeb7ce7b0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4abae5b6af811ab2b53aa761bf9ae2139757d594
+Message-Id: <173757282081.783272.7060393401461455874.pr-tracker-bot@kernel.org>
+Date: Wed, 22 Jan 2025 19:07:00 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tTB+zRNEZ6Rhy9nc"
-Content-Disposition: inline
-In-Reply-To: <20250122132821.126600-2-alisa.roman@analog.com>
 
+The pull request you sent on Mon, 20 Jan 2025 15:17:17 +0100:
 
---tTB+zRNEZ6Rhy9nc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.14-rc1
 
-On Wed, Jan 22, 2025 at 03:20:39PM +0200, Alisa-Dariana Roman wrote:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4abae5b6af811ab2b53aa761bf9ae2139757d594
 
-> +  adi,odr-state:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Should be present if ODR pins are pin-strapped. Value corresponds to:
-> +      0: 120 Hz (ODR1=0, ODR2=0)
-> +      1: 60 Hz (ODR1=0, ODR2=1)
-> +      2: 50 Hz (ODR1=1, ODR2=0)
-> +      3: 10 Hz (ODR1=1, ODR2=1)
-> +      If defined, odr-gpios must be absent.
-> +    enum: [0, 1, 2, 3]
+Thank you!
 
-This should be a property in hertz
-
-> +  pga-gpios:
-> +    description: |
-> +      PGA1 and PGA2 pins for gain selection. Should be defined if adi,pga-state
-> +      is absent.
-> +    maxItems: 2
-> +
-> +  adi,pga-state:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Should be present if PGA pins are pin-strapped. Value corresponds to:
-> +      0: Gain 1 (PGA1=0, PGA2=0)
-> +      1: Gain 8 (PGA1=0, PGA2=1)
-> +      2: Gain 64 (PGA1=1, PGA2=0)
-> +      3: Gain 128 (PGA1=1, PGA2=1)
-> +      If defined, pga-gpios must be absent.
-> +    enum: [0, 1, 2, 3]
-
-And I think this one should be in units of "gain".
-
-
-> +  adi,clksel-state:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Should be present if CLKSEL is pin-strapped. 0 selects an external clock,
-> +      1 selects the internal clock. If defined, clksel-gpios must be absent.
-> +    enum: [0, 1]
-
-IMO this one should be a string, options of "external" and "internal". 0
-& 1 means nothing to a dts reader/author and needs to be cross checked
-with the binding to obtain the meanings.
-
---tTB+zRNEZ6Rhy9nc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ5E5wQAKCRB4tDGHoIJi
-0iBWAP9cunN3VZiL/VMCctFYc0GGl32jDAmBgTtgCfqjwBieqQD+OruD3WW4BaQm
-IMdxGlmH2ViKldDq+l4neEa7erwlJQ0=
-=JpYZ
------END PGP SIGNATURE-----
-
---tTB+zRNEZ6Rhy9nc--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
