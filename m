@@ -1,198 +1,111 @@
-Return-Path: <linux-gpio+bounces-15035-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15036-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F4BBA1A2F7
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 12:31:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B31BA1A384
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 12:47:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78D107A2F57
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 11:30:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A975416E82E
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 11:46:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DAA220E314;
-	Thu, 23 Jan 2025 11:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD57B20C016;
+	Thu, 23 Jan 2025 11:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6/5urNE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A1C20CCF7;
-	Thu, 23 Jan 2025 11:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E080220E6E4;
+	Thu, 23 Jan 2025 11:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737631850; cv=none; b=e0urk2lFfPC5LtFayGDu/051q2rdHRsTQvQj885oXg+39qT9zlQ4+n4okMkuipRbY2rqGahuj6hQIOVBTpS7XasQ1Sqs3LT1ReFTaSTcdFn0Udzl+SKh14TCRbvxXk30qUYzPsm9nGB//O1eylnVBIPUs8gtTrlvFGuPFUPT78k=
+	t=1737632756; cv=none; b=kHCkkiZqWJi5X6Qd7EsxMuKTifIO5S6bQ/VRZxlFvO+UR5SI+Ou6DzDDSdg8aMxYa/fBDzMzwA+76dTIAiYXEFtTpLpX7GCnEgXvclUpGdsGEr5QKWb+L8kj/1CZtXtUor783qsIsjs9ojArlOUyvILXNrwwx+DGKIzElRnVL4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737631850; c=relaxed/simple;
-	bh=QXN45v3zlJ4Zmrk+cA8n8eududQA1Tin/vmIgvLpvc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cbbDTyg2WyeCQVhM2CNP/tOF0DXR9ir7Kkk35KMd12TD2NUFDCBqwpKE8mGmpGuFufwkEp1LTg/GvUpCeouM9EnvmSmH59D+7LNPIebUV8aQd0h6e+ekko7GBRwRDTndUnqvvTjThjU0Bo2TzOVi1NgqBFgxNIBCCPqawVvUeOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.60.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 3E44E3434F4;
-	Thu, 23 Jan 2025 11:30:46 +0000 (UTC)
-Date: Thu, 23 Jan 2025 11:30:42 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Olof Johansson <olof@lixom.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
- SoC
-Message-ID: <20250123113042-GYA38135@gentoo>
-References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
- <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
- <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
+	s=arc-20240116; t=1737632756; c=relaxed/simple;
+	bh=rBOgOxZNd0ESxYLiJ6t6AcqdwB3MVsE0EYS0CORxWQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YxwX8yWY9WuIhXIkfbf7bDNJ/rmehG0HvqgqK8YUV8L5Np8wd/6OYiS6IvYhN+aNTlx8AopjfPrN6ehDsX9srhalfNdbjT3F1JPgJQO1fgcKEqQ9DG9JzNmIzS2GBIF+QKvLpvj57crGpqJvLpIW7O/IEASgdUL6EqkSQjgxgBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6/5urNE; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso148340066b.2;
+        Thu, 23 Jan 2025 03:45:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737632753; x=1738237553; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rBOgOxZNd0ESxYLiJ6t6AcqdwB3MVsE0EYS0CORxWQU=;
+        b=Z6/5urNErDDITmbx82CTNnAdOcgIREIhvXprFdTnnC6QJweBzmghTf3rropdXfJK6U
+         8G5iBJNdRVTC2t6yBi1UgBnqZiEzRwOq2PERw7wTCpvS/wZHi5YAgTR8KmqSHqcAP/MA
+         rXrjuV1VHo87B2+7wRvCHdAqNQBfnJjDdh0mFDb7JgD3JEBlM3nsPtBISZnHliTXXvSc
+         WQ7NxhTOrFUtJUyHEqv8+ruEEnjzWS7Yb0NYtPfU6cK+0p+WPeGUSVB/wfb2K7b0wQJR
+         AFbedD9o3tRdxFp580bb9QOS0uV217isC7r7dV/cIeLjWVJrm8SW+qh6zd6e//EY3cHQ
+         2QLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737632753; x=1738237553;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rBOgOxZNd0ESxYLiJ6t6AcqdwB3MVsE0EYS0CORxWQU=;
+        b=YTOSiiQg8Pj4lnNLpYWdzJHuBrcD2nhWTB0QhWvDvHFyart5c+cDO2Vha+xpREZdcR
+         V+ToONvT/2qEJfqGig4IwQ2Hh5axYdLTe7R0ZGq0Zr1NvIL6LGoFF5jqIMRS6toULeOR
+         1+HiFFatVP/ohnx7/Fijqj3XhyGzsqSRezXFVPg3tiFigr17+ZNY44x87HmB8ekVcdyT
+         UD0GJpAE97WqT1th9SFRoqcfz5mmkfhNHCqNbq1nzcc0tNTe2JI6DJCiCaxZl0e8VhM3
+         2CfwesO3caU/bG48f060Ihrki/aw6buXwwkZROq86hpMZVyAFenGBDhCSl0s/I8+mevL
+         PO2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU+WLOqhNcdpNOOwyvVdv7hCB5Vq5IQftc435wv0rbdZ4jZeao3AkaEjP5qXyPIsBTlh18PFqfzpMgI@vger.kernel.org, AJvYcCXNRMRfr9Yjc9k85vwF7eBhj0vOMPW1iTDk1xd1iRUVy6XZ7TKe8HI0XsjLmIEp/EVPsg09bUt1ejQ2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/6oE/ejzbyHHIIdz8bhKIsLY87M3bhUu5GumkdGYfGJ5hRb/9
+	VhAlYlfW19p4qoqO/bPC/SdNZ3IwdScLQom1GHMD7NTqE8DXghQv7AGTi1Oer89sgJ8xopUewQl
+	Ul0FBgkgmVtBZimdktf9EDNvi988sHl59
+X-Gm-Gg: ASbGncv+vMXrGexW9QfO4m2byhARlPI0KYwI0H+CFfFq7sZPTVv+Nx/BKhla9+bPrdr
+	N0OvFrSE7K7nt4d8uC9JY4FfV1NVZwfIuyep3Kjjda1a/6iloSIFwHoYPHCEksE6i
+X-Google-Smtp-Source: AGHT+IEts0k8NBiyO+thYjEiMK042k+33X4Aooaif2LC6ypV/6jdQLW8bahVwNZqScLYNV33sLnd3tDbus7+Gwpvc6o=
+X-Received: by 2002:a17:907:7eaa:b0:aac:439:10ce with SMTP id
+ a640c23a62f3a-ab38b2cef0bmr2611572166b.27.1737632753115; Thu, 23 Jan 2025
+ 03:45:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
+References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com> <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 23 Jan 2025 13:45:17 +0200
+X-Gm-Features: AbW1kvbb_N_GsPUdnrHfwEynRD0I-fpvzVEOHvhgNuQYmg3kyuKk1dLn2hL8SH0
+Message-ID: <CAHp75VekFNu8Jzfit5euj2pKeesGHs3DQS4hJdT==RM7MONb4g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Olof:
- thanks for your reivew
+On Thu, Jan 23, 2025 at 12:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> The intel pinctrl driver can provide a PWM device and for that needs to
+> call the function devm_pwm_lpss_probe(). That function is provided by
+> the pwm-lpss driver which intends to export it in the "PWM_LPSS"
+> namespace. To prepare fixing the pwm-lpss driver to indeed use the
+> "PWM_LPSS" namespace, import that namespace when used.
 
-On 12:03 Wed 22 Jan     , Olof Johansson wrote:
-> Hi,
-> 
-> On Tue, Jan 21, 2025 at 11:38:11AM +0800, Yixun Lan wrote:
-> > The GPIO controller of K1 support basic functions as input/output,
-> > all pins can be used as interrupt which route to one IRQ line,
-> > trigger type can be select between rising edge, failing edge, or both.
-> > There are four GPIO ports, each consisting of 32 pins.
-> > 
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 116 +++++++++++++++++++++
-> >  1 file changed, 116 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..dd9459061aecfcba84e6a3c5052fbcddf6c61150
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > @@ -0,0 +1,116 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/spacemit,k1-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: SpacemiT K1 GPIO controller
-> > +
-> > +maintainers:
-> > +  - Yixun Lan <dlan@gentoo.org>
-> > +
-> > +description:
-> > +  The controller's registers are organized as sets of eight 32-bit
-> > +  registers with each set of port controlling 32 pins.  A single
-> > +  interrupt line is shared for all of the pins by the controller.
-> > +  Each port will be represented as child nodes with the generic
-> > +  GPIO-controller properties in this bindings file.
-> 
-> There's only one interrupt line for all ports, but you have a binding that
-> duplicates them for every set of ports. That seems overly complicated,
-> doesn't it? They'd all bind the same handler, so there's no benefit in
-> providing the flexibility,.
-> 
-yes, all ports share same interrupt line, but each port has its own
-irq related handling register, so it make sense to describe as per gpio irqchip
+...
 
-also see comments below
+> +#if IS_REACHABLE(CONFIG_PWM_LPSS)
 
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^gpio@[0-9a-f]+$"
-> > +
-> > +  compatible:
-> > +    const: spacemit,k1-gpio
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +patternProperties:
-> > +  "^gpio-port@[0-9a-f]+$":
-> > +    type: object
-> > +    properties:
-> > +      compatible:
-> > +        const: spacemit,k1-gpio-port
-> > +
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +      gpio-controller: true
-> > +
-> > +      "#gpio-cells":
-> > +        const: 2
-> > +
-> > +      gpio-ranges: true
-> > +
-> > +      interrupts:
-> > +        maxItems: 1
-> > +
-> > +      interrupt-controller: true
-> > +
-> > +      "#interrupt-cells":
-> > +        const: 2
-> > +        description:
-> > +          The first cell is the GPIO number, the second should specify interrupt
-> > +          flag. The controller does not support level interrupts, so flags of
-> > +          IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_LEVEL_LOW should not be used.
-> > +          Refer <dt-bindings/interrupt-controller/irq.h> for valid flags.
-> 
-> Same here, since there's no real flexibility between the banks, it might
-> make sense to consider a 3-cell GPIO specifier instead, and having
-how to handle the fourth gpio port? I would like to have uniform driver for all ports
+> +#endif
 
-> the first cell indicate bank. I could see this argument go in either
-> direction, but I'm not sure I understand why to provide a gpio-controller
-> per bank.
-> 
+Why?
 
-IIUC, your suggestion here was same as the implementation of patch v3 of this driver[1],
- while combining all four ports into one irqchip, which NACKed by maintainer[2].
- I tend to agree having a gpio-controller per bank provide more flexibility,
- easy to leverage generic gpio framework, even each port can be disabled or enabled,
- and IMO having shared irq handler isn't really a problem..
-
-[1] https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
-[2] https://lore.kernel.org/r/CACRpkdZPD2C2iPwOX_kW1Ug8jVkdHhhc7iFycHtzj5LQ0XWNgQ@mail.gmail.com
-https://lore.kernel.org/r/CACRpkdYgGho=VQabonq4HccEiXBH2qM76K45oDaV1Jyi0xZ-YA@mail.gmail.com
-
-
-> Comparing to say Rockchip, where each bank has a separate interrupt line
-> -- so there the granularity makes sense.
-> 
-> 
-> -Olof
-
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+--
+With Best Regards,
+Andy Shevchenko
 
