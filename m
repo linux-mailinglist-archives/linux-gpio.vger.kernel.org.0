@@ -1,140 +1,162 @@
-Return-Path: <linux-gpio+bounces-15020-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15021-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69FD6A1A03E
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 09:58:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25F95A1A04C
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 10:01:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FA2416D5F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 08:58:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B13673A2971
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 09:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 276F920C481;
-	Thu, 23 Jan 2025 08:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D930C20C48A;
+	Thu, 23 Jan 2025 09:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6McpOru"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwktgbQU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C08520C00D;
-	Thu, 23 Jan 2025 08:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC2720B7E3;
+	Thu, 23 Jan 2025 09:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737622712; cv=none; b=hZsbB5wVREDrik8N71Vrdl3tbmbD7DijTocK6EahFRHPLGBpzT4xwaQ63pHU7NACrdoCoGyQhXBaIRcFNewKEcz5OOj729yqYMs506JWrKWvudzOwGw+EM/baXpUWgNvQpg+w9DB37aCXl8uIM5MVMo8x81xK1jlGO1/pi8Bppk=
+	t=1737622888; cv=none; b=L2owR5o2BKkVh6t9uz+lCWlNvICk4bVJoLlQ5ZKN8c+VJc2XcTgoUFN5UngXe3pWwbqbWH8PO4KDFzPRO5iXAEfzZI9DryT4pnwsOCHXh+yipsFX3hNa1mIF7aj2JnEZW7K/tPs6wX43ipOTy0cHPJOdZ4n1wPQ0FeD7Ol+hIug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737622712; c=relaxed/simple;
-	bh=HkyeRQ66zp1oc6NXegGG+5zPV8GgPQJyFzgH5zMyigE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=q7D9bM2jwpCv1Zw7HLbrJp1IptI1z8hQj/wceh5Kn894BrG2bRws/r3eTWWlB7NHgaX2SJLDswA/DLLd4zKy/Yt+tNK0+jW0QQGaG3Cyt32GXqFuRiR3fSxYdYilVnmtO7t35i/F+/I/SUqPK1Vnoevpo5vpvve1I2FEZBFSy8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M6McpOru; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1737622888; c=relaxed/simple;
+	bh=9/E1nvOwQ142ouB7l/QczZ2kYOEk8bbjICCME+C1KAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqzeXLj7ty8dgHeO10JMzg24OhAkuPH60APnf6kuCmcQ0wLgMTVgic/5AyN69KT4gtgw2CNXipwg8Um087qKCYOn+X/EgKRpK9SGvXnmNqI8D4Jj2JYiQcKsWlAFmvK19rOQAirqN7LoBlW9czAB2d3vdA9cRGT/VwFYJZ5Rc5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwktgbQU; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38be3bfb045so1221273f8f.0;
-        Thu, 23 Jan 2025 00:58:30 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so6317715e9.1;
+        Thu, 23 Jan 2025 01:01:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737622709; x=1738227509; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HkyeRQ66zp1oc6NXegGG+5zPV8GgPQJyFzgH5zMyigE=;
-        b=M6McpOruscsWDOzcdeDw/uEBtammRmlfH3opcjr5YJwVGs0cTG0ojYJK2iD86Xve69
-         +Q9GKu+C7vxmvi8CXP6o/UJZNvidPvxuVag1kBRd4vQ7cOZ+bPrncMHZpKkiwZfY52z6
-         WeR90hPbivu1sVlUkQUq+P+bbxj7ILKTIyarcNrpZ+p2AStUqxZdV+1tfXHjm3EX9qoZ
-         9T8EtX/y5St/7sA9rUBiQbdvtt9SnpTNpbNVO6P9q2oJhlj+jE+JEYB6F11iXkoVKMmO
-         ieTs18wlT2fDvdVe/oWekYewiyXMzI9K5V0lcrP1/hAnGsjKGYB8/TVuT9erF4qdT4N8
-         1qpg==
+        d=gmail.com; s=20230601; t=1737622885; x=1738227685; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2jI+cPSleUjJx2uFZjXvCaJjGtWxxdbGZO23dapc7c=;
+        b=IwktgbQUwIzplDbSXm8hbzCg6NGlOuFymj4+z3NF4vZqfWb2fh7EXS0sf7mkP0SkAc
+         0tARXuYoVEmzeFbi+PjrH7NnofPM5T2WcjI0+J+csEqggUmP7M9VZbGAjL/YKmXH1Mxh
+         PpdlxMnOCH79llseg1m/2bHfnQxpS/z2+6fMG6AH5rCEv+JfxtHRM3dF4okLddx4JlNI
+         MhLRwyr2Rtn2YCqCUJ0b7uRzgyqIkxdVh2TM4NrHNrNEgQs+sBazsTAtIUBWFp5AYiUg
+         7hj2ih1kQ3d6JRzsilNG+n+cYRTgogNKf6RmuxYEvQR9hKGFZ1aiXj56ttgdRPRNr6Qc
+         LCzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737622709; x=1738227509;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HkyeRQ66zp1oc6NXegGG+5zPV8GgPQJyFzgH5zMyigE=;
-        b=bL7PHrwghmopBrjPJJPKE/48y6ecgrott4zh0flVYzuLuxpce8DbXXGOp/ogfylzWH
-         WifdFTw3Q7z/dcpTzXQV/bRjtjgZ6QDiiG4lFvBKC+WSFZd5RFCK/bzcUH/HrB5i97X5
-         6uvpe5+Vxooz7s872nRLICNd8z6wN2N9n1SeEntqXE6sFLX5dFBdHowLtdZcBHPws29D
-         NBtkjh6+Ctf58nhWO8JGmyP3JOqKeUEN+I3Q7JXr2BZKorFJtNn9Jw6SRXgreoq7cOHY
-         UBHzh5n1a0fUyjZfGX6FGO77vLh0gzsmcenwOActP0XxLaEdbxoTfB4GPLb7F/aoYyC+
-         tazA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG9HGVrzQBKBU0g31UqMQuDa5QIgSwlxrgQdLkfOWWuBxH8zEW5FBgBVndjQkgk9CC599i41dCg3y2@vger.kernel.org, AJvYcCV5qdw6yK6syI5FVjQZDsFP1SgIiNFZet0w90iM1emuAXlAaDymhuK1BPDW9ajApM+Av4Oe12/fHkU=@vger.kernel.org, AJvYcCV7CF0CIggqXvBVr1Md5lYICke1z/c8m8Rfc9xFg8SqF2og9Tly8dVQr8p2Ag5ZDcWohDuVPFW6tgdDsluC@vger.kernel.org, AJvYcCWT6VellgufhCioEGlwIWznbB1xdkkiSPGL6qDXTPb+xWmW5TsZic0ofk8pJp++WhV5U+KaHLSio/SleQ==@vger.kernel.org, AJvYcCWtv4uhBjeAolPeYmg572b2gZhCz4r9Z98IXKQV1yX8iXHggpQty7FiOqELu+tg+J3JLs4N0NS82RnE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHgUJGPUtRUuBWkJzw1qlHl5A8KEWg5NxrDSyYhTK4eNrjdQs4
-	V6cJTw1C2jhOZsvT/7xlGOPO/tv9W4A3ThSyLk04t6mJw1SZHHvP
-X-Gm-Gg: ASbGncvcBV8dJFoY7Q4AfWVAL7ofMSpmuK01ECNJ9OC+RGJfP9XLt2n8D+OAdJKJTB+
-	k92moCJztV8ejPSq+lpLBNw7nADNvwz2jp7tNtjYFmWMCJ7FOsTmyKNFW0gkclKji3otVj1emaf
-	o9o0qg+bfJlI3APQnUNpELBVSntWkVxZ4pKkUy+AzJPgjWg6sJh1D611rSf1TzBlyBc/8wmgeXL
-	ZMIi4Hj/nkenWPtZGvY8ZNBPgiZjLhj/gAPE9V8hLoDyWCkgS9kzXOOCGyU1G3j+UkSW1dhkxXg
-	hrqR1P3hPp2jByLhBACsGvCQxTKXmjM1DVkm5MUn6eQ=
-X-Google-Smtp-Source: AGHT+IHc1t5fGPvcthsivd2P9fI8/r4mtQiSRE3tXH+2jfQUvFcq70i0y1FajJPpW7lEuohcXqidQg==
-X-Received: by 2002:adf:f8c5:0:b0:388:c61d:4415 with SMTP id ffacd0b85a97d-38c22275647mr1806903f8f.18.1737622709399;
-        Thu, 23 Jan 2025 00:58:29 -0800 (PST)
-Received: from smtpclient.apple (185.174.17.62.zt.hu. [185.174.17.62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf322236csm18793946f8f.39.2025.01.23.00.58.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jan 2025 00:58:29 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1737622885; x=1738227685;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G2jI+cPSleUjJx2uFZjXvCaJjGtWxxdbGZO23dapc7c=;
+        b=ryByVAGSAx/9xz0RajObYMt6v/U6Unef//kwAiXH/n3Cd7OnjLT43BlBbgC5MxGB7m
+         ovSxxgd+/xx/UKseglbCWhSaYfbPHsqxz5fy6BTL2JvbBSBjupIFY46gKhouV5O1xCyS
+         LQVHwAnCyARV0OfBYZDJpOIuWdHgbNgGjA0fFv4HWTCk9Hs4CbanOEGKpJ6xZnh3YXbt
+         B/RgnLcRCFsLqH4W0zJQa4P33sZvb2qJOgKqKSQ5s/UjBQW9rfY6yZGOEW07vucwZkue
+         QTbTUk8rsffsLMdlCpaxLlu1ZDFuJSdSKPYJnsNOEW4INh6y127gSBb0hiN22sR4oEfc
+         AOsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+YjfatAfzt8UocyiXdJXY5rFcRcxQSQOaTR9ulySfw3eo9yJefltZR+QlxiSGlZ5vQOaX6bpzxMTerSBZ@vger.kernel.org, AJvYcCW5cr0noSqllwTauf9+/821IY9XjZM4EkrLtSFj4fVwg/0GUjWy3aiA9nSNi7XyQfGdtQOmpBSCgpV/N7E=@vger.kernel.org, AJvYcCXCJILND5IxU+U6wsEuYxBn08CbwJ93/PqdMrMI+7pzq6Nc/ahxqAM0A9dH7IruFt6LIi8LBRRe2vGA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm9UhVYphv3jJ7RDkFnkFoxqd2USqeXarc6daqui8KA8DhYCCe
+	G69g1NWzn+IQbPzJpJPWloM4p+6pEs6HfW+v0GEWlyFtxV5tEPTg
+X-Gm-Gg: ASbGncuJIAEC+yp/CCuIRhE128WZ0OWDwEn9nkcx3emlQo5UUgzcflBHpbKUZF6g3eM
+	upAC4c1+NW7ktuo4I0LFJlBgQnylGfHXGKGdxTT3SX7iwlHCLnHRhJ3+H/uvmV1L0bUDa02BBUU
+	Ja5/UeWLXFUCktrD8ArHH4y0uRtNnlND3fYxb3blI2lW/PTxnEdf551DpcvJ3hfMt+GiJt18Sve
+	LTU76WRuSBDcM6X2VXKJIzqmTIDIV++BolZIEFGYlPihtFehNuIuOdvvSQP72XsiqGo0Zf75GtJ
+	eq1Il3let7/LgFLZEZkgvqynJZ37aQ0CzpHuJZ8UH1bDbIaft1A1w/ChP1F1hWVj3k8=
+X-Google-Smtp-Source: AGHT+IGLTx2zeo7rHCwiDPBh+Id51Zm2fUPoSovZvuVb9eLl2wPj9NfWOsfkRkmLo7R0T4c8E873yw==
+X-Received: by 2002:a05:600c:6a83:b0:436:713b:cb31 with SMTP id 5b1f17b1804b1-4389daa4ac0mr214622005e9.3.1737622884898;
+        Thu, 23 Jan 2025 01:01:24 -0800 (PST)
+Received: from orome (p200300e41f281900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1900:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438b31b6ca1sm55715415e9.25.2025.01.23.01.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 01:01:21 -0800 (PST)
+Date: Thu, 23 Jan 2025 10:01:19 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com, 
+	peng.fan@nxp.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl-tegra: Add config property GPIO mode
+Message-ID: <f42w5rk5fcquqpi64eowlkhndcqg7sar65i2q3et6z5fjbtxwu@dycjfloq4cti>
+References: <20241217153249.5712-1-pshete@nvidia.com>
+ <CACRpkdaYwhy+-q=gQjT6WR9Ye8tgK6G9Pr3xzP7srxEH2R74sg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH 05/12] clk: sunxi-ng: add CCU drivers for V853
-From: =?utf-8?B?QW5kcsOhcyBTemVtesWR?= <szemzo.andras@gmail.com>
-In-Reply-To: <36af1162-cd43-4045-bb43-b8bbf44f9788@quicinc.com>
-Date: Thu, 23 Jan 2025 09:58:17 +0100
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Maxime Ripard <mripard@kernel.org>,
- Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org,
- linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org,
- linux-riscv@lists.infradead.org
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="54e5mdz3ktzwaey4"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaYwhy+-q=gQjT6WR9Ye8tgK6G9Pr3xzP7srxEH2R74sg@mail.gmail.com>
+
+
+--54e5mdz3ktzwaey4
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <266DB665-67E8-40FA-8BE6-E7F82955BAEB@gmail.com>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-6-szemzo.andras@gmail.com>
- <36af1162-cd43-4045-bb43-b8bbf44f9788@quicinc.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: Apple Mail (2.3776.700.51)
+Subject: Re: [PATCH v2] pinctrl-tegra: Add config property GPIO mode
+MIME-Version: 1.0
 
+On Fri, Dec 20, 2024 at 02:51:43PM +0100, Linus Walleij wrote:
+> Hi Prathamesh,
+>=20
+> thanks for your patch!
+>=20
+> a question here:
+>=20
+> On Tue, Dec 17, 2024 at 4:33=E2=80=AFPM Prathamesh Shete <pshete@nvidia.c=
+om> wrote:
+>=20
+> > The SFIO/GPIO select bit is a crucial part of Tegra's pin multiplexing
+> > system:
+> > - When set to 1, the pin operates in SFIO mode, controlled by the
+> >   pin's assigned special function.
+> > - When set to 0, the pin operates as a general-purpose GPIO.
+> >
+> > This SFIO/GPIO select bit that is set for a given pin is not displayed,
+> > adding the support to retrieve this information from the
+> > pinmux set for each pin.
+> >
+> > Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+>=20
+> If the description is correct, why is this bit not unconditionally
+> set in
+> tegra_pinctrl_gpio_request_enable()
+> and unconditionally cleared in
+> tegra_pinctrl_gpio_disable_free()
+> ?
 
-> On 23 Jan 2025, at 00:23, Jeff Johnson <quic_jjohnson@quicinc.com> =
-wrote:
->=20
-> On 1/10/25 04:39, Andras Szemzo wrote:> =
-+module_platform_driver(sun8i_v853_r_ccu_driver);
->> +
->> +MODULE_IMPORT_NS("SUNXI_CCU");
->> +MODULE_LICENSE("GPL");
->=20
-> Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
-> description is missing"), a module without a MODULE_DESCRIPTION() will
-> result in a warning with make W=3D1. Please add a MODULE_DESCRIPTION()
-> to avoid this warning in all of your new modules.
->=20
+Sorry for the late reply. This bit is already being set during
+=2Egpio_request_enable() and .gpio_disable_free(). My understanding is
+that this patch is primarily for making this available in debugfs. I
+suppose we could make that clearer by not making this part of the
+standard pinconfig options, but rather put it into a "read-only" set
+configs?
 
-Thanks for pointing it out, I=E2=80=99ll add it.=
+Thierry
+
+--54e5mdz3ktzwaey4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmeSBV8ACgkQ3SOs138+
+s6EeBA/+Mnwo4yJv81TrMhPG3d6keME570/svWtqyJqLt/78vazlzs3gkWCGSl+U
+kNEw7bFWD/ioQjL5BGghZWLKILs1sVvCxACXETSi7+/suxR+7f4dKGhEmqWNasRt
++mfBkV02wnrPJOWcijhG89CNV70dpP3iIzlTlsVqgdM+f+2a7NwgSInVLugCGkwl
+TWZ8eAl9nxoGPvVFtsUBrjYsqAETGQVLr1snZHCYYm6cwTU4jO1fioViPz2NMNIA
+pdBWx6wX4ax4bP+jFN7KZtCA3p4FkUfrtC7R6ldmqVQ/eOyojndnaWG3f7XikRl3
+geWXk0eOYQXwcP3K2D0gkdFCNuDZngD5sOi53vvtPEc4zmFYLuRWMn4oWKPfWsTU
+4aw7WumiKR/I3Tr7xcty0wmKvVFfsZ8ZYEB7Jht1LKFca2zTQ/AK7IYR+Hy42ACY
+LBw0GebFFzVRURxd0wgUoqaip7+D2vOp/j9vvvG7hpcFa3kAq9DebHndLoNN+ReI
+YKutrsv+QU5oUcAuYw/LsoM6RcCjFm4AYIaWZU4Ym0hRjobt2syjOzVm+Pgp+VmF
+eNz6gbWDqVABtrrIYBISWfHNJheCkx0SfYjFSOKqfnMLyuYr2MYDjeCEnOej8sNI
+mv9p4RkvyYSGEzl1+JBSBHi9xRrkl6fSMshmf+tmcb7M17VCwhA=
+=KHsn
+-----END PGP SIGNATURE-----
+
+--54e5mdz3ktzwaey4--
 
