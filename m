@@ -1,167 +1,235 @@
-Return-Path: <linux-gpio+bounces-15043-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15044-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87435A1A7DA
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 17:30:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DA1EA1AD2D
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2025 00:19:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44D943ACD2A
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 16:30:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2D75188B583
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 23:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E4020F98E;
-	Thu, 23 Jan 2025 16:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 024FA1D514C;
+	Thu, 23 Jan 2025 23:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NEQjiFYt"
+	dkim=pass (2048-bit key) header.d=lixom-net.20230601.gappssmtp.com header.i=@lixom-net.20230601.gappssmtp.com header.b="LGiS34cL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278BA2A1AA
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 16:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1761B1CEE9F
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 23:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737649814; cv=none; b=PK88ds9obrC3eJv2hwRcUx3SF9ojgC6FZRc+3dxjwyjI3GtUxDimt/iZKSae+t2MR49jJE9UkXxehrmJP3lZm0jMQZqnj6GFCeaQRCWTzIXgibpb3tTlzH1lu3/cIWp6W961FfZbQVucVs4di3++DDRK3OctbPzila2y4g5cLNo=
+	t=1737674366; cv=none; b=RmSq3StQyUPGTkCDX06GcCiAYnaUDcmls/tf3JMwiae/mBPXQXn1+NOefOmRj4BqzLlrlqIHORjUAYGxNZVuCSPuqO3S8rwO8z07dI0R85UIDwJDMIW4y6IV8bLTjOYfFqm/9d5smDkxz648BiZNmcuUjcF0xQv8JLTUaXnDPnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737649814; c=relaxed/simple;
-	bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
+	s=arc-20240116; t=1737674366; c=relaxed/simple;
+	bh=PgAhW/EhaBr+SCErS2B28yLOIwL/Oga2x3QZVVDnNW8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KsxRPA6TQUwJ1tp/frSjUn55XOZqWO96sLs9n4rYwOGxNVAxULMWCX+O5blWxPwxk8tes60yD2fqNceQQ6MD3IN/0bYOwvEYqZwRsdqS5+fKLx5x5DQxfGvH6uTDZSUqldj+hHzfhFKToVYtIgbpWz5og2eA1AC6ejTDqzK7nag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NEQjiFYt; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5d96944401dso2039259a12.0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 08:30:10 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlO06ZmrXhOqhtSJ8gMk/m2DELi4NN1j3iaQFnNi3boeKgU86FBCw18U0UNC7cnmG9XdNTyMqNA8hy3dnREAfpqoBrJMNEeg8aQEu1gBifs1bG4Y9FICrmGv71Cr0gAtRts/3VZ420N9xZZCUPFrecWPu8oymoPCIJXuR9zTYNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lixom.net; spf=none smtp.mailfrom=lixom.net; dkim=pass (2048-bit key) header.d=lixom-net.20230601.gappssmtp.com header.i=@lixom-net.20230601.gappssmtp.com header.b=LGiS34cL; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lixom.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=lixom.net
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2164b662090so29115235ad.1
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 15:19:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737649809; x=1738254609; darn=vger.kernel.org;
+        d=lixom-net.20230601.gappssmtp.com; s=20230601; t=1737674364; x=1738279164; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
-        b=NEQjiFYthPuOlv+V6j6tfVo2lMAeoq1fwwwiIqGXQ15KToFk9mzUyojEeWiJfCqj9u
-         Vxp0KslNzBssozrccDrT5e/3vL7oZN2FOs+WmincUG1aNeq7QRV400QgpBx13BsI3F4G
-         0spbCL9EhpNvKTGvMe2XXX1QUV75y+gLFBcKTOwrt8ogXeVKsHR1fouMxswev+r5Db/o
-         OL/jklWnB1pGNQAvs+GfeKcN1bqMlwGTzb9Ap2VqptjGSU4yQWvBBI5xW8gvBNfyfu0R
-         9T0SHJ81SB+fI6v+xh+SsP5DeFLat2t1UGYMpYjR1W3mgvXPbHoL4SgcdI0RUZnBFOA3
-         2KYw==
+        bh=jfONWgM4B+rw2JH14h+1A74u4ndlqnjc1n9HGrEwEIU=;
+        b=LGiS34cL/AxlDPY7NiaqNfLq2Tqz0Il/h4kg0Lei0Q3IX8bG7BLuB6lsIAyfrasrSB
+         BpwXAqXv2BMeCdBHgdoTPpKURvlHDfOCV2NCe31WefzWLMN5fH7uaD2Zn/YPYI/1ncdp
+         iienDUXaAk8Xo/Zwfn+0gX/tTd4OvzAyjEf/gjl1rWIlsl2EsnAmwYP7TEowdw34p5QC
+         NH6nOwuXQ69belM1V0I9E96EKqe4iptwoO34KbzKCvyNVPfmh+wdtX5z2Fn1VB/pyrsI
+         hAujeF/su/BPzrtHoLFcHDvHDlTh1GZLElVQyM+i650FaRchlivn3ZpxE0nQNN+Gdica
+         EEcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737649809; x=1738254609;
+        d=1e100.net; s=20230601; t=1737674364; x=1738279164;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
-        b=vj/L27BwWBs0Os7uFeT0aIq7BVKj4I65xCDAbllFcu2jbtdboBeq5bWKKdVqtShemZ
-         vTKfKAI7OWrRAJLzLCPx29lUj7qb3jCANgOYIQVpuqkCusefv+vJVuS5dy7hcMxgsD1f
-         HC9nTrlhr1LmjEUXR9Ou7veHAALnOokGU6sIb/UIXFUwmTr/WlKYjhtf6CAdfvNtleTe
-         X+jRWOOLkgv8acjHFhfkCsptZqrhk6i0tGwnaP08R72zDVgL3A4YaJK7W8vPTZiQB9bm
-         hSAJvlhcL4B+raLwfOHv3ffIlKCbmFke1NvqY2a12njlEMJ/ENanoyQt7+usD8eLKg4v
-         COPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUA9vLuBmNmcGb3ptdf9tq5RoLHUfxFMLAGBL1eoIpvUHHVU5Txgc6nAsL+LymZnyfqDFr1CVFX7Mky@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW0ouyTDPUx2ujbpKjhVa+RLiODK6m9JBnj4Zvj4UH6YAJHC8Q
-	N4Qc65u7Bc5GYRFK+VDe7xqAoTzP7p1hw2AVoE9kNixmCgg3r654cuditjyM40SE1dNvNM+5GNr
-	KSbazRA==
-X-Gm-Gg: ASbGnctZ/3UVnWs+ny+dkeUPP+mQdob3xA9+MxnBmnm0RHvkQ19ZYsIymM0oHx83BVk
-	32Z35R2pERkyY5D2tPv5X96HMQ4fpMby6YDm1mP6iuOto7Tnxv6ZXQqcGsHdT0tQS7N2Dyil1to
-	JHAXD562YVXeJKfaS2xBV18mZT4FQxxYgjv2Hb6A313o+0zy6aDsKyj6Nmyrx3OOAo3Ze117HaZ
-	3KYDksZNNxCJ0nNaLOKNr8euoS3Pd8+Xhr4xcJK039rLtQrTX0PeWUBxfiSWtv1Q+AGc4zVrawc
-	kK7/CILCpRNTUcmUEGn//+ifRbyt5+5Lvw4ob+7jztAYEwI=
-X-Google-Smtp-Source: AGHT+IEVa2GD13NRi92xJNdo7NSXiZpiZwOwmMtVGmQsgkMQqgoZJEKkCHGESH4P+4rSjQIvA9iIZQ==
-X-Received: by 2002:a05:6402:2710:b0:5db:f423:19b9 with SMTP id 4fb4d7f45d1cf-5dbf4231aecmr6278512a12.16.1737649809360;
-        Thu, 23 Jan 2025 08:30:09 -0800 (PST)
-Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5db73ef6c37sm10429319a12.81.2025.01.23.08.30.08
+        bh=jfONWgM4B+rw2JH14h+1A74u4ndlqnjc1n9HGrEwEIU=;
+        b=jXKu9UtPJcUrLV5/ia6hUsXbTTAihOlesk42WQWCRLxw1djCGgeKn2DZAk4kbUsVc+
+         uSfXYLyYYI29zEKXVp6DW5VqzmksA9c4AUcb27quU4paYkeRoPC+I1Rgpcg/ye965L/m
+         ff+Y+Fa12iP2k8F6QCTGkD5THiZZDUrzAsKUViISxFZcypwcqC1jNyRI0fNwUs4SvVdM
+         fP/KJeYx4MuxK3I0FSECwFpzHdIgZrbBTK5LdG139POO2ckBbcbnlXJxw2RMTK+ll5rJ
+         I+APinTkH0eu/+sChb/iP0/c0eU6K8UIW8YW31Q3/5EW4yzoaBRHF/MAomnC+IixIum9
+         UAkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVecabKj48V08SYxSHwC0P0Rtx/1wD0Z+AiRiFjopp0HmxHpWx0FCEb35Eme6Xn4MGvXzxEnG8dm5vA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3vrsdy6EozMwagKthobnJv4rtFEDdXGRw7Im4f8UhjsB7a7WY
+	YcE1IGvFuJmQMHIrAnURYQcJ61i3wZ2fXfsL8R+LtyDTypLS7A7cUWPEd0Pa+3c=
+X-Gm-Gg: ASbGncvAlrb3RdXJ5iTdcwI4AZzQVsLGzvQg2usLQCvFBCyu2JZAheuMXyNXRRAHtKr
+	8deMq1+Z4g62ldHVYUgb7eTfJLfFEEZRVShVoVe3L+y43J6aSZmACf4B+YHo0wPJjlFgD6rGJu6
+	LUI5T8TJIceMI9ltiqZcA4YVja82vQZncruX93ugL9vxRPbQ67WCxzsAZC88RORTWbmGsd6x4Dj
+	AYX/KWQya+u7IBLOc3Sz9xi48kMzW1bhWeO24H4xyh6IQqDs+iPpNXm7oDE4gWgkZ3GWjPdp48B
+	HN4AChF+HGn5lW5DSfazaE2r18Cqzb34P3MBS405nBp53A==
+X-Google-Smtp-Source: AGHT+IG9D69/A30bCSG56XByEivne0LZ4eTvZXYB8a9hFGTFSDJHXfcZ7shZT7kJGwKsgbTgNynaAA==
+X-Received: by 2002:a05:6a20:8423:b0:1e1:ca27:89f0 with SMTP id adf61e73a8af0-1eb215bec54mr45503593637.37.1737674364069;
+        Thu, 23 Jan 2025 15:19:24 -0800 (PST)
+Received: from localhost (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ac4907f076dsm426261a12.37.2025.01.23.15.19.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 08:30:08 -0800 (PST)
-Date: Thu, 23 Jan 2025 17:30:07 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
- function
-Message-ID: <yynjwr57jf4ytixfo2c6bojo5ib5plue7krlwzb64rxrfuqghy@u4pkkktbe7b3>
-References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
- <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
- <CAHp75VekFNu8Jzfit5euj2pKeesGHs3DQS4hJdT==RM7MONb4g@mail.gmail.com>
- <gw223bv34jyszlssyegvz2znb7q4zzh3lax2qgmvcx6m5lvy6l@gpuvyyhvsgf7>
- <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
+        Thu, 23 Jan 2025 15:19:23 -0800 (PST)
+Date: Thu, 23 Jan 2025 15:19:18 -0800
+From: Olof Johansson <olof@lixom.net>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
+ SoC
+Message-ID: <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
+References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
+ <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
+ <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
+ <20250123113042-GYA38135@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v7tgpdjpw3y6rsks"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
+In-Reply-To: <20250123113042-GYA38135@gentoo>
+
+On Thu, Jan 23, 2025 at 11:30:42AM +0000, Yixun Lan wrote:
+> Hi Olof:
+>  thanks for your reivew
+> 
+> On 12:03 Wed 22 Jan     , Olof Johansson wrote:
+> > Hi,
+> > 
+> > On Tue, Jan 21, 2025 at 11:38:11AM +0800, Yixun Lan wrote:
+> > > The GPIO controller of K1 support basic functions as input/output,
+> > > all pins can be used as interrupt which route to one IRQ line,
+> > > trigger type can be select between rising edge, failing edge, or both.
+> > > There are four GPIO ports, each consisting of 32 pins.
+> > > 
+> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > > ---
+> > >  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 116 +++++++++++++++++++++
+> > >  1 file changed, 116 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..dd9459061aecfcba84e6a3c5052fbcddf6c61150
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
+> > > @@ -0,0 +1,116 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/gpio/spacemit,k1-gpio.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: SpacemiT K1 GPIO controller
+> > > +
+> > > +maintainers:
+> > > +  - Yixun Lan <dlan@gentoo.org>
+> > > +
+> > > +description:
+> > > +  The controller's registers are organized as sets of eight 32-bit
+> > > +  registers with each set of port controlling 32 pins.  A single
+> > > +  interrupt line is shared for all of the pins by the controller.
+> > > +  Each port will be represented as child nodes with the generic
+> > > +  GPIO-controller properties in this bindings file.
+> > 
+> > There's only one interrupt line for all ports, but you have a binding that
+> > duplicates them for every set of ports. That seems overly complicated,
+> > doesn't it? They'd all bind the same handler, so there's no benefit in
+> > providing the flexibility,.
+> > 
+> yes, all ports share same interrupt line, but each port has its own
+> irq related handling register, so it make sense to describe as per gpio irqchip
+> 
+> also see comments below
+> 
+> > > +properties:
+> > > +  $nodename:
+> > > +    pattern: "^gpio@[0-9a-f]+$"
+> > > +
+> > > +  compatible:
+> > > +    const: spacemit,k1-gpio
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  "#address-cells":
+> > > +    const: 1
+> > > +
+> > > +  "#size-cells":
+> > > +    const: 0
+> > > +
+> > > +patternProperties:
+> > > +  "^gpio-port@[0-9a-f]+$":
+> > > +    type: object
+> > > +    properties:
+> > > +      compatible:
+> > > +        const: spacemit,k1-gpio-port
+> > > +
+> > > +      reg:
+> > > +        maxItems: 1
+> > > +
+> > > +      gpio-controller: true
+> > > +
+> > > +      "#gpio-cells":
+> > > +        const: 2
+> > > +
+> > > +      gpio-ranges: true
+> > > +
+> > > +      interrupts:
+> > > +        maxItems: 1
+> > > +
+> > > +      interrupt-controller: true
+> > > +
+> > > +      "#interrupt-cells":
+> > > +        const: 2
+> > > +        description:
+> > > +          The first cell is the GPIO number, the second should specify interrupt
+> > > +          flag. The controller does not support level interrupts, so flags of
+> > > +          IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_LEVEL_LOW should not be used.
+> > > +          Refer <dt-bindings/interrupt-controller/irq.h> for valid flags.
+> > 
+> > Same here, since there's no real flexibility between the banks, it might
+> > make sense to consider a 3-cell GPIO specifier instead, and having
+> how to handle the fourth gpio port? I would like to have uniform driver for all ports
+> 
+> > the first cell indicate bank. I could see this argument go in either
+> > direction, but I'm not sure I understand why to provide a gpio-controller
+> > per bank.
+> > 
+> 
+> IIUC, your suggestion here was same as the implementation of patch v3 of this driver[1],
+>  while combining all four ports into one irqchip, which NACKed by maintainer[2].
+>  I tend to agree having a gpio-controller per bank provide more flexibility,
+>  easy to leverage generic gpio framework, even each port can be disabled or enabled,
+>  and IMO having shared irq handler isn't really a problem..
+> 
+> [1] https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+> [2] https://lore.kernel.org/r/CACRpkdZPD2C2iPwOX_kW1Ug8jVkdHhhc7iFycHtzj5LQ0XWNgQ@mail.gmail.com
+> https://lore.kernel.org/r/CACRpkdYgGho=VQabonq4HccEiXBH2qM76K45oDaV1Jyi0xZ-YA@mail.gmail.com
+
+Hmm, I don't understand the reasoning there, but it's not my subsystem.
+
+It seems worse to me to misdescribe the hardware as separate blocks
+with a device-tree binding that no longer describes the actual hardware,
+but it's not up to me.
+
+Let's get the platform support merged, ignore my feedback here -- we need more
+SoCs supported upstream and this code is good enough to go in as-is.
 
 
---v7tgpdjpw3y6rsks
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
- function
-MIME-Version: 1.0
-
-On Thu, Jan 23, 2025 at 05:48:17PM +0200, Andy Shevchenko wrote:
-> On Thu, Jan 23, 2025 at 03:52:06PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Thu, Jan 23, 2025 at 01:45:17PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Jan 23, 2025 at 12:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> > > <u.kleine-koenig@baylibre.com> wrote:
-> > > >
-> > > > The intel pinctrl driver can provide a PWM device and for that need=
-s to
-> > > > call the function devm_pwm_lpss_probe(). That function is provided =
-by
-> > > > the pwm-lpss driver which intends to export it in the "PWM_LPSS"
-> > > > namespace. To prepare fixing the pwm-lpss driver to indeed use the
-> > > > "PWM_LPSS" namespace, import that namespace when used.
->=20
-> ...
->=20
-> > > > +#if IS_REACHABLE(CONFIG_PWM_LPSS)
-> > >=20
-> > > > +#endif
-> > >=20
-> > > Why?
-> >=20
-> > Because devm_pwm_lpss_probe() is only used #if
-> > IS_REACHABLE(CONFIG_PWM_LPSS). Without the #if but with
-> > https://lore.kernel.org/all/20250123110951.370759-2-u.kleine-koenig@bay=
-libre.com/
-> > this results in a warning (with W=3D1) :-)
->=20
-> There is no such commit in the current Linux Next, so let's solve the iss=
-ues
-> when they come up.
->=20
-> I'm okay to take your series via Intel pin control without that ifdeffery.
-> If you don't agree on the change, we need to find the way how to avoid ug=
-ly
-> ifdeffery from day 1.
-
-I'm ok with dropping the #if. Should I resend or do you want to edit the
-patch? Would you take both patches then?
-
-Best regards
-Uwe
-
---v7tgpdjpw3y6rsks
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmeSbo0ACgkQj4D7WH0S
-/k60pwf/VC4RxUsVBMUI4AyD1jPBH1hhcaiiu//PGrIbW+mlJuPSyWLOJKSJKLEQ
-SlBcUQTzN50e375UrXLG1FqwYsiAnOSODnFJaeLBSQl9lCpu7+eqXHZKdDqki1CJ
-v2hPg2Y4mi/M/j/Ai+nwUyNPm2S83AP61qRfcVg0IFpMiB6vrAg+agGG863j5agZ
-JC0/AOsPIy1ldQsBmosTlUZBgFjfvCi/nn3ap6wgNh6TVXQXrbaafxuHyygcxEZM
-nHXXqKpt/vjAav2XBTmvYwy3HAJe2/RbPmvwUdyoFSPdJUEuj1ReEWM73gKpAS9K
-W8sGYacSlJjq2aqO57dm3NvLMfMHMQ==
-=d+bW
------END PGP SIGNATURE-----
-
---v7tgpdjpw3y6rsks--
+-Olof
 
