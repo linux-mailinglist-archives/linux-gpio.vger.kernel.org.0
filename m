@@ -1,150 +1,124 @@
-Return-Path: <linux-gpio+bounces-15030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72B5AA1A0B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 10:19:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EC59A1A19A
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 11:11:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 587DE188DFF2
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 09:19:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 368497A4299
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 10:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E291C5D7C;
-	Thu, 23 Jan 2025 09:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11DF20DD41;
+	Thu, 23 Jan 2025 10:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="W0g/hRam"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="231ehXwD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40561537D4
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 09:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7FF20D4E6
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 10:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737623981; cv=none; b=g7XMp0rj/3vNwpFRldTzTqUmHuvNwpXU6AKzDc6xJiInPpZmYy0dFYs8A4a4WImA7K/bSUMFnqIyU4lY4EbCS+4Is6UNDak0e1ZxKQeyONn4XWYseJQ4IA79xIW9ks/WJEbd44A7lhfQYmnPdmM8Cyp9kZT1G3HFKfyA5aqlrO8=
+	t=1737627091; cv=none; b=Nie5Rj+jdip1RAexBk112MHhLLjo+0VX0LQNFo84YmtXyWhUWW8nYOyqw3GQMtU1EC6Ci4CLtlIf07D0V3udrBsYiU0b0sbyumSZUYNDYn1c/3b6ECi1QgjcuAuN6TkxzZrQJ5m2+eTHxmbQ1jE33FT3jKbv5N1Gu2Otg/ReFxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737623981; c=relaxed/simple;
-	bh=oB4W4SH6htOtdlhb8GrE+2UJqq21f/9wPF0wA34Zojk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KEQyNrn9EVOYQ0RTfaRXx43XGa4nVHL2RgONMl12jpDHCy2xLPkfvFEiPtuov8+qrX6ORoGg5gFzPT7aAVwOVtrdkpf02I5mjmrGYTchTHoQgY2NISNRHUbsFW/D7PUk6K5coA+t2iXOrEw+zlE6Rhh9Y53j3q/QcqJo81HeVVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=W0g/hRam; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30616d71bb0so6412901fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 01:19:39 -0800 (PST)
+	s=arc-20240116; t=1737627091; c=relaxed/simple;
+	bh=0t2qfd3GnssXmR2y8LW0cKG7GonvDxo8t2BPTONaO9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PGF5o7318+wWrqNIll/2VyuVxFra/0AX8TjIg9sJ/0ldKwKrtgJ4vR9GHPDwV6Bu6WKtvgUJRQub805EvVDvAuInur02ylBy38M4t3rAP3qBlmc/MDGKijwc0V+fBtPvUa+LhPh1bq04EsGgsgLYN0qtLI0cVFG4VZ6y0DltqyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=231ehXwD; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-aa68b513abcso165600866b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 02:11:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1737623978; x=1738228778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oB4W4SH6htOtdlhb8GrE+2UJqq21f/9wPF0wA34Zojk=;
-        b=W0g/hRam9EddRKgzi6aQUkcVlAZfhyVCatffgcTdzDaWuDwFt98oWzPqi/F8txR0ca
-         8G9FHLs8NtpgNrrtmCRpvzAmXID5wzPVpCfPW9yqxNMO/EvyAYQndpLVywfNEov4Pwwq
-         W66fM7UpAt0+zqBD0Ahd+Runhadentn57q6wrXXqK0HM4rUb/38wYxtx27H5YoKRuORZ
-         lsj3OcRc0UAA50l+Q7HOm1RQhcmT5Rat0H47rLcTEPqD434j6PRb2s3REEhWoc1WUmlW
-         8flt+gmSwAS054MCNT8JxMDFONfpIxR+tZXUGITgiBNWZeftg/hPTaN5J3CEiTWEup9x
-         hHSA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737627087; x=1738231887; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6AkogUzy8jf2hIq992KtJA1R6WCK3IssbvI/CIUiwCk=;
+        b=231ehXwD1nrTI16Hm7tBz6dt9ycpB94VjCBTV/9Nb/sEHsdW2k2OtXJfDEjKjdClTQ
+         xHWIjkVPo0uZEI/mdEyKtghx+Ce5A7Q9VrQt5+kYLEsnQon7yOOXmOghLDHtrOmgx84+
+         LLO/0nwCKj/gYW1F9I2M48NG0jIZzz+P8izK1eNnuGzPZPXVHpgrgWmRHmZTQhzWqIoB
+         Xk0MkZTDcJaJfi2TBNFuCmBQ9wndMNABKPWv530P3HfaygczX9L/pkJi1RPfn/3dIA3I
+         CGvvYG6eeVAmZkitmGz2lZ4SPTmKsElxWQQClzcrkVPPe6Zc+/v+Mo26S9C4e1wgEE0V
+         Ojtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737623978; x=1738228778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oB4W4SH6htOtdlhb8GrE+2UJqq21f/9wPF0wA34Zojk=;
-        b=QzkEPsGlVR1/BWPoI/wTwnHcbNwAgTLfemxKQTcoi2mQJem1vEZ5H2Trl4ZyMgmhmB
-         0Ry+YbBdP1NcINl+/povYola1v/8OlgfFTYvtmjU7t5onX06Ur9rLhKEoHm+bY5s/ZQ3
-         kWOj7T/rEJ5B8FMZTcqHsMuUGaRGzYFFePTLInZLK3LwvFEKkIeUX8hpgj1X+rmnTd2i
-         TLCTk4Bu9M6TF3qZT7t96zRXGJ/bBAddrjpTWyC+MBHQvYKTfin8eZjLzq9o/UO5juaC
-         v7lDpGEjoE2A3BjZ3eitbADfx6xy8dazhZDJXfsvIkTG2ILQk8izI/cy8Xb6QFvAknMT
-         lKgA==
-X-Forwarded-Encrypted: i=1; AJvYcCW83xx9BO/3CJdPoqA5eXBQHLnoqU0JXMKZ6O3rP2BVh7dCtRpMuw5G6FM5iQb6DQjGREvAkYBkCe+N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIvKiJ3cHmSxtMGv1Ua18CoTODxy1KKBxQpqdPNNRJIjYn2GUn
-	Cs6H9XhPKGC1+7v8+dGCFlZaUaa/ZLFSP1D8T9Wdj7MMVtLPA05EITe3uGrYMD6f5vySO1p3ZZ3
-	IDwsIaNEAFIC/Jsri8iSj4PO1fPph2fAeN5stQw==
-X-Gm-Gg: ASbGnctxVZxOFMG1XZlyN5SF2peq3fK1khyKSv/ULhKLhoQ5htZYu883FDwL/IQ/UQe
-	YAHEHJLsrgO81XnzjIIVZ+HmWihuD3AIHEpWSFSapZEMCYc+Gfh4I+hdUc7dwAFwYIzsxekx+ld
-	By5VP82Fl5iYI2+OaKqg==
-X-Google-Smtp-Source: AGHT+IGbSoxSTFInm4TCaCofKOLTJWRiuDcAw2dKFZSYyjUZBr9SIVV2X/zkpumKU3mLaYhF4wBklmHsUPwTqe2gouc=
-X-Received: by 2002:a2e:a373:0:b0:2fb:4abb:7001 with SMTP id
- 38308e7fff4ca-3072ca5c94dmr67603241fa.2.1737623977535; Thu, 23 Jan 2025
- 01:19:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737627087; x=1738231887;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6AkogUzy8jf2hIq992KtJA1R6WCK3IssbvI/CIUiwCk=;
+        b=bHSvhvY/OWDHM7gm6Qd5mlf8gIX4/U4IDpybVFw+JiyoomA+pA3rzn1imyXPtIKtLW
+         b2PXtRuh6tIOKUjiqwLjn/R8mKqLN+RQDlKVrtmgy3JagQKbo0SmbHS+G35UweR/Sr59
+         AfWV//HSWEThvhXnEe0gO2ox5qeZ+Ilm9gE90Z4vB1KCmrGq8aWw6Ewp15Lq/4yi96EZ
+         kUNO5utdyZkttkgtsHtO28qABBzIsPM+9dbxOWIUB4fCgf3Nvzkb20OIqTYAWLrujeQ8
+         Gvrir7UELRQrf1m48A0O3foNc5aH1tCs192IYZIJ0UFkKJSYttVtBmt9W3nP7HD6btu/
+         wv3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWuDKzw+KQ3pmT010un5eahCJVpjMM5//GmWmxDdMiwm/h7QA08ELU183wSNtD2M7n+eFiLRDFiq5zE@vger.kernel.org
+X-Gm-Message-State: AOJu0YydwBOPiMmu2HE1CpiZfd67pVgfrTpLLdWAvv2XK1tNIh6DYiaA
+	Wj7ZveIS8LKIZIZ7Zwu7pucvhW0SvbbWwILlyTUWfYd13QQSyUR4NtMj21chb8M=
+X-Gm-Gg: ASbGncuWPkx+y1ycOYSFrFrJs0zIHFoJ+qKkNFbkYduSzuz0atsqBwsznPsFiQqh3UQ
+	PdXWJGUcUJ0hFVOCLb+173DIfOO2hBpJBKTrcmnScRzUwjOJvEEA+rH/voVtfCDhdNKc7n1gQgJ
+	3z2U2dgI8rbq0Lf9p9uPtoJ60IglsUrbV7O6p0l5JAurwcL8/uRVISPL0mELvQbwodyXvSaRkBC
+	7GpARwOfHmiZVU2srIsa5DPgwaXK0Jva85A0EGri4IAMAJ9ve0HInk+JWu+8krej4Wu9DYwRJJ8
+	L9W6g2tu8X/0DxBm0dEaA3X5pcBk47xJTw4ABiTLeKuWqN8=
+X-Google-Smtp-Source: AGHT+IG9zdVilHknM+0G6YXDighy5AbQ0VbjqNQ6JTiB66RdlK8I0yBhaHfW/+EquzwqjcR1Z+eYVQ==
+X-Received: by 2002:a17:907:9726:b0:aab:f11f:f360 with SMTP id a640c23a62f3a-ab38b0b919fmr2405778566b.2.1737627086471;
+        Thu, 23 Jan 2025 02:11:26 -0800 (PST)
+Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab60d690232sm465042966b.37.2025.01.23.02.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 02:11:26 -0800 (PST)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/2] pwm: lpss: module namespace fixes
+Date: Thu, 23 Jan 2025 11:11:09 +0100
+Message-ID: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
- <CAHp75Ve8d96Uw1obJVwRPyRE5E0eC8qU7uXe-UKuZeB-3XLPcA@mail.gmail.com>
- <528b6695-387e-436d-98fc-6f576636d16f@pengutronix.de> <CAMRc=MdYB_XHCaurs1mO+KGX7rB5zFT3zCi=UbNY0rSbMEJdWw@mail.gmail.com>
- <3f21523b-816e-488c-bf0a-c6677c375a18@pengutronix.de>
-In-Reply-To: <3f21523b-816e-488c-bf0a-c6677c375a18@pengutronix.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 23 Jan 2025 10:19:26 +0100
-X-Gm-Features: AbW1kvYo_Qrh_r7UXUMBdQ5UCw_ecPTbUqtFHQIGsKawdSRJFwErHJRVdlHKD1o
-Message-ID: <CAMRc=MewWr8nrUBgWe+ckTuVdmLC=grkw1aWeXnWszcaBZvZvQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] gpio: mxc: silence warning about GPIO base being
- statically allocated
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>, Haibo Chen <haibo.chen@nxp.com>, 
-	Catalin Popescu <catalin.popescu@leica-geosystems.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1013; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=0t2qfd3GnssXmR2y8LW0cKG7GonvDxo8t2BPTONaO9o=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnkhW+EWT/d9tAECnBYMsK/F6iuh/aSQWrX2qOu HE8XJk4qM6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ5IVvgAKCRCPgPtYfRL+ TrtwB/wMftkBHCMhEbdpGMmqUw3A8iol7rVdpIw048RDkshdp1pSwvdqW+VfoYJoBnq3AutVkN/ GaVl0al9X8ZTVqpsc7ZrVupNrQI5c51VubEeZH1snRTTWBKxLQAsRCqTD4v4WlqpVB7xBEIAqYH JqUVqzj+I9JHKbuofVsAFhvUd/5GY9IFgyhR2cigOuIrZ5YiqmgoyXly3wuY6RrWctcNKzCX6Iu nNGHLDhnxzpfoqt1UjOWppUoPIl+Lz9ZkNXBYCu/FRp8/bHoe+7opMmsbjmC3Cjo4aFdIvmp1QF lg5pGKiOg33nQppszYp167bJKz03GjoAMDJFzTxVWwcIVI0G
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 21, 2025 at 11:37=E2=80=AFAM Ahmad Fatoum <a.fatoum@pengutronix=
-.de> wrote:
->
-> Hello Bartosz,
->
-> On 15.01.25 17:52, Bartosz Golaszewski wrote:
-> >
-> > I recently wrote a user-space compatibility layer for sysfs[1]. While
-> > right now it doesn't support static base numbers, I'm very open to
-> > adding it except that I wasn't sure how to approach it.
-> >
-> > Is this of any use to you and could it help you switch to libgpiod
-> > without changing your user-space set-up (given the support for static
-> > GPIO numbering)?
->
-> If the goal is to have a drop-in replacement for sysfs outside
-> of the kernel, I think it needs to maintain the same numbering.
->
-> I am not sure I see myself using it, because the new projects are using
-> libgpiod from the get-go. My issue is not with removal of sysfs, but with
-> user hostile deprecation approaches.
->
-> > If so, how would you like to see this implemented? A
-> > config file at /etc that would list chip labels and their desired GPIO
-> > base?
->
-> Many GPIOs tend to not have labels. I think the mapping config file
-> should rather map GPIO controllers to a base address. The same thing the
-> kernel is currently doing. This assumes the numbering of the built-in
-> GPIO controllers is deterministic, e.g. by consulting /aliases. I haven't
-> checked, but I hope this is already the case.
+Hello,
 
-Well, they will have labels, it's just that the label will be
-something like "6e80000.gpio" which can very well be mapped onto a
-predefined GPIO range.
+in (implicit) v1[1] I suggested to move the MODULE_IMPORT_NS magic into
+include/linux/platform_data/x86/pwm-lpss.h. While I still consider that
+a good idea I was overruled and so here comes the variant with the
+explicit MODULE_IMPORT_NS in each module that makes use of the
+respective symbols.
 
-The file could look like:
+I don't have a fixed merge plan for this series (assuming it gets the
+expected Acks). Either way (both via pwm, both via pinctrl or the
+pinctrl patch first and the pwm one in the next cycle) is fine for me.
 
-/etc/gpio-static-base.conf
+Best regards
+Uwe
 
-```
-6e80000.gpio 12
-foobar 340
-```
+[1] https://lore.kernel.org/linux-pwm/cover.1733245406.git.ukleinek@kernel.org
 
-Where the first column is the label and the second the static base
-that must be less than 512 - ngpio.
+Uwe Kleine-König (2):
+  pinctrl: intel: Import namespace for pwm_lpss function
+  pwm: lpss: Actually use a module namespace by defining the namespace
+    earlier
 
-Bart
+ drivers/pinctrl/intel/pinctrl-intel.c | 3 +++
+ drivers/pwm/pwm-lpss.c                | 4 ++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+base-commit: 232f121837ad8b1c21cc80f2c8842a4090c5a2a0
+-- 
+2.47.1
 
