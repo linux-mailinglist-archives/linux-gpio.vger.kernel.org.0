@@ -1,75 +1,77 @@
-Return-Path: <linux-gpio+bounces-15031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC59A1A19A
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 11:11:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 411A5A1A195
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 11:11:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 368497A4299
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAA603A5E64
 	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 10:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11DF20DD41;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9A1220DD46;
 	Thu, 23 Jan 2025 10:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="231ehXwD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="w4dTQuOt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7FF20D4E6
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 10:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB25520D4FE
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 10:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737627091; cv=none; b=Nie5Rj+jdip1RAexBk112MHhLLjo+0VX0LQNFo84YmtXyWhUWW8nYOyqw3GQMtU1EC6Ci4CLtlIf07D0V3udrBsYiU0b0sbyumSZUYNDYn1c/3b6ECi1QgjcuAuN6TkxzZrQJ5m2+eTHxmbQ1jE33FT3jKbv5N1Gu2Otg/ReFxI=
+	t=1737627091; cv=none; b=KPNDkE5Ph3dIbmMfOvb3xQFwhn6kMxzC1IpZmt3GgCIx2c1mh6yN/cYw/jRXi6NxAytk6fmoVKysd2d6A0O/YnikkwmFF+J3/3V8Sc3/cbksgjwTKWa2nXlZSPta9049jUz7I/2d2og/e3DpfuZJA1s7o67zdjGtz8oZr/PIMuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737627091; c=relaxed/simple;
-	bh=0t2qfd3GnssXmR2y8LW0cKG7GonvDxo8t2BPTONaO9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PGF5o7318+wWrqNIll/2VyuVxFra/0AX8TjIg9sJ/0ldKwKrtgJ4vR9GHPDwV6Bu6WKtvgUJRQub805EvVDvAuInur02ylBy38M4t3rAP3qBlmc/MDGKijwc0V+fBtPvUa+LhPh1bq04EsGgsgLYN0qtLI0cVFG4VZ6y0DltqyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=231ehXwD; arc=none smtp.client-ip=209.85.218.65
+	bh=PYg5SENmvMeNQ5ErhexAyuRRwu9HFms7ofbKlpAnsfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bDOOD0GymhyCuDDBPO/rBGCwnQpLgNxWknpxk9rGKRhax89qb68vwqCcGNK4A4q4VJcmshsck6ZSCLbQAaiA184uqIp+zybjvpLtkXIFPLGyyprXOyOv5htieL/e651oumqia3wLWPVZnKFjYaLvKNRJF9wju0o2xcZg/S+PjUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=w4dTQuOt; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-aa68b513abcso165600866b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 02:11:28 -0800 (PST)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5d3d479b1e6so1114069a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 02:11:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737627087; x=1738231887; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AkogUzy8jf2hIq992KtJA1R6WCK3IssbvI/CIUiwCk=;
-        b=231ehXwD1nrTI16Hm7tBz6dt9ycpB94VjCBTV/9Nb/sEHsdW2k2OtXJfDEjKjdClTQ
-         xHWIjkVPo0uZEI/mdEyKtghx+Ce5A7Q9VrQt5+kYLEsnQon7yOOXmOghLDHtrOmgx84+
-         LLO/0nwCKj/gYW1F9I2M48NG0jIZzz+P8izK1eNnuGzPZPXVHpgrgWmRHmZTQhzWqIoB
-         Xk0MkZTDcJaJfi2TBNFuCmBQ9wndMNABKPWv530P3HfaygczX9L/pkJi1RPfn/3dIA3I
-         CGvvYG6eeVAmZkitmGz2lZ4SPTmKsElxWQQClzcrkVPPe6Zc+/v+Mo26S9C4e1wgEE0V
-         Ojtw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737627088; x=1738231888; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zB5c6PP3YSzwR7PfKnY4U7m+rg847HJBbMyI3T78qCk=;
+        b=w4dTQuOtS1IV0Vk5lM4QN6sPNQ3Jg+D6x7YbsEBnqIB8sM/Z9Ll6cHXsDYvtuQ5PnT
+         1q5zhWVoaoU9IPCNjuJ4GAL2G81C1AID1YvKMw1gnBkHVztqJLnnzzUFA8c1TrZjQEnj
+         G9vR4pYXhbbDjeIWxhtqjuPusp86Tk6eXUtBoBuwzCxlsqF9mAyH7vyAOiL2DgxvOVzJ
+         JRujEjhxMl6sD2aVgbnpd5JuNsdIuHjfx7808D+2/Wk04FpaQ6QnBByo3dD++L7oBVFF
+         JzuySkSF8bz2yG+sy5jNLyrtsQuEFVZX8g8rklg01hBxCnno87MeFatNQdTWAcLYLjxu
+         cD8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737627087; x=1738231887;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6AkogUzy8jf2hIq992KtJA1R6WCK3IssbvI/CIUiwCk=;
-        b=bHSvhvY/OWDHM7gm6Qd5mlf8gIX4/U4IDpybVFw+JiyoomA+pA3rzn1imyXPtIKtLW
-         b2PXtRuh6tIOKUjiqwLjn/R8mKqLN+RQDlKVrtmgy3JagQKbo0SmbHS+G35UweR/Sr59
-         AfWV//HSWEThvhXnEe0gO2ox5qeZ+Ilm9gE90Z4vB1KCmrGq8aWw6Ewp15Lq/4yi96EZ
-         kUNO5utdyZkttkgtsHtO28qABBzIsPM+9dbxOWIUB4fCgf3Nvzkb20OIqTYAWLrujeQ8
-         Gvrir7UELRQrf1m48A0O3foNc5aH1tCs192IYZIJ0UFkKJSYttVtBmt9W3nP7HD6btu/
-         wv3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuDKzw+KQ3pmT010un5eahCJVpjMM5//GmWmxDdMiwm/h7QA08ELU183wSNtD2M7n+eFiLRDFiq5zE@vger.kernel.org
-X-Gm-Message-State: AOJu0YydwBOPiMmu2HE1CpiZfd67pVgfrTpLLdWAvv2XK1tNIh6DYiaA
-	Wj7ZveIS8LKIZIZ7Zwu7pucvhW0SvbbWwILlyTUWfYd13QQSyUR4NtMj21chb8M=
-X-Gm-Gg: ASbGncuWPkx+y1ycOYSFrFrJs0zIHFoJ+qKkNFbkYduSzuz0atsqBwsznPsFiQqh3UQ
-	PdXWJGUcUJ0hFVOCLb+173DIfOO2hBpJBKTrcmnScRzUwjOJvEEA+rH/voVtfCDhdNKc7n1gQgJ
-	3z2U2dgI8rbq0Lf9p9uPtoJ60IglsUrbV7O6p0l5JAurwcL8/uRVISPL0mELvQbwodyXvSaRkBC
-	7GpARwOfHmiZVU2srIsa5DPgwaXK0Jva85A0EGri4IAMAJ9ve0HInk+JWu+8krej4Wu9DYwRJJ8
-	L9W6g2tu8X/0DxBm0dEaA3X5pcBk47xJTw4ABiTLeKuWqN8=
-X-Google-Smtp-Source: AGHT+IG9zdVilHknM+0G6YXDighy5AbQ0VbjqNQ6JTiB66RdlK8I0yBhaHfW/+EquzwqjcR1Z+eYVQ==
-X-Received: by 2002:a17:907:9726:b0:aab:f11f:f360 with SMTP id a640c23a62f3a-ab38b0b919fmr2405778566b.2.1737627086471;
-        Thu, 23 Jan 2025 02:11:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737627088; x=1738231888;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zB5c6PP3YSzwR7PfKnY4U7m+rg847HJBbMyI3T78qCk=;
+        b=OBgvVPnX06pUK5aNsFsoV//8mvJ4qfjqByFN/+XqEiFl7qX8Ny8KXhSb2q8f2jM8s4
+         Rl1Tp80hlXkeLwZ6JyAnfxuXWXdMfNGzApQR1SKCqGTILto7oZcP4TeWqTCs7Fq9VdPj
+         sRhK9vzVx29KYDMcd08G6dw+XkramTaraQOuNGxAW8c7HNgg9p6QCAmzwPyaY57u+OaI
+         MaeCqV1e3CAq9SDong7rZq3sY6Rq7ZhpnSz3Iul/pUuBbMsG6qaWKucTk/wISAswbHbI
+         4YHunPcoMVoOC4n/svyf2ooLeXwsq5rC8vWopcfsLy+yXaB0lndlsMNjItPjKScl45o1
+         G6Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVUiobnXVP7heY0H9wJoi6BvKHDg1VVUFcW1UMlibfkNnyHyWoGPa0KxuPwzEK8CfsvIj/3zwwq5YFG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK30AqPDPI0oomu1SbL7kjirDDMmO7B1ib5WGcQo+kS9om8ybZ
+	CRU1/idbMn4kag8Bt8vXMmI/JocltMKPQsxwv6wS/kgh6pNpVPGn/JYXGWbyZk8=
+X-Gm-Gg: ASbGncubmXQXNj7CCRDB4ucNVdTSej3WSH/CbXusYJrtRP5ZgBF05EkS7kw4/17blfA
+	HmwUqei+tZk+U6XRmLhqW6lmmONMcHh5NtdNFw+CDF+hJtOwjc7hJQ57CHelsC3fOMKt5TEbTD/
+	s2zCCtDksMmjUvSZ8gmkFwRYjANWDAwROp2eJQ96a+lDfBlKWMgJpA7A3Jvo4LPTt89HLBZOlho
+	mrRdFW70ymz1EQRbHcyo3tmMm+8HNCWX8n+6JsQha6RjOHlCR74m/mUDwQ0BwHaBjbnuIbxDvkJ
+	cnzdBgIe3xJFj7YzY3Oh06f4hRVQViWuSBV/UqmVC9BJpXY=
+X-Google-Smtp-Source: AGHT+IGe400Tztd/jtvKXTVVKHrJ41HlMW0XwxuFnekMYp5OI4hrkNBszFO04qxsDkqDsgTBw/8hMw==
+X-Received: by 2002:a05:6402:40cd:b0:5dc:6c1:815d with SMTP id 4fb4d7f45d1cf-5dc06c18246mr6461265a12.8.1737627087947;
+        Thu, 23 Jan 2025 02:11:27 -0800 (PST)
 Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab60d690232sm465042966b.37.2025.01.23.02.11.25
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384ce1a49sm1036829166b.46.2025.01.23.02.11.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 02:11:26 -0800 (PST)
+        Thu, 23 Jan 2025 02:11:27 -0800 (PST)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -77,10 +79,12 @@ To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: linux-pwm@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v2 0/2] pwm: lpss: module namespace fixes
-Date: Thu, 23 Jan 2025 11:11:09 +0100
-Message-ID: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
+Subject: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss function
+Date: Thu, 23 Jan 2025 11:11:10 +0100
+Message-ID: <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
+References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,37 +92,33 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1013; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=0t2qfd3GnssXmR2y8LW0cKG7GonvDxo8t2BPTONaO9o=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnkhW+EWT/d9tAECnBYMsK/F6iuh/aSQWrX2qOu HE8XJk4qM6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ5IVvgAKCRCPgPtYfRL+ TrtwB/wMftkBHCMhEbdpGMmqUw3A8iol7rVdpIw048RDkshdp1pSwvdqW+VfoYJoBnq3AutVkN/ GaVl0al9X8ZTVqpsc7ZrVupNrQI5c51VubEeZH1snRTTWBKxLQAsRCqTD4v4WlqpVB7xBEIAqYH JqUVqzj+I9JHKbuofVsAFhvUd/5GY9IFgyhR2cigOuIrZ5YiqmgoyXly3wuY6RrWctcNKzCX6Iu nNGHLDhnxzpfoqt1UjOWppUoPIl+Lz9ZkNXBYCu/FRp8/bHoe+7opMmsbjmC3Cjo4aFdIvmp1QF lg5pGKiOg33nQppszYp167bJKz03GjoAMDJFzTxVWwcIVI0G
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1044; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=PYg5SENmvMeNQ5ErhexAyuRRwu9HFms7ofbKlpAnsfA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnkhXCb5k9qsOluJn+g1HoRUx+lG5t//WXOgfW3 26jTc1MysWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ5IVwgAKCRCPgPtYfRL+ ToJiB/0fMpcUjI0Azf8kBBAIsRNDZnjr+C92eZfOH6nos6nAWK8h2PzxztZTupp3axiGbUOTxE5 l09Zz1b7wzmh79ySJFbd7uYLVfb3LK+4nTHURUxigoAC8HTDqxD8Z8BFPtQaecGB1NWGmKytijm 3rorkTYbAixpvDGkGYagC5pJEsyXZv7gwlYDOVD+1EpmfcatP3pqVD2elc+TgKmJFu1zhmxqGtd bnBBvnB+dVKTRh5Kq3bEBG7rve1x37Dbi9QNl/mWLhoqJVpsBZVwDf4kcB3Dgx8SEUqLaF3Vbi2 GQaPNWvp6olfKa0uQtWSk25CamievmlQVdRtU5tRIlGNLslN
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The intel pinctrl driver can provide a PWM device and for that needs to
+call the function devm_pwm_lpss_probe(). That function is provided by
+the pwm-lpss driver which intends to export it in the "PWM_LPSS"
+namespace. To prepare fixing the pwm-lpss driver to indeed use the
+"PWM_LPSS" namespace, import that namespace when used.
 
-in (implicit) v1[1] I suggested to move the MODULE_IMPORT_NS magic into
-include/linux/platform_data/x86/pwm-lpss.h. While I still consider that
-a good idea I was overruled and so here comes the variant with the
-explicit MODULE_IMPORT_NS in each module that makes use of the
-respective symbols.
-
-I don't have a fixed merge plan for this series (assuming it gets the
-expected Acks). Either way (both via pwm, both via pinctrl or the
-pinctrl patch first and the pwm one in the next cycle) is fine for me.
-
-Best regards
-Uwe
-
-[1] https://lore.kernel.org/linux-pwm/cover.1733245406.git.ukleinek@kernel.org
-
-Uwe Kleine-König (2):
-  pinctrl: intel: Import namespace for pwm_lpss function
-  pwm: lpss: Actually use a module namespace by defining the namespace
-    earlier
-
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
  drivers/pinctrl/intel/pinctrl-intel.c | 3 +++
- drivers/pwm/pwm-lpss.c                | 4 ++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ 1 file changed, 3 insertions(+)
 
-base-commit: 232f121837ad8b1c21cc80f2c8842a4090c5a2a0
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 527e4b87ae52..d7f1ebb1919f 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1941,3 +1941,6 @@ MODULE_AUTHOR("Mathias Nyman <mathias.nyman@linux.intel.com>");
+ MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
+ MODULE_DESCRIPTION("Intel pinctrl/GPIO core driver");
+ MODULE_LICENSE("GPL v2");
++#if IS_REACHABLE(CONFIG_PWM_LPSS)
++MODULE_IMPORT_NS("PWM_LPSS");
++#endif
 -- 
 2.47.1
+
 
