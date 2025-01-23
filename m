@@ -1,132 +1,135 @@
-Return-Path: <linux-gpio+bounces-15017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A56FA19B6F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 00:24:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB073A19F89
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 09:06:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82BAF169FEE
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2025 23:24:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A71D5188D492
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2025 08:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD641CBEA4;
-	Wed, 22 Jan 2025 23:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D388D20B7F8;
+	Thu, 23 Jan 2025 08:06:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Um2U5XD6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hNNFGfEw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4314F1C3C1A;
-	Wed, 22 Jan 2025 23:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD326AF5
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 08:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737588237; cv=none; b=GBk8Yxvs86GJ/I/x9Ag3c6U8/PKjYZ1nJG98gR/dBQJ0YqfF4VRA+6ZNjU37AA8HL8mzFkvwv6f3Dl/KLcCUHyOK/FnymjCAlXfb3oEy8fdlz33px67+7UuqzxHDi9aMMrIDXXAC0/3VebWg9Sv8sAwUp5aDxKJFxOXKk4SUJy8=
+	t=1737619599; cv=none; b=mQHK8pY8w6lW0r4t6pusj/eqjW2gNHvnJOr9Jr3ZLdLII1jtRA+k3k61cI5siX7X5x5JJzHtBQWT2ttt+TvNMMkutlcNbHMIWHMdBwzEW12+Ar+F/n4QW1tGWQEfqqhQo29nnCxlQob6quPmVN6od0CIIyzYX2yjluYq6vBYelA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737588237; c=relaxed/simple;
-	bh=PQ9ID+y+HYqvdGcyA/HuZ8MXuYAda/StiIy444/tIYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YPa6+N4v+RkyiQFYFc8CL9Muj4EolAqUyca3q/SKqQQ5DBdHh+lSUSMF/UqNFuN1XLqi4g6t5VQ7/EGH8BvS/R/ycvdzdEVv1T5IfwMvmCXw7VQPcemc+cdaDQM4ZQMAfDxUqjxVuGkA8IZrz0A0PX08AV6+smjDW7+5w3iXNHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Um2U5XD6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50MGpaE4004030;
-	Wed, 22 Jan 2025 23:23:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PQ9ID+y+HYqvdGcyA/HuZ8MXuYAda/StiIy444/tIYw=; b=Um2U5XD6HENLY6Va
-	PQ/7Zee4uMIm2K5uJ68ivcvwIAnr6h5XRGJgLLX0Eaq1Gf8IukTMAwtOBZm6toFO
-	v1a2UA/4CC7w5k5tylnhPm9o7HhtkmI9wIXDz/9mGZUCYFXqlaKNlN3nz/pWNaIm
-	uBBy8YvJmR0FycamItBe9an9EGQdYSfVrywjY+260lxhYhS6JAqE8ohBtQ6SkiQU
-	ZbnK91SybUy2Lns4g9E6JexZtlTUoVY4ucMlWg48hvnzo0HrLDafyWh+BBBbR5x3
-	8TRJDH7js2jdCzQd1oZlCG6/iaAeKSkrcIECGY98iVQ0AOZn41z/KqDpdd/d45aA
-	Bgts9g==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44b4jm0s1t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 23:23:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 50MNNWJQ007045
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 23:23:32 GMT
-Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 22 Jan
- 2025 15:23:32 -0800
-Message-ID: <36af1162-cd43-4045-bb43-b8bbf44f9788@quicinc.com>
-Date: Wed, 22 Jan 2025 15:23:29 -0800
+	s=arc-20240116; t=1737619599; c=relaxed/simple;
+	bh=gxTHY5tNFQ26TyUclI0HVgzv6uKE7BrzAyF8O0x2uWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u5TkWLVAFODO0E3VmLBZGqwg+qkIccC1yQVuTe8SwX9PVEw+dkxsg2v3tD38yfPAhT/4iklDdzGfxr9GhIcOOOGJL30MooNGDX7gAP87c+THhnNsitj+fafgyZ5JYPfvDvZeiPnnJqZ0+YvFlDHsoy3U1DZbJyhXxvZuwYIQzCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hNNFGfEw; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38a88ba968aso499718f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2025 00:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1737619596; x=1738224396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S7vfNOMJ4n++kfz6xlTIcGOIzfhrBCGByHH6Dh+jmoo=;
+        b=hNNFGfEwVhQf5PmXEwZYtlf8bB7Si1FKUS58lkVhIv3m2z2a0xi/1D0BvhI5d4u6pa
+         GwtPMgZzbBydg6BDA2DypTTNoqtTzAb890QmK4vtYn+UTPEiPDeX55orsqmbrIUo/+2t
+         /8q5GW+v68tR9eJwyfDptb8M5dvmcGALmCMWFKAsmtUTBjPbdpv6mBaH1z7Hh2YhbcfU
+         qG+8EfG+ZR0oS99huvXTuH/PwzAveTyqJXGUnRYzLWcENmOvSHZsLzNi1OXpg4nEulze
+         wPPM88Qqve281jtbnNITmzu8bjjf6RR+W2OeQrXOHmsn3WwRCreMQlL4d7+cOEqw82bS
+         XwPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737619596; x=1738224396;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S7vfNOMJ4n++kfz6xlTIcGOIzfhrBCGByHH6Dh+jmoo=;
+        b=Mcsy/Xcm/iQKUQpswwJuSM09AoS0ZqKi8HPdAcwVV1Jn1fBbbPVwu9HRwA1NUKMZ1M
+         92Ftl4rPyiQf410qTe66jJOvMxEBactbAZjNNwZZOeW4lKk+9bqLzP2L1DnnVi+IjC3O
+         MixE+hWmSVY0Hv8GS8np+BkrQ9RdEh8v8CeEzLuP6gw4SNA2cWsiKFwtIoMkOrfGGZom
+         9gdB1FOaC3gi0k62AU4xEOVpoQuuio2b9K1f7rC7lyqCnv1rYqVxDNI8OZIIwWaTA/20
+         SMR3rsp+k075hYk9n3xqjEHSxQ4g3Uk/Ur0q4BwaqRH/KuNA5yLCa6QfsAkqGINXp0Ya
+         W2cA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgzdvunGeAS2a82vz9HRKWHe2IQi7kif0/RePGrAb1rrH2lWaAvNJBojSLUPcZcTEu1v4FY4kGM/bu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB3YQEPD4vkzjukJeNEqgCxEulxdCTNqzGwiaV+f5wV0+nauuv
+	Zh0FaR7mNdqNrcBZQeH5TvwCWnnJ/WisqFOPckSWUc0FJhjSK32yuc3Nl0Y/RME=
+X-Gm-Gg: ASbGnctUXZXU8gwOwjmWcA91NYK+dKcL+QJhKejumLAVuzhKpTC3NuHdiM6khydcesY
+	Zj7R74EyEgc3OexVdv5log6Br+tgAJHayZu82+gwEBBtQgVDSITLxBBeb7cvs/sZtTtO+jfzSRc
+	bc3Wz1esk8X5QSxuwKtHxVQ1uDXr5FoaHRTMaHbrfNxFD1q2ApzLMM03eeCsrtIytHUT1lJ7Qeq
+	5sC2ixsEdozvBSAUSPeRF7MQNYhpTQtg8SWUChtShE3dtehsOypL7rKAgMZaU5G5UdkMqwzBIHK
+	oT1Lsk+Xail+tW4=
+X-Google-Smtp-Source: AGHT+IFoSVv7AjtPcj5hMzm0WESMq53vzX3x7yD7jufTSV68NHpQ8JrlP4BZsZhmIRQzeL0cGJ5DoQ==
+X-Received: by 2002:adf:cd81:0:b0:386:3a8e:64bd with SMTP id ffacd0b85a97d-38bf566464dmr15670016f8f.22.1737619595796;
+        Thu, 23 Jan 2025 00:06:35 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ad40:de3b:e658:a016])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf327e06asm18802231f8f.95.2025.01.23.00.06.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2025 00:06:35 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH 0/4] gpio: mxc: silence warning about GPIO base being statically allocated
+Date: Thu, 23 Jan 2025 09:06:33 +0100
+Message-ID: <173761959063.8981.4421815655644713601.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
+References: <20250113-b4-imx-gpio-base-warning-v1-0-0a28731a5cf6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/12] clk: sunxi-ng: add CCU drivers for V853
-To: Andras Szemzo <szemzo.andras@gmail.com>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec
-	<jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Linus
- Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Walmsley
-	<paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou
-	<aou@eecs.berkeley.edu>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@baylibre.com>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-References: <20250110123923.270626-1-szemzo.andras@gmail.com>
- <20250110123923.270626-6-szemzo.andras@gmail.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20250110123923.270626-6-szemzo.andras@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0rtJg0pCT2kcaINT24J2xEvyArlsT86f
-X-Proofpoint-GUID: 0rtJg0pCT2kcaINT24J2xEvyArlsT86f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-22_10,2025-01-22_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- spamscore=0 mlxlogscore=922 priorityscore=1501 phishscore=0 mlxscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501220170
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 1/10/25 04:39, Andras Szemzo wrote:> +module_platform_driver(sun8i_v853_r_ccu_driver);
-> +
-> +MODULE_IMPORT_NS("SUNXI_CCU");
-> +MODULE_LICENSE("GPL");
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Since commit 1fffe7a34c89 ("script: modpost: emit a warning when the
-description is missing"), a module without a MODULE_DESCRIPTION() will
-result in a warning with make W=1. Please add a MODULE_DESCRIPTION()
-to avoid this warning in all of your new modules.
 
+On Mon, 13 Jan 2025 23:19:08 +0100, Ahmad Fatoum wrote:
+> The i.MX GPIO driver has had deterministic numbering for the GPIOs
+> for more than 12 years.
+> 
+> Reverting this to dynamically numbered will break existing setups in the
+> worst manner possible: The build will succeed, the kernel will not print
+> warnings, but users will find their devices essentially toggling GPIOs
+> at random with the potential of permanent damage. We thus want to keep
+> the numbering as-is until the SysFS API is removed and script fail
+> instead of toggling GPIOs dependent on probe order.
+> 
+> [...]
+
+Applied, thanks!
+
+[3/4] gpio: mxc: remove dead code after switch to DT-only
+      commit: b049e7abe9001a780d58e78e3833dcceee22f396
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
