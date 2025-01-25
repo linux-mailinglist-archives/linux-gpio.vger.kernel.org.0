@@ -1,190 +1,94 @@
-Return-Path: <linux-gpio+bounces-15054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32AA6A1C086
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jan 2025 03:52:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5EACA1C385
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jan 2025 13:59:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE76518868EE
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jan 2025 02:52:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03150188310A
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Jan 2025 12:59:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EED2204F64;
-	Sat, 25 Jan 2025 02:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF28720897B;
+	Sat, 25 Jan 2025 12:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U7f5PjIj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuEQkelL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D207204F95;
-	Sat, 25 Jan 2025 02:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CEE3596D;
+	Sat, 25 Jan 2025 12:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737773527; cv=none; b=LMFD46Wg491QRRRToqUfr0UfxuWijKNDMgWmKQVNlpDXYTEtZHea7xrdkM400k0Z7t6LRtySZvxYusrukXkq0vjTYAVYzhSCtTwPcETB6BiUNPLZ2IEvIxvVtBAa1ozUPyxGNCDDdOLkEIJxo38FEfrpNeAyHFI1TLaVQSBB7Ok=
+	t=1737809977; cv=none; b=Yg9I7BXM/fc2a/ubTr5FkuO/GNSOkQ397I8x/5OMJCSoLHDxjSRyXpRm8GALxqMfgsDBSJVg7ucBGOJJOm/U7c8HCtuBRNZLz3mTq1Dgtu2jdINqTTcWQx5bp855jIbkQ4xVMZLCxyXQgjpz8JkLA3tD0wxVScMMFotduu+oYIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737773527; c=relaxed/simple;
-	bh=dma3HqGkmYpW96N3lOqvq3NMtg7+Eu5CwYZ2sR+o6tA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ke4gwnKZv8RoZRaVt5Rk1R0ZG07pOPERBdki8G0GREFsFffnhHme5FCW8IqphtZ9LZTNAT+23zTmHsRvUD2yeBoWVvKujcKP6rTuT4FZaAZZCsuVUF/qWrSlXpmslB2vmwETqMKzKmT29vtTM6nnKAf7/T6gTylznEfjVcT6OM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=U7f5PjIj; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: 5737e624dac711efbd192953cf12861f-20250125
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=vHG0wIAtoOemWkPtzFx9h/lFGmdkP7r/cg9y4ucBGZw=;
-	b=U7f5PjIjFKjlioN9mNPhq1BC0h8SrwJmxKZ9vZ0CRc2Ug3uPMwzfju3bwkOUsRVq1yUKAmDidR+7yXc7lzmIB1sH0GoBc8xC0u0uRNAzBAxyi5Vm17YkQHKLakaBQpXqtCX7C9+As0Eoje4ON/9l0AEZfjtMSr5BS5RKkjY+D4U=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:68b738d8-c35a-4a64-bf5f-0be612f670b2,IP:0,U
-	RL:0,TC:0,Content:29,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:4
-X-CID-META: VersionHash:60aa074,CLOUDID:2872b07e-427a-4311-9df4-bfaeeacd8532,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:4|50,EDM:1,
-	IP:nil,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 5737e624dac711efbd192953cf12861f-20250125
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <ot_chhao.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1695610541; Sat, 25 Jan 2025 10:51:56 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Sat, 25 Jan 2025 10:51:55 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Sat, 25 Jan 2025 10:51:54 +0800
-From: Hao Chang <ot_chhao.chang@mediatek.com>
-To: Sean Wang <seann.wang@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>,
-	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen
-	<hanks.chen@mediatek.com>, Chunhui Li <chunhui.li@mediatek.com>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, Hao
- Chang <ot_chhao.chang@mediatek.com>
-Subject: [RESEND v3 2/2] pinctrl: mediatek: adapt to multi-base design
-Date: Sat, 25 Jan 2025 10:51:23 +0800
-Message-ID: <20250125025145.14405-3-ot_chhao.chang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250125025145.14405-1-ot_chhao.chang@mediatek.com>
-References: <20250125025145.14405-1-ot_chhao.chang@mediatek.com>
+	s=arc-20240116; t=1737809977; c=relaxed/simple;
+	bh=GgEn2bWpJe+6jP08tYNnkHNkEFVIw0xflv114EQSNz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=feXCupqSV+cwRX1pwHg+nTf1ZIJTgGOtDib6HTNtjDfuXxkWIPCumrmVISirwjH1J1I4Roq/9Rz7tOyhDtHWhNDQpbLqtapQ1RL+RwBkt507S/iBJAmmwmlvTJKA0wmkERGp7HoDF5iTqFqZQZ58LzGVIwwKfDKjBlJgy2fsePM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuEQkelL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82562C4CED6;
+	Sat, 25 Jan 2025 12:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737809977;
+	bh=GgEn2bWpJe+6jP08tYNnkHNkEFVIw0xflv114EQSNz0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fuEQkelLgHYKGn6dmXGbTsIyScIdvEIVVcqsqq2h4Zt+pEsbtiAwwYbutsn4QdJLP
+	 V8cT+W8SP5rCf9cHWf0223OB+QfpF2hs5ciBv0DxntjJb7yzD4JFc/wgwNSG5diFul
+	 xAl1y5O85nDfO6/nbZmFZQi9x7ZPmc1Ewn86by0IreEDlMWLBzxRbJZ7E3AQnm0oXl
+	 ew5IOo8LHie2s3uNv11JGv4TzZzKSpLQ9YeCyGY7RwrA6UnicJrpPCgAIeY7SAzjjk
+	 sR3Hqf98v00tOE5+5WQsdQm/MG5b/v2cxyDSTC3Q6oEAeF+vWyEo2UDJFHUBGG8L5A
+	 rVZNAEPsi6LLA==
+Date: Sat, 25 Jan 2025 12:59:29 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Cosmin Tanislav
+ <cosmin.tanislav@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: amplifiers: add ADA4255
+Message-ID: <20250125125929.1e365b85@jic23-huawei>
+In-Reply-To: <20250120105429.183004-1-demonsingur@gmail.com>
+References: <20250120105429.183004-1-demonsingur@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The eint num will obtain the operation address through pins.
-Change the traversal method of irq handle from traversing a set of
-registers to traversing one by one.
+On Mon, 20 Jan 2025 12:54:24 +0200
+Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-Change-Id: I3962b78042d32501a73153201cddf52c6b62a695
-Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
-Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
----
- drivers/pinctrl/mediatek/mtk-eint.c | 38 +++++++++++++++++++----------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+> The ADA4255 is a  precision programmable gain instrumentation amplifier
+> (PGIA) with integrated bipolar charge pumps.
+> 
+> With its integrated charge pumps, the ADA4255 internally produces the
+> high voltage bipolar supplies needed to achieve a wide input voltage
+> range (38V typical with VDDCP = 5V) without lowering input impedance.
+> 
+> The charge pump topology of the ADA4255 allows channels to be isolated
+> with only low voltage components, reducing complexity, size, and
+> implementation time in industrial and process control systems.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+Hi Cosmin,
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 540245c3128d..949a20196f74 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -513,6 +513,7 @@ EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
- int mtk_eint_do_init(struct mtk_eint *eint)
- {
- 	unsigned int size, i, port;
-+	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
- 
- 	/* If clients don't assign a specific regs, let's use generic one */
- 	if (!eint->regs)
-@@ -523,11 +524,11 @@ int mtk_eint_do_init(struct mtk_eint *eint)
- 	if (!eint->base_pin_num)
- 		return -ENOMEM;
- 
--	if (!eint->pins) {
-+	if (eint->nbase == 1) {
- 		size = eint->hw->ap_num * sizeof(struct mtk_eint_pin);
- 		eint->pins = devm_kmalloc(eint->dev, size, GFP_KERNEL);
- 		if (!eint->pins)
--			return -ENOMEM;
-+			goto err_eint;
- 
- 		eint->base_pin_num[0] = eint->hw->ap_num;
- 		for (i = 0; i < eint->hw->ap_num; i++) {
-@@ -536,34 +537,29 @@ int mtk_eint_do_init(struct mtk_eint *eint)
- 			eint->pins[i].debounce = (i < eint->hw->db_cnt) ? 1 : 0;
- 		}
- 	} else {
-+		eint->pins = hw->soc->eint_pin;
- 		for (i = 0; i < eint->hw->ap_num; i++)
- 			eint->base_pin_num[eint->pins[i].instance]++;
- 	}
- 
- 	eint->wake_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
--	if (!eint->wake_mask)
--		return -ENOMEM;
--
- 	eint->cur_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
--	if (!eint->wake_mask)
--		return -ENOMEM;
-+	if (!eint->wake_mask || !eint->wake_mask)
-+		goto err_eint;
- 
- 	for (i = 0; i < eint->nbase; i++) {
- 		port = (eint->base_pin_num[i] + 31) / 32;
- 		eint->wake_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
--		if (!eint->wake_mask[i])
--			return -ENOMEM;
--
- 		eint->cur_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
--		if (!eint->cur_mask[i])
--			return -ENOMEM;
-+		if (!eint->cur_mask[i] || !eint->wake_mask[i])
-+			goto err_eint;
- 	}
- 
- 	eint->domain = irq_domain_add_linear(eint->dev->of_node,
- 					     eint->hw->ap_num,
- 					     &irq_domain_simple_ops, NULL);
- 	if (!eint->domain)
--		return -ENOMEM;
-+		goto err_eint;
- 
- 	if (eint->hw->db_time) {
- 		for (i = 0; i < MTK_EINT_DBNC_MAX; i++)
-@@ -585,6 +581,22 @@ int mtk_eint_do_init(struct mtk_eint *eint)
- 					 eint);
- 
- 	return 0;
-+
-+err_eint:
-+	for (i = 0; i < eint->nbase; i++) {
-+		if (eint->wake_mask[i])
-+			devm_kfree(eint->dev, eint->wake_mask[i]);
-+		if (eint->cur_mask[i])
-+			devm_kfree(eint->dev, eint->cur_mask[i]);
-+	}
-+	if (eint->cur_mask)
-+		devm_kfree(eint->dev, eint->cur_mask);
-+	if (eint->wake_mask)
-+		devm_kfree(eint->dev, eint->wake_mask);
-+	if (eint->nbase == 1)
-+		devm_kfree(eint->dev, eint->pins);
-+	devm_kfree(eint->dev, eint->base_pin_num);
-+	return -ENOMEM;
- }
- EXPORT_SYMBOL_GPL(mtk_eint_do_init);
- 
--- 
-2.46.0
+In general please add a cover letter to all patches. 
+Along with providing some general info and anything you particular
+want to highlight, it provides somewhere for others comment on the
+whole series + it gives a nice name in patchwork!
 
+I've nothing else to add to what Cosmin said on this patch.
+
+Jonathan
 
