@@ -1,133 +1,116 @@
-Return-Path: <linux-gpio+bounces-15064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DCEBA1D3FD
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 11:00:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 238EEA1D405
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 11:03:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A1051887012
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 10:00:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73E727A16C6
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 10:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82CA11FF1B7;
-	Mon, 27 Jan 2025 09:59:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 731F31FCFFC;
+	Mon, 27 Jan 2025 10:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j/tCbRpb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAH2+U1o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2D11FECCA
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Jan 2025 09:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FD71FCF79
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Jan 2025 10:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737971975; cv=none; b=IVQJAQDHi/dkkj+3/I4hmnMTiqMnRY/a/lvNyduNecb+qFmLYltVZFUoPg402pzwjXuPeGazd84KDUvWp8GmdGKC7ytzMzkKJl4BwfeKzR5TKYmfoITxzbnfF69WpIDOycJUTHIOGdq64xKkyfX9egWGFvqvoNrNZmmQfpoVxrU=
+	t=1737972197; cv=none; b=Hj/8YkOdmIG+rVyEzBaUlssOtsWY0yR6bq5YpCJ0Sv4YlB4/G2RBRYJAMjDoL+7MUw0LR0cOifbRxjtqhAGJgsPDcs1qGLJPZfsYL/OG6e8hG2gcjzoqQ357Bvg4saW+Soyz/OVevJTg15ofsqMi9poyE0DGRzkkCvaexlrmX4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737971975; c=relaxed/simple;
-	bh=PDGrwIQK0S12LPOVvghHC4bvwNPOk/8FesbYnKkyLFM=;
+	s=arc-20240116; t=1737972197; c=relaxed/simple;
+	bh=N538vEYu6XnF0WHkONMmPonotxgHMdsCAfvL8a6mQr4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TtNXz7cmwQNHMHtMMYfKfedsuIEJByRkgKbhEZEpjI/kkDwmBBvWr5ZwPXaxIywjbDzXtm9TN0X6LlDD5XdWuNUKfuR6t0ezDscoqN5seiEJWQIY1ygH74azKLCgJYZrbwPiFSo8qpoM6OCDmxqSUbtI/adAEPWBRQ38D6t/ViE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j/tCbRpb; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=jmceEJpIRwGrEMChB7PQRyzwFp1j9+GbC3hy6kxoe/0AjzmrsZsaRLj9At4eFHfvtL/0hi8cwb5flDk9ASbr/PF6DasQjJpYdL+a4pNN3/wV/9XahpgeIvSr2m1GdgtGgjML1Iimi4l7Qp0MlualeDFH39E4tJdgh+FxOEmSl9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qAH2+U1o; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30167f4c1e3so42353581fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jan 2025 01:59:31 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30613802a04so43555791fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Jan 2025 02:03:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737971970; x=1738576770; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1737972193; x=1738576993; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nqS8yiFvPoQH42365EOQ4XQDK7lHJ8Wg2V08GdiylrY=;
-        b=j/tCbRpbOWjj3W6eCQ07jg1/Y6DahG3Vo2w3+zAzPI0LVs1i//cporX1LdU/hMqQ/c
-         7aANN0pfMXNvpfbkgZkptiOp2s4BtttZAyD6Ir5b9de64DdbrSesPExv0IlFuYWVSyzc
-         fuICJP2QNW4GGVxpv77tcBkpugjXpNCiMbpFKguw+jApZwnEUgiar1HB04i4xxcQDwjs
-         H+KFJ+rLVVOXfGajG73HlteeUO549uHcgC8tE2qnMiZYI5KPYNfClD73kSu5zMrf+fsv
-         HYShxoTgu6klPtYt9+TT0S4gA0ZmQg2iXW8A/6+qhXb4DBpaH/ZnZBPhjwkC19+Xjf4z
-         e50w==
+        bh=J4NmMIOuTviTZNb+IfZZhp63v5XOHewcC8VSW/yb66E=;
+        b=qAH2+U1o0pEM2aA3T13Rmsm0/V7/sU5DKiYfFUNI2FSuK8H+WjaorQEoJRMDsylkMs
+         dGKB4XwbbxK0F7NYHqS+nSqyM/LUg6gH6/Q7d3aBtvQnnu/iELsPV9WcPSKWHjSXGEos
+         jysPtNgRmM8SEolqigOnkaM3y8r55/THlRTfYSmdEqHlZqx35UIYNiHmvc7xfHHXQAD8
+         wgdb0wjR2TEsqYJ8h1KsQnQalGmAVZlUy400Yybw2nsLc9S7hTxJXne+RiGDF83T2Ngz
+         Hp2iEr4oV9QuPsSsv8dRqOtYdA4KqMsXysJSN/UPeI8VE31n+o8ki4EZGWNESGb/ZEDh
+         DY6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737971970; x=1738576770;
+        d=1e100.net; s=20230601; t=1737972193; x=1738576993;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nqS8yiFvPoQH42365EOQ4XQDK7lHJ8Wg2V08GdiylrY=;
-        b=oR2klOYHpYoQw2ZGSZ0LMhs3VWBAnYSExV67znfIg4Py1TjuOX3NzrQMviqAY6qehj
-         jgi38iD3+9MExmDSgDkUVGO/ZBKcVnX+HkRecBDfQtjQCJUSwXJ4Fx5TAW6MuB6MEGpO
-         bDBMEC6ZhvhHyaCYwrzBYN4J/LbhIYkK68DLgAFFeQRF5m1lYmy67yg8hISu2orPGv/2
-         SRe5bJFnxrJvcv2Yrt5Rw7WLT/52pKpbubJqw1urMoMwaBl6gMF1NO5N9b/yGCQELEvD
-         rMXyFuP76BO3j8R/wdnltaJmRPQEWUWLS7fFQO8kzw3aex78E/y8VQJlyZmjZ9F6grvy
-         E25g==
-X-Forwarded-Encrypted: i=1; AJvYcCUdSNu0XpYZdy4/2Nvrb9GFOuyufavvOGDNiNgf8XyOLVL39f29J9jCIHY5Xe4ocahG/wD5Azl14hU2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXUl890HlzoURsHqLrWVJ+3c8fF5DLTaC4M0qBqVrXM5WjXFNt
-	7FGMONLxV+NUAqmrVtipJfjGlASbiH6aIqkcmMS7UQNiral1dbwauzkRYDCMsvx+bGkdKwWB1lu
-	lKhTBNIpLkb6HHIQoEY5GduqVoSdkmOF/SYnm+Q==
-X-Gm-Gg: ASbGncsubYK8uZZ0QYjY8L26qDboHyzC+kOirENl5FCRWvIQE1YFEuRQSj/M4zJbuS9
-	rNsiV/2i4VWMS3CaJunk0yg9uN2WXq/EG5B80JjZ0bi+nZGqfUyBMPc+0RHL8
-X-Google-Smtp-Source: AGHT+IHqpm1ys9+lwbd/QxujcbzJL4i0yKhhKzjeujkw2d5Z1I5Id1mRs2qKI/MXH9CQY+F8hE4OzkVsIK/ZHQmuZJE=
-X-Received: by 2002:a05:6512:1312:b0:542:234b:9a6a with SMTP id
- 2adb3069b0e04-5439c281f9amr15646461e87.33.1737971970154; Mon, 27 Jan 2025
- 01:59:30 -0800 (PST)
+        bh=J4NmMIOuTviTZNb+IfZZhp63v5XOHewcC8VSW/yb66E=;
+        b=Gv9/ega5x7kxKS5/8N4Mnm+YXxraxnOh9FP+EMTVQnZrxfOjJ//gcw1D+b0oE7LBIN
+         51Rpwqjk63DCF6ylvMNyWpZH7YkRCEoSKfApg2Kgetl0eNKUPWsb9JqPr4+ALiacquKo
+         UBmd/ek/vLbr5PBvVBFhCY61rhgSVDM7gQMp6p0v6sbkr49z2aUZtlHF1cFbbsA0oekV
+         E1TpHXrpeyMvUTOfAhYF4oCUcWioOgzgOTS/Op0YAnE/y/1u9wE5Qv+DNkooNnVg+R3L
+         ji7UPo02Zti82DGplBR0+LL9F/4O3PZDiMoaWh3nkuAQsN/OaZBKvWlSiBSuUFUNNeID
+         FVyA==
+X-Gm-Message-State: AOJu0YwgHVYhQBum0a0zaNdnxG8c+/CheMVJ8NKtNdAA7pcaBRsQ6Nql
+	jhrqE3yhPoXsP6+w7DpEDmdbrAcowavA32zC0PXzMYR443XXlkEVueFHGrH9KyzPrV0gkGsuroF
+	Nmw1WYgHigLDN+CDHdRTBpAU1fW7Fl0VCOc4PiRWlMDVpvaR8
+X-Gm-Gg: ASbGncvAGBPRaJmSMGu7qGt+gC1uZQ9H79KqSTxg5bxzyVbrvkaWlG0pkHxQ0xAptgS
+	SGZHpMSIAZKltvCgRbtDokDUX5RoSnm4HwPR2MzAYUXjrzR4KMgO1zh7VEUyu
+X-Google-Smtp-Source: AGHT+IFXibelyUSQp2Gr/mOGUDbFIR4zvBx87cq8TNFbyN1svgKCukDrrYoUkm1G/479hFHHReF4d+bUFSiAVXgjVZo=
+X-Received: by 2002:a2e:b7d6:0:b0:300:317c:9b75 with SMTP id
+ 38308e7fff4ca-3072ca6a6b4mr116564231fa.12.1737972193490; Mon, 27 Jan 2025
+ 02:03:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122-amlogic-pinctrl-v4-0-4677b2e18ff1@amlogic.com> <20250122-amlogic-pinctrl-v4-3-4677b2e18ff1@amlogic.com>
-In-Reply-To: <20250122-amlogic-pinctrl-v4-3-4677b2e18ff1@amlogic.com>
+References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com> <20250117142304.596106-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250117142304.596106-2-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 Jan 2025 10:59:19 +0100
-X-Gm-Features: AWEUYZlw3ilYGs0ATdzTHL2yQh4eIVQWc6_6OrIXQyU_MtlIHFv72pFxPtpk8xc
-Message-ID: <CACRpkdZRbpd0Kw9V=aYX5P0vJLtErNR+aBzPagSwf=AZh6QERA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] pinctrl: Add driver support for Amlogic SoCs
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org
+Date: Mon, 27 Jan 2025 11:03:02 +0100
+X-Gm-Features: AWEUYZkbltOc0Gz_EJbR18RnU9jd0obin9Q4Izw-dghUXpRFQH_pR7bPJO1_bHQ
+Message-ID: <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
+Subject: Re: [PATCH v1 01/16] pinctrl: cy8c95x0: Respect IRQ trigger settings
+ from firmware
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Xianwei,
+On Fri, Jan 17, 2025 at 3:23=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-thanks for your patch!
-
-On Wed, Jan 22, 2025 at 4:26=E2=80=AFAM Xianwei Zhao via B4 Relay
-<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
-
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> Som of the platforms may connect the INT pin via inversion logic
+> effectively make the triggering to be active-low.
+> Remove explicit trigger flag to respect the settings from firmware.
 >
-> Add a new pinctrl driver for Amlogic SoCs. All future Amlogic
-> SoCs pinctrl drives use this, such A4, A5, S6, S7 etc. To support
-> new Amlogic SoCs, only need to add the corresponding dts file.
+> Without this change even idling chip produces spurious interrupts
+> and kernel disables the line in the result:
 >
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->  drivers/pinctrl/Kconfig           |   18 +
->  drivers/pinctrl/Makefile          |    1 +
->  drivers/pinctrl/pinctrl-amlogic.c | 1053 +++++++++++++++++++++++++++++++=
-++++++
+>   irq 33: nobody cared (try booting with the "irqpoll" option)
+>   CPU: 0 UID: 0 PID: 125 Comm: irq/33-i2c-INT3 Not tainted 6.12.0-00236-g=
+8b874ed11dae #64
+>   Hardware name: Intel Corp. QUARK/Galileo, BIOS 0x01000900 01/01/2014
+>   ...
+>   handlers:
+>   [<86e86bea>] irq_default_primary_handler threaded [<d153e44a>] cy8c95x0=
+_irq_handler [pinctrl_cy8c95x0]
+>   Disabling IRQ #33
+>
+> Fixes: e6cbbe42944d ("pinctrl: Add Cypress cy8c95x0 support")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Please move this file into drivers/pinctrl/meson as I requested
-earlier. We can rename "meson" to "amlogic" later if that placement
-is confusing.
-
-> +config PINCTRL_AMLOGIC
-
-There is already PINCTRL_AMLOGIC_C3 and PINCTRL_AMLOGIC_T7
-as will be very apparent when you move this driver.
-
-What is a *proper* name for this family of SoCs?
-
-> +MODULE_LICENSE("Dual BSD/GPL");
-
-On the top of the file you have:
-> +// SPDX-License-Identifier: GPL-2.0-only
-
-So this does not add up. Fix one or the other.
+Patch applied for fixes! (Speling mistake on first line fixed in the proces=
+s.)
 
 Yours,
 Linus Walleij
