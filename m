@@ -1,122 +1,290 @@
-Return-Path: <linux-gpio+bounces-15074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B75C3A1DC51
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 19:59:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06821A1DC58
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 19:59:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC06A166169
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 18:59:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D5B11881EB9
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 18:59:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014DD192B90;
-	Mon, 27 Jan 2025 18:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF95F18A943;
+	Mon, 27 Jan 2025 18:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNRH5SQG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2GuMsTJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A53191F83;
-	Mon, 27 Jan 2025 18:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9610CDF59;
+	Mon, 27 Jan 2025 18:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738004339; cv=none; b=iAasn3DzXFZNnGoVGTcusXCN8Ql8CpRwN2HkGB5JRSAgZHbDuIXia2Fg4jv/ZEXixIjFZ3wrPxk+uuUZYVeXvlZnAKRWlSx5ZxckLZbekwI/FQo2NawVm/RAhGcd6yCcEai4aCtkD5MCjg48cwQQGSZYGy2DiieQUa6tmWn3DiI=
+	t=1738004382; cv=none; b=tSsaVPLPNqqoXsQ/td6/BmIddu8vkejKxGOcmxgDGtaL1cVgmAZqAbFncvmMiBcWaHZnLOshHDXV6dJeoD0hF5hKqy/8xZ9K0VCs645VVhKse0jl7Zq3Ubqdp3iuaAZkm4gD3h5fPAhpVlU19lZH0co/9dLUw85PWOVoj3XXAoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738004339; c=relaxed/simple;
-	bh=7g3jvbADtbe5s/p0RNXa327Skqom3uwY1sXN/keB+tI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGC/BkSTHADdyqC44d3TbKgCkRTH0vBSz1XQstZYKZzyLNBewADyj6QiJIByfXR7+Ag8oBi7UFK0DqLNuAFlwSb1ICF8cnajp+eNEA0F9TbpfhpD41Sdz7GnebWhBURaw72gmSF2ehNXgM/SuDlNaG/0H2rQ4TQUzUFnZ9bMIi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SNRH5SQG; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d3bbb0f09dso9016760a12.2;
-        Mon, 27 Jan 2025 10:58:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738004336; x=1738609136; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7g3jvbADtbe5s/p0RNXa327Skqom3uwY1sXN/keB+tI=;
-        b=SNRH5SQGX8/A+/oAl3jnBWnbZK7PytsMnJ5vkFgCyX+q/MzYO4zoMsDW5O3mOyoN/t
-         PgqPmNSpHToCobr5CAkJ17xLNj700CD8dE+iNAeF7LlwgJrrIxPsoH/dlO/2Ad/oadE6
-         N9IQy5oPM55AoZ6y2NHIqWE3JF8EoFILI7ckSJ4W6UNyxTmqrrvysgWQscD0yTYXk2ZQ
-         BqDrbv/eeXqsHfo9eP5pWyNIHqrWdDp8I8YNbMysL5ex/N1sIYhyv9jlRuJYG9vho4u6
-         3lK8LfK9V7YOuqVCQF8xmxquuDY6+0PaMLiw/x1Vp682uNU96o145rJm+/UapN2k/QuB
-         MsKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738004336; x=1738609136;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7g3jvbADtbe5s/p0RNXa327Skqom3uwY1sXN/keB+tI=;
-        b=qKYEutSIZEWXFtS6hO1g5k2lxJb2daY6q5zYKJV2nh0w0qQhRBOJ3uX30fnH8gK0xU
-         c/tkHpKJ6iskfG2YqhqmaUP3lrYb+09592tuh0WCx5995jMKKyd2XHGgpx7PRURss6jy
-         v03JD70+KlCQicoIWjnA3mWwKiFaOugsqfXEJjXNHBMgylY+ch6Itgfm9ZFCHC67z6FP
-         5mabtva1l4dfY4GCY87nY5uKRcEc0IA5n022OXJDI6uqbXXcqd0Ef+6xLPUX6JzAz0/E
-         BygeQKfoS1+1ifLW+2ejCdflNGzKtNlWroLRG7zLRlD9GJuX4Sskic0S6USjqWVk571N
-         RZlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUToJfSN6LqMZTWs9f/Tx4hjILq/H2xj6qdsHl+FvjNe7C2tk1bo+Cet0YGvRhxyrlVvfPBC8i4moNe@vger.kernel.org, AJvYcCUZwxIMIAioacb+Mh/stlG39PS1oBmZnyfWPkXGidFq83tWJXMMsRowgyKTDiNt7xu/E1lsj3bU3/pgIVi8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrnpTzzLqZYOGJJOcLsDcBjq7cawqMEmsPJSOSf+omUfDxGAgy
-	+i6G9Owf9SZbukQAzBUm54ub+1Hl5uZNjCCW8tUSlhQy1oAoFnAKUSd97qfpT/GMEOlrvFRHTO7
-	Es+IV6kPZCMuCU2aPiyJpB2ewGzlGP4fG
-X-Gm-Gg: ASbGncuuQfWZDWEYyOXHTLJ2XqJ3d0QtyVzgbjt6ye9pTn+VIHTxIpvVgXojCtcj5ha
-	3Qy/3DFNjd4Yw+K/5PilIr0K3mweO6t9WPwhk0VGNFZ29m7Pg2FRgrSTqNWeBKg==
-X-Google-Smtp-Source: AGHT+IG7ArVw+Wxwp3IWFFbn5qH55qvWt6HMA46PXuIA+lg6QueMTBlZ10Lt8O5coO5eUEsqsTdpXTLXiCCOSfpSgIM=
-X-Received: by 2002:a17:907:268e:b0:ab6:6018:df18 with SMTP id
- a640c23a62f3a-ab66018e219mr1959082766b.6.1738004336104; Mon, 27 Jan 2025
- 10:58:56 -0800 (PST)
+	s=arc-20240116; t=1738004382; c=relaxed/simple;
+	bh=AT2ZxPgXT3E2xTLKhdLn/GaF61LTdzus5efSC1f26Ec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gOAIZXsM9/+yDcbs+IKF9FKvIAtFCVZU5PVRKjhDN2IqpOZi0c6O2I2EUyVzS9YgJsXcdQID9SDFNSeXqfP8tA1wGZr0d1y0lFuCc3T812qTLpvrgAqMSZdi/Giopjxo/dqNgLE1rIuq6gXIcp+/Antwo/+QE75LGHowcjnqoZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2GuMsTJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06F4C4CEE0;
+	Mon, 27 Jan 2025 18:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738004381;
+	bh=AT2ZxPgXT3E2xTLKhdLn/GaF61LTdzus5efSC1f26Ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n2GuMsTJaSw9Mfj2FiENWbgqSZ3wVfIMQVmbhkHkNsb4TkeGqalzHollxY5Po4kFl
+	 zR/58oZx75I0QDtGdU8SnurUP3wh+ZxKX0TSeE3UpXkUQ6/HolK2IkCQzbcOSsaeyk
+	 BL9WaFgF4rYqdorlvRYcMXpXp3xUS80VJnZf0s1gPya+S36lOItgt7kqKok2wkEWRH
+	 prvblDTG1V5kOjWoPBWwun9/gnwm6tp1Ocqw/pSLzBE5b6x9C4aQkIahwLeMzgXXfv
+	 Ft1Z46PiuEm9Hc72XP1kVd4F9ol0tet1H6N53hascvHxfGWRPntgNUWLaXLNfA/PU2
+	 Zge4E+02FFkog==
+Date: Mon, 27 Jan 2025 12:59:39 -0600
+From: Rob Herring <robh@kernel.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: pinctrl: Add support for Amlogic SoCs
+Message-ID: <20250127185939.GA612868-robh@kernel.org>
+References: <20250122-amlogic-pinctrl-v4-0-4677b2e18ff1@amlogic.com>
+ <20250122-amlogic-pinctrl-v4-1-4677b2e18ff1@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e407b7b58c966ee35e023618ad428a21f979e761.camel@alliedtelesis.co.nz>
- <20250113220221.13545-1-koute102030@gmail.com> <CAHp75VeLyacKo3rY5iyq+kZnLjEQsBN2eOJExHrqHuesaVyTQQ@mail.gmail.com>
- <CAHN=yabQB5jYDd9iQ7s1dMWTScRf3c_zuNtXL8U283+vvenfNA@mail.gmail.com>
- <CAHN=yaaZ3L23JbsQ+fugG-iXdtt9dOss0pe7yT5EG029nsfXFQ@mail.gmail.com>
- <CAHp75VdCwyJhYD9rtxf8H5mi5AfcPOhvSYx2MOqw3==3mnxoSg@mail.gmail.com> <CAHN=yaaYiyPOM6-T8_126N=rBdS-Qzf7_yAg=oWB_DxBsg6fuw@mail.gmail.com>
-In-Reply-To: <CAHN=yaaYiyPOM6-T8_126N=rBdS-Qzf7_yAg=oWB_DxBsg6fuw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 27 Jan 2025 20:58:19 +0200
-X-Gm-Features: AWEUYZknzneTedgEq7XOmfNvp1xbbVDad0h0BGFBXxYYraG171iX4C3fQSKuwjc
-Message-ID: <CAHp75VcUoLnXEypFuGF2Tzz3ncOi9daEVLdg+Vp4BwkFyGM1hg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
-To: lakabd <lakabd.work@gmail.com>
-Cc: mark.tomlinson@alliedtelesis.co.nz, brgl@bgdev.pl, 
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Abderrahim LAKBIR <abderrahim.lakbir@actia.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250122-amlogic-pinctrl-v4-1-4677b2e18ff1@amlogic.com>
 
-On Mon, Jan 27, 2025 at 6:45=E2=80=AFPM lakabd <lakabd.work@gmail.com> wrot=
-e:
-> > On Mon, Jan 27, 2025 at 09:47:17AM +0200, Andy Shevchenko wrote:
+On Wed, Jan 22, 2025 at 11:25:59AM +0800, Xianwei Zhao wrote:
+> Add the dt-bindings for Amlogic pin controller, and add a new
+> dt-binding header file which document the GPIO bank names of
+> all Amlogic subsequent SoCs.
 
-...
+Did you mean 'all subsequent Amlogic SoCs'? How can you know that? 
+Future SoCs may be different.
 
-> > Meanwhile looking into the code I'm wondering why we can't actually use
-> > just input port register data with the logic as for PCAL. Nonetheless t=
-his
-> > can be optimized later. I think Mark's patch is good enough as current =
-fix.
->
-> If we accept Mark's patch there will be no difference between PCA_PCAL
-> and regular chips in IRQ handling.
-> Looking at pca953x_irq_pending() the process for non-PCA_PCAL is quite
-> slower; there is one I2C read in addition, plus multiple bitmap
-> operations. I think that the solution I proposed at least helps in
-> keeping the leverage for PCA_PCAL chips.
+Update the subject to say this is for A4 SoC.
 
-As I said, we can do optimisations later on. The non-PCAL code is
-widely tested, so I prefer to have a slower but tested approach. On
-top of that bitmap operations for the chips up to 32 lines are just
-operations on one register, which are quite fast even on slow CPUs
-(like Intel Quark), in comparison to I=C2=B2C transactions.
+> 
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       | 127 +++++++++++++++++++++
+>  include/dt-bindings/pinctrl/amlogic,pinctrl.h      |  46 ++++++++
+>  2 files changed, 173 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+> new file mode 100644
+> index 000000000000..c4fdcd69bbf5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+> @@ -0,0 +1,127 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/amlogic,pinctrl-a4.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic pinmux controller
+> +
+> +maintainers:
+> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: amlogic,pinctrl-a4
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 2
 
---=20
-With Best Regards,
-Andy Shevchenko
+Do you really need 2^64 address space to define the GPIO nodes?
+
+> +
+> +  ranges: true
+> +
+> +patternProperties:
+> +  "^gpio@[0-9a-f]+$":
+> +    type: object
+> +
+> +    properties:
+> +      reg:
+> +        minItems: 1
+> +        items:
+> +          - description: pin config register
+> +          - description: pin mux setting register (some special pin fixed function)
+> +          - description: pin drive strength register (optional)
+> +
+> +      reg-names:
+> +        minItems: 1
+> +        items:
+> +          - const: gpio
+> +          - const: mux
+> +          - const: ds
+> +
+> +      gpio-controller: true
+> +
+> +      "#gpio-cells":
+> +        const: 2
+> +
+> +      gpio-ranges:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +      - reg-names
+> +      - gpio-controller
+> +      - "#gpio-cells"
+> +      - gpio-ranges
+> +
+> +    additionalProperties: false
+
+Move this above 'properties'
+
+> +
+> +  "^func-[0-9a-z-]+$":
+> +    type: object
+> +    patternProperties:
+> +      "^group-[0-9a-z-]+$":
+> +        type: object
+> +        allOf:
+> +          - $ref: /schemas/pinctrl/pincfg-node.yaml
+> +          - $ref: /schemas/pinctrl/pinmux-node.yaml
+> +
+> +        required:
+> +          - pinmux
+> +    additionalProperties: false
+
+Move this above 'patternProperties'
+
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+> +    apb {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +      periphs_pinctrl: pinctrl {
+> +        compatible = "amlogic,pinctrl-a4";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges;
+> +
+> +        gpio@14 {
+> +          reg = <0 0x14 0 0x10>, <0 0x14 0 0x10>;
+
+Both registers at the same address? I hope that's a typo.
+
+> +          reg-names = "gpio", "mux";
+> +          gpio-controller;
+> +          #gpio-cells = <2>;
+> +          gpio-ranges = <&periphs_pinctrl 0 8 10>;
+> +        };
+> +
+> +        func-uart-b {
+> +          group-default {
+> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 1, 4)>;
+> +            bias-pull-up;
+> +            drive-strength-microamp = <4000>;
+> +          };
+> +
+> +          group-pins1 {
+> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 5, 2)>;
+> +            bias-pull-up;
+> +            drive-strength-microamp = <4000>;
+> +          };
+> +        };
+> +
+> +        func-uart-c {
+> +          group-default {
+> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 3, 1)>,
+> +                     <AML_PINMUX(AMLOGIC_GPIO_B, 2, 1)>;
+> +            bias-pull-up;
+> +            drive-strength-microamp = <4000>;
+> +          };
+> +        };
+> +      };
+> +    };
+> diff --git a/include/dt-bindings/pinctrl/amlogic,pinctrl.h b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+> new file mode 100644
+> index 000000000000..7d40aecc7147
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+> +/*
+> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
+> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_AMLOGIC_PINCTRL_H
+> +#define _DT_BINDINGS_AMLOGIC_PINCTRL_H
+> +/* Normal PIN bank */
+> +#define AMLOGIC_GPIO_A		0
+> +#define AMLOGIC_GPIO_B		1
+> +#define AMLOGIC_GPIO_C		2
+> +#define AMLOGIC_GPIO_D		3
+> +#define AMLOGIC_GPIO_E		4
+> +#define AMLOGIC_GPIO_F		5
+> +#define AMLOGIC_GPIO_G		6
+> +#define AMLOGIC_GPIO_H		7
+> +#define AMLOGIC_GPIO_I		8
+> +#define AMLOGIC_GPIO_J		9
+> +#define AMLOGIC_GPIO_K		10
+> +#define AMLOGIC_GPIO_L		11
+> +#define AMLOGIC_GPIO_M		12
+> +#define AMLOGIC_GPIO_N		13
+> +#define AMLOGIC_GPIO_O		14
+> +#define AMLOGIC_GPIO_P		15
+> +#define AMLOGIC_GPIO_Q		16
+> +#define AMLOGIC_GPIO_R		17
+> +#define AMLOGIC_GPIO_S		18
+> +#define AMLOGIC_GPIO_T		19
+> +#define AMLOGIC_GPIO_U		20
+> +#define AMLOGIC_GPIO_V		21
+> +#define AMLOGIC_GPIO_W		22
+> +#define AMLOGIC_GPIO_X		23
+> +#define AMLOGIC_GPIO_Y		24
+> +#define AMLOGIC_GPIO_Z		25
+> +
+> +/* Special PIN bank */
+> +#define AMLOGIC_GPIO_DV		26
+> +#define AMLOGIC_GPIO_AO		27
+> +#define AMLOGIC_GPIO_CC		28
+> +#define AMLOGIC_GPIO_TEST_N	29
+> +#define AMLOGIC_GPIO_ANALOG	30
+> +
+> +#define AML_PINMUX(bank, offset, mode)	(((((bank) << 8) + (offset)) << 8) | (mode))
+> +
+> +#endif /* _DT_BINDINGS_AMLOGIC_PINCTRL_H */
+> 
+> -- 
+> 2.37.1
+> 
 
