@@ -1,205 +1,167 @@
-Return-Path: <linux-gpio+bounces-15068-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15069-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C34A1D59A
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 12:48:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEFF6A1D63F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 13:52:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10C257A185E
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 11:48:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA89218837DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2025 12:52:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D152B1FDE05;
-	Mon, 27 Jan 2025 11:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 588EB1FF5E6;
+	Mon, 27 Jan 2025 12:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gzg2v/os"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NLfhTpD4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671E6C2D1;
-	Mon, 27 Jan 2025 11:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3E71E868;
+	Mon, 27 Jan 2025 12:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737978511; cv=none; b=FnUwTZ3goJPp4sLtcYr1qKZS4WrarOVOuc+gIVHFc4cSgkOmX/QYVXZM96OLHliU5Uwepcbq6mVPBoheF1eCeT0G3Xh3cVA6WeCps5TtdNpkPob1IBHIaSsTG5Jcbqer48xwoVO0HI/zY9iC8KwRV1915Ergl8keTv0rdmoxC7g=
+	t=1737982343; cv=none; b=ZxkRlIot5FVSZNWCt305wFpKe694ISTKL2uvejWJ/V/pT/JQs3duKbY2pztYlxLjHXfhlUE/XD6THzQyMhzV3TCdzcOGf81N4K6zznW+3Pd98P7GynPSwoMDCcXxD1ors93r3oF2y1x85R6kJw93zyVIuYKV2KHdqpoSgaOtIjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737978511; c=relaxed/simple;
-	bh=lc+C2L2elEfWKiD8GPckPA2FJyMup+IhWEW4zlgFAig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=INVEAZXJP1mr5B3gyITiQAxSwWRC5qkd16oJCblXTyaXI+cb2+bfgIt1rV0ZrkeP1++mTDLwCzrWbONF8SeoCIvpWE0mwGXsBvuhv3qSB8Bxvp2zKVOp1kIZNg1UbFwdMsWpywNVQp8pwEZLkk24DmlashnLj5hIWNu4IhUfqp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gzg2v/os; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1737978507;
-	bh=lc+C2L2elEfWKiD8GPckPA2FJyMup+IhWEW4zlgFAig=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gzg2v/os61vIFPi7VAU4A/Dvy9J/wCYbsI/vpiIrry+fjO6XL+/NABr8UWmP7c3o2
-	 +E+M3bW3V/jygyD7Fi7KDySzISf5Jk4mPh9xcMFYtbHJH/IpmbICdDgCHKJ8ETU9Jb
-	 YKO29XB9mfWFxi8J8xtyGCCfKvXR7aOj0X5ePCXAL9PTY/IpRynjpVXrBuJyTRT0xV
-	 pZR+bmMmXZXlXaBu45qNC5EK1ELPYlfTD0yCyUCrB0h2D/XlhrcREIUzI72A27d8eP
-	 lBl018apjofsBdTuIJdL+PhYSmlkgNQQ9so/RM/+bQI2Av/1D4AFAuHpoH9sdJsnRc
-	 C/rvwcQ8MQZPw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 91FA717E0B18;
-	Mon, 27 Jan 2025 12:48:26 +0100 (CET)
-Message-ID: <bfce3aea-490b-4311-ad4a-ab567d2a0572@collabora.com>
-Date: Mon, 27 Jan 2025 12:48:26 +0100
+	s=arc-20240116; t=1737982343; c=relaxed/simple;
+	bh=VwEY5hofz3hPsMTdAq17aoEk6KmnInb9CnodmiEM7n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=koy+9rjqC+UnNqvsHcS/ZMswGffWIY5lcHNDzJO9Ze4eQ+dh+dGBsK96wRmuyZBuK5lE2rXxTe4rFT1IzJKDo6SftWDcluoiKIqN7/mzdM5mCbn7Rqpd0ASA3TTLrWdNEEwugURzIReuGyCIChaI9d/OmjXF7z1Dst7fnxVPSJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NLfhTpD4; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737982341; x=1769518341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VwEY5hofz3hPsMTdAq17aoEk6KmnInb9CnodmiEM7n8=;
+  b=NLfhTpD46QHJ1V4/B02Zt5rFSe452yoLENcKad1Tm6fYdX/0fcLq9sTG
+   /fNwMGEM2VwWxSe4WHuAMXP4A0xDB1zEfCZ/gTGCUTc7tpJREMFdeArKU
+   FibQl6G/7xzfqPkqwj8CqixRlGTHhI3hrlIp4m7RudtOG76wUVjn358Ax
+   WVPgC5pc20wuaxLa1mMEFhCOutBNhpXllMVQg4YTe9rlFiL+pALtUtfmW
+   NiTPWoXv2y3v5XOQGDigUAwhx9rJjdcV8TO+qcv/pIUss4fTevfgHczDz
+   YBKy80cX5rtRVoZ3E+3bMGbwLrXkyPSYqhMCB0d2Pa1F2ZHrbhdxzqrIK
+   Q==;
+X-CSE-ConnectionGUID: RqjR3WXFTpOouu/WB7/yXA==
+X-CSE-MsgGUID: +01SxSZNShmrEcv4KLgN7g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="38542949"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="38542949"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 04:52:16 -0800
+X-CSE-ConnectionGUID: Zh6YqMVRToG7ucu5kOz5zA==
+X-CSE-MsgGUID: mEr09hNiQXSkylplGZI0Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108868668"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2025 04:52:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tcOb2-00000005jDj-2cPu;
+	Mon, 27 Jan 2025 14:52:08 +0200
+Date: Mon, 27 Jan 2025 14:52:08 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z5eBeGhoBVVVUmDr@smile.fi.intel.com>
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+ <CACRpkdb5rmUK06uW3M2Lsy4Wam8JvrjmGM83cJa-V3LZwTX9dg@mail.gmail.com>
+ <D74G95A3DHG3.OD522T88GX83@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND v3 2/2] pinctrl: mediatek: adapt to multi-base design
-To: Hao Chang <ot_chhao.chang@mediatek.com>, Sean Wang
- <seann.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>,
- Qingliang Li <qingliang.li@mediatek.com>,
- Hanks Chen <hanks.chen@mediatek.com>, Chunhui Li <chunhui.li@mediatek.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250125025145.14405-1-ot_chhao.chang@mediatek.com>
- <20250125025145.14405-3-ot_chhao.chang@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250125025145.14405-3-ot_chhao.chang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D74G95A3DHG3.OD522T88GX83@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Il 25/01/25 03:51, Hao Chang ha scritto:
-> The eint num will obtain the operation address through pins.
-> Change the traversal method of irq handle from traversing a set of
-> registers to traversing one by one.
+On Fri, Jan 17, 2025 at 04:22:33PM +0100, Mathieu Dubois-Briand wrote:
+> On Tue Jan 14, 2025 at 3:33 PM CET, Linus Walleij wrote:
+> > On Mon, Jan 13, 2025 at 1:43 PM Mathieu Dubois-Briand
+> > My most generic feedback is if you have looked at using
+> > select GPIO_REGMAP for this driver?
+> >
+> > The regmap utility library is very helpful, look how other driver
+> > selecting GPIO_REGMAP gets default implementations
+> > from the library just git grep GPIO_REGMAP drivers/gpio/
 > 
-> Change-Id: I3962b78042d32501a73153201cddf52c6b62a695
-> Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
-> Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
-> ---
->   drivers/pinctrl/mediatek/mtk-eint.c | 38 +++++++++++++++++++----------
->   1 file changed, 25 insertions(+), 13 deletions(-)
+> I tried to switch to GPIO_REGMAP and I really like it overall, as it
+> does simplify a lot the code. However, I identified two features that I
+> was not able to port so far: the request()/free() callbacks and the
+> interrupts.
+
+You can easily extend the config to provide both if needed.
+So, update gpio-regmap.c itself as a prerequisite.
+
+> So for the request()/free() callbacks, I cannot add them anymore, as
+> they are set on the gpio_chip structure, and this structure is hidden
+> behind the gpio_regmap structure. I could easily modify the
+> gpio_regmap_config structure and gpio_regmap_register() to allow to
+> provide these callbacks, but is this acceptable? Or should I switch to a
+> different way to prevent concurrent use of the same pin? I saw you
+> mentioned the possibility of defining pin control.
 > 
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 540245c3128d..949a20196f74 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -513,6 +513,7 @@ EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
->   int mtk_eint_do_init(struct mtk_eint *eint)
->   {
->   	unsigned int size, i, port;
-> +	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
->   
->   	/* If clients don't assign a specific regs, let's use generic one */
->   	if (!eint->regs)
-> @@ -523,11 +524,11 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->   	if (!eint->base_pin_num)
->   		return -ENOMEM;
->   
-> -	if (!eint->pins) {
-> +	if (eint->nbase == 1) {
->   		size = eint->hw->ap_num * sizeof(struct mtk_eint_pin);
->   		eint->pins = devm_kmalloc(eint->dev, size, GFP_KERNEL);
->   		if (!eint->pins)
-> -			return -ENOMEM;
-> +			goto err_eint;
->   
->   		eint->base_pin_num[0] = eint->hw->ap_num;
->   		for (i = 0; i < eint->hw->ap_num; i++) {
-> @@ -536,34 +537,29 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->   			eint->pins[i].debounce = (i < eint->hw->db_cnt) ? 1 : 0;
->   		}
->   	} else {
-> +		eint->pins = hw->soc->eint_pin;
->   		for (i = 0; i < eint->hw->ap_num; i++)
->   			eint->base_pin_num[eint->pins[i].instance]++;
->   	}
->   
->   	eint->wake_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
-> -	if (!eint->wake_mask)
-> -		return -ENOMEM;
-> -
->   	eint->cur_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
-> -	if (!eint->wake_mask)
-> -		return -ENOMEM;
+> On the IRQ side, before switching to GPIO_REGMAP, I was able to define
+> the IRQ configuration using the irq member of the gpio_chip structure.
+> This does create the IRQ domain for me in a quite straightforward way.
+> Again, I will not be able to do that anymore, as the gpio_chip structure
+> is hidden. 
 
-This error checking was fine. Please keep it correct.
+Look how it's done in, e.g., drivers/gpio/gpio-104-idi-48.c.
 
-if (!eint->wake_mask) {
-	ret = -ENOMEM;
-	goto err_wake_mask_alloc;
-}
+It's pretty straightforward. You create and register an IRQ chip with
+devm_regmap_add_irq_chip(). It creates a domain for you.
 
-and
+> I saw I can specify my own irq_domain in gpio_regmap_config, so that
+> would be a way, but I was wondering if there is any way to have
+> something as easy as previously.
+> 
+> I had a quick look at existing drivers using GPIO_REGMAP and providing
+> IRQ support: I believe they are all using REGMAP_IRQ. And I believe I
+> cannot use REGMAP_IRQ here, as if I understood correctly, I would need
+> to have a register telling me exactly on which GPIO I have a pending
+> interrupt and I don't have such a thing: all I know is there was an
+> interrupt related to the GPIOs, and then I have to compare each GPIO
+> with the previous known state to know which pin is affected.
+> 
+> Do you have any thought about this?
 
-if (!eint->cur_mask) {
-	ret = -ENOMEM;
-	goto err_cur_mask_alloc;
-}
+I briefly looked at the code of regmap IRQ and I don't see big impediments
+for your case. So, you seems to have mask, unmask, and input registers.
+What you most likely want to do is to use input as status (regmap IRQ
+supports configuration without status registers).
 
-> +	if (!eint->wake_mask || !eint->wake_mask)
-> +		goto err_eint;
->   
->   	for (i = 0; i < eint->nbase; i++) {
->   		port = (eint->base_pin_num[i] + 31) / 32;
->   		eint->wake_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
-> -		if (!eint->wake_mask[i])
-> -			return -ENOMEM;
-> -
->   		eint->cur_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
-> -		if (!eint->cur_mask[i])
-> -			return -ENOMEM;
-> +		if (!eint->cur_mask[i] || !eint->wake_mask[i])
-> +			goto err_eint;
+What seems to be needed is the logic that uses previous state to handle a new
+one. This is not only this chip that may need this type of handling, so it
+will be beneficial for others that may be converted to use gpio-regmap.c.
 
-same here
+So, I don't think we need full bypass of the GPIO IRQ chip through
+gpio-regmap.c.
 
->   	}
->   
->   	eint->domain = irq_domain_add_linear(eint->dev->of_node,
->   					     eint->hw->ap_num,
->   					     &irq_domain_simple_ops, NULL);
->   	if (!eint->domain)
-> -		return -ENOMEM;
-> +		goto err_eint;
->   
->   	if (eint->hw->db_time) {
->   		for (i = 0; i < MTK_EINT_DBNC_MAX; i++)
-> @@ -585,6 +581,22 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->   					 eint);
->   
->   	return 0;
-> +
-> +err_eint:
-> +	for (i = 0; i < eint->nbase; i++) {
-> +		if (eint->wake_mask[i])
-> +			devm_kfree(eint->dev, eint->wake_mask[i]);
-> +		if (eint->cur_mask[i])
-> +			devm_kfree(eint->dev, eint->cur_mask[i]);
-> +	}
-> +	if (eint->cur_mask)
-> +		devm_kfree(eint->dev, eint->cur_mask);
-> +	if (eint->wake_mask)
-> +		devm_kfree(eint->dev, eint->wake_mask);
-> +	if (eint->nbase == 1)
-> +		devm_kfree(eint->dev, eint->pins);
-> +	devm_kfree(eint->dev, eint->base_pin_num);
-
-...and you should only kfree what was successfully allocated before.
-
-Regards,
-Angelo
-
-> +	return -ENOMEM;
->   }
->   EXPORT_SYMBOL_GPL(mtk_eint_do_init);
->   
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 
