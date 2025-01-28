@@ -1,243 +1,151 @@
-Return-Path: <linux-gpio+bounces-15077-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15078-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE901A20354
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2025 04:17:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26EA8A2036C
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2025 04:44:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C54AE188810C
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2025 03:17:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C0D61658F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2025 03:43:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A7E6A33F;
-	Tue, 28 Jan 2025 03:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4735619408C;
+	Tue, 28 Jan 2025 03:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="eOOt/raD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037E86AA7;
-	Tue, 28 Jan 2025 03:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9203518BC3F
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Jan 2025 03:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738034239; cv=none; b=gndypI9ehn7JG0I112CuT1/JkfshZ2SYLaBSt3tlznozIUMjIOQRcIo+aPd088TplzBAkNX5SBha/oW7IivAW93qa0e06koNtoVpCPmRVydUkEfjOHmYgIoe9JgDny+DVfJ6jAXSXyJlV2WFVTJAL4tONF0dIRe3vQ30EmeKuBk=
+	t=1738035834; cv=none; b=JLhJlWY38kS6UBVL7eRIpPl0GmeAEkWYreZ4HCAiva3TJCTr9sx80imGO2HymNlEvM2klFE/7chNoQWkTVCXNTmb8LJzwNP66PE4Sh/jMNLnG5L6Dc/XIWyjVwpWCiEwfwgNM+Oip8yl4YLMCAHsadUEANL7LXc/cuTQoTatI5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738034239; c=relaxed/simple;
-	bh=XpVX6zFCwlh2Xyx4jSujeZ1XM8jIgwnQiIkLkbFAj90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HWc5KuzuIUH7wygZ7PpgXNTFv9XBsU78zDFOGM51LVkp+YNs7h8RkbSGJI8VriD+vLC/BwE5I6LAZFkhgjdlUR0ZI11l9x/eUmPQ7H2Pe7Der1og/j2m/bw5OPqV7IuDf1aNcdXNsHIXg9VUpfH0CNFv8ckKKBkNpRkeprG9FBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.60.140])
+	s=arc-20240116; t=1738035834; c=relaxed/simple;
+	bh=7HNIW9W1O90CkXMig+gfZfkp0HF6QISO9ozkkRf0U3k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GyhUWlpDf6I7QK2OR402NCnPfbzrxXDjT80ClaymcnLzCo7q/CrjMhglvOD0DavkcLQG3CKffCwQe7j1lsm0/M6wPK5lpjx35llPunFevn3PbUznq+BsJHZEbAkndWpyyn0mB0/gKElAPx9kxJAHufFPmAtSZyy/eqAOztGmNvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=eOOt/raD; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id B2AFA343787;
-	Tue, 28 Jan 2025 03:17:16 +0000 (UTC)
-Date: Tue, 28 Jan 2025 03:17:12 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
- SoC
-Message-ID: <20250128031712-GYB47737@gentoo>
-References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
- <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
- <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
- <20250123113042-GYA38135@gentoo>
- <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
- <20250127181726.GA538260-robh@kernel.org>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0F3462C07BD;
+	Tue, 28 Jan 2025 16:43:41 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1738035821;
+	bh=7HNIW9W1O90CkXMig+gfZfkp0HF6QISO9ozkkRf0U3k=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=eOOt/raDTdn6VbeuRDbKEOMB9sFW8TrHHO0CO9rxOCleLzv9qxFF9ajoHell8o/hH
+	 wAcVLQNIKgJBOZaEYjpq1yMQaBchgxNi3nojiOHPHk3s7gbRkixbm/6CDC4xYn1mQ+
+	 o4kd/K/GCT8CVKz0NW3D0lxze4cqrxUDHG4mmUiFUbzkmFd/jCSIXR8iFEe9YMyqCl
+	 /Bk2sFG+L0bGJxjuHVqLeXFWu9jdcBhPOfp4iC+oyu2g3JXUPy2XfH1fZmRiGaGBI8
+	 TmMPRZpF180/7kdeICb6A39sqTe1ohMlL89o2/nDjYdpH7maqXNHa1iBrBZpfgzGBL
+	 Llo0VetKSTKtw==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B6798526c0001>; Tue, 28 Jan 2025 16:43:40 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 28 Jan 2025 16:43:40 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Tue, 28 Jan 2025 16:43:40 +1300
+From: Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
+To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+	"lakabd.work@gmail.com" <lakabd.work@gmail.com>
+CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"abderrahim.lakbir@actia.fr" <abderrahim.lakbir@actia.fr>, "brgl@bgdev.pl"
+	<brgl@bgdev.pl>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linus.walleij@linaro.org"
+	<linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
+Thread-Topic: [PATCH] gpio: pca953x: Improve interrupt support
+Thread-Index: AQHat8IKrnq78xh9RkCOMGJXNt7JBLG82EyAgAJjhoCBVohgAIAAwfAAgABm1YCACqNigIAJRZSAgAFORAA=
+Date: Tue, 28 Jan 2025 03:43:40 +0000
+Message-ID: <9bcfe1f204013708c7ea0fb4c1392004ad34c3ac.camel@alliedtelesis.co.nz>
+References: <e407b7b58c966ee35e023618ad428a21f979e761.camel@alliedtelesis.co.nz>
+	 <20250113220221.13545-1-koute102030@gmail.com>
+	 <CAHp75VeLyacKo3rY5iyq+kZnLjEQsBN2eOJExHrqHuesaVyTQQ@mail.gmail.com>
+	 <CAHN=yabQB5jYDd9iQ7s1dMWTScRf3c_zuNtXL8U283+vvenfNA@mail.gmail.com>
+	 <CAHN=yaaZ3L23JbsQ+fugG-iXdtt9dOss0pe7yT5EG029nsfXFQ@mail.gmail.com>
+	 <CAHp75VdCwyJhYD9rtxf8H5mi5AfcPOhvSYx2MOqw3==3mnxoSg@mail.gmail.com>
+In-Reply-To: <CAHp75VdCwyJhYD9rtxf8H5mi5AfcPOhvSYx2MOqw3==3mnxoSg@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <84D7805E5CA65F42A8060B697D75E5E3@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250127181726.GA538260-robh@kernel.org>
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=R9GgGsRX c=1 sm=1 tr=0 ts=6798526c a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=q-99K_eqv_YA:10 a=IkcTkHD0fZMA:10 a=VdSt8ZQiCzkA:10 a=pGLkceISAAAA:8 a=MN9ZA6XBkk6C8DiVUt0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=xNI9KcAJwtLuEY7SXz16:22
+X-SEG-SpamProfiler-Score: 0
 
-Hi Rob:
-
-On 12:17 Mon 27 Jan     , Rob Herring wrote:
-> On Thu, Jan 23, 2025 at 03:19:18PM -0800, Olof Johansson wrote:
-> > On Thu, Jan 23, 2025 at 11:30:42AM +0000, Yixun Lan wrote:
-> > > Hi Olof:
-> > >  thanks for your reivew
-> > > 
-> > > On 12:03 Wed 22 Jan     , Olof Johansson wrote:
-> > > > Hi,
-> > > > 
-> > > > On Tue, Jan 21, 2025 at 11:38:11AM +0800, Yixun Lan wrote:
-> > > > > The GPIO controller of K1 support basic functions as input/output,
-> > > > > all pins can be used as interrupt which route to one IRQ line,
-> > > > > trigger type can be select between rising edge, failing edge, or both.
-> > > > > There are four GPIO ports, each consisting of 32 pins.
-> > > > > 
-> > > > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 116 +++++++++++++++++++++
-> > > > >  1 file changed, 116 insertions(+)
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > > > > new file mode 100644
-> > > > > index 0000000000000000000000000000000000000000..dd9459061aecfcba84e6a3c5052fbcddf6c61150
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > > > > @@ -0,0 +1,116 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/gpio/spacemit,k1-gpio.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: SpacemiT K1 GPIO controller
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Yixun Lan <dlan@gentoo.org>
-> > > > > +
-> > > > > +description:
-> > > > > +  The controller's registers are organized as sets of eight 32-bit
-> > > > > +  registers with each set of port controlling 32 pins.  A single
-> > > > > +  interrupt line is shared for all of the pins by the controller.
-> > > > > +  Each port will be represented as child nodes with the generic
-> > > > > +  GPIO-controller properties in this bindings file.
-> > > > 
-> > > > There's only one interrupt line for all ports, but you have a binding that
-> > > > duplicates them for every set of ports. That seems overly complicated,
-> > > > doesn't it? They'd all bind the same handler, so there's no benefit in
-> > > > providing the flexibility,.
-> > > > 
-> > > yes, all ports share same interrupt line, but each port has its own
-> > > irq related handling register, so it make sense to describe as per gpio irqchip
-> > > 
-> > > also see comments below
-> > > 
-> > > > > +properties:
-> > > > > +  $nodename:
-> > > > > +    pattern: "^gpio@[0-9a-f]+$"
-> > > > > +
-> > > > > +  compatible:
-> > > > > +    const: spacemit,k1-gpio
-> > > > > +
-> > > > > +  reg:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  "#address-cells":
-> > > > > +    const: 1
-> > > > > +
-> > > > > +  "#size-cells":
-> > > > > +    const: 0
-> > > > > +
-> > > > > +patternProperties:
-> > > > > +  "^gpio-port@[0-9a-f]+$":
-> > > > > +    type: object
-> > > > > +    properties:
-> > > > > +      compatible:
-> > > > > +        const: spacemit,k1-gpio-port
-> > > > > +
-> > > > > +      reg:
-> > > > > +        maxItems: 1
-> > > > > +
-> > > > > +      gpio-controller: true
-> > > > > +
-> > > > > +      "#gpio-cells":
-> > > > > +        const: 2
-> > > > > +
-> > > > > +      gpio-ranges: true
-> > > > > +
-> > > > > +      interrupts:
-> > > > > +        maxItems: 1
-> > > > > +
-> > > > > +      interrupt-controller: true
-> > > > > +
-> > > > > +      "#interrupt-cells":
-> > > > > +        const: 2
-> > > > > +        description:
-> > > > > +          The first cell is the GPIO number, the second should specify interrupt
-> > > > > +          flag. The controller does not support level interrupts, so flags of
-> > > > > +          IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_LEVEL_LOW should not be used.
-> > > > > +          Refer <dt-bindings/interrupt-controller/irq.h> for valid flags.
-> > > > 
-> > > > Same here, since there's no real flexibility between the banks, it might
-> > > > make sense to consider a 3-cell GPIO specifier instead, and having
-> > > how to handle the fourth gpio port? I would like to have uniform driver for all ports
-> > > 
-> > > > the first cell indicate bank. I could see this argument go in either
-> > > > direction, but I'm not sure I understand why to provide a gpio-controller
-> > > > per bank.
-> > > > 
-> > > 
-> > > IIUC, your suggestion here was same as the implementation of patch v3 of this driver[1],
-> > >  while combining all four ports into one irqchip, which NACKed by maintainer[2].
-> > >  I tend to agree having a gpio-controller per bank provide more flexibility,
-> > >  easy to leverage generic gpio framework, even each port can be disabled or enabled,
-> > >  and IMO having shared irq handler isn't really a problem..
-> > > 
-> > > [1] https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
-> > > [2] https://lore.kernel.org/r/CACRpkdZPD2C2iPwOX_kW1Ug8jVkdHhhc7iFycHtzj5LQ0XWNgQ@mail.gmail.com
-> > > https://lore.kernel.org/r/CACRpkdYgGho=VQabonq4HccEiXBH2qM76K45oDaV1Jyi0xZ-YA@mail.gmail.com
-> > 
-> > Hmm, I don't understand the reasoning there, but it's not my subsystem.
-> > 
-> > It seems worse to me to misdescribe the hardware as separate blocks
-> > with a device-tree binding that no longer describes the actual hardware,
-> > but it's not up to me.
-> 
-> I agree. It's clearly 1 block given the first 3 banks are interleaved.
-> 
-yes, it's kind of weird hardware design, the first 3 gpio are register interleaved,
-while the 4th has independent space
-
-> If Linux can't handle 1 node for N gpio_chip's, then that's a Linux 
-> problem. Maybe it can, IDK. 
-I haven't seen somthing like this to register 1 node for multi gpio_chips..
-To gpio/pinctrl maintainer (Linus Walleij), do you have suggestion on this?
-
->The lookup from a DT node to gpio_chip just 
-> needs to match on more than just DT node pointer, but look at the node 
-> ptr and arg cells.
-> 
-IIUC, are you suggesting to add a index cells to match additional gpio bank?
-so the underlying driver can still register 4 gpio chips?
-
-               gpio: gpio@d4019000 {
-                        compatible = "spacemit,k1-gpio";
-                        reg = <0x0 0xd4019000 0x0 0x800>;
-                        interrupt-controller;
-			#interrupt-cells = <3>; // additional cell
-                        gpio-controller;
-                        #gpio-cells = <3>; // additional cell
-			...
-		};
-
-on comsumer side, it will be something like this:
-		gpios = <&gpio INDEX0 0 GPIO_ACTIVE_HIGH>;
-		interrupts = <&gpio INDEX0 0 IRQ_TYPE_EDGE_RISING>;
-(INDEX0 possiblely can be numeric vale (0, 1, 2, 3) or register base: 0x0 0x4 0x8 0x100)
-
-one thing I'm not sure about how to map the pinctrl pins via "gpio-ranges" to each gpio_chip,
-currently, in v4 verion, this info is populated via sub node of gpios (port1, port2 ...)
-
-I will investigate more on this.. but need suggestion to know if I proceed at right direction
-
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+T24gTW9uLCAyMDI1LTAxLTI3IGF0IDA5OjQ3ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+DQo+IE9uIFR1ZSwgSmFuIDIxLCAyMDI1IGF0IDEyOjEy4oCvUE0gbGFrYWJkIDxsYWthYmQud29y
+a0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+IExlIG1hci4gMTQgamFudi4gMjAyNSDDoCAxNjo0NCwg
+d29yayB3b3JrIDxsYWthYmQud29ya0BnbWFpbC5jb20+IGENCj4gPiDDqWNyaXQgOg0KPiA+ID4g
+TGUgbWFyLiAxNCBqYW52LiAyMDI1IMOgIDEwOjM3LCBBbmR5IFNoZXZjaGVua28NCj4gPiA+IDxh
+bmR5LnNoZXZjaGVua29AZ21haWwuY29tPiBhIMOpY3JpdCA6DQo+ID4gPiA+IE9uIFR1ZSwgSmFu
+IDE0LCAyMDI1IGF0IDEyOjAz4oCvQU0gbGFrYWJkIDxsYWthYmQud29ya0BnbWFpbC5jb20+DQo+
+ID4gPiA+IHdyb3RlOg0KPiANCj4gLi4uLg0KPiANCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogU3RvcmUgaXJxX21h
+c2sgZm9yIGxhdGVyIHVzZQ0KPiA+ID4gPiA+IHdoZW4gY2hlY2tpbmcgcGVuZGluZyBJUlFzICov
+DQo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGJpdG1hcF9vcihjaGlwLQ0KPiA+ID4gPiA+ID51bm1hc2tlZF9pbnRlcnJ1
+cHRzLCBjaGlwLT51bm1hc2tlZF9pbnRlcnJ1cHRzLCBjaGlwLT5pcnFfbWFzaywNCj4gPiA+ID4g
+PiBnYy0+bmdwaW8pOw0KPiA+ID4gPiANCj4gPiA+ID4gVGhpcyBzb2x1dGlvbiBoYXMgYSBmbGF3
+LiBXaGVyZSBpcyBhbnkgY29kZSB0aGF0IGNsZWFycyB0aGlzIG5ldw0KPiA+ID4gPiBiaXRtYXA/
+IFRoZSBjb2RlIHN0YXJ0cyB3aXRoIDAgKG9idmlvdXNseSkgYW5kIHN0ZXAgYnkgc3RlcCBpdCBn
+ZXRzDQo+ID4gPiA+IHNhdHVyYXRlZCB0byBhbGwtMXMuDQo+ID4gPiANCj4gPiA+IFllcyBpbmRl
+ZWQsIGFuZCBhY3R1YWxseSB0aGUgbmV3IGJpdG1hcCBpcyBub3QgbmVjZXNzYXJ5IGF0IGFsbA0K
+PiA+ID4gYmVjYXVzZSB3aGF0IHdlIG5lZWQgZG9lcyBhbHJlYWR5IGV4aXN0IHdoaWNoIGlzIGNo
+aXAtPmlycV9tYXNrIChJDQo+ID4gPiBub3RpY2VkIGl0IGp1c3Qgbm93ISkuDQo+ID4gPiBjaGlw
+LT5pcnFfbWFzayBpcyB1cGRhdGVkIHdoZW5ldmVyIGEgcGluIGlzIG1hc2tlZCBvciB1bm1hc2tl
+ZCB2aWENCj4gPiA+IHBjYTk1M3hfaXJxX21hc2soKSBhbmQgcGNhOTUzeF9pcnFfdW5tYXNrKCku
+DQo+ID4gPiANCj4gPiA+IFRoZSBzb2x1dGlvbiBzaG91bGQgbG9vayBsaWtlIHRoaXM6DQo+ID4g
+PiANCj4gPiA+IGRpZmYgLS1naXQgYS9ncGlvLXBjYTk1M3guYyBiL2dwaW8tcGNhOTUzeC5jDQo+
+ID4gPiBpbmRleCAyNzJmZWJjLi4yOWU4YzIwIDEwMDY0NA0KPiA+ID4gLS0tIGEvZ3Bpby1wY2E5
+NTN4LmMNCj4gPiA+ICsrKyBiL2dwaW8tcGNhOTUzeC5jDQo+ID4gPiBAQCAtODQyLDExICs4NDIs
+NiBAQCBzdGF0aWMgYm9vbCBwY2E5NTN4X2lycV9wZW5kaW5nKHN0cnVjdA0KPiA+ID4gcGNhOTUz
+eF9jaGlwICpjaGlwLCB1bnNpZ25lZCBsb25nICpwZW5kaW4NCj4gPiA+IMKgIGludCByZXQ7DQo+
+ID4gPiANCj4gPiA+IMKgIGlmIChjaGlwLT5kcml2ZXJfZGF0YSAmIFBDQV9QQ0FMKSB7DQo+ID4g
+PiAtIC8qIFJlYWQgdGhlIGN1cnJlbnQgaW50ZXJydXB0IHN0YXR1cyBmcm9tIHRoZSBkZXZpY2Ug
+Ki8NCj4gPiA+IC0gcmV0ID0gcGNhOTUzeF9yZWFkX3JlZ3MoY2hpcCwgUENBTDk1M1hfSU5UX1NU
+QVQsIHRyaWdnZXIpOw0KPiA+ID4gLSBpZiAocmV0KQ0KPiA+ID4gLSByZXR1cm4gZmFsc2U7DQo+
+ID4gPiAtDQo+ID4gPiDCoCAvKiBDaGVjayBsYXRjaGVkIGlucHV0cyBhbmQgY2xlYXIgaW50ZXJy
+dXB0IHN0YXR1cyAqLw0KPiA+ID4gwqAgcmV0ID0gcGNhOTUzeF9yZWFkX3JlZ3MoY2hpcCwgY2hp
+cC0+cmVncy0+aW5wdXQsIGN1cl9zdGF0KTsNCj4gPiA+IMKgIGlmIChyZXQpDQo+ID4gPiBAQCAt
+ODU1LDcgKzg1MCw3IEBAIHN0YXRpYyBib29sIHBjYTk1M3hfaXJxX3BlbmRpbmcoc3RydWN0DQo+
+ID4gPiBwY2E5NTN4X2NoaXAgKmNoaXAsIHVuc2lnbmVkIGxvbmcgKnBlbmRpbg0KPiA+ID4gwqAg
+LyogQXBwbHkgZmlsdGVyIGZvciByaXNpbmcvZmFsbGluZyBlZGdlIHNlbGVjdGlvbiAqLw0KPiA+
+ID4gwqAgYml0bWFwX3JlcGxhY2UobmV3X3N0YXQsIGNoaXAtPmlycV90cmlnX2ZhbGwsIGNoaXAt
+PmlycV90cmlnX3JhaXNlLA0KPiA+ID4gY3VyX3N0YXQsIGdjLT5uZ3Bpbyk7DQo+ID4gPiANCj4g
+PiA+IC0gYml0bWFwX2FuZChwZW5kaW5nLCBuZXdfc3RhdCwgdHJpZ2dlciwgZ2MtPm5ncGlvKTsN
+Cj4gPiA+ICsgYml0bWFwX2FuZChwZW5kaW5nLCBuZXdfc3RhdCwgY2hpcC0+aXJxX21hc2ssIGdj
+LT5uZ3Bpbyk7DQo+ID4gPiANCj4gPiA+IMKgIHJldHVybiAhYml0bWFwX2VtcHR5KHBlbmRpbmcs
+IGdjLT5uZ3Bpbyk7Pg0KPiANCj4gPiA+IMKgIH0NCj4gPiANCj4gPiBIaSBBbmR5LCBkbyB5b3Ug
+aGF2ZSBhbnkgb3RoZXIgc3VnZ2VzdGlvbnMgcmVnYXJkaW5nIHRoZSBwcm9wb3NlZCBmaXggPw0K
+PiANCj4gQ3VycmVudGx5IEknbSByZWFkaW5nIHRoZSBkYXRhc2hlZXQgdG8gdW5kZXJzdGFuZCBo
+b3cgdGhlIGNoaXANCj4gYWN0dWFsbHkgd29ya3MuIEknbGwgY29tZSBiYWNrIHRvIHlvdSBzb29u
+Lg0KPiANCj4gTmV2ZXJ0aGVsZXNzLCBJIHdvdWxkIGxpa2UgdG8gaGVhciBmcm9tIE1hcmsgaWYg
+eW91ciBwYXRjaCBmaXhlcyB0aGUNCj4gaXNzdWUuIFByZWxpbWluYXJ5IEkgY2FuIHNheSB0aGF0
+IGl0IGxvb2tzIGxpa2Ugd2UgbmVlZCBzbGlnaHRseQ0KPiBkaWZmZXJlbnQgYW5kIG1vcmUgY29t
+cGxleCBsb2dpYyB0aGVyZS4NCg0KVGhpcyBwYXRjaCB3aWxsIG5vdCBtaXNzIGludGVycnVwdHMs
+IGJ1dCBJIGJlbGlldmUgd2lsbCB0cmlnZ2VyIGZhbHNlDQppbnRlcnJ1cHRzLCBhcyBhbiBpbnB1
+dCB3aWxsIGJlaGF2ZSBtb3JlIGxpa2UgYSBsZXZlbCB0cmlnZ2VyZWQgaW50ZXJydXB0DQppZiBv
+dGhlciBpbnB1dHMgYXJlIHRyaWdnZXJpbmcgaW50ZXJydXB0cyBvbiB0aGUgZGV2aWNlLiBJIHdv
+dWxkIHByZWZlcg0KdGhhdCB3ZSBqdXN0IHJlbW92ZSB0aGUgc3BlY2lhbCBQQ0FfUENBTCBibG9j
+ayBpbiB0aGlzIGZ1bmN0aW9uLCB3aGljaA0Kd2FzIG15IHNpbXBsZSBzb2x1dGlvbi4NCg0K
 
