@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-15094-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15095-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC30EA22376
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 18:56:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CB1CA22374
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 18:55:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DE613A5E70
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 17:53:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C15591651BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 17:55:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89821E0E11;
-	Wed, 29 Jan 2025 17:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345A31E0DCC;
+	Wed, 29 Jan 2025 17:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRMjrINi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4X/Nly3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB041E0DF5;
-	Wed, 29 Jan 2025 17:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9A715666D;
+	Wed, 29 Jan 2025 17:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738173203; cv=none; b=JMIZghkgCoC1lQxNIulXJBH0bzp2SfTN7wq0yDjlvFlVSzNmwlH2wQfmc5OASWDm536GVs+ayqDe6UfF7PfhFLWWxMiT73RChe4U1sOxQzDC1x/HN96ZhCTuIDzp3VlwEKDCMSaKmZZ8XG0CsBRhdVsKXYNeMv0P30PqI+UvmmU=
+	t=1738173341; cv=none; b=F29LdOEp41s6t/YL5IQsPwhVsle20AmKtVR+x79HasWSA8jXaAZ+01bAf2amQhwPRH3HnAuU1ESBlNfHrvsaXAIPjWa0gaMvxH9oyZgfSN56Jo9s9hCsPI7pwUxD5t9Abgg+253n3lShr9+IWMvna6P2tj3POIstDa1ofUQMUKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738173203; c=relaxed/simple;
-	bh=IHL8DXNmQuRTF0KAzJoAbQY2ggA3knQ5CNly42SKysk=;
+	s=arc-20240116; t=1738173341; c=relaxed/simple;
+	bh=f7eHzTfb7CXxy4fxB26nVOMXC2jFiDmHLAVJP5x8kS4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cTfBxkDF+CBYmReJe/6nofB+lGJwe0GocSwIdcTKVA+Cl+kAxKDz6txW0l5ht4ZaxlcKM2IduzVLiMCmCaJ0Dw0/gM2d9vgGx+0Eu3V55CLQV8xXtXCDj2cl0Edk78Y6PM9zBgzpFDMteC+YqSzgoY3CC5Xz0c952QvqKQr7aMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRMjrINi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66ED9C4CEE6;
-	Wed, 29 Jan 2025 17:53:19 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=nPU2mnaIF6gmtB3gz9GUEby783ARxsDAtTi6SaCG7syfoiqKjWOY/mOzRfFa4urHSH8C1L/Mg/9MBJPW0uCm1PlUX003Sgezv3MGh+nmDcOR5sjcdPlVSL9Mduf8V0us4L7uiKOn59XSa215Ot5HsP7wN7JeEeNZS0NpdPt2M2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4X/Nly3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6E1C4CED3;
+	Wed, 29 Jan 2025 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738173203;
-	bh=IHL8DXNmQuRTF0KAzJoAbQY2ggA3knQ5CNly42SKysk=;
+	s=k20201202; t=1738173340;
+	bh=f7eHzTfb7CXxy4fxB26nVOMXC2jFiDmHLAVJP5x8kS4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hRMjrINi7jjon4rcmYQKlwrc9y0bexSi24ch9X4PTTtSE98TNot/PdTpDvjjvtJds
-	 kYdKIoEktHjPskPKVnS3NLmgqETf1pjspDl3BW7XTumyV8QDnB7VTkL+flXhc2CJy1
-	 6OdOGPLmyCpUrSwg0FhtRK4vXnP4piVLFI5x9Gq+qlJrSDUed+Bf4wcFl2fnxphEgO
-	 cMunmmLLa4rhMrVEFZcb+q6396L89TdsgEk35JPI10EUtzUmM8HdQTd3ESMk+QuhBP
-	 hB0gzljq4GfPA9I6ShXLaEtuygeG/LcMy5LRyZSH5Tcn2JcDggPXk6ytkXRlIpAPLH
-	 +V4vFeE0HWhNA==
-Message-ID: <de0d9a23-7364-4d33-81bc-05847a3b4ff6@kernel.org>
-Date: Wed, 29 Jan 2025 18:53:16 +0100
+	b=o4X/Nly3iITF/DvvEEvlFemWTvyruj+erfpMn7oF3ohNJGnbmmYH8dWutkxmnht7R
+	 IAA3K+cJVn+clDv0Guo37m7IQYmoCF5gKyVL1V/zpOn8C4tG4mCxT8Gnypwka6c4CX
+	 GQLbgZ+7ttETVtJ4pibyUQABkYCKG1L75+OwIfs3ttI1olsm/dlr5wJ0X19Zdm8rY+
+	 uTL9HCL9B6KZ3Xgy1Rr5BGOnaTym7h9ECoeoaq5ofvKoukU4IREE92+nzkQgjqLELW
+	 Vx06rOdN4tbJhOEXbOxnKXY0Bio9olqobvaR7UGEFNIwYRXvqG1kX1vYhNxlSi7S0G
+	 qsb5prlFOzOwA==
+Message-ID: <c7a76128-175a-482f-b326-a8d786241cdc@kernel.org>
+Date: Wed, 29 Jan 2025 18:55:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] pinctrl: samsung: add dedicated SoC eint
- suspend/resume callbacks
+Subject: Re: [PATCH 3/3] pinctrl: samsung: Add filter selection support for
+ alive bank on gs101
 To: Peter Griffin <peter.griffin@linaro.org>,
  =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -62,9 +62,9 @@ Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>,
  tudor.ambarus@linaro.org, willmcvicker@google.com,
  semen.protsenko@linaro.org, kernel-team@android.com, jaewon02.kim@samsung.com
 References: <20250120-pinctrl-fltcon-suspend-v1-0-e77900b2a854@linaro.org>
- <20250120-pinctrl-fltcon-suspend-v1-2-e77900b2a854@linaro.org>
- <4ac64a481d80785973d038b9292a05781e70a670.camel@linaro.org>
- <CADrjBPox8ZXRPSAsAxbPqoib0dgpgQXQF+5grPguujYjoOiy7g@mail.gmail.com>
+ <20250120-pinctrl-fltcon-suspend-v1-3-e77900b2a854@linaro.org>
+ <4e2057fc54022ba5791e482a1e631a1a77551389.camel@linaro.org>
+ <CADrjBPr3VVvY4axBhAEO4zVGhLMiDZ8jWHCf=uSfEBMcZSOa=Q@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,32 +110,38 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CADrjBPox8ZXRPSAsAxbPqoib0dgpgQXQF+5grPguujYjoOiy7g@mail.gmail.com>
+In-Reply-To: <CADrjBPr3VVvY4axBhAEO4zVGhLMiDZ8jWHCf=uSfEBMcZSOa=Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/01/2025 15:46, Peter Griffin wrote:
->>> and eint_mask_offset for saving & restoring it's registers.
->>>
->>> Refactor the existing platform specific suspend/resume callback
->>> so that each SoC variant has their own callback containing the
->>> SoC specific logic.
->>>
->>> Additionally we now call drvdata->suspend() & drvdata->resume()
->>> from within the loop that iterates the banks in
->>> samsung_pinctrl_suspend() and samsung_pinctrl_resume().
+On 21/01/2025 16:39, Peter Griffin wrote:
+>>> +  The FLTCON register (on alive banks) has the following layout
+>>> + *
+>>> + * BitfieldName[PinNum][Bit:Bit]
+>>> + * FLT_EN[3][31] FLT_SEL[3][30] FLT_WIDTH[3][29:24]
+>>> + * FLT_EN[2][23] FLT_SEL[2][22] FLT_WIDTH[2][21:16]
+>>> + * FLT_EN[1][15] FLT_SEL[1][14] FLT_WIDTH[1][13:8]
+>>> + * FLT_EN[0][7]  FLT_SEL[0][6]  FLT_WIDTH[0][5:0]
+>>> + *
+>>> + * FLT_EN    0x0 = Disable, 0x1=Enable
+>>> + * FLT_SEL   0x0 = Delay filter, 0x1 Digital filter
 >>
->> Maybe split this patch in two:
->> * first to do the refactoring plus adding exynosautov920_pinctrl_suspend()
->>   and exynosautov920_pinctrl_resume()
->> * second to add gs101_pinctrl_suspend() / gs101_pinctrl_resume()
->>
->> This way, it's obvious which part is the bugfix and which part is the
->> preparation and I believe it'd be easier to read.
+>> It's a delay filter filter either way, right? If so, I
+>> think '0x0 = Delay filter' should instead be reworded to
+>> '0x0 = Analog filter'.
 > 
-> Sure, I will split it into two patches in the next version.
+> I see your point, and kind of agree that Analog is a better name. The
+> rationale for going with "Digital filter" and "Delay filter" was that
+> it matches the FLT_SEL bitfield description in the datasheet. I
+> thought it might confuse people using a different name. The info about
+> it being Analog filter came via a bug from Samsung. But if folks
+> prefer Analog I can use that instead.
 > 
-Yeah, ack.
+> @Krzysztof any thoughts on the above naming?
+
+No clue / no preference, you guys have datasheet and more insight into
+this. :)
+
 
 Best regards,
 Krzysztof
