@@ -1,220 +1,141 @@
-Return-Path: <linux-gpio+bounces-15100-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F786A23170
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 17:04:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A101A2328B
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 18:11:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96D751887B44
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 16:04:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C68AB1884774
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 17:11:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65B3A1E9B33;
-	Thu, 30 Jan 2025 16:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B062A1EEA43;
+	Thu, 30 Jan 2025 17:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XO1D3qeI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lajg19n7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE0484D34
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 16:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB71D1DDD1;
+	Thu, 30 Jan 2025 17:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738253079; cv=none; b=kemq76LquZbU67s8jJa/nWzR0ODIXSfwQVcUxppdlfWSb89dcIgmtLQiAkcjvYKMfqe5o17+VXT5tNRHlYWk6z/4TTgT2JnmNd2IHVtt4vw5KZz5Bj3le2EPPfJ0LFZwV21EpDrd9M9dgOHIbO4jBjmwl/Rt/LR9CceEyLvP888=
+	t=1738257049; cv=none; b=Ikp6XabhXIEB1aZm/M3efPG0ifJh0Slqtdi6rfO34JQlPsCfokEH4Vz6n6h4N4mB9P09ESbbxSabz2AJhj9QuWV62XhOuvCXDYsNxb0bSb0Ojcx1cGGXvw1Ea4sk5WNqHHYfZ1lkvvT+BVt1SsBJHXHpOc9lru0FrNbP/Azidvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738253079; c=relaxed/simple;
-	bh=1RV6NlImWMNVSEpClVD7MX8BT7kXytBO1h9bFukv/3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ISOtD2m/y747oFCMUdxiPTA5I6dGuBllUPRxdjeCnqMDrUydaZHKNJkkrk1GQ+gAwI4AhxU/NF67h0lKqfGsV7QKrZlURDFirOAampo8w7hy2a0Rckso+vVlJ/9Jf7aI71cBWTFSicr64uomJXDDvWKwgiybVsHeryAL/e4j5Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=XO1D3qeI; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2A1A63F220
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 16:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738253068;
-	bh=DdStTEajIelfR7AL4b2VtQBKKCsYPbVQwJ/gEBmQAGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=XO1D3qeIDQdgRB60Ev5Y3AwQJoGKHcx/wDBDAmekrfZ2o8iQQxQyrbJj58U3XWYMc
-	 XWiJwU0HHcl8YSYqyNQ7yMR1SOrLr6S9eNMslza6gkmDitQI6XXAum1SgXlHQ3C+fA
-	 cdbusQabOkWo0MH30QlMADp4gAaSHI3YZWBPJKutaPn8fwSEnOoeo+v0NW5wYPflUz
-	 hXF+x+z2J+zeQk5PrPDBDZOVzoYpG4WqY4y4uuyms9Zh0gtNi9JtLI+mI7ZXksBi+u
-	 e53C7SxLXHX3eNlDyA4GNhdwyhsS7P0qeTjKqDvQqH81rSDaNm5ppaXwNkrfm9lMnC
-	 oDjFqMVpeZDeg==
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2f5538a2356so1827938a91.2
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 08:04:28 -0800 (PST)
+	s=arc-20240116; t=1738257049; c=relaxed/simple;
+	bh=PxtybYSxgsuwZVcwghTaYuaHXmTHWbwCzDuTXGP4NhE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZOc3F6GjFZZLFqw5UQtBURhszq1Hg/aISyp4s7KRrOp2vE+JngX/tYCSByrQTe0byS2kEYRSSNNCwVLbiUG7JR2+MgxweryVaazj0U/gCfqmSZ+445RP2W/amYpIVqlj6//r1L+4Wo42tVsjWrf0yfOPiaD/yCcWwqa8dtX9fWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lajg19n7; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d932eac638so1852326a12.1;
+        Thu, 30 Jan 2025 09:10:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738257046; x=1738861846; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qyi3Ntf2szBW5h6F6hgF0KHfVDRaAzVDcHs5RUl4h3Q=;
+        b=Lajg19n7iabDuVVRdhWT/fT12Kv8Cu7ppMcqilAMmIHyeIqIMR1D28Ci1RMudeULUh
+         mk/O7BsQquriKEYocPj1lPXGy3rLq51B4mjWpKxw5ASgj+0xThVD6nedVUGwtzxoy1YB
+         zrseQWs1wJpQvRGGrwr2Q9kLraVA4BjMLpv4ZVsdNbPIZKzejHqZieVxKCYrDIUoiL7A
+         isGtfcAOuyj6pcva0D92+mJeE9w3/AUBR3WvV3pJCrCElieMkviec6/Qw0g2beU20lhl
+         YlyHuY/yx8rPFWh1no9pMnwaroayVfqySkWI0sEE9VyAlZsEhSsIV/GKGPzyL3HY10rc
+         cdOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738253067; x=1738857867;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdStTEajIelfR7AL4b2VtQBKKCsYPbVQwJ/gEBmQAGE=;
-        b=G8rYGycvzNvWbZMQ/mdwgFbbd74dvsFpAgAfr1558GFDs2p1ndYl0kIYIKrSfZ2HXX
-         xEe6rAGEFzlr9CmxujYf3uLrxXp8fad7WaFurVRND4azwxYRLokANBWwumSN+iPE29Im
-         ez6/X356DYXjRYzRL/pMRJ7H3wQNB3SNJbHBTv8G/STTrZrues+krOIPyaFi8Y3nhHrZ
-         xasJDpL3I9EL6JwB5qt0m8UbtLo76POX9wN4wpVTGfe4toXTgsRYNjdMEhSEAqYGVnOu
-         E0gBaK2wm7GM2ywWazjo+0sKJCTBD9E3BPtIwvfuIP65P3FFKaKElr7pPEXpoWm4wgyS
-         FDng==
-X-Gm-Message-State: AOJu0YxGi6Z8Gck2G+MSuyu6lILrPxol8GUV1RI2SOQ3ddCOX/beIecf
-	8sYZow+9qf6Tg80793L40cJu0tkrl3OxEVGVDoWC/+wmbZRkUsuwnxrhoZlnw1CX0SC65yjmr1/
-	+gXRNIkZh7zLnywDibsIdJlKpHhsieBaMffrPw+ks1uI+X9BVUKiuevgnrkR04MWH/ve1Z5sNTS
-	w=
-X-Gm-Gg: ASbGncvhHxWM0pGaFtd1mdJKtv3MEkeXMJ9ZoNodqU7BP4Cw04Z08NXrxXf0Dk5MMKK
-	gBc3a+ndFVge1zyBy9o59GXBWISeJlWIRKex1hQIm1A1x9U66jZn0HJP/JrIsqof7x5eQEFauYe
-	UaIYnGgeTdz7clC3u4L/nQLIoyAPkUVjXeX+vDfyjo6qWRxx5MURDeoUMNhS2IkYxndODImpMB+
-	66cchNpzMkHk7EMPbdmtl8GtjzuycFqelitZ2cNIoc0LDqnHYdD5nnMOQF7Ez3SvOlatrOJtdfl
-	T0LlbLw=
-X-Received: by 2002:a05:6a00:2d1b:b0:727:64c8:2c44 with SMTP id d2e1a72fcca58-72fd0c67aa6mr10535775b3a.19.1738253066604;
-        Thu, 30 Jan 2025 08:04:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG/bczYSaqBe4gXfLSbdQfEUz5lhItOwc8MfpIsCWFahaGB/80iN04rCDIpbMBqoYSLzekpbw==
-X-Received: by 2002:a05:6a00:2d1b:b0:727:64c8:2c44 with SMTP id d2e1a72fcca58-72fd0c67aa6mr10535700b3a.19.1738253065779;
-        Thu, 30 Jan 2025 08:04:25 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:997b:dcb6:3fe7:2ab1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe69cdda2sm1614914b3a.128.2025.01.30.08.04.24
+        d=1e100.net; s=20230601; t=1738257046; x=1738861846;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qyi3Ntf2szBW5h6F6hgF0KHfVDRaAzVDcHs5RUl4h3Q=;
+        b=HkHLWJm1zfC1g9PMrcgBgYeySy1bDyHTON1dtimfKrzCnEh0W5HVpbkn/+xqiwwVyv
+         0kfuPyM1O6Er/naE1wwEr2LdVuVNrZklnIKYOBUUU07Njz+bYX6cg49eTh84w8/+ND3p
+         7ew2ZQCoFYROO5TulD36QmudszNfJXjIlxNSQ+PCT6ttQU0pQWD5g47jlXxTKPZjUzJ4
+         L618zNjkBVxMT4opD7Yk7qp6D4HLJiI4/r/N1JU5FMO0oVTacgzoRUzgEVDl3MnXQh31
+         h8W1lIuinbjNeyPGNQ5qSnsyJP4YDTPPGlJfQpmhYZrtBr+kJt23Zw6tLD9aSFfK7F3/
+         KRLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb7LAm/fzggYzwSprNSsyVV1VZdZECon/BbFPpwInW44ObK5i0/elpXIrB2XV9Z/Q2/Y389pCLrZDfqAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkxXX+E12iPdQCNXsx60njiFMZeEGS2BrponcL+FukiZaDKpga
+	YCv+CWqgBS4zi8yUJ0UmX35ADqlnj4WuccrcNKZeTXeTXVLOBSS2
+X-Gm-Gg: ASbGncuKiHrOO0CwMZrA+/BMD13CGuufPgS40dMbJ/5gh+DkfEXfvnudOM7uxY/4YRV
+	9GIC9BEAI2tftqdes887ECVnUBMPH0Br3/i875R6PV1YXqDtl987U3FOc1mliDBwo85EPT9LY36
+	iA+APKaydZe7liEgPfq0cbZHmFiZKQSpXZJkZcDJaFq24HjVgo6quGZXrM1/HHR5ynCyY1qvEWO
+	Q190CyGBbaSwUZ3bA8g8cbvakw9Wa3B9+B448g8xHOGV5nUorI7tAVQVWu1oEh2r/Ckv8owAC+w
+	VuxamgjDQk8KT7kMu/poq0vF8M9qxunPx7qUXOFLlthBkZV38q+O5FcD397yGQ==
+X-Google-Smtp-Source: AGHT+IHuH7tNl9Bb9Su6vnpYDZHYYanacyBZ/Eejqsa8vLrRR/2fxK8KHZyEMp9Wes5Q0gARcP5/hw==
+X-Received: by 2002:a05:6402:3511:b0:5dc:6c5:69d9 with SMTP id 4fb4d7f45d1cf-5dc5efb82aamr7345749a12.4.1738257045952;
+        Thu, 30 Jan 2025 09:10:45 -0800 (PST)
+Received: from hex.my.domain (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724c9da7sm1349021a12.79.2025.01.30.09.10.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 08:04:25 -0800 (PST)
-Date: Fri, 31 Jan 2025 01:04:23 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for
- gpio-aggregator
-Message-ID: <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
-References: <20250129155525.663780-1-koichiro.den@canonical.com>
- <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+        Thu, 30 Jan 2025 09:10:45 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+Date: Thu, 30 Jan 2025 18:10:36 +0100
+Message-Id: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIyym2cC/x3LQQqAIBBA0avErBtQS8OuEi2iRhsCDYUIxLsnL
+ R+fXyBTYsowdwUSPZw5hgbZd7CfW/CEfDSDEkoLOQi8YtjQ3xzR8UsZDU2jtpqMdQradSf6Q5u
+ WtdYP2p0DO2EAAAA=
+X-Change-ID: 20250130-kona-gpio-fixes-6e74595e69f2
+To: Ray Jui <rjui@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Scott Branden <sbranden@broadcom.com>, 
+ Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
+ Christian Daudt <csd@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738257044; l=1120;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=PxtybYSxgsuwZVcwghTaYuaHXmTHWbwCzDuTXGP4NhE=;
+ b=yIN8LeDh1lxlrHbTAtHCgCr1A6ElSJZix9sgmrXY74M5oBWn2YVhUoBoKk5nW19NbV+C/ITZ5
+ 8xLp7itDpO3DSfG9YrxRRYX14WBu2JbegOFsg5GD7ifD4/ALKoWF9hK
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-On Thu, Jan 30, 2025 at 11:30:59AM GMT, Bartosz Golaszewski wrote:
-> On Wed, Jan 29, 2025 at 4:56 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > This RFC patch series proposes adding a configfs-based interface to
-> > gpio-aggregator to address limitations in the existing 'new_device'
-> > interface.
-> >
-> > The existing 'new_device' interface has several limitations:
-> >
-> >   #1. No way to determine when GPIO aggregator creation is complete.
-> >   #2. No way to retrieve errors when creating a GPIO aggregator.
-> >   #3. No way to trace a GPIO line of an aggregator back to its
-> >       corresponding physical device.
-> >   #4. The 'new_device' echo does not indicate which virtual gpiochip.<N>
-> >       was created.
-> >   #5. No way to assign names to GPIO lines exported through an aggregator.
-> >
-> > Although issues #1 to #3 could technically be resolved easily without
-> > configfs, using configfs offers a streamlined, modern, and extensible
-> > approach, especially since gpio-sim and gpio-virtuser already utilize
-> > configfs.
-> >
-> > This RFC patch series includes two commits:
-> >
-> > * [PATCH 1/2] implements the configfs interface and resolves the above
-> >   issues:
-> >   - #1, Wait for probe completion using a platform bus notifier,
-> >         in the same manner as gpio-virtuser.
-> >   - #2, Introduce a 'live' attribute (like gpio-virtuser/gpio-sim),
-> >         returning -ENXIO when probe fails.
-> >   - #3, Structure configfs directories to clearly map virtual lines to
-> >         physical ones.
-> >   - #4, Add a read-only 'dev_name' attribute exposing the platform bus
-> >         device name.
-> >   - #5, Allow users to set custom line names via a 'name' attribute.
-> >
-> > * [PATCH 2/2] provides documentation on using the new interface.
-> >
-> >
-> > Koichiro Den (2):
-> >   gpio: aggregator: Introduce configfs interface
-> >   Documentation: gpio: document configfs interface for gpio-aggregator
-> >
-> >  .../admin-guide/gpio/gpio-aggregator.rst      |  86 +++
-> >  drivers/gpio/gpio-aggregator.c                | 673 +++++++++++++++++-
-> >  2 files changed, 757 insertions(+), 2 deletions(-)
-> >
-> > --
-> > 2.45.2
-> >
-> 
-> Hi!
+Fixes two issues that were preventing GPIO from working correctly:
 
-Hi, thank you for reviewing.
+- Lock/unlock functions tried to write the wrong bit to the unlock
+  registers for GPIOs with numbers larger than 32
 
-> 
-> I love the idea! In fact I think I floated it in a discussion with
-> Geert some time ago but never got around to working on it.
-> 
-> I just glanced at the code and it looks nice and clean. I'd love to
-> see some more improvements like using a common prefix for all internal
-> symbols but it can be addressed in a separate series.
-> 
-> I played a bit with the module and this is where I noticed some issues:
-> 
-> 1. The sysfs interface must keep on working. The same command that
-> works with mainline, fails for me with your patch. There's no error
-> propagated to user-space, write() returns success and I only see:
-> 
-> gpio-aggregator.0: probe with driver gpio-aggregator failed with error -12
+- GPIOs only initialized as IRQs did not unlock the configuration
+  registers, causing IRQ-related configuration (e.g. setting the IRQ
+  type) to fail.
 
-It looks like the issue is caused by gpiochip_fwd_line_names(). I'll fix it.
+Also includes a minor fix to add a missing newline to an error message.
 
-> 
-> in the kernel log.
-> 
-> 2. I couldn't verify that it's not the case already but the code does
-> not suggest it: IMO devices created with sysfs should appear in
-> configfs.
+Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+(DTS not yet in mainline).
 
-That makes sense, I'll add the implementation.
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+Artur Weber (3):
+      gpio: bcm-kona: Fix GPIO lock/unlock for banks above bank 0
+      gpio: bcm-kona: Make sure GPIO bits are unlocked when requesting IRQ
+      gpio: bcm-kona: Add missing newline to dev_err format string
 
-> 
-> 3. I don't think the user should need to specify the number of lines
-> to aggregate. That information should be automatically inferred from
-> the number of lineX attributes they created instead. [...]
+ drivers/gpio/gpio-bcm-kona.c | 73 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 60 insertions(+), 13 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250130-kona-gpio-fixes-6e74595e69f2
 
-I agree that it's essentially unnecessary, but considering the current
-state of gpio-sim's configfs, having the user set num_lines doesn't seem
-too unnatural to me. What do you think?
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
 
-> [...] Also: if I create
-> a line attribute without setting num_lines, the driver just crashes.
-> In fact it seems any discrepancy between the number of lines specified
-> and the naming convention of the line attribute causes a crash.
-
-My bad.. thanks for pointing it out.
-
-> 
-> 4. Writing 1 to live, when no lines to aggregate were specified, should fail.
-
-Agreed, I'll address this.
-
-> 
-> There's probably more but I haven't had a lot of time.
-> 
-> In short: I'm very much in favor of adding this but it will require some work.
-> 
-> Thanks,
-> Bartosz
-
-I'd appreciate a response to one question above. I'll prepare v2 after.
-
-Thanks again!
-
--Koichiro
 
