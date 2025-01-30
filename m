@@ -1,137 +1,116 @@
-Return-Path: <linux-gpio+bounces-15104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E714A23292
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 18:11:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03090A233EB
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 19:40:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D32D21674D0
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 17:11:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F03413A385C
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 18:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3F891F03D3;
-	Thu, 30 Jan 2025 17:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2C01F03D7;
+	Thu, 30 Jan 2025 18:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifyUwV8E"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="P2d14isu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE021EF0B2;
-	Thu, 30 Jan 2025 17:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E07B1487E1
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 18:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738257053; cv=none; b=swo1hJ3yeH4x1SnrKp8/tYOBXAnbQckA/R8jOUMrgWYbXDaPuMXhMrxzNBLvTFSO37Y2x2NXYQu7t0dLAegj51TwCUkkW89UYzS1k4PplfBBQ2aR8AERMtgV+60Ji8UAf1bAy3KD+fawL0RjoX7vZetHCHjVBcg0RX+a4WdYI0U=
+	t=1738262431; cv=none; b=KCEGLC2nDYhpWnwEZ5D3KYSIMTy1zu+cIba/y0nvYRzjcEGhoOhRgk0VmXKy3XOTS7yPcruxMtCwu8AnAQZD6hGxAyyxEduDRuDovFQQ2J0C99OEBiS/8GLIuNbUxy5MVvnjuxv/lEcDjPF3coC2SvC8xnpaGsAGzuVKGWaG30w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738257053; c=relaxed/simple;
-	bh=o70Fr1kCif6HdIhJyZPg+2LV/xA5phJjLyuIF/yrdgU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cv+A6U2p7D5nLp9LJVtLuI2sWxUiVoKTtH01fwKA9zhNcVMtX93cvTNxsk9PWcndkD2M1OYmFMmvOc5/tWmbUHJ3tH6qLLwRuSxz0urCe7S+gB5c/ac+KHAx8+NTIUDc6/2LO2+0V3CwgyxyHrhq77Exhy2k7db3fW+hCh1xO1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifyUwV8E; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d0d32cd31aso1425001a12.0;
-        Thu, 30 Jan 2025 09:10:51 -0800 (PST)
+	s=arc-20240116; t=1738262431; c=relaxed/simple;
+	bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T4HKyLSNKWPwxt08ojo2k+z2ZdAiKMvSPTtCHm6KV+bIbbmO4y0YhMNCs8CyHY1kod2izO95MD8RPiLkZziZvpzjqubkLd26lJDY1v/GMpBuoC/weIVFcgcKyu3xrr4R4wydJYXjFj1+Z4gQiqekFOxHT29AMY4IcvWfxz8UEl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=P2d14isu; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53f22fd6832so1254326e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 10:40:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738257050; x=1738861850; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5XvlM5yaUG/XEWadsYu0DyB9VDs+irAd4NAYgXsjiXc=;
-        b=ifyUwV8Eg7zogHArf19z9nNiU9tqfkjf8SLCoubGlHVHHEYSu+6FV+Pu74kpNV3eCD
-         b1DPCKaQVbjF9bDZ8YC6OYT6fy2DJ8ZNjcVfquJqAtg9N6QB+z/UBVcMxYpl49jvglsI
-         q1qJ3HuHAUP0x+RVqNZmHRMalbtK1ZkfM5geL2wJUgL+ag97NJaGiG1DBoms5QSpW0Lj
-         rRS35R0GyFGYwUnnXKU1BHhyLY8cTlU4RD3rrlVKlf+KqsVqo6bdwYBHI+P3vR3rESc5
-         nzWj56r/DtnyVTZTLfvvJ1roVWkmselAlzxufvZkFERunpCETXZPzlM2HBvqbEmTeQLK
-         gTww==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738262427; x=1738867227; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
+        b=P2d14isuB/UpS1h0JVpov8wUPkxiHqsBn7NOfpqfF6i0ksAR2P1b//+Jz8ug1DTjND
+         L8oIsZ/gBOuNcclS0f2e3de2FWsjMd4JlNlRkQ7cPBqoHtM8tGGVUBlfCIy17Fi3Y397
+         I9oL9BgPSh72WtpGWEv6oeMmKA5RCzezM+MkvlYXED6yjV4tLV/A5CD1vDvzJ/iqjDvy
+         dAetuwoyA28ByAbO6rlmZE4AMsSneSEi3T44GPITaQopDHIaQQarqLbpzFvrJ39KPjzc
+         r+3kbr5YzhIHsKvpbhxggswjo9p2y1/9KEm03UCJcfNW5sM9b2kVQzHB7M/wzDWVUF1y
+         M6MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738257050; x=1738861850;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738262427; x=1738867227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5XvlM5yaUG/XEWadsYu0DyB9VDs+irAd4NAYgXsjiXc=;
-        b=uXrgAPoV4WdjUPIpwLtyjRYPhq07Y9B8hsIls5zydoXjGZd6/QhQVC8AKJdRuR/tvq
-         /sBXmr//6Uzl3v9AZPiHZgQgQEnh9+oovIMLNpW4cjDhnIyifSKI+Fm8H7N1jJBHGBmE
-         TA3EvNg44OiCkxDbFhuBQQ7poSIJAa1WgEJqhnKgKkPAnX3szBHHKov79UA6ixe3UDoi
-         mx+a2f9YEFIP33gmYSwr6sy+W/4fFC1tIhO4oPYTtbdpCWLjXkIjWqwGz3jKU3ZVGMRa
-         /oDjlnHjxzL1hczzRGOQIyGV3zBi8QNXzT2jwOg5sPnqRJ/L6yLcTSAazl79CeBr/5YM
-         yzmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPKvhQSWcrmMMMgDRhLVct1clfuEo66vbz2mhZHwqemW3o2Y60HJsinsux+rauyaSKa6CRr9mYOyzHInI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxO0mfa5GbY1D1bEsLVraFzRTswSqzVzQ1KSUrhMrtKMy/Aj0y
-	Y9dfBTOL/arG3isaY0EVvGjIrB+GZJAuGHfwrzxVSVsc18ju2iYF
-X-Gm-Gg: ASbGnct54eB2xg8bHVHaNG5Rxs7Cxr2z7r+EIbiguRIG0JZ7RXOottlH/IorRPyoOcv
-	/I1Fhh7W0T7AjMv/hn0m2fEgDWQ1cLXNdf+APPvybOj7xDwHCIZy7OmF9S48Y6sMy8JZXuo3hVg
-	gU84qB7mJTe8t4Y+Jk4spB8sKUhYNMsVMt3tymUSElR4+O74zSyj0vYYVkkOhxBNB59oa13Cwqp
-	Et2ykUyk3rFPIGH/j4kaDvQnoVO42ZChaUmMgTcu0JoYc25HKXK6pOs8yE/TuqJqSxba6EiGbom
-	vs0VvKoJN0HibNRbSqscQRgU1wmPe0ZSiz2zf8WICF5lfd6OavYPqrN0RJo+Rw==
-X-Google-Smtp-Source: AGHT+IFnBcXXFgYguNK5JEoR/syq9ZqTDEOnCsww97RSiyQvXLA6mTR4V/mTrkIeWSBawUy0kgZzZg==
-X-Received: by 2002:a05:6402:1d4e:b0:5db:f423:19cf with SMTP id 4fb4d7f45d1cf-5dc5efbf1b3mr17141214a12.9.1738257049980;
-        Thu, 30 Jan 2025 09:10:49 -0800 (PST)
-Received: from hex.my.domain (83.11.225.21.ipv4.supernova.orange.pl. [83.11.225.21])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dc724c9da7sm1349021a12.79.2025.01.30.09.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 09:10:49 -0800 (PST)
-From: Artur Weber <aweber.kernel@gmail.com>
-Date: Thu, 30 Jan 2025 18:10:39 +0100
-Subject: [PATCH 3/3] gpio: bcm-kona: Add missing newline to dev_err format
- string
+        bh=PZGkakFNco4kbSBjz1opxRPk8R7MLaQEpY8TCV6WYk8=;
+        b=CZz95y4nDWiqI9JKRBoJ4dfuQVGAxZAg8pThWx6ESEEa329yGUDVPkb1Zo3EEHURKl
+         1nwH5OGqoBxkcto6rBfyRoU0dxlb9O+w+87lMyFjGvFzdYHaEzUkgCMp0lAtAgbDb2uO
+         rjgIHtjO/AHvTqMWL4tn0tII1myBKTwHbDEX+kqr4/mXl74VLetHUhKjRaikrb38OrP0
+         qYGDmH2E2W0cNsPHaVAIAQIqzvIw7cRuXQkg53gvJlasSFuRuALXO44j+noeCf6uTtv9
+         NUu+jMd1JPwOTPsWkSa3hRCC67eb/jgRhpuCHmaWpiVnzUWvoXGwX2Z1L2UWSSCZnP1t
+         CGvA==
+X-Gm-Message-State: AOJu0YybF2Jtwi5EOAspZNk4BaIZqBShSz4zLv1SjeBGTE/OF8u6uema
+	f4UFTqRPPczjtdP0c8aD1HGueRQsg4rOT0psqfXlFl7MhuIFmcmCyvKFseqe7vft5j2aLrvbwvd
+	wjpTSumIXN8nQp6FSP+OyAmVbQDrRif22SfwPhOX8vtmoGZYz
+X-Gm-Gg: ASbGnctxBacGJhXtOF4uT9ATgIcbuzG1nvpovOMfWyJNT7bbDUTCMtL0HVYz+xCZKoz
+	Fjjo/dOY9vlamxf8bsKBqGtsZC+9tgx+sh9ixKeAXLXcQZeJe731pTEli+fj4j9Z1PJFYKiwje8
+	WePgb1nDLNqVsrWe6JBKwoskst65ue
+X-Google-Smtp-Source: AGHT+IGTxA9Lst4wTIFbwdnHGpnqqupbNJQuRozQiYPZiFE1ggaSkErWWKv0+xtu4qHAe68MDpH55DgfT9AWtcrExiI=
+X-Received: by 2002:ac2:4e45:0:b0:542:2e04:edc5 with SMTP id
+ 2adb3069b0e04-543e4ba6c02mr2187230e87.0.1738262427290; Thu, 30 Jan 2025
+ 10:40:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250130-kona-gpio-fixes-v1-3-dd61e0c0a9e7@gmail.com>
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
-In-Reply-To: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
-To: Ray Jui <rjui@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Scott Branden <sbranden@broadcom.com>, 
- Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
- Christian Daudt <csd@broadcom.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- Artur Weber <aweber.kernel@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738257044; l=907;
- i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=o70Fr1kCif6HdIhJyZPg+2LV/xA5phJjLyuIF/yrdgU=;
- b=DZ+D6MTjjkV4K+aaihfH6KKOzGs+wHqN7dVsCb+Hb+UiMbpMsljqdsmuLMXkb7pnYKvtcM9jz
- mE6h8UKJqojDFljQhGthYglXiAM7F7AQ1ga2Evq39vC7J5UxYvhirW8
-X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
- pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com> <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+In-Reply-To: <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 30 Jan 2025 19:40:16 +0100
+X-Gm-Features: AWEUYZnj93d-FrMXvMxOaT44mXfI_4z33u8XVZrqCy6OvCJmKQ4xghRlKCNsUtU
+Message-ID: <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a missing newline to the format string of the "Couldn't get IRQ
-for bank..." error message.
+On Thu, Jan 30, 2025 at 5:04=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> On Thu, Jan 30, 2025 at 11:30:59AM GMT, Bartosz Golaszewski wrote:
+> >
+> > 3. I don't think the user should need to specify the number of lines
+> > to aggregate. That information should be automatically inferred from
+> > the number of lineX attributes they created instead. [...]
+>
+> I agree that it's essentially unnecessary, but considering the current
+> state of gpio-sim's configfs, having the user set num_lines doesn't seem
+> too unnatural to me. What do you think?
+>
 
-Fixes: 757651e3d60e ("gpio: bcm281xx: Add GPIO driver")
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
----
- drivers/gpio/gpio-bcm-kona.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, this is completely different. We cannot figure out how many lines
+the user wants gpio-sim to have without explicitly providing that
+information over the num_lines attribute. For the aggregator, we know
+exactly how many lines the user wants - it's determined by the number
+of line groups. We can simply wait for the live attribute to be set to
+1 and then count them. While at it: there's no reason to impose a
+naming convention of lineX, lineY etc., the names don't matter for the
+aggregator setup (unlike gpio-sim where they indicate the offset of
+the line they concern).
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index eeaa921df6f072129dbdf1c73d6da2bd7c1fe716..724db3434d277c5f9ea36b0d050e34c451787e4a 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -661,7 +661,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 		bank->irq = platform_get_irq(pdev, i);
- 		bank->kona_gpio = kona_gpio;
- 		if (bank->irq < 0) {
--			dev_err(dev, "Couldn't get IRQ for bank %d", i);
-+			dev_err(dev, "Couldn't get IRQ for bank %d\n", i);
- 			ret = -ENOENT;
- 			goto err_irq_domain;
- 		}
-
--- 
-2.48.1
-
+Bart
 
