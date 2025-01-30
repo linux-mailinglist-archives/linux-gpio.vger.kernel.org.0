@@ -1,60 +1,85 @@
-Return-Path: <linux-gpio+bounces-15096-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15097-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEAE0A225F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 22:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A4161A22A5F
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 10:35:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FFDF16367D
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2025 21:43:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01F22164DEE
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 09:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA1E1E3779;
-	Wed, 29 Jan 2025 21:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686A31A7046;
+	Thu, 30 Jan 2025 09:35:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="MGRmp/GT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b/rwV8AB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123801E0DCC;
-	Wed, 29 Jan 2025 21:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E08A15C0
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 09:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738187027; cv=none; b=m7+zo3IdHj32zZYu9i9mwQzqjbIKc98CK/whvYdgmKL4DZ/st1MWJmXBGrvPdPhhY9eVS1b4clNmoJn/QkXpAWZ7dRy7zPhy0FwT23emEx3PCHZ6usIV/ZxAa7fzsrf+3upv33cq4u1+NQt/m9LyyBeP9YeQuExMSVYsGV1ij6U=
+	t=1738229703; cv=none; b=R9BLRPngw4qqc5+5p5MXekC0qUjYqLsnCox0Y6DCSl6V1Bu9PpbPFxMnuw/uT/Ct/nYVxm+u5w4RIMgYecjhEzuP3YIz6aLxR5nX0ZvccpFrEXN1UjxKELrN43YDuEmX1hBcz3CCcfeRJMeqDrPTpa6PhUSmvbHaAgzVrW7f9r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738187027; c=relaxed/simple;
-	bh=0uAQJvbblrOaMD+1Eu350AZXigzrwPAQDrg9MZoR1T0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PEg2K7kTKRY96PSw+yaV9nE2PH1Mh2zlIdw3om7oDmuXXqeLJGY1mCDXhgzQCPtFhMhthJPAaCci3TwLRFmqwykjpqTUKtBQzqd6cvxtx0coGrgWlcVuAsoAc66A4rUj4JeGIfjGV33yM2U21j0k9xfjcqrahc/g19QPDxJ9v30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=MGRmp/GT; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=rT74W7h0R0GvGWb1NSbNxPJy6iXK0+YQDI9ZgeotLmk=; b=MGRmp/GTomUEkGOZ
-	JDwmdQuepuUBOSxM7kPmLISkkQJ76R0p2ZuT6z868Qfwf2tS2QbT1414qd/7ZwA5LuMrROK6bWJyt
-	37FO0/FmrOUX7yw0l8mfDGrxwiawwvjaqyU8ynkIH1hpa4eJrRdwz6OoeL4Y9DGJIzbCQRvbZKlta
-	M6zWgFLJQoaPUeK4uB7ZmF+h8tVCqwZ7dl3uadsfMMinyB2In0YYHIvpPGQ+TVa/SPHV3WNGZpo61
-	sztCPew/0aFw9F8b8fRD9cpz2p2HccEF29I/ZiqRdTCKuDXMgFW/aueXmDfe1k8pEw+yrrEqPt3bs
-	eGjf/1HSxxuS88//Tw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tdFqR-00CiU9-1s;
-	Wed, 29 Jan 2025 21:43:35 +0000
-From: linux@treblig.org
-To: ulf.hansson@linaro.org,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-mmc@vger.kernel.org,
+	s=arc-20240116; t=1738229703; c=relaxed/simple;
+	bh=xc4ELH0oFFibv3guQwRbvL5jq5ER+aQUIwoOEf5VieE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ACjovP5/KUT8AWTJhfTbqQApNLMoB+O/eRaa7Sz2R37BLGeI8cf1A/fU6dkFTj4rCC9vDoUymljLK9Gsuvucw6nMbEwbpowECcxzUAZxVlCmg0W1BBTpsZlj1ltz0JGQeDgPIXgo/DfGGyNds9Sg1z0Svq+TmnHfkLo37m+U5G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b/rwV8AB; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43635796b48so3126125e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 01:35:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738229698; x=1738834498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCSZkLmd87J+p3Gt97ywpEqoOmcq5P4BFSZvxAfGIHM=;
+        b=b/rwV8ABI5nYr/4fiX5v88Mn0+25O6xUxjxGVipfVcNj3zaSWNycyDSaeScWdq2JGv
+         WImdv6dd5Pnt+GPEHrCsJHNPxN/Fb0xAmaZ3rnp+kvHkqNaxqj0a68NF5Wcvc3PxOGw0
+         u/6Rm50EUPrbffdMIUM38OsW5+SEt6nkEGxY4Iu4AT4PeRd+6bzrvyaPXxKxhN+XzHl7
+         A6Pu6M4Rj93247gzH98ctOXdQlfncjYbqDLyTae8bE0uralKMmjO1B65N/tEWZL/jkVc
+         7YoBZTS/1criRf5Kaex7JSDlXzrH7hZDakOUimzUC0hA1ias7BmHcf3RvfbHxzOICVDq
+         HKMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738229698; x=1738834498;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rCSZkLmd87J+p3Gt97ywpEqoOmcq5P4BFSZvxAfGIHM=;
+        b=kiTUAvYQSFOrVs8fJxFwXBQZiP/byjQWkpI5LQE5/zDfOK7EW5toD+iTPvu5mrklLB
+         HLGCgwQrfO0QSIXhhZZuk9h4JqsXT3xLCa8JUw1vjB8q8bWefd2V5uRnaqOqQvL0lkrP
+         21quAHjIKd6/sYIC55TIXLywSZ5L0JmVGuHZApN1QkN9kal8/r/skiVgAmLE6mAWuy/z
+         9DOnSjEx/Su7/POpEwlOey7JQrfuylvccC2bWM5pzGuDdtoErs1OQ7YdBtffbyC/c4hR
+         F+dUIAB15lJX1pN+jzw7g+j9zj/E6Zoi/WLbqPLVY5yHAqYVtomab2nBspXXqU8XDrPl
+         2eZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWMKNm6UiCvFxpZbjCkCb879Fu6fh5S9py/tfkD4bratHQW1nbyQMbLeizpZQvq4wnRTXVuPKeN6L/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoX48EclCnyLvVc8LD7ekjwCDfGCMVD2aiULvxqSsr4nMU1L62
+	xh3725HAjnSrRHKiX8dI94VTVNrbtWDJU/GuZHsF9o6O1ebmp71zEa3rjhPxgkQ=
+X-Gm-Gg: ASbGncveIHiN/iEV+qjGMvWFBxnB9CvrmW0rXP7bQHJ7cR5UBGUNmnmRRnrLOpQk+Y1
+	TOKpSiqliHbxOppt/p+xbf5gBdMt7ZP5v7JNmib4pXWa8N2BmqMZIonNI+mExQpfy07qHToGvUN
+	erj7hei1PzefygjUjmov0fAEd+P+VSsRRr5KPMI79SeqcKexTQ9yb5Vg+utOLm4LkWMqwWP7XHA
+	dhdDZ2hEAmteZyLdavx6cWqSauAfy2Hdz6w9VvFQKApacqzvONFyH1r/UYyg5ezg2ipbyHWFLm5
+	yxAiSOqQ5+ciPKU=
+X-Google-Smtp-Source: AGHT+IFzBjXuzrIBGDmUC2JKEWFepdBNmuLP1BuRm1yt6BvEzzR/DXv8vtpiKd7cVq/Tc/3hfJbxQA==
+X-Received: by 2002:a05:600c:3d0d:b0:434:ff08:202e with SMTP id 5b1f17b1804b1-438e15ee1cemr19665025e9.8.1738229697826;
+        Thu, 30 Jan 2025 01:34:57 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:fc6d:e56b:f84b:f494])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23de35csm16705785e9.10.2025.01.30.01.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 01:34:57 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] mmc: slot-gpio: Remove unused mmc_gpio_set_cd_isr
-Date: Wed, 29 Jan 2025 21:43:35 +0000
-Message-ID: <20250129214335.125292-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc1
+Date: Thu, 30 Jan 2025 10:34:54 +0100
+Message-ID: <20250130093454.17264-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,55 +88,42 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-mmc_gpio_set_cd_isr() last use was removed in 2018 by
-commit 7838a8ddc80b ("mmc: omap_hsmmc: Kill off cover detection")
+Linus,
 
-Remove it.
+Please pull the following set of GPIO fixes for the upcoming rc1.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/mmc/core/slot-gpio.c  | 12 ------------
- include/linux/mmc/slot-gpio.h |  1 -
- 2 files changed, 13 deletions(-)
+Thanks,
+Bartosz
 
-diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-index 12247219e1c2..5fd455816393 100644
---- a/drivers/mmc/core/slot-gpio.c
-+++ b/drivers/mmc/core/slot-gpio.c
-@@ -159,18 +159,6 @@ int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on)
- }
- EXPORT_SYMBOL(mmc_gpio_set_cd_wake);
- 
--/* Register an alternate interrupt service routine for
-- * the card-detect GPIO.
-- */
--void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr)
--{
--	struct mmc_gpio *ctx = host->slot.handler_priv;
--
--	WARN_ON(ctx->cd_gpio_isr);
--	ctx->cd_gpio_isr = isr;
--}
--EXPORT_SYMBOL(mmc_gpio_set_cd_isr);
--
- /**
-  * mmc_gpiod_request_cd - request a gpio descriptor for card-detection
-  * @host: mmc host
-diff --git a/include/linux/mmc/slot-gpio.h b/include/linux/mmc/slot-gpio.h
-index 274a2767ea49..1ed7b0d1e4f9 100644
---- a/include/linux/mmc/slot-gpio.h
-+++ b/include/linux/mmc/slot-gpio.h
-@@ -22,7 +22,6 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
- int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
- 			 unsigned int idx, unsigned int debounce);
- int mmc_gpiod_set_cd_config(struct mmc_host *host, unsigned long config);
--void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr);
- int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on);
- void mmc_gpiod_request_cd_irq(struct mmc_host *host);
- bool mmc_can_gpio_cd(struct mmc_host *host);
--- 
-2.48.1
+The following changes since commit 4abae5b6af811ab2b53aa761bf9ae2139757d594:
 
+  Merge tag 'gpio-updates-for-v6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux (2025-01-22 08:47:54 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.14-rc1
+
+for you to fetch changes up to f8524ac33cd452aef5384504b3264db6039a455e:
+
+  selftests: gpio: gpio-sim: Fix missing chip disablements (2025-01-23 15:44:48 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc1
+
+- update gpio-sim selftests to not fail now that we no longer allow
+  rmdir() on configfs entries of active devices
+- remove leftover code from gpio-mxc
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      gpio: mxc: remove dead code after switch to DT-only
+
+Koichiro Den (1):
+      selftests: gpio: gpio-sim: Fix missing chip disablements
+
+ drivers/gpio/gpio-mxc.c                  |  3 +--
+ tools/testing/selftests/gpio/gpio-sim.sh | 31 +++++++++++++++++++++++++------
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
