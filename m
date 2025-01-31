@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-15150-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15151-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFDE2A243FE
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 21:28:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFF85A24409
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 21:29:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67AAB162AF5
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 20:28:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E368188B553
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 20:29:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE9C1F8906;
-	Fri, 31 Jan 2025 20:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D45001F8ACF;
+	Fri, 31 Jan 2025 20:25:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xfWVISNq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uPUzRuuQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902791F63EB
-	for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 20:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926691F869B
+	for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 20:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738355119; cv=none; b=FbuzkC8D6T4KUe++B9SuXsO72jhKse2lJb48o8uW8niSVCe2+/aqw1QxUULrYX2g/9ASULACJ4YfSRUUES1TsdSsldnpfoUkyHyGAqZwKkoIU5uaK6RqykjddY4aPw6BYi7aK7MlVLiMCKak+vngTCgqLZam95zMDaskwIhDIQo=
+	t=1738355121; cv=none; b=VsuMVt9C2lJaApqRpYGaRGKdLoCsJS1/g1wAtUJOBVclarbZi+wZuEZxhknD5V9NZQnzl/RI0rRyfLm915TAbM4Xd18VAHRf8Ic61UH/Y/JMzSMLw8OCP8JMxA6jsc7rSPsnz33XAdmFaBw+5NVJl/MZGv4+KNpRZeUv9P8LpbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738355119; c=relaxed/simple;
-	bh=5lFciV6sDtnvvFQNJQrSdhN6LDbuB2QD+esDyLXoYWY=;
+	s=arc-20240116; t=1738355121; c=relaxed/simple;
+	bh=rmBWKBYHCI+WuV2jjWYGUn7c5T236U0xlpQEPpz0oeY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KPArG9gMecqcsIqeVvrpDWRMoS2POfUSVaCb19/9B2AVfmoZyHASE/aoqSHO1u4gKVPjVu0KwpW4oGDigetIljjm+FfSaWG1Auijdy0rg3ByQDCMGYod1Rg3YUfZHziFiJ9+A6zlWcxbClKFd7jVsZsr9csvyqjUyJmG/qHGfhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xfWVISNq; arc=none smtp.client-ip=209.85.210.46
+	 In-Reply-To:To:Cc; b=l4ajjrm45oeQcuKa36ScyrU8w6J1Bjzp76oYwEupEU74+ydl66/7WjzT1Yydk+FqyDv6blMovyDXBcWruLtdKrYNQEXMx999t2ctbCu1ovKVxkcl1zGwPSVgP0lQRZpxA97PaNRaa1q5qpFlYILwrQktr30gHX9wkPZNvB/aDF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uPUzRuuQ; arc=none smtp.client-ip=209.85.160.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-71e36b27b53so1320669a34.1
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 12:25:16 -0800 (PST)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-29fb5257e05so788412fac.0
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 12:25:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738355115; x=1738959915; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738355118; x=1738959918; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=59JJI4CO0oacXanEEbv/QOEs28IMbairlUQePRWumA8=;
-        b=xfWVISNqGvmJvPxCnksE/Yz1kneKNWKaDoiPyVLVuJJqQz0AQds5/lIkpGqMh16iAD
-         ZERvZm4NHH8ecjtnA156EOdT+s3afBz+65DNdZt3iYc6HqEWYMjMyPm8Oa1Zu3dPVK4n
-         CbpaQ2ouRcwZeE4GRJsuUuze3SLPEEZf4CyvVcS6g/sEFkP/lEB0nbmevg42OYuehQjL
-         4ohqvG7FisQgxd+xvcJN/S6d9ahf31PmA33gG1nKowgQJgD8P+e0HjR3kWZiVVKkuPUD
-         3mdj0uy6cgk5FRaXgawn4H7fxeN9x9oZP6o3ixsNVrT4QqFTpirkBPSGe8iZKk7Ez5iQ
-         nxhQ==
+        bh=FzzIwzQtyYUR99JIrJ6how8p6bj9KukV10X1RHN4Hv8=;
+        b=uPUzRuuQm3ZGPf+v7Th3oUHvv+dGvhO4XsIBcA/QvMsizBApe0tGtAB7+nO1P7jy1q
+         Ik/cc+vEza7Pr28FhufIO5AhgNywlFpeHhVthF2ROlZ23MTfqT9DC0/fPVHcfpQqKK1x
+         kzOILKZEZX9col5sG0JKUv9gD/6s4Cc3oCTkY2HUjkGPU6GRoci/acai9Itvr6Qp2/SU
+         kKWD+BuyBLR4hZ99kKwNJdiWIWD6UX7ascKxVB9hBP3OJH7zJg23t4lGgvJvfcmyLr6q
+         QU/xxC/WfSqs/ZrYSf+pAdMqu0PJ/iCbo21j6K9tQFnuf4+j/WZhIqaFOn2uSzUKXEVA
+         TSLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738355115; x=1738959915;
+        d=1e100.net; s=20230601; t=1738355118; x=1738959918;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=59JJI4CO0oacXanEEbv/QOEs28IMbairlUQePRWumA8=;
-        b=fcol4DOsOVKu1hrl0er37A2iAXkWJLhQw3X66iTHVg2sHeMx5DCf7ImmR9Qzhrzf0m
-         mkWYq6Ssfd/BmwG4MHMWbNHcaIhC/wHV+k2w6TxgXDxgUAdhvnfDsluyJiUVhCA13mkV
-         0YKQttn7gQHxXvvCdjA0EpJsCSi+FkanOkVwQko7qIOqgjEgc01bAFzBh0ZxkQl9YwUB
-         5MICsn+o1QW8e+QxFIQ71gZMnd7Z7eV0tIss7EEtm47v30WtqdAMEG+wttEDBZkpwpEZ
-         B+JVhfRX6bONqzChqkLG2U6TJjOCzWXg7Xm/UoNfccgT6+Xiu1GK763PAFoWdTzIBi1J
-         TrAg==
-X-Gm-Message-State: AOJu0YzGSdXw4K15UvpqIo4KVArlt/0pX8c+mBujgv6NCVPXwYCcmb2p
-	QZZmleCcoARfOX59/kkiD3+MRxpL2SgSl+u0e1bdekpNbOMXr3AJKnki9HU+3o4=
-X-Gm-Gg: ASbGncuswTVSpnDvqShwr8NShHd2DS+FdzEJCbAbnDvMWHd+u42Xw11uvtjY0RoJzL1
-	qxUkZXx5beb36jDVMoKuDN0AHXygNrd8M7kIBGJPPpu6bTjmX/ZgH2xLJK+iDy/rnxHXA/bV4k1
-	khaIoD+k+2vnB7XpYJ7TGN+TSB+aU1NHjDMtJIB+v/b4sxXSy/59440erfbGDD0pX3R3+oHvupq
-	Pdyjje7p0M18vD9zM5snH5twXvNLzVofo3n4UQ7Hmf4QcS7whpeO9vuH600b0odYxa/kNS/UMm8
-	gSpNhXP2FwToLtPc/YIaDPSaN3WU7abre6CD1Yc84MTq6ws=
-X-Google-Smtp-Source: AGHT+IFrVMAfd3Y3wOZ0h4O9q45j+fMg4Vw3AAmlNZ9ZgYIq1KVZZxWHseA00ADe6a66eu+rR/ZJMg==
-X-Received: by 2002:a05:6830:6805:b0:71d:eb02:baed with SMTP id 46e09a7af769-72656774376mr9460293a34.8.1738355115546;
-        Fri, 31 Jan 2025 12:25:15 -0800 (PST)
+        bh=FzzIwzQtyYUR99JIrJ6how8p6bj9KukV10X1RHN4Hv8=;
+        b=OVIoCWORNBkB/GuBN8hZencMXanFmQCqs5t25EsSeTkZCzywJpIMLYg9EezVA4X9PB
+         fis+LqENoZnC1Ir1bPpQavbNtgNnqJ2MxtX70fWvSY+hyyMnUmmBQxFyL8q7lArRTkhO
+         2HLbK7OBc87+uYQlSNwX3mJh/ztDJOoWqjfgOKjmjB6HU05Uy2GxLmZCBmUaZEwI3fKi
+         GQ6ecUzmmSWkL4Urix0u4iqphRRcAwAU4YkaAZGeSxjdpmBPxxez2ipKYLHMtCyQtQIT
+         xiAxLPRAwHW+nronXIX92HFIyVZgtvfulKyEzL3njCyEFcU0hODtbmtmk8YM6FxYXmOO
+         ig/g==
+X-Gm-Message-State: AOJu0YzRlm25btVMXRYOBJ6RxNdVOQB/QpJDNLl3cAYaqbA0k1k/m2ME
+	yH3uuRGc6RtMgxcPfH6q6yxdG1IkRhpuM0bMBsDX29kmyLbcP6cXfxH8FIjUCw0=
+X-Gm-Gg: ASbGncuYharR7Q1B96QV3rQI7f2QqsYOaUBfNmZBU5+ZS3u51o6jQKfZfoFC3+wtOQG
+	1W2r14pafV6ggZCpr2d5jegQlSYe8Ki7wneXNss0CBi1H02YurAy86UdH5hfsUOpZUI38uKe3D7
+	WU2W+CxkYoTMdtjQNf+rNYNXEOi1AuE4B8x68DQ0oFq+MgJpnzCWRtTEPQVtGbE2V1JDHEw5OXJ
+	KtPXMMLcK7W3v0lOWZa8X2hDIZBwNGTNEoqf31aoLmf0vaBmOcJ6M9nX560WlJVrozuCTZEa4U1
+	pM0Qx2hmdZjQ+7ADWEgwL2YCExnvmSFz+7qNFxLbiksuzvM=
+X-Google-Smtp-Source: AGHT+IERsKIHS0RESeT1aGghrd2e2VbJU3Jew/L2qRirwk6axnCtq0WNFwypLdr9E1c9DhZObl9GKw==
+X-Received: by 2002:a05:6870:32cf:b0:29e:255e:9551 with SMTP id 586e51a60fabf-2b32ef5a830mr8108456fac.2.1738355117684;
+        Fri, 31 Jan 2025 12:25:17 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b35623d2ffsm1403157fac.22.2025.01.31.12.25.12
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b35623d2ffsm1403157fac.22.2025.01.31.12.25.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2025 12:25:14 -0800 (PST)
+        Fri, 31 Jan 2025 12:25:17 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 31 Jan 2025 14:24:51 -0600
-Subject: [PATCH 11/13] net: mdio: mux-gpio: use
+Date: Fri, 31 Jan 2025 14:24:52 -0600
+Subject: [PATCH 12/13] phy: mapphone-mdm6600: use
  gpiods_set_array_value_cansleep
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250131-gpio-set-array-helper-v1-11-991c8ccb4d6e@baylibre.com>
+Message-Id: <20250131-gpio-set-array-helper-v1-12-991c8ccb4d6e@baylibre.com>
 References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
 In-Reply-To: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -110,25 +110,30 @@ X-Mailer: b4 0.14.2
 Reduce verbosity by using gpiods_set_array_value_cansleep() instead of
 gpiods_set_array_value_cansleep().
 
+ddata->cmd_gpios->ndescs is validated to be equal to
+PHY_MDM6600_NR_CMD_LINES during driver probe, so it will have the same
+value as the previously hard-coded argument.
+
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/net/mdio/mdio-mux-gpio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/phy/motorola/phy-mapphone-mdm6600.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/mdio/mdio-mux-gpio.c b/drivers/net/mdio/mdio-mux-gpio.c
-index ef77bd1abae984e5b1e51315de39cae33e0d063d..d7eaeadde2873977606bdcb5821dba18aa4a578f 100644
---- a/drivers/net/mdio/mdio-mux-gpio.c
-+++ b/drivers/net/mdio/mdio-mux-gpio.c
-@@ -30,8 +30,7 @@ static int mdio_mux_gpio_switch_fn(int current_child, int desired_child,
+diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+index 152344e4f7e44de0f8ab1cae6ae01a1f1c5408e9..8243bab6ac3af2ee1394ef743aaad12a19c8ae36 100644
+--- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
++++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+@@ -177,9 +177,7 @@ static void phy_mdm6600_cmd(struct phy_mdm6600 *ddata, int val)
  
- 	values[0] = desired_child;
+ 	values[0] = val;
  
--	gpiod_set_array_value_cansleep(s->gpios->ndescs, s->gpios->desc,
--				       s->gpios->info, values);
-+	gpiods_set_array_value_cansleep(s->gpios, values);
- 
- 	return 0;
+-	gpiod_set_array_value_cansleep(PHY_MDM6600_NR_CMD_LINES,
+-				       ddata->cmd_gpios->desc,
+-				       ddata->cmd_gpios->info, values);
++	gpiods_set_array_value_cansleep(ddata->cmd_gpios, values);
  }
+ 
+ /**
 
 -- 
 2.43.0
