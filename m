@@ -1,243 +1,139 @@
-Return-Path: <linux-gpio+bounces-15116-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15117-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2DA1A23749
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 23:36:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C537A23A17
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 08:27:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 381001671EB
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2025 22:36:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0ED4D188A57C
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 07:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B81691F0E59;
-	Thu, 30 Jan 2025 22:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A1F153BC1;
+	Fri, 31 Jan 2025 07:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MpJ7Mtev"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="V2LS5b0Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3CC1537C6
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 22:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ECA14F9F4
+	for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 07:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738276604; cv=none; b=rw9k/BraycModF9ngf1fjLf2ph6ntQrQ720V9idfTCoySJU4Uc9tJDUpqde9Gx6MLX98CHIpKTLt4AujvTJCuQsHxiiess+av5pOkOpW5U7VChnKyRy2Wdl+ruliuS81fGXXSTQHo+jiZDqxfPsgaPSpuj9RZb5y/RkL3/WqYNQ=
+	t=1738308368; cv=none; b=cXUxqUz68EtdrZLr65QzsZaHKJbYw7z9TO+oAi7F5an5VbV4iy88QnnodKiow2BKnUM/pTtOrbEzz8WdL2ifqPrfOWVdR+gW/e0N2A0QzFHAcW46znBMwkGBOmu5WjtLea9MUmkanVR6drZN4OASaxYmyCecmhYtP7QCLot9Qts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738276604; c=relaxed/simple;
-	bh=Mr9VPHEYwzikNGVu6aqPbtT+QJrjqagL80OvMDNpri8=;
+	s=arc-20240116; t=1738308368; c=relaxed/simple;
+	bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cnGFw+QimKNyZMR1grsfxCAxZiJs0FibOb0vDF/eV8iWOBLKPIB+5CYeTLtiW34xd+3OA2OaPghy/dfjbTKpM3YU5WaEUkEyEviCCeTTHkEjNw7288Fm9aClIeM2NRGJ3I+blB7lQQyKd0abswLhJ7gfC1PGsI6dQV5dv+QPiyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MpJ7Mtev; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso290790566b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 14:36:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738276601; x=1738881401; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qtkOqUEVN6b5UWeEcDH0ysGGZIkOzBjcOn25NELvg1U=;
-        b=MpJ7MtevdhtqAO+qqC4xaxZx+toOm/3x8bSeOge8TYAK/sqOiFIr4tDoSc/Tyh/ulr
-         NYR9SAAKa4KmuD1330HUUVNUbbm3jkZRwzPbjxqbEBs0RvvlVN9WHGaMvOK6YHn9jjgM
-         0hpfVr+9Ekb6FaEQQPe1BlQYM6NHitxm+ibnQ=
+	 To:Cc:Content-Type; b=l398C0BBwH6tTB38iobm6VuW6n+y8+6hhVE271SRCx5TFlYQ6uZ3jwAVnOjhzDYE1/OOrpC1SV0RRH+VgfPnM0xCTA5xghw+412VEHOe4AtTPUIkaj86pN4j4KT3lQ9LetSxkPo6pPl0ftSI78O7P5dOFz7P6aJLAASzQQ0u1dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=V2LS5b0Z; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 259C93F475
+	for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 07:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738308364;
+	bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=V2LS5b0ZOru10wBsoh0CMSfBXa6C1E6rPgJUbHUPTZOashpsMSs/gqEPmTxZpYHcV
+	 Dc+OT69juZEZ1lCVLTAyD1MkjcpyxGS+Rtwu5nxf/DnalQbI2LCccwXmNDTmIQRT8C
+	 NpPP9HA/HNCBcBoen1ImNMus9WdcFWO75olGBMrt1CiPSyKzWkfbgvr2MLQqCVoxe5
+	 +4PrKbcp/A3AArUKVoREI8jnnDBlPaxkganicilcAKkNUYl5jQaiBsrwuM5FWXhBXs
+	 WvxF2PnA0qK+1oP00BEiMSCCWvV+2sNZdhCgnXB0AO9lczw3GTwCzjYTngcw73muN8
+	 fIN//vQZrz/NA==
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5dbe8a4165eso1861569a12.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2025 23:26:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738276601; x=1738881401;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qtkOqUEVN6b5UWeEcDH0ysGGZIkOzBjcOn25NELvg1U=;
-        b=wg+CXVTU4nWLD0Jtmp5s4TCEO+K7IGMpnWQIsWZOfUKuTZD8et1dQyXhl5cV+6jtpR
-         d076VoF2XQJbGTdU7dVCmzwpxwAsRZv5mlaENfuJp/RsKAgYMroRMWPiwbC1e2yNhp1j
-         OV3Yjpp9y8AnVP28aRggOEO48F5M9K1cs6a72l8JqspgFJ0weImCFQ5I61+NyoGi3hjn
-         V0acC093sYIFBnB2/Dxxn6L/dDo2aAY3HIsd5Z4bgqXvycQhAwCOVicpvcPhHSbdq0cB
-         v2yraILBbPyOnOG1pf+G//6QeUTBMBmIrC7Tm5oHvZuRkF1U2al6re05zm4HNf5jnI3y
-         b2AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQkOvzF/nG3tHffzMdQkMareta5TqBbG13nHrOCSY0R3gMIQCjLTiL2ZVUSC5bfK/QDYcNolVovEoW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIwK/dj8XGN6DykGsWKEwqd+WTJ0d1liv3XwKiIaTRWguSjZ8v
-	xrbdn8To/kPiVldfakTKDRmxXo+Gk2lPOVxY0KL5VvXsw370QlYudGfoAa2y5SJ3olq/H5rwjp7
-	XU8GL8aEMXVgTJUuqrPoCszHCeb5ebtaBgT4E
-X-Gm-Gg: ASbGncvIzytXPOdtHpoS9vJ+Nk8lwUgkzFCYDIsL1U4MtIzqil3GofYs5MEdnCQcbWJ
-	esG8gTOLlvI5FZ3vSXac8hmfWZrTjUghKmloIjA+yHNnkN+gUf1ECmNxNDMWnwFKYehk+YS0VnQ
-	==
-X-Google-Smtp-Source: AGHT+IGK/MmCjXxDXhEiQezsh199a5i6aQtdYvIMWHlq14xrKhJrCA+QC1Lu+IJKOTemrrFhRE6a0l8goR0jWG4cB3A=
-X-Received: by 2002:a17:907:961a:b0:aac:2128:c89e with SMTP id
- a640c23a62f3a-ab6cfdbc4d3mr976502766b.43.1738276600726; Thu, 30 Jan 2025
- 14:36:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738308363; x=1738913163;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tr3ksmV2pNqejIWqja5XZ8mPSPBwaqrs3w/kzLOqLi8=;
+        b=AvipOrlqRRSuUxV7Ct3lzSSj5uVlvfwzLidpgPKURTipU9ozyGrzBV3gLIw8ziQ5Hr
+         4xCjWEQM8kG+Lk0gpbSDaLek+zR+aSzFYygseugdG+/IuSsmRLbyEI0kSgXW2v7dasjd
+         oDdxoVcjF2Xdc/V+uPFP/v3Uwmhrq7kcu9OPnUm9VImafbTV9bU1pTq0caw+Lipw+clk
+         X27/F5mdpN2xpQM2o3IL8G+Lntiat95WGwmvT5awzkfUO8FWzzakNz8TzIZLD49NhbnO
+         PZ6CeL3F6NoIe7xKdutI4clAk4CDD0FERF8qu6Yd+M2lyWkv8138lqj+PNYmus9n8vda
+         GVvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpRCQ2O3Jp5vw9BdMOdAI9AAMI+1fXIIzEUDKutSveO4ZbBIWvTLLHkSDGDp1k3DSTpaAnD5PgUGuy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE2yj+6WiOCqYQsVPGcw8vQyS6JWYcvWf/39nPT5evBrtVJZEB
+	YQVChueQbx027Q4uRefXqxbihxPvof3s+YnPgfLrb+i4I+AEc/G30mY/ZDSgspvs5FgeKg5IxXH
+	o3ggDjvJESavw8RCrGaYoR0Goun/f+toT1f2GTCjbDEp7ovK1DQLRguapc5gy4izmzyjWSexAYB
+	0s+0gdYAR7RYBMsKyXBhZuCapYPC9/xn18jDi9sgA+ci0n7HWCJg==
+X-Gm-Gg: ASbGnctj+alXoCIJfZAhnK/Jrf7pEJ8tERMMLzdt8OJ6r00uunQ07TFTPKjYEYfsx71
+	nKmfs8K1HUotH6IrQHVTQTIE0svuEzT5uBwgZ/fGCmZQOckML/tuqvtOtKtN7Xw==
+X-Received: by 2002:a05:6402:5215:b0:5d0:e9a8:4c96 with SMTP id 4fb4d7f45d1cf-5dc6f5d1319mr5750217a12.9.1738308362877;
+        Thu, 30 Jan 2025 23:26:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHo4YZqyV5ZOEg9+j+noeoGbHn2LUCzKjoiwvK9ssgYbSRCXOD0oMtLMDCHvPeCMnQfqRAl5WKzXsjCA7hTx6c=
+X-Received: by 2002:a05:6402:5215:b0:5d0:e9a8:4c96 with SMTP id
+ 4fb4d7f45d1cf-5dc6f5d1319mr5750191a12.9.1738308362546; Thu, 30 Jan 2025
+ 23:26:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com> <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
-In-Reply-To: <20250130-kona-gpio-fixes-v1-2-dd61e0c0a9e7@gmail.com>
-From: Markus Mayer <mmayer@broadcom.com>
-Date: Thu, 30 Jan 2025 14:36:28 -0800
-X-Gm-Features: AWEUYZkcCVICEMmJw__cXZ1_dqEqWHmRCncRycNgghzoMxajsFn3x9qLXBVF970
-Message-ID: <CAGt4E5sqd_Aojk+boD5K5EiRfOsiU+jYY5EV0DP6TFut291HnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: bcm-kona: Make sure GPIO bits are unlocked when
- requesting IRQ
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com> <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+From: =?UTF-8?Q?Maciej_Borz=C4=99cki?= <maciej.borzecki@canonical.com>
+Date: Fri, 31 Jan 2025 08:25:51 +0100
+X-Gm-Features: AWEUYZnqd6nFifeeXMsgHpAgXINp0XindBDZvZmEHwOqyGGNlqREVOFH2WdDmfE
+Message-ID: <CAFGk_a0U=jSQD85UKC1e=pSWr8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org, 
+	geert+renesas@glider.be, linus.walleij@linaro.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Jan 2025 at 09:10, Artur Weber <aweber.kernel@gmail.com> wrote:
+On Thu, 30 Jan 2025 at 21:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > While at it: there's no reason to impose a
+> > naming convention of lineX, lineY etc., the names don't matter for the
+> > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > the line they concern).
+> >
+>
+> Scratch that part. There's a good reason for that - the ordering of
+> lines within the aggregator. I'm just not sure whether we should
+> impose a strict naming where - for an aggregator of 3 lines total - we
+> expect there to exist groups named line0, line1 and line2 or if we
+> should be more lenient and possibly sort whatever names the user
+> provides alphabetically?
 
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index 77bd4ec93a231472d7bc40db9d5db12d20bb1611..eeaa921df6f072129dbdf1c73d6da2bd7c1fe716 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -69,6 +69,22 @@ struct bcm_kona_gpio {
->  struct bcm_kona_gpio_bank {
->         int id;
->         int irq;
-> +       /*
-> +        * Used to keep track of lock/unlock operations for each GPIO in the
-> +        * bank.
-> +        *
-> +        * All GPIOs are locked by default (see bcm_kona_gpio_reset), and the
-> +        * unlock count for all GPIOs is 0 by default. Each unlock increments
-> +        * the counter, and each lock decrements the counter.
-> +        *
-> +        * The lock function only locks the GPIO once its unlock counter is
-> +        * down to 0. This is necessary because the GPIO is unlocked in two
-> +        * places in this driver: once for requested GPIOs, and once for
-> +        * requested IRQs. Since it is possible for a GPIO to be requested
-> +        * as both a GPIO and an IRQ, we need to ensure that we don't lock it
-> +        * too early.
-> +        */
-> +       u8 gpio_unlock_count[GPIO_PER_BANK];
->         /* Used in the interrupt handler */
->         struct bcm_kona_gpio *kona_gpio;
->  };
-> @@ -87,14 +103,25 @@ static void bcm_kona_gpio_lock_gpio(struct bcm_kona_gpio *kona_gpio,
->         unsigned long flags;
->         int bank_id = GPIO_BANK(gpio);
->         int bit = GPIO_BIT(gpio);
-> +       struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
->
-> -       raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-> +       if (bank->gpio_unlock_count[bit] == 0) {
-> +               dev_err(kona_gpio->gpio_chip.parent,
-> +                       "Unbalanced locks for GPIO %u\n", gpio);
-> +               return;
-> +       }
->
-> -       val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
-> -       val |= BIT(bit);
-> -       bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
-> +       bank->gpio_unlock_count[bit] -= 1;
+If I may jump in quickly (I provided some initial feedback on the
+configfs interfaces
+for the first internal patches). I think it's preferable to have
+strict and explicit, even
+If more verbose, line ordering in the aggregator.The motivator for
+this is that whoever
+sets up a new device through the aggregator does not have to second guess w=
+hat
+the driver will do. Implicit ordering could perhaps be fine if the
+consumers were to
+impose some set of rules themselves, but I fear there would still be
+some ambiguity
+left if free form names were for e.g. [1, 02, 10]. In the end they
+would probably settle
+on some mechanism which would mimic what we could already do in the
+driver itself
+and avoid any further confusion for the user.
 
-Not a big deal or a show-stopper, but this could be
-          bank->gpio_unlock_count[bit]--;
-or, better yet,
-          --bank->gpio_unlock_count[bit];
-
-And a bit further down...
-
-> -       raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
-> +       if (bank->gpio_unlock_count[bit] == 0) {
-> +               raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-> +
-> +               val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
-> +               val |= BIT(bit);
-> +               bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
-> +
-> +               raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
-> +       }
->  }
->
->  static void bcm_kona_gpio_unlock_gpio(struct bcm_kona_gpio *kona_gpio,
-> @@ -104,14 +131,20 @@ static void bcm_kona_gpio_unlock_gpio(struct bcm_kona_gpio *kona_gpio,
->         unsigned long flags;
->         int bank_id = GPIO_BANK(gpio);
->         int bit = GPIO_BIT(gpio);
-> +       struct bcm_kona_gpio_bank *bank = &kona_gpio->banks[bank_id];
->
-> -       raw_spin_lock_irqsave(&kona_gpio->lock, flags);
-> +       if (bank->gpio_unlock_count[bit] == 0) {
-> +               raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->
-> -       val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
-> -       val &= ~BIT(bit);
-> -       bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
-> +               val = readl(kona_gpio->reg_base + GPIO_PWD_STATUS(bank_id));
-> +               val &= ~BIT(bit);
-> +               bcm_kona_gpio_write_lock_regs(kona_gpio->reg_base, bank_id, val);
->
-> -       raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
-> +
-> +               raw_spin_unlock_irqrestore(&kona_gpio->lock, flags);
-> +       }
-> +
-> +       bank->gpio_unlock_count[bit] += 1;
-
-...this could be
-          ++bank->gpio_unlock_count[bit];
-
->  }
->
->  static int bcm_kona_gpio_get_dir(struct gpio_chip *chip, unsigned gpio)
-> @@ -362,6 +395,7 @@ static void bcm_kona_gpio_irq_mask(struct irq_data *d)
->
->         kona_gpio = irq_data_get_irq_chip_data(d);
->         reg_base = kona_gpio->reg_base;
-> +
->         raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->
->         val = readl(reg_base + GPIO_INT_MASK(bank_id));
-> @@ -384,6 +418,7 @@ static void bcm_kona_gpio_irq_unmask(struct irq_data *d)
->
->         kona_gpio = irq_data_get_irq_chip_data(d);
->         reg_base = kona_gpio->reg_base;
-> +
->         raw_spin_lock_irqsave(&kona_gpio->lock, flags);
->
->         val = readl(reg_base + GPIO_INT_MSKCLR(bank_id));
-> @@ -479,15 +514,25 @@ static void bcm_kona_gpio_irq_handler(struct irq_desc *desc)
->  static int bcm_kona_gpio_irq_reqres(struct irq_data *d)
->  {
->         struct bcm_kona_gpio *kona_gpio = irq_data_get_irq_chip_data(d);
-> +       unsigned int gpio = d->hwirq;
->
-> -       return gpiochip_reqres_irq(&kona_gpio->gpio_chip, d->hwirq);
-> +       /*
-> +        * We need to unlock the GPIO before any other operations are performed
-> +        * on the relevant GPIO configuration registers
-> +        */
-> +       bcm_kona_gpio_unlock_gpio(kona_gpio, gpio);
-> +
-> +       return gpiochip_reqres_irq(&kona_gpio->gpio_chip, gpio);
->  }
->
->  static void bcm_kona_gpio_irq_relres(struct irq_data *d)
->  {
->         struct bcm_kona_gpio *kona_gpio = irq_data_get_irq_chip_data(d);
-> +       unsigned int gpio = d->hwirq;
-
-Since you added a comment to bcm_kona_gpio_irq_reqres(), would it make
-sense to add one here too? Just another nitpick and not a big deal
-either way.
-
-> +       bcm_kona_gpio_lock_gpio(kona_gpio, gpio);
->
-> -       gpiochip_relres_irq(&kona_gpio->gpio_chip, d->hwirq);
-> +       gpiochip_relres_irq(&kona_gpio->gpio_chip, gpio);
->  }
->
->  static struct irq_chip bcm_gpio_irq_chip = {
->
-> --
-> 2.48.1
->
-
-Since I am okay either way with regards to my three nitpicks:
-
-Reviewed-by: Markus Mayer <mmayer@broadcom.com>
+Cheers,
+Maciej
 
