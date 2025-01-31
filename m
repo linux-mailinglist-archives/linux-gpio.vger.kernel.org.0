@@ -1,336 +1,213 @@
-Return-Path: <linux-gpio+bounces-15135-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15136-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD147A241B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 18:15:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 630C7A241D6
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 18:23:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20120166F59
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 17:15:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63979188AB20
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2025 17:23:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB47A1F03E9;
-	Fri, 31 Jan 2025 17:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B4A91F12F6;
+	Fri, 31 Jan 2025 17:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="u6pNC8m/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B2B38DF9;
-	Fri, 31 Jan 2025 17:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D13B1C54A6
+	for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 17:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738343685; cv=none; b=tjhLQhvxG/LGeOu6EcatymIUCM7OyzsaeQ8odtW3N88+a35t7ALuYuX4bG7Hh24LsmEj8vng0mWUp0V+kNv3EvTHlMVsbgWRNNu6NS2mLK98d7Hz5e9raNSjka2CWevQpxSAfwu9ueoVqD+NOah+Q/mHSFS8VaO7ORyfbQXo9/k=
+	t=1738344186; cv=none; b=SclXvRjx7vQh16hK5RBKoXV4MdmBipgsfKWY3UIKldtTRJY5wOijzQb0a5WwCRXSPIRhRgdEF0zXvFRhHCX/jXh1zgLFWPZB2PkePHsPxempWO/cHC2/pD8WdwSi3Hgdxp3zTZLQ2WShE6A6NGYtyMfdb7vr52SFe6YiDKUqXLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738343685; c=relaxed/simple;
-	bh=DWrbM1OPPKJ/c+KMhjtfQA5MEWOMGGnbEw89xPCUknI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TRRyNsynaqbMA3HIaRTReICXdSPmlSczw2uexhmTlHsPWMAUeHPFnbinHB8YLVuTxBup3IWPRG5DNlzVdgDHjv8c/9eZx5A2YzPbTzs60YsJObUP/HULuyFhwA2u1VFIIYmGOrVuwS6gK2pFxEDVgh9UhthG3x+utUha3tzCOZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yl2YK2Z1rz6K61Y;
-	Sat,  1 Feb 2025 01:13:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7637E140A86;
-	Sat,  1 Feb 2025 01:14:39 +0800 (CST)
-Received: from localhost (10.195.244.178) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 Jan
- 2025 18:14:38 +0100
-Date: Fri, 31 Jan 2025 17:14:36 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-CC: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones
-	<lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron
-	<jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij
-	<linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David Lechner
-	<dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>, "Trevor
- Gamblin" <tgamblin@baylibre.com>, Matteo Martelli
-	<matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/5] mfd: Add ROHM BD79124 ADC/GPO
-Message-ID: <20250131171436.00002583@huawei.com>
-In-Reply-To: <cc30cf6859b5e5a7320282709f428cd42717ac6b.1738328714.git.mazziesaccount@gmail.com>
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
-	<cc30cf6859b5e5a7320282709f428cd42717ac6b.1738328714.git.mazziesaccount@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738344186; c=relaxed/simple;
+	bh=kme+XPg+cuiUjsUHBIxrAcU2Va9lng0EAL+26Hj0OsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T/hdG+ak2lQasLMkw1jJBECiYyFQ8rMtTO5qwMaltSPJWmpn39IyTDW7FoBQ5kknmvrcH+seIeIr+JsDa6B/1o8Avp3u8l9QYA9dKS/ybHxIvlNvCaCn6Rj5vPq8nbA7iBj7NTECbU0mEYHupAlMjwwitYu6jHY8EsIAnSrJvOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=u6pNC8m/; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3061f1e534bso22613031fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2025 09:23:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738344182; x=1738948982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HjFe7vrxU6YEM1DATv1IgiJrIlKHUq54rhWlLDCXyk8=;
+        b=u6pNC8m/M6hWuaNsAw6iUhP4uEFln1Cj09OdSpfwnM0Qg49/9o0GvdBMSNB1lK/TZG
+         PxHSAHxFemTr0zi8bMYjreqJluHWu9x35riBOIq5mmusRS7PRCxOKhlz3SeQzBYFdKal
+         W2dqwFTFDLtHy2S9gUESrRbEHA1mAUYIcjrmE2M7NM36PQn86WwLXCedBkH7rSkBGiSH
+         +KczK7lKL2etHlK+72fIIb9DUPyzegh/CHscMd+uT7+jGRdn/Syj7QJcYRLbMKFzIlQG
+         hVe6s/WFJqkNYatZcRHzg1qs5ytgGnSaLdjW0KQKpCoaMKsmg5fs7dnG1uRm7tX/lXRz
+         GImQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738344182; x=1738948982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HjFe7vrxU6YEM1DATv1IgiJrIlKHUq54rhWlLDCXyk8=;
+        b=oGaOHpsz3ZNOetJRa7cYPnR+KEIDEC0pLm8IbKXw+gypyjmncA/54xS1fq6qjPUs22
+         FlRJlDRpIJzCln60h5+33W2sOdyVQ161aKJKFHwftZzjQNFci2jFap3aj8H27H9zyCwo
+         HVj86Olnx0bcdgkFCd/UmLxsHsT0yG2eKxuQzZpCYGhKA/HafNP1gJtdw1uFCx/zewwO
+         Sr+01FIFWjZ41Ix3weNmKLwgBj/feWv2peeuIGkDGrNo9VgjtQSHzK8+tdBYm2kaw0TI
+         HYKUvYAnAX5ZwDTp08QqKKcmTTMFu/ZyprrqLEHZ7AA9ZBxqGcHA+NdrFWhR+KfFix/K
+         qPnA==
+X-Gm-Message-State: AOJu0YwXamUwdlSHM7S8W6Nop1Gs4z61lsCm2sbKNH6a91qfXkyICQtv
+	b1b3keRnHMT0IsaM/tnX/Rn7BNKhOQePrkpt1AH5QG33I7WEx1Yy01Z1FDNh4SCDSVRpwb1FV+/
+	bw8lKXqpcHD1CNnzeVa8iOFmImK9dtYRYNoZV5Q==
+X-Gm-Gg: ASbGncvd//qTCH9MmsbgNZoxcSfwb+U+ukdyGeQJllsKdq9p4plkvdwQaX0jlh4m+/t
+	ZQ6PGsSuZVnxyjmpfILPB6m7CmUzzRjZKcLRfSMH6VMoZZ49+X7O0mw8qQ4aPg3oZojw7bUw=
+X-Google-Smtp-Source: AGHT+IHxXoKtKpfWmHiyCkmDOMffgXB2luyZa9jFQPi8dZzp+nNVT/3VlAaiMixKow+4twrU3G/pSVUWwpEVrrMSCWA=
+X-Received: by 2002:a05:651c:b06:b0:300:3a15:8f22 with SMTP id
+ 38308e7fff4ca-30796872c96mr45396891fa.21.1738344182267; Fri, 31 Jan 2025
+ 09:23:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+ <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com> <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+In-Reply-To: <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 31 Jan 2025 18:22:50 +0100
+X-Gm-Features: AWEUYZljrTXtp6VdTg8U8MI4zsCzrgDx5TFvSWaWs-N0kRXVKgUx5Ql-znHgiZc
+Message-ID: <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 31 Jan 2025 15:37:06 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-
-> Add core driver for the ROHM BD79124 ADC / GPO.
-> 
-> The core driver launches the sub-drivers for the pinmux/GPO and for the
-> IIO ADC. It also provides the regmap, and forwards the IRQ resource to
-> the ADC.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-As per response in cover letter. This is a common device combination and so
-far I don't think we ever bothered with an MFD. Lots of ADCs provide
-GPIO chips as well so I'd just squash it into the ADC driver.
-
-> ---
->  drivers/mfd/Kconfig              |  12 +++
->  drivers/mfd/Makefile             |   1 +
->  drivers/mfd/rohm-bd79124.c       | 165 +++++++++++++++++++++++++++++++
->  include/linux/mfd/rohm-bd79124.h |  32 ++++++
->  4 files changed, 210 insertions(+)
->  create mode 100644 drivers/mfd/rohm-bd79124.c
->  create mode 100644 include/linux/mfd/rohm-bd79124.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index ae23b317a64e..f024256fb180 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2113,6 +2113,18 @@ config MFD_ROHM_BD71828
->  	  also a single-cell linear charger, a Coulomb counter, a real-time
->  	  clock (RTC), GPIOs and a 32.768 kHz clock gate.
->  
-> +config MFD_ROHM_BD79124
-> +	tristate "Rohm BD79124 core driver"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  Say yes here to build support for the ROHM BD79124 ADC core. The
-> +	  ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
-> +	  also an automatic measurement mode, with an alarm interrupt for
-> +	  out-of-window measurements. The window is configurable for each
-> +	  channel. The ADC inputs can optionally be used as general purpose
-> +	  outputs.
-> +
->  config MFD_ROHM_BD957XMUF
->  	tristate "ROHM BD9576MUF and BD9573MUF Power Management ICs"
->  	depends on I2C=y
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index e057d6d6faef..c7d64e933a7d 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -270,6 +270,7 @@ obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
->  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
->  obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
->  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
-> +obj-$(CONFIG_MFD_ROHM_BD79124)	+= rohm-bd79124.o
->  obj-$(CONFIG_MFD_ROHM_BD957XMUF)	+= rohm-bd9576.o
->  obj-$(CONFIG_MFD_ROHM_BD96801)	+= rohm-bd96801.o
->  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
-> diff --git a/drivers/mfd/rohm-bd79124.c b/drivers/mfd/rohm-bd79124.c
-> new file mode 100644
-> index 000000000000..c35ab0e03b0b
-> --- /dev/null
-> +++ b/drivers/mfd/rohm-bd79124.c
-> @@ -0,0 +1,165 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// Copyright (C) 2025 ROHM Semiconductors
-> +//
-> +// ROHM BD79124 ADC / GPO driver
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-
-mod_devicetable.h
-
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/rohm-bd79124.h>
-> +
-> +static struct resource adc_alert;
-
-What if we have two of these?
-
-> +
-> +enum {
-> +	CELL_PINMUX,
-> +	CELL_ADC,
-> +};
-> +
-> +static struct mfd_cell bd79124_cells[] = {
-> +	[CELL_PINMUX]	= { .name = "bd79124-pinmux", },
-> +	[CELL_ADC]	= { .name = "bd79124-adc", },
-> +};
-> +
-> +/* Read-only regs */
-> +static const struct regmap_range bd79124_ro_ranges[] = {
-> +	{
-> +		.range_min = BD79124_REG_EVENT_FLAG,
-> +		.range_max = BD79124_REG_EVENT_FLAG,
-> +	}, {
-> +		.range_min = BD79124_REG_RECENT_CH0_LSB,
-> +		.range_max = BD79124_REG_RECENT_CH7_MSB,
-> +	},
-> +};
-> +
-> +static const struct regmap_access_table bd79124_ro_regs = {
-> +	.no_ranges	= &bd79124_ro_ranges[0],
-> +	.n_no_ranges	= ARRAY_SIZE(bd79124_ro_ranges),
-> +};
-> +
-> +static const struct regmap_range bd79124_volatile_ranges[] = {
-> +	{
-> +		.range_min = BD79124_REG_RECENT_CH0_LSB,
-> +		.range_max = BD79124_REG_RECENT_CH7_MSB,
-> +	}, {
-> +		.range_min = BD79124_REG_EVENT_FLAG,
-> +		.range_max = BD79124_REG_EVENT_FLAG,
-> +	}, {
-> +		.range_min = BD79124_REG_EVENT_FLAG_HI,
-> +		.range_max = BD79124_REG_EVENT_FLAG_HI,
-> +	}, {
-> +		.range_min = BD79124_REG_EVENT_FLAG_LO,
-> +		.range_max = BD79124_REG_EVENT_FLAG_LO,
-> +	}, {
-> +		.range_min = BD79124_REG_SYSTEM_STATUS,
-> +		.range_max = BD79124_REG_SYSTEM_STATUS,
-> +	},
-> +};
-> +
-> +static const struct regmap_access_table bd79124_volatile_regs = {
-> +	.yes_ranges	= &bd79124_volatile_ranges[0],
-> +	.n_yes_ranges	= ARRAY_SIZE(bd79124_volatile_ranges),
-> +};
-> +
-> +static const struct regmap_range bd79124_precious_ranges[] = {
-> +	{
-> +		.range_min = BD79124_REG_EVENT_FLAG_HI,
-> +		.range_max = BD79124_REG_EVENT_FLAG_HI,
-> +	}, {
-> +		.range_min = BD79124_REG_EVENT_FLAG_LO,
-> +		.range_max = BD79124_REG_EVENT_FLAG_LO,
-> +	},
-> +};
-> +
-> +static const struct regmap_access_table bd79124_precious_regs = {
-> +	.yes_ranges	= &bd79124_precious_ranges[0],
-> +	.n_yes_ranges	= ARRAY_SIZE(bd79124_precious_ranges),
-> +};
-> +
-> +static const struct regmap_config bd79124_regmap = {
-> +	.reg_bits		= 16,
-> +	.val_bits		= 8,
-> +	.read_flag_mask		= BD79124_I2C_MULTI_READ,
-> +	.write_flag_mask	= BD79124_I2C_MULTI_WRITE,
-> +	.max_register		= BD79124_REG_MAX,
-> +	.cache_type		= REGCACHE_MAPLE,
-> +	.volatile_table		= &bd79124_volatile_regs,
-> +	.wr_table		= &bd79124_ro_regs,
-> +	.precious_table		= &bd79124_precious_regs,
-> +};
-> +
-> +static int bd79124_probe(struct i2c_client *i2c)
-> +{
-> +	int ret;
-> +	struct regmap *map;
-> +	struct device *dev = &i2c->dev;
-> +	int *adc_vref;
-
-Wrap that in a structure.  It's just a bit too odd to have just
-one integer!
-
-> +
-> +	adc_vref = devm_kzalloc(dev, sizeof(*adc_vref), GFP_KERNEL);
-> +	if (!adc_vref)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Better to enable regulators here so we don't need to worry about the
-> +	 * order of sub-device instantiation. We also need to deliver the
-> +	 * reference voltage value to the ADC driver. This is done via
-> +	 * the MFD driver's drvdata.
-> +	 */
-> +	*adc_vref = devm_regulator_get_enable_read_voltage(dev, "vdd");
-> +	if (*adc_vref < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get the Vdd\n");
-> +
-> +	dev_set_drvdata(dev, adc_vref);
-> +
-> +	ret = devm_regulator_get_enable(dev, "iovdd");
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to enable I/O voltage\n");
-> +
-> +	map = devm_regmap_init_i2c(i2c, &bd79124_regmap);
-> +	if (IS_ERR(map))
-> +		return dev_err_probe(dev, PTR_ERR(map),
-> +				     "Failed to initialize Regmap\n");
-> +
-> +	if (i2c->irq) {
-> +		adc_alert = DEFINE_RES_IRQ_NAMED(i2c->irq, "thresh-alert");
-> +		bd79124_cells[CELL_ADC].resources = &adc_alert;
-> +		bd79124_cells[CELL_ADC].num_resources = 1;
-> +	}
-> +
-> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, bd79124_cells,
-> +				   ARRAY_SIZE(bd79124_cells), NULL, 0, NULL);
-> +	if (ret)
-> +		dev_err_probe(dev, ret, "Failed to create subdevices\n");
-return dev_err_probe();
-
-Then return 0 in other path.
-
-> +
-> +	return ret;
-> +}
+On Fri, Jan 31, 2025 at 3:36=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
 >
-> diff --git a/include/linux/mfd/rohm-bd79124.h b/include/linux/mfd/rohm-bd79124.h
-> new file mode 100644
-> index 000000000000..505faeb6f135
-> --- /dev/null
-> +++ b/include/linux/mfd/rohm-bd79124.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright 2021 ROHM Semiconductors.
+> On Thu, Jan 30, 2025 at 09:47:47PM GMT, Bartosz Golaszewski wrote:
+> > On Thu, Jan 30, 2025 at 7:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> > >
+>
+> (Small reply to the previous comment:)
+> Yes, I understand your point about why you think 'num_lines' is
+> unnecessary. What I meant was more of a UX (User eXperience) consideratio=
+n.
+>
 
-No update on that date?
+If anything this sounds like worse user experience - having to provide
+duplicate information.
 
-> + *
-> + * Author: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> + */
-> +
-> +#ifndef _MFD_BD79124_H
-> +#define _MFD_BD79124_H
-> +
-> +#define BD79124_I2C_MULTI_READ		0x30
-> +#define BD79124_I2C_MULTI_WRITE		0x28
-> +#define BD79124_REG_MAX			0xaf
-> +
-> +#define BD79124_REG_SYSTEM_STATUS	0x0
+> > > While at it: there's no reason to impose a
+> > > naming convention of lineX, lineY etc., the names don't matter for th=
+e
+> > > aggregator setup (unlike gpio-sim where they indicate the offset of
+> > > the line they concern).
+> > >
+> >
+> > Scratch that part. There's a good reason for that - the ordering of
+> > lines within the aggregator. [...]
+>
+> You're right, that's exactly the intention of the strict naming, 'line0',
+> 'line1', ..., 'line<Y>'.
+>
+> > [...] I'm just not sure whether we should
+> > impose a strict naming where - for an aggregator of 3 lines total - we
+> > expect there to exist groups named line0, line1 and line2 or if we
+> > should be more lenient and possibly sort whatever names the user
+> > provides alphabetically?
+>
+> As Maciej pointed out:
+>
+>   (https://lore.kernel.org/all/CAFGk_a0U=3DjSQD85UKC1e=3DpSWr8W9y_MMAFyPV=
+FOcE-fUZry7-Q@mail.gmail.com/#t)
+>   > [...] if free form names were for e.g. [1, 02, 10].
+>
+> we would need a well-defined rule to avoid ambiguity, which could
+> potentially unnecessarily impose burden on users to understand how to
+> properly use the interface.
+>
+>
+> Regardless, the point is that we need to make it clear to users which GPI=
+O
+> line a specific line<Y> of an aggregator forwards operations to. Since
+> requiring users to explicitly set the offset within the aggregator for ea=
+ch
+> virtual line (e.g. besides 'key'/'offset'/'name' attributes, by adding
+> 'idx' attribute, which users would need to set explicitly) would be
+> cumbersome, this RFC implementation instead just makes use of directory
+> naming. I believe we agree on this approach (i.e., using directory naming
+> to establish ordering). Correct me if I'm wrong.
+>
+> So, to move forward, let me outline the possible approaches we can take:
+>
+> Option (a). Drop 'num_lines' attribute and:
+>
+>   (a-1). Impose strict naming rule for line directories
+>
+>          Users can only create directories with a predefined naming
+>          convention. This could be 'line0', 'line1', ... 'line<Y>' (as in
+>          the RFC implementation), or simply '0', '1', ..., '<Y>'.
+>
+>   (a-2). Allow arbitrary naming for line directories
+>
+>          This would require a well-defined rule to avoid ambiguity. As
+>          Maciej pointed out:
+>
+>          (from https://lore.kernel.org/all/CAFGk_a0U=3DjSQD85UKC1e=3DpSWr=
+8W9y_MMAFyPVFOcE-fUZry7-Q@mail.gmail.com/#t)
+>          > if free form names were for e.g. [1, 02, 10]
+>
+>          Users would need to understand these rules, which might impose
+>          unnecessary burden on users.
+>
+> Option (b). Keep 'num_lines' attribute but:
+>
+>     (b-1). Prohibit manual creation of line directories
+>
+>            Users would no longer run 'mkdir line0', etc. Instead, writing
+>            <Y+1> (Y >=3D 0) to 'num_lines' would automatically set up the
+>            required directories.  convention. This could be 'line0',
+>            'line1', ... 'line<Y>' (as in this RFC implementation), or
+>            simply '0', '1', ..., '<Y>'.
+>
+>     (b-2). Keep manual 'mkdir' for each line, in the same manner as (a-1)
+>            (as in the RFC implementation) or (a-2). Seems that no-one is
+>            favor of this option.
+>
+>
+>     Note: (b-1) is a new idea. Considering what really needs to be
+>     configured by users, this could be the least burdensome and simplest,
+>     especially when configuring many lines. I'm including it here for
+>     broader discussion.
+>
+> Personally, now I'm inclined towards (a-1) with the simplest naming schem=
+e:
+> non-zero-padded integers ('./0', './1', './2', ..., './<Y>'). Or even (b-=
+1).
+>
 
-Give it two digits. 0x00 for ever so slight readability advantage.
+I too think a-1 is the best option. However, I'd go for line0, line1
+etc. convention as for computers it doesn't make any difference while
+for humans it's more readable.
 
-> +#define BD79124_REG_GEN_CFG		0x01
-> +#define BD79124_REG_OPMODE_CFG		0x04
-> +#define BD79124_REG_PINCFG		0x05
-> +#define BD79124_REG_GPO_VAL		0x06
-> +#define BD79124_REG_SEQUENCE_CFG	0x10
-> +#define BD79124_REG_MANUAL_CHANNELS	0x11
-> +#define BD79124_REG_AUTO_CHANNELS	0x12
-> +#define BD79124_REG_ALERT_CH_SEL	0x14
-> +#define BD79124_REG_EVENT_FLAG		0x18
-> +#define BD79124_REG_EVENT_FLAG_HI	0x1a
-> +#define BD79124_REG_EVENT_FLAG_LO	0x1c
-> +#define BD79124_REG_HYSTERESIS_CH0	0x20
-> +#define BD79124_REG_EVENTCOUNT_CH0	0x22
-> +#define BD79124_REG_RECENT_CH0_LSB	0xa0
-> +#define BD79124_REG_RECENT_CH7_MSB	0xaf
-> +
-> +#endif
+Bartosz
 
+> Let me know your thoughts.
+>
+> Thanks.
+>
+> -Koichiro
+>
+> >
+> > Bart
 
