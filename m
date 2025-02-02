@@ -1,130 +1,172 @@
-Return-Path: <linux-gpio+bounces-15179-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15180-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ED54A24E09
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 13:46:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2147BA24F5D
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 18:54:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFD363A4930
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 12:46:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64D0E1640B7
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 17:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F531D6DB6;
-	Sun,  2 Feb 2025 12:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8308A1FBEB2;
+	Sun,  2 Feb 2025 17:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ottse+9B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EL0EzNW3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D741156885
-	for <linux-gpio@vger.kernel.org>; Sun,  2 Feb 2025 12:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB10E1FBCB6;
+	Sun,  2 Feb 2025 17:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738500374; cv=none; b=MB7ElxQowntc/1rfc7F9mvktDCFdZg5VEgvUbP+H3nBX2t970J/yoR1RrRiNQUxjAn+uzIr0Fg6m3k+khz0txJR9G9PhJ1Vxfb0Dkh1FYymvBcJRyCcM1gbd3RTuZOQy8tGSA34aFoxMZxyE5HhejVEZhN8zALB3HRg9DjbRIXo=
+	t=1738518839; cv=none; b=ub+LKxdT6Nd/MharsksR5NA1OGvoK75GP6nzkMfqW983mmRZ2L0AewqU6R2H5AAyc1HrDPptuLXxDVsn5N9R9skGp4ykcUs25BXo2IWnOh7ibFC+xZonXxSDqirdj4xL11qldi2HCVlSO+ybIypRv3f3/So90KvAJ2DQ1rvdB6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738500374; c=relaxed/simple;
-	bh=ZDO6wpNMU9RRwY7zeqHJeB3paV+3Hs4MB2W1s2LofnE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rQPFkfewmMJes62WPUrjYzrQ+7O4y+RbXsaNa6Ba0QEbJvW+BFEo3dlF7uvMQzuJVo92Pi7Vi0syKiX4G5pH70EUY/oFZyve7e9qKP/06K0gxsJjiuZ6VJ8TG45LiiF5/Qun5ykP0aGV4purRHt3QmCE3dG9JR9njQGVOjJc3kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ottse+9B; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a6bso36182661fa.1
-        for <linux-gpio@vger.kernel.org>; Sun, 02 Feb 2025 04:46:11 -0800 (PST)
+	s=arc-20240116; t=1738518839; c=relaxed/simple;
+	bh=wJ1UIWu8ialmyd9DgBW/S9FAV5r3Qu1m/hwmDc7n5FU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbpdXPcWvjXpg4RCUFAdM6KwJmdJsdIAeOQ5A/ke+kaH5UetinyXcGz9lz2JsxvnYgOtsdxYGrV2bDnDyl1stgs46J2s6sU/LFH646AReX6hx3YlKUmDgyq98VILRSIp1GBjx/n4+dzOx6rSMQla+5Qqxaij+GCYzr3jfL+4V7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EL0EzNW3; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6f6cb364c7fso17285577b3.3;
+        Sun, 02 Feb 2025 09:53:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738500370; x=1739105170; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZDO6wpNMU9RRwY7zeqHJeB3paV+3Hs4MB2W1s2LofnE=;
-        b=ottse+9Bx17hwaUJhJ7RPsNi+CzYOTv2vvsjt9gs2mFdiHqce/1iYmRx2tIV9qANMK
-         FTRUpsvt+LvmP/hVsQzKlvd5v6uhPFHC9YloVLRgBq3vD1uvHODJndYWE8uNPC4uyZi9
-         62IkBp7wEoefQeL8y9hiAWz991et+P/0crvHfYYbVuc5Hd5kisWt+XKc+dxQeU4NDX+t
-         ZMZUAc5qmb93nogyUdA93JdSUSHILCDxwZyPK+hb5brD/VlYGDEJVmF+4NUDsUdDbnYL
-         4deEqnUqhtrc8eAmeSNnOMCYuqyxn2QfpHxHl48rUf8taW0Vc3IJIIE73Bxo74gEVtGT
-         QZkA==
+        d=gmail.com; s=20230601; t=1738518835; x=1739123635; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bu/o5ZKE+DmrVvfqpvDfKwO+d8/POCqsIdA64ajmPWE=;
+        b=EL0EzNW3p/UPCWPz5ixqlfJGRdBUqpe0WKZhc7nXfdCL8/VqiPW6x9P4SiH1/QOZd0
+         FjJUaHs/RXXdgqfUZ2+Dj0MoNBpGRPht3vC6qkq/vDm+m9Rt8joSyh7lbIDn1ri0e6Zy
+         SZLnZ7yQIz06zgKYYfIfRSaIF9XeCqUgXal7tdaW9T/iD4UQSKDuBVftGrGToRg5YFwf
+         YsXoYFt8d+c6adfG9fmn8Le0OX2t1eiJIDoC8gpMT+6tsiyM0eNoURWxoe2XvN+NH+Yo
+         UQKS6W2PAWb2FSjrcWrNkP9wWJmQKLglJMoaIuAFKA+V3pqOIPvTtc25GlrtT4iWlZrr
+         W5kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738500370; x=1739105170;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDO6wpNMU9RRwY7zeqHJeB3paV+3Hs4MB2W1s2LofnE=;
-        b=iifpBX8S7oERy/sZQNSsnZJKlJA6BOOyjljKiEToaSlZOdb+Yda+E7ptwAxD7FXmY/
-         WkFuQi5FXHh9DRxYW76m5/E0duZJWru5MSZyvWFv+TgGdiG7xjhTlprvwIuh7Wgd2Zw+
-         SZOLzTCLQ2nTwhe1+gz1wqnVmYl2JrEhVjmFSK12iEu8mgol6bys6gJRpU55HF3opsln
-         LjwFHuDnUXgA5cvbXHjZhiiHV7ZY41WSGdVKWXjrgUL84SX1zcuEX/d55Q5g/8CY8alR
-         VNoCNokE19VZm9unzSFM9wTrcGZjhC/+RI2rxN3PjXXNI5ORqCiHyBaQgufyh9qXXv9u
-         CdqQ==
-X-Gm-Message-State: AOJu0Yyf1/umsol51U77VLVs5biMu+9E2gzMBSJpYYqgQLCiIY2xcgrd
-	04JTCt/1NEj/0nSGPNAANlUo2agxmasRTLe5r2NmX1H/cK1cLnUYAMDSgtXOkcMtHCaYX6FONB4
-	SBVrTBEmU1Ur73qa+llaOIMJ1o3n18y89mvpU7g==
-X-Gm-Gg: ASbGncsADJpWBwnQyB0rMotBfRT+COF0x/QH9xjjDCUzuzv21NOtTODO+6uT4jsuDHM
-	+8F6m77MOzpn2VRjUzWwLsrImTz0ctZCD7RSKfYyCskZJEA7+qX2MN3f2GxHmhq+8Q7wZXsNOtg
-	==
-X-Google-Smtp-Source: AGHT+IHzHCOGlfdvddNebCngYM4/eIvseodmKtWlMoLVacB5hl4Rk40dGokwMeXnSG5bsaJPPrlEKXIIo52LrshbG/4=
-X-Received: by 2002:a05:651c:1541:b0:2ff:e5fa:1ae7 with SMTP id
- 38308e7fff4ca-307968f646dmr68317201fa.21.1738500369963; Sun, 02 Feb 2025
- 04:46:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738518835; x=1739123635;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bu/o5ZKE+DmrVvfqpvDfKwO+d8/POCqsIdA64ajmPWE=;
+        b=lFX9CW2Ej/CQ4fh6590qXQwVyC/60LbbjqztW2x0M/K1BcfCVcvAHVgp1jl2FMrt/Q
+         ogSWmE49G//JHtcblA4JZQVyBBlz/tuZw7Q34ZFwQc52dTTJ+a/8e2/We+NlVg/oatPU
+         ewXjt5h+mpme4wRnWSop0viOGmJMvnFugwQzb0HHXchrwJqQ9rqKrTEY3k+i7Oy2qDiU
+         4KBhEIQG+xrweB6ySe6c70cwJO/vZVcgHOzvzHFH2ZRLVayQlqZJAvXjmX6uZVDcMcoY
+         Tc/0kVohcBY8LjnND1vBoPov3Yl53Nh1jA85mwKXeZ2oSS1UFBQ8xdPLuvLLdmYJl3zO
+         kLlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAaajvYpz8GSj4uwIKIZ6e1iQmkQ4DNRARryjdFX2EF3QRBCoafBEi19HLPBsgZcIGWT2fCR/JEAZaNhYZ/SOoUzg=@vger.kernel.org, AJvYcCUyMLvJz0jFM+cf8vwi/Ol41pBzglnBX8qNf47Jxk3lq6xeFZsudL1z0kjiRZXMFEexC94plh4kX8UZtKOd@vger.kernel.org, AJvYcCUzR0qxnDRAKnfWoDtN3pgFAwaU2XDkKtOdkptEfnOK3Zxfjmg7q8Fk1bLDzpYJRBMRVrNM42XFwBtWaOg=@vger.kernel.org, AJvYcCWQA94JmZ+mXRYpsIgQUearpO9l6cc6scycTAVbiEEPTLjHaar4CO/GMPE2c0LDN0ehWF5Mqe5BBxNK@vger.kernel.org, AJvYcCWqO6+XOXU6i8QtuXaDUDaMEV4eG6QWJT5fIo6YnikOQw0l+hKh91OnZh0v9I/PeSk9EOzYYe45kVNepTAB@vger.kernel.org, AJvYcCX5/ErFzWLIR6q1Cab99QaEUsZ1gqJxQTJjIL/IzcgVE4zKIQq0tVyMaCGsZfTcUcFm9zOA4VXu9sTDzQ==@vger.kernel.org, AJvYcCXRJyy4eB36v/hQq2Jtg1D3kKuZ0NApl+flXdz52yJUYx1J12gZo+nmln1luDa4KrgLviVeAlssVy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzslZo50tx0HH7PMmBGlgNIgZUjRYuVbFvxRDcnrM0qDjfoIO9t
+	1nPsIS/WBc7/325FpDUdMFw2NqrAhkE6YfOZFPRpnrqUdKJXgEeq
+X-Gm-Gg: ASbGncszc/3FFpH4moRgk6T4zetiveR/EFL2cMbbjKDRjQ92BcpFy8KKKSX5BkbStDL
+	WCd3dz5r0jT9VIZM9kedqZFLY70sORczXebsKTxs4e+VqTY4B7Xpps+EJChlQg/VogIafUrI5N7
+	Fm/jmFsPPXSiuFfQ/UjNvOcNIwYVfWvbQY3J+XBHILjxwC93wIPbCh1YnpJZenG1i9eGlHBAsxF
+	sWKzSNKWf/LTQTsHDMWbIH4xR86BE7Swvqwp7hAky8nFk9S5Ypcvm+JkXFLyjy+0swxyFE84aKX
+	/3JOczHz7VpQRXZE3mTN8ZaaZFV7sO6QGUuf/cqZEcZeoIqQqVI=
+X-Google-Smtp-Source: AGHT+IHHQI3478HvRiKWIVLIdATv32EFyyXdDb7s9xEv/S/0xqBbGzFcSVKK2nIkOtoAuYeOo+6nPg==
+X-Received: by 2002:a05:690c:6e09:b0:6f5:4304:fdc with SMTP id 00721157ae682-6f7a832a301mr158970467b3.6.1738518835574;
+        Sun, 02 Feb 2025 09:53:55 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f8c465b884sm17908247b3.59.2025.02.02.09.53.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 09:53:55 -0800 (PST)
+Date: Sun, 2 Feb 2025 12:53:53 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+	qat-linux@intel.com, linux-gpio@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+Message-ID: <Z5-xMUqrDuaE8Eo_@thinkpad>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+ <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+ <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 2 Feb 2025 13:45:58 +0100
-X-Gm-Features: AWEUYZllzY8CadonvGSLZs9pELHzgN38hLXrItcFXTGtm7vUU-qic-0bj1FC_vs
-Message-ID: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
-Subject: Replacing global GPIO numbers in sysfs with hardware offsets
-To: Linus Walleij <linus.walleij@linaro.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
-	Kent Gibson <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
-	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
 
-Hi!
+On Sun, Feb 02, 2025 at 05:26:04PM +0900, Vincent Mailhol wrote:
+> On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
+> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> > constants.  However, it is very common to prepare or extract bitfield
+> > elements where the bitfield mask is not a compile-time constant.
+> 
+> Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
+> compile time constants?
 
-I'll allow myself to start a thread about it before anyone invests a
-significant amount of work into it. Yesterday (01.02.2025) during the
-"embedded dinner" after the FOSDEM 2025 embedded devroom concluded, we
-discussed the motivation behind my wish to remove /sys/class/gpio and
-the reasons why many users prefer it over libgpiod or even a
-user-space compatibility layer I presented during my talk earlier that
-day[1].
+I guess, for historical reasons?
 
-The gist of it is: some people need to play with GPIOs very early, for
-example in an initramfs that is very limited in size and doesn't
-contain anything other than busybox so echoing into sysfs attributes
-is preferable over trying to cram additional tools or even the entire
-python interpreter into the limited system. An alternative to consider
-is of course adding some limited GPIO functionality to busybox.
+> Instead of creating another variant for
+> non-constant bitfields, wouldn't it be better to make the existing macro
+> accept both?
 
-The main thing that bothers me in the GPIO sysfs class is not its
-existence per se but the fact that it identifies individual GPIOs by
-their global numbers and not hardware offsets which is the biggest
-obstacle to removing the global numberspace and the legacy GPIO API
-from the kernel.
+Yes, it would definitely be better IMO.
 
-I think it was Ahmad or Marek who suggested that users aren't really
-attached to the global numbering but to the ease of use of sysfs.
+> As far as I can see, only __BUILD_BUG_ON_NOT_POWER_OF_2()  and
+> __BF_FIELD_CHECK() need to be adjusted. I am thinking of this:
+> 
+> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+> index 63928f173223..c6bedab862d1 100644
+> --- a/include/linux/bitfield.h
+> +++ b/include/linux/bitfield.h
+> @@ -8,6 +8,7 @@
+>  #define _LINUX_BITFIELD_H
+> 
+>  #include <linux/build_bug.h>
+> +#include <linux/compiler.h>
+>  #include <asm/byteorder.h>
+> 
+>  /*
+> @@ -62,15 +63,13 @@
+> 
+>  #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                      \
+>         ({                                                              \
+> -               BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+> -                                _pfx "mask is not constant");          \
+> -               BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+> -               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+> -                                ~((_mask) >> __bf_shf(_mask)) &        \
+> -                                       (0 + (_val)) : 0,               \
+> +               BUILD_BUG_ON_MSG(statically_true((_mask) == 0),         \
+> +                                _pfx "mask is zero");                  \
+> +               BUILD_BUG_ON_MSG(statically_true(~((_mask) >>
 
-I floated an idea of introducing a backward compatible change to sysfs
-that would allow users to identify GPIOs by the label of their parent
-chip and the hardware offset of the line within that chip (like what
-we do for the character device) in the form of the export/unexport
-pair of attributes inside the gpiochipXYZ directory associated with
-given controller. These attributes, unlike the "global"
-export/unexport would take the hardware offset and create the line
-directory within the chip directory of which the layout would be the
-same as that of its global counterpart (in fact: it could point to the
-same directory in sysfs as a single line can only be requested once).
+This should be a const_true(), because statically_true() may be OK
+with something like:
+        ((runtime_var << 1) & 1 == 0)
 
-We could then encourage users to switch to using the chip-local
-exports and eventually at least remove the global export/unexport pair
-if we cannot make the entire sysfs class go away.
+I think it's your own patch that adds const_true(): 4f3d1be4c2f8a :)
 
-Please let me know what you think about it?
-
-Bart
-
-[1] https://fosdem.org/2025/schedule/event/fosdem-2025-5288-the-status-of-removing-sys-class-gpio-and-the-global-gpio-numberspace-from-the-kernel/
+Thanks,
+Yury
 
