@@ -1,172 +1,219 @@
-Return-Path: <linux-gpio+bounces-15180-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15181-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2147BA24F5D
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 18:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D2EDA24F73
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 19:38:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64D0E1640B7
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 17:54:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C93561633A0
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 18:38:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8308A1FBEB2;
-	Sun,  2 Feb 2025 17:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F791FCFD8;
+	Sun,  2 Feb 2025 18:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EL0EzNW3"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="PvRkanL+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB10E1FBCB6;
-	Sun,  2 Feb 2025 17:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD462A1A4;
+	Sun,  2 Feb 2025 18:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738518839; cv=none; b=ub+LKxdT6Nd/MharsksR5NA1OGvoK75GP6nzkMfqW983mmRZ2L0AewqU6R2H5AAyc1HrDPptuLXxDVsn5N9R9skGp4ykcUs25BXo2IWnOh7ibFC+xZonXxSDqirdj4xL11qldi2HCVlSO+ybIypRv3f3/So90KvAJ2DQ1rvdB6A=
+	t=1738521504; cv=none; b=Xd6Ai8CgBofwJfdu3Y0fiKleUnxR5LNWUB5LsZyRPK+dZizmiXJlFLmK6WX6bUcQ9XjMo1+fE4jUFTf2kro8y3wO3fhKd4ITEzvxCq1VrnkFEV//NBoW4FtF0imoxaMkrXApMhlNNdHqLcVFtPd0tkmxG8JpbwiyxEqDVhuGAC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738518839; c=relaxed/simple;
-	bh=wJ1UIWu8ialmyd9DgBW/S9FAV5r3Qu1m/hwmDc7n5FU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbpdXPcWvjXpg4RCUFAdM6KwJmdJsdIAeOQ5A/ke+kaH5UetinyXcGz9lz2JsxvnYgOtsdxYGrV2bDnDyl1stgs46J2s6sU/LFH646AReX6hx3YlKUmDgyq98VILRSIp1GBjx/n4+dzOx6rSMQla+5Qqxaij+GCYzr3jfL+4V7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EL0EzNW3; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6f6cb364c7fso17285577b3.3;
-        Sun, 02 Feb 2025 09:53:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738518835; x=1739123635; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bu/o5ZKE+DmrVvfqpvDfKwO+d8/POCqsIdA64ajmPWE=;
-        b=EL0EzNW3p/UPCWPz5ixqlfJGRdBUqpe0WKZhc7nXfdCL8/VqiPW6x9P4SiH1/QOZd0
-         FjJUaHs/RXXdgqfUZ2+Dj0MoNBpGRPht3vC6qkq/vDm+m9Rt8joSyh7lbIDn1ri0e6Zy
-         SZLnZ7yQIz06zgKYYfIfRSaIF9XeCqUgXal7tdaW9T/iD4UQSKDuBVftGrGToRg5YFwf
-         YsXoYFt8d+c6adfG9fmn8Le0OX2t1eiJIDoC8gpMT+6tsiyM0eNoURWxoe2XvN+NH+Yo
-         UQKS6W2PAWb2FSjrcWrNkP9wWJmQKLglJMoaIuAFKA+V3pqOIPvTtc25GlrtT4iWlZrr
-         W5kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738518835; x=1739123635;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bu/o5ZKE+DmrVvfqpvDfKwO+d8/POCqsIdA64ajmPWE=;
-        b=lFX9CW2Ej/CQ4fh6590qXQwVyC/60LbbjqztW2x0M/K1BcfCVcvAHVgp1jl2FMrt/Q
-         ogSWmE49G//JHtcblA4JZQVyBBlz/tuZw7Q34ZFwQc52dTTJ+a/8e2/We+NlVg/oatPU
-         ewXjt5h+mpme4wRnWSop0viOGmJMvnFugwQzb0HHXchrwJqQ9rqKrTEY3k+i7Oy2qDiU
-         4KBhEIQG+xrweB6ySe6c70cwJO/vZVcgHOzvzHFH2ZRLVayQlqZJAvXjmX6uZVDcMcoY
-         Tc/0kVohcBY8LjnND1vBoPov3Yl53Nh1jA85mwKXeZ2oSS1UFBQ8xdPLuvLLdmYJl3zO
-         kLlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAaajvYpz8GSj4uwIKIZ6e1iQmkQ4DNRARryjdFX2EF3QRBCoafBEi19HLPBsgZcIGWT2fCR/JEAZaNhYZ/SOoUzg=@vger.kernel.org, AJvYcCUyMLvJz0jFM+cf8vwi/Ol41pBzglnBX8qNf47Jxk3lq6xeFZsudL1z0kjiRZXMFEexC94plh4kX8UZtKOd@vger.kernel.org, AJvYcCUzR0qxnDRAKnfWoDtN3pgFAwaU2XDkKtOdkptEfnOK3Zxfjmg7q8Fk1bLDzpYJRBMRVrNM42XFwBtWaOg=@vger.kernel.org, AJvYcCWQA94JmZ+mXRYpsIgQUearpO9l6cc6scycTAVbiEEPTLjHaar4CO/GMPE2c0LDN0ehWF5Mqe5BBxNK@vger.kernel.org, AJvYcCWqO6+XOXU6i8QtuXaDUDaMEV4eG6QWJT5fIo6YnikOQw0l+hKh91OnZh0v9I/PeSk9EOzYYe45kVNepTAB@vger.kernel.org, AJvYcCX5/ErFzWLIR6q1Cab99QaEUsZ1gqJxQTJjIL/IzcgVE4zKIQq0tVyMaCGsZfTcUcFm9zOA4VXu9sTDzQ==@vger.kernel.org, AJvYcCXRJyy4eB36v/hQq2Jtg1D3kKuZ0NApl+flXdz52yJUYx1J12gZo+nmln1luDa4KrgLviVeAlssVy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzslZo50tx0HH7PMmBGlgNIgZUjRYuVbFvxRDcnrM0qDjfoIO9t
-	1nPsIS/WBc7/325FpDUdMFw2NqrAhkE6YfOZFPRpnrqUdKJXgEeq
-X-Gm-Gg: ASbGncszc/3FFpH4moRgk6T4zetiveR/EFL2cMbbjKDRjQ92BcpFy8KKKSX5BkbStDL
-	WCd3dz5r0jT9VIZM9kedqZFLY70sORczXebsKTxs4e+VqTY4B7Xpps+EJChlQg/VogIafUrI5N7
-	Fm/jmFsPPXSiuFfQ/UjNvOcNIwYVfWvbQY3J+XBHILjxwC93wIPbCh1YnpJZenG1i9eGlHBAsxF
-	sWKzSNKWf/LTQTsHDMWbIH4xR86BE7Swvqwp7hAky8nFk9S5Ypcvm+JkXFLyjy+0swxyFE84aKX
-	/3JOczHz7VpQRXZE3mTN8ZaaZFV7sO6QGUuf/cqZEcZeoIqQqVI=
-X-Google-Smtp-Source: AGHT+IHHQI3478HvRiKWIVLIdATv32EFyyXdDb7s9xEv/S/0xqBbGzFcSVKK2nIkOtoAuYeOo+6nPg==
-X-Received: by 2002:a05:690c:6e09:b0:6f5:4304:fdc with SMTP id 00721157ae682-6f7a832a301mr158970467b3.6.1738518835574;
-        Sun, 02 Feb 2025 09:53:55 -0800 (PST)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f8c465b884sm17908247b3.59.2025.02.02.09.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2025 09:53:55 -0800 (PST)
-Date: Sun, 2 Feb 2025 12:53:53 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	qat-linux@intel.com, linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-Message-ID: <Z5-xMUqrDuaE8Eo_@thinkpad>
-References: <cover.1738329458.git.geert+renesas@glider.be>
- <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+	s=arc-20240116; t=1738521504; c=relaxed/simple;
+	bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sgza5YpeXNOVeWj6Y3WNQJLndUChkGjK8Bs4jBfCEDw2LFIQYJTTQdkqKs4wDF5aki9P1At70FRFQ/QQizHOA533CoFaeNwzUwq/oAW+zBImFZ+O12jdz4wb25NC9lSSXe5LrqlYMy57MX25ls3KRBdcya8qS8hP0L5+gEG0b/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=PvRkanL+; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id F211924D2C;
+	Sun,  2 Feb 2025 19:38:11 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id OEy66ANLXArl; Sun,  2 Feb 2025 19:38:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1738521487; bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+	h=From:Subject:Date:To:Cc;
+	b=PvRkanL+THf7F0wJyRMfB4LMkH1MPC/pG9VfEO20TqFB1gTnivf3bmhWs56ZXjTuy
+	 1/DKfAcHXhDlpT7dQm452xmiL3Dp54ty6+0kg7giSIINEDGSL3NOR5yAxEt5GL1DH6
+	 SdgrDIj+G6K/4/xY6QFe3IWjCvVqnT7BsJ5Ccfm8CwPAWI+6JaoJyUSiD7G98lqWjn
+	 qsyQ2CCWkbR9M/1GzNw62FUXLt+SGgb9ptR+gHHR3LRmxC3bjWaewgB/uiFCQJ2K2/
+	 i/TZvyU1Ao9ULDNM8ff3udU0yroWs6G+AyKSBU5Aj+/ZKRjWeQ7dUDMIn/0jcZax9N
+	 boofc5bJitG+w==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH 00/33] Add support for the Exynos7870 SoC, along with three
+ devices
+Date: Mon, 03 Feb 2025 00:06:33 +0530
+Message-Id: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADG7n2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwND3dSKyrz8YnMLcwNdAxNLUwvzVJMk85Q0JaCGgqLUtMwKsGHRsbW
+ 1AMsls61cAAAA
+X-Change-ID: 20250201-exynos7870-049587e4b7df
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Conor Dooley <conor@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Jaehoon Chung <jh80.chung@samsung.com>, 
+ Vivek Gautam <gautam.vivek@samsung.com>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-usb@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738521464; l=6574;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=PJpkgskkNYqE5ktWw6CmmWj99ePEwkxlYbUu1j7z2tQ=;
+ b=OQtdK1RGc0JLdcNe0AAwrKVcWolcTpa0ZUxZtTQKZh2HI/tE+Yxg3q5N8DaCYUDzMaj8ii3Z3
+ nZlAC/KW2OeALOGfeSJkRYgLwjHwBi5N9Fw5vGYllF7W3vwwCgIL231
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Sun, Feb 02, 2025 at 05:26:04PM +0900, Vincent Mailhol wrote:
-> On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
-> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> > constants.  However, it is very common to prepare or extract bitfield
-> > elements where the bitfield mask is not a compile-time constant.
-> 
-> Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
-> compile time constants?
+Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
+announced in 2016. The chipset was found in several popular mid-range to
+low-end Samsung phones, released within 2016 to 2019.
 
-I guess, for historical reasons?
+This patch series aims to add support for Exynos 7870, starting with the
+most basic yet essential components such as CPU, GPU, clock controllers,
+PMIC, pin controllers, etc.
 
-> Instead of creating another variant for
-> non-constant bitfields, wouldn't it be better to make the existing macro
-> accept both?
+Moreover, the series also adds support for three Exynos 7870 devices via
+devicetree. The devices are:
+ * Samsung Galaxy J7 Prime     - released 2016, codename on7xelte
+ * Samsung Galaxy J6           - released 2018, codename j6lte
+ * Samsung Galaxy A2 Core      - released 2019, codename a2corelte
 
-Yes, it would definitely be better IMO.
+Additional features implemented in this series include:
+ * I2C     - touchscreen, IIO sensors, etc.
+ * UART    - bluetooth and serial debugging
+ * MMC     - eMMC, Wi-Fi SDIO, SDCard
+ * USB     - micro-USB 2.0 interface
 
-> As far as I can see, only __BUILD_BUG_ON_NOT_POWER_OF_2()  and
-> __BF_FIELD_CHECK() need to be adjusted. I am thinking of this:
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 63928f173223..c6bedab862d1 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -8,6 +8,7 @@
->  #define _LINUX_BITFIELD_H
-> 
->  #include <linux/build_bug.h>
-> +#include <linux/compiler.h>
->  #include <asm/byteorder.h>
-> 
->  /*
-> @@ -62,15 +63,13 @@
-> 
->  #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                      \
->         ({                                                              \
-> -               BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
-> -                                _pfx "mask is not constant");          \
-> -               BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
-> -               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-> -                                ~((_mask) >> __bf_shf(_mask)) &        \
-> -                                       (0 + (_val)) : 0,               \
-> +               BUILD_BUG_ON_MSG(statically_true((_mask) == 0),         \
-> +                                _pfx "mask is zero");                  \
-> +               BUILD_BUG_ON_MSG(statically_true(~((_mask) >>
+The series has commits from me and Sergey, who has given me permission
+to upstream their patches with proper attribution.
 
-This should be a const_true(), because statically_true() may be OK
-with something like:
-        ((runtime_var << 1) & 1 == 0)
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Kaustabh Chakraborty (26):
+      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
+      dt-bindings: clock: document exynos7870 clock driver CMU bindings
+      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
+      dt-bindings: serial: samsung: add exynos7870-uart compatible
+      dt-bindings: mfd: samsung,s2mps11: add compatible for s2mpu05-pmic
+      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
+      dt-bindings: phy: samsung,usb3-drd-phy: add exynos7870-usbdrd-phy compatible
+      dt-bindings: usb: samsung,exynos-dwc3: add exynos7870 support
+      dt-bindings: gpu: arm,mali-midgard: add exynos7870 mali compatible
+      dt-bindings: i2c: samsung,s3c2410: add exynos7870-i2c compatible
+      dt-bindings: i2c: exynos5: add exynos7870-hsi2c compatible
+      dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
+      dt-bindings: soc: samsung,boot-mode: add boot mode definitions for exynos7870
+      dt-bindings: arm: samsung: add compatibles for exynos7870 devices
+      soc: samsung: exynos-chipid: add support for exynos7870
+      clk: samsung: add exynos7870 CLKOUT support
+      tty: serial: samsung: add support for exynos7870
+      phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
+      phy: exynos5-usbdrd: use GENMASK and FIELD_PREP for Exynos5 PHY registers
+      usb: dwc3: exynos: add support for exynos7870
+      arm64: dts: exynos: add initial devicetree support for exynos7870
+      arm64: dts: exynos: add initial support for Samsung Galaxy J7 Prime
+      arm64: dts: exynos: add initial support for Samsung Galaxy A2 Core
+      arm64: dts: exynos: add initial support for Samsung Galaxy J6
 
-I think it's your own patch that adds const_true(): 4f3d1be4c2f8a :)
+Sergey Lisov (7):
+      dt-bindings: clock: add clock definitions for exynos7870 CMU
+      clk: samsung: add initial exynos7870 clock driver
+      pinctrl: samsung: add support for exynos7870 pinctrl
+      mfd: sec: add support for S2MPU05 PMIC
+      regulator: s2mps11: Add support for S2MPU05 regulators
+      phy: exynos5-usbdrd: add exynos7870 USBDRD support
+      mmc: dw_mmc: add exynos7870 support, with a quirk for accessing 64-bit FIFOs in two halves
 
-Thanks,
-Yury
+ .../bindings/arm/samsung/samsung-boards.yaml       |    8 +
+ .../bindings/clock/samsung,exynos7870-clock.yaml   |  246 +++
+ .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |    5 +-
+ .../bindings/hwinfo/samsung,exynos-chipid.yaml     |    1 +
+ .../devicetree/bindings/i2c/i2c-exynos5.yaml       |    1 +
+ .../bindings/i2c/samsung,s3c2410-i2c.yaml          |    1 +
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   |   13 +
+ .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |    2 +
+ .../bindings/phy/samsung,usb3-drd-phy.yaml         |    2 +
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |    2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |    1 +
+ .../bindings/regulator/samsung,s2mpu05.yaml        |   44 +
+ .../devicetree/bindings/serial/samsung_uart.yaml   |    2 +
+ .../bindings/soc/samsung/exynos-pmu.yaml           |    1 +
+ .../bindings/usb/samsung,exynos-dwc3.yaml          |   34 +-
+ arch/arm64/boot/dts/exynos/Makefile                |    3 +
+ .../arm64/boot/dts/exynos/exynos7870-a2corelte.dts |  624 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-j6lte.dts    |  611 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts |  659 +++++++
+ arch/arm64/boot/dts/exynos/exynos7870-pinctrl.dtsi | 1035 +++++++++++
+ arch/arm64/boot/dts/exynos/exynos7870.dtsi         |  722 ++++++++
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos-clkout.c            |    3 +
+ drivers/clk/samsung/clk-exynos7870.c               | 1830 ++++++++++++++++++++
+ drivers/mfd/sec-core.c                             |   12 +
+ drivers/mfd/sec-irq.c                              |   85 +
+ drivers/mmc/host/dw_mmc-exynos.c                   |   41 +-
+ drivers/mmc/host/dw_mmc.c                          |   94 +-
+ drivers/mmc/host/dw_mmc.h                          |   27 +
+ drivers/phy/samsung/phy-exynos5-usbdrd.c           |  407 ++++-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |  141 ++
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |   29 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 +
+ drivers/regulator/Kconfig                          |    4 +-
+ drivers/regulator/s2mps11.c                        |   92 +-
+ drivers/soc/samsung/exynos-chipid.c                |    1 +
+ drivers/tty/serial/samsung_tty.c                   |   13 +
+ drivers/usb/dwc3/dwc3-exynos.c                     |    9 +
+ include/dt-bindings/clock/exynos7870.h             |  324 ++++
+ include/dt-bindings/soc/samsung,boot-mode.h        |    6 +
+ include/linux/mfd/samsung/core.h                   |    1 +
+ include/linux/mfd/samsung/irq.h                    |   44 +
+ include/linux/mfd/samsung/s2mpu05.h                |  152 ++
+ include/linux/soc/samsung/exynos-regs-pmu.h        |    2 +
+ 45 files changed, 7257 insertions(+), 81 deletions(-)
+---
+base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
+change-id: 20250201-exynos7870-049587e4b7df
+
+Best regards,
+-- 
+Kaustabh Chakraborty <kauschluss@disroot.org>
+
 
