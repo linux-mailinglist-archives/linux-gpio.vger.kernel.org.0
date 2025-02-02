@@ -1,148 +1,188 @@
-Return-Path: <linux-gpio+bounces-15172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4DE9A24BA2
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Feb 2025 20:48:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94604A24D0D
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 09:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FCDB3A60D0
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Feb 2025 19:47:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06334162DE3
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 08:27:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0256B1CD1FB;
-	Sat,  1 Feb 2025 19:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BBAD1D5174;
+	Sun,  2 Feb 2025 08:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgZkeeM8"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Er14Dtt3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19051182;
-	Sat,  1 Feb 2025 19:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9F18BE7;
+	Sun,  2 Feb 2025 08:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738439275; cv=none; b=U8SPU8tuSnN2dltBlNy+dHd1qIKQ2hJZPOb/1aCUsUBj+aDKEBhyrsU3gvr6yVU2CAgyE9hqHcW8NtX4lNLxt7TaaYYPyOV5V4ESc/xrt7enQoiBgi58hW39NaqfhMTGXNyxMB7zjCtIFe5NGqMazrd2AWpTAy+xcqFGD5U1XAo=
+	t=1738484863; cv=none; b=r7I6IAAd8B5HpnbfRXWLtYdxv6MYPdBP/oLmyeTLde2Zr51UUwgRNYEMGPZmGRTOpvBwEmz90CSlN1cpCMv3Nc/JpV9K+ml2agsMvwTBexcnx1QIn9gbwhCk90sJTiFpVpsAu7tP5jJ6yqke+/4ab8O/eieU2SfhpNBcYBYEF4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738439275; c=relaxed/simple;
-	bh=9Y2iEwJwFkc2B9GqWgu70tRdf2FM2JE7y2skPhWMyUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hGYPT+jn6zbHpKLMoMOkgp64Pk690hv3sLiLe0a8HdhOq2jjBFYGyvU+ICVygn36seOPO76zj9dE+mYzqW7zjfKAuV2Xna6o1zsKpmsd42NB26OoJCSh7B1E1unB2cf1XC8kci3PQ7xTVQjn5eXk7N4mFcLDp/yLv0BzpdYV/5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kgZkeeM8; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab2aea81cd8so552715966b.2;
-        Sat, 01 Feb 2025 11:47:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738439272; x=1739044072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Y2iEwJwFkc2B9GqWgu70tRdf2FM2JE7y2skPhWMyUI=;
-        b=kgZkeeM87mX6Mf2pfULm61xqqA/7Mpt2WpfSLdgliX7jv929FIGy9XcvQSkmqggo+o
-         V0mTxrUzqE9VCoK2J//uWnAoCp9URoykvxioYbYVAqc/yOFvNkRuI45U7mybsQObFX1W
-         32rSjDsL4EqFCpnpgRtKDWtcal8SVbw08dghCTQ9EPpC8xz9fGrfMNYGn+BpmMHhIYrA
-         ZHGSpIv7eszw08j7OGd57k+dQxjAkuE+adZXSrQnAS+NasT22eqLA9blk6Y8PZYk6dIH
-         2t/qBGfZLxdZtcI+FbyQJf5CA/kVlJO+yHQUAsRMrcbYNLxFe+93mkoUnQfa/flmUbmh
-         rprw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738439272; x=1739044072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Y2iEwJwFkc2B9GqWgu70tRdf2FM2JE7y2skPhWMyUI=;
-        b=U+8Utbf0bEewgXUiQape6DbV53561aqX7q/dpdwenVjO6OpLAU+CbW5KjM6kc6zJ9e
-         V9Lb6+ol0WRNP1MnjhB9Nxatg+cdmMiqewBfqmaMaiQMO04Y2yWfisGKGEXUZLCI6rdv
-         gnyL3X7nvwKdvNsC3zc9EIzURvD29e4zujcG4d0VFxj79Ts2wJmoGzGca6M+WCGvUW3o
-         D4uUINlEkwkiLgf+HFJshRBNlYXWt1/+FrpAA8lqr6lIlc60x1HRTL3LdLZkGYWfjgas
-         EIsLD/Z9nd+K0GN4S0fEh4OqL61oiBHsbQyc6e13gm+nlIDLg5rWau0uDkIrTZIM4ytu
-         tYhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGzcCoaYwpuLEDVJn60XfLev9iVmXI0GPMAKk2SiI39U+sa9QA3KDUgh8hi2nUYTfRrXm/qgLEAU89@vger.kernel.org, AJvYcCVUPSHmM+viAJfdf+2zfFvckmXCtNi8BL05CO57e458O9dbNJ47gqqdiQarbfaSrLoFcAdeTwIyEsFgtdR+@vger.kernel.org, AJvYcCVq/73iec3EvLeTetGgWbOwX8DdgzDp31f2acrLLWKocJZc+z6C20/VgH+s0gzrXBCIxGzu+Cj5@vger.kernel.org, AJvYcCW8YReOQv97v0de2vOb92INj45gMIiwBzid2rj91+F7TalpJqjuuYbbc7xpeCop2IDFtl89+NBN4NmYVaI=@vger.kernel.org, AJvYcCX+F6yEy2eVRQeMsI3jml43OxfVnIrgC9HNzD7fQ06SMtnz+Bc7ri9Th/ighq/lgTvP2i8TNlxBE8NW@vger.kernel.org, AJvYcCX78KjuWMklep9OudMGRCYnNIZ/TKP84/6zkLf6jtcOKLO4OiPeCpqvYMwuV3ghcPRhe3UxsASusM9+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxet1V60WgTsN0xL8zhKpDOhWP3M2ANICPp6pKEe+78jgFyp60g
-	3R50r4F8DLJ9BzA2O3uXAbbkyzwNJ0AjR2PWrBtAq/4dDVXyn6IZ1AOEGFc0SVZEAmg/+xmzZcM
-	mDjuD7IR0xRxU9LNfA8hcdE8JpMQ=
-X-Gm-Gg: ASbGncsJSKj9/hpursdPBUVpgICOqHtuZamdVucV/dlxI6u+vJHfg+sV/pgb4hn5dNI
-	DxumlTmjVJUJsy/++MWmsF5g3jU6Ks7B0oK+YkoU0nwM3wWyWpY/iuvjEHfLKHWt9UJ2nztkD
-X-Google-Smtp-Source: AGHT+IERpw1g5M8zApVrYpVEyiqFZwYlR+EKeXU2Shhx2R7/TSFd//bZA6HHTfe0pDB1mxJjnTIivwCXlr0P6UlEOUg=
-X-Received: by 2002:a17:907:da0:b0:ab6:8537:60d6 with SMTP id
- a640c23a62f3a-ab6cfcc2e89mr2048306966b.7.1738439271988; Sat, 01 Feb 2025
- 11:47:51 -0800 (PST)
+	s=arc-20240116; t=1738484863; c=relaxed/simple;
+	bh=3R02TGIEWd2cVE8jGoGk2IukoLrWOAmI6UyxCl1vFdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LUgU023YRTxZuRNY2oxBcMpXpDjnIJs5WAvy4bNrsR+IxiMNFMm4801PCYAEsuRlxo0shOtlEXLlIWhJWmrAsR54NkfvETJJRjx+g7kttnNa55zVNtwfLWbNwOUR+qAb8sYl78QGpRkYKz3Yw8koIE44Ngxy1Y+Itugh7dDksxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Er14Dtt3; arc=none smtp.client-ip=193.252.22.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id eVIrtwgZkM6ZbeVIwtQSlb; Sun, 02 Feb 2025 09:26:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738484790;
+	bh=PzrthrLkW4R8v6fQu4F9Z0+3j1oj2AKD6gdwJR3+YjY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Er14Dtt3+zfNicUpvicGUD6Vdf5OQJsDpkGPvY598Y41dT4BnaZJiPDU0Z9Am45FA
+	 rt5j0Pz9QRRm/z1mN2d3bb772DaBoyfWVgR/c2muJ80mlphsG3rFguogAus2nGUtIq
+	 SMzYzyRktW1gkaZRsNIAjVI989zqNQFAkzvJwc+c2MnnUIjwGsK+qKlmGw7er9lbI/
+	 pIddcTj+3U4H8qpjYBDjjnhQpTydKf0sXi6FZhIfK4nK0TsNcNc/SvIiJquLWgQ3LP
+	 O1s8+gqFJZHGsDqv+oFJDfLSh35L6j+QPDYeBSJJCpC011UxtV+bXz1kDtn/PestXd
+	 +aDON8InPsqFw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 02 Feb 2025 09:26:30 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+Date: Sun, 2 Feb 2025 17:26:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
- <CAMRc=MdwQL8dWU5zF5fp+KUbC2RA2Q264by8HGXMg2k1rxhsTA@mail.gmail.com>
- <9931433b-5cde-4819-ac96-eea4f1f0f1f2@baylibre.com> <CAMRc=McEdcDs01BAKN5vg9POg_xxJBY1k8bfgiDN60C1-e_jow@mail.gmail.com>
- <072be5a9-e0fb-4073-85b3-4a8efcafae09@baylibre.com> <CAMRc=Meq_Gfhcjzx0vCL0JPzfnOcijFgB6AuqtsqgGn1eOTMVg@mail.gmail.com>
-In-Reply-To: <CAMRc=Meq_Gfhcjzx0vCL0JPzfnOcijFgB6AuqtsqgGn1eOTMVg@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 1 Feb 2025 21:47:15 +0200
-X-Gm-Features: AWEUYZnwTIj9KEDy9rRdO0tPB3DfcugGi6Loe0pNH7j-w_mg25ltYxBcKQtk_8k
-Message-ID: <CAHp75Ve+iwrm8dx49+6C7xFJgTQrh3XumKVzKvnYY=00J-j43A@mail.gmail.com>
-Subject: Re: [PATCH 00/13] gpiolib: add gpiods_set_array_value_cansleep
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: David Lechner <dlechner@baylibre.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+ qat-linux@intel.com, linux-gpio@vger.kernel.org,
+ linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Jakub Kicinski <kuba@kernel.org>,
+ Alex Elder <elder@ieee.org>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+ <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 1, 2025 at 6:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-> On Sat, Feb 1, 2025 at 5:17=E2=80=AFPM David Lechner <dlechner@baylibre.c=
-om> wrote:
-> > On 2/1/25 10:14 AM, Bartosz Golaszewski wrote:
-> > > On Sat, Feb 1, 2025 at 5:09=E2=80=AFPM David Lechner <dlechner@baylib=
-re.com> wrote:
-> > >> On 2/1/25 4:36 AM, Bartosz Golaszewski wrote:
+On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
+> The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> constants.  However, it is very common to prepare or extract bitfield
+> elements where the bitfield mask is not a compile-time constant.
 
-...
+Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
+compile time constants? Instead of creating another variant for
+non-constant bitfields, wouldn't it be better to make the existing macro
+accept both?
 
-> > >>> This looks good to me except for one thing: the function prefix. I =
-would
-> > >>> really appreciate it if we could stay within the existing gpiod_ na=
-mespace and
-> > >>> not add a new one in the form of gpiods_.
-> > >>>
-> > >>> Maybe: gpiod_multiple_set_ or gpiod_collected_set...?
-> > >>
-> > >> I was waiting for someone to complain about the naming. ;-)
-> > >>
-> > >> I was going for as short as possible, but OK, the most obvious prefi=
-x to me
-> > >> would be `gpio_descs_...` (to match the first parameter). Any object=
-ions to
-> > >> that?
-> > >
-> > > Yes, objection! As far as any exported interfaces go: in my book
-> > > "gpio_" is the prefix for legacy symbols we want to go away and
-> > > "gpiod_" is the prefix for current, descriptor-based API. Anything
-> > > else is a no-go. I prefer a longer name that starts with gpiod_ over
-> > > anything that's shorter but doesn't.
-> >
-> > Oops, that was a typo. I meant to write gpiod_descs_.
->
-> Eh... the D in gpioD already stands for "GPIO Descriptor" but if
-> there's no better option in your opinion than I guess I can live with
-> that.
+As far as I can see, only __BUILD_BUG_ON_NOT_POWER_OF_2()  and
+__BF_FIELD_CHECK() need to be adjusted. I am thinking of this:
 
-gpiod_set_many_value_cansleep() ?
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 63928f173223..c6bedab862d1 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -8,6 +8,7 @@
+ #define _LINUX_BITFIELD_H
 
---=20
-With Best Regards,
-Andy Shevchenko
+ #include <linux/build_bug.h>
++#include <linux/compiler.h>
+ #include <asm/byteorder.h>
+
+ /*
+@@ -62,15 +63,13 @@
+
+ #define __BF_FIELD_CHECK(_mask, _reg, _val, _pfx)                      \
+        ({                                                              \
+-               BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
+-                                _pfx "mask is not constant");          \
+-               BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
+-               BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
+-                                ~((_mask) >> __bf_shf(_mask)) &        \
+-                                       (0 + (_val)) : 0,               \
++               BUILD_BUG_ON_MSG(statically_true((_mask) == 0),         \
++                                _pfx "mask is zero");                  \
++               BUILD_BUG_ON_MSG(statically_true(~((_mask) >>
+__bf_shf(_mask)) & \
++                                                (0 + (_val))),         \
+                                 _pfx "value too large for the field"); \
+-               BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
+-                                __bf_cast_unsigned(_reg, ~0ull),       \
++
+BUILD_BUG_ON_MSG(statically_true(__bf_cast_unsigned(_mask, _mask) > \
++
+__bf_cast_unsigned(_reg, ~0ull)), \
+                                 _pfx "type of reg too small for mask"); \
+                __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
+                                              (1ULL << __bf_shf(_mask))); \
+diff --git a/include/linux/build_bug.h b/include/linux/build_bug.h
+index 3aa3640f8c18..3b8055ebb55f 100644
+--- a/include/linux/build_bug.h
++++ b/include/linux/build_bug.h
+@@ -18,9 +18,9 @@
+
+ /* Force a compilation error if a constant expression is not a power of
+2 */
+ #define __BUILD_BUG_ON_NOT_POWER_OF_2(n)       \
+-       BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
++       BUILD_BUG_ON(statically_true((n) & ((n) - 1)))
+ #define BUILD_BUG_ON_NOT_POWER_OF_2(n)                 \
+-       BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
++       BUILD_BUG_ON(statically_true(!(n) || ((n) & ((n) - 1))))
+
+ /*
+  * BUILD_BUG_ON_INVALID() permits the compiler to check the validity of the
+
+
+> To avoid this limitation, the AT91 clock driver and several other
+> drivers already have their own non-const field_{prep,get}() macros.
+> Make them available for general use by consolidating them in
+> <linux/bitfield.h>, and improve them slightly:
+>   1. Avoid evaluating macro parameters more than once,
+>   2. Replace "ffs() - 1" by "__ffs()",
+>   3. Support 64-bit use on 32-bit architectures.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+(...)
+
+
+Yours sincerely,
+Vincent Mailhol
+
 
