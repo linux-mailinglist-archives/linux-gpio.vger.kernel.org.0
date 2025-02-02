@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-15174-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15175-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94795A24D6E
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 11:07:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62FFDA24D74
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 11:09:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC8EF3A4402
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 10:06:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 221A03A4395
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 10:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C551D5CDE;
-	Sun,  2 Feb 2025 10:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD041D6194;
+	Sun,  2 Feb 2025 10:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuWhJ7Zk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZNbA9be"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB582FC23;
-	Sun,  2 Feb 2025 10:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93DD111AD;
+	Sun,  2 Feb 2025 10:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738490819; cv=none; b=GNa5t4WB1RZAHNLfv2n01oJBhJwg1kPSO7WPKRo36ddYHMwRKSaS2LscU0j3sxVw8s0Wkgjt4zJDXPYO6kdNPQRFIpB+oXQxsba8KczsJTlmEalF2JvcNtFOIOTA9VhupT8icfqR0nt9hoRqkoX6V6Oh2DYRm710Xnowwp2Ukkg=
+	t=1738490943; cv=none; b=pK8eXkAfIgXZOfVzXKhMGbsOtbIpEJqIlGYaaKD4WB3QZ+85AAu3vhfaREtQjBuZUfSW/qxHzpQG1Uud8v3TdDAQa2fY8kOOI6Efl1WBLVe7Y8HCGwrunTvBMrUreF2eJoTb5eGubNnOtrxuc3L4qsJUm45MeKLVfSBe1AUe0lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738490819; c=relaxed/simple;
-	bh=4Lc9RmLDAbYF4kkewDG5T9yLyCSqx1Psz5qGLxfm5Eg=;
+	s=arc-20240116; t=1738490943; c=relaxed/simple;
+	bh=JWUZPomdszTM47BU/+BbEkaucwLYsLRFbnWZlNYrstw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UHOcLW7XpvDn/WvHTSFJ2+IuRJZTL+eLr1P+M9pplSLaAHbZGnlCMllvK6d0GMUyLqI2COxeMxUSvrarHJYwNG6gSNHORfEb1wXEWb5z0X+01WOm7f8IaTTUX3Tit41VbMAmbHKqcd8+3XC2nxbwOGbTlmGKmPDJXU86ERsa7hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AuWhJ7Zk; arc=none smtp.client-ip=209.85.218.44
+	 To:Cc:Content-Type; b=CNZGvPRdVuTG57yde8DyS94WZfP2n2Cyg50p4kXr5Cjh83lUhm6CnDhYMOS9vyIQUq/J1jV7nQfjXPx+r1WFIWi1oGTBRfdcVqvzy/dNDizvJGb/b2BuC26Y28rwBfb4iwEDFLdXL5i0+mMMgF//0t2suuvqtfHFplYtNGiFSUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iZNbA9be; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaecf50578eso689714266b.2;
-        Sun, 02 Feb 2025 02:06:57 -0800 (PST)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaeec07b705so550649366b.2;
+        Sun, 02 Feb 2025 02:09:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738490816; x=1739095616; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738490940; x=1739095740; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d9eZ/0dk/F51+IlX4ChMtLpWjOxnMp8WZ++jOtUzjCk=;
-        b=AuWhJ7ZkGGn0UW4K3/0oVQf1kZrdc/XGtVUt3oiutZ0tmRap4k3dpOeFAdHIH4lWDU
-         epRf5LW6esNmtHr3RL1EF6pjs//TpCnDW9ymnDBsx95EFzOVpAabb4cJtAzsvoAX4TQ/
-         MljOuGFB5yYLgAu3XuRJT+KLIMy1R2GJss+DRd4Bi2HsLF6iEuFuFbSwBNT7YlsMoqts
-         dCbdDa5uvEvwFIlJptaL+zoAj11DJKyGueoPsnr7exfwxtvVuRzvg/XFTvswdLeeu82n
-         EkgyVILbyXQa/SUk8ePdctz3AmabV84Faz82bVvLbzhCoAbxnlWa2xnplHk3/n97EYPb
-         aylw==
+        bh=JWUZPomdszTM47BU/+BbEkaucwLYsLRFbnWZlNYrstw=;
+        b=iZNbA9bezlp6KbsQrUs/FPw3vyS+EAKNYIxbWQVxDvSlUfaUg4ky3IxLDx7bMcFB/y
+         AraWGul5wM6a5FykKTU1Wx/gFIEPLDImrY8BcGVy6aKOOOo3ED5qH6gwrcO/6IBPFs8+
+         2S0Y/1BFYmjIiwZfzmC3dpE8l0GyuWD/W8r7ct3J1k+iKycDw6R2GxNgeZHb0XoYofCH
+         dAlys7+pISt+ew+qV/rQG+kp0IFgXQKWN4DxZmuy3jjLHM0njjj9JjXY6gS0bjCAUP/s
+         o4FioniKTw+fH2R+9pjtkpcEZuN+air8vwZYuNkbVmAzAqYJDr+YpcesCNOwXcngn6ZA
+         AuXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738490816; x=1739095616;
+        d=1e100.net; s=20230601; t=1738490940; x=1739095740;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d9eZ/0dk/F51+IlX4ChMtLpWjOxnMp8WZ++jOtUzjCk=;
-        b=rdy3TOLr0rYDfmfLBtUcC6J+aDl53nRzwC3Q8Ntc5yvOlK4fT61L2GtnBrHvTVgi1w
-         v/cihFTbkTdVZJUpNlMb9GcuKoCkqBj4TeuULTziwD9M9n5GKb1FeHktAGopGRVFcTL3
-         LmUpO/FvMh+WAfqpFsxE9X385P1fXBvCFxg+F1k++LA9AUPEsJAh88S4c9ZtblfkzGax
-         AaNSUB65j46pA3dyFWdmzBsGPd9zwl7A7r1rF4j/V0wFOuxFsruFJv6GAMWqN8eWwwwB
-         XznC0ZHE1bkyFHvW/8QDNPYX8PyU+PTMlEfkDEyUPCKuhxcSzJ+Co0/sooulzuX/d90K
-         2M8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcAN49ye7mpBXQws4fugQ95bcA4MWunbvQLD1jfqeMbq+Xixih9qnS4tMOELFxyaVspP7c2fSe3CEunQT2@vger.kernel.org, AJvYcCVQKlLExa9kh9V42Z2qWJnfCFDmTBkDI/W5OHYbrIkUpi3fzaZH6yHp2DmrVOAkRMwy6bkIwLye4/Dr@vger.kernel.org, AJvYcCWe0Ryg4kNgaIFluCGklv1J8jgewq7rtCaJBh1//+IGE/Tu9CQY6dwVgEe0vZJ/m8h0W+YTMYXZhjFV@vger.kernel.org, AJvYcCXFg/ryOlDA0J1tAlw0vpQ6ITMtZcNd2NphlPAGh17/Krx7lbNsgUnqiwqO9o8VKyEPVoUhfQcXza+G@vger.kernel.org, AJvYcCXL3FUIavXIsNfue1H3IwDtBGWm1AdVqG7odpZqYnW89d8Z9B0koFgzf5s/V1wDUfIydWs/sBU3@vger.kernel.org, AJvYcCXbMXfLXAo/yIdbcMcGtmc0i9Aq2YrNOWUeZjGSDps8DZ3RlPMEnKmsTgdr028rKCNU1OwAjgrLcMWwmrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5o3oFQOGW1aTB0Ndfdeca2BIIcjIcEMIH4LRkms0wDzbXtIbw
-	MoszIZTZTqjlM2HzVWF+mtESjnuvTY5nOROIiVQN7FyAe/4DQGyK6O9O6sBxepZvN1n7r90W9fN
-	rbsP+3A4oZNAsAYjUPYHTjyRLk+k=
-X-Gm-Gg: ASbGncs0Rxhtnbu06GKezNpt130PbmmBCyqlXRholm8Fo94r+g039hSnSVFasK9n/1s
-	/qUj9emthzkOCAeyK7fsNPc2pqC4gmgnDf7ki9Mv6nY5v+lAkGY6fSm3dN+g4hQtTa2Dl5b33
-X-Google-Smtp-Source: AGHT+IG0wgCm6rScVgdh7ldT74nISv2x1RULgwNTbS7+ud7IN3fLokwjmQgWGRLHgTUHU4CmxVCsVeR0NUhgmA5cLkQ=
-X-Received: by 2002:a17:907:c20a:b0:aa6:7b34:c1a8 with SMTP id
- a640c23a62f3a-ab6cfe29c5fmr2041673966b.55.1738490815666; Sun, 02 Feb 2025
- 02:06:55 -0800 (PST)
+        bh=JWUZPomdszTM47BU/+BbEkaucwLYsLRFbnWZlNYrstw=;
+        b=oLdRd+vUuKdPWde/8iayhTiJqAGpJfI5jwZ0bm6MUPXctQyffH0oZSsDrda2TXBgWg
+         XVY8CfWToDRIM+oWw5PWBagOssz4euUL2NA+M2pCOGymNBYz6cb7PKVU0Sqa/OhN3TiA
+         YApGjMb51FtnunuVVeSOYRWzuS+zO2H+/Oy/NVOoUsUmWfA5ajzR82KvCn47BoLuvyzW
+         ML5YXNSvfdRGsIo3bxmDcCwE+mYcA560eDKp10+lCn7+8zcyMZH5MJ+2+v0o4AvbUNpZ
+         G9zD5QBCOVuaxEODKOz8snak6RnwAXymCpj0u1Zy5PeVyl18X+daIYGez0T5iyB/25yW
+         ymEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVuU+ZD4lFV2EHK/m50tevXVxmE3aYUiMZIqtIiW6QoeaKrT4j+1y0pOZpjA5N16er8X6bxaxE@vger.kernel.org, AJvYcCVaxKmU7uQdNCbk0DIrI0EYSvTOvtmmXD6Ir3xkFyBv5N0p6kHKGgwjgOniVcMwuUQf+H+6MhrZBJ2+IFyn@vger.kernel.org, AJvYcCVxxyvpXZBBBLI5QheTm3kl0/tnAlqPkKtsRrQiyOSI8H+TNItfogzT7vX+pM+aOdNQYtchHoaN4RxA@vger.kernel.org, AJvYcCWWDvRHNRcSgE8cQJdDcxmkG9MroU/tGEvh83NvXXySjh61ELDbF6Toz3DVASDR93njcaR1s9/P/aG7@vger.kernel.org, AJvYcCX+bU3HTd3wvaDejqSpMzQf06+oQOPDYgLXQ+fCoWbpRJObxSSpq+gSC2bMMz1vd6bwYhoMupT67A1I@vger.kernel.org, AJvYcCXDFFrtxg+lC+8Bgl3iNEBkKukSfnAoYeHe8aVOHUKpjKKajpdUkKdD6d8+yfM7px4SMo/IAJjvVPUTuPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTP3XX8Cn2pFwMjiPerji6Og9g/XjgylvzRdlFIoWBCZ1y014U
+	5PN/ET9r+4rVyZpHihnTXtsuDwJpiGfxzV/avRUBftPYQT6OOhAq8yVWHa/0g4+230kYmHVqULn
+	rdiTIsj4S/XugHerzIP9DOGgj9R4=
+X-Gm-Gg: ASbGnctWgQPYVWKmcO2AlSp5iJXsPX+vBXyflVwq8sQNqv4VbGlNjwv5rDxBi5CwNEz
+	uh64UPAyHkFJGGUCzLL6Zlh4qCQAeTkOmLeRSuKb2l1OAbI3Io0ugKTsiyWmtXxLpRDwWSKks
+X-Google-Smtp-Source: AGHT+IGoMhEdpYXBWWR7zI4SfcoJvtkFU2TWS1zQ7GZgm8kyeKcPqMITa2e0cneA92EhnMutQOz1UJGZQayvtg32aYY=
+X-Received: by 2002:a17:906:40c7:b0:ab6:d660:c845 with SMTP id
+ a640c23a62f3a-ab6d660cb02mr1815035366b.50.1738490939878; Sun, 02 Feb 2025
+ 02:08:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com> <20250131-gpio-set-array-helper-v1-1-991c8ccb4d6e@baylibre.com>
-In-Reply-To: <20250131-gpio-set-array-helper-v1-1-991c8ccb4d6e@baylibre.com>
+References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com> <20250131-gpio-set-array-helper-v1-2-991c8ccb4d6e@baylibre.com>
+In-Reply-To: <20250131-gpio-set-array-helper-v1-2-991c8ccb4d6e@baylibre.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 2 Feb 2025 12:06:19 +0200
-X-Gm-Features: AWEUYZlrR1Eyf2sDO98qHNboDjvCKSIueyg3JRzZHEx-ArKJqfo7ClDNOGf2xy4
-Message-ID: <CAHp75Vcx+7v3pq4T0q9+8zOHqAZ=FRrCRfhD8j9LAp4pkXzxNw@mail.gmail.com>
-Subject: Re: [PATCH 01/13] gpiolib: add gpiods_set_array_value_cansleep()
+Date: Sun, 2 Feb 2025 12:08:23 +0200
+X-Gm-Features: AWEUYZn8sXhkqdCp_uJFCgUuy56ygLY55_-aYNnx8QdbJRXYArIopW_KyJxDO2E
+Message-ID: <CAHp75VcPgCeC9RJQA411RYCiPpTjEqiwtchPyajz9su5dgvPiw@mail.gmail.com>
+Subject: Re: [PATCH 02/13] auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
 To: David Lechner <dlechner@baylibre.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
@@ -100,31 +100,13 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Jan 31, 2025 at 10:24=E2=80=AFPM David Lechner <dlechner@baylibre.c=
 om> wrote:
 >
-> Add a new gpiods_set_array_value_cansleep() helper function with fewer
-> parameters than gpiod_set_array_value_cansleep().
->
-> Calling gpiod_set_array_value_cansleep() can get quite verbose. In many
-> cases, the first arguments all come from the same struct gpio_descs, so
-> having a separate function where we can just pass that cuts down on the
-> boilerplate.
+> Reduce verbosity by using gpiods_set_array_value_cansleep() instead of
+> gpiods_set_array_value_cansleep().
 
-...
+Acked-by: Andy Shevchenko <andy@kernel.org>
 
-> +static inline int gpiods_set_array_value_cansleep(struct gpio_descs *des=
-cs,
-> +                                                 unsigned long *value_bi=
-tmap)
-
-My proposal was to make this gpiod_set_many_value_cansleep(), but I'm
-not pretending it's the best choice.
-
-> +{
-> +       return gpiod_set_array_value_cansleep(descs->ndescs, descs->desc,
-> +                                             descs->info, value_bitmap);
-> +}
-
-I don't remember seeing the _bitmap suffix in other GPIO APIs, perhaps
-just drop it?
+Or if you want me to take it through the auxdisplay tree, please
+provide the immutable tag/branch for the first patch.
 
 --=20
 With Best Regards,
