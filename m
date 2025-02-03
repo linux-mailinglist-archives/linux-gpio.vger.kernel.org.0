@@ -1,119 +1,120 @@
-Return-Path: <linux-gpio+bounces-15247-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15248-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48A18A25902
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:11:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7CA8A2590D
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:14:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4377188542F
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:11:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AF2E3A3004
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D06B2040AD;
-	Mon,  3 Feb 2025 12:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935572040A6;
+	Mon,  3 Feb 2025 12:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQWOE/JJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvhFuRnk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB64920127F;
-	Mon,  3 Feb 2025 12:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D601FA15E;
+	Mon,  3 Feb 2025 12:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584675; cv=none; b=aUXxz5DkcLwZxAKhjSGQjnex2gpHFzsFZRHq6kHPeRd/jS7EsAJnWQwRhNB4tZVw3e8+/KfOoUV0q3O77/Il9/v093wM1YjuN/f/pSawGYtjd2b/aqoeR6Joj7W5qehkclFaJCvV/bIjLtTRDTQpjYOmq3hUZcY38Z6nEnG25FQ=
+	t=1738584835; cv=none; b=m32vuaKBpftZmUpLVi+MmJo7ZEouCMePeeSAPF7MjkQLXHOPJorNHVcfHvvb7jpqbCQIp5XVGui3w8aSQ+260+TeZomgGHfQNYHt++1fiGWcgKBTiByiucwTch3QEfczoyHI6pqBrGiMmzyyqmHioJO58OLf5tsQ1VZS6AWYasI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584675; c=relaxed/simple;
-	bh=QJSfw0ibffczpv3ZVDja1neQo0fo+tjFi3CxupB7wBg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MIZnEbg1pV37N3YU/Lf6oCZoeD2AQwyPV6J49v84CJYfvptar7H9VpkAH6pOeAT+rs1Km5KdG0bsnHZsbNUaIn/z8f1+68Tr5CO25HZPTuP4ohFlbCGLv4CTbd/IRDHYuieeaS/3U1U/9Pscja+5cuaErCLtSNbXmZityqY9vmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQWOE/JJ; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab6fb2940d4so618418766b.1;
-        Mon, 03 Feb 2025 04:11:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738584672; x=1739189472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vC3+WjLhlpstTgR2X3bUINeiUZ7D7J/mU9HK8P5Il04=;
-        b=lQWOE/JJlcdjat++l0KrI7Dyx7R/wQPV/2zT1jb9cikcNxcklRTcJug0n57k7nYBzb
-         TRJYx5gYtI4qmXIxQDzq2e9ERqiQjkOOoh+0jDqJmW5YFEHMgNBQ6xHk7KYglf/JlWVy
-         LIPIVoA+ZrRsUgKkjT38MU+BCknW7m5P7i9gAMDG7bF+PTH2/u5dFUoklJTIuA1e01Cl
-         vlGraL7USPLef/Eh6oQbUltSkSZQPlUP3Fyqu4GNraMbHJjxirpf5h0PC65bskxcHg3N
-         RAz9ACdriWCo440OzkyQ5irTH+mOVA/sA+yGp/U53OTLY46TuxyATjPVtMnGQc9mLuT9
-         skrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584672; x=1739189472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vC3+WjLhlpstTgR2X3bUINeiUZ7D7J/mU9HK8P5Il04=;
-        b=Kjn4xov1Tx2b/z8j0FrayrY0rsfYewM/XnwKRPSf7XbwhN+QKPElqa5f1pop3emxlV
-         2YIH8ZUWlRZKOwwuU7SjQxK9mbw2JhBAjfccjStQ82XFH7Y4nGWG0+KKJJJhz0NAUqo7
-         pVU7B6ev7FDc7Z0asdL+/Fk4Fg2cSyKRAbInv39UaXhzDVkMvdlcxjd9hn0vNQW6LuFq
-         VOu/ULYjCMqkAwTbkgWosY9ZZFzOAW20DOe+kxHF6JTSwjIlBioxfRy7lA4szIbidZA6
-         MtqKRXDQYxvCm0iqaU8as3YZYYF3Ry7vayK2xyZ9WeOusx+FgdXvTT6cjCUr2OPhewDP
-         /WUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHKGvhUbkNYcOXyRil3pLt/NsehFEQHU9BKKVhdjO+1HIgurtN3NQCrf5ZpoFrXN/sTb6j6IC+/kE4@vger.kernel.org, AJvYcCULJtjdd/pwaXRhAw11+AQA8Dn6gn5ydG6RVA6RYqh27Pc5D2jC73aWtkN4Thgz1OsdSffbcMR82yCD@vger.kernel.org, AJvYcCVHq1n+qAKqomWif3mj3YSN+3avimmx5HTQfgycna7dL3RC623xEKVClSs1UcG6+Glf+gAoE17U4XLbOU+j@vger.kernel.org, AJvYcCVnxD83y24YqZRin5danHyXj+9ZaAdXKpG0q2n77ZcQM/756cRcp88IicOMzEewP98ZY8lPSKPEx8nXz+M=@vger.kernel.org, AJvYcCX5bZSMjXbqXcUTODn4iYAijehUmuYm8b3LwvkArjKK17p5L1gRgSPX6gNv2Drh6n/xST3UFMrB@vger.kernel.org, AJvYcCXnS1Wg3y78e8t9cX1klcQiHF4Uzl93cIzBXKa79ED8554JbWAN557MW5/5Ci+vwDyBfCjjDi1wftuQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHQQDkdAhX5Wt2o05tvvUYK5pckvQuVhisuP+iuIlb5fOsXluH
-	iprGJBhwUJN88NX8KiGwrUNbS1TSLx/0/Tsl2KWq4rOMU5g/PZPYCzpXPzEHz8Mkwp56GLHdIeq
-	YikjefmTrd7lJ8+kv7jgr0V7kbsA=
-X-Gm-Gg: ASbGncv9BcF8HBd0bji2UkwCOHmpbWHAj1UexDyVcwE177AXJRP8h2Sjcx99+qRsiC1
-	cXHG1/9AxubbP2xKtrzKipchDRq+TLgFuoLiktDjedopfyf8dn5gz5vPz3JJQ0zwnKpWoZJ7qNj
-	4=
-X-Google-Smtp-Source: AGHT+IEl0shu0wyCbYmjiWbZ8xSkp39SyMbNA10oWwjLNUg4dYl7AJ/ctOStbBTvln5XQSzLfDgbhCKUVzpxgJe5YOM=
-X-Received: by 2002:a17:906:1707:b0:ab3:a18e:c8b6 with SMTP id
- a640c23a62f3a-ab6e0c3105fmr1897817666b.10.1738584671668; Mon, 03 Feb 2025
- 04:11:11 -0800 (PST)
+	s=arc-20240116; t=1738584835; c=relaxed/simple;
+	bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7GpAWQS7nXOdBVwABuCcM9bH/j4UTAtylCBWm/h+orOxtvEmeTFddmtPT1A+9UeS8Xl5U3FpbcAlr7zLLTQxOvCPkg10HC6LoNAbr/NbRGphVFrZJnVJWRcQBU4QMfR12UauFZNngC998gS29+zS54/7s1a4RQTPAgnBDYdj8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvhFuRnk; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738584834; x=1770120834;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
+  b=GvhFuRnkabjFSK84qxZbjBOSUPhE3f82An2XxS3LVjTx+qPqcu5qYqcW
+   /oNMc0LzWyQtwkEfcH8EhDLTEheacI7ykh/CJuUBL/qYlCn8HMEe9wWd4
+   4+EhaO/nqkysOmYChesWEB/wqm8zPJaFi7kc4gnOCmNGEc4gGNs+2V7dx
+   5IB6LqaBf7f5pqRWKJs056haQ7l6IJIAr7TBLJcR64eM5Ttj84oXNq8GS
+   Wy8IxnJjfD4B8snkyeu7s6OqKOKNOg0XCg+9cjnV4WUw1V1p2KsVyvV12
+   ESiDNksjvFYzytOSFJNiOX2u4d7+ao2B5Nv0/am8amfUR0SA/TVjGjSGp
+   A==;
+X-CSE-ConnectionGUID: u0+zT/R4Q7i8LyPf0D4PPg==
+X-CSE-MsgGUID: FBsKw/phQfWaH9lauzenRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26676183"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="26676183"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:53 -0800
+X-CSE-ConnectionGUID: cPOMVMPeRGaRVLvglrh2PQ==
+X-CSE-MsgGUID: 03UBfc3AQB2QttB6A11ckA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="110095012"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:51 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tevKn-00000007p5P-0Xuh;
+	Mon, 03 Feb 2025 14:13:49 +0200
+Date: Mon, 3 Feb 2025 14:13:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Subject: Re: [PATCH v1 01/16] pinctrl: cy8c95x0: Respect IRQ trigger settings
+ from firmware
+Message-ID: <Z6Cy_Nap7Euvb7Am@smile.fi.intel.com>
+References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+ <20250117142304.596106-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-gpio-set-array-helper-v1-0-991c8ccb4d6e@baylibre.com>
- <20250131-gpio-set-array-helper-v1-2-991c8ccb4d6e@baylibre.com> <CAMuHMdVqNiquGdEs16GMTA6DPCko=TX84XWJygAorTnQk=+PUA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVqNiquGdEs16GMTA6DPCko=TX84XWJygAorTnQk=+PUA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 3 Feb 2025 14:10:34 +0200
-X-Gm-Features: AWEUYZk_mY3onXi_-WCfb4vPsGEHZy7b021-vFp4QXXzEaG2YFkuGveLah_lXTQ
-Message-ID: <CAHp75VcUiNVFktAL8zFSf-8tw_J1vJp+D_4Z-hYDqRp4S9C7ZA@mail.gmail.com>
-Subject: Re: [PATCH 02/13] auxdisplay: seg-led-gpio: use gpiods_set_array_value_cansleep
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: David Lechner <dlechner@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 3, 2025 at 12:35=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Fri, 31 Jan 2025 at 21:24, David Lechner <dlechner@baylibre.com> wrote=
-:
-> > Reduce verbosity by using gpiods_set_array_value_cansleep() instead of
-> > gpiods_set_array_value_cansleep().
->   ^^^^^^
->   gpiod
->
-> Am I really the first to notice you got this wrong in each and every patc=
-h? ;-)
+On Mon, Jan 27, 2025 at 11:03:02AM +0100, Linus Walleij wrote:
+> On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Som of the platforms may connect the INT pin via inversion logic
+> > effectively make the triggering to be active-low.
+> > Remove explicit trigger flag to respect the settings from firmware.
+> >
+> > Without this change even idling chip produces spurious interrupts
+> > and kernel disables the line in the result:
+> >
+> >   irq 33: nobody cared (try booting with the "irqpoll" option)
+> >   CPU: 0 UID: 0 PID: 125 Comm: irq/33-i2c-INT3 Not tainted 6.12.0-00236-g8b874ed11dae #64
+> >   Hardware name: Intel Corp. QUARK/Galileo, BIOS 0x01000900 01/01/2014
+> >   ...
+> >   handlers:
+> >   [<86e86bea>] irq_default_primary_handler threaded [<d153e44a>] cy8c95x0_irq_handler [pinctrl_cy8c95x0]
+> >   Disabling IRQ #33
+> >
+> > Fixes: e6cbbe42944d ("pinctrl: Add Cypress cy8c95x0 support")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Patch applied for fixes! (Speling mistake on first line fixed in the process.)
 
-Who reads the commit messages? :-)
+Thanks! Any plans to take the rest of the fixes (except the one which Patrick
+rightfully objected on)?
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
