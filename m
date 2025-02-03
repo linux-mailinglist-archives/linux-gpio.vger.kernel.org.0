@@ -1,210 +1,134 @@
-Return-Path: <linux-gpio+bounces-15187-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15188-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D009A24FBF
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 20:13:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DBC1A25145
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 03:42:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8C7F3A34F4
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2025 19:13:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12B73162D61
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 02:42:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C86F1FE478;
-	Sun,  2 Feb 2025 19:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 695B428E0F;
+	Mon,  3 Feb 2025 02:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdGcrfwb"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="SuisEVK9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34771FDE29;
-	Sun,  2 Feb 2025 19:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B3F156CA
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Feb 2025 02:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738523609; cv=none; b=A4e/NwUJd79olXpdqljuyz8Fi+tcsgL6f+ktV6QV2PkIT/RsfUB7hPQ25UTKRwcOzK7/S6vZlzySjVZhJqvsH5PUUJPoXPhJva2BPxdrPh7CmJu4IvCrbPoL073SCPVD5hQcTZtkqaNth3VNrIm3CnvEbVAMS4evwve1egu6OSs=
+	t=1738550520; cv=none; b=ErFrUhdw8hKAcah25Hzw4Fk2ycFTylBw2H7xPpBT1BR5u/fjWDRDcL57zsJg4CBThneRJ2kXYFcDevtQJHy49LluFFmey8WUL2rgbigzmEmcZQCSmIGTL02O7dAe65RcVo9fZICCUduzukjtDssd4rFNG/o6Vdb1fpry+sEj3mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738523609; c=relaxed/simple;
-	bh=qp85f6lVtyFufftLcvm0KtTkfgTx1E2OjGrzMRYdJYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IdOBlGpYkqWATD3Z1YYBlmOBs+5bW5373cgSMaaNeCyUYn5b7M3bhieFRmQW9VoC+gW/kwkgsQayasVHQwaHdkGhQSlmB2JkOnnGB75Gde1IrRZnK0XeBNRkFh9VWbn98Taz4k4dT3fWcXlitNcsR+acIUy/nBhNSYGT6LQWJuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdGcrfwb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D208CC4CED1;
-	Sun,  2 Feb 2025 19:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738523608;
-	bh=qp85f6lVtyFufftLcvm0KtTkfgTx1E2OjGrzMRYdJYQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pdGcrfwboB3rD+kxQfruN+ONEzE/H0slRWflqRFQugTFLh6rRmf+SaG8i3l4YEIXh
-	 LinmJZwsi3NK7Y8/6aJCrLZOIAy48FyVey4pVb6vZBNwL2sCRB1YYfzktAg4wTjSNM
-	 2JyA+MGnaZg1kfbeQpq/AKgiXUWIC/pXP1h24HMSZpKmnc6kVHG1NLbFZqAJwDwXEM
-	 CXYBHqQd+BUZDewXD0UVhlPgmWi1lYJSOBn+03/4GYpgKQSjGl4Td8IFyS8zfsKXTZ
-	 SgcUZL4TB70C/GqhP7mZXzcNzI/nK8hX2iXPw8WaOvot5f+3nCC3KOuWXExfoiZUpJ
-	 JAr75MtBwZhyg==
-Message-ID: <54d9a2ef-baaa-4d09-afc8-974bd9bd9daa@kernel.org>
-Date: Sun, 2 Feb 2025 20:13:11 +0100
+	s=arc-20240116; t=1738550520; c=relaxed/simple;
+	bh=qzCf6w0kWR1848H5E9nYadnxcuCIu+NDN2mKGbf5Y+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T80hjjWpnrrzBC1hATCniKnCK0jv1PVw6a87Dc2qEwkxjVAdEhO9qMVpKl1FyJXElybJzkLWuZ7GYkuMOHvHX/JkSwS3E1QqYa7S5raWkIbwDnUyI8n/Xh/ChsNkmkh338MWFoZ0RPPY3dP1QvfFY5sS9YWCwQqrE5i1pgOjRkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=SuisEVK9; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id EFBF83F2B8
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Feb 2025 02:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738550508;
+	bh=xZvdSBE+LgaOYmmFBhKsCXeW+YkHJkSKnanfbLe89eo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=SuisEVK98z0yD2f47s+sMlopW77h0oIdkmdj7k1Uh1+nwZsR/C/cDOA3mfZwQvggq
+	 pzR7IEt2F0387FEK8Y/hKUKkz9srm3IxZuoAwPGNqADS7pSkNO69N6zJD7W8LWaDXN
+	 SBK/rtTAXfKr8FLR+6Yd4qDAS8Dtstz8ORv93sXy+pCgHwa18CJ4i80lG5q5JYnvdX
+	 YQv+3pn0PWLiHt+zt4/UgSxGR24dLovc0BYv+ZtoLMPtYeiwO/TiDmui9qy/5N977n
+	 EOmYB2SbSTIUADwnw+Nx9XRUN7tRJcAWONoMHArBLxyDhs3o+1/MFia7Qt8dR1NMFS
+	 9Q4BSNIV4vrwQ==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso11244932a91.2
+        for <linux-gpio@vger.kernel.org>; Sun, 02 Feb 2025 18:41:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738550507; x=1739155307;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xZvdSBE+LgaOYmmFBhKsCXeW+YkHJkSKnanfbLe89eo=;
+        b=ctP54Wp8MrHuU0aGjJbcTYeJ6ktoipa+37ht5vtMhtgn9elWs7NxgjlmEGiIEMjijq
+         kBe+a0BEPev3FYMUfT0MjB+tnvOHStVCZEsZyriyezdfMy+CP3GEpsseq5S0nUISHtiF
+         uvjTPGd5+zEZWxtMGkCFWA97xV/tC6hRnbEQc3cAWAo12rgNWumk2BoMpc+MC0oLy0Ie
+         QiIo45bvUBCL/z9jfL5ALRXHs6H+aI8FlLej7GmXJlSdyB9mABXbei4bxmbB95JmTyvQ
+         XevfoUDPZhkLdu8kT4uMgybqZA4sbHNJpZpBXoNkMNaUnoK6MM/E0hsCDKMN7nRLz3LZ
+         P8iw==
+X-Gm-Message-State: AOJu0YwMBeMTvbtPtJCiEmsq7dYJ3P9OgmM6QKyeiZNO8Hh+XrAmXT4Y
+	tLSu/JMI/3xVi4sti6yMJXpSd+vP3mTFDxvVDtdaXpla7uSu/77fAdFhVd4fk5hHQVlN7C3Qd6u
+	bAlVdCIxKLi0ZG1pLkITI0VKlc6cIDf/Sv930DFdCucbFv07WB0AUlsp2e8msfHDG/W0uywRgws
+	M=
+X-Gm-Gg: ASbGncuZx4TumV0zINETS6d+cWQMbdJQTwfFHFU6iTQvjJozuyn03dHifXXYK1c8eOp
+	Zqmor2vGsIw0zeoK/izTxvj+Hgn8bPnaT/tfH5Ago+AqZ3Z7Iy4aPHVILmuY/kZnuoJ85ejOJr1
+	NcgHkWRGcpza3SpMHTRlOUy0mJhPl0JBdpPaJ3NdVqWVT4CDMe8A/bCtSXSVyhnDvbInXWfhyIZ
+	qPlqN3WtLR9MOKtO1ELAVMjNPGKJGa6mz66yUS4tUrUClWJMmkvXA/+a3/Rfp/uW/Dz7wVmZLkW
+	d7pjwA==
+X-Received: by 2002:a17:90b:288c:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-2f83ac17f80mr28520528a91.21.1738550507049;
+        Sun, 02 Feb 2025 18:41:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH6i84l0H8/NyTIQEDPCj+dTbpJBMzycl508u2oFUGlYYYue6YCfB1i+fgYjqkSujkuoyg7OA==
+X-Received: by 2002:a17:90b:288c:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-2f83ac17f80mr28520510a91.21.1738550506665;
+        Sun, 02 Feb 2025 18:41:46 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:33e1:5e62:5b35:92b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de330025esm65084985ad.166.2025.02.02.18.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2025 18:41:46 -0800 (PST)
+Date: Mon, 3 Feb 2025 11:41:43 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Introduce configfs-based interface for
+ gpio-aggregator
+Message-ID: <vscpr2piax6vgbrkbrfi5iboszymcuotflqjnk2jufannsgmvn@s6dyfs4ftbk3>
+References: <20250129155525.663780-1-koichiro.den@canonical.com>
+ <CAMRc=Mdim2aSBs+JsL8dECfG0Vvrvcq6CHaGHbBoVhNhSZn9Kg@mail.gmail.com>
+ <2kz6mz6nglozgrwudkgziles4wievwfkkl2oo7qyvosirchjuw@y3wfna5dsekv>
+ <CAMRc=Mc3qBXaATpYRAXeHne0+mBjErivjvUe4rBEj2ksansatQ@mail.gmail.com>
+ <CAMRc=Mc5WWNErJfEQ4sFRQm_+vDRMa7KBKSPSnP3W8scu4G19A@mail.gmail.com>
+ <rhdrieapetwdr3z7roguf5nex3esazhygjbjx4zklkrjzqrlsv@6vc5zmk3il5e>
+ <CAMRc=MeRBABW6JCScGvsRR_4+W6u5QMWJwA7yMB9gj7=uOeD0g@mail.gmail.com>
+ <xrllvn5tmshdbb2mjlxvoc4rpalnefy52wwd5p6s55ehhysl4l@k4w42cd7hxkn>
+ <CAMRc=Mf6FZgTNBGUSsm3H2nSBLbp+DpamzbZiHZ67Xc62F3QnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33] Add support for the Exynos7870 SoC, along with
- three devices
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Jaehoon Chung <jh80.chung@samsung.com>,
- Vivek Gautam <gautam.vivek@samsung.com>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mf6FZgTNBGUSsm3H2nSBLbp+DpamzbZiHZ67Xc62F3QnQ@mail.gmail.com>
 
-On 02/02/2025 19:36, Kaustabh Chakraborty wrote:
-> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
-> announced in 2016. The chipset was found in several popular mid-range to
-> low-end Samsung phones, released within 2016 to 2019.
+On Sat, Feb 01, 2025 at 05:10:07PM GMT, Bartosz Golaszewski wrote:
+> On Sat, Feb 1, 2025 at 1:26 PM Koichiro Den <koichiro.den@canonical.com> wrote:
+> >
+> > On Fri, Jan 31, 2025 at 06:22:50PM GMT, Bartosz Golaszewski wrote:
+> > >
+> > > I too think a-1 is the best option. However, I'd go for line0, line1
+> > > etc. convention as for computers it doesn't make any difference while
+> > > for humans it's more readable.
+> >
+> > Thank you for the comments. I’ll address your feedbacks and send "v2"
+> > later, Since we seem to agree on the overall approach, I’ll send it as
+> > [PATCH v1] (i.e., without the "RFC").
+> >
 > 
-> This patch series aims to add support for Exynos 7870, starting with the
-> most basic yet essential components such as CPU, GPU, clock controllers,
-> PMIC, pin controllers, etc.
+> No, please don't. It'll be confusing. The RFC WAS the v1. Next
+> iteration must be v2 with a changelog.
+
+Ok, I'll send it as v2. Thanks!
+
+-Koichiro
+
 > 
-> Moreover, the series also adds support for three Exynos 7870 devices via
-> devicetree. The devices are:
->  * Samsung Galaxy J7 Prime     - released 2016, codename on7xelte
->  * Samsung Galaxy J6           - released 2018, codename j6lte
->  * Samsung Galaxy A2 Core      - released 2019, codename a2corelte
-> 
-> Additional features implemented in this series include:
->  * I2C     - touchscreen, IIO sensors, etc.
->  * UART    - bluetooth and serial debugging
->  * MMC     - eMMC, Wi-Fi SDIO, SDCard
->  * USB     - micro-USB 2.0 interface
-> 
-> The series has commits from me and Sergey, who has given me permission
-> to upstream their patches with proper attribution.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
-> Kaustabh Chakraborty (26):
->       dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
->       dt-bindings: clock: document exynos7870 clock driver CMU bindings
->       dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
->       dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
->       dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
->       dt-bindings: serial: samsung: add exynos7870-uart compatible
->       dt-bindings: mfd: samsung,s2mps11: add compatible for s2mpu05-pmic
-
-This is not related at all to this patchset.
-
->       regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
-
-Neither is this.
-
->       dt-bindings: phy: samsung,usb3-drd-phy: add exynos7870-usbdrd-phy compatible
->       dt-bindings: usb: samsung,exynos-dwc3: add exynos7870 support
->       dt-bindings: gpu: arm,mali-midgard: add exynos7870 mali compatible
->       dt-bindings: i2c: samsung,s3c2410: add exynos7870-i2c compatible
->       dt-bindings: i2c: exynos5: add exynos7870-hsi2c compatible
->       dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
->       dt-bindings: soc: samsung,boot-mode: add boot mode definitions for exynos7870
->       dt-bindings: arm: samsung: add compatibles for exynos7870 devices
->       soc: samsung: exynos-chipid: add support for exynos7870
->       clk: samsung: add exynos7870 CLKOUT support
->       tty: serial: samsung: add support for exynos7870
-
-This goes to different patchset. Don't mix with SoC changes or pure
-bindings. Your CC list is too big.
-
->       phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
->       phy: exynos5-usbdrd: use GENMASK and FIELD_PREP for Exynos5 PHY registers
-
-Different patchset.
-
->       usb: dwc3: exynos: add support for exynos7870
-
-As well, with bindings.
-
-Please organize your patchset according to standard SoC upstream
-guidelines - don't mix SoC with non-Soc upstreaming or other subsystems.
-While putting entire SoC in one patchset is tempting, you added here
-totally unrelated changes like PMIC drivers. Result: 33 patches and huge
-cc-list bouncing from mailing lists.
-
-https://lore.kernel.org/linux-samsung-soc/CADrjBPq_0nUYRABKpskRF_dhHu+4K=duPVZX==0pr+cjSL_caQ@mail.gmail.com/T/#m2d9130a1342ab201ab49670fa6c858ee3724c83c
-
-https://lore.kernel.org/all/20231121-topic-sm8650-upstream-dt-v3-0-db9d0507ffd3@linaro.org/
-
-Best regards,
-Krzysztof
+> Bartosz
 
