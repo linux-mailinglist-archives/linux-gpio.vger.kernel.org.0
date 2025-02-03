@@ -1,91 +1,146 @@
-Return-Path: <linux-gpio+bounces-15288-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15289-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C972BA25E97
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 16:25:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3636A25ED7
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 16:33:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04F6E1881221
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:25:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD6F63A79CD
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A966209663;
-	Mon,  3 Feb 2025 15:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410C520ADDD;
+	Mon,  3 Feb 2025 15:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="WPKbYP2m"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE56204C04;
-	Mon,  3 Feb 2025 15:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CDD205E1C;
+	Mon,  3 Feb 2025 15:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738596340; cv=none; b=a4B3A9FcFoOz7ngf6wzM+XnUKP1m7+O6P+JilQwNIOU4AjVes2km/ebRAxFfNyrAh5OMdZaDFemG2sORfjR5xoTEtj5czwi86btK168KXetDc0HF+ThNefTjO0llsIxKuVysr9rOkF0/cA0e9U6+zHk+UpDsPGt5G2cMuEpj9Kk=
+	t=1738596711; cv=none; b=pUydIgHEVwqqR9jueXcX+NLyXh4jMjBqdpGRYCUE/G6P1ahSCyhhh2JMBtlIS+t/6oDEPhQT3+1sHZSmjzrwo7EdH09XGE+FsgKtdigppbVmprMU8HQpDaIa49rzhrY/XPmeGMjtjM8r2wkRrqAkg0e5pjm4R07aW9vJstW8MbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738596340; c=relaxed/simple;
-	bh=wRpwTEd72M21DmLzOcouJm+GBzjy+8mSBR6J8Uag0h4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vl2srzLUxas94VgRiCopb62PPehbV0WifCD8UamATQcKjl21/zlePciePXfyiAbvdTwLo8u39fSjo4j4YqwUXU1PiMNBnfn/azONMtbgP2aOysEqzmsHG5vx5mAewBuGwgcPln92iXkm6xZgbmZLHnqlD06czFjStWilCHRsuq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: UOU1/cmPSEG1CeOwAhLzbg==
-X-CSE-MsgGUID: 7MQHIseUQ1aLfSzCo2mMWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="41924711"
-X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="41924711"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:25:38 -0800
-X-CSE-ConnectionGUID: 1sNiTXNJTde1JCqyHDCYaQ==
-X-CSE-MsgGUID: ExALNuoaThe61pnbpGy1jA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110128517"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:25:37 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1teyKM-00000007s81-23pH;
-	Mon, 03 Feb 2025 17:25:34 +0200
-Date: Mon, 3 Feb 2025 17:25:34 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] pwm: lpss: module namespace fixes
-Message-ID: <Z6Df7lmckX_gPgJG@smile.fi.intel.com>
-References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1738596711; c=relaxed/simple;
+	bh=3v8EFM1T7G9E1gQyrUNrG6m+aM4+dQyCmq/iSZIDY4c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eo5Ixx/pNVXyfC1uRonGX6K+v2pA9zXlWB1C+C1/jEbjLLRLKHHISXkFCltHIjnc4n9rjIB0KaZjBcyenYA0c1zzbfczIOdb6skOaHm0PAio4FDCGwWYSp9i4Ykvr7NYCSkkUQvonU56W1m5ETd1yqJ28nkXZfrThp7lx00qkXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=WPKbYP2m; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=PAvOtJHsIMS59RfRzFfMyl8id23TWAECc7EwAHrUKlY=;
+	t=1738596709; x=1739806309; b=WPKbYP2m554oV92ofNHXgmK4f5Kczfmx2KPMeDJ7kzv1Sml
+	y1H3j1+rZ0GesRwgqUY5RZsVVrDmBPHmpxMcL0DNzmIvmAikxh7BFhj4iy4ABbQ2g8ZExVnUlpK2C
+	GsK61+rWhqpm1tth0kgHRNRp0cpkz+gwtfAwc5g/rHbQANNEruTT4Pf1Xq5CSlWhnCwiIbxYfzKP9
+	IEm9aMR8rkQBGczMUdSCY7UdN6VS75As6bv/VjRl6H11vZbLpPA5zN6thqtKcpAp2rOXzjCmPbLR2
+	lQ1sulqkjKmvqann1uS8o9cDlWWI/at8loLohsF6z7VllXRMpRr8sIgJtkM1PmVw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1teyQE-00000001gus-0LFB;
+	Mon, 03 Feb 2025 16:31:38 +0100
+Message-ID: <2904baea9188a4707d4b5a9a6bfa517a54323f8a.camel@sipsolutions.net>
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Yury Norov
+	 <yury.norov@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
+ 	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, qat-linux@intel.com,
+ linux-gpio@vger.kernel.org, 	linux-aspeed@lists.ozlabs.org,
+ linux-iio@vger.kernel.org, 	linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Michael Turquette	 <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre	
+ <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>,  Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu	 <herbert@gondor.apana.org.au>, "David S . Miller"
+ <davem@davemloft.net>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,  Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Lars-Peter Clausen	 <lars@metafoo.de>, Jacky Huang
+ <ychuang3@nuvoton.com>, Shan-Chun Hung	 <schung@nuvoton.com>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, Alex Elder
+ <elder@ieee.org>
+Date: Mon, 03 Feb 2025 16:31:36 +0100
+In-Reply-To: <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+	 <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+	 <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+	 <Z5-xMUqrDuaE8Eo_@thinkpad>
+	 <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
+	 <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-malware-bazaar: not-scanned
 
-On Thu, Jan 23, 2025 at 11:11:09AM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> in (implicit) v1[1] I suggested to move the MODULE_IMPORT_NS magic into
-> include/linux/platform_data/x86/pwm-lpss.h. While I still consider that
-> a good idea I was overruled and so here comes the variant with the
-> explicit MODULE_IMPORT_NS in each module that makes use of the
-> respective symbols.
-> 
-> I don't have a fixed merge plan for this series (assuming it gets the
-> expected Acks). Either way (both via pwm, both via pinctrl or the
-> pinctrl patch first and the pwm one in the next cycle) is fine for me.
+On Mon, 2025-02-03 at 22:36 +0900, Vincent Mailhol wrote:
+> > On the flip side, there have been discussions in the past (though I
+> > think not all, if any, on the list(s)) about the argument order. Since
+> > the value is typically not a constant, requiring the mask to be a
+> > constant has ensured that the argument order isn't as easily mixed up a=
+s
+> > otherwise.
+>=20
+> If this is a concern, then it can be checked with:
+>=20
+>   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
+>                    __builtin_constant_p(_val),
+>                    _pfx "mask is not constant");
+>=20
+> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
+> any other combination.
 
-Pushed to my review and testing queue, thanks!
+There almost certainly will be users who want both to be non-constant
+though, and anyway I don't understand how that helps - if you want to
+write the value 0x7 to the (variable) mask 0xF then this won't catch
+anything?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > However, the suggested change to BUILD_BUG_ON_NOT_POWER_OF_2 almost
+> > certainly shouldn't be done for the same reason - not compiling for non=
+-
+> > constant values is [IMHO] part of the API contract for that macro. This
+> > can be important for the same reasons.
+>=20
+> Your point is fair enough. But I do not see this as a killer argument.
+> We can instead just add below helper:
+>=20
+>   BUILD_BUG_ON_STATICALLY_NOT_POWER_OF_2()
+>=20
+> But, for the same reason why I would rather not have both the
+> FIELD_{PREP,GET}() and the field_{prep,get}(), I would also rather not
+> have a BUILD_BUG_ON_NOT_POWER_OF_2() and a
+> BUILD_BUG_ON_STATICALLY_NOT_POWER_OF_2().
+>=20
+> If your concern is the wording of the contract, the description can just
+> be updated.
 
+No, I just think in both cases it's really bad form to silently update
+the contract removing negative assertions that other people may have
+been relying on. Not because these trigger today, of course, but because
+they may not have added additional checks, or similar.
 
+So arguably then you should have BUILD_BUG_ON_CONST_NOT_POWER_OF_2() or
+so instead, so that all existing users are unaffected by the updates,
+and similarly that's an argument for leaving FIELD_* versions intact. Or
+I guess one could change all existing users to new ones accordingly, say
+FIELD_*_CONST_MASK(), but that's pretty annoying too.
+
+johannes
 
