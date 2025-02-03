@@ -1,203 +1,164 @@
-Return-Path: <linux-gpio+bounces-15291-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15292-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66103A26084
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 17:48:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36286A2614F
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 18:22:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 76D2A7A21E1
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 16:47:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F42381883F53
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 17:22:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA5E020B7E2;
-	Mon,  3 Feb 2025 16:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B4D420B807;
+	Mon,  3 Feb 2025 17:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFak/j1Q"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="flSIZfhh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D972063CC;
-	Mon,  3 Feb 2025 16:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA49D20C46A
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Feb 2025 17:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738601285; cv=none; b=XcTpDsNddU3IUO2yvHQBcRObP3fEGdVzTI4PLtUI+vP4jml5PiBllJJHFPDLj1Y5J8B8LqZrLsuVQH9Yd7oiL6SlEEaBza/JFIy7KltykKU+OqxKEsIwkQDei5ELr5H2o/OCB/cm49E09KNH6SPKY7sSujF/TzSK53zeNJgzHM4=
+	t=1738603242; cv=none; b=Y2aJBtnEDMj3k2l6fLnjO5A/BsoxDPCVrPN2+EHKXfRxTd0DyEHMMn0yZk+ThIr1XELb8TCKCJoC64lVhtLmsdthCPZC34n4RG4IGHKzmuH2ccM2yU2CUejkkOjl6FlTpER1a7ar3lqzHtSF4eaSg8a+QC4L6SORlCcze0LQ7Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738601285; c=relaxed/simple;
-	bh=KsQAqNFBlCnRQ0Q1Ww9rKgZbgaipv1/rUQJ1vcpzy8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHcrfVFx9f3nkhhMktE3w+8Z1kaCTLAKpoDzUZfXw/hOP69/qw/s4h56PPWp4rYWrQJwBFL6Pv7tucAZ/zRBx3uHFjKn2/zRdCyrqeuSma9ebQ7KugLGPalx17HjxZZ8r5qrEOZ7xAut/utCVyWI/BsDZeruQ+rLeSFazPij8y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VFak/j1Q; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ee76befe58so7995336a91.2;
-        Mon, 03 Feb 2025 08:48:03 -0800 (PST)
+	s=arc-20240116; t=1738603242; c=relaxed/simple;
+	bh=WKM8Xl2YJm9lSGeWpKICpjBYGuMgPiOjmjIMO2jIpUk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XeMoiYAdTXbbeuYwxGHYL8Ica885zN1x0ThVglj9wZOfU9yRUrwi+5JOxCH0VHP7QfXkm+lp/gWLN5ZT0tPEESebv6EKM2ZV0OSIrSPnGQxlVinMRi1teXxkqf5FLCHN1WidWq3zcY638U9GgHCmQo0ffgIpSwxQwmBE6Ry7+fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=flSIZfhh; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-385ddcfc97bso3707802f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Feb 2025 09:20:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738601283; x=1739206083; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yPAYDZWhZdvT52ze2ZOmieMRhyI6YJK1D7vMTJGJV3Q=;
-        b=VFak/j1QQn9eqWpMCfprLZRAQvJYeLtwMPSW3t+Hl9xEo7gv8nm8NtkAUq/vjWlcB1
-         k+9wvy9/nnkVuarYEz8/vwky0zaRJxjJUfVb5+ZpcRZ4w/l3lnRRdpjS86aL8W3tJwYL
-         p0e3AGfPh9xD17WyesmahD0vHsEpcF5EtNE0X0a1rVoGkLtQSOYextSwqxqLKm7wAzFC
-         xaGFWcEXKuCr9EJYxMEzYKISXAi58jYvDW0m3BzlgUWza4YGHUPRyGflkh2ysq2o+0s8
-         HLQHbKHqUex7UQaEzpJ+8+xsdiy3x6Iqiu2tu/mGMePhCFDcHeVATtpuyRTk0l9x/gTa
-         bbbw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738603238; x=1739208038; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yooZZwhM+k4ztx6Gy6sHU7tFSm5CVfUBvdP7kZBzJ0s=;
+        b=flSIZfhhUKbZztiezYLLUPWZAVpPNyv6SF08SF1fnWqkHx2iLvXa39MV3pt/SoS/63
+         L1X5iEYSmWznjJUpPLLR5wy5f+wG0nncF7yJxYhFpPTqYfx8wJLa8ZaAYfq27AAo0ayj
+         2ZS0uQRJnT+hyl+R+1qFonj8M2dFraNa3uzt8iL9UBY5nSYAv0N1mBtv4f77jXS3zQ8G
+         S6AJLz/q0fEZw/6Lh287cNRCAr25CZdceziWNB6KxYM+4Kvdd1w1d1gEj1UOipLeObRE
+         K5mRrmvMLn094T4eny+aj8GSG2gt0QdTBuTOpxt2At5ERERns4OMp7iIh4miu6GtsaVW
+         RZEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738601283; x=1739206083;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yPAYDZWhZdvT52ze2ZOmieMRhyI6YJK1D7vMTJGJV3Q=;
-        b=UZ6EYeHTApIsiGvD/qsHRPdK9DIpQTuT8u42RQAHZTR8kCdO5FdDma9rrAG0yszKje
-         Evbpijx55ZDWvsy6V84fQ8fbRC2OKphA3mczw2DtdHKigtPqYzj6oMyOBmJxUz1+0Se5
-         iWzfovJVB2hwGoYizRjc7cTaNyOzDAE95DTRLKscqS08Y3H2KTtcO/xOSCUfrJcQnbXB
-         EYxykrtUHm9mKkPyOpG8R5I2sFReFCiDy1M8McjFsYSjaeNjY+4tz9GeYXFBRtC4WeqB
-         kUSDqgx+v33sMNYYeZGMlqoFtHRQSeZCgqAJToIJlOIAKFQKISQQUOyNvC7YLP56adRE
-         wXuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUY19bS/ZEWxR4yBiIHSCOtUYLMMJEvr0kg1sYCoQeag7cWKHynJ7W/dvv7kHLhRuntP5VaQamlwDIVhY=@vger.kernel.org, AJvYcCUmxMZCZPR/J/irL78+bM8npSxcQSRUNlclvcByecUsChG2xOG8NZmLhtkz7YVX2/hqd2GcEyp9YQQ=@vger.kernel.org, AJvYcCVaQ94QCECD6CsaVQcpmpDOtJDofTxgxpXkRZyNzkZR8kLFx7F5o6DYY4QPb6qsPty6AfOZYXJMAmAUoZGxlndCxic=@vger.kernel.org, AJvYcCWqAnBLub6psTdytPFGkZ0o8x+IocXqluD+Y/8binoGLYkJa8dwnld7JxEnmrU61bdeygXRJdgY3qMGjw==@vger.kernel.org, AJvYcCX/g/1O+m+dvfkoO+EB1tQ33l7H6nD7i1lSu6fciuavWqJOjCSTo1mx8qdCzHoIJE8LZdDX9CWP6VYuSQRg@vger.kernel.org, AJvYcCXTo1Tj6PeUDgRjMyzRKCU5D514rXIdFijHCc42hLhbZkFtZB5ucBBTo77IkCJW0S6UTPUud28O6xgZ@vger.kernel.org, AJvYcCXWgMs09BCPi9mnCUvLPB/FjLnjjGsRBQSEMWdQ34sYSLrG10WX7M28Dg9jvklhg3gpRxLABHBQzT8d6Tcg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+tCWLwELb8usKdgEpi3lWf3l9mQpZjxHZsuJAurvG23ZwXlF3
-	TGAIIcBJNnRBaNmus+PuCkmxN/MlgbelIv1e3YDGCcSIqEKlM1wR
-X-Gm-Gg: ASbGncv2h++5K+eZ1aEQdWC1obF/67WtcALH/k+WBeKhLjb5+ocuuKbFQ0o0vfDg57Y
-	TD7OfDOOE5V8d6TvDyDOtwWmrwngC2BQpDYuALp3PNQHjxrG7oLxZ3fvLHaQiEeE85ygYOxPw2I
-	L2NpgmXa6kYP0pGN20MnaLCi7nc2FQYYASVwnlloeMba0Ig5fqUBSKXxB6KRbnJF4bEWE1pY34s
-	BoInwJXaNpxnsvZ3fVGKmgcVgwqRVEkWli4IZi4R3NFAswiNdnc35cDtiQ4vKFwT7wyVq4Zal6+
-	s+8DuZUwf0LAqXBRbRbuMLlwekxoH1XCbT19AlY=
-X-Google-Smtp-Source: AGHT+IHh9exrF+8QB08CxBY/dutMFmF0pU/5zhM+ZnTaly80R74kffODtDWK+nW0lOwVLaaD6ED6FA==
-X-Received: by 2002:a17:90b:53d0:b0:2ee:45fd:34f2 with SMTP id 98e67ed59e1d1-2f83abb8f42mr30994632a91.6.1738601283227;
-        Mon, 03 Feb 2025 08:48:03 -0800 (PST)
-Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f8489adf7csm9341363a91.13.2025.02.03.08.48.02
+        d=1e100.net; s=20230601; t=1738603238; x=1739208038;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yooZZwhM+k4ztx6Gy6sHU7tFSm5CVfUBvdP7kZBzJ0s=;
+        b=nPjnkkMzQo0vcbeaRErMDHZpMUy+UahwgSXuyV8dspVHcYtPa709FbGFNQSZ9/Kjk3
+         SNmRQ2vPtxB43rUrcvBpy2Ed4WBIvDWwCnNELeSe+RA3aDjVMUsuL6IGGKUjST1y1vpi
+         V29UHzN18zsQx0KESr6UJGg9zZwZeByAX7Tmadv4U74CNMfMQAjXRjcSA/+kR6YlUEnF
+         RypBN8QsYdOYgjYftASGsQrLgiEiLTynLTP36FL0loSHHl92Tudi3hxFFOIn8+sa3hyI
+         qBTsVQIp5lr2Mn0V59yhzF7cjEy+dTl1gKDy6hGTbn7IG0DODuWGWxxgHxKSR2ODmZpE
+         yJUg==
+X-Gm-Message-State: AOJu0Yy1oI6qRLRvvoOA3ub0LrvAYtPmhICDKZUuj+5heY8pLwk3FtMN
+	v03/40QjUzsX/Fra8SCk2VoCwpBvV2LNjwMoWdPnl4mDJgMNIjVt5C7q3lcD6tI=
+X-Gm-Gg: ASbGncvQ9el1o2LNvMBDO+0KjXktWDnTy+3tQIjf+BM4U0628JiCSiI/7jibRx+zXS9
+	GkXkYi2Thn56qtMYW331wccaE849DZrDeR+86iqWJMiiWXqw1a9w0Laow/7WC1niLbEQq+EyVdw
+	lacsVl0TpE8Tj1ZVmVu543kMR2URCXp5ZCmN1pZ7TFzniyRIUVqtq74JNIU/DCaGi2XwvzoLkQO
+	ijb8QGu9dDY2HVOhrK+KsngOV9tXOBoCVcMLUJdsf2BqQK2pzzBgfskvRqM4XeNafz3NS48bAhj
+	fQzwYcs=
+X-Google-Smtp-Source: AGHT+IF2Nfk7tfw6hP8j8Qb13diZMOQNa7IzSmAly6YZUZMwPvkopTtvpv2NwazX3VQmF7oAwqa9aA==
+X-Received: by 2002:adf:e6cf:0:b0:38b:f04c:25e6 with SMTP id ffacd0b85a97d-38c519447bdmr14817122f8f.14.1738603237334;
+        Mon, 03 Feb 2025 09:20:37 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e23d4f9esm168000045e9.2.2025.02.03.09.20.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 08:48:02 -0800 (PST)
-Date: Mon, 3 Feb 2025 11:48:00 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	qat-linux@intel.com, linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-Message-ID: <Z6DzQHebEKBb12Wo@thinkpad>
-References: <cover.1738329458.git.geert+renesas@glider.be>
- <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
- <Z5-xMUqrDuaE8Eo_@thinkpad>
- <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
- <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
- <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
- <16e1568d-8747-41e0-91b9-ce23c5592799@wanadoo.fr>
+        Mon, 03 Feb 2025 09:20:37 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 03 Feb 2025 18:20:27 +0100
+Subject: [PATCH libgpiod] dbus: client: tests: fix the way we wait for
+ simulated chips to appear
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16e1568d-8747-41e0-91b9-ce23c5592799@wanadoo.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250203-fix-dbus-wait-for-chip-v1-1-563f7132c04f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIANr6oGcC/x2MQQqDMBQFryJ/7YcYTWm9inQRzY8+KCYkVgvi3
+ RtcDszMSVkSJFNfnZRkR0ZYCzR1RdNi11kYrjBppY3SqmWPH7vxm/mw2NiHxNOCyN1L2od15im
+ iqcQxSTHv8UAfjHNEcPS+rj+a+JFFcgAAAA==
+To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Erik Schilling <erik.schilling@linaro.org>, 
+ Phil Howard <phil@gadgetoid.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+ Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1879;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=0JHgpdKpjShEk0huPvSNVFzKVOyUbSccRDpH4PxJivU=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnoPrgXFbHxGbsUhnqUS94ht8jnR8qcD1Hbo/KK
+ kI+ikStGCeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6D64AAKCRARpy6gFHHX
+ ciUiD/9iqiddaLS+w1C08EX1aE2JRwr50ykq94LXzGBssRqVcEePIYiTzCn6dNYmgMDdwyVntL6
+ wMvzSHkKI3xKvtOEE5jYHcf36BYd3caw1s0XpPDWxYkR9Vo+lwS8BSd/4Z1yYYxV9p5SfBTIG2r
+ AvccfT4Sjb/yaWhWld8A341dhiBrjfdM5Wu/tEdGNcVxy5avLo0/hjcIKQ02XTK5ec3X4Eq5dLM
+ L9wE1CgJn81HDo86Fh8hwDzNYRdOM70bVjTcjB/BZz82V+6zhQ5glCtHQ49grJzIR/wQSvY/2Sl
+ 9N1uYAd0rw/NXQjEYLgpL4z4RZvi7IaxDGTyT/r8mSO4PHB3pQXtNPwd1akSFq35CzqCljpI9Mq
+ XNpzgA41A445ldWQI0csdZ6dKl8cACWe10YE1jPQ0WFqAWtXnaaFFHHlq8tPAfeNuDYh/noPdrR
+ 2asSKV5S3+B9HwG7MW60LPlbrj1sHu4YLTs1xy+USCPItz0p6pyqb4QUf5k+NQf+tNtouLvsjXA
+ dmX8yTiLrlV+iVr39ud4X9SVN07Tu1xuS4DFZRdfhxSXq+OrZpQODs8gWYP5K56T1uF1E97KjiT
+ N3MppzzuuwRywOW0pOB7Rr20crhNeojBJehWkNVPrLBKVfW32jbJ4pCHKv4kWcizIHrKJ3tfrOE
+ vAHe7I46Owsjo7g==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, Feb 04, 2025 at 12:41:55AM +0900, Vincent Mailhol wrote:
-> On 03/02/2025 at 22:59, Geert Uytterhoeven wrote:
-> > Hi Vincent,
-> > 
-> > On Mon, 3 Feb 2025 at 14:37, Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
-> >> On 03/02/2025 at 16:44, Johannes Berg wrote:
-> >>> On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
-> >>>>> Instead of creating another variant for
-> >>>>> non-constant bitfields, wouldn't it be better to make the existing macro
-> >>>>> accept both?
-> >>>>
-> >>>> Yes, it would definitely be better IMO.
-> >>>
-> >>> On the flip side, there have been discussions in the past (though I
-> >>> think not all, if any, on the list(s)) about the argument order. Since
-> >>> the value is typically not a constant, requiring the mask to be a
-> >>> constant has ensured that the argument order isn't as easily mixed up as
-> >>> otherwise.
-> >>
-> >> If this is a concern, then it can be checked with:
-> >>
-> >>   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
-> >>                    __builtin_constant_p(_val),
-> >>                    _pfx "mask is not constant");
-> >>
-> >> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
-> >> any other combination.
-> > 
-> > Even that case looks valid to me. Actually there is already such a user
-> > in drivers/iio/temperature/mlx90614.c:
-> > 
-> >     ret |= field_prep(chip_info->fir_config_mask, MLX90614_CONST_FIR);
-> > 
-> > So if you want enhanced safety, having both the safer/const upper-case
-> > variants and the less-safe/non-const lower-case variants makes sense.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I agree with that. I just don't want the same shift-and operation to be
-opencoded again and again.
+The org.freedesktop.DBus.Peer.Ping() method isn't correct for checking
+if a given object is exposed by a service. It only lets us know if the
+service is available no matter the object on which it's called (in fact:
+it will not return an error even if it's called on a nonexistent object).
 
-What I actually meant is that I'm OK with whatever number of field_prep()
-macro flavors, if we make sure that they don't duplicate each other. So
-for me, something like this would be the best solution:
+While this has worked for most part by accident, if the timing isn't
+right, we may start calling methods in chips which are not yet fully
+registered. We should try to read the chip's property instead and keep
+on waiting for as long as org.freedesktop.DBus.Properties.Get() returns
+an error.
 
- #define field_prep(mask, val) \
-       (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))
+While at it: fix the counter increment as its syntax is invalid.
 
- #define FIELD_PREP(mask, val)                                         \
-         (                                                             \
-                 FIELD_PREP_INPUT_CHECK(_mask, _val,);                 \
-                 field_prep(mask, val);                                \
-         )
+Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ dbus/client/gpiocli-test.bash | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/dbus/client/gpiocli-test.bash b/dbus/client/gpiocli-test.bash
+index f210183..1d2337d 100755
+--- a/dbus/client/gpiocli-test.bash
++++ b/dbus/client/gpiocli-test.bash
+@@ -14,11 +14,11 @@ wait_for_sim() {
  
-#define FIELD_PREP_CONST(_mask, _val)                                  \
-        (                                                              \
-                FIELD_PREP_CONST_INPUT_CHECK(mask, val);
-                FIELD_PREP(mask, val); // or field_prep()
-        )
+ 	while true
+ 	do
+-		gdbus call --system --dest io.gpiod1 \
+-			--object-path /io/gpiod1/chips/"$1" \
+-			--method org.freedesktop.DBus.Peer.Ping > /dev/null 2>&1 && break
++		gdbus call --system --dest io.gpiod1 --object-path /io/gpiod1/chips/"$1" \
++			--method org.freedesktop.DBus.Properties.Get \
++			io.gpiod1.Chip Label > /dev/null 2>&1 && break
+ 		sleep 0.01
+-		COUNTER=$($COUNTER - 1)
++		COUNTER=$(expr $COUNTER - 1)
+ 		if [ "$COUNTER" -eq 0 ]
+ 		then
+ 			fail "error waiting for the GPIO sim chip to be exported on the bus"
 
-We have a similar macro GENMASK() in linux/bits.h. It is implemented
-like this:
+---
+base-commit: d6457b28e29a8edadcb619d389878ea99cd4bab4
+change-id: 20250203-fix-dbus-wait-for-chip-49e36ad58ee2
 
- #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
- #define GENMASK(h, l) \
-         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-And it works just well. Can we end up with a similar approach here?
-
-> So, we are scared of people calling FIELD_PREP() with the arguments in
-> the wrong order:
->
->   FIELD_PREP(val, mask)
-> 
-> thus adding the check that mask must be a compile time constant.
-
-Don't be scared. Kernel coding implies that people get used to read
-function declarations and comments on top of them before using
-something.
-
-Thansk,
-Yury
 
