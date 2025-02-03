@@ -1,148 +1,169 @@
-Return-Path: <linux-gpio+bounces-15282-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15283-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1927A25BAB
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:02:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5511A25BCC
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:07:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF001163B33
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 14:01:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1029D3AB4AB
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 14:03:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7DF2080DC;
-	Mon,  3 Feb 2025 13:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D2B206F0F;
+	Mon,  3 Feb 2025 14:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxJQFzlt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C10207657;
-	Mon,  3 Feb 2025 13:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982C3205E11;
+	Mon,  3 Feb 2025 14:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738591195; cv=none; b=Kj17U+yz09k+61xVkK/SGSRNwYvaeyRxN3/03jvKck7wTAWkx53zz6zTeWtE2P/d5/it7n86YZnCGUSFoXMZvCgzy8xLszpHtpTVZdn/UsOubvFXNu42mXZ3NNZJWcxh8ygeJYnl96zAL9m1x35AT4oXC4pzP/mZgjMqX3pzSpw=
+	t=1738591297; cv=none; b=Hzl/acI3eI1Nz3s5M1ClZ3h1UJ0tP/NCNhw/myoKJE+IP6+Agw2mQnEf1ANX7PXGfFg/Q9sOZG0URdbTGD6SKNNq308koDgoalfV5lmP0nJfr6/NL6xkXJcGLBbF5EtucraPJLwJs023wjp2Dmx4JwcnsDC0Zoys+QjWzP/3Sao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738591195; c=relaxed/simple;
-	bh=qCz9jE3C8/DH/rIVWt5Lk605SNimvvlqaYiePQLwTYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HcUxfy/1A2rPjECDqAHZxymKB3sQFB/6mi5CeaxZXWcRnP4x2iQ9tHk9DtHdhJT2LxuZ/mJjmQn72CSqtrMRJMoEBNZQvjit2uJw2BVjpKFdcJXPBXRlh/hYCsZbOJazncobKpdNqQL8s314lPgZlZa0dcytECsBezxCnenlyPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-85bafa89d73so853284241.2;
-        Mon, 03 Feb 2025 05:59:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738591189; x=1739195989;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2e3vrd26snuR7BBCNgEi1ltS7NqcxsA/B6t8vBEFYDs=;
-        b=RrSJ7HsTNrk2Y2+yINGbXd4woA4DPGMh7QRuj8mqrP20+ajPA8e6MpvQ7GxX/KQ3zh
-         WvKluSGDbFyX1GRu3zEvOWoTt5J+cqjTuVAOtzrtqOQ1dcrOImOpHyLvXXsMqmpyatG2
-         JUHtA3ay3zt0XIZrOF2d7zmfrF2ZYkxGSHgqLGi6vMaY3aMLstwIgqbWKQtAi0fNErn/
-         DqpHUZqbvE07OfKX8pt74juxHJpE+6fW4/JJekrfNQDUZ2j9UY7TMj3fq+RtsRMqf0pC
-         lXLfz/7gsOHlW+rY8VqmqzlAH+JJDeOawa4+EFdHfW4CpYaQmN10RMhhzEo1gIIeORGx
-         fWtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWu+DXUSSrRSa6+Hqtyo0y7nhY9UMm+6sG8XD/SEtGpKvCkxmG3kNkihjvYll8I4AwaATkArzmwe4goKqJ@vger.kernel.org, AJvYcCVEd+Pu9L0qWO1CkiA/SkZFwJOSpAQyGJzTt9NMtCmnCwXlbw4aD2Uxet8jHhSqqAeA2g52PLKq6B7srA==@vger.kernel.org, AJvYcCWEF4jRaDt7yz/ySGq2fodwVJ1qVvYz5/5WLmCMF/jAWIvuAsjV8vXMwVu33BykDTYMYUSG4O/v4P/1vhspOUgnbBI=@vger.kernel.org, AJvYcCWS42oxkz0pAYv24KgpTgR1mGtCp73L/CHZK7cW+8Hxgst7H5OXOdQ1u0eQvy8dz2lQtw7Cy8m1jgzEon+F@vger.kernel.org, AJvYcCWcQPp3/rzV0d/CGHy45eKjYcXOy/SP1C7snfUMKpoq6hEzfgY93E00S1hhfF2tYHk6TtY0wOIPsKBP@vger.kernel.org, AJvYcCWzCNd+9B/jsBjcPuvZMlBwWO0kWihwtG5xjI7tfYabDEh1Zu/V5zndlJeeUQOmUHng2yUBQy3hlQ8=@vger.kernel.org, AJvYcCX+rPQS2WZZQL0AXZwX0qju9nL7sJIJlZ5VjyJ6/7CVjoX257PrBK7pOrv5XxE2KJod2j31K45JSeRnpd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNpOoVfu8Xag1CBkLrD1k5OseCYAjIwWamxeChMx3eFdpI7fmA
-	Clko2tcXB2YwPNm/fteWLtm0ZEWOSy46UW3sAAZ96kGNRniQ7cJ89OP0NIcQ
-X-Gm-Gg: ASbGnctF+3pp8eA7vXgQ3Nci835IRu3PFHGKOqLIqfZ7mDUu4pb5jCzT6a/Xzdke86k
-	sx8hzFRttc15blaZb7sKmb9/Hc1fHwGM8iOw1IfAHUrsQ6AlV0DxOFpUyWRPd20j+WhEp4NhvE+
-	8oUL5QhV2Y+gStZAhfl/50qvSOXmGoP5PzjR9pE+ad8EuIRYz2pAlkMSBQ1lrmi16kRCVo80J3v
-	7e3UL7CoFH8YLpMsaRC2VxhSyVLGkigcGod4np9xiWLHOI6o2wB+D9u/T1B//JGQtPAcJH0xfB/
-	38/TrX/YX3w4fl6LArH1R577K13XRjnfVH8rOld3vIn0isr6o3SDVe7NbA==
-X-Google-Smtp-Source: AGHT+IHMxI/2v0SfcLwteoxT8STy991q5j8vL75bqZcV4zbtOIYaHRNiw16arLwHeEOR+aNooAZEMQ==
-X-Received: by 2002:a05:6102:330b:b0:4b6:d600:a35f with SMTP id ada2fe7eead31-4b9a4eb3fe8mr14586189137.4.1738591189660;
-        Mon, 03 Feb 2025 05:59:49 -0800 (PST)
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866941da3fdsm1549787241.25.2025.02.03.05.59.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 05:59:49 -0800 (PST)
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-518ae5060d4so1388081e0c.0;
-        Mon, 03 Feb 2025 05:59:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUCSxPdtewQcOQ0VqH6KbxR4AJHf9AWvwOdRbLTbvQjRiAZ4FpuZD5vIUmLA1S5L+pEJdteSv/vOmkN@vger.kernel.org, AJvYcCUHuzVuJTMpt0LQKeVDHJ1VtblVA/jQAqbWjUWIRKIAuAyMlzBNOZ/n6K0qxfK3H0yghOkGUzfpxLj+nA==@vger.kernel.org, AJvYcCUZWFTVihvApMJKLl3n2E9mazFs5hQcdPJnyLYEnO0kTePafT0VDFcesNs+EowedR+CcfkxEFzF4dg=@vger.kernel.org, AJvYcCUl+wcql7GU+jy8A7Dvt2aY/XyP/TwLPAXwO9xOPEQ/OFOMj8i3HBHDoMKuZDAnPGp2HKUaKVISae34fkFw@vger.kernel.org, AJvYcCV/NESNNuh7EgpaWW3U7NQXZ8TenqvtEB3nzQdJP0gppFbLr7BKmXebhvwfM1xasbU1m7lxPWX5uxaf4K+y@vger.kernel.org, AJvYcCWC0XUNHF1VlrFHkUNsacVF3cs7Ach9FCtZrUL+/sL865CKb7gH5rsQRDTFY2MrD+KjCMJAulaNj4aUiVM=@vger.kernel.org, AJvYcCWWdCymXHv2toYAg5XNDIfLqTNh8zJ8w2ClBk1asRJsOYRuIbavqezhrOlfMYhCYUSWlReR4F0bs1YGMfCqAGy3SHI=@vger.kernel.org
-X-Received: by 2002:a05:6122:1990:b0:51c:aa1a:2b5b with SMTP id
- 71dfb90a1353d-51e9e3fdc44mr15881808e0c.4.1738591188554; Mon, 03 Feb 2025
- 05:59:48 -0800 (PST)
+	s=arc-20240116; t=1738591297; c=relaxed/simple;
+	bh=FUGVfpQsBsQZDnW8/29ndy6ufToxH4fLIZhk0OSH+vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PWJnpIQnCcw3Z4NRiEFoorB/w8iMP32SiN53w1b31k6F5Pw7JxrhgJsMXPOGjz26mB0yQg4luk8+sfI1aenKAjSWwNw9Jzw4k9Ip/wkMAg7F3K3rcY72wl2txrwAS1XJKqsfrocFLGv84RaC+Xzgt3ujFGzsazGp4WnvIAe7y0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxJQFzlt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664D6C4CED2;
+	Mon,  3 Feb 2025 14:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738591297;
+	bh=FUGVfpQsBsQZDnW8/29ndy6ufToxH4fLIZhk0OSH+vk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dxJQFzlt4BVNOgSQuojXmA9wuzm4juDMiaj0xfMOAE5qPk5Vzb1dY6VgLM/hLrYRI
+	 Zd9+pCEzYYVOR46Td4Mo1YEY21wDNc78e4E/NQu4MLG+yWelOi7uSJDHAR94Gq2Io2
+	 S/5g5li5Jhvv/wwVRI4ApfEeYqSP9+TuKxkXCOjaMGuMZGFoJXBSs7yJ/o4dYajCqM
+	 7sMqSFURdJ7oxQpQ7ZoOdRq4XLWiWKj1QXmNEhRzyyuYLgf26P1NSFzawTAN1FRBJ4
+	 ckEJtWX4+/sU6ftXPOVdiNouwo41UZKZrbT/T99jACiBEflDshR6f2c2lZ7XLI/b7z
+	 DPRk7DkWm7p3g==
+Message-ID: <9c8a9dee-92ba-47e4-b16b-ab47727d8057@kernel.org>
+Date: Mon, 3 Feb 2025 15:01:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738329458.git.geert+renesas@glider.be> <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr> <Z5-xMUqrDuaE8Eo_@thinkpad>
- <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net> <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
-In-Reply-To: <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 3 Feb 2025 14:59:36 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
-X-Gm-Features: AWEUYZkxzrXQCnvoDXR55r9qIi7LTjZDYDZYK_OEJibEwCDu5alOHeJTYjGkvIg
-Message-ID: <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Yury Norov <yury.norov@gmail.com>, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	qat-linux@intel.com, linux-gpio@vger.kernel.org, 
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Alex Elder <elder@ieee.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/33] dt-bindings: clock: add clock definitions for
+ exynos7870 CMU
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Andi Shyti <andi.shyti@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Jaehoon Chung <jh80.chung@samsung.com>,
+ Vivek Gautam <gautam.vivek@samsung.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Kees Cook <kees@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G . Piccoli"
+ <gpiccoli@igalia.com>, Sergey Lisov <sleirsgoevy@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190758.14986-1-kauschluss@disroot.org>
+ <20250203-enigmatic-remarkable-beagle-709955@krzk-bin>
+ <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c1249f2f6ac8a2f5a1dcb3bbbba647f9@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Vincent,
+On 03/02/2025 13:40, Kaustabh Chakraborty wrote:
+> On 2025-02-03 07:54, Krzysztof Kozlowski wrote:
+>> On Mon, Feb 03, 2025 at 12:37:58AM +0530, Kaustabh Chakraborty wrote:
+>>> From: Sergey Lisov <sleirsgoevy@gmail.com>
+>>>
+>>> Add unique identifiers for exynos7870 clocks for every bank. It adds all
+>>> clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
+>>> CMU_PERI.
+>>>
+>>> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+>>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>>> ---
+>>>  include/dt-bindings/clock/exynos7870.h | 324 +++++++++++++++++++++++++
+>>>  1 file changed, 324 insertions(+)
+>>
+>> Look at git log - that's never a separate commit.
+> 
+> Hmm, I see past examples which are mixed.
+> 
+> 2ae5c2c3f8d586b709cf67efe94488be397d7544
+> Exynos850 CMU (c. 2021). CMU definitions are in a separate commit.
+> 
+> 591020a516720e9eba1c4b1748cb73b6748e445f
+> Exynos7885 CMU (c. 2021). CMU definitions are in a separate commit.
+> 
+Huh, indeed, my mistake.
 
-On Mon, 3 Feb 2025 at 14:37, Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
-> On 03/02/2025 at 16:44, Johannes Berg wrote:
-> > On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
-> >>> Instead of creating another variant for
-> >>> non-constant bitfields, wouldn't it be better to make the existing macro
-> >>> accept both?
-> >>
-> >> Yes, it would definitely be better IMO.
-> >
-> > On the flip side, there have been discussions in the past (though I
-> > think not all, if any, on the list(s)) about the argument order. Since
-> > the value is typically not a constant, requiring the mask to be a
-> > constant has ensured that the argument order isn't as easily mixed up as
-> > otherwise.
->
-> If this is a concern, then it can be checked with:
->
->   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
->                    __builtin_constant_p(_val),
->                    _pfx "mask is not constant");
->
-> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
-> any other combination.
+Let's avoid that pattern, so binding headers are always part of bindings
+commit.
 
-Even that case looks valid to me. Actually there is already such a user
-in drivers/iio/temperature/mlx90614.c:
-
-    ret |= field_prep(chip_info->fir_config_mask, MLX90614_CONST_FIR);
-
-So if you want enhanced safety, having both the safer/const upper-case
-variants and the less-safe/non-const lower-case variants makes sense.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
 
