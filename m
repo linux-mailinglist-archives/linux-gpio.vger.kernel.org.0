@@ -1,120 +1,103 @@
-Return-Path: <linux-gpio+bounces-15248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15250-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7CA8A2590D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:14:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4CD6A2592E
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:19:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AF2E3A3004
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:13:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED70518844D1
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:19:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935572040A6;
-	Mon,  3 Feb 2025 12:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EC0C204689;
+	Mon,  3 Feb 2025 12:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvhFuRnk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VaZGVZOm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D601FA15E;
-	Mon,  3 Feb 2025 12:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F542040BC;
+	Mon,  3 Feb 2025 12:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584835; cv=none; b=m32vuaKBpftZmUpLVi+MmJo7ZEouCMePeeSAPF7MjkQLXHOPJorNHVcfHvvb7jpqbCQIp5XVGui3w8aSQ+260+TeZomgGHfQNYHt++1fiGWcgKBTiByiucwTch3QEfczoyHI6pqBrGiMmzyyqmHioJO58OLf5tsQ1VZS6AWYasI=
+	t=1738585130; cv=none; b=t18JRoRoa4bBtcJnoabr1KahmdZM4EKG280p/6GikfIonXpSN8bHrTnaVPNtUZxsBIWZ1BHgWoO46qadvZ0jb1v/By+cE1TaitMXoC14zWEItry1EMxdiBBVX5ZVsc0A20tZZSPI9i4RK5QsgSh6gswKZQVxcYT2veWvlFgiNXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584835; c=relaxed/simple;
-	bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O7GpAWQS7nXOdBVwABuCcM9bH/j4UTAtylCBWm/h+orOxtvEmeTFddmtPT1A+9UeS8Xl5U3FpbcAlr7zLLTQxOvCPkg10HC6LoNAbr/NbRGphVFrZJnVJWRcQBU4QMfR12UauFZNngC998gS29+zS54/7s1a4RQTPAgnBDYdj8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvhFuRnk; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1738585130; c=relaxed/simple;
+	bh=NBVcdgylnwnM3bgnQaOwIXSjV8MjodT55hSyuPWhiMg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qJq22DWtll9tKwTG9XEE4YysyM2QXioXeXgqqKw9wvItFjcvTUuX02FWVVgiv3Bg1ldWErJTJ2/UWYSiciN3Uf108sbxMNmdRUhmyNUeNkIBIDFhVRZcuS8NXFTYOHcDyNEMTP0w30AqPCAcH3n4EdLsza1NOwJouFzfhzKzvAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VaZGVZOm; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738584834; x=1770120834;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ct1m8qnSRoUG1BuJX26GQpfL2oSAy2xCl3eci1O0qH4=;
-  b=GvhFuRnkabjFSK84qxZbjBOSUPhE3f82An2XxS3LVjTx+qPqcu5qYqcW
-   /oNMc0LzWyQtwkEfcH8EhDLTEheacI7ykh/CJuUBL/qYlCn8HMEe9wWd4
-   4+EhaO/nqkysOmYChesWEB/wqm8zPJaFi7kc4gnOCmNGEc4gGNs+2V7dx
-   5IB6LqaBf7f5pqRWKJs056haQ7l6IJIAr7TBLJcR64eM5Ttj84oXNq8GS
-   Wy8IxnJjfD4B8snkyeu7s6OqKOKNOg0XCg+9cjnV4WUw1V1p2KsVyvV12
-   ESiDNksjvFYzytOSFJNiOX2u4d7+ao2B5Nv0/am8amfUR0SA/TVjGjSGp
+  t=1738585128; x=1770121128;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NBVcdgylnwnM3bgnQaOwIXSjV8MjodT55hSyuPWhiMg=;
+  b=VaZGVZOmEb7zUjRphV1Lr9nvl6AtuEEqb4D8KQk1dCQDTJJnQc2Q1YaU
+   ygOzpP9uw31fziKgd8wIb8msE1/G/GIaaBz/2JZ2aLJZ2mKJulevmaX9O
+   k9HbwANj65BnXzKIb9ysLc8KETm68afSxR9oaEDFp4GLhTVpwlFOtggjT
+   YHkBXMolNA/tl+lvy9E7m3mjLw6fMsTzzqncLJGjry9qo4cAQtNJIkv/n
+   u3QbtA/gRLpYNSjUf4ToU9jqhI1NUL/Btx/fu9tlE4LCjh9MJAvey7uDK
+   /u7Z/cjaGSoNVarYX/lnYS3WC5ov7Sa35FJqFxLNpO4Cix+1kv9NlYLCI
    A==;
-X-CSE-ConnectionGUID: u0+zT/R4Q7i8LyPf0D4PPg==
-X-CSE-MsgGUID: FBsKw/phQfWaH9lauzenRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="26676183"
+X-CSE-ConnectionGUID: Pwc/jv5/RHKqDuN9IUrqbw==
+X-CSE-MsgGUID: fnMtkgvKQZe9YU7VBtvUbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="42731503"
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="26676183"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:53 -0800
-X-CSE-ConnectionGUID: cPOMVMPeRGaRVLvglrh2PQ==
-X-CSE-MsgGUID: 03UBfc3AQB2QttB6A11ckA==
+   d="scan'208";a="42731503"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:18:48 -0800
+X-CSE-ConnectionGUID: wVmJOYIUQ3CJDWDsAtN8cg==
+X-CSE-MsgGUID: nsGwx/DLRmeoZt7OdsWEbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110095012"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 04:13:51 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tevKn-00000007p5P-0Xuh;
-	Mon, 03 Feb 2025 14:13:49 +0200
-Date: Mon, 3 Feb 2025 14:13:48 +0200
+   d="scan'208";a="141138405"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 03 Feb 2025 04:18:45 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 2FD1823F; Mon, 03 Feb 2025 14:18:44 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Patrick Rudolph <patrick.rudolph@9elements.com>
-Subject: Re: [PATCH v1 01/16] pinctrl: cy8c95x0: Respect IRQ trigger settings
- from firmware
-Message-ID: <Z6Cy_Nap7Euvb7Am@smile.fi.intel.com>
-References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
- <20250117142304.596106-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 0/7] gpio: 74x164: Refactor and clean up the driver
+Date: Mon,  3 Feb 2025 14:17:16 +0200
+Message-ID: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdb=WDLxerQCS4oGoxe4p+A6VZDw-WH9NJuDaxoxju8PeQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Jan 27, 2025 at 11:03:02AM +0100, Linus Walleij wrote:
-> On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Som of the platforms may connect the INT pin via inversion logic
-> > effectively make the triggering to be active-low.
-> > Remove explicit trigger flag to respect the settings from firmware.
-> >
-> > Without this change even idling chip produces spurious interrupts
-> > and kernel disables the line in the result:
-> >
-> >   irq 33: nobody cared (try booting with the "irqpoll" option)
-> >   CPU: 0 UID: 0 PID: 125 Comm: irq/33-i2c-INT3 Not tainted 6.12.0-00236-g8b874ed11dae #64
-> >   Hardware name: Intel Corp. QUARK/Galileo, BIOS 0x01000900 01/01/2014
-> >   ...
-> >   handlers:
-> >   [<86e86bea>] irq_default_primary_handler threaded [<d153e44a>] cy8c95x0_irq_handler [pinctrl_cy8c95x0]
-> >   Disabling IRQ #33
-> >
-> > Fixes: e6cbbe42944d ("pinctrl: Add Cypress cy8c95x0 support")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Patch applied for fixes! (Speling mistake on first line fixed in the process.)
+Seems like I have had a cleanup series for 74x164, but forgot to send it
+last year, here it is.
 
-Thanks! Any plans to take the rest of the fixes (except the one which Patrick
-rightfully objected on)?
+Andy Shevchenko (7):
+  gpio: 74x164: Remove unneeded dependency to OF_GPIO
+  gpio: 74x164: Simplify code with cleanup helpers
+  gpio: 74x164: Annotate buffer with __counted_by()
+  gpio: 74x164: Make use of the macros from bits.h
+  gpio: 74x164: Fully convert to use managed resources
+  gpio: 74x164: Switch to use dev_err_probe()
+  gpio: 74x164: Utilise temporary variable for struct device
+
+ drivers/gpio/Kconfig       |  1 -
+ drivers/gpio/gpio-74x164.c | 63 +++++++++++++++++++++-----------------
+ 2 files changed, 35 insertions(+), 29 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0.rc1.1336.g36b5255a03ac
 
 
