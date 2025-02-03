@@ -1,135 +1,99 @@
-Return-Path: <linux-gpio+bounces-15240-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15241-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 016E0A257A9
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:01:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 103BFA257D7
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 12:15:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86075166FF2
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 11:01:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9491D166F7D
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 11:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78DFE20126B;
-	Mon,  3 Feb 2025 11:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w8HRxYe2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C079D202F71;
+	Mon,  3 Feb 2025 11:15:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453C4201249
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Feb 2025 11:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BD4202C30;
+	Mon,  3 Feb 2025 11:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738580493; cv=none; b=FEuAPLAKWcjwffMlC8gMvTBVB8BTA+24o7xS/Rl9saUhPPi8RT2HgcrzVEx3qrnCFjqgt2aXFQvMqEtlvTx/cWQd8f/cJzJkXn2lALK4hII7x0G/Y2u1VRw+6NH7Z/EvchahVXWnRqoCuPJMFRMsjZSESXfryC5TL+2W82SMEvQ=
+	t=1738581304; cv=none; b=H1jls9p7ug6kZFTI8wKMF23eoQrmkQPRIv98dn6ozFSxgmKK0vW2goXW4Tuu0YqhlU73VodzuimAj3VuDdku+GpV+c2uTqXqtWOfmRX5iNP/WiVbL4Wb2PcpeY1Rl1DUZ0b0lTMMEKgl+kPxg+7k8EKheg+rwPhOngEZAINAgYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738580493; c=relaxed/simple;
-	bh=YdZ1F2UIY2BKSTH/78CeGePqnoOFXkPUh4G0+xOW8I4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KkylQa80rHWbmF8Q1uR7OcslsePGEi0mDRvlNg0H+8N1aFWBhredfIkAh9mUo5lpFJV7WDBMlTlzM0qt4tzqRw8125SSO8wZwgA5Rqch73nUSytpOeL3ddfVxBlkr+7SWzwCZIPOJoKasBY/+ivDW9t82cDvBeEUnRil5nw3H3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w8HRxYe2; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3862ca8e0bbso3542881f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Feb 2025 03:01:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738580489; x=1739185289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cw22mpAU6PFV8UovQOXfDj306Sn0bhW1MdW6JnCSix8=;
-        b=w8HRxYe24ch3I7IIFKjLd/PrqMMPVcbflsiYPAwG1alizGMJ/1q1X13LWO43k+wH6a
-         M+PDBWKHa1mthMyLDWq9o7moSVlSUYevttc2CSDdL7cCtyh8ecdkqygwPn1fVmvwcarL
-         FkK0qZ2qJIMHTtIeBAyCvFWweAu5qjeA+4XanWQKVJ9KfjWdzakkmXqaoV+s6sXz+3PA
-         BJncAWN9InY6p7logdzYs571M5DWiMUWQkSZytyOjgnzL2i+7ZDm8hoGM1Q6IDXkgfXw
-         yZF+/S0ZD5cNH0uBQSGiZ7dcZ/5Pq9RyuSYwmluBccy68qigHZCr0+mK3BO4wnnbA/30
-         ul8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738580489; x=1739185289;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cw22mpAU6PFV8UovQOXfDj306Sn0bhW1MdW6JnCSix8=;
-        b=rf4U8nQxaV8jXL4blkFFBROAF//2jEd7h0gZ+fZEeSBK5bEl/1VJGkwykexSGGypF1
-         LolE6v38DpwZKi9C7PuSWfkL03o770Al4irAigpl8ABpyh3L70CC37az8Sx0263UZpe3
-         yWGCZ4OOcePmXJzkJNB8RqP6c8WZHFPNIp1DKADj1lHZyVDidzdr0leE5+XXFB/A2BMe
-         mx5d7EH8oaSABxBbSjorU9M60qeLJ38bt+jWpO8csmhlsjItBYpxhiU4hA4Nkli9VpwY
-         kf8yOPoUXkug/kuPkH9YApvMLYbOgDTJWVUafaSUk06kZM2/gaQ/9XCHrRvtxS42esPS
-         LSIQ==
-X-Gm-Message-State: AOJu0YxJvmjj9Vb2HNZj5Hzepr1qFTYQBrYE0CKPUnBA/oQGL4GJH8mA
-	fcpKqYy5QrtPLx+n82mBbzpa/HaLu3Aq2KDuUYUJyudRDgCpnJ9/rlJaY45FGls=
-X-Gm-Gg: ASbGncuTx84imYCH+eEJkDpwC0kGM1mHpZVRjCpw6BWaMJuKc1uIbfFXkqDgcr+hiKd
-	uW8fDJtvpKKkBszEs5b7B9d6cGROKSFxrLv/h2NBdFNe04oxhoPQ1Ljc9Uqi6RrsfNzOOVV1iEZ
-	d7LkKW5yr58Y6ERJBYf0Q53mKTJefddVOkXEaEvqv2XhKzx228utk1cSmecxukyRPSFsmSI20SM
-	jc0Er6TjY2cwk7YDAxdRmiXOk5AhX89EWcBeyBDGgz5+CaB2kFsAC9GPCNI/R8dnSJjTCE1LV+h
-	9LX2Ngddyup0DA==
-X-Google-Smtp-Source: AGHT+IHnarVZWqY3vGCVzchvGea+YM7uiTfqLn9N97rzsoYlda8HMAkD7/6sIilZA3qM5d1MQ2HkQA==
-X-Received: by 2002:a5d:6c65:0:b0:38c:5cd0:ecf3 with SMTP id ffacd0b85a97d-38c5cd0efe3mr13978813f8f.11.1738580489130;
-        Mon, 03 Feb 2025 03:01:29 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c0ec78esm12245894f8f.3.2025.02.03.03.01.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 03:01:28 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: lock hog configfs items if present
-Date: Mon,  3 Feb 2025 12:01:23 +0100
-Message-ID: <20250203110123.87701-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1738581304; c=relaxed/simple;
+	bh=Sh62TUgO9nu9uV2ysqDVSkHBdGr8aWWz1Gt2+gIoWWc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u6jTtP/M9ptAC8yS9ISMQN5xdeSHhahOYLeoe4DSv5wQ6vPtYoHaoDTSfU4UnK6BV53UsgldSdKvpprSlyICCRprUIZGKf0FVxKMfHZ1aUZv8afPWaG+BLl57MJE8F3kF3p6Kho94mHKEpqIH0c/Rg8dl0AcDl0o3zb4KHAys0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YmkNr2CjGz6L4tr;
+	Mon,  3 Feb 2025 19:12:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 11D70140155;
+	Mon,  3 Feb 2025 19:15:00 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Feb
+ 2025 12:14:59 +0100
+Date: Mon, 3 Feb 2025 11:14:58 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Raag Jadav <raag.jadav@intel.com>
+CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	<gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<linus.walleij@linaro.org>, <mika.westerberg@linux.intel.com>,
+	<dmitry.torokhov@gmail.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+	<sre@kernel.org>, <jic23@kernel.org>, <przemyslaw.kitszel@intel.com>,
+	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-input@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v3 14/20] iio: adc: xilinx-xadc-core: use
+ devm_kmemdup_array()
+Message-ID: <20250203111458.00002a5d@huawei.com>
+In-Reply-To: <Z6CdnPryJkBHO9PK@black.fi.intel.com>
+References: <20250203080902.1864382-1-raag.jadav@intel.com>
+	<20250203080902.1864382-15-raag.jadav@intel.com>
+	<Z6CSYn7ZDVNELIIv@smile.fi.intel.com>
+	<Z6CdnPryJkBHO9PK@black.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, 3 Feb 2025 12:42:36 +0200
+Raag Jadav <raag.jadav@intel.com> wrote:
 
-Depending on the user config, the leaf entry may be the hog directory,
-not line. Check it and lock the correct item.
+> On Mon, Feb 03, 2025 at 11:54:42AM +0200, Andy Shevchenko wrote:
+> > On Mon, Feb 03, 2025 at 01:38:56PM +0530, Raag Jadav wrote:  
+> > > Convert to use devm_kmemdup_array() which is more robust.  
+> > 
+> > ...
+> >   
+> > > -	channels = devm_kmemdup(dev, channel_templates,
+> > > -				sizeof(channels[0]) * max_channels, GFP_KERNEL);
+> > > +	channels = devm_kmemdup_array(dev, channel_templates, max_channels,
+> > > +				      sizeof(channels[0]), GFP_KERNEL);  
+> > 
+> > I would use more regular sizeof(*channels)  
+> 
+> This might get confusing since we're assigning it back to channels.
+> 
+It looks like standard pattern.  Assign X * the thing to the thing.
 
-Fixes: 8bd76b3d3f3a ("gpio: sim: lock up configfs that an instantiated device depends on")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+So I'd prefer sizeof(*channels) here as well.
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index a086087ada17..b843682b47e9 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -1028,6 +1028,7 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
- 	struct configfs_subsystem *subsys = dev->group.cg_subsys;
- 	struct gpio_sim_bank *bank;
- 	struct gpio_sim_line *line;
-+	struct config_item *item;
- 
- 	/*
- 	 * The device only needs to depend on leaf line entries. This is
-@@ -1036,12 +1037,14 @@ gpio_sim_device_lockup_configfs(struct gpio_sim_device *dev, bool lock)
- 	 */
- 	list_for_each_entry(bank, &dev->bank_list, siblings) {
- 		list_for_each_entry(line, &bank->line_list, siblings) {
-+			item = line->hog ? &line->hog->item
-+					 : &line->group.cg_item;
-+
- 			if (lock)
--				WARN_ON(configfs_depend_item_unlocked(
--						subsys, &line->group.cg_item));
-+				WARN_ON(configfs_depend_item_unlocked(subsys,
-+								      item));
- 			else
--				configfs_undepend_item_unlocked(
--						&line->group.cg_item);
-+				configfs_undepend_item_unlocked(item);
- 		}
- 	}
- }
--- 
-2.45.2
+> Raag
+> 
+> 
 
 
