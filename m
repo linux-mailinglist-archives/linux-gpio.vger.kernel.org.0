@@ -1,123 +1,94 @@
-Return-Path: <linux-gpio+bounces-15200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95E1AA2532D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 08:44:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D82A2533E
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 08:53:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 261FF163393
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 07:44:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D86591884115
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 07:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C3F1E98F2;
-	Mon,  3 Feb 2025 07:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 513B31F427D;
+	Mon,  3 Feb 2025 07:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="mRvKnnWs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdzDDw+T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBF41D86C3;
-	Mon,  3 Feb 2025 07:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E6B1C695;
+	Mon,  3 Feb 2025 07:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738568683; cv=none; b=d4OeZ2MhM/TckPGXCMnSkBjYUxgNjYUZgZ3EztGHbwxNQd6eauZRp+Q5AcoJd6P9+Sr6iRGVYyMjqyWrlHCrlMKWvT9KH1OCzcv0isc6XkPFVh1DL8R4Btc7wASI9uJN8iMuahG5sNHWJcX30LH4VXdI6aTSQQLjtd6mjMpkIho=
+	t=1738569189; cv=none; b=RK6zTqSvmB1mon6xxP9Hl7c9LUwb/++yf/7zbilddxFpJAYeE1ZpRqDC20RRsQLsFZA2/1FUIn8Wkyq+jrQZPx2UcG7BNMFa/XV8Y8mUoeDRLvdSeRyN8DIHydI0FfOzwlaeDJlXpdYSE6F+3vNTFsGPIao44C5pbD244cpZ9cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738568683; c=relaxed/simple;
-	bh=x1beuisn9wdEKP1QdS1UhUe3+GT+LqGgI15rKS+Adds=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PBS2W+TN9NlQUKii18bmNWAbfkPBQpDxslQpEHeQp9R60UqvcvZmNqQqIMIWRffTblPrQG1vKLU4+2UP2bERaMJPCfcVatVfKnh6Nlz2Q50PpxLdjr+BixYxcJkHPaiAkeGB7877gCvVexgexycPSjaNtRrIO0gWhpUivML+/AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=mRvKnnWs; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=x1beuisn9wdEKP1QdS1UhUe3+GT+LqGgI15rKS+Adds=;
-	t=1738568681; x=1739778281; b=mRvKnnWso7bumZit+yviqahz/44SggGsn0LU225JzCFCnWw
-	qkExAMOaXIxp9bIgjunoUdpGVPXuqaSpv6kKrcwJ22yC89lKYgaUf8r5naJrAAAh4uPi1GsG4ML6l
-	Bf4IeLdDPUx7i7vW+7d+uoSuG7PeJgajncxQQczZwRL6T68UKKpSBbrb2cMIh9hNpcDJSak/dcJ98
-	Ounk7o4ivaH0UXjG3gCeNc0LUBfysnYlK1C4Q8SDEbTw25DCm67kkUUSI1me78ACOpYCYUTs6jc77
-	O2XNSB4qygsj3h82m/1sqpafeLlUH1wb8LjgegC/oLGHGfFBpcTnyhY/OFtBi+Xg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1ter7q-00000001RTp-38Nc;
-	Mon, 03 Feb 2025 08:44:11 +0100
-Message-ID: <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Yury Norov <yury.norov@gmail.com>, Vincent Mailhol
-	 <mailhol.vincent@wanadoo.fr>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
- 	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, qat-linux@intel.com,
- linux-gpio@vger.kernel.org, 	linux-aspeed@lists.ozlabs.org,
- linux-iio@vger.kernel.org, 	linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, Michael Turquette	 <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre	
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>,  Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Herbert Xu	 <herbert@gondor.apana.org.au>, "David S . Miller"
- <davem@davemloft.net>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,  Andrew Jeffery
- <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
- <jic23@kernel.org>,  Lars-Peter Clausen	 <lars@metafoo.de>, Jacky Huang
- <ychuang3@nuvoton.com>, Shan-Chun Hung	 <schung@nuvoton.com>, Rasmus
- Villemoes <linux@rasmusvillemoes.dk>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, Alex Elder
- <elder@ieee.org>
-Date: Mon, 03 Feb 2025 08:44:06 +0100
-In-Reply-To: <Z5-xMUqrDuaE8Eo_@thinkpad>
-References: <cover.1738329458.git.geert+renesas@glider.be>
-	 <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
-	 <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
-	 <Z5-xMUqrDuaE8Eo_@thinkpad>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1738569189; c=relaxed/simple;
+	bh=98P8X6HMfcm3Oxb2BZKVpxuLvrRbMpgR2GrkKyq4mkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JcdFWNoWRqb2nhtgwALRKvLQtX38l0NowDU6Cb1ZMUy41xWgk66rivjTt1L5QLviMo4YSG/XdbEs2KMQCGU5xk3/6fFZ1AqzTvq8ltvNy9vRwrAPeRYtbymobM4thMa5PEH9akZJAP9ls2p2p1sADvDeGNwAeTXAdjH+EZvMpwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdzDDw+T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D18AC4CEE2;
+	Mon,  3 Feb 2025 07:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738569188;
+	bh=98P8X6HMfcm3Oxb2BZKVpxuLvrRbMpgR2GrkKyq4mkM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GdzDDw+TQ2RB5QCOljApbh1Dlc8hoYjvO4lSQ/49lsQ6ZVV2A4k2pJaVsWI+FbVNo
+	 VJ0yLHPv9e01G669yA0cuIG1WK5T0WTiUegMwrtsOhcnUeitdHku8VcHPoepnDJlw8
+	 nKJqcmFLJrGplgm03KhG48/AI5d0XlKpajVGrFIv7SBLqq6QE05rpho4o4HNhHNnXr
+	 d8pLn1baGWmyQ7nL3QgzE6t+29sl0NIKOwo3GOwMGDtBM0fK9eXa7LqHDX5ggldgBy
+	 NAhtDZ4dmKbGXZwVM37OEtQwAQvLvyAJXI61czxKGZ0rwcFHOkR0idtiPKZFfgURMR
+	 VVlgiT8sUR8Pg==
+Date: Mon, 3 Feb 2025 08:53:05 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Andi Shyti <andi.shyti@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, 
+	Vivek Gautam <gautam.vivek@samsung.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, Sergey Lisov <sleirsgoevy@gmail.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 02/34] dt-bindings: hwinfo: samsung,exynos-chipid: add
+ exynos7870-chipid compatible
+Message-ID: <20250203-roadrunner-of-unnatural-wind-54bddf@krzk-bin>
+References: <20250203-exynos7870-v1-0-2b6df476a3f0@disroot.org>
+ <20250202190353.14572-1-kauschluss@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250202190353.14572-1-kauschluss@disroot.org>
 
-On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
->=20
-> > Instead of creating another variant for
-> > non-constant bitfields, wouldn't it be better to make the existing macr=
-o
-> > accept both?
->=20
-> Yes, it would definitely be better IMO.
+On Mon, Feb 03, 2025 at 12:33:53AM +0530, Kaustabh Chakraborty wrote:
+> Add the compatible string "samsung,exynos7870-chipid" to the documentation,
+> with a fallback to "samsung,exynos4210-chipid".
 
-On the flip side, there have been discussions in the past (though I
-think not all, if any, on the list(s)) about the argument order. Since
-the value is typically not a constant, requiring the mask to be a
-constant has ensured that the argument order isn't as easily mixed up as
-otherwise.
+This we see from the diff. Say something not obvious about hardware
+instead of repeating redudundantly subject and diff. Otherwise what you
+said is equivalent in just few words: "Document Exynos7870 ChipID."
+instead of two lines of text. Instead say whether device is or is not
+compatible.
 
-With a non-constant mask there can also be no validation that the mask
-is contiguous etc.
+Best regards,
+Krzysztof
 
-Now that doesn't imply a strong objection - personally I've come to
-prefer the lower-case typed versions anyway - but something to keep in
-mind when doing this.
-
-However, the suggested change to BUILD_BUG_ON_NOT_POWER_OF_2 almost
-certainly shouldn't be done for the same reason - not compiling for non-
-constant values is [IMHO] part of the API contract for that macro. This
-can be important for the same reasons.
-
-(Obviously, doing that change now doesn't invalidate existing code, but
-it does remove checks that may have been intended to be present in the
-code.)
-
-johannes
 
