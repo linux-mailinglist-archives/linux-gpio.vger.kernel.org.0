@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-15266-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15268-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9790DA25A93
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52927A25A92
 	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 14:16:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC1F93A7951
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:15:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46D7B165D9B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 13:16:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7361205AD7;
-	Mon,  3 Feb 2025 13:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46ED8205E24;
+	Mon,  3 Feb 2025 13:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FxwrgVQS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwpWbNHv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CA1205502;
-	Mon,  3 Feb 2025 13:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6779320551B;
+	Mon,  3 Feb 2025 13:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738588516; cv=none; b=vDtKjfs3vDH1y1K6eajYTQil4QHMY28vZ7S2aXLI0+JvvCqRQuTbVde8nbM1XzSApyNUjCSozerixO5kxvf0MZjPxojzGyyJE7ahK/C36JjZt8k8wvUCfrLio89fR5x8iyr47y8BJNfKPPSjPgcK8n1oWD+uA/tAFnzwi69ykC4=
+	t=1738588517; cv=none; b=aNt47ljswjqiKZq5VrxxSpjCx3XfTrc/tDlpf5IyV/AztSsYmdFhrLyYptnO7rexkJDRTXhSLQCVq21N2hW/LwwcOBhW82GANI50GO/VijLnhCSIRVY7OVK4sdPEJuufsWPmitPR/D39milYtnEYiEYQ+6YhGSXUnQCKCKL4z5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738588516; c=relaxed/simple;
-	bh=1qaeu4/7lVPNsuJyFSKzK+LZhY0Btpn+7+eFmjWn5VI=;
+	s=arc-20240116; t=1738588517; c=relaxed/simple;
+	bh=xe1zv0tzk/GSTJsUigGdLZtpoCH8O3sHDtIzPXb+VL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KXaJWvct5R5RXbOzIH/E7ayXeTEhOBM9CtZO+PRnbYPkDucBE0aFjf4Yl8U95B1JoPJMMb9F9M0p8swPaWZDRC7zMkjinzJ+nmoqROruclrtlSKQOJWnrwD1gduEkXnikhhVz3oFNsNMYO++fwEXUvi62XACXLY0ipmWVXbs/QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FxwrgVQS; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=hY8Jf1DgEK2r8C7V5Oqnx9VOvsimVaUhwE1gInXf6Eia2YlxCiWcHHADaZ3tmVGTZny5U5+FBhdcnygLeGYBbTgjub9sQKmC944joXd7a9K8MHqxf+H84xR/k4ko1DmLRVRdkqEDUJdX7ai9Gm1GkwA2o5MS0AVUzNE5xKE9wmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwpWbNHv; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738588514; x=1770124514;
+  t=1738588515; x=1770124515;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1qaeu4/7lVPNsuJyFSKzK+LZhY0Btpn+7+eFmjWn5VI=;
-  b=FxwrgVQS/7FE5COuoISbQZqcPwuXAAHRCUUJhmOZTXMU/bHipMFARWC+
-   qfjIwjjMArCjMnyxq8c/FHzYh1JM0paBbyx/J4eUAnwFfzMRUzyc5jnb4
-   siOOJ8U8S+d8K5MrNSYl1Tupuo1OBW8vRHDOrv5hEeOknkSqHIMXt18y6
-   pQJeIHRf6cb6jHbNFru6yEwUrPrEpmxpwKojk2HgxEsyWhjFdp7C7EIQd
-   xu6xUhIfTY68IvPbhaIVyN8mbhL+LiMdsQPgQ+nM01pccwErMDaVYFVzD
-   Fp26RasH7Uz3vigkA4IaIBlF4TGZhR5/fE6hKPHvWE4RM1ej4uDaYgv1R
-   w==;
-X-CSE-ConnectionGUID: q3ZrtpRkST6YK35P11TQqg==
-X-CSE-MsgGUID: +q0q7RppQQGTh7yGOSDVMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39217683"
+  bh=xe1zv0tzk/GSTJsUigGdLZtpoCH8O3sHDtIzPXb+VL4=;
+  b=PwpWbNHvGnxNuzQmSGcK0FsNOAR1h5YuxoVSeIttYfrM4vW5vd7bWtyY
+   /SX6EuFp9PHKZGylMPiB2rnK6RMr4S3g+yj/sdP+a2WiG4KUkVcXjoa9x
+   EPtivkeTPGpCPFfZY/7Wcu/TBMk3uTrt9XpOsB3ckfpTcsH0sYpvGaqIA
+   WlRVi13xVGBPN9koIPoTwosoQM3XgNnTHQSL3zdHJHSDPsWRa9I3fE5Ie
+   eHbSJ3sW78hesfBlPgrUul75LD+T4t8pv+iJ5knF+Cngc+GE7CEhz674W
+   tFeMfjbR9J+YczP2dVgABPsU1mHcdiLhZyInlCD2O/6cqof1lKQDsmKlt
+   g==;
+X-CSE-ConnectionGUID: c4LAdA3kQqK5X/J1IE4c0w==
+X-CSE-MsgGUID: kDxkuxfwSC6f8wbhhxocuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39217693"
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="39217683"
+   d="scan'208";a="39217693"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
   by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 05:15:12 -0800
-X-CSE-ConnectionGUID: ywa9axWKSZWhOwO/8HVCnA==
-X-CSE-MsgGUID: 3LDrgOdUTRSRXxgObAutKQ==
+X-CSE-ConnectionGUID: pBfBV4VBQTaqf0soQX8MTA==
+X-CSE-MsgGUID: j6rSZ+yaTAWu7m0sY7i1aA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="115287399"
+   d="scan'208";a="115287401"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa004.jf.intel.com with ESMTP; 03 Feb 2025 05:15:12 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 01FD857C; Mon, 03 Feb 2025 15:15:08 +0200 (EET)
+	id 0F4FD5E3; Mon, 03 Feb 2025 15:15:08 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 08/14] pinctrl: cy8c95x0: Remove redundant check in cy8c95x0_regmap_update_bits_base()
-Date: Mon,  3 Feb 2025 15:10:34 +0200
-Message-ID: <20250203131506.3318201-9-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 09/14] pinctrl: cy8c95x0: Replace 'return ret' by 'return 0' in some cases
+Date: Mon,  3 Feb 2025 15:10:35 +0200
+Message-ID: <20250203131506.3318201-10-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
 References: <20250203131506.3318201-1-andriy.shevchenko@linux.intel.com>
@@ -80,46 +80,45 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function is never called with the PORTSEL register in the argument.
-Drop unneeded check, but rescue a comment. While at it, drop inline
-and allow any compiler to choose better stragy (note, that inline in
-C code is only a recomendation to most of the modern compilers anyway).
+When it's known that the returned value can't be non-zero,
+use 'return 0' explicitly.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/pinctrl-cy8c95x0.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 02b692118cb2..cd191cb1101e 100644
+index cd191cb1101e..e02cab05cbfc 100644
 --- a/drivers/pinctrl/pinctrl-cy8c95x0.c
 +++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -477,20 +477,14 @@ static const struct regmap_config cy8c9520_i2c_regmap = {
- #endif
- };
+@@ -517,7 +517,7 @@ static int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
+ 		regcache_cache_only(chip->regmap, false);
+ 	}
  
--static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
--						   unsigned int reg,
--						   unsigned int port,
--						   unsigned int mask,
--						   unsigned int val,
--						   bool *change, bool async,
--						   bool force)
-+/* Caller should never modify PORTSEL directly */
-+static int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
-+					    unsigned int reg, unsigned int port,
-+					    unsigned int mask, unsigned int val,
-+					    bool *change, bool async, bool force)
+-	return ret;
++	return 0;
+ }
+ 
+ /**
+@@ -1286,7 +1286,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 				unsigned long *configs, unsigned int num_configs)
  {
- 	int ret, off, i;
+ 	struct cy8c95x0_pinctrl *chip = pinctrl_dev_get_drvdata(pctldev);
+-	int ret = 0;
++	int ret;
+ 	int i;
  
--	/* Caller should never modify PORTSEL directly */
--	if (reg == CY8C95X0_PORTSEL)
--		return -EINVAL;
--
- 	/* Registers behind the PORTSEL mux have their own range in regmap */
- 	if (cy8c95x0_muxed_register(reg)) {
- 		off = CY8C95X0_MUX_REGMAP_TO_OFFSET(reg, port);
+ 	for (i = 0; i < num_configs; i++) {
+@@ -1295,7 +1295,7 @@ static int cy8c95x0_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			return ret;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct pinconf_ops cy8c95x0_pinconf_ops = {
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
