@@ -1,134 +1,120 @@
-Return-Path: <linux-gpio+bounces-15226-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25B61A25415
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 09:16:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D4AAA255B3
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 10:21:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCF951881A9F
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 08:16:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6E061885C3A
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 09:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FBD2214812;
-	Mon,  3 Feb 2025 08:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988421FF1DD;
+	Mon,  3 Feb 2025 09:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i3apWOqL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XbbxL6fH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1F02147FA
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Feb 2025 08:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C183E1FF1D5;
+	Mon,  3 Feb 2025 09:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738570389; cv=none; b=j5TTXCV3WzRJY8NVO7kdgooDjOjV9La+CsKRXt5Y2ZzTuViLgZEo9QIqJPLQTVEREYTrzmWmTa4La954XCfpwIxMNlUWS3Tap7ONNoddaewBLBm0WPWwoc7LX+Vvks7D0JczDA8fhYIwh/yMS1UZKScu5TA1yQLbeoQt6RZvxN0=
+	t=1738574481; cv=none; b=k8HdZMGZ7f7AhcFZ1p2i0u7w0YarH63g5eD9Qj+t69eEuoNHUqfa30lGsCKh/dve37/6gVCu32zeAPbxBt5sbcM4DslH7G5fIgvlDi0dSLL+hsz5FFuX5zNO+82g76mKPMsznT3SKnPheu6lPRozhfcd5/aqEHnQqum/DEbzZo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738570389; c=relaxed/simple;
-	bh=8BzrjfzW6hMDq8JMBmAHvHJ/8jbUh41Fukiv4MAQV0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iV265j6OrAwzw3uMyyfT1mEB8yfEc8o85obEvWPn3rRgDBeQp+KLWJjF3PfLL2aeagG7GnzibArG5RyqpX/E61Ep8Hssp6wRe5UffukORE/nVDNz2t0is0eruf3YeUxU0oTMYYyr/wA6ln9uWvDqzj4N2DDEcit3VjzYT1/qPto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i3apWOqL; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-385e27c75f4so3414406f8f.2
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Feb 2025 00:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738570385; x=1739175185; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
-        b=i3apWOqLHYC6bL1RzMegFXJE7HYUYkRMcGjbc90X9vOytR7yAWZxhKFnu6pjVbUb59
-         JdocnU8BZZbfxuyxu9WMB/QBikj2BDJjt8dhXeqKy+ztRVfLejhJiU2BnHxVHbYgE82+
-         asDluLlVVwMVUGL0daoY0HSiyJAj+LINHn43NvO0UUdiDlHfoP5DKo/2JEvmE8ymgzyr
-         Xx5OnLRx2RBbBBi1RWQyEVD93Yv9fj/qichojPCL0f/+Gru0mdEwxwx00UbTGgjJMUTr
-         bfSDXCagosr/BeMCs+R1UrWSXFztVusqTOqMqY7CfpxO26FTZ4tAQ1ubKlaSIhC0gsKF
-         yO8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738570385; x=1739175185;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
-        b=UqKdcf3jOXL8XKqExjj8yS0r0ulvp3Nf6Fs7TjKgKwx7qKY9S8zTJf6RpMyOhJBjea
-         3kNmQJ0fsud4HqZGhKWs+Xt6O7XPRVe4S+lEgPSe7GBO0wRAh0XrfiDQnvGD3wr8jzZF
-         sLvRDJjqycsj8AkjEhKPcpuNFJUc6jr6V+V/maivdNyS0gl+0x23NKeUVLm+YnhIFleW
-         SxIoFmbu5lwHaYe3vBo+Pv4vPhy6sqO3sIk140IN5b+sRhfqk/kASMVijYFJGCRopkVl
-         h7EKNNdwiG4Cr2eqwLkNMAc0auUZJZeyyEnpJ3IjZ6++TR08zIF1wPjOQmunGC0e4xGs
-         y/hA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ECdqN2ROEtaZaYmyvOdxLSK8rQIT5mnmHuQSdvVVxGyK6+em0GNoiogMvzlFSQF58H+OoIecDWxA@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp3S9Y02P5BQdbdT8mFY/pbL52CXJc9Vy0sffJOsrh0qq5g4xU
-	Wn8xlnmeSQvsouNILWbQVL8VHjkblVAL9g4S1ONXeQYJDU8ZxqRzMs+eQJ1uQg0=
-X-Gm-Gg: ASbGncsakI89sP7P3mzQ+0w4fPQ3uV2B2kSj/7Jq5YX9j1sF8kZ2XiEBM4Y/p1/f2/M
-	l55JWFz0GrRq50+LuSnhFJoaLJ2+KGqQnSnBllGsX18k6PKfkt6suD0ZSox0x8P1mG3L9Ah1Vp3
-	A2Rrny7lokz/77rUPAugJ8ZjLFMZbNE9nNDAQgGEv2qgsMtrQMuEHmH8UvVhq4fqSD/CgHMqKvl
-	9EfmWL2u240WNQDXHf58jnlQPiSU/HBQsuu++MvSY9/SUhMjIjlibtWXpn5AQ7GWwxNuPvrN1Yd
-	KEjYwKjRqy8cww==
-X-Google-Smtp-Source: AGHT+IF3lNNZmS2B9T8gXfcE5kd5EuOjnSuh3iWUdY1d50Algj3kP3sHpQaRcW0lvgZf4+fEDGkUsw==
-X-Received: by 2002:a05:6000:18a9:b0:385:df6d:6fc7 with SMTP id ffacd0b85a97d-38c51b5efb4mr18533137f8f.25.1738570385202;
-        Mon, 03 Feb 2025 00:13:05 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b574fsm12019825f8f.70.2025.02.03.00.13.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 00:13:03 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Nandor Han <nandor.han@ge.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	patches@opensource.cirrus.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
-Date: Mon,  3 Feb 2025 09:13:02 +0100
-Message-ID: <173857038027.20723.17081473974273068659.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
-References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1738574481; c=relaxed/simple;
+	bh=J1atqQx3xJM6YbcXMH5G7IHsZ8yCqKrNmIuJrq5A/uM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MsX3G5lhH1Ep8igDaVwL43RYHh95HGMERQXoyx8MzhzcS9cQ96eMQEtbj81NniUy00Wfs89YTGrTstpKCsOPtuhNZjVQJPnLolUlu6Ov/VgATtUzUPCchgSFNqqZfFXGWBmwU9NasRrqVAejCpRMZJEn+jp+QkOvrmFbrR6mVhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XbbxL6fH; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738574480; x=1770110480;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=J1atqQx3xJM6YbcXMH5G7IHsZ8yCqKrNmIuJrq5A/uM=;
+  b=XbbxL6fHKFxBnz2hoXST0D5qUE/xU9eNcBEibWn9StF/xIG9Lf/vexLV
+   WMh8jjbIi5IjLvrA+JkfHnppaESt8HOLvTNaNdws1q0F0Pzn8BHAVV1JY
+   VhxUlgXreItDKr2saGiJHhsEwlKtIK1mrHLdVUrTgNerSpw0eImhGp29m
+   yI183VbkZgsCNuZBgdI/VNipNclj0hf3KQxouO9/1XUb1DQ7EBZ2pE1v1
+   qL0UMCN4PqNmTeX+cGe2kgD67TQlWfYiodXRNGtVpAoP68J1MXCsCjvEp
+   +aRQWX9slnrZS05m/MAaVd8dWQ89vAQ4Qv8zHVVH40jSstHm34Uy76It5
+   Q==;
+X-CSE-ConnectionGUID: Ld+XH1glSlGSBQiRCCSrzg==
+X-CSE-MsgGUID: M3HSva58QrOzBugj/YegpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="50448368"
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="50448368"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:21:19 -0800
+X-CSE-ConnectionGUID: cGAH7kxUTxG0irQFOdgyJw==
+X-CSE-MsgGUID: QAZWdNiIR4OsuDsAlOacAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
+   d="scan'208";a="110806792"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 01:21:19 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tesdn-00000007mc8-2eY3;
+	Mon, 03 Feb 2025 11:21:15 +0200
+Date: Mon, 3 Feb 2025 11:21:15 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 05/16] pinctrl: cy8c95x0: Remove incorrectly set
+ fields in regmap configuration
+Message-ID: <Z6CKixK7KndRBzeF@smile.fi.intel.com>
+References: <20250117142304.596106-1-andriy.shevchenko@linux.intel.com>
+ <20250117142304.596106-6-andriy.shevchenko@linux.intel.com>
+ <CALNFmy2qGCt8OTb3qx+0PsPivbfY89gWe74Moeeu7r7hCp_UaA@mail.gmail.com>
+ <Z4pzoNInabOHWjK5@smile.fi.intel.com>
+ <Z4pz-gmfermTjZ77@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z4pz-gmfermTjZ77@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Tue, 14 Jan 2025 20:14:38 +0100, Krzysztof Kozlowski wrote:
-> Replace ternary (condition ? "enable" : "disable") syntax with helpers
-> from string_choices.h because:
-> 1. Simple function call with one argument is easier to read.  Ternary
->    operator has three arguments and with wrapping might lead to quite
->    long code.
-> 2. Is slightly shorter thus also easier to read.
-> 3. It brings uniformity in the text - same string.
-> 4. Allows deduping by the linker, which results in a smaller binary
->    file.
+On Fri, Jan 17, 2025 at 05:15:06PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 17, 2025 at 05:13:36PM +0200, Andy Shevchenko wrote:
+> > On Fri, Jan 17, 2025 at 04:01:43PM +0100, Patrick Rudolph wrote:
+> > > On Fri, Jan 17, 2025 at 3:23 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > We don't provide defaults for the regmap, we shouldn't provide
+> > > > the number of them either.
+> > > The intention is to read back the defaults from HW to initialize the
+> > > regmap cache.
+> > > The defaults are applied at each POR from the device's internal EEPROM.
+> > > See regcache_hw_init() for details.
+> > 
+> > Yes, I was looking a lot and that code and it doesn't work as intended.
+> > I can reproduce the issue, but it's real issue and I don't think we need
+> > to read back anything from the HW forcibly. It will be done naturally, no?
 > 
-> [...]
+> I think I now remember, it has a NULL pointer dereference.
 
-Applied, thanks!
+FWIW, okay, it was induced by a fix in regmap core, so this NULL pointer
+dereference is for real, but it's a regression in the regmap core.
 
-[1/1] gpio: Use str_enable_disable-like helpers
-      commit: de454ac4fc5a117a4264e8bdf60fca58021574b1
+For the reference read this thread:
+20250116124303.3941583-1-andriy.shevchenko@linux.intel.com.
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+With Best Regards,
+Andy Shevchenko
+
+
 
