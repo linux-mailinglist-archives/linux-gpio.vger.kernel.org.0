@@ -1,116 +1,87 @@
-Return-Path: <linux-gpio+bounces-15287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77DA5A25E92
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 16:25:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C972BA25E97
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 16:25:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAAE016222D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:19:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04F6E1881221
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2025 15:25:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA37F20896D;
-	Mon,  3 Feb 2025 15:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A966209663;
+	Mon,  3 Feb 2025 15:25:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C4C201270;
-	Mon,  3 Feb 2025 15:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE56204C04;
+	Mon,  3 Feb 2025 15:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738595986; cv=none; b=BmLXm6Osnnwn5t8FvTfXF4xf6AwxktEPc43PIWln1MpxtJe1/VNaW9YbI7Twbbwfr+t1EzGpgzejuIbzYtVP9MsYDYbo1jXTZOx1Vonk8DjC5bs0UyW7AyFXTMf/7KWrOBes73CLOlmeTeLShN8+wJ/Zx0yxyJkaFoc19Ika0M4=
+	t=1738596340; cv=none; b=a4B3A9FcFoOz7ngf6wzM+XnUKP1m7+O6P+JilQwNIOU4AjVes2km/ebRAxFfNyrAh5OMdZaDFemG2sORfjR5xoTEtj5czwi86btK168KXetDc0HF+ThNefTjO0llsIxKuVysr9rOkF0/cA0e9U6+zHk+UpDsPGt5G2cMuEpj9Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738595986; c=relaxed/simple;
-	bh=zPxnIStNSWd8T8InfzBNuvDDeu4qTWFOb1t/3vkT8FQ=;
+	s=arc-20240116; t=1738596340; c=relaxed/simple;
+	bh=wRpwTEd72M21DmLzOcouJm+GBzjy+8mSBR6J8Uag0h4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyIEjDGAGLkltj4C84gU93Oo5yarx+MSjVBuarnKLzviMpX864iTqAehMKe+coHRK1XFrHaqp5riWpyuzAeVwDlc6pBAN+W8eF9G5KUovKibpprwUAdC/sDYNCMCboTmqc6MWn2Gmj3UwJyXsG7VKHg1kHPuXiXfo3RMGPkmfBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: ookRIJUVRWyBnMH+lRouiQ==
-X-CSE-MsgGUID: fy1UWUXdRE+0nfOA8BWjrA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="49348844"
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vl2srzLUxas94VgRiCopb62PPehbV0WifCD8UamATQcKjl21/zlePciePXfyiAbvdTwLo8u39fSjo4j4YqwUXU1PiMNBnfn/azONMtbgP2aOysEqzmsHG5vx5mAewBuGwgcPln92iXkm6xZgbmZLHnqlD06czFjStWilCHRsuq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: UOU1/cmPSEG1CeOwAhLzbg==
+X-CSE-MsgGUID: 7MQHIseUQ1aLfSzCo2mMWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="41924711"
 X-IronPort-AV: E=Sophos;i="6.13,256,1732608000"; 
-   d="scan'208";a="49348844"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:19:44 -0800
-X-CSE-ConnectionGUID: Rf/UqqPvRICbJnG52bMqbg==
-X-CSE-MsgGUID: kRPIYVSMSfq5PbY1+vZRFQ==
+   d="scan'208";a="41924711"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:25:38 -0800
+X-CSE-ConnectionGUID: 1sNiTXNJTde1JCqyHDCYaQ==
+X-CSE-MsgGUID: ExALNuoaThe61pnbpGy1jA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114937934"
+   d="scan'208";a="110128517"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:19:43 -0800
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 07:25:37 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1teyEe-00000007s1o-2uHW;
-	Mon, 03 Feb 2025 17:19:40 +0200
-Date: Mon, 3 Feb 2025 17:19:40 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
+	(envelope-from <andy@kernel.org>)
+	id 1teyKM-00000007s81-23pH;
+	Mon, 03 Feb 2025 17:25:34 +0200
+Date: Mon, 3 Feb 2025 17:25:34 +0200
+From: Andy Shevchenko <andy@kernel.org>
 To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
 Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
- function
-Message-ID: <Z6DejKRkxa1XCc5E@smile.fi.intel.com>
+Subject: Re: [PATCH v2 0/2] pwm: lpss: module namespace fixes
+Message-ID: <Z6Df7lmckX_gPgJG@smile.fi.intel.com>
 References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
- <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
- <CAHp75VekFNu8Jzfit5euj2pKeesGHs3DQS4hJdT==RM7MONb4g@mail.gmail.com>
- <gw223bv34jyszlssyegvz2znb7q4zzh3lax2qgmvcx6m5lvy6l@gpuvyyhvsgf7>
- <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
- <yynjwr57jf4ytixfo2c6bojo5ib5plue7krlwzb64rxrfuqghy@u4pkkktbe7b3>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <yynjwr57jf4ytixfo2c6bojo5ib5plue7krlwzb64rxrfuqghy@u4pkkktbe7b3>
+In-Reply-To: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jan 23, 2025 at 05:30:07PM +0100, Uwe Kleine-König wrote:
-> On Thu, Jan 23, 2025 at 05:48:17PM +0200, Andy Shevchenko wrote:
-> > On Thu, Jan 23, 2025 at 03:52:06PM +0100, Uwe Kleine-König wrote:
-> > > On Thu, Jan 23, 2025 at 01:45:17PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Jan 23, 2025 at 12:11 PM Uwe Kleine-König
-> > > > <u.kleine-koenig@baylibre.com> wrote:
-> > > > >
-> > > > > The intel pinctrl driver can provide a PWM device and for that needs to
-> > > > > call the function devm_pwm_lpss_probe(). That function is provided by
-> > > > > the pwm-lpss driver which intends to export it in the "PWM_LPSS"
-> > > > > namespace. To prepare fixing the pwm-lpss driver to indeed use the
-> > > > > "PWM_LPSS" namespace, import that namespace when used.
-
-...
-
-> > > > > +#if IS_REACHABLE(CONFIG_PWM_LPSS)
-> > > > 
-> > > > > +#endif
-> > > > 
-> > > > Why?
-> > > 
-> > > Because devm_pwm_lpss_probe() is only used #if
-> > > IS_REACHABLE(CONFIG_PWM_LPSS). Without the #if but with
-> > > https://lore.kernel.org/all/20250123110951.370759-2-u.kleine-koenig@baylibre.com/
-> > > this results in a warning (with W=1) :-)
-> > 
-> > There is no such commit in the current Linux Next, so let's solve the issues
-> > when they come up.
-> > 
-> > I'm okay to take your series via Intel pin control without that ifdeffery.
-> > If you don't agree on the change, we need to find the way how to avoid ugly
-> > ifdeffery from day 1.
+On Thu, Jan 23, 2025 at 11:11:09AM +0100, Uwe Kleine-K�nig wrote:
+> Hello,
 > 
-> I'm ok with dropping the #if. Should I resend or do you want to edit the
-> patch? Would you take both patches then?
+> in (implicit) v1[1] I suggested to move the MODULE_IMPORT_NS magic into
+> include/linux/platform_data/x86/pwm-lpss.h. While I still consider that
+> a good idea I was overruled and so here comes the variant with the
+> explicit MODULE_IMPORT_NS in each module that makes use of the
+> respective symbols.
+> 
+> I don't have a fixed merge plan for this series (assuming it gets the
+> expected Acks). Either way (both via pwm, both via pinctrl or the
+> pinctrl patch first and the pwm one in the next cycle) is fine for me.
 
-I can take both. No need to resend.
+Pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
