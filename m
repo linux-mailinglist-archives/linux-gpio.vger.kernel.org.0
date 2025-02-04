@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-15360-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15357-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F94A27BB0
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 20:44:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7339BA27BA8
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 20:43:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D56B161912
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 19:44:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D59F53A177E
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 19:43:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6250321C9EB;
-	Tue,  4 Feb 2025 19:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC0F1217711;
+	Tue,  4 Feb 2025 19:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ILTcoG7k"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QD0/1e9U"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CFF21C163;
-	Tue,  4 Feb 2025 19:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C2221ADB2;
+	Tue,  4 Feb 2025 19:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738698121; cv=none; b=IrEWaFwVlu6fyydwl7AOOKFV39UWmZ9fO6VT9gnektUDQTPs17rIeKtDUYjrzlmFjDWgCFH8hbIlAUftltqod5SkFa4F5hYE9XQKwiUUhf+/cyIHL8Uk0RzmctsTdlaxdMoXWKxr1e83DzkuVtWx7uxyAjWruTLRVdQk23aUxSQ=
+	t=1738698116; cv=none; b=DIV/lFGO/5y3GJVw8Lt/1qHWUQTDG7Unx330MikNOD1nsC6kQEi0/m9Dkxdh1RPGdKC6sXFGa6WeEfxJYWG22bhi9r3SVqD0lpcbwZF8oLaQ5MLsEm7OJU1quHabUCks+1tLUCRlJ0d+LbYGjqceeskgzVKSs5wGHdunmU4pcrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738698121; c=relaxed/simple;
-	bh=kie8a2TQetHCU1Ogt/lrzXjdw3emP5Cp2X1jKLodV3Q=;
+	s=arc-20240116; t=1738698116; c=relaxed/simple;
+	bh=31vrB/Q7xCKIYSwPn2vx86OCzJ49Y2LbgaqFF9SCVg4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uggvHYaqMW5bJjflj91i8c5bbEzN3Anq2g46C82tdFXAWsOCf4ZyK9CJuHfX0WGOUQLSXXlViRg404d1DFUJSDaR51Xs7hdW2a/ai2PnQYUgY/IMkIhsV4lyIxoIfO5Hjm3/ytcJ51v7qV88MFiHjG+kfuYHmmhc072ydV4mwWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ILTcoG7k; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=Uo/lPt/RH2ERNs/zDb2G0iKTlbSi65/A7CVkRrdCykgeQAY3kzwiClVtW2F9bZmqU0sqcbntSMzj3lxPdMoap1ZiTN9g0EWY5PgKg74MGdKyePKBaRhdoRhkfL/RCQVUuADAe/ehIlOQbjPx0Lvlak5Lo1nVfHIapTbFr7724Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QD0/1e9U; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GEmR5010696;
-	Tue, 4 Feb 2025 19:41:22 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 514GEnrD023279;
+	Tue, 4 Feb 2025 19:41:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=t4q1OOLHrJ3AMW0GT
-	4Vo3vA65FTygVFlcuJU8UFfBjY=; b=ILTcoG7kq8xg7eH/hzrJjBrntnzBpr/yB
-	lgLcwN/X4WxGgDzLRRdbmrBsS1iQaKIRc9sN9PVNDx3Q60RakSKo0lbhbYsfLvUg
-	KOcFlGxD3Sbd0w8E0QiY1nkP+Zg2yj/5ur7tV39MS6wgdrTkO/rVv+hEpn0u+XG7
-	M4f5MNwTTDXPl8Xu6ck8yY76K8JTNp/2uu6nU2xVy4EpXn9K9+zSXZEj33Z63Ks+
-	t76E4IiCc4bcLEb4EvSsg2Or0QxgaIg9AZ6hqFYEfe+nLMkn9s6bKp1hStsdBtWT
-	eOdAI/ygFQ8E4UZIM7eodIPDg3TYQxjr75Y97Mz7LrdQdUxEvYgQg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44k9r0vkef-1
+	:mime-version:references:subject:to; s=pp1; bh=ftBo0P4wnz9NKDpBs
+	zzMvbwyZf8xb/pGYa+IgAkrrJs=; b=QD0/1e9UvLaMm68DbUEkIHMM8thrNdFEH
+	EO0+jq75HyXg2tqNDNiMg4jlH5Iu7pqQxp8Xh2DhT82J9E/JFfZrwjdprsfn/s85
+	044Z49y8ubNYMMdLVbvxPwQYxf+taOpmbWrgt9aGO5jszriznr4Iz3JZHfwwCxgP
+	sNMoorhH8ZwDNqFeajsuyS4PRZZiMfoz/iORacswgMjqH98zkHBCcTzEF50+UTkT
+	WiIn7BItRALDwLYIedqhn64iw9nZtNs0ozj9kb11tixVz6j7BwwHfU/2nIZKjIpc
+	/gUlNOiEUjVwoM50hVl2Yv4NRIyveX5gfTfsoxLNX6sRfemyc+9dw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kn62hf0f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Feb 2025 19:41:21 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514JDKq4016276;
+	Tue, 04 Feb 2025 19:41:22 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 514GPChm006508;
 	Tue, 4 Feb 2025 19:41:21 GMT
 Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsdbk4-1
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekd2vb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 04 Feb 2025 19:41:21 +0000
 Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514JfJMR23855550
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 514JfJZT23855552
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Feb 2025 19:41:19 GMT
+	Tue, 4 Feb 2025 19:41:20 GMT
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6897758043;
+	by IMSVA (Postfix) with ESMTP id C2F155805F;
 	Tue,  4 Feb 2025 19:41:19 +0000 (GMT)
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 105D658059;
+	by IMSVA (Postfix) with ESMTP id 7361B58060;
 	Tue,  4 Feb 2025 19:41:19 +0000 (GMT)
 Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
 	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
@@ -76,9 +76,9 @@ To: brgl@bgdev.pl, linus.walleij@linaro.org, minyard@acm.org, robh@kernel.org,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
 Cc: Ninad Palsule <ninad@linux.ibm.com>, andrew@lunn.ch
-Subject: [PATCH v9 5/9] ARM: dts: aspeed: system1: Reduce sgpio speed
-Date: Tue,  4 Feb 2025 13:41:08 -0600
-Message-ID: <20250204194115.3899174-6-ninad@linux.ibm.com>
+Subject: [PATCH v9 6/9] ARM: dts: aspeed: system1: Update LED gpio name
+Date: Tue,  4 Feb 2025 13:41:09 -0600
+Message-ID: <20250204194115.3899174-7-ninad@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250204194115.3899174-1-ninad@linux.ibm.com>
 References: <20250204194115.3899174-1-ninad@linux.ibm.com>
@@ -90,38 +90,126 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Gel5aTvThrApb4t8R5sICFbi5GpHlmfq
-X-Proofpoint-GUID: Gel5aTvThrApb4t8R5sICFbi5GpHlmfq
+X-Proofpoint-GUID: WKlglM2HYiMfwLFDdRjeOTy73qx3425p
+X-Proofpoint-ORIG-GUID: WKlglM2HYiMfwLFDdRjeOTy73qx3425p
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-04_09,2025-02-04_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=497 phishscore=0
- clxscore=1015 adultscore=0 spamscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502040145
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=743 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502040143
 
-Reduce sgpio speed to improve stability with the current PCB layout.
+Rename LEDs with meaningful names for easier identification.
 
 Reviewed-by: Eddie James <eajames@linux.ibm.com>
 Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
 ---
- arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 36 +++++++++----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-index 5567e24ff99b..e02ff50fb48e 100644
+index e02ff50fb48e..56357dda4b0a 100644
 --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
 +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-@@ -401,7 +401,7 @@ &emmc {
- &sgpiom0 {
- 	status = "okay";
- 	ngpios = <128>;
--	bus-frequency = <1000000>;
-+	bus-frequency = <500000>;
- };
+@@ -116,63 +116,63 @@ vga_memory: region@bf000000 {
+ 	leds {
+ 		compatible = "gpio-leds";
  
- &ibt {
+-		led-0 {
++		led-bmc-ready {
+ 			gpios = <&gpio0 ASPEED_GPIO(L, 7) GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-1 {
++		led-bmc-hb {
+ 			gpios = <&gpio0 ASPEED_GPIO(P, 7) GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-2 {
++		led-rear-enc-fault0 {
+ 			gpios = <&gpio0 ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-3 {
++		led-rear-enc-id0 {
+ 			gpios = <&gpio0 ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-4 {
++		led-fan0-fault {
+ 			gpios = <&pca3 5 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-5 {
++		led-fan1-fault {
+ 			gpios = <&pca3 6 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-6 {
++		led-fan2-fault {
+ 			gpios = <&pca3 7 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-7 {
++		led-fan3-fault {
+ 			gpios = <&pca3 8 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-8 {
++		led-fan4-fault {
+ 			gpios = <&pca3 9 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-9 {
++		led-fan5-fault {
+ 			gpios = <&pca3 10 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-a {
++		led-fan6-fault {
+ 			gpios = <&pca3 11 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		led-b {
++		led-nvmed0-fault {
+ 			gpios = <&pca4 4 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-c {
++		led-nvmed1-fault {
+ 			gpios = <&pca4 5 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-d {
++		led-nvmed2-fault {
+ 			gpios = <&pca4 6 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+-		led-e {
++		led-nvmed3-fault {
+ 			gpios = <&pca4 7 GPIO_ACTIVE_HIGH>;
+ 		};
+ 	};
+@@ -368,14 +368,14 @@ &gpio0 {
+ 	/*I0-I7*/	"","","","","","","","",
+ 	/*J0-J7*/	"","","","","","","","",
+ 	/*K0-K7*/	"","","","","","","","",
+-	/*L0-L7*/	"","","","","","","","bmc-ready",
++	/*L0-L7*/	"","","","","","","","led-bmc-ready",
+ 	/*M0-M7*/	"","","","","","","","",
+ 	/*N0-N7*/	"pch-reset","","","","","flash-write-override","","",
+ 	/*O0-O7*/	"","","","","","","","",
+-	/*P0-P7*/	"","","","","","","","bmc-hb",
++	/*P0-P7*/	"","","","","","","","led-bmc-hb",
+ 	/*Q0-Q7*/	"","","","","","","pch-ready","",
+ 	/*R0-R7*/	"","","","","","","","",
+-	/*S0-S7*/	"","","","","","","rear-enc-fault0","rear-enc-id0",
++	/*S0-S7*/	"","","","","","","led-rear-enc-fault0","led-rear-enc-id0",
+ 	/*T0-T7*/	"","","","","","","","",
+ 	/*U0-U7*/	"","","","","","","","",
+ 	/*V0-V7*/	"","rtc-battery-voltage-read-enable","","power-chassis-control","","","","",
 -- 
 2.43.0
 
