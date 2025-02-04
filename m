@@ -1,150 +1,104 @@
-Return-Path: <linux-gpio+bounces-15333-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15334-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B757DA274C3
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 15:47:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3152A275DB
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 16:30:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E8471882B9B
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 14:47:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5DA523A6C6C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 15:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D9C2139CF;
-	Tue,  4 Feb 2025 14:47:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2714A214809;
+	Tue,  4 Feb 2025 15:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="qh0XkdRg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxFt1+76"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334A62135D1
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Feb 2025 14:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7272147F9;
+	Tue,  4 Feb 2025 15:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738680444; cv=none; b=Avndgu6S18COpWnxTBQLirfFLQGbtQKuodd4TcEAgDRo5t38o0kWJols+NgVMomTbUw7Mm4cav/qlk7hRxKSbZJ/npq+TqUu555PY1rGGJvIClR8k29wvXrtgsQ5UeH49XEi1WreV6IiP//4UFGXpSR/VNPlVag6+qZlwCMplE0=
+	t=1738683014; cv=none; b=J1uA4ouxV8o92N1UXB9e6Op15WtEDwLZGMMcpUUU0qu+xBiZ+NceFxmSv2IXuNF1hD18NH3mhyZpa+3o30VKc3cKn+BMvpTr2EJsxAaDc4UCweOtq20Kfz7vIbcvvBIMG6aRR1YwzWIFqEp36IXtAz9SsIDdAcvUlRMh4uuCf0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738680444; c=relaxed/simple;
-	bh=9sSUvA2pf9s68H5xIKqnGcIqBfggQlWyoUWMwKLVlPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7DtOKryZxuFSZVhv01nfS2bcZ/GNoJHJmP/mu9sDcnua4SQcbmBmz/8wHtiDzZDSlaWUCOIyFOo1LYrNrtiYGlYeYrMx5TrD+IbbyngW/f+vmAcDsonvkazPaZN2guTryEd6wrtmxik9WzBQHjqEpsxKhAb5Hep3d6p1jWQQkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=qh0XkdRg; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D003E3F322
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Feb 2025 14:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738680435;
-	bh=n3EGoN50SBFmj+V3N+sn2G/FlvdwJ5OvZq5vVoZVOtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=qh0XkdRgasojQT3dkdOweElhc2EfqcAUGRJ5yFCxpR7iJxLXpkqnspKk3lm08bWnv
-	 tvRPlXSM2RpB56BP4kA2ehbFVIH/beexGjmmgwRBj4d3EYW8zEY/xJTwCtjY8z8RzR
-	 1PW7cPDZ5jxoWzDqaBFwxEJWqdqDvV/rc9qEGN39aicnhYhnszmq+VgsKAOK6AGBfu
-	 nAEuYckRfBf8D2B7xFvomlFoh9JEESMkKNQCzAzJ8oWApgf900Vq3CHGI4UdDXQvvC
-	 E62x+O25KSZEgYE4lPeG7/LGRlkourlbWH8PsqAMAWM5Oo/XcLhBHPBJvhu8yMx1HT
-	 z2QogobxgmyQQ==
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2166a1a5cc4so121588355ad.3
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2025 06:47:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738680434; x=1739285234;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3EGoN50SBFmj+V3N+sn2G/FlvdwJ5OvZq5vVoZVOtU=;
-        b=qhxxiqvTYF2hI6sZHcP9zXhMU/NkBYfw+jxWbAS7YBuIl8XuKmZOhVSXiucq1IEKLG
-         pMV09cDVBEE2hSTtz+hNua+Z/vhGwDn8l6XnUM/MjvpJxbdely+q6fp/PNxaqsDC2mJp
-         FyhCd/8UlPMsYVPVPqdALHrtviO8oknqwN43Btu9LA28aaFp5LJ4JwPiqBkY2Z+UAeVw
-         iBNQuG6xhxIEsxR8hx7U9BChlDogyRs0mdAnAm249XyrREVxaffzprq9sm5chYU/josn
-         ee7wmdZf4xBBixpoRqbKzFSr4gVN+bRQrhZGxacQCwJub6n+M0GOaCvUoZ37G3s6e04e
-         kx5w==
-X-Gm-Message-State: AOJu0YziqFmq7WANZ5SUZxG/gVhppGFbZG/Um4LlPx+q5jrsIMPN0+QA
-	/dVofmV2e4C8C0Zt86gTbL48j9ISasvKUlYkC/8pOy3CySLJNmEcNh7vJYqVpx410AQ1x2AZRht
-	yF32JQJ871ZaHAjI7Q7z4Q+u+uLFIlMR83ziIHJnBrAiwXBrQeT9KhKAOgW8IhTMfB4BLKg28ay
-	w=
-X-Gm-Gg: ASbGncv04wuhFc2Ik/BnAlmM6a2BLCNRIUVi8VMAElfhePGf337rrlSJQxz4dpNjoLq
-	CV6QcaRnJfn5ZTzJdImn1KMJyqemjgei5rC1DtqGHS9uI7uHyFLDTNOOY3oaHdrAB/y6hnlxhY6
-	iyu8vR0iFZLgbispVkUvfO3U46fxmZK+isGXDy6QV16cjmZgxxzIpCsKXQBy8ymasxdAgNm8sdJ
-	sAYwShWleZbYK4h4OCmm+u9Vlrs0og1nSTpxc8VCGWdkHNTSQ7eL/7QmlUHKis5zWPEAIxjhV6P
-	THdcNDo=
-X-Received: by 2002:a05:6a21:3399:b0:1e1:a094:f20e with SMTP id adf61e73a8af0-1ed7a5f06e6mr38741351637.17.1738680434208;
-        Tue, 04 Feb 2025 06:47:14 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE1EH4i9UWmswnm5lEyNNQ8DxaVfhJd/Qske9LY23x30Up5+/d5qYK4fAT8keB6BiGvn+0GGA==
-X-Received: by 2002:a05:6a21:3399:b0:1e1:a094:f20e with SMTP id adf61e73a8af0-1ed7a5f06e6mr38741322637.17.1738680433910;
-        Tue, 04 Feb 2025 06:47:13 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:45f0:d4ba:baba:a275])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72fe653a9basm10550590b3a.78.2025.02.04.06.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 06:47:13 -0800 (PST)
-Date: Tue, 4 Feb 2025 23:47:11 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] gpio: aggregator: expoose aggregator created
- via legacy sysfs to configfs
-Message-ID: <dm3enfd2hlhktozbax44h73qo3bw6bj6sqru62hi5pglv7fn6w@buve3k4oyfv5>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-9-koichiro.den@canonical.com>
- <CAMRc=MdQuQnmqFravDfvcoN_TUXgfZnJh5UxdRuYhECfmvAhGw@mail.gmail.com>
+	s=arc-20240116; t=1738683014; c=relaxed/simple;
+	bh=w12EPpGUmvzDudWzppT/O+ACvWWy08Cbo3XC+tGv3iY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GZvmOOkrKGR2+i9/Hlr9Boq6eMQ41tlm6K3U7jvap+Z/Tz/V4npUmtwKsCAN38aQysqM5/0Ydmb+i62mPzZAbJA5fUs2u2GxjyjPg0JlinCjFIEiohg6eY2qtk3uGllLDq+8SvWz+9QnrAQetsLrYTh2G0omlzR/BZMQMpGFGiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxFt1+76; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F517C4CEE2;
+	Tue,  4 Feb 2025 15:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738683014;
+	bh=w12EPpGUmvzDudWzppT/O+ACvWWy08Cbo3XC+tGv3iY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rxFt1+76LToM21A8s0ynlnAIwt78hr6Di4Rj31ycjaxNsQldtEz4HGEKhDCpZBIoU
+	 Xq7Uyz1X4dOfpnShEge2okV+AlHBJXtcWuP46mvOedK7nxngJBLhC9mfqClLlHO4AK
+	 m+iBiNjJZnet6vZuKO6jTDzRyc/CYRlBuu40fbiQTidRQ+FjMq4imH0KziZHiC07Vs
+	 yHXFoZLweaKE9xL0bnUKC6Uai0BGtZPAOhRb+gLgYbIyPKjDVAV9MTomKE5Jk+0r3r
+	 Z1Ki34lpSJDD3f7NpPDeqiev2aYna2qG+7mqi/vzbvodKXpJ1+Z96jQ2BaoarLuvEX
+	 +0olbUxhCUEmw==
+Date: Tue, 4 Feb 2025 07:30:11 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, qat-linux@intel.com,
+ linux-gpio@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+ linux-iio@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+ <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, Jonathan Cameron
+ <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang
+ <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>, Yury Norov
+ <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Johannes
+ Berg <johannes@sipsolutions.net>, Alex Elder <elder@ieee.org>
+Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
+ field_{prep,get}() helpers
+Message-ID: <20250204073011.5f6ca125@kernel.org>
+In-Reply-To: <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
+References: <cover.1738329458.git.geert+renesas@glider.be>
+	<1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
+	<e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdQuQnmqFravDfvcoN_TUXgfZnJh5UxdRuYhECfmvAhGw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 04, 2025 at 02:12:33PM GMT, Bartosz Golaszewski wrote:
-> On Mon, Feb 3, 2025 at 4:12 AM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > Expose settings for aggregators created using the sysfs 'new_device'
-> > interface to configfs. Once written to 'new_device', an "_auto.<N>" path
+On Sun, 2 Feb 2025 17:26:04 +0900 Vincent Mailhol wrote:
+> On 31/01/2025 at 22:46, Geert Uytterhoeven wrote:
+> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> > constants.  However, it is very common to prepare or extract bitfield
+> > elements where the bitfield mask is not a compile-time constant.  
 > 
-> I would prefer this to be called "_sysfs.<N>" as it's not really
-> "automatic" - the user did create this, just with a different
-> interface.
+> Why is it that the existing FIELD_{GET,PREP}() macros must be limited to
+> compile time constants?
 
-Makes sense, I'll change it in v3.
+Hard no, some high performance networking drivers use this on 
+the fastpath. We want to make sure that the compiler doesn't
+do anything stupid, and decomposes the masks at build time.
 
-Thanks,
-Koichiro
+The macros work just fine for a *lot* of code:
 
-> 
-> > appears in the configfs regardless of whether the probe succeeds.
-> > Consequently, users can no longer use that prefix for custom GPIO
-> > aggregator names. The 'live' attribute changes to 1 when the probe
-> > succeeds and the GPIO forwarder is instantiated.
-> >
-> > Note that the aggregator device created via sysfs is asynchrnous, i.e.
-> > writing into 'new_device' returns without waiting for probe completion,
-> > and the probe may succeed, fail, or eventually succeed via deferred
-> > probe. Thus, the 'live' attribute may change from 0 to 1 asynchronously
-> > without notice. So, editting key/offset/name while it's waiting for
-> > deferred probe is prohibited.
-> >
-> > The configfs auto-generation relies on create_default_group(), which
-> > inherently prohibits rmdir(2). To align with the limitation, this commit
-> > also prohibits mkdir(2) for them. When users want to change the number
-> > of lines for an aggregator initialized via 'new_device', they need to
-> > tear down the device using 'delete_device' and reconfigure it from
-> > scratch. This does not break previous behaviour; users of legacy sysfs
-> > interface simply gain additional almost read-only configfs exposure.
-> >
-> > Still, users can write into 'live' attribute to toggle the device unless
-> > it's waiting for deferred probe. So once probe succeeds, they can
-> > deactivate it in the same manner as the devices initialized via
-> > configfs.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
-> 
-> Bart
+$ git grep -E 'FIELD_(PREP|GET)\(' | wc -l
+22407
+
+BTW aren't u32_get_bits(), u32_replace_bits() etc. not what 
+you need in the first place? I think people don't know about
+those, with all due respect the way they are coded up looks 
+like an IOCCC submission..
 
