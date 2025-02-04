@@ -1,130 +1,165 @@
-Return-Path: <linux-gpio+bounces-15328-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15329-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9522EA272F2
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 14:38:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB5B6A272FF
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 14:40:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BC7A162A5D
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 13:37:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D89A21883898
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 13:40:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 834852135A9;
-	Tue,  4 Feb 2025 13:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B0E821767D;
+	Tue,  4 Feb 2025 13:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZUECS8yB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a9c9E+mh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F7520E305
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Feb 2025 13:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC4211472
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Feb 2025 13:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738674768; cv=none; b=NIeMlDWgrWwjXhVIiHivAlEFO2c7ZKZLbQhwwIsW24wEpktW8krc0mDEG/hYo0G9PB8qnvwb0EBiIaS7qr8WYVlEMep7y7RKt+NE660wzHPREW1EMy0y6qBA8yrG/duyH+WoRGxNNQ3jTyq4PpLwR9G++T6k872v7Mn8EISqfdk=
+	t=1738674882; cv=none; b=Q1lLKwGbgl1zLEAEvmEt6m2zU7Av5i+pzqahZKv74z+AIFYvSl0jHeMwmtorVUnyFi1traiRLtcQTwbwCPfqshw3c34WkS8MS+QeVvnYk6vpoX8ieo94E34Q0fZ4pY1nFm8ZDIQfT7M9E+H6Ekw7FTb5vwYRSS287MaRU1mNyN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738674768; c=relaxed/simple;
-	bh=vj6IduQxZjTzlbvnUzGiJR/GcRS+u9ZV5NL/laZuY+U=;
+	s=arc-20240116; t=1738674882; c=relaxed/simple;
+	bh=lJ9T1u9q2YZ6gau6z5aPQ5S1iFNq+ZFtrOES/qnuq+0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lhIPgUQADXRda5QhaeN2GLLAZxAsBhxb5J5nYIJ6fw8CJLXb1Quzc/aLD4nrcR902vS+hBEoFh/CmW+h2lcMwHvpK5t1VbtJtzt7xNMqwwwOU5YoHrgHdKueREynfjKuDiS8Qn/KmruhIOo7HoES5PtVBW+TaOV3pz2c0D3QDN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZUECS8yB; arc=none smtp.client-ip=209.85.208.182
+	 To:Cc:Content-Type; b=Y8lhV7HqsjAo4WED7rnrfuurqiSZC2w6MRTaJeWJH31G/8wdA/vaKBIp/U1Fd0+/+NdRAvZHj1R8sNRoBYiJH+tjtR6ykziEh65FhmdcNF0FCSckw2NwXbZcfQmdVfl9PyqgJe4cWuS1JdCG8uXeTypXNz24cN5N64PBpDu2GhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a9c9E+mh; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-305f529a987so41553851fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2025 05:12:46 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5439b0dd4bfso4844193e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2025 05:14:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738674765; x=1739279565; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738674878; x=1739279678; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vj6IduQxZjTzlbvnUzGiJR/GcRS+u9ZV5NL/laZuY+U=;
-        b=ZUECS8yBUGdvCMhSHAPwsFMojCnGHPAjTiwwg1TRyLR/n7cT98RUx/9B+oHSrp9o3Y
-         nKxSAirFKyWqIbHwKRAcgU4+bligjIQwb7vQXgq4ghddKMkxt2y4w0+kwc03u9TEXWOR
-         nfwenEctsWpDp49aD1Sww1PEQoTz+VW8tnFs1N5y+Co9HjjLRkgG7ZqinueNusyeZzX2
-         mpxS2Xa0iEaplQiuKme6TVQkE22Qab8g4Uy0tbPVVdMuRbXi0M6HttAlWOqVbRccNmsO
-         /+3L3A2YxlE/zY15hE2NylW5Wjkc9eDu7U0YM1d/p+vWrQx75uCJEqsMPp2M62at1L14
-         HBxg==
+        bh=zzKgIq7rz08fBMN0W/dqGNraXehNUjIQ90fAtJxNy1o=;
+        b=a9c9E+mhZ8Y7YL5vd994W/W5NcaoWnDgPMcmNq9leF1WNamiyGq8VWDCZ5tNiUscwM
+         yNpyfWp8lHWMJcthtr0BLaG6WezIVGDlINGR/KpPtRHs+37cM69EMzkBn4Ekzm0ydwOw
+         Zu/weoKggCW0QdbQ9VlNmlokuEoCxFiZUBGyrTcXNKgOQsl9vg55cLbnGSEz0QYYaLGn
+         VRMPNBwvwoAd0AAF/QCp34hID3GPac+kLbgaY6QfHneOeB/idw6YCDCNXffUwx6qCLz+
+         a5MLSNWoAqaF/I0sez06J95S8x5sWpqmhFfu5vZ9pa+nYeCYeDABCUk58xRwu/Lw+z8/
+         4qng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738674765; x=1739279565;
+        d=1e100.net; s=20230601; t=1738674878; x=1739279678;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vj6IduQxZjTzlbvnUzGiJR/GcRS+u9ZV5NL/laZuY+U=;
-        b=p/xKTy8J5BZEjKwpub1PHxv3Mnge+u1NdNTkj8chuf33Z2llmoYh6/8w7C663GLMBm
-         vLqH6orjpc+wkOA76/2yA4QndchTMnEFo/aCn9DndrhB6XUZJhm49g/denDtY1Hp7jPI
-         xqN31ih4SgFjemZzhX90+WJAw7FZrX70eJbPkIh2BVCaa+W4ZaWjPo2U3bvUczffMV5X
-         FgnT+U6wRkX+lx5uz8JE4UWWP++5vxs5FV8APOK3EIGeLGDptfh8PKCatWei28bgKvcM
-         vgkh0TyLsIhQlwIVJr3xB//GRyFjq1mE9mL+L/B3aH7VtqNLN33zOXdXLw16J8Fc1Wmi
-         mkmw==
-X-Gm-Message-State: AOJu0YwlziZkJTwGhD73VaM3BSNq257CnKw5qABOJgzjLJ/qRRgSLZI/
-	BOcb2JkDlZAQFmulQlRc2lBmp67morueRkxFlXtUFD3uuZJj2stBAsDpvW6iHx8LrcKs4UkJw6v
-	m2e6UpV03wtXDepeFZLDDM4RmcC06pRQ0qFY/Iw==
-X-Gm-Gg: ASbGncu389Agl0Y/X5HtXBWbAkjOXqXMoeVMHqpuDEMijSHMyWrF6y+A65P0mf2FAqI
-	jiu98SI1jFDVOhkUjqJD2Eg8ymPNH6HPeSllvdBdWh+llKs5cfVXJWpDy11qHgLniqB2Slmya2V
-	SGzoCCWyfqI61/590m2XUZn7R1EOCS
-X-Google-Smtp-Source: AGHT+IELIX734CmpZjaUH1LhY+mNlPgn6FfQqHOjvdD+PtEwT0waywr7AsYeKEHFqGsboEk9PPcQl3wAhUOLx9QZVbM=
-X-Received: by 2002:a05:651c:198d:b0:302:497a:9e5b with SMTP id
- 38308e7fff4ca-307968c0671mr84854771fa.2.1738674764635; Tue, 04 Feb 2025
- 05:12:44 -0800 (PST)
+        bh=zzKgIq7rz08fBMN0W/dqGNraXehNUjIQ90fAtJxNy1o=;
+        b=iDQRfmnfAZBYaU1KQBx992yQuLM/awG/dBcYHtwirA42ifHOMKEnTH/8+8sb+AZPvZ
+         xkgrAdMda7auNqIzMzUQLzlfbmLUvsvHFn02HEF1qEsuYPSApEubv4giX2bCj/LSlnoG
+         wIJoqRwZQ94y2Ys+ac8tcPCiA7jIn0NBofeYJrqTuDJ1HHVWDb5altlqeEmYX4tbR5uO
+         /UpwmY/BYDQl4gok9pP8cOPXTDIr1JG3hpiR9ICtu237OYBGyfX9grJm8pHGMOC6G5H3
+         cMx86Xb2igYtntfgksR8zhe2oyDk3daU1b1OMpUGQfZCRaIJjINjseicWc2pmoKbWJTa
+         RaPA==
+X-Gm-Message-State: AOJu0YyHNr85tNnvn19mQuHoFVGco7m0JJhrMZg3YHPck2EZ8Fxe0o9s
+	1ZxHW6+sHIZYW/YMXM9VZH77xyCj6tt+eDRHsmb/COXA94+C6e+DZ2sscuQxOupQRF0Y/dQCH98
+	BoFYilhbDPELift6YzcQ85GZKy6gk6TWLOC9JpA==
+X-Gm-Gg: ASbGncvg4E4JReVpr1RP/987U05bGNAr3GdfcAFOnzh8oBKp8Cx06vT+FwlA7k9QmZS
+	PFmmh9giMNa2r8InjfXBIYYyqdwDngk4qlbF4dG8JzvxvP3YgZnFjSQY94COy31TuB2uVLeGJw4
+	jkVEkApZmMX6wrHuSWaWF5vrkpbyxJ
+X-Google-Smtp-Source: AGHT+IG3iK/gLYXxjiIAYHWRJ7P+AhZZKbxnmRlx23C/h/unN+vix5GK7X+U8ENJurLGDtOx9+8rw2p5LXLpdHZKqK8=
+X-Received: by 2002:a05:6512:131e:b0:540:2576:d0d8 with SMTP id
+ 2adb3069b0e04-543e4c32866mr7678444e87.40.1738674878387; Tue, 04 Feb 2025
+ 05:14:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-9-koichiro.den@canonical.com>
-In-Reply-To: <20250203031213.399914-9-koichiro.den@canonical.com>
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-10-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-10-koichiro.den@canonical.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 4 Feb 2025 14:12:33 +0100
-X-Gm-Features: AWEUYZnZziKEMrS7-p9No8WpR-3WgtOd65xny6U9QQ4GzETV_Gz4K7cRMAjks74
-Message-ID: <CAMRc=MdQuQnmqFravDfvcoN_TUXgfZnJh5UxdRuYhECfmvAhGw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] gpio: aggregator: expoose aggregator created via
- legacy sysfs to configfs
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 4 Feb 2025 14:14:27 +0100
+X-Gm-Features: AWEUYZk-OGR0Gg1AhH6ADDIik_r3P3vu-Vw7Ihm4kfBQvjAQXX4aKVaTVOSz8VY
+Message-ID: <CAMRc=Meb633zVgemPSeNtnm8oJmk=njcr2CQQbD5UJd=tBC5Zg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] gpio: aggregator: cancel deferred probe for
+ devices created via configfs
+To: Koichiro Den <koichiro.den@canonical.com>, geert+renesas@glider.be
+Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Feb 3, 2025 at 4:12=E2=80=AFAM Koichiro Den <koichiro.den@canonical=
 .com> wrote:
 >
-> Expose settings for aggregators created using the sysfs 'new_device'
-> interface to configfs. Once written to 'new_device', an "_auto.<N>" path
-
-I would prefer this to be called "_sysfs.<N>" as it's not really
-"automatic" - the user did create this, just with a different
-interface.
-
-> appears in the configfs regardless of whether the probe succeeds.
-> Consequently, users can no longer use that prefix for custom GPIO
-> aggregator names. The 'live' attribute changes to 1 when the probe
-> succeeds and the GPIO forwarder is instantiated.
+> For aggregators initialized via configfs, write 1 to 'live' waits for
+> probe completion and returns an error if the probe fails, unlike the
+> legacy sysfs interface, which is asynchronous.
 >
-> Note that the aggregator device created via sysfs is asynchrnous, i.e.
-> writing into 'new_device' returns without waiting for probe completion,
-> and the probe may succeed, fail, or eventually succeed via deferred
-> probe. Thus, the 'live' attribute may change from 0 to 1 asynchronously
-> without notice. So, editting key/offset/name while it's waiting for
-> deferred probe is prohibited.
+> Since users control the liveness of the aggregator device and might be
+> editting configurations while 'live' is 0, deferred probing is both
+> unnatural and unsafe.
 >
-> The configfs auto-generation relies on create_default_group(), which
-> inherently prohibits rmdir(2). To align with the limitation, this commit
-> also prohibits mkdir(2) for them. When users want to change the number
-> of lines for an aggregator initialized via 'new_device', they need to
-> tear down the device using 'delete_device' and reconfigure it from
-> scratch. This does not break previous behaviour; users of legacy sysfs
-> interface simply gain additional almost read-only configfs exposure.
->
-> Still, users can write into 'live' attribute to toggle the device unless
-> it's waiting for deferred probe. So once probe succeeds, they can
-> deactivate it in the same manner as the devices initialized via
-> configfs.
+> Cancel deferred probe for purely configfs-based aggregators when probe
+> fails.
 >
 > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 > ---
+>  drivers/gpio/gpio-aggregator.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregato=
+r.c
+> index e101b78ad524..174078e02287 100644
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -1313,7 +1313,6 @@ static struct attribute *gpio_aggregator_attrs[] =
+=3D {
+>  };
+>  ATTRIBUTE_GROUPS(gpio_aggregator);
+>
+> -
+>  /*
+>   *  GPIO Aggregator platform device
+>   */
+> @@ -1342,8 +1341,22 @@ static int gpio_aggregator_probe(struct platform_d=
+evice *pdev)
+>
+>         for (i =3D 0; i < n; i++) {
+>                 descs[i] =3D devm_gpiod_get_index(dev, NULL, i, GPIOD_ASI=
+S);
+> -               if (IS_ERR(descs[i]))
+> +               if (IS_ERR(descs[i])) {
+> +                       /*
+> +                        * Deferred probing is not suitable when the aggr=
+egator
+> +                        * is created by userspace. They should just retr=
+y later
+> +                        * whenever they like. For device creation via sy=
+sfs,
+> +                        * error is propagated without overriding for bac=
+kward
+> +                        * compatibility. .prevent_deferred_probe is kept=
+ unset
+> +                        * for other cases.
+> +                        */
+> +                       if (!init_via_sysfs && !dev_of_node(dev) &&
+> +                           descs[i] =3D=3D ERR_PTR(-EPROBE_DEFER)) {
+> +                               pr_warn("Deferred probe canceled for crea=
+tion by userspace.\n");
+> +                               return -ENODEV;
+> +                       }
+>                         return PTR_ERR(descs[i]);
+> +               }
+>         }
+>
+>         features =3D (uintptr_t)device_get_match_data(dev);
+> --
+> 2.45.2
+>
+
+Geert, what do you think about making the sysfs interface synchronous
+instead? I would argue it's actually more logical as the user will
+instinctively expect the aggregator to be ready after write() to
+new_device returns.
 
 Bart
 
