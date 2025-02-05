@@ -1,122 +1,91 @@
-Return-Path: <linux-gpio+bounces-15362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFBBAA27CCA
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 21:28:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83FECA27FDE
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2025 01:01:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C3B23A43D4
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2025 20:27:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A0251887A0C
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2025 00:01:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F29421770E;
-	Tue,  4 Feb 2025 20:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6754E2B9A8;
+	Wed,  5 Feb 2025 00:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wJPZ2ZR1"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="G5V0byMa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB93219A67
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Feb 2025 20:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A28240849;
+	Wed,  5 Feb 2025 00:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738700876; cv=none; b=EP3jn1ytz7DRhK1DQZwmC8MMZq2CoEWfmSKE8XxZVz60otZRV/LYij8Gf6hXx+zwxIG+4jJz8pmN1ksexEHP490sLfwxM9Q5rhmvXJM2glC1UCRVTb0uVmH9CVqoIL+XiYx02cKaFl9HNc7KzsnWqjchkz5VAE615SUG5GsMYv8=
+	t=1738713661; cv=none; b=nZyXjvUCBYTJ20/uI+oV3TZRj7mAKJxZ2+z+55YhGz5s3ajtzCR9/m3vSKqoNGjtHIVgDGb+D90fdjnCnsrzxQQ16FYTa4m8m8KBK7D9DNelKxHki8WSkhf+st1EA3b+tURfowWkOahf0ovmr9gbyoLq9NURaKx7qJdVPnqnMh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738700876; c=relaxed/simple;
-	bh=ZhfAZnDJgHsp4g3A5U2aBrP5viFVs+Efw9vK/2u5x58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EK8jJwwSz/HHUoR+f5KnwQJLgcjHOJAGncnR7G5+TwKCItveEdjFaUTj4+ivLYIZgZhYiqeizertiLph3oNHGO+o9h1L5zY+ccxtIzs5DBy71ztboTyTvyBJkIA/MX8BzLJWXemod6puyHOZecnWYLNfKFtBp4BgSq+ue1fzW7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wJPZ2ZR1; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436202dd730so43093205e9.2
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2025 12:27:52 -0800 (PST)
+	s=arc-20240116; t=1738713661; c=relaxed/simple;
+	bh=GWQWzYt8utmoJ+vGnEmbU1n9a9uX+2dxeh0p6epdA/g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UF2GPJbGk5H39E2TZjFo3dL4qcmWHCjihvCfOz3JZKX9ipkzr155swIOjQZCI94e0JXEgt/ijSTbRQ4qSEn8t265eY+dUfLoSEfXH6t6t2h/OHxXfBjbL3WYqXbROsS+EC8arcebkKedNIfN5n7MN5l13zsxJdyCd7k4T+HMhpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=G5V0byMa; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738700871; x=1739305671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ZeHY/2J2Yuo8dxLF3vbNvohBC3qjQ1SOEuo/Ri1m5w=;
-        b=wJPZ2ZR1ApTBihOxBZbZcl4iaod9O406/8W2yq92BkgCSpeXHFvEIEd1Q73E39rlPD
-         p7zJKRAN3oM2xLsjRzIGTZ2GIAVdm4ddND97dh1WpjX5MciETuv8HOoiKaKyKX6kxyWL
-         CWYDK2hiko/lQQ9+gmTcHE52nQZCH7oHY4r7pwGg4nSZfFlHpqOiiygbxgoEXhVTCawV
-         2UrDW2zCitYRs3Ht3QPyAI8j+COIRsPm+BQv1s2I0FGnUTM0GZKOLwPnEywlPtGt5E/8
-         l6dJedUhf1nP/XvfW3OFBtY+cwHMrUuXQLkfZB8yIwYl7bkDBXu1+mazeQfi0dM9b93Q
-         o4VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738700871; x=1739305671;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ZeHY/2J2Yuo8dxLF3vbNvohBC3qjQ1SOEuo/Ri1m5w=;
-        b=HmN2RCnZ+EEXwg08tqmyjVWO3+7YXlO44eQHGyO9z0E0RNiqR4RcLZBtH4CG446Iwm
-         Ew2VjIdIZDwnvbnvvbEVGNZpnLreBKRBFvuAZ9i2W+eErkOElh6vt9AjSz+akQT3Fl1F
-         8uZP05acuRTOruAsS4QFZPEEw5rMfeEhj+CrJoAkdOow1/WOD8seEcobbQ0sndq7GaNY
-         CL4u51g1pFWk/WC7WgHwEq+Ka/vr+h25OE+k1Hjkn9i+OvcemriLqag4cZdXs+Pwunbg
-         MOyn+E6WX6zpBZeJn+GvWUQpbNawa8KhjA3HQGSQ5CIHuzoMufSD7J6ujV2SoxHXxSAn
-         pjnw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4eB64hZDsCOKYWX3mJRH8FKLLQqjbP7XGZ4xERf/+8yUlWCk4rdQl5z3io80KVaF8/8RsquBrirpE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVio9Hh8madbp69n9nccgvSZ3/JouZdoSrH2HsraGxKEQQ96L8
-	ZWhRDT2zUZLYjC5ClwUZ11qKm9QDP00JiHsJkQf1mG3YPCWVd1O3dh9WpO2UKGM=
-X-Gm-Gg: ASbGncsuwhpCr4hn/kYgj1PCAIhL8JSsODmY0+YwY2KUzbI2lVrfVaEGoUSVz7+6woc
-	Jz4+CiLyvUhuZ+2DJcRHx+w4RE0mp3Pqy2E/Pnne0DCixWToC5g03Q0qUwH3wx5YrJ5/azZGMib
-	MzI6HN0bVlskUdMWcKJnFLGVvhcdmzAALM0wIoZPQeH19gSL2JBWyGzHbwwClL/B1UYBRPjpbKN
-	tyrgrbh/G18YkLYXrqvPPbuXEjKU9tgIGyEJeSKUeIi4COHSdoEpwV6wIH5QN4FdpVy1TLXqAKo
-	NgoYAePAz81h89I=
-X-Google-Smtp-Source: AGHT+IEoYW5pVEP/c4CSgEK9useH3xzBCLlbEG/oukqupf8k+442HpqGKOGL5DkBe0Nx4uPAzc6nNA==
-X-Received: by 2002:a05:600c:1994:b0:434:9fac:b158 with SMTP id 5b1f17b1804b1-4390d42ccfbmr299195e9.1.1738700870983;
-        Tue, 04 Feb 2025 12:27:50 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4fb0:17c9:a494:227f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc6df36sm245420855e9.25.2025.02.04.12.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 12:27:50 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
-Date: Tue,  4 Feb 2025 21:27:46 +0100
-Message-ID: <173870057719.106350.17999921686110317967.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
-References: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
+	d=codeconstruct.com.au; s=2022a; t=1738713657;
+	bh=GWQWzYt8utmoJ+vGnEmbU1n9a9uX+2dxeh0p6epdA/g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=G5V0byMamZKCiKzf3lArq4TYeY5xEWC8oOt2fXx/T04duFwgkWOGBbfVgQcbMEZzZ
+	 ehkem+9oG4eutuRSWau/YSE9SkJCh1rQ88Zey+Eb9cX0nTpHYDwpSKxkCNJrynFyAN
+	 VCE7DcFnp+8JO0OXy0CFmvPzc6Q/jSdFqjIdEYvPiExZXmyPrTUHI25vrocZJoeRJl
+	 AUU57qZK5Jx6FzqmErxeDMKftT7YaM1cBJ1Fjjx/i7JNMKCn5Xx60vDAG90IjA1XfA
+	 jt9FaxFYR+p18EJ1dFp0WFLxoaRfWYtaCVzBdm+vGHPyiL4kXPdaNKeSGchkbAdtY+
+	 FD0cpUz4eeelA==
+Received: from [192.168.68.112] (ppp118-210-185-209.adl-adc-lon-bras34.tpg.internode.on.net [118.210.185.209])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 992C37104E;
+	Wed,  5 Feb 2025 08:00:55 +0800 (AWST)
+Message-ID: <fd92f75620e48957c2875cdcfd1285c33d3176e6.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v9 1/9] dt-bindings: ipmi: Add binding for IPMB device
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Ninad Palsule <ninad@linux.ibm.com>, minyard@acm.org
+Cc: andrew@lunn.ch, brgl@bgdev.pl, linus.walleij@linaro.org,
+ robh@kernel.org,  krzk+dt@kernel.org, conor+dt@kernel.org, 
+ openipmi-developer@lists.sourceforge.net, joel@jms.id.au, 
+ devicetree@vger.kernel.org, eajames@linux.ibm.com, 
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 05 Feb 2025 10:30:53 +1030
+In-Reply-To: <20250204194115.3899174-2-ninad@linux.ibm.com>
+References: <20250204194115.3899174-1-ninad@linux.ibm.com>
+	 <20250204194115.3899174-2-ninad@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Corey,
 
+On Tue, 2025-02-04 at 13:41 -0600, Ninad Palsule wrote:
+> Add device tree binding document for the IPMB device interface.
+> This device is already in use in both driver and .dts files.
+>=20
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> ---
+> =C2=A0.../devicetree/bindings/ipmi/ipmb-dev.yaml=C2=A0=C2=A0=C2=A0 | 56
+> +++++++++++++++++++
+> =C2=A01 file changed, 56 insertions(+)
+> =C2=A0create mode 100644 Documentation/devicetree/bindings/ipmi/ipmb-
+> dev.yaml
 
-On Thu, 06 Jun 2024 15:31:02 +1200, Mark Tomlinson wrote:
-> The GPIO drivers with latch interrupt support (typically types starting
-> with PCAL) have interrupt status registers to determine which particular
-> inputs have caused an interrupt. Unfortunately there is no atomic
-> operation to read these registers and clear the interrupt. Clearing the
-> interrupt is done by reading the input registers.
-> 
-> The code was reading the interrupt status registers, and then reading
-> the input registers. If an input changed between these two events it was
-> lost.
-> 
-> [...]
+Would you like to take this through the IPMI tree? Otherwise I'm happy
+to take it through the BMC tree with your ack.
 
-Queued for fixes. Thanks Andy for taking the time to review it.
+Andrew
 
-[1/1] gpio: pca953x: Improve interrupt support
-      commit: d6179f6c6204f9932aed3a7a2100b4a295dfed9d
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
