@@ -1,154 +1,121 @@
-Return-Path: <linux-gpio+bounces-15474-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15475-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9380CA2AF50
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 18:48:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3079EA2AFF5
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 19:12:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 231791617B5
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 17:48:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C25D0165775
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 18:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC911191484;
-	Thu,  6 Feb 2025 17:48:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D9919E98B;
+	Thu,  6 Feb 2025 18:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1LNjWuf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXtKdv84"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB376190497;
-	Thu,  6 Feb 2025 17:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5588F19ADB0;
+	Thu,  6 Feb 2025 18:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864121; cv=none; b=mFJ4wfbTRgIXM4ypgOReiG6tH/z9m+DMdh18v4/kCuT+bTERp+txZ+qMc3H3J4nAGmKbg3Wl7rw4mH9ikuWk3BRMs05pLUKpE2Ajwkiv5F+hk5IrFsE4UAkXfQXWfv4khKWfuhTw7z1kA+tDtSFdfYG114aOkj2hKkIuMnXK7gw=
+	t=1738865477; cv=none; b=mMgRQkcF7JCzQkH9l0LNvUelrstLuYPiI4pqQxd2KvvdqFmputyHA6YCGFV8hnUWJH/mTdXl/x1A1mcbl6h52s0QI76vvr98T8oFt0kbXf+ovQleBLv6VUkmSOKKeyc3qNSjpjg7xS2OnayRcjiS/sB5ZXus3Cm2JX9eerdtztE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864121; c=relaxed/simple;
-	bh=1t3zXBpCdXhEEFu1TFhEr/3WTg7CV454FBaJGsialWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=J+uzLgYwTzJrcnDzfz6zs3vk7AUaxudlf7GHz/4sW5QVakkLnHIzo3gbzdohowLgWY4EgBhe6iwuWKbQh/d91X90tV1Z2LkcLrB9lxX3TtaVdTiijtlUSQcSwBwFrLQDcRKw5Oyli7lO4pQEyfKjlLPouZfo7P1dDtDgg1DPSB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1LNjWuf; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab744d5e567so219197366b.1;
-        Thu, 06 Feb 2025 09:48:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738864118; x=1739468918; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DX2627YI24l2pBBbnjtgt3lAgexHaljl0LuWtEBAE00=;
-        b=E1LNjWufsowKqyup/ztOv7Rl21vYO3nBeDaGFRfmEztqYiv3Sp0Kw76hIhHSF6Own9
-         xWNY14O7bJN4NvDToMl4x5xTieZ9/Jm3O1eDD6YykUyuZGHXEMyXEQm89iwNemMAJ6vP
-         Y57DeZ2BE2hnfT3ApXPmOu1s4imJNaGRjJNVJE1DIVxAA4THI7sso+JsSAzQco2JO/fB
-         U3F3jkBnLRw1LuE8IKhJy2mLrm6npqRs/1ByKVbzPdkXfwdnx4zfS5Bsr1JnmnQmzfMr
-         PbIpXptDhM3nLcYu1QkUgz25Nmgjgn6p3r00tCGf+40M0BRffeplYEEECLqMhW3PX1a2
-         8zjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738864118; x=1739468918;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DX2627YI24l2pBBbnjtgt3lAgexHaljl0LuWtEBAE00=;
-        b=ap3GbZzXSrZXN83AFDRMOhH06m9u9rhY8xmVouhRi+EPW4FQuqEqUXoqqjQOIKYTQP
-         zCUtPGyyOPHj4gAZKxVMrrmrbzjx8l65BAGFKv/NRZnuNbuOaNXH0vY6pEsRkpEkeGcB
-         GMjMJXF9Y0e9SvSJ8c0s0AIWmXgvsPUF7F4VAd/vpOw6O/MBOWoiHFmE/Ya8nD6xQCBo
-         I4EUVP8JOcGsoV2sf70WMsO+VNlOYG7QrJnR+0twcDaiaE3Z6GyaCgk2WAMzESYciBw5
-         81U0U4/GVyjT4BFYnuVavtYAghzlZrNWCxD5wpMu+6ci0sJkfywTfEH2sWQpvsgQLdUj
-         q98A==
-X-Forwarded-Encrypted: i=1; AJvYcCVhAYgJO5Sb4C/Ez3Zt3Svb/uOx3mCVFi4SjH0TDRGRsyitZiHpUJXMo7x6sJEFpp3E/n4PTpouMSeS8WF/@vger.kernel.org, AJvYcCXRYDQRZ8XP7ME/U4JmN3HJ+jeDNoZ5Jn7dpR38lXymeZPayHfyoMaA+j8jEU7WrLFtSTkuYsc0XolN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLO4mbosj9G7OZLizOhFdW0+rSEswB49P5vUx9wbkICHhxSV34
-	G12QBDcOg3n2mgOemWg56VVwBcCgTFvEoetsOaKTnbwjQWU4vJ0n
-X-Gm-Gg: ASbGncsmMY337VI1dsGC/+2xdZcBKEyOmIgwRwIqA7pJmXjDQYZ5Dvkq/FbEgfaLgOd
-	eqlL7IFaS27Sz20qVjOwxXfmfT2oKPl0pi4q8okbDZjd5atgtdEajz+yOPm16AKpWUXZlra5TGz
-	Gv5DKFF2FIq5t0qzCxdet4YmJbdLQgNQrBdQKgYHCFxE0zYMAVlPGKdbqkNyyvhRjhIsTrZpd/E
-	U7qxAMMtwX2XnAQ8ODucqH1pS77otjU41S+UZF1yp+lCrF36k8E2Sw0ZBwFqsN0Bs4dhihIXTP9
-	AyXIfSwqOnmm5x3HyHrWQ8GcTpbXxaPt838Mg1ArM/j7BHDuUloDtHGph5fU
-X-Google-Smtp-Source: AGHT+IEjb3ESIc4QoSERq3VJk7mxL8fDDwkecLmWkcVMf6V6yV2xjMkNs2d03WF0itTo+ldSq9dkGA==
-X-Received: by 2002:a17:907:94c3:b0:ab7:5a5a:4318 with SMTP id a640c23a62f3a-ab76e87adbfmr401085966b.12.1738864117894;
-        Thu, 06 Feb 2025 09:48:37 -0800 (PST)
-Received: from [192.168.50.244] (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f84417sm132736266b.53.2025.02.06.09.48.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 09:48:37 -0800 (PST)
-Message-ID: <50371e83-917d-4b0c-af4e-ec1afa7e8c94@gmail.com>
-Date: Thu, 6 Feb 2025 18:48:36 +0100
+	s=arc-20240116; t=1738865477; c=relaxed/simple;
+	bh=9vRyEHJHFpcr3sE+aLJw6NFhHWVoNdgXB+W5Pdi5tVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jO19+uzlmN5qIlKyIr45LGf35tIL4WVanv2pyQrXxkV7ChX3FiA8mUicQXk8QCVX00DNm6jMOYbhT3xFYcPwb8t9ykhrdVdHy4GeXY/4brFFoXcycGMYPlukybCyjn7ClVcku+VtNS1jQd/9Pfo8uJJ17HACQ6HRyGnb7f156jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXtKdv84; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738865477; x=1770401477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9vRyEHJHFpcr3sE+aLJw6NFhHWVoNdgXB+W5Pdi5tVE=;
+  b=aXtKdv84E5An8lvTcMTlolTkvUGZz1pGk/JfPjDftDK7m/372GRBy8dl
+   fLOnH+XNWQwY8nvMZhAvKSJzqiaoX74HHlXHeLqs1lrzVqTVYbU+HgZGX
+   eHEH0pVVqJV+z3xLgSPHdWgm9Daq7Cf3j+71NKpNH/2ttmu4cGzIc5FU/
+   2xzGDN0QMs2mmatfyR3MF3/jyflSfGZ0kYU4MqL8xSly7nMScFgMSquet
+   SCHeEcjbOycic0iFYZGmqi6+hWU95QStxEoy+BRFlaSdsdfteYZJx/W8U
+   aaGTSY8IAqoderZ6fS5SW5TB4Acw5zqFEw//+rfryUpCHqWiCSO1ADEHo
+   A==;
+X-CSE-ConnectionGUID: VUoSYIK9S9+oEzOwHb9GYA==
+X-CSE-MsgGUID: /347yr5JSFWMQyueWESMRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56904265"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="56904265"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:11:16 -0800
+X-CSE-ConnectionGUID: Ju8QnR+iS3iwXTl/7oVP/A==
+X-CSE-MsgGUID: izyH6iwjThCvY8M+hQh3Gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="111118158"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:11:11 -0800
+Date: Thu, 6 Feb 2025 20:11:08 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: kernel test robot <lkp@intel.com>, gregkh@linuxfoundation.org,
+	rafael@kernel.org, linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
+	jic23@kernel.org, przemyslaw.kitszel@intel.com,
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6T7PE2Qpw4VbQyn@black.fi.intel.com>
+References: <20250203080902.1864382-2-raag.jadav@intel.com>
+ <202502060025.XJwUub6I-lkp@intel.com>
+ <Z6RS-A2FFjYuPoyn@black.fi.intel.com>
+ <Z6TRcWCKe__oxCUV@smile.fi.intel.com>
+ <Z6TRveCRK7LFwSNV@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
-From: Artur Weber <aweber.kernel@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Markus Mayer
- <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
- Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
- Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
- <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
- <981d534a-a439-40c2-bd24-2e518846580e@gmail.com>
-Content-Language: en-US
-In-Reply-To: <981d534a-a439-40c2-bd24-2e518846580e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6TRveCRK7LFwSNV@smile.fi.intel.com>
 
-On 6.02.2025 16:37, Artur Weber wrote:
-> On 6.02.2025 10:34, Linus Walleij wrote:
->> Hi Artur,
->>
->> On Thu, Jan 30, 2025 at 6:10 PM Artur Weber <aweber.kernel@gmail.com> 
->> wrote:
->>
->>> Fixes two issues that were preventing GPIO from working correctly:
->>>
->>> - Lock/unlock functions tried to write the wrong bit to the unlock
->>>    registers for GPIOs with numbers larger than 32
->>>
->>> - GPIOs only initialized as IRQs did not unlock the configuration
->>>    registers, causing IRQ-related configuration (e.g. setting the IRQ
->>>    type) to fail.
->>>
->>> Also includes a minor fix to add a missing newline to an error message.
->>>
->>> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
->>> (DTS not yet in mainline).
->>>
->>> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
->>
->> Looks good to me, do you want to resend the patches picking up the
->> Acks or do you want me to apply as-is?
+On Thu, Feb 06, 2025 at 05:14:05PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 06, 2025 at 05:12:49PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 06, 2025 at 08:13:12AM +0200, Raag Jadav wrote:
+> > > On Thu, Feb 06, 2025 at 12:27:03AM +0800, kernel test robot wrote:
 > 
-> I'll send a v2 in a second with the style fixes suggested by Markus[1].
-> After that, it should be good to go.
+> ...
 > 
->> Should this go in as urgent fixes (-rcN) or as nonurgent?
->>
->> The DTS not being mainline suggests nonurgent but are there
->> other systems suffering?
+> > > >    102	
+> > > >    103	static inline
+> > > >    104	void __iomem *devm_ioremap_resource(struct device *dev, const struct resource *res)
+> > > >    105	{
+> > > >  > 106		return ERR_PTR(-EINVAL);
+> > > >    107	}
+> > > >    108	
+> > > 
+> > > Andy, are we expecting this?
+> > 
+> > Oh, no, it's sparse error, but easy to fix. Need to have
+> > 
+> > 		return IOMEM_ERR_PTR(-EINVAL);
 > 
-> Non-urgent is fine. AFAICT the only upstream-supported Broadcom Kona
-> devices at the moment are old Broadcom dev boards; while they
-> technically are also affected by the bug, I doubt anyone's actively
-> using them. As for the devices I'm testing with, there's still quite
-> a few fixups I plan to make before I consider them ready to upstream.
-> 
-> Best regards
-> Artur
-> 
-> [1] https://lore.kernel.org/lkml/ 
-> CAGt4E5sqd_Aojk+boD5K5EiRfOsiU+jYY5EV0DP6TFut291HnQ@mail.gmail.com/
+> But isn't it the original issue? I mean that it was already before this series.
 
-v2 sent: https://lore.kernel.org/lkml/20250206-kona-gpio-fixes-v2-0-409135eab780@gmail.com/T/#t
+For all this time?
 
-Best regards
-Artur
+> If so, perhaps you can fix all sparse errors like this in the devres* code.
+
+With a fixes tag?
+
+Raag
 
