@@ -1,123 +1,145 @@
-Return-Path: <linux-gpio+bounces-15467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15468-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F716A2AC3B
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 16:14:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 453EDA2AC9D
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 16:38:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC32516A1CA
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 15:14:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D86963A2FC2
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 15:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3DF91EDA0A;
-	Thu,  6 Feb 2025 15:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFD76225A30;
+	Thu,  6 Feb 2025 15:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAMAfu77"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv0SQezA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D011A5B9B;
-	Thu,  6 Feb 2025 15:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80B1624C2;
+	Thu,  6 Feb 2025 15:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738854870; cv=none; b=tE936cdcJHxTrp+1LMp7rSvxtjO7gN2WTQtwZSajzQa3HJ6ocRZi4lpU8RWHyX09WGjAdjzTooynqNutbJkJ3uVBch3VVxAECHyZCc5iwQS4/JkqIOv0asW5Fay5K6t6c1m/S3yDfJXV0qKmbxHCtrsqq7MuVv3K2Ld4PbiRJyc=
+	t=1738856278; cv=none; b=FLSkmOMA+6Ao8tQ3WF9/HqBARsFRQtaaY+9LKveik2xjKBh+krVZbjEm81raEDB4E8R1MCfiFniLE2wIBHH5p0ZYAkQOsOk/5djX6uKO1Kece0GS9MV5rfq/OBvb1KfJGXUxtq5f1bHZd2jtNXfxjXD/R42LkmDEIe1cIuXX9vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738854870; c=relaxed/simple;
-	bh=t9cqZ73hIkX27lcJLtc+ipmxM7vC2a5RxdsIIVAnrsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8PIjL+SDnrpG/9/ZDWjduoZII/pmtDvXQhz7B4Tm9jiwHb1mt4uIV6vHXqmtxiUCs+8EgucGCONVkM7yOm0BAlaJZ/+jxqEVYXKDKyL0yyixRJMJJreVklQDbZPOW/GeQzWmw80tyYhdiHkUkTo6G7DcqNUQNQ7b0AEkuxA/M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAMAfu77; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738854869; x=1770390869;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=t9cqZ73hIkX27lcJLtc+ipmxM7vC2a5RxdsIIVAnrsk=;
-  b=HAMAfu77ZBVsmu20c9imTIv/7e43R1qj310gq/wawx2sWTbHMxn4p/eR
-   NgygL9HvqkkrZCFthVL3ciaKYwg7ewXd5xCVSu3TybPyNneNCmHjblvw7
-   PIwCVQMwbnl3RDVBAWLOP7rV7ryH5K9Yt63bknyHHB/auFPo2yYUfCA/k
-   HD4Su9GoLANPv4f25PErCimYHEe3FaYCuEEMWyMtDQrBg3QVlYGkrGk2e
-   QSn5o1LZKZkBgrV9UIsPR8QLKAOANNqAmKCje2wbPOMz2jFU4879WyQhi
-   J2322jVMTFPWw+IIINz5iCkQc8I7v1H8/SoXV5PK7j1o0BLrye8BWOoUU
-   w==;
-X-CSE-ConnectionGUID: ZcgDtTWdRDS2r0w0mKWuWw==
-X-CSE-MsgGUID: l3JBex9qSqSmR3NqNK1G+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42296130"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="42296130"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:14:28 -0800
-X-CSE-ConnectionGUID: ygznJFoSRH2VjRKbP8U1mg==
-X-CSE-MsgGUID: 9cOaqXNrQDSU5OfiOKsN0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111084299"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:14:23 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tg3Zt-00000008l7W-3Qru;
-	Thu, 06 Feb 2025 17:14:05 +0200
-Date: Thu, 6 Feb 2025 17:14:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: kernel test robot <lkp@intel.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-	jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 01/20] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <Z6TRveCRK7LFwSNV@smile.fi.intel.com>
-References: <20250203080902.1864382-2-raag.jadav@intel.com>
- <202502060025.XJwUub6I-lkp@intel.com>
- <Z6RS-A2FFjYuPoyn@black.fi.intel.com>
- <Z6TRcWCKe__oxCUV@smile.fi.intel.com>
+	s=arc-20240116; t=1738856278; c=relaxed/simple;
+	bh=ZlzDWmhB7UIdqvn9ZA3N4/Cp//44ZgbIgvl9u6GBTSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hPVuupL5TWDSgocid7ZYElyJtA0dZlaDRt+7WATS7gbI1pMycLvu4UjX/f8rB6OoSOI6xMgqvu7VLERbVkd/Gj99VdLPMRSmtVZU1qWSRz8GSF8Yw8iJVJB5E0LoaceLOjhsLHWlJKLP0ur9p9D0rpFuRowrYoJv+WUmC6CZG/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv0SQezA; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso1077534f8f.2;
+        Thu, 06 Feb 2025 07:37:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738856275; x=1739461075; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
+        b=Mv0SQezAljSzDTXu4u4cmxroalFl3GXAAeFKfyIqPNn3mkkcd7yMKylhFVr6wrjfWT
+         E58bPFl6ifHLPsXQ0c4u5lPMhRRguPNwLgZe4HWSBJlbvzTQDzp+f7jGaVw6zannFijT
+         wzv0bkTUeQdV4NNa+X5XAn4Cn4F2hWyHRLwTpVes1Z64jzSLVpAZ+gN/wO414n/PgeH+
+         P3jjxjDKPpqfy8xulX1wDg2e+/8U8r/3iMgv6Lw3UfUv9TRyOWpKkSXfMJ5IeMl/6SKp
+         7hjhvrOxHV9yrUflLqGlvYVWA+LvVJinSxFNIXOPoR30UuWqkVkBXibW9lYrYAwHU2hd
+         kB2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738856275; x=1739461075;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jEzCsc/q3svFkwQlOP5jPW9KfsGihf2HptC6MSm8Zw8=;
+        b=Chkkk30bssbXQmW5UUAUMzdaFYnO8jxypap17a5TtxooL0sSHztm/iEKGXnGoLsAZt
+         491GfV+kcRFnxLlfPgqDI5TnpjJvrns+6DtQpyN23Kr3oTnCxkudZna++IIzcjC1QZED
+         vjagv6gIJrTt3TE0No5tUzvcU8bhCLzuSrm8jlQJgZsepWLm3/xkfUnYRouaIZCX6HjR
+         QfxbDRfbGhUYvlMA65v2J8zIEfmcqwH5cXT3xy4BqErfyPIEm+nAdaalMUe7yjYV3L5z
+         yKEzqG2SzHcq5aAQmMjCbxlg0F5ZlJh4aHGNovkrgX1iqAeisAD4kYJum5QlSFgFk20m
+         U0HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSHbG/BK83yFyWr3SzEfD+JwMjSiuYIsLSFp8ltTvJ//mof/gUr3Ib3ifkhjqu9d/4+lLV+UybodQj8bwx@vger.kernel.org, AJvYcCVykrwdB5bxB24Fi6XzBVqq+0EKFgHtOulxvResFtNYrIYbfgf9I4Xd8+P1WMxDnMmceX7tQhdqTzLi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy49IuxvybEbpFxozifQI5SBlRnNiSaK0i+432BMEoiZfAViiJC
+	r0P8CKC+Lmfe64nNgnwai8OedX58+d1UXwT0r0LAwP2OERSlBfla
+X-Gm-Gg: ASbGnctYTWROFHO13x9avT7bA4uGrOxaj6ZPyzUbG7+n3ehcbAAcJo3R3SaFKCoN1V1
+	5Ri6j4+Al35zLXiZI/P3vtLmMaonKjihtJ/sofU9XdDKPPr04FqAYuHMOuDrrclRYrxdfEmFHxm
+	qTq3Kbjs1FOUG3YwBGKsLZ9ClRgANICr0zUkPAiRDdZcAPSNy4am7boXJT+ipBy8AZ8n+3Ww9DW
+	L1moaDTn59FKYSEWGvB04Jdl1HX6HTFMYl7D0ELXNyVbzhwWGIJF4tKOYyB4Z3KiM+MGtxIn0zw
+	lMF5UnJT4xTQ1avpfILbZcVaRa7gVMHiTUAPNimdmuE8nVTRM/w1mltugzsE
+X-Google-Smtp-Source: AGHT+IHXKfLaVddaZ9De9vD/kKyUtDaf5GMgLO3NiS4kYqU17vHau1zvLc+wrE4ONfty4SCGtsNyqw==
+X-Received: by 2002:a05:6000:144f:b0:38a:88ac:ed14 with SMTP id ffacd0b85a97d-38db489322dmr7061870f8f.19.1738856274668;
+        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
+Received: from [192.168.50.244] (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f84383sm116408566b.50.2025.02.06.07.37.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 07:37:54 -0800 (PST)
+Message-ID: <981d534a-a439-40c2-bd24-2e518846580e@gmail.com>
+Date: Thu, 6 Feb 2025 16:37:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6TRcWCKe__oxCUV@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Markus Mayer
+ <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>,
+ Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>,
+ Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com>
+ <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+Content-Language: en-US
+From: Artur Weber <aweber.kernel@gmail.com>
+In-Reply-To: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 05:12:49PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 06, 2025 at 08:13:12AM +0200, Raag Jadav wrote:
-> > On Thu, Feb 06, 2025 at 12:27:03AM +0800, kernel test robot wrote:
-
-...
-
-> > >    102	
-> > >    103	static inline
-> > >    104	void __iomem *devm_ioremap_resource(struct device *dev, const struct resource *res)
-> > >    105	{
-> > >  > 106		return ERR_PTR(-EINVAL);
-> > >    107	}
-> > >    108	
-> > 
-> > Andy, are we expecting this?
+On 6.02.2025 10:34, Linus Walleij wrote:
+> Hi Artur,
 > 
-> Oh, no, it's sparse error, but easy to fix. Need to have
+> On Thu, Jan 30, 2025 at 6:10 PM Artur Weber <aweber.kernel@gmail.com> wrote:
 > 
-> 		return IOMEM_ERR_PTR(-EINVAL);
+>> Fixes two issues that were preventing GPIO from working correctly:
+>>
+>> - Lock/unlock functions tried to write the wrong bit to the unlock
+>>    registers for GPIOs with numbers larger than 32
+>>
+>> - GPIOs only initialized as IRQs did not unlock the configuration
+>>    registers, causing IRQ-related configuration (e.g. setting the IRQ
+>>    type) to fail.
+>>
+>> Also includes a minor fix to add a missing newline to an error message.
+>>
+>> Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
+>> (DTS not yet in mainline).
+>>
+>> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> 
+> Looks good to me, do you want to resend the patches picking up the
+> Acks or do you want me to apply as-is?
 
-But isn't it the original issue? I mean that it was already before this series.
-If so, perhaps you can fix all sparse errors like this in the devres* code.
+I'll send a v2 in a second with the style fixes suggested by Markus[1].
+After that, it should be good to go.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Should this go in as urgent fixes (-rcN) or as nonurgent?
+> 
+> The DTS not being mainline suggests nonurgent but are there
+> other systems suffering?
 
+Non-urgent is fine. AFAICT the only upstream-supported Broadcom Kona
+devices at the moment are old Broadcom dev boards; while they
+technically are also affected by the bug, I doubt anyone's actively
+using them. As for the devices I'm testing with, there's still quite
+a few fixups I plan to make before I consider them ready to upstream.
 
+Best regards
+Artur
+
+[1] https://lore.kernel.org/lkml/CAGt4E5sqd_Aojk+boD5K5EiRfOsiU+jYY5EV0DP6TFut291HnQ@mail.gmail.com/
 
