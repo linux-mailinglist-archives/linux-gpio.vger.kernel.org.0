@@ -1,125 +1,168 @@
-Return-Path: <linux-gpio+bounces-15477-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15478-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E979A2B09D
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 19:22:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16080A2B0A4
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 19:22:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 336BA188BAAF
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 18:22:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05818188B3D4
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 18:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D63ED199254;
-	Thu,  6 Feb 2025 18:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77081A2564;
+	Thu,  6 Feb 2025 18:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFeOuAHu"
+	dkim=pass (2048-bit key) header.d=remarkable.no header.i=@remarkable.no header.b="OvHgtkWY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C382B19D8B7
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 18:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34331A4F3C
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 18:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865840; cv=none; b=YxdBrZZtFEB/rcUyfTAKFZLShMmGCuixDZ7jMnGNgEbta7MttVSxfdAdrggVTXFABIPziEwO20FzoxRpPorcUFeMMlMyybwd4X345JYKjRONr4U/q2tlMNr4SW2SxqK4lhOZxM3L9WOEVUVS+6FbLlDvyMxtdgcdhk6I5RlYwwU=
+	t=1738865870; cv=none; b=ZrUTLYqoMddEebFSH3uCOJ+3ofGRLtMekzqFssep49knzYy4U0kK2FgQVIBtTA0/cVgfA26AoU3wvUblPLVJ6jlg98YNSVKfhL6YNhd7WjK8O+A4rt4xfQYChxUUwcv5cxN2+2oliYNqyBxDIEkKQIaGxV1DhXJoidmVJmn3t3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865840; c=relaxed/simple;
-	bh=197lp3kzwItmnztsj2amEy4Ts4sUwvD5wd25DtZFya8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oecX7rYiJAiM+Rrd0SL+M1BbCWiqtMDW5Wn5cLvfQqgP9SaLH2lDKtfuJqfi0du/F/c9P901J7v+jhknTNkh+lWLVpi4/CjfoiPZOea9cp/v4kTYDqmrGirxf7UATvOvDd3Z+wZpR4fQUxlwU88UjfFOj1InLlr4GK0xuGIJtXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FFeOuAHu; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54410d769f7so902797e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 10:17:18 -0800 (PST)
+	s=arc-20240116; t=1738865870; c=relaxed/simple;
+	bh=Hbji5T/6K3y5tQ8qKUOLvVFNzd8uxzmS4sFnAmyqUx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AGt8sVQvNVa8ZStgqaI2NwAyflE15I4zTixEFSkaKDJlntvNwQMbSjq45VKuaWy6/b+lc32E3EU0IqbM3HjbEQY1W6p+L/kksTBSGSAPzXMzwmdZJDSuDCTvMPF4FWjmEXyfqljnS7raW46x9iOhP/IRsUXSZMuD11Yenm4pjC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=remarkable.no; spf=pass smtp.mailfrom=remarkable.no; dkim=pass (2048-bit key) header.d=remarkable.no header.i=@remarkable.no header.b=OvHgtkWY; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=remarkable.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=remarkable.no
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53e3778bffdso1241568e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 10:17:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738865837; x=1739470637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5MVWUvrz6I/EjcUog/wJCigSBALMduOPBpWQgvDyB4o=;
-        b=FFeOuAHutN34rCWmRwBmVPING5Ib3EZINfkYy6HfqWluVEWJRLaxVVeteS4Wa0KTTR
-         KrrsDGOnbu7QS42Gun+ZpJSmaFc5BIkp20EOlq6R7Nev0DSZx6J+gVMpSDeX4oU0mPUr
-         Ifk60wpQX2/8Nk8ucszSWP7nJ53LExgPLOGNI6zRM6209XwrcTEgMWN63UogJUzDq3NU
-         5rUrmCqp7NPQqiQk32Xk4gEPm9NH6+9wTQtsw5H1QixGZzCUci9Ujdy+MMZ1mzl+gufE
-         fCmWCnpqXO7aTHP0uhpM7WIXbotRbxhuQs7zCVQ+ZksnfHLx30b/oC/VdCRelvuVx5FZ
-         JiAA==
+        d=remarkable.no; s=google; t=1738865865; x=1739470665; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2djNpUvfAgvQ84m91IKI9aY9SedH15fgV7SgaS/c8sk=;
+        b=OvHgtkWY508j6cffndQqWMYcYfeHFg2FC/0eIJEznfYt/ODqdVLsNahrRKXd5iAFT/
+         W0heXDNGlpCvOk2u8UC3LL9fdbvKD0oIZtuWzbaLEQatXRO5NECUeHVa6FI36TETkDVu
+         vzk0v5isBA0nazO5kPPZtNXZpa73yog8XQkbj4jOQ6XKaDpjKgDquytbQvsPnmT7+q3O
+         XA6Ff04cmE0fwomOXg3HG06OSkyfQM+90FcQVi6EWcjgZ61lh5duofiuT/1LJt7qAOLu
+         55KRYcAU7gmNuUGMuDTRdvVAa/IAMr7kq8gXNSFCy8Y7z/CSvTOfCJyHqoZ62tmBeLxn
+         ON0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865837; x=1739470637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5MVWUvrz6I/EjcUog/wJCigSBALMduOPBpWQgvDyB4o=;
-        b=WkyqykWpmw34umcER1pbctH+O8mbpV2SLt7zgL4NEWC7QWDGSvTB4UeaRQe6Lxa1LB
-         BysBQWcsyES8AdRfvEmflH9qizRiXSd+kdjcJa4qGFg3SNM7fM98vyaOrvWWaR8FWzmG
-         KpFSiIfmJ1lOlfeanPIYgCINkCPyInZKNXB/4KKBIlEU/WGLOY1hjTc2Medj896NcnGv
-         mW6ZXjqSFBMGNswC4OAdzepMxVuAMbdfREkCZe0wVC40kzPfQS7E8ytY2JxHvfnS97rD
-         wk2lX6A+GFCdLVEZNdYQqh3roEGRrixH38qSs77cLjB1lYN66TV1Ku434HV6s+tTEd0R
-         igVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWimifxQEnJlumyNZzpHyUPlqVl1VnPHvQhuVDkPgnl3qA9ocxeqLMGZwRdBJkbDx8g3eDrzCI3u02v@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAF6+HvEcJdSvFRpSSnhfw89OYZ6I1t6+bGTN8Q46zbA0bgHEe
-	AsF+kbPAYml/pM8DAnfJL/4nu2Guo6OEdOnr8gydxjBnaOcMVFus+zqoyBAd0tRq4mBzIEFZ0M2
-	BU+2DHWDbiL5QDpXp2KFtMhuC38HRmQXDemSLCJbqIB1R49T+
-X-Gm-Gg: ASbGncuPD6z7eqQ+X9FpscTef5necEOknH9Urnf6dd8vSOtv+J8JYwcxADTzW+tJiYV
-	LQQVFOJ0dus10sWcDq7q6OcsgtMXr+5U1wjffact43rniCZ93gTsmuQaD7G0AmtViHDgGUk0=
-X-Google-Smtp-Source: AGHT+IH3sHYKWyOD5ia3rmPaUPdB8KYuQwRoGoxGcTpzNmXeS5xrmV3mgCN6Tr2QiY+B044QqFQhDWxhGS1tixCTg/o=
-X-Received: by 2002:a05:6512:1044:b0:540:1d37:e6e with SMTP id
- 2adb3069b0e04-54405a438a5mr3117203e87.33.1738865836820; Thu, 06 Feb 2025
- 10:17:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738865865; x=1739470665;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2djNpUvfAgvQ84m91IKI9aY9SedH15fgV7SgaS/c8sk=;
+        b=AnHqOna3C5ejbj//whpKACdx2KITrzNOd+jWiX+BUAT9KI0nC6MuGTVtsBX7CaseEq
+         WQZCg5gBetPEpWeQ+o8I/+qFuxs4/urxu5II1qkw11C6vFwyvNqIyxDSFR3JiNPM8TIJ
+         yQ4/s1RgMd232TSI3pm+YhR4c+fKeFvOmuRZUefANZeLQCLjO+oj3FVJVwgwSEHlup2j
+         VIZMpRylUiceIdNR5QbIFz2NfQKPLnjagtDcTxcGrP/WKw3TUhVSm2EN8vu14qysHCQ5
+         49LYno+p+ILyVCAajuII8RLg+Evau4xx9GeMH8kJ2tyqBhMpmSSy+ETFw7UmSsJlqiAa
+         epbg==
+X-Gm-Message-State: AOJu0YwR0hl4NfmMNhklHKxFH8A3frOzdcQ7hoCqEcTZVRu22H9vt2bL
+	715S1wtWTWEvDotkvkN04DpYrgm+dSGN2d1D8nALOWTA6RqLEmnLqqeJ2FMfvH3eXFMMG4yrz5X
+	L5w==
+X-Gm-Gg: ASbGncu8q3Gjm3Nd/zgwTUlgrik/H6NKsRgCgHMovoX582kgytsX6ofl9NL8zl+zV4s
+	r8hEumLdmLX4lCgxqCSs07RSx2eIkswcIf9dIPWUkumvzMCkkZDCtf2vg+ujwDmiM6LkCPGA9D+
+	rUkuIZFd+zQns9rDDbGb8XmuXDipwKRlJuc0vtbL7qXljDcKffqNu/uoPsK6UDWo2xlFF6qW2al
+	GuKbsmIgokmzoVFkXjzqEWX4TSdz4tsOMDlvmfDFA7VtqEIsrx25GHBQWKVQDAyCL65qd3uIElb
+	e+YGgt930Zfdt4ROorgm06ejJvgBCNVtBukDXVVfOQm2OVXQwNhL9c7UEjzRqO5CllmdPm8daEt
+	7sFllxmEukxs+cGeLGos+FpbQ4vX/eEv5nu0kVw==
+X-Google-Smtp-Source: AGHT+IE5/NRLVqSmdV3o+ILVR/RP/JKGCDcn6ygA3r1tx1LrKyjPsL51CVvwBDhKjmlD6RO8Z46a6Q==
+X-Received: by 2002:a05:6512:32c7:b0:53f:231e:6f92 with SMTP id 2adb3069b0e04-54405a45714mr3412824e87.34.1738865865080;
+        Thu, 06 Feb 2025 10:17:45 -0800 (PST)
+Received: from yocto-build-johan.c.remarkable-codex-builds.internal (20.63.88.34.bc.googleusercontent.com. [34.88.63.20])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544120864c6sm140475e87.88.2025.02.06.10.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 10:17:44 -0800 (PST)
+From: Johan Korsnes <johan.korsnes@remarkable.no>
+To: linux-gpio@vger.kernel.org
+Cc: Johan Korsnes <johan.korsnes@remarkable.no>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Haibo Chen <haibo.chen@nxp.com>
+Subject: [PATCH] gpio: vf610: add locking to gpio direction functions
+Date: Thu,  6 Feb 2025 19:17:13 +0100
+Message-ID: <20250206181714.417433-1-johan.korsnes@remarkable.no>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206143714.182230-1-brgl@bgdev.pl>
-In-Reply-To: <20250206143714.182230-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 19:17:05 +0100
-X-Gm-Features: AWEUYZmjY00VQRyj-wROvCwcjvRKMHYs9Ew0heG6nw4BijJkAe4FJsZiQNQlpkw
-Message-ID: <CACRpkdYKY-fZED=ZCjuXD5s0TYYxBsgFwJ2ga-rHkx4k6FE5Bg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't build HTE code with CONFIG_HTE disabled
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dipen Patel <dipenp@nvidia.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, timestamp@lists.linux.dev, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+Add locking to `vf610_gpio_direction_input|output()` functions. Without
+this locking, a race condition exists between concurrent calls to these
+functions, potentially leading to incorrect GPIO direction settings.
 
-On Thu, Feb 6, 2025 at 3:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Haibo Chen <haibo.chen@nxp.com>
+Signed-off-by: Johan Korsnes <johan.korsnes@remarkable.no>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Hardware timestamping is only used on tegra186 platforms but we include
-> the code and export the symbols everywhere. Shrink the binary a bit by
-> compiling the relevant functions conditionally.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+To verify the correctness of this fix, a `trylock` patch was applied,
+where after a couple of reboots the race was confirmed. I.e., one user
+had to wait before acquiring the lock. With this patch the race has not
+been encountered. It's worth mentioning that any type of debugging
+(printing, tracing, etc.) would "resolve" the issue.
+---
+ drivers/gpio/gpio-vf610.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index c4f34a347cb6..3527487d42c8 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -36,6 +36,7 @@ struct vf610_gpio_port {
+ 	struct clk *clk_port;
+ 	struct clk *clk_gpio;
+ 	int irq;
++	spinlock_t lock; /* protect gpio direction registers */
+ };
+ 
+ #define GPIO_PDOR		0x00
+@@ -121,12 +122,15 @@ static int vf610_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+ {
+ 	struct vf610_gpio_port *port = gpiochip_get_data(chip);
+ 	u32 mask = BIT(gpio);
++	unsigned long flags;
+ 	u32 val;
+ 
+ 	if (port->sdata->have_paddr) {
++		spin_lock_irqsave(&port->lock, flags);
+ 		val = vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+ 		val &= ~mask;
+ 		vf610_gpio_writel(val, port->gpio_base + GPIO_PDDR);
++		spin_unlock_irqrestore(&port->lock, flags);
+ 	}
+ 
+ 	return pinctrl_gpio_direction_input(chip, gpio);
+@@ -137,14 +141,17 @@ static int vf610_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio
+ {
+ 	struct vf610_gpio_port *port = gpiochip_get_data(chip);
+ 	u32 mask = BIT(gpio);
++	unsigned long flags;
+ 	u32 val;
+ 
+ 	vf610_gpio_set(chip, gpio, value);
+ 
+ 	if (port->sdata->have_paddr) {
++		spin_lock_irqsave(&port->lock, flags);
+ 		val = vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+ 		val |= mask;
+ 		vf610_gpio_writel(val, port->gpio_base + GPIO_PDDR);
++		spin_unlock_irqrestore(&port->lock, flags);
+ 	}
+ 
+ 	return pinctrl_gpio_direction_output(chip, gpio);
+@@ -297,6 +304,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	port->sdata = device_get_match_data(dev);
++	spin_lock_init(&port->lock);
+ 
+ 	dual_base = port->sdata->have_dual_base;
+ 
+-- 
+2.43.0
 
-> +static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
-> +                                              unsigned long flags)
-> +{
-> +#if !IS_ENABLED(CONFIG_GPIOLIB)
-> +       WARN_ON(desc);
-> +#endif
-> +       return -ENOSYS;
-
-I think you can just:
-
-if (!IS_ENABLED(CONFIG_GPIOLIB))
-  WARN_ON()
-else
-  return -ENOSYS;
-
-here, so it's not so ifdeffy.
-The compiler will eliminate the second branch.
-
-Yours,
-Linus Walleij
 
