@@ -1,140 +1,134 @@
-Return-Path: <linux-gpio+bounces-15435-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15436-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57BABA2A592
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 11:09:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F9C3A2A5FA
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 11:39:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E701716251D
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 10:09:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCAB9188A0FF
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 10:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23EB922655B;
-	Thu,  6 Feb 2025 10:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJqjs/s5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0735227580;
+	Thu,  6 Feb 2025 10:39:20 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33988213240;
-	Thu,  6 Feb 2025 10:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D01022688C;
+	Thu,  6 Feb 2025 10:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836581; cv=none; b=mpZoCe3MFnRctp/ID/6eo9g34SBqIrz48fmjj0eROuK/Eh/W617IvOqurGdnae6F5Qy9k3z1jQ8jaCxva3xg9thvtHj6zVr/mkzN/Tq8yjUnoBLAR/TsYvfjXFvbBO8C+7Fo7P4bV5HkZIy1w6apuaoVGG11FyiN7VhagQHKvwM=
+	t=1738838360; cv=none; b=Is/xtaDcLEC9nXAOP/DDGfHEPVpqttxpCwuuvtZLTKysmX/ozROhPoOSVPvV+gDkVgHERTi2WSpJXTD51uP+aD0SxcOvoBGvIRyDthiW+3EB1rhYFA6HDIb7E5u/3iSp3BlVJVgUQUTk5D9LyWtr03j1lr1Nblu0Z/1PteKP5JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836581; c=relaxed/simple;
-	bh=7eqh7K858NH1AZrNBNH9wQrXQPBI8B/6RmUW1r2TAcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9znx17xy551BBhEiEHRJE3J29yVwOQMqud3y77fCJDGB5+72+YaaoZo+1KBdNeo3otslleAehw9hlE73gDibSRyHiUWPmYR+w7F4s4p4PHBbCsmwuZb2NlLUA1DPsAc3lzHDeq/l/9pQbIfqiDVJFtopfyf7sr6jxxB5W/7ESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJqjs/s5; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-543d8badc30so894729e87.0;
-        Thu, 06 Feb 2025 02:09:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738836578; x=1739441378; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3J7Bg0TmAUJrOo6sonChdz6dfz6pIJ+CpqIwcnqSIEA=;
-        b=QJqjs/s58/uaYmH3tIvsLFnrI90KUVSGpX2DD0NvD+rT32mYG51O8Q+ivpRx7r4Rq7
-         sRTRo0qF5lDzDljoehxVIdztat4ACUQkzC5MIV6Dv5VwLGWcugsJNgxwKAWcf7uxO821
-         9OqJ4w3YaVWqcnuFWAWnxYmSuU+YRcNnP55SuOaOlveGiVYSKNqOVDyIVZoW5o2vq9Rp
-         hviqZqpp4f4ti4NOemPy3JDddocBSExjtlojvr4Mr+ONdBXkAH+52lROGNMajOFNc3Mp
-         ppIU3YRET8aZSznEWZQsjnvt0vXCkCFndvJIKJDAuDQu/3JEZ9R3NaAjqqEaJnmeoGWJ
-         qSSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738836578; x=1739441378;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3J7Bg0TmAUJrOo6sonChdz6dfz6pIJ+CpqIwcnqSIEA=;
-        b=hx+bQ2OOqL8Q0F6U3Obp2MUs639CXxECxYvvRRSlkoUEp/q048A4wSNVOw0APP1pRi
-         tVqSgWW6Wn16LGiWAy5pSFS6zBcrbxNu78rOavX3PBIAByBGR1ZTh6MMJnF6C9unXLW6
-         MB62KFFKLhxKTqOwxs1k1Lf4uuzcY/OIjUGiUetYttiRnTK3V1z+tpb+6Au1t6pmClk3
-         rWAdsNxr5Tijfk3TBhSh8rd2y5h/ckKnN7ChwdraToIi/nsisyVkQ1chKvTSNlVUpH6y
-         z9xxRqXYRy3JKsGSHuQnnFJsSXzbKzS/M+4iJJhKiX1K7Mj60YtvoO27AX5ZdBnADlIz
-         A4dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUEciFFBExJsdGEU3HPnE+kwRi9JKcmBbPNGgkpNxIPr/+WxjTNVq8dsOaBCt3qmXYq/2o7E93EAX3J0H+@vger.kernel.org, AJvYcCVCIyRVfFPSu31eiPySpN3hSOTMzUaE124Op4LlexCDMgqYBJ4yXuPQZYcdhrwfvhZjmC56MYxt6y9Atg==@vger.kernel.org, AJvYcCXHFGJz2wIHBA1HzWMvkx0vc+1Uo+if+kgxek9jW6aQKYLCqR5pkiSs8MUqbmLqsLO7mRd73M+GgzcQ@vger.kernel.org, AJvYcCXObyFbbAW84lPoRYWYTH2ax/d8cn6/A5Y/1IqAHSRCo0+hqAQPUkX0TLsMYF8bGnz2/LhIUJsoqObB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl5BVk+BVCDsIs02wUoFXFLMHxVcVCwa6dqF5zLpDZAqzV7J31
-	bvLya5HKi3Orest9yEBmVQ7rlrW/MJ0h1+5BVBpi4bCIiPNVy+00
-X-Gm-Gg: ASbGncvkDQGwJxJgZdwMn6rlymJ9yh5hAotqnza42TIDClsnLZTpLSQfyE3jhjVJ52S
-	b07clC2WkkzAj62r96WFnrpd14QxdDLA49zGzTXjd9+DRhs0z1W4+LVLc5VavopHWJBEBMgMG66
-	FyLAqxgKm/JVVdNeK7ZwYin++lsIRXHZ61FF4r/Jukdwan28fQpPgEpcYTZVadB472+kVfFkPC6
-	etWLHhyoruiq1NFC4ICdc2jh//QQz2PIBGy0u1hij/CpAfAYchedTOleJQ8hByfxfR5JwmGARA4
-	AzZg5q4QwxVxQeMDIze9gZeFyu6I
-X-Google-Smtp-Source: AGHT+IGpHJYo74+wxQ1D3J2yvrx6IQcEeGEY/UGt8IL44DX+DiZjLtuOLLwZrbFXWEFrFRiTbVt/Rg==
-X-Received: by 2002:a05:6512:2207:b0:542:214c:532 with SMTP id 2adb3069b0e04-54405a19d21mr2153436e87.13.1738836577877;
-        Thu, 06 Feb 2025 02:09:37 -0800 (PST)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441053ed63sm93621e87.41.2025.02.06.02.09.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 02:09:36 -0800 (PST)
-Message-ID: <a52933a2-8b87-4e49-a346-91266fe3b675@gmail.com>
-Date: Thu, 6 Feb 2025 12:09:33 +0200
+	s=arc-20240116; t=1738838360; c=relaxed/simple;
+	bh=IrkYBAfnihE5+RnlAP1QM/DQ+ewAzLq0FIwKqRdGAQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ht69bvjxWBnQ9Eu0EKIAh2ukWdVYjg8todLLRMT0qqlUCGcJyxBeNcp2yZO6/JCwpEq1BYAOstyg9qyYiEUan0Ss4XnvYo2Voj7S0V8Ep34k724lDcPYxIM0Tnp4DzDNRkACm2yZ7tYCiAcDrK3KtP+ibrJe5tAsSNsO5EQL7cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id C3C89342FB5;
+	Thu, 06 Feb 2025 10:39:17 +0000 (UTC)
+Date: Thu, 6 Feb 2025 10:39:13 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
+ SoC
+Message-ID: <20250206103913-GYB5367@gentoo>
+References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
+ <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
+ <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
+ <20250123113042-GYA38135@gentoo>
+ <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
+ <20250127181726.GA538260-robh@kernel.org>
+ <20250128031712-GYB47737@gentoo>
+ <CACRpkdYbSOHD9UH5=+qjztxS3Cq_rxaoOT9tFtD8ZWm9zQGnPw@mail.gmail.com>
+ <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <cover.1738328714.git.mazziesaccount@gmail.com>
- <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
- <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
- <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
 
-On 06/02/2025 11:39, Linus Walleij wrote:
-> On Wed, Feb 5, 2025 at 2:40 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
->> On 31/01/2025 15:38, Matti Vaittinen wrote:
->>> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The AIN pins can be
->>> used as ADC inputs, or as general purpose outputs.
->>>
->>> Support changing pin function (GPO / ADC) and the gpo output control.
->>>
->>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>> ---
->>>
->>> NOTE: This patch is not properly tested. More thorough testing is to be
->>> done prior v2 if this pinmux approach makes sense.
->>
->> Just a note to reviewers - I dropped the pinmux from v2. No need to
->> review this any further.
+hi Linus
+
+Thanks for the ping..
+
+On 10:18 Thu 06 Feb     , Linus Walleij wrote:
+> Hi Yixun,
 > 
-> Why? Gave up on the idea or want to pursue it later?
+> On Tue, Jan 28, 2025 at 5:03 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Tue, Jan 28, 2025 at 4:17 AM Yixun Lan <dlan@gentoo.org> wrote:
+> >
+> > > [Rob]
+> > > > If Linux can't handle 1 node for N gpio_chip's, then that's a Linux
+> > > > problem. Maybe it can, IDK.
+> > >
+> > > I haven't seen somthing like this to register 1 node for multi gpio_chips..
+> > > To gpio/pinctrl maintainer (Linus Walleij), do you have suggestion on this?
+> >
+> > For Linux we can call bgpio_init() three times and
+> > devm_gpiochip_add_data() three times on the result and if we use the
+yes, even I've already done this in v4
 
-I just realized I should've shared the link to the v2 - which may not 
-include all the recipients (because it no longer touches all the 
-subsystems - and the get_maintainer.pl probably reduced the list of 
-recipients). So, for anyone interested, here's the v2:
+> > approach with three cells (where the second is instance 0,1,2 and the
+> > last one the offset 0..31) then it will work all just the same I guess?
+> >
+agree, I just need to connect dots.. parse dts & adjust the driver code
 
-https://lore.kernel.org/all/cover.1738761899.git.mazziesaccount@gmail.com/
+> > foo-gpios <&gpio 2 7 GPIO_ACTIVE_LOW>;
+> >
+> > for offset 7 on block 2 for example.
+> >
+> > We need a custom xlate function I suppose.
+> >
+> > It just has not been done that way before, everybody just did
+> > 2-cell GPIOs.
+> 
+> does this approach work for you? I think it's the most diplomatic.
+> 
+I like the approach which make sense
 
-I do still appreciate all the reviews of the v2 even if it does not 
-target subsystem you're specifically watching ;) But reviewing the RFC 
-v1 patches does not make sense because the v2 dropped a few of them.
+> I'm sorry about the hopeless back-and-forth with the bindings, also
+> for contributing to the messy debate. I do want developers to feel
+> encouraged to contribute and not get stuck in too long debates.
+> 
+no problem, thanks for the encouragement..
 
-Yours,
-	-- Matti
+I planed to go for the implementation, and raise any actual problem I
+may find, but it turns out taking more time than I expected (some reason
+to due long chinese new year holiday..)
+
+> Yours,
+> Linus Walleij
+
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
