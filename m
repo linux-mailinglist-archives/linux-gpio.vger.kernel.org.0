@@ -1,123 +1,117 @@
-Return-Path: <linux-gpio+bounces-15430-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15431-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9E8AA2A4BE
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 10:37:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 27904A2A4C6
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 10:40:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C0EE188A5B3
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 09:37:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23E001888C17
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 09:40:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2426822577D;
-	Thu,  6 Feb 2025 09:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903AA226196;
+	Thu,  6 Feb 2025 09:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zTomzqFd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="licLhQ5e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3206225760
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 09:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C6D226175
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 09:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834609; cv=none; b=J/itQyaeLiuR3jHSyJp0qhpQRXAZ571kI6im074VuXivXNctTn3E+l4vj9cejKfbp/1GvB+y9OteAJFxrRDGTcBQkHqarZZ6BKHBZ29NRmeH8aUOuWVPfmf8X2S9CLy4AFgE8xA2gJFg2VzOyJ7wv0fgdwqY2l1s2WccpmXmt3U=
+	t=1738834761; cv=none; b=V1QDfqusddfitaaLtke4+UDkiX0ayTo2eDKBS5AlEA8b4Mt+UFaJoVNWY+xtknuEtOdNl4IweNCLrO5ks+eoUrxMCLJPFbsyqpqcCGS47Rysh0SlH7vqbjOGuDfj2jxl53DORWmF49Ifg0o/HioJPnNovg6hirhojRW1+Oqdh/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834609; c=relaxed/simple;
-	bh=Kh16Wp8fAy3I7OTirw74yhvKe46+5odebHIHXPF1qa4=;
+	s=arc-20240116; t=1738834761; c=relaxed/simple;
+	bh=QxqCdZ87Rgx4ITls+sBoaB5NXU+rg+6sFyys6kqsgrM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kLzYRB46TFZ2yUcyUQdz7USjuK8kczaaeVgeQv80ASkiA3fki6lv2ajY1CflTjy0b2z4lU5wFjshgGG5v3dh2YVbzpZsGb+BpCgsOGLY7vykXBFw3MhmoL0lZB8nq3AcCUNOmOzTXbkTCPwOoDLRAYT0R5/4UOK2beGMxLP9W/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zTomzqFd; arc=none smtp.client-ip=209.85.167.52
+	 To:Cc:Content-Type; b=UaGn1m3Fu7/mLKA3MzWfC3zX8q9MrD8eNGOYQcWQGlrXjChLBW4ljhDQ0oGfJLgA7B8NMNiSVrZtvsGjs0OpD9qJ9qzfjIgTKjK3tb2zPb3ZEmaOYUv3l29gwTVNcKdC0GBx33xy8XxBHUf4U2Lftd+V3htsXyjC0CwWNcla1A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=licLhQ5e; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53e3a37ae07so786010e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 01:36:47 -0800 (PST)
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5426fcb3c69so630068e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 01:39:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738834606; x=1739439406; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738834757; x=1739439557; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+2fOiT1hShmWAzem6QrK7ODBNtOVKho77Ypt9RNsYGk=;
-        b=zTomzqFdGu2L36wsIEuPXt0D0GZmDhMLR8oujNZE8oWv8X4ONVT3BKbMFgP25PBScV
-         1mTlkpWekCu/5g3B78kFKlyPBkZQXr5KFUNmG/zWRC/99I29ibQGITo8jRka0fSDAx8+
-         MxMgpSy1ZMmlkqlpxWns4ZjxM1BN5ZbZLI7OqhsETo4R0KIZEn2n4Y0VmUOdPe68Fx7G
-         uPEp3NN/ljGwDuHcVO230c7xvyTc+DubmhSpLGx5Erjpvro4I5avakzm0CT0FPH6yLnN
-         8aqDaMCZt06P36ejgU3tsvUEJD/w70uynkiujmd/ywNf/saUqYskDmfYzy7QZFbQHNqG
-         YdaQ==
+        bh=QxqCdZ87Rgx4ITls+sBoaB5NXU+rg+6sFyys6kqsgrM=;
+        b=licLhQ5eluAjHoFsYIbW48leUXFFrxtQZp+uT7wowm2HOsPHZS0jcfoTUJMckdz5Q3
+         Jfh9DeT40HqnUK7zLqMjbUzW8IFVc9DT7Sk5w19tf+M5zO+J+Fe20wmBeVrjdtdcT0q9
+         GrYRgeOfHC7Hll22udPz93wCAAbfvD8Qy0ck4ZdggdcHHnGnOWchX4fJ+IYU1Zl1QN1z
+         a2WMRH25KGl11EIFVZRTPTytWmkSF03w0a5/of72MmZSLewa/4qLD6cvOg7RvDYHxGF+
+         r2Ii5U59SwZfrL9joMoskb2bze8zTD2EXP3ZSRIIYUiiLj2Z9w+YpYl2C10IU8A/r81w
+         qkiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834606; x=1739439406;
+        d=1e100.net; s=20230601; t=1738834757; x=1739439557;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+2fOiT1hShmWAzem6QrK7ODBNtOVKho77Ypt9RNsYGk=;
-        b=TQpqhsFi+Jd8lLaLIO29Tip/NUerS+FVSh8gx02eKZGR/ZjR2+55dvUm7oWBWx11Ns
-         na8Gp0KuI3+Ml848txqf30j4DuTQdvQBzvgUyVQ2lSz4B1RxtmrH2GA3QXI0oagKIfJU
-         xhd/ol94FKH1oeJPngP+tW4nmx4ou4CVb/zn3+XS0pZB/iihYg7l2iVlzqXJ8Z87ZW1A
-         6ZWYMR4B9IYgISvDgt8wTe/wpJXn0iEHfIXMpKxszAeMxOL02Nlhjsnk5P24yxEDQb56
-         c8EbFICbDBqXaIGgZbpfOGAcisqgAojX/N4g+k9wiQwB0uYK5eHJdYdXJGwZnxL0/obW
-         DNUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLUc0WDRjGoShlrbQMKYBndJZrPYEXRywRJ8FYh3i/EtNrccDOruOWpKMkE5eReoSvXIVZCCUXXhzL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwqX0wAIEuaN7EblasakkHNKQLppMtKHD7tfv2Gryu/R7CqKUl
-	j7NSF2ijZufi4BWQ7lYltix35POApt72ZyPaUdII4IBdGLkDQEbBfv/NhEV4Xc4f4yE2CilA6II
-	HIx7Lw/owlJ2syiG6SgqZW1pONZGlovWV76m9Wg==
-X-Gm-Gg: ASbGncvReU0dOXzMW9ZJgXt1QCAA/XHSVaduIhNfa8NoTMeFEJ9YWE7kQZh7MhR0oRb
-	uJQryC0fAUbE8sOru0ckdoNjBi2FJtwdVxgscV3ON2i/5Gq2URfNnGpfSnpeHVxVKtLY4fK8=
-X-Google-Smtp-Source: AGHT+IGTk7OHZHlA5Lj/y+SkMVlyAK1YiPP71DuZPiW3j2C24cxgmg+ZfIh/5nUIZiV+mmjJFD2qxBxmd7B/Wz3cmmk=
-X-Received: by 2002:ac2:4f01:0:b0:542:6f59:f86d with SMTP id
- 2adb3069b0e04-54405a24b55mr2378669e87.24.1738834605896; Thu, 06 Feb 2025
- 01:36:45 -0800 (PST)
+        bh=QxqCdZ87Rgx4ITls+sBoaB5NXU+rg+6sFyys6kqsgrM=;
+        b=NLeibrbYP+JRZf9s3ZD9U+DmSZZt1+1gL9rnuIr+essroM/NbAXmrptL9BwiStVn70
+         /V0GfbWbFVN8E1YJ6CDLRnCINfPwwbGxzmJfHBTEg+AzNw78E1HekrHwHhUevyUmNfvg
+         u4lLPmP+SG2UeNWxXkmrITZ30IxSzgJTg6qpW/jFXfMz7IBdGnCFTvuwET6sx9pJ4Dhy
+         nFwBy42H4qtJWO9zTQXZWl+xenImFsSdeccEu5joa3WViUv6QqqLQN/Uj9cp8vJzU0vq
+         kbFu5v4YqgPjhJlz6p4GvOIzu8GgexY6LuKQwp7ribJJT9lk885zJyBrDCEren6w4v/e
+         XoGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKyksaT1FAnoPtwNGu8+ZZoGluX/fBblkSalKc/eFh84tVYW4vmofcx0wzkN7I4iGefCKX1fIca6Ln@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx8Tu51LEgg4k3XXLxNEi/auf95jkpF9yoE7BXstYlq6OF3t81
+	rvcKWWy8GcbwPMjvhW+cZ7b/6D+uxKS/GsYYUL+qY36C3tlUCIlQA1WzmpADrjRsVsu47oluWWD
+	CKTo7pQakMj5Uhq7RoCywWQZzb2nXz0zMfMrO/w==
+X-Gm-Gg: ASbGnctQIpiwj6fN8fR0SBe3oygkkM0nJNr/sh8pms0r9fwzdOC+o/FLGrLlKQqQ//X
+	+WAvmFUBoveIw0z1eemRlYq74b7FtdjCEC3TqSgRhXOP7rkjFDf4CJF3re/jApEnSbaJ+R14=
+X-Google-Smtp-Source: AGHT+IHy2erTOylDXjPHhr46b25AbKpq4hR75UITsDiNv3fd/IuGBDeoE5/TCxFr0JD6443xhniX9GkOIwD7QR0zOhc=
+X-Received: by 2002:a05:6512:1385:b0:543:c3d9:418b with SMTP id
+ 2adb3069b0e04-54405a0c5f6mr1856455e87.16.1738834756940; Thu, 06 Feb 2025
+ 01:39:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130-kona-gpio-fixes-v1-0-dd61e0c0a9e7@gmail.com> <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYVeHKzH7dgXfqFSDCvxBe04FJVDx5LGR9G7Og13bpDNQ@mail.gmail.com>
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+ <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
+ <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
+In-Reply-To: <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 10:36:31 +0100
-X-Gm-Features: AWEUYZnuvQ5xC93XkWdpkWPDAjjF9Gk591-Ngc1pgTXmw3cRSAbzEVROjCVfbTA
-Message-ID: <CACRpkdY6PbUjEsQFTPjo=YrjyZ6L3gciAmSA16PFKdSVFVrR7w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] gpio: bcm-kona: Various GPIO fixups
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, 
-	Matt Porter <matt.porter@linaro.org>, Markus Mayer <mmayer@broadcom.com>, 
-	Christian Daudt <csd@broadcom.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
+Date: Thu, 6 Feb 2025 10:39:05 +0100
+X-Gm-Features: AWEUYZlG4xyNl-aquwRcbpurNNF0W3dgBH-PwD4_WNVA671mh_9EE2XioA6hXcg
+Message-ID: <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>, 
+	David Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli <matteomartelli3@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 10:34=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Thu, Jan 30, 2025 at 6:10=E2=80=AFPM Artur Weber <aweber.kernel@gmail.=
-com> wrote:
+On Wed, Feb 5, 2025 at 2:40=E2=80=AFPM Matti Vaittinen <mazziesaccount@gmai=
+l.com> wrote:
+> On 31/01/2025 15:38, Matti Vaittinen wrote:
+> > The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The AIN pins can be
+> > used as ADC inputs, or as general purpose outputs.
+> >
+> > Support changing pin function (GPO / ADC) and the gpo output control.
+> >
+> > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > ---
+> >
+> > NOTE: This patch is not properly tested. More thorough testing is to be
+> > done prior v2 if this pinmux approach makes sense.
 >
-> > Fixes two issues that were preventing GPIO from working correctly:
-> >
-> > - Lock/unlock functions tried to write the wrong bit to the unlock
-> >   registers for GPIOs with numbers larger than 32
-> >
-> > - GPIOs only initialized as IRQs did not unlock the configuration
-> >   registers, causing IRQ-related configuration (e.g. setting the IRQ
-> >   type) to fail.
-> >
-> > Also includes a minor fix to add a missing newline to an error message.
-> >
-> > Tested on a Samsung Galaxy Grand Neo (baffinlite rev02) with a BCM23550
-> > (DTS not yet in mainline).
-> >
-> > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
->
-> Looks good to me, do you want to resend the patches picking up the
-> Acks or do you want me to apply as-is?
+> Just a note to reviewers - I dropped the pinmux from v2. No need to
+> review this any further.
 
-Actually it's Bartosz applying, heh confused this for pinctrl.
-
-But most comments go anyway I think.
+Why? Gave up on the idea or want to pursue it later?
 
 Yours,
 Linus Walleij
