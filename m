@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-15457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CCD2A2A867
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 13:22:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33DF4A2A868
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 13:22:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CB8A1888EFA
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 12:22:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13C4E1889308
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 12:22:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB2222D4E5;
-	Thu,  6 Feb 2025 12:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF08222DF88;
+	Thu,  6 Feb 2025 12:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lEC4aTqW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M11cr4E5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC29622D4D5
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 12:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF20822D4F0
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 12:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844552; cv=none; b=e+or0vIjsg0xEoRafN0HfseAsp+FOSkf2VO+XDwT/YwfmL3oQ5z1UiWe/CGvhlDkM2SXOhF224Z7roDoHVomYob1L/0cMXMjfA880vQjkhfVzaIDoRe5WnVh/kwBdBs/ArQCg4TJXdfV12yVGv4BVL4tEWRjPwtfITlc6R/6pKM=
+	t=1738844553; cv=none; b=U0xpfpydy0iWaX2xLSV0csGGNH86s9v7r658H6+hx/kXMPXMaBF4LKcoSsV6SdKD+hsLrEe1x+NeZqxwA9pbfO4CNydwKMyT8JvAd6KBSbF8Moo5modrsAui9i2f4GGRu/Aq/nAH3Dc6c4Kgkq03gaYH2NogM/a6y4CNCI1+NBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844552; c=relaxed/simple;
-	bh=C83/n0dzhy10SzcX9pFT1a0HqaZLjXcgxsTq8ErvNNc=;
+	s=arc-20240116; t=1738844553; c=relaxed/simple;
+	bh=JayJQKl8QyM1y03imMMb3+krWrXZlOrW9T8eiTIiFpE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T1QMmsG0Wf3SIby6tipE7yKkl18I0eA97j+/RiVRRxHfegQau6IYP8TnGtzd3cUwViUc35tYD6QFhJObpqZyPWKttyE2zYuqIiEBCnk2HdckNq2HpgYbq5FCWgGymVq65xbzcosChrtbkG8DckVBxUtLK+yei/VkvxlzsA7ZSwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lEC4aTqW; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:To:Cc; b=rC6QLR2Oo/2QdcDRw2feRzcUDhcaoSmbTipSkpRcU7ds2mJyRnUimiER1J6of3NmwpwbC9ujHVy2m1JvqDuljIXBM/hoyBBmz4NV9RnApgjq/o3Mg372T00Iq5ir23iWgUIpAMs/5D7T2YRKNB/nBRXXvNP64gTQuiiAwIu/qCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M11cr4E5; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so5260325e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 04:22:30 -0800 (PST)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4368a293339so9128145e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 04:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738844549; x=1739449349; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738844550; x=1739449350; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Xx4xbYPphWqOiZSyil4D9RJUGzOHeo3JsF0Q9TNJ/k4=;
-        b=lEC4aTqW84vxEFDkEc/e3aJKVN+xyuh1+UEClXpEnoQXuM2WFSQ6sPXCNLLvsvimFm
-         B3fq/LHiKODEJ3G7rQ/6iS9SBHXNu5D5UW91oETK2zvU3rMu7KGtfzvZMFsBrLZBsml8
-         emeLn/oFH7ktI4nf5ZxUzl7DpKvSzldv1PDy1GqSqQ3+6jgRcBTx0J6W7H5oWJ5RhVeq
-         6mU/GqAH9FKniMGL7pr7Mtg157Gcnf69KBdpsswANuvzvvEmz1Z+k82sAft/e1y+lwBZ
-         2lkqJNFvg5b6YFBbE1aFvik9yAE/1AzVbY3FqD+F0bV210KsdnVTsrdkunFSN8DESfLV
-         TsGg==
+        bh=MCdNJEl2czQbOdGVTb4tBPEJedPychSdvsrDKPt3tZI=;
+        b=M11cr4E5d/EyIGqFNUb+4i2ppJVZkvcB5JQl56BQnGXZmNU2MAaUTmJBccxWJul1fG
+         78bJpuVq8wvutX4wLkrtN/Z38W4MeUGw8tJ6TDWvXxOLoVuzuOEQ5/bW/KZWvPVCR73B
+         1Ukfwq+s4+WZb1NGh+7hvLuiZ4BlXBFT00b94fgYd3/phD5iZtT0/VRrpoYmOPwWh/4F
+         3xqPzqekVgkNwfWB5o0jDjEuVJYfClUkFA9TOEFcQC5IJ7YQ9SC7V9xUjhVIHnXN+Ws7
+         E50FOoCWMgDomluN7JEsNSUQo4w6zkWbprW81BxK653gi/KburyoGCTgTj/P0p53MD+m
+         9F3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738844549; x=1739449349;
+        d=1e100.net; s=20230601; t=1738844550; x=1739449350;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xx4xbYPphWqOiZSyil4D9RJUGzOHeo3JsF0Q9TNJ/k4=;
-        b=CqEPAK7zBXcno2UR9IUpz85+oiFnvV6TIzbKHEPGDQwLQqzNsYgTmp73dY3SBWOneO
-         SDCch816bLTkML2+1OtxPNlTcFnKguzrVKzHdFUKNs2kykMvpbp7DpVTvky5qOSyxVLZ
-         yLYWr/om0mVTJNbyoa+EmSDAY5WNAfO9+I8qHKkTwMC0OggUsmOjt6bStyWTPQlxTSLz
-         4fPbdqHRl/W5YrqEZASMWON1/jmVC8cw2olGA6tk9ifLzSCGu1YjJ6LIK/ow9KEMHcLO
-         VsU+POJd0+uF5KA5PRUeL3OqKnQjBHh45Q2MGxy8iDyka60+eXJ9q5oTNCtdr+Zzc4zM
-         89+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWvYh9tMs0Cg4gX6hqvwHrcoCfE8GXXi7jYLx3BGSHkZnBb8CY4wmoy14h3w5oRlHugRtE6cr4swTqm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7YtxPTeGdk59PhRViiAp1I+wqNT/3mwRF2VMzb1vRR3JjKdIa
-	t27RRQ/+BeuetrYg1NE/AqWngIjVBM2BKopCAQ8npEzvD9CQODcUaXCWwKwI608=
-X-Gm-Gg: ASbGncsPD4e6QEhl4lYR4dXtRbDh59zsmUGLAx6jdBVpDbC7QUJrdpwkMq7WDLY2edh
-	ORZZ8SLYIfMbCXDPxd0YOhAn1fnoifGL286fLkdIewZmweMJPBLKwClzjIws1G4apSxHDQsu1HC
-	ut4GtyPnernB1HIOPxb+JO2vN14WCd5IKbd2K4zOQWtejyxIazI1m5tP4LiwzdtzIC0mXxNgjQA
-	edrwYRpfZtCGVbOjd6i0/1UX4ykxZcSsdK1IlKTyuqGXo6omFC/LCBf0o4XZEAYg8v44EwQQPs/
-	LSXCJw==
-X-Google-Smtp-Source: AGHT+IH/5r7BQwdc+Av7FdsUZUrw4aaA5DCbbDH7chItUBtUuVfb7qkxdeLmxx8flU5vO7L3qRrX5g==
-X-Received: by 2002:a05:600c:4fcf:b0:434:f623:9fe3 with SMTP id 5b1f17b1804b1-4390d43f12cmr65818915e9.16.1738844548945;
-        Thu, 06 Feb 2025 04:22:28 -0800 (PST)
+        bh=MCdNJEl2czQbOdGVTb4tBPEJedPychSdvsrDKPt3tZI=;
+        b=LiIKiJ+OFm2Tyir+6ts300U2ljdS+xmq0/03uNnzmn1WxIlmht+kYPw/TrHYaxDJhj
+         DzPYBkRclztrYcv2GoFJWqSR6ziK6jvcFnD5RlmRcOiaL1JOyLXPxFxeIp1ThAr51wjh
+         sKTqWfhCLlilVNJkX/o89pAteVGetS1KI0mX8WJSt2paFg0Psxk/vIGOzpWag6KzlXsd
+         m9So1QtVulZ8W097PK6STirA9t8sQ3D9MHMyx+Dr+DEscEFRea5HZPfqLRA0JDePeSV8
+         6A6T/V59fTXL1wS5WGa34RFAzI7idE/khlgKdyH/kJ1rXeihzlpxWXEMB5g+RuN+lEyQ
+         mPmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUso+sB67Olp1c3WtXxjoyh0SWPJgsSK3KlqRciVEHO7C80gofFf4TPblAQylolUQ9GDO4SIsLTGPb4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf3pAYH7NtHb8qo+C6BEaV4/sL/vFejgwId3ZMtMWP36IrJ5Vr
+	lqDn5AkAvOjReGnTvg9XJ4DK5+oksjJZ5dyFnLWv8U8kTv4A05SqYv4wSokyQQI=
+X-Gm-Gg: ASbGncvh7BjfevQ7B6XAdJBbfElOPKlkIbKwZkxwIbqc582o0BstoQ+xqa6yqacVH4V
+	U2qesJ2rA53E787XvClQUI9mJtbX72KcSQXdpILLMzsacI1F7ROYG1VzGSZ3s530hVMsr8MwXwD
+	vbhThsejvJqkL0FykU+DqVLXR6zw3it43a3TVDxY6QRzW7lSkYy3QK8kfkRP/Ju2gvX8j+16oEr
+	ZOTFoCiggIbi6vqNtJiLd181fUSIJtKzKidOpiCEnmNk5MM1sbD7idLhLaa8o0pp7R95/I47uZX
+	VROBhw==
+X-Google-Smtp-Source: AGHT+IEPGUrA4z8KiPHY+gmH2GT3EO3P/+hS9jOUPUEwJfeGhIMgpO2YYGej7V+DrbEcTvJOUzLB4A==
+X-Received: by 2002:a05:600c:4f87:b0:434:a815:2b5d with SMTP id 5b1f17b1804b1-4390d569847mr49804185e9.24.1738844550094;
+        Thu, 06 Feb 2025 04:22:30 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c726:a8e:825:b823])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd7d7asm17366775e9.36.2025.02.06.04.22.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd7d7asm17366775e9.36.2025.02.06.04.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 04:22:27 -0800 (PST)
+        Thu, 06 Feb 2025 04:22:29 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 06 Feb 2025 13:22:10 +0100
-Subject: [PATCH libgpiod v3 13/16] doc: add documentation for GLib bindings
+Date: Thu, 06 Feb 2025 13:22:11 +0100
+Subject: [PATCH libgpiod v3 14/16] doc: add documentation for gpio-tools
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-improve-docs-v3-13-2065191fff6f@linaro.org>
+Message-Id: <20250206-improve-docs-v3-14-2065191fff6f@linaro.org>
 References: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
 In-Reply-To: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
 To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
@@ -93,167 +93,211 @@ To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4247;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5208;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=WiXLRks1OFxSdHV21Ymo3Cnsw8xD/7Ijy0sn6TXuRJY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnpKl0Nu7eGIKxQ9F98nI5xAev4pLG/4CmsLsuG
- pG7fS94mRSJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6SpdAAKCRARpy6gFHHX
- cmiKD/49K3XipoNINerkgl09uCc6d0kAdC6lCHKyY2yUELjK/i9ShD2gGg3rhMe5JhkKh6ZRv/f
- gJVYw6uxO3b0oyi7nDIFq0METaSnEZ/Jl/9gxxVL6wPqWn0k0JtCYeQHJ8HRJuOwQglpy+llMho
- rt/loDHqlBmXTaN4uDUVcCUuTYVo0dwqqbbYG/pJQiMocjxDgEdWgG3A8xzaUL62DDPIHj1SWOg
- jiEzJqgOVt7YuEMwrpBeqZ2KbZN9DLhX+7qfpmU/BRGk9yg2RRkEi0dZ5yItToTbxljq51zUSiS
- jaXYenn19YAik1rb0w2KWo36l/QjtVMXpUZJ+ExR3GqJvcX0wTBFMIyZdHq4cS9ImNfUxzg90Yi
- EttSuHVeMCJ6OLtLM639li0LXZYrJRvsulEsy6+Y1JptEUXWXBaQm8YLOC3Y4VqCiKFqO35mPQ8
- HoQPBJK/G8RLlXcXWr1Z8CjLD8B+rAPbiWLjszdlwAjvkzesDh6XRDMUPKbxngtiEE9JR6WSLe/
- qpyhC/JYXnck7VW5w+L1Q7nSsWmkmGNox6uLRs+iHBUnaM1414MwxengKaXk8B18SgmuHCUahA+
- HUWGD18WX+z6TEHhBHVgWJkBtHAQru7PNXC3x/fqPXioiQFp6G564bDsIgy/RjaOU8qXxYPzQ9+
- s+C0fZeXUCH5zRw==
+ bh=FFQGQE+U+3PHlEYdijSCavIj74kLd24iZQFFrmUiQ6Y=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnpKl0u0DpFvo0e11exfgZFINR7gazG6k/2l6kx
+ AS0OKDS2O2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6SpdAAKCRARpy6gFHHX
+ cix4D/4nK3Td/iSDzwvANuxFA66Jmn201K6PLYiZujEA96oxbRm0UE+NgNPw3eu0UAshEpxXUEw
+ rB+adS1n3zzNAxWkenRsHWQsJFCnWfeHfibxtiGlV9C+kzeaCnZvwajSKPE5B4AG+8yzB6kFll8
+ TaslcVZJcaTVC3o3oQtVl6ksSueb/Qe9jRwRTOkBDRW/LeOTwlXGxPTAGb9X+xv2dqmHKOwJf5J
+ L3knqK5smBjnlD2LU198z0jqzQcM/oGNWkre5/c016xSbvuXc9Y47cXsewSwOlhzHIUDcb768Fo
+ O/C/ZGSbOgP43ZQ5VLdLzn3LLg3CIhtEVpdhiqvFXDDgZZ3kL/6KXefdMsRU+gX50lg7lj2F/dM
+ DGgRG9rAMnZmoFiqfHNnt6JAR93ufhZ8rFfO+2oP5ys+ob8aA4Qio+EHwatTpmLL4cqeQmDiKv4
+ HyZ0rvVBFaIoIeeZtA74tMWWAOJ79ZvVNuxT6AhfmQbn5TpG6rXDPQsLquDYglGH61yio8/Kjcl
+ y263DOrsQPpfovFljOQkHsIrzSjdM2h0oz4tLd3q6LVX09U0Y0O+sxQSMbSMXJo0XZdpv+SkZ2w
+ zHI+RHg/WsZ+x4hN/xvz7+enH5J0dFrdlnCJQaoO2SuxTw3WVJpIATR1Lxy73yu8UC8z4Wxhw9Z
+ QSKsi90Fq4HYV+A==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The GObject docs are generated with gi-docgen and there doesn't seem to
-be an easy way of converting them to sphinx. Let's put the GLib docs
-statically into the sphinx output and reference them from the bindings
-chapter.
+We already generate man pages for gpio-tools. Let's use man2html to make
+them part of the sphinx docs.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- .readthedocs.yaml |  9 ++++++++-
- docs/Makefile.am  |  1 +
- docs/bindings.rst |  1 +
- docs/conf.py      | 38 ++++++++++++++++++++++++++++++++++++++
- docs/glib_api.rst | 23 +++++++++++++++++++++++
- 5 files changed, 71 insertions(+), 1 deletion(-)
+ .readthedocs.yaml   |  2 ++
+ configure.ac        | 32 +++++++++++++++++++-------------
+ docs/.gitignore     |  8 ++++++++
+ docs/Makefile.am    |  1 +
+ docs/conf.py        | 22 ++++++++++++++++++++++
+ docs/gpio_tools.rst | 25 +++++++++++++++++++++++++
+ docs/index.rst      |  1 +
+ 7 files changed, 78 insertions(+), 13 deletions(-)
 
 diff --git a/.readthedocs.yaml b/.readthedocs.yaml
-index 510b5c1..97086fa 100644
+index 97086fa..c2b0a7f 100644
 --- a/.readthedocs.yaml
 +++ b/.readthedocs.yaml
-@@ -11,13 +11,20 @@
- version: 2
- 
- build:
--  os: ubuntu-22.04
-+  os: ubuntu-24.04
-   tools:
-     python: "3.12"
-   apt_packages:
-+      - autoconf
-+      - autoconf-archive
+@@ -19,11 +19,13 @@ build:
+       - autoconf-archive
        # doxygen is available by default, but just in case.
        - doxygen
-+      - gi-docgen
-+      - gir1.2-glib-2.0-dev
-+      - gobject-introspection
++      - help2man
+       - gi-docgen
+       - gir1.2-glib-2.0-dev
+       - gobject-introspection
        - graphviz
-+      - libtool
-+      - pkg-config
+       - libtool
++      - pandoc
+       - pkg-config
  
  sphinx:
-    configuration: docs/conf.py
+diff --git a/configure.ac b/configure.ac
+index 8eec855..af5d53d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -327,18 +327,6 @@ then
+ 		      AC_MSG_ERROR([systemdsystemunitdir not found - needed to enable systemd support]))
+ fi
+ 
+-AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
+-AC_CHECK_PROG([has_sphinx], [sphinx-build], [true], [false])
+-AM_CONDITIONAL([WITH_DOCS], [test "x$has_doxygen" = xtrue && test "x$has_sphinx" = xtrue])
+-if test "x$has_doxygen" = xfalse
+-then
+-	AC_MSG_NOTICE([doxygen not found - documentation cannot be generated])
+-fi
+-if test "x$has_sphinx" = xfalse
+-then
+-	AC_MSG_NOTICE([sphinx-build not found - documentation cannot be generated])
+-fi
+-
+ if test "x$cross_compiling" = xno
+ then
+ 	AC_CHECK_PROG([has_help2man], [help2man], [true], [false])
+@@ -346,7 +334,25 @@ fi
+ AM_CONDITIONAL([WITH_MANPAGES], [test "x$has_help2man" = xtrue])
+ if test "x$has_help2man" = xfalse
+ then
+-	AC_MSG_NOTICE([help2man not found - man pages cannot be generated automatically])
++	AC_MSG_NOTICE([help2man not found - man pages and documentation cannot be generated])
++fi
++
++AC_DEFUN([DOC_PROG_NOT_FOUND], [AC_MSG_NOTICE([$1 not found - documentation cannot be generated])])
++AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
++AC_CHECK_PROG([has_sphinx], [sphinx-build], [true], [false])
++AC_CHECK_PROG([has_pandoc], [pandoc], [true], [false])
++AM_CONDITIONAL([WITH_DOCS], [test "x$has_doxygen" = xtrue && test "x$has_sphinx" = xtrue && test "x$has_pandoc" = xtrue && test "x$has_help2man" = xtrue])
++if test "x$has_doxygen" = xfalse
++then
++	DOC_PROG_NOT_FOUND(["doxygen"])
++fi
++if test "x$has_sphinx" = xfalse
++then
++	DOC_PROG_NOT_FOUND(["sphinx-build"])
++fi
++if test "x$has_pandoc" = xfalse
++then
++	DOC_PROG_NOT_FOUND(["pandoc"])
+ fi
+ 
+ AC_CONFIG_FILES([Makefile
+diff --git a/docs/.gitignore b/docs/.gitignore
+index 86f8cfd..c9ffb90 100644
+--- a/docs/.gitignore
++++ b/docs/.gitignore
+@@ -3,3 +3,11 @@
+ 
+ doxygen-output
+ sphinx-output
++
++# Automatically generated .rst
++gpiodetect.rst
++gpioinfo.rst
++gpioget.rst
++gpioset.rst
++gpiomon.rst
++gpionotify.rst
 diff --git a/docs/Makefile.am b/docs/Makefile.am
-index dd3e6ac..ef9ebf2 100644
+index ef9ebf2..269dd7e 100644
 --- a/docs/Makefile.am
 +++ b/docs/Makefile.am
-@@ -32,6 +32,7 @@ DOCS_DEPS = \
- 	cpp_request_config.rst \
+@@ -33,6 +33,7 @@ DOCS_DEPS = \
  	Doxyfile \
  	index.rst \
-+	glib_api.rst \
+ 	glib_api.rst \
++	gpio_tools.rst \
  	python_api.rst \
  	python_chip_info.rst \
  	python_chip.rst \
-diff --git a/docs/bindings.rst b/docs/bindings.rst
-index ed7ec69..73f1262 100644
---- a/docs/bindings.rst
-+++ b/docs/bindings.rst
-@@ -19,3 +19,4 @@ C library.
- 
-    cpp_api
-    python_api
-+   glib_api
 diff --git a/docs/conf.py b/docs/conf.py
-index 3d0209a..33fc89f 100644
+index 33fc89f..5e20c17 100644
 --- a/docs/conf.py
 +++ b/docs/conf.py
-@@ -62,8 +62,46 @@ def autodoc_skip_init(app, what, name, obj, would_skip, options):
-     return would_skip
- 
- 
-+# We need to know where to put docs generated by gi-docgen but app.outdir is
-+# only set once the builder is initialized. Let's delay running gi-docgen
-+# until we're notified.
-+def make_glib_docs(app):
-+    # For some reason on RTD we're in the docs/ directory while during a local
-+    # build, we're still in the top source directory.
-+    prefix = "../" if os.getenv("READTHEDOCS") == "True" else ""
+@@ -100,8 +100,30 @@ subprocess.run(
+         "--enable-tools",
+         "--enable-bindings-glib",
+         "--enable-introspection",
++        "--enable-tools",
+     ],
+     check=True,
+ )
+ subprocess.run(["make", "-j"], check=True)
+ os.chdir(cwd)
 +
++for page in [
++    "gpiodetect",
++    "gpioinfo",
++    "gpioget",
++    "gpioset",
++    "gpiomon",
++    "gpionotify",
++]:
 +    subprocess.run(
 +        [
-+            "gi-docgen",
-+            "generate",
-+            "--config",
-+            f"{prefix}bindings/glib/gi-docgen.toml",
-+            f"{prefix}bindings/glib/Gpiodglib-1.0.gir",
-+            "--output-dir",
-+            f"{app.outdir}",
++            "pandoc",
++            "--from=man",
++            "--to=rst",
++            "--standalone",
++            "--wrap=none",
++            f"--output={page}.rst",
++            f"../man/{page}.man",
 +        ],
 +        check=True,
 +    )
-+
-+
- def setup(app):
-     app.connect("autodoc-skip-member", autodoc_skip_init)
-+    app.connect("builder-inited", make_glib_docs)
- 
- 
- subprocess.run(["doxygen", "Doxyfile"])
-+
-+cwd = os.getcwd()
-+os.chdir("..")
-+subprocess.run(["autoreconf", "-ifv"], check=True)
-+subprocess.run(
-+    [
-+        "./configure",
-+        "--enable-tools",
-+        "--enable-bindings-glib",
-+        "--enable-introspection",
-+    ],
-+    check=True,
-+)
-+subprocess.run(["make", "-j"], check=True)
-+os.chdir(cwd)
-diff --git a/docs/glib_api.rst b/docs/glib_api.rst
+diff --git a/docs/gpio_tools.rst b/docs/gpio_tools.rst
 new file mode 100644
-index 0000000..307f5f7
+index 0000000..7372de4
 --- /dev/null
-+++ b/docs/glib_api.rst
-@@ -0,0 +1,23 @@
++++ b/docs/gpio_tools.rst
+@@ -0,0 +1,25 @@
 +..
 +   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++   SPDX-FileCopyrightText: 2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 +
 +..
 +   This file is part of libgpiod.
 +
-+   libgpiod GObject API documentation
++   GPIO tools documentation
 +
-+libgpiod GObject bindings API
-+=============================
++Command-line tools
++==================
 +
-+**GObject bindings** for libgpiod provide a high-level, object-oriented
-+interface to interact with GPIO (General Purpose Input/Output) lines on Linux
-+systems. These bindings leverage the **GObject framework**, commonly used in
-+GNOME and GTK+ applications, to wrap the lower-level C API of libgpiod.
++The **libgpiod** project includes a suite of **command-line tools** to
++facilitate GPIO manipulation from console and shell scripts.
 +
-+.. warning::
-+   The documentation for GObject bindings is generated using gi-docgen and
-+   cannot be easily integrated with sphinx documentation. Please navigate to
-+   a separate section dedicated exclusively to the GLib part of the API.
++.. toctree::
++   :maxdepth: 1
++   :caption: Manual entries
 +
-+`Navigate to GObject bindings documentation <Gpiodglib-1.0/index.html>`_
++   gpiodetect<gpiodetect>
++   gpioinfo<gpioinfo>
++   gpioget<gpioget>
++   gpioset<gpioset>
++   gpiomon<gpiomon>
++   gpionotify<gpionotify>
+diff --git a/docs/index.rst b/docs/index.rst
+index 8dcea20..a52cc3a 100644
+--- a/docs/index.rst
++++ b/docs/index.rst
+@@ -26,3 +26,4 @@ this interface.
+ 
+    core_api
+    bindings
++   gpio_tools
 
 -- 
 2.45.2
