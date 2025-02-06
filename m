@@ -1,138 +1,187 @@
-Return-Path: <linux-gpio+bounces-15463-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15464-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CC63A2AA09
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 14:33:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A345FA2AB8B
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 15:37:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB1AA3A45A4
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 13:32:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5A1E3A989B
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 14:37:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9FE1EA7F4;
-	Thu,  6 Feb 2025 13:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE27236428;
+	Thu,  6 Feb 2025 14:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YRHHjnwK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62F51EA7E2;
-	Thu,  6 Feb 2025 13:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1C0236430
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 14:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848725; cv=none; b=pMe4BOt8YheXK4o29wZ8uZqJB5RQOEG6jh3dkh0lyBmbnXOM1qbDE3YLyGwhaCoeC/nKZXKUe1hHRbB1Xi95M+w4HSHna0fFEUeFKt0QGAPMJ6CzQugxBPoKFs1rKlydJJ9DZLXL4v6JhjLvJVQZWPeNGP0z6Snu/EpTW6mgvQA=
+	t=1738852647; cv=none; b=K/9+75rB6EfrUl0TOje5oMISF6AbknkAAtRUzF1GVjBrEw+tCsMgNagy/vTchEQjavPN34IOZfxEprbLK+gBQoViB8U+GdNvIeOvlVsBP9Olss3NrvTNKhtJferCz4+4I3ZcKA8SQq1wszvp4hmFe7nS7sEitN+CcBCEklsKKQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848725; c=relaxed/simple;
-	bh=45yT85WTqRhzxnDZFfHXU5w/YSy+M3a+25Xbs44fDYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9WpLUepoqWFQEu9/VdNGLdi6uFOy6VA/ssqRPs3Nap/d3WjPKsKIfsJydH91ksvTlvEr6rzLpMiHit2IrEKONaIKsrHtVPRhotBq4pqsPl3cGNsDCoi/9dx2VauOW0vdCEsyskmG8VnBguapleenNdZLrI8et/0rl1wgZTKHN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id E15F4342FF5;
-	Thu, 06 Feb 2025 13:32:01 +0000 (UTC)
-Date: Thu, 6 Feb 2025 13:31:56 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
- SoC
-Message-ID: <20250206133156-GYA5687@gentoo>
-References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
- <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
- <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
- <20250123113042-GYA38135@gentoo>
- <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
- <20250127181726.GA538260-robh@kernel.org>
- <20250128031712-GYB47737@gentoo>
- <CACRpkdYbSOHD9UH5=+qjztxS3Cq_rxaoOT9tFtD8ZWm9zQGnPw@mail.gmail.com>
- <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
+	s=arc-20240116; t=1738852647; c=relaxed/simple;
+	bh=cWW9uaj5btARuTOtAzQ7Ntg5bsR34Hrv1hOCWz5pJfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+20f3RwCMm6DBzkV0s7jL6+9iBRYuuWkgtemZgLjWPEwEsOAZw3i1OpZbjCcD5ZX8NCEYmeHvNqV+nbmJUiDl0gQAYemDaqYK0iBgcgR22JSy2frxF0T2GGA70ihoUoTVWTAxzsbrC154D6+lcyc4jfvRxRlN2axn3Pvl8RAmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YRHHjnwK; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38db3a3cf1cso436913f8f.2
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 06:37:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738852643; x=1739457443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NF98C5d2ZTnvdUxMyQwmWIlQzv8/8YoukSIjQ9ItWNU=;
+        b=YRHHjnwKbzC1bMTjFr3aED+pcoLHUR6hFwo478EOHb9d9ivzAKiNAeYOuzCn+GUgnj
+         RPFVclpNbHHQQ3cUsGiKSMJPSG9Pvbp3/2qc2+7ehwb5YrGqSn16fvKOkWmh9oFWTLQ9
+         7V+iZZhF71lZ8PPtrX4Yo4lXyCkOGAauSQqoHpkBIE6fI8emFDM0W6XrUa2i7avoMCFI
+         f/akOU0dTtA4SzwZ/gPFQPoRti2WEhNuK8UFUspvpLgMlULrXcBmVuBZwTN+UJN+Ygbt
+         nV8F+zx9qam17Olly3jT55VR4cmeZC6ruIo8tYSps9VhFlUa1242IjchW8in7OSXTjfo
+         jJgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738852643; x=1739457443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NF98C5d2ZTnvdUxMyQwmWIlQzv8/8YoukSIjQ9ItWNU=;
+        b=D9j+7TacXnMrmmb37KUaKrkVqpdFKj9N2B9Wi1z8OOepBT/uy5Ussqy264ZJ3GvksL
+         uYEW9Q38BNp6qw2ydrjzm8lD8fWtWCYONsk0BoEiJ+IpaeufEY3u/MuWAD494t5VpJ4D
+         Kpnk3yAA9CXAp6oG4fus1DJcJIGnkwQH4U5H1Jy13xwhoW4xaW7kgNOPcXK5DF7LxS8A
+         SbwZ0N/zN/4e4yHH2N9vw2JDr+UQX1svaawsWu21tWxMl74R6jqXq+5Sr6JjrzMlyug0
+         cJoAqyr4DMUP1izjHvhTRBi6mCEPNYC1QHshGLlBVO8mW5SGgXk4jTUhg9uie3y436Rm
+         bWEA==
+X-Gm-Message-State: AOJu0YwQqfa+5vKXGkYBxxCPo65oSNdA4WtT7R6H5DVf5S4Ky9U8QtfM
+	CfHD/ha4XVXEXjEQwlHP4XjDGkL1sKBacxlvIx+bB9JpMvnz8Og+cIh71y8ufFg=
+X-Gm-Gg: ASbGncs//B1el4gyMIfV9IADNxOBRUirm5qrVJxWPpUjv06h7WD696vOkBtnv3uhGxb
+	WATeeo1mSE71h+hS/Hp1LosDpfQmASMcFl/8AT5vDNVxfZc+reU0kLq4ZntdeaFoSqcjUZ7qgDr
+	7ktK5EVDS16pDI29gOP6AWojJ1IjIcUKFgWs0LZAD+am83RkrLWtOoKdNjs9Ci/d+pgUZoJ6KpE
+	BOGYXos4L/YGwEGouT9WNzfjCPRaWI5iQu0+J4SB+DTo1u/4R99/wybie1ee4hr5iEFxUu0eRV9
+	aRZR2FRsfa+a
+X-Google-Smtp-Source: AGHT+IFo/YE/ZtOR+lTWdRiCCfpRQ8d0qEwBCkSp6K2f24hkXXHc1rTYV9AZD/HJU1mRVqh7TuuJCw==
+X-Received: by 2002:adf:f38f:0:b0:38d:b283:2c48 with SMTP id ffacd0b85a97d-38db4938a63mr4602821f8f.50.1738852642865;
+        Thu, 06 Feb 2025 06:37:22 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c726:a8e:825:b823])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd7e5f9sm1929769f8f.57.2025.02.06.06.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 06:37:22 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Dipen Patel <dipenp@nvidia.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	timestamp@lists.linux.dev,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpiolib: don't build HTE code with CONFIG_HTE disabled
+Date: Thu,  6 Feb 2025 15:37:14 +0100
+Message-ID: <20250206143714.182230-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
 
-Hi Linus and DT maintainers:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 10:18 Thu 06 Feb     , Linus Walleij wrote:
-> Hi Yixun,
-> 
-> On Tue, Jan 28, 2025 at 5:03 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Tue, Jan 28, 2025 at 4:17 AM Yixun Lan <dlan@gentoo.org> wrote:
-> >
-> > > [Rob]
-> > > > If Linux can't handle 1 node for N gpio_chip's, then that's a Linux
-> > > > problem. Maybe it can, IDK.
-> > >
-> > > I haven't seen somthing like this to register 1 node for multi gpio_chips..
-> > > To gpio/pinctrl maintainer (Linus Walleij), do you have suggestion on this?
-> >
-> > For Linux we can call bgpio_init() three times and
-> > devm_gpiochip_add_data() three times on the result and if we use the
-> > approach with three cells (where the second is instance 0,1,2 and the
-> > last one the offset 0..31) then it will work all just the same I guess?
-> >
-both bgpio_init() and devm_gpiochip_add_data() operate on per "struct gpio_chip" bias,
-which mean they need to request three independent gpio chips..
+Hardware timestamping is only used on tegra186 platforms but we include
+the code and export the symbols everywhere. Shrink the binary a bit by
+compiling the relevant functions conditionally.
 
-> > foo-gpios <&gpio 2 7 GPIO_ACTIVE_LOW>;
-if we model the dts as above, then "&gpio" will register itself as one sole "struct gpio_chip",
- which mean one gpio chip combine three banks.. I've looked at the sunxi driver which
-Samuel pointed, imply same example as this.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c        |  2 ++
+ include/linux/gpio/consumer.h | 36 +++++++++++++++++++++--------------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
 
-if taking "one gpio chip support multi banks" direction, then it will be reverted back as patch V1,
-then, even the three gpio-cells model is unnecessary needed, as we can map gpio number
- to the <bank, offset> array in the underlying gpio driver
-
-the v4 patch is very similar to drivers/gpio/gpio-dwapb.c
-
-If had to choose the direction between v1 and v4, I personally would favor the latter,
- as from hw perspective, each gpio bank is quite indepedent - has its own io/irq registers,
- merely has interleaved io memory space, one shared IRQ line.. also the patch v4 leverage
- lots underlying generic gpio APIs, result in much simplified/clean code base..
-
-> >
-> > for offset 7 on block 2 for example.
-> >
-> > We need a custom xlate function I suppose.
-> >
-> > It just has not been done that way before, everybody just did
-> > 2-cell GPIOs.
-> 
-> does this approach work for you? I think it's the most diplomatic.
-> 
-> I'm sorry about the hopeless back-and-forth with the bindings, also
-> for contributing to the messy debate. I do want developers to feel
-> encouraged to contribute and not get stuck in too long debates.
-> 
-> Yours,
-> Linus Walleij
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index be3351583508..0f4b31f4a995 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2908,6 +2908,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+ 	return ret;
+ }
+ 
++#if IS_ENABLED(CONFIG_HTE)
+ /**
+  * gpiod_enable_hw_timestamp_ns - Enable hardware timestamp in nanoseconds.
+  *
+@@ -2973,6 +2974,7 @@ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_disable_hw_timestamp_ns);
++#endif /* CONFIG_HTE */
+ 
+ /**
+  * gpiod_set_config - sets @config for a GPIO
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index db2dfbae8edb..2175f62e2178 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -110,8 +110,6 @@ int gpiod_get_direction(struct gpio_desc *desc);
+ int gpiod_direction_input(struct gpio_desc *desc);
+ int gpiod_direction_output(struct gpio_desc *desc, int value);
+ int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
+-int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+-int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+ 
+ /* Value get/set from non-sleeping context */
+ int gpiod_get_value(const struct gpio_desc *desc);
+@@ -348,18 +346,6 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
+ 	WARN_ON(desc);
+ 	return -ENOSYS;
+ }
+-static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
+-					       unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+-static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
+-						unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+ static inline int gpiod_get_value(const struct gpio_desc *desc)
+ {
+ 	/* GPIO can never have been requested */
+@@ -560,6 +546,28 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 
+ #endif /* CONFIG_GPIOLIB */
+ 
++#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
++int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++#else
++static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
++					       unsigned long flags)
++{
++#if !IS_ENABLED(CONFIG_GPIOLIB)
++	WARN_ON(desc);
++#endif
++	return -ENOSYS;
++}
++static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
++						unsigned long flags)
++{
++#if !IS_ENABLED(CONFIG_GPIOLIB)
++	WARN_ON(desc);
++#endif
++	return -ENOSYS;
++}
++#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
++
+ static inline
+ struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
+ 					struct fwnode_handle *fwnode,
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.45.2
+
 
