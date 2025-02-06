@@ -1,80 +1,81 @@
-Return-Path: <linux-gpio+bounces-15453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D339A2A862
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 13:22:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F358A2A864
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 13:22:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABF6C3A8166
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 12:22:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9055616214D
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2025 12:22:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BBDD22D4F0;
-	Thu,  6 Feb 2025 12:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C11B22DF85;
+	Thu,  6 Feb 2025 12:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M4gTKgW8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="t6fprTc3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D75222DF89
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 12:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB4922D4E5
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Feb 2025 12:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844547; cv=none; b=WeNsFneqg4HwJCgbNC+LU4ZiZd+ppZ4xcPRsRhJjUvUHOpteiefdmC+MD3zjFVHuSnVRkmo2FgQB+4TTIah4aynZVzOeMOnaAhW3M6G3KArT6BaGt+NLYuyJ7e+k6dj8QrkY6roXKmqBgA8DdE0rSNMWHiWDTjfswu7VDZLIqng=
+	t=1738844548; cv=none; b=KQ9849hPP0xrg23q2duZH8PNR0fJdou8A1jGB/VAqEzrN3LoCWQIMUBAQxGlfIH3tF8QhzR3NZw5XRvmt/UCDT4PgoYv7DCs7XL7EbsTtRyzRcYkK80+9jOs3PvMR3ef/3kCYvlz0ZulOfV1oVTlsLUiF2wJvkSWLX2qPdv2HRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844547; c=relaxed/simple;
-	bh=NOWwpmJBYV5ghwlu+/wbIJh/GmNExKZiNFQCVv+Sxo0=;
+	s=arc-20240116; t=1738844548; c=relaxed/simple;
+	bh=vsC0ALtmeFLUJid3v92trM8BakrNODQ+xcARW6L4VGM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eGsyhGJTAu8j2KG08hizbouPXjWm3YCCxPO/AkXG8LgAQUHrlXfdfBxv8rZysfxYP/4dRv2h3iUONblZkEnHcOQ7aD+3Ga2vO41C7qlR94FaV6z/e9neRQbbVlcf/GOxyt3wJOVDjIPPpdJ6OFqX1nQWOmQ9/NjQugLOqakdsL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M4gTKgW8; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:To:Cc; b=m8A91/gTLxckoYGHp3PQQE8+btxC7pMyyUVZiWNbqtlxesGUiCR3I9KoKa9eLoxisPA8MIXpflTe57eI798ObBK8dAES6sRbS8g5dma+oRYmMsONKsssCskBTa19ndDFgbIyhmcFlnkLnTGFq0Hky1B9Oa7WB04V6FuxVTo02XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=t6fprTc3; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361c705434so5691695e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 04:22:25 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-436202dd730so5554155e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Feb 2025 04:22:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738844544; x=1739449344; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738844545; x=1739449345; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=InkFhCCRI2CAF2CvZhuAFHXRNWz5kwo2d8XJvFQW824=;
-        b=M4gTKgW8IPwIoq7gPDV/WX0p2qABjJto7o0Qm4aJ288o9wIghk8YKlkQFqfQPDn6vh
-         Sq1Am9x2b38LUCqD8+/eVbPVdI+tLMdKZKER5jZftuioMCF8fJ9nZdG7yNbmXetOpkX1
-         CO40LKe9Cwi7pwAyamncr/w6VbV79BkHkNzS1D2V6Rxv1YWyRb/zQzOFEnQVP3IjHeJv
-         c5BpGCX/Z3P94yJ7MRptoSrPaPN7LcTFeYXvL1h42dscuZo/GVU5bFG6uN3w1RIUMTyu
-         f/famR1YPt9v62oErd5bqf6wgqvwRK801FAoHVIacJpaaCBLDrHUZANNtMtvXul+W1Rh
-         kBtQ==
+        bh=kOiGJQ4r4j0cd7t2jdREclbjjrfQFirN7yKGlUgJciA=;
+        b=t6fprTc3/Jyw11HRRPLD6AvwQGc+d0bmfm28taEms2pehMbADr3698npley9A8ISAk
+         eDo4Am40IwvKeMDRANSm3ZhsfGsxOfTer7bnEfGUxHZ7UxuXrTHeiN+/caj9SgoHo72J
+         P6FcKeAw8lHC10KL6uU36WYkQbWZ5mieLs9hYGsPzJiml9ultrPwcHgkafGXV7wppbqF
+         ScjP+YTQnTh9NGXsupRAZf4Q5N4kJfnE8MOpeN6sI+duZBP6HPy/sFVrZxCSlAx0eaNb
+         JS/aa6d4dKe/TjJnTeaMUWc+oU9CPl4O2Sn5CNJH49OWV3KpP3KjgncKqnAV9S99hJ4K
+         i7hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738844544; x=1739449344;
+        d=1e100.net; s=20230601; t=1738844545; x=1739449345;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=InkFhCCRI2CAF2CvZhuAFHXRNWz5kwo2d8XJvFQW824=;
-        b=TFbLBi93pJqOAtx7wFl7Iy6OXpvpoLgdQvZQ6tYf6/oqwgkU1PoFwbtFl0ZxoM3Rbg
-         6AjoY+POzda2VIWyJUc4ibpwPQNojEnkI4J62iQlcydoJeQwKHZyYInvi9H0FvyVkz8N
-         u+dARzt58G9zEK7J3SA8Q8xbrUaP8vgzMgsZ1JwyezRRchTMSKJrN8ugMvcxb22pBAqe
-         z4eaJyll6xnFuHc95e5GGhl52+Er494dElZot/BeeYguVhTuFVB1PTHMVG1ZTvTR0f5y
-         35NlfKGqxfw69a99mqLlbaoze9yzTvCzV5tAl5yXk+8q7TcKiL2Tx4e9lEcWsi66JFTa
-         m5sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSpygEkyLt421wkrgYb2gxr7ssOkSSRQcD9tThInXTk6oZji3p+UAO8/KLgs7OYcV7Bu0l6r+jGoJj@vger.kernel.org
-X-Gm-Message-State: AOJu0YySRWS1lTjxKtlz8TMhZqo+EbegX20l+LH8MjlBpUVQ4Fc/T6Br
-	mnZV9IqJV/10Nud2OzfcVOdYel5N1Ymx7FUqI6PTwxb7GHm+tXAwNHPH/6A9qtY=
-X-Gm-Gg: ASbGncucXk0Qoy9tnbv5bo3Bv0G+83M2RoY8/X4A3HslTvgs3W8upBtPW4WfbdHY23z
-	eE3+H+wthDHfMLNSVnZjgo1K/HVnQPxUjBxdrNvvRvGCtnjnHG//GficClnhdToNuLd8dEDURMA
-	0jf/bUejxZpHyqbvH7rLn665dySH3HzudEobJ0jsC+3W/eOt8GmN59EneCEm+p9//Hhy9fQMQDB
-	yJOsQELw3EnXZbbAkIQxZgJNpH5vyNqxyQ58Y1f7rRaH6RPouGif0yX/YqMmVb42LaFLWeo0Sht
-	iUsqOA==
-X-Google-Smtp-Source: AGHT+IHfJVHXcnfMqPnZKHXlcFb2MFK/pjnfr5tt0Za/lefI5nSX7qAKRVp1lWgUuLdapE8PeyzLlQ==
-X-Received: by 2002:a05:600c:4253:b0:431:55c1:f440 with SMTP id 5b1f17b1804b1-4391466908emr20315405e9.30.1738844543748;
-        Thu, 06 Feb 2025 04:22:23 -0800 (PST)
+        bh=kOiGJQ4r4j0cd7t2jdREclbjjrfQFirN7yKGlUgJciA=;
+        b=tNaadanJo/yye84YJZOV5S2MWYx938TnQmeAC0j9kLO6rh8kiFbax+U3yVNW/PI0HN
+         CKGi9stzVBl5N+omIKxTrT35Gfn1KjOJJklCebnQlDWZke3iuMCK3w3M6vIHS4gkdlYe
+         a2na3V2YP5RuglI3BvsuVpi18ErXpzWXOwe4YZf1zgLLGbULyREa/12GqBfnzYBon7R2
+         5KRsmWoGge371OTcnckf3JlA9AlDnmRkWhVYTmXVCWLAZ8ImY+ILxHkr2+GwyjgAVdo8
+         pTdEOJqo9yviIvyajj4BLs76Ehh3pOvHdLL2yJDy57eJlEpfYJIOrKlMI/mo2bZOXtnJ
+         rIJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHaISIjRc/2ZNY7VGJAR28jZczy1B83PQPDwANuOZgu88RyLSGcZEerkbz8THVNRCgiCsjZaJM4yOY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8PiLPvP8IFNqCzjezTl+3wUAAgXx5wZJAOf0cUkC9jF3CY8+I
+	VSiWGYNPlGT+4b55Tisdpy6r6laTxmTsIR0Rf9aEYv17URToR8lirP8Q3hji1xs=
+X-Gm-Gg: ASbGncuGeXBoMFgcQX28Wt0ByWKGRLTM4rApo8yX6FWym13vS0SO4Bi5wxa3dP/D8VA
+	ECEHRbMT7wHAU/G1UaWLex7bIrX2PyzlXtVGiR6I+8LBke+1jOf/SZ2mjOx+7iaWMM807yTUnu+
+	iR5nI2AsT1qq7eS5G9SYWpr54xpDtW7HgbxOm+bJXd9vqB/8icLiWHZ+Cdqyi3lh+2JBNTdEaPr
+	DKFm/zwIzN++LDtSPhjMEAcs2abgYO3oaTCAATylxm0FzeOqu/Qju7iwrO1Z+Wz3CVKcg0uinWi
+	iKPA1A==
+X-Google-Smtp-Source: AGHT+IGiVQd0qFmQVsVXz6h3k6onPKVCJXuA9UuIiZxpcL7v79TaU5m485BNF53X3sFzBwRCxX3veg==
+X-Received: by 2002:a05:600c:4444:b0:431:547e:81d0 with SMTP id 5b1f17b1804b1-4390d4340e7mr70085515e9.11.1738844544707;
+        Thu, 06 Feb 2025 04:22:24 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:c726:a8e:825:b823])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd7d7asm17366775e9.36.2025.02.06.04.22.22
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd7d7asm17366775e9.36.2025.02.06.04.22.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 04:22:23 -0800 (PST)
+        Thu, 06 Feb 2025 04:22:24 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 06 Feb 2025 13:22:06 +0100
-Subject: [PATCH libgpiod v3 09/16] dbus: improve comments in API xml
+Date: Thu, 06 Feb 2025 13:22:07 +0100
+Subject: [PATCH libgpiod v3 10/16] doc: create man entries for gpio-manager
+ and gpiocli
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-improve-docs-v3-9-2065191fff6f@linaro.org>
+Message-Id: <20250206-improve-docs-v3-10-2065191fff6f@linaro.org>
 References: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
 In-Reply-To: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
 To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
@@ -93,184 +94,148 @@ To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7033;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2909;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=cUeMTm4AJlpUcPLKsb+j9wyt+CiiE0p1BclrHiEIvA8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnpKlzgGZl3VuPRbMxkTY+qJPRQZUEFOUroKmu+
- eloDGzLUIiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6SpcwAKCRARpy6gFHHX
- ckUBEACHqaPoY5Rk9F8XDVXD9bNdN2EqbP8F2MiorSs25jTXpugwx+dPmxDa1/b4kvfIZpD0DpI
- Uuay/LVMsOlWm+DdGqaqOpr0RrvXA9FXEH7Yg87RNuCeR80IZgHtHCyzb8I8mRyqg9YuYOoC/yY
- ldXhVcyRyr2KIKElAoIbPCJpHPmphK4JlLjVFr7EvCQwjb28MCAf40OdSpkO5+faC9m9HU8j+pt
- OTEwS89pidqHQShyjwZLNa2OmnEAoTsHdSHUjXJyPJybYtxbvzD8RvpchstT84OBuSx/Bnx1z67
- D5nUA70frx/fSOjXVda6UrBmhVXOLczjnaevuEOjw/z9R81x94vZj7iTT1KEyNMbipH9KmtKEKN
- /5Oxgq/L/W4WmJCoE0cilNotbJPXrihn45aQX8RelL50B/1VPmbqaOitRcfCFHG+Ax5jHA67Arv
- DAr071vWD/jpsFADAraY10av5JL27Eemnfr8zW/BvrLIjLpkIctiO/1tJCxLn52YZgMBXKsdWMk
- CGWbLn8nI+ZRd8oiWCfEsVxPNF4tiCYrwFa0g76cAj1JCzU2z9Xr5hYwQcjDlNgPftSjyWSkS1r
- nj6we8Q6ZnnGxzVrRdl+kS1zrSvz+Rr+Te3/jpqCN+6naNbZTmlX8/AR9T0STsgzegmTyE0JckK
- AyBcYT+AolPdJXw==
+ bh=ze8CjUpLFt39ID/3fvUYRUTR+iu8gp4jyehOfU7r9ak=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnpKlziqIQ8R27vKLgPxgVm3pswdSbvQARh43lM
+ 1IQvvHUagyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6SpcwAKCRARpy6gFHHX
+ crRoD/0Vcr6oXl1HyXLlBkuVBbfCcQnTUR+q04rN2GkQQhTtKLK/ttjsPlKr2hMgxNmbF4W4UDd
+ WNYpraK864rccIzyP6dz5T7gNYFeNIfTRV0yuQCmz4US0v5+1oIefXy/eWyLZ/TqiSC8aG8eMeq
+ y3BTSeAfrkok5l9zd2A/+4SeMyYseLnf5A1kSRX+agoBX6c4pYgxTyWlONPjM4TX/I4OhR/BU4g
+ QkU/v23LYv4vJvBF5ntBO2CYM/adQnLeXqFaKwZH4kAHAevvGNSwxSbXCWTveguQrnDMNqun1Ji
+ aieqKvJEkjyGTAT6sisT2SSquU0H5cqkwtFMoqZHH9xhlFg2p1aRNG3/Qw5Vrouw0CxUpZrPA0W
+ B7X61PB20t7IDww6nncjDBqzb4UzvQeL9wvmVPj8ngzvPvh4mBLRWl7jueJVXEQGAlMWtl5QhOk
+ YGQXWWIRLm2akduHXTfJdM00jGPToYomFPQBeN8JCByeiezwukaqlf31jwRZqREvAH3k/oSY0aX
+ ToGgKWdYJnW1yTQo+frQD5uR/+BGyb3Lx/tRc4FSVAPr3b9DGag65m82zTFD9gcoikdnYlbrPib
+ aTvzlSHSEuAs/Y6g9LAJmJ56PLyVa/WF0+l0qe2QtWVZLCWewcHeZUv5tkrNN0v/OqFgw6nRG5R
+ YrQ9AL55HlditOg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The current comments don't follow any particular formatting so the
-resulting .rst generated with gdbus-codegen is all mangled up. Use
-proper .rst formatting to make docs better.
+Extend the build files under man/ to also generate man pages for
+gpio-manager, gpiocli and each of the former's sub-commands.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- dbus/lib/io.gpiod1.xml | 98 ++++++++++++++++++++++++++------------------------
- 1 file changed, 52 insertions(+), 46 deletions(-)
+ Makefile.am     |  8 ++++++-
+ man/Makefile.am | 72 +++++++++++++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 67 insertions(+), 13 deletions(-)
 
-diff --git a/dbus/lib/io.gpiod1.xml b/dbus/lib/io.gpiod1.xml
-index ace7d72..411ea6e 100644
---- a/dbus/lib/io.gpiod1.xml
-+++ b/dbus/lib/io.gpiod1.xml
-@@ -1,5 +1,5 @@
- <!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
--<!-- SPDX-FileCopyrightText: 2022-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org> -->
-+<!-- SPDX-FileCopyrightText: 2022-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org> -->
+diff --git a/Makefile.am b/Makefile.am
+index c824dc4..d310e17 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -24,7 +24,7 @@ endif
  
- <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
-  "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-@@ -54,58 +54,60 @@
-       contains the list of default output values which are only used in output
-       mode.
+ if WITH_TOOLS
  
--      Available line config options:
-+      **Available line config options:**
+-SUBDIRS += tools man
++SUBDIRS += tools
  
--        "direction" => String representing the line direction. Accepts the
--                       following values: "input", "output".
--        "edge" => String representing the edge detection setting. Accepts the
--                  following values: "falling", "rising", "both".
--        "active-low" => Boolean representing the active-low setting.
--        "drive" => String representing the drive settings. Accepts the
--                   following values: "push-pull", "open-drain", "open-source".
--        "bias" => String representing the internal bias settings. Accepts the
--                  following values: "disabled", "pull-up", "pull-down", "as-is".
--        "debounce-period" => Debounce period in microseconds represented as a
--                             signed, 64-bit integer.
--        "event-clock" => String representing the clock used to timestamp edge
--                         events. Accepts the following values: "monotonic",
--                         "realtime", "hte".
-+      - **"direction"**: String representing the line direction.
-+        Accepts the following values: "input", "output".
-+      - **"edge"**: String representing the edge detection setting.
-+        Accepts the following values: "falling", "rising", "both".
-+      - **"active-low"**: Boolean representing the active-low setting.
-+      - **"drive"**: String representing the drive settings.
-+        Accepts the following values: "push-pull", "open-drain", "open-source".
-+      - **"bias"**: String representing the internal bias settings.
-+        Accepts the following values: "disabled", "pull-up", "pull-down", "as-is".
-+      - **"debounce-period"**: Debounce period in microseconds, represented as a
-+        signed 64-bit integer.
-+      - **"event-clock"**: String representing the clock used to timestamp edge
-+        events.
-+        Accepts the following values: "monotonic", "realtime", "hte".
+ endif
  
-       Output values are applied to the lines in the order they appear in the
-       settings mappings.
+@@ -44,6 +44,12 @@ SUBDIRS += dbus
  
--      Example variant that allows to request lines at offsets 1, 5 and 11 in
--      output, push-pull and active-low modes and specifies the output values
--      as active (as visualized with g_variant_print()):
-+      **Example variant** that allows requesting lines at offsets 1, 5, and 11
-+      in output, push-pull, and active-low modes, and specifies the output
-+      values as active (as visualized with `g_variant_print()`):
+ endif
  
--        // Line config tuple
--        (
--          // Array of line settings mappings
--          [
--            // Single mapping tuple
--            (
--              // Offsets to map
--              [1, 5, 11],
--              // Line settings dict
--              {
--                'direction': <'output'>,
--                'drive': <'push-pull'>,
--                'active-low': <true>
--              }
--            )
--          ],
--          // Output values
--          [1, 1, 1]
--        )
-+      .. code-block:: none
++if WITH_MANPAGES
 +
-+          // Line config tuple
-+          (
-+            // Array of line settings mappings
-+            [
-+              // Single mapping tuple
-+              (
-+                // Offsets to map
-+                [1, 5, 11],
-+                // Line settings dict
-+                {
-+                  'direction': <'output'>,
-+                  'drive': <'push-pull'>,
-+                  'active-low': <true>
-+                }
-+              )
-+            ],
-+            // Output values
-+            [1, 1, 1]
-+          )
- 
-       Request configuration is a hashmap mapping names of the available config
-       options to their values wrapped in a variant.
- 
--      Available request config options:
-+      **Available request config options:**
- 
--        "consumer" => Consumer name as a string
--        "event-buffer-size" => Requested size of the in-kernel edge event
--                               buffer as an unsigned 32-bit integer.
-+      - **"consumer"**: Consumer name as a string.
-+      - **"event-buffer-size"**: Requested size of the in-kernel edge event buffer,
-+        as an unsigned 32-bit integer.
- 
-       The object path to the new request is returned on success. The user
-       should wait for it to appear before trying to use the requested lines in
-@@ -239,8 +241,7 @@
- 
-     <!--
-       EdgeEvent:
--      @event_data: Contains the edge (1 for rising, 0 for falling), timestamp
--                   in nanoseconds and the global & line-local sequence numbers.
-+      @event_data: Edge, timestamp and the global & line-local sequence numbers.
- 
-       If the line is managed by the gpio-manager and is requested with edge
-       detection enabled then this signal will be emitted for every edge event
-@@ -249,6 +250,9 @@
-       D-Bus EdgeEvent signals are designed for low-to-medium frequency
-       interrupts. If you performance better than the order of tens of HZ, you
-       should probably access the line directly using the kernel uAPI.
++SUBDIRS += man
 +
-+      The edge contains 1 for rising and 0 for falling. The timestamp is
-+      expressed in nanoseconds.
-     -->
-     <signal name='EdgeEvent'>
-       <arg name='event_data' type='(ittt)'/>
-@@ -287,11 +291,13 @@
- 
-     <!--
-       ReconfigureLines:
--      @line_config: Line configuration. Refer to the RequestLines method of
--                    the io.gpiod1.Chip interface for details.
-+      @line_config: Line configuration.
- 
-       Change the configuration of lines held by this request object without
-       releasing them.
++endif
 +
-+      Refer to the RequestLines method of the io.gpiod1.Chip interface for
-+      details on line configuration.
-     -->
-     <method name='ReconfigureLines'>
-       <arg name='line_config' direction='in' type='(a(aua{sv})ai)'/>
+ if HAS_DOXYGEN
+ 
+ doc: Doxyfile
+diff --git a/man/Makefile.am b/man/Makefile.am
+index ddd0628..8d8bc46 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -1,22 +1,70 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
++# SPDX-FileCopyrightText: 2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+-if WITH_MANPAGES
++MAN_ENTRIES =
++MAN_DEPS =
+ 
+-dist_man1_MANS = \
+-	gpiodetect.man \
+-	gpioinfo.man \
+-	gpioget.man \
+-	gpioset.man \
+-	gpiomon.man \
+-	gpionotify.man
++if WITH_TOOLS
+ 
+-%.man: $(top_builddir)/tools/$(*F)
+-	$(AM_V_GEN)help2man $(top_builddir)/tools/$(*F) --include=$(srcdir)/template --output=$(builddir)/$@ --no-info
++TOOLS = \
++	gpiodetect \
++	gpioinfo \
++	gpioget \
++	gpioset \
++	gpiomon \
++	gpionotify
++
++MAN_ENTRIES += $(TOOLS)
++MAN_DEPS += $(foreach dep,$(TOOLS),$(top_builddir)/tools/$(dep))
++
++endif
++
++if WITH_DBUS
++
++GPIOCLI_CMDS = \
++	detect \
++	find \
++	info \
++	get \
++	monitor \
++	notify \
++	reconfigure \
++	release \
++	request \
++	requests \
++	set \
++	wait
++
++MAN_ENTRIES += \
++	gpio-manager \
++	gpiocli \
++	$(foreach cmd,$(GPIOCLI_CMDS),gpiocli-$(cmd))
++
++MAN_DEPS += \
++	$(top_builddir)/dbus/manager/gpio-manager
++	$(top_builddir)/dbus/client/gpiocli
++
++endif
++
++dist_man1_MANS := $(foreach entry,$(MAN_ENTRIES),$(entry).man)
++
++%.man: $(MAN_DEPS)
++	$(AM_V_GEN)export PATH=$(top_builddir)/dbus/manager/:$(top_builddir)/dbus/client/:$(top_builddir)/tools/:$$PATH; \
++	if [ "$(*F)" = "gpio-manager" ]; then \
++		EXEC=$(*F); \
++		NAME="libgpiod D-Bus daemon"; \
++		HELP=--help-option=--help; \
++	else \
++		EXEC=$(if $(findstring -,$(*F)),$(word 1,$(subst -, ,$(*F))),$(*F)); \
++		NAME=$(if $(findstring -,$(*F)),$(word 2,$(subst -, ,$(*F))),"libgpiod command-line utility"); \
++		HELP=$(if $(findstring -,$(*F)),--help-option="$(word 2,$(subst -, ,$(*F))) --help",--help-option=--help); \
++	fi; \
++	help2man $$EXEC \
++		--include=$(srcdir)/template --output=$(builddir)/$@ --no-info \
++		--name="$$NAME" "$$HELP" --manual=$(*F)
+ 
+ clean-local:
+ 	rm -f $(dist_man1_MANS)
+ 
+-endif
+-
+ EXTRA_DIST = template
 
 -- 
 2.45.2
