@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-15594-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15595-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0D8A2CFB2
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 22:36:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D40CA2CFB4
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 22:36:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 035987A4ED6
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:35:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38F221883553
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:36:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B61322FAE0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDF9B22FDE5;
 	Fri,  7 Feb 2025 21:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XkxFHFuK"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="akxOe2Yy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568C522E401
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 21:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A0622F159
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 21:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963874; cv=none; b=ow3BcOFTbJujmiA/YqNq7W5uFNVJRqVoAZ26HPr030kd6kJbbvgwkE88s3SkTRgY9sdEsDnact31Z3LfJn9CRcdevTg+H+bU17f6bNjmjAgkupI0YbbMG6cFllNHWYNp9aAYrN5r2MLQvFeUQ6yt1O5+XoEoQXjsccgKpR513As=
+	t=1738963874; cv=none; b=NxNM6FiegKTaM76dtNgDm7/je12dRa48gxQT9BiwzQDzmAyuJHdd3K5zfKS5F/2d420hCEqOC34Y4Ak+kIpgk5fGhxIO0UnnhqwWQpw03/wDMeNdah2L6Xd3r7p0M9dfGclljLptFRdGfBSJmL4kERGEVqjtvbn1QapK8RC8cAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738963874; c=relaxed/simple;
-	bh=VtQ1ljfmYtyXEA61aEiaZEeKdDz/H5SMisehIOwJ9No=;
+	bh=6A227ZHcLwmH34Uyd7dFlW31JXsgCCsAPJaGw3Nto3o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UtcwZtDhvVCnokDwPQ38jEbL5T/VBKeOlMKcenjdIeHfg7DWQN7T2Bwmp/lYzgQ8a+wAfALyZrcy/e3tdT4aAY4hbkncja/UlrVQZ04LSg5QBYp4I+82aY33ybJSlESbkLkRSa/sWDBB9sOYDPwR0+HNRMZOMBxkcgCY0LtRqMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XkxFHFuK; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=Eoa9uf9ZDUweNmgIBbV3AF98gw4VN6etZuz9YTEmC4c9BOdgjIctmvn+uwHvmXjXCZ3K8ikCEy/t2UGgGejKbUH0gUxP87og1Wk8EsfJWsQZMxWw1DlldIUuW+3VHxpvWS2Vzy3bIDEYbjWG6qCp+el8teYSt6VucpvBFDkHWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=akxOe2Yy; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaec111762bso608613966b.2
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 13:31:10 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dced61e5a3so4620538a12.0
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 13:31:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738963868; x=1739568668; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1738963870; x=1739568670; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=XkxFHFuK/l9LvD5agP4n1Phkw4F9H+705BDsnlnkkZ/uslBVQPQtOxSDJbvlUEHlaU
-         6AX5slyctm5J8ss92Qf2Puw427wTeAbihj4rFscP5I13rwsPLuv4iNakQQ0yXoY/Zog2
-         PIHkQc/CUCILKbdma5Tfrb62k4qEbFtacTJqGrIlYWULrShf0dxZiMWaWebfGOK1CRsA
-         x2SePYs6LyaYxlGm7JlcYGT2Auf/sTMck9amecpWg1t2a9P0FKD3NtGF0Jzv6KH7lzA3
-         Qn7mPufNVBBB1ES2zaNgM8PCXFU3IK4yEGEfs7BVNsHVr0iXBiqCoH2G8E6bGidwwt6f
-         fwDg==
+        bh=2FlX2bXYTfLPxWNvFOZ2OVVRCbqnN5Q4yt/8rIDVkFQ=;
+        b=akxOe2Yyq1JtGh5VxMvlsR+ntcOQ9QXTOUGCRcom1rd3zvb9tUHl9tlYciimNSq/bw
+         dtjADaiqD8i5NEwEf3bMCAwpX4qTlk/TvW48yd2D03d3S+LqDiHbABG4e5COkNu28apd
+         Iu+02NGVd2v1AFvHGPqwYjo1x8QWZz14AbnFFO1iCdWyOf3IMxBOz/G7sL2F0jFEkjxv
+         /GMB2lw3HHyoY3ReqvBq3LrRWtkazXzQZNsQ66Th13XJ2Bg84QrOG2i3pThRzO0TdV34
+         XkJ0+4dj0w6M7Lx7Nadp88ueYGh31YfgWoagPhjnfTtGNj02mi7z9oJtdOnMK2/bTB7t
+         QUHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738963868; x=1739568668;
+        d=1e100.net; s=20230601; t=1738963870; x=1739568670;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=E6ZFWgHwSsax7hu4lbgwcaoYi05WWsdUr0azi6msHtsREP9Ry6xVI76X+rS7dSBxEP
-         FzfTzxPzg0QF+NHEQUqrc7F/jHnnkft+R+fRhFoE9oOjkBb9Kb7uVXMRMShmBEPr/79K
-         Jhxc0sDouXhUGsdSYgdlsKKgcUQKaKENntRwFwCk8JbuRR0o2O577GYjpfBRRCWfoKDi
-         /nUHTco/gYgP3PaCu+V4n1ruIDy5m1YUo41tWy4XtF4nTTAN11/SVSJMMYgkvIcFfVV8
-         ce2bcVc5vNuwP2xIJ1ctf2L0v6dyPiWYeVZc4k9nAtrrEOfgVKFieWu5hRqi8+9Ic1SM
-         9yfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4/Va2TWTCsTwT8SsuaFwAeZyxTARykll9hmRBMvLUM5KE+xC6FdC/1G+/FEz0Yu6tT4gq6b4HxxLC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK6UnQK8/hvR+ECV/ipod2o+U/PqI0JrefM/rXVO6aU+Ygi92A
-	VCplHWTvB/UeHM3JQHo1RimdFx3gLZ+c7PDAFjDujWe9NBMKbEFgRVNGLm42OC0=
-X-Gm-Gg: ASbGnctOYticFQce93x2UU6gzm1dGonsI6JsSlU2sep1vIFkNwnxSuH4LBrZjg+es+h
-	hkIRJPbcLsr6Cyrh/MZuESoR4zrHZn440+BVpYittMkk1L+IrkNS0XOt/jlmrWi1E0nJ9R3AJNX
-	mBrHkC2T8+zrKLMRDZwQzn7Wcx5lCajyCze4Dv0bJqkX5d2yEEb9NFmF+D43hQNYuSXb9ebsg3Z
-	Uzauo3Bkhi+T07pCqAsUGj7I7XyKNQ24YNuJlMug5sNvH8SXVqkUl5INx8Rjii5bba4yHakjW17
-	MBbu5CdHii4xBJtUj/L8PD5Jmu/A/nqtcCKr/1KZHn2bqAddn0SH3m+renE=
-X-Google-Smtp-Source: AGHT+IFnue8aM5uMyuzX6JhUGUVfjNquFfLUAy682QmcZWe7J/NUbnpi5Rbddmy7cdrZqcN/Fq3qvA==
-X-Received: by 2002:a17:906:f5a4:b0:ab7:b08:dab2 with SMTP id a640c23a62f3a-ab789b39591mr578677566b.22.1738963868593;
-        Fri, 07 Feb 2025 13:31:08 -0800 (PST)
+        bh=2FlX2bXYTfLPxWNvFOZ2OVVRCbqnN5Q4yt/8rIDVkFQ=;
+        b=VM4nZi3OokdqL4RTM/fGuhIR/SVNSTvJ46x550vTFI7nFy87v/+dZL4Kv9i3EQ0Jog
+         xxnwuMmPT0USyFUxQvgeccYVcp0F7L2hdHoNsCtGaSavvCKi1Mmdt5jlFQgc4yOqPI15
+         2Bm+NnYPc2KU/WkUne5Xf9V25bexK+fs1a2ia7xOVZpXoDIUfthDGS8YVI3LI9kpiFng
+         ykxfZALSeB7NIY8dfLt4cShTFKHVKoJMlbqWImaWOINKAuaTdqtLqYqCBpU+QKMuQtch
+         uutNqsTnuU41WO3RWbBZxc6LbpXHGcxSpaTY72zkbjGwXITboFZ1Gwn+9kOq9Xs9PQ5F
+         XcGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRo6Zu7tw6TkirMHwkU/qkJvGpNMKSf+wDA0AT+SIoY+cxkKO84H0n+7Dgdo+601gw/nUSGyhtVINu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdgIU47oEkOOeBn2MmWCmnhmZJCFcWjDhuGUqZKnHrFjngYamW
+	LpQi2zjFTMxWilE3r5sYE6NIU+UT5BYF65dT4ak6yNh3Qy3IasznJvcdRzdTBek=
+X-Gm-Gg: ASbGncsKmzaR+oAQVx5nGRvaGV76CeCd9vb/JPMNnF9VO8RfKZ0gwcoID035K4dHiG8
+	aRFZDfaLD+RAygVq8EsLRkjBCgRyRqoTprY5cil+nfJ4X7mB08bl+0dBMncyXzvE7KesM8VemXO
+	psLFs8I/rRIjP4TBnO2mIscFg9GJy71T6dJLtshNUrxymgNYpEJCU9WPO11hRUfMhiYoRwtAZk8
+	FzgYCD6QjiaheqGZClRzj/MdXlQPmH4sL0hKcW7muNBm6+iv5sNl5KOBQY5SorZlTWB3NQcOpKQ
+	25FN6G4Z3dFa0+4hETdStWd6oD9OJ0T6oMgN8O9PXD/JsmcuXklLTCthr/Y=
+X-Google-Smtp-Source: AGHT+IGqkLo0lI36PtNVD5Cy94zl3v7p9AH5vVE/OdrL5N+bHa3ei/O+q+8oK4gR/8Gmpzk1d7rM+w==
+X-Received: by 2002:a05:6402:5290:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5de4503ff1emr5658453a12.7.1738963869994;
+        Fri, 07 Feb 2025 13:31:09 -0800 (PST)
 Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f485dfsm333069866b.28.2025.02.07.13.31.07
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de51768762sm970455a12.61.2025.02.07.13.31.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:31:07 -0800 (PST)
+        Fri, 07 Feb 2025 13:31:09 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -107,9 +107,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v7 09/11] arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
-Date: Fri,  7 Feb 2025 22:31:49 +0100
-Message-ID: <d77f34885b21a1953a5a498d397432ef377bd6e6.1738963156.git.andrea.porta@suse.com>
+Subject: [PATCH v7 10/11] arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+Date: Fri,  7 Feb 2025 22:31:50 +0100
+Message-ID: <4a84775f3dbdc0d66882563598b837eaf6328d9f.1738963156.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1738963156.git.andrea.porta@suse.com>
 References: <cover.1738963156.git.andrea.porta@suse.com>
@@ -121,33 +121,44 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-Add clk_rp1_xosc node to provide that.
+Select the RP1 drivers needed to operate the PCI endpoint containing
+several peripherals such as Ethernet and USB Controller. This chip is
+present on RaspberryPi 5.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 ---
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index fbc56309660f..1850a575e708 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -16,6 +16,13 @@ chosen: chosen {
- 		stdout-path = "serial10:115200n8";
- 	};
- 
-+	clk_rp1_xosc: clock-50000000 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-output-names = "rp1-xosc";
-+		clock-frequency = <50000000>;
-+	};
-+
- 	/* Will be filled by the bootloader */
- 	memory@0 {
- 		device_type = "memory";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..cc70793e97ef 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -618,6 +618,7 @@ CONFIG_PINCTRL_QCS615=y
+ CONFIG_PINCTRL_QCS8300=y
+ CONFIG_PINCTRL_QDF2XXX=y
+ CONFIG_PINCTRL_QDU1000=y
++CONFIG_PINCTRL_RP1=m
+ CONFIG_PINCTRL_SA8775P=y
+ CONFIG_PINCTRL_SC7180=y
+ CONFIG_PINCTRL_SC7280=y
+@@ -700,6 +701,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
+ CONFIG_SENSORS_SL28CPLD=m
+ CONFIG_SENSORS_INA2XX=m
+ CONFIG_SENSORS_INA3221=m
++CONFIG_MISC_RP1=m
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_DEVFREQ_THERMAL=y
+@@ -1289,6 +1291,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
+ CONFIG_COMMON_CLK_FSL_SAI=y
+ CONFIG_COMMON_CLK_S2MPS11=y
+ CONFIG_COMMON_CLK_PWM=y
++CONFIG_COMMON_CLK_RP1=m
+ CONFIG_COMMON_CLK_RS9_PCIE=y
+ CONFIG_COMMON_CLK_VC3=y
+ CONFIG_COMMON_CLK_VC5=y
 -- 
 2.35.3
 
