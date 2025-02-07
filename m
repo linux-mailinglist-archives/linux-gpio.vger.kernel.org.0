@@ -1,132 +1,124 @@
-Return-Path: <linux-gpio+bounces-15530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3599CA2C242
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 13:12:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 684E3A2C248
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 13:14:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13FE43AC594
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 12:12:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F04A3A86E4
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 12:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FEA1DFDA2;
-	Fri,  7 Feb 2025 12:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1841DFD95;
+	Fri,  7 Feb 2025 12:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCGPztX/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F9A1DF97D;
-	Fri,  7 Feb 2025 12:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367021DE89A;
+	Fri,  7 Feb 2025 12:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930337; cv=none; b=NBic+kvU1oY1ihdbdcKDhVg81UT+nd73AhTA8PcLO6G1sI6/t4Q0fryTkBhKeqFq6x7CgCinxXK9XHQT0ovyMp6Q6LWXtr272itUsV2TtUgZzn3zbwYZ/O+zbcp6TihQhFP8eAh9+bw3ZaUJ7DWRrqlhFqtLUgkO3+86OZy+T1w=
+	t=1738930443; cv=none; b=BoAStyfuukijzEbk1rLAFiMrfv7gbGKj2qRWoeYhpPx9/PjIPbzinJiMQBN3klt2yl0mY+uJMamzpDBe/uVkGunkdCnu6hjfCr7AcGpBYCYhEuv4xXhaynLBxHABDyDHdcrQsWu5ZakXLWtAeOKStahq2EDBnOSVt+q0sD6/NoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930337; c=relaxed/simple;
-	bh=JHVNcI3xg4IrPDaXnnLHrbwRcYBbXD8MmMYM+m8cIxY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g7ucMMLSawh+XgJ9jxKe6iD5vJczDKFUD9QVWacnEuPK+OsjgXfMZ/rERGppJW8E+gprEphmMNfwPG8Rb3DhAIhqHUt3uBbGaRwmF6PYrdxPLESteMupcL8vNJ3w4CalzzY80NFgE+gg9KTgQjzmCuOQb8Fstf8X2ho73zO5SO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 1D9FF342FDD;
-	Fri, 07 Feb 2025 12:12:11 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Fri, 07 Feb 2025 20:11:42 +0800
-Subject: [PATCH] pinctrl: spacemit: enable config option
+	s=arc-20240116; t=1738930443; c=relaxed/simple;
+	bh=/W9c9p++17eMgUahRKE4oI34+Q3vrWjGJDtabku3InI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HV95zm60ca3/ZlShqVnqe/GrS9CDa3uNPm4KxJgv9bq+0tu4olN3PZ8pHrOTvCKUnZxHLTz5ungJuWUN09VslcjifTOS0G3ULM8P9OWYa7WkbNLBTd9XQDVTmnZkZfsB35fRLY/0RMcSCY14PCOep5n7u4V0+AlAo81s6cmlyjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HCGPztX/; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab6fb1851d4so403975266b.0;
+        Fri, 07 Feb 2025 04:14:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738930439; x=1739535239; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MF6gElV2cDQ91CKc9Ejq8GVQ8GLozgvPR2NnTRy0mAE=;
+        b=HCGPztX/4M3sm635Ol+QH2dLGwK+QtCo7bKR9JPm+nvtjwZ9iF/g+JaVPb8X0C79zj
+         GGeept7HST07ESbYq2vkIlQijmlNmLRICvCQauFM8LXvLL75X5e81hpZpU4ts/DbEv/W
+         7NJeobejZSEDy6uIhLFgIakV2kHL8+YQU49xL3mVR5y9MEXtuHn7m5PdoaiOMkf5AQxR
+         7odlSRT/cFChXK6VWZucgD4IovzbRNB/LUsqOASe4K415SAWTy0B/Z+4wEneDi8ZtrXx
+         YraLTJpKybMRHKMxQjhJzVpqOckiK/pUE7CHS4wn1lIYvxEtkJUIgipVeaH2m6CGVH2p
+         nZ2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738930439; x=1739535239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MF6gElV2cDQ91CKc9Ejq8GVQ8GLozgvPR2NnTRy0mAE=;
+        b=iIZ3V19X6G7ypgdBSfek/RiXbKNBnpAP5bqIA2F84NhPbwqkaIsMgTtJxdPXf762IC
+         zn/ylyJoT0S3bjboWRdUo9qN8o/D6yVz4gAutZ9l+EOaluV3kZOi3kAa1T6aq2jf0i0W
+         SaNbM32xGB9Q58KTaODVlZHtc95dqMtywWisQM2e9AGIxz3UT9r71LOtCf/umlX789Kb
+         x7nDJJYdJCE/PpfKSZSdCZAHxezXB4sMZwpW8qPMtnnc1dW5TDnRorga5E3cZyZu9ONd
+         YmZNyFszAzaT4Rw/9AIJXzTvh+C7h1r6k6Q3oYUk3xkVWELU/WxYIjU8MgEO6rJ6V+sr
+         EKhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0v1onIj4YNEC7zrJrnIOWflIg/KP8V9BPkJw7wZWK8xAx9/cpAu9fQ6L2f29sIdKNozAXwB6iXiYU@vger.kernel.org, AJvYcCUUW0+X6oFRl+0XKRvC3J6se5kb/1Hlb5XHWtg7+ksGtJ30yd9OHg4KWttnRgRoYWjeBg9p5OMpx+ddAco=@vger.kernel.org, AJvYcCUbsyfgvCrXA8/gP4QF7g/t4szZwZqvZF7vwFirFrX+4eiTdcHYpY+4yaDQW83+EzkJciMc2cLkpTKP@vger.kernel.org, AJvYcCUkVvD+6+T2pgGb8mTCbL/UCM0jRmAUtk0s9uPt/CBCDAhNm0eVsh4dYwKF5AvIKHVM/7rOmR6B6AVJzXp1@vger.kernel.org, AJvYcCVDKIVv51i9gk3PRfhvUSIkwcBHFyHkn60nMTcIp7/FncXL/QYiyi7ncMbN68KiV45z6SEk4wClNz3u@vger.kernel.org, AJvYcCXtNz329S2emB6ibud/wAJKa2/VB+touivPQ481TjLHRMPgKcC3bq7F0CKMZv55UYaoL1KyeonR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0uLi8f3aHOOrtdnSIer6yeGbyTY86T6die/baBODtCA7dvPox
+	FaLYV7UHv0DBJJfAX2stfX94pFi6lu2Hp3bcia/yrSzuclMuEHQMm5sdQOkfE9qaXahAs/corUm
+	GiU1vYnR4bFqxSplXXSigSGaqpyM=
+X-Gm-Gg: ASbGncsT0DFTtRdfyZUoM/F26IRJXJioQ0S5pGhntI3dIpvg8dimhkzs/1DYewSYD2X
+	xoFatAa5tq1tXtbZFqDaU9ELd9RjdTdM2uABBYYuuwndovE9MkIoDAXxeb3haSk07SqRNS3hfJC
+	s=
+X-Google-Smtp-Source: AGHT+IEcQ5RnwktITKDyFNQPm/ZlJAT6Jq4e+AddpJ4slMbkkGXOrIfWiA+9GZp7vOfbRBsKaL82KDhPv8+MGVLOCTU=
+X-Received: by 2002:a17:907:2ce3:b0:ab6:f4eb:91aa with SMTP id
+ a640c23a62f3a-ab76e896c0cmr758141266b.10.1738930439333; Fri, 07 Feb 2025
+ 04:13:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
-X-B4-Tracking: v=1; b=H4sIAH34pWcC/x2MQQqAIBAAvyJ7bsEkC/pKdKhcaylMVCIQ/550H
- JiZDJECU4RRZAj0cOTbVWgbAduxuJ2QTWVQUmmp5IBni57dlsKFt0/VRkN6Ndb0a6cIaucDWX7
- /5zSX8gFzfmeRYwAAAA==
-X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- spacemit@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1848; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=JHVNcI3xg4IrPDaXnnLHrbwRcYBbXD8MmMYM+m8cIxY=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnpfiYZWflhguUmnNsz2Ee2Fm6knaCOFupVZUID
- MU7bzEB0NSJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ6X4mF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277c0xD/9QSxsI/yGV+w8nXX
- IyjEUQiRt+ioHM9mdbjlpQZlxg064SV6PFNJhvuyZuXKslsnava4tySY1VwWVWggZsguyD0ZlHI
- drKklsQ19Lj7Fhr140KgPHzLldl7OSqLU0aBLkpWTEZcS4UWA2Sxh4PbLWVZZ4zOxyrDN5npP/Z
- tGgI+Eaa/BzLj5UaavGoC8uRnVPXpvcCBWDCojGT3Mm2j1rvBJNt4uCO86DT6qGo11xaFP8obJB
- ftB4g5d/W/MeMvphkXHWDFzgmYX5Q8MhGw2CwhpsuOt30JyVNmHzOqWEvHQXpQzQShWuJJakYgx
- VCrpGvlkeJhzWb6Ga2c1dsTlgZGmWZQKQH8nVN+3FOCRAqO8tWKd3zgcewPuHI5YZOt0261YL06
- x0oDhWqFkhdrA7AKMnd94Lmx1W1ZbQom2/Wg53Ap99Y8aDCVy9dK1Q2fuCJOcd1HWAcvN896506
- 1JNVtB+3eWIJbYHSJr9U34dkd8vMWLZ4gYO4Ayo1q822S2N94wxv2BJ9yrgAYdNM9FbeWZr27x+
- cxUGLS1sRTXbCavDMvuPd3Hg3WybmGA6ZcsVDuQZmd4t2h5hKawvDfnAqNYMhn0gIe28ung7IyO
- D/3nwcEUsaSeJQ3W3nlzvWeFpLy4/FK0b9VKK9sgRSpok1OgK2KUeyyt+ER6f3aCLJ0w==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com> <20250206-gpio-set-array-helper-v2-6-1c5f048f79c3@baylibre.com>
+In-Reply-To: <20250206-gpio-set-array-helper-v2-6-1c5f048f79c3@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Feb 2025 14:13:23 +0200
+X-Gm-Features: AWEUYZnW5RxxBc3bDqX_OpBL8hmNResFkWKqXoGA9bw_WE1ro5fEYdWUTUuFnFw
+Message-ID: <CAHp75Vfb7EgHkHtqm4b0QnG=uWwszpWwFe8MLDPRSifKtQFAcA@mail.gmail.com>
+Subject: Re: [PATCH v2 06/13] iio: adc: ad7606: use gpiod_multi_set_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
+	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pinctrl is an essential driver for SpacemiT's SoC,
-so let's enable it by default for this SoC.
+On Fri, Feb 7, 2025 at 12:48=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+> gpiod_set_array_value().
+>
+> These are not called in an atomic context, so changing to the cansleep
+> variant is fine.
 
-The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-'make defconfig' to select kernel configuration options.
-This result in a broken uart driver where fail at probe()
-stage due to no pins found.
+...
 
-Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-Reported-by: Alex Elder <elder@kernel.org>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
-This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-when using make defconfig, thus fail to initilize uart driver which requst
-pins during probe stage.
----
- arch/riscv/Kconfig.socs          | 1 +
- drivers/pinctrl/spacemit/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
+>         if (st->gpio_os) {
+> -               gpiod_set_array_value(st->gpio_os->ndescs,
+> -                                     st->gpio_os->desc, st->gpio_os->inf=
+o, os);
+> +               gpiod_multi_set_value_cansleep(st->gpio_os, os);
+>         }
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -26,6 +26,7 @@ config ARCH_SOPHGO
- 
- config ARCH_SPACEMIT
- 	bool "SpacemiT SoCs"
-+	select PINCTRL
- 	help
- 	  This enables support for SpacemiT SoC platform hardware.
- 
-diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
---- a/drivers/pinctrl/spacemit/Kconfig
-+++ b/drivers/pinctrl/spacemit/Kconfig
-@@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
- 	tristate "SpacemiT K1 SoC Pinctrl driver"
- 	depends on ARCH_SPACEMIT || COMPILE_TEST
- 	depends on OF
-+	default ARCH_SPACEMIT
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
+Now I do not see any justification to leave {}.
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-
-Best regards,
--- 
-Yixun Lan
-
+--=20
+With Best Regards,
+Andy Shevchenko
 
