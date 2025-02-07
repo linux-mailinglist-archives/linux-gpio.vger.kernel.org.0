@@ -1,149 +1,109 @@
-Return-Path: <linux-gpio+bounces-15561-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15563-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA25EA2C942
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 17:49:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D905A2C9B3
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 18:03:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77222161F5B
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:49:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3736B163700
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 17:03:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3F31922E8;
-	Fri,  7 Feb 2025 16:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9C318FDB2;
+	Fri,  7 Feb 2025 17:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyJ2i8Ov"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NKtv0DZX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289AC161320;
-	Fri,  7 Feb 2025 16:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC30023C8DB;
+	Fri,  7 Feb 2025 17:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946973; cv=none; b=QVwmgeezf2TCFINvp8Lsaqn/dMQPcyTVWYdI1d6ubbMGUUq4tlj89lYuU42srzvkGA1wumba8rSCBvyd9l9uIkeiRy/0MYHRigpdN7DBQoDwlOLEkF8EJ6hhrErXTw95w2ecaIhw6ePL1hlpEqEsLCNJvQGvIfztOKqb2GjsCJo=
+	t=1738947797; cv=none; b=h/0+Vu2U+9+4d4en6EuJu3kxWD+GwMpEETUZVkKLtDXlCZlhh/KH+wPX0oSMjy2yfxMAUEoNaSirEM6FqvoARAOxYg4gNDeAnTN4l6Vpaqc3jRBDEEHqSDksOdtxCmb66hC9OZdN/4XRo/JvuFjLeEhkut3XlUpoVoJ8MM83kKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946973; c=relaxed/simple;
-	bh=ItfnGfst8Hsw1pgzRl9nYJMmsBmHoauxcyRGeQCngLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gee5upgp3zwvOiw3RxEfuysL6/hINwqXkmC/36VkT1V+TA72HEANorxhicZKkgo4pmInjD90XZ79fE4aBAXqbC9ebX96dlpC5aATxLxhNsYg/6Jpq0/y5Pc0UQ72GGfoZMXDQBcApJXUE4pRtbcrTT41gLbFU0FJq5LPYd4/sVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyJ2i8Ov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D809DC4CEE5;
-	Fri,  7 Feb 2025 16:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738946972;
-	bh=ItfnGfst8Hsw1pgzRl9nYJMmsBmHoauxcyRGeQCngLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eyJ2i8Ovem9vEjhEOnzIOUbfpDskXresbo3Vu9Shg4H0KMRy/Z5mEROxqxaOCe2Do
-	 ytRsmC2tgpq8vRIyNCUqez2TR21GN+AZin39Bpr+gxXKDAFo57GSy2U6a34zsOKCH6
-	 dasozOdoK+VvcGPOm3SPt4Ic04PfNZZX+hTgv/UHcbZQq/395R+WKHZBejTNI/IZs3
-	 q0g7LeTNP7AZ1MDr2ZL3pyQRuY3bIRkm3FTPIbunNXhFxJ2TRI64f5XXqGBmP1BGMd
-	 IiZgUKVHtzYUoccrjxosruabdh+ZTlX8sJ9Om1lb2bn6MPRIgtJ1hShMrW9ImFNW7y
-	 cMy8mpcwByX2Q==
-Date: Fri, 7 Feb 2025 16:49:28 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH] pinctrl: spacemit: enable config option
-Message-ID: <20250207-promenade-hazily-d7900cbc127e@spud>
-References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+	s=arc-20240116; t=1738947797; c=relaxed/simple;
+	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cEcLurwf4uy0/mQXj9EmsgjpX2VSsLs7ho3Eq5moroBrJGnu5Kc29mrWAJOOiu4XsxN/fZVCBPZM5QSM1TZnpEDQEXzpaoQGvHdCuh1cwTbrQ3sVYE730n7/Y7kZZRVDHXtj8NrcRbIVYax3CZL9rOj0YuuxL+Fa/CuX1+rNqCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NKtv0DZX; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qbu3039421
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 11:02:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738947772;
+	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=NKtv0DZXtokLgalUpTO60zr4Cf092BJfxuhfrDpxAUoUfsROwTrh3/q9n5mXPkjbH
+	 YgRW3VjP4wISo23vbD+PR4PjwilQoT/OWyZdPDmrWqWUHlttRLYxn+LPNKbd4OM5xL
+	 HF8yee3ax0+YOWrbnW163mVqy7vQzwiCiPmxPLqw=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qI7040519
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Feb 2025 11:02:52 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Feb 2025 11:02:52 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Feb 2025 11:02:52 -0600
+Received: from [10.247.30.175] (lt5cd3040qtn.dhcp.ti.com [10.247.30.175])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 517H2qv4105448;
+	Fri, 7 Feb 2025 11:02:52 -0600
+Message-ID: <0c5f962b-3264-49c8-a1c5-893b8eb41b63@ti.com>
+Date: Fri, 7 Feb 2025 11:02:52 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rYTB+GBMkx5iLYMN"
-Content-Disposition: inline
-In-Reply-To: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
+        <christophe.jaillet@wanadoo.fr>
+References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
+ <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hi,
 
---rYTB+GBMkx5iLYMN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/7/2025 2:53 AM, Bartosz Golaszewski wrote:
+> On Mon, Jan 13, 2025 at 11:55 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
+>> significant register map overlap with TPS65219. The series introduces
+>> TPS65215 and restructures the existing driver to support multiple devices.
+>>
+>> This follow-up series is dependent on:
+>> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
+>> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
+>> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
+>>
+> Did these go into v6.14?
+>
+> Bart
 
-On Fri, Feb 07, 2025 at 08:11:42PM +0800, Yixun Lan wrote:
-> Pinctrl is an essential driver for SpacemiT's SoC,
-> so let's enable it by default for this SoC.
->=20
-> The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> 'make defconfig' to select kernel configuration options.
-> This result in a broken uart driver where fail at probe()
-> stage due to no pins found.
->=20
-> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-> Reported-by: Alex Elder <elder@kernel.org>
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
-> This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-> when using make defconfig, thus fail to initilize uart driver which requst
-> pins during probe stage.
-> ---
->  arch/riscv/Kconfig.socs          | 1 +
->  drivers/pinctrl/spacemit/Kconfig | 1 +
->  2 files changed, 2 insertions(+)
->=20
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5ae=
-fb50eeb982d14aa 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -26,6 +26,7 @@ config ARCH_SOPHGO
-> =20
->  config ARCH_SPACEMIT
->  	bool "SpacemiT SoCs"
-> +	select PINCTRL
->  	help
->  	  This enables support for SpacemiT SoC platform hardware.
-> =20
+These didn't. I figured with the dependency feedback, it was easier to combine the series for TPS65215 and TPS65214 into 1 series.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I submitted the combined mfd + dt-binding series [0] first, and once that was ACK'd, I will follow up with the gpio series for both devices.
+Let me know if there's a different approach you would recommend!
 
-> diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/=
-Kconfig
-> index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc55=
-5b2b90643adbdea 100644
-> --- a/drivers/pinctrl/spacemit/Kconfig
-> +++ b/drivers/pinctrl/spacemit/Kconfig
-> @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
->  	tristate "SpacemiT K1 SoC Pinctrl driver"
->  	depends on ARCH_SPACEMIT || COMPILE_TEST
->  	depends on OF
-> +	default ARCH_SPACEMIT
+[0]: https://lore.kernel.org/all/20250206173725.386720-1-s-ramamoorthy@ti.com/
 
-This is effectively just "default y", since ARCH_SPACEMIT is a
-dependency.
-
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
->  	select GENERIC_PINCONF
->=20
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
->=20
-> Best regards,
-> --=20
-> Yixun Lan
->=20
-
---rYTB+GBMkx5iLYMN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6Y5mAAKCRB4tDGHoIJi
-0n9bAP9XtCzAV2iiq9j3juCE6vQIfvx2/7YUbFSqiWXDIxWXEgEAgRXKFqkntGmr
-M0aPk8b4FjhWokyIM7/Xo2cJz9vhlAI=
-=gtfL
------END PGP SIGNATURE-----
-
---rYTB+GBMkx5iLYMN--
 
