@@ -1,156 +1,138 @@
-Return-Path: <linux-gpio+bounces-15579-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15580-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32BDCA2CE18
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:25:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C6A6A2CE28
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:31:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 484453A9C1F
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 20:25:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90BCA188F39D
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 20:31:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD3F1A0BC5;
-	Fri,  7 Feb 2025 20:25:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD311ADC7B;
+	Fri,  7 Feb 2025 20:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSF3MG1O"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TojjMHz8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-72.smtpout.orange.fr [80.12.242.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2F23C8C7;
-	Fri,  7 Feb 2025 20:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0855B194C9E;
+	Fri,  7 Feb 2025 20:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959909; cv=none; b=B9L2+2Z0idjqeRbZI0W+3bijUCHDRASZBqUDBdZVEGCCFK2n2bBSE4TTdybx9AJIQv9QuHRbiZWt5uibr7QTpETBvFGfiJPSrkVTzfR1dOM1u/HVL5xkLJmcp8g0gthH6JHuLLkz+K2H+hHkWI9J4hWqrkDYK1HidDi7GS7du1Q=
+	t=1738960260; cv=none; b=Z0rFEt2j3BrOzwoKKUSYuLQxuj8EP+sOuPadIEmjpE7JocvlJoMW1G23WDnbmky8u63Aw1ArUyDGNGjvINUN/+Gd7Gi65otPIwW3U8QLuYJNn2kw6lhRAg/QdySTuMoGfsD7Zx0ID0oryh+Tpr40dbnziUC1sRqJ5ZS/DBd57ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959909; c=relaxed/simple;
-	bh=KAppddcGy75M1GijtWeVnHspaf0hv7YTbaO7eU7CW+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFz8RvFD4nE9GG+1qxDRFDXN1PVRjddbSBNI6mCf6dJ5C1fj0LIW99Umke3lUWF2gjpJXFEur1RMjFH+/08FjfKRmVEKuQ08QgJVxDuFAHvZVCzaUwaelZKsbDrCLCDi9sQU6mHw8GqHZd+jRb9SxCZvz9leWvT7yHL4oXRs8fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSF3MG1O; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738959908; x=1770495908;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KAppddcGy75M1GijtWeVnHspaf0hv7YTbaO7eU7CW+A=;
-  b=kSF3MG1OlXU4ZC9g2nzwujJQsHOUEnCoR/Ht/k/p2/oIzLhu3LU0kySU
-   dWCgYAr2BLkGtyDTREKANpbbYkzGrXKcuaaBZWUTxbLDe4C1UhSVVNS1y
-   tphGQdAW9F7hYEsOi+TaLypr1mXSt74NCSldrZ09EOFWQ9ZiIdWBjPk1F
-   gfJu7i3zy6NsD8OfZ8a/aNeoGewqXYSPQ7OA3KeZm6lR32UYVK1/nXcqW
-   /7XVtwtg2hOm1S6rh+KUH5KLzD4G+KHDhYSw8eov5t6hPjHJ21bgFUhgz
-   DO0twCUFM0j+4Um/APiuu3SaVr/O+twjy1UPkwktyD7OMgTgy9/unn59Q
-   Q==;
-X-CSE-ConnectionGUID: G1goy+6vSNa706YyZrOzLw==
-X-CSE-MsgGUID: 9V+puwXVS3mi3FUWU1VDpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="27219096"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="27219096"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:25:07 -0800
-X-CSE-ConnectionGUID: d18eyhYiScW1fPYwWK7LnQ==
-X-CSE-MsgGUID: 1551tkwPTYCfUn66SQBp4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="111392184"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 Feb 2025 12:25:04 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgUuL-000z07-2H;
-	Fri, 07 Feb 2025 20:25:01 +0000
-Date: Sat, 8 Feb 2025 04:24:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
-Message-ID: <202502080425.N7HVOOJr-lkp@intel.com>
-References: <20250207083146.17872-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1738960260; c=relaxed/simple;
+	bh=5xCA2aFRWIHt9UXYtDkyYMN6nBFHc3iGvDF2cYwAjEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ll4eayEtJZBs1D7TdzOIYe1h5PaStTCG6VtlEj7epOJuiISn2Y0fjZ4/yGZs+YJi2P5jFVmrMqnvm+6j6SVKyfKDHiss3FA8Oeo3h2ajHeJ5ILIeMyhgak3haqCS1yfBxS3krZGUtFVz2/I7pKAGEOs7+ktQ+T03UitLC47NveU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=TojjMHz8; arc=none smtp.client-ip=80.12.242.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id gUzvtE7TuS3EkgUzztx5yo; Fri, 07 Feb 2025 21:30:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738960254;
+	bh=v8RzLLz8uCfxpLBta41IG2wNm1yEnnjxj05C5WD4mOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=TojjMHz8cfdFXLwbWT8w7XbHMiYM8vP1p/x6JCr68oFMahVzfgu/C1Jf9R/tcBHQs
+	 IzuZ4igAg8dwVzx+j7pnBWStOZGD6V5BPZ0fLCnulEhkXNrjHQvPEQ8o7jtKE7VIFB
+	 mtEc0AYTo8c4jYo+kKIFVxnQqss2l7fKHMjVI4XpNfycS2zr1pw7XKp1F0qRM/huU4
+	 9vHHF9Zi/bMqTgCYlRgNA3qZXveBQ+Oy8BL9U81m5BMqLgJQZppXkW1Ja36P/yOr1u
+	 L0oaW6UEtWtJUG0ZWua49q/+8OrFvsziOXBrnKw7Z1vfwS9yTe1jhTeOm3mxWA74Iz
+	 LRTMrr3BTIIaA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 07 Feb 2025 21:30:54 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <9b451153-41b4-4c15-a586-01cb5126e207@wanadoo.fr>
+Date: Fri, 7 Feb 2025 21:30:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207083146.17872-1-brgl@bgdev.pl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 5/7] watchdog: Add Nuvoton NCT6694 WDT support
+To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+ mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+ jdelvare@suse.com, alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20250207074502.1055111-1-a0282524688@gmail.com>
+ <20250207074502.1055111-6-a0282524688@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250207074502.1055111-6-a0282524688@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+Le 07/02/2025 à 08:45, Ming Yu a écrit :
+> This driver supports Watchdog timer functionality for NCT6694 MFD
+> device based on USB interface.
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.14-rc1 next-20250207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +static int nct6694_wdt_probe(struct platform_device *pdev)
+> +{
+> +	const struct mfd_cell *cell = mfd_get_cell(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	struct nct6694 *nct6694 = dev_get_drvdata(pdev->dev.parent);
+> +	struct nct6694_wdt_data *data;
+> +	struct watchdog_device *wdev;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->msg = devm_kzalloc(dev, sizeof(union nct6694_wdt_msg),
+> +				 GFP_KERNEL);
+> +	if (!data->msg)
+> +		return -ENOMEM;
+> +
+> +	data->dev = dev;
+> +	data->nct6694 = nct6694;
+> +	data->wdev_idx = cell->id;
+> +
+> +	wdev = &data->wdev;
+> +	wdev->info = &nct6694_wdt_info;
+> +	wdev->ops = &nct6694_wdt_ops;
+> +	wdev->timeout = timeout;
+> +	wdev->pretimeout = pretimeout;
+> +	if (timeout < pretimeout) {
+> +		dev_warn(data->dev, "pretimeout < timeout. Setting to zero\n");
+> +		wdev->pretimeout = 0;
+> +	}
+> +
+> +	wdev->min_timeout = 1;
+> +	wdev->max_timeout = 255;
+> +
+> +	devm_mutex_init(dev, &data->lock);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-don-t-build-HTE-code-with-CONFIG_HTE-disabled/20250207-163408
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20250207083146.17872-1-brgl%40bgdev.pl
-patch subject: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
-config: i386-buildonly-randconfig-002-20250208 (https://download.01.org/0day-ci/archive/20250208/202502080425.N7HVOOJr-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502080425.N7HVOOJr-lkp@intel.com/reproduce)
+Error handling?
+(also apply for patch 1/7 and 6/7)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502080425.N7HVOOJr-lkp@intel.com/
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	watchdog_set_drvdata(&data->wdev, data);
+> +	watchdog_set_nowayout(&data->wdev, nowayout);
+> +	watchdog_stop_on_reboot(&data->wdev);
+> +
+> +	return devm_watchdog_register_device(dev, &data->wdev);
+> +}
 
-All errors (new ones prefixed by >>):
+...
 
-   In file included from drivers/power/supply/max8903_charger.c:9:
-   include/linux/gpio/consumer.h:557:3: error: call to undeclared function 'WARN_ON'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     557 |                 WARN_ON(desc);
-         |                 ^
->> include/linux/gpio/consumer.h:559:10: error: use of undeclared identifier 'ENOSYS'
-     559 |         return -ENOSYS;
-         |                 ^
-   include/linux/gpio/consumer.h:565:3: error: call to undeclared function 'WARN_ON'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     565 |                 WARN_ON(desc);
-         |                 ^
-   include/linux/gpio/consumer.h:567:10: error: use of undeclared identifier 'ENOSYS'
-     567 |         return -ENOSYS;
-         |                 ^
-   4 errors generated.
-
-
-vim +/ENOSYS +559 include/linux/gpio/consumer.h
-
-   548	
-   549	#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
-   550	int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-   551	int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-   552	#else
-   553	static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
-   554						       unsigned long flags)
-   555	{
-   556		if (!IS_ENABLED(CONFIG_GPIOLIB))
-   557			WARN_ON(desc);
-   558	
- > 559		return -ENOSYS;
-   560	}
-   561	static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
-   562							unsigned long flags)
-   563	{
-   564		if (!IS_ENABLED(CONFIG_GPIOLIB))
-   565			WARN_ON(desc);
-   566	
-   567		return -ENOSYS;
-   568	}
-   569	#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
-   570	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+CJ
 
