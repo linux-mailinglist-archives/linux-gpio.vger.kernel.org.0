@@ -1,133 +1,133 @@
-Return-Path: <linux-gpio+bounces-15581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DDC1A2CE2D
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:33:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D9B1A2CE37
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 21:41:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F5171691F3
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 20:33:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 852BF3AB65F
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 20:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A661A5B98;
-	Fri,  7 Feb 2025 20:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D76931A5B94;
+	Fri,  7 Feb 2025 20:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Yw+B2VcT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSP0scUk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4C8194C9E
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 20:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDEC2A1D8;
+	Fri,  7 Feb 2025 20:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738960397; cv=none; b=Rq6J0zAkEnNJxZE3LhK6DJ9AjllseOfpmqOWRl0LiA/p2OG8Q1gvoqbfaPSKwSDVw0SzhE8HARtO9mdFKcZqHuyK957jTkO6QVvTXlK6/bVoEZQAqP3xvEclGX/OKFEmb5cJop+KnTno9oCJNJh9lwyLN2Q4GK4X92FqDulgN6I=
+	t=1738960868; cv=none; b=MchWPbZ0l2pxtTq3IUUIKcy1Of+XhUJp0E4YWTyfMMCvCYtAwHJdDnb1aMfHZnYa/cofS8Z7YA4bWw13v8CoSzXNFquJ4O85LBA3xeTTiScgp2EPxuJjJZbdxiXvegb020Yr9jVUnuOh7BBNz35jlQt1008rfTy2yvfUx8tqqVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738960397; c=relaxed/simple;
-	bh=T0i+T8f/fGXbZDbRjptinB25bnQH0CfmcAFBJRxvNRE=;
+	s=arc-20240116; t=1738960868; c=relaxed/simple;
+	bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PcO69iboasg1zrg5qEMt4gpq7b7YJTvvlTzJLljUZopYSu/fEHJa7rKZDaDYtrTwQM+KncYxy60Pjd5Lh9IhJ30sHAdbXu2QhmMnSTK5z9LfAwX+BHxoPUXmgNXQVjno/UYKLW2W1lVpBM7JUINRdPVNjUE3drTI1IPb05oETNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Yw+B2VcT; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-543e47e93a3so2694876e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 12:33:15 -0800 (PST)
+	 To:Cc:Content-Type; b=uaCN3N0M/B9Ofh4iUdeVHHtwhHeQaCixxJfonLIzUli7t05cL71CZSbVAWYo2Mx2LPIos/XkRhSEDmVVMNtLICk9DF8rMx/1+t57aPxCwvfOUJF0r3KCdWs3KGHcWMU+WFqKePTXXtR6ra7EKi8aJNolb8zgnqxmOYpNI9qJyf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSP0scUk; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dcd09af4f9so5186820a12.0;
+        Fri, 07 Feb 2025 12:41:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738960393; x=1739565193; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738960865; x=1739565665; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wW2vOgB6bgDG5mmgyCSvB76L98jFgeTMFmrfO8s1Z6k=;
-        b=Yw+B2VcT9uLjmAa9xQiYjEqTE7nykO5ygDR9UR/ne7WESsuclgCRGSpz4gV6SOBi9x
-         Tmeez6WbXnDTspPHt+hkLmV84ixgMFDXNITAGmNhtxMAklDKuvPnifyftaYvTQ8wuPCi
-         eiIfOYd72xRHoiA9EwlwzhwSwqOh352I4fziVxROXoAPNEG3MDSSDit5dUl90kcmZs9H
-         DNtBEgDUASIb4vakwMWnxCazvs6UhetkFyJnj6ROKvW29fdKu6Vd5bis87xCA+phpmWW
-         jva9Lp/vIjkyMsaDyk1VeghKN3cJjTFYJVlw8Gj3LBj9TatbFVDJaErSNj6ZBHr5n2oU
-         qfUw==
+        bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
+        b=SSP0scUkiYkmPFjWbM0p0DnMbbTjAJRtREvJE5PRkR2mDFTvbapbUjU0yL85H/AYEA
+         83VfMWqDomKfV3NhesDIoXJ+x9JwLGFB2SPn+nrKw4wPOM7FTD4W1JXyKCDaxDz7jyR2
+         +e+Vx3fbm06I+Y2JdK3CvNTIMFzvzJbxLZ6ym4Rz1yVIEKFypuiS0eE9dkmMdpZtxI+r
+         sPds/a97HCk8TGSRr+/tCWbN7YDOIqw8zNaOEQ/Clt+0Md+/5K/V3JBu/LMVZylQX5QF
+         14n/2mT7JYviF8tMkNBmEIUKQv2o//oqMRUvcybNN4TSW7qZ9dTiEtdsOn22ua+DOEPu
+         UOyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738960393; x=1739565193;
+        d=1e100.net; s=20230601; t=1738960865; x=1739565665;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wW2vOgB6bgDG5mmgyCSvB76L98jFgeTMFmrfO8s1Z6k=;
-        b=eDBy6IcNV9wo4iWXveVznN2vB7svDEI8rdjb+ZKmZsBryG/U3zyFhqt7rbKLvZa7NZ
-         SIsy82uHgMOqS7/lbf5p0Cq46rbDm1Tcv7ll72PQYKIz5plUTvA+iuTvRJa75c3LtMQ6
-         ioR4K76ompD+1/5EsUQciVe2sc62JMr3cXqaLxMHMBkKdTAHVAlUxxaKaEnXWq+lKZC5
-         noLvOpaCLPxGwG48LRyoS76KuEGKiRupfTAWRvpz9ZS3EfRTsqsuNy9Jj92vD+zGUoPY
-         rkZTmvioeOOvKjcMaybl8APsgme4oE9Dj0kbn2Hphse2Vzls1cpa3smMMqYZ/ZPmn0DE
-         Y+mg==
-X-Gm-Message-State: AOJu0Yw8sSCtVeO7DmxnMN8bYsRqHv5a/6zzUiZP8dqD/fQiPMmqgA5y
-	1//LIof9qSOYIgubZgWO2dpd0l6DJ/t91JJGRl0G9iZQUvKb9vkC+EU6ODHwJMY/lK0y4xwup6l
-	f8w6MP9gTk0bIyhZ+0kfByop8/WJMVVYDKHbAQg==
-X-Gm-Gg: ASbGncsA1Aq0GHkOD9m+yJBOEvF95SmZdJIMbDV+FK6fCvbSkn+g2E1NC7gHDKqKXvL
-	YhskVziebHGo1OIomJlgvLwyd+XfxisCkJKoQgjNnm98K6AclNPw3xXTy4U+89Aliem79HOIor2
-	JMLerffIrNNqWcB7hm5mqrKBsdcMQ=
-X-Google-Smtp-Source: AGHT+IF1IrGAtJdeeEHIkfuTVjmO57+6voLGDlLEPmeCMVPqcpYupKtXRcE7wRdLsw8262YSbmFgdCwRyTc+m/xBfYQ=
-X-Received: by 2002:a05:6512:3ca1:b0:545:48c:6de2 with SMTP id
- 2adb3069b0e04-545048c6f8fmr62951e87.13.1738960393528; Fri, 07 Feb 2025
- 12:33:13 -0800 (PST)
+        bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
+        b=qZesn6PeBpQqs2J3G2USzdQkqGv/lrUtLPhjArlJrHHeiDEf1UmfJObATBWFoAwka8
+         J2MBybWIdTX71wYY0/o9hSfYm8n5hX6IqByVGNBpaZD0dCce7Ee29Wm23hxxPjR9iP6D
+         GbMSrzHaclK2IBL4AdJsnGOzPsMhp/hdUjieiEZGIAqh9N8HL5zZgaefz1ADgZVUvgf2
+         zwLRPoQDyO/zI0jwYOMBVBhg0oRh7+3vj6YS6UoYG42tYD8+cP3Q/CSjQUW1HNAcfmt0
+         /mxFMFmX8vKZ7+sEnfTwQEsnIrbqqvyVszagGAqGfPZ2Vp935OaL0zBi+fyPJd/uih7i
+         D+yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNkMZJ4TTmVr5RIPR0GO1OyaGJzhr54MnVDFyWrgr0Attum4gQP2pY6vbDxLW6xf23QmDTCanUWwdW@vger.kernel.org, AJvYcCXn7K44MkPFPgzhTgMtra88yNdvKqm5Frjkc+cfAEIJw5tYbZZRMjDg/myl+17k+gAWeJR1LjSXGC8+7fOd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQe9NZZhQ7lMUqF4OlJFFj96gRhixXKH21ebvbRnTl7daclAjq
+	M1/w9rkiPOIkA3rIpQrXIiStLbIOAAm5R1TyG0ElxUTuSKRwmuNlAwvTWtDkSTO0y7aIucrOfc5
+	2AD/mXwFEtjUZhfpWlj5t223+pkM=
+X-Gm-Gg: ASbGncseOFDKodqs5RoyLhL/ko2yhmgyJockYAwdlx4HykO8wI5aCf9umw0uhKHEaB7
+	Fj9trcCAIguMm38dtBUxGJLwZ1TSDXHwY82BOtEaIS6Q85BydLCOayWAvVt/JzUKeiF/OzHBj
+X-Google-Smtp-Source: AGHT+IHTBXjU2mEuopccCel//ymz7vVggMYDhLgH7VKHD/w9kNEbmuNmoD4XoI5BlFQ6YqLmRGPMNfjy/JJx7cuemkw=
+X-Received: by 2002:a05:6402:550c:b0:5dc:5e4b:3e21 with SMTP id
+ 4fb4d7f45d1cf-5de45003a18mr4956485a12.9.1738960864724; Fri, 07 Feb 2025
+ 12:41:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207083030.17698-1-brgl@bgdev.pl>
-In-Reply-To: <20250207083030.17698-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 21:33:02 +0100
-X-Gm-Features: AWEUYZlP1D4GyPf7liRrgYL26q5AaSQQ2fCUIiqVJnjpqgQs7J9PvQ3GnLGOYBI
-Message-ID: <CAMRc=MfSr4CN_3GABi_NH0W4ACg4UU7KUBJ-NoUdXQ6Ou-FboQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add missing include
+References: <20250122120504.1279790-1-mastichi@gmail.com> <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
+In-Reply-To: <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
+From: Dmitry Mastykin <mastichi@gmail.com>
+Date: Fri, 7 Feb 2025 23:40:53 +0300
+X-Gm-Features: AWEUYZk-DfzfkvP29lAJ84QYUJQNGMy1jGNY5rel3GTLhoY5cfrgZWeBmPWo6v0
+Message-ID: <CALieaef39VdmjF=e+65bqF6_dkq7sT1-ps1X3gAnq-Gy6Huodg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mcp23s08: Get rid of spurious level interrupts
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, e.shatokhin@yadro.com, 
+	arturas.moskvinas@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 9:30=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> With some randconfigs I'm seeing the following error:
->
-> In file included from drivers/gpio/gpiolib-swnode.c:19:
-> ./include/linux/gpio/consumer.h: In function =E2=80=98gpiod_enable_hw_tim=
-estamp_ns=E2=80=99:
-> ./include/linux/gpio/consumer.h:557:17: error: implicit declaration of fu=
-nction =E2=80=98WARN_ON=E2=80=99 [-Wimplicit-function-declaration]
->   557 |                 WARN_ON(desc);
->       |                 ^~~~~~~
->
-> Pull in bug.h to fix it.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  include/linux/gpio/consumer.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.=
-h
-> index db2dfbae8edb..0b1acd014186 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -3,6 +3,7 @@
->  #define __LINUX_GPIO_CONSUMER_H
->
->  #include <linux/bits.h>
-> +#include <linux/bug.h>
->  #include <linux/types.h>
->
->  struct acpi_device;
-> --
-> 2.45.2
->
+Hi Linus,
+thank you for the answer.
+I made more tests and think that this patch shouldn't be applied.
+It removes duplicated interrupts, but sometimes they increase the performan=
+ce:
+a new interrupt may come during handling a spurious one, and a
+spurious one will become valid (resulting in a kind of polling). I see
+the number of my touchscreen interrupts reduced from 200 to 130 per
+second with this patch. It may be a bigger problem for users, than
+duplicated interrupts. Sorry.
 
-Ah, build bot responding to my CONFIG_HTE patch made me realize we
-already include asm/bug.h for !CONFIG_GPIOLIB. I'll rethink the
-approach here as we'll need it for the HTE stubs too.
+Kind regards,
+Dmitry
 
-Bart
+On Thu, Feb 6, 2025 at 12:26=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Wed, Jan 22, 2025 at 1:05=E2=80=AFPM Dmitry Mastykin <mastichi@gmail.c=
+om> wrote:
+>
+> > irq_mask()/irq_unmask() are not called for nested interrupts. So level
+> > interrupts are never masked, chip's interrupt output is not cleared on
+> > INTCAP or GPIO read, the irq handler is uselessly called again. Nested
+> > irq handler is not called again, because interrupt reason is cleared by
+> > its first call.
+> > /proc/interrupts shows that number of chip's irqs is greater than
+> > number of nested irqs.
+> >
+> > This patch adds masking and unmasking level interrupts inside irq handl=
+er.
+> >
+> > Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
+>
+> Patch tentatively applied as non-urgent fix.
+>
+> If this is urgent, I need a Fixes: tags and we should also tag it
+> for stable, is this a big problem for users? I don't have the big picture
+> here.
+>
+> Adding Sebastian, if he's still using this expander.
+>
+> Yours,
+> Linus Walleij
 
