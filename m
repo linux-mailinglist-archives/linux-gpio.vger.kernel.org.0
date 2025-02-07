@@ -1,136 +1,133 @@
-Return-Path: <linux-gpio+bounces-15537-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15538-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80D96A2C3FD
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 14:43:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 661E1A2C4B0
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:11:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22656162FA6
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 13:43:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C78A1188A58A
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 14:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48FD1F55F8;
-	Fri,  7 Feb 2025 13:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3941D89E3;
+	Fri,  7 Feb 2025 14:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IgMMk9gZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNtLzOgv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D871E98F4
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 13:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42F914B06C;
+	Fri,  7 Feb 2025 14:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935817; cv=none; b=szOHMHqsM7cOT3gdDgBmhXM9YHDhSc2rPI02VWqMMxmj4ThhE/0tvDsqc3XA0Jl9QKNTwkgzzHrRX4yuPibGzgkMaIPEfIeUqNOnJaW1+e43cp+4EaLZt3BAuJ4bsTSdsh/pjHnqYJVfmlq4GqtCB+m5glduvnKM/qNH3GygbPs=
+	t=1738937179; cv=none; b=azHNiZOP26DhW2zI8nw3hBIATMHOT9y3g5zZpX6yO+6jv8i5bT5Av39I+g2V0Or4M5y55wo4KDhW6VZMXP3MHgXZADiFN9sFStiy8971kN4JnLiwgEcphT/cCay4Qo22NLHlJC21hvSxgz3MDNw7W+7XYBtCJMVVRknyZjrToVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935817; c=relaxed/simple;
-	bh=FHXUInqL1mERxxhyzNOi52kx1FixifBEqw9FLbgO6ak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y1FJ+aslPOhL3KvImfJ4izra6vcvRCyESWVPnqa17yhb7WKxBkdNdeoMwAvmOmS8CSMIjKC+40EkTPr2UOcAyyI/IFmSRRs8Lm2v4NsTs++8CcpMjFugnuDinAGqHDR/lVIDcaZjIrAZVtRWg13BqrY5zn7jRdX6qyLRV9FSxfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IgMMk9gZ; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-544fe4f254eso429122e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 05:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738935814; x=1739540614; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hKsA6ABCoqBy1+Rb3r5XpccEe89AQ7e2K8/y7ck82Vw=;
-        b=IgMMk9gZ3JPUYBx/vOP6SoETaTqSSkg1iVoaSrvoZZRjmyVPTR7uXLkUyRJDBh+44C
-         9qH7Pget8/lMo7QlJ5039TV/rRiAmCZjmf6T1kTLFj9LLmU1r8bD82X+VZhoRkxeFQzk
-         S4EzUikNabl4jDWsojT5NDw19aIKyyL43ZRfliLt3xbgM++6w6ctXEnK5PSbou2gbSSs
-         9FDKZXi551DRgrMNvxqiezx6uriDsxNl5omaxXV9rEluB3kAXq1lLVeGb2yrrZZ45QnG
-         9T9J7kcqk4hsBI6odtKhrT1G1RF4CeR0o1rPIgpE7+l58xgbHZjUifudEsiROt4twjaV
-         lAIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738935814; x=1739540614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hKsA6ABCoqBy1+Rb3r5XpccEe89AQ7e2K8/y7ck82Vw=;
-        b=hYbmQ/5Uy3PPYLDf4d3YMadwTraIPWgLBuWd0t0F26A9Up/Rs6CSykeeJaOasIfReI
-         dydl0Bu6E36vDzo6kulrXwPsnWBOWhNttwBC8hNNzB0p6Wk1vF6sxRODmPvmh3ikZEKt
-         8FsPxAjmxAucP4eY4QHRUOIj6JbuIj3zYLrvEh3jWq19Pmmj/TDlOwxeqaDuWdjr9lrH
-         +OcmdFdpTottsiEc1R7TbUklYGyhaN/WJQB3dK6pcgEH4PW8aTRw51Yz5OaEwW0dCfyn
-         9XdRuh6RA6YLezMgF+OvFHXG2VOIGjiIqpz+hI+BZRD1SdR06/pgKw7LwJsku7PgHluk
-         7YlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUOYoKOnszQRjfu4hBbSWhOv7UNkZUmk/IzQjoS4Y45uHPKzycZ+8dGls1JwO9H99obsxB1BMVx/iy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIFWmSKmv1UcCr/QG8r2Zq9XgVxYJdTQNKFU6dpExic9frEN6n
-	Rv8X57LGUjJ9mjvyYCZqkBt2HzyK9xdiqVbi6Vwd1/08frdXrtCUT9+1VAffyGTTRSBAbeBkgHj
-	sBus5yTMuYcS4qB5Y9pUE/8KaU/JYMvoSUTERcw==
-X-Gm-Gg: ASbGncsE3ALMiYo9gjPL4PfBfFDAhv+BtXEQ4cJgM+wXq0wHYcIYipI7405MXbfEkih
-	PNGE9h1Ie793ugm8HNwspUOWHK/qeh03L0rfsmmMHQRtBHut/uRMsKf3DYuTfb+dnquPzySlIv0
-	Ya06cbUxa7aSkkX9xHiTCGQYhJF7M=
-X-Google-Smtp-Source: AGHT+IHks/1sa0KdRih+/AWLyA7Q3wgROj+ap1j3UX5UezETpT6I8+u4s+rJOBhjffLIcT1QtpxoyyrTQqGKdpXxMKw=
-X-Received: by 2002:a05:6512:31ce:b0:541:3175:19b4 with SMTP id
- 2adb3069b0e04-5440e643812mr2557388e87.11.1738935813528; Fri, 07 Feb 2025
- 05:43:33 -0800 (PST)
+	s=arc-20240116; t=1738937179; c=relaxed/simple;
+	bh=0/tipEzfWBT37O57TIU2pWxZAmUOiCfelggbZOOjntc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T6UURetbuJa2WBDr7kmIBz+jSO/h0uM1BJZmVVGMUSGUvqe9fIvdXfW0NKHu3CnR6Cc1LTeXRai/ka3X0SNw8rniaBMQOiOSPem79QfFNEj6YTVjJAJkFi9+04aBqZSM4Ccb0KtsvqNuFAcgEhiLKlGUMIsOuzdWr4xfVLdonMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNtLzOgv; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738937178; x=1770473178;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0/tipEzfWBT37O57TIU2pWxZAmUOiCfelggbZOOjntc=;
+  b=PNtLzOgvyxDCV5QVbfC6v2r+6rRbTMO4cGnhm9k8NB70ofPthDhexsb3
+   TZ9tAVoEDk9Tk/YtFpRkis/gtpB8pJJ+mzeLKHWNfPBG5ztWc32v0GT2U
+   NAv6AMlv5e0NxIqmm8cgSbxHyGN91zc9U1jW8qZ/jr6ZR0iiyd4IVd1LT
+   YPSGlkRQnKSswxsBTBbU3QmFgcwyuxLkl5CLlBUwyFXqvxITUEvY394ZR
+   91BKq8F42evEzJAhnxhqMyxdhnoB/bs3SyQv9Ov5fUA6ZGtfdvZtjKC+A
+   1jY15E7VGtp7NAqcfIn4D5/X3m5oUg8iwWF6yzmMwQW4SOQrrQsP8OMgi
+   A==;
+X-CSE-ConnectionGUID: oI7FYp2zTUWmYETcrTeEIg==
+X-CSE-MsgGUID: nPpupGTjTZW1Dnd8zFcd4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="56993050"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="56993050"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:06:17 -0800
+X-CSE-ConnectionGUID: MH5e9lriSB2KbNqVO9/pbA==
+X-CSE-MsgGUID: ug/xwKDNQJKviczLM8hj0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="111452296"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:06:15 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tgOzl-000000096GZ-0y21;
+	Fri, 07 Feb 2025 16:06:13 +0200
+Date: Fri, 7 Feb 2025 16:06:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate some code in
+ for_each_requested_gpio_in_range()
+Message-ID: <Z6YTVMdfbWA57qTo@smile.fi.intel.com>
+References: <20250204175659.150617-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MeS1gCP2aNKs9xydqLQQnVbWHbVoSqTyLzVcENDFZYM=g@mail.gmail.com>
+ <Z6YMDwflaxCFdnoc@smile.fi.intel.com>
+ <CAMRc=McATQEVKrh=Pi6u8tSgQac85YoT=U8X6WrdRW8mXgUSyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204175659.150617-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MeS1gCP2aNKs9xydqLQQnVbWHbVoSqTyLzVcENDFZYM=g@mail.gmail.com> <Z6YMDwflaxCFdnoc@smile.fi.intel.com>
-In-Reply-To: <Z6YMDwflaxCFdnoc@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 14:43:21 +0100
-X-Gm-Features: AWEUYZn4w0AFhjUVVaaPzWXSUburvcZM3FGt7u2UBMubmSEsv8i14THnw7uGdr0
-Message-ID: <CAMRc=McATQEVKrh=Pi6u8tSgQac85YoT=U8X6WrdRW8mXgUSyw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate some code in for_each_requested_gpio_in_range()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McATQEVKrh=Pi6u8tSgQac85YoT=U8X6WrdRW8mXgUSyw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 7, 2025 at 2:35=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Feb 07, 2025 at 09:46:31AM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Feb 4, 2025 at 6:57=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
->
-> ...
->
-> > >  /**
-> > > - * for_each_hwgpio - Iterates over all GPIOs for given chip.
-> > > + * for_each_hwgpio_in_range - Iterates over all GPIOs in a given ran=
-ge
-> > >   * @_chip: Chip to iterate over.
-> > >   * @_i: Loop counter.
-> > > + * @_base: First GPIO in the ranger.
-> > > + * @_size: Amount of GPIOs to check starting from @base.
-> > >   * @_label: Place to store the address of the label if the GPIO is r=
-equested.
-> > >   *          Set to NULL for unused GPIOs.
-> > >   */
-> > > -#define for_each_hwgpio(_chip, _i, _label) \
-> > > +#define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)   =
-                   \
-> > >         for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
-> > > -            *_data.i < _chip->ngpio; \
-> > > +            *_data.i < _size;                                       =
-                   \
-> > >              (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NU=
-LL) \
-> > >                 if (IS_ERR(*_data.label =3D \
-> > > -                       gpiochip_dup_line_label(_chip, *_data.i))) {}=
- \
-> > > +                       gpiochip_dup_line_label(_chip, _base + *_data=
-.i))) {}           \
-> > >                 else
+On Fri, Feb 07, 2025 at 02:43:21PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 7, 2025 at 2:35 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Feb 07, 2025 at 09:46:31AM +0100, Bartosz Golaszewski wrote:
+> > > On Tue, Feb 4, 2025 at 6:57 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+
+...
+
+> > > >  /**
+> > > > - * for_each_hwgpio - Iterates over all GPIOs for given chip.
+> > > > + * for_each_hwgpio_in_range - Iterates over all GPIOs in a given range
+> > > >   * @_chip: Chip to iterate over.
+> > > >   * @_i: Loop counter.
+> > > > + * @_base: First GPIO in the ranger.
+> > > > + * @_size: Amount of GPIOs to check starting from @base.
+> > > >   * @_label: Place to store the address of the label if the GPIO is requested.
+> > > >   *          Set to NULL for unused GPIOs.
+> > > >   */
+> > > > -#define for_each_hwgpio(_chip, _i, _label) \
+> > > > +#define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)                      \
+> > > >         for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
+> > > > -            *_data.i < _chip->ngpio; \
+> > > > +            *_data.i < _size;                                                          \
+> > > >              (*_data.i)++, kfree(*(_data.label)), *_data.label = NULL) \
+> > > >                 if (IS_ERR(*_data.label = \
+> > > > -                       gpiochip_dup_line_label(_chip, *_data.i))) {} \
+> > > > +                       gpiochip_dup_line_label(_chip, _base + *_data.i))) {}           \
+> > > >                 else
+> > >
+> > > Can you add a kerneldoc here as well, please?
 > >
-> > Can you add a kerneldoc here as well, please?
->
-> Sure, but it will duplicate the above.
->
+> > Sure, but it will duplicate the above.
+> 
+> Will it though? It's a separate macro with different semantics.
 
-Will it though? It's a separate macro with different semantics.
+With 80%+. Whatever, I'll add it.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
