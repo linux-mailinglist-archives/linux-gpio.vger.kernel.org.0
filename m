@@ -1,79 +1,141 @@
-Return-Path: <linux-gpio+bounces-15597-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15598-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3296A2D06F
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 23:25:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04464A2D0CE
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 23:41:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1C933A8695
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 22:25:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25E6C18809E4
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 22:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CE1D1D90C5;
-	Fri,  7 Feb 2025 22:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5Q5bd6S"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7791D958E;
+	Fri,  7 Feb 2025 22:37:13 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F041D8A0D;
-	Fri,  7 Feb 2025 22:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4751D90DB;
+	Fri,  7 Feb 2025 22:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967130; cv=none; b=NZc/9mSAr4s9h+RO5CkwYW2+f38EfMMkbnCxZ7FaK/eUsOMIz9CODekpi12v1DUbZIVT8y//TxWzgSvuZuCSv+Qd684cgXDTwO7V2ovvKdIthW+j9E9sEHVHX1SDvSArDwM6qOCP2eswp2JjuwmRt/b+QV5v5zaQmG2IF1PchJk=
+	t=1738967833; cv=none; b=MoFg0qzxRKR1KoDYA78UfB/D2wFm1C1a7aPnkQgl6dqKessEEvbc/Dr+3Ik9eUxS3QolEOWNaMnlOEa2kpWcl0Ncs53/Lwyst2uTc0P5+9eyFHkWnuujHF8vPvOjD0TCMqrpBtevE9W63UQi66Sqc7WALPDNyPQsOfT3NKqJ974=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967130; c=relaxed/simple;
-	bh=5hhacTFn74xU0FsdaFmOBJwM9/9saf2R32VpKccasyg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Rm8mDLo5EDa7rxkHYNwUni16eQcPCq1RUSm9R64b1L7Qoj6qU9va4rxkA84vnqPn4ZDfu63st0g2vWOAdBavSkO4IOh8aTQ6auLqA472qg6VVixgsuROoFrv9iqArhPrmerz5d8xTeQyK8HqxZpF/AbNs93A7C1isudKUMjIcXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5Q5bd6S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF41BC4CED1;
-	Fri,  7 Feb 2025 22:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967130;
-	bh=5hhacTFn74xU0FsdaFmOBJwM9/9saf2R32VpKccasyg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=O5Q5bd6SRNojzhGsrdtIVc6K7n5Xlwam6Dnf0e1C4hmukN8EixqxzVmM3AUmDWzec
-	 dE1GgnV07emh7XcwjRiDt4ZiGFrnCrLF3az7XEXhxdGhE+fzPLFxCtX/c72gzNM79i
-	 pnmlR5GszM/AN6Kwfqn/L1OZFc4FQD1HohB/M2q6lc9entfuXPrlI4yWIvXCoceVxz
-	 Mcls26WBtD5iE/tmJiYRJ79GaF+sqrK/FWBBQ2lT7gDLOb0WXf+5WKlzB7ax8Fbe/X
-	 qDhy1jSmOixmrMMZVoITNhkUnWbZ+QzxErtk/fglxmXD3TbVKpp8gmBmDWfJsnimXk
-	 K5rcuFiqNbDaw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34004380AAEB;
-	Fri,  7 Feb 2025 22:25:59 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.14-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250207084211.35316-1-brgl@bgdev.pl>
-References: <20250207084211.35316-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250207084211.35316-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc2
-X-PR-Tracked-Commit-Id: 59ff2040f0a58923c787fdba5999100667338230
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 78b2a2328bf931ff7791dbfb82c2da97d10b42f9
-Message-Id: <173896715783.2405435.5145698733750809987.pr-tracker-bot@kernel.org>
-Date: Fri, 07 Feb 2025 22:25:57 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=arc-20240116; t=1738967833; c=relaxed/simple;
+	bh=S/tpQ3STB8+/87M4WfkqS1yWyucnvmjhKxobuJLNll0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/InPVUarjcTNlAE6BD2eP2BFXPiH1Ev7U5GT5XAgVsLVUSSZs6xHHXs5Wc/h2snAkWl6txpLMXhwbe3S+wwxHCJQO0n8bBVNv6bRHduJ7WQkVOKbXdI7ogTOTQbw4vtsuSma+WpmyssiVzk/KNmTdApJ7zESPZt08b1di4pfS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 7A213342FDC;
+	Fri, 07 Feb 2025 22:37:10 +0000 (UTC)
+Date: Fri, 7 Feb 2025 22:37:05 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH] pinctrl: spacemit: enable config option
+Message-ID: <20250207223705-GYA7567@gentoo>
+References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+ <20250207-promenade-hazily-d7900cbc127e@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-promenade-hazily-d7900cbc127e@spud>
 
-The pull request you sent on Fri,  7 Feb 2025 09:42:11 +0100:
+Hi Linus Walleij:
+ I think you won't mind if I take this patch through SpacemiT's SoC tree,
+as it's fairly SpacemiT specific, right? anyway I'd appreciate if you
+could give an ACK for this, thanks
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc2
+Hi Conor:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/78b2a2328bf931ff7791dbfb82c2da97d10b42f9
+On 16:49 Fri 07 Feb     , Conor Dooley wrote:
+> On Fri, Feb 07, 2025 at 08:11:42PM +0800, Yixun Lan wrote:
+> > Pinctrl is an essential driver for SpacemiT's SoC,
+> > so let's enable it by default for this SoC.
+> > 
+> > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+> > 'make defconfig' to select kernel configuration options.
+> > This result in a broken uart driver where fail at probe()
+> > stage due to no pins found.
+> > 
+> > Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+> > Reported-by: Alex Elder <elder@kernel.org>
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> > This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+> > when using make defconfig, thus fail to initilize uart driver which requst
+> > pins during probe stage.
+> > ---
+> >  arch/riscv/Kconfig.socs          | 1 +
+> >  drivers/pinctrl/spacemit/Kconfig | 1 +
+> >  2 files changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> > index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+> > --- a/arch/riscv/Kconfig.socs
+> > +++ b/arch/riscv/Kconfig.socs
+> > @@ -26,6 +26,7 @@ config ARCH_SOPHGO
+> >  
+> >  config ARCH_SPACEMIT
+> >  	bool "SpacemiT SoCs"
+> > +	select PINCTRL
+> >  	help
+> >  	  This enables support for SpacemiT SoC platform hardware.
+> >  
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+thanks Conor
 
-Thank you!
+> > diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+> > index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
+> > --- a/drivers/pinctrl/spacemit/Kconfig
+> > +++ b/drivers/pinctrl/spacemit/Kconfig
+> > @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
+> >  	tristate "SpacemiT K1 SoC Pinctrl driver"
+> >  	depends on ARCH_SPACEMIT || COMPILE_TEST
+> >  	depends on OF
+> > +	default ARCH_SPACEMIT
+> 
+> This is effectively just "default y", since ARCH_SPACEMIT is a
+> dependency.
+> 
+right, this is the plan, it make sense to bundle this config to ARCH_SPACEMIT
+
+> >  	select GENERIC_PINCTRL_GROUPS
+> >  	select GENERIC_PINMUX_FUNCTIONS
+> >  	select GENERIC_PINCONF
+> > 
+> > ---
+> > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> > change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
+> > 
+> > Best regards,
+> > -- 
+> > Yixun Lan
+> > 
+
+
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
