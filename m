@@ -1,192 +1,146 @@
-Return-Path: <linux-gpio+bounces-15558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53350A2C7A0
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:46:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CB42A2C7E5
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:52:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EB1116BE59
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:46:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E1C216CFE5
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:51:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F9824635D;
-	Fri,  7 Feb 2025 15:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUmVpxDC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93AD23C8AD;
+	Fri,  7 Feb 2025 15:51:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39351EB18D
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 15:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B9D23C8A6
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 15:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943114; cv=none; b=NPmnUo0jdSKO/A3Uz5xd2+1KrlxkLqN1omamzaX6Au4jZYHyHcdPCKbY6y6DVl9GpJ0De819L1YP7lm1H/zQ5isMHG1VYWQ5Hc3syjQSuwWL3MJae4KfDZAW0g0SholenMVyFiwJo1hF12PalmCH1EKZbX6+ZkF5soGp7Js3uYM=
+	t=1738943504; cv=none; b=oOMErIUJqKgMPIohYN/Ya1U5021bJFqgk0pGvMQ6EcHHmSWR5y/CknVUjOtFd9hZauBb2xUNkFyOGYWzKbclA9KVAKiDUTcZufxq7xyDSj2X8N94nB0TuX3bQ35Maep3Ys41rNfNExqLqjvnnbW/XKAdpsbP/2WCQmlBn/Pogew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943114; c=relaxed/simple;
-	bh=QycRRgHIxy4ETSckeXSh8sPqcwHBpFjBsFaIG1HJqjs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S+r6ZbDHgcUyAXPxkyiC0bvYjC6y4mrK9U2N6a+WphroIbFASDbqhmb7aRi82z63tkQ5Fqmw8BemdldMXAIZ4raLcnZEWGbiHEQbgZyZYJD4NFIVghD8HZegU51bFLgft3RbDaNBraOtUtCF/yA1xeOteqqr/QbPL1hmv9oowv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BUmVpxDC; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21bb2c2a74dso5381595ad.0
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 07:45:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738943112; x=1739547912; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WZjhOSrdirDierZy/P7aAvFWbtfQfMSSXsi+CBuznaQ=;
-        b=BUmVpxDCZNIZO3ZB+zzUTbdVz6MrS7w3yHw+0nBFEQmP+TazCe8+i2VTzwQiP6VcyJ
-         0EDblDhtw0PWSJhDdzlfTeZin25fp7YH7Or5dEUvuFXzBXYUfKrrEBK3ZjCcaGhaxIdk
-         MhdUIueOFr0qC1QmEVMwaC6n5S8gII+jrPe6ZjIBMPxikEpFaU4DQaV7bB3uEiIfpQah
-         0fgT2V8k1y7Jn5QQNTaqn1qSZhmmLNiJgZ+EuLTM61SlGbUX5zgHH+9cpUY4z33K0Fm0
-         pz74fd/BxzLPqBo3FWhj1+tPxjq8yPmdIP86duWql97+6HS+mPH8VKnCSuOBfMqmu3oS
-         JUIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943112; x=1739547912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WZjhOSrdirDierZy/P7aAvFWbtfQfMSSXsi+CBuznaQ=;
-        b=Nf5ee7cw3+0yg+Osxwce+IenBG49EyuqoWE5f21c0SRQ0D1OQvPDLBN8i+WTpuDhBu
-         JTXd81Z6nchGm+8ijquKojFHg/UiKQa9h5rtHVTzXRIDhjXURkAIa7U1hMVDSEMjU5jN
-         Qz16LN6DVgciyW/1XDD4/IZK4cQN389Wx3u5fWl28LASrQBinEFiZYsRs4rhqAL9dK8d
-         WJBOLkVwoPaMVzAvW6cN0krsIPYJO2iGLUpzcUgSnZCHOgCwULKpvMEptbCAi/9nS4Aj
-         6+xl0ULZL8WLCV/Db1tuEYeyn+7Xa1CkK2tHrptWellpZfyC1jzaScREXvIxZYjAWHHM
-         1csg==
-X-Gm-Message-State: AOJu0YwcvzTuS0uAo2p1lNxNgm2u8n8aiomQUmj2s16jt7w5meqiHgIr
-	6LbFIAH/ynocIsEjR8Hgjo1TRZwR8A3tgvL4zeg7ca+VrIdYBBdaxW+CMAzL1WhAurAp4Sf2UpJ
-	IX+zWZuXfy8IbEmL8bK1upraForU=
-X-Gm-Gg: ASbGncu/J4YfaFqGcU09R4uzXkjnxS/muT/GiCXuXgIXy4jNTB1IcxeyFYTX6chnFJI
-	tpr86e6YJIFMslMNNHHUAvC4R0D51CxxynAskcZui85CofcMc+QKZD0kKJW2DQ+UNuab0f0x1lW
-	P6mtXJlMoML56oR0XmjQreEuYupgpw
-X-Google-Smtp-Source: AGHT+IGqQ7BA3BP9uDJNFumsU/C5HC5TYYjNqv07Qv7yIfvdQjrlb0Bptc50NN3sPNmuB6wV4AV9bOGuPqa17sEKlZw=
-X-Received: by 2002:a17:902:f60c:b0:215:2f19:1dd with SMTP id
- d9443c01a7336-21f4e772a58mr21198625ad.11.1738943111946; Fri, 07 Feb 2025
- 07:45:11 -0800 (PST)
+	s=arc-20240116; t=1738943504; c=relaxed/simple;
+	bh=FYBzQWrbc5BZbG36FmSxvb/yRkK3m4dSs/j7WyRK1LM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TsO0Y8fjFbEkm5iq4gq26v8qmL+eM3oo5RYXQfFH6puoyCHaUb8uUleTjGruJ7BLit2oU7noSgZlC4vX5xqafKcu5OotfQoSu85lRn9V0sYhV8uq9viPhNp5XDEFRx/UgsmiGFbe/HYG1bKfVNmjwMRxX89Fx00PVCRyHA5jyG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tgQdX-00035S-1R; Fri, 07 Feb 2025 16:51:23 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tgQdU-003zzi-0y;
+	Fri, 07 Feb 2025 16:51:20 +0100
+Received: from pengutronix.de (pd9e59fec.dip0.t-ipconnect.de [217.229.159.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id DAB1B3BC4F8;
+	Fri, 07 Feb 2025 15:51:19 +0000 (UTC)
+Date: Fri, 7 Feb 2025 16:51:19 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
+Message-ID: <20250207-fair-active-robin-30025a-mkl@pengutronix.de>
+References: <20250207074502.1055111-1-a0282524688@gmail.com>
+ <20250207074502.1055111-5-a0282524688@gmail.com>
+ <20250207-savvy-beaver-of-culture-45698d-mkl@pengutronix.de>
+ <9a3f1242-794e-41f1-80a5-bc6d18ff6641@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241030164924.3276981-1-boerge.struempfel@gmail.com>
- <CAMRc=McDR+hK8t+dtAc6i57_JgozkwCUmYwpTtx=heF8v13fAA@mail.gmail.com>
- <CAEktqctbreLjq2fh27vW8YSob_ooQTDFCFda6HHmxbS8AQ0exA@mail.gmail.com>
- <CAEktqct2w3FBdce5993s9PNf+OtuCT_T69q5tSn6y_hRwuiNVA@mail.gmail.com> <CAMRc=McDT-apAk2=Me0Ahz4t_EWvhzGF8uemtuEbBtFT2Nu0Ww@mail.gmail.com>
-In-Reply-To: <CAMRc=McDT-apAk2=Me0Ahz4t_EWvhzGF8uemtuEbBtFT2Nu0Ww@mail.gmail.com>
-From: =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>
-Date: Fri, 7 Feb 2025 16:45:00 +0100
-X-Gm-Features: AWEUYZk7A1KP8lmgN1mrIA8Q82Llpcpt-2iE8INjcP1drhCNCvCYQPB4c8NmWKM
-Message-ID: <CAEktqcu3+to5VBA5SSM51gsZqCROyRtRXCW09_6L16vXaWhAnw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/1] dbus: manager: fix linker not finding libgpiod.so
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Boerge Struempfel <bstruempfel@ultratronik.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="76ydemzthxfsfgeu"
+Content-Disposition: inline
+In-Reply-To: <9a3f1242-794e-41f1-80a5-bc6d18ff6641@wanadoo.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--76ydemzthxfsfgeu
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
+MIME-Version: 1.0
 
-Hi Bart,
+On 08.02.2025 00:00:43, Vincent Mailhol wrote:
+> On 07/02/2025 at 21:15, Marc Kleine-Budde wrote:
+> > On 07.02.2025 15:44:59, Ming Yu wrote:
+>=20
+> (...)
+>=20
+> >> +static netdev_tx_t nct6694_can_start_xmit(struct sk_buff *skb,
+> >> +					  struct net_device *ndev)
+> >> +{
+> >> +	struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> >> +
+> >> +	if (can_dev_dropped_skb(ndev, skb))
+> >> +		return NETDEV_TX_OK;
+> >> +
+> >> +	netif_stop_queue(ndev);
+> >> +	can_put_echo_skb(skb, ndev, 0, 0);
+> >> +	queue_work(priv->wq, &priv->tx_work);
+>=20
+> What is the reason to use a work queue here? xmit() is not a hard IRQ.
+> Also, the other USB CAN devices just directly send the USB message in
+> their xmit() without the need to rely on such worker.
+>=20
+> Sorry if this was discussed in the past, I can not remember if this
+> question has already been raised.
 
-On Thu, Feb 6, 2025 at 9:48=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> On Thu, Feb 6, 2025 at 12:46=E2=80=AFAM B=C3=B6rge Str=C3=BCmpfel
-> <boerge.struempfel@gmail.com> wrote:
-> >
-> > Hi Bart,
-> >
-> > While preparing a patch to add gpio-manager to mainline Buildroot, I
-> > encountered this issue again. That is, I can successfully compile the
-> > gpio-manager manually (using autotools/gcc/ld provided by ubuntu 2024) =
-however,
-> > when using the Buildroot infrastructure, I get a compiler error, statin=
-g that
-> > the libgpiod.so.3 cannot be found.
-> >
-> > After further investigation, I'm increasingly unsure on how the
-> > libgpiod.so.3 is supposed to be found by the linker in the first place:
-> >
-> > From what I see, gpio-manager depends on:
-> > - bindings/glib/libgpiod-glib
-> > - dbus/lib/libgpiodbus
->
-> Correct.
->
-> > - lib/libgpiod
->
-> This one is an indirect dependency, it's already pulled in by libgpiod-gl=
-ib.so.
->
+AFAICS xmit uses nct6694_write_msg(), which uses several usb_bulk_msg(),
+that can only be used from task context.
 
-Yes. You are right - there are no direct calls into the libgpiod
-library only via
-libgpiod-glib.so. I also verified that the libgpiod is properly build and l=
-inked
-against the libgpiod.so.
+You can build a chain of usb_fill_bulk_urb(), usb_submit_urb(),
+callbacks instead, but that's hard to read compared to blocking
+usb_bulk_msg()s.
 
-> >
-> > However, I see no direct reference in dbus/manager/Makefile.am, nor can=
- I see
-> > an indirect reference via the Makefile.am files used to generate:
-> > - bindings/glib/libgpiod-glib.la
-> > - dbus/lib/libgpiodbus.la
-> >
-> > Am I missing something obvious?
-> >
->
-> These are generated in different directories, the Makefiles in there
-> take care of this.
->
-> > Furthermore upon review, I believe the solution I proposed last October=
- was
-> > flawed - I should have used:
-> > LDADD +=3D $(top_builddir)/lib/libgpiod.la
->
-> On Ubuntu, I see that gpio-manager is only linked against
-> libgpiod-glib.so and libgpiodbus.so. However if I cross-compile on
-> yocto, it's linked against libgpiod.so as well. I don't know exactly
-> what the differences in linker setup are but yocto is able to find
-> libgpiod without problems. Before we add an unnecessary flag, may I
-> suggest looking into how yocto does the linking?
+Marc
 
-Here is what I have figured out so far:
- - whether libgpiod.so is linked to the final execuatble seems to be
-at least partially
-   dependent    on the version of autotools and/or libtools. (Tested
-by backporting
-   yocto's autotools and libtools)
- - there is a fix in the yocto recipe for finding the libgpiod.so bit
-it conserns only
-   gobject introspection, which is not the problem I am facing with buildro=
-ot
- - The behaviour of the problem I am facing in buildroot does not depend on
-   gobject introspection as far as I can tell, since the error happens
-independent
-   of it. (which is good in my understanding, since it is what I would expe=
-ct)
-  - there is a flag in the libtool "link_all_deplibs" which yocto sets
-to "unknown" and
-    which in buildroot is set to "no" after the configure step (I
-couldn't figure out the
-    reason for this yet) If I manually tweek this value in buildroot
-between the configure
-    and build steps, the gpio-manager is build successfully (with or
-without an explicit
-    link to libgpiod.so depending on the version of libtools used).
-However setting
-    this flag to "no" in yocto, still leads to a successful build.
-Therefore I don't think,
-    this is the root-cause of this problem.
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-By now I fully agree with you, that gpio-manager should not get libgpiod.so=
- as
-a dependency even if I don't know yet where this error is coming from.
+--76ydemzthxfsfgeu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind Regards, and thanks for your support,
-Boerge
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmemK/QACgkQDHRl3/mQ
+kZwmeQf+K8g+Oy8vCIUI/Kice58VwDSu6EFa30wRLM0oqjCgE4LqXapNiSB1F8iJ
+sDm2IyQER6qNYSLqzeZWG/bMyJwfHNpKjfXN3RImtyTXuN4nlvraaQabsV1bEY3y
+rNGHojpZqxDXCb3Q9B5GLjNhdZldM4T+Xrs8gG+7Zv4jBxjNxn8J7Xz+1BpX3UqZ
+ql8gENFEAe9nb6O5ODNVcGTnU+SzGWvy1VsEz23VcvXWEKbyyObvG+e0yUoYEi4y
+s2MbMh1xxkTliIXn7GvqIdMj6/RSPo7xLoShAalHzurN1mey2u5PZfQapk718BEx
+Wj/o/s1vTiX+qqRfcgpDz3UvoRZEtQ==
+=0uK9
+-----END PGP SIGNATURE-----
+
+--76ydemzthxfsfgeu--
 
