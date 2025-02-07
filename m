@@ -1,158 +1,192 @@
-Return-Path: <linux-gpio+bounces-15557-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 769E1A2C792
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:44:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53350A2C7A0
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:46:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70AEE7A640E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:43:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EB1116BE59
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:46:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806332451D2;
-	Fri,  7 Feb 2025 15:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F9824635D;
+	Fri,  7 Feb 2025 15:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jX6Z1EkM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUmVpxDC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D500E23F27E;
-	Fri,  7 Feb 2025 15:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39351EB18D
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 15:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942991; cv=none; b=PM/h/how+57tO1It0l9o7odv07eEUG0tsUKjx7hd8wv6pSXyfOGimA6zOU/nwp6ucn7B15eZBs5caB7JlByx9ynOHJSqPzqzTIyWevOOJiIifrck505wQ1t4RCHxfVXJIotDDNSxI3LPkErSZBXZFGOaEg1gGeYawLuAdTwWB+Y=
+	t=1738943114; cv=none; b=NPmnUo0jdSKO/A3Uz5xd2+1KrlxkLqN1omamzaX6Au4jZYHyHcdPCKbY6y6DVl9GpJ0De819L1YP7lm1H/zQ5isMHG1VYWQ5Hc3syjQSuwWL3MJae4KfDZAW0g0SholenMVyFiwJo1hF12PalmCH1EKZbX6+ZkF5soGp7Js3uYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942991; c=relaxed/simple;
-	bh=V/mJbsV2FpS/yrn+vg3Hob7Vj8vsVhpVXGKAdYRI+5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQVFXIF+wvidEPLH50Wzxi+hDY3OZmAGrOGvjh5qk2L4RWWgIuYXbECV+rYX3ssnMZG4PC+SyYCiEUpDE81dUtETg1Tsdd3NUn0Gw0wppkAXxtSDaBpbS2G1cEHiqeoSUWQg8WxHxuFI+xk66M/U0tJ2qLvNkb9uDbN9kRvNcH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jX6Z1EkM; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1738943114; c=relaxed/simple;
+	bh=QycRRgHIxy4ETSckeXSh8sPqcwHBpFjBsFaIG1HJqjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S+r6ZbDHgcUyAXPxkyiC0bvYjC6y4mrK9U2N6a+WphroIbFASDbqhmb7aRi82z63tkQ5Fqmw8BemdldMXAIZ4raLcnZEWGbiHEQbgZyZYJD4NFIVghD8HZegU51bFLgft3RbDaNBraOtUtCF/yA1xeOteqqr/QbPL1hmv9oowv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BUmVpxDC; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f5268cf50so13446825ad.1;
-        Fri, 07 Feb 2025 07:43:09 -0800 (PST)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21bb2c2a74dso5381595ad.0
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 07:45:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738942989; x=1739547789; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UxhLoK7XAPc7+07p+MzQjz273lZ6TnGYiS+xzwBXJJs=;
-        b=jX6Z1EkM6hvx+zqfG4Jk8J4qv8Ahcwp3Qc6KaJf5Cr8DCYajF6YUT/pUVTnIObhkjH
-         ljHB64kpEnwRU2dcOKm8WuinRBXAGji18YcPFkmmtWBeAAsCWROdbyHb7KIKUmOt26os
-         gr/6IL3ZrCcagTXKd4FtfkgMIW3F63Kt2Jm9Vzn2K2DvGPBYGodmeQiOoY9n1/UFOzwz
-         rcHjVXF4MRLMOXyUC/WM/djIIJEIMZqn1RYNnee0VKeE4PTo/5tg99ByoyOEjSw8Iiv6
-         f67HLcLcOMEBOFVZcRutLL0uhf/otB8b8v7f9gQKdNHvdSuvnkKACKvfx/bKo4eAICsh
-         A9og==
+        d=gmail.com; s=20230601; t=1738943112; x=1739547912; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WZjhOSrdirDierZy/P7aAvFWbtfQfMSSXsi+CBuznaQ=;
+        b=BUmVpxDCZNIZO3ZB+zzUTbdVz6MrS7w3yHw+0nBFEQmP+TazCe8+i2VTzwQiP6VcyJ
+         0EDblDhtw0PWSJhDdzlfTeZin25fp7YH7Or5dEUvuFXzBXYUfKrrEBK3ZjCcaGhaxIdk
+         MhdUIueOFr0qC1QmEVMwaC6n5S8gII+jrPe6ZjIBMPxikEpFaU4DQaV7bB3uEiIfpQah
+         0fgT2V8k1y7Jn5QQNTaqn1qSZhmmLNiJgZ+EuLTM61SlGbUX5zgHH+9cpUY4z33K0Fm0
+         pz74fd/BxzLPqBo3FWhj1+tPxjq8yPmdIP86duWql97+6HS+mPH8VKnCSuOBfMqmu3oS
+         JUIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738942989; x=1739547789;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UxhLoK7XAPc7+07p+MzQjz273lZ6TnGYiS+xzwBXJJs=;
-        b=kqOQA5PW+tA2xQHDDT0qbljm74/nBi5tXFyRAEXCqhL2eSbG2GyxTgTC52DC72w+NX
-         6QlEPUTVbuQE99tBH7pJoD/VipxoK/NgskBfGswtzCB6HS6jJFE8XxdLr7hhGdUzMqHI
-         YR+asq3cdHCMzM3BORElwQjKn6JGP3qL3dFFLhrkH4vizlkdDwYeWt0M7sSgbmNmKZIC
-         tWD51ZTdX+x3uAx/b4uI0y/+d/luA2l4AJugNKj7zU1S5pDwTIvGhZzJV93YIane1fAB
-         aaW3hr2nTHVQ75vPH1s9magE04aEXxbME8dz6jA9NBEGip4qr3noGqFB4sf7fHZXWMWT
-         I8og==
-X-Forwarded-Encrypted: i=1; AJvYcCUv6X5YyW5AXTHhVEdLm+LA9ey99R6eZs1nGhIfNZPStcaGDUdrBCgjZojkFX+99RJ6eEloUev6bpQQUI8=@vger.kernel.org, AJvYcCV8YxcrmZldtl02mXnNsJAWGPVhhk/M8qLcL3+DIwSvD2FLrx8JUurp7x++6nOezOU06h40K81bzbih@vger.kernel.org, AJvYcCVWeTB/D8/ifaXQSK62Uj1Td8qNX+CGqMaDQpN01HxvtgDL1YqyBd1DPBP0NYzSdxUVa3/QN5n7Sczvi6WP@vger.kernel.org, AJvYcCWsOn9mldbwmvTJhK3O/m32CSggMm6sOuo+wA6T2GLv1ElmNhCkL3amiqHmWd1ZB36Zc7FtAeA0@vger.kernel.org, AJvYcCXhXqqJ9ZOxkw8FrUs6lQEIrzrZim9UGokFxqL0Kd5gmmgBQl5sGwZOGV+tMVaK4HnZW/SZnn9fJX5W@vger.kernel.org, AJvYcCXo2gvcNogiQe0Bw23U5E92Ki/SlFzzzVSB+3Yzc6Lj9iYqbrdQfzuI8ULdLyap9pyVuBhbsxnPyb/2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHjjNm5PvJkSAd31vtLXiYY2MZiYbTu0GJfurJSkKRnb2WFE4T
-	TUxvF1euBbRyB4ncBb/cKzy5ryPgtf+E0UlythUgLuMcvXMW7bJQpLpmytHX
-X-Gm-Gg: ASbGncsyaFazJVTwVL03mlfnq8L22tM3Eqi5ADevJm4SLcCKwfLSn384o9/KEb0MyDM
-	zQgj70IOMkil/smqWSQk3UGcDcdIcFE/cv+l6hIoGvArIR224x8I1ZdNqDtUderaAN+Ginob6zR
-	NFlTlKcbDkJjyw3qofLq7UsgJFMzL//EvxOHU8ftVkUcQkhEVqGP1oCzTRLFmNUP7HyUIwdNk7t
-	eDr2SjjxUJHROBl6HzXMixrYuTq3uktyE31UdPaFM2x6F9UJDvK9o2vcFXgrDc6uEJ3AnTdIq2m
-	20kFJevC2uL6nxs=
-X-Google-Smtp-Source: AGHT+IHksggvra53OzUJzI4zoRynwjPKZIRBW8flE8pNvut2OPynffqKQreS+fTXcRUSXiaAn6xL3A==
-X-Received: by 2002:a17:902:ce8c:b0:215:4a4e:9262 with SMTP id d9443c01a7336-21f4e1cc2e9mr47245225ad.8.1738942987478;
-        Fri, 07 Feb 2025 07:43:07 -0800 (PST)
-Received: from localhost ([216.228.125.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368ce622sm31799335ad.241.2025.02.07.07.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:43:06 -0800 (PST)
-Date: Fri, 7 Feb 2025 10:43:04 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] bus: ts-nbus: use gpiod_multi_set_value_cansleep
-Message-ID: <Z6YqCOP2lVseW-i4@thinkpad>
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
- <20250206-gpio-set-array-helper-v2-4-1c5f048f79c3@baylibre.com>
- <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
- <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
- <b1459947-18ec-4835-8891-5251d8f8c95e@baylibre.com>
+        d=1e100.net; s=20230601; t=1738943112; x=1739547912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WZjhOSrdirDierZy/P7aAvFWbtfQfMSSXsi+CBuznaQ=;
+        b=Nf5ee7cw3+0yg+Osxwce+IenBG49EyuqoWE5f21c0SRQ0D1OQvPDLBN8i+WTpuDhBu
+         JTXd81Z6nchGm+8ijquKojFHg/UiKQa9h5rtHVTzXRIDhjXURkAIa7U1hMVDSEMjU5jN
+         Qz16LN6DVgciyW/1XDD4/IZK4cQN389Wx3u5fWl28LASrQBinEFiZYsRs4rhqAL9dK8d
+         WJBOLkVwoPaMVzAvW6cN0krsIPYJO2iGLUpzcUgSnZCHOgCwULKpvMEptbCAi/9nS4Aj
+         6+xl0ULZL8WLCV/Db1tuEYeyn+7Xa1CkK2tHrptWellpZfyC1jzaScREXvIxZYjAWHHM
+         1csg==
+X-Gm-Message-State: AOJu0YwcvzTuS0uAo2p1lNxNgm2u8n8aiomQUmj2s16jt7w5meqiHgIr
+	6LbFIAH/ynocIsEjR8Hgjo1TRZwR8A3tgvL4zeg7ca+VrIdYBBdaxW+CMAzL1WhAurAp4Sf2UpJ
+	IX+zWZuXfy8IbEmL8bK1upraForU=
+X-Gm-Gg: ASbGncu/J4YfaFqGcU09R4uzXkjnxS/muT/GiCXuXgIXy4jNTB1IcxeyFYTX6chnFJI
+	tpr86e6YJIFMslMNNHHUAvC4R0D51CxxynAskcZui85CofcMc+QKZD0kKJW2DQ+UNuab0f0x1lW
+	P6mtXJlMoML56oR0XmjQreEuYupgpw
+X-Google-Smtp-Source: AGHT+IGqQ7BA3BP9uDJNFumsU/C5HC5TYYjNqv07Qv7yIfvdQjrlb0Bptc50NN3sPNmuB6wV4AV9bOGuPqa17sEKlZw=
+X-Received: by 2002:a17:902:f60c:b0:215:2f19:1dd with SMTP id
+ d9443c01a7336-21f4e772a58mr21198625ad.11.1738943111946; Fri, 07 Feb 2025
+ 07:45:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1459947-18ec-4835-8891-5251d8f8c95e@baylibre.com>
+References: <20241030164924.3276981-1-boerge.struempfel@gmail.com>
+ <CAMRc=McDR+hK8t+dtAc6i57_JgozkwCUmYwpTtx=heF8v13fAA@mail.gmail.com>
+ <CAEktqctbreLjq2fh27vW8YSob_ooQTDFCFda6HHmxbS8AQ0exA@mail.gmail.com>
+ <CAEktqct2w3FBdce5993s9PNf+OtuCT_T69q5tSn6y_hRwuiNVA@mail.gmail.com> <CAMRc=McDT-apAk2=Me0Ahz4t_EWvhzGF8uemtuEbBtFT2Nu0Ww@mail.gmail.com>
+In-Reply-To: <CAMRc=McDT-apAk2=Me0Ahz4t_EWvhzGF8uemtuEbBtFT2Nu0Ww@mail.gmail.com>
+From: =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>
+Date: Fri, 7 Feb 2025 16:45:00 +0100
+X-Gm-Features: AWEUYZk7A1KP8lmgN1mrIA8Q82Llpcpt-2iE8INjcP1drhCNCvCYQPB4c8NmWKM
+Message-ID: <CAEktqcu3+to5VBA5SSM51gsZqCROyRtRXCW09_6L16vXaWhAnw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/1] dbus: manager: fix linker not finding libgpiod.so
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Boerge Struempfel <bstruempfel@ultratronik.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 09:23:56AM -0600, David Lechner wrote:
-> On 2/7/25 6:17 AM, Andy Shevchenko wrote:
-> > +Yury.
-> > 
-> > On Fri, Feb 7, 2025 at 2:15 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >> On Fri, Feb 7, 2025 at 12:48 AM David Lechner <dlechner@baylibre.com> wrote:
-> > 
-> > ...
-> > 
-> >>>  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
-> >>>  {
-> >>> -       struct gpio_descs *gpios = ts_nbus->data;
-> >>>         DECLARE_BITMAP(values, 8);
-> >>>
-> >>>         values[0] = byte;
-> >>>
-> >>> -       gpiod_set_array_value_cansleep(8, gpios->desc, gpios->info, values);
-> >>> +       gpiod_multi_set_value_cansleep(ts_nbus->data, values);
-> >>
-> >> As I said before, this is buggy code on BE64. Needs to be fixed.
-> > 
-> > Or isn't? Do we have a test case in bitmap for such a case?
-> > 
-> >>>  }
-> > 
-> > 
-> 
-> Maybe not the best style, but I don't think it is buggy. Bitmaps are always
-> handled in long-sized chunks and not cast to bytes so endianness doesn't affect
-> it. I didn't see an explicit test, but bitmap_read() and bitmap_write() use
-> array access like this so indirectly it is being tested.
+Hi Bart,
 
-Not a bug, but direct addressing to bitmap elements is discouraged.
-I'd suggest using bitmap_write(values, byte, 0, 8) instead.
+On Thu, Feb 6, 2025 at 9:48=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Thu, Feb 6, 2025 at 12:46=E2=80=AFAM B=C3=B6rge Str=C3=BCmpfel
+> <boerge.struempfel@gmail.com> wrote:
+> >
+> > Hi Bart,
+> >
+> > While preparing a patch to add gpio-manager to mainline Buildroot, I
+> > encountered this issue again. That is, I can successfully compile the
+> > gpio-manager manually (using autotools/gcc/ld provided by ubuntu 2024) =
+however,
+> > when using the Buildroot infrastructure, I get a compiler error, statin=
+g that
+> > the libgpiod.so.3 cannot be found.
+> >
+> > After further investigation, I'm increasingly unsure on how the
+> > libgpiod.so.3 is supposed to be found by the linker in the first place:
+> >
+> > From what I see, gpio-manager depends on:
+> > - bindings/glib/libgpiod-glib
+> > - dbus/lib/libgpiodbus
+>
+> Correct.
+>
+> > - lib/libgpiod
+>
+> This one is an indirect dependency, it's already pulled in by libgpiod-gl=
+ib.so.
+>
 
-Thanks,
-Yury
+Yes. You are right - there are no direct calls into the libgpiod
+library only via
+libgpiod-glib.so. I also verified that the libgpiod is properly build and l=
+inked
+against the libgpiod.so.
+
+> >
+> > However, I see no direct reference in dbus/manager/Makefile.am, nor can=
+ I see
+> > an indirect reference via the Makefile.am files used to generate:
+> > - bindings/glib/libgpiod-glib.la
+> > - dbus/lib/libgpiodbus.la
+> >
+> > Am I missing something obvious?
+> >
+>
+> These are generated in different directories, the Makefiles in there
+> take care of this.
+>
+> > Furthermore upon review, I believe the solution I proposed last October=
+ was
+> > flawed - I should have used:
+> > LDADD +=3D $(top_builddir)/lib/libgpiod.la
+>
+> On Ubuntu, I see that gpio-manager is only linked against
+> libgpiod-glib.so and libgpiodbus.so. However if I cross-compile on
+> yocto, it's linked against libgpiod.so as well. I don't know exactly
+> what the differences in linker setup are but yocto is able to find
+> libgpiod without problems. Before we add an unnecessary flag, may I
+> suggest looking into how yocto does the linking?
+
+Here is what I have figured out so far:
+ - whether libgpiod.so is linked to the final execuatble seems to be
+at least partially
+   dependent    on the version of autotools and/or libtools. (Tested
+by backporting
+   yocto's autotools and libtools)
+ - there is a fix in the yocto recipe for finding the libgpiod.so bit
+it conserns only
+   gobject introspection, which is not the problem I am facing with buildro=
+ot
+ - The behaviour of the problem I am facing in buildroot does not depend on
+   gobject introspection as far as I can tell, since the error happens
+independent
+   of it. (which is good in my understanding, since it is what I would expe=
+ct)
+  - there is a flag in the libtool "link_all_deplibs" which yocto sets
+to "unknown" and
+    which in buildroot is set to "no" after the configure step (I
+couldn't figure out the
+    reason for this yet) If I manually tweek this value in buildroot
+between the configure
+    and build steps, the gpio-manager is build successfully (with or
+without an explicit
+    link to libgpiod.so depending on the version of libtools used).
+However setting
+    this flag to "no" in yocto, still leads to a successful build.
+Therefore I don't think,
+    this is the root-cause of this problem.
+
+By now I fully agree with you, that gpio-manager should not get libgpiod.so=
+ as
+a dependency even if I don't know yet where this error is coming from.
+
+Kind Regards, and thanks for your support,
+Boerge
 
