@@ -1,111 +1,142 @@
-Return-Path: <linux-gpio+bounces-15521-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15522-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C42F9A2BE76
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 09:54:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE109A2BE8B
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 09:57:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E6E67A35A9
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 08:53:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FCFB16A15A
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 08:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 510001B4224;
-	Fri,  7 Feb 2025 08:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JxyHj+mR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD641B4F0C;
+	Fri,  7 Feb 2025 08:57:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C5A1B0404
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Feb 2025 08:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA9F1A4E70;
+	Fri,  7 Feb 2025 08:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918451; cv=none; b=rB7Jqzv+1KRC/gwMQdBFhsCGAO2oKKlx6FsVRKvnpv0w+ktIAbuR3beHaw9AQ+FmTtsQXUnWTroWW1edziXhGp1kd8iVAwgKRI5Wag8vCpJQaLi+3E04vndGXy2ZQDQY5arSgH18/oPJpZ4FFzvk/vK8Q31y6NwQnlvC3NUyEnQ=
+	t=1738918621; cv=none; b=A72Ksd2qQuLwzG4nJKSn++5By+d2eLWStqZ8pffNOwIedCEdngWlA59acwVKhgHApMM9o/KZUiNGAn1SMR3+igAYfSAFJmb/j5KXgbKN3AJhYhnSWN0DmprNjPdx/hbc9t6m0+0+W2I0cCRS6w2kseOOU4xCTvJOKdo/V2+QGd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918451; c=relaxed/simple;
-	bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
+	s=arc-20240116; t=1738918621; c=relaxed/simple;
+	bh=qdT/29cyc7JB1ssT2HNf6SixytB1jtRpLJC5tR/8pH0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VqPPw8PPGJT/3+veoOi+NuGudLuZQNoyHZlSxJS861vyShNuACWedsWiIPaKuaoR3yqzs1Mj3R07naQTwAqTGZQS4VfydLCR3j6dhgzAt+tMxkDBiYVwBtCBm2UM2NqYeHutIgiUYSvMuAC7TW0D1QySwzNBgpUe3U7E+zGQZWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JxyHj+mR; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307e4e72ef3so7395651fa.0
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Feb 2025 00:54:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738918447; x=1739523247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
-        b=JxyHj+mRgzITlPG8rh+s9KeYHq9Kqq43I7VRIYkhrAm27BkxHjM1HgR6SWP11tP/nx
-         cjbu3Hz05x+FYTFMx5w6YUJ+W+rO1IP8FFil86UYwBQ+B00gAh1nYkNVItEzwtBG2FcA
-         NYyb+g9srRfxRkjkmhPjLFDTnAe1fpcI602FT5EdUafcv6IKLd2PxUgodqgP6i9ziP7w
-         jSUcilml/Zm4wTl368lti0134QsT6uOL53laFt3Mhim9UT3gxx1aN7ymc58mht7zqSCW
-         vQqQX9HOLdIsuAblTAERx405xttawK6cXLPUaku+w/karePkV3uc+69iMFK6YuK+hPFu
-         TOqg==
+	 To:Cc:Content-Type; b=Q87Drw+7ai7qedwQHJO3rgAOC06BG0C0Nd92YrpvoVzOakModm30jJ8Qi+8nOFhW8G0K7U2e8NeuDuhJ8WmUz+RSbF+3heZZgn3b7BRcbtU9/A0UzO3X68PlL737ocyOrgooxnpKx3UQ30TGpYlqPGeLGpppGMi7oLlSAgGiuws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-867044e979dso295605241.3;
+        Fri, 07 Feb 2025 00:56:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918447; x=1739523247;
+        d=1e100.net; s=20230601; t=1738918617; x=1739523417;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
-        b=hV9qjTEJ2nPcLYsQZXFPID9op6hPAuZuP+Id2zjPAUgGjPOWMGgjRmg5QYQNuQ057J
-         EiTDfk29A6HJmGnP94oopgapoo37bUB4P3KGUCXHe3sQnuy4wDitL+oDfPmc1Uu1pfqO
-         C32JblX5+zlV1P5q0ASN8vE5IsLRoL+qsFrZZz/V/gOg9jW5pwf7tKuss/IysuVXeHqy
-         202JcZGA6s+J/k/xW6JzNEkt1EVVxlHyu0Iry8o015cNjJu9g/rOBAVFeMOB+imvu2Vx
-         67dRba1y5C34Kelp1g6oNALVDsAjbbHipYGSN6uqYl5wWnDXmE5M+r41wZXUYg67IXjH
-         V+ow==
-X-Forwarded-Encrypted: i=1; AJvYcCU50Q3M5iAUVDofHg2ZeFLh4VvGP6Xhm+VqH8SpBp5WWnLFmoINs3aPQTri79jhXNYLHQKqPy23nAOd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM7jfnIIWKktAcWqlx7Hz7yyPT6x+yyTQL+OnKhORVfNgkabN9
-	svuD8SQReDAebUpmw5OtoQZIEzxnZ0ckH2TQ7tvMVbldcVuDEZWMiyFBu9CPOdbivm3RkK+mfuM
-	OwaRNMuzjQfsl9b1XhwYs3zwc9/vRMfyt+3VyaQ==
-X-Gm-Gg: ASbGncvu4013M09I5qXt4FAf7V3ejMIl+uOTluukg+j1EJ+ZVIYFtLwNei740MSi26c
-	32MGM6kd6U+v+aOWUZgTXDqTMG5sBjZK5vh9jJMKJtcmEWYDersWZe0j5HcRTXUfvxbSrCg3lU7
-	61E1q9QMiXu+jBNnPS760aMSgYoW4=
-X-Google-Smtp-Source: AGHT+IFsHFJNNKLdEXxQ9RmJCfueArNgIRv8RA8F15dLwBa+jex6lO4HgAmkMuAZ7uzNIjHQrLjlpHUd8vXUHrS8TPM=
-X-Received: by 2002:a2e:a58d:0:b0:300:33b1:f0cb with SMTP id
- 38308e7fff4ca-307e57fd423mr7386291fa.13.1738918447302; Fri, 07 Feb 2025
- 00:54:07 -0800 (PST)
+        bh=87zAwDqn4YRpNZcopP/g+d7cMXIfHWmwxzZ93OsCwSc=;
+        b=pzvGiWOfnr720wPqV4U5NpETG7oxigksU5Yzh44QuHbM+1ukY2HlPSY9Hdwpv6mx9r
+         FlAazpXLplGG7SMy+ZGOgwWa2VXN2+lFZkohzR44Lric44/snmevVOmARlXRc+yOCmBL
+         VMK+WtJhvRU4Yu7r+ohnvgTFbDxKsVmftj1S7QIFYrKBKMy3nJm/AL7a/FmziWen3fmx
+         jWqgvLbxMVRQeOn0D4bKVGMGY3T9y7tUO91I+BeU98HWFhK7uYFkNOfIUhLJyINzjkVZ
+         O2x1gLy8EcBKy2+tnoUfplDDdoIH78CxEVoYs9h9gFkBXdr3ckI2JrB+AzJcTUJlHdi6
+         SzGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAnnumOLMWFEU6c6aOKHYhBhovO8kXAcwhdWpQxiPH5YEO9N7WwnW2eC+t0wED8VV3zh5kQ6dL8qTAyjgtGGrl@vger.kernel.org, AJvYcCVNKsc78zsbKyF4purpPKdrNfJcvxvAsKYpml3uuj6QYGjT1wI64ZgX6dNfsvJQY5ZbuMEnkRAv5CviPtQr@vger.kernel.org, AJvYcCWnfQVYojzPMVLBE4REDQE1yBOkW71J8oTPt5xdOvHuwWgtl2CQmIHabN5vvtBEw16UkRKck6Y98qOj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvFmLs6H/mOPlXTQ1+aVl6TIV0275g2cwN/62VlJXu2zg4lVlp
+	GMM8dgO+nXK0cqckyDByPStWLqrBSGgBp3M53+IysVfIdhy2bBC0gqVrDz0D
+X-Gm-Gg: ASbGncvhf7s+mkgR2VqD9HtdR6mtS6ehGDPbuKfsBKDAocQNJu71bAsn0Yj0xjfyOp1
+	iyd7jRKibWoOd1kvTirniP3x9DzF0YH90jOm3zJqmXU3tbDOEheDb/CJ6PL1CREElyqY8pWszq4
+	A0k187bbATEsUR3P63wyiyDKvltfmxG5V2bdO1LFU3FMdigKLczHRk1rWXR/Az4xnz7j77UeKKx
+	VsxnoV2rQ6+nH+jAxqR/CMF1P9r5B3jrizYkkZED2Tp2kQNQJG7h9Ej04mX8fdzILWCtV+oO/LC
+	pyMbsgHoitvLjdeBX35trlH8kUzFt1nZbfFrxLA6LV6MciwecXrhpQ==
+X-Google-Smtp-Source: AGHT+IHYF1s3U6smqly/1sjDLk79FxMLI6Ytr+The15rXusrXwotkHkd4AFJB4m+1SxSnFuRdqJFHA==
+X-Received: by 2002:a05:6102:94e:b0:4af:98c6:bc97 with SMTP id ada2fe7eead31-4ba85f03c21mr1306012137.19.1738918617516;
+        Fri, 07 Feb 2025 00:56:57 -0800 (PST)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f97d9237sm514886241.26.2025.02.07.00.56.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4ba791bcc06so568213137.0;
+        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU4w9jiFYDIbA9G13B9FmSl1fEkUt17hZEFCEAri/Bo4qZCCSbBvZDejeZwKllk93dvYZ+ogm/U0e0a@vger.kernel.org, AJvYcCVQVXN8dzvgOKuvVzTaydGt77IZppw+1vAg3cqxWy7xHMB3EjTTrj8Ifv6sMA8wnsPy20dYiIYuidldy6Dh@vger.kernel.org, AJvYcCXOsRg3xDM67NrS73zRjBWu5YHbJfVCvAl3zcfailkRqmR6ihmrDbEHV4TsEOVsUlnjQ6g5A31ASnSL9AiV5VZ/@vger.kernel.org
+X-Received: by 2002:a05:6102:5088:b0:4b2:cc94:1877 with SMTP id
+ ada2fe7eead31-4ba85e4d571mr1335521137.13.1738918616642; Fri, 07 Feb 2025
+ 00:56:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
-In-Reply-To: <20250113225530.124213-1-s-ramamoorthy@ti.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 09:53:56 +0100
-X-Gm-Features: AWEUYZmOl7wUQPy_ROOuSzKSygvKItMb-rBgZEqVwt35XGP1BYQLd0FbfBe00Ew
-Message-ID: <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
-	christophe.jaillet@wanadoo.fr
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
+ <20250203121843.3183991-2-andriy.shevchenko@linux.intel.com> <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 7 Feb 2025 09:56:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
+X-Gm-Features: AWEUYZljf0IGGMytcBRCTOMEDxbwhlJ-40zK3OAP4RuiK1d2KIt4lu9Kk5amk40
+Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 13, 2025 at 11:55=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
-i.com> wrote:
->
-> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
-> significant register map overlap with TPS65219. The series introduces
-> TPS65215 and restructures the existing driver to support multiple devices=
-.
->
-> This follow-up series is dependent on:
-> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindin=
-gs")
-> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
-> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
->
+Hi Bartosz,
 
-Did these go into v6.14?
+On Fri, 7 Feb 2025 at 09:02, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > Remove unneeded dependency to OF_GPIO which driver does not use.
+> >
+> > Fixes: 3c7469514dbe ("gpio: 74x164: Make use of device properties")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/gpio/Kconfig | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > index add5ad29a673..56c1f30ac195 100644
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -1790,7 +1790,6 @@ menu "SPI GPIO expanders"
+> >
+> >  config GPIO_74X164
+> >         tristate "74x164 serial-in/parallel-out 8-bits shift register"
+> > -       depends on OF_GPIO
+> >         help
+> >           Driver for 74x164 compatible serial-in/parallel-out 8-outputs
+> >           shift registers. This driver can be used to provide access
 
-Bart
+>
+> Geert: Just Cc'ing you here because you yelled at me last time I
+> removed all dependencies. This driver is under the SPI section so it
+> does have the CONFIG_SPI_MASTER dependency. I think it's fine to drop
+> OF_GPIO here but I just wanted to run it by you.
+
+That's fine, as there is still the SPI_MASTER dependency, and the
+driver uses device properties.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
