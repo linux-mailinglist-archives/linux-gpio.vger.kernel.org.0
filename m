@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-15541-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15544-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E6D5A2C69A
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:12:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E76FA2C6A0
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 16:12:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10E4C165032
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:11:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 875143AC1EF
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 15:12:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D8DD1EB18E;
-	Fri,  7 Feb 2025 15:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA2923ED56;
+	Fri,  7 Feb 2025 15:11:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S43s8UJe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EosEbuOH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B806A238D29;
-	Fri,  7 Feb 2025 15:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7702E1EB1A4;
+	Fri,  7 Feb 2025 15:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941115; cv=none; b=D7oG5sp/p0JeRH9zAVcZAj6lnzV0S8oiiLJC+6kl0wBh1y4dMt5ut6WRmL/XKBPUWsuq4EPe0j0MDj968kxzzKVSXNrhHBeoRjSPppnvoHMFc+BKgbLA82usqOXW1gVatUy4MUkPYvtyQFisH8PzofhnbrP507GvvUlt4V80tx4=
+	t=1738941118; cv=none; b=AsOCtexF6L3ys1l5NgGzsJ3CQXD3DJzFiJFxUtS3Jg5TyBnE4H1xOVysR7vU/Xpsw+OeBDRu+6mU3IasBYoGVrVKa//wTHSftXsifiOTeMeSTbCnfbhuJFqpm/eY62XxftM1xa0rtG0l9lpARDDgXsspKBVIBqL8txX3uCef8A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941115; c=relaxed/simple;
-	bh=tlKUSEgfkOWxUCWS9Kma7VNMHWLG4r8SidwahNgYw8s=;
+	s=arc-20240116; t=1738941118; c=relaxed/simple;
+	bh=MJujtC3ZW+VSXyU6bigjgtlw84B4aNtIkZUpkniiuy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r552MTBBY0Qz4rBU2igA8HetGxb/vBSwkSS0vaTmOQyIZwBRxM2rBpDFM0Iyfh9hMruWaP6ElLECn/Bhf8ENNqcEA7fM655v03/8ciLtzwQ/im7hneDzua2zBNb2bcOmvLZyH5kg93Ut7HrIIlAfIwCJoMyfJ2TnaOggNXU6Sb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S43s8UJe; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=h6s4BK1ymM8qpAlyq5NvZBtj0DJKOolpJw1GZo5PKEjmiwW4mH65dufFRS2/NSpb87HqR82OlsQs0RIrV11B3EBsQVjxrqKrhci2MMEfa9V1wAk/3XMIW8Ae6e0k8fwH7iAz5BEGZkz2xArJEjhj36xrkbANwEAXO9xQ2WmHpfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EosEbuOH; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738941113; x=1770477113;
+  t=1738941116; x=1770477116;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tlKUSEgfkOWxUCWS9Kma7VNMHWLG4r8SidwahNgYw8s=;
-  b=S43s8UJeZJDL1k6gLgVgaiFo0L99Si2fkQaSMrTtZdZcChbhwNggkDbV
-   5A/xOUoBoCc65n7us7WzKOmHQ3nLWaHlyNfzHKi241MPx9jemAfMfcfqE
-   GoWLyD7Yax1z8KnpV2NEVEjNKQrAc8hmOkhEKlvvsbtvkrYZnxiviPJGX
-   +MDIEsueW4dqEg1N7CHY/mUOsU7gtIrsIsTCGH+GJ7vVmse+g+K/fwMkt
-   iXNA9G60O5mrBNS3iGNjElwZNGXPFyGP9yE28sZ6+jWqhONc3ECBwX1qu
-   XuSqU32azlBJfxjExm1AeIoarcQyx03tvQz1ltJ2K8AbEA1+4TnR8ExYX
-   Q==;
-X-CSE-ConnectionGUID: tq4Hs5gvS+irNuS+V8ar4A==
-X-CSE-MsgGUID: BRhMJC5vSP6UT65hFRXxxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39491581"
+  bh=MJujtC3ZW+VSXyU6bigjgtlw84B4aNtIkZUpkniiuy4=;
+  b=EosEbuOHb/GqzRpKTlCe34aHcfoT3zQfl6/1wXvqiaRMO//E+sVHXlq7
+   Dy8cbxKs1514Ro3CiqIbRt1BObncG/2HteJgo8H8XuD9dC6UL1IJwJBJE
+   tFdbCrk/SYTWpM6Mhevbas0uIq7NFUZj8jOtAK93kRPf9QrXGMS2wajId
+   1yjjvQHwkreFgCe8WwsfOYjl1GoQpBiEcJQ3772mOM1uC6udjpC5sg7NW
+   p5YpKLB5kLnS+pO1QO1nTfauiIZ7HZ+vL9emHku22DuUWzNz6TiS/vwNQ
+   t+6aSO4i45Q8GMCYuqfGCPQhQkEo6Dvf3tfK+kwomClVqHWXzGlVi5oJL
+   w==;
+X-CSE-ConnectionGUID: DCq4+78gQ5yufGligIL+sA==
+X-CSE-MsgGUID: U4/1qoPcTiqLT0bbrZBGKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="57120807"
 X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="39491581"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:11:53 -0800
-X-CSE-ConnectionGUID: rzRxEP5vRMWjZHWnSkf11A==
-X-CSE-MsgGUID: VIMm2EoXRyiybpNILX7A/A==
+   d="scan'208";a="57120807"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:11:53 -0800
+X-CSE-ConnectionGUID: RLZdE5Y9Rfepa10I7zZ9yA==
+X-CSE-MsgGUID: ubym+9i3SFCE7/IQLaZHbg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="111395741"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="111511667"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 07 Feb 2025 07:11:51 -0800
+  by orviesa006.jf.intel.com with ESMTP; 07 Feb 2025 07:11:52 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 306A1116; Fri, 07 Feb 2025 17:11:50 +0200 (EET)
+	id 38DB938D; Fri, 07 Feb 2025 17:11:50 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -67,9 +67,9 @@ To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 1/3] gpiolib: Deduplicate some code in for_each_requested_gpio_in_range()
-Date: Fri,  7 Feb 2025 17:07:34 +0200
-Message-ID: <20250207151149.2119765-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/3] gpiolib: Simplify implementation of for_each_hwgpio_in_range()
+Date: Fri,  7 Feb 2025 17:07:35 +0200
+Message-ID: <20250207151149.2119765-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20250207151149.2119765-1-andriy.shevchenko@linux.intel.com>
 References: <20250207151149.2119765-1-andriy.shevchenko@linux.intel.com>
@@ -81,76 +81,38 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor for_each_requested_gpio_in_range() to deduplicate some code
-which is basically repeats the for_each_hwgpio(). In order to achieve
-this, split the latter to two, for_each_hwgpio_in_range() and
-for_each_hwgpio().
+The whole purpose of the custom CLASS() is to have possibility
+to initialise the counter variable _i to 0. This can't be done
+with simple __free() macro as it will be not allowed by C language.
+OTOH, the CLASS() operates with the pointers and explicit usage of
+the scoped variable _data is not needed, since the pointers are kept
+the same over the iterations. Simplify the implementation of
+for_each_hwgpio_in_range().
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/gpio/driver.h | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ include/linux/gpio/driver.h | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index a307d8ed9c51..024112ef5a78 100644
+index 024112ef5a78..ae93f75170f2 100644
 --- a/include/linux/gpio/driver.h
 +++ b/include/linux/gpio/driver.h
-@@ -548,6 +548,23 @@ DEFINE_CLASS(_gpiochip_for_each_data,
- 	     }),
- 	     const char **label, int *i)
- 
-+/**
-+ * for_each_hwgpio_in_range - Iterates over all GPIOs in a given range
-+ * @_chip: Chip to iterate over.
-+ * @_i: Loop counter.
-+ * @_base: First GPIO in the ranger.
-+ * @_size: Amount of GPIOs to check starting from @base.
-+ * @_label: Place to store the address of the label if the GPIO is requested.
-+ *          Set to NULL for unused GPIOs.
-+ */
-+#define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)			\
-+	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);			\
-+	     *_data.i < _size;								\
-+	     (*_data.i)++, kfree(*(_data.label)), *_data.label = NULL)			\
-+		if (IS_ERR(*_data.label =						\
-+			gpiochip_dup_line_label(_chip, _base + *_data.i))) {}		\
-+		else
-+
- /**
-  * for_each_hwgpio - Iterates over all GPIOs for given chip.
-  * @_chip: Chip to iterate over.
-@@ -555,13 +572,8 @@ DEFINE_CLASS(_gpiochip_for_each_data,
-  * @_label: Place to store the address of the label if the GPIO is requested.
-  *          Set to NULL for unused GPIOs.
+@@ -559,11 +559,9 @@ DEFINE_CLASS(_gpiochip_for_each_data,
   */
--#define for_each_hwgpio(_chip, _i, _label) \
--	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
--	     *_data.i < _chip->ngpio; \
--	     (*_data.i)++, kfree(*(_data.label)), *_data.label = NULL) \
--		if (IS_ERR(*_data.label = \
--			gpiochip_dup_line_label(_chip, *_data.i))) {} \
--		else
-+#define for_each_hwgpio(_chip, _i, _label)						\
-+	for_each_hwgpio_in_range(_chip, _i, 0, _chip->ngpio, _label)
- 
- /**
-  * for_each_requested_gpio_in_range - iterates over requested GPIOs in a given range
-@@ -572,13 +584,8 @@ DEFINE_CLASS(_gpiochip_for_each_data,
-  * @_label:	label of current GPIO
-  */
- #define for_each_requested_gpio_in_range(_chip, _i, _base, _size, _label)		\
--	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);			\
+ #define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)			\
+ 	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);			\
 -	     *_data.i < _size;								\
 -	     (*_data.i)++, kfree(*(_data.label)), *_data.label = NULL)			\
--		if ((*_data.label =							\
--			gpiochip_dup_line_label(_chip, _base + *_data.i)) == NULL) {}	\
--		else if (IS_ERR(*_data.label)) {}					\
+-		if (IS_ERR(*_data.label =						\
+-			gpiochip_dup_line_label(_chip, _base + *_data.i))) {}		\
 -		else
-+	for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)			\
-+		if (_label == NULL) {} else
++	     _i < _size;								\
++	     _i++, kfree(_label), _label = NULL)					\
++		if (IS_ERR(_label = gpiochip_dup_line_label(_chip, _base + _i))) {} else
  
- /* Iterates over all requested GPIO of the given @chip */
- #define for_each_requested_gpio(chip, i, label)						\
+ /**
+  * for_each_hwgpio - Iterates over all GPIOs for given chip.
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
