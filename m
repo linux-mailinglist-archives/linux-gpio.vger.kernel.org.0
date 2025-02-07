@@ -1,142 +1,117 @@
-Return-Path: <linux-gpio+bounces-15522-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15523-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE109A2BE8B
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 09:57:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78BF2A2BEDD
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 10:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FCFB16A15A
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 08:57:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69BEF1886620
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Feb 2025 09:11:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD641B4F0C;
-	Fri,  7 Feb 2025 08:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAC11D9324;
+	Fri,  7 Feb 2025 09:11:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA9F1A4E70;
-	Fri,  7 Feb 2025 08:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4321D618E;
+	Fri,  7 Feb 2025 09:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918621; cv=none; b=A72Ksd2qQuLwzG4nJKSn++5By+d2eLWStqZ8pffNOwIedCEdngWlA59acwVKhgHApMM9o/KZUiNGAn1SMR3+igAYfSAFJmb/j5KXgbKN3AJhYhnSWN0DmprNjPdx/hbc9t6m0+0+W2I0cCRS6w2kseOOU4xCTvJOKdo/V2+QGd8=
+	t=1738919479; cv=none; b=fmYrvDM5JrBpsQ5K2CrgL/IoJR8npja/LZtz3s52n6exjOmfiA3MVVnC1Y/urCIzGHEOazk++1U8rM/F9+2Me7/JY4PG2oECE8L+dq/rkAJnb0HSowWjC1Rxs9Og652nw66E1oGzAy0X5Gy8yUgGlfR9n6PFwnv/qC00f32/Nys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918621; c=relaxed/simple;
-	bh=qdT/29cyc7JB1ssT2HNf6SixytB1jtRpLJC5tR/8pH0=;
+	s=arc-20240116; t=1738919479; c=relaxed/simple;
+	bh=u61PcvQYvGjXqoKlF75HIDoW1zfSqi+e4jVbsPkHMQI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q87Drw+7ai7qedwQHJO3rgAOC06BG0C0Nd92YrpvoVzOakModm30jJ8Qi+8nOFhW8G0K7U2e8NeuDuhJ8WmUz+RSbF+3heZZgn3b7BRcbtU9/A0UzO3X68PlL737ocyOrgooxnpKx3UQ30TGpYlqPGeLGpppGMi7oLlSAgGiuws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+	 To:Cc:Content-Type; b=ompPuE8xTyWfcdusCcLxW93BEq5f+EN90MAOktkv2wTuy1GChnFM0799MPD52MiYPV4uAMy2KqVDFFZZ4kuAzEkM7wUT/nR5P4anoSnbr8fjA5/fc7NnvcAFPrE5Rbz6yyvOngusHJsiccDd1NkOuwBvtpRGikGwBSoVjZfZVmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-867044e979dso295605241.3;
-        Fri, 07 Feb 2025 00:56:59 -0800 (PST)
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3ce886a2d5bso16622965ab.1;
+        Fri, 07 Feb 2025 01:11:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918617; x=1739523417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=87zAwDqn4YRpNZcopP/g+d7cMXIfHWmwxzZ93OsCwSc=;
-        b=pzvGiWOfnr720wPqV4U5NpETG7oxigksU5Yzh44QuHbM+1ukY2HlPSY9Hdwpv6mx9r
-         FlAazpXLplGG7SMy+ZGOgwWa2VXN2+lFZkohzR44Lric44/snmevVOmARlXRc+yOCmBL
-         VMK+WtJhvRU4Yu7r+ohnvgTFbDxKsVmftj1S7QIFYrKBKMy3nJm/AL7a/FmziWen3fmx
-         jWqgvLbxMVRQeOn0D4bKVGMGY3T9y7tUO91I+BeU98HWFhK7uYFkNOfIUhLJyINzjkVZ
-         O2x1gLy8EcBKy2+tnoUfplDDdoIH78CxEVoYs9h9gFkBXdr3ckI2JrB+AzJcTUJlHdi6
-         SzGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAnnumOLMWFEU6c6aOKHYhBhovO8kXAcwhdWpQxiPH5YEO9N7WwnW2eC+t0wED8VV3zh5kQ6dL8qTAyjgtGGrl@vger.kernel.org, AJvYcCVNKsc78zsbKyF4purpPKdrNfJcvxvAsKYpml3uuj6QYGjT1wI64ZgX6dNfsvJQY5ZbuMEnkRAv5CviPtQr@vger.kernel.org, AJvYcCWnfQVYojzPMVLBE4REDQE1yBOkW71J8oTPt5xdOvHuwWgtl2CQmIHabN5vvtBEw16UkRKck6Y98qOj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvFmLs6H/mOPlXTQ1+aVl6TIV0275g2cwN/62VlJXu2zg4lVlp
-	GMM8dgO+nXK0cqckyDByPStWLqrBSGgBp3M53+IysVfIdhy2bBC0gqVrDz0D
-X-Gm-Gg: ASbGncvhf7s+mkgR2VqD9HtdR6mtS6ehGDPbuKfsBKDAocQNJu71bAsn0Yj0xjfyOp1
-	iyd7jRKibWoOd1kvTirniP3x9DzF0YH90jOm3zJqmXU3tbDOEheDb/CJ6PL1CREElyqY8pWszq4
-	A0k187bbATEsUR3P63wyiyDKvltfmxG5V2bdO1LFU3FMdigKLczHRk1rWXR/Az4xnz7j77UeKKx
-	VsxnoV2rQ6+nH+jAxqR/CMF1P9r5B3jrizYkkZED2Tp2kQNQJG7h9Ej04mX8fdzILWCtV+oO/LC
-	pyMbsgHoitvLjdeBX35trlH8kUzFt1nZbfFrxLA6LV6MciwecXrhpQ==
-X-Google-Smtp-Source: AGHT+IHYF1s3U6smqly/1sjDLk79FxMLI6Ytr+The15rXusrXwotkHkd4AFJB4m+1SxSnFuRdqJFHA==
-X-Received: by 2002:a05:6102:94e:b0:4af:98c6:bc97 with SMTP id ada2fe7eead31-4ba85f03c21mr1306012137.19.1738918617516;
-        Fri, 07 Feb 2025 00:56:57 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f97d9237sm514886241.26.2025.02.07.00.56.56
+        d=1e100.net; s=20230601; t=1738919475; x=1739524275;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vXaXKdHLoKk2Bg/TFRHcL35cN8BOIB//KM9g1NizCeg=;
+        b=hfvAeUTwlk/2A+rCIyzt1PoPKA5lN1MK1BL6wosEZHeUPwVS05BSAkK4w8pJ+irJxb
+         G7ZXRCL/QEGkzAWpCUVpnq/+cbogtzpw/amTy3tKtYfTh/ym7NdRrIz+wRlw5TCiAz7b
+         Vmb+p8TYm3nOrcXzmZ/x5Djap38XK1fyTicBmLGyttpgvioIP9uLCJgCzQe3FcC3WA9c
+         M2DnlgvAD/6ei3jmXq5QMUKsbNW3fKuRwH8PznQ2MJZWuIGUqKJh+7B6pHXbciIfDNfk
+         uW/MXievSsOtauncDr+Gl3C+KaN4b+sBRQ66P4ZLzxj8OeAEOg01VtR1Md6tH96OUEJm
+         OZ/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJQNGfJIfPkRlkGCKhHRu4X+yUcg7ipVvN7dBehpFKNgap9LSho29I1o2eGYHpAA8hPJxzzJeExxxYy9tw@vger.kernel.org, AJvYcCUKWC4lfNmoHF5Sureb2vB1IdHcYVNh2/I4nLL++PxFzZks6gbCX0Vq4xphfxyl1/+iGxxq8fOt6e9VL8I=@vger.kernel.org, AJvYcCUUKxRZA+v7emcz8l6KlmPIwFCswgGK5ZeKmdgCmTUUMs1HgXbC/X2rEafM5o73/Qv2rCVZ9KZh9mEV@vger.kernel.org, AJvYcCV03gkTNiJT3xhzN59FL3LybE3CuFRyz7AGoqmRVU9bIWqqw0pHgCNndoZjgnpvjbPTMN1OlLvKGr4q@vger.kernel.org, AJvYcCVRbQuVSOcJJHyzS/x3dtyzn+Bz7o/w12tFKW5BqgdT/itt0qqtL1KiauQV1mWpvNpk6K28XuwBp79s@vger.kernel.org, AJvYcCXUjPyz5ZQPoipatz7YMtSTaJguaG894CHoQ6HLbrG9R/kCaaz6rIubjTQ2ZGoJhlmTEbWgVdVK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF6rUy4sq6Fe8DaQT9Q+9MRGIaU1TABNtR12RyQK6peqCjJD2g
+	Yt2zfK4FqwXqMWkf7jGB8qNQp4lHhG4nKUtOBHLAEDKkzj962Sv/yVwB6qi3
+X-Gm-Gg: ASbGncsZfedorOGy8b2zSaFT2BsI+1Yty4g7FFSnHrilQZSUKWecuNX5Am5AX3ppQWK
+	rjZrXcUQKL8VIAktOToUE3WACLUsgdU/DtzT/ftFk5jzF5PPNqipQYtup2/aTcVD1Opgf46N03q
+	E+Q5h9itk2IfpEUGbPWmy1edo1ZiMtTq3z39iB2ygVMN7nUovlITR7q4hVOBks18bBvImED2H2k
+	n663ZictBqwOVZHJXew0HatwoUj7mF17M137ZLBQJ+ZKUdoKsnCsaq/VHroBRT+ebBmMyOYcpAD
+	hdcDC4Jax0ht0m+XkwyEhFvrl1agP10QtEbkWNX7KaIJ9Biu4OIKf7cYGQ==
+X-Google-Smtp-Source: AGHT+IFkY09aibSPf1/gpIlUnx6Qdvk0iARD9BLTGhOSqcq0FflVzJ8fTSgviMpRL59x4GveJtKc8w==
+X-Received: by 2002:a05:6e02:1c0e:b0:3d0:28d3:e4ba with SMTP id e9e14a558f8ab-3d13dfa700amr19512425ab.18.1738919474810;
+        Fri, 07 Feb 2025 01:11:14 -0800 (PST)
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com. [209.85.166.171])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eccfa0322asm642257173.60.2025.02.07.01.11.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4ba791bcc06so568213137.0;
-        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4w9jiFYDIbA9G13B9FmSl1fEkUt17hZEFCEAri/Bo4qZCCSbBvZDejeZwKllk93dvYZ+ogm/U0e0a@vger.kernel.org, AJvYcCVQVXN8dzvgOKuvVzTaydGt77IZppw+1vAg3cqxWy7xHMB3EjTTrj8Ifv6sMA8wnsPy20dYiIYuidldy6Dh@vger.kernel.org, AJvYcCXOsRg3xDM67NrS73zRjBWu5YHbJfVCvAl3zcfailkRqmR6ihmrDbEHV4TsEOVsUlnjQ6g5A31ASnSL9AiV5VZ/@vger.kernel.org
-X-Received: by 2002:a05:6102:5088:b0:4b2:cc94:1877 with SMTP id
- ada2fe7eead31-4ba85e4d571mr1335521137.13.1738918616642; Fri, 07 Feb 2025
- 00:56:56 -0800 (PST)
+        Fri, 07 Feb 2025 01:11:14 -0800 (PST)
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3cfcf8b7455so13598995ab.3;
+        Fri, 07 Feb 2025 01:11:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8Hw4ojbNL12uqG+c2M6mead8QB/BDeyBs7da6BK6122NKkEA9IhXSF1Z8FuovhBhv7JVQX5+DsecI@vger.kernel.org, AJvYcCVUyPcHvFN8dxr2MbFdaZW5ByG4QyuARlp4J//bmYWVEpvQwULsH7bipcffsHBacLQWi13UjPPLXvGcCUo=@vger.kernel.org, AJvYcCWRxx/cLuJ+2CoocQnwsYx/8NU1B5OOmtHvNSO9iEDnVA50GzVcnwQ8MPad7nThCsgBkNvKwdh3Gvy0@vger.kernel.org, AJvYcCXWFkEcfqqjpBajkcQqb+4ETmeMlWlQz9A1xSwMLksEpGT4hW3z+AjCq+Ud5K5SH84LTZ+l4YR6@vger.kernel.org, AJvYcCXii3TQp4lD/bD7Vl4E9PGlnUafvSf/g5H8Dc2dIGwOno/6Pzdzxfg7k59gAHUrvaNg0JNCdrJjAwHeSUJA@vger.kernel.org, AJvYcCXniRzRN6bTGwDjv8vVqDbQD38CTJKb8iaCYKpI7kzmo4i+Hia71HKCdlHwftA/bUIwa+YlblmuTHSp@vger.kernel.org
+X-Received: by 2002:a05:6102:5088:b0:4b2:4877:30bd with SMTP id
+ ada2fe7eead31-4ba85e54e05mr1293360137.12.1738919086507; Fri, 07 Feb 2025
+ 01:04:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
- <20250203121843.3183991-2-andriy.shevchenko@linux.intel.com> <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com> <20250206-gpio-set-array-helper-v2-2-1c5f048f79c3@baylibre.com>
+In-Reply-To: <20250206-gpio-set-array-helper-v2-2-1c5f048f79c3@baylibre.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 7 Feb 2025 09:56:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
-X-Gm-Features: AWEUYZljf0IGGMytcBRCTOMEDxbwhlJ-40zK3OAP4RuiK1d2KIt4lu9Kk5amk40
-Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Fri, 7 Feb 2025 10:04:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU-aUcBJgPoJRGqzBY-Bz2m4vqcbNdNtKJNVO7-uoYjLw@mail.gmail.com>
+X-Gm-Features: AWEUYZm7zUNXfbynKkUkF501_SJvA4QZJWomDWGGkRSnLChv7AsYMrm87FyiXfA
+Message-ID: <CAMuHMdU-aUcBJgPoJRGqzBY-Bz2m4vqcbNdNtKJNVO7-uoYjLw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/13] auxdisplay: seg-led-gpio: use gpiod_multi_set_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
-
-On Fri, 7 Feb 2025 at 09:02, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > Remove unneeded dependency to OF_GPIO which driver does not use.
-> >
-> > Fixes: 3c7469514dbe ("gpio: 74x164: Make use of device properties")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/gpio/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index add5ad29a673..56c1f30ac195 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1790,7 +1790,6 @@ menu "SPI GPIO expanders"
-> >
-> >  config GPIO_74X164
-> >         tristate "74x164 serial-in/parallel-out 8-bits shift register"
-> > -       depends on OF_GPIO
-> >         help
-> >           Driver for 74x164 compatible serial-in/parallel-out 8-outputs
-> >           shift registers. This driver can be used to provide access
-
+On Thu, 6 Feb 2025 at 23:48, David Lechner <dlechner@baylibre.com> wrote:
+> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+> gpiod_set_array_value_cansleep().
 >
-> Geert: Just Cc'ing you here because you yelled at me last time I
-> removed all dependencies. This driver is under the SPI section so it
-> does have the CONFIG_SPI_MASTER dependency. I think it's fine to drop
-> OF_GPIO here but I just wanted to run it by you.
+> Acked-by: Andy Shevchenko <andy@kernel.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-That's fine, as there is still the SPI_MASTER dependency, and the
-driver uses device properties.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
 
