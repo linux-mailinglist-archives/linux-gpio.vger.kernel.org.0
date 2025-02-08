@@ -1,138 +1,204 @@
-Return-Path: <linux-gpio+bounces-15599-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15600-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA3D7A2D4C9
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2025 09:11:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A023A2D627
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2025 14:02:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D299C188DA6D
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2025 08:11:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E3DC3AA801
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2025 13:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0491A8F82;
-	Sat,  8 Feb 2025 08:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A102246325;
+	Sat,  8 Feb 2025 13:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAvzMH65"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7aN/YpT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A481A7046
-	for <linux-gpio@vger.kernel.org>; Sat,  8 Feb 2025 08:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4251A3157;
+	Sat,  8 Feb 2025 13:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739002275; cv=none; b=QcZmxEEgScde6cYLaxZzVEJRV6KpmANRPxhwfkUcyFeVhERqG3cPiBYF0q3pW+xW0CoBf0WC/DcWM7iFoqN1i8qDSKCqB52ttyBDiKcTtht0qG9hw3r7WkcZvt91QLgdi9ppV/s7ICiCPRdztiH9qzCbybe2gpNYkIttfvVX2TA=
+	t=1739019716; cv=none; b=WXFMLQiLjMicejfbXjSoDWLlI4NSsVTV4jk3HVwAGIICHpIacUnDG1A796Jhp2oEW8d/sdcuX7AWsNAmRim4We5CGOZCvj5P5tmC81+F28HMMhL0A15hs/tSCTfDagl+nV87DNg6qg025/N++zNTIuyAFMcBZXijScwEWUl2g6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739002275; c=relaxed/simple;
-	bh=bxm0Gq1x5fkAqjzhK6hgWVUbEn5Ef6NT3MJ8Fh7seZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a7MWk71GyhJXTKbaIMGLtyPBLFcfy+0Ssope1V8GogSjn+vqIWzVdRNOLfGsZfTSTI0nVneI24KW/qjpTB9HuBrve8Id/fNaK20gFmtuLIRyLtspjhvoN/GXvqqggNiEQnwRloZqIQWCZNgG35W9LuReW3JwVhl14xlhdwG3SIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAvzMH65; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5450268e513so87405e87.3
-        for <linux-gpio@vger.kernel.org>; Sat, 08 Feb 2025 00:11:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739002272; x=1739607072; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WiIFqqJMdXJ23ljTdQnHZqAYZ1y/yPvmLVewrsPJ3/Q=;
-        b=eAvzMH65EypK2n0SsTSD8+O21o+DJm1SXiOFTk6yDneDT3sXNzcEWZNTO7anLdA+FU
-         D/p9KQqEOnAJLIPBwoyItbH5pRMlYzJQbwn2rgvcHinwcbTg9yOeOy3+sMQUBZ80bF+z
-         m2DWP2ZevQllnPWjI17fnrvlpqQNwkEyB1Dy2dK/t0KrcRA7AY1KSAMS7o7QfVEOvVt/
-         KIebWYxvY7ERbRAYEVEQToksI6+JW1fNrem2hLuZI16zUOTSyHdJMAUU8DAdoUARa71x
-         VUo6Ul2kVORZphSTRFPxJ+zTllCvWOXJK56a6YjGOdhv8Gs5p8hRarIdMSeiYVmmMebW
-         MM7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739002272; x=1739607072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WiIFqqJMdXJ23ljTdQnHZqAYZ1y/yPvmLVewrsPJ3/Q=;
-        b=JWUAqXl3kHbrMM9fbk6SkqATonck4VqHGhcnn3un8L1FKU99FEuiX/a5AoUOoaXPgp
-         qvb/q2i7CsHlm8S0hR+S4sWCsVF+v7ORyAVntfa2isGV2xJjFEr/dg5YS4u1RKioN+yv
-         lue3jTBG81ryb0d8eCT33b0uVw1AHuIKaZy6jI8KNB1dc1LDVT2dEj6cHPbNnjQMfsjz
-         C1d0p2VQgqMP8YWnI2224vDba8Vvwq26xHseLTMrOL+2Jz6ZTkjEH6CTWKZDKEFtJx7g
-         Q3op8TI51xLibwz/cggKEKvT156jX2TiaGWqFBGkZ1IUwPYC3mkn5QN2gd82faI7qRBF
-         4ceQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEO0Q5RQQXSk2JbfzPvidKfCj96FqqBU/Fo8OcXJWYwTgPxKyf92gc88b9KlFPrmhVfCKijRFxeCQU@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCUbmXhof2jZnSZbzWBhwtw6yUKvCF5t/iN+DcHnPCMmi8LD8
-	EEf1+YcbPSU7JjmHfcHg2YTnoEyZmItZKjQdpHizFZOXrqGdqveF5hTCMaIqcte7uV3OAXmGyMQ
-	Fa9snzije/BDO2c4kT6e1vzEFoGQ5398u
-X-Gm-Gg: ASbGncu7fbnhyOsA00HEXWhj21mzT4eFvYgZ6wmfT1g27qVwsNUvf1hMUxUPnkZvcHt
-	uz9sJmDy5iEWS6+nJjBRx97PruwH7Qn99cCD+JwV7ciuWg9dFEuAkm20d8PWkrx7y9tcLMeA=
-X-Google-Smtp-Source: AGHT+IE4hfU9dp0bqeXZ7WIU0MXocNLEpy5CFnS6vFLxZfiGCPVQJUWZz7OVPcMxYC9NahuiTEz0FM74j/j+kBak/g0=
-X-Received: by 2002:a05:6512:468:b0:545:23a:d9b5 with SMTP id
- 2adb3069b0e04-545023add7amr280210e87.9.1739002271595; Sat, 08 Feb 2025
- 00:11:11 -0800 (PST)
+	s=arc-20240116; t=1739019716; c=relaxed/simple;
+	bh=V5vec8PpiED22t7ygC/hZpyml2vl0CPM6zxX4o5lAo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LwW5YmwGpeQVWGN+HAK4LA0urqihZJ+GxRyAyKQT/OZxL7QjczYV3ccijBWvD7Onu3RpFbFlOxZmOCAkl1q7oUfpGjNcurvyopS2cKwekVJXd59NRsmjDy4cfnRp6plgZEyYJY4J3ESiiIAhvfDgKSuJ0Z7cqGpmMdVOUduCPiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7aN/YpT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA33C4CED6;
+	Sat,  8 Feb 2025 13:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739019715;
+	bh=V5vec8PpiED22t7ygC/hZpyml2vl0CPM6zxX4o5lAo4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c7aN/YpTGmUqOuiAL7IEqm6XILmeXLuLqIEv+29lD52lckTMVMLxkfaF8yyuSX/AR
+	 c4I4/J/5qLXirmvBFIjonruZCoJKIbIfIBjIQ78cWDxNu3T7oINSo5epVZKkt+pHsS
+	 t8whEmZbxJOPg/QpwBVnX1y+QvCgaKY/xVOWvCnXkdUjAa70f2VM9eKr9cidm4dzCW
+	 Nr6qIfu9VX6BQGNVHcdftRQmKAoIlhJrvdzgUHMpakbzg2Zdz0kmBfzTTc/533A2UK
+	 0KYQuuiuNNMdUQzWp5yS0jhKZZYYszUMokcQ8XAExSo25Nz4Ug0NcXFaUpuufxQFKJ
+	 s9EWens109G7Q==
+Date: Sat, 8 Feb 2025 13:01:43 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus
+ Walleij <linus.walleij@linaro.org>, Nuno Sa <nuno.sa@analog.com>, David
+ Lechner <dlechner@baylibre.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli
+ <matteomartelli3@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Subject: Re: [RFC PATCH 3/5] iio: adc: Support ROHM BD79124 ADC
+Message-ID: <20250208130143.121058d6@jic23-huawei>
+In-Reply-To: <8353a96d-fe39-45c2-b6da-e8083a6bdcd8@gmail.com>
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+	<e44851669ce7e91d1295ab7352535c93b89d35bf.1738328714.git.mazziesaccount@gmail.com>
+	<20250131174118.0000209a@huawei.com>
+	<8353a96d-fe39-45c2-b6da-e8083a6bdcd8@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250103083520.1764441-1-a909204013@gmail.com>
- <20250106043508.x3pwt3jzh37t265f@vireshk-i7> <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
-In-Reply-To: <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
-From: Leng Cold <a909204013@gmail.com>
-Date: Sat, 8 Feb 2025 16:10:35 +0800
-X-Gm-Features: AWEUYZl2v0ZB2StNgGA7NbBp4txnrsS-dgvem0L6IQvr-ttXub1s2F9gwMWSd0E
-Message-ID: <CAHqiF6B4pQZYVmsfVM8bRaS1Zt3TX5Sw0_bmLZM6WBx7t7d+Pw@mail.gmail.com>
-Subject: Re: [PATCH] drivers:gpio: support multiple virtio-gpio controller instances
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: info@metux.net, vireshk@kernel.org, linux-gpio@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-ping
+On Wed, 5 Feb 2025 15:58:18 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Viresh Kumar <viresh.kumar@linaro.org> =E4=BA=8E2025=E5=B9=B41=E6=9C=887=E6=
-=97=A5=E5=91=A8=E4=BA=8C 14:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> On 06-01-25, 10:05, Viresh Kumar wrote:
+> On 31/01/2025 19:41, Jonathan Cameron wrote:
+> > On Fri, 31 Jan 2025 15:37:48 +0200
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >  =20
+> >> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
+> >> an automatic measurement mode, with an alarm interrupt for out-of-wind=
+ow
+> >> measurements. The window is configurable for each channel.
+> >> =20
+>=20
+> Hi Jonathan,
+>=20
+> I just sent the v2, where I (think I) addressed all comments except ones=
+=20
+> below. Just wanted to point out what was not changed and why :)
+>=20
+> ...
+>=20
+> >  =20
+> >> +struct bd79124_raw {
+> >> +	u8 bit0_3; /* Is set in high bits of the byte */
+> >> +	u8 bit4_11;
+> >> +};
+> >> +#define BD79124_RAW_TO_INT(r) ((r.bit4_11 << 4) | (r.bit0_3 >> 4)) =20
+> > You could do this as an endian conversion and a single shift I think.
+> > Might be slightly simpler. =20
+>=20
+> I kept this struct with bytes matching the register spec. Doing the=20
+> endian conversion and then shifting would probably have worked, but my=20
+> head hurts when I try thinking how the bits settle there. Especially if=20
+> this is done on a big-endian machine. I can rework this for v3 if you=20
+> feel very strongly about this.
 
+The key is that an endian conversion is always the same as OR + SHIFT
+because that is being done in the system endiannes.
 
-> On 03-01-25, 16:35, hlleng wrote:
-> > Modify the virtio-gpio driver to support multiple virtual GPIO controll=
-er
-> > instances. The previous static global irq_chip structure caused conflic=
-ts
-> > between multiple virtio-gpio device instances as they shared the same
-> > interrupt controller configuration.
->
-> What is the conflict you are getting since all it has is callbacks only, =
-I
-> wonder why do we need to duplicate it.
+Doesn't matter that much, but we may see follow up patches switching
+this over to the endian handlers.
 
-Ahh, so irq chip should be shared actually..
+=46rom datasheet point of view it tends to depend on whether they show
+an illustration of a bulk read or not to whether it's described
+as a multi byte value, or as bits in smaller registers.
 
-static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
-{
-        ...
+>=20
+> ...
+>=20
+> >  =20
+> >> +static irqreturn_t bd79124_event_handler(int irq, void *priv)
+> >> +{
+> >> +	int ret, i_hi, i_lo, i;
+> >> +	struct iio_dev *idev =3D priv;
+> >> +	struct bd79124_data *d =3D iio_priv(idev);
+> >> +
+> >> +	/*
+> >> +	 * Return IRQ_NONE if bailing-out without acking. This allows the IRQ
+> >> +	 * subsystem to disable the offending IRQ line if we get a hardware
+> >> +	 * problem. This behaviour has saved my poor bottom a few times in t=
+he
+> >> +	 * past as, instead of getting unusably unresponsive, the system has
+> >> +	 * spilled out the magic words "...nobody cared". =20
+> > *laughs*.  Maybe the comment isn't strictly necessary but it cheered
+> > up my Friday. =20
+> >> +	 */
+> >> +	ret =3D regmap_read(d->map, BD79124_REG_EVENT_FLAG_HI, &i_hi);
+> >> +	if (ret)
+> >> +		return IRQ_NONE;
+> >> +
+> >> +	ret =3D regmap_read(d->map, BD79124_REG_EVENT_FLAG_LO, &i_lo);
+> >> +	if (ret)
+> >> +		return IRQ_NONE;
+> >> +
+> >> +	if (!i_lo && !i_hi)
+> >> +		return IRQ_NONE;
+> >> +
+> >> +	for (i =3D 0; i < BD79124_MAX_NUM_CHANNELS; i++) {
+> >> +		u64 ecode;
+> >> +
+> >> +		if (BIT(i) & i_hi) { =20
+> > Maybe cleaner as a pair of
+> >=20
+> > for_each_set_bit() loops.
+> >  =20
+>=20
+> I kept the original for 2 reasons.
+>=20
+> 1. the main reason is that the for_each_set_bit() would want the value=20
+> read from a register to be in long. Regmap wants to use int. Solving=20
+> this produced (in my 'humblish' opinion) less readable code.
+>=20
+> 2. The current implementation has only one loop, which should perhaps be=
+=20
+> a tiny bit more efficient.
 
-        /* Check if the irqchip already has this hook... */
-        if (irqchip->irq_enable =3D=3D gpiochip_irq_enable ||
-                irqchip->irq_mask =3D=3D gpiochip_irq_mask) {
-                /*
-                 * ...and if so, give a gentle warning that this is bad
-                 * practice.
-                 */
-                chip_info(gc,
-                          "detected irqchip that is shared with
-multiple gpiochips: please fix the driver.\n");
-                return;
-        }
+OK.
+>=20
+> >> +			ecode =3D IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
+> >> +					IIO_EV_TYPE_THRESH, IIO_EV_DIR_RISING);
+> >> +
+> >> +			iio_push_event(idev, ecode, d->timestamp);
+> >> +			/*
+> >> +			 * The BD79124 keeps the IRQ asserted for as long as
+> >> +			 * the voltage exceeds the threshold. It may not serve
+> >> +			 * the purpose to keep the IRQ firing and events
+> >> +			 * generated in a loop because it may yield the
+> >> +			 * userspace to have some problems when event handling
+> >> +			 * there is slow.
+> >> +			 *
+> >> +			 * Thus, we disable the event for the channel. Userspace
+> >> +			 * needs to re-enable the event. =20
+> >=20
+> > That's not pretty. So I'd prefer a timeout and autoreenable if we can. =
+=20
+>=20
+> And I did this, but with constant 1 sec 'grace time' instead of=20
+> modifiable time-out. I believe this suffices and keeps it simpler.
 
-        ...
-}
+We might want to present that value to userspace anyway at somepoint, but
+a fixed value is fine.
 
-For your patch:
+Jonathan
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>=20
+>=20
+> Yours,
+> 	-- Matti
 
---
-viresh
 
