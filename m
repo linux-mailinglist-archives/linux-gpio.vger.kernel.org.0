@@ -1,145 +1,128 @@
-Return-Path: <linux-gpio+bounces-15610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15611-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 678C3A2DB3B
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Feb 2025 06:37:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA1C4A2DBCF
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Feb 2025 10:41:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 510043A6FEB
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Feb 2025 05:37:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1F9F3A5277
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Feb 2025 09:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CD53987D;
-	Sun,  9 Feb 2025 05:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lragoFyn"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303C113DBA0;
+	Sun,  9 Feb 2025 09:41:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78AF24339E;
-	Sun,  9 Feb 2025 05:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811B433987
+	for <linux-gpio@vger.kernel.org>; Sun,  9 Feb 2025 09:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739079427; cv=none; b=bKMsEwT1TqSr6zJe51jhlIWKCYjP7iWv41APFThSDid01cYgy/GYj1RJzSoLEdEH1B2BwicaCsVK62ibihuVNVYR14I1MLirrp0C4tU6bjqctldKMVjqgU4M1w6YVExxpQxwD+5svdPX09yOhn9rqanKZbyQ/oZxsc8P4zZBL8o=
+	t=1739094069; cv=none; b=MTCv2Cwqq0B3ybDq39scQXN3Rtw8oAC88hBYOaOoAxDxJCMQ/EuJ+8erk7VApMy6HfhcDHugMAxN/1Yjd+WWVQqeqL1LGdIySeBcOLNVsV0SBWH0paXpljb/JSKK2C5pNTWfMoHGg4ALlpDvpGoCz7R910alFs0uDSPQnTKhv94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739079427; c=relaxed/simple;
-	bh=LQYHpToHZqvrvUEO8vPOG+RisUsfNychAkbijb2JVT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fUAMjsNyo12iC6EEZJib0p6K+WPp1v8CgfdqqSqa7NY3pNhyB/69wEn1vlSyrDMA6IyXKD5b48QOPmWMU/4obLE3vwi0IJDT6p+FByelCvbY+rW5pZ4lYlJXMftkvJoPn1YbhfwHOzrnqZ4Ns4TRQkEaprkgtiHgw3bsU4BapdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lragoFyn; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739079425; x=1770615425;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LQYHpToHZqvrvUEO8vPOG+RisUsfNychAkbijb2JVT4=;
-  b=lragoFynu7/SQydzU1Bxa63vNkAjlGt9m1LvmhtcqfRe8f8eXgsB44FW
-   4GmbOlshi6iVkCOQ+l8fv2TB0cuTpFaqSsR00BKzNPa9ENiORna2NwACv
-   9GUnfgX7QeTrd/SDM4DO6TYqVRL91U4D+h/X2Ns/OUI4wnAOXRlfaXZzX
-   NMXh5fBsY+gMVhB6zf+BqB5xAAaKLYg2PArMd5mtfHfD8wEArO33GGkjy
-   T3CFxgSMajeQsdYPngzLY6OoVYyFqCLzRf1mlVjOW9iuuvOaamsqs+G8G
-   MPC2r0PYLsrvmblAwEQcQV/6xMyRKUwLF30wjXqKLsEmc88fpdMrk1S/X
-   w==;
-X-CSE-ConnectionGUID: pljfILQ/RVOm2f7uj6cvWw==
-X-CSE-MsgGUID: SYHp7DnKQLCtOWBtkCQT/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="62157868"
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="62157868"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 21:37:04 -0800
-X-CSE-ConnectionGUID: uJznlC4YT/+W9s625x6DMA==
-X-CSE-MsgGUID: /jWVE8OJTeyAq4L1lGPEag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116486851"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 08 Feb 2025 21:37:00 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1th001-00117X-3A;
-	Sun, 09 Feb 2025 05:36:57 +0000
-Date: Sun, 9 Feb 2025 13:36:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Artur Weber <aweber.kernel@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Daudt <bcm@fixthebug.org>,
-	Sherman Yin <syin@broadcom.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	Artur Weber <aweber.kernel@gmail.com>
-Subject: Re: [PATCH 4/7] pinctrl: bcm281xx: Provide pinctrl device info as OF
- platform data
-Message-ID: <202502091354.vwFJOxGn-lkp@intel.com>
-References: <20250207-bcm21664-pinctrl-v1-4-e7cfac9b2d3b@gmail.com>
+	s=arc-20240116; t=1739094069; c=relaxed/simple;
+	bh=qgeNDZM+2PVBE+7orbo7TSZVpNy1KRa/mEZrjDqZ0oI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d0+VYcgmtLPdWgQpZdos6ATUU4BY+oO7HqGmYgzlJ/tmIFjn7WCSBOb9H/k11WF/GhWC1OeqgPkqYcn1aVi+c8CCXQ8htntrJTbFfdaZcSP6r5941M3ScgbhYgOr2qAUOISwtSXeqtZLwTihQ53zF5VDD0xXsJHmNueiR1zox74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52031ffca74so237375e0c.2
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Feb 2025 01:41:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739094064; x=1739698864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8cUkSq5br4RYq/jOxCyYuBl3rTeKO5DZFE1Si1EHkCY=;
+        b=g7v8MvrY4ZtW+IqGBvqcKePaSenQkcjgOqVNvDKKZgJE6Rlppcp+Q6Apu5CuDNBAMw
+         oa3tJBbz4YXYfwAwV9Zyjn6+K4RC9u4sqvL79/iDFRkcCnmSAbMByroYM2kUbO4pJaiW
+         5OsMPPr1FOl3S4g85yFSDuydKJ0V/Rfx8Q5CDLeaYWeEfjPjk5b+//QBrW55O7iY6oZ/
+         fTYpLhc9SimYzMRf7sYaBHM0CMBG+B2JWoH3Xgp11KeMO/NpRsJvZgR5X29ptLKhsctH
+         pbXav8033uLmZla3/4lTY06jRS3uFGe80KQhtN/678slqila1fU8u04XZoD+7xJ0mXY8
+         1seQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUhpE5WQ39B07UOsrAJm0/gHzvEkzhOaPL9iZ6UHkVS0Of4FFy5qriQXk5FiEbnFIFyv6hJdzPZFGr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVFN6/yjpg+tnQW3xND/nRwPQLIx4P9TlkIkgwKTR2lnvCOTNv
+	bIM7PuxreBhDrP36Fse41lH4MdkJP38f29i8fw7OIAYFB3aV5quKyg6x8wil
+X-Gm-Gg: ASbGncsYUxs8kQr5znvJLb5nU4Zj9dlQCuYOPU0Xy8dj9Q7P68tpNUAFyomTfXddZ+U
+	j1Gpz6FUCZpYMqevb074TvqWJwXbYsQDs6iCmPMHhzYUj30J6fID6aUEK0e396oqKiqVEqyD3Ba
+	UV/gPTW76GCeYJbAcMII+E2WJvT+XSKgIAAbony3bcjL3wLKwXO5tUbIK9jCb1PDYsLJpsSFkL7
+	4Nb22JsbxJbUMbicdgrE2HGm0HmKyxDLnTcQrFpQa9PqBF/MG2tymMLhPMWDaDFTTYCVV6dRWpP
+	xK8VOeOoIdOWME6zEOpITjmnA86OLIs7m6L3a8RjZ68jVWJkjqizTQ==
+X-Google-Smtp-Source: AGHT+IHKSv2vK5nPCmpDGO5m5ceehdl/V8iBNIeX65cQSzK/sMgegFbQtCGrf7i5RhMJ4WoW9DMu7g==
+X-Received: by 2002:a05:6122:794:b0:51c:c23e:8cd6 with SMTP id 71dfb90a1353d-51f2e1d9b57mr7292769e0c.6.1739094064003;
+        Sun, 09 Feb 2025 01:41:04 -0800 (PST)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f228dabd4sm1069135e0c.32.2025.02.09.01.41.02
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 01:41:02 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-8671441a730so286168241.0
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Feb 2025 01:41:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXhaLQ7XFyMVCPs7WdYjDSCcmwrO9uWTtD5YEj0fs1ivcfsz3KfqFVZwcvHE9BxH6PVjAlKWZ8TXkzf@vger.kernel.org
+X-Received: by 2002:a05:6102:3046:b0:4b2:48cc:5c5a with SMTP id
+ ada2fe7eead31-4ba85e8d160mr7070808137.15.1739094062684; Sun, 09 Feb 2025
+ 01:41:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-bcm21664-pinctrl-v1-4-e7cfac9b2d3b@gmail.com>
+References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+ <CAMuHMdXgQPcUw-UuGC886RRBpeCz34OAz-Nx4FUxeAq0w2qBkA@mail.gmail.com> <CAMRc=Md7Z9zASsbDcy4prY8tZggS5505_gTQULzOweYYEpNsig@mail.gmail.com>
+In-Reply-To: <CAMRc=Md7Z9zASsbDcy4prY8tZggS5505_gTQULzOweYYEpNsig@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sun, 9 Feb 2025 10:40:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVxZab5X4HyKj2d_21WohKfpFrsnRYYjx9X1ys22xCvLA@mail.gmail.com>
+X-Gm-Features: AWEUYZmpYH6QplbU8RzkMV_BCixvOTmPuPRxqU8rhNFjQhOfMH9qZmGX2CEl6Wg
+Message-ID: <CAMuHMdVxZab5X4HyKj2d_21WohKfpFrsnRYYjx9X1ys22xCvLA@mail.gmail.com>
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	Kent Gibson <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+	Marek Vasut <marex@denx.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Artur,
+Hi Bartosz,
 
-kernel test robot noticed the following build errors:
+On Fri, 7 Feb 2025 at 21:18, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Mon, Feb 3, 2025 at 3:23=E2=80=AFPM Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
+> > The other thing to consider is why people are playing with GPIOs
+> > directly: do they lack hardware descriptions? Or do they lack proper
+> > Linux drivers for their use cases? Something else (people brought up
+> > testing random pins, or plugging random things into a Pi)?
+>
+> I think you're speaking from the position of an experienced kernel
+> hacker. The majority of libgpiod users with whom I interact on github
+> or via email have never even compiled the kernel. They're working on
+> some kind of RPi or BeagleBone project and want to have their python
+> script fiddle with the pins. These are hardware people and makers. So
+> to answer your question: they play with GPIOs from user-space because
+> they don't know better and can't be bothered to learn - developing
+> kernel drivers is not on their roadmap.
 
-[auto build test ERROR on ffd294d346d185b70e28b1a28abe367bbfe53c04]
+Ah, the dreaded userspace GPIO drivers...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Artur-Weber/dt-bindings-pinctrl-Add-bindings-for-BCM21664-pin-controller/20250208-040646
-base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
-patch link:    https://lore.kernel.org/r/20250207-bcm21664-pinctrl-v1-4-e7cfac9b2d3b%40gmail.com
-patch subject: [PATCH 4/7] pinctrl: bcm281xx: Provide pinctrl device info as OF platform data
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20250209/202502091354.vwFJOxGn-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502091354.vwFJOxGn-lkp@intel.com/reproduce)
+Please point them to my ELCE2020 presentation "Gadgets and Trinkets,
+The Upstream Linux Way"
+https://elinux.org/ELC_Europe_2020_Presentations#Day_1_Presentations
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502091354.vwFJOxGn-lkp@intel.com/
+Gr{oetje,eeting}s,
 
-All errors (new ones prefixed by >>):
+                        Geert
 
->> drivers/pinctrl/bcm/pinctrl-bcm281xx.c:971:19: error: initializer element is not a compile-time constant
-           .regmap_config = bcm281xx_pinctrl_regmap_config,
-                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pinctrl/bcm/pinctrl-bcm281xx.c:1424:6: warning: unused variable 'rc' [-Wunused-variable]
-           int rc;
-               ^
-   1 warning and 1 error generated.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-
-vim +971 drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-
-   962	
-   963	static const struct bcm281xx_pinctrl_info bcm281xx_pinctrl = {
-   964		.device_type = BCM281XX_PINCTRL_TYPE,
-   965	
-   966		.pins = bcm281xx_pinctrl_pins,
-   967		.npins = ARRAY_SIZE(bcm281xx_pinctrl_pins),
-   968		.functions = bcm281xx_functions,
-   969		.nfunctions = ARRAY_SIZE(bcm281xx_functions),
-   970	
- > 971		.regmap_config = bcm281xx_pinctrl_regmap_config,
-   972	};
-   973	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
