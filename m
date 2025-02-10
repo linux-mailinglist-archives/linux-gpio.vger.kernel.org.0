@@ -1,139 +1,126 @@
-Return-Path: <linux-gpio+bounces-15685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44CA8A2FD8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 23:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 31D5FA2FE63
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 00:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ED2F3A5B5D
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 22:42:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F42013A6476
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 23:25:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A712638AE;
-	Mon, 10 Feb 2025 22:38:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4465F261367;
+	Mon, 10 Feb 2025 23:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sBoqBWii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2zR/fy3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF6B262D19
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 22:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900C0264607;
+	Mon, 10 Feb 2025 23:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227100; cv=none; b=Tno1qMLmQxhF1UEVVv200lqyx0kAX0xfivBIWOns3BSQJeacQM1QIiuRQL18QWnX1rWq1U4YXXZuXaeN0vfbjOYBryGeFzMYOQbvRGMgTnvBDykT/Xc+2JbFEgs+ATIJ0Y7Xoz3WzVCvhF8WT9ye9sKsktP4HKlOCxyOrmC0scY=
+	t=1739229959; cv=none; b=BFBvASqoan1LyQywdX6771Pz+L0ihHLgVQNpm7p05hByGz+DW+Pk8XYOyuH2fQ98okgfFYTEGtWfbeZ8szju+krLU0XIOqqVmG9RS3YOR1Oy0s8UoPzEvsbpdrneWRvM+WJo866WqTAVvWE89oIhiEnxRvxsex8NB8ZO1z3nrhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227100; c=relaxed/simple;
-	bh=SREiuK3L9rZlfmn2CRPkgp1zixwI3ho4VDIygOej2Dw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QPAFbkx0m+1AVc3KzJT+gGJSMDtXer7kQWRZv8epcsFhtqU8S7T1L+iP67i2PIz/BQj6WtkS5ofllJ+yoBNFSspqFjnaduvpvFprxlA6DbVcIhePi0jb/Ih4I/jsHYaQpJiywzUoleyMR7JDZiAomTlnwGRA/ZraqDp1OiQhqw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sBoqBWii; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f3a6980ba7so1240120b6e.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 14:38:17 -0800 (PST)
+	s=arc-20240116; t=1739229959; c=relaxed/simple;
+	bh=KN77nCqnFYHqWvJ1p3RHQD50VswFZvR6dd2EgrNJCnk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dTfQGzZ15lIEIzoztWXFSfe14sKKUYEFECnhseuemMFgbtMv1h338dHQobG8efY14eZN3byH+k8U2U5Tcv9/Ffb+LWUWLvaHWziClBzA70dhTe42DNnt7rInzeiGEzzrKSli4OG0w9e+sR4g/tEeykxw3/hDDX6aeIJvlIHHEoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2zR/fy3; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c05aa6d3beso12126885a.0;
+        Mon, 10 Feb 2025 15:25:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739227097; x=1739831897; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zrl0lG0s99SDBuGZ/+AcMLJIAJmPLy1NCd/dBoX8jU8=;
-        b=sBoqBWiilrg6G6DcKncG/QpD3XTif6KLjw4bVZEcVRfSe0hlXDRNldE9YF2PAWEulM
-         /sVf3tX5SwJe89Lj9M3MIJaCSs/jc++FpF8/lBpSXw2Rh4aJABVWPzB+mAbwOIK7QYhN
-         6oPTUx7jplW5h1Q9Glmxas07OXMuPokCylYCVZrWgO1kbMVxEreyu7pT3Uos0DthgENZ
-         qRm2huNp0aJC+MYKTFrjAeCcU0mMxdfCA6N5q8CvwJ9rjYFSF2MzzMa+Jy26pj/OKhJr
-         5eOr6oS8AUK89BLsnCV0I9YsOlDgM+6fh0+hziadoBBOWYFT53YLUukUBy7sBwFkSFVY
-         JHFg==
+        d=gmail.com; s=20230601; t=1739229956; x=1739834756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/8XenbubIJUWheqMjhkn1jG61lOTP/K0WRD37kJpkcU=;
+        b=Y2zR/fy3E7wThIeD8n/g8OuAkmnxgX/0CmAIgH0mO0UfDL+X6ou3V7f+C95bqxrRdy
+         DFSpc7SUiK1L0NCfUsZHEmHHKWdQSXj088onQ78pBMefQ6Wp3Pn9LocXd0O6rvdngp04
+         XKPu+DN0WN+E9vrI/CipXLrctiG9ejO4h7U3ZfjtjBc7+UBe1ShAaNi1lk1q5sojWrN1
+         xikHBIcaZeND3tGllzqBSQxDSonlUws3FUdSaY4XNboR6Z8pat3vavNt0VZplXwUzvqN
+         YGuBuKCXjOyDYjxMtg8XD2XONHc3Oh8gf13HGS2uh8z6kQrS0ziZVAn0E41BFi2fi0mw
+         7cCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739227097; x=1739831897;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zrl0lG0s99SDBuGZ/+AcMLJIAJmPLy1NCd/dBoX8jU8=;
-        b=QNS4Nja/+ubsuZX7ctwWud9cNC2FLu9KShhvCLNpikaK6O6O8fTRe9FbSlLX8u9eBt
-         c4Ew7xh42yfRBzHcT8SvNUYzoybCly/TzfPqpnjXLmLF66TDBIyz6lBSDR/Po6XF9X+Q
-         k7I+WyJTFks6oiTjBdgZfZcwRslmi4RyKQd8lKlrZsx+dCL32MPerc4LUsT5ntSRJlWi
-         qJbUs61v+QWjYJzy0AN8GpEboVtZcJoG9/Kj99spKSYz+4Nlc7EcMXMfStKdIu5nGWhU
-         rNqE8ByHPLhKUbTE8RdAXviBcsOCm31ql2pV/qzR36Ip3Gsm+Qczwi02ZRuIrI2/GkTC
-         M8Mw==
-X-Gm-Message-State: AOJu0YxDUZJNHtWnfQPCtUNGoaUuFlhH1JTXoK2KU68jAJluwAw9b6Dm
-	v00FwvuD2QL8YAWZHjj0slnEv1HqjV7EivVsEIwPEunC/R4xK58b1PIkEa5PdEU=
-X-Gm-Gg: ASbGncs06ZVbjSGKb3SqVtWZDFC6ujt9Mpa7qZrGkgK2iO/8sEPHqsA21ruyIzd14Pe
-	sl4CfpehGyT8IoAdEfcKyXULvIOx0zFVXcPBl2EBbnhrD6D1nc5FJe/GCZJWy+WU3d8akwABrPG
-	bQtVhrhxB4hbND/7REq4LKWMFftbQ7T1VqP7HIwJTOf+Dq6fJZD5V54o4z6O2lZ7T0Owpnfw6am
-	sBe2I8aJPKvxAoHIoipB8HELoaOU2H+0teFoxQiI3Zf6EarEMMrEhtOam6hwWIako+9ofdnnBns
-	nnZgXmKmpvgCoPUHAJ4PmPoeIPxBmkrlFyoA9budXbv+gcI=
-X-Google-Smtp-Source: AGHT+IENohB4+Vdl15nvUdajyBJJbaG44s39TfMb4Zf97z1Hi7JTuCyMgAhZEnJb83znOkXtS3I7Kg==
-X-Received: by 2002:a05:6808:10c7:b0:3f3:be50:2a69 with SMTP id 5614622812f47-3f3be502d24mr1971166b6e.17.1739227097004;
-        Mon, 10 Feb 2025 14:38:17 -0800 (PST)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f389ed1ca2sm2521820b6e.11.2025.02.10.14.38.13
+        d=1e100.net; s=20230601; t=1739229956; x=1739834756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/8XenbubIJUWheqMjhkn1jG61lOTP/K0WRD37kJpkcU=;
+        b=IE+0jDC/hlxNzETiCbSqACAQx/fmqEXGPM0xnNT4x9uVFbgG0twUogocy6QANTmpaw
+         E0xcLr+Q7ThkhLYOoElOCQ9y6pOr8ru+eZfW6nITIa8bnvD86ab0ojyxu5PY/4WECdLu
+         0mxFrjUFZGE9ocDCo/7D77TdM5rEn/UVLfArWZPio8fNEOHF4wHvKFRoWVO0rDDyq1le
+         OAhxyGMtrw/x56Od9Pd6jo0DKR/udnFm9tiUuz+BsCuQx/iM2Z+Sgvn+KbSeB3K02DpO
+         ZNki3Rd5GbaWM3T4GaP0RV5Og7+Bv3qLhUxb5G119WQk2zEtFEgOvgxQKuhGYOgRvc9o
+         I09w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/zqgzZAlD4W8ZHXHcgMd4ZJHvOF3OOuaRaw+R8Bj6VMnA9Sxiv3KC73Cp0B2TY4mTQJRM8/EXfuRL+yx8@vger.kernel.org, AJvYcCVyumoeeQaXOubIo8+xhrH03W8irCeydTTCmoOMjWA0EGO1PvNmbxdhl5fr/Ogg5JKHx8k161xz@vger.kernel.org, AJvYcCWq/AHSxTWvZsajqzdNO4lKUEv/LXQHs6mhV7W1YZH2kSoN/aVla0i385tSq0thv5vGDVGgqdmZ6DDR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/WWIlCh1FHYTml/EFu24CKHLOZpwiJcr7mvwDW3+3+06sG0BE
+	HuSKb1vEzUMZiJWU7K5qv2FIDxu8+HDG7nHhmysgfUSRIK6qktY=
+X-Gm-Gg: ASbGncunF97hHAbU4kfxun8VD2fP4fP4BUbU6PkXDO2hTXYDaKsLTuauqKjqX6NzDZ0
+	gfKHngdvaIxXq4FxCEORqnCjRWf4Hsnra+MelES+SBlrffu+24byu1QWEprby7CO+5BMBasCObr
+	AUlAUURgfI9EKaC97Yu5OYXUHMeKK/VdNQrr0fPLoIxuQyGkG02D6soy4HPNdnfX6MVQNbJJ358
+	gQtxA9KFC/2iu8C+/GFDs1ujwai5pzBjDVt6+gZ/stkyqyNTqIl20Tp1b3T92a4TsO5Vc9OAPUy
+	EyqEsSdIsUpe
+X-Google-Smtp-Source: AGHT+IHNYHue1/6onrrPc27NAv7Yzt2CgxTI9Tchg6QmJ/oQr90zAJuy/Fy1+6xVffMwmut1Bs5bxg==
+X-Received: by 2002:a05:6214:27c9:b0:6e4:67af:cc64 with SMTP id 6a1803df08f44-6e468dbbbc5mr2648146d6.9.1739229956435;
+        Mon, 10 Feb 2025 15:25:56 -0800 (PST)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44f4835e6sm36479346d6.111.2025.02.10.15.25.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 14:38:15 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 10 Feb 2025 16:33:41 -0600
-Subject: [PATCH v3 15/15] ASoC: adau1701: use
- gpiod_multi_set_value_cansleep
+        Mon, 10 Feb 2025 15:25:55 -0800 (PST)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	richardcochran@gmail.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zzjas98@gmail.com,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] pinctrl: Fix potential NULL pointer dereference
+Date: Mon, 10 Feb 2025 17:25:52 -0600
+Message-Id: <20250210232552.1545887-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-gpio-set-array-helper-v3-15-d6a673674da8@baylibre.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
-In-Reply-To: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Geert Uytterhoeven <geert@linux-m68k.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
- Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, 
- netdev@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-sound@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-gpiod_set_array_value_cansleep().
+The `chip.label` could be NULL. Add missing check in the
+rza2_gpio_register().
+This is similar to commit 3027e7b15b02 
+("ice: Fix some null pointer dereference issues in ice_ptp.c").
+Besides, mediatek_gpio_bank_probe() in drivers/gpio/gpio-mt7621.c also
+has a very similar check.
 
-Acked-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 ---
- sound/soc/codecs/adau1701.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rza2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/codecs/adau1701.c b/sound/soc/codecs/adau1701.c
-index 291249e0a2a32df7dde81904dce2f6be143fc2d7..6876462d8bdbb41d551f776c2d7fe6ed46115fa1 100644
---- a/sound/soc/codecs/adau1701.c
-+++ b/sound/soc/codecs/adau1701.c
-@@ -325,9 +325,7 @@ static int adau1701_reset(struct snd_soc_component *component, unsigned int clkd
- 			__assign_bit(1, values, 1);
- 			break;
- 		}
--		gpiod_set_array_value_cansleep(adau1701->gpio_pll_mode->ndescs,
--				adau1701->gpio_pll_mode->desc, adau1701->gpio_pll_mode->info,
--				values);
-+		gpiod_multi_set_value_cansleep(adau1701->gpio_pll_mode, values);
- 	}
+diff --git a/drivers/pinctrl/renesas/pinctrl-rza2.c b/drivers/pinctrl/renesas/pinctrl-rza2.c
+index dd1f8c29d3e7..3da8b0d389c9 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rza2.c
++++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
+@@ -246,6 +246,9 @@ static int rza2_gpio_register(struct rza2_pinctrl_priv *priv)
+ 	int ret;
  
- 	adau1701->pll_clkdiv = clkdiv;
-
+ 	chip.label = devm_kasprintf(priv->dev, GFP_KERNEL, "%pOFn", np);
++	if (!chip.label)
++		return -ENOMEM;
++
+ 	chip.parent = priv->dev;
+ 	chip.ngpio = priv->npins;
+ 
 -- 
-2.43.0
+2.34.1
 
 
