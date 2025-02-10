@@ -1,157 +1,171 @@
-Return-Path: <linux-gpio+bounces-15636-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15637-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2783A2E657
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 09:24:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 561DAA2E704
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 09:53:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15FA51889B73
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 08:24:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25B8A16057C
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 08:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A73E1C07E5;
-	Mon, 10 Feb 2025 08:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDCA1C07EC;
+	Mon, 10 Feb 2025 08:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tMMeF+FQ"
+	dkim=pass (2048-bit key) header.d=remarkable.no header.i=@remarkable.no header.b="GbuJgakQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1D51BFE03
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 08:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541BA1BEF90
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 08:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175784; cv=none; b=Zru4arP35XdxfEAsWpT8HbE54YTp4LYMLK92fpqQLn03mfuQhqxvt7PmjJLDWH0ttFcXC++WpXGmMHJTfooGrRF60zUjIqOpzelK2uv3cdvrLsMSAE/+8ZfCPiWADEYGXMkwEFN88wM0KT3xHNXAcOPcc5/fDlKuMIxfoo4HMbw=
+	t=1739177573; cv=none; b=rX5r2Ef1I/DLaslHjC+//YNhwDbTmALMu3Kx6vOr5BzgBLJYLQYM0ArHieFG23IL2XpckT7K52tBtdxTObuuYzOu/BfMWI3dKK7gy1BFvJjPH+zgoHIQBhhdfgpMtenq6KKj2mFRypR0PebmVgKMUi3OpDqolcZJIQADzdq6IX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175784; c=relaxed/simple;
-	bh=YkP0GghXk5rZxXF+bKkrcLZxMboqgkzN8bfvUUzqc+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tpOtFzC0fMPYmzDu9P8DocSiTM6HffPNOe19IdtEAwZNGGPq1ju0eQtQ8znLotwVSRRydjjzwsMddzPOtpsKtvXuSRUy2Vp1fuNSRJL2568nEsuZqIWQu+j/96inDJS45VKmsLMfnzwsi0o95WlCi9stTzjDyV4OCWq93JIUV6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tMMeF+FQ; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-545074b88aaso1308896e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 00:23:01 -0800 (PST)
+	s=arc-20240116; t=1739177573; c=relaxed/simple;
+	bh=Mzo8weuAT2mlks7nbB7Xl9z60vdOgIwwxoK6G6Px/mc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgsZuTaAO2DF/tIMSyIpxcN0w3H9h82qIu87lhzji0/cTYVVJqE9xUwnsFX1wXq66kdVXPOzfNIOUvb6Aw5OD1aVTQlhY0CVcvbtyEAXy+FQbnUWaKd6zSznX0SjZmxB/iw1v39JbmmzIownvDLDsApS59aQW4uU+3gbzQbhVAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=remarkable.no; spf=pass smtp.mailfrom=remarkable.no; dkim=pass (2048-bit key) header.d=remarkable.no header.i=@remarkable.no header.b=GbuJgakQ; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=remarkable.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=remarkable.no
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-307d9a13782so35812861fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 00:52:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739175780; x=1739780580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZoT+boRbhRr/jTb1oqMqPAiRLBIMVE1Brfce63wCwqw=;
-        b=tMMeF+FQfWm8yjUy/r7DnHUozcGGNFCKgTQeMe05rv0xsqsceLU9JAZmKrFOHnUw4B
-         ifSElsd7dWiDa3J2L6bQTTEBM2Qfrb7UaLvvgWdl5JCoMljRjh5U4DDHtcifINgvlwQY
-         CoNvFTlwRIvQ+BZwWBp/acYoysnFT9vWIaluMMcl0xWM9WJIE/Oqh6vxYdS+rB53JhBs
-         Sr2fkVuxDVIgplCJCRZfuSbSFm9NG2h3BfR97v28deK/gMCSluMu/eqFMfCvv+rhNnEW
-         yO8Sq/vEmiH419FWpkRbg2vIhosaSG6pW+eRNSDnj8ZQvtgeGgTEpV0RaVfCx6hQEXUQ
-         StNA==
+        d=remarkable.no; s=google; t=1739177569; x=1739782369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JYu8yQ/OgSiNEgnJK4K3dO6bbEYi+Xy76mIpaogzGWI=;
+        b=GbuJgakQ4scuZ9r7LAAGIyd8rZBC6o4ul2HR/h0RrtMVJjYRvb3Gy6L5sL8NKLozDg
+         1YdsNU0MHDCTAuSTQpu2Gate3i2yw5Q+JWVZO5b3Vy2Bbopvil4SDQJi1I8UbMjifshB
+         ev6wSR4eLUW3UR3+5Px7tOBazs9yVx/kUR6DwtkkNujP5Y9GVud1wb5xQNlWJbUHSFRs
+         tOuCnVuesZ1JLNIQGycoZR4Mah/zuGx45i2eXJu8woQzb7IkZSS4O76O3uWalEp422la
+         Qy1i2bMx3Hi6BeKcFcsyDFeo0XcwY7A8h5JFJJUn7sgsnBX7g9utpfDQTTYJViJwXKSC
+         LxXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739175780; x=1739780580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZoT+boRbhRr/jTb1oqMqPAiRLBIMVE1Brfce63wCwqw=;
-        b=ZrV1WOZI2SeVkSXPO5aO6gJ8DTDrpgjhN8HeF7sKOJBbBD01PYFOssrOVmC2IGDf9+
-         e/ZsOTFCoT4OvgsLVfBiie0YPerr04Td/GC4BsoRCu9WCN//wJPOrfiZp5KDUAKcWFzw
-         WPudNeQLDY5MfO5MTOCert+WBiJdna/UIOMrVDebREqdpxw7zcCwa44gbVciNQ6UmHcY
-         /eOz3ORJbwPdYWUWVWR1D9a7GibsGCcsc5TewDFs+X0mPMEwJF0O92lTqqnR4UDepDL1
-         rQFd6va5Zp5uMiPD3T1XmceMQBhmCQV77sWRkKCTlEDGXykWabTmLqAM5a+2DJEZymBX
-         WVbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBKXrsjFK2wUK7IGFZP56WLrxCKTm15Dbv5DL8yJgYxlGO9zO92dUx94Yldwm0fe1J7A4eY1rg+9P3@vger.kernel.org
-X-Gm-Message-State: AOJu0YySsXvs2XbJCHd6P3OByPKlyNv6TU0/7wbOtXBtlKQBJ7soR3OQ
-	mwiTvxLFiNWpSF774jyV7TJ3n7USMA+LmK9yGini8dISbCwD82ONZ79wPwKpHMK3J7atGdypR8L
-	bIzBTKUs/g5o2f+hmUwqSKdLRIUPhm92h97JnXA==
-X-Gm-Gg: ASbGnct5Kyu5guFIrfd8VKMrXncBGRJqnlZr9C734oLT6u8gLPuk0HPl2xlxWkEYcIM
-	OuG5hZ8kihF92zYmkrVrZuhPpYp9tyOMKtIEn4QRCgbuINUPCKLKohj0WMZBmchharuYrCaRU4x
-	qq8OuIAWrfs51iUH5FpSudIfbj2S3/
-X-Google-Smtp-Source: AGHT+IFFAiFvMPMX5w5vYWoD1W4TlwXK4TNGtARGkVlKtIMWS7CPgk80bycWo/eBWUAIbKZuY1UA3HQ76st0rRLGm2U=
-X-Received: by 2002:ac2:47f3:0:b0:544:ffbe:cd22 with SMTP id
- 2adb3069b0e04-544ffbecdebmr2209076e87.46.1739175779838; Mon, 10 Feb 2025
- 00:22:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739177569; x=1739782369;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JYu8yQ/OgSiNEgnJK4K3dO6bbEYi+Xy76mIpaogzGWI=;
+        b=McIhRxaUCapD7zM0XCgOR2p7Wn+1zu6IGmkbvkC/AX+1p7ChoVa/R9jjNJv8SInXxh
+         Iv7Mm5XDpq/cjSDeO7Q802O9/FStgYst/gaPNEML1bW7wuX1rladxbDIOwivtxsYMQp4
+         vwlURkMd4yLfRuSKheYeWtELvxvZeeevTE+mEKMI4Cyc6Iud0lxEbLmoc44ZY+OmD8OK
+         x0vXIzl6Gb47zo/1p1TN726FSbT+Ddbu1dJKOVko49IUDlKA2yrngYWVy0pDMwWmLAQi
+         p4J0n3ByHmXf2/7FmsSxIdjyg3Rol5gR5beBLtexUHwCtGzehukRrO5Eg9DiG2DxSrmh
+         ehRQ==
+X-Gm-Message-State: AOJu0YwWao4yK//cll2t6tYMccvvXIn5+MJAITEX1DdrY+b3YiiBZwZg
+	W3kAwurFGb1dLwqiZ4tGk0V8Q3yn9ZXPa/HEeBDSPYwZE/x73rYeyngK9ry66g==
+X-Gm-Gg: ASbGncu0jeteBZ1/I/U8tJKQ66bwXd7tr4igQvK5gy4BVOppyUFFbdtL+/2Yl8AI2LZ
+	jWhlkz4KVw1cf2F02VDDPE3qirlvN7AR63aZ164M0mapbVrunqMjpn1jnwVudFV18NJTvO+LZW3
+	Use+7fwmVfRSD2rUDApPBpH4/+lQ8OsNDtR574QOK1bJjAiIpHbLA+AhrfoxMf33oLdaPvNG0IS
+	OMcnfHUeQiaGacbpS3WvXySUboscBuAENNbw/kaaoqn6zkQ+uspSM2XvAc+6bo4TEr7T2dU/gqw
+	K11youPbMyUqFiWnMj0rCbpFPNVrLcAONKvg9rva+q/puigZAGhI7NqKTgd73WRNkA==
+X-Google-Smtp-Source: AGHT+IEFrSWijx5//WYxrO69alxyK3OwlZnbT1e1oSn0kYEx0Jps5YEkPD7RfAkSs7gwPx91jQfBeQ==
+X-Received: by 2002:ac2:4c39:0:b0:545:5d:a5d9 with SMTP id 2adb3069b0e04-545005da81amr2978311e87.3.1739177569272;
+        Mon, 10 Feb 2025 00:52:49 -0800 (PST)
+Received: from ?IPV6:2001:4643:2b9c:0:a407:a1b4:766f:a8eb? ([2001:4643:2b9c:0:a407:a1b4:766f:a8eb])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545064c95fdsm585428e87.205.2025.02.10.00.52.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 00:52:48 -0800 (PST)
+Message-ID: <cb75162b-de5a-475b-aeb6-9a3c39de108e@remarkable.no>
+Date: Mon, 10 Feb 2025 09:52:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250103083520.1764441-1-a909204013@gmail.com>
- <20250106043508.x3pwt3jzh37t265f@vireshk-i7> <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
- <CAHqiF6Aoe4eUShxpPfKczPF-bVneiyM0gpZ7xWF3artzoC__7Q@mail.gmail.com> <20250210045653.p5d6svdl4d32sttf@vireshk-i7>
-In-Reply-To: <20250210045653.p5d6svdl4d32sttf@vireshk-i7>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 10 Feb 2025 09:22:49 +0100
-X-Gm-Features: AWEUYZm0bjFLpqFBJMLvFtabmvBsH883FPmkZVriR3JJZIG8MQp8vYUvvpxS9Nc
-Message-ID: <CAMRc=MfocjJW_oYbePC2yOWZUHnTuUfkvs0d+ANz9=TDdegBxg@mail.gmail.com>
-Subject: Re: [PATCH] drivers:gpio: support multiple virtio-gpio controller instances
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Leng Cold <a909204013@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, info@metux.net, 
-	vireshk@kernel.org, linux-gpio@vger.kernel.org, 
-	virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: vf610: add locking to gpio direction functions
+To: Bough Chen <haibo.chen@nxp.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>
+References: <20250206181714.417433-1-johan.korsnes@remarkable.no>
+ <CACRpkdaNDJrGZ4Y2PPUWQfm6BprfNACYWD7srs3sYHMEsdX1Ew@mail.gmail.com>
+ <DU0PR04MB94963632094E71ABE730631990F12@DU0PR04MB9496.eurprd04.prod.outlook.com>
+Content-Language: en-US
+From: Johan Korsnes <johan.korsnes@remarkable.no>
+In-Reply-To: <DU0PR04MB94963632094E71ABE730631990F12@DU0PR04MB9496.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 5:56=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> +GPIO maintainers.
->
-> On 08-02-25, 15:54, Leng Cold wrote:
-> > ping
-> >
-> > Viresh Kumar <viresh.kumar@linaro.org> =E4=BA=8E2025=E5=B9=B41=E6=9C=88=
-7=E6=97=A5=E5=91=A8=E4=BA=8C 14:00=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > > On 06-01-25, 10:05, Viresh Kumar wrote:
-> > > > On 03-01-25, 16:35, hlleng wrote:
-> > > > > Modify the virtio-gpio driver to support multiple virtual GPIO
-> > > controller
-> > > > > instances. The previous static global irq_chip structure caused
-> > > conflicts
-> > > > > between multiple virtio-gpio device instances as they shared the =
-same
-> > > > > interrupt controller configuration.
-> > > >
-> > > > What is the conflict you are getting since all it has is callbacks =
-only,
-> > > I
-> > > > wonder why do we need to duplicate it.
-> > >
-> > > Ahh, so irq chip should be shared actually..
-> > >
-> > > static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
-> > > {
-> > >         ...
-> > >
-> > >         /* Check if the irqchip already has this hook... */
-> > >         if (irqchip->irq_enable =3D=3D gpiochip_irq_enable ||
-> > >                 irqchip->irq_mask =3D=3D gpiochip_irq_mask) {
-> > >                 /*
-> > >                  * ...and if so, give a gentle warning that this is b=
-ad
-> > >                  * practice.
-> > >                  */
-> > >                 chip_info(gc,
-> > >                           "detected irqchip that is shared with multi=
-ple
-> > > gpiochips: please fix the driver.\n");
-> > >                 return;
-> > >         }
-> > >
-> > >         ...
-> > > }
-> > >
-> > > For your patch:
-> > >
-> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->
-> --
-> viresh
+On 2/7/25 7:21 AM, Bough Chen wrote:
+>> -----Original Message-----
+>> From: Linus Walleij <linus.walleij@linaro.org>
+>> Sent: 2025年2月7日 2:29
+>> To: Johan Korsnes <johan.korsnes@remarkable.no>
+>> Cc: linux-gpio@vger.kernel.org; Bartosz Golaszewski
+>> <bartosz.golaszewski@linaro.org>; Bough Chen <haibo.chen@nxp.com>
+>> Subject: Re: [PATCH] gpio: vf610: add locking to gpio direction functions
+>>
+>> Hi Johan,
+>>
+>> thanks for your patch!
+>>
+>> On Thu, Feb 6, 2025 at 7:17 PM Johan Korsnes <johan.korsnes@remarkable.no>
+>> wrote:
+>>
+>>> Add locking to `vf610_gpio_direction_input|output()` functions.
+>>> Without this locking, a race condition exists between concurrent calls
+>>> to these functions, potentially leading to incorrect GPIO direction settings.
+>>>
+>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>> Cc: Haibo Chen <haibo.chen@nxp.com>
+>>> Signed-off-by: Johan Korsnes <johan.korsnes@remarkable.no>
+>>
+>> Looks correct to me, verified by looking at the most tested driver gpio-mmio.c
+>> and seeing there is a lock there indeed.
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>>> where after a couple of reboots the race was confirmed. I.e., one user
+>>> had to wait before acquiring the lock. With this patch the race has
+>>> not been encountered. It's worth mentioning that any type of debugging
+>>> (printing, tracing, etc.) would "resolve" the issue.
+>>
+>> Typical. I would include this in the commit message, people care.
+>>
 
-The author would have had more success getting our attention if they
-used get_maintainer.pl. Also: the subject is wrong, should be "gpio:
-virtio: ...".
+Hi Linus and Haibo,
 
-Please resend a proper version with Viresh' tag collected.
+Thanks for the review! I'll include this in v2.
 
-Bart
+>> Looking at the driver it seems vf610_gpio_irq_mask()/vf610_gpio_irq_unmask()
+>> could have a similar issue, both write the same register.
+> 
+> Indeed, and also the vf610_gpio_set() / vf610_gpio_irq_ack().
+> 
+
+Could you please explain the race condition we fix by adding locking to
+these other functions? F.ex. the vf610_gpio_set(), in which scenario would
+the lack of locking cause an issue? It's a single write to either the set
+or clear register. Is this related to how the writel_relaxed() works on
+different architectures?
+
+Kind regards,
+Johan
+
+>>
+>> Both issues could be fixed by converting the driver to use
+>> gpio-mmio() with bgpio_init() which would also implement get/set_multiple
+>> support for free.
+>>
+>> I have no idea why this driver isn't using gpio-mmio.
+>> Not your fault though, just pointing out obvious improvement opportunities.
+> 
+> I check the code, for vf610_gpio_direction_input()/vf610_gpio_direction_output(), to let the input/output really works, need to call pinctrl_gpio_direction_input() for vf610/imx7ulp/imx8ulp SoC.
+> Refer to drivers/pinctrl/freescale/pinctrl-vf610.c, it implement gpio_set_direction callback. Also for imx7ulp/imx8ulp pinctrl drivers.
+> This should be the reason why not using gpio-mmio.
+> 
+> Regards
+> Haibo Chen
+>>
+>> Yours,
+>> Linus Walleij
+
 
