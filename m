@@ -1,83 +1,88 @@
-Return-Path: <linux-gpio+bounces-15643-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15644-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA65A2E94E
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 11:26:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 202B6A2E94F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 11:26:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DDE51886DA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 10:26:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E36A7A226C
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 10:25:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794A91E990D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B491E9901;
 	Mon, 10 Feb 2025 10:24:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mcm2onaS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LSPS7zza"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001581E5732
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 10:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53C01E633C
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 10:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739183044; cv=none; b=nRofD5MpFYm7U6/RrdnpN9trwbYsstKGKZqXR8MZtBz6FMTwL1hZI80K5pU56DTqAxIam3ZoGXn1x7b9FpvQlsYxI3KOS0hS7b5LojUZciPdUSFoLTDkYAAXy1k1+vwC9NGWEETOnJP4kb9FxzOKlz5nJvSv7CHpRRN+1FTIBN0=
+	t=1739183044; cv=none; b=EP8RwmDY26nsxsIHhqsOvHa33D695CtiIDCJ1bK+h21sABzhXu0JCQ/YKGW47s2uOc6Re+rXvsc4NuxHKSCsztyhW7zENuHvISbvXXeoGSmuD8Xw7nTMSnHjQRv8AJ13nNtLYvW/xVKby2AqS6K8iTM/+6A/eXtfmoV4WmKL0rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739183044; c=relaxed/simple;
-	bh=b3SV5k/KQygSUmsLcH/lbc71WE3VIsoF0AdcugQYbDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AM7knaCPUTmlMtJoP1yjX+n9K6UDHwl4skFyrUMkcK6Qv4HO7QiEx37oA6SWlt8WbGz8Cwx09iFN9yKBOTESPFtO0JqFEneXwto1s2SKktHZ53MqGGxSsaiqCiPxZ3a9BIdF9G/OZ2JoJET6zicTpE/UKCYINZE3wbWQ9ju+J7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mcm2onaS; arc=none smtp.client-ip=209.85.221.50
+	bh=SEuHiZ39nk3R/OgrwDMMKMgLaelHjpgsvFZR3Gv2erU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mWW8JE5pqyxKU/W2zuLciiswEz4YqTTLwXA84gFXhFM7pvYZJk5dKxJD+r/UWDdgH6MCxacVT1x+EVcPkiC5yER5kNCcXc3af93h3HIhyGJ+Z5cDZvst3207PgYOULE9PpuzVLqqYUDWL0wi039cK5Q106+Re8whiOsyIojnG6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LSPS7zza; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dc0cd94a6so1825029f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 02:24:00 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38de1a5f039so334455f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 02:24:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739183039; x=1739787839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ank6bIl11Gd54JLurACsKZbr/Yd6r6NjJq6xSc8Bh8=;
-        b=mcm2onaSlypuq7rV6IIV/YXCq1YPVxESOnYvvtkw+FQNtI0lGCYr7agK7lJiTh4G2u
-         Ksw5l0yIxDUSLdrOFzE5WQNttEa8jr0YCvcHMUC+OpqHE4vTYDYo9TIhjkYjw3DS2OQu
-         lWJ7TLSnIXAtC9rKjHUrUOjXw8qhhJp8Z3AKf3tSU2xRdIVCdh0f8LCi6mfFCHbmB0m2
-         SnfoB+klg4n9Qt/15Z2x/X4pPFgNLofTykg3r+n9YzGEs59jbqMVGqavrkvSQRnP6W31
-         ZvhBQRkxOnLfxZIu/fxHsoyxzhRdsyCm9ZvRW1KD+mm0JhZzq+DKWHHxz+OM2cCE96tY
-         WUxg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739183040; x=1739787840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CAs2LZ2NWgql1gIfsJGw/9zwhaFBmE7zJ8vE+7MhjGA=;
+        b=LSPS7zza+7KrmBbCn7pmjIINN5kt4DTvmk6ce/CYU9GxPJ0RjSODXXcLjOb0FlC1LE
+         R6VzRXhR9p/YNOoxZ+5NMqkMFCzaZFCruas0fLKqG7w1qZQntrmUX18COdoDD/Gz1Y7j
+         vYOSRhGQfXRDJwNwunMRTfLz5BLjvzvYJtDB6NXO05EEI95JXqEDixgan02b2GtFFsBb
+         RHOyX84cpWtcnnyGa2PmsSmNJX/vrB9JUJbQ9Xn61ECH8xoNkTKkipvf+xxAR4EtzZFf
+         bpTw7FzjbPD009mCkjzeyejFBfusjUi/gXdHERrKa6owlnT9tq4eo9R+GnrKDzHShAhG
+         W+hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739183039; x=1739787839;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2ank6bIl11Gd54JLurACsKZbr/Yd6r6NjJq6xSc8Bh8=;
-        b=S4sMlCK+MdRp/uuzazUDiQWUuOCYDiLxXbFNAIwhudEgA4hrO74t+WT4adrj1ONRRp
-         irL8Sx9hlKwA1w01BqN6LCJ9p8yN1VMMkx14Lh7IbGJttL5lbqN80J+iM3gpfidtszcS
-         Tmy0LvmCmVM8wj/H9rp4f8lUdzM4ZXvxHMYyWU+GOhPqNWgrPJUSY9Y1Z9yQd9VJpvde
-         MfpX7zQomsZa06SprDsGTUkc3reGUICq81H/JfV4Jb3Fd2CuaASzsU33SPo3d3dmrciY
-         WCvoexEmpcFozXtjdrN6BywnxIF8dJVjf6WfTc4QatZJGVDL+4xFUhE0kyBZlTb1IUD8
-         l0iQ==
-X-Gm-Message-State: AOJu0YyVqC1RIasbGvdpLoT20cAbOaqXtnQNKZSK4w0jFCeNrcUy21tj
-	XBmM77euZU6nqUEf4vC2Fzo5cP+mgoUxub2M/+oDLKp+31aZx2v5eSre0nbH2Jw=
-X-Gm-Gg: ASbGncuQT0FDOzX800F5UcRegMGQsUi7NukaPPoh2MBNZPzRfnvRAfynpFkwCGknW6c
-	BiWi02UKGXpYPciC22FlvQGKJuzqWyXj33O4xxh6QDX6p1KdNhidPJOP9hO2qKPv83V939Yc5+w
-	q+BMn93+SO7pH9Nn+KzzOGTaZC9PftqJAYgn1WTk+kWaLqx6Do1Su8Rmbyorm9p6de8Y1G23LLY
-	/CD2QMq2Xid/KmrO9d4HO7qG+DAXz4ZbLXP6P6Hbbz+pr6hvcLiC5QcCE5QgQPR1YFeJd1JWT4+
-	cI9UBqmIfULtyEI=
-X-Google-Smtp-Source: AGHT+IHCZAdBMpY2sRfYAHGzsluTp1uiQftR0w2RkUbnpBtWvkkmyFwOKCoa7AkAT+7SAHKlPsYaMw==
-X-Received: by 2002:a5d:420f:0:b0:382:51ae:7569 with SMTP id ffacd0b85a97d-38dc9104440mr7170729f8f.18.1739183039083;
-        Mon, 10 Feb 2025 02:23:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739183040; x=1739787840;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CAs2LZ2NWgql1gIfsJGw/9zwhaFBmE7zJ8vE+7MhjGA=;
+        b=rLbvJC5Q2cV5s83cKeojDYYzprRm1kYSRbXg777IJgV+fF/vLGdN9hJby4RGxwVp5r
+         YN25aQTWtUogQIwrmOMZNg3dTUTL3kGpj7Y8UhczZKRcSVaZrhACZQCbd38az0ZzdBW1
+         ukqYepIdwr9hu0R/hGcyeT6VvcCm8oC40iNQoKHE439mkZG4NM7/ob01T9vPu27rYW79
+         HToebd1qA4bU7g8sktOHiYs75upKKJXu0Mee7Jn2D2hj2uUQPIpYlgU7TuvN+EUCQ1Q2
+         Jd4tz/6xLNF/0e9p7qLc1B6tOorzxPdPbynUNxPURH+mqxopzPbqZP4rIZ3nu4BlQoct
+         icHQ==
+X-Gm-Message-State: AOJu0YwWOXdOHAA8KsdRRL1ZTwTiWu1j7tCpYu5bTCnOzNqQJmokuuAE
+	vaYCLfCPLZ9aPNk8yLYZG95lho8L20q200v0+FzcPnn2VzfSl+qHtDekOIJ255T9wYOMCi7+SdP
+	mQ2I=
+X-Gm-Gg: ASbGnctZDKRhuf+Bm6CDBRqPkHPr1LGwCebINyzGk+08yAqBmsSkzwqtUvnN2jFeOxa
+	TO1eTobNnQtlzVQ8femHyX7amugpzoZGezpsl2AlqxEw2lZaCVAL/c6Hl+5xp+4D+9w2eJfKos2
+	F6IhFloYrCpEjfiQd4aH5epZnckDUM4EJiDfYumI2p2QSJDFk45jkAXINGp7VckA88LIJ0tJ48a
+	mokovyvCxRtvHTi3gWR9u9z1DImiGWJjScmsJzWAgoavk+VwZwwkvLUb3jRoLQC94dT+3Knialq
+	uPLM6jM3h6767yQ=
+X-Google-Smtp-Source: AGHT+IEvwcW7az1HIBBu0fJmkVOZLB7gEKv2EGnPMa5hQfRCyWQYPs3/QVHnYwuk7OBqTXYHsRMJkw==
+X-Received: by 2002:a05:6000:144d:b0:38d:df21:a51a with SMTP id ffacd0b85a97d-38ddf21a881mr3009109f8f.16.1739183040177;
+        Mon, 10 Feb 2025 02:24:00 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:f3e9:47d0:94c6:777f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd6080926sm5846535f8f.83.2025.02.10.02.23.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd6080926sm5846535f8f.83.2025.02.10.02.23.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 02:23:58 -0800 (PST)
+        Mon, 10 Feb 2025 02:23:59 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 1/2] gpiolib: move all includes to the top of gpio/consumer.h
-Date: Mon, 10 Feb 2025 11:23:52 +0100
-Message-ID: <20250210102353.83132-1-brgl@bgdev.pl>
+Subject: [PATCH v3 2/2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+Date: Mon, 10 Feb 2025 11:23:53 +0100
+Message-ID: <20250210102353.83132-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250210102353.83132-1-brgl@bgdev.pl>
+References: <20250210102353.83132-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,63 +93,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-We have several conditional includes depending on !CONFIG_GPIOLIB. This
-is supposed to reduce compilation time with CONFIG_GPIOLIB=y but in
-practice there's no difference on modern machines. It makes adding new
-stubs that depend on more than just GPIOLIB harder so move them all to
-the top, unduplicate them and replace asm/ with preferred linux/
-alternatives.
+Hardware timestamping is only used on tegra186 platforms but we include
+the code and export the symbols everywhere. Shrink the binary a bit by
+compiling the relevant functions conditionally.
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- include/linux/gpio/consumer.h | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Changes in v3:
+- add patch 1/2 that fixes header issues with stubs
 
+Changes in v2:
+- reduce preprocessor ifdiffery
+
+ drivers/gpio/gpiolib.c        |  2 ++
+ include/linux/gpio/consumer.h | 36 +++++++++++++++++++++--------------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index be3351583508..0f4b31f4a995 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2908,6 +2908,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+ 	return ret;
+ }
+ 
++#if IS_ENABLED(CONFIG_HTE)
+ /**
+  * gpiod_enable_hw_timestamp_ns - Enable hardware timestamp in nanoseconds.
+  *
+@@ -2973,6 +2974,7 @@ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_disable_hw_timestamp_ns);
++#endif /* CONFIG_HTE */
+ 
+ /**
+  * gpiod_set_config - sets @config for a GPIO
 diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index db2dfbae8edb..8d467344528f 100644
+index 8d467344528f..ade8a0b52373 100644
 --- a/include/linux/gpio/consumer.h
 +++ b/include/linux/gpio/consumer.h
-@@ -3,6 +3,10 @@
- #define __LINUX_GPIO_CONSUMER_H
+@@ -114,8 +114,6 @@ int gpiod_get_direction(struct gpio_desc *desc);
+ int gpiod_direction_input(struct gpio_desc *desc);
+ int gpiod_direction_output(struct gpio_desc *desc, int value);
+ int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
+-int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+-int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
  
- #include <linux/bits.h>
-+#include <linux/bug.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
- #include <linux/types.h>
- 
- struct acpi_device;
-@@ -183,11 +187,6 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #else /* CONFIG_GPIOLIB */
- 
--#include <linux/err.h>
--#include <linux/kernel.h>
--
--#include <asm/bug.h>
--
- static inline int gpiod_count(struct device *dev, const char *con_id)
+ /* Value get/set from non-sleeping context */
+ int gpiod_get_value(const struct gpio_desc *desc);
+@@ -347,18 +345,6 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
+ 	WARN_ON(desc);
+ 	return -ENOSYS;
+ }
+-static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
+-					       unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+-static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
+-						unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+ static inline int gpiod_get_value(const struct gpio_desc *desc)
  {
- 	return 0;
-@@ -608,8 +607,6 @@ int devm_acpi_dev_add_driver_gpios(struct device *dev,
+ 	/* GPIO can never have been requested */
+@@ -559,6 +545,28 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
  
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
+ #endif /* CONFIG_GPIOLIB */
  
--#include <linux/err.h>
--
- static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios)
- {
-@@ -635,8 +632,6 @@ void gpiod_unexport(struct gpio_desc *desc);
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_GPIO_SYSFS */
- 
--#include <asm/errno.h>
--
- static inline int gpiod_export(struct gpio_desc *desc,
- 			       bool direction_may_change)
- {
++#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
++int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++#else
++static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
++					       unsigned long flags)
++{
++	if (!IS_ENABLED(CONFIG_GPIOLIB))
++		WARN_ON(desc);
++
++	return -ENOSYS;
++}
++static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
++						unsigned long flags)
++{
++	if (!IS_ENABLED(CONFIG_GPIOLIB))
++		WARN_ON(desc);
++
++	return -ENOSYS;
++}
++#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
++
+ static inline
+ struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
+ 					struct fwnode_handle *fwnode,
 -- 
 2.45.2
 
