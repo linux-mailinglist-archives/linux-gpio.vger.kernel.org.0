@@ -1,173 +1,172 @@
-Return-Path: <linux-gpio+bounces-15654-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15655-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1CC0A2EBDF
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 12:51:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFE7BA2ECF4
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 13:54:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 342D53A8013
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 11:49:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EC7C18856AC
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 12:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2635B1F3D5E;
-	Mon, 10 Feb 2025 11:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BBC222589;
+	Mon, 10 Feb 2025 12:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hb3JQqVr"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P3h0rmGS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88D1F3D3F
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 11:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BF3223323
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188192; cv=none; b=QMoufhTaVLaLIE10ThAjSFmkLNIzT+urdmuc45UOKn6JuLUDcSaFjXNA/0xCclen0/cJW8umEBS2OE+JJN8N2ZcMooHoyxI2quqpLlAwJIcxPRLgTabIKbzCVZyGeelhpwMGV5TpnOwRhiEgdxgxj3l7qE8WIbFkogRFIO/4Bhc=
+	t=1739192046; cv=none; b=h3oyGF+D5iQQ0rZxG7BLWr2kadWbSAm+5kvj8eSb3unZOmcd1BQnB8XR7J3Gk9ZcMl9vlHxwLBO3h/PCER04kfYBy1nnt4KSar5SyctD/O6CQwuchBjJ9kW1I6T25H06VtmT158pQUzkHx2Fdz5Xb0bTOcyH0or6PrNDaFQuscw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188192; c=relaxed/simple;
-	bh=LnIWPwlyM/8ENYW81f37MvCRjBLr8uT8Ig1qt/tLfLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FGDABF4lEcxa+FEQzK3qF0m3hxsFAI04uWMI7/2mjZ6OZpT4vTBUbDqb78gCVQeMv/XnubjbGY6PMNHFywNorGd4jKT4ouEOHLlsvKhbpicZchAXGaA/3Fgh/NxSo9T0qZYuc7lFvASmXXmhFPVspBJb5d7QzqIci0+OmvrzEgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hb3JQqVr; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f5e943543so4070475ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 03:49:51 -0800 (PST)
+	s=arc-20240116; t=1739192046; c=relaxed/simple;
+	bh=7A6tQDHT8Gygs27nVXNQUFzlGL1/SnpgPWEJccOdUoo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgsY/dm+qUu8FQ91Mct9f6or0k0N6YoKIojhnDAbXj3o6bh23mGL5M7A6omSU2SwB5zM7A9FEdZ0ZSTSVMqcLuLIVrJd/1g1q7DO2arwrRd95WbzcWwzmFP4IwYIc+/VZNhv1k+WB78gjsjG2MY2ol6WoUbqJskEKcDnNId29Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P3h0rmGS; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-ab78e6edb48so422222766b.2
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 04:54:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739188190; x=1739792990; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivq4rOjqcMtcp86r8Le4OyvwVvaLK9Ybknb9whMQ8sw=;
-        b=hb3JQqVrhA32ngE+BU24qE5ubn9QhQAnZYFifKNVi/a4xImesDPjdjF8M1Mh1SNV/J
-         8gxiCJ/qcZdo8ewAxHLhfr5Y1SU7Q5ftPB3Whba/sKc5rFmoV0McdJvrO6u2Fu0awM6g
-         2VfqyAtWL1infW2SNHdfVwTZMlFqkB8fS2WXoWDv1Byw9JXimBM+Bq11qameylE93SCM
-         miy9r8QRd6CloieUc9SxkV70Cmie/Gzlt63sOv1gUuf0bZAR2XtsYtmgyG24OWJiLnIm
-         Yj2uh2cetkBlnlT/bkXLOqpNyUN+j6b/WG63cu8K2+QtqzBczSma0EEw+X/N8oeAg5KE
-         vE4g==
+        d=suse.com; s=google; t=1739192041; x=1739796841; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rf85jElMNnrDZvKC7vVh5MfFio59DRgJHRcTUJEvgGI=;
+        b=P3h0rmGSIzJypOlZkNcOiyOuXI9tPLb8MlACDEThOAmgaAuxTYNrH+YuKT7i7yUlJe
+         3GV7NlcMOfW4VBTuhIIPv267BuafGzPV1lho4qwXOY7/1CvHrjhg+v4v+hWTL5gKOmFA
+         h6egxTBbEwr5mmM4yJvfrYuUDz+Z3ybIOY70fvMIfk+jM4yS+Jdvdmv+NH1DuGF/yn+B
+         eK82cPFvWzpWNWbg57bM2nERXIMKbOa2lVAllWKClLUiUXvd+X/DNIhXSWpWVHk0PqNe
+         U/x2tQfgAgNUvIFXKhvVwAhpjwIqKPTdBvxkdDss43zbnZMMlY77rzoTYBgTMANcMrkV
+         wwzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739188190; x=1739792990;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ivq4rOjqcMtcp86r8Le4OyvwVvaLK9Ybknb9whMQ8sw=;
-        b=lt6TyBaexQ5gWXHvqZlNO+7MU3IiaXKn3lcN7DBtdRo7Wx4X5VArb7ZQeszz5tW+AM
-         OwsT/UzifYR133yeAe0O+4D8aRYhYys4h2z6p/pGZ3Pke08HDS+4kIu6CVFnkVd5LgL5
-         f1szE/2ZJbylbFRW+/pDybwYQnfCQhR/FRGb3hzopoFlDnpMatLGu+r9RyO2iw9rwuAh
-         QUVKWs5A2hJGF8WFbR9iCHwICLLhRNgTiKYmP800j9AIdKWRHn7sMXuNqi3vL/v/Xq1M
-         PAqkBcRdYoNMtWH1fqnvDGKXkXYpQn+iEjs1jkjxbnbkILcGHatCMeH9ni4E/SWLt8hn
-         nXfw==
-X-Forwarded-Encrypted: i=1; AJvYcCV57vpsDzWeGSS2UJaUEHiZsfGRZlepC424tcJ4w+3loJda4srSEK2gNylvBY3ALSZw30PYkp0j6w+M@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHWMdLOlCeRt2Bvd7Nu/E+GiWJvhyHgYXvzyH3vU4xF+Y77hgk
-	/jWiAPIYhO4OTH9pGbzkFTId37qXF+eThXA49IubglJoYXrfTcBy
-X-Gm-Gg: ASbGncsck2olZjmSsN1CqdKhVsmCebWNmkcblvGvVIGiXVdtE6pvognYD/ot6f6TWIl
-	WUmD7A1YpwD3XSLD5j4GjKnMPoOI+LQjAjA2DZbY8njgwuXM944PpY/xo2gSiTDyc1jRez597ey
-	S1LfWlBueUOxySDSaa+X0DlZRz2CBa/dKAGmfkPsWkVo1llOgPIQ7OZzI4XTudG0ep0H2G3rFEk
-	TJ3IgnxxoyC4HmQ9BeIRwMfoXhOd+Py+jwEfR02P2FJ11JSdFzFHy98B84jjWw6kyg3XY4iA0ZR
-	mkjgzZMdLfkf3+Hr1v2yanVxrhhm
-X-Google-Smtp-Source: AGHT+IGqyt0x8perOxvOGaYXy7nT409A3phfwrJpRPWWjTCB6RpC8xBN5ySrfOcN7s5jEAP1TdqkUg==
-X-Received: by 2002:a05:6a20:d49a:b0:1ed:acb6:7fb4 with SMTP id adf61e73a8af0-1ee03a41ae9mr8636078637.3.1739188190526;
-        Mon, 10 Feb 2025 03:49:50 -0800 (PST)
-Received: from localhost.localdomain ([45.78.50.120])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7309569d5e4sm1103778b3a.162.2025.02.10.03.49.47
+        d=1e100.net; s=20230601; t=1739192041; x=1739796841;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rf85jElMNnrDZvKC7vVh5MfFio59DRgJHRcTUJEvgGI=;
+        b=BSNdWvtaot2TqLceZHN3MTmgOnmWyVSzb72NLpvKjRbv1xSIHAZZhqSatHVcdHUhVL
+         tY7SFTdN7P8Zql8561ieSn15rx19ewBo2PWF0xZyK1bXusQTVbFLJrkbFlKxEk8f0xyU
+         7O+FwuRrGh85iPkVY0wK9zQArwlYtJ04TJVr2czB7cn9Xc+iVxFTLWh658I5m5lw3U7Y
+         FBvyQKeSLK2x3bt/iKqPg7GGGEzf9vpf0+bEdYxfMgBPeRCKCUaZaW+0eOClO/SHXFBk
+         FhkypPdJgJleGRKS2RcOeQ6C90M7rU4l5nozFxgLG0hwrKUiUXO9ejQSulKFEpVmpykc
+         k69A==
+X-Forwarded-Encrypted: i=1; AJvYcCUlU3GqlJ+7PsBJL3iP4n+NAICwsptCPbtx8XMXsTPaJ8QD65UoQQSO5DvKL/o8pPYedQnfFcEBHKHq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHfO8VAjOIvZVealCiMSe2ApgqLQSa6JjdPYeTAlG4etVfFxD7
+	BArIzetI9R4EvgdwffoDLhei0htEwYZZPjzMxFLKWy5q3f55e+4jV7T8GKzSskg=
+X-Gm-Gg: ASbGncvW6Oa4bmIfOakrAQ5ZL6YRNxQA2+C0Tzp5alnfp9HkfGLkd0fNOGlBPH4O0B5
+	y87bqr2D5lS+iS8uxHZ+Mop0mt+ZHE5U77SXj8XiUxdoD7EK2XenzG+W2GjdxOqV4RWVzzZZBI3
+	kQfeBeC4aX8HGZZXIEwbC0+ekJls6TEmYOyOD8GKuHO9Ff2kMb+14vTxMm67P+S6iV1KTyFXgUV
+	J9EcrC+CiiOtcD6PwdO/4op2rxHcb9ealpG3Wm4H6drH2MlK1kIHfzn5dwMbxwKPVmvlE9/U3TI
+	btQ/wE9+3Ljtmrey9rAIcvLvOsFMraChGTFIuc2FFQ/vMl4OMc+IGdfDmZw=
+X-Google-Smtp-Source: AGHT+IExaOon2TXZW9Vep+azLuX3PC+zXsCFuFLx/CO8qnQeXU427WnR0bcNBj8GMhFUwVXVl5oCDw==
+X-Received: by 2002:a05:6402:5290:b0:5dc:6e27:e6e8 with SMTP id 4fb4d7f45d1cf-5de450706fcmr34849448a12.24.1739192040759;
+        Mon, 10 Feb 2025 04:54:00 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de5a2fc79esm4970729a12.10.2025.02.10.04.53.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 03:49:50 -0800 (PST)
-From: hlleng <a909204013@gmail.com>
-To: info@metux.net,
-	vireshk@kernel.org,
-	linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	viresh.kumar@linaro.org
-Cc: hlleng <a909204013@gmail.com>
-Subject: [PATCH v2] gpio:virtio: support multiple virtio-gpio controller instances
-Date: Mon, 10 Feb 2025 19:49:35 +0800
-Message-ID: <20250210114935.204309-1-a909204013@gmail.com>
-X-Mailer: git-send-email 2.45.1
+        Mon, 10 Feb 2025 04:54:00 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 10 Feb 2025 13:55:00 +0100
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 11/11] arm64: defconfig: Enable OF_OVERLAY option
+Message-ID: <Z6n3JLOn-PrSt3Pa@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <49da5d0cf961fef23a1622253825443eb51d660d.1738963156.git.andrea.porta@suse.com>
+ <ab88fe2a-4f59-47d1-855b-517d98773f3c@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab88fe2a-4f59-47d1-855b-517d98773f3c@gmx.net>
 
-Modify the virtio-gpio driver to support multiple virtual GPIO controller
-instances. The previous static global irq_chip structure caused conflicts
-between multiple virtio-gpio device instances as they shared the same
-interrupt controller configuration.
+Hi Stefan,
 
-Fix this by:
-1. Remove the static global vgpio_irq_chip structure
-2. Dynamically allocate a dedicated irq_chip for each virtio-gpio instance
-3. Use device-specific names for each instance's irq_chip
+On 14:42 Sat 08 Feb     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
+> > The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
+> > option. Enable that option in defconfig in order to produce a kernel
+> > usable on RaspberryPi5 avoiding to enable it separately.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> > This patch is *OPTIONAL* since I'm not sure if OF_OVERLAY is a desirable
+> > feature to have enabled by default. It would be advisable to have it included
+> > so that 'make defconfig' can produce a kernel config that will work out
+> > of the box on Rpi5, otherwise OF_OVERLAY has to be enabled separately.
+> I think this isn't a good approach to convince the arm64 maintainer.
+> This change is not really optional for the Raspberry Pi 5 and possible
+> users/testers/CI rely on a working default configuration.
+> 
+> So my first suggestion would be to provide a scripts/bloat-o-meter
+> output (before/after). Based on this the maintainer can better decided.
 
-Signed-off-by: hlleng <a909204013@gmail.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/gpio/gpio-virtio.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+I agree with you. IIUC what you are proposing, the following metrics should
+help to decide. The defconfig kernel with CONFIG_OF_OVERLAY=y added (wrt to
+the defconfig one without that set) has:
 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index 93544ff62..ac39da17a 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -350,19 +350,6 @@ static void virtio_gpio_irq_bus_sync_unlock(struct irq_data *d)
- 	mutex_unlock(&vgpio->irq_lock);
- }
+- same uncompressed kernel image size (due to ELF section alignment I guess)
+
+- ~7Kb bigger Image.gz
+
+- 3 new modules (all related to RP1, i.e.: clk-rp1, pinctrl-rp1 and rp1-pci)
+
+- 27 added symbols, of which 5 exported
  
--static struct irq_chip vgpio_irq_chip = {
--	.name			= "virtio-gpio",
--	.irq_enable		= virtio_gpio_irq_enable,
--	.irq_disable		= virtio_gpio_irq_disable,
--	.irq_mask		= virtio_gpio_irq_mask,
--	.irq_unmask		= virtio_gpio_irq_unmask,
--	.irq_set_type		= virtio_gpio_irq_set_type,
--
--	/* These are required to implement irqchip for slow busses */
--	.irq_bus_lock		= virtio_gpio_irq_bus_lock,
--	.irq_bus_sync_unlock	= virtio_gpio_irq_bus_sync_unlock,
--};
--
- static bool ignore_irq(struct virtio_gpio *vgpio, int gpio,
- 		       struct vgpio_irq_line *irq_line)
- {
-@@ -542,6 +529,7 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 	struct virtio_gpio_config config;
- 	struct device *dev = &vdev->dev;
- 	struct virtio_gpio *vgpio;
-+	struct irq_chip *gpio_irq_chip;
- 	u32 gpio_names_size;
- 	u16 ngpio;
- 	int ret, i;
-@@ -591,13 +579,26 @@ static int virtio_gpio_probe(struct virtio_device *vdev)
- 		if (!vgpio->irq_lines)
- 			return -ENOMEM;
- 
-+		gpio_irq_chip = devm_kzalloc(dev, sizeof(*gpio_irq_chip), GFP_KERNEL);
-+		if (!gpio_irq_chip)
-+			return -ENOMEM;
-+
-+		gpio_irq_chip->name = dev_name(dev);
-+		gpio_irq_chip->irq_enable = virtio_gpio_irq_enable;
-+		gpio_irq_chip->irq_disable = virtio_gpio_irq_disable;
-+		gpio_irq_chip->irq_mask = virtio_gpio_irq_mask;
-+		gpio_irq_chip->irq_unmask = virtio_gpio_irq_unmask;
-+		gpio_irq_chip->irq_set_type = virtio_gpio_irq_set_type;
-+		gpio_irq_chip->irq_bus_lock = virtio_gpio_irq_bus_lock;
-+		gpio_irq_chip->irq_bus_sync_unlock = virtio_gpio_irq_bus_sync_unlock;
-+
- 		/* The event comes from the outside so no parent handler */
- 		vgpio->gc.irq.parent_handler	= NULL;
- 		vgpio->gc.irq.num_parents	= 0;
- 		vgpio->gc.irq.parents		= NULL;
- 		vgpio->gc.irq.default_type	= IRQ_TYPE_NONE;
- 		vgpio->gc.irq.handler		= handle_level_irq;
--		vgpio->gc.irq.chip		= &vgpio_irq_chip;
-+		vgpio->gc.irq.chip		= gpio_irq_chip;
- 
- 		for (i = 0; i < ngpio; i++) {
- 			vgpio->irq_lines[i].type = VIRTIO_GPIO_IRQ_TYPE_NONE;
--- 
-2.45.1
+hoping this is enough to gather a rough idea of the impact.
 
+> 
+> In case this change is still rejected, we still have the option of
+> something like this [1]
+
+I'm ready to go down this way should the previous numbers not be convincing
+enough.
+
+Many thanks,
+Andrea
+
+> 
+> Best regards
+> 
+> [1] -
+> https://patchwork.kernel.org/project/linux-kbuild/patch/20200203184820.4433-3-nsaenzjulienne@suse.de/
 
