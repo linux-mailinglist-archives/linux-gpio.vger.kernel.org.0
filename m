@@ -1,148 +1,177 @@
-Return-Path: <linux-gpio+bounces-15612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3852FA2E349
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 05:57:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A524A2E455
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 07:49:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A17657A16C2
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 04:56:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1399F3A4602
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 06:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3CF1586C8;
-	Mon, 10 Feb 2025 04:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E391A8F8A;
+	Mon, 10 Feb 2025 06:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W2mG0/d6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpvdNqv9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A40D2F2E
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2025 04:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07CD199237;
+	Mon, 10 Feb 2025 06:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163418; cv=none; b=WPdx3tPPpcwExGrAdUCTMFgq8lA9gK9cIIr5/JKd/zX30HENj2AFZ28p1pWRzmInjN+RO8aJgWDIks6fKbXiKxhKW4RhihgB4Icmtj89dd/NP5Tva5FGNO3DiRXDuQcbT7roQF1EH8lxG8VAI4TxEsqU4CwuJzZk8qcT6Fg5K2s=
+	t=1739170162; cv=none; b=e8oSo8ivaEo58xlhC1NgQ6TDFf2PpLZx48oe+vWh0RUqSOJYw7V3feUkXpvAcyOuxdc2hzvRQOVYkmVbT6/EtcSuHIKsnwmaNmXOvqEmh767eBNPR5+qtIqjHbYRTS1hDPIANYULPUp6WvgCb6GoKQgdyky+86/1nOb/i8fIN2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163418; c=relaxed/simple;
-	bh=YAHkr0METhTi1KTLZaI/9EuUxKR5coa/VgzRRe2H2pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElcZoeXxJYtTbHshX/mxQVNeHSlW2g5qdLPg63QkdWysmmpmaIXJWRVp3B7kTbd7STQfzpXYKFxryRtMl210CSgJ7yIDZH9FY5n4NtfWzSiyprHY6TmLv2wntoWRRrmhlz5fgQRFXvqr/UEemfZZT9rw6JZf0dMOTttW5czjc38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W2mG0/d6; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f5660c2fdso43706045ad.2
-        for <linux-gpio@vger.kernel.org>; Sun, 09 Feb 2025 20:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739163416; x=1739768216; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wBZBkXBErlJMDONsaNIRaxXflZoSWgdPOLJTp5zZ1Q0=;
-        b=W2mG0/d6bfaVqBJV59fDso86cTHZuHr+lJY7WCBMZLLPVJx28AL0+pumhuSMj0gx3a
-         WXrlnVoWDfwMJyJTEjzpA6tBldZpuQdlVnOe3unoi5g+6iRPmlAZ4LcxrxIWXVIXO7ux
-         zymig1w6hPWQl/0K+DrRISML+F1caQabjHkpayLXAyX4y1CGnv3irinial5SeXGTuCbY
-         4z2FSbMT7llnLAsx1Z+8F5Vm+sFWP78gfHbttohKwubj6GUQDw+DoGfl411KsYz8Vc54
-         zUegq4jKvXVra7VoBTzL9G8nbqj7i7SP8nN+ujUOSepdiJ1wC3fCvmzbbSO9mxHF9pRD
-         nGOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739163416; x=1739768216;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wBZBkXBErlJMDONsaNIRaxXflZoSWgdPOLJTp5zZ1Q0=;
-        b=a4iPxGh9UG5TrSU8mxnL2d2ccFmyjjnSaGReoYCrquxRts9a/u9gtNYUW35pbzOTE0
-         4/0d2TQ7oXVyT1lNYZ4YSn+GAmlLKLYyio8AbA3cVQgxa0eE7BPPtq+P4IhFesT4EG3I
-         wk4YxiIHaZzZ9kH/k6Y7g/rYBWK0C+ViV7SIB0XU3vUWkFlnzR+Se3mg4brB78NjMgSc
-         kftdF9OZQmEDAnbrjrTHb0LK3X5Thj29gzmc7fU6La2Bn2fx1LPTyWrswRCS1vky521p
-         PQRhQOgw98mAzABnH1+/5xfzpUI1i0Jt/l930sXX/1g7H9cuZ1HRwvybgyWeIUGUtNv6
-         U0qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVikQkdNKeW0m43cGuDlU1LEwqOmpKkTCpc55lHw/1tgnRWBjov2L1KAfLbdM8lZ9AYV4QwFCfYxDhW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWfFU9K6aisr/KoXsxwYSvHZ8Ixz7ZGBmIU01Lbilt5xWnW4cJ
-	XYwVOxu+TMkLu8gRD/+3Col4ZKtsXOvzutAioPqElM3EIudh+ULcc08Jx6zQN1A=
-X-Gm-Gg: ASbGncthWMuLN8KcId9Kk6Vmp6y5p3wcCGkIr/xq3R7oxjbD0lFLi9VFHCHDYJedRra
-	uN++WQ4s1h5Z6Mo0oTfrn6b4FCf8yt9EALQO1F8mYs/0BPKSBQYvORYg3QICc7NiQU5zTjZ+d90
-	YVcre4znGsio+EcORLV9STCEseWjb8qqEQI/Rdv6k+F9iFqmA6bJxwos3jPGsUO1DwW5mv+NXzL
-	RmIAqIZ11NDawb8NV0W2r7AY9Pqsf3lrAdTvEXDnk5XOHGNNYcAeVe2c1l47Yx/D1fz4S7wPU5l
-	2u1M+q2SWBo8NSyXcQ==
-X-Google-Smtp-Source: AGHT+IHylgse8VRUp8uwAnVdFN1Fm4nsm42hMF25H4bQ839GlTcZj0Y1uxCc3mugNys8LftmyO8qsw==
-X-Received: by 2002:a05:6a00:21cf:b0:71e:108e:9c16 with SMTP id d2e1a72fcca58-7305d4944admr19147693b3a.12.1739163416455;
-        Sun, 09 Feb 2025 20:56:56 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73089afd0cdsm1556606b3a.134.2025.02.09.20.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 20:56:55 -0800 (PST)
-Date: Mon, 10 Feb 2025 10:26:53 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Leng Cold <a909204013@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: info@metux.net, vireshk@kernel.org, linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH] drivers:gpio: support multiple virtio-gpio controller
- instances
-Message-ID: <20250210045653.p5d6svdl4d32sttf@vireshk-i7>
-References: <20250103083520.1764441-1-a909204013@gmail.com>
- <20250106043508.x3pwt3jzh37t265f@vireshk-i7>
- <20250107060044.hteiw6dgycz5rr7x@vireshk-i7>
- <CAHqiF6Aoe4eUShxpPfKczPF-bVneiyM0gpZ7xWF3artzoC__7Q@mail.gmail.com>
+	s=arc-20240116; t=1739170162; c=relaxed/simple;
+	bh=MT20+ISjNrsfj+JY6Luwuix13n0+yvZ1ZzVBv1EsCd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YATOc48gxaDk0X7n/PeJb4rdnwXRuq5lLbRBAhuiI49n0eF1/IJKsG5SOSlQTJSUnxWAqLM9fAYxKyuto6r/YLuwepoedsHr2nCLCwuziPPSI0lQW16AAPXceRrhyScNH9meOARjMtEeAhT7QRmYcYhlTfcFiXPSkXAsH5DPy+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpvdNqv9; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739170161; x=1770706161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MT20+ISjNrsfj+JY6Luwuix13n0+yvZ1ZzVBv1EsCd4=;
+  b=kpvdNqv9Fd+1whyAp/aVWUJHrScH/en1Z+YW8nMgasBcRoGPK9RF1sdc
+   e76bnh8Houf5kcOVKy/s25bbCUILKJxGHCR9lOzi0+2N2bNeeuBGxyPGa
+   3tXT1XPHAbIyWD/Pa+QNFKYtPUdjm3xHZ3W+WRhOd2LQbAeef7aF7EHCn
+   R2gvd5kpCn1HMdGxwziyai1se3aM6vefqcOamYQHbnrLZvD96RAketfH/
+   30/wWSpAZaGibGYv5oFmIkSkJYCYfR72bdcHW4uPEwP5v99kzH3KgyzK+
+   G6/SAx9iqeJeBS+0MM5Of/3L6Km9v6pT9LkmnpJy2PoQbr8vemy+QwcZv
+   g==;
+X-CSE-ConnectionGUID: x2pQQrB0TOaasgOwTyoVBg==
+X-CSE-MsgGUID: knOT/hnySd2JSPuq+HhAgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="43499274"
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="43499274"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:49:20 -0800
+X-CSE-ConnectionGUID: ihMdF6JZSSKHTujs9K787g==
+X-CSE-MsgGUID: zszNhHMBSFCXLDb8sZw9yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="117122370"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by orviesa004.jf.intel.com with ESMTP; 09 Feb 2025 22:49:14 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	dmitry.torokhov@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	sre@kernel.org,
+	jic23@kernel.org,
+	przemyslaw.kitszel@intel.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v4 00/20] Split devres APIs to device/devres.h and introduce devm_kmemdup_array()
+Date: Mon, 10 Feb 2025 12:18:46 +0530
+Message-Id: <20250210064906.2181867-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHqiF6Aoe4eUShxpPfKczPF-bVneiyM0gpZ7xWF3artzoC__7Q@mail.gmail.com>
 
-+GPIO maintainers.
+This series
 
-On 08-02-25, 15:54, Leng Cold wrote:
-> ping
-> 
-> Viresh Kumar <viresh.kumar@linaro.org> 于2025年1月7日周二 14:00写道：
-> 
-> > On 06-01-25, 10:05, Viresh Kumar wrote:
-> > > On 03-01-25, 16:35, hlleng wrote:
-> > > > Modify the virtio-gpio driver to support multiple virtual GPIO
-> > controller
-> > > > instances. The previous static global irq_chip structure caused
-> > conflicts
-> > > > between multiple virtio-gpio device instances as they shared the same
-> > > > interrupt controller configuration.
-> > >
-> > > What is the conflict you are getting since all it has is callbacks only,
-> > I
-> > > wonder why do we need to duplicate it.
-> >
-> > Ahh, so irq chip should be shared actually..
-> >
-> > static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
-> > {
-> >         ...
-> >
-> >         /* Check if the irqchip already has this hook... */
-> >         if (irqchip->irq_enable == gpiochip_irq_enable ||
-> >                 irqchip->irq_mask == gpiochip_irq_mask) {
-> >                 /*
-> >                  * ...and if so, give a gentle warning that this is bad
-> >                  * practice.
-> >                  */
-> >                 chip_info(gc,
-> >                           "detected irqchip that is shared with multiple
-> > gpiochips: please fix the driver.\n");
-> >                 return;
-> >         }
-> >
-> >         ...
-> > }
-> >
-> > For your patch:
-> >
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+1. Splits device/devres.h for the users that are only interested in devres APIs.
+   Original work by Andy Shevchenko:
+   https://lore.kernel.org/r/20241203195340.855879-1-andriy.shevchenko@linux.intel.com
 
+2. Introduces a more robust and cleaner devm_kmemdup_array() helper and uses it
+   across drivers.
+
+The idea behind embedding both work into a single series is to make the review
+process easier and reduce conflicts while merging.
+
+Current proposal is to merge initial patches with an immutable tag (volunteered
+by Andy) for other subsystems to use. Feel free to share a better alternative.
+
+v2: Use size_mul() for multiplication (Dmitry)
+    Update commit message (Dmitry)
+
+v3: Embed devres.h work by Andy
+    Add more users of devm_kmemdup_array()
+    Update tags and rebase
+
+v4: Use IOMEM_ERR_PTR() to fix sparse warnings (Andy)
+    Use source size and make it robust against type changes (Andy)
+
+Andy Shevchenko (2):
+  driver core: Split devres APIs to device/devres.h
+  iio: imu: st_lsm9ds0: Replace device.h with what is needed
+
+Raag Jadav (18):
+  devres: Introduce devm_kmemdup_array()
+  pinctrl: intel: copy communities using devm_kmemdup_array()
+  pinctrl: baytrail: copy communities using devm_kmemdup_array()
+  pinctrl: cherryview: use devm_kmemdup_array()
+  pinctrl: tangier: use devm_kmemdup_array()
+  pinctrl: pxa2xx: use devm_kmemdup_array()
+  input: sparse-keymap: use devm_kmemdup_array()
+  input: ipaq-micro-keys: use devm_kmemdup_array()
+  regulator: devres: use devm_kmemdup_array()
+  regulator: cros-ec: use devm_kmemdup_array()
+  power: supply: sc27xx: use devm_kmemdup_array()
+  iio: adc: xilinx-xadc-core: use devm_kmemdup_array()
+  ASoC: Intel: avs: use devm_kmemdup_array()
+  ASoC: hdac_hdmi: use devm_kmemdup_array()
+  ASoC: tlv320dac33: use devm_kmemdup_array()
+  ASoC: uda1380: use devm_kmemdup_array()
+  ASoC: meson: axg-tdm-interface: use devm_kmemdup_array()
+  ASoC: uniphier: use devm_kmemdup_array()
+
+ drivers/iio/adc/xilinx-xadc-core.c          |   4 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c |   2 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c |   2 +-
+ drivers/input/keyboard/ipaq-micro-keys.c    |   5 +-
+ drivers/input/sparse-keymap.c               |   3 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c    |   6 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c  |   5 +-
+ drivers/pinctrl/intel/pinctrl-intel.c       |   6 +-
+ drivers/pinctrl/intel/pinctrl-tangier.c     |   5 +-
+ drivers/pinctrl/pxa/pinctrl-pxa2xx.c        |   8 +-
+ drivers/power/supply/sc27xx_fuel_gauge.c    |   5 +-
+ drivers/regulator/cros-ec-regulator.c       |   4 +-
+ drivers/regulator/devres.c                  |   5 +-
+ include/linux/device.h                      | 119 +-----------------
+ include/linux/device/devres.h               | 130 ++++++++++++++++++++
+ sound/soc/codecs/hdac_hdmi.c                |   3 +-
+ sound/soc/codecs/tlv320dac33.c              |   6 +-
+ sound/soc/codecs/uda1380.c                  |   6 +-
+ sound/soc/intel/avs/boards/da7219.c         |   3 +-
+ sound/soc/intel/avs/boards/es8336.c         |   3 +-
+ sound/soc/intel/avs/boards/nau8825.c        |   3 +-
+ sound/soc/intel/avs/boards/rt274.c          |   3 +-
+ sound/soc/intel/avs/boards/rt286.c          |   3 +-
+ sound/soc/intel/avs/boards/rt298.c          |   3 +-
+ sound/soc/intel/avs/boards/rt5663.c         |   3 +-
+ sound/soc/intel/avs/boards/rt5682.c         |   3 +-
+ sound/soc/meson/axg-tdm-interface.c         |   9 +-
+ sound/soc/uniphier/aio-cpu.c                |   8 +-
+ 28 files changed, 181 insertions(+), 184 deletions(-)
+ create mode 100644 include/linux/device/devres.h
+
+
+base-commit: a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744
 -- 
-viresh
+2.34.1
+
 
