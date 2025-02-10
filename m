@@ -1,64 +1,65 @@
-Return-Path: <linux-gpio+bounces-15666-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92D8FA2F98D
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 20:53:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 962DFA2F99D
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 20:55:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A5481696D4
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 19:53:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C1163AB56D
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2025 19:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A73224C68B;
-	Mon, 10 Feb 2025 19:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2582505BB;
+	Mon, 10 Feb 2025 19:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3ixRV8K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oLHU6J4o"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544CC24E4D9;
-	Mon, 10 Feb 2025 19:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E402505AC;
+	Mon, 10 Feb 2025 19:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217160; cv=none; b=TYDKVeoagkEWdmtYPz949hr8cTCd5lvpL9XqulZvuj1trjmL6z3WXloCuyct22jcEnFU5tuHVU1p12lYeeSZZjz01nYHOxuAjDeUbSFUDrc3duhNyB3WSL00cWm5cjPrw1e42PZtGJfOhGavmv4QBtkf7hyXhcNdsbSEhsHiq0A=
+	t=1739217158; cv=none; b=EtnG5ySVIshxkC+YReJfQ3cmlK0yNAGPrHx57qDQL2K5te1ozdzmFCi8rz3NlStdLEF+gDqwfe08OuiYkhOWRntzWdrJ0OMvGbO36awNO7+jCcDSEWtneEndQcDy9De2npOB+TVE0SCm55Iq3WnXITG3YiYZq6pvEVBP9Jz/ji8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217160; c=relaxed/simple;
-	bh=YKyCyz2ARHxjUjk7uzAEj6oAAwn39/A/3L0yak7dy9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lRi6NxyobgTnVDgHWo0LouT/n+EJDXvGx+yHGhkTbczKY23WxGYPdqnaXMr41TNDED/s35ONo9/Dxqwv6y/lAmn3+7NJruiBLmOC2FShUerR5Q9xY2lR2AtKiglvkitY9J1QO0FTzqs8f0m1cXDlWANIjbMhskCtGqSh5n0Rr0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3ixRV8K; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1739217158; c=relaxed/simple;
+	bh=A1smERkQ7tLAEPCrqvp+5IIzk4F01vWVmsR3HQOXMNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HUmqvlzuIgjVxSm7aU38AnFNWm5nNlG0QUrXSOZklvgP/UaJxwA8kIBV57puNigr/3S8v4ai4WJOceH25YZGW8ZiNl50IKE8HU7SAHgQlJ3JVHAHmw6pzhWVFJ7q54hWPxI7GHHyFXpgtNw/IJJ7QB4SGpxITLkILYsV6yzKAck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oLHU6J4o; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739217158; x=1770753158;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YKyCyz2ARHxjUjk7uzAEj6oAAwn39/A/3L0yak7dy9c=;
-  b=C3ixRV8K9H6oqYu3Zu26IqBcG4l3xGgeUQUuSpDiHrfGVgKdV3W/G/gW
-   AoieGisNNo3se4qi14bhTy3rbeHcYW52nmMmkGhd5AqoEHtV88TINmLRo
-   0oDSrnT89/7Aa+OxNvlGuayMsFizfxHWzOBoMcBV7asXetI/zeFPzYif8
-   J8zzsDLdaTM4nrhmKJbvKPpdNXDgSFpYd52fARNNYxlHfHEd2wDbBqLqE
-   gzTNpBRO4heov7NyXNGPjEAusOly2IMVKfZOrPUTua7d8L5yL35fFs1fh
-   rEE0TV8Ug2LlnQ6Rasotvb2Kj0q19/uliKGF5v8Rf4KZ5R8KThltAcl4G
-   g==;
-X-CSE-ConnectionGUID: DJzB1PLWSUCcA3/ApyJ5IQ==
-X-CSE-MsgGUID: DbtIjN7gSfGLmnpvHeDz1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40085024"
+  t=1739217156; x=1770753156;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=A1smERkQ7tLAEPCrqvp+5IIzk4F01vWVmsR3HQOXMNs=;
+  b=oLHU6J4oXyxeQtzT443niKF4ucs3NPyQUtiNNvw2j0LNqGvnNC3xZhlB
+   rIer/pHZNAap5Dd0xrdxdhtT8RqcfmehKg+j9DiBiwNVaaaG/QYKPKaAX
+   +B9EIxQXZoIjS0nOamlaVPTZdGcp9ehqytAOUNrPqp7fBQGzLdYCQ9IKA
+   iDfHjcAEjXcWeKvt/9NDsv6VqDsheUHfHPyhrXf84Q+GInvoReG1VxXE3
+   dHECSi3+Ik9sXMZm4y1mkVzu49v00zhXWQVfaqzd0CyFbYfm1e2O1rLsf
+   N68iHqqutmOR//rhCZXC4Vx9CUUxI1aYPStN6tJmLF0zrqUTQcHshdmBI
+   A==;
+X-CSE-ConnectionGUID: +WtRKza/QhSJaar4p0/Zeg==
+X-CSE-MsgGUID: y9rmVOabSu2QLNba37IJfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40085020"
 X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="40085024"
+   d="scan'208";a="40085020"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 11:52:36 -0800
-X-CSE-ConnectionGUID: Y8pPCPD5TcG5ULBuAwdcFQ==
-X-CSE-MsgGUID: rwU+klMkRi+6lMUC1uuI4w==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 11:52:35 -0800
+X-CSE-ConnectionGUID: UIjBdXxFRiqVc8DukIR9MQ==
+X-CSE-MsgGUID: 3Oml8hwSSJK9uKMxeFskNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="143148722"
+   d="scan'208";a="143148720"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa002.jf.intel.com with ESMTP; 10 Feb 2025 11:52:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B7E492F2; Mon, 10 Feb 2025 21:52:31 +0200 (EET)
+	id C517A10F; Mon, 10 Feb 2025 21:52:31 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
@@ -68,12 +69,13 @@ Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Alexis GUILLEMET <alexis.guillemet@dunasys.com>
-Subject: [PATCH v1 0/2] pinctrl: intel: Fix PWM initialisation
-Date: Mon, 10 Feb 2025 21:44:49 +0200
-Message-ID: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v1 1/2] pwm: lpss: Clarify the bypass member semantics in struct pwm_lpss_boardinfo
+Date: Mon, 10 Feb 2025 21:44:50 +0200
+Message-ID: <20250210195230.490904-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+In-Reply-To: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
+References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,31 +84,58 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It appears that PWM instantiated from pinctrl-intel is configured
-to a wrong flow. This mini-series to fix the issue. Note, patch 1
-is comprehensive documentation paragraph to explain what the difference
-in the programming flow and what the SoCs are affected.
+Instead of an odd comment, cite the documentation, which says more clearly
+what's going on with the programming flow on some of the Intel SoCs.
 
-The issue had been reported privately, hence no Closes tag.
-I haven't added the Tested-by, so to make sure that it (still) works
-I ask Alexis to give the formal Tag here in a response to the series.
-
-The idea is to route this via pin control tree as there are already two patches
-against PWM handling in pinctrl-intel. There is no need to backport that, it's
-optional, because it wasn't worked from day 1, and hence no Cc: stable@.
-
-Cc: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
-
-Andy Shevchenko (2):
-  pwm: lpss: Clarify the bypass member semantics in struct
-    pwm_lpss_boardinfo
-  pinctrl: intel: Fix wrong bypass assignment in
-    intel_pinctrl_probe_pwm()
-
- drivers/pinctrl/intel/pinctrl-intel.c      |  1 -
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
  include/linux/platform_data/x86/pwm-lpss.h | 33 ++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
+index 752c06b47cc8..f0349edb47f4 100644
+--- a/include/linux/platform_data/x86/pwm-lpss.h
++++ b/include/linux/platform_data/x86/pwm-lpss.h
+@@ -15,9 +15,36 @@ struct pwm_lpss_boardinfo {
+ 	unsigned int npwm;
+ 	unsigned long base_unit_bits;
+ 	/*
+-	 * Some versions of the IP may stuck in the state machine if enable
+-	 * bit is not set, and hence update bit will show busy status till
+-	 * the reset. For the rest it may be otherwise.
++	 * NOTE:
++	 * Intel Broxton, Apollo Lake, and Gemini Lake have different programming flow.
++	 *
++	 * Initial Enable or First Activation
++	 * 1. Program the base unit and on time divisor values.
++	 * 2. Set the software update bit.
++	 * 3. Poll in a loop on the PWMCTRL bit until software update bit is cleared.+
++	 * 4. Enable the PWM output by setting PWM Enable.
++	 * 5. Repeat the above steps for the next PWM Module.
++	 *
++	 * Dynamic update while PWM is Enabled
++	 * 1. Program the base unit and on-time divisor values.
++	 * 2. Set the software update bit.
++	 * 3. Repeat the above steps for the next PWM module.
++	 *
++	 * + After setting PWMCTRL register's SW update bit, hardware automatically
++	 * deasserts the SW update bit after a brief delay. It was observed that
++	 * setting of PWM enable is typically done via read-modify-write of the PWMCTRL
++	 * register. If there is no/little delay between setting software update bit
++	 * and setting enable bit via read-modify-write, it is possible that the read
++	 * could return with software enable as 1. In that case, the last write to set
++	 * enable to 1 could also set sw_update to 1. If this happens, sw_update gets
++	 * stuck and the driver code can hang as it explicitly waits for sw_update bit
++	 * to be 0 after setting the enable bit to 1. To avoid this race condition,
++	 * SW should poll on the software update bit to make sure that it is 0 before
++	 * doing the read-modify-write to set the enable bit to 1.
++	 *
++	 * Also, we noted that if sw_update bit was set in step #1 above then when it
++	 * is set again in step #2, sw_update bit never gets cleared and the flow hangs.
++	 * As such, we need to make sure that sw_update bit is 0 when doing step #1.
+ 	 */
+ 	bool bypass;
+ 	/*
 -- 
 2.45.1.3035.g276e886db78b
 
