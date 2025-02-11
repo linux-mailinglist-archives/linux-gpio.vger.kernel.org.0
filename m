@@ -1,54 +1,55 @@
-Return-Path: <linux-gpio+bounces-15772-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15776-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF203A318B7
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 23:38:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED17CA318CB
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 23:39:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E223188A4C4
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 22:38:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 904AF164F11
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 22:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2265A26A081;
-	Tue, 11 Feb 2025 22:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87DBA26A1AF;
+	Tue, 11 Feb 2025 22:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="RV66N7hf"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="KRaBFXzp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AB024E4B0;
-	Tue, 11 Feb 2025 22:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC2F26A0C0;
+	Tue, 11 Feb 2025 22:38:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313496; cv=none; b=Ttch2JxDFRNfWMu3N1Jm6KLD+bNZouXrrdQ6MmbdBqhKTGCJ28QI7ewGrVELhaWNbpy7uH2DeFlmp1apuyhADUmnkrAMH8KUzG6Q8SYEvT74EE2Jgu3PstoUgNHVFEgU7mB78su8z98pS+cBiICv6z+Oo/f/poAvpzM9Vq3812A=
+	t=1739313500; cv=none; b=U+PWhOM6Xmgn/IME0AgaRmsKUn8djxaXsUEKN2xPfY1hKTE4iMA0GsW9OWHdtt0R5mGggRLrhTLhDb4kWlSaLluQqG/BSrG3gE/lP3zcHNa9sXDDBDd88GiHWa3FN+7HxeAS+lB/lZ/pXhbzx/FnQ+8AMkM9Pt1HAwYL6yamCok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313496; c=relaxed/simple;
-	bh=7WIpvq4/O65XfG23yjkfFRHrpE2QsTdNr67aJS/kJew=;
+	s=arc-20240116; t=1739313500; c=relaxed/simple;
+	bh=rWnWugIb1mILN22ffUtNr+15cGpAZ1Qkyp5CSezmC8c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=obsNd+NpPrkA2Fqkme7tGqznI5QMVu0kLUl0vcEoDYUCqWgM8+udWHwtvbn00F/zG2XjN4bgU8zAnxTIgWyC5G0NI5mhkGgFRD/HR79sPpBPt7s5l6XdzUFDKYFtGJNJjDgpe3NpyD+5ehO+TiRjbNEOtgp0yBTy1oxgeaFzLpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=RV66N7hf; arc=none smtp.client-ip=5.75.144.95
+	 In-Reply-To:To:Cc; b=R7vHB0kV2K6tM8I+9BG1lHGZJOUtRlPJPXyHceRwTpPpEDEyxGKxIX743w5NYLU58+gB7QQ5woD71TO3eojLpl4zjsm8d8qJiCoVdzrOjD1LNgC56Yk7JM86smeaqTaffqZ1za8+DLzSFRrmcOz0R4/3XwIXbq723WldV8c2QeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=KRaBFXzp; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Received: from [192.168.244.162] (254C21CD.nat.pool.telekom.hu [37.76.33.205])
-	by mail.mainlining.org (Postfix) with ESMTPSA id AC609E453D;
-	Tue, 11 Feb 2025 22:38:11 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id 679D7E453E;
+	Tue, 11 Feb 2025 22:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1739313492;
+	s=psm; t=1739313494;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sAV0Qe0+FmS/ZCfAzMOGXS1xl5PRcB7p0GeHYLx+/po=;
-	b=RV66N7hfkvH6zCsuwfzhvneBQwMTbrxHhAxzMPMawa4/cS3vZpI6TW/0GsHNzRGaZxIsHO
-	Lad+YfMh6dLSXe8b0Vg9W2m1g8SuNzx3WXSImJFFnwmAOQBacDM6bDyDt4mAHSKj/Sbdxf
-	0ZtuDWEpqImschE1lKsGikHl50XOz4qBlTVQWnYWyRusb5641D2KaBT+IQGZQ0LI8SYIfs
-	RYAtCcCq9loisKrcte1fMezhj4yriIgXD/ueDoIAzS3g4aLc8ZsAVBmjfVuOGM14jcDbq6
-	q1qjeRDEZJxL4ZgUMcylgRWhBD+WAKhkgu1flEq7wvfT/dXmTc6ft9KpMuoByw==
+	bh=+9Fb+kzSr1brBkZYKUqpkGeN+Gw1NNq3tX8qP+X3keg=;
+	b=KRaBFXzpgLcH4LujEB1tM6n0BnPI+BXDIbVq7xTzxx0HbRTPZdaIk3hQrkHHK+za0Analy
+	sExrQnfQk7SOsW9kDsTEdRUxwJKYxAnA1emuU+yqPDrUnls6WtG4t7ZS7TN+4FqF2elHPa
+	JHU9JYppWXq1NVMuGBhXPr3nhMHaL+STsqFlmDzy5m1wzgJaKkODBT280MOZfpWOtOE1Vx
+	5AAm7gbosyvXcvoJGTUq/IHliPjUVGHcs4O3YTCXOZVPDmHHf4/Mx/ETNQWD7jWm+JaTM7
+	VdR0H/1qQCC4JRfZY51i6A2eQWBuqvWFnDSWwVxNbM3a4XXMUg6HPBx35wZt0Q==
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Date: Tue, 11 Feb 2025 23:37:48 +0100
-Subject: [PATCH 04/10] pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
+Date: Tue, 11 Feb 2025 23:37:49 +0100
+Subject: [PATCH 05/10] dt-bindings: mfd: qcom,tcsr: Add compatible for
+ MSM8937
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,7 +58,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250211-msm8937-v1-4-7d27ed67f708@mainlining.org>
+Message-Id: <20250211-msm8937-v1-5-7d27ed67f708@mainlining.org>
 References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
 In-Reply-To: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -73,84 +74,35 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Dang Huynh <danct12@riseup.net>
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739313484; l=2411;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739313484; l=824;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=ATKVPnPAnxLDqZY8gYpdG3Mfkq8Qieu8l9ptvDkctEI=;
- b=VYmy8NWOjhU4F35G/zQ5lbhNQ4T40R/uiaVRQnb8Cw4MaXrXA/jA1mhtKjV8TCIpaz6jQnnI/
- R6t2eenWVF9DbSj1LK1Sj41dow8VF4ks5hkTcliORMQY4AAekWJUfYo
+ bh=rWnWugIb1mILN22ffUtNr+15cGpAZ1Qkyp5CSezmC8c=;
+ b=eGUpm3IiWBiNfzOUhY1QriJeJai88w1GdJzpMORa4B3V9aSQFLiDP/jIKsCnL1iI8YCfkS4JC
+ JkWUF65LpzOAGGrvrLl7gxAmGqXjqQdTQJN07SGGX1gXQhOar+vQ1cf
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-From: Dang Huynh <danct12@riseup.net>
+Document the qcom,msm8937-tcsr compatible.
 
-It looks like both 8917 and 8937 are the same except for one pin
-"wsa_reset".
-
-Signed-off-by: Dang Huynh <danct12@riseup.net>
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
- drivers/pinctrl/qcom/Kconfig.msm       | 4 ++--
- drivers/pinctrl/qcom/pinctrl-msm8917.c | 8 +++++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/qcom/Kconfig.msm b/drivers/pinctrl/qcom/Kconfig.msm
-index 35f47660a56b1a730d7724fd5a4fb490da9c7880..a0d63a6725393496e034ca26d218265b7ba4b53f 100644
---- a/drivers/pinctrl/qcom/Kconfig.msm
-+++ b/drivers/pinctrl/qcom/Kconfig.msm
-@@ -138,10 +138,10 @@ config PINCTRL_MSM8916
- 	  Qualcomm TLMM block found on the Qualcomm 8916 platform.
- 
- config PINCTRL_MSM8917
--	tristate "Qualcomm 8917 pin controller driver"
-+	tristate "Qualcomm 8917/8937 pin controller driver"
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
--	  Qualcomm TLMM block found on the Qualcomm MSM8917 platform.
-+	  Qualcomm TLMM block found on the Qualcomm MSM8917, MSM8937 platform.
- 
- config PINCTRL_MSM8953
- 	tristate "Qualcomm 8953 pin controller driver"
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8917.c b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-index cff137bb3b23fbbe2b2630a7cbbf9f46e39981e7..350636807b07d9ab0e207368de63837bc5fa5502 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8917.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8917.c
-@@ -539,6 +539,7 @@ enum msm8917_functions {
- 	msm_mux_webcam_standby,
- 	msm_mux_wsa_io,
- 	msm_mux_wsa_irq,
-+	msm_mux_wsa_reset,
- 	msm_mux__,
- };
- 
-@@ -1123,6 +1124,10 @@ static const char * const wsa_io_groups[] = {
- 	"gpio94", "gpio95",
- };
- 
-+static const char * const wsa_reset_groups[] = {
-+	"gpio96",
-+};
-+
- static const char * const blsp_spi8_groups[] = {
- 	"gpio96", "gpio97", "gpio98", "gpio99",
- };
-@@ -1378,6 +1383,7 @@ static const struct pinfunction msm8917_functions[] = {
- 	MSM_PIN_FUNCTION(webcam_standby),
- 	MSM_PIN_FUNCTION(wsa_io),
- 	MSM_PIN_FUNCTION(wsa_irq),
-+	MSM_PIN_FUNCTION(wsa_reset),
- };
- 
- static const struct msm_pingroup msm8917_groups[] = {
-@@ -1616,5 +1622,5 @@ static void __exit msm8917_pinctrl_exit(void)
- }
- module_exit(msm8917_pinctrl_exit);
- 
--MODULE_DESCRIPTION("Qualcomm msm8917 pinctrl driver");
-+MODULE_DESCRIPTION("Qualcomm msm8917/msm8937 pinctrl driver");
- MODULE_LICENSE("GPL");
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml b/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
+index a503b67f2dbe78516a693ca55a8906f93c8f01dc..7e7225aadae3285f59ec303294cf1515772a629b 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml
+@@ -52,6 +52,7 @@ properties:
+           - qcom,tcsr-msm8660
+           - qcom,tcsr-msm8916
+           - qcom,tcsr-msm8917
++          - qcom,tcsr-msm8937
+           - qcom,tcsr-msm8953
+           - qcom,tcsr-msm8960
+           - qcom,tcsr-msm8974
 
 -- 
 2.48.1
