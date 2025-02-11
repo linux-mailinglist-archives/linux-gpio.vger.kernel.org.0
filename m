@@ -1,128 +1,111 @@
-Return-Path: <linux-gpio+bounces-15700-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15701-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF7B3A305A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 09:22:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 009E3A305F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 09:37:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71E4D162054
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 08:22:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75E631888BF7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 08:37:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780EE1EEA43;
-	Tue, 11 Feb 2025 08:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="l6R2ARP5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E33EC1F03CE;
+	Tue, 11 Feb 2025 08:37:33 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F40C26BDA8
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 08:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1F1F03CC;
+	Tue, 11 Feb 2025 08:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262145; cv=none; b=ZGBA5HbjHTwSOSLWkOLyj4BimJvt/akqTF0G2HaqXnCr7veqbPfb/67Z4D6nQMDkpNtliTz0BcN8uWOYuLyXYz3PeaZ9Z4b7L/Dgt5dIdcnOb9w7tu/VsbDNl4jqQEamFnPcTByA59UcA8jTaN2d7yNVJarzRMHR5bnNu4vdY/k=
+	t=1739263053; cv=none; b=B7W/H5p1fpik0/Kc4CZYfhTHMs9zaKkP2QQNIpJfFyNkeKH4vC8/bar+IutEjg9BwF4+xquv0Lrs/1TTHHbUzdi6hfTkrUJZY02dJ9m4147VeqLZ3cW/8e68qjCeq+Ua2LXeS1ctGiuhdJjWnz9krCKjSOYu8o00P9etXYyQpxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262145; c=relaxed/simple;
-	bh=VtlCoBRlyZzN6frYOm+UDR9Y9LTgg9CCmXLOlgK4JqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BRVH/MXjaTP1K0b9IIv11OtySyYiVy647HjdFNk9QW8G5YlVlGzvmfQHod5B2vH5fMDkMlgvC72zQbZlZReP9vvk2E7DSp/97TO9yeMVWb8CSSqsJ9WZHWwGXAO11oXopNgTrw1kd7unmiOCzGwHOvu0cV1l3ysZSi0GbnbC6ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=l6R2ARP5; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38de17a5fc9so930336f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 00:22:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739262142; x=1739866942; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=abkvBx0v5xQR+AB9ER99VMmoPJKSMX/xYZ55cOWkUJY=;
-        b=l6R2ARP5YBxdiBOeJEYGGD/X4dyoWWQ4fXomKRyEh5ND1vHPSJf3XQwfGzpx5LS88W
-         Xja/wklzRrz+OEI9f3rHVaYn/wQ+RBrt+gj3y8cWG7xK3VPd6/fduHUNXLNsba33wFNm
-         ryBYzkP9ZN+q17CtEwyZ84z7fRQc/PI7GAVLbW1XL3qnZrXCyLQCmWrB5p74ToDMv9yA
-         Dy7I+QmD22vFRZ1MnzqgXANYw1uSIUB/bks3bSs2zWA0kBtEOVkUVGtmH2kysgHzD1sA
-         aVvnvJh7bors7OknlnUyGZV+wm+lxnzbB+hocN3/bpGNaHUhAfueMuSa2Poca2K+SumI
-         PVdg==
+	s=arc-20240116; t=1739263053; c=relaxed/simple;
+	bh=qdRH1BtNG+oyHqsnJrOlkHT6qsNDAOavEAkg69yD7fY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JbmbcUGCD/uFNfG1WPm+3EnwX+tIgjxS+/bXSHNGFLVSulw8l3IV6eT6eynucM1H2Z7InxMNH9v6QgPqtEfiT0hM+Bsozz/G3nQhHoMhGK98/c3qITcOiAgCk19wESeWUXcKW0tI5AjBoB5YVoYiDsszih+VFwBinULOgk1HBjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5203d852d68so491203e0c.3;
+        Tue, 11 Feb 2025 00:37:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739262142; x=1739866942;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=abkvBx0v5xQR+AB9ER99VMmoPJKSMX/xYZ55cOWkUJY=;
-        b=QT7BJNUm+peDsktsjXCnPoUf/4ncmEfhMyDMZHELtTmmmgXLDzgM8iOCShliqMwe28
-         L9d90HWp4HMlnA6DoyBrdpE8Q3OE940x8/d8qRcPtTdyJ1I3RaBsod0Sx0bNP/85iyKb
-         uvfBWlmYfOeyQpF2Qdh2vbKNwoDadn88oi509aWKZ1oLQVMJp67mfrzvYaZtkKxIQh9I
-         FIRwTyOqP4yPz71pmlodY279rGtLcA09AVuolbUYSPhmu5MksQ/vfh37H3tPG+2hQwrx
-         NCUFhIMOxjefO/VbGhshbBpu3b/Sw7TtsNqpNU73Ob7b0qUBTxqayChXdha2RqiJDmuS
-         J38A==
-X-Forwarded-Encrypted: i=1; AJvYcCXS+P1OjEe6MaxFu6A+og/1xZyDkgWOTFfhdXU3dQfG0RSLrPaCezfnV31jTsEUaq7nW0S+iyYvqrif@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZbvFtVXpe7200iF8jhGxDGVj+N5baG3gabp5dxksOZnCkJX/e
-	WurOmvfzjYt9z7T/vBSh1tj9r2q1b8KuchMqoMOMZLTFMDNaX7h0xF4B0OjsFmgzibqktk1LjeA
-	iDCI=
-X-Gm-Gg: ASbGncv6F/1IyXxh9g+sVkpxrUAHOl57OLup5T4JIxtbLPsw4GKO3fj4Vesz3BQGNJm
-	abX3WtMslB8s9Okh3jcHd9QwsAPHYIsmNe4s1mZKoBNhmOilCqxMevxdpns55WI2++jWauiwERi
-	+MyDTHEWVZ+Mum3ceSTq1ou101/P4w76N/goDd2tYftdXvFoF6Lm7B/1AdA4YBlLwA4OFcxpvEI
-	PcPLwNFNysCRekrW/pEjPtF2O6wNwue0qCE6x/01dYCy4ckPNrHXIhQadexuB2YYbO4buYurghg
-	Kt7vLdPkO1ITjg==
-X-Google-Smtp-Source: AGHT+IFMK0Nn9o2/qeM7LLSpZk9GKr3o9T2LYpmMng3eAzPZNsEZRpFEaZ5tqKD9U5N7kc3OHLpkdw==
-X-Received: by 2002:a5d:47c9:0:b0:38d:e12e:5db4 with SMTP id ffacd0b85a97d-38de12e5f10mr4447546f8f.29.1739262141893;
-        Tue, 11 Feb 2025 00:22:21 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dccc1f531sm10913753f8f.87.2025.02.11.00.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:22:21 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: info@metux.net,
-	vireshk@kernel.org,
-	linux-gpio@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	viresh.kumar@linaro.org,
-	hlleng <a909204013@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] gpio:virtio: support multiple virtio-gpio controller instances
-Date: Tue, 11 Feb 2025 09:22:19 +0100
-Message-ID: <173926208976.9431.867890278648224136.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250210114935.204309-1-a909204013@gmail.com>
-References: <20250210114935.204309-1-a909204013@gmail.com>
+        d=1e100.net; s=20230601; t=1739263050; x=1739867850;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y9KxQXy5uyWPLs+CMmlPzBUmnPCJ50c3Ua0JR6mtJHE=;
+        b=a2moQX/5u/bROtkdKT4vL0B/o67kHCbL00jVXCGSr0LTAc5GJ2oZ0VKOLplkdAUD4d
+         0aTLAt3KYKNEDIr/TEgUqrczdhlIXC7saKZNjYVlIFelDP47+O/9tjXBJDh/9RSnQ8Ni
+         qPW07+bc40YuotiYZB+Jup0LCVEyS5gDHao08tXGCuBRppdmP1xIZpkDQb3uaRCrbxcx
+         45NitrSW9Gj8m8TejS9MRsvZmIVFgbfXACHQnRrlB0RtRldIm4G4b1tNoG0YHe5ggk3D
+         1ULZpetXPOH9VpmmGo82Z4rEvE52zSy80MOp9mQuTBpKNWwYiBKxO4T/uGtC9jv7PmbX
+         s0uA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAhgDtzA3roEWoefSH2YjoaBzU2V2tgvFjvZHyCJx6N7C15XdbggVVYtJBQjj1O7HKg74CP4WaN5W6RJvZhjMID70=@vger.kernel.org, AJvYcCUlvWKdiw+jhZsQE9sT7OfG45AmvhMd0nfbByZUl1+1K/STb4Zh2msSNPgV1Gk1Ooyb0emaFKpSI5NX@vger.kernel.org, AJvYcCWwRVOxNjH9XjXOh2n/YuVk4LHFRmyFEgDHgk9rkjk0uJpAcs5sK/JlxqNjI1cTCUyuQ+KiswiF1jjV4q7L@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjRPVyYuuIXPJ1dgndbWHdLtL6Lks9+VJm+w0RS2Iz9nHWEu6R
+	c8+LLfRA/lpPUKcBLGbNoz6XiiVjxREvrvVe3ltNZIlwG9w8n0NwlnhNWCvjHts=
+X-Gm-Gg: ASbGncv0VLLHu6Uvq9RI1Mt8D29VLBoRs5g/SDUFZv1lde0qaZQQiNc8Q6EyjfQmGnv
+	vsZ4DwNRoGmZiu9zszTm0q41zC75RWsxEHwk2qbR2AOhPWboJy0IALiDxSAbBOCQH+BdwPOSOPG
+	MY6jvjvo0lXUZX/cTd5+Fx6rjlT67is6ZCnhq877imEatq1fynlRtKS6xk2m/Vu9s+4Z6a6hr/S
+	vwt1uRdOPHGgWH6cUx7Lp8IKgOKUHtkI/zKQPe9GTzjhJ3ELxyRQnkA0zpAuR4GhixBQUW3I0gP
+	PU62v+COjyeGqEgtD2X6+5wmt4dVXNlboJ5WxWndUQhwI8YE87hNJw==
+X-Google-Smtp-Source: AGHT+IGzAl3/20OdKblWMZHtEeqf13JlzKmoC426xgvmeWngiqWHQVndiDFhoBdRAYg76o7F6R88Lw==
+X-Received: by 2002:a05:6122:4695:b0:520:4d95:1319 with SMTP id 71dfb90a1353d-5204d9514f4mr3143195e0c.4.1739263049656;
+        Tue, 11 Feb 2025 00:37:29 -0800 (PST)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f965e674sm1918586241.9.2025.02.11.00.37.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 00:37:29 -0800 (PST)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4bbd84003dcso465350137.2;
+        Tue, 11 Feb 2025 00:37:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU2+OGdNsDya7QYK4T97iq51koHbvjx6AZiwBBtBVfuZiu/VqrF4I7Lqx6In+6f4mw3Dk4iHpPmCh/4jRhY@vger.kernel.org, AJvYcCVO0C9eApQHHInyhvxtd9B9jVKafIoHdyJtQp3hGiCOGCZOdMkFoGmJHqbo0PQ4jjN4MiE/Ij+D8UhQ@vger.kernel.org, AJvYcCVsLJMYDhKTDJYJBO5laXIVz5wtGKtUWbgyQSp31lepbO26OY+JQM3Xzd51o6+vuiZjWlaV0nem03J8AczL1eIJXhA=@vger.kernel.org
+X-Received: by 2002:a05:6102:299b:b0:4ba:95f1:cc83 with SMTP id
+ ada2fe7eead31-4ba95f1ccd4mr6510138137.16.1739263049324; Tue, 11 Feb 2025
+ 00:37:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250205100116.2032765-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250205100116.2032765-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 11 Feb 2025 09:37:17 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVrtAy2Y0MHrSSY5JsdL=CicA1Jw0j1Rh65Vc7OUz-ayg@mail.gmail.com>
+X-Gm-Features: AWEUYZnvP6FUW0j0B-fJEGJIF1UxEF_NgaVnCxPLMQhuEsKIKLvkzoboqq_Fi9w
+Message-ID: <CAMuHMdVrtAy2Y0MHrSSY5JsdL=CicA1Jw0j1Rh65Vc7OUz-ayg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Add suspend/resume support for
+ pull up/down
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, 5 Feb 2025 at 11:01, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The Renesas RZ/G3S supports a power-saving mode where power to most of the
+> SoC components is lost, including the PIN controller. Save and restore the
+> pull-up/pull-down register contents to ensure the functionality is
+> preserved after a suspend/resume cycle.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.15.
 
-On Mon, 10 Feb 2025 19:49:35 +0800, hlleng wrote:
-> Modify the virtio-gpio driver to support multiple virtual GPIO controller
-> instances. The previous static global irq_chip structure caused conflicts
-> between multiple virtio-gpio device instances as they shared the same
-> interrupt controller configuration.
-> 
-> Fix this by:
-> 1. Remove the static global vgpio_irq_chip structure
-> 2. Dynamically allocate a dedicated irq_chip for each virtio-gpio instance
-> 3. Use device-specific names for each instance's irq_chip
-> 
-> [...]
+Gr{oetje,eeting}s,
 
-I fixed the subject, there should be a space after "gpio:". Also: when sending
-a new iteration, please add a changelog.
+                        Geert
 
-Bart
-
-[1/1] gpio:virtio: support multiple virtio-gpio controller instances
-      commit: 84693df49dac458e980eaf37f26ae6e23ead98d5
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
