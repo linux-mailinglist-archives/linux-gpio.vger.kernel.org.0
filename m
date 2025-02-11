@@ -1,111 +1,126 @@
-Return-Path: <linux-gpio+bounces-15735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BD17A30B9F
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:19:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1062A30BA4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:21:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 043E83A36E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:19:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14E951886DF2
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:21:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FD01FBE92;
-	Tue, 11 Feb 2025 12:19:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 891D31FBEAB;
+	Tue, 11 Feb 2025 12:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XhUBf0gA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhOV/fn6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D56B1F3FCB
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AAB1F9F7A
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276370; cv=none; b=Q3TPrnxjCH8vYIP4KuNOExh30Qa77Ojlsp/nfw1LlyzufsCyevtcT51TMgU3UTIHhyTseZbU+ZgK+nfy+QtzTUMVM78KyKyESBDn1fv8qHtYUp4olnKwx58C5T981Zy0MWoBIY3hpUihvR1TypsfNcH0546P5snoyu4zBEx2tMI=
+	t=1739276504; cv=none; b=GYKUwfF+GXQ1jnXQlDSuMf7kMwKO+6051ciHlHso6RPr0xUuSi96u/Slqy97bN/RYVngrvjKM5IQXKM5z+n76FmTetESH81xTpGBVbpTkYIEf+iAMt6Zh3E+tmjXn8PM2Q8/DMdoj+yRj73izEBLuNA0+8yDgKucNJ/HhxmfE/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276370; c=relaxed/simple;
-	bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WyvjL5851/JaD8rNvqUw9c0+MZh6t7lbY0fehw7Gw3p3oh0MMYovRWLxMZmNiNiaLr+0tEhA7hLFl4PUKEUCA92yGu4aPCk0eztnjJOykWc/ef0IFm3AHKgfTNtoUtVJia1lLvXg+cPUyR1oLSdN/UtDAVxu5YNY2GEjNCvbuxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XhUBf0gA; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-543cc81ddebso6083059e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:19:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739276367; x=1739881167; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
-        b=XhUBf0gAYuq0bMiugxANzIR9gwgFNmKG1MDdPLIKeE0tJW3XAnkFEA8Srau4I3VkWv
-         oLi07RCfVQ0e/Dr8Vva4ysNSOiVOF54folE3aRViOUkcDNfL1c767Qj/j8Blyk2ivHtU
-         jaup5MkcL33bTInaGzUlvFjNSxFde+Yg5bBZnwVnmBqS1+vKQZcErX7qtx9SsD2bApsK
-         AT3ssE8yR9eLhMG6PB8tPgE8Lnpc7W3az1tT83ZAIP8oXitT59NncLMmiap6hJ0kSqkl
-         CFBySd4kV7FgVAMGM68m6Y2PgK+/+h8sQ797xx9seGgn+AS0u+ufQpkDpNApp1MEniYS
-         5kHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739276367; x=1739881167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
-        b=O6VXBM+9aqXSCjWpdSJy2SiZLxsYdU/a9VJuOCwgNwTjKj0R17fv5I7R8bm0Dhz5v6
-         9aEG9pgdh0YvlyaTvMleKM9tjojTWlG3O0KGW35A0kCoHeQRr1uq3THTIXNWIY3CgSfs
-         vdhlVPcAmuLGjnSCTMFKTv3HSJUi6H0L7aR1fIyeXe2Y1+fUXv46NnRngD8PBeMCQTnp
-         3+IGUjYaXSJA9sWm3TvpTqnuPOS2lGf/KEKSiu7cauiCmWjaAZ+RsBw8kJ83eO+iNZSt
-         r3FP06eg6YR1/mC6OpjlXKCAr70sjCCz5oqqP8KutU6jtgo1nDIjuLwafpMRn8IgcKT9
-         6pAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDv7mU4n85Z9yyCAtgqx/yGuHESmb0GaFWcIcJcsweYMVhqoTnG0Ium4y2lhbvigZoZYycdUsca0ok@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJletNIhzIDITLbe7YN5vnKw2kV0xt2NW8U3I4Vud/5O9GZX21
-	Cut4z6JcbTWqIVcHlTQNM/9NfgNkCeYnU0/lrlYCNdHJWYRCsghk4nZvZ+gtASipQFz/sSccjp1
-	by4jijS+EjD4CJd462E9XxdW1BqPZ43VJNFMMiQ==
-X-Gm-Gg: ASbGncvPimVtBwq3JMNpbarbV7eDNusoyE3dL9eFPLZIVfj6oxPX2z1/BtE3vWiiAme
-	LM492w4Vq/tmHSwnWagQ0/9zCFqyuKVU7y4P86TahOtsRI0tivz3XORgNk/95EF+9pE6PjoOYLI
-	EOOpnK+CrOITBGzmgZrJMTj7T8P2o=
-X-Google-Smtp-Source: AGHT+IGYxrn8VvG+hmFMeu3O9l0Hxo+atYIUk+qcitHkvE8T3yRM9ImCgH8WPhBQyvK3gRncV71gqSsunU4dJbFSig4=
-X-Received: by 2002:a05:6512:b9c:b0:545:8a1:536b with SMTP id
- 2adb3069b0e04-54508a1550emr2866169e87.50.1739276367097; Tue, 11 Feb 2025
- 04:19:27 -0800 (PST)
+	s=arc-20240116; t=1739276504; c=relaxed/simple;
+	bh=FFT7dxLEi4qoCkgl6hCpkDpfJvVeonijxTnyKn7xuzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2WX2e0jLh/4J1j8K4yX/8bqP4wMXVacJpYC40U34RTpxof1NkyQjaqeRnQRRYCuF6eUBKUUbqXL4fONA0QkuT2+RuF4wZGyECkKCNVMqbLFOaoBEshPbqzKd2YrQiZcHZrpfSnd0XBvl5TDQEb1C78xKjNk4N7YgrK9VTPswdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhOV/fn6; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739276503; x=1770812503;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=FFT7dxLEi4qoCkgl6hCpkDpfJvVeonijxTnyKn7xuzU=;
+  b=WhOV/fn6aW3fRbVGzOykw4fMTIf+s0/pwBP+QNPJKAZrr5RvYtq8cONx
+   F2aRyBKDWkkqE7AnMoNOMRf+kHR6EKgoMJ3rpptwfZxqgj7RpGbYwXxcK
+   2q+yEmEQ3KQiV4Dg5daJT5AJfAp/RA9QyCJzzKhaWxw2cM8cTVnYRHZSs
+   A1FcrbMUe2J4oXEPezy6dNzOro3Y3r+Y++fkRvNSmGzuks/aQw4oAY/Uj
+   speLm7d0ccKFwbTve49xiU73tcrtedB0d9YdyAYieYs+hh6AyYhmAAbjW
+   /fpClZPSOoJscWRWDzEBStAgol8D9gdzXMDBHwOAY2GF5LktQpO6cdZpo
+   g==;
+X-CSE-ConnectionGUID: vG3t5U0CSKG4Iu3beilmPw==
+X-CSE-MsgGUID: pgTOqwdiQ/GuTWnoeueIWQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="51282695"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="51282695"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:21:36 -0800
+X-CSE-ConnectionGUID: ntVvCsBCSBu31nMpTnZ2mg==
+X-CSE-MsgGUID: BGeLGWB2SQmtpYONgmd/QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="112463872"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:21:34 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thpGd-0000000AV3I-1rFK;
+	Tue, 11 Feb 2025 14:21:31 +0200
+Date: Tue, 11 Feb 2025 14:21:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Koichiro Den <koichiro.den@canonical.com>
+Subject: Re: small brainstorm for the problem I have
+Message-ID: <Z6tAy1orm9UzZ9OS@smile.fi.intel.com>
+References: <Z6nHVEB85AQE-rQE@smile.fi.intel.com>
+ <CAMRc=MdT9A1ctGy747dwJ0TEbr3bfApu0xM=6iSnAdSe5CrZvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
- <20250206-improve-docs-v3-11-2065191fff6f@linaro.org> <PH1P110MB1603B27EBC05880518E1E4CD9FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-In-Reply-To: <PH1P110MB1603B27EBC05880518E1E4CD9FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Feb 2025 13:19:16 +0100
-X-Gm-Features: AWEUYZmm_Vufcd2VIuYlkpmClZmhEw3INUMAExWV0TP9CODSEgAsAJKq6bFXiM8
-Message-ID: <CAMRc=MeFKGdJnru2uwevfQT7XJnLf9GrGvg4b55w-3ybWST6KA@mail.gmail.com>
-Subject: Re: [External] - [PATCH libgpiod v3 11/16] doc: provide sphinx docs
- for the core C API and C++ bindings
-To: Vincent Fazio <vfazio@xes-inc.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdT9A1ctGy747dwJ0TEbr3bfApu0xM=6iSnAdSe5CrZvw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 10, 2025 at 3:53=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
-wrote:
++Cc: Mika, Hans (if you have any input on this, I will appreciate)
+
+On Tue, Feb 11, 2025 at 01:14:44PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Feb 10, 2025 at 10:31 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > Update configure.ac to check for sphinx-build in addition to doxygen an=
-d
-> > make the main Makefile trigger a sphinx build on `make doc` (although t=
-he
-> > docs can also be generated without starting the build system by
-> > running: `sphinx-build ./doc/ doc/sphinx-output`).
->
-> Should probably be "docs"? sphinx-build ./docs/ docs/sphinx-output
->
+> > I have a device that uses SPI bitbang (which is physically represented by bunch
+> > of GPIOs). I want to have a driver of that device to use SPI GPIO driver, but...
+> >
+> > 1) SPI GPIO has an established DT schema and hardcoded GPIO line names in the
+> > driver.
+> >
+> > 2) The firmware for the device uses already some names for the GPIO lines that
+> > not compatible with SPI GPIO schema.
+> >
+> > So, what would be the best approach here?
+> >
+> > I was thinking about the following:
+> > 1) Use GPIO aggregator to fake the chip that will provide necessary names.
+> >
+> > 2) Hack the GPIO library to add a quirk for this specific device to translate
+> > the line names.
+> >
+> > 3) ...your variant...
+> >
+> 
+> I would go with #1 of course - as it has the least impact on the
+> kernel - but setting the names is not yet available upstream. I'm
+> Cc'ing Koichiro Den who's working on adding support for it.
 
-Yes, thanks!
+I now realized that under "names" I actually meant "connection IDs"
+(con_id in the code).
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
