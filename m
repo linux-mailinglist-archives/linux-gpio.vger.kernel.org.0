@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-15753-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D81EDA30C57
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 14:00:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ECA6A30C55
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 14:00:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C36D1668C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:00:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B81E61669E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3374621C9F3;
-	Tue, 11 Feb 2025 12:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D16F21D5A9;
+	Tue, 11 Feb 2025 12:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="s91DYsm1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="n6YoOPWY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F8C215793
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2430A215799
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739278796; cv=none; b=U09bi9F0E28R7PEWjWyGSmFvlzXu8mcOn/vgSw/B8fGKZcliFr3o4QEex0dgwa3fKz3E0T3fSK84PReVlRT4+3n65eQqjVEgILzfH0MdtDzwKM4lXJfDcQGQ7w/djDVVVk1UXO8k/fF4rtXEaKM+rwKmYohkEYVuC4+ycsjB1K8=
+	t=1739278795; cv=none; b=S2UGLTTHpUBpYuCwi6jIzJGxYMhkz5wuZt6iItO8xg/2I/auL/6z+n/fUYVJRJlcRaaSByu1LQSyYY2+AC224Q9/lg71PVrbauWytfbRgelNl0N9EcDSz6g5NMnT/xewYfMp7PpSE830Rpznl0Gh0pRDHcUgPpRLdyVGQhblQG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739278796; c=relaxed/simple;
-	bh=sv5jd+aZKb5A3ehW0lDT+74RH9tP3fBs93kGmvNBXdE=;
+	s=arc-20240116; t=1739278795; c=relaxed/simple;
+	bh=xtY16JuTPGy0f0AsElIlHsFkNo85eg7KSmoHacYE07Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Hc1FXwEwohIebF/feGZGFrNxJsdgP384+qcwZ9j4kLfDG1yB8YqzTeSIcEZ2L/VaYUMqkJ1frEeIjOcRaHURHWctzU5PjlXzI+XxdaH+WxSQt5edHDrWXAemILuyK12VHGlZBN4lgjNfkumyvMVxK7HVM542OcjF3KVyGUWYW90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=s91DYsm1; arc=none smtp.client-ip=209.85.221.53
+	 In-Reply-To:To:Cc; b=LDQUFiEk8GfidVANPEcgpJI3V6dXkyzFARLW8TX8IT789V108tewIQYNuNrg2sFrssFwpr94B1AWrWNgcph4yM65Sts2m1RYm98onYiYc6m3iqpKX2bkBrVklfNQNxUaO2hw6NVEi9AciFBrTEsyHsvuST6vbC2amYWnBhtwwEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=n6YoOPWY; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dcb7122c1so3517044f8f.2
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:59:54 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43618283dedso55382625e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:59:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739278793; x=1739883593; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739278792; x=1739883592; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UkUmUcKe4VndENMhfh4iGMZVtl5QOXM6snLn+fIOv70=;
-        b=s91DYsm1rrQGJPFPvQVXTYEwyEG7w4CMMPV1ppDEgqzXA8wWaot5OTVZK83YOQQfPM
-         JGX1sdCKW4rx6jH5ij3BUDSy0CHnczTq2F0G6ynAFpWphLMZQvrEtpqIMsp91vL2cmcl
-         aeqcWaTKCeZAzi0RjVNNW4iR59tYIyDk3hbNiBZV3qHBnwUVF2Wmad3r4NeY4DIH85RR
-         9P6jC1XtQz/W+n6D+SruWiHdoq/yvsvBrLTV16PilkixtV5YvsNx59BtwIwZa9q9wcqp
-         dJPTV1AcVnuqCQlZSHwq5MMRrTT8eNcZVamv0XyfUGzH7eieyOcP8d7VIK/bnv+hIvLI
-         Rypg==
+        bh=ZPH+Pxwqlyrx1DSr8zde+bZJyhr4eJxNgQrIhm0XUcw=;
+        b=n6YoOPWYk4H21/OcZX9AHpSZj40FhscfqFDEb69S8zRvrDkOElpJHzVrIMYeGQxs8b
+         U9S4z8snGMzJDe8+xEdBqADO23s1tbODQPmxS/NbpAvAl5y9HOurogHNV/mGeshl/ItX
+         ppSBxhSzRBL0XfUVDAiJpAPD1gzk6w5yVA6a/BhVoEcPNoE3Il9iortLcJHyRYJhlmyf
+         tNPwdglDo/3ZlrpZIErYvwYN/NmSdtNoeOwieYZp/5/w04EsPtTvGshtL9VTt0XMPWWV
+         a+J5Kivc27IetM5/hKUpIlQtufGKgPc3dlHFZ8qyAwcHNCGQBypz4VHRWFrEs9/n/xrT
+         NVVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739278793; x=1739883593;
+        d=1e100.net; s=20230601; t=1739278792; x=1739883592;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UkUmUcKe4VndENMhfh4iGMZVtl5QOXM6snLn+fIOv70=;
-        b=CAqKjn2lTJ5+xop90tlCfRU053gcuCtY5irS7bYbNF0sapMmFzTwNJFVfo0/boPMRI
-         njQrTznVuHE+xdEmWOBHJV3A6U2dPllfdxJHHXhglBJSvCNX3mPpjMAZLHx9NcgM7BoC
-         GUrj4Qz7lgeBst2AUI2fReYMZ/Q/l8mMumCB7mLoth0bPFvLJseI3mava3thTQKuQE2w
-         YJglSpMhMimNDRudt494FCnnNMI59v7cu//BSD8QMxaS2ihrhR7+ySYofySGoshYNZEE
-         waQZOzxcxdPjCV9MuXkf4ZjEoA1/J/D46Qz59Sb6yd0jQXKuZ6+htznK3cKW9AIho/zS
-         3wAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcNdwjjvqYjICHK7ASSCrsJs2pFvY5iKE1A4JHTt7VLhaO1MPZ5OnBKA8+j/smwXcR4shXGC/wpYz+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC0TZIm6KCzgQ0UEBYNOYwQl618CsE5agBwjibou6gTgonAmEo
-	p6RCc/xxqxjneByT1ySR2cpv5Hr25GKBwJ6xoJYq79xKhp9qbzQe1eJ0KSclexE=
-X-Gm-Gg: ASbGnctRnIo+Sg/pdehL0ORMxQUQC4Qm47uC3XIqNNJhfHdtp3jrrICt6a/hVLMmJA7
-	9xiKM/4rL5RgELS4A8lZ/sOXSUS6L8YYatZBxxLEUkGAdy1gDQK5/P1xtD1pkfAKSDwpSCDkhlo
-	YgzNukr6+hLv5dYlpugAp0Qu+g+fYCgF16xBhjtpA1TIYbTqB8+8PtXvDvpqbX/9v1P7hIeKPmb
-	8xzXp9726w7Ic2xTlqVxsHEm3VnlaPgYWlOq3ASzJIMJyjiM0rwlyc91sW6k+cVkyMI/AtPQXjb
-	aGiMj8I=
-X-Google-Smtp-Source: AGHT+IFEevF5GvJCbsqGDVstDocQFRz+S6f/+xQ07qcYTbrHEFI0rFPkgWYX6QkY5SSYdUGflnBn1A==
-X-Received: by 2002:a5d:6d8a:0:b0:38d:dfd7:cca6 with SMTP id ffacd0b85a97d-38ddfd7ce1cmr6590364f8f.22.1739278791552;
-        Tue, 11 Feb 2025 04:59:51 -0800 (PST)
+        bh=ZPH+Pxwqlyrx1DSr8zde+bZJyhr4eJxNgQrIhm0XUcw=;
+        b=cQ2oADK9CWi19YIYCiNC4VeLq387aMXVOd2vyQfAelEClkW+ScWrSjV5sPCiXGzith
+         MYBngWwZ+H9Dp71kvyC0pD+u8UGci/5fuKlqC+fGQ24dnrVB//28ZOyk47y9VDWBJtyJ
+         RZKhDg+pDvTEh66mf3QJKCyAf+RQvgqri6bfdOy1B9pHeL3HNMo4bo474BroVmNPNTTD
+         qTSElYnnVOIiAawW4CqVIX6pQgV19Y2rLEXYTtLybkY5J11Z6F8muH734iEexO6UwlsQ
+         rdvPqVcIUrVP0hlERmxQ5o6R7p691IoFEQHyPTiXvpuvykMW8yybXXUTneNEr+ntoheO
+         kp5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBvTZj8Df/8vZt12RzBsMzNUFtZVqBYIFKr8U6miP0EwltUVSZGkbKlDTUZI85K1Tp6rTbsyYyz7Yy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwihtTxQ+guuwfv5uW0BR/w7OcijiK1YJ4bVJ/Kp+8K1+cA3Ztg
+	6HArQTiN3x4VOlwKKW4Nxkql/AfLOWN9b5AbBGAZs8WaVz7tcUv7Rhb2eX/R7qHUJkPPeGNaPkW
+	FswE=
+X-Gm-Gg: ASbGnctBJurZRiYh+5uHARYv2UdTOMSJ8NtjmfvLFdz0HdChLJluS3fa4z6OrWfSiZ9
+	9AxXD8CcskKQ0U5V1gAw+aqxNnjlQea5j8/2+oootx8LzAGngYdRi3k7C72p8Ymnd2GVaOBA22C
+	ActhgrNVy5d3Num8IMqvYuXf3XrBXlMXbQxA/eoycipID/DFe7IM1qaz1+OnFXsajmFd52uJeJX
+	Or4WYAVufLfBGMDa0jZpXmATZRhdqCXL4itglmR1d/NG3/9Yw9qbHIDXzg6zRn+KzFsLE+gOToU
+	T1blDPs=
+X-Google-Smtp-Source: AGHT+IGVukhVj+2UDHcUjYTJ8XrXssPEQf3cnzaLKeDWU+q7Zt74VcW7bQ6FzmFsVsUHe+eLjVV80A==
+X-Received: by 2002:a05:600c:44c9:b0:439:34d3:63da with SMTP id 5b1f17b1804b1-43934d36692mr107533195e9.10.1739278792384;
+        Tue, 11 Feb 2025 04:59:52 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d40csm209844095e9.9.2025.02.11.04.59.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d40csm209844095e9.9.2025.02.11.04.59.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 04:59:51 -0800 (PST)
+        Tue, 11 Feb 2025 04:59:52 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Feb 2025 13:59:34 +0100
-Subject: [PATCH libgpiod v4 13/17] doc: add documentation for python
- bindings
+Date: Tue, 11 Feb 2025 13:59:35 +0100
+Subject: [PATCH libgpiod v4 14/17] doc: add documentation for GLib bindings
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-improve-docs-v4-13-dc56702c2ca8@linaro.org>
+Message-Id: <20250211-improve-docs-v4-14-dc56702c2ca8@linaro.org>
 References: <20250211-improve-docs-v4-0-dc56702c2ca8@linaro.org>
 In-Reply-To: <20250211-improve-docs-v4-0-dc56702c2ca8@linaro.org>
 To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>, 
@@ -94,114 +94,143 @@ To: Vincent Fazio <vfazio@xes-inc.com>, Kent Gibson <warthog618@gmail.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8739;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4189;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=ak0DM9dfmdpdTsuqo+gHwS6h5DiMw4tEQvjTklsChCA=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnq0m3ArUfX4jRFuDeqvYG7kXnECsPhBnXvwN5X
- VcgKZ1or7aJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6tJtwAKCRARpy6gFHHX
- cqCtEACaFdNcew+XFKGJ3kbYNMqVR7FYMzQR8b3Ui9V6ZIolW/nRGxqAlmhiRjlfJniS0rz9GVw
- EQevG1YRfNjco5TYFfCd95T2bfi+GIB1PSp1DZH28BsH62q0Q6QchgDMj4YO51KsyRu48kq0mTe
- Z2F9EzTy75VRUgGXDfII7tzgsbSgycL9KIQ1Nqs4X/6P/G60UCcurTU2i8fL0g1eL5ElhVYdktg
- tBnP3PvpBI5Rx6xopnHP7DrnVx9HXYda5Kv9rzdAVCHQz0h9dgqVh/8dT2y01zX1AeS0V7DkWm4
- 7/k0qnA8QNiDAcPtlMuurnD53OQvUFQbKfp+44TFdKmyhFcHxcw/u87wInXrTacqJV3c2bRc9xD
- sbhPETbucNP6cms0eUOP26Q4XSkdPUIjRkSEg0LD07HP96gLJZj0vt7xhyDfCjNIKs9csNLr1Z4
- jDt1vsSNiEkYcpO6a0P1J5v2WZ9NKvni//MkqxffGAfgcE6uZ9m0kryJr74riae6GlNwQMlvtlB
- 6A6uD0dV7qxm9w1tbaOL3u5DsXZbBhd/WW5ObJ+u8y1ngDwfj9KXrwXvcXf9wRR9sVFOKkMBlGW
- Li08A2TARRTFCkhQk9njt77AewtJpuNLQwb1s0uXNBOOGY9YqqYSUlKOg+AABNr6tXngMJDA1Y+
- YWxsuruNTMzH1fA==
+ bh=en4nI9CttlbGrQfJ+gSjxV0dUmu73WEAI1tpbSKo/VQ=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnq0m3ZqWwQkl/QUHNexSH96NxoU9+DquCFB/u9
+ 0mK9icIC1KJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6tJtwAKCRARpy6gFHHX
+ cvQ3EAC1aKFcA6wjSWUwLVR2YIN9rY4aZli7vj8tOSCeapM7Fgvv/KV4BzaViD5WBsz6vou133y
+ o9GlRXizMXMhBQQcZrTIgcwFhak2ezc/tmGUzOOx0xduO0l0ExveKzjq8+x64g7lpQl0eTZdpOl
+ e7300mrxt6KGV3G5A03sstlfLQaMK8kjLriClU67BqYXNupP6cdyExHNsUzpHRWDtzaALxHEBgq
+ 1UxpFZnCHnB9TXCZ/fCdixedEWlHR1EXtrwk08tPhDuIbNRB7JocplJyy60wBCXAD/2cIoGWPbn
+ WT+zId5mSEY2c60RijYEMFwuWTJ+1zGMUZ/LZ1mC2djMjlY90uxVI7g1gkG/84OVK6UeZM+0uES
+ ND0RcQGCuQ0Ixkvgk/jQCrFCWzVUwcApkqsuxI9khoCEii/D2UFNWSGdpfqlPCrUM9Lh2cwEY0A
+ OHS/8bDbFrbaWr9Y/GCbQRKWjHytzyAgT1KSA8EjI/sQzI7DyTqU6ZYR5jpwUzaxdqF68/oCXeh
+ g/n1aWlPMbOBXOlqbNyQBhE6RvCirwQ0GoRFSdvIf4DrnLf9FDxb4Owp1fJywvdlaRHn0YIU0cJ
+ ARa62sbfdh1iArJFRwAFNYDadSnq/dokr7PdEsylKAlg8bQZcqZFOhDm91T4ezBps2wBWor/+DJ
+ OZxBjMhTZcS5B2g==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Integrate python docs with sphinx using autodoc and the import mock
-feature which allows us to avoid having to build the C extension.
+The GObject docs are generated with gi-docgen and there doesn't seem to
+be an easy way of converting them to sphinx. Let's put the GLib docs
+statically into the sphinx output and reference them from the bindings
+chapter.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- docs/Makefile.am              | 13 ++++++++++++-
- docs/bindings.rst             |  1 +
- docs/conf.py                  |  6 +++++-
- docs/python_api.rst           | 33 +++++++++++++++++++++++++++++++++
- docs/python_chip.rst          | 12 ++++++++++++
- docs/python_chip_info.rst     | 12 ++++++++++++
- docs/python_edge_event.rst    | 12 ++++++++++++
- docs/python_exceptions.rst    | 17 +++++++++++++++++
- docs/python_info_event.rst    | 12 ++++++++++++
- docs/python_line.rst          | 27 +++++++++++++++++++++++++++
- docs/python_line_info.rst     | 12 ++++++++++++
- docs/python_line_request.rst  | 13 +++++++++++++
- docs/python_line_settings.rst | 12 ++++++++++++
- docs/python_misc.rst          | 13 +++++++++++++
- 14 files changed, 193 insertions(+), 2 deletions(-)
+ .readthedocs.yaml |  9 ++++++++-
+ docs/Makefile.am  |  1 +
+ docs/bindings.rst |  1 +
+ docs/conf.py      | 41 +++++++++++++++++++++++++++++++++++++++++
+ docs/glib_api.rst | 23 +++++++++++++++++++++++
+ 5 files changed, 74 insertions(+), 1 deletion(-)
 
+diff --git a/.readthedocs.yaml b/.readthedocs.yaml
+index 510b5c1..97086fa 100644
+--- a/.readthedocs.yaml
++++ b/.readthedocs.yaml
+@@ -11,13 +11,20 @@
+ version: 2
+ 
+ build:
+-  os: ubuntu-22.04
++  os: ubuntu-24.04
+   tools:
+     python: "3.12"
+   apt_packages:
++      - autoconf
++      - autoconf-archive
+       # doxygen is available by default, but just in case.
+       - doxygen
++      - gi-docgen
++      - gir1.2-glib-2.0-dev
++      - gobject-introspection
+       - graphviz
++      - libtool
++      - pkg-config
+ 
+ sphinx:
+    configuration: docs/conf.py
 diff --git a/docs/Makefile.am b/docs/Makefile.am
-index 0b0618b..0cfa4d5 100644
+index 0cfa4d5..3d5c1e4 100644
 --- a/docs/Makefile.am
 +++ b/docs/Makefile.am
-@@ -31,7 +31,18 @@ DOCS_DEPS = \
- 	cpp_misc.rst \
+@@ -32,6 +32,7 @@ DOCS_DEPS = \
  	cpp_request_config.rst \
  	Doxyfile \
--	index.rst
-+	index.rst \
-+	python_api.rst \
-+	python_chip_info.rst \
-+	python_chip.rst \
-+	python_edge_event.rst \
-+	python_exceptions.rst \
-+	python_info_event.rst \
-+	python_line_info.rst \
-+	python_line_request.rst \
-+	python_line.rst \
-+	python_line_settings.rst \
-+	python_misc.rst
- 
- docs: $(DOCS_DEPS)
- 	pushd ..; sphinx-build ./docs/ ./docs/sphinx-output; popd
+ 	index.rst \
++	glib_api.rst \
+ 	python_api.rst \
+ 	python_chip_info.rst \
+ 	python_chip.rst \
 diff --git a/docs/bindings.rst b/docs/bindings.rst
-index 069fc8f..ed7ec69 100644
+index ed7ec69..73f1262 100644
 --- a/docs/bindings.rst
 +++ b/docs/bindings.rst
-@@ -18,3 +18,4 @@ C library.
-    :caption: Contents
+@@ -19,3 +19,4 @@ C library.
  
     cpp_api
-+   python_api
+    python_api
++   glib_api
 diff --git a/docs/conf.py b/docs/conf.py
-index 04c8c3b..cbe1691 100644
+index cbe1691..9d80bde 100644
 --- a/docs/conf.py
 +++ b/docs/conf.py
-@@ -9,6 +9,7 @@ import os
- import re
- import subprocess
- import sys
-+from pathlib import Path
+@@ -54,4 +54,45 @@ except ImportError:
  
- project = "libgpiod"
- copyright = "2017-2025, Bartosz Golaszewski"
-@@ -34,11 +35,14 @@ with open("../configure.ac", "r") as fd:
+ html_theme = "sphinx_rtd_theme" if sphinx_rtd_theme else "default"
  
-         release = f"{version}{extra}"
- 
--extensions = ["breathe"]
-+extensions = ["breathe", "sphinx.ext.autodoc"]
- 
- breathe_projects = {"libgpiod": "./doxygen-output/xml"}
- breathe_default_project = "libgpiod"
- 
-+sys.path.insert(0, str(Path("../bindings/python").resolve()))
-+autodoc_mock_imports = ["gpiod._ext"]
++# We need to know where to put docs generated by gi-docgen but app.outdir is
++# only set once the builder is initialized. Let's delay running gi-docgen
++# until we're notified.
++def make_glib_docs(app):
++    # For some reason on RTD we're in the docs/ directory while during a local
++    # build, we're still in the top source directory.
++    prefix = "../" if os.getenv("READTHEDOCS") == "True" else ""
 +
- # Use the RTD theme if available
- sphinx_rtd_theme = None
- try:
-diff --git a/docs/python_api.rst b/docs/python_api.rst
++    subprocess.run(
++        [
++            "gi-docgen",
++            "generate",
++            "--config",
++            f"{prefix}bindings/glib/gi-docgen.toml",
++            f"{prefix}bindings/glib/Gpiodglib-1.0.gir",
++            "--output-dir",
++            f"{app.outdir}",
++        ],
++        check=True,
++    )
++
++
++def setup(app):
++    app.connect("builder-inited", make_glib_docs)
++
++
+ subprocess.run(["doxygen", "Doxyfile"])
++
++cwd = os.getcwd()
++os.chdir("..")
++subprocess.run(["autoreconf", "-ifv"], check=True)
++subprocess.run(
++    [
++        "./configure",
++        "--enable-tools",
++        "--enable-bindings-glib",
++        "--enable-introspection",
++    ],
++    check=True,
++)
++subprocess.run(["make", "-j"], check=True)
++os.chdir(cwd)
+diff --git a/docs/glib_api.rst b/docs/glib_api.rst
 new file mode 100644
-index 0000000..00b30cb
+index 0000000..307f5f7
 --- /dev/null
-+++ b/docs/python_api.rst
-@@ -0,0 +1,33 @@
++++ b/docs/glib_api.rst
+@@ -0,0 +1,23 @@
 +..
 +   SPDX-License-Identifier: CC-BY-SA-4.0
 +   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -209,234 +238,22 @@ index 0000000..00b30cb
 +..
 +   This file is part of libgpiod.
 +
-+   libgpiod python bindings documentation
++   libgpiod GObject API documentation
 +
-+libgpiod Python bindings API
-+============================
-+
-+The **libgpiod Python bindings** provide an interface to control and interact
-+with GPIO (General-Purpose Input/Output) lines on Linux systems using the
-+libgpiod library. The Python bindings allow developers to manage GPIO pins
-+easily through Python scripts, enabling tasks such as reading input values,
-+setting outputs, monitoring events, and configuring more fine-grained pin
-+options.
-+
-+.. toctree::
-+   :maxdepth: 1
-+   :caption: Contents
-+
-+   python_chip
-+   python_chip_info
-+   python_exceptions
-+   python_line
-+   python_line_info
-+   python_info_event
-+   python_edge_event
-+   python_line_settings
-+   python_line_request
-+   python_misc
-diff --git a/docs/python_chip.rst b/docs/python_chip.rst
-new file mode 100644
-index 0000000..8f56004
---- /dev/null
-+++ b/docs/python_chip.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO chip
-+=========
-+
-+.. autoclass:: gpiod.Chip
-+   :members:
-diff --git a/docs/python_chip_info.rst b/docs/python_chip_info.rst
-new file mode 100644
-index 0000000..c6db865
---- /dev/null
-+++ b/docs/python_chip_info.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO chip info
-+==============
-+
-+.. autoclass:: gpiod.ChipInfo
-+   :members:
-diff --git a/docs/python_edge_event.rst b/docs/python_edge_event.rst
-new file mode 100644
-index 0000000..b316665
---- /dev/null
-+++ b/docs/python_edge_event.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO edge event
-+===============
-+
-+.. autoclass:: gpiod.EdgeEvent
-+   :members:
-diff --git a/docs/python_exceptions.rst b/docs/python_exceptions.rst
-new file mode 100644
-index 0000000..260dc3d
---- /dev/null
-+++ b/docs/python_exceptions.rst
-@@ -0,0 +1,17 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+libgpiod python errors
-+======================
-+
-+.. autoclass:: gpiod.ChipClosedError
-+   :members:
-+   :show-inheritance:
-+
-+.. autoclass:: gpiod.RequestReleasedError
-+   :members:
-+   :show-inheritance:
-diff --git a/docs/python_info_event.rst b/docs/python_info_event.rst
-new file mode 100644
-index 0000000..b89cdfa
---- /dev/null
-+++ b/docs/python_info_event.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO info event
-+===============
-+
-+.. autoclass:: gpiod.InfoEvent
-+   :members:
-diff --git a/docs/python_line.rst b/docs/python_line.rst
-new file mode 100644
-index 0000000..ec8f09f
---- /dev/null
-+++ b/docs/python_line.rst
-@@ -0,0 +1,27 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO line definitions
-+=====================
-+
-+.. autoclass:: gpiod.line.Value
-+   :members:
-+
-+.. autoclass:: gpiod.line.Direction
-+   :members:
-+
-+.. autoclass:: gpiod.line.Bias
-+   :members:
-+
-+.. autoclass:: gpiod.line.Drive
-+   :members:
-+
-+.. autoclass:: gpiod.line.Edge
-+   :members:
-+
-+.. autoclass:: gpiod.line.Clock
-+   :members:
-diff --git a/docs/python_line_info.rst b/docs/python_line_info.rst
-new file mode 100644
-index 0000000..06f526f
---- /dev/null
-+++ b/docs/python_line_info.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO line info
-+==============
-+
-+.. autoclass:: gpiod.LineInfo
-+   :members:
-diff --git a/docs/python_line_request.rst b/docs/python_line_request.rst
-new file mode 100644
-index 0000000..9a58d47
---- /dev/null
-+++ b/docs/python_line_request.rst
-@@ -0,0 +1,13 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO line request
-+=================
-+
-+.. autoclass:: gpiod.LineRequest
-+   :members:
-+   :class-doc-from: both
-diff --git a/docs/python_line_settings.rst b/docs/python_line_settings.rst
-new file mode 100644
-index 0000000..b1d594e
---- /dev/null
-+++ b/docs/python_line_settings.rst
-@@ -0,0 +1,12 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+GPIO line settings
-+==================
-+
-+.. autoclass:: gpiod.LineSettings
-+   :members:
-diff --git a/docs/python_misc.rst b/docs/python_misc.rst
-new file mode 100644
-index 0000000..3ba1e2d
---- /dev/null
-+++ b/docs/python_misc.rst
-@@ -0,0 +1,13 @@
-+..
-+   SPDX-License-Identifier: CC-BY-SA-4.0
-+   SPDX-FileCopyrightText: 2024-2025 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+..
-+   This file is part of libgpiod.
-+
-+libgpiod python bindings misc
++libgpiod GObject bindings API
 +=============================
 +
-+.. autofunction:: gpiod.is_gpiochip_device
++**GObject bindings** for libgpiod provide a high-level, object-oriented
++interface to interact with GPIO (General Purpose Input/Output) lines on Linux
++systems. These bindings leverage the **GObject framework**, commonly used in
++GNOME and GTK+ applications, to wrap the lower-level C API of libgpiod.
 +
-+.. autofunction:: gpiod.request_lines
++.. warning::
++   The documentation for GObject bindings is generated using gi-docgen and
++   cannot be easily integrated with sphinx documentation. Please navigate to
++   a separate section dedicated exclusively to the GLib part of the API.
++
++`Navigate to GObject bindings documentation <Gpiodglib-1.0/index.html>`_
 
 -- 
 2.45.2
