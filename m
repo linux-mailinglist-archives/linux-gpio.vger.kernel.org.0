@@ -1,50 +1,51 @@
-Return-Path: <linux-gpio+bounces-15770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15771-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAEF8A3172B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 22:04:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F47DA31751
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 22:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FB9A3A32F1
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 21:04:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86B9C7A3909
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 21:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142FC264F9D;
-	Tue, 11 Feb 2025 21:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564F2265CB6;
+	Tue, 11 Feb 2025 21:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJ1e4HBR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQ+4Fr4o"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9AB2641E5;
-	Tue, 11 Feb 2025 21:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E9F2641E8;
+	Tue, 11 Feb 2025 21:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739307859; cv=none; b=CoTDnS5H1Zk4N4vXpSItlTgrz6k5UIoUQMh+FhnJcQ5vrmfOF0988ObSUf9PGSGO2lKYyFlx5HBX1VPRJM0zdg7cEBopr8TYHV0s5HzWLuAyn4UFIjCPGI81vCG4+VmsuRpj0unicJgktytGrtLsVs7oBJ/bHCuR/RFQKd6YJY4=
+	t=1739308098; cv=none; b=J6A8JfIEkoZyVpwHDHvkmzm8xan06Noh37rreduxxfBozP2L072U+9vkDJgCZY6MUwH5Qob5KjDtb3bSEngI13MC6i0aiEZzecCh0ceyNnHWKYY0XH+AfZ7N3s2o243/aT+Xkab1L3msaMdwBqJrjDOYKuOWMA19LvTOjIlLZh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739307859; c=relaxed/simple;
-	bh=QBM1KecRIyqwFJKJr5Qa6EXftCFXKvIfRc/X2og4zNY=;
+	s=arc-20240116; t=1739308098; c=relaxed/simple;
+	bh=bGAOKA1MkNL81iEciQ/YaP9238hsjmHj0yVs2PHuZjM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QDXoHDY/Got38oHh1PAdVnH5T22zu0N7AMhY6yBdlAe+C/MvefoEzNI9X1EJ20CIwYYYtO33mSu1ZoHpRUTm7EKJ4br4dA73dqWMxcydYQsgV3/Rna+oUSnkuOGjsclkxjv4idw5r7XwoeXs5zbzhOO9PA810tR2Wlvemsxd3X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJ1e4HBR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45BC5C4CEDD;
-	Tue, 11 Feb 2025 21:04:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=OzQNReQMe7hgX1Pl9QJjtdCKFV6XP2MQbcfTIh85sllnI/a3HZDKso2T1uUaWmxAq2G40dte0cueJkng8zoHNXrRCldyurphOSag67sunN/Lx3O5azXHRbc62P/f4uY8h0CjW2f6kzwSyFMmFmtTE/xVg5tNabyv72oZOsjf9PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQ+4Fr4o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26979C4CEE2;
+	Tue, 11 Feb 2025 21:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739307859;
-	bh=QBM1KecRIyqwFJKJr5Qa6EXftCFXKvIfRc/X2og4zNY=;
+	s=k20201202; t=1739308095;
+	bh=bGAOKA1MkNL81iEciQ/YaP9238hsjmHj0yVs2PHuZjM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UJ1e4HBR4HykvJcDifuZAV8jxb26dyJveTq4z6xAuQl98eFIDF/Fzj/Ai65OpksOx
-	 QUCBtM/uoWTrskBIGCgtSKyIFp6yLq2z1IhOzZRQ3aMPDXnX/AbPWXp6IpHagE0j/p
-	 2ZpWzK7McjscizTIHAHMBJq0TQd3uXuGgISTx5WUgH3RmB4GAsmw9IOpXq56vgzeTN
-	 5xNFdHSdjwxipTAVpG9gZcXkjwnm82a7ZekzpkFn/OxjJsu1KgdZ5md6U+4gNsyneK
-	 ugdWWtiuYFFHt8WJy5FdipuWXeUXN7jxtCF9qQMAAdk61NSbuhmR7XyJ9W6VdtoOVG
-	 ZLAeOXFopDtlg==
-Date: Tue, 11 Feb 2025 15:04:18 -0600
+	b=WQ+4Fr4obzotuKZeY0/kEEylnLtsOD6qn4FsTE6130dX+MJjMj/w+e8PP+Rimq72C
+	 TrSDrPoODZpQ0mWRSCDfuz5DIEnbG4cxoY5xlGdm+mXlMGfSE1wUUT/m3Jspj+9rrA
+	 G81fXqid9RUh9II6oOuWG9CkvC3Lbz3ogvPg7KAEakKMpacaZBCIQWesFL8M9BTx6U
+	 Zbzo+M49Pq+rEzRVuGgmkNbc7Ew8iY78IZleQNZb3B+N5X07Yyb4F1putZOT+qAPRP
+	 5y1Ze4HTH/9MfNe8uOxWCKn4VxNHAhJ+YFRaj67QNEb3ULeJzPFkuvAsj7C99etlv+
+	 6Sy+bxDDNG+AA==
+Date: Tue, 11 Feb 2025 15:08:14 -0600
 From: Rob Herring <robh@kernel.org>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Andras Szemzo <szemzo.andras@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -65,10 +66,11 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
 	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 07/10] dt-bindings: phy: allwinner: add v853 usb phy
-Message-ID: <20250211210418.GA1172102-robh@kernel.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: sun8i: add DTSI file for V853
+Message-ID: <20250211210814.GB1172102-robh@kernel.org>
 References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
- <20250205125225.1152849-8-szemzo.andras@gmail.com>
+ <20250205125225.1152849-10-szemzo.andras@gmail.com>
+ <20250206161958.1ae885db@donnerap.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,36 +79,51 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205125225.1152849-8-szemzo.andras@gmail.com>
+In-Reply-To: <20250206161958.1ae885db@donnerap.manchester.arm.com>
 
-On Wed, Feb 05, 2025 at 01:52:22PM +0100, Andras Szemzo wrote:
-> Document Allwinner v853 USB phy.
+On Thu, Feb 06, 2025 at 04:19:58PM +0000, Andre Przywara wrote:
+> On Wed,  5 Feb 2025 13:52:24 +0100
+> Andras Szemzo <szemzo.andras@gmail.com> wrote:
 > 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
-> ---
->  .../devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml   | 2 ++
->  1 file changed, 2 insertions(+)
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
-> index 21209126ed00..815742c4f5fb 100644
-> --- a/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun50i-a64-usb-phy.yaml
-> @@ -19,9 +19,11 @@ properties:
->        - enum:
->            - allwinner,sun20i-d1-usb-phy
->            - allwinner,sun50i-a64-usb-phy
-> +          - allwinner,sun8i-v853-usb-phy
->        - items:
->            - const: allwinner,sun50i-a100-usb-phy
->            - const: allwinner,sun20i-d1-usb-phy
-> +          - const: allwinner,sun8i-v853-usb-phy
+> > V853/V851 is a new SoC by Allwinner. Add a basic dtsi file for it.
+> > 
+> > Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/allwinner/sun8i-v853.dtsi | 656 ++++++++++++++++++++
+> >  1 file changed, 656 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
+> > 
+> > diff --git a/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
+> > new file mode 100644
+> > index 000000000000..8b82b8783127
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
+> > @@ -0,0 +1,656 @@
+> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+> > +// Copyright (C) 2024 Andras Szemzo <szemzo.andras@gmail.com>
+> > +
+> > +#include <dt-bindings/clock/sun6i-rtc.h>
+> > +#include <dt-bindings/clock/allwinner,sun8i-v853-r-ccu.h>
+> > +#include <dt-bindings/reset/allwinner,sun8i-v853-r-ccu.h>
+> > +#include <dt-bindings/clock/allwinner,sun8i-v853-ccu.h>
+> > +#include <dt-bindings/reset/allwinner,sun8i-v853-ccu.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/power/allwinner,sun8i-v853-ppu.h>
+> > +
+> > +/ {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	dcxo: dcxo-clk {
+> 
+> What's people's opinion about the node name? Traditionally we call this
+> "osc24M", in all the other SoCs except D1 and A100. So is this the new
+> black?
 
-You just changed existing users. 
+That's documented (but not enforced) in fixed-clock.yaml now. It's 
+"clock-<freq-in-hz>".
 
->  
->    reg:
->      items:
-> -- 
-> 2.39.5
-> 
+Rob
 
