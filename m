@@ -1,93 +1,127 @@
-Return-Path: <linux-gpio+bounces-15765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE1F8A3133F
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 18:41:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 970B3A315E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 20:50:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C7DB162869
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 17:41:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF02161F0C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 19:50:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C5D17C91;
-	Tue, 11 Feb 2025 17:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5BB265637;
+	Tue, 11 Feb 2025 19:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="P3iRA/LF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqXsQQAK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFA126156B;
-	Tue, 11 Feb 2025 17:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B0126562F;
+	Tue, 11 Feb 2025 19:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295663; cv=none; b=K3ih+JRDsM30bRoA6Zboux0vCqmMpIQS0qHzrAGuKKMljxlInQGw1O9HcZ9ibm5taskJVgeNM9o59QVItcH7JVftqAfDBtvzH1N09C8n43g2AKm3SSyZjYBa3PmzwigM8WgLT8jW7zCKohiDcZ0syxBq8IP2dj35IQS9WZtHFB4=
+	t=1739303234; cv=none; b=GffLN5LwqzZw4z+YYs2MryQ8L/9Si+vfrzcgWu2GEt0ITboQejxj1z5G++NtMi4V43MbHbJiy64U30L2Ey3Nkcd7tVwYG6JRo0BUU0t8F+SQUC0xziUqx5n6rgVhXmZLGmRMMJR9x2FtuDLTib4iFSCFCCr5ntPuww0Dnw/Kuig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295663; c=relaxed/simple;
-	bh=GOiwm1wHZc/AznJrAuxQaJv6N7XnPRihLg4UA4rAFHI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=CXpO/rqV0ruhH2g4OK/3YUMPFbyi60z7KTIWKCTt5mWyvOA/YYfFW39nrFceQYd40K7nAzlGAOMzD/bmnIvb8Nf6UTqJS6zoKzgASDjxRjSejXi024/fVOMkXp4Y1ywZWMXXlchvXSSSKL5jdOnRhwx2WMAa+MEQuS1MzLeC3WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=P3iRA/LF; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id A858A25B0D;
-	Tue, 11 Feb 2025 18:40:52 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 2SotM2Jdszzq; Tue, 11 Feb 2025 18:40:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739295648; bh=GOiwm1wHZc/AznJrAuxQaJv6N7XnPRihLg4UA4rAFHI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=P3iRA/LFZEX1s9f0Z0/3GlcbJ6usxjiHNpVMnzOKgpgC3asR1tryrnnNM1S4d6dKo
-	 7DWGN2n77QYchJs1MqDyxOklxrhE52E4QFvySI8riosYYr3iPEdASqUvwxGDmg3eND
-	 sf22RN4B6sXqf8ZkBZmjnNeQNLuzan15rugqMLRCOl9qhnkT6HWg508ckl1DXuLSRK
-	 nhqVvFMEzyPWhQ8x6c+JSzKykZ0XnbX3JRsX4KSLso25/AKYmkZVrIatZjMRJBAkf+
-	 9odluTlD2LzQj+ZT9RLvmw1/Mk1oag626SF25Y5f1BuEWqFXyXCtpf9ZKFtsl/uCf0
-	 LG9hjdKMgTbRw==
+	s=arc-20240116; t=1739303234; c=relaxed/simple;
+	bh=l+iielRDD1bT9pM6nGbHot5GG7rZbmttCOx/HN/goU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ai7Bo58oPVLetAIkrnXyZ3CjO8Yh0SbiStOI9oK9kmdlCHZegviRGvWFJyIK3xZ37TRL+q9sWRSgRr3yaZ+QkjdiNXkOc0c7Q2F0/1uYgGo1LcmZPOrz8+PuY0sdXwBmwCziJbrudKqFK4wM87cU0IwtBn4kqdGCM3pnD9BEqgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqXsQQAK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99459C4CEDD;
+	Tue, 11 Feb 2025 19:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739303233;
+	bh=l+iielRDD1bT9pM6nGbHot5GG7rZbmttCOx/HN/goU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bqXsQQAKXNpcPIx/WGsrVudBGjDBJGYDzYGupkC/m/yjeYFTzw//u+4Rcck6JDRoN
+	 XRlVHoP6LL6Vpc++j6YQOc1DsslK488cxUTfjBxpEC9c9UZzchUrygtiU6dT9hnxAY
+	 YeMSdBEC7VF2X/KfFSzw41R+5Sh2XKND46lfId60Qm+76moulNskmn+88svpHL6ufB
+	 Tc730P46NE7W8EqNRAMkR6ro+ggaQ9xhIXaDusCaeBzYw2MaMshFiCra/pAFgWAYb2
+	 9qMHCJbUev6uUvd2s5BPOd+3p/QMKeWkkoYArIchnm9txu416uQI81b6hl/ueMlP81
+	 ik8UmeTWMLfHg==
+Date: Tue, 11 Feb 2025 19:46:58 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org
+Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
+Message-ID: <20250211194658.0cfb437b@jic23-huawei>
+In-Reply-To: <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+	<20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 17:40:39 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
- <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus
- Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor
- Dooley <conor@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-Subject: Re: [PATCH 3/3] pinctrl: samsung: add support for exynos7870 pinctrl
-In-Reply-To: <20250204-exynos7870-pinctrl-v1-3-77b9800749b7@disroot.org>
-References: <20250204-exynos7870-pinctrl-v1-0-77b9800749b7@disroot.org>
- <20250204-exynos7870-pinctrl-v1-3-77b9800749b7@disroot.org>
-Message-ID: <03c51c96256aa6b927febf7c005d9164@disroot.org>
-X-Sender: kauschluss@disroot.org
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2025-02-03 20:35, Kaustabh Chakraborty wrote:
-> From: Sergey Lisov <sleirsgoevy@gmail.com>
+On Mon, 10 Feb 2025 16:33:36 -0600
+David Lechner <dlechner@baylibre.com> wrote:
+
+> Replace bitmap array access with bitmap_write.
 > 
-> Add support for the Exynos7870 SoC pin-controller in the pinctrl driver.
-> It has 8 GPIO banks, and 3-bit PINCFG_TYPE_DRV width.
+> Accessing the bitmap array directly is not recommended and now there is
+> a helper function that can be used.
 > 
-> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
 > ---
->  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 141 +++++++++++++++++++++++++
->  drivers/pinctrl/samsung/pinctrl-exynos.h       |  29 +++++
->  drivers/pinctrl/samsung/pinctrl-samsung.c      |   2 +
->  drivers/pinctrl/samsung/pinctrl-samsung.h      |   1 +
->  4 files changed, 173 insertions(+)
+>  drivers/iio/resolver/ad2s1210.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+> index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
+> --- a/drivers/iio/resolver/ad2s1210.c
+> +++ b/drivers/iio/resolver/ad2s1210.c
+> @@ -46,6 +46,7 @@
+>   */
+>  
+>  #include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/clk.h>
+> @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+>  	if (!gpios)
+>  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+>  
+> -	bitmap[0] = mode;
+> +	bitmap_write(bitmap, mode, 0, 2);
+>  
+>  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
+>  }
+> @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+>  			return dev_err_probe(dev, -EINVAL,
+>  				      "requires exactly 2 resolution-gpios\n");
+>  
+> -		bitmap[0] = st->resolution;
+> +		bitmap_write(bitmap, st->resolution, 0, 2);
+>  
+>  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
+>  		if (ret < 0)
 > 
 
-Please refrain from merging, wait for the next revision.
-Thank you.
 
