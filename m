@@ -1,194 +1,127 @@
-Return-Path: <linux-gpio+bounces-15737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2269DA30C0E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:51:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90668A30C35
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:58:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBE4A1648F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:51:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA8FD16592D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A05B204873;
-	Tue, 11 Feb 2025 12:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365FA221D92;
+	Tue, 11 Feb 2025 12:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="t4c69+VW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SsCcIb8W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29728320F
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0BA21480A;
+	Tue, 11 Feb 2025 12:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739278310; cv=none; b=WQwe7ZsEQdp+U7F3bFf6yl1XbqWfuDXBB3AHHEGo0uoCPcwVJfzUJLGa+XZ9ENDBCTfrx+qOnh5vgV4UWcS8C/LtGptrIn5AVMhgih4405xMUUMbOa1lCYckPbhHiJt8NeeCdBSIFStk+FAMe2FMKPhsxOWD+BNnaX2MjvuUDmM=
+	t=1739278663; cv=none; b=MmMNTa8n9TRu1uhS6jXtvcXfjFNyQWaS/jRNbzy8JAC87q2mEhTnO+Vz+X5455qo/9q4MxqNjNwhzHUH9sYHKEg1AYMbQlV1UvKpbZtiPpbPfoQnNJiHnU1ykQcvF8IEu+3p8jSaVPf0WWTJtKTEBKd/3YjZHFfJsZLnyuASiK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739278310; c=relaxed/simple;
-	bh=edsr47UZMLQ2/Oz1MWiudK8ZJ21PpWVogkexhabxjdg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CjaeQroxpuxgQB6y+wOGwB6tyHEq78VCRbi/2aYezWS5Oi6vc7IgczMIb5IUHMnucXgjDEzXEpKHzItI7T6cdx62fnY762tydWMt0vGGmGcclDjgZM6n8TbqqHK8dy44hqeNDXl4NqcU/wyRU6XWpLF8wJ/CoEd97l+trwfYCj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=t4c69+VW; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54509f46614so2586217e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:51:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739278307; x=1739883107; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BKQWcyZMt73G6/nGYP5CVdrHXeNZcLGr3j3iFfKbH4g=;
-        b=t4c69+VWxJwB9fLOIZRFIh3nKzBYKrxjnnzEH9tqTB2xZbK87jixV3V3QOURFTRtBi
-         foDK4vPCYdvd1juGClLTorVnXQV9+h6JT3IH5YdkuS9YJL5rLLY94Q/wVrmRcUyDkrCS
-         AAfQmJjrrQKp6Y2Nor9eZVIQIOcr06JqPHARnITEY2VC2/7t8BYpOYb6P0NcQp1hzSkW
-         rhKzVsWvFO2Evm6NsvmNc3QeFFsgeDV4yhyPr4o4sRGDmgq+JWSwhbyfyddRAPesnsFx
-         wY83Q4e9wbcPCzvtRYsn53qq0K9qm/mT7/RxW2YaiAyKWrFqKyMd7DC/CMdtAqS5KJRb
-         cqQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739278307; x=1739883107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BKQWcyZMt73G6/nGYP5CVdrHXeNZcLGr3j3iFfKbH4g=;
-        b=S8ro/7QiX9rzfH8lYgDoYHwEOLLTEHkMcmC57bDrAX12iLoecmh++rO81ATeqRNsIR
-         57BLMBG+stNo/0jMCevFpISmzB83WJxbkfkkb0cyszWB1k9i3YOEXQKNDpCiLWcOPIS6
-         ZhgDCJCVoGnCLTlzu4W25THKObNYTzg5KMmfdLYo61Wqn4SkIp6kXt6z71NflvxoZ3PJ
-         mXYzTyskxwGOWIgJ9cLTVsK+jp/rqnlvX0ADJSLt2cNmoRMzZ+BqcKyb5OtXd/prlxaj
-         QueHTALYkQmPr58mYKbwmeKnqwZDA4xEA017uB1GoZbKKYtpEq46T0CYG0gsgsWm1pN1
-         Sasw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjc57ZBVJcWTKwr1+/ZB9X6bbTgsPyxXTD6WNoH+0ImNvLuQp5WPlotnKO9Bcg8/xdNMtM83CBrpa2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV/G5Ivjlb0XBoVeElf7Pj0t4fQb5KwJWQynLJIjM+lsPbz7HY
-	N/DK4xBN2xVoa/ZPwBQ211IKyP5RSOL4+egxB2lyIWPa9d+AOt+Y2BcXlhmbJqjwx8VxXI1fAIo
-	AryqVTe1zmuvSIB8JWijaxYDRT0UldqPS/6raDw==
-X-Gm-Gg: ASbGncvb22yUcr1CEwsK7Qs0NgpLRAci7Jo6tWcmlSn5Bri82D3DnHGeql2XsO1KcJB
-	e7vMKKcqP16bZJZ1RbXKcMphK20qvC0BS5aRMXhQU3lV7BjMqSq0CBLgI2xxNPR665ymlz2H6/U
-	f2Mx7APoAG7Y6dfGAqkQQqENwOI00=
-X-Google-Smtp-Source: AGHT+IFf2e8QWqMl5TU8uZkCjPoo3aTbLouOJ+E3G3cbACEU0kyZIHz6vnmCoUb1OL1gRoa8jZshhpd8bPs5gJNstGE=
-X-Received: by 2002:a05:6512:ad5:b0:544:1093:ee3a with SMTP id
- 2adb3069b0e04-54414abb29amr6501749e87.24.1739278307145; Tue, 11 Feb 2025
- 04:51:47 -0800 (PST)
+	s=arc-20240116; t=1739278663; c=relaxed/simple;
+	bh=X4fB1Ellq5GKEOukrFF7YPbWRktsIcuO66L67hsODoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwB77/g9ezeZFD4mgOasRYCzxxQI5bJiGsgh6sVDA/DY1SWq/ALKpjAWL/LuI9G/p2gR7EOFYVb7iNTFv0gq8v0A599qlINJv5u4T+KP5SJhDwWWxlryQHDwQcMgDcaJVpED4ncoJOBLFOxTwZVqfYKNzwVcfYinKPfVAbUBIQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SsCcIb8W; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739278662; x=1770814662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X4fB1Ellq5GKEOukrFF7YPbWRktsIcuO66L67hsODoo=;
+  b=SsCcIb8WojibYanEr7gMS9H9D8VxzJI+wS2A0mYVfLhUtX3bqcqrsVHG
+   3plM9BaGhcY9JwV/F2vTlL9gmlF9q+2o4J/5f7QYtX+xnfLKvjFb+hNQw
+   l9eTsFHYYMpXIcObw6n7ZoahVJktvxtqME/M7q/QgXDC84/uHU6LbKW6L
+   l/bBsLr46Xs8CC7t4x6q6NVkrj/jP0rN+7zWuOo+n+SLRCWC+B/gM1N5V
+   G2rkJRyN+eDFL/HPLO1H5Z4bnOuZ0HEOHHAy/4cVMBu4EL3LcANdTdeKU
+   Je3G/B0p33CCBpWqs51jkmGS5Pn+ZBZMgtqOWUWw/6co/03ZnF6Mkf62/
+   A==;
+X-CSE-ConnectionGUID: 4SQgvuPPTiOUbzfuiRBurQ==
+X-CSE-MsgGUID: MFz5LGCqSqGgEQmamEF0wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40019705"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="40019705"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:57:41 -0800
+X-CSE-ConnectionGUID: t0LgvSdkSSy5isLBEeXO8A==
+X-CSE-MsgGUID: B0jUdtFpT+aBUeHNlcg5UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="113023165"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:57:36 -0800
+Date: Tue, 11 Feb 2025 14:57:33 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
+	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	oe-kbuild-all@lists.linux.dev,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6tJPc-coP1Iw3qt@black.fi.intel.com>
+References: <202502102201.zLWaJC6V-lkp@intel.com>
+ <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+ <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
+ <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
+ <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
+ <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
+ <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
+ <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+ <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
+ <Z6s-S67MdpVrXRji@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
- <20250206-improve-docs-v3-13-2065191fff6f@linaro.org> <PH1P110MB16032914796D8FE520943F359FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-In-Reply-To: <PH1P110MB16032914796D8FE520943F359FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Feb 2025 13:51:36 +0100
-X-Gm-Features: AWEUYZnGW9mu9Rh4-w4q-ZZjIWgPIV2-uAQXSp4vc42ugdD6GTetpd2iQKli7Ww
-Message-ID: <CAMRc=Mek=VnRBC-7CwfNb38JOe6EKw3a=37KJPhF96pySOK=zQ@mail.gmail.com>
-Subject: Re: [External] - [PATCH libgpiod v3 13/16] doc: add documentation for
- GLib bindings
-To: Vincent Fazio <vfazio@xes-inc.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6s-S67MdpVrXRji@smile.fi.intel.com>
 
-On Mon, Feb 10, 2025 at 4:10=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
-wrote:
->
->
->
-> > -----Original Message-----
-> > From: Bartosz Golaszewski <brgl@bgdev.pl>
-> > Sent: Thursday, February 6, 2025 6:22 AM
-> > To: Vincent Fazio <vfazio@xes-inc.com>; Kent Gibson
-> > <warthog618@gmail.com>; Linus Walleij <linus.walleij@linaro.org>; Erik
-> > Schilling <erik.schilling@linaro.org>; Phil Howard <phil@gadgetoid.com>=
-;
-> > Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>; linux-
-> > gpio@vger.kernel.org
-> > Subject: [External] - [PATCH libgpiod v3 13/16] doc: add documentation =
-for
-> > GLib bindings
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The GObject docs are generated with gi-docgen and there doesn't seem to=
- be
-> > an easy way of converting them to sphinx. Let's put the GLib docs stati=
-cally
-> > into the sphinx output and reference them from the bindings chapter.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  .readthedocs.yaml |  9 ++++++++-
-> >  docs/Makefile.am  |  1 +
-> >  docs/bindings.rst |  1 +
-> >  docs/conf.py      | 38 ++++++++++++++++++++++++++++++++++++++
-> >  docs/glib_api.rst | 23 +++++++++++++++++++++++
-> >  5 files changed, 71 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/docs/conf.py b/docs/conf.py index 3d0209a..33fc89f 100644
-> > --- a/docs/conf.py
-> > +++ b/docs/conf.py
-> > @@ -62,8 +62,46 @@ def autodoc_skip_init(app, what, name, obj,
-> > would_skip, options):
-> >      return would_skip
-> >
-> >
-> > +# We need to know where to put docs generated by gi-docgen but
-> > +app.outdir is # only set once the builder is initialized. Let's delay
-> > +running gi-docgen # until we're notified.
-> > +def make_glib_docs(app):
-> > +    # For some reason on RTD we're in the docs/ directory while during=
- a local
-> > +    # build, we're still in the top source directory.
-> > +    prefix =3D "../" if os.getenv("READTHEDOCS") =3D=3D "True" else ""
->
-> Building via `sphinx-build ./docs/ docs/sphinx-output` seems to work ok b=
-ut building via `make docs` does not, maybe due to `make -C docs docs ` cha=
-nging directory and requiring the prefix be present?
->
-> Maybe we should always use the "../" prefix and expect callers from the t=
-op directory to: `pushd docs; sphinx-build . ./sphinx-output; popd`
->
-> (venv) root@9935cce25ae1:/work# make docs > /dev/null
-> autoreconf: export WARNINGS=3D
-> autoreconf: Entering directory '.'
-> autoreconf: configure.ac: not using Gettext
-> autoreconf: running: aclocal --force -I m4
-> autoreconf: configure.ac: tracing
-> autoreconf: running: libtoolize --copy --force
-> autoreconf: configure.ac: not using Intltool
-> autoreconf: configure.ac: not using Gtkdoc
-> autoreconf: running: aclocal --force -I m4
-> autoreconf: running: /usr/bin/autoconf --force
-> autoreconf: running: /usr/bin/autoheader --force
-> autoreconf: running: automake --add-missing --copy --force-missing
-> configure.ac:54: installing 'autostuff/compile'
-> configure.ac:40: installing 'autostuff/missing'
-> bindings/cxx/Makefile.am: installing 'autostuff/depcomp'
-> autoreconf: Leaving directory '.'
-> /work/venv/lib/python3.12/site-packages/breathe/project.py:116: RemovedIn=
-Sphinx90Warning: Sphinx 9 will drop support for representing paths as strin=
-gs. Use "pathlib.Path" or "os.fspath" instead.
->   self._default_build_dir =3D os.path.dirname(app.doctreedir.rstrip(os.se=
-p))
-> usage: gi-docgen generate [-h] [-q] [--fatal-warnings]
->                           [--add-include-path INCLUDE_PATHS] [-C FILE]
->                           [--dry-run] [--templates-dir TEMPLATES_DIR]
->                           [--content-dir CONTENT_DIRS] [--theme-name THEM=
-E_NAME]
->                           [--output-dir OUTPUT_DIR] [--no-namespace-dir]
->                           [--section SECTIONS]
->                           GIRFILE
-> gi-docgen generate: error: argument GIRFILE: can't open 'bindings/glib/Gp=
-iodglib-1.0.gir': [Errno 2] No such file or directory: 'bindings/glib/Gpiod=
-glib-1.0.gir'
->
->
+On Tue, Feb 11, 2025 at 02:10:51PM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 11, 2025 at 12:56:11PM +0100, Arnd Bergmann wrote:
+> > On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
+> > >
+> > > The problem this series solves at the beginning is that not all the consumers
+> > > of device.h needs it, in many cases the device/devres.h (or subset of
+> > > device/*.h) is enough to include. While solving this, it appears that
+> > > the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
+> > > and kernel test robot found this and complained about. While solving
+> > > this new issue, LKP found another issue that is circular dependency.
+> > > But the original code only wants to have an access to IOMEM_ERR_PTR() which
+> > > is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
+> > 
+> > Yes, that sounds fine to me. I agree that not including linux/io.h
+> > from device/devres.h is a good idea, same as no longer including
+> > linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
+> > describe is the right idea.
+> 
+> Thank you for confirming the idea. Raag, please follow as suggested:
+> 
+> Move IOMEM_ERR_PTR() to err.h (perhaps in a separate patch),
+> and drop io.h from devres.h as it will be not needed.
 
-I worked around it in docs/Makefile.am.
+Sure, and perhaps drop a few patches to reduce spam while we sort this out.
 
-Bart
+Raag
 
