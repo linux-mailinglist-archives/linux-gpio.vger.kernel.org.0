@@ -1,104 +1,111 @@
-Return-Path: <linux-gpio+bounces-15734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4C9DA30B95
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:18:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BD17A30B9F
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:19:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 295391883A86
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:18:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 043E83A36E3
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:19:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42ED11FDA9C;
-	Tue, 11 Feb 2025 12:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FD01FBE92;
+	Tue, 11 Feb 2025 12:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWsJhdW/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XhUBf0gA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0241EDA22;
-	Tue, 11 Feb 2025 12:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D56B1F3FCB
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739276276; cv=none; b=H9t7KbSTPTQllpkrZhfBGoIoPgH4yShBM+rf0+FC0/5r+IrpHIHdFjegwaPxAtMKF1pGNA4cVxFTMvzp3uQbSSnIh1bpih16kHXJ29KlnJjBL46xcqdqfl1ipkDJneCrQRKUJ+/eQbhiCETl5FIX5o1X+1POGhQZmysN9WIL/jM=
+	t=1739276370; cv=none; b=Q3TPrnxjCH8vYIP4KuNOExh30Qa77Ojlsp/nfw1LlyzufsCyevtcT51TMgU3UTIHhyTseZbU+ZgK+nfy+QtzTUMVM78KyKyESBDn1fv8qHtYUp4olnKwx58C5T981Zy0MWoBIY3hpUihvR1TypsfNcH0546P5snoyu4zBEx2tMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739276276; c=relaxed/simple;
-	bh=9RkT9PdNQs5dp3tugQvqKFcTLZgv8DtPvPLncpkJT1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/yai1nZvUOzPFB04Xi/n74d+tYUd4J0qVe6QVjDja6xyclxxPoyaiEIS5v3dmjaK/BP4O0f48qus5IwvOLYCkppMAzh2saIaBxl5InZ9TVHD3ov/UaKYftnYp3ofkCSmCf4rTlYhbOi/NjCEQTag4a+zQnYprY4gxw4yax4BXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TWsJhdW/; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739276275; x=1770812275;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9RkT9PdNQs5dp3tugQvqKFcTLZgv8DtPvPLncpkJT1A=;
-  b=TWsJhdW/zbvHce7gpBcbx5JnVTxB+6z/f9/PknOPyxWCcc+VrWtyELra
-   CrUdB55MKaO9fglv95jLznMBRnpyjzJYGgEoHCITW6CkDtqSB+bPDPmgS
-   y+aK7EvB1fTo3SESwwCU6KqMQuNnG3y0Ey34NVRqI9BnK9tb6D36gx04O
-   wJfjQTFYGmzM2ugnUdKxH/3lvd58cnmGAHa2reSN5UwGZAIeBCaYweAk6
-   loKXW90Ne6ARP+o/8zLKKfP4vKFJk1s4UjgTn8vHLsrulqjntMTZ2lNFy
-   LF0G+yAkYFMaIc8rSSGDE0Rqn83w1BmNydpJdCM7UO/ly9RIbTWgkq+eQ
-   w==;
-X-CSE-ConnectionGUID: HSx69PBcQu2OHIe6DcFGaQ==
-X-CSE-MsgGUID: FOFmv/i1RHKsWQktHwP+kw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50526097"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="50526097"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:17:54 -0800
-X-CSE-ConnectionGUID: T8U6InUUT9GDAnLvXSS+WA==
-X-CSE-MsgGUID: yF37Vw9qRx+T6/C1KQts8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117113920"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:17:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thpD3-0000000AUzi-2Rns;
-	Tue, 11 Feb 2025 14:17:49 +0200
-Date: Tue, 11 Feb 2025 14:17:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexis GUILLEMET <alexis.guillemet@dunasys.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] pinctrl: intel: Fix wrong bypass assignment in
- intel_pinctrl_probe_pwm()
-Message-ID: <Z6s_7XTW4-Y1VeSp@smile.fi.intel.com>
-References: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
- <20250210195230.490904-3-andriy.shevchenko@linux.intel.com>
- <ea58e549-a1ba-4508-8a70-59622f8c3ce3@dunasys.com>
+	s=arc-20240116; t=1739276370; c=relaxed/simple;
+	bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WyvjL5851/JaD8rNvqUw9c0+MZh6t7lbY0fehw7Gw3p3oh0MMYovRWLxMZmNiNiaLr+0tEhA7hLFl4PUKEUCA92yGu4aPCk0eztnjJOykWc/ef0IFm3AHKgfTNtoUtVJia1lLvXg+cPUyR1oLSdN/UtDAVxu5YNY2GEjNCvbuxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XhUBf0gA; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-543cc81ddebso6083059e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:19:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739276367; x=1739881167; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
+        b=XhUBf0gAYuq0bMiugxANzIR9gwgFNmKG1MDdPLIKeE0tJW3XAnkFEA8Srau4I3VkWv
+         oLi07RCfVQ0e/Dr8Vva4ysNSOiVOF54folE3aRViOUkcDNfL1c767Qj/j8Blyk2ivHtU
+         jaup5MkcL33bTInaGzUlvFjNSxFde+Yg5bBZnwVnmBqS1+vKQZcErX7qtx9SsD2bApsK
+         AT3ssE8yR9eLhMG6PB8tPgE8Lnpc7W3az1tT83ZAIP8oXitT59NncLMmiap6hJ0kSqkl
+         CFBySd4kV7FgVAMGM68m6Y2PgK+/+h8sQ797xx9seGgn+AS0u+ufQpkDpNApp1MEniYS
+         5kHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739276367; x=1739881167;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YV+/V9sdNWS897GVPrhzVEvei7oazl3Yldisop72Ywg=;
+        b=O6VXBM+9aqXSCjWpdSJy2SiZLxsYdU/a9VJuOCwgNwTjKj0R17fv5I7R8bm0Dhz5v6
+         9aEG9pgdh0YvlyaTvMleKM9tjojTWlG3O0KGW35A0kCoHeQRr1uq3THTIXNWIY3CgSfs
+         vdhlVPcAmuLGjnSCTMFKTv3HSJUi6H0L7aR1fIyeXe2Y1+fUXv46NnRngD8PBeMCQTnp
+         3+IGUjYaXSJA9sWm3TvpTqnuPOS2lGf/KEKSiu7cauiCmWjaAZ+RsBw8kJ83eO+iNZSt
+         r3FP06eg6YR1/mC6OpjlXKCAr70sjCCz5oqqP8KutU6jtgo1nDIjuLwafpMRn8IgcKT9
+         6pAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDv7mU4n85Z9yyCAtgqx/yGuHESmb0GaFWcIcJcsweYMVhqoTnG0Ium4y2lhbvigZoZYycdUsca0ok@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJletNIhzIDITLbe7YN5vnKw2kV0xt2NW8U3I4Vud/5O9GZX21
+	Cut4z6JcbTWqIVcHlTQNM/9NfgNkCeYnU0/lrlYCNdHJWYRCsghk4nZvZ+gtASipQFz/sSccjp1
+	by4jijS+EjD4CJd462E9XxdW1BqPZ43VJNFMMiQ==
+X-Gm-Gg: ASbGncvPimVtBwq3JMNpbarbV7eDNusoyE3dL9eFPLZIVfj6oxPX2z1/BtE3vWiiAme
+	LM492w4Vq/tmHSwnWagQ0/9zCFqyuKVU7y4P86TahOtsRI0tivz3XORgNk/95EF+9pE6PjoOYLI
+	EOOpnK+CrOITBGzmgZrJMTj7T8P2o=
+X-Google-Smtp-Source: AGHT+IGYxrn8VvG+hmFMeu3O9l0Hxo+atYIUk+qcitHkvE8T3yRM9ImCgH8WPhBQyvK3gRncV71gqSsunU4dJbFSig4=
+X-Received: by 2002:a05:6512:b9c:b0:545:8a1:536b with SMTP id
+ 2adb3069b0e04-54508a1550emr2866169e87.50.1739276367097; Tue, 11 Feb 2025
+ 04:19:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea58e549-a1ba-4508-8a70-59622f8c3ce3@dunasys.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250206-improve-docs-v3-0-2065191fff6f@linaro.org>
+ <20250206-improve-docs-v3-11-2065191fff6f@linaro.org> <PH1P110MB1603B27EBC05880518E1E4CD9FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
+In-Reply-To: <PH1P110MB1603B27EBC05880518E1E4CD9FF2A@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 11 Feb 2025 13:19:16 +0100
+X-Gm-Features: AWEUYZmm_Vufcd2VIuYlkpmClZmhEw3INUMAExWV0TP9CODSEgAsAJKq6bFXiM8
+Message-ID: <CAMRc=MeFKGdJnru2uwevfQT7XJnLf9GrGvg4b55w-3ybWST6KA@mail.gmail.com>
+Subject: Re: [External] - [PATCH libgpiod v3 11/16] doc: provide sphinx docs
+ for the core C API and C++ bindings
+To: Vincent Fazio <vfazio@xes-inc.com>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 01:11:57PM +0100, Alexis GUILLEMET wrote:
-> On Mon, Feb 10, 2025 at 08:44PM +0200, Andy Shevchenko wrote:
+On Mon, Feb 10, 2025 at 3:53=E2=80=AFPM Vincent Fazio <vfazio@xes-inc.com> =
+wrote:
+> >
+> > Update configure.ac to check for sphinx-build in addition to doxygen an=
+d
+> > make the main Makefile trigger a sphinx build on `make doc` (although t=
+he
+> > docs can also be generated without starting the build system by
+> > running: `sphinx-build ./doc/ doc/sphinx-output`).
+>
+> Should probably be "docs"? sphinx-build ./docs/ docs/sphinx-output
+>
 
-> Tested-by: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
+Yes, thanks!
 
-Thank you for confirming, I'm going to push this to my review and testing queue soon.
-It should appear in the next (v6.15-rc1) Linux kernel.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
