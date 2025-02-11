@@ -1,159 +1,148 @@
-Return-Path: <linux-gpio+bounces-15731-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15732-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42F15A30B5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:12:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80FB7A30B65
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 13:14:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95F46188C5C8
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:13:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA4BE3AB151
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 12:13:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 685F7250BE3;
-	Tue, 11 Feb 2025 12:10:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741031FF7B7;
+	Tue, 11 Feb 2025 12:11:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="e1wVmPp3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTmtaVyF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4571FE449
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 12:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41EE2010E6;
+	Tue, 11 Feb 2025 12:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275820; cv=none; b=kg5Zrc/oGlnxMJr/6PLoy6hLzbPFckASmPYd5+oCiTdQ6eVJNKiZOZvAo+26rbXZn5L5g7A9VzByDLR0bh87wjYZi9MJjdXrukkVDspQ7fAXvCfQpO4cb6/+ncJbyUGl020htmzjrDUKMIbPAQNcFnFvwuv8nLLhjio24OgFex8=
+	t=1739275865; cv=none; b=iWnvs5MPcHUfNuitYfeUL8H6GA2wfv0iRqdYh8BPlxlqJXpUA65ZC9gBctBXLIH71a696ACv6jHKQ+zAQU58RuP4PotNDpdy9pKxBnQrXHfQDSAXTDjigzfVorATPusRZTF5M6ZOGwzRNQQ9DT472d1iq17zUoYq7fawkbpbrec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275820; c=relaxed/simple;
-	bh=OvyGL2YeY7Q8iznU+X9mmrIKaFtAa6AYlttV774XVbg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fbhddpXnON2L3Jm3NeS+6zYbwrVPnLyClJOvQ8uhAyXUUNPPN8Z+1jMhnSimxY59IUDmnVHjjfjdDjDXaWDuBQR87FDt8Ik5tDLBrbtcZCn0ufgQBghQITtB1lekrf7MxYgS/Ek3dJixKdGzG6ranuQQNDyBvf2ljKu/Wfs1Nco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=e1wVmPp3; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38dc9f3cc80so1471773f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2025 04:10:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739275815; x=1739880615; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oRq/T6GE9bSeX1D1Gt9SuyzuOUWanfcEXtTNwUHWu90=;
-        b=e1wVmPp3Siv4FDFOFsvxliqAgDCA0u/iBke5kPGLo6o3Ee6WeBy8K8/YyNz3jeR587
-         O0vbZKdrjezlbEq2CL+n4pkM1XMfsqhap/OMuP2rmXQ2CrjG+yaNVSHY2dSZna65hrJZ
-         MQbr02Mhj271uj4fzx4Mz4JA2164cJVsgT5NoNa9VktR0NqWlVESPjn8EAzh/QnZK/+r
-         CU6ZA7OvBbmn+rg3ZKAvi1G89BcTb+G+XyQXw1Glz5PDJdtZ9bb66iVrzsicEdTBaLeF
-         2F7mNIcmYsnQMbk5eXoMm32lEK8dj7pDY5QKb5whPhoaIs2993bY64jvh+iUGzuo47ot
-         2zjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739275815; x=1739880615;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oRq/T6GE9bSeX1D1Gt9SuyzuOUWanfcEXtTNwUHWu90=;
-        b=Z1Nt7Ng49giWVOn7eh6yyAm8nL1j/LT1CHihrrJWThiRqILDbtDn+rLQeSgEV3+GM3
-         iZy3NnihMNhqfLu+ngAK6ifaL4XZPFlx3NWNcSXxqdyh46x17FIWvWA3ipfPYLmyvqGe
-         CKzNZi1OdPUUP+mkqQjkmfCStj4X7hkv5b/lkrbZwFg5Tb7atbhAmWyccJnkVc1cU8Ef
-         +UsSsmq6UTXhDgLbdEfm5WzAxT4Ai7+nxY3WYi/UuV8GdZnGKA4l5A9q9W9z7TWfN0GA
-         r3NMWjFPSocS35+KAVEk+ew0BhfUAPdPh6bJMCpZ1Ro/3kcK0pTxzzsV0zwdIEdPyoM7
-         a1dA==
-X-Gm-Message-State: AOJu0Yx0pPsElGuBqk7lXO4zYcb6XOYIOnX1Cez2+b/8XypqKkaJMz41
-	mZq+d0+BU1PsEeUvKsexjG9VnR5KBtRCNBqJPcGYDIi32qS5Hjd3QbPdbvaIWXY=
-X-Gm-Gg: ASbGncvLqdJv5bTkM4i1zilUh2DvzvA/euVdWdhn6Wkx1XEl3LPynRALETvOYLbPrkF
-	c4zXd2Qj9805OZbAZUaSxZ4binnPCxW4N0EgJSP7ClBuNMGEWDaLFczdNEZTcCwOCvLIhU5wWVV
-	at1ARjCH3afz6cr6OxaTgTj8FDMAn0VQJq6t4Mahsqns7Z2CzDvMa0c3dBlWsmFWaQ5343TuyDo
-	DzQFb4MQdTPOztupT13+xqhtgiBb2cMnXeVdCP9oWTWXLPBNj+Vs6GFwENeWqVEMHUTIjnfG9Lo
-	rk9N9RU=
-X-Google-Smtp-Source: AGHT+IHpk+5B6aVQLxsLSPqsY19+wTs9O8NCp4xKz9/p1TCNTCXaDWyHFV1DSI5SZkQBCHMGhHyv1g==
-X-Received: by 2002:a05:6000:1448:b0:38b:da31:3e3e with SMTP id ffacd0b85a97d-38dc90ee504mr14083350f8f.28.1739275815512;
-        Tue, 11 Feb 2025 04:10:15 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd4342502sm9152327f8f.26.2025.02.11.04.10.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 04:10:15 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Feb 2025 13:09:48 +0100
-Subject: [PATCH 14/14] gpio: mvebu: use value returning setters
+	s=arc-20240116; t=1739275865; c=relaxed/simple;
+	bh=dVa1v4FEnhdEcRKHgQOjoXmm0Uba3dBOZT5OrGPkID0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SGrF8EvVrQGhV9sDYG/15CNszsF0/+P5oHjZUC7HzV88pia+ItMmdkAhWlJhM9Zl4mHMTvWBF8fY9GyXHM9o4xNDabWTexp6BFgXLLJiWXo1PgR4CCO/9I76ax9xr/8z+CEeRhmWs2nBxM00Vn9DkeCVBOwTkT6YRM3PbiqkbU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTmtaVyF; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739275862; x=1770811862;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dVa1v4FEnhdEcRKHgQOjoXmm0Uba3dBOZT5OrGPkID0=;
+  b=UTmtaVyFUY97Ydf7r/N8wWj92mNEZd4ajF/ZcIFPGNYOmYSu/fiZzXlT
+   nZ471/QyuD7sWsWD6Dtq0Axi+wfNCs9BPD8jVweJUK7Qao1B0qK22YEBU
+   9CzxVZB8CsRrD9sBAwPSQ2s7MnlLKv5/gtOLCKdGg6kc6u/4kVfYz1lIz
+   3ELumAaOQB10LpV1wcCSt7NUZrw5xWB2DMPX4NNE1UC+cP0hy3Y/z6fQ2
+   9cTR0e/h1xma7mmOQuMPLI3FRqWuVJ8JaYhGs+ElJxVhP8bUf2HhySuwy
+   mMXRdcKSETK2QVB5MUQWQknGtm0j5wovkcou2tTj00nu0Y2lSB1ZWjveq
+   w==;
+X-CSE-ConnectionGUID: vNd8oQahQmujvx4TI3s46Q==
+X-CSE-MsgGUID: TQLBJ/26RwS3V/2x8hAdcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40009046"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40009046"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:11:01 -0800
+X-CSE-ConnectionGUID: 1c0JZ1woQzWllJevK0qSYw==
+X-CSE-MsgGUID: vEphLevZRnyj2ZPdgjfSpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113390239"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 04:10:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thp6K-0000000AUm6-18UE;
+	Tue, 11 Feb 2025 14:10:52 +0200
+Date: Tue, 11 Feb 2025 14:10:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kernel test robot <lkp@intel.com>, Raag Jadav <raag.jadav@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
+	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	oe-kbuild-all@lists.linux.dev,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <Z6s-S67MdpVrXRji@smile.fi.intel.com>
+References: <20250210064906.2181867-2-raag.jadav@intel.com>
+ <202502102201.zLWaJC6V-lkp@intel.com>
+ <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+ <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
+ <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
+ <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
+ <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
+ <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
+ <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+ <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-gpio-set-retval-v1-14-52d3d613d7d3@linaro.org>
-References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-In-Reply-To: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>, 
- Bamvor Jian Zhang <bamv2005@gmail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pwm@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1667;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=CxAelnjMdbcRuwV9O+C01TbuJn6vA1w0ry/4z1+OR0s=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnqz4Yj6qJLPO+UIt+NymYEMJOR8YxigCMSlVHs
- czl/relyCuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6s+GAAKCRARpy6gFHHX
- csWaD/9mbJ5eKSLEyErL6bqsXcw8l4WAJV6ugzeHQolcyWwGuFbMEcsOmsgbW0weQReaWnpgHtC
- cKaWmRGoYTvghOaPshMV3QLhWJu6CHvTVNE/mYu+NOXoscZQ368Eeaal9X+7MkrD1rtnSs3Q4Y8
- 9055WiVqsC+Ws98hWBUs3ydr5dDYMJ0U7JkwI3ky+QLfJlOs/OM44yTRDLU9cXIcujbu65DwiOK
- 97wz8+lL3ie4/3bUF2f4Jb4x2SQN1KhCVjEbufOxg9GvfA94Wb+nkni7BDf+UMGqH5uSHcJeD4z
- qJa/Vhhr/jWV/RdgNptcufaav6wK3yZYhPlnZNghO7Bo7mHQSv/PvObxEEPgBoX+QFLn7mzf9V/
- u+TIUwYAcAYmuvaQ5VyY6i1GtmgA/xw1pXnz4El933Jh3WPi+thZmNNKE1zzUaNwUn/6wtsPb+G
- Ebv84adCqb1tx9BsdBwfeUHELnt/KYeFGyba86EGdtsP1AnamQ74ZhHQWaA9EMyYXh0diVzGMfx
- H8T7ymolklssV+IrhKSvWqhruc03x0KUlU4rrGlUWm1SncP7i/qEs2EKQJS7SHC298CV2HfAqZz
- qh5cWxccz8FiDS3Qfn0TbjyD42EXMtJNoaGauxiWM5QQfKz0DJe53sDxCDrl392pYcyGV6LtRMj
- iSI93SL42UVXOTg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Feb 11, 2025 at 12:56:11PM +0100, Arnd Bergmann wrote:
+> On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
+> >
+> > The problem this series solves at the beginning is that not all the consumers
+> > of device.h needs it, in many cases the device/devres.h (or subset of
+> > device/*.h) is enough to include. While solving this, it appears that
+> > the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
+> > and kernel test robot found this and complained about. While solving
+> > this new issue, LKP found another issue that is circular dependency.
+> > But the original code only wants to have an access to IOMEM_ERR_PTR() which
+> > is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
+> 
+> Yes, that sounds fine to me. I agree that not including linux/io.h
+> from device/devres.h is a good idea, same as no longer including
+> linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
+> describe is the right idea.
 
-struct gpio_chip now has additional variants of the set(_multiple)
-driver callbacks that return an integer to indicate success or failure.
-Convert the driver to using them.
+Thank you for confirming the idea. Raag, please follow as suggested:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-mvebu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Move IOMEM_ERR_PTR() to err.h (perhaps in a separate patch),
+and drop io.h from devres.h as it will be not needed.
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 363bad286c32..3604abcb6fec 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -298,12 +298,12 @@ static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *mvpwm)
- /*
-  * Functions implementing the gpio_chip methods
-  */
--static void mvebu_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
-+static int mvebu_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
- {
- 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
- 
--	regmap_update_bits(mvchip->regs, GPIO_OUT_OFF + mvchip->offset,
--			   BIT(pin), value ? BIT(pin) : 0);
-+	return regmap_update_bits(mvchip->regs, GPIO_OUT_OFF + mvchip->offset,
-+				  BIT(pin), value ? BIT(pin) : 0);
- }
- 
- static int mvebu_gpio_get(struct gpio_chip *chip, unsigned int pin)
-@@ -1173,7 +1173,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	mvchip->chip.direction_input = mvebu_gpio_direction_input;
- 	mvchip->chip.get = mvebu_gpio_get;
- 	mvchip->chip.direction_output = mvebu_gpio_direction_output;
--	mvchip->chip.set = mvebu_gpio_set;
-+	mvchip->chip.set_rv = mvebu_gpio_set;
- 	if (have_irqs)
- 		mvchip->chip.to_irq = mvebu_gpio_to_irq;
- 	mvchip->chip.base = id * MVEBU_MAX_GPIO_PER_BANK;
+> Side note: I looked at large-scale header file cleanups in the past,
+> and in general the result of that was that the best way to reduce the
+> indirect inclusions is by splitting data structure definitions from
+> inline functions that use those data structures. The definition of
+> "struct device" clearly has too many dependencies, and to make
+> this one better. There has actually been some good preparatory work
+> done by Kent Overstreet a while ago that moves structures out
+> (e.g. work_struct and mutex), but not yet struct device and
+> struct kobject, which are needed in many other headers. The tricky
+> part that needs to happen to actually make it useful later on is
+> to replace all the unnecessary indirect includes with the minimal
+> ones, and that is a huge amount of work.
+
+Good to hear that somebody is working on the dependency hell untangling.
 
 -- 
-2.45.2
+With Best Regards,
+Andy Shevchenko
+
 
 
