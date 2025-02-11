@@ -1,94 +1,93 @@
-Return-Path: <linux-gpio+bounces-15764-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15765-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5616AA3127F
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 18:13:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE1F8A3133F
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 18:41:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E636B7A2E3E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 17:12:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C7DB162869
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2025 17:41:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 864CD262150;
-	Tue, 11 Feb 2025 17:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C5D17C91;
+	Tue, 11 Feb 2025 17:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="P3iRA/LF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F77261397;
-	Tue, 11 Feb 2025 17:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFA126156B;
+	Tue, 11 Feb 2025 17:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294009; cv=none; b=jCpkVtI4g4rEh34eNOWz5sOy8M+iRGGqdAPJQWYCCDGdBn1NV6CZvRk4Fhj1WtKJMP6pQMjREuMyUZed0iM9da+mk1nvPCv7qD0eukx69j4lg34IBoilnrC1lMNHkMnN9OJn/6AicDG/fUdRh0kHmSgaHdf2zaQ0yybc3Qr53Qo=
+	t=1739295663; cv=none; b=K3ih+JRDsM30bRoA6Zboux0vCqmMpIQS0qHzrAGuKKMljxlInQGw1O9HcZ9ibm5taskJVgeNM9o59QVItcH7JVftqAfDBtvzH1N09C8n43g2AKm3SSyZjYBa3PmzwigM8WgLT8jW7zCKohiDcZ0syxBq8IP2dj35IQS9WZtHFB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294009; c=relaxed/simple;
-	bh=BZ+YpgMYrYtDrJkujzjcM2WQZLt5/UaLnQfYvjtyUvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZvFOC/MWsokwSLbG7PQxbsev4QoSFkCETu/eUuUtRXtJSsmYork4YH1kN081UVfVtyNc7zM0xA6onzmqX9pjYIaAI+U3rY6wSMULYKTz8JId3bqyGcRJj8rhSGoK17o4QRu4xUyU5v9LyFjGA7d2/mgJEzqJLzPBLIFKCiEh4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8BF013D5;
-	Tue, 11 Feb 2025 09:13:48 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AD313F5A1;
-	Tue, 11 Feb 2025 09:13:24 -0800 (PST)
-Date: Tue, 11 Feb 2025 17:13:21 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z6uFMW94QNpFxQLK@bogus>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
+	s=arc-20240116; t=1739295663; c=relaxed/simple;
+	bh=GOiwm1wHZc/AznJrAuxQaJv6N7XnPRihLg4UA4rAFHI=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=CXpO/rqV0ruhH2g4OK/3YUMPFbyi60z7KTIWKCTt5mWyvOA/YYfFW39nrFceQYd40K7nAzlGAOMzD/bmnIvb8Nf6UTqJS6zoKzgASDjxRjSejXi024/fVOMkXp4Y1ywZWMXXlchvXSSSKL5jdOnRhwx2WMAa+MEQuS1MzLeC3WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=P3iRA/LF; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A858A25B0D;
+	Tue, 11 Feb 2025 18:40:52 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 2SotM2Jdszzq; Tue, 11 Feb 2025 18:40:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739295648; bh=GOiwm1wHZc/AznJrAuxQaJv6N7XnPRihLg4UA4rAFHI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=P3iRA/LFZEX1s9f0Z0/3GlcbJ6usxjiHNpVMnzOKgpgC3asR1tryrnnNM1S4d6dKo
+	 7DWGN2n77QYchJs1MqDyxOklxrhE52E4QFvySI8riosYYr3iPEdASqUvwxGDmg3eND
+	 sf22RN4B6sXqf8ZkBZmjnNeQNLuzan15rugqMLRCOl9qhnkT6HWg508ckl1DXuLSRK
+	 nhqVvFMEzyPWhQ8x6c+JSzKykZ0XnbX3JRsX4KSLso25/AKYmkZVrIatZjMRJBAkf+
+	 9odluTlD2LzQj+ZT9RLvmw1/Mk1oag626SF25Y5f1BuEWqFXyXCtpf9ZKFtsl/uCf0
+	 LG9hjdKMgTbRw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
+Date: Tue, 11 Feb 2025 17:40:39 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor
+ Dooley <conor@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sergey Lisov <sleirsgoevy@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: Re: [PATCH 3/3] pinctrl: samsung: add support for exynos7870 pinctrl
+In-Reply-To: <20250204-exynos7870-pinctrl-v1-3-77b9800749b7@disroot.org>
+References: <20250204-exynos7870-pinctrl-v1-0-77b9800749b7@disroot.org>
+ <20250204-exynos7870-pinctrl-v1-3-77b9800749b7@disroot.org>
+Message-ID: <03c51c96256aa6b927febf7c005d9164@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 25, 2024 at 04:20:44PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 2025-02-03 20:35, Kaustabh Chakraborty wrote:
+> From: Sergey Lisov <sleirsgoevy@gmail.com>
 > 
-> Two drivers scmi_cpufreq.c and scmi_perf_domain.c both use
-> SCMI_PROTCOL_PERF protocol, but with different name, so two scmi devices
-> will be created. But the fwnode->dev could only point to one device.
+> Add support for the Exynos7870 SoC pin-controller in the pinctrl driver.
+> It has 8 GPIO banks, and 3-bit PINCFG_TYPE_DRV width.
 > 
-> If scmi cpufreq device created earlier, the fwnode->dev will point to
-> the scmi cpufreq device. Then the fw_devlink will link performance
-> domain user device(consumer) to the scmi cpufreq device(supplier).
-> But actually the performance domain user device, such as GPU, should use
-> the scmi perf device as supplier. Also if 'cpufreq.off=1' in bootargs,
-> the GPU driver will defer probe always, because of the scmi cpufreq
-> device not ready.
+> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 141 +++++++++++++++++++++++++
+>  drivers/pinctrl/samsung/pinctrl-exynos.h       |  29 +++++
+>  drivers/pinctrl/samsung/pinctrl-samsung.c      |   2 +
+>  drivers/pinctrl/samsung/pinctrl-samsung.h      |   1 +
+>  4 files changed, 173 insertions(+)
 > 
-> Because for cpufreq, no need use fw_devlink. So bypass setting fwnode
-> for scmi cpufreq device.
->
 
-Not 100% sure if above is correct. See:
-
-Commit 8410e7f3b31e ("cpufreq: scmi: Fix OPP addition failure with a dummy clock provider")
-
-Am I missing something ?
-
--- 
-Regards,
-Sudeep
+Please refrain from merging, wait for the next revision.
+Thank you.
 
