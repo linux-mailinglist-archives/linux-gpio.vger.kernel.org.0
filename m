@@ -1,233 +1,128 @@
-Return-Path: <linux-gpio+bounces-15884-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15885-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95D55A32E60
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 19:19:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB4E7A330BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 21:24:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DEE3188BA59
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 18:19:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72F063A714B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 20:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE4F26281C;
-	Wed, 12 Feb 2025 18:17:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DA69201269;
+	Wed, 12 Feb 2025 20:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H87SpPOg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNgPYjKF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715CB26157D;
-	Wed, 12 Feb 2025 18:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC9C202F8F;
+	Wed, 12 Feb 2025 20:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739384261; cv=none; b=KfsyczTMLV5Sku5Y95Us2sFib/AVuU4Ewzr/Md6lcGoz20HPnWmjbCon4hf9YGn6cwuuvSKmzXmqbzvxYrWgrRDj0HY+6OcOaPkTDNSzc1/3FcD6X8BmA/32PUNiE/TX9IX8YRrbcALvYUJ8Kwged5j8aiUuHxM0aj9qTs9a1tg=
+	t=1739391810; cv=none; b=SdQgaZq29UmZmNJOVncKCKXxW8DsOVX1JPOFFSBF2npM6Ql52hnlowLbwwgWMmG53ayYcvbRdt443mhuv8tuyLWUkvvGSlcJlfTGTGxUYPNGK8v667iljtyqVm3i+WQmR6Og2IbUtOHHs4QgDlCCIzQ0UVhJiCalsSj+/Gt//VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739384261; c=relaxed/simple;
-	bh=jU2kPhgyRZAfdjYf2MKVcaAlilzb8sQchUY6HIPoYUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H3y1TE5oRq8MmbgprGT4KigPMfqMlTVzXKnKhGDEbCfx9XTHeCgGHgojuCtgXlRkKL2peN+/3XIWKJTHEg4FoJh7pQdE3oXOURGNRY0hqo2QRhLuTfEu3Xi5ccABYxc/LXv4gihh5isPtf0xdCGrgTcktMitOwbV7zaZsBMT/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H87SpPOg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D38C4CEDF;
-	Wed, 12 Feb 2025 18:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739384259;
-	bh=jU2kPhgyRZAfdjYf2MKVcaAlilzb8sQchUY6HIPoYUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H87SpPOgrCyGqo44WNZMOiY7ftkh5qONH0YCgttNiuye/7uexi28ExoBCGok2InLh
-	 zNiobaiOZ/eFofd97uUB/D/h/O0wjL/9ACrJaexTBoWg0/iof73FHv440cYpRX7jI0
-	 avnjFg0skeGp0kisV/1SlCUXSUH1kPqwn7Ub0cc1lVDNIqAd8XOjo/FecG2DVnkIjR
-	 GBQD1GRMX8DGjtvcIpK+ztuo4dlbPr7CVuMyncJ9R3IaOh23lWs8SVBRE4BXCsNNxq
-	 8qXJX88jNTmmzkz+qxD1JdWEemHmcsuwOTlSFbgS3lpVVKNo3A3odYulBgInJ89ryF
-	 ZhxR89buP8NkQ==
-Date: Wed, 12 Feb 2025 12:17:38 -0600
-From: Rob Herring <robh@kernel.org>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Daudt <bcm@fixthebug.org>,
-	Sherman Yin <syin@broadcom.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add bindings for BCM21664 pin
- controller
-Message-ID: <20250212181738.GA4056295-robh@kernel.org>
-References: <20250207-bcm21664-pinctrl-v1-0-e7cfac9b2d3b@gmail.com>
- <20250207-bcm21664-pinctrl-v1-1-e7cfac9b2d3b@gmail.com>
+	s=arc-20240116; t=1739391810; c=relaxed/simple;
+	bh=T4SN9qQTVCRprL18w226gEvL0hjMQ/9J2Lehg+8OR1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BVojlTH3fnzaLhe8LKXras0VlBGxJXtFA+cthsSMU3rnYpK9BmQhxcmWlA1YfHi5rdsmZd7qmjXhFk+z+aKVfc6azZxb9ikBmuHIhgQ8m9ViHRQxeiokHfIvXWKK4x0P+F1IMo9ocUOxXFR3BTpfsw7wfr/kkcdTcQHOOe1+qxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gNgPYjKF; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d90044ac35so262176d6.1;
+        Wed, 12 Feb 2025 12:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739391807; x=1739996607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
+        b=gNgPYjKFzO5gkTVkOrS4OTXKb7mQc8j5yq7PQt6UZOWpYx5L79SmCil5DwWqylW2I+
+         Mc5HYq6ZAji2T6uagUEfGuT1NoZBBTi1yAQXCrHqY72IaO908CL+Utz5cOEXlCZjif58
+         6KhgatH37SwxSp/+W1/Vl1oCkM6d3W/LvZgaPhjvyU/7x7oojrrRoB8/P9HNz3JV5Gjk
+         P1GOMFHFYqAMnjbyZ4DOzdgJoA7S/rlmzB2i6x3+bA5P71ZkauHb9lD+GxgxBPdGH4CY
+         YBi6yXWaPXuQ0l555px/1CsCvSxmoipQEMW3ImblNjrP3z7ybxrGDH8KuAKdvf9hyN5o
+         HZdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739391807; x=1739996607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wFqfug0dvo4+SvGxTEfuy1Nbc66z9jbXayYAmndjSOM=;
+        b=d8og5DoEaN0Ovd+vf85TuP36wmtyjQABKh5+15w4qwFzjL83ceu8TuGiL1kR7jrB+A
+         aWuh+hg/wNPXfOZjjWbkl9TPbREr9FuaPnp/RVQD/SV/RZeHD8l9FubCgPSDuHLyk4kl
+         shNDs8RZtQ0NeLi935JnczFaJlUOaLRu8v0wuAgNFmokfrO6CP0DGllCRb7bYq1qEJvJ
+         wcylhG83r/C3trRT50eGXY+rGFZiQPs14cUXGuSMTXvgmL4RDEr27TFpRfo9Reu21VWX
+         mfS3YRzIts6VC7bD/A1YlRbJdsirHFH/6OS7I6Sgit74ROLG3IJgf/MtMAoUa8h56DtY
+         kRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWA1PUTWhpSSOJ5fhg0Vvfg7ckpkcJYv9WRKDmY0vu6SKIIcB2Gh4kKd5B+OetLW+oVXuS2FmjPXraGpWr@vger.kernel.org, AJvYcCVvhg7HUv/+sR4TpjbjCK5qLXMMKAn2Q/zYYksovWOuYlYEoXmir0BhrnQstXrYhEmJLrog+bDroaVW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzMdjvr5TNkUZ+iV1jN8aDGVkwS6o0qM20gDNtgLTh7S1RlGqZ
+	4S5//wFV+Hn2JHq2GvR0DXBXUq5jAxhQ67HN/hf55tLtQz9NQwc=
+X-Gm-Gg: ASbGncvadT+w/SqcbVIbqZ4PXPYM1aNIFI/Fzx2zswk4YwtdAJFn5Gji6I9HIp0M6pq
+	TSU7FW+LC81h8viEtCC4OTcJr7m13s7KlERj9D9z/zw4Hmml7nl5lIm+mrXUC57qg39mxlgl6IH
+	m7SWAOOvOI/6A9N5SUMvDltoxYF15P/jDd93052+kI4cVe2opMoM/fWYDMpJj2XtGY/tFVCDziH
+	yixvl0M/Q7JT5oY4ucEq39D962sET2noSjj1DjtLghsyS7rGK8pV/h/k/weaaxbUESBOITLl4Z7
+	SeMfwe9dW6Sp
+X-Google-Smtp-Source: AGHT+IHrunwFa9y1n/VCE/JHLro3uaHsjKV1AuCg8NjkBGyKTg9Jo6/WpWR9TxBMa0++i/xfgPtU4Q==
+X-Received: by 2002:a05:6214:20e9:b0:6e1:a79c:4cb8 with SMTP id 6a1803df08f44-6e46ed772damr30480456d6.2.1739391806803;
+        Wed, 12 Feb 2025 12:23:26 -0800 (PST)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacee1sm82943076d6.84.2025.02.12.12.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 12:23:25 -0800 (PST)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: avifishman70@gmail.com,
+	tmaimon77@gmail.com,
+	tali.perry1@gmail.com,
+	venture@google.com,
+	yuenn@google.com,
+	benjaminfair@google.com,
+	linus.walleij@linaro.org
+Cc: openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] pinctrl: nuvoton: Add NULL pointer check in npcm8xx_gpio_fw()
+Date: Wed, 12 Feb 2025 14:23:11 -0600
+Message-Id: <20250212202311.3741443-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-bcm21664-pinctrl-v1-1-e7cfac9b2d3b@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 09:02:40PM +0100, Artur Weber wrote:
-> Add device tree bindings for the pin controller included in the
-> BCM21664 chip. The bindings are based off brcm,bcm11351-pinctrl.yaml;
-> both chips use the same driver, but have different pins, and the
-> BCM21664 has 6 alt modes instead of 4.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> ---
->  .../bindings/pinctrl/brcm,bcm21664-pinctrl.yaml    | 169 +++++++++++++++++++++
->  1 file changed, 169 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..233bea91b640ffa8480637d7304f661b7a4f5d79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-> @@ -0,0 +1,169 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/brcm,bcm21664-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM21664 pin controller
-> +
-> +maintainers:
-> +  - Florian Fainelli <florian.fainelli@broadcom.com>
-> +  - Ray Jui <rjui@broadcom.com>
-> +  - Scott Branden <sbranden@broadcom.com>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm21664-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-grp[0-9]$':
-> +        type: object
-> +        unevaluatedProperties: false
-> +
-> +        properties:
-> +          pins:
-> +            description:
-> +              Specifies the name(s) of one or more pins to be configured by
-> +              this node.
-> +            items:
-> +              enum: [ adcsyn, batrm, bsc1clk, bsc1dat, camcs0, camcs1, clk32k,
-> +                      clk_cx8, dclk1, dclk4, dclkreq1, dclkreq4, dmic0clk,
-> +                      dmic0dq, dsi0te, gpio00, gpio01, gpio02, gpio03, gpio04,
-> +                      gpio05, gpio06, gpio07, gpio08, gpio09, gpio10, gpio11,
-> +                      gpio12, gpio13, gpio14, gpio15, gpio16, gpio17, gpio18,
-> +                      gpio19, gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-> +                      gpio26, gpio27, gpio28, gpio32, gpio33, gpio34, gpio93,
-> +                      gpio94, gps_calreq, gps_hostreq, gps_pablank, gps_tmark,
-> +                      icusbdm, icusbdp, lcdcs0, lcdres, lcdscl, lcdsda, lcdte,
-> +                      mdmgpio00, mdmgpio01, mdmgpio02, mdmgpio03, mdmgpio04,
-> +                      mdmgpio05, mdmgpio06, mdmgpio07, mdmgpio08, mmc0ck,
-> +                      mmc0cmd, mmc0dat0, mmc0dat1, mmc0dat2, mmc0dat3, mmc0dat4,
-> +                      mmc0dat5, mmc0dat6, mmc0dat7, mmc0rst, mmc1ck, mmc1cmd,
-> +                      mmc1dat0, mmc1dat1, mmc1dat2, mmc1dat3, mmc1dat4,
-> +                      mmc1dat5, mmc1dat6, mmc1dat7, mmc1rst, pc1, pc2, pmbscclk,
-> +                      pmbscdat, pmuint, resetn, rfst2g_mtsloten3g,
-> +                      rtxdata2g_txdata3g1, rtxen2g_txdata3g2, rxdata3g0,
-> +                      rxdata3g1, rxdata3g2, sdck, sdcmd, sddat0, sddat1, sddat2,
-> +                      sddat3, simclk, simdat, simdet, simrst, spi0clk, spi0fss,
-> +                      spi0rxd, spi0txd, sri_c, sri_d, sri_e, sspck, sspdi,
-> +                      sspdo, sspsyn, stat1, stat2, swclktck, swdiotms, sysclken,
-> +                      tdi, tdo, testmode, traceclk, tracedt00, tracedt01,
-> +                      tracedt02, tracedt03, tracedt04, tracedt05, tracedt06,
-> +                      tracedt07, tracedt08, tracedt09, tracedt10, tracedt11,
-> +                      tracedt12, tracedt13, tracedt14, tracedt15, trstb,
-> +                      txdata3g0, ubctsn, ubrtsn, ubrx, ubtx ]
-> +
-> +          function:
-> +            description:
-> +              Specifies the pin mux selection.
-> +            enum: [ alt1, alt2, alt3, alt4, alt5, alt6 ]
-> +
-> +          slew-rate:
-> +            description: |
-> +              Meaning depends on configured pin mux:
-> +                bsc*clk/pmbscclk or bsc*dat/pmbscdat:
-> +                  0: Standard (100 kbps) & Fast (400 kbps) mode
-> +                  1: Highspeed (3.4 Mbps) mode
-> +                Otherwise:
-> +                  0: fast slew rate
-> +                  1: normal slew rate
-> +
-> +          bias-disable: true
-> +          bias-pull-up: true
-> +          input-disable: true
-> +          input-enable: true
+Add a NULL pointer check for pctrl->gpio_bank[id].gc.label in
+npcm8xx_gpio_fw() to prevent potential NULL pointer dereference.
+This is similar to the fix in commit 3027e7b15b02 
+("ice: Fix some null pointer dereference issues in ice_ptp.c").
 
-With unevaluateProperties, these have no effect.
+The npcm7xx driver already has this check in its npcm7xx_gpio_fw()
+function, which provides similar functionality.
+Add the same protection to npcm8xx.
 
-> +
-> +        required:
-> +          - pins
-> +
-> +        allOf:
-> +          - $ref: pincfg-node.yaml#
-> +
-> +          # Optional properties for standard pins
-> +          - if:
-> +              properties:
-> +                pins:
-> +                  contains:
-> +                    enum: [ adcsyn, batrm, camcs0, camcs1, clk32k, clk_cx8,
-> +                            dclk1, dclk4, dclkreq1, dclkreq4, dmic0clk, dmic0dq,
-> +                            dsi0te, gpio00, gpio01, gpio02, gpio03, gpio04,
-> +                            gpio05, gpio06, gpio07, gpio08, gpio09, gpio10,
-> +                            gpio11, gpio12, gpio13, gpio14, gpio15, gpio18,
-> +                            gpio19, gpio20, gpio21, gpio22, gpio23, gpio24,
-> +                            gpio25, gpio26, gpio27, gpio28, gpio32, gpio33,
-> +                            gpio34, gpio93, gpio94, gps_calreq, gps_hostreq,
-> +                            gps_pablank, gps_tmark, icusbdm, icusbdp, lcdcs0,
-> +                            lcdres, lcdscl, lcdsda, lcdte, mdmgpio00, mdmgpio01,
-> +                            mdmgpio02, mdmgpio03, mdmgpio04, mdmgpio05,
-> +                            mdmgpio06, mdmgpio07, mdmgpio08, mmc0ck, mmc0cmd,
-> +                            mmc0dat0, mmc0dat1, mmc0dat2, mmc0dat3, mmc0dat4,
-> +                            mmc0dat5, mmc0dat6, mmc0dat7, mmc0rst, mmc1ck,
-> +                            mmc1cmd, mmc1dat0, mmc1dat1, mmc1dat2, mmc1dat3,
-> +                            mmc1dat4, mmc1dat5, mmc1dat6, mmc1dat7, mmc1rst,
-> +                            pc1, pc2, pmuint, resetn, rfst2g_mtsloten3g,
-> +                            rtxdata2g_txdata3g1, rtxen2g_txdata3g2, rxdata3g0,
-> +                            rxdata3g1, rxdata3g2, sdck, sdcmd, sddat0, sddat1,
-> +                            sddat2, sddat3, simclk, simdat, simdet, simrst,
-> +                            spi0clk, spi0fss, spi0rxd, spi0txd, sri_c, sri_d,
-> +                            sri_e, sspck, sspdi, sspdo, sspsyn, stat1, stat2,
-> +                            swclktck, swdiotms, sysclken, tdi, tdo, testmode,
-> +                            traceclk, tracedt00, tracedt01, tracedt02,
-> +                            tracedt03, tracedt04, tracedt05, tracedt06,
-> +                            tracedt07, tracedt08, tracedt09, tracedt10,
-> +                            tracedt11, tracedt12, tracedt13, tracedt14,
-> +                            tracedt15, trstb, txdata3g0, ubctsn, ubrtsn, ubrx,
-> +                            ubtx ]
-> +            then:
-> +              properties:
-> +                drive-strength:
-> +                  enum: [ 2, 4, 6, 8, 10, 12, 14, 16 ]
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Not sure this is worth the complexity. And actually, 'drive-strength' 
-will be allowed on the pins not listed here and can have any value.
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 471f644c5eef..d09a5e9b2eca 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2374,6 +2374,9 @@ static int npcm8xx_gpio_fw(struct npcm8xx_pinctrl *pctrl)
+ 		pctrl->gpio_bank[id].gc.parent = dev;
+ 		pctrl->gpio_bank[id].gc.fwnode = child;
+ 		pctrl->gpio_bank[id].gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", child);
++		if (!pctrl->gpio_bank[id].gc.label)
++			return -ENOMEM;
++
+ 		pctrl->gpio_bank[id].gc.dbg_show = npcmgpio_dbg_show;
+ 		pctrl->gpio_bank[id].direction_input = pctrl->gpio_bank[id].gc.direction_input;
+ 		pctrl->gpio_bank[id].gc.direction_input = npcmgpio_direction_input;
+-- 
+2.34.1
 
-I would just move this to the main section and drop the if/then. You 
-could list the subset of pins where 'drive-strength' is not valid 
-instead and then put 'drive-strength: false'.
-
-Rob
 
