@@ -1,117 +1,123 @@
-Return-Path: <linux-gpio+bounces-15827-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15826-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7245EA321C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:09:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FBFFA321C6
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:09:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 052323A6F1B
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:08:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15F903A5CF1
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A48E205E0D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EB43205E01;
 	Wed, 12 Feb 2025 09:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rHoWqk9K"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Lobg896n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50187205AD8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA7B205AD7
 	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 09:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739351341; cv=none; b=g4OJnUkSgaUtGg345vu9WYE0aKUFPb61SJAQEeLFILR+ZpbvDUFpJBR4YaWbEyoGP4f2q1k23UZDHypiAqb+4Z3hyXOIeM7Ljnb9LiPGLJ1U5XqnVUp4pF7o9YJKN3U0Srj/PQeav93f4d4hLyQ3vG3LdfCmPnhoPQiWuUmb1jY=
+	t=1739351341; cv=none; b=lUvbHgfzi1c75VgaD79WJ62QBGIkRaX5Sd3biRuKaautx1KMtxyBHf30eVN4wPr3KtADRGAbBzzSQldemQ/4sj00pR2ES18sFCBXy2WZa3IXhfk2+V44JFe+MAp/W3uQxZIK6qA3vh1iNO8/dHoJ1Y7TJ34busy0dvtak11z2aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739351341; c=relaxed/simple;
-	bh=n5wGpnFwIRrA8Xe201rtdK31/WPbH4qcC7pqdJpe9PM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZiHPMW9xInY8Bpk8Q4F+6EVS2X5t+Hs5fBFhwc3u7l23WQCyqnr+4TMBsokAPjMAQjtfT/n+x5T65yukZL5iyA0N164SvV/cxkUwwWC/xeM2YnLKeeqvEaCWD7ivUB0hNOTCePAg26nsFdvBNYsrMZ4vz1Z2FBjjeWPc2SkpfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rHoWqk9K; arc=none smtp.client-ip=209.85.167.42
+	bh=OvqYnpRvYG0LGpobj7IV6ZwhbVEj/AeD6iszKsbWduI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hWy9IKKugnqDKWu6n33+U/Ay9Y/K8Q8NYBNoYyQk0+yQQRUuknc4JAxRmSgDsWjyhoYWDOYsnWct3aAYCljdnr1cs8GQok48nfv1yiwPM314XRIuXcXB2E47URfjjocpmHgrLdz7l6Nvhcc2ww/nkwoxhIeP9XaGpLCq78pTlGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Lobg896n; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5450622b325so3875889e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 01:08:58 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dd0dc2226so3697459f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 01:08:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739351337; x=1739956137; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n5wGpnFwIRrA8Xe201rtdK31/WPbH4qcC7pqdJpe9PM=;
-        b=rHoWqk9KET0/UQ/ypo46bbvtDE7KVr2A0Su0zP99gIi13A5YypM+5rtXFlf9+Pi9XG
-         S1p7zWrmM6Cpf4+oEjbBfjNNPAUn4RXEJWT2lB92AYtmk7OU1OOF53vNerZYnsRNcrit
-         3WTY4zd57B3VAxztrC4hOGhKP1xPmbrur1pGgTi3NnrMX8uA0MC8gPyUn5Pe0t4WyMb/
-         J8e6BstzphqbwUUjxcB3b+EjL91JKnWq/UhyrShnawCmKwugtdXjAYBhPMNPiKeV96ch
-         LBzU8yDrM0bj2PSV/7FG5WlLQ7SPkcRxwobkU6MfLZcs8L1cfH9tfnrHAbbyKnSciCcq
-         6ImQ==
+        bh=AKD7ISvSvAMVM8VZFenVGXThc2qL1nsB/7rDLqi7zUI=;
+        b=Lobg896ndhZPs6yXKqr/cY4V7/DEA7KP+TKLxYtHkgSFX6r/2uTz0cdPtjt8gaTqsc
+         MxQJekncT4s+ZuSl29i2orX8oEVZW197VtoyPqmW6ONGYRIzggpGncki5lsRe4YYZekx
+         tF2+mFj5ALB1JxVZNrJIqUch+7VTdWt6hTb3I1LuDfIg8JiwFg37fzKnBx5Bg0zovYrW
+         kIhsvXnpDVt9dnG+w5gjDIH2Nujzk71OtTcslUox8/RmPkgF6BVDdyeT5LirvYv3lePs
+         Ce03jxrq5pQOQd9Nkb6hPh1lS3cgDyo/wsnrFx+Noqe0rM2QPDGcV0fKmOL2rc7b58Zl
+         h6Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739351337; x=1739956137;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739351338; x=1739956138;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n5wGpnFwIRrA8Xe201rtdK31/WPbH4qcC7pqdJpe9PM=;
-        b=BJyc3nddQsG6qD/Wg+m9wFbUTs/+VGEUwzXwSarnhMGc1nPM9+t9mhhpyUOOm+Z3cT
-         GG3ugWyRqpqixYWdXoSHgPL1J/yYK59mYqxdiEzZueR7dwyp+kkL9tynwFEehFTcbzWJ
-         kUIgGjxdwtT+0jCEE/y7JtbIhyFzV+92PS8MgYKWGpy8gvoDZxx1BTghbFGafbSopq8J
-         XA+Uk0ZNV8Izd0evvD2AY2wg3blnr1DL6lqbGCYfHCpSxtAiF9lUwlgkS0gTNfVD+s9d
-         BoZ8OA73mJa92V5MAlJQFq5NctUiYvMfr0PnWpDg+LQkBMZMscU8jPVn+GQyLT+5PKdF
-         S5Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2GjX9pUIHAsE02mcDzOLDib2k/U3wsnOH4dUAauD9ITxuywU7rZs+uq1/RNGUbWZROziGIw702Xw4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEUE3QdWvb+1WS1H7TjGyjGye1lcbNZwWIlzCKABmbd4xbZ/2S
-	Co+t4sWzh2pt/XaNtqSWxxbItXLtC0uHIxfpDcRfwydRPWACSrpIp6q18A9hLG0CnsBNQY0n+lz
-	6mCUiZlwFjCoeVZDTG6QmhRuPND1cJkDuJuuxWA==
-X-Gm-Gg: ASbGnct5eFPndv02d4bnIC43YsH6De4mPTQ2QbkRjP4vsnC0AH4+IBrt7LKO4bP0ZbE
-	27XMDB5jmLB9LhfolGmlcSM3NtoS+TQzM6UVNPBLq9oiBMW95d60mxPHRxFw2lUNrS9AyviSy7Y
-	irwnjUs5vAe6th9qeQhkXPjOooHKwD
-X-Google-Smtp-Source: AGHT+IHMVhNH1DsYiwDgLt8aoqLJRbGu0lSkpmAHQUbgHbclESRiO+lCCFE5NmUMNPANjy2YyCxX/m9IzHXzQl+nN4A=
-X-Received: by 2002:a05:6512:6d6:b0:545:450:74b9 with SMTP id
- 2adb3069b0e04-54517f7b432mr715928e87.0.1739351337360; Wed, 12 Feb 2025
- 01:08:57 -0800 (PST)
+        bh=AKD7ISvSvAMVM8VZFenVGXThc2qL1nsB/7rDLqi7zUI=;
+        b=Xg+IQQgq4odHRZ99s1lKNcrTgzJ0oEDj8vBipcr3lRte84rCmb7C8NeuYF06ONessI
+         vypokS5kArnrG++HTuRaJlaMLal71Uz4FwpzgZwJYhY76gvcbB9xgWUtj4C2y2PbBMQB
+         ZOYYAafsfZnl38+/hXBFiIfWmPvNicjtiU4nBEhYuTz8AXLBIR5lWfMso89TzhwWv/rj
+         To3z6sXvM72zc90Unyj7a35jziKeolNZutTWHaUkGipiB1lbAryjnumBYoKDXRre+5u/
+         IiKSohTungdMg4iZ98DhzBHgewcn/xj5vF1fTE0mqkGk/off7pd046sjL8ydWaq/kNu9
+         Mj0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXgruA9sUnyeF1nzrh2n0fPVrnaCpF5pVau5ocp+ChMSW/PpPftat6H0oDjilQu3/lMhtFUh7Npld7E@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFLkv6p+zvePsoU0sofUdsKtmS7VLakEBjN3YGe3nFkCfr4p8U
+	3mW/oDpXbmYrDMcOgyXmFAXwpqnFA5tg4U+PvW/l0zpZVV3zOvHx+tgBopKaqtI=
+X-Gm-Gg: ASbGncsd0d7wTcXAzTQOIt9fm/6TXZXpHJPyW/7rNClrJ4RiGGQy3fFpHA2bisrSYJO
+	VTr2xbZWB9PPuJIS73yGe5IVo5mkuLoMOxe2EFx9REQHVS6NRGDsu1d8CY5a1XXbbIASa/z/Lxs
+	RscZRuvG0gtGLMCYlcEmf4IXma36Rh147JLyJNaUCi+cLIlrLi+HseNinez/Gxi1nD/OMzX+muy
+	ifZEbmjL+wUmiVaQzTwywAtqR9yCmK9XG4qMF/4WF++Ay6tJ/d8SSCqla+hGAPQprycRTfULO30
+	4xxAoLQ0YvlNhus=
+X-Google-Smtp-Source: AGHT+IFkWvd1ex79ASDD1erZLM9AfGHHCjVCSYDIPWJ+oZLpJ2fy77FdM8qDbkbqPp6eM3En7ZTtig==
+X-Received: by 2002:a5d:64c2:0:b0:38d:d666:5448 with SMTP id ffacd0b85a97d-38dea2d363dmr1957104f8f.40.1739351337520;
+        Wed, 12 Feb 2025 01:08:57 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a078689sm13220325e9.37.2025.02.12.01.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 01:08:57 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: mario.limonciello@amd.com,
+	westeri@kernel.org,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	Mario Limonciello <superm1@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org,
+	Delgan <delgan.py@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Add a quirk for Acer Nitro ANV14
+Date: Wed, 12 Feb 2025 10:08:55 +0100
+Message-ID: <173935133349.8493.1997870240852943455.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250211203222.761206-1-superm1@kernel.org>
+References: <20250211203222.761206-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211203222.761206-1-superm1@kernel.org>
-In-Reply-To: <20250211203222.761206-1-superm1@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Feb 2025 10:08:45 +0100
-X-Gm-Features: AWEUYZlOaG0fdFZcvnZdGV-_YBOc5ks7TZt7wQR5Pn3UZrMzduFNjTZra-BNIVw
-Message-ID: <CAMRc=MfOjfHWYGWMx3jcqQpnn6Kn+TFHVLZ355P7zG27JkqFDQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: acpi: Add a quirk for Acer Nitro ANV14
-To: Mario Limonciello <superm1@kernel.org>
-Cc: mario.limonciello@amd.com, westeri@kernel.org, 
-	andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, 
-	stable@vger.kernel.org, Delgan <delgan.py@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 11, 2025 at 9:32=E2=80=AFPM Mario Limonciello <superm1@kernel.o=
-rg> wrote:
->
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> Spurious immediate wake up events are reported on Acer Nitro ANV14. GPIO =
-11 is
-> specified as an edge triggered input and also a wake source but this pin =
-is
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 11 Feb 2025 14:32:01 -0600, Mario Limonciello wrote:
+> Spurious immediate wake up events are reported on Acer Nitro ANV14. GPIO 11 is
+> specified as an edge triggered input and also a wake source but this pin is
 > supposed to be an output pin for an LED, so it's effectively floating.
->
+> 
 > Block the interrupt from getting set up for this GPIO on this device.
->
-> Cc: stable@vger.kernel.org
-> Reported-and-tested-by: Delgan <delgan.py@gmail.com>
+> 
+> 
+> [...]
 
-Please refer to process/submitting-patches.rst - don't combine tags.
+Applied, thanks!
 
-> Close: https://gitlab.freedesktop.org/drm/amd/-/issues/3954
+[1/1] gpiolib: acpi: Add a quirk for Acer Nitro ANV14
+      commit: 8743d66979e494c5378563e6b5a32e913380abd8
 
-This should be `Closes`, not `Close`.
-
-I fixed the two above myself but please keep it in mind next time.
-
-Bartosz
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
