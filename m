@@ -1,142 +1,158 @@
-Return-Path: <linux-gpio+bounces-15864-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15865-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F336A32863
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:28:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50213A328D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:41:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B6AE188A7F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:28:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB3AD3A99D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:40:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30077210182;
-	Wed, 12 Feb 2025 14:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E12B425A622;
+	Wed, 12 Feb 2025 14:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Je5v/O6R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B5020E70B;
-	Wed, 12 Feb 2025 14:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1CE25A33E;
+	Wed, 12 Feb 2025 14:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739370487; cv=none; b=MQo/C9Zr6V2CUx6wjvj5phCSqsu1HWIRgSkHLHpqotNICmqmZ0ATMHkrwWLmVLiEzxv+pizCyzgha5gCD8/Y8a6HfluSEpOSoHJ3HRsOanAETJdB+AsB5zo6GZIo0S5QcDHQGJ7wpohSC8/c7TjrYY9rX2pUt1TXTpRLC/IKz9Q=
+	t=1739371077; cv=none; b=oKgfhoP7P8/29+oiy+kWHcvIKba6n/33QfAdvVhAw/5IlNHrncRGEwxxLt1QrjCNCsJTBRCoXv3wLVca4HezUupoPvZ+Po7mD8iMjCrHJKB+vF+yjT538DhQxT0C0qSBh2HgmQ7bmgN5xlTqELUk7qgD5+dekhrvgCPwL47Jc1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739370487; c=relaxed/simple;
-	bh=ufar0w70vXNNGPtC5NL0LW5K23clTayPogTX1Ff5/10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BlneANpdueLEWsUR/8U8gpTgORJrJyKBfl3mnqfWaE+E0IsgAO7/STlpOWQVOYDoQ7yavQPXGQu05QO+9xWwTApNAoZIhtmrcavPUdcHwAIbeiIf2DJxXevyb70DG2Ja0bWEjdNuIflt/iU0nBWS79fkQwPh92c8bHF4Rax5UHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5203bbb969cso1001993e0c.3;
-        Wed, 12 Feb 2025 06:28:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739370483; x=1739975283;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nhC8rf1vpQF8mEfYpEVkOS/fQGbyABinaAFRiAMwgnc=;
-        b=QNeF8O4Q453wpBp1MVB8Z6bI3JbH3UPg5G4FdgTTARlwo/gKEyYqOlI9dNRrc+q6Fu
-         /oliOMkXmNHdNYvCz8A2hpXtS1yVUUlvhbEz2QhphxJqyQUQBG3NdpvlkH5GdFxTmP9l
-         bycO9WL2e2RED8Nv7KTAeLDoHG5XvAn3Q2UyFEzTxoiL3mzHtHyzkir4yNiTabCJKbqh
-         NMFEF+RRVB21Uik3lcCEesquLVOfuqa2bcojuq2ZCVMCbkDrIrDkwt653e5u8h36T3+R
-         TUAGgq3MbU7GiRbKlFGbIA4qrmleb0eQJuq6R/aT/yh+ZUd3l06wqikd0YXuXi4hM3BO
-         AIlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS3zLyVje5HTQ9jAMaHnM9JIoPaGw9KGZ0kcr85tadZlW/Nz7MYFovI2p7KG4pbiJJR6MxW+jiRoSJLgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRl1duqVUOurVnbDGqszLgVqRIxbsqtNIgnnwSz7Xt/lRTzTAw
-	ZO2waxARuZpXx8H95EeefCL5c8MLLqUnFE7jXFrNivu50c2CblcTiDK+1YfKEmI=
-X-Gm-Gg: ASbGncsMEs7eboCBgbpMrdW8nQoG3DEi416FIoXpsts5R6GPwrkxsL5r09keWunj9Uj
-	tp9R5ljtExcckPWxBdZhnetnc26Rk2nLK6pf5rPyvpECYXJA1JqXHiVuVZKsuOD1/i6NacI0Zdj
-	V0+4+6beYmnNMAkXLzLbyhHpGpAmZ/SaBro2h2pQ8vQI+JSrXYJK7ANVXU+XpvIwy9CxQfALlTI
-	Pl513i+1MShftc6xfgNd3FDLCQjWN2ngCL+YdCHqmYP2DOvZXQ/mhdh754O/Mo9dkMIe++CafEb
-	N0u2QCr0+epWZZfK0C6TNCgD8l+hDyf1I3gp2+oisyKY8uqzjz0jKQ==
-X-Google-Smtp-Source: AGHT+IFk7A45UpLIIfqXuAg3ZqeVp8n1Q9AmiaFqBrxsIOU3pyplxMffDZXA1UI0Yaqzz2w04ESh/w==
-X-Received: by 2002:a05:6122:1683:b0:520:61ee:c805 with SMTP id 71dfb90a1353d-52067c2e4f3mr2929318e0c.3.1739370482895;
-        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5204900cfd1sm728366e0c.29.2025.02.12.06.28.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4bbefec9362so374175137.1;
-        Wed, 12 Feb 2025 06:28:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUCYZLrtAk/xyNn3bDhJYtrOKuKeYCdYXLFAcSrTQ3b2Jb6WIKXf7Y8wx7rsRKafx6cGhaTuO3UA1JZP8Y=@vger.kernel.org
-X-Received: by 2002:a05:6102:50aa:b0:4bb:d062:436 with SMTP id
- ada2fe7eead31-4bbf1fbb722mr3249274137.0.1739370482234; Wed, 12 Feb 2025
- 06:28:02 -0800 (PST)
+	s=arc-20240116; t=1739371077; c=relaxed/simple;
+	bh=VUBM57jOz21qhzl4JgnGGgiFmJ16K4z/3nSk3V+odWQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=s2shW5vJglAG87cdDeYvL24imuL5UvQsf1AjZDX+Yeu2/TwaFKy9yTZxDAWk7sh7XliIjfQq/zfeqBWxeq2o1eTTNsnGLhQqRPaIXrR/fhNhYrDuA/7p062z5ukppZU4Y/6dMdpxFTk8Ao1cjjXMdX8OD15O72sLkw2Eah3N9D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Je5v/O6R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43F8C4CEE4;
+	Wed, 12 Feb 2025 14:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739371076;
+	bh=VUBM57jOz21qhzl4JgnGGgiFmJ16K4z/3nSk3V+odWQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Je5v/O6RvOmLtL1lWrIBnUZdIB9qSs5EzOVdh0V7z1Wp5/q7Seycikmd3UDwzVhZd
+	 r60tyUtkLhGWXvRZua2EZbVry+x0exOrN9X7SVOi670+LrPax9T3ze+hHf3T2ZZQlx
+	 qJ3AfWEUNv2W3g7BTWsTnpXRct0ysuDJFPDaK4km1V1sbRsMa51ZkgF4LNXd/YgKfV
+	 8FLPNGgSpj8395pzX311yHjDr5sDyA5Hqhin4D4jIxNmmIMpqqWi3EcLZL9QstKpGG
+	 aTsR2kRVHbQCnBFJD15qKYbIyjx5k7u6LwWO/hTn/KMThp19m0vZvZEkAlWJ7UK6dK
+	 oA8B5HOGhqO1g==
+Date: Wed, 12 Feb 2025 08:37:55 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-5-koichiro.den@canonical.com>
-In-Reply-To: <20250203031213.399914-5-koichiro.den@canonical.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2025 15:27:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXnST1Y3oxEz_r59urauZ42nrtL5P4+rnPEsgiKgENOOg@mail.gmail.com>
-X-Gm-Features: AWEUYZkY4h0ACOAIiyzE48Rv0lGMuOcaZQjgQi3518er7EMQfREuJN-qKiMAuG8
-Message-ID: <CAMuHMdXnST1Y3oxEz_r59urauZ42nrtL5P4+rnPEsgiKgENOOg@mail.gmail.com>
-Subject: Re: [PATCH v2 04/10] gpio: aggregator: add read-write 'name' attribute
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Will Deacon <will@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Daniil Titov <daniilt971@gmail.com>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Joerg Roedel <joro@8bytes.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Stephan Gerhold <stephan@gerhold.net>, linux-arm-msm@vger.kernel.org, 
+ linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+ iommu@lists.linux.dev, Stephen Boyd <sboyd@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Dang Huynh <danct12@riseup.net>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>
+To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+In-Reply-To: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+Message-Id: <173937096484.3561919.15204410384855360487.robh@kernel.org>
+Subject: Re: [PATCH 00/10] Initial support of MSM8937 and Xiaomi Redmi 3S
 
-Hi Den,
 
-On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
-> Previously, there is no way to assign names to GPIO lines exported
-> through an aggregator.
->
-> Allow users to set custom line names via a 'name' attribute.
->
-> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+On Tue, 11 Feb 2025 23:37:44 +0100, Barnabás Czémán wrote:
+> This patch series add initial support for MSM8937 SoC
+> and Xiaomi Redmi 3S (land).
+> 
+> The series is extending the MSM8917 gcc and pinctrl drivers
+> because they are sibling SoCs.
+> MSM8937 have 4 more A53 cores and have one more dsi port then
+> MSM8917.
+> It implements little-big architecture and uses Adreno 505.
+> 
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+> Barnabás Czémán (5):
+>       dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8937
+>       dt-bindings: nvmem: Add compatible for MS8937
+>       dt-bindings: iommu: qcom,iommu: Add MSM8937 IOMMU to SMMUv1 compatibles
+>       dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+>       arm64: dts: qcom: Add Xiaomi Redmi 3S
+> 
+> Dang Huynh (2):
+>       pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
+>       arm64: dts: qcom: Add initial support for MSM8937
+> 
+> Daniil Titov (3):
+>       dt-bindings: clock: gcc-msm8917: Split to separate schema
+>       dt-bindings: clock: Add MSM8937 Global Clock controller compatible
+>       clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
+> 
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+>  .../bindings/clock/qcom,gcc-msm8909.yaml           |   10 +-
+>  .../bindings/clock/qcom,gcc-msm8917.yaml           |   74 +
+>  .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+>  .../devicetree/bindings/mfd/qcom,tcsr.yaml         |    1 +
+>  .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
+>  arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+>  arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  402 ++++
+>  arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2145 ++++++++++++++++++++
+>  drivers/clk/qcom/Kconfig                           |    6 +-
+>  drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
+>  drivers/pinctrl/qcom/Kconfig.msm                   |    4 +-
+>  drivers/pinctrl/qcom/pinctrl-msm8917.c             |    8 +-
+>  include/dt-bindings/clock/qcom,gcc-msm8917.h       |   17 +
+>  14 files changed, 3277 insertions(+), 17 deletions(-)
+> ---
+> base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
+> change-id: 20250210-msm8937-228ef0dc3ec9
+> 
+> Best regards,
+> --
+> Barnabás Czémán <barnabas.czeman@mainlining.org>
+> 
+> 
 
-Thanks for your patch!
 
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -63,6 +63,8 @@ struct gpio_aggregator_line {
->         /* Line index within the aggregator device */
->         int idx;
->
-> +       /* Custom name for the virtual line */
-> +       char *name;
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-This can be const.
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
->         /* GPIO chip label or line name */
->         char *key;
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-Actually this can be const, too.
+  pip3 install dtschema --upgrade
 
->         /* Can be negative to indicate lookup by line name */
-> @@ -678,6 +680,44 @@ gpio_aggr_line_key_store(struct config_item *item, const char *page,
->
->  CONFIGFS_ATTR(gpio_aggr_line_, key);
->
-> +static ssize_t
-> +gpio_aggr_line_name_show(struct config_item *item, char *page)
-> +{
-> +       struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-> +       struct gpio_aggregator *aggr = line->parent;
-> +
-> +       guard(mutex)(&aggr->lock);
-> +
-> +       return sprintf(page, "%s\n", line->name ?: "");
 
-sysfs_emit()
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250211-msm8937-v1-0-7d27ed67f708@mainlining.org:
 
-> +}
-Gr{oetje,eeting}s,
+arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dtb: gpu@1c00000: clock-names:5: 'alwayson' is not one of ['core', 'iface', 'mem', 'mem_iface', 'alt_mem_iface', 'gfx3d', 'rbbmtimer', 'rbcpr']
+	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: clocks: [[18], [51], [52, 1], [52, 0]] is too short
+	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: clock-names: ['xo', 'sleep_clk', 'dsi0pll', 'dsi0pllbyte'] is too short
+	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
+arch/arm64/boot/dts/qcom/msm8917-xiaomi-riva.dtb: clock-controller@1800000: Unevaluated properties are not allowed ('clock-names', 'clocks' were unexpected)
+	from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
 
