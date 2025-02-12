@@ -1,95 +1,90 @@
-Return-Path: <linux-gpio+bounces-15832-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15833-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26244A322E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:54:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64B24A322F3
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:57:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD101166FEF
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:54:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0646E3A8536
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:57:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E21206F21;
-	Wed, 12 Feb 2025 09:54:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68EF7207650;
+	Wed, 12 Feb 2025 09:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rJNs5C6o"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UXuAfugM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF7735956
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 09:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32871F03C1
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 09:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354042; cv=none; b=d9nHrF7zal3GBJ5XrUEMyn70iwmqQ/pxGvL1tEa6fbD60J4FHrMjXurDj1bWspfxWiswce/TTBTyn456s7+TOYCDy1B+LC9C0fP33Pffng4J3sexXV/PZMSUY4yhyXA5Vo5xyXjI5NVi/rH8GS4rwraJkADbJWFOuPormxpnRSg=
+	t=1739354242; cv=none; b=KXTKKLu//AKK3mMxh6tZglfQODovsCuOV3AJN1IcWagUprWgZG3uHsAmAgG5Bkv/C9ICsgdPuzmwYPc6yO0IDzQLGyofssIPsh6WxupqzzCQW2fW2goyI/B9hHP1FvD6w7Qd+DodHRDk5T32vpMABn7IMLHAw0H0uBtsMzTn/70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354042; c=relaxed/simple;
-	bh=PZMdbK+5409eVJVCWqtfrQHw1QcFuT5g6apO0nOaPtc=;
+	s=arc-20240116; t=1739354242; c=relaxed/simple;
+	bh=DbWnxZQj/QY2+PENDx3QARa/H9rHcPmmXzkYM1WueAc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lC/Ho+CKRjHVHrG3E6vtwMPdig+xqagu9oUDB4tdryzuuCCgomxtwDQgVGZ8u+dIIx8ZG9qC56SEG0jhfq4YIksW4hfKHBLSJzd0G0IG2EYQ1q8vkU9Y/qPOlbxYABwb3+AXFqN/tOfz+yN6qyZObS85gvvl5BHJrk59M8ZjgIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rJNs5C6o; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version:Content-Type; b=fY9Vea0ac3SGitbACme5iCHR3KoYl2Q6d9SG9rXdCBvLhHfx3pVgUeQjBvSzsZ4tCKnP/7CkWWyEacNJtT3AtGFbTu26fc+Ji6wdVXLW5HYzb4mpRbzHUwfBpSRbHr6ts6A/CULQXaiWpbYAD8KitxZipQDz6hKW4lit8L+/Fbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UXuAfugM; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dc0cd94a6so3146972f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 01:54:00 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43934d6b155so3935845e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 01:57:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739354039; x=1739958839; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739354238; x=1739959038; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tIR7kxuCYlEHmDo3YVqs1C3HW9gsJqd1zOT7FkNeONI=;
-        b=rJNs5C6o1myS/dabDPlyvOgRNVMkwHsc3AftOwVes5E68Oqlul7ykNq/gZNJkTRBZx
-         Vx7SzN9uY4uSbn6ihsrFNgMDpzkKjH7HBv9qyaLSxfeaXfFcndkQ5MTy70IWc6hChzgV
-         b2dTbhPcO7qoGWCbI9fWU23Lmt3U/5VThnSYqV3CwGiuAliDbIQni5/Fjn6lm7Xibn/C
-         pSEJ+QGXP1uNk6tFBB7xWZf1ugfK5bK1H8aBaKIud6arS9XefFWZk0rkqPnnk6yzvS9Q
-         t1XbsO4YA9AzjWQ40G7DNrNvIzBv2Sk7VHwUYk1Ys8M2rfECKiywBfjtEM5Pc1rDpAhI
-         ND5w==
+        bh=I6vJyJgeQHsvu6Ff/y0C/JbFL7zNshY57B+aHRbXHVM=;
+        b=UXuAfugMmdiunwS5DAOP7Sb3521mL0MCbjGNacRvIShKBdA7YriBtylrCrtRtyHmYQ
+         SPjTxkQTw32WiX8iYfhH0JQMsR0yS5GBp+OORCgDXyEkvNtcWmHi7+Jk191cctQiouGD
+         UotovcVOB3KN2EbjrkDggJGd04wE3F0ISLIV16w1lzsAtXwgcdpTCouZo2VoGq/ntKOA
+         AncJ4p5VGKgu+NFwsIBOOe6y/+fmMcT8LDJ/sf1SU+2VtismrZvD0tGjNYPY4y53O6RT
+         P6BRIIyfrE+LKPL0h91iAwLTepZXfsuEOGlpY+nl+ty3gvf5KAOvIf7Cw2MDDvpvlpOn
+         dmzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739354039; x=1739958839;
+        d=1e100.net; s=20230601; t=1739354238; x=1739959038;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tIR7kxuCYlEHmDo3YVqs1C3HW9gsJqd1zOT7FkNeONI=;
-        b=jiuVQSc6Sj3wiaIa6wpHRNd/RNMBxVHlQR7ynbY43cxqfLwt3p3QqXn/X92xwcyn/O
-         eHWZu/wvZg1rxyIJxGUqc2I+/Ukzy0DYy/POntADvqCNL9sHVAv5RKzQJE1LRW21IXfI
-         6qy8/3Gi0hfxYqBjY35f/sTgVsKF3vmgYHylOfaZFy5wYNP8iesYV6chAcHpn1qS7cv+
-         kMfkqRBIau2v86NelNBYLEGLK+JSyIEqFtVWCCFm7CeqPsWkUpkixvO2R4TwTeeHSH/R
-         2eRjR7rkuG7G2/Jf2tKKzleJVAwIvDyF0WbcEdShQg0TfWdiVh2YOC3MKiH3usOugNjZ
-         noJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXrCxGDQEUd+AW2YkuofSqsgLU9bxyvrCoDftCvAPL6zaF8Tg/RXoZmwMHijnYP/Ii2wr6mnV1iNAT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfEnijx+shUwGOUcF6JVNgM+/A+MIyAVrvk9oV/Bj/YY782zhE
-	cPwN3LjPhe8fS1fu/bheZKd+QuqpVoXeYKq2xMBsXmn4Rnbei9pnViIRYShqlBI=
-X-Gm-Gg: ASbGncszPUeFc3qGUkBagZ4e+6jPpFx3osba6Hw4ZrQZPWoOHT3KLSWx6PyjXCoit3a
-	6LZic9d05ankwj49vQC4pjcYBc8jQiuqgTbYLU4o5zv9qyheWWqZSOXDT/7qwe8/oJFYtw7Hfy8
-	K/aPWqDvGuFZgZbwIw32PyKjJX7mdy9UNCPhLpK2fPM6eIaKmBz4q/zvr6AoZ4s20+JhZHz2yKt
-	r6mate407xXcKaYxQIod3h1DV6nOq4ty355lbxbLgRvAkQoTql+Aqvae6lbxu3NQy6rlyNud758
-	tvxqVwVvQ5xLkwc=
-X-Google-Smtp-Source: AGHT+IE1AuIEYHupLeeT9Nxbe+qdld3vOkKKKz82MsP6O3GVbjl5NUVtbZU3jbI1vKhF91kVaT9XZA==
-X-Received: by 2002:a5d:6908:0:b0:38d:db8b:f505 with SMTP id ffacd0b85a97d-38dea262832mr1371554f8f.17.1739354039252;
-        Wed, 12 Feb 2025 01:53:59 -0800 (PST)
+        bh=I6vJyJgeQHsvu6Ff/y0C/JbFL7zNshY57B+aHRbXHVM=;
+        b=j6i3WGtaGNU6qGReOCSa+f+J0YDQOwGxpQGDm6SM71A+u6dEJk5hp4gH4NfzacTebY
+         Xuhctf2oQWDdwbUbbQ01oIuDFZJVuRmsoWZTVu0JN8unWjj+R8jIhC9RnmtbVEAyRIJK
+         eQWC3M9CvL5FjT82ulaoaCQjQswRrilH0LQF9eBbFlIZ3IdMiWo19zD08MBfKISAvFzN
+         7mlXN6Z0ZNY5ogZRz+HQSb0dIgtFKpnrzkEBXw5JVA8vBP7CFWOluNAfF6X4TCI8sewH
+         zgxy1wN0/ysqzOTbWKHWFbHNjeebGYh5xI8I18MZLvpXXz7jYwmCRGGoWqKR7T/ZMaaN
+         aVHQ==
+X-Gm-Message-State: AOJu0YxaQR6CadSZ5rqpp3+/6ZQbjFz9XxzzKdzr4Ax396vW9amGol1J
+	Bnp+qa2b4lzBJ1+xwFgW4pB8DNyYInHk2d7P8JU9Ds6emSyyq+XvyR9qp2G4iqmFw8Hu5EYfi3V
+	bCEs=
+X-Gm-Gg: ASbGnctCyiKPMb6YSi0vkQnjxI4e8LNh6hCUSSArkBTDBk6mXYyZMmuwukQLKafDuXb
+	u76bgOocwrPuNmTkM8lSgPjqJrdFZY5OmLx6oZnxaC/wSAeTR2zyPwNOMpv4KcpGoMabZ1KR212
+	mcy9g5q2e2WvGRqhJ3+twaq7mOMpNbP4ihp5XXH4AIgvu3ge2EfWp/VYBvu0WdWVFWCpCFwNguT
+	MSSa9/7Jvl+cGUqJLu0UWZief8o/ZPrUqgkuZzl9vtxEp/WtQ/iQIc+Q3DWbaDyjP2n2ni0doyO
+	jrbCFb91ioZU0oI=
+X-Google-Smtp-Source: AGHT+IHmNW/uEKKhVJH5d7jzvEsFDf7h41DfWWQR+7ySmCWdVvV8vJ3bcQAm3tRGaO+q01hevGkb7A==
+X-Received: by 2002:a05:600c:694:b0:439:5cf6:ec3 with SMTP id 5b1f17b1804b1-4395cf61043mr7945095e9.4.1739354238666;
+        Wed, 12 Feb 2025 01:57:18 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38ec2d9b299sm842935f8f.56.2025.02.12.01.53.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd511e626sm11255636f8f.74.2025.02.12.01.57.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 01:53:58 -0800 (PST)
+        Wed, 12 Feb 2025 01:57:18 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Wentao Liang <vulab@iscas.ac.cn>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
+To: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-Date: Wed, 12 Feb 2025 10:53:57 +0100
-Message-ID: <173935403447.13404.4893974637827879328.b4-ty@linaro.org>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate gpiod_direction_input_nonotify() call
+Date: Wed, 12 Feb 2025 10:57:16 +0100
+Message-ID: <173935420805.13771.5715845143153249360.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250212021849.275-1-vulab@iscas.ac.cn>
-References: <20250212021849.275-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250204175646.150577-1-andriy.shevchenko@linux.intel.com>
+References: <20250204175646.150577-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -102,21 +97,18 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 12 Feb 2025 10:18:49 +0800, Wentao Liang wrote:
-> The stmpe_reg_read function can fail, but its return value is not checked
-> in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
-> incorrect behavior if the hardware access fails.
+On Tue, 04 Feb 2025 19:56:46 +0200, Andy Shevchenko wrote:
+> Deduplicate gpiod_direction_input_nonotify() call in
+> gpiod_direction_output_nonotify() when emulating open-drain
+> or open-source behaviour. It also aligns the error check
+> approaches in set_output_value and set_output_flag labels.
 > 
-> This patch adds checks for the return value of stmpe_reg_read. If the
-> function fails, an error message is logged and the function returns
-> early to avoid further issues.
 > 
-> [...]
 
-Applied, thanks!
+Meh, it's a bit of churn IMO but whatever.
 
-[1/1] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-      commit: b9644fbfbcab13da7f8b37bef7c51e5b8407d031
+[1/1] gpiolib: Deduplicate gpiod_direction_input_nonotify() call
+      commit: 8beaf839018096cd20e427e68645b4fbecdcb1f0
 
 Best regards,
 -- 
