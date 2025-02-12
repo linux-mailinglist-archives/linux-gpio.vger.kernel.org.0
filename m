@@ -1,124 +1,96 @@
-Return-Path: <linux-gpio+bounces-15834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1E2FA322FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:58:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59701A3232F
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 11:06:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA163A4CD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:58:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C94163A072C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:05:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DD8207A20;
-	Wed, 12 Feb 2025 09:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EhzYAVWi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 319512066E1;
+	Wed, 12 Feb 2025 10:05:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E7B207678
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 09:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D312B9BC;
+	Wed, 12 Feb 2025 10:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354307; cv=none; b=aOAZIBCR1ndYxyz3YyXUtMpklmC9lDvrC2hjadtUTmK0MT8ymrwC/sh5aK2Y1tYIhm20+/UQGaW0uRMHKyJMTIB19xt+v8/ulgS/SCi6mSnAIdCKCASQIGGWT435IHGJL+FyV3Xm43M4EJtOdEN+balRQJukchaIGXOe3EHv6pY=
+	t=1739354755; cv=none; b=CPTagm5I888prJQxCkPbbVuqszFonokOJksRjNmDlSclyq3r4FCQKy0omQcc1lUPq3RIu3F4cV3o+xIVUAerNJB/34KVbjEzE14xU/J6+8IsRnb8FGUC7+d16EvkeGPVYl3MZ8Vh067F2494hustMoB07NbkpDwligfwo4gx/so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354307; c=relaxed/simple;
-	bh=S15E8A+hHFoDG1C4WcwtVn82iNSvGavQW2XFU/NyIIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QM/g9/IWVagUr9E1iFrvooOZCh7KqqlYqfbJE20EFOuMxn9WnAMXCgD6zJ4Eu0J5+1ecwh7eis1b/RSLnYa/lG7NH4KevlNXeFnn8Qmp577MicMK30W7esTA+eeyBlbsdBYjNZXGO/rCUsP5nPtbay1GELAIE2qJh0ivMOBUkPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EhzYAVWi; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso45812925e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 01:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739354304; x=1739959104; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tXCdN+0JkkY18KL8OSU6hHNRFl6UAgJHQfjogbVCiA4=;
-        b=EhzYAVWijvCdbsSuuprWmAysDztwNljyO42mkb4vw85NF2y6faxwbwq7sU16hZ+26I
-         Kbw5k4wcK8gZEy+/zSqFFipoD7gAjRovbPPNZBZE1r12820nX5M4NoSZozjpbCXjVaYN
-         p/62bJeMZMTPVrBxEnYel4FRzr9DBGzvjwhodcWH4L1d2R5wGz/BbxjK8yBI1tI3xqyT
-         oYzDJAxptsxnqtRZ9FgtVe8nygtL4KRIQb6JrcBnfjvYxFelSG+lCZLbDvWw5HV3NFLk
-         kiDZkHOstIlM+I1FaJlc+rYp+um7HWelWrvjnjYuHSQ0m0qCOdAOJ2E9EA+rNyfhyb6x
-         gxsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739354304; x=1739959104;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tXCdN+0JkkY18KL8OSU6hHNRFl6UAgJHQfjogbVCiA4=;
-        b=uyfIORL1fvPMyReSZ8n9FRVOdyXhyNnkhf3IW2ee/AEgqLqm+DfbweN9PaH8jJRo16
-         D2ikQAMiauQ95g0OwT+cJshT7Pbfb5l0ba8TQuA/Nl6oQT9GczbCDFtDwjZBVJHNzmK2
-         sQBmyiFlKZMoK/OnfIiNaKY65k2uc4uaFkfJDIEhMZ1lfvnZH7wBJ1HfA8jGLBLSO9VW
-         kaMaVQ8bt8BzWegMmJlK1okh/cDyrB6mGILvCBUOcqcuoZ7xR2JEPFx1bwxtN8oLxkE5
-         baMYnohraKi5JNjj1lKyKFfk0tlnnZYBYGszzNcMS47BjOHX+7E6j55/BI6iDqn7IMFZ
-         CekA==
-X-Gm-Message-State: AOJu0YzCp4cuDya3+PzBenZgfd76ogUB5VHWAeYtiTXCjFUBmPTfMdvN
-	2DRwOjxUViAYBQtPFRgTF4AgpoRDLbwCQ2j6nqb+iikDpF8rFajrX3uOdfdM8j4eCqZfn7XRpu9
-	XOOc=
-X-Gm-Gg: ASbGncsOR/EntHyu+N8WuYDXQYhBIjIy06wwfm2f5zXbsTFJ/5OOtyeld/6j4Od3JX+
-	2oMfnkh2OXWWruVmztiqAPNiY9B32/k34BrfQ8QH4F1JPAi5+lG68lH98XZ54P4dpJuVKpmmLyq
-	Y5aWXfVLHlXHkbPv0duVi76Szj14T/ECrC0TdRE7sjmdN94Yhrf0EN1G3dBwUWVecItLnjqnPd9
-	/F7MdwMj2s2fkH8+TLiNbZ5trOht7ti5J4ud9RP4oMgoDJpirv7QAKxBSlIuiyULPTcLwmV49Il
-	JxINcGCVkj/rYjk=
-X-Google-Smtp-Source: AGHT+IEC+Gn+QY0QYIabf+Hl3KXlYWU8d1F0mJV1sCSbwbfbBxRgth+shDbPFtARl1s9kroKk18pjA==
-X-Received: by 2002:a05:600c:444c:b0:439:477c:cf73 with SMTP id 5b1f17b1804b1-43958176299mr29395355e9.11.1739354303696;
-        Wed, 12 Feb 2025 01:58:23 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:521c:13af:4882:344c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc5e6f027sm15055093f8f.4.2025.02.12.01.58.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 01:58:23 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/2] gpio: xilinx: Replace custom bitmap APIs
-Date: Wed, 12 Feb 2025 10:58:22 +0100
-Message-ID: <173935429949.14007.9294735731624784387.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250205093200.373709-1-andriy.shevchenko@linux.intel.com>
-References: <20250205093200.373709-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1739354755; c=relaxed/simple;
+	bh=mOjyNtiZg/CJICnPP13bn3ZDqJTR2ZsKEeg7wHb6epk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OkXI5YWEy+34LtJ0PT3GrFrr6Fqy09XqGK2Slj4PO04DLf7vJ/dQJlpEHELDxkT0fFnahk/cocyqUVIvdGYC3KZBRmFge9YBMwCf380yBXUYHU8YRfd+irQkyl3pKpMOyMbCDXuLzQpmTL0lvk0Z4xcAZHNItUod4y/Bfa9k/o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from ssh247.corpemail.net
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id KES00136;
+        Wed, 12 Feb 2025 18:05:36 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 12 Feb 2025 18:05:36 +0800
+Received: from locahost.localdomain (10.94.3.204) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 12 Feb 2025 18:05:35 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <avifishman70@gmail.com>, <tmaimon77@gmail.com>, <tali.perry1@gmail.com>,
+	<venture@google.com>, <yuenn@google.com>, <benjaminfair@google.com>,
+	<linus.walleij@linaro.org>
+CC: <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] pinctrl: nuvoton: npcm8xx: Add NULL check in npcm8xx_gpio_fw
+Date: Wed, 12 Feb 2025 18:05:32 +0800
+Message-ID: <20250212100532.4317-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201618.home.langchao.com (10.100.2.18) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 2025212180536ac220fe9cd78e875c27752d06b511bb8
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+devm_kasprintf() calls can return null pointers on failure.
+But the return values were not checked in npcm8xx_gpio_fw().
+Add NULL check in npcm8xx_gpio_fw(), to handle kernel NULL
+pointer dereference error.
 
+Fixes: acf4884a5717 ("pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Wed, 05 Feb 2025 11:31:09 +0200, Andy Shevchenko wrote:
-> Relatively recently bitmap APIs gain a few new calls which may help
-> to convert the GPIO Xilinx driver to use them and become shorter and
-> nicer. This mini-series does exactly that.
-> 
-> Changelog v2:
-> - fixed a regression in patch 2
-> 
-> [...]
-
-Applied, thanks!
-
-[1/2] gpio: xilinx: Use better bitmap APIs where appropriate
-      commit: 2af1f667532013eb354c783514839f89d9923240
-[2/2] gpio: xilinx: Replace custom variants of bitmap_read()/bitmap_write()
-      commit: c11708e2b66b56f102bac83980a52661996c2a21
-
-Best regards,
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 70e6966049e4..17825bbe1421 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2374,6 +2374,9 @@ static int npcm8xx_gpio_fw(struct npcm8xx_pinctrl *pctrl)
+ 		pctrl->gpio_bank[id].gc.parent = dev;
+ 		pctrl->gpio_bank[id].gc.fwnode = child;
+ 		pctrl->gpio_bank[id].gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", child);
++		if (pctrl->gpio_bank[id].gc.label == NULL)
++			return -ENOMEM;
++
+ 		pctrl->gpio_bank[id].gc.dbg_show = npcmgpio_dbg_show;
+ 		pctrl->gpio_bank[id].direction_input = pctrl->gpio_bank[id].gc.direction_input;
+ 		pctrl->gpio_bank[id].gc.direction_input = npcmgpio_direction_input;
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.43.0
+
 
