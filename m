@@ -1,118 +1,98 @@
-Return-Path: <linux-gpio+bounces-15797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64D02A31DE4
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 06:24:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F5A3A31E44
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 06:52:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 172ED166871
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 05:24:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02122188BD86
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 05:52:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FB21FAC4F;
-	Wed, 12 Feb 2025 05:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6681FBEAC;
+	Wed, 12 Feb 2025 05:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDzuMOAi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H2BIC3GF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248FE1F9EC1;
-	Wed, 12 Feb 2025 05:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267D71FBEA1;
+	Wed, 12 Feb 2025 05:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739337847; cv=none; b=By0XqNF4ch/HLWLbge2/6OjRUJNHTfL9IJqIFBDaxJ8x2Zxz2jCozzIBacdNDsHmXQ2bzooEXCLg9S/RPmM15KavSD54JCuuS6X+/Zwft4wCtF0mWkqDGTl1DmBcbcelZ0uCqTiUh/yxhcQ7NgWysn8H88Bdq+EG2MIz9laHZ+Q=
+	t=1739339485; cv=none; b=M8qoV+/HmO+eDpMyTvuDUqJ5PqSAhH9wKbDza+imjuCizb4tf5O2WglifmrcXxfBKyQ2hsaU57bC3ji86IQabVtirCjT5idH3jTUfw1xJIuzIsxqIb2kD75ouswbr1Un52BTrCfKel1rrGemscmy6DXMVhqJb9rKNXXlGjH7ZRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739337847; c=relaxed/simple;
-	bh=vSXb+2ggUZ/x16ojZ2sI7MJhVmux4rbJ1k+Dt5LPLv8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UnsPHZ+Foq6TJZ1PnV1UE6RDEaM40K0nfxa0oasLetZCq0ZACh6uOiGAeFHwWeoBrMM9mXDYWEQnihHaGSLI6VaXzVTq5uGGK9DCC9nFYYR75YK/HYShXJblSUC3SuvY6mLVY4ObzS+/fXNrEezCkHF2VgphBkqdU9dcQLTbFnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDzuMOAi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E441C4CEDF;
-	Wed, 12 Feb 2025 05:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739337846;
-	bh=vSXb+2ggUZ/x16ojZ2sI7MJhVmux4rbJ1k+Dt5LPLv8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NDzuMOAit2fC+1XlEQc0nRuQ50/d53IZdy97MMV3CTlmobdVAMjzjX0/qwrQJfYzx
-	 GY2xRaL/RJfKcpm/+LAgF6hZM7oWj1N0Ew9p+9ScNYPPa+vZ5hwzUYbfwWyd96Tf8Y
-	 FTQLqUXraZsQLdc0MCK1UWQKYACwi9PJJRGemm8wny+eZAZ+PquxekGKZPbXWOYEyL
-	 tJpgEavvDko+lEmpAmYGKY4ZvQm01u92er8Qycl6epdF2YksidMTZi3je1SXetjGXN
-	 Aa8W9GDHaxsoK/vDY9fWxcJKJIVf4RKTytXNhfqcUSPZxCjy9EDFqL+yXvwf1MJUq4
-	 2wcjuIocjc/6Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC93C021A4;
-	Wed, 12 Feb 2025 05:24:06 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 12 Feb 2025 13:20:54 +0800
-Subject: [PATCH v5 5/5] MAINTAINERS: Add an entry for Amlogic pinctrl
- driver
+	s=arc-20240116; t=1739339485; c=relaxed/simple;
+	bh=WiPSLwyekIgOvheGbxfgpUahDc4J1nc6fcB/ziPf8v0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XL2BJu29soE6DTdew2jIZaIq+t4UlLMlxZUJ9TTQ43x0Dttu+T7I2agGWKJKcfSRdpPjSzlibguG7o14pkOaOe6vH5cgHm8HgJKZZAFCDyERRs+KKI3Sx7dO+6LooWUB3lzk3qWliwRkOcDtF3/4L2s5PmsRgUn5S4jJU9IB/60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H2BIC3GF; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739339484; x=1770875484;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WiPSLwyekIgOvheGbxfgpUahDc4J1nc6fcB/ziPf8v0=;
+  b=H2BIC3GFu8sF5/2XvfGfFxAvJoYHmfrH9h2HNeS5xKAV6VqzSF5EDdSE
+   +7tu2A0eZh3ltomKB8XG3kYIXSUXtV6jD6b/dZ5aDEZpfBYw/Q++aGr05
+   QD9zNRm++wElldtVJZ0jNP6Qgb9BbsmW90esennHL479SbVFifSgBiDTv
+   fHewChxDRer+gWgyhdyJnWsfhtCEEoLz81pyVCYmLMIbKViqXJiI1M2Zz
+   UHf1qNEg20xfr7N5BRwsZD/3J+GurgVhIosOp4OvmzNWWQy4SmTVXjA08
+   tqfys1DNO0ORmPSRJ1GbyVAWCeXNzkwDZw8R4MUUtNeltWPXNRJnT2s4H
+   A==;
+X-CSE-ConnectionGUID: ojnAq7mYRZSen9h5yghPcw==
+X-CSE-MsgGUID: /xWg67i9Q/qNr3V5BSeE+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="27581221"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="27581221"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 21:51:23 -0800
+X-CSE-ConnectionGUID: CkI2eLKMRT2JNmxPWLfk2g==
+X-CSE-MsgGUID: 4nB4NpbVRmmV7UheVQJo0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="112552560"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 11 Feb 2025 21:51:21 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id D71C011E; Wed, 12 Feb 2025 07:51:19 +0200 (EET)
+Date: Wed, 12 Feb 2025 07:51:19 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: mario.limonciello@amd.com, westeri@kernel.org,
+	andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+	brgl@bgdev.pl, stable@vger.kernel.org, Delgan <delgan.py@gmail.com>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Add a quirk for Acer Nitro ANV14
+Message-ID: <20250212055119.GB3713119@black.fi.intel.com>
+References: <20250211203222.761206-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-amlogic-pinctrl-v5-5-282bc2516804@amlogic.com>
-References: <20250212-amlogic-pinctrl-v5-0-282bc2516804@amlogic.com>
-In-Reply-To: <20250212-amlogic-pinctrl-v5-0-282bc2516804@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739337841; l=865;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=nBXqe1tXYGfdmglaQs6qWtScD9N64VHa3kQ6UO7Q5xQ=;
- b=jwNdMCdgfLrMjGjYwYUFjVTMM5Bv9t0hCQWWUpKJORngppCG4bYoD2uCgtfqk1Y2CFYzVs2eL
- VlrSg2BJj96C9y+r6UR8oJOnfIXC8XX3GKNF8EA10cFgyguEJyapr2l
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250211203222.761206-1-superm1@kernel.org>
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Tue, Feb 11, 2025 at 02:32:01PM -0600, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> Spurious immediate wake up events are reported on Acer Nitro ANV14. GPIO 11 is
+> specified as an edge triggered input and also a wake source but this pin is
+> supposed to be an output pin for an LED, so it's effectively floating.
+> 
+> Block the interrupt from getting set up for this GPIO on this device.
+> 
+> Cc: stable@vger.kernel.org
+> Reported-and-tested-by: Delgan <delgan.py@gmail.com>
+> Close: https://gitlab.freedesktop.org/drm/amd/-/issues/3954
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Add Amlogic pinctrl entry to MAINTAINERS to clarify the maintainers.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1e930c7a58b1..c73d7ed5aa8a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1218,6 +1218,14 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
- F:	drivers/perf/amlogic/
- F:	include/soc/amlogic/
- 
-+AMLOGIC PINCTRL DRIVER
-+M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-+L:	linux-amlogic@lists.infradead.org
-+L:	linux-gpio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
-+F:	drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+
- AMLOGIC RTC DRIVER
- M:	Yiting Deng <yiting.deng@amlogic.com>
- M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-
--- 
-2.37.1
-
-
+Acked-by: Mika Westerberg <westeri@kernel.org>
 
