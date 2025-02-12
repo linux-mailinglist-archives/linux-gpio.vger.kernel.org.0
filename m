@@ -1,132 +1,110 @@
-Return-Path: <linux-gpio+bounces-15887-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15888-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFBE6A331FF
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 23:06:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A419A332F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 23:56:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D96D188AE00
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 22:06:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E145D3A5CF6
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 22:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F43204590;
-	Wed, 12 Feb 2025 22:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9DA2036E2;
+	Wed, 12 Feb 2025 22:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttgayTej"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QYW6mTKF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0182036E6
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 22:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E5024C692
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 22:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739397952; cv=none; b=NIrqiDo/jjHflw+uaXLR1khUW4T0MK8X5SYiw7f277i2YV+6c1NJ/eMIJnR/8HZ360UaACfAyppf9YvHQ2GJg2DPDchoCFyi/up2RyLd3P7ENiihqiaaoB1uibV6iu2YF3xBqXmwxJlYi2B78ieH5VJLq9/sI9CWgnotWNGZp6Q=
+	t=1739400947; cv=none; b=KU4GvrlQI8llR/Ru20aqQwhw4Asi/w170niGlZLFLGD2Cqmv2Mn3j3/RqniMRsbWHPQKAX4bCt+LuIe2yPBuSb6iTMK73REqmZfkXO4jxuTHwebVfdKOT6ceSXm1F+7DI/dgpBtP80xRYVNsgMYhJPbh/rYMdK7OWemH1ptARTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739397952; c=relaxed/simple;
-	bh=TIp6IiSw9J6XeW41z4PtWs3Pf5rf0JtnBBQ3ET3vPAw=;
+	s=arc-20240116; t=1739400947; c=relaxed/simple;
+	bh=Vh8OHOSoRu0tL2Xo3xK7ABKzYb3yz9WcNsydc0J1CWU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cBqon/XTwz1IrVqr+tMp5MF1rjdGFi+dtkm6f6RUX5GUmy2k/6IShmgR6lnU8YzBb1znPfaA1sNU2WkdSt5KNanJHZOji2I/bsF3AUrzcrbty6uDZGXT3Gq3bNMRtaiU3MbsR6lhEXPV9Hy5O67NySSjjL8caZNcWqcCPC7gsp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttgayTej; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=og2cVkYB/YiRQLrhh3piryaRz/rMETKVxRGjnitzXhDw4YGtyKoqpetb5MQInJRL3YlHAVwO/16jG+wlLVwXTc2tmysesWn2RxbXNb/3fYBAKMBK5GtCQktATttiT/lCF52FocvIBby0H1RO7wRfeSbk7encioswktVLYXUFqw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QYW6mTKF; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30613802a59so2439531fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 14:05:49 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-545074b88aaso165997e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 14:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739397948; x=1740002748; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739400943; x=1740005743; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AyeS31oOn+dyoHdEWwNg/btCvozuEbvtdJVbwfowCPI=;
-        b=ttgayTejd1PyC4/daUQsPLiIUzmFcgNOFlR3oRFQDJq6S3kvSPz3zjPpvV1zEITOU5
-         bFsCqHW7clcTqeKHUFyRJx9FvFxF8myeI2SvFacrVkD638WTHZY6vB8RKX+608j+lOVM
-         VAXrESsDlx4yS2NX5UWPbYykJUChAV2r6O1nwQrBuMQLQo0Ol/4LInKdyrUKiCBgSOMG
-         +JyMrlhX8jKO8TdafilAekwhxd/6HJ+8abV3KMAaedDS4UUgMLUsqJbT/JF97TSQbavN
-         fSTDsQz1DjHoOMtdjg1fpk1UFYZur9atEfwjVnTXao/p5xOMahyVbOyALsir6RUmsJp5
-         skIQ==
+        bh=Vh8OHOSoRu0tL2Xo3xK7ABKzYb3yz9WcNsydc0J1CWU=;
+        b=QYW6mTKFawKMvbHwECidwOahBBH1WUrqhMOgh4WK5UpjLaoFFriXB5Fi6/FuXMZdWS
+         uvAh46xDB88yNxY3BIY/odRCqGOzBsf6oiiezEObQuamD3CX56PNSumVdBMPIk1gr1L6
+         sVMT6fEKImv3k4eLaI0uo0idpJTVzcs+j+jtJ+EzDazHpe/KJEuLhCaSqC36h/66aUTE
+         NVrv8B4yRv4+O53BcIr7ijLdZfzNp5n/+OINDTGelCYo/pWCidacSVkHrt1MROzBTxYJ
+         YDsgX0Q+ss3/k4nQXx5o+Wk64/mnnJMeWkdFDASPSyNP7R1W+bWLUynZPqRX9/6j9Gr1
+         TD3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739397948; x=1740002748;
+        d=1e100.net; s=20230601; t=1739400943; x=1740005743;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AyeS31oOn+dyoHdEWwNg/btCvozuEbvtdJVbwfowCPI=;
-        b=CWTlB0tcbL6dhQWQiQvA2cQWL998tn78oiXYpz7CdPLY/l4ZEkJlwuN6ujzxaoB9dr
-         lzCZN07tSLZLSUdkeWvrHAuieH4FGVtkLGrRKZPKfpIvEhZYcC4fl32kOeYOnhaG+zVv
-         hAsjqhfR6STU0xemY5YEoYJz2AloPpCE4/+7IALcV6eMhXEmRBh9gOvXkmuthDxLIWKY
-         GayLQ3vYzMDNI060DJ2F4+oEVJSneN8zB0LMgIc7O3MAuzFGWLLk3roMlz9bqZ3ktz5D
-         hURywBDmH9/iK9/4opnDS89/RBowBo8HbVDKLQFsDdCT3HoULZXmOE80jLaAMyYTmFvk
-         T0yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbZA2XRkEeGyCqWpiQ7huDiXmIIeOz6mX9XAMg23b7Bz/9Ood7d0ZKAhJnRoOxOvRmn0ScurcpI9cC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCcReUAiDQlapllqwcbQyNxD6iF51WF+ob++zcrB6OQs9pPN8L
-	aZnpGTitzfkcrhT24yqjOqf4iFnllNclJBgIL79uuYjzTW7YuPXk1OaTjaqJ/DV0VW7hWxeAbaN
-	m2S+B5xD1MkY0IpcBesRpZJY5kOMLWctvBhWrEA==
-X-Gm-Gg: ASbGncs9whmpUmvKxFqk8VGv4uZPj298KvnqmmHzxmhUKXZTBQ76RshiWm9dy2IEvW1
-	NvDF92dgBS4uWTenpNzJnpObTaeB10STx9x9sneTNzfj5Qv1+KkGEGjHso/GB+GsibNWQSyv1
-X-Google-Smtp-Source: AGHT+IFVaagqh0CMTsKcRkmd3v9fDc83O1leceTlQ3IBKxH8tfOt/VuYKAEwsc8W8nqObHABGLW4nQjjLkytNesf0P0=
-X-Received: by 2002:a2e:a9a6:0:b0:301:12:1ef3 with SMTP id 38308e7fff4ca-3090363078fmr16793271fa.4.1739397948015;
- Wed, 12 Feb 2025 14:05:48 -0800 (PST)
+        bh=Vh8OHOSoRu0tL2Xo3xK7ABKzYb3yz9WcNsydc0J1CWU=;
+        b=uMOoLI4hMdm1iGBdh1iiPqopXEAJUuxXLeivrT/tQUus9qILhDMR109P1/t092HL1x
+         CnPQscgQl/fGYcWn2vLRTfFL7t0Nin0vkfHJrucrrhm6jfgMxBUe0d/62WCnH/ECBxf6
+         cbZr8JM3z+rJsGF5zF1Fm98i4uemRKkH9djmkD6l85y201E3IN/Ipe9jw2StFRyOfipz
+         ICH3E6nwoyga/SljDHuiCl+ooSCobf/iMwQJhk4umscT8wDz9G+1AqceEjXH9kOoA7YM
+         TpAmr/YGZNmhdvEYwnA3hU3KMYkS0dZ7BuKlmv60Mnsi7s9HTla4gOQ7z96UxAmYZ23o
+         YvvQ==
+X-Gm-Message-State: AOJu0Yw5rDR+0is/uMocWYFZ4pm8F31yk0eBYF4yb8u++ssZXAJNobiF
+	rqWyNa8bsbkN4anJcBsUR2DIjGaRzTjazJxXK/2kWrRBPqCGPh9rg2EAPJQi4za7X8rQgThflmE
+	cQxCrDhuhEY80x5NF27IBCpjZ0Q/iP0MpMbMiaLc6khl1ucYs
+X-Gm-Gg: ASbGncuKQXZazIk7IraO5G/5EYOs2UCh4GDDox59SZGeuz688hG9w06MmOP/eURb0Dz
+	tfvzUaL+c/H7y28QhtJqgwwvcrPlLTGildgc4cF/8jr4vWirgK0fVsOpeE7t5QGPeY2m6eaFB
+X-Google-Smtp-Source: AGHT+IFO/FcemoGJE1XThod9aovk0qho24pkfaWi+AF8m2zM7DfIEMsY7q5oQo7rFA/RtypHMAEP37EbGXxF2pqj5og=
+X-Received: by 2002:a05:6512:6d6:b0:545:df9:5bbd with SMTP id
+ 2adb3069b0e04-545180e90ccmr1518608e87.7.1739400942991; Wed, 12 Feb 2025
+ 14:55:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212-kernel-upstreaming-add_gpio_support-v1-0-080e724a21f3@blaize.com>
- <20250212-kernel-upstreaming-add_gpio_support-v1-3-080e724a21f3@blaize.com>
-In-Reply-To: <20250212-kernel-upstreaming-add_gpio_support-v1-3-080e724a21f3@blaize.com>
+References: <Z6nHVEB85AQE-rQE@smile.fi.intel.com>
+In-Reply-To: <Z6nHVEB85AQE-rQE@smile.fi.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 12 Feb 2025 23:05:36 +0100
-X-Gm-Features: AWEUYZlDq7_9jonIwEr0yAB71k3AJVNBKOFS6VlejNFuOFWzLB734tg5VjHuCCs
-Message-ID: <CACRpkdaWSgTO=S=L=m4bCXCU5b7aOG-DzN-TLEvPjb-QZGc72A@mail.gmail.com>
-Subject: Re: [PATCH 3/5] gpio: vsiapb: Add VeriSilicon APB support
-To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, James Cowgill <james.cowgill@blaize.com>, 
-	Matt Redfearn <matthew.redfearn@blaize.com>, Neil Jones <neil.jones@blaize.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Date: Wed, 12 Feb 2025 23:55:31 +0100
+X-Gm-Features: AWEUYZkI_WWF5CIPSuWdxs0FRwaXhf8GWaDz97og2RAlktqshtyBrkPapy0zQwA
+Message-ID: <CACRpkdbUCjeJXkc4iBBqJFsQ3sEbiv8HO9eh7ft5dAC88f7XSQ@mail.gmail.com>
+Subject: Re: small brainstorm for the problem I have
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Nikolaos,
+On Mon, Feb 10, 2025 at 10:31=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-thanks for your patch!
+> 2) The firmware for the device uses already some names for the GPIO lines=
+ that
+> not compatible with SPI GPIO schema.
 
-This driver is really high quality, only nitpicks below.
+I guess you mean the node names
+like "cs", "mosi", "miso", "sck"?
 
-With these addressed:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-On Wed, Feb 12, 2025 at 2:47=E2=80=AFPM Nikolaos Pasaloukos
-<nikolaos.pasaloukos@blaize.com> wrote:
-
-> VeriSilicon APB v0.2 is a custom GPIO design provided from VeriSilicon
-> Microelectronics. It has 32 input/output ports which can be
-> configured as edge or level triggered interrupts. It also provides
-> a de-bounce feature.
+> I was thinking about the following:
+> 1) Use GPIO aggregator to fake the chip that will provide necessary names=
+.
 >
-> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-(...)
-> +config GPIO_VSIAPB
-> +       tristate "Verisilicon APB GPIO support"
-> +       depends on OF_GPIO
-> +       select GPIO_GENERIC
-> +       select GPIOLIB_IRQCHIP
-> +       select IRQ_DOMAIN_HIERARCHY
+> 2) Hack the GPIO library to add a quirk for this specific device to trans=
+late
+> the line names.
 
-Are you really using the hierarchical domain?
-
-Not in this driver, right? This is just regular chained IRQ.
-
-> +       /* configure the gpio chip */
-> +       gc =3D &chip->gc;
-> +       gc->owner =3D THIS_MODULE;
-
-I think the core sets up owner for you so you can drop this assignment?
+I would honestly do (2) if it was device tree, because we already
+have nicely centralized quirks for it, but for ACPI I don't know :/
+Aggregator feels a bit like overkill for this.
 
 Yours,
 Linus Walleij
