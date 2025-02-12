@@ -1,133 +1,133 @@
-Return-Path: <linux-gpio+bounces-15784-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15785-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB95A31BD4
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 03:19:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4F19A31BE1
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 03:20:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B5F1168150
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 02:19:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C3281889F09
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 02:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A477413C81B;
-	Wed, 12 Feb 2025 02:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231C01917F4;
+	Wed, 12 Feb 2025 02:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MoCH0xs4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1632A2AE69;
-	Wed, 12 Feb 2025 02:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5894B78F4E;
+	Wed, 12 Feb 2025 02:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739326772; cv=none; b=QtzsOKGC6QCXdI4uRWW66fCwsXGfNJaSsmuZSor8tOzRoagapQiFkbxDH4PnZnusGjCJrglBm5sKprZziIPRUKWudNN6dDNhgWQewLJQSTvpITSVaT/d/Mpv6PY4kSlUELelqowTNpg9u2JXLWsqysEj3XYTtwVSqZFvK065Kp8=
+	t=1739326839; cv=none; b=rDo0wjM14EvB+N2uuFAEXdM+GPWT07RgUkKx9AavsVs+u61ueWWcbw/r8pK3Sg4xR8esJkcbXFLlqnflVEUZrIrDGkm6lqF4Q19GYRhqqMRBxo5pvtYWiyKhFVBqjqdyzBKr482tG4Q0tJ2ZaDovN/j10PjU+mSY2+qLhPhvbi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739326772; c=relaxed/simple;
-	bh=8QGo7rX/XTnY33h1jfbbbpzLdlwYl7IJWM7cUDYjapE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L9nW4kq2Rfog8oszjCwtq2ZIn0+C17TohhwqY7VXdXMYzBNbEVPHsTaYW2rjBXKLLMIyd4LDSltfE4owec1n4izt8bn2xMob45u0j0uIW//ugM88eAx1GmpfR4xBPiZUXbUbzpVPLCKpRDMDhM/OCwXwyin0+5M7Pm23HfWJcfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowABHT9MaBaxnzuKRDA--.62447S2;
-	Wed, 12 Feb 2025 10:19:14 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-Date: Wed, 12 Feb 2025 10:18:49 +0800
-Message-ID: <20250212021849.275-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1739326839; c=relaxed/simple;
+	bh=BGF4WgRFYes+wXFKDiff8lSB4cxf0V4m7cSG+sh0234=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K154mY3x0vTwNDNl5/IQdCsw5vK/95r++ZuMLnt3Wg7eSbLkz0bYsDA3Q//leYdmzniLoufDIDGeAg9JbwDzFtZuGKTRf230WNg7WPSj0GWTbTyTZvGX5sskWVllFLu0lsHReRJlStE71J67yS7aRA6jmpjRWOeuwspXHaS3YTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MoCH0xs4; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f9b8291c49so37446507b3.1;
+        Tue, 11 Feb 2025 18:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739326837; x=1739931637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BGF4WgRFYes+wXFKDiff8lSB4cxf0V4m7cSG+sh0234=;
+        b=MoCH0xs47Oufjn9oslv7MF59r/clAlbm/A38hhpc5XBd9klopVBnmDKOi7szex/0c+
+         e3zvOf8G9auXKVjjrZxDvXk3TRjkeDpH3+ECT5z3imEOzK2I8orFX0W0Pms6iO8EzFm/
+         paHha4KTNNdCPqmlKj/N677cmRbIdeWQrRSs+XVWb3b5vTGALIFEwsELdKOwMTjGex9U
+         sVv3t1KNyHOqgYinWdebs2oaO7vjr3rQDmX2qAT72CvZLsutjIOmjth3HNNElySR/IP7
+         SVm++FZUF4wyOJVto3G42jGbTOb+My0ug9/GN2F2nTExMHKNKjWyCW9iRoUgtGBlU3J/
+         mk0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739326837; x=1739931637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BGF4WgRFYes+wXFKDiff8lSB4cxf0V4m7cSG+sh0234=;
+        b=Vmce9+IvquEaC3gRTyou0OD8QwgAdmpOFE8VH8yVFpErZmiJSWy9tQ3yeZwWfGE1Kw
+         zrDlygOyN1xjYeyiSD0rr2g5cZz5TNje/UHD8yEoZCsiClP6caUFezG8fZY8mQBAvOCm
+         HKOGNMv//prVP63rLW5MdFN2stwnFAy6P7CPLiHqCQJwDKml3TvD3NA8US3FlgkmOAub
+         Z7OmwfrKfwJJK6Aeptha/nCxpY81PhocIewjOuDBluaufB0UDAXV9IaM+5RcRiF0Wrin
+         YvTNumXBKANRh9WycFmyO48XpCv5x+s3jK+wrs9rqSJb9tPGbIWcGRl3pEWoWMqkHBZ8
+         LyVw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3/RfjS8j4hO+tj/utkMXvhi8D51kOKyn6kxDTGfsIwJaXHdH0tpFX4zaf4VTGj0tSpbmyGX/tkqFCHwDANAU=@vger.kernel.org, AJvYcCUCS8qPEJiFXH8gUZaenfpHBUBvncH23prSEr/ppzCLGQKI9DK0NE2XqjuGukHlj9vwW1YqpkxUaJv9@vger.kernel.org, AJvYcCUhlJ1j3DZvJvRybAMWJ6qh1vjI1pxF5v+8Vtzf1c6H0cns6NuoVYdvWnO9PYK6B4o7K+bIhbfC4cE=@vger.kernel.org, AJvYcCVGZQfdreBJDj/zl/Kzf42VXic1IAorRmkK1yrTw4np3ujFjI5oy6ccBr9xAPXtRdMCkBhlMrSmLnrxPQ==@vger.kernel.org, AJvYcCW8cERn8w1aRtCbl4jtTam7Z7yBRyS94ZJOHnzj0ef/I511ED5L4S1F91uysqyeKOrn9+IQnmwrW0f2@vger.kernel.org, AJvYcCWJrh00gxBxBJMaxyhNSaiP3q1OlKXt3FLgzugsJJHUIkg00gtuHtxTH4yljrzEU6VAK6ICOX/GBaooaX3b@vger.kernel.org, AJvYcCWoloS8fg3dSEXyJOq9SZM9mWhJgUMhDNEI6y6mdMVF31gelqt7CniLtOkjg6FMQDi9dhtRZxiWS2TqQXQ=@vger.kernel.org, AJvYcCWtLSP9qRTt0OYqk6Gi4fGavkSPgIQk2ID3AdklMQAYFeiGGT/dGv6v2mGKehWoYtbHeMPUm8Dr@vger.kernel.org, AJvYcCXO7MotSiF0Bsb2goPvVuxF8f6CBJOU32cxpkB3u97zOkelaVQd5WsnyrNDXrl50p1MjnD08oJUje6T@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVSMJqCNkrbzyHMEaTQHB1rVYpe48Wzk5KklgR2vtVZVvV7OIj
+	RWjztbiNChd++deA0N1CiqisoYevGSzk3e/MIMuDV6Nw9BsyGnwuRsXwi5alNJMzgElBfxaz/cG
+	OBX0hRWnEGtS+/by+nlQ7SHvl8+lnFg==
+X-Gm-Gg: ASbGncu/lHuLWlgRLhtRokGP0QSzvFo7QYBpk9D3dK/9JQLgB6w8f3OwuhnUORkgX4C
+	5GqaPq+kOtFDolD4NgTm52JwNTmfW6fSRzC5VlqI7cnK0v9+A43+PUPP54wU6PToNlJb75YVOMs
+	KUYFalNkfQL0iuxB7hFiYA5j4919gtjLU=
+X-Google-Smtp-Source: AGHT+IF+oFBT4/eJC7fxrqCxEqFTUuytLV8FG9XSBDtcVlHz7Ohthj7nFqSBcKDND+KZxt4lh4ibh6h6TvJDsK+a7jk=
+X-Received: by 2002:a05:690c:6811:b0:6f9:8845:cfbf with SMTP id
+ 00721157ae682-6fb1f1e638emr16843557b3.22.1739326837122; Tue, 11 Feb 2025
+ 18:20:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABHT9MaBaxnzuKRDA--.62447S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy3tF17Aw4rCF4UWF48WFg_yoW8CFy5pF
-	Wqgr98CryDJa1rZryYyF4rZwnakay8KrW7C3srWrsagr1Fvr9rGFW8XFyaqFn8trWkWw47
-	AF1DtF95tF1kZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbLFxUUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0LA2erwGWqbgAAsu
+References: <20250207074502.1055111-1-a0282524688@gmail.com>
+ <20250207074502.1055111-2-a0282524688@gmail.com> <1ee664ec-f912-467e-aedb-81208987ea2a@wanadoo.fr>
+In-Reply-To: <1ee664ec-f912-467e-aedb-81208987ea2a@wanadoo.fr>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Wed, 12 Feb 2025 10:20:26 +0800
+X-Gm-Features: AWEUYZk7swZO7fFhHB97EG7zyv5Dg2IiX0RdzYvso9G14rlwE4a_llIRTcKsa5A
+Message-ID: <CAOoeyxVUN9A3gKB_vMH_d2gzRSznF_DVifJ3ie7BgKhZU+P6Pg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The stmpe_reg_read function can fail, but its return value is not checked
-in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
-incorrect behavior if the hardware access fails.
+Dear Christophe,
 
-This patch adds checks for the return value of stmpe_reg_read. If the
-function fails, an error message is logged and the function returns
-early to avoid further issues.
+Thank you for reviewing,
 
-Fixes: b888fb6f2a27 ("gpio: stmpe: i2c transfer are forbiden in atomic context")
-Cc: stable@vger.kernel.org # 4.16+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpio/gpio-stmpe.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> =E6=96=BC 2025=E5=B9=B42=
+=E6=9C=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=882:37=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> Le 07/02/2025 =C3=A0 08:44, Ming Yu a =C3=A9crit :
+> > The Nuvoton NCT6694 is a peripheral expander with 16 GPIO chips,
+> > 6 I2C controllers, 2 CANfd controllers, 2 Watchdog timers, ADC,
+> > PWM, and RTC.
+> >
+> > This driver implements USB device functionality and shares the
+> > chip's peripherals as a child device.
+> >
+> > Each child device can use the USB functions nct6694_read_msg()
+> > and nct6694_write_msg() to issue a command. They can also request
+> > interrupt that will be called when the USB device receives its
+> > interrupt pipe.
+>
+> ...
+>
+> > +static struct irq_chip nct6694_irq_chip =3D {
+>
+> This could be const.
+>
+> (I'm working on a serie that should constify struct irq_chip, so this
+> one would already be done)
+>
+Okay, I will fix it in the next patch.
 
-diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index 75a3633ceddb..222279a9d82b 100644
---- a/drivers/gpio/gpio-stmpe.c
-+++ b/drivers/gpio/gpio-stmpe.c
-@@ -191,7 +191,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		[REG_IE][CSB] = STMPE_IDX_IEGPIOR_CSB,
- 		[REG_IE][MSB] = STMPE_IDX_IEGPIOR_MSB,
- 	};
--	int i, j;
-+	int ret, i, j;
- 
- 	/*
- 	 * STMPE1600: to be able to get IRQ from pins,
-@@ -199,8 +199,16 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 	 * GPSR or GPCR registers
- 	 */
- 	if (stmpe->partnum == STMPE1600) {
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
--		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_LSB: %d\n", ret);
-+			goto err;
-+		}
-+		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
-+		if (ret < 0) {
-+			dev_err(stmpe->dev, "Failed to read GPMR_CSB: %d\n", ret);
-+			goto err;
-+		}
- 	}
- 
- 	for (i = 0; i < CACHE_NR_REGS; i++) {
-@@ -222,6 +230,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
- 		}
- 	}
- 
-+err:
- 	mutex_unlock(&stmpe_gpio->irq_lock);
- }
- 
--- 
-2.42.0.windows.2
 
+Best regards,
+Ming
 
