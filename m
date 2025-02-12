@@ -1,93 +1,96 @@
-Return-Path: <linux-gpio+bounces-15867-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15868-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B099A328F4
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:46:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE6CA3290A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:48:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DB9F7A39F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:45:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFD043A560F
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E742520F08C;
-	Wed, 12 Feb 2025 14:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A282C211A13;
+	Wed, 12 Feb 2025 14:47:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F861CBEAA;
-	Wed, 12 Feb 2025 14:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED192116FB;
+	Wed, 12 Feb 2025 14:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739371561; cv=none; b=KV3HG2QjL+s9ACqdejolXtDX0xQQWizyRr4JulkCW7XnW/3PQpN3KnRHd4I0F3AST4x+tqXs7EYllrU6r/86ZIVGcJAyhVf+/OcbjVnJZ548E+Sb6AcC6BHIY6cetZ7ADdCJ0xKnDUZfRUXNg0Hv508CwOP9GRiG8RQyjOchb2s=
+	t=1739371667; cv=none; b=fn4EfwXE8o9C29OEkueALhE6iB2K4Mck7hXh13hBkvTtDoo7ShPgEzwQEyEK2f54LbhmhCxz/la1WIIg8VJSQ+D5SYjqI/IDCTHKwPJiAD+sJKaCa9BSz4FfTRTw9v39JEhJGj0G83iZ9NIZCEs8KTaW5kmCF3ekAHr1kNNStqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739371561; c=relaxed/simple;
-	bh=tiZcpPmsYdL9+5vGzhmxj9bRyY3C5O6wHKX2ZthcN38=;
+	s=arc-20240116; t=1739371667; c=relaxed/simple;
+	bh=tk/vmlhAI+qMeOZsrOxHEyW5xsEyE6tqWlKGnrjJMXw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jM3/fsrVNxrvmDYFX6sXK2jQAkvSDCkg26W4EDN3A7DeMPyKqyOdgf2nZW51kWOeFMJyuLJwxLEsq6lbnCvcdt2AHu/YOkY8/jtRKxyMdFG5DEGax69lHJfu15tKM2/eVIddgP60r1A/Jx2CaCoHUC3wdqGi0EvT/5SQykW3jVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+	 To:Cc:Content-Type; b=kbS57huWyKVd94mJBgpsPvnCv6FdGdj2ClR5zaioSGbPFTlWCaVbnk/B+HZY0rEo6KmNBDYMlL7yC0BKdfYMvIFvWMH6H7gUZfbY+nKwMoAnSdGcJZ0F+DOksppPlH3RtFR4YyJAiCnHL7GVnP6VINZTSH2SghO2Zt95wgikDps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-866f61c01e5so2060790241.2;
-        Wed, 12 Feb 2025 06:45:59 -0800 (PST)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86715793b1fso1279888241.0;
+        Wed, 12 Feb 2025 06:47:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739371558; x=1739976358;
+        d=1e100.net; s=20230601; t=1739371664; x=1739976464;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QyWxNRTx4hkC36ShjYW3se4rNdifgReIBZrHPvWyHWk=;
-        b=U/8LAWBDVAIEq5q9HPX8CXsA2AErxUW/rFqKhkSVU+SBNkNrWFM1YBs+lc8LKBMTzs
-         QjwP4RiMf0p0P21MoyayfDPdnpAH4LCVJG140dEig7wUwkdUPaWuCdOpH3aXhz8s9JO1
-         kvOgH5uvUplwbuQzBkpDGgf7IqQy2GTBmLs+rD4C33MhlkuDFLJbtWJjKft0aeMsnzC9
-         bJN5yHgRDuVLgw3D/6LEHKKOaO7r8TrJFpzji7SVtMl7Cq3+CaFHB+mPWDw2jbOiscyI
-         aL4o7KnXp6eM58bS1I0eomsf+N/0UbxaqrlFYTtgFz6KBjdK50APjuNPXfHsjTUdQzUU
-         EYfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+TZXlCfhuLBISp/llbh2nH238ng24DpaE/kCJpRm/yfPqCVNduv1G59NKJJN99mmVX9S2u8Jrt8VGD3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1wEk2m4UOyuMr4isQcKOa1yT1yu7k+YlJvBrUFqn5W2tt5i0J
-	I4OLOOFVF64/RduQ/988A96wFiar0LmqXi2JEHT4kW/aU1ugCQzPpM+EJ4970Vg=
-X-Gm-Gg: ASbGnctwuwLafoDRDsTmYw38C2PgXWhd1Qarlp3Y9I62xbVjsFYy7B0ZKPZm6ENVsBD
-	uj19A9dnWSp9eM9+mvo9G16w/i1uqvfuCSi4K3PUKqMmCbwNY4Jdesw1IA/2hFMvXRBaF2gWN1x
-	uCxgxv3otefUtrT6gEX6Qkw4b0w/0aLlbCPVYTFSFvt2gdu82T6q9O6V4LVpQffn3ZqeeJBcTvJ
-	uulOPrNAsvnQQsXFghAAnD4q/iSf06xTwqwK0cTp8hTafoLcvxrTp4JcRD9jXOXRGYaKaWKXId8
-	KM0Awdmk7vTNl/a0vJqQs1scjXySq5loTxTWuX6ZP2o5rJfa/xug8g==
-X-Google-Smtp-Source: AGHT+IGpua3PBkOjgTXFxjvC5tjKNvm7fI3lnhrANGN/nkocQdIg7rk4hqlnvbdGiGBlkpKxU4Esgg==
-X-Received: by 2002:a05:6122:169b:b0:520:3536:feac with SMTP id 71dfb90a1353d-52067cdb8f9mr2682293e0c.11.1739371558136;
-        Wed, 12 Feb 2025 06:45:58 -0800 (PST)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f22767030sm1871647e0c.19.2025.02.12.06.45.57
+        bh=Ki9NWMoxOc/6PSeV96Jx9sM9blTYLQvhD8qv2wzYXRk=;
+        b=gCkfh0IAIE3Hz+t7kkJnHs+vNFKP7RFqEb/ZdS1WLnx4o8p9ue1Z4ZCDFBN8wZLXv6
+         SVq168bAI5pjVEJVjS6z2lJEDNM8nkAt8ptwqWZbyOyXNpz8VfOZduqKAMxdjSVkorvk
+         8zqAhMH0ZI8dNOhpF6u2j9c8TzkFo8bhC1ZnR4XQ7YLVaQw3xSw6nF5MAtDiG8HHgbPP
+         Bg1XZMAfg6mKM2+U+kxR9o843ZsK/pCPinIJYLvVYj72aFjtTgmO3H1tD9BNF+Hq/yVU
+         XLqqBcUP7gHF0Q4orb57bw9t9eTuogWznH9SGder6OyisbFVP0pnIZIx7P6jCO+A5v6u
+         YipQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/P0ek7RxsFFaf8e8SUhzaCKWNGlo+aiUQm60UHbnDkYnwavFrfh9MwnlagxOy9oC7HK6CKQ/27gJAclc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR1+jaF9rf38Mzlhkw6TIYUiR4WHF27twrwh08EYzRjeYwg3x/
+	IyLIZrATN+gpnOTg3sEV0aJc/Nu/c9TXtsj9ZC/L0J4bztjYukLWQDqRT9qpUk8=
+X-Gm-Gg: ASbGncvbcUpTFzSNDOHXWDAcax8HnYRHveDxkS9sucqJNU2NhXuPTHOA+4jiXwcM4cD
+	71RFxpxo651hHu+e+s1ZrBr4GRW0QjlSdWdIF8T68b3lHAVSRW7aefx+OWLWoCKik5pTxP8nxah
+	nafZGQneBV2xWhUBw+HIpXrLaJzKzEfr3Q5/8g3YYIbF10EoLAPGpSabYMHRu40PJ+K9XGH8WM7
+	rvS2IMkpqiw5O/dD7JlpmLpAie+l0f+fEZyE3dRqZqlQDFNpD8rdLuJ1PMwMXVXXMJPYAV53Bmq
+	J1NdDzip1nsVGY9qLO2nMdM/eJltLa9zZWQHJ9CmpiCmLdabwWwBAg==
+X-Google-Smtp-Source: AGHT+IFWUs/+FrqPiTMHPNi2WN0/tD2LrS1c+/FQ2SRf001ORPN8lBmM0vdWkoNEqPjlgWmiL7qI4w==
+X-Received: by 2002:a05:6102:1514:b0:4bb:edc9:f94b with SMTP id ada2fe7eead31-4bbf216b15bmr3561082137.5.1739371664236;
+        Wed, 12 Feb 2025 06:47:44 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9636904sm2312862241.3.2025.02.12.06.47.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 06:45:57 -0800 (PST)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4bbb91481deso1036913137.0;
-        Wed, 12 Feb 2025 06:45:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXg1xkdurdPuGEzmGxz0AvXhqYF9aKFOnEhMJYkTMeZXQdwBGRdKNKADh3oPLrrdLrKZVhf875nLT7bsG8=@vger.kernel.org
-X-Received: by 2002:a05:6102:8012:b0:4bb:dba6:99d4 with SMTP id
- ada2fe7eead31-4bbf21b3a0dmr3392659137.7.1739371557786; Wed, 12 Feb 2025
- 06:45:57 -0800 (PST)
+        Wed, 12 Feb 2025 06:47:44 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4bbeb009101so518043137.1;
+        Wed, 12 Feb 2025 06:47:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVNgfGeUZGHZt6QswN5xw3IORQ3mCA5UjNq+mZQNrX6vgNXebHn6af5fpsnAYK8UK2zusUtKCA56qmaqOc=@vger.kernel.org
+X-Received: by 2002:a05:6102:1606:b0:4bb:e36f:6a30 with SMTP id
+ ada2fe7eead31-4bbf2243aa9mr2752174137.15.1739371663714; Wed, 12 Feb 2025
+ 06:47:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-7-koichiro.den@canonical.com>
-In-Reply-To: <20250203031213.399914-7-koichiro.den@canonical.com>
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-8-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-8-koichiro.den@canonical.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2025 15:45:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXbqxYSt5YCRf2t0fSx54GpKo3SpS=LeDtCaJTYAC-V5g@mail.gmail.com>
-X-Gm-Features: AWEUYZkj4O2JpvIUD3fQDIqNckfN0wojaL5VDfengXpT4GVPUpddWw8AfYj5p74
-Message-ID: <CAMuHMdXbqxYSt5YCRf2t0fSx54GpKo3SpS=LeDtCaJTYAC-V5g@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] gpio: aggregator: rename 'name' to 'key' in aggr_parse()
+Date: Wed, 12 Feb 2025 15:47:32 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVaj7Hs6ZpfS=9xNw+WUEiYoWa4B6a4HbvoRfZStJxDSg@mail.gmail.com>
+X-Gm-Features: AWEUYZnq-RLpxTuHau4kfhcycRN6kwEa_Uf9PNR5kJZPq1AzpwE8mFRJl9Qb48Y
+Message-ID: <CAMuHMdVaj7Hs6ZpfS=9xNw+WUEiYoWa4B6a4HbvoRfZStJxDSg@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] gpio: aggregator: clean up gpio_aggregator_free()
 To: Koichiro Den <koichiro.den@canonical.com>
 Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
 	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
-> Rename the local variable 'name' in aggr_parse() to 'key' because struct
-> gpio_aggregator_line now uses the 'name' field for the custom line name
-> and the local variable actually represents a 'key'. This change prepares
-> for the next but one commit.
+On Mon, 3 Feb 2025 at 04:14, Koichiro Den <koichiro.den@canonical.com> wrote:
+> - Rename gpio_aggregator_free() to use the "aggr_" prefix for
+>   consistency with other functions that modify struct gpio_aggregator
+>   internals.
+> - Replace four lines within the function to invoke aggr_deactivate()
+> - Move it to a more natural location.
+>
+> This is a preparatory change for the next commit.
 >
 > No functional change.
 >
