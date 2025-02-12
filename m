@@ -1,158 +1,203 @@
-Return-Path: <linux-gpio+bounces-15875-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15876-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3797A32B53
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 17:17:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E399A32B63
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 17:20:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5822C164A1D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 16:17:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40D2C16555B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 16:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77232210F6A;
-	Wed, 12 Feb 2025 16:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 060B22135B0;
+	Wed, 12 Feb 2025 16:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJI3DgFH"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Byx1S3Df"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6409C271838;
-	Wed, 12 Feb 2025 16:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59AD1D516D;
+	Wed, 12 Feb 2025 16:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739377056; cv=none; b=W+2V1AG8dTS8Me6CfCbFBmFiKBAC/ENVkNoetLwAwt12OFZDERMJQeGi3OaikQcidet9JraoxXwXpQLc/F9GXyTS+gFzhYep/QuGq6QN3mMh0N8r7XR5/QDIFwaqLk2EMFCcL8F6dNX4/NnZtF5MyoJUlaw3Mo0oy0zlp2ERBes=
+	t=1739377227; cv=none; b=dLwSFRMkXtyFr+hb4g4KMpKRjiluKlLAAH/mGnhWtPcTDwZJ1Jsn1KVfGgDUC8ZqNKSqMY5ustgfPrlGlDeodgPiKDCmDhL6A0a1EYiDqzgsW9B2TVzrX1p2A8dUr6FQ9sAMg0j6jWJwWrXWMIOAhYktPcucj497QXGs4jvggZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739377056; c=relaxed/simple;
-	bh=Sx0gjwQ2xWYVGUEXYQCDsZtlY6q7k8a71QG8sWV01LE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rn2UzZS2elVqNF47nQg7t8cOROA4xOghPSXz3154nL7Mtcy4rM9GyP59moJSGLqY4Ww3eRVn8sLqypPzls2lbaUMAPSipncm64SA+zUR/EwaSoBLXnzccn6i9njT5U7ou4SeoPCiO6FyqX4eQelPdTA12ycllH7B7oQw1/61rDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJI3DgFH; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739377055; x=1770913055;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Sx0gjwQ2xWYVGUEXYQCDsZtlY6q7k8a71QG8sWV01LE=;
-  b=TJI3DgFHWncYN37Bnt1RdspZwfQ/G/oBcFQ1gwzdcodFTcB9Mvn9V41N
-   8SZ5t6VHASbKWVNSXX6H3o4bfZRuxx8veEOfbjn1B5Of39cqwOBVXbol2
-   zwqXGeO5yMTeOGcD6jro1SVqCW3RoJuP7KKVSjXPGdnHEcS5Sq5Q9fYpg
-   ZZXkDbR4XZU3NM3sDZ1IlH9bI3qRzGadukPJ8yE21LeBudWKJN5UBQ0AB
-   KaJHdi9YItzD9Ij+fSC7qS+7I6EWJlX0PFNi+iVcttFM/tF7TxT/HagpE
-   E9ZM+HNt3/V+3Fs0z9CISw8y2Wx76fRItZy0+x4yQS/dqQSDwJ0MlYuSv
-   A==;
-X-CSE-ConnectionGUID: q3GkO22OStWlwBuEPOQmbw==
-X-CSE-MsgGUID: zHrETBkGSRy2gsO5VSU1Eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="65401766"
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="65401766"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 08:17:34 -0800
-X-CSE-ConnectionGUID: kjQ8+wilTqiuJDRQQb1Ggg==
-X-CSE-MsgGUID: s54xrSM0QgyEtfmNe8TMtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="112851499"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 08:17:30 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tiFQV-0000000At9E-0oX1;
-	Wed, 12 Feb 2025 18:17:27 +0200
-Date: Wed, 12 Feb 2025 18:17:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <Z6zJljphfTuEhBTP@smile.fi.intel.com>
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
- <Z5eFGJspoGOINcG6@smile.fi.intel.com>
- <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
- <Z6y65SnrprvnpKEa@smile.fi.intel.com>
- <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
+	s=arc-20240116; t=1739377227; c=relaxed/simple;
+	bh=IH6FJ/LOaKwyiedQHW7mKTCXkZR7qoVHrS4dm49fsuM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ZhQwkM6mZGHCVjCTIeBOGvh4hzx4GSfZ86pys+JvVXN2Q46G07dbEW2RbH5CWxcpX/FuLqQU53VLa3vo3W7yLyiOtbfpOCHvBp9japJIlSWhdB+okZuVWOjrt+ZOkxNli7cGhWthnB0zKzeFSVhtviNDhgy1F6ZcfgAOtTNNZSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Byx1S3Df; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 1EEE9BB835;
+	Wed, 12 Feb 2025 16:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1739377223;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QIxsFEW0fxFxc9Uh+/NGJ+ZhMAYCRBTTVCPuNqXBoWo=;
+	b=Byx1S3Df880pwgYYJt/jlleUmRcSPicWQL0Wc8t66UFcEb4Ymrj0X6U5GMcQUYlG72P2mw
+	AeaCaTksiVCGthozukYYKwjh3r55Uz37MR6DYqQJeSryK0a28AaAI628C8QpSgwcNHP8YN
+	Ugp1f/43WQ36lJKDc/0i2PQxPXa9x9s6e5JY19LUMUxLF26KtosgKVuDcScxwxfcNnXhTl
+	I2VksJS6LWy8Axv7ckWW8Blhfu29BQg92lauuTdMQbk2adwD+FDeA1/O/6pkjMXAnZ2L7e
+	27oLOvRuwFSq3zr1O60LashbJabjiwJfddqgNM7GEOJWHLXh+m8VAne7uyZi2Q==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Date: Wed, 12 Feb 2025 17:20:23 +0100
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio
+ <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, Dang Huynh <danct12@riseup.net>
+Subject: Re: [PATCH 08/10] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <7664b71c-ed47-4765-9ac4-5dbe3ec80d3c@oss.qualcomm.com>
+References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+ <20250211-msm8937-v1-8-7d27ed67f708@mainlining.org>
+ <7664b71c-ed47-4765-9ac4-5dbe3ec80d3c@oss.qualcomm.com>
+Message-ID: <d4792e6323e2dd5392a0d9633df62174@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 12, 2025 at 05:08:56PM +0100, Mathieu Dubois-Briand wrote:
-> On Wed Feb 12, 2025 at 4:14 PM CET, Andy Shevchenko wrote:
-> > On Wed, Feb 12, 2025 at 01:57:34PM +0100, Mathieu Dubois-Briand wrote:
-> > > On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
-> > > > On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Briand wrote:
-
-...
-
-> > > > > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
-> > > > > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
-> > > > > +		return -ENODEV;
-> > > > > +	}
-> > > >
-> > > > This is not needed, it is already done in GPIOLIB core.
-> > > 
-> > > I believe this is still needed:
-> > > - For gpos, we need the gpio count to correctly set the partition
-> > >   between gpo and keypad columns in max7360_set_gpos_count().
-> >
-> > Shouldn't be that done somewhere in the GPIO valid mask initialisation?
-> >
-> > > - For gpios, we need the gpio count to setup the IRQs.
-> >
-> > Doesn't GPIOLIB parse the property before initializing the IRQ valid mask
-> > and other init callbacks?
+On 2025-02-12 14:07, Konrad Dybcio wrote:
+> On 11.02.2025 11:37 PM, Barnabás Czémán wrote:
+>> From: Dang Huynh <danct12@riseup.net>
+>> 
+>> Add initial support for MSM8937 SoC.
+>> 
+>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 > 
-> No, I believe I have to register the IRQ before registering the GPIO, so
-> I can get the IRQ domain.
+> So the computer tells me 8917 and 8937 are *very* similar. Have you
+> tried assessing how making 8937.dtsi an overlay atop 8917.dtsi would
+> work out?
+
+They are similar but there are many small differences:
+- have two dsi
+- using adreno 505
+- different iommu it uses arm,smmu for gpu and qcom,iommu for 
+applications
+- 8 cores
+- camss will be a different a bit
+- venus will be different a bit
+- have more i2c and spi
+- different mdp version
+
+Maybe i can find more differences, originally it was based on 
+msm8917.dtsi
+but we have decided to keep it separate, also it have different license 
+from 8917.
+The plan is MSM8940 and SDM439 support will based on msm8937.dtsi in the 
+future.
+
 > 
-> Right now I have something like:
 > 
-> irq_chip->num_irqs = ngpios;
-> devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), max7360_gpio->regmap,
-> irq, flags, 0, irq_chip, &irq_chip_data);
-> gpio_config.irq_domain = regmap_irq_get_domain(irq_chip_data);
-> devm_gpio_regmap_register(dev, &gpio_config);
+>>  arch/arm64/boot/dts/qcom/msm8937.dtsi | 2145 
+>> +++++++++++++++++++++++++++++++++
+>>  1 file changed, 2145 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8937.dtsi 
+>> b/arch/arm64/boot/dts/qcom/msm8937.dtsi
+>> new file mode 100644
+>> index 
+>> 0000000000000000000000000000000000000000..ef633c1694ad98165e58130cbeb186d2f0e2dcaa
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/msm8937.dtsi
+>> @@ -0,0 +1,2145 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * Copyright (c) 2023, Dang Huynh <danct12@riseup.net>
+>> + */
+>> +
+>> +#include <dt-bindings/clock/qcom,gcc-msm8917.h>
+>> +#include <dt-bindings/clock/qcom,rpmcc.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/power/qcom-rpmpd.h>
+>> +#include <dt-bindings/thermal/thermal.h>
+>> +
+>> +/ {
+>> +	interrupt-parent = <&intc>;
+>> +
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +
+>> +	clocks {
+>> +		xo_board: xo-board {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +		};
+>> +
+>> +		sleep_clk: sleep-clk {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu4: cpu@0 {
 > 
-> Also, gpiolib will store ngpios in the gpio_chip structure, but while
-> using gpio-regmap, this structure is masked behind the opaque
-> gpio_regmap structure. So I believe there is no easy way to retrieve its
-> value.
+> I'm pretty sure a CPU with a MPIDR of 0 should be called CPU0
 > 
-> This part of the code changed a lot, maybe it would be easier if I push
-> a new version of the series and we continue the discussion there?
-
-So, what seems need to be added is some flag to GPIO regmap configuration
-data structure and a code that is called after gpiochip_add_data() in
-gpio_regmap_register() to create a domain. This will solve the above issue
-and helps other drivers to get rid of potential duplication of
-devm_regmap_add_irq_chip_fwnode() calls.
-
-Have you researched this path?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x0>;
+>> +			device_type = "cpu";
+>> +			enable-method = "psci";
+>> +			operating-points-v2 = <&cpu_opp_table_c0>;
+>> +			next-level-cache = <&l2_0>;
+>> +			#cooling-cells = <2>;
+>> +			l2_0: l2-cache {
+> 
+> Please add a newline between the last property and the subnode
+> 
+>> +				compatible = "cache";
+>> +				cache-level = <2>;
+> 
+> cache-size = <0x80000>;
+> 
+> [...]
+> 
+>> +		cpu0: cpu@100 {
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x100>;
+>> +			device_type = "cpu";
+>> +			next-level-cache = <&l2_1>;
+>> +			enable-method = "psci";
+>> +			operating-points-v2 = <&cpu_opp_table_c1>;
+>> +			#cooling-cells = <2>;
+>> +			power-domains = <&cpu_pd0>;
+>> +			power-domain-names = "psci";
+>> +			l2_1: l2-cache {
+>> +				compatible = "cache";
+>> +				cache-level = <2>;
+> 
+> cache-size = <0x100000>;
+> 
+> I'll do further review if you decide it makes sense to keep this
+> separate from 8917
+> 
+> Konrad
 
