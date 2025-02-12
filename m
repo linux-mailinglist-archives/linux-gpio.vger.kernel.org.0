@@ -1,180 +1,170 @@
-Return-Path: <linux-gpio+bounces-15872-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15873-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12F77A32AE2
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 16:57:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DB4DA32AF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 16:59:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 107C4188D64B
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:55:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75133188CECA
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED57253B49;
-	Wed, 12 Feb 2025 15:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BC42135B7;
+	Wed, 12 Feb 2025 15:55:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C950F271814;
-	Wed, 12 Feb 2025 15:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088A7211719;
+	Wed, 12 Feb 2025 15:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739375364; cv=none; b=HIGdxbajNCORJ+vYuITro3zrqYvSEPF/Oz/zSK0JTmQP483QyuKBlDwf5m20TjKld92G0V5AvyTo2VsOK8yUTvTJ/8/JzZofsfdYli1ZBRmv0OMIuokkANJ4QSyVm49gQQ4nFVMcOcFg0husrF9Pg2tLiWZB1Z4qLqmXBIx/wH4=
+	t=1739375743; cv=none; b=WIkNI60I5OCcNFgbpM7pzWjr0BIFA7ylqSRlYT8jlXsYZBzSqdgNy/c5Hdso67JAgCzrUNI4aKHMkEqpiPmoAwvTCFScg+a3c46cancC6/jOMrJ9961d7ncabX0iqlYyyj0Pf06BYCrFx/GBTOP+YumxbksalXqWb4KVhHa6nds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739375364; c=relaxed/simple;
-	bh=ZYb25KYfw2P0BGhQV+uuhhL05dEUG6c5vP2hzj2tUFw=;
+	s=arc-20240116; t=1739375743; c=relaxed/simple;
+	bh=D5mD9IAXTnOb2cQ8W0aejURoCVrV8nKfuVaFTld4tz8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o6rtqvSIlAQ+HrERVdqTClN33fk12A+bd6OaYIe3yMkRQnfg1+y86YcrkRevdL/XU6G3eD306c3o7icA0kpfNy7Khb3sdObGL0d2w582U8zhP/GkTtwGJkAO20K9+wQinah3fAM5LxwM8DsRyaFLNQczh0xwfPtSgpkQjvAjba0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
+	 To:Cc:Content-Type; b=mgAmHj+8pn0V3YD3HlHXQQTc/Bb+M4Rw6c9P1LWu+Gae79It69uhpkXgIA8GityC/y0fP0Z0HFwz7lnkLkctjxORz9TIHWCD+/H4tOZX19ew8OogRYQUt948WL/mBKZkjKU8NOTiWRvvp0K8M/a6Ql7N3Y8lKkkOjqxjr2zsF18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4bbefec9362so398264137.1;
-        Wed, 12 Feb 2025 07:49:22 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86112ab1ad4so1964110241.1;
+        Wed, 12 Feb 2025 07:55:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739375360; x=1739980160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TdhMIUeQbiUqE75o3CDsfPB27KyZHvKIbaqHUkg+aFM=;
-        b=gvntMcj4LaRsO07cXkxGsV4L4IXaJyPHAD5dFpGmKhVnv0/AMEFHs65qWDftpB98N5
-         zs3ta1eLYIar1VNrIjA3IwhlDKJ6+BzMWBqXTqbPzEmXnB3q46t+SDVTxHQFNgGkESLV
-         VDxejy481A03ZtcOYnOc2KJxWe9LYkDdIVANl/tk9SsoTW7raZfARtVQ58SYpQbAMG14
-         ndKP+ma+botp+aDSF7KZOg7kE0Q2STdtptEfKBe9gu3Y+fzEF4r6PH4NmRLmGsocKnLb
-         4dVgXfJaG2RPuPRGlhF1nceYaMiNfFDqS1aFHUiZyqdYyHVq2Rg4MB+vHECqUsgBwkCF
-         /MoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrHF1vC/Eigm0dhiPsnNw8XEn+bprAeI5wZ5pJ1q/7qaUaqHuFxDJ+bz0NBWrrQwsWtysmzw1H/kHw@vger.kernel.org, AJvYcCVSYFpWmMqSCnGOG/Hd13byhVgCvM7tiNNG/gfM6OTDFtmwfPQ6s5CBiFmwRiXt+8nr2r5/Jbxv6Fnad4To@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW396lEu5hKB4g2CkpBSo4xWlV2GGcfHNyna1O7uasKyd3u4MM
-	kQmFKXd8f2v8nvfQGJWMUDym3p1B2Kn0+WlHeypZ72wQ00/lyeQzPgOdZV+MW0U=
-X-Gm-Gg: ASbGnctobVT+okOx5dAru/gPb4KoNNlV4+YjQ1ENs1YCdVP2yv6Qq8k7IXLewW7P3Cv
-	2dUN7wYilygyf7ATX7uYbLym/AbxNcpFfBysqIq6dEKggkINnQRW/RCt8ajSHP7oR0MhFN+pvpx
-	H//Ae0ua5GS9yivlz3f0VnPApDZPJvKu71zgpvhY0O7y4aMYWLETv5Rql2ujaJMyRpfvDzQ4e+w
-	EabYyr43Pq7T4/cqzU/i7eEGJo+9a65MJcQ3Gmlc4GgzUjCLRCjoZHF8MhVn4Jb2I9JrWea8Lf7
-	cNdfGJv1Qdqh+RH6635vcAB8bDUXXZ1pP56zTb/5Cgo0+2jv3G1eMw==
-X-Google-Smtp-Source: AGHT+IHxjNeXYHO/TESLn6/+lP4SNRO4bJlI25tPHOGWd/RtsWE2l1h+Xo8F6I9hHNqv6rfSWOZbng==
-X-Received: by 2002:a05:6102:3751:b0:4bb:e2a1:183e with SMTP id ada2fe7eead31-4bbf22df22dmr3535914137.18.1739375360470;
-        Wed, 12 Feb 2025 07:49:20 -0800 (PST)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba76ebe373sm2418189137.12.2025.02.12.07.49.19
+        d=1e100.net; s=20230601; t=1739375738; x=1739980538;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bforJpo8vosER9QTAjbmU387xww9JghWz4rNWUdpIZ4=;
+        b=JB49GMiRWLgKinW+voJ5YVJ3IrudKPCboalgQmTHhvHWVsJriJQ8VYnsHv3q9XgvV5
+         cyiHcT8F0Hz6GszWzYD4qu45MhJ0kgbSvvTiPGXLmn2P5LyY6fhUf1NavAMxOX89SxBw
+         DsZ3StFQGWTMy1hyfmzfUcNYoHKNmxgXpoO8BLZ5K6wRVLZ/z328WL+JMCGvwVd8q5tp
+         Hp+IU3GrTjESGrtOSVoCRq09Cyb53osH7dHkkxv5Xys4WSbeXYnZlpxqlqfZgi+Vl7+B
+         v2WtaR/kUCj3ykwZplROrlUTwEXuPWYv/v7wsQakYWwljXwRd2UFEcbHWv6eWQpzcOAV
+         uAiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuaqNXMK+tajtK7Xu9p3KNdYS0ZHHlsnCa6hTi4XeDgoa1fkK9SekRmrjhtVX32H8kD2i5m0ePAtz9ahg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4DJSzfEFkLETWoP5HreGov6yPUIZNghwktNYoL6uR1Y7Z70qT
+	s2K5l3aZv92xqa5jDZkb0HYonISQ/GxOvoiRrdnuLELN1qR0xbwT75ffMW842Hc=
+X-Gm-Gg: ASbGncuD/BHMvKnaGgsgrTO5R4RyPWL8sYzTNdWlG7BrFh9/Ih4ui1YpkS+/1ozyOfX
+	e2rtM2WBjBJ5MGJEnhUmBmz+e1zScq+iEjhoMzoaYpOHOqqLtc3uHb3v6NtVqq/C0EG2AVLXU6N
+	D71zsZOiU6PFJKfUNA8mQF4qbBdIJTgJwtJd3ryWFbiHyDoUXI6cgmSX7kOs/ZBBLaOGnwYRTtA
+	oyTgGrcl95zWSfaIHpSqkvePOTNYjA+yAgahBTief4vx66U3twStbMSzELP9JsdzsTx1oiJr76f
+	I+GlYitYoitoGuDE+XFnYw+D3jroCov+Z/qBsLjJ/H8R5m8+44z8Lw==
+X-Google-Smtp-Source: AGHT+IFm9tScj+pnf9kdtSHkANerT5orm3eLABTSwYPJVLx6ZwUzplqv6qD1qkUguUFGYfzyzNBuzA==
+X-Received: by 2002:a05:6102:f85:b0:4bb:d962:61f with SMTP id ada2fe7eead31-4bbf225f4famr4281077137.24.1739375738515;
+        Wed, 12 Feb 2025 07:55:38 -0800 (PST)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba772d7239sm2320166137.19.2025.02.12.07.55.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 07:49:19 -0800 (PST)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-866e924f735so1968162241.2;
-        Wed, 12 Feb 2025 07:49:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV17y4RXKJWF7GgJosW1oe+q98bP2HSYBjSXK1CsafneZn79tLFvkAF4TDQPegnBxma8ICrw9r+1SSd@vger.kernel.org, AJvYcCXDocyd1TXX/STPMQyp7iixpt88W/C33hW/qY2s9/veFfVyswljlq3v0tSqMNm7Rr7EQ6eCrufk4qIvR5aN@vger.kernel.org
-X-Received: by 2002:a05:6122:65a2:b0:515:4b68:c37f with SMTP id
- 71dfb90a1353d-52067cfe3b1mr3462313e0c.6.1739375359679; Wed, 12 Feb 2025
- 07:49:19 -0800 (PST)
+        Wed, 12 Feb 2025 07:55:36 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4bbf29bb21eso271885137.1;
+        Wed, 12 Feb 2025 07:55:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8xw2+02UyVGL3JhEDjWxfEi4eCxlGZ+mQgmzI/B4OETNVl2wr0TdecQcbNAtEmgD9Z9/ABJHCIkE4FD0=@vger.kernel.org
+X-Received: by 2002:a05:6102:c89:b0:4bb:d062:44e with SMTP id
+ ada2fe7eead31-4bbf207f1a2mr3569901137.1.1739375736177; Wed, 12 Feb 2025
+ 07:55:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-10-koichiro.den@canonical.com> <CAMRc=Meb633zVgemPSeNtnm8oJmk=njcr2CQQbD5UJd=tBC5Zg@mail.gmail.com>
-In-Reply-To: <CAMRc=Meb633zVgemPSeNtnm8oJmk=njcr2CQQbD5UJd=tBC5Zg@mail.gmail.com>
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-11-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-11-koichiro.den@canonical.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 12 Feb 2025 16:49:07 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU24x9pxEjBHTKxySxwr-L+iKXSUNFxpM9hvaSTNAWDuQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmpWWmZOz-tU2hYiwfvYtFQ4il4iVmshwrei97TcpDUFUcWtvxe_jjHHOw
-Message-ID: <CAMuHMdU24x9pxEjBHTKxySxwr-L+iKXSUNFxpM9hvaSTNAWDuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] gpio: aggregator: cancel deferred probe for
- devices created via configfs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 12 Feb 2025 16:55:24 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXBJhpWht4eo569h0kdY+evi=JTgMQtccUxf2X+tX-QPQ@mail.gmail.com>
+X-Gm-Features: AWEUYZkaMMoOeL3i8ya-GXV6XGIRzVwgfwwPhpIvHpWNBuMghWvHqLgDmA99Lnc
+Message-ID: <CAMuHMdXBJhpWht4eo569h0kdY+evi=JTgMQtccUxf2X+tX-QPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] Documentation: gpio: document configfs interface
+ for gpio-aggregator
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
+Hi Den-san.
 
-On Tue, 4 Feb 2025 at 14:14, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Mon, Feb 3, 2025 at 4:12=E2=80=AFAM Koichiro Den <koichiro.den@canonic=
-al.com> wrote:
-> > For aggregators initialized via configfs, write 1 to 'live' waits for
-> > probe completion and returns an error if the probe fails, unlike the
-> > legacy sysfs interface, which is asynchronous.
-> >
-> > Since users control the liveness of the aggregator device and might be
-> > editting configurations while 'live' is 0, deferred probing is both
-> > unnatural and unsafe.
-> >
-> > Cancel deferred probe for purely configfs-based aggregators when probe
-> > fails.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -1313,7 +1313,6 @@ static struct attribute *gpio_aggregator_attrs[] =
-=3D {
-> >  };
-> >  ATTRIBUTE_GROUPS(gpio_aggregator);
-> >
-> > -
-> >  /*
-> >   *  GPIO Aggregator platform device
-> >   */
-> > @@ -1342,8 +1341,22 @@ static int gpio_aggregator_probe(struct platform=
-_device *pdev)
-> >
-> >         for (i =3D 0; i < n; i++) {
-> >                 descs[i] =3D devm_gpiod_get_index(dev, NULL, i, GPIOD_A=
-SIS);
-> > -               if (IS_ERR(descs[i]))
-> > +               if (IS_ERR(descs[i])) {
-> > +                       /*
-> > +                        * Deferred probing is not suitable when the ag=
-gregator
-> > +                        * is created by userspace. They should just re=
-try later
-> > +                        * whenever they like. For device creation via =
-sysfs,
-> > +                        * error is propagated without overriding for b=
-ackward
-> > +                        * compatibility. .prevent_deferred_probe is ke=
-pt unset
-> > +                        * for other cases.
-> > +                        */
-> > +                       if (!init_via_sysfs && !dev_of_node(dev) &&
-> > +                           descs[i] =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-> > +                               pr_warn("Deferred probe canceled for cr=
-eation by userspace.\n");
-> > +                               return -ENODEV;
-> > +                       }
-> >                         return PTR_ERR(descs[i]);
-> > +               }
-> >         }
-> >
-> >         features =3D (uintptr_t)device_get_match_data(dev);
+On Mon, 3 Feb 2025 at 04:14, Koichiro Den <koichiro.den@canonical.com> wrote:
+> Add documentation for the newly added configfs-based interface for GPIO
+> aggregator.
 >
-> Geert, what do you think about making the sysfs interface synchronous
-> instead? I would argue it's actually more logical as the user will
-> instinctively expect the aggregator to be ready after write() to
-> new_device returns.
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-On one hand, I agree that it would make some scenarios simpler, and
-let us propagate an error code to the sysfs writer in case of failure.
+Thanks for your patch!
 
-On the other hand, it would change user behavior. Currently people can
-configure a GPIO aggregator, and load the driver module for the parent
-gpiochip later, relying on deferred probing to bring up everything
-when it is ready.
+> --- a/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> @@ -69,6 +69,99 @@ write-only attribute files in sysfs.
+>                     $ echo gpio-aggregator.0 > delete_device
+>
+>
+> +Aggregating GPIOs using Configfs
+> +--------------------------------
+> +
+> +**Group:** ``/config/gpio-aggregator``
+> +
+> +    This is the root directory of the gpio-aggregator configfs tree.
+> +
+> +**Group:** ``/config/gpio-aggregator/<example-name>``
+> +
+> +    This directory represents a GPIO aggregator device. You can assign any
+> +    name to ``<example-name>`` (e.g., ``agg0``), except names starting with
+> +    ``_auto`` prefix, which are reserved for auto-generated configfs
+> +    entries corresponding to devices created via Sysfs.
+> +
+> +**Attribute:** ``/config/gpio-aggregator/<example-name>/live``
+> +
+> +    The ``live`` attribute allows to trigger the actual creation of the device
+> +    once it's fully configured. The accepted values are: ``1`` to enable the
+> +    virtual device and ``0`` to disable and tear it down.
 
-I2C's new_device is also synchronous.
+As the code uses kstrtobool(), it accepts variants of
+yes/true/on/no/false/off, too.
+
+> +
+> +**Attribute:** ``/config/gpio-aggregator/<example-name>/dev_name``
+> +
+> +    The read-only ``dev_name`` attribute exposes the name of the device as it
+> +    will appear in the system on the platform bus (e.g. ``gpio-aggregator.0``).
+> +    This is useful for identifying a character device for the newly created
+> +    aggregator. If it's ``gpio-aggregator.0``,
+> +    ``/sys/devices/platform/gpio-aggregator.0/gpiochipX`` path tells you that the
+> +    GPIO device id is ``X``.
+> +
+> +You must create subdirectories for each virtual line you want to
+> +instantiate, named exactly as ``line0``, ``line1``, ..., ``lineY``, when
+> +you want to instantiate ``Y+1`` (Y >= 0) lines.  Configure all lines before
+> +activating the device by setting ``live`` to 1.
+> +
+> +**Group:** ``/config/gpio-aggregator/<example-name>/<lineY>/``
+> +
+> +    This directory represents a GPIO line to include in the aggregator.
+> +
+> +**Attribute:** ``/config/gpio-aggregator/<example-name>/<lineY>/key``
+> +
+> +**Attribute:** ``/config/gpio-aggregator/<example-name>/<lineY>/offset``
+> +
+> +    If ``offset`` is >= 0:
+> +        * ``key`` specifies the name of the chip this GPIO belongs to
+> +        * ``offset`` specifies the line offset within that chip.
+> +    If ``offset`` is <0:
+
+Missing space before 0.
+Please add "(default)", so the user knows he can skip writing to this
+file when specifying a GPIO line name.
+
+> +        * ``key`` needs to specify the GPIO line name.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
 
