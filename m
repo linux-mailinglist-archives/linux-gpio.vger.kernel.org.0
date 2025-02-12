@@ -1,168 +1,131 @@
-Return-Path: <linux-gpio+bounces-15852-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15853-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C890A32788
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:50:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E34EA327E0
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F19C13A3F89
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 13:50:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34972188C849
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 13:58:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED0A42557C;
-	Wed, 12 Feb 2025 13:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 024DF20E6F7;
+	Wed, 12 Feb 2025 13:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="JEoTr1iU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbyeaJX5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5622046BF
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 13:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31EE20E315;
+	Wed, 12 Feb 2025 13:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739368221; cv=none; b=sdU2WaJomaeR+2U2TtlAdvaM6N8/1SrDAvof03beHXqn//EJzKowGg29qcdoHRAl6k3t0RMc/5pOa85pe+lpm9CRCWrkb9o/l4TgDm0xrG8ayMmBjDgLeLKsh4f/90ycWj/dr7fJRY4O+KpaSwyaWjkIoohbnTFbxqCgvzfUtsQ=
+	t=1739368682; cv=none; b=NzbEEXIEf15r1E20WxLglIYeehqObNxBLQYmksPU+WJLk/m585kji2Iy/LghesK+kqRJCoFgttEV5F8vq71gxBnBiYsVT8GOGJMnIwNiNdpaQnVKqRWxuoFe/NCQZLeHmJYNWAUFV0fI04MdD2ojJfsa40XWgw9bwuhzMoU8RF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739368221; c=relaxed/simple;
-	bh=b578F3G4ksg9uYuuIbDmEdH1PzTG2rkqiAEAgGBywv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pcgJ1sMbXlujD9i2jyj4k+rqsh6/23J0BO/ORw1G9JHn1BQJER/3+OSmvVAxgYiZ/UHMaFW/EibiGePvq3ux/YpWnNJ356YA1I9jShn4NwjbCp7cNwAExurWLiaU7nKkQBSm6IhVegsRhWDBE7B8bjRnoFf46foQ8npnEd+Py8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=JEoTr1iU; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-854a68f5aeeso145528239f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2025 05:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1739368219; x=1739973019; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L++QIvyizjU09jC6Ra79XUphzeMezUQZEHB1o4PFgv4=;
-        b=JEoTr1iU02+HdmXf12s1+WhKYBOYAqZ7ZXunK8wuc4u3+bk7/kLfSP+9opAPDzLeze
-         7l7Dc5KWM94MFpb3jldq5EdGY+QTqIA+xH4NtNzk38h8cicctdViXeBNmDjRzV3rYhCl
-         iGZvpqXDOr6MAZfBG9DB7oIurXo2YHntaT29fpN+CCtUty+HYC4FhdutcyFQkcrfyojB
-         ZjCo+I8fQMhWeBou4zVNjsXvwDDH69LHSfuF6BqIqrYqd17NdiMwr6ZRWTfGgo/bTQYg
-         u3xwCgloMh4Kut7fzGZVmAlhyyTJGrifambbjVsDdxg9nmNB+Str6HtFD2quZb5xj0kn
-         /QCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739368219; x=1739973019;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L++QIvyizjU09jC6Ra79XUphzeMezUQZEHB1o4PFgv4=;
-        b=Pv0zn+6VsQxz4oDTWsUoyXQ5uILqwUnK1NJ+dcEedFteRJdGD0V9KGuWUgeMxzDqNk
-         nxaxeH5jm68FN9NDgxbTck+OAXw6py9vqsII0Av0sNQMLysYRc6KrcfKtZg1re3M4i42
-         EPQxEnKwGegvH6mZjtvIqPGs1+Le5cPaNZR5ADscZlniH+CQXRwU4l/TrmeasBAsEoKl
-         yVIAxlPIKBSOx66tG1IamKBDb3lFqrSoDHWIaO8xF73NBpUe9vgMYuDyPAgzAO+9hJq3
-         HrxH23TJtsn+Hqe5kI41fy+0IJRTuq/in4sQPyNf5AtVWlvaBbDqE+HHM4QJMNuHGSt7
-         41PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6Vrxdx6uFfvN4wHz0Ejp1FpwyQz69yT2EOUdDjbeiaIqNIhY2eqTJ0H5U6xABM+t3nKJRbNkxKj/a@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyPJeSagt+aHb1b4806KIHv9CQdo102N5AlNGxJC7v1hJlv4/W
-	s0TsgnEyphT461QnB1+2UALdyKlYo3+iE3+dwP3k6vXkVNa4qnfwEEeT+8GN4kg=
-X-Gm-Gg: ASbGncvxRIY3H5WsYrp4zgZ5FUEFecZkMp6o3EPDQfXJjkcrW2jMDuZsd0EFqXwZ4vd
-	slRoyGh+skOKUgGPHtb/IA46jlmieG6AFrx0OpgBwavfmEu28gUhCMLKs/lQszZCHGKWJcC0526
-	jCN3w75CUCcjUPHau6nkiIvSYxYRzXYScY/8uQ75au/d4mGwx8+o8KBqmZBIlynktugJ/bgrrIQ
-	dEAL48ogPPvp0cQXV5hQvIDuZ5DLnhkprUgQ90lPdf8ByOBtSI8pIM2UUM9Gq91hGVTaF+nDq3u
-	0S+2YcvpiOGdNfE3osMyKJ3f59b7vURj4CyTcMyTU56tHetNpWlTbWs=
-X-Google-Smtp-Source: AGHT+IGZhne98LVx62ktvxV2QQrzKBPSzDo+6zahs2aSXaoHvmnrhXadwbf8Kww9ZmRSX7qfmJgLgQ==
-X-Received: by 2002:a92:c56d:0:b0:3d0:4700:db18 with SMTP id e9e14a558f8ab-3d17c1090damr31382265ab.20.1739368219019;
-        Wed, 12 Feb 2025 05:50:19 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d05e96f2cdsm32337095ab.50.2025.02.12.05.50.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 05:50:18 -0800 (PST)
-Message-ID: <b67abe31-5647-4450-b025-2bbacee5fa72@riscstar.com>
-Date: Wed, 12 Feb 2025 07:50:17 -0600
+	s=arc-20240116; t=1739368682; c=relaxed/simple;
+	bh=96pdxkWjw6GsLVtvNftdKd10yxyF39mB6biRnC42Ps4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MVbiQ3UKoGXp8AGQSAg+69N/jE2HBPF6J2RohyJ4yskPj9UgDa6yeV8E7R678FaOQIoijgNl6oTl6xq7m6JCFCftsHlN3SxiMVa33Rmvl5m1S8M5mKYhnTpa1et8OPx5XPJjFPKYcl33MRr1CFAcFULglGGGrX0a7qA/DfXTxfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbyeaJX5; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739368681; x=1770904681;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=96pdxkWjw6GsLVtvNftdKd10yxyF39mB6biRnC42Ps4=;
+  b=nbyeaJX5ch9dNu3ABwc0Co7IgMmiTqMgnit9HXNCmb7ECkDzqiXuwwht
+   S6zpV9eLcMlcSzmKDRuVDF6kLxxbatnbWqK8aB04kFWcjrhGo/NZy42k2
+   tBV+eq72F0kxYWfwPeM+/jJMg8ie+sVXoREkGVTljaQqEc2m02xQqQpzb
+   EUSwfht2W8o289ceE9C+/zO/Y0g/d2XDGpdItXRK3rARMc3Tw4aUqcubz
+   jyu9vVeWVyersFVbW9DB5fepZIJSiOZcZ8YBi7UIZiZ6nM5dFcZmjWjse
+   0bG0ZXCxPXFJDwmUW5CBoIOFSz+1JZgR2vNtcU+JAncqijHQADGdZDHl/
+   w==;
+X-CSE-ConnectionGUID: vDt1JB/NRUay7pN6os1fWQ==
+X-CSE-MsgGUID: y+JegSPrTy6nMnhPyFQWTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40145853"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40145853"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 05:58:00 -0800
+X-CSE-ConnectionGUID: RRVwHANLSeakNeJ9W2v9ow==
+X-CSE-MsgGUID: e1wjcWhhQPWqIcbWUmrUxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112686345"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 12 Feb 2025 05:57:56 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tiDFT-0015gJ-0T;
+	Wed, 12 Feb 2025 13:57:55 +0000
+Date: Wed, 12 Feb 2025 21:57:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Keerthy <j-keerthy@ti.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 01/14] gpiolib: make value setters have return values
+Message-ID: <202502122100.xnayNYRg-lkp@intel.com>
+References: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: spacemit: enable config option
-To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>
-References: <20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
 
-On 2/12/25 2:27 AM, Yixun Lan wrote:
-> Pinctrl is an essential driver for SpacemiT's SoC,
-> so let's enable it by default for this SoC.
-> 
-> The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> 'make defconfig' to select kernel configuration options.
-> This result in a broken uart driver where fail at probe()
-> stage due to no pins found.
-> 
-> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-> Reported-by: Alex Elder <elder@kernel.org>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Tested-by: Alex Elder <elder@riscstar.com>
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+Hi Bartosz,
 
-I just tested this version of the patch.  By default
-PINCTRL_SPACEMIT_K1 is "y".  But since it's tristate,
-perhaps it should be default=m so it's not built in
-for everyone.  Yixun I assume the K1 pinctrl driver
-actually *works* as a kernel module.
+kernel test robot noticed the following build errors:
 
-Anyway, I suggest this change to be a module; Conor
-should weigh in.  Either way is good for me, and I
-have tested both.
+[auto build test ERROR on df5d6180169ae06a2eac57e33b077ad6f6252440]
 
-Reviewed-by: Alex Elder <elder@riscstar.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-make-value-setters-have-return-values/20250211-201426
+base:   df5d6180169ae06a2eac57e33b077ad6f6252440
+patch link:    https://lore.kernel.org/r/20250211-gpio-set-retval-v1-1-52d3d613d7d3%40linaro.org
+patch subject: [PATCH 01/14] gpiolib: make value setters have return values
+config: sparc-randconfig-002-20250212 (https://download.01.org/0day-ci/archive/20250212/202502122100.xnayNYRg-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502122100.xnayNYRg-lkp@intel.com/reproduce)
 
-> ---
-> This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-> when using make defconfig, thus fail to initilize uart driver which requst
-> pins during probe stage.
-> ---
-> Changes in v2:
-> - set default as y
-> - Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
-> ---
->   arch/riscv/Kconfig.socs          | 1 +
->   drivers/pinctrl/spacemit/Kconfig | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -26,6 +26,7 @@ config ARCH_SOPHGO
->   
->   config ARCH_SPACEMIT
->   	bool "SpacemiT SoCs"
-> +	select PINCTRL
->   	help
->   	  This enables support for SpacemiT SoC platform hardware.
->   
-> diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-> index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..c18d879274e72df251e0bc82a308603ce23738bd 100644
-> --- a/drivers/pinctrl/spacemit/Kconfig
-> +++ b/drivers/pinctrl/spacemit/Kconfig
-> @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
->   	tristate "SpacemiT K1 SoC Pinctrl driver"
->   	depends on ARCH_SPACEMIT || COMPILE_TEST
->   	depends on OF
-> +	default y
->   	select GENERIC_PINCTRL_GROUPS
->   	select GENERIC_PINMUX_FUNCTIONS
->   	select GENERIC_PINCONF
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-> 
-> Best regards,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502122100.xnayNYRg-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   drivers/leds/leds-aw200xx.c: In function 'aw200xx_disable':
+>> drivers/leds/leds-aw200xx.c:382:16: error: 'return' with a value, in function returning void [-Wreturn-mismatch]
+     382 |         return gpiod_set_value_cansleep(chip->hwen, 0);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/leds/leds-aw200xx.c:380:13: note: declared here
+     380 | static void aw200xx_disable(const struct aw200xx *const chip)
+         |             ^~~~~~~~~~~~~~~
+
+
+vim +/return +382 drivers/leds/leds-aw200xx.c
+
+d882762f7950c3d Dmitry Rokosov 2023-11-25  379  
+d882762f7950c3d Dmitry Rokosov 2023-11-25  380  static void aw200xx_disable(const struct aw200xx *const chip)
+d882762f7950c3d Dmitry Rokosov 2023-11-25  381  {
+d882762f7950c3d Dmitry Rokosov 2023-11-25 @382  	return gpiod_set_value_cansleep(chip->hwen, 0);
+d882762f7950c3d Dmitry Rokosov 2023-11-25  383  }
+d882762f7950c3d Dmitry Rokosov 2023-11-25  384  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
