@@ -1,131 +1,139 @@
-Return-Path: <linux-gpio+bounces-15823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C230CA3208D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:03:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97CF5A32113
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 09:28:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A8593A4640
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 08:03:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCA7A188987B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 08:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E477204C03;
-	Wed, 12 Feb 2025 08:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XbYso5MR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7E32054EC;
+	Wed, 12 Feb 2025 08:28:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CCF26AEC;
-	Wed, 12 Feb 2025 08:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9D41EE013;
+	Wed, 12 Feb 2025 08:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739347407; cv=none; b=G+RQIwQiNM0MZjNHUP3H5LtiuylsGaK8WIniqu5OI9SayXKZF30IiAoJkzksOEaki93v06OEGmnySCyyhOyD8MCPTqXisAmrlh3Iczb+tD/CIms5Kbve+L9O2w8R70ii9ME1r8+anYRNBgW78/bHheY1YkqCKvaZQD1gXev9QrE=
+	t=1739348897; cv=none; b=ujDc5xyAXzk26tmbucVnNIOf89iYWoV3fK96DbNNoO5MmKe3MVRHX/U+BNaO0o+ZHatX3maRAGVUfmQqEKD4K1mmG10Usxud0NypBBho4qHfqkjS5tFH/+Tn+oaLwGw1ewt6JxncaUlUlEct6r1m32zxWwO3WfaJuldmF0hYNbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739347407; c=relaxed/simple;
-	bh=pO031soeAN2xTZUcwq6yyzqPBbAKgf77wG9z2Co6OAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uE8PIVzURGR6/2ZQfiupkOwLwtNwE85DOomzDvVlZddyqKI0IxOBVHtG1PdgVsriJgPKBDvQiGEQFiG3j72N8V2jvWXAf9///Hsf6jeLQPfmYr9FnrsF8iQPsc3YBplJrf49P7ICcOaq1SiLFq60Lb3KhcG6TilzjqGkhr5COWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XbYso5MR; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739347405; x=1770883405;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pO031soeAN2xTZUcwq6yyzqPBbAKgf77wG9z2Co6OAQ=;
-  b=XbYso5MRmNLCb1dQeLGQ9DmwQ72bgjp4OGpl6q5yNkpb9BX4WPj9V1a2
-   HZF4esuZKWbdfG8TURw4H44bpqFmET2UQit+U0FCP0DR5akf4SNAiIACj
-   q9amjsG8BY6bax/gT5jlajmuACrfmrgUYnhH5+a59q6yuHt4HW8Cgr5v3
-   ZV8EmjKDaIBcC/KoD4+I2RaE2WGODi20xAurZ4AHhns0mYvILQ0T4Gzf7
-   F+3OfmJcy7ub9acjntmGoV9B/KrlieoYpPfpzekQ+Giti6Wqknf4fdA/4
-   DHlKHUQXmL/pLsHaa0YXoGcsmQvDO3YMUdkTOz4+YRi7eB4yLfAEcz08B
-   w==;
-X-CSE-ConnectionGUID: PTtOYggZTTaQOILKZKVrXg==
-X-CSE-MsgGUID: xUZsNhcKQhKrnLE3dK7GyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="51384806"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="51384806"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 00:03:24 -0800
-X-CSE-ConnectionGUID: FFGiGoEsRq+bQBfIANicbw==
-X-CSE-MsgGUID: RXhg/U3zReqi686kTX0hrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117929688"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 12 Feb 2025 00:03:22 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ti7iJ-0015L9-1O;
-	Wed, 12 Feb 2025 08:03:19 +0000
-Date: Wed, 12 Feb 2025 16:03:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Keerthy <j-keerthy@ti.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 01/14] gpiolib: make value setters have return values
-Message-ID: <202502121512.CmoMg9Q7-lkp@intel.com>
-References: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
+	s=arc-20240116; t=1739348897; c=relaxed/simple;
+	bh=IrKptbNyGnEsWszE5Znu38EPyhXvclhSWF3aK3/HD0Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G8zNQBthMuMCqu311C+7QhkzA25nMDKiDuH/nFjQDUaRZtKKcTxISdjjg4SXMRLq7sb4eOiiEuyjkH8419eEN//Dfh2a/bBZtmg3mtkbTc1IlZC7e90cYnqUIuKAlvSJm9GznNBo+M6UT7poV2b4aHH4fV+Xm7tGNg4I+aNGmn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id B8DB13430A9;
+	Wed, 12 Feb 2025 08:28:11 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Wed, 12 Feb 2025 16:27:28 +0800
+Subject: [PATCH v2] pinctrl: spacemit: enable config option
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAG9brGcC/32NQQ6DIBBFr2Jm3WmAYDVd9R7GhcqAkzZggJA2x
+ ruXeoAu38//7++QKDIluDc7RCqcOPgK6tLAsk7eEbKpDEqoVijR4VPixn7J8YVhy7WNhtrZWHO
+ btSKouy2S5ffpHMbKK6cc4ue8KPKX/rMViRKpnzrSptdC24cjn0O4huhgPI7jC8myJNOzAAAA
+X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
+ Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2071; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=IrKptbNyGnEsWszE5Znu38EPyhXvclhSWF3aK3/HD0Q=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnrFuXkQwvpdyu8m47lqJTTAGrb7SfOF2GrOSvL
+ UHu0Hsl9c6JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ6xbl18UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277dIvEACMYP9kQbngE6dUW3
+ h6H4LM3rRAFvEA0o5jKhCwlXKiw/S4Ck+DqnVKWYBYbtsc3v072HERc3R2mVk8MgGUaA+wyDo9+
+ ddkYXfXpkoCwxNwzgdweUJ87v0WCIFmKn+YbFmse7SRqNGtnmDnbE4hXI+mVLIFE4PcGWc1aCgs
+ fXyUPpYWCGU/ph2WxAsFD+LSQvoXM+ROD1hd72A1e0NbIFi4yoKKcc2UafSUwIb0rhBwHYv3lCu
+ zla1UUPCoVU7Hm0RNetJvncn91o2/DqnDxuhOS5+MTWEqG/TiVY5I5Bj178kt7snAPNw723PUeA
+ Zdze8qsl/11y392nC1bjnTgDFJx1za7Kx+bXY3PJIfvsYBifLI4J/UMQ+2OgMJ1Tz3XuwhCSjr3
+ lJVKBwN1f1P4uz8p4B8PQtRwJSP2jGTg12nmoctTsXn1P0HnQoCDxhmSriDxTM7/aSylC2wNn2k
+ g81X2tjJje+cI8qgoptLoS5JzUkuO3Aoj3Fb/KFGMVlotIaRUnsnCh5PHLIOgEwSimStmcQYooL
+ 7Zvsx5zCPiraRRvx+80oi3qfSQC8E93Ng+lQTdnbGnu1jIGd3W6dP1V3EytBEi12kGK33u3vg3T
+ 3MwEIcur1df6KTJk5W/VTy8cv+9y1D7O5TymH3Dmcu8k1DhV8e5DXQBQSjZIibcKNlWQ==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-Hi Bartosz,
+Pinctrl is an essential driver for SpacemiT's SoC,
+so let's enable it by default for this SoC.
 
-kernel test robot noticed the following build warnings:
+The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+'make defconfig' to select kernel configuration options.
+This result in a broken uart driver where fail at probe()
+stage due to no pins found.
 
-[auto build test WARNING on df5d6180169ae06a2eac57e33b077ad6f6252440]
+Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+Reported-by: Alex Elder <elder@kernel.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Tested-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+when using make defconfig, thus fail to initilize uart driver which requst
+pins during probe stage.
+---
+Changes in v2:
+- set default as y
+- Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
+---
+ arch/riscv/Kconfig.socs          | 1 +
+ drivers/pinctrl/spacemit/Kconfig | 1 +
+ 2 files changed, 2 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-make-value-setters-have-return-values/20250211-201426
-base:   df5d6180169ae06a2eac57e33b077ad6f6252440
-patch link:    https://lore.kernel.org/r/20250211-gpio-set-retval-v1-1-52d3d613d7d3%40linaro.org
-patch subject: [PATCH 01/14] gpiolib: make value setters have return values
-config: i386-buildonly-randconfig-002-20250212 (https://download.01.org/0day-ci/archive/20250212/202502121512.CmoMg9Q7-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502121512.CmoMg9Q7-lkp@intel.com/reproduce)
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -26,6 +26,7 @@ config ARCH_SOPHGO
+ 
+ config ARCH_SPACEMIT
+ 	bool "SpacemiT SoCs"
++	select PINCTRL
+ 	help
+ 	  This enables support for SpacemiT SoC platform hardware.
+ 
+diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..c18d879274e72df251e0bc82a308603ce23738bd 100644
+--- a/drivers/pinctrl/spacemit/Kconfig
++++ b/drivers/pinctrl/spacemit/Kconfig
+@@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
+ 	tristate "SpacemiT K1 SoC Pinctrl driver"
+ 	depends on ARCH_SPACEMIT || COMPILE_TEST
+ 	depends on OF
++	default y
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GENERIC_PINCONF
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502121512.CmoMg9Q7-lkp@intel.com/
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
 
-All warnings (new ones prefixed by >>):
-
-   drivers/leds/leds-aw200xx.c: In function 'aw200xx_disable':
->> drivers/leds/leds-aw200xx.c:382:16: warning: 'return' with a value, in function returning void [-Wreturn-type]
-     382 |         return gpiod_set_value_cansleep(chip->hwen, 0);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/leds/leds-aw200xx.c:380:13: note: declared here
-     380 | static void aw200xx_disable(const struct aw200xx *const chip)
-         |             ^~~~~~~~~~~~~~~
-
-
-vim +/return +382 drivers/leds/leds-aw200xx.c
-
-d882762f7950c3 Dmitry Rokosov 2023-11-25  379  
-d882762f7950c3 Dmitry Rokosov 2023-11-25  380  static void aw200xx_disable(const struct aw200xx *const chip)
-d882762f7950c3 Dmitry Rokosov 2023-11-25  381  {
-d882762f7950c3 Dmitry Rokosov 2023-11-25 @382  	return gpiod_set_value_cansleep(chip->hwen, 0);
-d882762f7950c3 Dmitry Rokosov 2023-11-25  383  }
-d882762f7950c3 Dmitry Rokosov 2023-11-25  384  
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yixun Lan
+
 
