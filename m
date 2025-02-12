@@ -1,155 +1,146 @@
-Return-Path: <linux-gpio+bounces-15861-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15862-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C3D1A3283D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:18:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1E44A32846
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 15:20:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDD247A2CE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:17:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DC673A5E22
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 14:20:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C627D20FA89;
-	Wed, 12 Feb 2025 14:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24753210184;
+	Wed, 12 Feb 2025 14:20:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D641A5AA;
-	Wed, 12 Feb 2025 14:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05420F08F;
+	Wed, 12 Feb 2025 14:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739369869; cv=none; b=dZfbkx5wpWx6XNrooO/uRM4V67d9zP0p8NkpZxI2YNOc0qZSa0cwQYJkNPJDwqBkpVh5rLfyRFxpJFzbCvhTJCpjsGS6K3ulLb6BTrPisYkhM2F7e6a4clvoqhEEkzliAludlCEQl5D12kAup6kVzbmuvP94pTX8K4azk15Uoo4=
+	t=1739370023; cv=none; b=IOdQsMAYJVOkGSuEvmjeOgbfu5V0Px/Xh1cWVQRsiHpnB3YVmYq7Jfxqe6ZlXxAItigyI2Xkp5pWegdSXYyzNRiN9gmzICZH9JWLTPLL94BCf4/N2pmT//BOO+k+REXo0JA0nyQduiTyxzp7M7gvJ9/iz7eRjJbcz3Op2PqHWfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739369869; c=relaxed/simple;
-	bh=mJxBysoRgZGhkya7SXolEV5gKdR7CjNvQTnBQE2fKxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V+D8e3EC/YVekVAapmr3owww6ipX+a8RO+gN/jzTqorLIR8/qBNKFyp1shGg61F/2o5Sm92ig/DSBO/eZ60kUVcE66C7S3uibav+43Z8B/ee1zzKcIy/28V6e9S7OWbRYWZzUdR/TZJimMkxVx0IFuI4Wjf3hqYKKoeWAo/qFso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 0BBAF343065;
-	Wed, 12 Feb 2025 14:17:46 +0000 (UTC)
-Date: Wed, 12 Feb 2025 14:17:41 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2] pinctrl: spacemit: enable config option
-Message-ID: <20250212141741-GYA18065@gentoo>
-References: <20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org>
- <b67abe31-5647-4450-b025-2bbacee5fa72@riscstar.com>
+	s=arc-20240116; t=1739370023; c=relaxed/simple;
+	bh=KAdde7/YbmPjymod1BEVt4mvuRgqXMe35ab+tSR9ydA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IUS+NpRFrJXBGDuPZmy+L+keKP0jwUCQKAMwCqPpd7RoZ5SlvGv3cute7ko5WB4gI358hl5G1S0c/TMgp4geg2rUJ0Iv765uW1WFSUqR3nx3cvzwfcSgf5ZJ9WTBKdM/xPU7xK4PDou/9ZwuMcE7NzIW3q7fwQjhLo+0b8ypBGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4baf654570fso1028958137.2;
+        Wed, 12 Feb 2025 06:20:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739370019; x=1739974819;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jkMBG44/sW86YW+XfhRRb2qU3DXjedl8dAdo6+7avXo=;
+        b=R2l2jXk9B8RzoRJDX8SZOBRznt0upWoCh0sVkm0I2XUuAy+JRhrEIF4BJF0o76h2Hz
+         84BBk7TM8B6bfwIYFRqIK8ktJkLU6M7KG2sWBz6afhlhrlxDihNTEiJf1eGjOmBgulRQ
+         dAVNTVaJX8wwRdFyd7CsVkfHcvU7oXCo4P/z3JMauNHKAZX28+/g8ugjV7X2/YLXfJU2
+         J8t9ApxQlXWmg7Xr+/JEDPcTNzsrbABfAbN4N4UQ6dBft8KAmkl5gyfWnQI7cseyI+n0
+         qcHr9aNe/nP1dlQd7KB0O/Q3ZYggI5iG5j2XbC8HSev+YdNZAurd8hb9spAC9+R6xO8N
+         4Mkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpGWXzxQK7pl1bEc/TPXbQdykorI4TzvGI5Ze0dlSynq2sZNhJBzXKQYi7BqUDRW3xuubSbGPLMqp5IHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbcexFThhxVF+VwiqDY3jKv37OCMj0VQYfvIAx/lmimu4L8Lfz
+	M+urKN6OiUlF3Ecw/qIJwkHpedQOwYAkF9N7+34sPC+hmhqZH6mrOGfXXGvd7C8=
+X-Gm-Gg: ASbGncsxnNNraARdq6Ay7eYkxqGnJsi1h8jSQwNbxaoWBSubZ6rZ6qoyRIgi49r0X3+
+	z00v7jShtMr2oedtncbWOsaKjIpuuYgFAv80ck91Y6l/yaJo8UtsznbqyevwMj9NagzaOsUAgrR
+	8BqgBWJ8aXvMg7UEyuYEHsj5nI8J7/zoOriG1kTAlD4xIXK0puDQUNP2PzxbKZbFFsrCPZkcNr2
+	Uu/Rju8vhLsFiBWiGV1C2oHjL+O0OXES2Xdj0YLlRHHnaUbfgcDGKRcGUzb+0pdH49nZEejcH0q
+	V6HAb2E9E28L0NOIw1cakj36m0z1n6xy4k06rzRUoqmklPthn+3K3N9E1w==
+X-Google-Smtp-Source: AGHT+IGgRLQ5KcH12oKOgro87sjmi0jezj5BZ4rnkkVx7v4d/vXA+akiNfZEtKPv9vF5SSGnNBKnnA==
+X-Received: by 2002:a05:6102:1607:b0:4bb:c8e5:aa8b with SMTP id ada2fe7eead31-4bbf22e95f9mr3311962137.22.1739370019080;
+        Wed, 12 Feb 2025 06:20:19 -0800 (PST)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9688cb9sm2092618241.15.2025.02.12.06.20.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2025 06:20:18 -0800 (PST)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5203d50ade0so703241e0c.0;
+        Wed, 12 Feb 2025 06:20:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVbTLZyYuMfks7XflJGwOiGWM1FwRHH8VDSG2Q8rYyVV3lyF9L2/LFI4nJnVvNGWK7EPCC8z9F2nHoYg4I=@vger.kernel.org
+X-Received: by 2002:a05:6122:2187:b0:520:652b:cdf9 with SMTP id
+ 71dfb90a1353d-52067ba9daemr2796956e0c.5.1739370018607; Wed, 12 Feb 2025
+ 06:20:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b67abe31-5647-4450-b025-2bbacee5fa72@riscstar.com>
+References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-4-koichiro.den@canonical.com>
+In-Reply-To: <20250203031213.399914-4-koichiro.den@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 12 Feb 2025 15:20:06 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWUrHbizyKoLs-DJL43QvmE+Y=vCuGc+1yteYXYQOmURg@mail.gmail.com>
+X-Gm-Features: AWEUYZmGqrEJ5R0Usjj2HJIMGPEzwVxXNwCpFPwFCcvHbnWb_hjEj6CTQBdm-Y8
+Message-ID: <CAMuHMdWUrHbizyKoLs-DJL43QvmE+Y=vCuGc+1yteYXYQOmURg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] gpio: aggregator: add read-only 'dev_name'
+ configfs attribute
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Alex:
+Hi Den-san,
 
-On 07:50 Wed 12 Feb     , Alex Elder wrote:
-> On 2/12/25 2:27 AM, Yixun Lan wrote:
-> > Pinctrl is an essential driver for SpacemiT's SoC,
-> > so let's enable it by default for this SoC.
-> > 
-> > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> > 'make defconfig' to select kernel configuration options.
-> > This result in a broken uart driver where fail at probe()
-> > stage due to no pins found.
-> > 
-> > Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-> > Reported-by: Alex Elder <elder@kernel.org>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Tested-by: Alex Elder <elder@riscstar.com>
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> 
-> I just tested this version of the patch.  By default
-> PINCTRL_SPACEMIT_K1 is "y".  But since it's tristate,
-> perhaps it should be default=m so it's not built in
-> for everyone.  Yixun I assume the K1 pinctrl driver
-> actually *works* as a kernel module.
-> 
-in theory, making it built as module, it should work fine if all drivers
-can handle "deferred probe" gracefully, but since pinctrl is an essential
- basic driver, I'd prefer to make it built-in ..
+On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
+> Add a read-only 'dev_name' attribute to configfs interface, which
+> exposes the platform bus device name. Users can easily identify which
+> gpiochip<N> has been created as follows:
+>
+> $ cat /sys/kernel/config/gpio-aggregator/<aggregator-name>/dev_name
+>   gpio-aggregator.0
+> $ ls -d /sys/devices/platform/gpio-aggregator.0/gpiochip*
+>   gpiochip3
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-I didn't bother to change this module from tristate to bool,
-as there is additional COMPILE_TEST option(maybe it want to test as module?)
+Thanks for your patch!
 
-> Anyway, I suggest this change to be a module; Conor
-> should weigh in.  Either way is good for me, and I
-> have tested both.
-> 
-no, I don't think making it as module is a good idea,
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -732,6 +732,23 @@ static struct configfs_attribute *gpio_aggr_line_attrs[] = {
+>         NULL
+>  };
+>
+> +static ssize_t
+> +gpio_aggr_device_dev_name_show(struct config_item *item, char *page)
+> +{
+> +       struct gpio_aggregator *aggr = to_gpio_aggregator(item);
+> +       struct platform_device *pdev;
+> +
+> +       guard(mutex)(&aggr->lock);
+> +
+> +       pdev = aggr->pdev;
+> +       if (pdev)
+> +               return sprintf(page, "%s\n", dev_name(&pdev->dev));
+> +
+> +       return sprintf(page, "%s.%d\n", DRV_NAME, aggr->id);
 
-I can adjust this driver from tristate to bool if necessary,
-also adjust to builtin_platform_driver() in driver..
+sysfs_emit(), for both branches.
 
-let me know what you think
+> +}
+> +
 
-> Reviewed-by: Alex Elder <elder@riscstar.com>
-> 
-> > ---
-> > This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-> > when using make defconfig, thus fail to initilize uart driver which requst
-> > pins during probe stage.
-> > ---
-> > Changes in v2:
-> > - set default as y
-> > - Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
-> > ---
-> >   arch/riscv/Kconfig.socs          | 1 +
-> >   drivers/pinctrl/spacemit/Kconfig | 1 +
-> >   2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> > index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
-> > --- a/arch/riscv/Kconfig.socs
-> > +++ b/arch/riscv/Kconfig.socs
-> > @@ -26,6 +26,7 @@ config ARCH_SOPHGO
-> >   
-> >   config ARCH_SPACEMIT
-> >   	bool "SpacemiT SoCs"
-> > +	select PINCTRL
-> >   	help
-> >   	  This enables support for SpacemiT SoC platform hardware.
-> >   
-> > diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-> > index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..c18d879274e72df251e0bc82a308603ce23738bd 100644
-> > --- a/drivers/pinctrl/spacemit/Kconfig
-> > +++ b/drivers/pinctrl/spacemit/Kconfig
-> > @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
-> >   	tristate "SpacemiT K1 SoC Pinctrl driver"
-> >   	depends on ARCH_SPACEMIT || COMPILE_TEST
-> >   	depends on OF
-> > +	default y
-> >   	select GENERIC_PINCTRL_GROUPS
-> >   	select GENERIC_PINMUX_FUNCTIONS
-> >   	select GENERIC_PINCONF
-> > 
-> > ---
-> > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> > change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-> > 
-> > Best regards,
-> 
+Please drop this blank line (everywhere).
+
+> +CONFIGFS_ATTR_RO(gpio_aggr_device_, dev_name);
+> +
+>  static ssize_t
+>  gpio_aggr_device_live_show(struct config_item *item, char *page)
+>  {
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
