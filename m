@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-15836-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15837-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71272A32338
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 11:08:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DF33A32353
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 11:17:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3A2A27A190C
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:07:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC8BD16672C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 10:17:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25596207E1B;
-	Wed, 12 Feb 2025 10:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D33207E1E;
+	Wed, 12 Feb 2025 10:17:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/3Lg9If"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC6xNK5T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C17D2B9BC;
-	Wed, 12 Feb 2025 10:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675221F03CC;
+	Wed, 12 Feb 2025 10:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739354875; cv=none; b=juekprwUQcIhRPbzOKIrBO6j2tCm0myzZJaIr714PeSj4xo511ipLYg5xiOoQ4N1vPAPlOa/Xf/EKd9lbDuZiKipePchxu16B21H44YuHD1pVEFkC5R/km/8TNAtTkLSZoaaoOuPGVCWKNrqMm/KuvFjzgb2Tfn8tsxEvUatGDQ=
+	t=1739355450; cv=none; b=fbCc1i23Yh6O4DjGb4YVwrJ8UNXOvYJpjKutnpKaHkINPCgmUjEb/rpL+Sm4jZVwC95IP+N2VANjxsC/h2y02PeA0OBgwbNPS3+LbnnZoQRhTvAhdjEDZqbLxGYIyBkuA97exfoH8iQc0YIUJIpsWty/axIVzHLD6NrXUawBFiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739354875; c=relaxed/simple;
-	bh=z06n+8M6XH3U1NxhQZ7fMR2oQNDt7WtqhaCqYX9NeX4=;
+	s=arc-20240116; t=1739355450; c=relaxed/simple;
+	bh=gL/2m74l/wyHUrEOpQ7n7NflgnvPPPgeQ0J+VSqI+BM=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=vGWkmSKLRZSbbEZsZTFho199W6JHwwT3pgvY4pxILK8yyTRR0J9Jjzlna/hcYoEsp6u77jhN1hDKkrPUSl8gPVkyga6JEE3KEd9ClN2nfBwxCqfY0jldfxE+b32wXWhqsfdGMZ5UM9WEbNTV0ae9k12ltYL870H0rgCyn+eayKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/3Lg9If; arc=none smtp.client-ip=209.85.218.54
+	 Message-Id:References:To; b=S+5hGBUA9WVAwcKDlYctLY7sjeeCbNH+7e+g/joV2Gw8W8zQEtilrdVJ8798AWFsGwv2YQH+si5kcB78gn5ijl0+M7CiEe27yLBGbjiWP37XgbG8B4Ob7z0VTbKUt67g5waGf/AHMnGoEhrgNUAP3ZGQaG1dh+YTPfKWraTLrwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HC6xNK5T; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso1135644466b.1;
-        Wed, 12 Feb 2025 02:07:52 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7d3bcf1ceso428944366b.3;
+        Wed, 12 Feb 2025 02:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739354871; x=1739959671; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739355445; x=1739960245; darn=vger.kernel.org;
         h=to:references:message-id:content-transfer-encoding:cc:date
          :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d7raU3jxlxf9m9YsM8gyXW3wWqEhQoovh+ulChmxjhI=;
-        b=V/3Lg9If/rzTTw4v/WkJRuHAjgHrjUeFXdiJWJUuoXntpyboRg9Nr6Gyb68P8F8tXf
-         VKrMooUO/8BV/TNk/K64FF06908skxBEOGb8V4YDp1WOxazl/aFIIr5/hDd67JP9IHjt
-         EoWbTZ9X3I/Ryvr9N2DDnqnI5Dh5n8ayb+WzSG3nPRRxNdVCq1+w0rV4q9jiAEohe6hb
-         hYq1688NQ4rbQed5iYqrQp6FjrNcBriu/R8tTZbXGJs6LI/EZkJp8tYXxb6HoKNzVqEP
-         fwD529OKmgvf6ZTUs6kF1InRI6Si1UtGMFJ77N1u9/4JbsOy2bBXbSc9iWhWh3adC0AV
-         +ALA==
+        bh=dyQTSRUTEZln7LDV22hntSiQeYuhQXZ+LV2DSlHtWN0=;
+        b=HC6xNK5THQkVqdMSy4GPj1rEf0jrMLJew7HE7PsaCues4CCHkRAYZY01dNmeY0pTzX
+         qmKM8e/OBWPk4d8B/OxZ/mosE+QR1c9UXX6gx9+cfYrbHLrPfqKqiak96pdCPxfu4Mrx
+         Vf5ZUx5U0r56kQOB7YRllU1YT9cTqsnLUNvNtQbXcPgC0Hr2axYl3kNftaA5fegIIKXP
+         Syz5j8lSyoYFDoucMXdzv6VZgUWQu8iL2Gpo1x1cYSHKJ5SWtm/UaHtZAxNErtgCK3dq
+         6+7FVJwywr/8o9UqlFJb4dsKgJbH5c8/RcZ5JP1NNVnzFfQzBiIbzE4Rb/0SASDgl/ip
+         37sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739354871; x=1739959671;
+        d=1e100.net; s=20230601; t=1739355445; x=1739960245;
         h=to:references:message-id:content-transfer-encoding:cc:date
          :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d7raU3jxlxf9m9YsM8gyXW3wWqEhQoovh+ulChmxjhI=;
-        b=BjEnQ3QpOhaQhUfO9tdlXUiKRk/TuhPBym3GD8QmPOadc02jWt2+yz/Eq2JjaMVioA
-         TzKAyYo4dHp07U8V/g8ZrI0j0aXaqgH9f2uXTNfbKs70e5FyOvXRb3Au3HgXeXh+6Fs3
-         egXu9//ZAzjha2WaAZdwHi/6A1WJmAYvxVNqkwSnv7itSd0oJbTjXW3JtJVj2UlagzFL
-         aN5O9+kr319rJSlXgU8DgPIDKa+0Sf5fcD+7eG0cA+0Vx7RWGYVF+i5O9LJrom1S0CDF
-         zr3BYXN4WjMZ5CiECztXOx0IdEUeckyubtgILPkrDVR+oc8FhKOVCZQzD6PLxy/ZyFDB
-         Iweg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0lUjzUHwtmJIRXNk2RrOzWaSyU4GXhAArUH6d21WzWMv2KiHiTCe3AoKgkAJsjtl6vmiT9ytyrWdQ@vger.kernel.org, AJvYcCUS/xZb1m74HvP5rAV4HfEvywnG8GKHoz4UwNogFl+aeu4tGFSCkNYMUEt0S8SmbUY+bh3MEjUtT3A=@vger.kernel.org, AJvYcCX0qfD2FO907ufUnkxcxe5TQKJAKru3xtn1lmhCeXBbqQUlDP+7hv2eSZc+b6fFmiod69KODYHPiOj4cw==@vger.kernel.org, AJvYcCXj4/HjexIh/v7NbZs8ULsnVKQvACCGsge2fjTr9xnXVqK6mgOGITGCknmlc3oam633HHxaTRweCwKi+F18@vger.kernel.org, AJvYcCXuYByhFaNlz3lumVu29waxM8nicNswYDww42Rmo0Ivt//83ttAXglWnbyg5QO/Ifr24zGZLRgg1Oxk@vger.kernel.org
-X-Gm-Message-State: AOJu0YysjTNPoyrz77QE1R/U5ik9GuPapJc28hm2lAo0xHL1T5yLdwWm
-	uCVoD+j+nRhVzD8ZJOJscr10Sc6SjUNflgBMhPsAtN1j6FtAiuTW
-X-Gm-Gg: ASbGncuCfF7qTS5zXRJWoOocpxd9BG89P34prbCZQN4Awq2YIPRky07jRwIIsILLazN
-	/ge7ivBlzGKbI7y0FQo9KXRoVdz7loDU7iQymWsOb7jdyIQ1ncEF3t+8dc7jUBQ0LlfBVhxYf55
-	bEn9z6e4hj02dTjlZyI7DSHU4xiyoXBs2fMpBRrKvDMEtEvjziDeOxowMi/khWy4NdbIUu4twX0
-	M+VJcGm6IieG3bAfR0HpccpRQoHy6BcESMXFFqJp+i5H4VI0fBfLf8GLQ8JvjB5Ih4Yl8eCwh+m
-	7EkxrjCHtQcGV8kornVvpY+xPFREv1gkJrFZmXnG0kNSrG5VoKsM6w==
-X-Google-Smtp-Source: AGHT+IGxLPAauHVK2s+DzzOXD7zTX93+sf4uDMkVN6GPU8MVIyb4hkft2lhqEwwdYQNefaB3cPwpdw==
-X-Received: by 2002:a17:907:1909:b0:ab3:85f2:ff67 with SMTP id a640c23a62f3a-ab7f339c7f8mr256456066b.16.1739354870213;
-        Wed, 12 Feb 2025 02:07:50 -0800 (PST)
+        bh=dyQTSRUTEZln7LDV22hntSiQeYuhQXZ+LV2DSlHtWN0=;
+        b=K/8wq1fexyhEz9OnPUx/XDmag6LBO2kmiNT0Yq0Yn9V9wibMvGhIIBdF54PDsm3Frg
+         1eO2mZMY8dCP9nlk0OCk6E09ix/FcaBZUauwACSj6cWyiDsLWPE/YK1iPq+pXa7xnr1/
+         YR0Jv2+ijdk7MhZ+ORr3H8n6maEYqAzWvhwW28cVX7imeyHsQ23R70IIf4aarq0YJtmd
+         kom6HDhUwfbZhzIzSSf9Bqbe9iu71nWs0C0QaaUjbCZHHl5LINzzhGhAASaNFwIedlaX
+         62ak6V9KHqM1VnHDFVaIgd3XN7hYkcjowYqLfUCQ67zQV3FqhH6h6Io2TCaXASJc1Avz
+         HI4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpygggDuXKrYkaTVnHoTnXihz49AQ9kQLZBI4qkLgkiAp1ECsTah6EjxXNFh8gKqxOBHUcMf2F/Rya@vger.kernel.org, AJvYcCW9h7/SJAWt03vNL05F2jkx5YwOS3AnnNC5QhVvBcbf83416jMdOzVE50SHpCrffbyZFcqd8TTs5byI@vger.kernel.org, AJvYcCX7O9jyI+r6wyzDGxAVSCiHMgxxgezWWbT3nEJ2YxH7JuUVKN8R1n9HZCbooPucvUUZmg+ybc1Mu6j+oA==@vger.kernel.org, AJvYcCXIm2hyiZ/rCZ5FCHCfLy5LehY0WU6IVKDPizKymaJUbRjp/vXFWz1Zsqs28138rHkLA2rhFn9T5Qw=@vger.kernel.org, AJvYcCXtgv2rF4ZtEaxnWcz3dhwvD+hnmeWsNfErVKOGEoNKjWp/z+OBmNwpmyBlQ1br/zTCGjGHa38XhOHK94Zf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUr2RLdlF/v7mOHiDvz4rstQVwCWBSnvHTLXFzISpkdwhcusIA
+	o/umZd0qOdkGKjG5uG7XtUXTAKMUeFZsfLBbxpNnlZzs6rykMw1D
+X-Gm-Gg: ASbGncvZnhD6Oij/Hf2P9hrYWoZnGeQBK2e+9f8MNKC7Ahb3GZ3eXAo96dwialhj4kl
+	slJBlNZJkFsW68sWUjXoEVMUejxMtkQ2tDhYnoVgpwdvqg+JeOMYu+F/moqHlsDjq4oMdi5qK5t
+	tOklN2NieZUJMA6w7269lUTI+Uoc0q+5iBYuJ7s3YK0GbiDKWEDEdiJVN5K0B5XxobDRrr8cq3a
+	5oFx8fhF71KTNrhGBtzKNFsXn9wrCUQIet+vSjqzBwIfGJw233Igbpcvde9Vt0veG588X1SzaLa
+	5IYMMkCObatFh15UT/iBxB+cvwlxA2yf5CyA6lEJDcmvG5Gu542HVg==
+X-Google-Smtp-Source: AGHT+IHX1kHoLAt6ZZdnsRgcYSqmq7cQdVlk5JmQSbJ9zhjAYKeqHsrY9eFHOkLjVA4AlJ3tuP4J3Q==
+X-Received: by 2002:a17:907:1c1a:b0:aaf:1183:e9be with SMTP id a640c23a62f3a-ab7f3714990mr243361266b.2.1739355445101;
+        Wed, 12 Feb 2025 02:17:25 -0800 (PST)
 Received: from smtpclient.apple (185.174.17.62.zt.hu. [185.174.17.62])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d18e006csm428383666b.52.2025.02.12.02.07.46
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7bae59ae6sm639107366b.169.2025.02.12.02.17.23
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Feb 2025 02:07:49 -0800 (PST)
+        Wed, 12 Feb 2025 02:17:24 -0800 (PST)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -82,8 +82,8 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
 Subject: Re: [PATCH v2 09/10] ARM: dts: sun8i: add DTSI file for V853
 From: =?utf-8?B?QW5kcsOhcyBTemVtesWR?= <szemzo.andras@gmail.com>
-In-Reply-To: <20250206161958.1ae885db@donnerap.manchester.arm.com>
-Date: Wed, 12 Feb 2025 11:07:35 +0100
+In-Reply-To: <20250207010202.63bb5ac6@minigeek.lan>
+Date: Wed, 12 Feb 2025 11:17:12 +0100
 Cc: Michael Turquette <mturquette@baylibre.com>,
  Stephen Boyd <sboyd@kernel.org>,
  Rob Herring <robh@kernel.org>,
@@ -113,24 +113,24 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  linux-pm@vger.kernel.org,
  linux-riscv@lists.infradead.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B220CF49-1717-491C-AFD9-D8C4FD2DEF88@gmail.com>
+Message-Id: <C21A3AB4-C37B-4096-8EB2-1CBFB817F2B8@gmail.com>
 References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
  <20250205125225.1152849-10-szemzo.andras@gmail.com>
- <20250206161958.1ae885db@donnerap.manchester.arm.com>
+ <20250207010202.63bb5ac6@minigeek.lan>
 To: Andre Przywara <andre.przywara@arm.com>
 X-Mailer: Apple Mail (2.3776.700.51)
 
-Hi,
 
-Thanks for your review!
 
-> On 6 Feb 2025, at 17:19, Andre Przywara <andre.przywara@arm.com> =
+> On 7 Feb 2025, at 02:02, Andre Przywara <andre.przywara@arm.com> =
 wrote:
 >=20
 > On Wed,  5 Feb 2025 13:52:24 +0100
 > Andras Szemzo <szemzo.andras@gmail.com> wrote:
 >=20
 > Hi,
+>=20
+> those comments go on top of those in my previous reply:
 >=20
 >> V853/V851 is a new SoC by Allwinner. Add a basic dtsi file for it.
 >>=20
@@ -164,17 +164,6 @@ b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
 >> + #size-cells =3D <1>;
 >> +
 >> + dcxo: dcxo-clk {
->=20
-> What's people's opinion about the node name? Traditionally we call =
-this
-> "osc24M", in all the other SoCs except D1 and A100. So is this the new
-> black?
->=20
-
-I renamed it because node names can=E2=80=99t contain capital letters, =
-and D1/A100 already use
-dcxo.
-
 >> + compatible =3D "fixed-clock";
 >> + clock-output-names =3D "osc24M";
 >> + #clock-cells =3D <0>;
@@ -187,10 +176,25 @@ dcxo.
 >> + cpu0: cpu@0 {
 >> + device_type =3D "cpu";
 >> + compatible =3D "arm,cortex-a7","arm,armv7";
+>=20
+> The binding says to only give the CPU name, so just the first string,
+> no fallback.
+>=20
+
+ok
+
 >> + reg =3D <0>;
 >> + clocks =3D <&ccu CLK_CPU>;
 >> + clock-names =3D "cpu";
 >> + clock-frequency =3D <912000000>;
+>=20
+> Please remove this, it only makes sense for a constant frequency, =
+which
+> is contradicted by the previous two properties.
+>=20
+
+ok
+
 >> + clock-latency =3D <200000>;
 >> + cooling-min-level =3D <5>;
 >> + cooling-max-level =3D <0>;
@@ -203,46 +207,36 @@ dcxo.
 >> + compatible =3D "arm,cortex-a7-pmu";
 >> + interrupts =3D <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
 >> +     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+> What's the second interrupt for? I'd assume that's for a second core?
+> Can you check that? Use "perf record" (perf stat does not trigger
+> interrupts), and then check the counter in /proc/interrupts.
+>=20
+
+I don't know what is the second IRQ, but the datasheet says C0_PMU0 and =
+CO_PMU1 on the GIC section.
+With perf record the IRQ#204 is triggering. Maybe this is a copy/paste =
+error in the datasheet?
+
 >> + interrupt-parent =3D <&gic>;
->=20
-> Please move interrupt-parent to the root node, as the first property. =
-Then
-> you can lose it here, and in the timer and soc node.
->=20
-
-ok.
-
 >> + };
 >> +
 >> + timer {
 >> + compatible =3D "arm,armv7-timer";
 >> + interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | =
 IRQ_TYPE_LEVEL_LOW)>,
+>=20
+> This should be GIC_CPU_MASK_SIMPLE(1) for a single core CPU.
+>=20
+
+Sure
+
 >> +     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
 >> +     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
 >> +     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
 >> + clock-frequency =3D <24000000>;
->=20
-> Please remove this, and let the firmware set CNTFRQ. U-Boot does this
-> automatically (in nonsec_virt.S), and it should be just a few lines to =
-add
-> to awboot's arch/arm32/arch_timer.c.
->=20
-
-I actually already did that.
-
-> Or, even better: provide proper U-Boot support ;-)
->=20
 >> + interrupt-parent =3D <&gic>;
 >> + arm,cpu-registers-not-fw-configured;
->=20
-> Same here, please fix your firmware to configure the non-secure world
-> correctly, and remove this property.
-> I am happy to help you with that.
->=20
-
-ok and thanks.
-
 >> + arm,no-tick-in-suspend;
 >> + };
 >> +
@@ -273,17 +267,6 @@ ok and thanks.
 >> + #interrupt-cells =3D <3>;
 >> +
 >> + /omit-if-no-ref/
->=20
-> You don't need omit-if-no-ref for *all* nodes, just the more obscure =
-ones,
-> which are only used by one or two boards.
-> Here I'd say, just have it for: uart2, dsi, spi3, i2c3, and remove =
-that
-> tag for the others.
->=20
-
-ok
-
 >> + uart0_ph9_pins: uart0-ph9-pins {
 >> + pins =3D "PH9", "PH10";
 >> + function =3D "uart0";
@@ -292,6 +275,13 @@ ok
 >> +
 >> + /omit-if-no-ref/
 >> + uart2_pe12_pins: uart2-pe12-pins {
+>=20
+> There is only one set of UART2 pins in PortE, so drop the pin number:
+> uart2_pe_pins: uart-pe-pins {
+>=20
+
+ok
+
 >> + pins =3D "PE12", "PE13";
 >> + function =3D "uart2";
 >> + allwinner,pinmux =3D <6>;
@@ -306,7 +296,39 @@ ok
 >> +
 >> + /omit-if-no-ref/
 >> + spi0_pins: spi0-pins {
+>=20
+> SPI0 can be muxed to PortF as well, so please use spi0_pc_pins.
+>=20
 >> + pins =3D "PC0", "PC1", "PC2", "PC3", "PC4", "PC5";
+>=20
+> This includes the optional WP and HOLD pins, I think they should be
+> separate? So add a second node, with just PC4 and PC5, and then
+> reference both nodes in your SPI flash node, in the board .dts.
+> The base pins should be untagged, but the optional pins should carry
+> the omit-if-no-ref tag.
+>=20
+
+What is your opinion about something like this?
+
+                        spi0_pc_pins: spi0-pc-pins {
+                                pins =3D "PC0", "PC2", "PC3";
+                                function =3D "spi0";
+                                allwinner,pinmux =3D <4>;
+                        };
+
+                        spi0_pc_cs0_pin: spi0-pc-cs0-pin {
+                                pins =3D "PC1";
+                                function =3D "spi0";
+                                allwinner,pinmux =3D <4>;
+                        };
+
+                        /omit-if-no-ref/
+                        spi0_pc_cs1_pin: spi0-pc-cs1-pin {
+                                pins =3D "PC6";
+                                function =3D "spi0";
+                                allwinner,pinmux =3D <4>;
+                        };
+
 >> + function =3D "spi0";
 >> + allwinner,pinmux =3D <4>;
 >> + };
@@ -343,6 +365,12 @@ ok
 >> +
 >> + /omit-if-no-ref/
 >> + mmc1_pins: mmc1-pins {
+>=20
+> mmc1_pe_pins
+>=20
+
+ok
+
 >> + pins =3D "PE0", "PE1", "PE2", "PE3", "PE4", "PE5";
 >> + function =3D "sdc1";
 >> + allwinner,pinmux =3D <6>;
@@ -358,6 +386,10 @@ ok
 >> + allwinner,pinmux =3D <3>;
 >> + };
 >> + };
+>=20
+> Verified that the pin numbers and the pinmux match the function in the
+> manual.
+>=20
 >> +
 >> + ccu: clock-controller@2001000 {
 >> + compatible =3D "allwinner,sun8i-v853-ccu";
@@ -372,17 +404,6 @@ ok
 >> +
 >> + gpadc: adc@2009000 {
 >> + compatible =3D "allwinner,sun20i-d1-gpadc";
->=20
-> Please use a fallback notation:
-> compatible =3D "allwinner,sun8i-v853-gpadc",
->     "allwinner,sun20i-d1-gpadc";
->=20
-> This allows to later add quirks should we need some for this SoC.=20
-> And this requires a binding patch.
->=20
-
-ok for all the compatibles below.
-
 >> + reg =3D <0x2009000 0x0400>;
 >> + clocks =3D <&ccu CLK_BUS_GPADC>;
 >> + resets =3D <&ccu RST_BUS_GPADC>;
@@ -393,9 +414,6 @@ ok for all the compatibles below.
 >> +
 >> + i2s0: i2s@2032000 {
 >> + compatible =3D "allwinner,sun50i-r329-i2s";
->=20
-> Same here, fallback compatible.
->=20
 >> + reg =3D <0x2032000 0x1000>;
 >> + interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
 >> + clocks =3D <&ccu CLK_BUS_I2S0>,
@@ -424,37 +442,37 @@ ok for all the compatibles below.
 >> +
 >> + timer: timer@2050000 {
 >> + compatible =3D "allwinner,sun20i-d1-timer",
->=20
-> This should be allwinner,sun8i-v853-timer.
->=20
 >> +     "allwinner,sun8i-a23-timer";
 >> + reg =3D <0x2050000 0xa0>;
 >> + interrupts =3D <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
 >> +     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+> Shouldn't there be four interrupts, for the four timers?
+>=20
+
+Sure
+
 >> + clocks =3D <&dcxo>;
 >> + };
 >> +
 >> + wdt: watchdog@20500a0 {
 >> + compatible =3D "allwinner,sun20i-d1-wdt-reset",
 >> +     "allwinner,sun20i-d1-wdt";
->=20
-> Same here, use a more specific compatible, then the sun20i as a =
-fallback.
->=20
 >> + reg =3D <0x20500a0 0x20>;
 >> + interrupts =3D <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
 >> + clocks =3D <&dcxo>, <&rtc CLK_OSC32K>;
 >> + clock-names =3D "hosc", "losc";
 >> + status =3D "reserved";
+>=20
+> Who is this reserved for? Should be "okay", no?
+>=20
+
+yes
+
 >> + };
 >> +
 >> + uart0: serial@2500000 {
 >> + compatible =3D "snps,dw-apb-uart";
->=20
-> The UART is an exception, it's just the generic Synopsis name, so this =
-is
-> fine.
->=20
 >> + reg =3D <0x2500000 0x400>;
 >> + reg-io-width =3D <4>;
 >> + reg-shift =3D <2>;
@@ -508,12 +526,6 @@ is
 >> + i2c0: i2c@2502000 {
 >> + compatible =3D "allwinner,sun8i-v536-i2c",
 >> +     "allwinner,sun6i-a31-i2c";
->=20
-> This needs three compatible strings:
-> compatible =3D "allwinner,sun8i-v853-i2c",
->     "allwinner,sun8i-v536-i2c",
->     "allwinner,sun6i-a31-i2c";
->=20
 >> + reg =3D <0x2502000 0x400>;
 >> + interrupts =3D <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
 >> + clocks =3D <&ccu CLK_BUS_I2C0>;
@@ -583,11 +595,6 @@ is
 >> +
 >> + syscon: syscon@3000000 {
 >> + compatible =3D "allwinner,sun8i-h3-system-control";
->=20
-> I think you got the idea by now, fallbacks ... and for the others =
-below as
-> well.
->=20
 >> + reg =3D <0x3000000 0x1000>;
 >> + ranges;
 >> + #address-cells =3D <1>;
@@ -601,6 +608,14 @@ below as
 >> + ranges =3D <0 0x00020000 0x21000>;
 >> +
 >> + ve_sram: sram-section@0 {
+>=20
+> The manual says "Using ISP SRAM". Do you know what it really is?
+>=20
+
+I didn=E2=80=99t had a chance to try this, but it can maybe be used by =
+the ISP or VE?
+I can rename it.
+
 >> +    compatible =3D "allwinner,sun8i-v3s-sram-c",=20
 >> + "allwinner,sun4i-a10-sram-c1";
 >> +    reg =3D <0x000000 0x21000>;
@@ -651,15 +666,18 @@ below as
 >> +
 >> + gic: interrupt-controller@3021000 {
 >> + compatible =3D "arm,gic-400";
->=20
-> (no fallbacks needed here, it's an actual GIC-400)
->=20
 >> + reg =3D <0x03021000 0x1000>, /* GIC Dist */
 >> +      <0x03022000 0x2000>, /* GIC CPU */
 >> +      <0x03024000 0x2000>, /* GIC VCPU Control */
 >> +      <0x03026000 0x2000>; /* GIC VCPU */
 >> + interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | =
 IRQ_TYPE_LEVEL_HIGH)>;
+>=20
+> GIC_CPU_MASK_SIMPLE(1)
+>=20
+
+yes
+
 >> + interrupt-controller;
 >> + #interrupt-cells =3D <3>;
 >> + };
@@ -690,27 +708,9 @@ IRQ_TYPE_LEVEL_HIGH)>;
 >> + reset-names =3D "ahb";
 >> + no-sdio;
 >> + no-mmc;
->=20
-> I don't think we use those two properties in mainline?
->=20
-
-yes, it=E2=80=99s remained from the BSP, I=E2=80=99ll remove.
-
 >> + cap-sd-highspeed;
 >> + max-frequency =3D <150000000>;
 >> + mmc-ddr-1_8v;
->=20
-> This looks wrong here, definitely you should not have voltage =
-dependent
-> properties in the SoC .dtsi.
->=20
-> And you can add the pinctrl properties already here, since there is =
-only
-> one set of pins for MMC0.
->=20
-
-ok
-
 >> + status =3D "disabled";
 >> + #address-cells =3D <1>;
 >> + #size-cells =3D <0>;
@@ -728,9 +728,6 @@ ok
 >> + cap-mmc-highspeed;
 >> + max-frequency =3D <150000000>;
 >> + mmc-ddr-1_8v;
->=20
-> same here, please remove.
->=20
 >> + status =3D "disabled";
 >> + #address-cells =3D <1>;
 >> + #size-cells =3D <0>;
@@ -750,11 +747,6 @@ ok
 >> + max-frequency =3D <150000000>;
 >> + mmc-ddr-1_8v;
 >> + mmc-ddr-3_3v;
->=20
-> Please leave that to the board DTs to set, they know which voltage =
-PortC is
-> running on.
->=20
 >> + status =3D "disabled";
 >> + #address-cells =3D <1>;
 >> + #size-cells =3D <0>;
@@ -770,12 +762,6 @@ PortC is
 >> + dmas =3D <&dma 22>, <&dma 22>;
 >> + dma-names =3D "rx", "tx";
 >> + num-cs =3D <1>;
->=20
-> Is that so? I see SPI0_CS0, SPI0_CS1, SPI1_CS0, SPI1_CS1 pins.
->=20
-
-Sure, I implemented it from v851s datasheet, where there is no xCS1.
-
 >> + status =3D "disabled";
 >> + #address-cells =3D <1>;
 >> + #size-cells =3D <0>;
@@ -908,30 +894,11 @@ Sure, I implemented it from v851s datasheet, where there is no xCS1.
 >> + nmi_intc: intc-nmi@7010320 {
 >> + compatible =3D "allwinner,sun9i-a80-nmi";
 >> + interrupt-parent =3D <&gic>;
->=20
-> not needed
->=20
-
-ok
-
 >> + #interrupt-cells =3D <2>;
 >> + #address-cells =3D <0>;
 >> + interrupt-controller;
 >> + reg =3D <0x07010320 0xc>;
 >> + interrupts =3D <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
->=20
-> reg and interrupts typically come right after compatible
->=20
-
-ok
-
-> That's it for now, I will check all the numbers against the manual =
-later,
-> and verify the clock names and such.
->=20
-> Cheers,
-> Andre
->=20
 >> + };
 >> +
 >> + rtc: rtc@7090000 {
@@ -944,6 +911,13 @@ later,
 >> + wakeup-source;
 >> + #clock-cells =3D <1>;
 >> + };
+>=20
+> Verified that all MMIO base addresses, DMA channels and interrupts are
+> matching the manual.
+>=20
+> Cheers,
+> Andre
+>=20
 >> + };
 >> +};
 >=20
