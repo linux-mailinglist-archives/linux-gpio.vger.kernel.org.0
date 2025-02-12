@@ -1,162 +1,162 @@
-Return-Path: <linux-gpio+bounces-15790-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 277E6A31C7A
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 03:59:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39143A31DDA
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 06:24:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB4AA1883842
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 02:59:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89355188ABAF
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2025 05:24:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE481D8DEE;
-	Wed, 12 Feb 2025 02:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3951F4295;
+	Wed, 12 Feb 2025 05:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahTuZaHh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAo1JDSa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7BA1D79A0;
-	Wed, 12 Feb 2025 02:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA231DB12C;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739329174; cv=none; b=lGTLQOxx1ad+4DCT8j6s0kChEsRpzx0ihJV4quqKI8lfq61/vPlqgxH/cFdrn7PDCD6bkfpyH4SPwweT8y5ACr0iLM3/CjY4Vgu3NwGDAUOi1rEOFR9vtQtsI2SVUr/HMNe/Rw558MgiE4rfT2+IPTb7dqrbY+FSopUpCX8jkno=
+	t=1739337846; cv=none; b=mUp3BkFXiM5mxAp4zyvnk9EFD4elhWaPB4M0ZslF3Y1kJ2Iapn0n39k4PXowE7a4knMBplBBs2R3MjOEMtTt0Yoc0xs5n6GPULD+DsuWqKh/lJ1zVqxOlDm7BBFkCbRWJn8dhJhx11vAt0ExaePRxvCYwEymBa9gGXpuF3l0xms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739329174; c=relaxed/simple;
-	bh=DooFRktCEVvA6ei7DrdVf0d7v1fgelgEfdO5aKcqTDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XjDV4Kp7yFCeROoTJ0v8eRqvAwD+Be01DJlIEAgceLHuP4AzA5hHVZuFgtrC97yZpwbjv3hOymEgi1Vjd62VY7HHIIgeOdWuslQAdWMX0SvzIinA4AutMpVhlPe2ZZ9izHB5UUOGvch5T37JVt7VV2pUa/IIQ7VAcu/CuokkEw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ahTuZaHh; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f972c031efso3614467b3.1;
-        Tue, 11 Feb 2025 18:59:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739329171; x=1739933971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KFr81poCk30co8Z6rUcjrZ/vaw48HOEFaFkI76fkyJc=;
-        b=ahTuZaHhgBht2YLJHM+JHOGjrQX3MYf0ZgEq0CqXS3suSQMY9idO0xn0ZcYyGD69Pu
-         6ZeFqj/tJlfRpDBWqYGwBQJFTRY7DttKUsGYBekG7QeQFwafAmVLg1LQYAkcHahclBrH
-         N4LHFT8XB4My3wcFsHgu3256+SubaBxH/0JxwKBBfVUOeI6ZqcUm8cGFpFVsoNLaGm9n
-         XQKglwaiF25WMtWNA9qt+x55jMMeGiLUkotg81o/eCEViiJr91BFvQZ/ywGBOen14fl4
-         u09r0JKXci8fEaiEAoN4wck31IOg2aoaY2v3R1IE+X7drlFK0lL/473tZnKLfzpk76dP
-         4/aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739329171; x=1739933971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KFr81poCk30co8Z6rUcjrZ/vaw48HOEFaFkI76fkyJc=;
-        b=BD6rLZrQK70FhrVK3/3T19gS8auyk3quoQXHbN/w1Ui0Ppcj4LX47+ydBS7PwSSXjk
-         sPYXkFZxU3kY0W3SgOT7wF5KgUDaU/bNugeXpl+BW6SzxUsQ1dIdVnRoG6TDteRQwbfl
-         5pWLenew031rJkDGtQrFhtdLXXZ6jSCO5Rtc0Co+IXt5ZkWoAL4Ddx2ERWgr5IvC7TCz
-         fqke+GBDz6bX8fo+ce4qYgbEdtit1+1g2zmeBjsHM7JQEcbQNbx3K6le625iwmU8GGWa
-         2Ae/CQhYBXuc1oW9baGpzWWfKlrMm9gj8v/E2+F7inAfVn753AtiSDRcbCmtLcV7+zWJ
-         YhlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUh4OI3Dzt0ey7mFqpC1zLfK7NfV7xoA0Nkuv2SpvLN51+DkINssiZmanwnre99gCT8o+0Vue4ZD/8=@vger.kernel.org, AJvYcCUlPqYB+LqnYo0L+gmYkIMlSB0gJCLQ9gHs6Tjz5O2983ClxD1j6wtq3FKru85+GlvBmbK2JQ5O@vger.kernel.org, AJvYcCVGK2WM0Gd8O2KV/ggfY5my+kchSTW01Jcp4FpL7ebwvJYn5aWgXXdgajNtTrPQIlJbnC83WXXK6/nc@vger.kernel.org, AJvYcCWawiVqSlZ843MTNpZwXUkdG9PwRwuY/hqf2Jn+ZY4SWSHqxGOiF/0FYxNbxyVk9b9+SHvPkD6uEi6F@vger.kernel.org, AJvYcCWc41cql8FYlVh0dLU2rGiV7OGM7rqAHQpShOzEDDYE3sqzSqGz4Mdzvca4bAjHCPCVrVcVJ6uKacmh@vger.kernel.org, AJvYcCWehDpp4nb/F8EQo3qCrnGCshWvkDnANbi8tCnsUGVsHXmDM7G9GxUb9uWZiPU4c4SfHRVuIlxURy17RHk=@vger.kernel.org, AJvYcCWnXdKPVmcjHCP8ap1s2YdKniGoskvAC43C8WA3PgkWAO3hROxp8n5GODyex7UFRpJ3aZEWk7VOjjYzYEjfI3U=@vger.kernel.org, AJvYcCWzO+MXdJTCHumWhMz5NmkCELZ/pMfBf2ZrF8uQ1e0SnolEVQzu5ZQiNn0gmC6ds2TDxOR0iLztohuitP2W@vger.kernel.org, AJvYcCXi1/0JgWBXGzs8TnyduKD1uZRHyZGyq7OyARTE80RwMJHryd+it/P+Swe3Fl13VzfQeD2zzIIFNpYlvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9LH8w9CSIz6XleCnBtjz1tWYiBHMqvAAtiyZ8ecoDrx6naCSj
-	WYsVAShiWCA7EjO00hQS6IdW2b/te4IwNpCRREPjZjXeA+yiSfZCaDI1dzbfB641mkgQ6JlKVsE
-	gO2IrU+H2/oN3YpipVnnv/3pX1y8=
-X-Gm-Gg: ASbGnctqdGJr/xiXqg/xV3NIJBYnkUXc+oNEq06uAHFU8C60NRkUUOkwRKNBuaiBePk
-	3qNKlE9xS/WmSwI0WBzxK7ywyoMbaIkERnkK78qfFvlNk0u4O1Lby6zNMdzWwOeTSXnNHg987mZ
-	oXgAmlnt/pKOxGGz0wnI3Z1xarR3ksZ6o=
-X-Google-Smtp-Source: AGHT+IGAAjKu3ijuvkklPj1UHUI20qu2CCBoL8o01Rki7jfm8ulRSwOxj+9C0sqtYuH7rLF8eGtDo4a4fre+pXEsE2k=
-X-Received: by 2002:a05:690c:c01:b0:6f9:4f93:c80f with SMTP id
- 00721157ae682-6fb208b8e92mr12977497b3.6.1739329171475; Tue, 11 Feb 2025
- 18:59:31 -0800 (PST)
+	s=arc-20240116; t=1739337846; c=relaxed/simple;
+	bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OVD8uMQPirrgX3SemgmRDvb6J6v565qP35C/CWM5ppGV4Qx61Zn6A9ZKVT/uLhSyKCIPyurERfoDP0ijmUmcNLeKH+/XideMyPzqN84PgkfJZccCB0iZRfz2q5Z3sNxHjZDbK96Nt9UXGshHYwvUrs759qX3j18ZAwBoSw3E5DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAo1JDSa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B44DC4CEDF;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739337845;
+	bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uAo1JDSajDjOdGtARdCHKbr06rWf+WGgb//DbXcB3s1LusNEcxyg7K5TOlAB1uw/d
+	 6lGxLv7QB13j5Js/2Qn0rwlh9/62E7ARrV6rn3JRi3CaJcAI0/489PHF4sVA19fHGR
+	 ebfG4jEsngo2fsAcXIBjbl/YKfsOKJyZZU1i1L+f4jerFjKmnZ+IDe2E4iKibBNkCb
+	 ITrSNVgsOR2jcMIz6swONZ1cA3xrLHjOWaVKezIS1YN3nM1qibwpjTPtmqq1Q7l+8b
+	 pBTYUADUmrKyV15b0lwJNckaBWT4cYp1kROTvt3LCLw8zOSb2RyqTaZvkem/d+dlvg
+	 xfeGI57C8wRGQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA0C02198;
+	Wed, 12 Feb 2025 05:24:05 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v5 0/5] Pinctrl: Add Amlogic pinctrl driver
+Date: Wed, 12 Feb 2025 13:20:49 +0800
+Message-Id: <20250212-amlogic-pinctrl-v5-0-282bc2516804@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207074502.1055111-1-a0282524688@gmail.com>
- <20250207074502.1055111-5-a0282524688@gmail.com> <c714463f-e027-470d-82d8-3905f5107d6c@wanadoo.fr>
-In-Reply-To: <c714463f-e027-470d-82d8-3905f5107d6c@wanadoo.fr>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Wed, 12 Feb 2025 10:59:20 +0800
-X-Gm-Features: AWEUYZlq8C-6fOlQaMyUi7TbWeoU_-OcuCn2P7TSMwOHCZmUYpYmx6cJl4mufqA
-Message-ID: <CAOoeyxUu+RuLsuctC-swDWmNi1WTVrVv26FuDOUmibaL7njXzw@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALIvrGcC/3XPywrCMBAF0F8pWRvJTF7Vlf8hLtI0rQH7IC1FK
+ f1306JQCS7vMPcMM5PBBe8Gcs5mEtzkB9+1MchDRuzdtLWjvoyZIEMBCEBN8+hqb2nvWzuGB0V
+ 0RkGOrGQlia0+uMo/N/F6i/nuh7ELr+3ABOv0vzUBZVQA06g5lwCny2fjaLuGrNqEOwFVKmAUb
+ GmcQKN0oVUq8K8gGYBMBR4FLHLJlZDaFCYVxE5ATAWxfqG0LtBBXlXwKyzL8gaOnmPOdgEAAA=
+ =
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739337841; l=3760;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=dHrGo3MQlhcb+bCCsVoydXD2nFxFqQhq9MWMEMJtsf0=;
+ b=48ehFmexr5yBzIpiugk/aBUy3SDD2ySYKaPSO1jH0djIjbkaZPDx5ja95qCF5cNLzEZ/H198f
+ +RjYNcMPgnMD4tKNn1OuOp6+DkWPuomKh+bYk3D6AceXOK+tVTjpcNj
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-Dear Christophe,
+Add pinctrl driver support for Amloigc SoCs
 
-Thank you for reviewing,
-I will make the change in the next patch.
+Base on the previous discussion,
+https://lore.kernel.org/r/20241113-a4_pinctrl-v6-0-35ba2401ee35@amlogic.com
+The existed meson driver failed to meet the requirement of the current dt-binding.
+So we start this new pinctrl driver to solve problem.
 
+The advantage of this version: Once the source file and binding document
+are added, adding dts node will be only operation for subsequent Amlogic SoCs
+(such as A4, A5).
+
+The code in DTS file is also readable when using GPIO, as below:
+reset-gpios = <&gpiob 6 GPIO_ACTIVE_LOW>;
+
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v5:
+- Some little modifications were made to bindings and dts according to Rob's suggestions.
+- Move source file into driver/pinctrl/meson and fix license issue.
+- Link to v4: https://lore.kernel.org/r/20250122-amlogic-pinctrl-v4-0-4677b2e18ff1@amlogic.com
+
+Changes in v4:
+- Drop bank-number property, and get information from gpio-ranges property.
+- Keep required of pinctrol after patternProperties, and add missing "ranges" for required.
+- Add required(pinmux) of function.
+- Keep address-cells and size-cells property values, because:
+  Previously only represented a register address offset value, now directly represents a register, through 'ranges" which to represent.
+- Some little modifications were made to bindings and dts according to Krzysztof's suggestions.
+- Link to v3: https://lore.kernel.org/r/20250115-amlogic-pinctrl-v3-0-2b8536457aba@amlogic.com
+
+Changes in v3:
+- Move reg and reg-name from pin controller node into gpio-controller node and drop mask property.
+- Use gpio-range instead of ngpios property.
+- Some little modifications were made to bindings according to Rob's suggestions.
+- Fix bug reported by kernel test robot.
+- Two pin controller node compressed into one because of register address defined in gpio-controller.
+- Link to v2: https://lore.kernel.org/r/20241226-amlogic-pinctrl-v2-0-cdae42a67b76@amlogic.com
+
+Changes in v2:
+- Some modifications and optimizations were made to bindings according to Rob's suggestions.
+- Refined some details on functions node for bindings. 
+- Some source code optimizations were made according to Linus's suggestions.
+- Add stand API to generic to deal pinmux propertity.
+- Add private reg data to deal with for future SoCs.
+- Simplified some unused processing (previously used for extension).
+- Sync add to MAINTAINERS files.
+- Link to v1: https://lore.kernel.org/r/20241211-amlogic-pinctrl-v1-0-410727335119@amlogic.com
+
+---
+Xianwei Zhao (5):
+      dt-bindings: pinctrl: Add support for Amlogic A4 SoC
+      pinctrl: pinconf-generic: Add API for pinmux propertity in DTS file
+      pinctrl: Add driver support for Amlogic SoCs
+      arm64: dts: amlogic: a4: add pinctrl node
+      MAINTAINERS: Add an entry for Amlogic pinctrl driver
+
+ .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |  126 +++
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |  120 +++
+ drivers/pinctrl/meson/Kconfig                      |   11 +
+ drivers/pinctrl/meson/Makefile                     |    1 +
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1053 ++++++++++++++++++++
+ drivers/pinctrl/pinconf-generic.c                  |  130 +++
+ drivers/pinctrl/pinconf.h                          |    4 +
+ include/dt-bindings/pinctrl/amlogic,pinctrl.h      |   46 +
+ include/linux/pinctrl/pinconf-generic.h            |    4 +
+ 10 files changed, 1503 insertions(+)
+---
+base-commit: 4de5110762b94b9978fb8182a568572fb2194f8b
+change-id: 20241211-amlogic-pinctrl-22ea61820d0d
 
 Best regards,
-Ming
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> =E6=96=BC 2025=E5=B9=B42=
-=E6=9C=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:18=E5=AF=AB=E9=
-=81=93=EF=BC=9A
->
-> Le 07/02/2025 =C3=A0 08:44, Ming Yu a =C3=A9crit :
-> > This driver supports Socket CANFD functionality for NCT6694 MFD
-> > device based on USB interface.
->
-> ...
->
-> > +static int nct6694_can_start(struct net_device *ndev)
-> > +{
-> > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
-> > +     struct nct6694_can_setting *setting;
->
-> Could be:
-> struct nct6694_can_setting *setting __free(kfree) =3D NULL;
->
-> to slightly simplify code below.
->
->
-> > +     struct nct6694_cmd_header cmd_hd =3D {
-> > +             .mod =3D NCT6694_CAN_MOD,
-> > +             .cmd =3D NCT6694_CAN_SETTING,
-> > +             .sel =3D priv->can_idx,
-> > +             .len =3D cpu_to_le16(sizeof(*setting))
-> > +     };
->
-> ...
->
-> > +static int nct6694_can_get_clock(struct nct6694_can_priv *priv)
-> > +{
-> > +     struct nct6694_can_information *info;
->
-> Could be:
-> struct nct6694_can_information *info __free(kfree) =3D NULL;
->
-> to slightly simplify code below.
->
-> > +     static const struct nct6694_cmd_header cmd_hd =3D {
-> > +             .mod =3D NCT6694_CAN_MOD,
-> > +             .cmd =3D NCT6694_CAN_INFORMATION,
-> > +             .sel =3D NCT6694_CAN_INFORMATION_SEL,
-> > +             .len =3D cpu_to_le16(sizeof(*info))
-> > +     };
-> > +     int ret, can_clk;
-> > +
-> > +     info =3D kzalloc(sizeof(*info), GFP_KERNEL);
-> > +     if (!info)
-> > +             return -ENOMEM;
->
-> ...
->
-> CJ
->
+
 
