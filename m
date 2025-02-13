@@ -1,142 +1,123 @@
-Return-Path: <linux-gpio+bounces-15947-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15948-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0CEEA34D9F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:26:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B340A34DA9
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:27:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C73263A4A13
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:25:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5774816BCFB
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:26:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BC2245AF8;
-	Thu, 13 Feb 2025 18:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F9F245013;
+	Thu, 13 Feb 2025 18:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H2oIPWI7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyYidiRl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08853245027;
-	Thu, 13 Feb 2025 18:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CED24290E;
+	Thu, 13 Feb 2025 18:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739471143; cv=none; b=pqz4clgsgSS10rPyeAkas+gEpCf4Wjeyw+WOGEPCgX7CQeb+4wYqV7ghOFuQmRyMII6svYjld3zc1lz1Fyt4nhSUq9gFNN3rf+Vt25Zza5YHuNCXKhtt6On1nQ1a4BhN0HLFYFYzOBLWYc2kf8ncguG2XK/A+kdODoNxvUDZvCY=
+	t=1739471196; cv=none; b=PfUQT8z8wLgGit+B6xmm1+2yGE8WR6iW0HeHLf0I81nSNutFbHYCs3pdBV09MojtjciTmCJqvuUppPonmKdbw5lpxOPcLUqFkI6An5Vd1PwXMZJKZ58onjc8ZEAxndYFMdLHjgzo/mUXhJ9+/6KvU/vzI/zcWjFMsOKcoASkTW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739471143; c=relaxed/simple;
-	bh=k7ua/KFoZaBYMvO6Q/O+0QUvgRzL0DRgto7N8H41V7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FJwQroB7BMcU5VddR8WYGFMxbxRjPDnUhJiZaWLBtNK/huBijMHHe729MDhpCo0fF3RoSb3hchZUCR1zaIz2GtkusEYI/Xf1TXWO8XZPGAdqgKah2oY2qIoW5cBl1+3wkdTbC0IHoN8kZQ/kR2iH7gxXiWr16RHOSuKWzrF2bkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H2oIPWI7; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739471142; x=1771007142;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=k7ua/KFoZaBYMvO6Q/O+0QUvgRzL0DRgto7N8H41V7g=;
-  b=H2oIPWI7BdB1XK9LnqzUZ4WP9U//+Lx/QzIrIQk5q3IOuxLWDWb/qQTS
-   HIzEZzE9QnXmZho3UfHn4DNGdxk5r+mhkFpZa97qE2iain+9017WQe2Yi
-   M14s4US5rhTr42K9jrz4SNb/oO6ceo/dvygNvwmry9DTi5JY7G2dOgiSv
-   3d4RK+gzg8wD8qQO0/aYFZLUWS6b4tBTAYXf8nu6n/1HjBkLOTL77R09s
-   sdPQTEJT6wgtXSUYQbfkyUN+HoSVd2dQIT6+f2wGtb3TpQJvphE7cGlc5
-   xTmLTxCcgKU0KqzkuucIdgzlcvD0SRRrb7gvyCConIspf0gpG1U3NzMfr
-   Q==;
-X-CSE-ConnectionGUID: N+ZUfQGuR1ujI9DhJ+eNxQ==
-X-CSE-MsgGUID: +qkUdcD0SiuEPDmnurJG2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="51177657"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="51177657"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:25:35 -0800
-X-CSE-ConnectionGUID: 2w/+92TyT6SEWaUrBCUo0A==
-X-CSE-MsgGUID: O+bpjhxARyus70Sw3d5X/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113721778"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 13 Feb 2025 10:25:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 1BE642CA; Thu, 13 Feb 2025 20:25:29 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Alexandru Ardelean <aardelean@baylibre.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 2/2] gpiolib: Switch to use for_each_if() helper
-Date: Thu, 13 Feb 2025 20:24:01 +0200
-Message-ID: <20250213182527.3092371-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
-In-Reply-To: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
-References: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1739471196; c=relaxed/simple;
+	bh=NhDUxXj3oz4V8+R+gygt7nMUyVRevYRPQIQD8pzOLW4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IswPCtzf0KD8PDyFDqqdfUynTkYliqz3sBviD0vApmLsZAKuEb0NoXZxUCIpTD0x3krvp4o4j9j8LVETz7h2GGYt5iGRQIR/sJXTiX7rm7dStjIlHmPHgZycWwbWKdpVAkcHuynlbrrUKfFRloBhX3QVH8zt30D9bsm5W6tw9RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyYidiRl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A484EC4CED1;
+	Thu, 13 Feb 2025 18:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739471196;
+	bh=NhDUxXj3oz4V8+R+gygt7nMUyVRevYRPQIQD8pzOLW4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=HyYidiRl96qMUK43IQ2LEvdRgb7aV2nlKM2bLVVDdT0GLa2JiVVRRAqipVkb81xry
+	 FdB0y8AmenVdTI0LN6gNC315LwkL3WSjmGtmhbcYovNNpe4KcQUg6K80R+fSwNuSWN
+	 9Tvvdp9lXYLjA1wILVrcbu/9C54cWychEQaQ74rEDmEnNQYDHRUsjVkHjtYl2JnlRW
+	 k5b17R/FcBYhJkhchj9LuznGmJfEBUgCluEvJ4dyafeIi6pf+g6ZcpK7kyx08UM8a6
+	 mqHLPtCYVJmEpLmWGvO6BQDxpInUEMGAKW0soThrDxe0H28Ac2jqWQcqtOClR8v1mY
+	 v/NAMI419dweg==
+From: Mark Brown <broonie@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, David Lechner <dlechner@baylibre.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+In-Reply-To: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add
+ gpiod_multi_set_value_cansleep
+Message-Id: <173947119037.339941.1732579278867629226.b4-ty@kernel.org>
+Date: Thu, 13 Feb 2025 18:26:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-The for_each_*() APIs that are conditional can be written shorter and
-less error prone with for_each_if() helper in use. Switch them to use
-this helper.
+On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
+> This series was inspired by some minor annoyance I have experienced a
+> few times in recent reviews.
+> 
+> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
+> having so many parameters. In most cases, we already have a struct
+> gpio_descs that contains the first 3 parameters so we end up with 3 (or
+> often even 6) pointer indirections at each call site. Also, people have
+> a tendency to want to hard-code the first argument instead of using
+> struct gpio_descs.ndescs, often without checking that ndescs >= the
+> hard-coded value.
+> 
+> [...]
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/gpio/driver.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Applied to
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index ae93f75170f2..af046f7fd4f5 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -14,6 +14,7 @@
- #include <linux/property.h>
- #include <linux/spinlock_types.h>
- #include <linux/types.h>
-+#include <linux/util_macros.h>
- 
- #ifdef CONFIG_GENERIC_MSI_IRQ
- #include <asm/msi.h>
-@@ -561,7 +562,7 @@ DEFINE_CLASS(_gpiochip_for_each_data,
- 	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);			\
- 	     _i < _size;								\
- 	     _i++, kfree(_label), _label = NULL)					\
--		if (IS_ERR(_label = gpiochip_dup_line_label(_chip, _base + _i))) {} else
-+		for_each_if(!IS_ERR(_label = gpiochip_dup_line_label(_chip, _base + _i)))
- 
- /**
-  * for_each_hwgpio - Iterates over all GPIOs for given chip.
-@@ -583,7 +584,7 @@ DEFINE_CLASS(_gpiochip_for_each_data,
-  */
- #define for_each_requested_gpio_in_range(_chip, _i, _base, _size, _label)		\
- 	for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)			\
--		if (_label == NULL) {} else
-+		for_each_if(_label)
- 
- /* Iterates over all requested GPIO of the given @chip */
- #define for_each_requested_gpio(chip, i, label)						\
-@@ -869,7 +870,7 @@ static inline void gpiochip_unlock_as_irq(struct gpio_chip *gc,
- 
- #define for_each_gpiochip_node(dev, child)					\
- 	device_for_each_child_node(dev, child)					\
--		if (!fwnode_property_present(child, "gpio-controller")) {} else
-+		for_each_if(fwnode_property_present(child, "gpio-controller"))
- 
- static inline unsigned int gpiochip_node_count(struct device *dev)
- {
--- 
-2.45.1.3035.g276e886db78b
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[15/15] ASoC: adau1701: use gpiod_multi_set_value_cansleep
+        commit: ad0fbcebb5f6e093d433a0873758a2778d747eb8
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
