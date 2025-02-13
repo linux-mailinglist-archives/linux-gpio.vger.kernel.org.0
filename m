@@ -1,121 +1,127 @@
-Return-Path: <linux-gpio+bounces-15923-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB3AAA34981
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:19:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44BEDA3495C
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:14:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4F303A828C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 16:12:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1607163BB1
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 16:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67FBA14831C;
-	Thu, 13 Feb 2025 16:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C2C20010B;
+	Thu, 13 Feb 2025 16:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+x6wTGK"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o/ragaeq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A18E155326;
-	Thu, 13 Feb 2025 16:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E96D155326;
+	Thu, 13 Feb 2025 16:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463123; cv=none; b=ezcuyjcXKEfgmtcctCgmnsbzQYDR53qCF9ivfNswGbfLnjWKWI1zyl0BBLbqQQmWB6cktrifcNjn7doVYI7DFxnGkIHzc0N9pHEXu3Sc6Md5vY264iRobDtlRku5XkzU5svbtIPNKvBbQmGpMfxCcAo1eetGleJ5qbu7B9NdI8E=
+	t=1739463283; cv=none; b=Ba/sOifu0MnOPiDwu8Jz7IYi9GG6+m7OSG8QJp4uaq7FXt1n3sBCqIk2+BbvUEom9ucAZzpIAFg0M1GFjolBms0RQuRLkRhnMo7kTFxXKMbaOiljCckOsrKpvNxDHbuuaLLAtj4bt2cuQnF0U6duGlU9Rw8pCSPfEjcqP1h0lK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463123; c=relaxed/simple;
-	bh=Gw2NNolSujsXsCBXaWvkOKgck4tkLrrExFqPs0BhTqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cfllzoce6F1CQY6LhXKBY+4Z5hqdNt8GR1is/2UfMQ6LO9Z7cDJj4FmuXALBF56gLpdA7sVKO61gazpuI5USk7gLJlFDEki0p2KnbEnutiLVjdXOsVam+bCx1giLWmCK7SXVdsXCWTYSWjFpgTnVSoWeS+zPlczIQvr1Brda6jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+x6wTGK; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739463121; x=1770999121;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gw2NNolSujsXsCBXaWvkOKgck4tkLrrExFqPs0BhTqc=;
-  b=U+x6wTGK4fYP9tkRuqCuUhfRTB3qqmqur4ekoD2asgYQJUmPlj2qKBUf
-   F0e25SMS56WqWU8g+ixEPqqkHmRY+leQ32HEPKMHgj1/aiGIYIKizA/OH
-   3e0xEt7/JMAOyoiVvMf/MUgFJyoP19FudFiI/y0jZIONRqI0iRyJcK4vN
-   Y5soUGo/9JrthiepfUrPB0PoTIKHan60KiC8lk5SAClhciYzSgdvJqkmT
-   /4szliwVrkosMXyEaGuXJM2Ht78bcLb7FM2Trxk9bMHAMgDhWJHa54KOk
-   ihWq/bydhWQWQsXkql8Xe8PzaAURnuRjk/ZYQjPJCtPC8nwZi0ztylTX/
-   g==;
-X-CSE-ConnectionGUID: +6p6uQbNSx2Puy9lxf/aKQ==
-X-CSE-MsgGUID: S+Bk9+RDQ76AecP6SgYxvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50790721"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="50790721"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 08:11:57 -0800
-X-CSE-ConnectionGUID: 20q/Wuc2QR++M6YKWg7BjQ==
-X-CSE-MsgGUID: 7YyOYlSnRB+omCGp8+2yzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113846352"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 13 Feb 2025 08:11:55 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tibof-0018Ol-1H;
-	Thu, 13 Feb 2025 16:11:53 +0000
-Date: Fri, 14 Feb 2025 00:11:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kim Seer Paller <kimseer.paller@analog.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kim Seer Paller <kimseer.paller@analog.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add adg1414
-Message-ID: <202502132314.mPTyC8ew-lkp@intel.com>
-References: <20250213-for_upstream-v2-1-ec4eff3b3cd5@analog.com>
+	s=arc-20240116; t=1739463283; c=relaxed/simple;
+	bh=vGJnb1m4SzGUIvD8C7Q70RDN83mTiA+BJaGjQwL7LEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uuOACICQBD7QZc41KJo4DNMVeNA3Sm5/SOG5ME0ILN3VXAMDSPboIt2lOnL2vCG9xDuATwC/EIn5idZ6TDEiKPPygnsxjv4hf0Qy4/tAMohsiydIBNRcv8Qum01JSa199dFDpzigxrYCbJZFCmExn7FVUYMUjizgopA9EoyMC3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o/ragaeq; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 25360441D0;
+	Thu, 13 Feb 2025 16:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739463278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0TVSfnhO/D9vf7kVKocZCtgHhLvkRIYScp2kiZ0Rn5s=;
+	b=o/ragaeqE14+pkiUyeerhxStHnHzUEuBaR1MDzBW+7wdy/u3tp+KketwFkv6a1sl29X91R
+	bazTwFPopWFSaJGSUnKpDZQLBGOmVuo2ndmrlnYUDCz/CfzWgQ3cFrXnEsLh/o5rj6Vzn4
+	VVkvrSy7CFWtMgXit8j7dBcts6buJjY42hvgI8s8rJOqOX6cPCwaWN1Rs4f9k222J2ouyg
+	g8hqm/3JkLHGpxJAL0LWtcSlVMlhaRHgSzcKAdhZtP9y9aopwC7UfNpKr9ixsbQlI3cumA
+	81i+wvtWy8TucWElCaV+3PwElF+2fBxbpdNArU7gYJqnCwdZinWA3a/2fuPrjw==
+Date: Thu, 13 Feb 2025 17:14:35 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>, andrew@lunn.ch, Arnd
+ Bergmann <arnd@arndb.de>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250213171435.1c2ce376@bootlin.com>
+In-Reply-To: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-for_upstream-v2-1-ec4eff3b3cd5@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjedvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
+ ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Kim,
+Hi Phil,
 
-kernel test robot noticed the following build warnings:
+On Thu, 13 Feb 2025 15:18:45 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
 
-[auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
+> Hi Andrea,
+> 
+> The problem with this approach (loading an overlay from the RP1 PCIe
+> driver), and it's one that I have raised with you offline, is that
+> (unless anyone can prove otherwise) it becomes impossible to create a
+> Pi 5 DTS file which makes use of the RP1's resources. How do you
+> declare something as simple as a button wired to an RP1 GPIO, or fan
+> connected to a PWM output?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kim-Seer-Paller/dt-bindings-gpio-add-adg1414/20250213-211900
-base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
-patch link:    https://lore.kernel.org/r/20250213-for_upstream-v2-1-ec4eff3b3cd5%40analog.com
-patch subject: [PATCH v2 1/2] dt-bindings: gpio: add adg1414
-reproduce: (https://download.01.org/0day-ci/archive/20250213/202502132314.mPTyC8ew-lkp@intel.com/reproduce)
+The driver could be improved in a second step.
+For instance, it could load the dtbo from user-space using request_firmare()
+instead of loading the embedded dtbo.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502132314.mPTyC8ew-lkp@intel.com/
+> 
+> If this is the preferred route to upstream adoption, I would prefer it
+> if rp1.dtso could be split in two - an rp1.dtsi similar to what we
+> have downstream, and an rp1.dtso that #includes it. In this way we can
+> keep the patching and duplication to a minimum.
 
-All warnings (new ones prefixed by >>):
+Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
+the the kernel sources could include user customization (button, fan, ...)
+without being modified ?
+At least we have to '#include <my_rp1_customizations.dtsi>'.
 
-   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
-   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
-   Using alabaster theme
+Requesting the dtbo from user-space allows to let the user to create
+its own dtso without the need to modify the one in kernel sources.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Does it make sense ?
+
+Best regards,
+Hervé
 
