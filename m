@@ -1,147 +1,173 @@
-Return-Path: <linux-gpio+bounces-15931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AC60A34BF0
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:31:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80743A34BEC
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:30:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E19F3A9ED9
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:25:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8225818857B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490EC207E01;
-	Thu, 13 Feb 2025 17:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7073621D3FC;
+	Thu, 13 Feb 2025 17:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Qpw5VAZi"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="CDFqEyi6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8401FFC54
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 17:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5F02036FD
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 17:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739467527; cv=none; b=d8QEeiVioPvB/+ycvZlR9pooc2aGxUAIi6+QQoiVoHftlQ2IOCkB5c3q6Vqvpg9ReBpihtJYI9pRLJ1qQoD/12Crw95VCHKCD+E+vaZHkv17M5FVw34MPRN54p1vaH/LiQrh9BMCHyuim5q4QSN82pCP8wUdusRCGqTquMdL4lE=
+	t=1739467803; cv=none; b=FCL9jSTNLPdcCexnYnvTs2jnAm/+KK65VYueb4conAmI+sbM9ijSqcvstV6BfBYX14porbGtilEO0LT8yld4tNujcyQGockJ3G+dqZvqryP9lqkNPafEgitQJ7PzNmoHMndhrPYSv6eF3M0DrThXvT2l1Z3HooPyAoM0bciiulE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739467527; c=relaxed/simple;
-	bh=h60vbM9Jm6zaTd85iyob/nz/7LZiBLiFuNTQdv/csWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iG50EZ6xa+xXmDRP+ulQFvsmzgkjx6o0DZozvlwI2dcvOKEYZBwJaK1AVruSwjngXQTROOwn2AFMCgxPr1gQfFkYYM0uVEpvsxia0EG4quZq4ikloY598OuSydYRirD9gp0ptMZ/aZW08KuGB9jx+cAwnO+89NZ4sQ1cAluXX/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Qpw5VAZi; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7270003d9c8so607274a34.2
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 09:25:24 -0800 (PST)
+	s=arc-20240116; t=1739467803; c=relaxed/simple;
+	bh=zCyaallTEZbcZi+JylNVW9wmEI/TBI8/RQryPjwOpa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bIWZG+wjohK4WAzXUJ3FBBbleYEi5znTnmE9fDDuFcRtdSVnAbFxGCk4yiUNvKTtqLb2pk/BnBZbWxlzR//AjQ36KBC1hp8OC2ouUrUIbMTbsKSDZEDuHX0318P9IwYa6XB3er7q0y3MmFsvMyWC6R+h+8m2nn8NXMf3TFA/++s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=CDFqEyi6; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7d451f7c4so175744866b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 09:30:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739467524; x=1740072324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mp8WnurnIDwQ4N7+32kRAbs4w5dFYFrQQIq32Y3ZWhU=;
-        b=Qpw5VAZiW0z1sw+g0eMb4K0BC7svOU1K4X5Tb33HGYlkaxm+tE6pgGP/ma6CQePrL5
-         SoKGuP5cBKtw40VCu0D7PR/TpvSGBjJXZYwnUvqTfllqoEcxTn5gG7DysyOMo9Xgz4q7
-         oyNI2Zc+07H/aUU9HLZaTdRINRovyxZdycQ2TE+ld82H2RC6tfAfXZYTHqdgIY6pIL5J
-         2yZ+UNlSPsYgWsbSRqJ4qzG+GnNnylbKyMQDgDtEgyeEYzX4FiTWp9xyIsodKTGXWiZv
-         FxKRtV2uYYF1PLVdW0/UedqZJ2uM7g+qNGOns8PI15O5SHczUo7Rgve6nXuTvmbZfz5x
-         Flsg==
+        d=raspberrypi.com; s=google; t=1739467799; x=1740072599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCyaallTEZbcZi+JylNVW9wmEI/TBI8/RQryPjwOpa8=;
+        b=CDFqEyi6Bv1HleC6Cy5siHHPDLJcf1a8cOladBbrJPFmDSCj334wcT0TT2E1pub8Rf
+         LUG1nNpfJkCazIiYf2tXd0UrjkIps4ePzQRuqgiB7mXMtjC8acdpxZtwIk7nHV86Eoz5
+         L00571aJCrVOWwF4ktJPpY1HjgK7i9G6SyM2KCi+FeY1wB2gArrUebDZKNjJj5bkZwP/
+         WKPi82jRW/5qvsAZtvh2jPudofvlki+RrzyXNElThwP/gDj6dCwhJ8aRVEe872XEBFou
+         bDj2rNyCMXhJjIJ0IkmHlZ3KMcRqAUnCJ4hxaU7zVqoFb42MzSDcoAEx36Oaxs06DoJA
+         beWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739467524; x=1740072324;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mp8WnurnIDwQ4N7+32kRAbs4w5dFYFrQQIq32Y3ZWhU=;
-        b=KkXZ9BECxvMygRY7DlR6tZR/BoKq6u8Yf1JpsiGKH4kuns2RYrgHPTZi5FVB2tiDjB
-         17tmq/2mDrjkj1m7xmWC1QKRCHa6vjAItIOsmBt35CyylL0ao7/hhxARhkDy4/ku3UFj
-         mL7YGrplW012hG7qVLIMaFxIjwgVolzyqfCpNdkrjoBY7MB1SZQzzLBf3JPG/rxzrJZ4
-         khNzphVZwlrg3w2l9T5hxXGo0pxYgV8RSg2PKdReQaftHA5fImgT0rkpVTFRRbvsXrlI
-         Af19++ZSGCoPfMoHPwn1v1Gsc1hlaJOi5vMivGK/IRC37X31Q7OSllroXydXGt85JZMf
-         X3QA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7J4afzCeBUWE4f9hkpozOH5o7L+k7rTj4jXnq5Q6nN3sycwlOlJQvmOIRhzgdPoxx8jvBqxGsm2ya@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhRtY6JRqXmPVOLuTYA/UImDJkiRY2ux4n2jDU9lclNZrecE0Q
-	mDejStvPO4s0uqei/RNFtOvgKbTTsZMr9Zh1AfX3k3q9AsfoT+gX5oCKEFb8CtGzeaF19hn9cbB
-	c
-X-Gm-Gg: ASbGncvOEewv0RbQ9+uiizl2yo1w+WsAbRjuQhU3HBtCOfxBh5xGwCPDJauNIY1Gn9h
-	MougIEa4G1J+AsxnU28ES86EaCDrldvPlZd3n3XUQ/uff05Q4YQhXmFBHzjHL7vQd00c7MkWY9d
-	QLUHDRjoBQy7ewtWp5ByLWa/jw6Ef2tB6z83U/E6nHosyMHo3W7fZiP+F2AlBQ1JoM8zoFoM852
-	ums3iGtWI2kyk9JlzBCo5+/i8ky4YpcUkudRBWmYmtMiWbLHQNr9Q61bQAddyHsymaZFLfkR1EP
-	+rHKHHJFA4RIZnHLX8Jgjru95xl7Vd8D5E8SidZtiNLPkiMtnxAo
-X-Google-Smtp-Source: AGHT+IFRLkc52JKi83ncUWwAgxo2TvaFCE/dbkTZNE6D15ISJ0Y8Jn4hp2Y0d5PwcxAk7Qj4zAr0dQ==
-X-Received: by 2002:a05:6830:6b03:b0:718:41b8:5d6d with SMTP id 46e09a7af769-726f1d8aaa8mr6076689a34.24.1739467523802;
-        Thu, 13 Feb 2025 09:25:23 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7270025806bsm743771a34.53.2025.02.13.09.25.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 09:25:22 -0800 (PST)
-Message-ID: <801b5364-129f-42e9-bf9a-a90d9eeb4629@baylibre.com>
-Date: Thu, 13 Feb 2025 11:25:21 -0600
+        d=1e100.net; s=20230601; t=1739467799; x=1740072599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zCyaallTEZbcZi+JylNVW9wmEI/TBI8/RQryPjwOpa8=;
+        b=oWCdZC9RJ3++DwcxM6WrQZDTcr68iPS3j30U3m25rSsZDkA5hOGnu+Xd3XwjiU3a+F
+         ELrfdQgXht356gZLdbnfy0zTxGArr0birCiIzCAb/XgYgWq4m4c1Wk2Lsj8OpGveMp1o
+         MJfGoZPDSQ+L+XIKVtVdY0WGodY8NBXg8AVfVuPsHa1Che+4buLD+9wIbjTXhrm8GVNW
+         QxZ31mm/VrFYF0PXU6GIXeH/ispAXDpB2whZhto2Rhvt1g0EhnsT2v6l4AJIJL5JQNCf
+         MkDaeZid6dUqAjFYSt6N60+X+1byFyb82mi1QMq4FYEiMzx9P3TakNhigsWfLhZzyQ1n
+         LOeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLzP2CcJxqrxTWL06OcFrIRFoV6OmDyz50VPdbhu7rXCK1Zw5c6CjNQujp+y2XP+EEMvQeG1waQm/l@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc3S7wWxAwpWErEbxJlU7KBko9NvqiMMF1xc7otlKjtIbb2+yS
+	7jDhjJJINkIomXVSz2k8ZLqL7Bv9FVfwS3KMXQFCxRf/T7zn9RAmH318C8JDM534tJflCq5tl/i
+	v6b2+WcxsDLgtn6oOeE7sitkzEkc27B8F5Ctajg==
+X-Gm-Gg: ASbGnctXVfs2hJCx7ZEhy3ue202ck5skfRPqiaoY5jNCXMgCEx487pRWV5YGOZM2LT6
+	xA9J8n2D0TX91zz4/RSCyWj5Nodb0gM6M6QMc6c2koOzRdEVTYBbQCQkSr62Bbcj4zHc2pZEsmu
+	ibR6kCEN+H1ILQja3PRn8RdRM2Wddp
+X-Google-Smtp-Source: AGHT+IEHpzGOhWWzUiRDzPOLNzp9YXUJMsGD72YcUx4PUeutR3aym3wR77yLoxsgRGXTk2VSMsiRI1k+qJ+nezQ3KC8=
+X-Received: by 2002:a17:907:86a7:b0:ab7:c284:7245 with SMTP id
+ a640c23a62f3a-ab7f339c875mr683201066b.18.1739467799148; Thu, 13 Feb 2025
+ 09:29:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add
- gpiod_multi_set_value_cansleep
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-sound@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <173935301204.11039.10193374588878813157.b4-ty@linaro.org>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <173935301204.11039.10193374588878813157.b4-ty@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+ <20250213171435.1c2ce376@bootlin.com> <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+ <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com> <20250213180733.11999e07@bootlin.com>
+In-Reply-To: <20250213180733.11999e07@bootlin.com>
+From: Phil Elwell <phil@raspberrypi.com>
+Date: Thu, 13 Feb 2025 17:29:47 +0000
+X-Gm-Features: AWEUYZklu9_MY3YY8SePLjBKtjUgGs0eTYBH-ezMm1VNb2UMos7_-NKxbQAJTns
+Message-ID: <CAMEGJJ2FB-wwyOtjjCmPJ-vUDpZaV-8MMXxV13qXnKxYSzt9pw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
+ a DT overlay
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
+	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
+	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
+	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
+	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
+	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
+	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/12/25 3:36 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> 
-> On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
->> This series was inspired by some minor annoyance I have experienced a
->> few times in recent reviews.
->>
->> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
->> having so many parameters. In most cases, we already have a struct
->> gpio_descs that contains the first 3 parameters so we end up with 3 (or
->> often even 6) pointer indirections at each call site. Also, people have
->> a tendency to want to hard-code the first argument instead of using
->> struct gpio_descs.ndescs, often without checking that ndescs >= the
->> hard-coded value.
->>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [06/15] gpio: max3191x: use gpiod_multi_set_value_cansleep
->         commit: eb2e9c308d2882d9d364af048eb3d8336d41c4bb
-> 
-> Best regards,
+Herv=C3=A9,
 
-Hi Bartosz,
+On Thu, 13 Feb 2025 at 17:07, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+>
+> On Thu, 13 Feb 2025 16:30:44 +0000
+> Phil Elwell <phil@raspberrypi.com> wrote:
+>
+> > Hi Andrew,
+> >
+> > On Thu, 13 Feb 2025 at 16:27, Andrew Lunn <andrew@lunn.ch> wrote:
+> > >
+> > > On Thu, Feb 13, 2025 at 05:14:35PM +0100, Herve Codina wrote:
+> > > > Hi Phil,
+> > > >
+> > > > On Thu, 13 Feb 2025 15:18:45 +0000
+> > > > Phil Elwell <phil@raspberrypi.com> wrote:
+> > > >
+> > > > > Hi Andrea,
+> > > > >
+> > > > > The problem with this approach (loading an overlay from the RP1 P=
+CIe
+> > > > > driver), and it's one that I have raised with you offline, is tha=
+t
+> > > > > (unless anyone can prove otherwise) it becomes impossible to crea=
+te a
+> > > > > Pi 5 DTS file which makes use of the RP1's resources. How do you
+> > > > > declare something as simple as a button wired to an RP1 GPIO, or =
+fan
+> > > > > connected to a PWM output?
+> > >
+> > > Where is this button or fan? On a pluggable board? Isn't that what
+> > > overlays are for, and they are stackable. So when you probe the
+> > > pluggable board via its eeprom etc, you find the overlay and load it?
+> >
+> > In the Raspberry Pi ecosystem it would be the firmware that applies
+> > the overlay, and it can't do that if the resources the overlay refers
+> > to are not yet present in the dtb.
+>
+> What do you mean by the 'the resources are not yet present in the dtb' ?
 
-Do you plan to pick up the other patches that have been acked
-as well? It seems like most folks were OK with everything going
-though the gpio tree since the changes are small.
+Consider the fan connector on the Pi 5 PCB. It is wired to GPIO 45 on
+RP1. In our current Pi 5 dtb there is an instance of pwm-fan whose
+"pwms" property links to rp1_pwm node, which declares a PWM block on
+RP1. Similarly, the camera and display ports make use of I2C
+interfaces on RP1. The camera and display overlays, applied by the
+firmware, have references to those interfaces.
 
+If RP1 is not present in the dtb then neither of those scenarios -
+board features and overlays applied the firmware - will work because
+the necessary nodes and symbols are not present until the kernel has
+started running, at which point dtb has been handed over.
+
+> Also what you call the 'firmware' is the bootloader ? the kernel ?
+> Can you tell me who is the 'firmware' what is the mecanisme it uses to
+> load the overlay.
+
+In the case of the Pi 5, the firmware is an EEPROM image containing
+code run by the VPU embedded processor. It can load overlays using the
+same mechanisms it uses to load the kernel - SD/EMMC, NVME, USB, TFTP,
+etc. The same problem would exist for U-boot. Even though RP1 has a
+standard XHCI controller, U-boot wouldn't be able to detect it and
+make use of it, say to load a kernel from a USB stick, because it
+isn't declared in the DTB.
+
+Phil
 
