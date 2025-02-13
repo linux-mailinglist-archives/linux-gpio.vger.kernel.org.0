@@ -1,133 +1,162 @@
-Return-Path: <linux-gpio+bounces-15896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33E27A339B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 09:12:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19951A339BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 09:13:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E63B3160C0E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 08:12:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DDAD3A7BD3
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 08:13:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806EE20B7EB;
-	Thu, 13 Feb 2025 08:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5281C20B20B;
+	Thu, 13 Feb 2025 08:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nBCPXnm+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MuPfC2eB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B362920B20B
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 08:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C5420B20E
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 08:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739434327; cv=none; b=aVNvYgjs0lQ0jntEeS2rrMCVyBDjklmdmi7Ei1wZDkxsCNnXlPY/ZzpQ5HE6vAQkt7CvclxpqGiZo6g7qPNCj/cCI73YVjlDf9HtLOi2t5WSEFrscOamCn2G9jD/tdYBvG1EtmM7zaVUMIDjk9zzdvtqe0CoqubiyyJRK2qFY4A=
+	t=1739434434; cv=none; b=WExudujVUl88Sb9EO7aT5Y3bRe8iTOa5C1HpaeJk5xr5p3bEYSb5CL57493x8T85owh7oyidaGkLluXoTIpQI9G5uQtB25ZVQOaK+LvxhsNJgV/TmldUpL7m3+mOBd7fIgUhmrpUFIhiseyS99D4fd7xHc3ukuoMUCkPVEHDffo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739434327; c=relaxed/simple;
-	bh=+dFfwgX0CbcC8ID7JA7WN/WcTf8Op76swd4beDyWCTM=;
+	s=arc-20240116; t=1739434434; c=relaxed/simple;
+	bh=5vZT6XRac5Sw20P5sZfV62hmlC+ZCKjlScO/x0rmuYU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EtDFV/IrDIL2+yecFJqaGA5r0MviYFhW0/EXRZjTtyhM5A59j8Z2t/a7zuCf5lYc6wifBWIZc6p0ZnVY0oQxku84kbVdTruzV5My+RJKupFKRA3NXn+QQXhbSH41ceHi/MMZbEzmLxYH40RLOlfB+rqvTilGBDub9g0odSp+99M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nBCPXnm+; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54509f46614so570402e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 00:12:05 -0800 (PST)
+	 To:Cc:Content-Type; b=YELU/cSG3fFldAWZ6+eeHxRXMAatIH7xuBqylB40HC3tVTTCoJ0c3FXGycRWYBDbf227v9PKXOd5K+yYouHD9fm8g5qwzNZWUsm9RwaL/Royqv6U4M90czMegNPo7ZOsGHCaGNlxapjYGFSC1aJwRQEZTxurgtdtm2Es4XuImn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MuPfC2eB; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5450475df04so557701e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 00:13:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739434324; x=1740039124; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739434430; x=1740039230; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+dFfwgX0CbcC8ID7JA7WN/WcTf8Op76swd4beDyWCTM=;
-        b=nBCPXnm+aVWW4XKLBxHOvFNzjuOi8ievurtGudwsFEqg+kqElVsHxMnS5iRv9O6uzh
-         TvnuvnOUT3ZsWkiM0A11FzmDLHTC1wHN3oOfx57TtrVZJ3Jk7uGhzjS0d67oqtRrWgaI
-         M46jE0rOM/3f8o2/WfNs5XsZ838rLPK3vKmnknhdLCAjPyoKnTmc/TFwJwl9/KSdXyif
-         q6Dc2Ov4Qm33ng8eLoALbCNxi4jsiXbib5gLdQu5fsm1F3HNwoAjl/Ruo29N3XFLBI7/
-         UJxB3bBClYQlh8JxVtnfAMB6bOXiheT1YG3JPyFIAO9/bdZezgO+7RsUujAEacJCmRdM
-         z+vw==
+        bh=OmuftgvnuZZgHkOz1gVQFljvkOd+vXnZycbJ9gQVvqU=;
+        b=MuPfC2eBtclF0qE37TC0SpGor6eDz2lSUe8rO0GVTTfYif83qkpx6GrhETOgzLSxQi
+         7mic9a/GLNqxjkNe2mO37hv+8xEpFxeqpL9vCnlHAJ1cZjMfOXDNSaK+WAngWmPAOkd8
+         72sT3ZY2S67U5S3fmV4w6EaTs3tBYzcQWePUwbSDYfPmda5Cmd2K0+VkTaH7D+m+vYVk
+         YsBTZJWKbUMh9O9oxKMJsfVZOZzr5lwGQsPLpIjk8yu8omv6OAm93yiKDOrQkOvftj1W
+         pyl+/iCX4vJxJE7FOCIk3aJVU5Vk7u8wN+RpNlp7Q1HNig7PbE56M7kGkogI4QauqqKT
+         tMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739434324; x=1740039124;
+        d=1e100.net; s=20230601; t=1739434430; x=1740039230;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+dFfwgX0CbcC8ID7JA7WN/WcTf8Op76swd4beDyWCTM=;
-        b=QxmB1dr036H3qXIrhPX+x6BvHlX5/mcTB0mHNY0hbKErvNI3e+zI1xPqA3cl5PT2vE
-         qJbZzODgkCGFFfkMSwqeGK4c3XN5S0cl6UwyomSTn0UpwuLSxWXYs++pHQk00HWN3lLt
-         iGPWX+lDLNF+PGwLcn0uFqcPLmmpHsCPR0iNlExbtQi2hY+XyudnKilvF+zdbyHr2F7l
-         MuxeGbOqc+qre7qJIFbQJN2NJiEkBH+EzmxZPNwZfgxerVyq7RLopF8GXwvASy5B8off
-         23GSuXw5BAVvhRYacHHhN/20dHIfvTtQeaXVKOCbsVripkjvB33oU/VQZYeq9Wg6jETr
-         t1kg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGchSvWyRDs/X/omJvb5GqPAS0kT0cBg+qTgibivJPddT5k1eAolVB/IagTfEwfk67IFpS/PAVcfEJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSdivWEFQznXeVBh7Rc0Dl7AnoLyEVriLhLIQh0oeYox9xmG7H
-	2LnCx1Af0o5QWUOCsv9R0foSJhOckrKhOxY8MEsXNzdfVH39lUlLzJ/eHwrv14dLN72EwZrB/Pf
-	IQGBZYicVNL1vlprScFLj+5nEXXAgqS1hKuvlNw==
-X-Gm-Gg: ASbGnct7F/t25wmFOk5aQDhyWsQ/4Xh8vg9LNXN9gICC+f112liZv9QUe9V48WP5d7w
-	lMDZGXbHflfU46pRU4he2UuaZEFGu/Aq00R4c5rPFiAuHMGI5IcSHM4JFjo16QlQQODy1fndL6W
-	MCV0jYKH/ACavvOVSYXaJemCo4rnDM
-X-Google-Smtp-Source: AGHT+IEIAFhRMajhJpOtMGjvIxm2QdCbWm4QaFxeLh+n1Rj6FPuiVieLB9SVYIYG1UUPR2y+YCRUUAl/3rRdA4PZnvQ=
-X-Received: by 2002:a05:6512:159d:b0:545:ee3:f3c7 with SMTP id
- 2adb3069b0e04-54518116604mr2088771e87.30.1739434323801; Thu, 13 Feb 2025
- 00:12:03 -0800 (PST)
+        bh=OmuftgvnuZZgHkOz1gVQFljvkOd+vXnZycbJ9gQVvqU=;
+        b=Yow+ka6cMKpX2ngpDdEKNNtfWrZLxy3GUQwBE79DPAD29+yoGDZp31YTyw52cykTQy
+         HliEIoxLvv98n++oZM9eaQn0/wARQ6wy/jfLe+xrSV1fplwFaBUZ98a+Otj37jVlnacP
+         QozwTGpZd2fTApaaSjx8sLubB5R/GO1RTq6NM7RqNU7YgBvCzRPpW0eGxNKurANGnft1
+         xMqg0XaJQ+TSDz9ujSG4vI+9vtS1h0N+FPAjj7tLsRJmKDZ1IaGYdpRAq1ujTmm3ETH1
+         N/FmJmWjzUoM4P76X/T0fkGxP0SkRJDpEk/gZFhzNZ9Yz981475NLQQrDFDiEFJZP4k7
+         CAyw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Avelemzuy1Pfy4+h6tkojxLndrO0fNSJad4O7K8bubL+nwnwwA2YcZEzdZnVOUh0jkP1Miws1AS/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU6gZyef9NSYf1t7lGKf5VzaMKP9pZd+KhMENyqSSAmCG+8b0l
+	fll1OuYyXnECG/mi89bgVHbfuHh2oSogHuH/bUKAtFC8reFPeXdYLgBzVHCE6UcxG09a/lr57TX
+	hXiIEsmF5FhMFweIL0p9GF4HjPLgQJCau3glLPa90kckqovZgJA==
+X-Gm-Gg: ASbGnctuN0GHns5hNkwpHNwi9n5+rY0MZZ1noS8hlKp0ssGiFISeSVCwACJd0oZnTUW
+	57C5Ri+qSSTAFHqYEyKITm3Ac7Xcl2jhh+uas8cadxcWMDepQI6XS2Z2RS+745Iziq8Gbo8I=
+X-Google-Smtp-Source: AGHT+IHxDaK7ENYXtLhPy5Kf93LWj2N5S6iojG3fU8e+7THrJ3l9WM1h9CK9jmfpQxgM8xkKRYjCh9V5QtuuPWJHPGk=
+X-Received: by 2002:a05:6512:ac7:b0:545:646:7519 with SMTP id
+ 2adb3069b0e04-54517f86d1fmr2003992e87.0.1739434430158; Thu, 13 Feb 2025
+ 00:13:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113225530.124213-1-s-ramamoorthy@ti.com> <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
- <065cdaca-cc37-4b1e-9c1e-e2dedbb2ffd5@ti.com>
-In-Reply-To: <065cdaca-cc37-4b1e-9c1e-e2dedbb2ffd5@ti.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 13 Feb 2025 09:11:52 +0100
-X-Gm-Features: AWEUYZkbTb8bENEVnsn2E-MYQzjbnZkeB4d8wppWNtFqHw8XqmJeTxrvnmw4bYw
-Message-ID: <CAMRc=MfR2q8TTcEHtbX9HxyFikHP_nS+Mva3dTwmgu4tvkxJ1w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
-	christophe.jaillet@wanadoo.fr
+References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com> <20250120-scmi-fwdevlink-v2-3-3af2fa37dbac@nxp.com>
+In-Reply-To: <20250120-scmi-fwdevlink-v2-3-3af2fa37dbac@nxp.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Thu, 13 Feb 2025 00:13:13 -0800
+X-Gm-Features: AWEUYZns82i0k5Ijag1LujAqT5WjKXUA5FWo3NR6_9wBOcWaDsE90ePdb8ZFdME
+Message-ID: <CAGETcx9+BzSoHj54koiGniUOUPfY9yZ9cAedbb2A-hb+2D1sGw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] pinctrl: freescale: scmi: Switch to use machine_allowlist
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 10:12=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
-i.com> wrote:
+On Sun, Jan 19, 2025 at 11:14=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
 >
-> Hi,
+> From: Peng Fan <peng.fan@nxp.com>
 >
+> With machine_allowlist, only allowed machines have pinctrl imx scmi
+> devices created. The fw_devlink will link consumer and supplier
+> correctly.
 >
-> On 2/7/25 2:53 AM, Bartosz Golaszewski wrote:
-> > On Mon, Jan 13, 2025 at 11:55=E2=80=AFPM Shree Ramamoorthy <s-ramamoort=
-hy@ti.com> wrote:
-> >> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
-> >> significant register map overlap with TPS65219. The series introduces
-> >> TPS65215 and restructures the existing driver to support multiple devi=
-ces.
-> >>
-> >> This follow-up series is dependent on:
-> >> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bin=
-dings")
-> >> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC"=
-)
-> >> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
-> >>
-> > Did these go into v6.14?
-> >
-> > Bart
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/pinctrl/freescale/pinctrl-imx-scmi.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
 >
-> The dependencies listed in the cover letter were just applied by Lee Jone=
-s:
-> https://lore.kernel.org/all/173928615760.2233464.12306998726512431222.b4-=
-ty@kernel.org/
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx-scmi.c b/drivers/pinct=
+rl/freescale/pinctrl-imx-scmi.c
+> index 8f15c4c4dc4412dddb40505699fc3f459fdc0adc..058b4f0477039d57ddae06f38=
+5ad809cbb4784d6 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx-scmi.c
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx-scmi.c
+> @@ -287,11 +287,6 @@ scmi_pinctrl_imx_get_pins(struct scmi_pinctrl_imx *p=
+mx, struct pinctrl_desc *des
+>         return 0;
+>  }
 >
-> The rest of this series still applies without a need for code modificatio=
-ns.
+> -static const char * const scmi_pinctrl_imx_allowlist[] =3D {
+> -       "fsl,imx95",
+> -       NULL
+> -};
+> -
+>  static int scmi_pinctrl_imx_probe(struct scmi_device *sdev)
+>  {
+>         struct device *dev =3D &sdev->dev;
+> @@ -304,9 +299,6 @@ static int scmi_pinctrl_imx_probe(struct scmi_device =
+*sdev)
+>         if (!handle)
+>                 return -EINVAL;
+>
+> -       if (!of_machine_compatible_match(scmi_pinctrl_imx_allowlist))
+> -               return -ENODEV;
+> -
+>         pinctrl_ops =3D handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PIN=
+CTRL, &ph);
+>         if (IS_ERR(pinctrl_ops))
+>                 return PTR_ERR(pinctrl_ops);
+> @@ -339,8 +331,13 @@ static int scmi_pinctrl_imx_probe(struct scmi_device=
+ *sdev)
+>         return pinctrl_enable(pmx->pctldev);
+>  }
+>
+> +static const char * const scmi_pinctrl_imx_allowlist[] =3D {
+> +       "fsl,imx95",
+> +       NULL
+> +};
+> +
+>  static const struct scmi_device_id scmi_id_table[] =3D {
+> -       { SCMI_PROTOCOL_PINCTRL, "pinctrl-imx" },
+> +       { SCMI_PROTOCOL_PINCTRL, "pinctrl-imx", NULL, scmi_pinctrl_imx_al=
+lowlist },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
 >
 
-I'm not sure I'm following: should this series wait until v6.15-rc1 is
-tagged? Or did you ask Lee to create an immutable branch? Or doesn't
-this series depend on the MFD changes at all after all?
+Definite NACK to this. Please don't depend on indirect
+conditions/flags. There's no guarantee that this check will hold true
+in the future.
 
-Bart
+-Saravana
 
