@@ -1,127 +1,141 @@
-Return-Path: <linux-gpio+bounces-15924-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15925-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44BEDA3495C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:14:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6358CA34A14
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:37:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1607163BB1
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 16:14:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 248D33AC9C0
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 16:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C2C20010B;
-	Thu, 13 Feb 2025 16:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02546266199;
+	Thu, 13 Feb 2025 16:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o/ragaeq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mnJDTdqL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E96D155326;
-	Thu, 13 Feb 2025 16:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB33211A3F
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 16:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463283; cv=none; b=Ba/sOifu0MnOPiDwu8Jz7IYi9GG6+m7OSG8QJp4uaq7FXt1n3sBCqIk2+BbvUEom9ucAZzpIAFg0M1GFjolBms0RQuRLkRhnMo7kTFxXKMbaOiljCckOsrKpvNxDHbuuaLLAtj4bt2cuQnF0U6duGlU9Rw8pCSPfEjcqP1h0lK4=
+	t=1739463531; cv=none; b=md6wf2+ZpB+aLnAnY++m2bdqmrZNlyV+Cz39GrP62gKBHZB0mpohDDNhtg7nWToGQ1Uys5DMyWatXJmAjHDcmAqH4eEGQeT7p+lu7LoJlrZIbXnO5PMxBLDnRdiUer6Q2BHa5LXQ/llbrS5PcviReqjgmAvgLRlgSX8n55Ay2bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463283; c=relaxed/simple;
-	bh=vGJnb1m4SzGUIvD8C7Q70RDN83mTiA+BJaGjQwL7LEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uuOACICQBD7QZc41KJo4DNMVeNA3Sm5/SOG5ME0ILN3VXAMDSPboIt2lOnL2vCG9xDuATwC/EIn5idZ6TDEiKPPygnsxjv4hf0Qy4/tAMohsiydIBNRcv8Qum01JSa199dFDpzigxrYCbJZFCmExn7FVUYMUjizgopA9EoyMC3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o/ragaeq; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 25360441D0;
-	Thu, 13 Feb 2025 16:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739463278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0TVSfnhO/D9vf7kVKocZCtgHhLvkRIYScp2kiZ0Rn5s=;
-	b=o/ragaeqE14+pkiUyeerhxStHnHzUEuBaR1MDzBW+7wdy/u3tp+KketwFkv6a1sl29X91R
-	bazTwFPopWFSaJGSUnKpDZQLBGOmVuo2ndmrlnYUDCz/CfzWgQ3cFrXnEsLh/o5rj6Vzn4
-	VVkvrSy7CFWtMgXit8j7dBcts6buJjY42hvgI8s8rJOqOX6cPCwaWN1Rs4f9k222J2ouyg
-	g8hqm/3JkLHGpxJAL0LWtcSlVMlhaRHgSzcKAdhZtP9y9aopwC7UfNpKr9ixsbQlI3cumA
-	81i+wvtWy8TucWElCaV+3PwElF+2fBxbpdNArU7gYJqnCwdZinWA3a/2fuPrjw==
-Date: Thu, 13 Feb 2025 17:14:35 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Phil Elwell <phil@raspberrypi.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>, andrew@lunn.ch, Arnd
- Bergmann <arnd@arndb.de>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
- brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
- dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
- kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
- list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
- <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
- ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
- lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
- manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
- <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
- saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
- thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
- <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <20250213171435.1c2ce376@bootlin.com>
-In-Reply-To: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1739463531; c=relaxed/simple;
+	bh=FPEZM9FyvR3U6n4xCdl/NKl6rhtE2PyRI2Op+6EI5MQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C7U+BDYFsFjAieKHPw31KSki6MDAU4nRifIXaG2Jo0Mb7B+sYhUKZJdsxrQuuaNcbBaUXtn8XWvPUaDfMZ8+v5pZxnnU/yHVqf4f/CJgvnqFGAi4SXZ7RCQO0A38uuHnNiKM7CviMTMe1oAZRGFw4UIf/h+ednqkjGWlAyS/3BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mnJDTdqL; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-726feeee4f0so600597a34.0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 08:18:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739463529; x=1740068329; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wk0Ke649msGfj609eFpxLZzrb3zbWSGeBEU/UMBg818=;
+        b=mnJDTdqLOdB8K44ye0GFUh8u40ijPypdKkXPA8svvypjDgZ3hyYZbRuROW1vdsN5jI
+         tFh9PtX5YWp0yAHTkdRDN8BYiuoMG4b7CWQ5cRHZcRSfKERc8AgnrnnPUfzWha6YtHPM
+         Y3M4uqd8eVPKcT9iA5z3Qgwzc/N08CuGTRX+9uAWRCC/FKM4XaqUT3vyw7Hi1T4TOpJt
+         r+6WPb3y71ygwT1WjJzxb4Y3SMFYfow++Gkq+o9fs284aRFKZT22Zy8rccCZ+OdDHak9
+         BAkd9ZyxF61Q5UJOXEobm6lpmFo0QChIowkaIluJD/ewf5/DZEXm/Cqur9PtN/X/ltQ2
+         vOWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739463529; x=1740068329;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wk0Ke649msGfj609eFpxLZzrb3zbWSGeBEU/UMBg818=;
+        b=jiWHHvnh8N4vaRzxokhww+rn8ToG51wedrFa2MgCttzqbhYlDDYH7/yvew7btMOWPS
+         w60HqQtQxHLsjYosJhlb0hgCSJ0myV1lRtkGwqJfRfFM8bDbUYBHcDg+DJ5LmP4Cv8w3
+         xBc8pdJ0FeR/UiXW+esQq3ex31h49lzIikrmij/G534FuubfRe7tWaHyZzHu4xp2IqZ6
+         +nwUFTpbOvv3NAPbR4ImxLwWJ0SSB4tIiESNfY8Dd9AOV5i4y3LcWRF/Q+7qxuzFzurD
+         WuOtBfHW5JjPiyzNf4QlfE6nnN9RdStA1Taip910saRIwluFbMoBdVjd9CWid6VBhZRk
+         E1yg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1GejPJWSVrKCpoPW2iMnI7r1vMZLdygNaCNNsXVZt2jZZQ9egnFEWd7PlPa0zjfkFiv5bIliYksO9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEk8ixjBCW/5miyecME/dUNItlMHtTW3c6k61McaYTTh6rpZWd
+	csmJwlkR8wVpj+ueZXlghzEdVsY89MJl960rjv8G6MB9KV5/QNBlqnV5Gb3QGqM=
+X-Gm-Gg: ASbGncvq21bSJejTGdYv8GMn5LjSIwU+c2eRAVG1vpKMDSaSrtvh31zBaYNJtkjBMVQ
+	aXk8tE//RjWfn5AYm+lLcjm3JFB8l/xaoe8EbnWtfoeLptt1y5OuzL0MSxMQsXRZ6qd48l4YEwJ
+	YBv1S4xlHZ6vbJTpdnt5RzzD/HQgqKnvdl9uaRcWP4OS9gslcpraccIFNnygHghlPyNlmOoa+SI
+	R82Wfh+bd8kunDBCOnMH+9bRI5KbJ95nZ+RfIXZePw8115gMVvusjyWGxrGkIdRY4xJL+1mHka3
+	WISVNrWaYiDMJ5WenzR23z1nIIpheVaq6tLUTeBT3ldyp3m6kjBl
+X-Google-Smtp-Source: AGHT+IEGLLAr3ZCm1qk6HJfeJrpeKZVxdyf5Q+R8bhFa0Q5GeLkClKacnVaUNLgJ0z38uu3iJ2EimA==
+X-Received: by 2002:a05:6830:6487:b0:71d:ffa1:6b0a with SMTP id 46e09a7af769-726f1d18a26mr5080482a34.23.1739463528835;
+        Thu, 13 Feb 2025 08:18:48 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-727001ff3absm693643a34.39.2025.02.13.08.18.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Feb 2025 08:18:48 -0800 (PST)
+Message-ID: <dacc7cd7-961d-4c30-8b8c-4622132d2cbc@baylibre.com>
+Date: Thu, 13 Feb 2025 10:18:47 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/5] pinctrl: Support ROHM BD79124 pinmux / GPO
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <cover.1738328714.git.mazziesaccount@gmail.com>
+ <3d85fe979fca352bed4d9841e3233c055dfaf154.1738328714.git.mazziesaccount@gmail.com>
+ <6867812e-7269-4686-9fc2-55afd9fa91bf@gmail.com>
+ <CACRpkdaP6biD8ueeezBDw1P3LP6ARoJw0zfkmxC-QKK0fw79YQ@mail.gmail.com>
+ <a52933a2-8b87-4e49-a346-91266fe3b675@gmail.com>
+ <CACRpkdYMytiXoXrjTX3ts6ce1T6Xf4rSyk=sDP9fYz730Q-3bQ@mail.gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <CACRpkdYMytiXoXrjTX3ts6ce1T6Xf4rSyk=sDP9fYz730Q-3bQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjedvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
- ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Phil,
-
-On Thu, 13 Feb 2025 15:18:45 +0000
-Phil Elwell <phil@raspberrypi.com> wrote:
-
-> Hi Andrea,
+On 2/13/25 5:53 AM, Linus Walleij wrote:
+> On Thu, Feb 6, 2025 at 11:09 AM Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
 > 
-> The problem with this approach (loading an overlay from the RP1 PCIe
-> driver), and it's one that I have raised with you offline, is that
-> (unless anyone can prove otherwise) it becomes impossible to create a
-> Pi 5 DTS file which makes use of the RP1's resources. How do you
-> declare something as simple as a button wired to an RP1 GPIO, or fan
-> connected to a PWM output?
-
-The driver could be improved in a second step.
-For instance, it could load the dtbo from user-space using request_firmare()
-instead of loading the embedded dtbo.
-
+>> I just realized I should've shared the link to the v2 - which may not
+>> include all the recipients (because it no longer touches all the
+>> subsystems - and the get_maintainer.pl probably reduced the list of
+>> recipients). So, for anyone interested, here's the v2:
+>>
+>> https://lore.kernel.org/all/cover.1738761899.git.mazziesaccount@gmail.com/
 > 
-> If this is the preferred route to upstream adoption, I would prefer it
-> if rp1.dtso could be split in two - an rp1.dtsi similar to what we
-> have downstream, and an rp1.dtso that #includes it. In this way we can
-> keep the patching and duplication to a minimum.
+> Well it touches (uses) the gpio subsystem so the GPIO maintainers
+> should have been on CC...
+> 
+> This is one of the shortcomings of get_maintainers.pl really (also what
+> b4 is using): it does not know that if you use some specific APIs from
+> some specific .h files then some specific maintainers need to be on
+> CC.
 
-Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
-the the kernel sources could include user customization (button, fan, ...)
-without being modified ?
-At least we have to '#include <my_rp1_customizations.dtsi>'.
+Can't we do that with `K:` in MAINTAINERS? 
 
-Requesting the dtbo from user-space allows to let the user to create
-its own dtso without the need to modify the one in kernel sources.
+I see:
 
-Does it make sense ?
+K:	(devm_)?gpio_(request|free|direction|get|set)
 
-Best regards,
-Hervé
+to catch use of old gpio apis. Maybe should add 
+
+K:	(devm_)?gpiochip_add_data
+
+to catch anyone registering a gpio controller?
+
 
