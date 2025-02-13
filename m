@@ -1,203 +1,189 @@
-Return-Path: <linux-gpio+bounces-15965-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15966-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A967EA34F4C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 21:24:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD592A3503C
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 22:08:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5169E16D67E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 20:24:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0E3B3AC57D
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 21:07:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D47B257AF1;
-	Thu, 13 Feb 2025 20:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2878A2698B0;
+	Thu, 13 Feb 2025 21:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QzZvmcPQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD0DB2222DE;
-	Thu, 13 Feb 2025 20:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66992698A7;
+	Thu, 13 Feb 2025 21:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739478259; cv=none; b=eX8kgU8lGsuFAcmDjmcoFRMunt+J09H18LdVyBPWwf2LHZ8Fh09iwT7EXZ09DgH4+C47z8taMiZboyRRJl3ShiYrTWmir9YgNWXF1qILMTCD0AzGhYKFSTFPpyXZicEE1jarK3Kml0v+fG6m9f/038TEkZ9VfrwLASnCBroMIds=
+	t=1739480808; cv=none; b=bVCOqFaHnKMyxYRCfmh2CC5blyxRL3dG++Kvw0EvfLbbSGqyo5RfFy2kPsbaTV1+E6BhENNHRNuz1d/+3+QskdcyhOYQ1kPnoVGLnt5MmasxDCAGeuAMEqHw1X6ZSPnF688fcAlMa7GVkajm55x27XLNonipOk9+GNPqPKpdtKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739478259; c=relaxed/simple;
-	bh=D2YETnVgFrI7hLRiidm23TMJLYAHSLeT0TpoXHZ/UJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NfDI9w9HOR8NitbfIfuziv7I0WMRN1eTihUaccVvOmLbJ9WeNkivmDNFmcYQEW0X/asK9TxVA2SWaIL2SH1wmAyFlKp6wW7IUFAvRq8+Z3m/9MkMn7DsIGDi99kFIY//fCiNZzaNgaw2j/5g/Qov8v7n00f/NiCx+/WjfYBwwm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C5CF113E;
-	Thu, 13 Feb 2025 12:24:35 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E747B3F58B;
-	Thu, 13 Feb 2025 12:24:10 -0800 (PST)
-Date: Thu, 13 Feb 2025 20:23:53 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z65U2SMwSiOFYC0v@pluto>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
- <Z6uFMW94QNpFxQLK@bogus>
- <20250212070120.GD15796@localhost.localdomain>
- <Z6x8cNyDt8rJ73_B@bogus>
- <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
+	s=arc-20240116; t=1739480808; c=relaxed/simple;
+	bh=MqX8yGdjZfKsnWm26teUdp1QQyFQ8CTu3YhcUTzLJ90=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mxp6Qbxz1/+jhzCtFMy/gavN2mDSSU9zyrf/w5gPXG45tZYuUxTkEb+RtVPrLAelC4ME74dfb+1Ho0W++61YBkqvaPd9G8V6KJYMnU9KjesLEkCgEpj0BIYvSd/Oz3Kdjr8JXR0CAao7mPvRPRQ8LVChwxsC50scCpnss+Plo0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QzZvmcPQ; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A3A13440EA;
+	Thu, 13 Feb 2025 21:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739480803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/RrLWIXf4/dLUY89jPfVENxi4hWrbWl7h6YxyRzQyMU=;
+	b=QzZvmcPQo9X5fDpSORzylrRO/Q/OdB0KdxtS5BPna0CDfRfeO4Wsm9Em6qEc9Lqxbas9/L
+	zeYiz+NCs899b+tGYydjQWKSCLTPXgE7lRZxrWU4oFUNMAMU2yISKhhpZJLxraJuminz1T
+	V80xesALUQr4mrf3Dr7DP7AuOs3JqWZZ2Jyl7Oa8QVn8gN+v+rgYk/Lbxf25pVa6cZSDxf
+	NriJJQkazv/OFlIY6jtqAXL0Giz8CVrTdr8Sv4AMd9Ly4+b1aqvZqo3gbVxt9uRjFbOPms
+	SMhtt+LbP6q6Hmjy9rWzmMmN4UhujAfimZnjqrjJtmtU2OyoaSY0zy1u/kQ53A==
+Date: Thu, 13 Feb 2025 22:06:39 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta
+ <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+ "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250213220639.373da07b@bootlin.com>
+In-Reply-To: <CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+	<20250213171435.1c2ce376@bootlin.com>
+	<a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+	<CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+	<821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+	<CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+	<20250213195304.3a2df02c@bootlin.com>
+	<CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjeekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
+ ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, Feb 13, 2025 at 12:03:15AM -0800, Saravana Kannan wrote:
-> On Wed, Feb 12, 2025 at 2:48 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+Hi Phil,
+
+On Thu, 13 Feb 2025 20:15:06 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
+
+> Once more, with plain text, which I'd hoped the Android GMail client
+> would work out for itself.
+> 
+> On Thu, 13 Feb 2025, 18:53 Herve Codina, <herve.codina@bootlin.com> wrote:
 > >
-
-Hi Saravana,
-
-> > On Wed, Feb 12, 2025 at 03:01:20PM +0800, Peng Fan wrote:
-> > > On Tue, Feb 11, 2025 at 05:13:21PM +0000, Sudeep Holla wrote:
-> > > >On Wed, Dec 25, 2024 at 04:20:44PM +0800, Peng Fan (OSS) wrote:
-> > > >> From: Peng Fan <peng.fan@nxp.com>
-> > > >>
-
-[snip]
-
+> > Hi Phil,
+> >
+> > On Thu, 13 Feb 2025 17:57:37 +0000
+> > Phil Elwell <phil@raspberrypi.com> wrote:
+> >  
+> > > On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:  
+> > > >  
+> > > > > > Or do you mean a custom board, which has a CPU, RP1 and the button and
+> > > > > > fan are directly on this custom board? You then want a board DTS which
+> > > > > > includes all these pieces?  
+> > > > >
+> > > > > That depends on whether you count the Raspberry Pi 5 as a custom board.  
+> > > >
+> > > > So you mean the Pi 5 board would itself make use of the resources the
+> > > > RP1 device has? They are not simply connected to headers for plugin
+> > > > boards, but used by the main board? Hence you want to describe them in
+> > > > the board .DTS file.  
+> > >
+> > > That's correct. But even for plug-in devices, those which are on
+> > > non-discoverable buses need overlays to declare them, which causes a
+> > > problem when the overlay application happens before the kernel is
+> > > started.
+> > >  
+> >
+> > Hum, I see.
+> >
+> > We worked on overlay usage on non-discoverable buses wired to a connector
+> > and we did a talk about issues we are facing on at Plumber [0].
+> >
+> > You can also find our big picture in [1] and a last contribution introducing
+> > export-symbols feature in [2]. export-symbols is also under discussion on
+> > some other threads.
+> >
+> > Also, we proposed the i2c bus extensions feature [3] whose goal is to allow
+> > an addon board to add devices on an i2c bus provided by a base board and
+> > wired to an connector the addon board is connected to.
+> >
+> > Maybe in your case, you can decouple resources (gpio, pwm) provided by the
+> > addon board and used by the base board using also nexus node.
+> >
+> > We use a nexus node [4] (not presented at the Plumbers talk because the idea
+> > came during 'out of talk' discussions in Plumbers) in order to allow our
+> > addon board to use resources provided by the base board.
+> >
+> > In your case, if I understood, you are in the other direction but why not
+> > using also a nexus node to decouple and translate resources in this other
+> > direction ?
+> >
+> > Don't know if this idea can help but feel free to ask for some more
+> > information if needed.  
 > 
-> Cristian,
+> Nexus nodes look interesting - I see them as adding a layer of
+> abstraction such that, for example, boards can declare which of their
+> specific resources performs a common function so that clients can
+> treat them all the same. We do the same thing in a limited way by
+> using common labels on nodes, but this goes much further.
 > 
-> Thanks for taking the time to give a detailed description here[1]. I
-> seem to have missed that email.
-> [1] - https://lore.kernel.org/arm-scmi/ZryUgTOVr_haiHuh@pluto/
+> In the case of Pi 5 and RP1, I imagine you are proposing that the Pi 5
+> dtb declares the connector node and the overlay fills in the content
+> with references to its GPIO controller, PWM controller etc. However, I
+> think the overlay would also have to be board specific because it's
+> not possible to patch part of a property from an overlay, so you'd end
+> up overwriting the GPIO number as well as the controller reference.
 > 
-> Peng/Cristian,
-> 
-> Yes, we can have the driver core ignore this device for fw_devlink by
-> looking at some flag on the device (and not on the fwnode). But that
-> is just kicking the can down the road. We could easily end up with two
+> What is needed to make this work is the ability to cope with
+> unresolved references in the base dtb, to be resolved as each overlay
+> is applied, with runtime checking that each reference is resolved
+> before it is used, all of which sounds like a nightmare. Plus, we
+> really don't want to have to change the way all our camera and display
+> overlays work on all Raspberry Pis just to accommodate somebody's idea
+> of how RP1 should be handled.
 
-Oh yes this is definitely some sort of hack/workaround that just kicks
-the can down the road, I agree...just I cannot see any better solution
-from what Peng propose (beside maybe we can discuss his implementation
-details as we are doing...)
+Just to be clear, my comments were not there to tell you how RP1 should
+work. I just proposed ideas without trying to force anything and I can
+fully understand that ideas proposed don't feed your needs.
 
-> SCMI devices needing a separate set of consumers. For example,
-> something like below can have two SCMI devices A and B created where
-> only A needs the mboxes and only B needs shmem and power-domains. This
+Sorry if my approach was misunderstood.
 
-..not really...it is even worse :P ... the mbox/shmem props down below are
-really definition of a mailbox transport SCMI channel: some transports
-allow multiple channels to be defined and in such case you can dedicate
-one channel to a specific protocol...
-
-...so, in this case, you will see there will be something similar defined
-in terms of mboxes/shmem at the top SCMI DT node to represent an SCMI channel
-used for all the protocols WHILE this additional definition inside the
-protocol node defines a dedicated channel...IOW these props mboxes/shmem
-are really parsed/consumed upfront by the core SCMI stack at probe to
-configure and allocare basic comms channel BEFORE any SCMI device is created
-...then the protocol DT node is no more used by the core and is instead 'lent'
-to create SCMI devices for the drivers needing them...(possibly lending it to
-multiple users...that is the issue) 
-
-> will get messy even for drivers if the driver for A optionally needs
-> power-domains on some machines, but not this one.
-> 
->         firmware {
->                 scmi {
->                         compatible = "arm,scmi";
->                         scmi_dvfs: protocol@13 {
->                                 reg = <0x13>;
->                                 #clock-cells = <1>;
->                                 mbox-names = "tx", "rx";
->                                 mboxes = <&mailbox 1 0 &mailbox 1 1>;
->                                 shmem = <&cpu_scp_hpri0 &cpu_scp_hpri1>;
->                                 power-domains = <&blah>;
->                         };
-> 
-> Wait a sec, looking around at the SCMI code, I just realized that you
-> don't even really care about the node name to get the protocol number
-> and you just look at "reg" for protocol number. Why not just have
-> peng's device have two protocol@13 DT nodes?
-> 
-> cpufreq@13 {
->     reg = <0x13>;
-> }
-> whateverelse@13 {
->     reg = <0x13>;
-> }
-> 
-> You can also probably throw in a compatible field if you need to help
-> the drivers pick the right node (where they currently pick the same
-> node). Or you can do whatever else would help make sure the cpufreq
-> device is attached to the cpufreq node and the whateverelse device is
-> attached to the whateverelse node.
-
-..well...my longer-than-ever explanation of the innner-workings was
-meant to explain where the problem comes from, and how would be difficult
-to address it WITHOUT changing the DT bindings, BECAUE I pretty much doubt
-that throwing into the mix also multiple nodes definitions and compatibles
-could fly with the DT maintainers, AND certainly it will go against the basic
-rules for 'reg-indexed' properties ...you cannot have 2 prop indexed with the
-same reg-value AFAIK...and the reg-value, here, is indeed the spec protocol
-number so you cannot change that either within the set of nodes sharing
-the same prop....
-
-...moreover the above additional construct of having possibly per-protocol
-channels would create even more a mess in this scenario of explicitly
-declared duplicated protocol-nodes:
- 
-- should we duplicate the optional mbox/shmem too ? not possible...DT sanity
-  would fail immediately also in this (I suppose due to duplicated entries)
-
-...BUT
-
-- at the same time we should assume that ALL the duplicated protocols inherits
-the optional per-protocol dedicated channel that is defined in one of
-them...seems very dirty to me...
-
-...moreover...explicitly allowing for such duplicate DT protocol definitions
-would open the door to create even more SCMI drivers like pinctrl-imx that
-uses the same PINCTRL protocol as the generic-pinctrl BUT really implements
-the SAME functionalities as the generic one (just slightly differently
-and using a complete distinct set of NXP pinctrl bindings for historical
-reasons AFAIU)....BUT pinctrl-imx is an *unfortunate* exception that we had
-to support for the historical reason I mentioned BUT should NOT be the rule
-NOR the advised way...
-
-....while other drivers exists that share the usage of the same protocol
-(HWMON/IIO GENPD/CPUFREQ), they use the same protocol to achieve different
-things in different subsytems...and they are anyway impacted (even to a less
-degree) by this fw_devlink issue AFAIU so the problem indeed exist also
-out of pinctrl-imx
-
-> 
-> Looks like that'll first help clean up the "two devices for one node"
-> issue. And then the rest should just work? Cristian, am I missing
-> anything?
-
-Yes that is the main issue...but still dont see how to solve it in a
-clean way...
-
-Thanks,
-Cristian
+Best regards,
+Hervé
 
