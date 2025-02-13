@@ -1,162 +1,159 @@
-Return-Path: <linux-gpio+bounces-15898-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15899-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 469B6A339BF
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 09:14:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80538A339C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 09:17:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2DE2164C31
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 08:14:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67CC17A3CBB
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 08:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B02120B7EB;
-	Thu, 13 Feb 2025 08:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D7020AF72;
+	Thu, 13 Feb 2025 08:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmucnGDk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oMXitEiR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFD220B20E
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 08:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5D13B29B
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 08:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739434463; cv=none; b=IKiPkwVJBFYsyTcM5Yhrx9+i5EONUeZyKHwOrbwrag0CU9N+XZzmVd5C5hAylFpXULHvS/NQokvJY7iLSdXSCYrgWNrYjXamyaAmjclWV6ie4+z7+ubO+MffbPYykN46JIj8lXk51GkgcNWEcVEtOBkTcM6dXn1+WSKqDwxNOZI=
+	t=1739434666; cv=none; b=b+alaEayDc3MfvPoqnOTl4W4aYsHONYewXGze4RqeT1scYe5Rq3/EwXj+LyMcoyxTUkrRvckKYsuU5ktSXQazIfpHDWYj+w4VL5diIjZOvEfoISNpnN5fJBSCHO3d7rE6plhdmLIbP68D1qYgW+G4bKUIwttO9qKa7VxEzCq/xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739434463; c=relaxed/simple;
-	bh=oxo5VknzmyosiN70TxoSyT6j6915qRwF1UviL6zfZrg=;
+	s=arc-20240116; t=1739434666; c=relaxed/simple;
+	bh=QIcpGwLOutIyQh32HNDYfU3g6OUWstG2YLgU9TsX+WI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nU5kNI9Kb2s+xecej0YdaWblIuMuLhcR/kCvSm4ItSKSv8V+od6J8wQgKUY8h0v2HiF9cygHn5T/mOrwyQGMdAYbj5kSiM6NtYHbPiLqCXSQLSM2d1gpcHD+wYRiiHBjCUEpW3wXWFKl5Xrk002VLM52tsPPODPlh+XU34c8N2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qmucnGDk; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=q0Eov4OHK3LADaosta0ZMDCpxgOEfvgtOCoaxa1+wzNohQkAGEa4/NTwQR5+Mlf1JxDNUr8eBLNcT+g6ka/G72QA6vnFbQBmYUnzkUjJpNYc70tRdWBTt5OlDCLLgTh9Dqz2myQ46Zwomklrf0tLpINVG0mvLRpcmphcfr8+zs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oMXitEiR; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30902641fc2so5405361fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 00:14:19 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54504f29000so539490e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 00:17:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739434458; x=1740039258; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739434663; x=1740039463; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J1ki+G0JPNrh9TGAEWfL+l/C4IFlJkUDv2DnvQNOIs8=;
-        b=qmucnGDkYWFAZ67tP5m/CF9AuKWzO+jYMga2gfRdneE8x/vXg+2q2E5L32cClL4yzX
-         NgUnH4boMBd/Kgg3/YgqBcgEZwosmI1sYy2yG5GbyYBnNgghh+/ZgNGiyo+5swWTLamg
-         yLk64KmhTSqLRzSGBPpfttRSGUxw4YsK2wOVymeqsikZ3oa/0gAOXF9hPp3q7m3m54HK
-         alRFQCIGDsAolfmV/TE5JweUltRv5TsgrzMLscCkDYQIjTa0/XNVLIS5XR+mIv8d6+7e
-         YLDcYRz5LlqlYpzFds6SEcZPHCAOSdcwIUdiU89zBqRvyjk2kRSBigOvO+lpJWdSV+G4
-         PkAw==
+        bh=7fEfu8GLWbh9oVDTAIcK1Jbp7CxeZowSLouxzJ5V5kc=;
+        b=oMXitEiRuwfq49pY7AKMyNT4gWyJAk1mOiy56ZYJpjaBvJBhZmbGULsaw0AYLz5r3F
+         yAkKuELMX9rFljpAJDq5DltS744wcfogSP5ssNgwMMHTiVQqTSXYL0nazcsb9RcARXyD
+         8+rIeFz+rhkUalzNfpGWDaG5FIlB6koJSc0R9cyArAi7TMqx+IkDe5lIqVZ8sU+57Iey
+         b5gReVR2VgHONCToAgwmhhUigGi7Wfb6xVPEt1fGb/xYXC3tMqTFdPWBLjNdBy3JObgp
+         xIYX2V9vu+5D9+IT+Re7VpJnmktqMKVI0fC++MOdo99D8KY6AxCKxGlT5bDn+ngnC56n
+         iYKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739434458; x=1740039258;
+        d=1e100.net; s=20230601; t=1739434663; x=1740039463;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J1ki+G0JPNrh9TGAEWfL+l/C4IFlJkUDv2DnvQNOIs8=;
-        b=MxhEn0P8nteamOfrCPRB10HgCxT8GO1ab9j4kew2Nu3nNrDI3pIWEtaZGyTSxy1L68
-         o786YuT8hr9ulUxZWQY8W7FMzsPhie3bLAWALkjl6WdENSvcHh3Ap/EcaQr6GUPVGPNO
-         pCI4k3y2u10LnZF34uLTBLULl7ovHobIZWh5ZRbXvC4YprHDzQyP8CaLNfY2UYSTMO/g
-         CoPKvyQNv4BGUOx8Tg6qoTKF1kC5d/GU8+o17iOEnX4zQGxqI3XT294jw7HzsrOlrhq6
-         EpwfatEr1tFjVwMPkx8JH0V+BIl42W8sXl4xKm1ztaX0KzGGxJUr+j2IMpItctotyV3U
-         lavg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0hoVEmpJsjmfH+H0ClUAHJgbO9/LC7L/WWA7jinkJbWBBEHKaOKoHCEDZX//tgKZmBJKD8//dDasP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqLVVsC7x6n/9qIpDK/V4YksrGNMfmavgcrwE0UY6dRrU/aYha
-	+TfF5ac75TFLTZZ6LNyS2Sbjew7VEIKzUuQ/W+JJSM9OqjsI1nVAbnXSs/7HuwznvgVK9FjQhdK
-	efZsS0sQnVMQ9/7OvsUVGtoid+/OlBWcDK0rN
-X-Gm-Gg: ASbGncuGvnu/fq4R7l7Z+rt1VQPwd8tsdFJP1hPLZvYrmC8hae1n5jMeIe8uqx1q2Ie
-	vMfVQnQJUL/Dr7I4pH6Pl8NuzIU3e0YCNbp3Olcrk5IV3eRTu6IxfGrYfSjhF7hI1ceqOYEw=
-X-Google-Smtp-Source: AGHT+IHf9iq2n1PUU5HCWe9soaH4SFA9WbopYOlEastjkCTCAX4hoUJGTt7Zw2wOUBlbY2AJ3VKHXgQD1OrOSfhwXZM=
-X-Received: by 2002:a2e:bc85:0:b0:2fb:cc0:2a05 with SMTP id
- 38308e7fff4ca-3090ddd1604mr8206891fa.37.1739434457896; Thu, 13 Feb 2025
- 00:14:17 -0800 (PST)
+        bh=7fEfu8GLWbh9oVDTAIcK1Jbp7CxeZowSLouxzJ5V5kc=;
+        b=cWIVtNY2MI9ouBjk4n1G6FpPPZOTex+XgoXqZ4W+N8AanFAAaxRdasYFhGfFVUBUPi
+         vQXxFBsJKpsRz58BOiwk65Ezw/fKpFFS92PbJ+vBytM6Rfj9JqN7Cc1DNxcdZtB/71Y2
+         RnSiJSKtQ+H6nD0xlhKMH4TnGJ5U5J+6lnvh8+2b0zNWvfnci64W7JNlRSI/dCgX+ogH
+         GFZyzkHBk5zgVTaSt3XQtBiLGncVqVbeDmR1JrPuJ0BbVs8/pSAqUF0hLMXOy6dI/uyd
+         MrF6PoA70MnANTYw9MMXmebg9URff+6B2Ra0rHoatYf2nX0tMqrWNxgIqpkiA1WWhcQQ
+         TpPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxwWkLo1KQAvzW/jNJvlW6cL37C8G0k0nyWOB7vzHyEyD+pEzWG00AmzkoOhWKRIrTBOn2A21B9jVi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSwSv/Yog//veys0+/f2J1cgXaSOLLCX9j56LtU4o/OJL4Dxvg
+	yNjvbbuNEBZ8iQ/GCNXXizZ0tn1P3j+robr3zYaqbPTYDNEgmgKWZJQilHQajlwxU/85KXcMWKP
+	niA40mUpjU0vBmggzLQZD6F2KItHk0O8tsT/a
+X-Gm-Gg: ASbGncuKZF/DOCzeoHJ96GgB27zocRFjpZsWlqRPAtDu7d6/YXj86nR8SL2YpiRfjo1
+	VZw0dN+e0Vu9bjk29JTH/RxtQFRKhYugbz9pTjMqK855+gBADHDYDoSmsz8eDKMLdEckZeoA=
+X-Google-Smtp-Source: AGHT+IF69eZEtmq/bytiQvp5QhXzQAgT59awT8Yvq0oySfRGAni/tuvturEoI284/LivbVgt7JWAcyiW719+mfChwik=
+X-Received: by 2002:a05:6512:1324:b0:545:c92:271f with SMTP id
+ 2adb3069b0e04-5451826ea10mr1946789e87.10.1739434662716; Thu, 13 Feb 2025
+ 00:17:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com> <20250120-scmi-fwdevlink-v2-4-3af2fa37dbac@nxp.com>
-In-Reply-To: <20250120-scmi-fwdevlink-v2-4-3af2fa37dbac@nxp.com>
+References: <20250120-scmi-fwdevlink-v2-0-3af2fa37dbac@nxp.com>
+ <20250120-scmi-fwdevlink-v2-1-3af2fa37dbac@nxp.com> <7a29ec8f-fef8-4f1c-a2eb-16a63f2b820c@stanley.mountain>
+ <20250206105218.GA22527@localhost.localdomain> <e20415aa-517c-4e72-a1c3-9c02769c1149@stanley.mountain>
+ <Z6SgFGb4Z88v783c@pluto>
+In-Reply-To: <Z6SgFGb4Z88v783c@pluto>
 From: Saravana Kannan <saravanak@google.com>
-Date: Thu, 13 Feb 2025 00:13:41 -0800
-X-Gm-Features: AWEUYZkG9pGG1E2hWQ62JNBsrZ94QFIvS7VdMRQU29qCe8Cm2dCEy_nhw7vZ3rE
-Message-ID: <CAGETcx9E1MYgzd7Hupz8YAqk7-D1Aeb+AAyQiEMia-6hnFQTRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] pinctrl: scmi: Switch to use machine_blocklist
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+Date: Thu, 13 Feb 2025 00:17:06 -0800
+X-Gm-Features: AWEUYZmIzWqZe4wj2qpsKpM0Mnm6z_-a0UXdGuXwQ-oMTHKT5ieIi6a9LqYyhk0
+Message-ID: <CAGETcx8MXpLntMu4=9qECdZJzJLJbWa8ziH8XcW=yJNDAgD=Vw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] firmware: arm_scmi: Bypass setting fwnode for scmi cpufreq
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
 	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 19, 2025 at 11:14=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.c=
-om> wrote:
+On Thu, Feb 6, 2025 at 3:42=E2=80=AFAM Cristian Marussi
+<cristian.marussi@arm.com> wrote:
 >
-> From: Peng Fan <peng.fan@nxp.com>
+> On Thu, Feb 06, 2025 at 02:31:19PM +0300, Dan Carpenter wrote:
+> > On Thu, Feb 06, 2025 at 06:52:20PM +0800, Peng Fan wrote:
+> > > On Wed, Feb 05, 2025 at 03:45:00PM +0300, Dan Carpenter wrote:
+> > > >On Mon, Jan 20, 2025 at 03:13:29PM +0800, Peng Fan (OSS) wrote:
+> > > >> diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/ar=
+m_scmi/bus.c
+> > > >> index 2c853c84b58f530898057e4ab274ba76070de05e..7850eb7710f499888d=
+32aebf5d99df63db8bfa26 100644
+> > > >> --- a/drivers/firmware/arm_scmi/bus.c
+> > > >> +++ b/drivers/firmware/arm_scmi/bus.c
+> > > >> @@ -344,6 +344,21 @@ static void __scmi_device_destroy(struct scmi=
+_device *scmi_dev)
+> > > >>          device_unregister(&scmi_dev->dev);
+> > > >>  }
+> > > >>
+> > > >> +static int
+> > > >> +__scmi_device_set_node(struct scmi_device *scmi_dev, struct devic=
+e_node *np,
+> > > >> +                       int protocol, const char *name)
+> > > >> +{
+> > > >> +        /* cpufreq device does not need to be supplier from devli=
+nk perspective */
+> > > >> +        if ((protocol =3D=3D SCMI_PROTOCOL_PERF) && !strcmp(name,=
+ "cpufreq")) {
+> > > >
+> > > >I don't love this...  It seems like an hack.  Could we put a flag
+> > > >somewhere instead?  Perhaps in scmi_device?  (I'm just saying that
+> > > >because that's what we're passing to this function).
+> > >
+> > > This means when creating scmi_device, a flag needs to be set which re=
+quires
+> > > to extend scmi_device_id to include a flag entry or else.
+> > >
+> > > As below in scmi-cpufreq.c
+> > > { SCMI_PROTOCOL_PERF, "cpufreq", SCMI_FWNODE_NO }
+> > >
+> >
+> > Yeah, I like that.
+> >
+> > -     if ((protocol =3D=3D SCMI_PROTOCOL_PERF) && !strcmp(name, "cpufre=
+q")) {
+> > +     if (scmi_dev->flags & SCMI_FWNODE_NO) {
+> >
+> > Or we could do something like "if (scmi_dev->no_fwnode) {"
 >
-> With machine_blocklist, the blocked machines will not have pinctrl scmi
-> devices created. The fw_devlink will link consumer and supplier
-> correctly.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/pinctrl/pinctrl-scmi.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scm=
-i.c
-> index df4bbcd7d1d59ac2c8ddc320dc10d702ad1ed5b2..f041478758b50e85d99214f4f=
-e42208d0c8c808f 100644
-> --- a/drivers/pinctrl/pinctrl-scmi.c
-> +++ b/drivers/pinctrl/pinctrl-scmi.c
-> @@ -505,11 +505,6 @@ static int pinctrl_scmi_get_pins(struct scmi_pinctrl=
- *pmx,
->         return 0;
->  }
->
-> -static const char * const scmi_pinctrl_blocklist[] =3D {
-> -       "fsl,imx95",
-> -       NULL
-> -};
-> -
->  static int scmi_pinctrl_probe(struct scmi_device *sdev)
->  {
->         int ret;
-> @@ -521,9 +516,6 @@ static int scmi_pinctrl_probe(struct scmi_device *sde=
-v)
->         if (!sdev->handle)
->                 return -EINVAL;
->
-> -       if (of_machine_compatible_match(scmi_pinctrl_blocklist))
-> -               return -ENODEV;
-> -
->         handle =3D sdev->handle;
->
->         pinctrl_ops =3D handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PIN=
-CTRL, &ph);
-> @@ -561,8 +553,13 @@ static int scmi_pinctrl_probe(struct scmi_device *sd=
-ev)
->         return pinctrl_enable(pmx->pctldev);
->  }
->
-> +static const char * const scmi_pinctrl_blocklist[] =3D {
-> +       "fsl,imx95",
-> +       NULL
-> +};
-> +
->  static const struct scmi_device_id scmi_id_table[] =3D {
-> -       { SCMI_PROTOCOL_PINCTRL, "pinctrl" },
-> +       { SCMI_PROTOCOL_PINCTRL, "pinctrl", scmi_pinctrl_blocklist, NULL =
-},
->         { }
->  };
->  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
->
+> I proposed a flag a few review ago about this, it shoule come somehow
+> from the device_table above like Peng was proposing, so that a driver
+> can just declare that does NOT need fw_devlink.
 
-Definite NACK to this. Please don't depend on indirect
-conditions/flags. There's no guarantee that this check will hold true
-in the future.
+Sorry, looks I replied to v1 series. Can you take a look at that
+response please?
+https://lore.kernel.org/lkml/CAGETcx87Stfkru9gJrc1sf=3DPtFGLY7=3DjrfFaCzK5Z=
+4hq+2TCzg@mail.gmail.com/
+
+If that suggestion I gave there would work, then that's the cleanest
+approach. This patch series is just kicking the can down the road (or
+down an inch).
 
 -Saravana
 
