@@ -1,115 +1,156 @@
-Return-Path: <linux-gpio+bounces-15953-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15954-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35DC4A34E0E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:51:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31A7DA34E18
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:53:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9AA416D3BC
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:51:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D88C716C79A
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B55245AE4;
-	Thu, 13 Feb 2025 18:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5B15245AF8;
+	Thu, 13 Feb 2025 18:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5yi+iYr"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QQFIS6Yl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241E828A2D4;
-	Thu, 13 Feb 2025 18:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B0D28A2D4;
+	Thu, 13 Feb 2025 18:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739472690; cv=none; b=sF5/uuro2I9ZVV/tpwCH6OLyQJ8umJSZRPOTdLnMFr+Gb/3cXFVBdeJqIl6NCR4ESr9F35XPpNaaIB0Ift3vzpPetNbvBcMjI+cIe2cAWIKfRA+EXDeiXmXsqerfemijKB5jRvIbm+MguQMxnpAGHLhWPsv+XtQV4xkn4fis59o=
+	t=1739472796; cv=none; b=Yd/OLZcQneDF+M9s+JaOfbqpmZpLmBz3U2ksl1kxBMxlG7UUE3fu1H9DZ/2DQfNOy8+GXYFRN3UgUq/wbOG6qL68CMbk9qzCnrzsmwEJCD3C+gLWukFl2LThl+CeVKPo9s4sjoxe/AHLIv2s6CXTrLOU5tiZFHEbvUZ74Ef9j0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739472690; c=relaxed/simple;
-	bh=Z4JIzyla/zB42IIdyq9rsiYIJ4BG8zZIFXJSyVMSn5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YSFPT3tg53T/oaSGs1PRnwb3AVOlvTo1d1blDJNOLJSCoduRq2SW7Xi/XBbYAN9JoHZL7AMhIr5XBJ0srHUPp+lDtjAKtaDSYgsDzEt+33UwyazIEDvPbcRAsrxKvH22bs2NUHlZGjs9c/F8fo7nH51pkVPnP8NrOdpoWSRFuSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5yi+iYr; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739472689; x=1771008689;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z4JIzyla/zB42IIdyq9rsiYIJ4BG8zZIFXJSyVMSn5A=;
-  b=O5yi+iYrXxKqvWzjL3L9IAMDOS8ziGCquYhC+S7VElPmYLtHrLf++Cr3
-   mp1ui1gVtf6tODkubyDD/Na156Ew6Hi7qDBPG26sEJipnVYEpdub0SUhW
-   9X44ngE7oKd2RINb3JH+wSrqShNHC3ieb4McxV70ss3NyhKG019v4q9KK
-   X5yf87/tR8I+xApeRoG4Tcy9hprqaXre5BwzAuKvKPyG2wQu0C5r9KUJJ
-   hJl1DCBtTBrMeEtcJft8+saQ6CYMPWlL4mqX5QdoRgUwTYOv4p7kSy4WR
-   PLUwo6Xea0TzUCGt7xIX8HhPppODqws2TZ6nmPRuOIdNdsHp4R1Ky8buJ
-   A==;
-X-CSE-ConnectionGUID: t9K6O2jlQSy+KjJXsHQdaQ==
-X-CSE-MsgGUID: g+6C0P0TTq6qAaG7KNSc0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40123366"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40123366"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:51:29 -0800
-X-CSE-ConnectionGUID: h8dHvQ9XTBSbZoTu5XPOSw==
-X-CSE-MsgGUID: u5xXpwf1Sh2wFmPfe87bCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113108142"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:51:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tieJ0-0000000BFtK-2TtO;
-	Thu, 13 Feb 2025 20:51:22 +0200
-Date: Thu, 13 Feb 2025 20:51:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Alexandru Ardelean <aardelean@baylibre.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 1/2] drm: Move for_each_if() to util_macros.h for
- wider use
-Message-ID: <Z64_KheQ_b0TtBDn@smile.fi.intel.com>
-References: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
- <20250213182527.3092371-2-andriy.shevchenko@linux.intel.com>
- <87msepy93x.fsf@intel.com>
+	s=arc-20240116; t=1739472796; c=relaxed/simple;
+	bh=y2OXpJsSi9OIRanlMyx3KWqQShtlGo0AuzXqA9Fbzqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uZMuntwa3+cLGsp2OZzTzLmqOR+WdrSoQrs/7KL0w8Y209N8y4DScxTzJtbOJROIEah/TsqlOXSmVjoa69ggWRLqI8W/5aqZ4Fs84W64dHL/OALjZapoT0YXnqu+A5F7HeLuvQAbKg+fRNUPIGq+0e9tmYAOJJQDva8cul6e1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QQFIS6Yl; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 44E1E4442E;
+	Thu, 13 Feb 2025 18:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739472790;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J6qH4iFmq2eCsp4gR0alhKpvz8JxjM4NdzNRGitctoQ=;
+	b=QQFIS6Yl0SPVIujgU2GPm4v6MzAaeFar1z+P8jxljvArnhEuso+Y/P/qcxiEHDYPns9Oe2
+	je9+Kk9CWdf/ZsYEv5gcGV6gh9WpYb42YK62QI6bB0wAUu3we0b6aprTdQJADCNWcrSAwx
+	9ycbaUf61H5QU/WHv8hmtogOn+6BAi7kQmiMc7MydcuHs8hj5eRXpVwGOvirzmuVhTb/Xp
+	kqAxyCa/lZbEnmksJuVGjvMa1RbnPT5GuzchNsyUEemWs5dhkGjLVNdJ4susBSgI35TH1b
+	M6SnAW8+yTKzKsCCoVguJ7nfcytgbsCz4gHn8GfhtBHVrRRIAJoC44hKvft1aw==
+Date: Thu, 13 Feb 2025 19:53:04 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta
+ <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+ "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250213195304.3a2df02c@bootlin.com>
+In-Reply-To: <CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+	<20250213171435.1c2ce376@bootlin.com>
+	<a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+	<CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+	<821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+	<CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87msepy93x.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegjeehgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffleegleetgedtuddugfffkefhgeeuheeugffhhfetgffhfeehkeejgeelfeetfeenucffohhmrghinheplhhptgdrvghvvghnthhspdhkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefhedprhgtphhtthhopehphhhilhesrhgrshhpsggvrhhrhihpihdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrnhgurhgvrgdrphhor
+ hhtrgesshhushgvrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, Feb 13, 2025 at 08:48:02PM +0200, Jani Nikula wrote:
-> On Thu, 13 Feb 2025, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > Other subsystem(s) may want to reuse the for_each_if() macro.
-> > Move it to util_macros.h to make it globally available.
+Hi Phil,
 
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
+On Thu, 13 Feb 2025 17:57:37 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
 
-Thanks!
-
-> If you want to go down the memory lane, see [1]. ;)
+> On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:
+> >  
+> > > > Or do you mean a custom board, which has a CPU, RP1 and the button and
+> > > > fan are directly on this custom board? You then want a board DTS which
+> > > > includes all these pieces?  
+> > >
+> > > That depends on whether you count the Raspberry Pi 5 as a custom board.  
+> >
+> > So you mean the Pi 5 board would itself make use of the resources the
+> > RP1 device has? They are not simply connected to headers for plugin
+> > boards, but used by the main board? Hence you want to describe them in
+> > the board .DTS file.  
 > 
-> [1] https://lore.kernel.org/r/20180709083650.23549-1-daniel.vetter@ffwll.ch
+> That's correct. But even for plug-in devices, those which are on
+> non-discoverable buses need overlays to declare them, which causes a
+> problem when the overlay application happens before the kernel is
+> started.
+> 
 
-Yeah, I have read it a few hours ago to refresh my memories.
+Hum, I see.
 
--- 
-With Best Regards,
-Andy Shevchenko
+We worked on overlay usage on non-discoverable buses wired to a connector
+and we did a talk about issues we are facing on at Plumber [0].
 
+You can also find our big picture in [1] and a last contribution introducing
+export-symbols feature in [2]. export-symbols is also under discussion on
+some other threads.
 
+Also, we proposed the i2c bus extensions feature [3] whose goal is to allow
+an addon board to add devices on an i2c bus provided by a base board and
+wired to an connector the addon board is connected to.
+
+Maybe in your case, you can decouple resources (gpio, pwm) provided by the
+addon board and used by the base board using also nexus node.
+
+We use a nexus node [4] (not presented at the Plumbers talk because the idea
+came during 'out of talk' discussions in Plumbers) in order to allow our
+addon board to use resources provided by the base board.
+
+In your case, if I understood, you are in the other direction but why not
+using also a nexus node to decouple and translate resources in this other
+direction ?
+
+Don't know if this idea can help but feel free to ask for some more
+information if needed.
+
+[0] https://lpc.events/event/18/contributions/1696/
+[1] https://lore.kernel.org/lkml/20240917-hotplug-drm-bridge-v4-0-bc4dfee61be6@bootlin.com/
+[2] https://lore.kernel.org/all/20241209151830.95723-1-herve.codina@bootlin.com/
+[3] https://lore.kernel.org/all/20250205173918.600037-1-herve.codina@bootlin.com/
+[4] https://github.com/devicetree-org/devicetree-specification/blob/v0.4/source/chapter2-devicetree-basics.rst#nexus-nodes-and-specifier-mapping
+
+Best regards,
+Hervé
 
