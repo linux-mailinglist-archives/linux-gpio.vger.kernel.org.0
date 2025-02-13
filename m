@@ -1,147 +1,101 @@
-Return-Path: <linux-gpio+bounces-15934-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15935-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BF94A34C3A
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:44:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102F7A34C50
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0216D3A3E89
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:42:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCC87188B12B
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 17:46:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D99E2222B6;
-	Thu, 13 Feb 2025 17:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C1424501B;
+	Thu, 13 Feb 2025 17:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YsnRVMjz"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cjaP5ulX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AA22040B7
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 17:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4AA24167A;
+	Thu, 13 Feb 2025 17:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739468554; cv=none; b=bt23dG8O4MxhO3m0+gM7BGMhcgPEj2Vevdd8MARb/ORwsVUgzd00Z5smERJCXKrzI31R771tDc+GSHttZw6ZOxl3NgEWbhXArJoR4NeqWzs5E8r7MwHFxi8fRahrW4Y7aF8vtfPNZu6LkQgyaQWYDWwqcwyOHr6vqqO01CdWeDQ=
+	t=1739468746; cv=none; b=uX7g6SrmWWJyaUAG5Sndj4Nzxo7wpN0a2ndZ7G/jL8fwYXSGSvC2tpQueebGiEEtgkVf1lodSyMq0DVAWxHwdcEr4Ns9KtoAzNnYZXvpEA3hEt99IUBqB+8kcXABcsxLs475u9IdvGov07ElkrdJn9N0VtVBpbyd2GPF7HeK27w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739468554; c=relaxed/simple;
-	bh=ry5HU2b5JpTWT9D21OGSEN89Xcj4kAma40gpiFnwdJE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QFt+CO9vlea+9DKqT0HRS2U2P5wC74PHxVy9CtK4VMY82ptRcvDY6N4gWAnjEDiMi114AORGbf295+Y2nQdavkV9TBb9TbraW+DMv5FRoe6S4iYAccMAL+ygz9n7fHAHzohUxkvQLIh4CKTTjoCVV2l8v4ZCABBRhKX58miE9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YsnRVMjz; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54508b026d1so957135e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2025 09:42:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739468551; x=1740073351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o7poaTbadceb30IF+pZHsHhZOoR9b8z1fPvVtB4cPUk=;
-        b=YsnRVMjzJpPBywIoYZCkd40noCATJ91FhwUJPHKaTaC5FOJQEwcOwlDqAvaHXqvm0Z
-         CU4elwzrofsWwdQSvQiYO1hWORw3Z+62DEHhDGrCmIbikCcknlRFciQXerV2e2i3cDA/
-         AfD8pviyuSDCjbF5YE2hPy7fvBPLyJoLniHlKHa0DAvIUdNw1GLmZkpBZnIDjEfXfDfK
-         dMIv3VUkCFRVc46vU67s46hNoz2AZu4WCp41nITN1eB4E3qkxQLyljvBIG97NDXub+Zs
-         rPkwcTfCyY8cJ8mVpJr5xyE8ktDb017ab7j/XLJ7AYMKrfJXdki3HfDwesmN3gVeuFRh
-         gO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739468551; x=1740073351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o7poaTbadceb30IF+pZHsHhZOoR9b8z1fPvVtB4cPUk=;
-        b=m6oM52LYLvMcTxnkBqE19VhiMHqT389gM8GkDxGD8U1TK8JSU4lERF4PzEv/MewWGm
-         3QCwNEUZ8ArtP3Ox2sLgcjrQukmg8IFBKYvR9U5b+L/V816da6xHAZg4dSw1ojmSyaYr
-         lKzGVsdfCrS1hbUFg0XIfNSOlhWY+gzrZt4wlLqhbjSrrG3uC+WPrlxs8caZWcdyL2Pq
-         qrqyMJ9S4sx/EmJGK+ifwOh1/2wVXgHPJwhgkwYiTeybs4mtVZgGiM3jO80rzwajn02+
-         7ftha0wXlr/ZaAkjLteSf4ohYx2HpYw4EfQV5PEzIK4DH35I+Nag7mmGcH+xKik7Nd8a
-         B+eA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzfhjxDhn6IuBcm+SWPkwGTdEs7OdrKdnmbhMEobSo4nGkXRD8ibPaxk4bCepiw/wrmHnc1b7l1DG3@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTzmfVU31hsAgvFiUrzeJS6yFgxQetT9PYxJYOLazzDc5H8fIN
-	rIYTEFSagiat8IVGcBV+RVHaely6ytJd2lwoANEAry1ka/hwEKI6BBAe8XL3xJtXpp+HMdHZqs5
-	F8uAaupzCQ40BtdhiHxBc6Y6vPkGgRyks/LAATQ==
-X-Gm-Gg: ASbGncsdEOwdnre54ztIFTuXBWGYRlpzI9YSCTyA+aIAI6kYPQ9hyWywzNurlPa0F+A
-	azP3PQ0MnyftaEfWqSMKhMZ9gsuPoiRtHL6RxJoGuoDts3kgMatvDlmIXYNNpao3fs0rEbAjLSy
-	ADQDk12Ds05NtjoUQ7VkahEsezu6d5
-X-Google-Smtp-Source: AGHT+IF+fWjLMy4RC4fJfJhppdyGnDeRMMDIkKzyGd/CQOlFqBivCx8W/IGAYdJvOJJTC/43hOWG0nQaRr0ngZJNi/U=
-X-Received: by 2002:a05:6512:3d88:b0:545:8cb:2183 with SMTP id
- 2adb3069b0e04-54518122c71mr2468700e87.29.1739468550462; Thu, 13 Feb 2025
- 09:42:30 -0800 (PST)
+	s=arc-20240116; t=1739468746; c=relaxed/simple;
+	bh=lEggCUYbTk+GP5TUUiY50DmE28Zc//S9OpoLzZIcRLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcG67VHz1jWqKvg3UAtWDcT3Bk+WMdQb/loAXeSBcFqJowCvnHWQ785xKRkjmNiR8rbIMloS3kP5gE561dHez4uhrzoKREJCjsgkfEGIpKpZqT94bGeTt58WIQYMYmZbqniJ+6UnPg1gTmJ0A4GFslRSgirK1WyjRAMgh4Oxrjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cjaP5ulX; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Cx4b9ljxXAEd//n/bsswHdYF1IR3q+eU4ODteiygmF8=; b=cjaP5ulXVtAF5UtU8yjn3p8bRx
+	vAw7A708oQfTl74++6PYDDfNE5Quqdg8w+JZ/3fW9xV+d9yeNy1L9zplg4DzFnCA8hgg/KUuJIBLU
+	5Z9PnHBVEh2LrFcEdUPmQgZB8j9j288L7m6WyEW7atimeHSwDrIjlLJD0ETW+vHcHPYU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tidHH-00DoRW-SC; Thu, 13 Feb 2025 18:45:31 +0100
+Date: Thu, 13 Feb 2025 18:45:31 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>,
+	bhelgaas@google.com, brgl@bgdev.pl,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com,
+	devicetree@vger.kernel.org, dragan.cvetic@amd.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+	kw@linux.com, Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+	manivannan.sadhasivam@linaro.org, masahiroy@kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Rob Herring <robh@kernel.org>, saravanak@google.com,
+	Stephen Boyd <sboyd@kernel.org>, thomas.petazzoni@bootlin.com,
+	Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+ <20250213171435.1c2ce376@bootlin.com>
+ <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+ <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <173935301204.11039.10193374588878813157.b4-ty@linaro.org> <801b5364-129f-42e9-bf9a-a90d9eeb4629@baylibre.com>
-In-Reply-To: <801b5364-129f-42e9-bf9a-a90d9eeb4629@baylibre.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 13 Feb 2025 18:42:19 +0100
-X-Gm-Features: AWEUYZkzHoDq5i_PpQBC_MEOqx6J4QYBMs6-RGY-gc-y6YI9Zv84ton-OV3XB6s
-Message-ID: <CAMRc=MeXTvPnEPjOmPd5Vw0FYKHzndsB0SVjQErA4CY_0MGsMQ@mail.gmail.com>
-Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add gpiod_multi_set_value_cansleep
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
 
-On Thu, Feb 13, 2025 at 6:25=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> On 2/12/25 3:36 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> >
-> > On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
-> >> This series was inspired by some minor annoyance I have experienced a
-> >> few times in recent reviews.
-> >>
-> >> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
-> >> having so many parameters. In most cases, we already have a struct
-> >> gpio_descs that contains the first 3 parameters so we end up with 3 (o=
-r
-> >> often even 6) pointer indirections at each call site. Also, people hav=
-e
-> >> a tendency to want to hard-code the first argument instead of using
-> >> struct gpio_descs.ndescs, often without checking that ndescs >=3D the
-> >> hard-coded value.
-> >>
-> >> [...]
-> >
-> > Applied, thanks!
-> >
-> > [06/15] gpio: max3191x: use gpiod_multi_set_value_cansleep
-> >         commit: eb2e9c308d2882d9d364af048eb3d8336d41c4bb
-> >
-> > Best regards,
->
-> Hi Bartosz,
->
-> Do you plan to pick up the other patches that have been acked
-> as well? It seems like most folks were OK with everything going
-> though the gpio tree since the changes are small.
->
+> > Or do you mean a custom board, which has a CPU, RP1 and the button and
+> > fan are directly on this custom board? You then want a board DTS which
+> > includes all these pieces?
+> 
+> That depends on whether you count the Raspberry Pi 5 as a custom board.
 
-Jonathan requested a branch so I made one and sent out a PR. I figured
-people would just pick the relevant patches into their respective
-trees? For patches that won't be in next by rc5 - I will take them if
-Acked - just remind me.
+So you mean the Pi 5 board would itself make use of the resources the
+RP1 device has? They are not simply connected to headers for plugin
+boards, but used by the main board? Hence you want to describe them in
+the board .DTS file.
 
-Bart
+	Andrew
+
 
