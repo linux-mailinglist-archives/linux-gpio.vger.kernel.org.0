@@ -1,64 +1,65 @@
-Return-Path: <linux-gpio+bounces-15946-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6441CA34D9D
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:25:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A79AA34DA0
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 19:26:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E0603A4059
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:25:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A339C188ECAD
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2025 18:25:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B0624502A;
-	Thu, 13 Feb 2025 18:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110F924291D;
+	Thu, 13 Feb 2025 18:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jf0AyP2B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5Jg4K2V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CBA241678;
-	Thu, 13 Feb 2025 18:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A622063E1;
+	Thu, 13 Feb 2025 18:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739471141; cv=none; b=tjCqOCwb5Pl1UqA/e+hqLxIdGKlBFW48yHuncP7WgyO3dHq+6fq9/q4K1w6ZR0Kf9QfM7g75rECIKAbNenoZQLhH8274xxHi9LnKo1AJebbifQZR385Vr88TiB0i6rL0+iWehX20JDXOXPW8ihAF0By2hze7LyuGAQhKWGRzzqA=
+	t=1739471135; cv=none; b=rPbYLQK3KPbdU9RXItI6bmfRO4OQTwxU2cRyOKOVjhFOrr7OHYBJZ2hV7F0rusuv3efPUnf7kEpMAD2INi1/am5SOXRyoBTIkoybmhgUvm5Bx6LvL4M8c97B3KOhbotewjP7Y9u4Ij8UNjBLUV098OfcnmP73EaZzP4bJTggp9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739471141; c=relaxed/simple;
-	bh=feGGHOi3zI3MPTYTRwIv47zVrsjrDEIKTSIWX8tUD9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jEM8vSfH6zRjIq8LrnpW73BoLbhbas2s4U+qDchYJSsBdt60Q40u6agJsU2ZTIJx4s4hd4nY+kvLJUzFV3ZvjFuiWzifgCrKB31hpVBSkCMrlkjok5dOqABiOQy0oBqbfXU7NDo40LLMv8CefsBTcDDr6wODp0w5IKtOShS36/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jf0AyP2B; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1739471135; c=relaxed/simple;
+	bh=uLX7BKkCsOAAmxOi6VDKnJUBlyAfuP7t1DKSjk9fKlE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XEfRETXc30YSZsVGQaTO6Tf7+Kwcr8O/TRo45dlGCDl2Scf/Add+R/28Oscr2d1YM/AYTHi+pCkJpB0FSXFPwHqCfd4Z/XZt15QryDIHEUxPiFHJLl5p2ct366NnlmMaHfgmjBnedt3oJuWrp/kYJTfecCAcaKzWgz/68zyLlBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5Jg4K2V; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739471140; x=1771007140;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=feGGHOi3zI3MPTYTRwIv47zVrsjrDEIKTSIWX8tUD9w=;
-  b=jf0AyP2BUUN13t5lMBpWk8AMKpgQCoSSHxgYNjXKsA5FIhLsii8qrDHP
-   wTuAOSkcS0HDnSOdM0aVToLLUINrzFyIvNQjbLKMrbRo/N8PYD28Jalzk
-   E6z1BNPCs7PJIJikBO8NVS2VnfZ7lPPARmD8NeB6ofo0FPfc8xxrE05z4
-   21ip2gffmo3BRqHr0IvhVhnfSAXPz0gkfHCXl4dRIqKXKiw/g6PX3wNfZ
-   Ox5adR2AtMWOTXOw4ZLB2DS9v+gRcPViic+OtBkY+sRfVAhe7NFB3S5ow
-   BNSAqCRoCU7nqtCcQQsM97yVgSQGvnhXxQfxwtBdfRvh1ppJdEUHXfV5g
-   Q==;
-X-CSE-ConnectionGUID: DNrDaqBdSGmJCy8/CMT8Ug==
-X-CSE-MsgGUID: q+eYHp8SRkS8X+8jZDTqYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="51177673"
+  t=1739471134; x=1771007134;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uLX7BKkCsOAAmxOi6VDKnJUBlyAfuP7t1DKSjk9fKlE=;
+  b=S5Jg4K2Vs4K3i/d+CF1fT8NFfNmUnquhAdtAEW0vt8EVXS5Lk+M2ZJmM
+   6hNijT7vi0l8xvESMz7Ok+bSbVdIzBWH2h/UicJ3j5HaVkJ33gvFgiZad
+   AWcVMeXgCYudY/xkwMrmdEsttFZBhcXy+7ZgL80i9IUengilowe+/4Fe6
+   Fwq0i7Xg5FGQUy+8o1Q0V5zodv8QbjP8IScZkJH5AUqRFvMGvt5SnTjWD
+   NKgmNJDrEWeC0ZfGbCI7irnyPmxfbPbun5cW5Pk2PyKb7VkSRbPwwZyZY
+   7+jeuy3ab9n2rqINe5qOQVIwr/HtqcJk/Ty44QCouhbJuXagFCJu1PzGg
+   g==;
+X-CSE-ConnectionGUID: cqLohFrFRFi3wS3QVHbzPw==
+X-CSE-MsgGUID: qvHm1/g+RHGTfL8FaqvllA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50407634"
 X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="51177673"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:25:35 -0800
-X-CSE-ConnectionGUID: 2kv5/gDFTa2LCfXXmvCe7A==
-X-CSE-MsgGUID: PQkSx2DlREChrWj3GYuAGw==
+   d="scan'208";a="50407634"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:25:33 -0800
+X-CSE-ConnectionGUID: L6EReLleSf2aGolaPW7PZA==
+X-CSE-MsgGUID: Y5FJqQU3Tbm7wX/V0GFH7g==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113721779"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="118314411"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 13 Feb 2025 10:25:30 -0800
+  by fmviesa004.fm.intel.com with ESMTP; 13 Feb 2025 10:25:30 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id EAC3B1FD; Thu, 13 Feb 2025 20:25:28 +0200 (EET)
+	id 068891F5; Thu, 13 Feb 2025 20:25:28 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
@@ -73,10 +74,12 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 0/2] gpiolib: Make code more robust by using for_each_if()
-Date: Thu, 13 Feb 2025 20:23:59 +0200
-Message-ID: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/2] drm: Move for_each_if() to util_macros.h for wider use
+Date: Thu, 13 Feb 2025 20:24:00 +0200
+Message-ID: <20250213182527.3092371-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+In-Reply-To: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
+References: <20250213182527.3092371-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,21 +88,76 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of opencoding with long lines, use for_each_if() macro
-which makes intention clearer and less error prone.
+Other subsystem(s) may want to reuse the for_each_if() macro.
+Move it to util_macros.h to make it globally available.
 
-In v2:
-- moved original for_each_if() implementation to the global header (Bart)
-
-Andy Shevchenko (2):
-  drm: Move for_each_if() to util_macros.h for wider use
-  gpiolib: Switch to use for_each_if() helper
-
+Suggested-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
  include/drm/drm_util.h      | 16 +---------------
- include/linux/gpio/driver.h |  7 ++++---
  include/linux/util_macros.h | 15 +++++++++++++++
- 3 files changed, 20 insertions(+), 18 deletions(-)
+ 2 files changed, 16 insertions(+), 15 deletions(-)
 
+diff --git a/include/drm/drm_util.h b/include/drm/drm_util.h
+index 79952d8c4bba..440199618620 100644
+--- a/include/drm/drm_util.h
++++ b/include/drm/drm_util.h
+@@ -36,6 +36,7 @@
+ #include <linux/kgdb.h>
+ #include <linux/preempt.h>
+ #include <linux/smp.h>
++#include <linux/util_macros.h>
+ 
+ /*
+  * Use EXPORT_SYMBOL_FOR_TESTS_ONLY() for functions that shall
+@@ -47,21 +48,6 @@
+ #define EXPORT_SYMBOL_FOR_TESTS_ONLY(x)
+ #endif
+ 
+-/**
+- * for_each_if - helper for handling conditionals in various for_each macros
+- * @condition: The condition to check
+- *
+- * Typical use::
+- *
+- *	#define for_each_foo_bar(x, y) \'
+- *		list_for_each_entry(x, y->list, head) \'
+- *			for_each_if(x->something == SOMETHING)
+- *
+- * The for_each_if() macro makes the use of for_each_foo_bar() less error
+- * prone.
+- */
+-#define for_each_if(condition) if (!(condition)) {} else
+-
+ /**
+  * drm_can_sleep - returns true if currently okay to sleep
+  *
+diff --git a/include/linux/util_macros.h b/include/linux/util_macros.h
+index 825487fb66fa..3b570b765b75 100644
+--- a/include/linux/util_macros.h
++++ b/include/linux/util_macros.h
+@@ -4,6 +4,21 @@
+ 
+ #include <linux/math.h>
+ 
++/**
++ * for_each_if - helper for handling conditionals in various for_each macros
++ * @condition: The condition to check
++ *
++ * Typical use::
++ *
++ *	#define for_each_foo_bar(x, y) \'
++ *		list_for_each_entry(x, y->list, head) \'
++ *			for_each_if(x->something == SOMETHING)
++ *
++ * The for_each_if() macro makes the use of for_each_foo_bar() less error
++ * prone.
++ */
++#define for_each_if(condition) if (!(condition)) {} else
++
+ /**
+  * find_closest - locate the closest element in a sorted array
+  * @x: The reference value.
 -- 
 2.45.1.3035.g276e886db78b
 
