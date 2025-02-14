@@ -1,110 +1,114 @@
-Return-Path: <linux-gpio+bounces-15985-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15986-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9969FA359A4
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 10:03:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0366A359F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 10:14:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2C6527A04ED
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 09:02:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFB9C3B04B2
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 09:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC8022C328;
-	Fri, 14 Feb 2025 09:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A1F24501F;
+	Fri, 14 Feb 2025 09:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJst4X3S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KEVQshiQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2025B229B36
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 09:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F5A242925
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 09:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739523804; cv=none; b=BOX7LqG9gFP1qdXYQcGhgcY0sxIFSu55cmEbyFYWq0x7Fs9R3in2fpHhHLLkBbj9FG8YmP5rb/kdg7rRTzOIn3wLk1tX+1ikj21HaQJtMAKngm1DWgQxbnqU3Nfv69URPMHooKR6iCvy08gvsPC/KHT+NMzx5TzILmiIafYS1nY=
+	t=1739524209; cv=none; b=Q2hmMvY/n2e0oQuwLY/dQOphiERNMdEl5YdRa1yDKOBrSR5r5SsDkvpVZsZVqA9xtoTEYvK7sMMWS1U+R3efuJwAei33ZDr+tkk4XuwmewSNi6bA/3VUY2WpulfhC36LRkni5R9gUCQ3HzA7Bf/Es5dA31Hg/99+E7FXjOnxk8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739523804; c=relaxed/simple;
-	bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
+	s=arc-20240116; t=1739524209; c=relaxed/simple;
+	bh=DER3TMntGQq5jg7E86/NDM7bx6lqw/lzX8FEgotNMUY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y7Yk5D2JE0zKx6fPIeRW/rkQ8mJ/81hcDMT7+L0BPeaSV4M48JZWpDcz3BXlzjWI4IZ/jfK06U94S6GmSpjCx2nzNYI8JJ9C9VARVpx0FKrosE3IdGzNhllWHiWyg92ZrA30KbkQ4lmHfj+KUPRL8MjavCtY4WwsnQm6UQkF1D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NJst4X3S; arc=none smtp.client-ip=209.85.208.179
+	 To:Cc:Content-Type; b=NqKsIJ3Hr8iTUnI2KK9RJ87+ogW+ulFDgqypLQjSvDxVKrhiuOtb6KmsVVUd8Zvfk30+7PMyXbnjxyKX15AkPuqoq1IDH+7RdNKcIxdztO3lF/PkEhxXwG3xSqEnqs8hVXocDYd6JFEE2+cHylKqh7/bNRwHc/LkaqVezEkIqR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KEVQshiQ; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-308eebd4938so17559441fa.0
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 01:03:21 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5451d1d56a7so1963327e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 01:10:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739523800; x=1740128600; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739524206; x=1740129006; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
-        b=NJst4X3ShKfYilNvdBaAeZUSsNND0v2If27aHRsb398vytgj3Mv6zvMZv/ElAHtpAd
-         gEi16QAbNvI3UrPJTZxa/3Nf26mrJhW7hS5aDIZxPB6dH3tJwSl3LaZGQlIFv6sX5YN/
-         uTEJlU6hbBbDAfkK01+kD57zdhE3+3h3ipqeEh85BMtvW53mFuZGjhNEn8Rp77g94DQt
-         N7IDS8voyAohHxca/hnh3RypNejTYYyyFGd76f82LbuPfZV0Rp1VSi845s9GCykNLV90
-         5bZNXCQt3QkKGIiVSjsqT4q+NC9GwlR2CTT+Osqb+8YLtL1gnS+q3zde+7v66GAOm1wS
-         NUAg==
+        bh=DER3TMntGQq5jg7E86/NDM7bx6lqw/lzX8FEgotNMUY=;
+        b=KEVQshiQVvW/yhbbEuawfh5arnnzKMijXiqe7mZ1k+ZNvXcfC0IxX2pESBhVrK97ue
+         /fAr/yPiI88bgYbLm73BDR5OloDF6j/oYSVth3HMejKsl4KkpUulQ0+hVi4iYBqUEp/0
+         UT0feugGfAy/3CQPC9nPgqP01dwccfgjAzU5896WNfNf7EWHMDb2bRilp3anPuvI5crT
+         Jv9pTQMZT+q3rxzTlvpSP9T9lD4Y2io/Cecxb3qr8JducIpFzSAbh+lmUhaVXzgYZJM7
+         d0mHDP85aFpytG12T5wp0W/6RL/aHvN0AXn3XfycDkhOKKKR039gCGxb8kZPcW4RYjdQ
+         wDGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739523800; x=1740128600;
+        d=1e100.net; s=20230601; t=1739524206; x=1740129006;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iTJc0cMLK8/kUGnVlLkEpjMd1IDc2KhUACzQgpu9b34=;
-        b=flEH8qOcyH6iUvcdytTGFoCXtdygTrn2ToxXTIY3KV39L0WDo6RBw199UbivKFZp1d
-         Y5ghNQLJautGmGJ414cdqTtwxYaDS3DsXQKhLGdn9SZDtfyYoa5J27/ZDOm8+0DyJb3i
-         8wDyBwXJy6OyXgAmcsAip2VLHrccf5qXGORmBv1uENXc+Rcuxh5WT3Pv8xuFmYp/TdOG
-         jXaDh9pos+EwYNIKLPV+fHyrrtv1/oy7ccCubkPZ/X1MujqPdMYsUeKF4kEzCnOR5/jr
-         O8blMP+Dn9DZhJHw6VAym4371CAMda+AJpGTOCVFPtw25hYEBDrVMUOELw9BJwYXZHcV
-         y7vw==
-X-Forwarded-Encrypted: i=1; AJvYcCXb15TyIbiDtfHVNelELPG1rVznc3G86YoQaFl70wFIsr65nLeqyOY4UadoJsfxTb6JwH3sTIAiQoy4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPgMO4cvK/b3Yv0i/ny8pAsaWc3EILVZ5DA91+dOg19sJ51YnJ
-	xU9PfahE1FkkrOaaXpm/NOTJbqMqyG1W0EyTLP3GamAWtoy/Z+ozhVLPYMxWYLcSrdwtaA9YBDI
-	aixWS+JrPPgitVG/NoiBzEevCoS40WceiYDdVJA==
-X-Gm-Gg: ASbGncu6CBbC8NaH9rLnZvKdyjSMAEU50qw27eG9C+Y/LGTNoSdVG2wmG8IVsskLcpN
-	uP/0tPN/pKiQOvOYYxwNG989IlbZEKuABpSz5YsZcaipYR1RXHFQruSXmNC/JB3l++2qd6S0j
-X-Google-Smtp-Source: AGHT+IF3HDdrnSW3BLW3bq9cqh3LStu3LTvk4uCfYArhbMCiGtiuvWWNtxSZE4wwSFlSY9sTduBuIBS2XR5LiRCWzdc=
-X-Received: by 2002:a05:651c:221d:b0:300:3a15:8f1f with SMTP id
- 38308e7fff4ca-30903927410mr38426071fa.32.1739523799914; Fri, 14 Feb 2025
- 01:03:19 -0800 (PST)
+        bh=DER3TMntGQq5jg7E86/NDM7bx6lqw/lzX8FEgotNMUY=;
+        b=dnDv2UZb/ZaO3Cun4CvqSBUEhx3zDbczUxi+91LEhcKW129L9mrSsP5oqowrTyvGuD
+         52l98jOlcCPgF73IfSORh6Dk5L2oU+Y7RyPD87jRnXt7vmsIrYAauNrYoVvVIk58JKXk
+         NXAnqGlKsFbgOklxE7K0Nr82u7dmZ8j7sbJnasFqin/mYh35MiGjXMrq9dvrS7QGTECe
+         N67692ClHQgMJOnB5+2qSmC3pFc5tf8jgRYBLnEqUOS7ZBJCGqqLBpFbAv+Ra9L+MAI7
+         +Ugd/DIsnIT5e5/RbatYu/0FVHXWAppJ/kUBXu8NvxjkhtVOoTxHZ923HSie7wmpVBvq
+         xDow==
+X-Forwarded-Encrypted: i=1; AJvYcCX5+6l1WjAin6lTFpOyrZSjULSY6Ucoi7ZG6/WpipDqUoueBEA85WGrBF4SvZm+GWserOHTpnsw8r01@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKjhOgNvJhJFMUCnAPF/Cgd1XEEbvP4fkMWZOU9ELct4QjDcBb
+	kR/j14jbkwKNMmYmgNZF51+YrTQTDofs3KdamIt590XWNb4fvWUM3N1eEEz0pQydDFOfUX9v+bD
+	CjL3NdoTrMOKz3KmnT969fu9+LDkPonglB3hhkESSbzGaAVqB
+X-Gm-Gg: ASbGncvqSf33uQN0JXrIU9IYMjMGEyinF7tIGRv7tNGsCvFgk5sjJ5C4ZJiMtrtUA5+
+	Qhi3us2x8FDMHxny+HgJvq3D74BoNGNYu+MaLx8l8Ayk1HCAP6Xkjmby8RahfgD9OvIjukByl
+X-Google-Smtp-Source: AGHT+IEAkug4IoXZCrjNUEs/f2U7SdEyFMpm+LMsw0oq/cisRKgOMzIhJOtnVLJvvA6rdUxdvsRrfELmDBHc4ke/nAQ=
+X-Received: by 2002:a05:6512:1598:b0:545:2474:2c9b with SMTP id
+ 2adb3069b0e04-54524742e1dmr1124028e87.22.1739524205568; Fri, 14 Feb 2025
+ 01:10:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-bcm21664-pinctrl-v1-0-e7cfac9b2d3b@gmail.com> <20250207-bcm21664-pinctrl-v1-2-e7cfac9b2d3b@gmail.com>
-In-Reply-To: <20250207-bcm21664-pinctrl-v1-2-e7cfac9b2d3b@gmail.com>
+References: <20250122120504.1279790-1-mastichi@gmail.com> <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
+ <CALieaedTCPNkMBZaaFWME9LHDE5OypcaOw0uDBK5fFFcNSO=wQ@mail.gmail.com>
+In-Reply-To: <CALieaedTCPNkMBZaaFWME9LHDE5OypcaOw0uDBK5fFFcNSO=wQ@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 14 Feb 2025 10:03:08 +0100
-X-Gm-Features: AWEUYZn7NND4I1Mgn5Kpd46GvIrBPpNFG6Ldn40L_YZFFLWpE1zhxOGmLe4jdWE
-Message-ID: <CACRpkdbwVdEa_xgR=wRfkPN2_tpYGnbdpQkTtvgDMRSKPT-GEQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] pinctrl: bcm281xx: Fix incorrect regmap max_registers value
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, 
-	Sherman Yin <syin@broadcom.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Stanislav Jakubek <stano.jakubek@gmail.com>, ~postmarketos/upstreaming@lists.sr.ht
+Date: Fri, 14 Feb 2025 10:09:53 +0100
+X-Gm-Features: AWEUYZl9vF-zSUt9bEaQ3FecnTlzAqqBsm5OSza7G4Mrs2iP2A6zz2vX5Rkx2to
+Message-ID: <CACRpkdbpWgZHUn4SouR3yL_xjhjnyC0ogb8bErDuECakyhPW_Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mcp23s08: Get rid of spurious level interrupts
+To: Dmitry Mastykin <mastichi@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"e.shatokhin@yadro.com" <e.shatokhin@yadro.com>, 
+	"arturas.moskvinas@gmail.com" <arturas.moskvinas@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 9:02=E2=80=AFPM Artur Weber <aweber.kernel@gmail.com=
-> wrote:
+On Fri, Feb 7, 2025 at 9:36=E2=80=AFPM Dmitry Mastykin <mastichi@gmail.com>=
+ wrote:
 
-> The max_registers value does not take into consideration the stride;
-> currently, it's set to the number of the last pin, but this does not
-> accurately represent the final register.
->
-> Fix this by multiplying the current value by 4.
->
-> Fixes: 54b1aa5a5b16 ("ARM: pinctrl: Add Broadcom Capri pinctrl driver")
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> I made more tests and think that this patch shouldn't be applied.
+> It removes duplicated interrupts, but sometimes they increase the perform=
+ance:
+> a new interrupt may come during handling a spurious one, and spurious one=
+ will
+> become valid (it's kind of a polling). I see the number of my touchscreen
+> interrupts reduced from 200 to 130 per second with this patch. It may be =
+a bigger
+> problem for users, than duplicated interrupts. Sorry.
 
-This looks like it could be causing regressions so I pulled this patch out
-and applied it for fixes.
+Don't be sorry about that, we code and learn by our mistakes.
+
+So is this patch causing any regression for users? Like touch
+events being slow to react? Also the expander could be used
+for other things than touchscreens. If it's not causing any regression
+for users it seems like a reasonable patch.
 
 Yours,
 Linus Walleij
