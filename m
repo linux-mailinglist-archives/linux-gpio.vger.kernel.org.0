@@ -1,117 +1,90 @@
-Return-Path: <linux-gpio+bounces-16034-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16035-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0031FA360A4
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 15:39:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 251BEA3611D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 16:12:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09AD1188C317
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 14:40:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 653CA7A5D16
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 15:10:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 115B326657C;
-	Fri, 14 Feb 2025 14:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D899266B7D;
+	Fri, 14 Feb 2025 15:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1lYWQD1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eq4KpSyL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563FA264A9F;
-	Fri, 14 Feb 2025 14:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5728E26659A;
+	Fri, 14 Feb 2025 15:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739543987; cv=none; b=blA6Ba25xb8bm+Yj/Te/R/UzHzHmS0XnSziyzSQreiLCbhttvchStqqb9k3nvXIq4ehjl/UtO4lnE2ByiSjXem/7i4TMZ1xYMpK4mKFwgQx1fcpSkLY5ZzdLYtjDBYo5Vup20W2JfNbFiEttG8LM/+0WiCGwkUk8ht/6noiXiR0=
+	t=1739545825; cv=none; b=EPiEs52aQLJQwBPETT+lmLb92TlH5Mgiy2mwXw8LCvTZFjyecofaZBNxIui+IkdrWRJZUu/SNL5ZgfqS2UUhs4xks+F3iIsPoOckMtTKRLglyXM0/Ffr67CAueze5LoNo1VtUbP4ZyhcauCO7U9P+HKNDVHxnPoS9vtG/iIqJEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739543987; c=relaxed/simple;
-	bh=NX77pwb06Kvs7WxpDXaPVihgFPdSFRjITEXfK2Hopjs=;
+	s=arc-20240116; t=1739545825; c=relaxed/simple;
+	bh=D+uHq0k343FqJFRy9KVkDXZiYD6MshK/nRMVZIrXXp0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jfks0SxrCjtVE7TLsl5QcHV5GKivNYfeTFv9X/TpqqK6Ad6+O8rG9JWMFaUl+PcofLIfNnNQl3NrzpO6S6MqJ1Ld9//Cesjk/Zw4P+yqk1WgMwCT69Y/Wwu+ju+JScZ1WZU431J+YkvFDdEa5Gf1JQ5hURRJB2vu/EYas+7YyCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1lYWQD1; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6f9c6d147edso19887417b3.3;
-        Fri, 14 Feb 2025 06:39:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739543985; x=1740148785; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BI8KVq1D2a2mMAsVtcWo7XlUKAeczvE5EfV30VmWJCY=;
-        b=L1lYWQD1HeOZuTlLSjNWY981oW2qoKZCC/qOnmyqYQl4K+Pm17y6r12jG7xcaG+1VX
-         BbvZ2/rjdlC7W/83sZLAcah/+biNula3fnw1P0aMO2kjOCX03DpgNkW8AR0yPXy1xMYN
-         KjEHjRz6dncJ+zDuUFgltJCDd32dZK1qUKYRvmU0b6e0rSGRgvTWnttj8F/k1tJ8aOTI
-         P8RrFLxafZesdgaj8ZLSeooQXlxQdpIWXGRahoKmTqNdBSL6mVLiPLzJty0/vNThf/eW
-         fKZLL0Xx0JMnhGZ+Rc4lKzvhR0W3XH4x5B+1IrjfULcZLgzG6I9IVrCaVIa2fpwv/2YU
-         iCkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739543985; x=1740148785;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BI8KVq1D2a2mMAsVtcWo7XlUKAeczvE5EfV30VmWJCY=;
-        b=MmDABZ7Olj1WJ+JicG7nJFSEByTcLqV178qsLh9Ttld4XqtMqmP4KSn3PLjvY2Z13I
-         0xNYBylTIWdV75549CmuUzSqa+lvGf1B7DPojz8mQBm8Ve//1VAS9FbPS2Yqtc9BoxuN
-         yvtBLJUqy4twjToirMZHN8oJbjNxg05e0zWRvFZwj/plu0KLPFWzTvjpdptITAh6JQc1
-         Y4fifXB13bGu/u5NHN4pyL27GcTFmb5zTti15lrn9NVc4bN3lQilRxnhHC//thMstr3b
-         kRSIsKAbFhaDDX2OAWtFMWXLZo8PufbjUoq+BVUNkeuHqeSLWPRyKqTKuyIDcJgkr9vs
-         QGqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9zKa+ZZcNTFTQFhx5u3Jfju+l6atRRqftutvHlB8qAmNYB0JsSipfA4kgv70k8hcLd+lB9F16o+kHQI8q@vger.kernel.org, AJvYcCUyTgyuo9pBFAVqxFu+C/8z0NB64lfjKYlV0pSBkV91I5uHl9JA2mdHU6AdZ2Jrp8ARLzdj3DpzzhOhqoI=@vger.kernel.org, AJvYcCVQ25wsogKO1J9hdg0xlYTR4zgZf2i8XjS+tSG1BuEv+FXL0B/6v8VI0DdSGwVrgmCTfYojiGOc+dgBP82hx8z0mOQ=@vger.kernel.org, AJvYcCWXX19V/6efSVl3+hZ+agotxk81yqPslfj2j1zhnhzrmEozVuD+GOmCz2favD9OFCBcoK5fRjf3R5bw@vger.kernel.org, AJvYcCWu1Pe+Ct1o+OYuX9jx/Uhyn0LUJRbwsiZJmTwdPkW80koDpcNmPpCGajjFViqLQDCDqpKQVmuGceASpQ==@vger.kernel.org, AJvYcCXSa0su7Ym3VesrF+ipApPdz4if0gPGiHJ8VkqrHnh4Nx42YfPhL+6WwBTDotf2eaTnTJsrf/yG7nI=@vger.kernel.org, AJvYcCXUrhuCTJaATfRo6CuuoTcJzfVIRPRM20mF2xlJ3eiFpNmXV1FadFINdjdS1i3KC0eFDybUmeHWJrIzWiGp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtiU5bya+44KiEEY2z+atVGfKOCzl7i+swR4Uw5zs5BAMPzaXt
-	Va0MeGD/TjU6LB/3Q/phyP5cngHS9QC23pen1JE71V8UOBejNI9h
-X-Gm-Gg: ASbGnctbhFxQniYN7pDyKsH8fU59roj4JE1Y+xDcMXrGZPdYXR+Fj7eADxt7aoyc6O5
-	SuWjIcol5Dh59VkApoSu3opVFnO/z2DZYaDYFcixP+DPpMY47cuxL0IpraUirdFUvhtkBc+3VnZ
-	/i5qVcCqXeGNGdfMMWgTsN+2z6k+bBuMyeG9Bkq/nzSg7EOsaENNPE3gWc3xlKxMeYlAD0+x7Ne
-	Icjs+BCCn1SmxIu3NFio32ZFFHsImUWsLvUifKSlCosUoggp3SxBbcABrFOXMOjc+8vxRLITep3
-	sGSAYQEYlFczu/hfz6VRJ21PLBs2oxSz9xuU/mzdMbQ9ADtMaO8=
-X-Google-Smtp-Source: AGHT+IFSk6lpEhh1WcbK3saqrHokhIjyrUSazUu/lghjS/PE2nJjXAP82B0Z/67hwQGCLhksXNnAww==
-X-Received: by 2002:a05:690c:6206:b0:6ef:6fef:4cb6 with SMTP id 00721157ae682-6fb1edcc561mr119515777b3.0.1739543985181;
-        Fri, 14 Feb 2025 06:39:45 -0800 (PST)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fb3609589asm7800987b3.56.2025.02.14.06.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 06:39:44 -0800 (PST)
-Date: Fri, 14 Feb 2025 09:39:43 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	qat-linux@intel.com, linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z8QQtBAd2uZpaR3wuVq7Mp7CSQBpkUyY5iWt+WX9AFak3tnICskAHFlAfPGexhebtse0AxJMVqj54RyP1aR8a1J1A6mJ6weZbd29DBe9DEJpHRA+/pSWpl/opH4FcU7Vv0hI4F7Qm8eyIkGWArk/gyoXDGBv9aSWzdrCxwv6iWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eq4KpSyL; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739545824; x=1771081824;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D+uHq0k343FqJFRy9KVkDXZiYD6MshK/nRMVZIrXXp0=;
+  b=Eq4KpSyLTmr6CDKFavQHb0blNVwY316Z8T1WMBKnNUg5Ty2jn8La6/k1
+   LCoJe4mS/gyX+g+KkzD7cZFLw1FoG3vrS+iEn3auHmFQluxaEnM7ayzEv
+   X+OHHAY5Y91p1skPpP5PI2OVpsWZRer8QARorgmjZKx03nzvgZjGCZ7Re
+   TyPy/+VXPaM9P23M8ZQ/MhrofpAYu/yhWWimchziUTVdW7nE/NZVnVpbi
+   ugZ6NPpapoBEGrS5LsBLAOfKY8hCUIWspoKosO5PCEutWy2bfi7X5JmPq
+   V9gsw8Isx73vaZtCXJYprL954AlRz6AIYV9I/SFWPdNFblVgGC/AIFJ7g
+   A==;
+X-CSE-ConnectionGUID: 9BgsUX/dRXOoaCI7slF53Q==
+X-CSE-MsgGUID: KsHhVcguSSWuGoDzCp5rOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="50510459"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="50510459"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:10:23 -0800
+X-CSE-ConnectionGUID: 2wKz+ewVQo66/w6hC1ftIw==
+X-CSE-MsgGUID: K+awIMD6TmCr9xRtkbSDsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="118410858"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 07:10:16 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tixKW-0000000BWep-3HVY;
+	Fri, 14 Feb 2025 17:10:12 +0200
+Date: Fri, 14 Feb 2025 17:10:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Crt Mori <cmo@melexis.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@ieee.org>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-Message-ID: <Z69Vr4ZGlrq7HxmT@thinkpad>
-References: <cover.1738329458.git.geert+renesas@glider.be>
- <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr>
- <Z5-xMUqrDuaE8Eo_@thinkpad>
- <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
- <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr>
- <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
- <16e1568d-8747-41e0-91b9-ce23c5592799@wanadoo.fr>
- <Z6DzQHebEKBb12Wo@thinkpad>
- <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <Z69c1BQHmlbmwUYf@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -120,82 +93,190 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
+In-Reply-To: <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 14, 2025 at 12:03:16PM +0100, Geert Uytterhoeven wrote:
-> Hu Yury,
+On Fri, Feb 14, 2025 at 12:49:53PM +0100, mathieu.dubois-briand@bootlin.com wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > 
-> On Mon, 3 Feb 2025 at 17:48, Yury Norov <yury.norov@gmail.com> wrote:
-> > On Tue, Feb 04, 2025 at 12:41:55AM +0900, Vincent Mailhol wrote:
-> > > On 03/02/2025 at 22:59, Geert Uytterhoeven wrote:
-> > > > On Mon, 3 Feb 2025 at 14:37, Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
-> > > >> On 03/02/2025 at 16:44, Johannes Berg wrote:
-> > > >>> On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
-> > > >>>>> Instead of creating another variant for
-> > > >>>>> non-constant bitfields, wouldn't it be better to make the existing macro
-> > > >>>>> accept both?
-> > > >>>>
-> > > >>>> Yes, it would definitely be better IMO.
-> > > >>>
-> > > >>> On the flip side, there have been discussions in the past (though I
-> > > >>> think not all, if any, on the list(s)) about the argument order. Since
-> > > >>> the value is typically not a constant, requiring the mask to be a
-> > > >>> constant has ensured that the argument order isn't as easily mixed up as
-> > > >>> otherwise.
-> > > >>
-> > > >> If this is a concern, then it can be checked with:
-> > > >>
-> > > >>   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
-> > > >>                    __builtin_constant_p(_val),
-> > > >>                    _pfx "mask is not constant");
-> > > >>
-> > > >> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
-> > > >> any other combination.
-> > > >
-> > > > Even that case looks valid to me. Actually there is already such a user
-> > > > in drivers/iio/temperature/mlx90614.c:
-> > > >
-> > > >     ret |= field_prep(chip_info->fir_config_mask, MLX90614_CONST_FIR);
-> > > >
-> > > > So if you want enhanced safety, having both the safer/const upper-case
-> > > > variants and the less-safe/non-const lower-case variants makes sense.
-> >
-> > I agree with that. I just don't want the same shift-and operation to be
-> > opencoded again and again.
-> >
-> > What I actually meant is that I'm OK with whatever number of field_prep()
-> > macro flavors, if we make sure that they don't duplicate each other. So
-> > for me, something like this would be the best solution:
-> >
-> >  #define field_prep(mask, val) \
-> >        (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))
-> >
-> >  #define FIELD_PREP(mask, val)                                         \
-> >          (                                                             \
-> >                  FIELD_PREP_INPUT_CHECK(_mask, _val,);                 \
-> >                  field_prep(mask, val);                                \
-> >          )
-> >
-> > #define FIELD_PREP_CONST(_mask, _val)                                  \
-> >         (                                                              \
-> >                 FIELD_PREP_CONST_INPUT_CHECK(mask, val);
-> >                 FIELD_PREP(mask, val); // or field_prep()
-> >         )
-> >
-> > We have a similar macro GENMASK() in linux/bits.h. It is implemented
-> > like this:
-> >
-> >  #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
-> >  #define GENMASK(h, l) \
-> >          (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> >
-> > And it works just well. Can we end up with a similar approach here?
-> 
-> Note that there already exists a FIELD_PREP_CONST() macro, which is
-> intended for struct member initialization.
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
 
-Hi Geert,
+...
 
-That was my suggestion. Now that we're going to have many flavors
-of the same macro, can we subordinate them to each other? 
++ bits.h
+
++ dev_printk.h
+
+> +#include <linux/err.h>
+
+
+> +#include <linux/math.h>
+
+Other way around, id est you need math64.h (see below).
+
+> +#include <linux/mfd/max7360.h>
+
++ minmax.h
+
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of.h>
+
+Is this used? Cargo cult?
+
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+
++ types.h
+
+...
+
+> +#define MAX7360_PWM_PERIOD_NS			2000000 /* 500 Hz */
+
+Comment is superfluous, if you need HZ units, define the respective one.
+Also you can use something like (2 * NSEC_PER_MSEC) which will immediately
+gives a hint of how long this is and reduces potential 0:s miscalculations.
+This will need time.h
+
+...
+
+> +#define MAX7360_PWM_CTRL_ENABLE(n)		BIT(n)
+> +#define MAX7360_PWM_PORT(n)			BIT(n)
+
+Personally I find these macros overkill. The value of them much shorter and
+equally readable.
+
+...
+
+> +struct max7360_pwm {
+
+> +	struct device *parent;
+
+Is it not the same as you can derive from regmap?
+
+> +	struct regmap *regmap;
+
+Btw, have you checked the code generation if you place regmap the first in the
+structure? It might affect it.
+
+> +};
+
+...
+
+> +	/*
+> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
+> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of
+
+> +	 * 0.
+
+Easy to read with 0 be on previous line.
+
+> +	 */
+
+> +
+
+No need for this blank line.
+
+> +	duty_steps = mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_RES,
+> +					 MAX7360_PWM_PERIOD_NS);
+
+This comes from math64.h
+
+> +
+> +	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
+
+...
+
+> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      const void *_wfhw)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
+> +	struct max7360_pwm *max7360_pwm;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +
+> +	val = (wfhw->duty_steps == 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm);
+> +	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+> +				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
+
+> +
+> +	if (!ret && wfhw->duty_steps != 0) {
+> +		ret = regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+> +				   wfhw->duty_steps);
+> +	}
+> +
+> +	return ret;
+
+Please, improve readability by rewriting like this:
+
+	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
+	if (ret)
+		return ret;
+
+	if (wfhw->duty_steps)
+		return regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+				    wfhw->duty_steps);
+
+	return 0;
+
+> +}
+
+...
+
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+
+With
+
+	struct device *dev = &pdev->dev;
+
+all below will look shorter and nicer.
+
+> +	struct max7360_pwm *max7360_pwm;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return dev_err_probe(&pdev->dev, -ENODEV, "no parent device\n");
+> +
+> +	chip = devm_pwmchip_alloc(pdev->dev.parent, MAX7360_NUM_PWMS,
+> +				  sizeof(*max7360_pwm));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops = &max7360_pwm_ops;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +	max7360_pwm->parent = pdev->dev.parent;
+> +
+> +	max7360_pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!max7360_pwm->regmap)
+> +		return dev_err_probe(&pdev->dev, -ENODEV,
+> +				     "could not get parent regmap\n");
+
+Will become one line (with the above suggestion).
+
+> +	ret = devm_pwmchip_add(&pdev->dev, chip);
+
+> +	if (ret != 0)
+
+Please, be consistent with the style, and moreover this style is unusual.
+
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
