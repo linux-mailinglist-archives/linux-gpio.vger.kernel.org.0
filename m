@@ -1,127 +1,265 @@
-Return-Path: <linux-gpio+bounces-16019-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16020-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EC3BA35D24
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 12:55:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2243A35D2D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 12:58:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA244171B90
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 11:52:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D37BA18874A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 11:54:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5342661B7;
-	Fri, 14 Feb 2025 11:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iQQumOHM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA07263C9B;
+	Fri, 14 Feb 2025 11:54:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF56E26462F;
-	Fri, 14 Feb 2025 11:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECEE25A623;
+	Fri, 14 Feb 2025 11:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739533825; cv=none; b=L61Ai2nmqUQIVw3eQYjRprpzEHUsgtDskJnMOedwEdQFkWHlwQE/rKYWXf6BMJZaNfrThT+iUmUMHe0iS+tb1NKKgV9lbjkXA9IZSovt8bm2irg8JkAJvGk2RUwsqPS6ZtqX0N3/8OYagyBuaiQ6KgU0cHfZF2FGC5z7MxXPQro=
+	t=1739534064; cv=none; b=PADrSmCsaeSfDs4WmrJFg6GWE5PVfY8QMjYioiKOLUd838KoY7MXNH4+uIo76HFLd4hejeRzEsooP8vdbqfEXczSBp6kVAX2pTMNMbYqOczkU5VCAienrSgXKFWu1Iy0k9DDx0jue2mPNpYn05c5zGNvKEEiSmFH86fXJ3ARYt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739533825; c=relaxed/simple;
-	bh=D/eIms9kiC35KWhyUeLOEVFRQllk3whI5W6tAPS54ps=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ufs5NuxNRH4qS2ib2LVTjiusHBKOqhByRowAnufCmRyIcA13iqAbwckzGxQSYJK9boZ3MqxHcK8xT5inJXA+k7dUPtUPNtniILDVqfLt7tTP51nI3mjWZLDNrq61BZGfYgxZl78yeQRfOD1vrNOfetYK+ak5SUsUdvSIwR0MM+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iQQumOHM; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EC35B442C0;
-	Fri, 14 Feb 2025 11:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739533820;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KmhFstE9r58cW4sRIbJleq7fBxZv+mHOP5YHY97/3Lg=;
-	b=iQQumOHM8h8wylM5W0LrNpmPlfFLza5iiw1Jof2W8UYFDCddBWEP1NriQQd6ZLoL+oRJ1Z
-	xrozJooF0Ma8aNgEnoqp/bNjgK0QOB7Q3AqjpGYJYVHzjcx+E/sy/ggei7lgdmAunx53ph
-	pIsiwdiFhjI61NBcGGyTOTpr3k/lZ+xZeOALY88LhTJKD9aCl04h9hpMAdeotuWoSdIS6B
-	Ux0By4r/PF5uQv3p/9IGQnjISG67FkJxNJ2AebFcC6kQAZlSeuxf3iQZ5vr1f6VYgjwlSl
-	pH6r9gDqzpDJ6XomyXN8XNxRr1I2w0YpvsKLTPUb6mktzInGk7HWSJNt9FjSZA==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 14 Feb 2025 12:50:00 +0100
-Subject: [PATCH v4 10/10] MAINTAINERS: Add entry on MAX7360 driver
+	s=arc-20240116; t=1739534064; c=relaxed/simple;
+	bh=WqM6pCi7iPCKYwn6UXNd4FgAcsKn5Chxq/5jqmqGaTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DuyYjz1QS0yJ+Mo4hd6xDB435wn+ts8e0Z+svXvUZpLuuL5SfIkWPRWG+P1I8sC46ZB2/8XUt+BIdyQPd0M+Rve7q1D1RU8Oo6GhPSRN8C3gonab06/ObluZPJzPhq3QhZtWfScGO0vbA2M7jj4RoRckgCrYaXhdM0pHYLM5bvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 3263A3430DA;
+	Fri, 14 Feb 2025 11:54:20 +0000 (UTC)
+Date: Fri, 14 Feb 2025 11:54:10 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1
+ SoC
+Message-ID: <20250214115410-GYA21743@gentoo>
+References: <20250121-03-k1-gpio-v4-1-4641c95c0194@gentoo.org>
+ <Z5FPJLzAEVXGWJnE@chonkvm.lixom.net>
+ <20250123113042-GYA38135@gentoo>
+ <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
+ <20250127181726.GA538260-robh@kernel.org>
+ <20250128031712-GYB47737@gentoo>
+ <CACRpkdYbSOHD9UH5=+qjztxS3Cq_rxaoOT9tFtD8ZWm9zQGnPw@mail.gmail.com>
+ <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
+ <20250206133156-GYA5687@gentoo>
+ <CACRpkdZYYZ5tUR4gJXuCrix0k56rPPB2TUGP3KpwqMgjs_Vd5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-mdb-max7360-support-v4-10-8a35c6dbb966@bootlin.com>
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
-In-Reply-To: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739533806; l=1042;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=D/eIms9kiC35KWhyUeLOEVFRQllk3whI5W6tAPS54ps=;
- b=BjvuPwcQmsL5Sf8B6SZYaiHb2mS3Iic12ZFWmdR/RTDKCB2JGwSjcdWTcmfYcV6l1FqewUbOq
- lUMYXFjsYL0AwLvSWdOys6h4oJLrm2I9P25YLvVIBLgfNu4BOzcXpn0
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrt
- ghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZYYZ5tUR4gJXuCrix0k56rPPB2TUGP3KpwqMgjs_Vd5w@mail.gmail.com>
 
-Add myself as maintainer of Maxim MAX7360 driver and device-tree bindings.
+Hi Linus:
 
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 14:07 Thu 13 Feb     , Linus Walleij wrote:
+> On Thu, Feb 6, 2025 at 2:32 PM Yixun Lan <dlan@gentoo.org> wrote:
+> 
+> > > > foo-gpios <&gpio 2 7 GPIO_ACTIVE_LOW>;
+> >
+> > if we model the dts as above, then "&gpio" will register itself as one sole "struct gpio_chip",
+> >  which mean one gpio chip combine three banks..
+> 
+> Not really: the fact that there is just one gpio node in the device
+> tree does not
+> mean that it needs to correspond to one single gpio_chip instance inside the
+> Linux kernel.
+> 
+> It's just what the current existing bindings and the code in the GPIO subsystem
+> assumes. It does not have to assume that: we can change it.
+> 
+> I'm sorry if this is not entirely intuitive :(
+> 
+> One node can very well spawn three gpio_chip instances, but it requires
+> some core changes. But I think it's the most elegant.
+> 
+> > if taking "one gpio chip support multi banks" direction, then it will be reverted back as patch V1,
+> > then, even the three gpio-cells model is unnecessary needed, as we can map gpio number
+> >  to the <bank, offset> array in the underlying gpio driver
+> >
+> > the v4 patch is very similar to drivers/gpio/gpio-dwapb.c
+> >
+> > If had to choose the direction between v1 and v4, I personally would favor the latter,
+> >  as from hw perspective, each gpio bank is quite indepedent - has its own io/irq registers,
+> >  merely has interleaved io memory space, one shared IRQ line.. also the patch v4 leverage
+> >  lots underlying generic gpio APIs, result in much simplified/clean code base..
+> 
+> So what I would suggest is a combination of the two.
+> 
+> One gpio node in the device tree, like the DT maintainers want it.
+> 
+> Three struct gpio_chip instances inside the driver, all three spawn from
+> that single gpio device, and from that single platform_device.
+> 
+> What we are suggesting is a three-cell phandle in the device tree:
+> 
+> foo-gpios = <&gpio 0 7 GPIO_ACTIVE_HIGH>;
+> bar-gpios = <&gpio 2 31 GPIO_ACTIVE_HIGH>;
+> 
+> Notice the new first cell which is 0 or 2.
+> 
+> The first one is what was previously called gpio 7.
+> The second one is what was 2*32+31 = gpio 95.
+> 
+> So internally in the driver it is easy to use the first cell (0 or 2) to map to
+> the right struct gpio_chip if you have it in your driver something like this:
+> 
+> struct spacemit_gpio {
+>     struct gpio_chip gcs[3];
+> ...
+> };
+> 
+> struct spacemit_gpio *sg;
+> struct gpio_chip *gc;
+> int ret;
+> 
+> for (i = 0; i++; i < 3) {
+>      ret = devm_gpiochip_add_data(dev, &sg->gcs[i], sg);
+>      if (ret)
+>         return ret;
+>      gc = sg->gcs[i];
+>      .... do stuff with this instance ....
+> }
+> 
+> Callbacks etc should work as before.
+> 
+> Then these phandles needs to be properly translated, which is done with the
+> struct gpio_chip .of_xlate() callback. (If you look inside gpiolib-of.c
+> you will see that chip->of_xlate() is called to map the phandle cells
+> to a certain GPIO line).
+> 
+> In most cases, drivers do not assign the chip->of_xlate callback
+> (one exception is gpio-pxa.c) and then it is default-assigned to
+> of_gpio_simple_xlate() which you can find in gpiolib-of.c as well.
+> 
+> You need to copy this callback to your driver and augment it
+> properly.
+> 
+> The xlate callback is used to locate the struct gpio_chip and
+> struct gpio_device as well, by just calling the xlate callback, so if
+> you code up the right xlate callback, everything should just
+> work by itself.
+> 
+> this is a guess on what it would look like (just dry coding,
+> but hopefully the idea works!):
+> 
+> static int spacemit_gpio_xlate(struct gpio_chip *gc,
+>                                 const struct of_phandle_args *gpiospec,
+>                                 u32 *flags)
+> {
+>         struct spacemit_gpio *sg = gpiochip_get_data(gc);
+>         int i;
+> 
+>         if (gc->of_gpio_n_cells != 3)
+>                 return -EINVAL;
+> 
+>         if (gpiospec->args_count < gc->of_gpio_n_cells)
+>                 return -EINVAL;
+> 
+>         /* We support maximum 3 gpio_chip instances */
+>         i = gpiospec->args[0];
+>         if (i >= 3)
+>                 return -EINVAL;
+> 
+>         /* OK is this the right gpio_chip out of the three ? */
+>         if (gc != sg->gcs[i])
+>                 return -EINVAL;
+> 
+>         /* Are we in range for this GPIO chip */
+>         if (gpiospec->args[1] >= gc->ngpio)
+>                 return -EINVAL;
+> 
+>         if (flags)
+>                 *flags = gpiospec->args[2];
+> 
+>         /* Return the hw index */
+>         return gpiospec->args[1];
+> }
+> 
+thanks for this very detail prototype! it works mostly, with one problem:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 25c86f47353d..1916b41309f0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14259,6 +14259,18 @@ L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	drivers/iio/temperature/max30208.c
- 
-+MAXIM MAX7360 KEYPAD LED MFD DRIVER
-+M:	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
-+F:	Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-+F:	drivers/gpio/gpio-max7360.c
-+F:	drivers/input/keyboard/max7360-keypad.c
-+F:	drivers/input/misc/max7360-rotary.c
-+F:	drivers/mfd/max7360.c
-+F:	drivers/pwm/pwm-max7360.c
-+F:	include/linux/mfd/max7360.h
-+
- MAXIM MAX77650 PMIC MFD DRIVER
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-kernel@vger.kernel.org
+how to map gpio correctly to the pin from pinctrl subsystem?
+
+for example, I specify gpio-ranges in dts, then 
+                gpio0: gpio@d4019000 {
+                        compatible = "spacemit,k1-gpio";
+                        reg = <0x0 0xd4019000 0x0 0x100>;
+			...
+                        gpio-ranges = <&pinctrl 0 0 96>;
+                };
+
+		foo-gpios = <&gpio0 2 28 GPIO_ACTIVE_LOW>;
+
+It should get GPIO_92 ( 92 = 2 * 32 + 28), but turns out GPIO_28
+
+Probably there is something I missed...
+> ...
+> gc->of_gpio_n_cells = 3;
+> gc->of_xlate = spacemit_gpio_xlate;
+> 
+> If it works as I hope, this will make the code in gpiolib-of.c in
+> of_find_gpio_device_by_xlate() calling gpio_device_find()
+> (which will iterate over all registered gpio_chips and then
+> of_gpiochip_match_node_and_xlate() will call this custom function
+> to see if it's the right one and return > 0 when we have the right
+> chip.
+> 
+> This should work for gpios *only*. When we then come to irqs,
+> these assume (see gpiolib.c) that we are using
+> irq_domain_xlate_twocell() when using GPIOLIB_IRQCHIP, so
+> you either need to roll your own irqchip code or we should fix
+Sounds I should implement something like irq_domain_xlate_threecell()?
+
+> the core (I can help with this if the above works).
+> 
+> Several gpio chips use their own domain translation outside
+> of the gpiolib so you can use this as an intermediate step:
+> git grep irq_domain_ops drivers/gpio/
+..
+> ... but if you get here, let's patch the core to deal with custom
+> irqdomain xlate functions in the same manner as above.
+> 
+I like this direction, but how we should proceed?
+
+> I hope this isn't terribly unclear or complicated?
+> Otherwise tell me and I will try to ... explain more or give
+> up and say you can use a single 96-pin gpio_chip.
+> 
+Let's try first, sounds it's a feasible way.
+
+Many thanks!
+
+> Yours,
+> Linus Walleij
 
 -- 
-2.39.5
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
