@@ -1,187 +1,201 @@
-Return-Path: <linux-gpio+bounces-16005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 713AAA35C2E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 12:10:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41A7BA35C81
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 12:27:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 668C73ADEB2
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 11:10:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B884F7A5A17
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 11:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56880261364;
-	Fri, 14 Feb 2025 11:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35EC42627E5;
+	Fri, 14 Feb 2025 11:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MoKtpO4r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7932D25D539;
-	Fri, 14 Feb 2025 11:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052B325A657
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 11:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739531438; cv=none; b=ftg4dXxg4D/TXtXtr3QT213O5Azw3ZtE+ciPKa2/v2QzcUcuIaAYxEM1L/lReYLm4GSe8oaNSwvgszIP8WFumruBktHlAOtxpaF0Q4SCq6hya8MjvaQjj0YbeinPKPqldQUVI1ndfKLrVXfHuZTu0h1vIh+O1mDaUqrK7sXv7J8=
+	t=1739532396; cv=none; b=NPTN8CQ4R0KptP+9MQGQNF/BPAjvmmu5a8RCwviykWDyQANlR9QWLAIqgabEDx2do2o9UYJkUBf5CU6xJMPQT9FjyTcZISDPr57n57cTsr3GNTzgjHX1sUCXjB34Qgn6Yya8U/XVJMkXN0JiiOIqqcIYiwiZzD4vzSGkYS4XDdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739531438; c=relaxed/simple;
-	bh=hdsgSjQQ8qgcIp8XrQEUL7+bx/XSkrcszbmnaoinpo4=;
+	s=arc-20240116; t=1739532396; c=relaxed/simple;
+	bh=ioKZ2MvhUw4Q0y9IwBXxm/cxgOWwwIiAjPD8x7s0DKg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OTACUON0S9b2/1hwURkwaq/Y/en56w2Ix+F3c0NaMa/4c3DKSJiGjD0nvrXNORXouKNJxvj8+FNhLxKhJe3KnT0qfoI+zpaxzPxaVyb/DW+2Z2H2hGVSuM85uvNqkgcsrrKyHsTXX7w3LoaOb70+WPSY1yaHQ/R+v4VwD7cXHpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f3b93e4e32so1796708b6e.0;
-        Fri, 14 Feb 2025 03:10:36 -0800 (PST)
+	 To:Cc:Content-Type; b=QSneGixvwAuUPOgtFQFOnqTiiJqqlZqrmtsVrMolYRROA1VLP4yNfLbLicK2fwiazjRRc7a6SN68Bk8ignEGFc8Pg+MtCrkd/rGMnyrtwrBSpilw3aDDUfBSDWnGGhzExaWpvjoD5HA4jtOiNYunzlHS6SwEOsWWIsVTW5T8h2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MoKtpO4r; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f9c6d147edso18199597b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 03:26:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739532392; x=1740137192; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=V0lFTwfZZcUWkq9fJmOvcld23qYjy5biwQLrQr9JB8A=;
+        b=MoKtpO4rNvIBgN6jGqtGzj7n/zSy2m2444NFRZFxYQKpXDx/xxfRVNIaVHLFLKmB+6
+         eEQ+U9k1Ol5/DcpidBPpSOAn8Thq9MKB+xgTEDNB+xOBLz3ovGjf9p+JA4IkE8XWhfhT
+         Am9cR7N6YafEzsE7bdSdDgiWrPQZZJFMvgdvkek0SrNT8PXXf7KMsuPUJvjjjwn8yoc7
+         WlL/6dfFiH406HOucQcd2MVPHLesXW8N3sKtkOUn4ZKec8FbK89qANOX4uXedYNEuLR3
+         wGvdG8E9082DML2TCmjvskFemH3XxEp1wH1Ya8A10O592Ui/0T++tWl+LlHKn8EACZLs
+         OMag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739531435; x=1740136235;
+        d=1e100.net; s=20230601; t=1739532392; x=1740137192;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r+/2I2hmbkU9zkmHuYX1t9oqaBOTTvF7uTNap3Wsbsk=;
-        b=n+gFbF+9HQy32m63+iRfU7baomTogRZt8Q0x+8p1o1I9VNtjyMgiSGmrWFtaOCJWOx
-         dbXd7ASszWZp7+nJFerhuQlESYXG1au5TAw8zwj0rnqkNbDHNjTW/zvBrVJgbh8jK5v+
-         hTPxf4M+elrzhwfKUADHYwCg6zdPhc1FPuR9yoxDOSbNdZ/ZrYnkxfln5pEr0258OWP+
-         ObRSjx7bTgA+uxEdA7EmOtmi6IUqhJkfbZSlWuVesMmpuqqmcxUBhvphOIzgD9SmpOr+
-         Lwc1LYPyG4BnC15MkYla0AxiBBxq/3hmajbV0X6Xa6xu4p0DsZk7RSp79XKK2vc4ai+R
-         R4wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDVCUK6c/F3iml1NpIaVqopvbCyJAh8oxLb9I3BOXnjFJic1zL0taRowjbrVA1MN9gPwp4Ow3VqssDNqY=@vger.kernel.org, AJvYcCUbTOYIh1mG8TPX0Bi4c5rn5098w8UcKyqORjVAaFM6JCLn+hHFFsIHaVUAey5iUsTrMdJHJD1VP5m2@vger.kernel.org, AJvYcCUiHv7z7osjvN7WSDwCff0AV7rGVxgWHrJvyZ9rTEQKdFwO6pTmPaQfAIoLZDiUUPvNRm7eYV0CP3U=@vger.kernel.org, AJvYcCVKS/5ZYXsPcouogUjX1/7d56V4NXP/ZjViLwkHqpkfOss36i9fu9SRTbrEmpmaWJPmKDlOCowPguWnDfof@vger.kernel.org, AJvYcCVguviZY4vRnP70NorWp75Xw2fv1Z+mhtQ7r/c2apzkZCIQeecTjcRkaiJlyVgLCQFH0O4os6pGlYjO7xOcHtk83Y8=@vger.kernel.org, AJvYcCW5cx1lF5pOHqZKo0CKzLdtS/2tTkQ6kcS3kq/p/UyobKPe/lUIHCDmYAQxQPsWHXXO8AV9FC2r+Q853Q==@vger.kernel.org, AJvYcCWnpjvqjCh5ARprm5JFHRwhBOZw3EWQkHBoFYxXJRJFUA8O2rUsa4QoCi2nZTZVKsp5NHQFDhR8yHSAhCCq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6f0rdew3/WcRh9++9RoN6tQciQDyRPIlq7sLsYoQfh066Cs8g
-	Mc0oOV5ObrC61jrHfYNxtQuyyPVwW88b2iJhchQVVmOUJIQawZk50r4Pyts8Tp0=
-X-Gm-Gg: ASbGncvRkLVEyhKe5BvrB7ocx1yBnp4UQJczt0gdj48+Ag/O7lqsGg/ePTEm1kgz3c0
-	p3RJHBPUXeN8tSav7dtbLxFOJWGeOr0WVXhfOP6ITcqod3O6QC3CtR557+tbHvpKoFjUcSzMaXZ
-	AeqtIXfz7q7Y6TKq0TFL9I8quBxoQkeLzI04g/Ec8PUB70GM0TrYmX44/DgwLPu6R3RHTTPxHCf
-	djR4v9ZsrpWL6gwYqW4KN1lmRXKWW7zWH7pUWTxavgT8zJHZR/P0rYWqWoXGDrqA8F4gNRZqa4t
-	CB+P+cFPzq4PT0nIHeCdhOREwjqDTcQj71p5JtdawaCDM4Tk4l0PKA==
-X-Google-Smtp-Source: AGHT+IEmOpncqw55JDATPBMdgoevFZbTsL+l4QREB3q5EOlWtwZuqK0wyAgTzC8TAmqM9FoNpjSQ/g==
-X-Received: by 2002:a05:6808:2508:b0:3f3:b97d:769e with SMTP id 5614622812f47-3f3d90dc9b8mr4185959b6e.7.1739531435211;
-        Fri, 14 Feb 2025 03:10:35 -0800 (PST)
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com. [209.85.160.51])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f3daa1a4b8sm1191927b6e.49.2025.02.14.03.10.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Feb 2025 03:10:34 -0800 (PST)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2bc607b3190so788701fac.1;
-        Fri, 14 Feb 2025 03:10:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUy1lu/GJ6ERAmnfIqzVmu3C/Md9NgZanbZ9AlBkuxSikVLdWVTmv16zY9OytdJ9x+1bOD1xBdZoVtQDc2H@vger.kernel.org, AJvYcCVgqycNxfL55R6c69VsRIV//3UbVnRy1LsM6IXcdNZYTodYYbT5innUZI6qyiaXzFTDRrBAWAEYH0aK@vger.kernel.org, AJvYcCVpGAmsVWktjDWORoOa8SWbZwR93fR8IPXy2OueOJIEQibrvap3HctBV43GhtrSUSFdRoQjJT5SbI6afK3k8MmVtH0=@vger.kernel.org, AJvYcCWWolf/nrJ/6oXgSTgl4K14aY2GU29mdny1O3QmYSTUlOy83g0aI8cAUH46uNcAE8RT4WEzhyw79zid0g==@vger.kernel.org, AJvYcCWpxs59d1sDbltZAD01S8wzlCfefYW8qP+/tZshXhdVgrZs0TFBeWYfiGZaBJEEMeoH8TTdo0ifxNACHlY5@vger.kernel.org, AJvYcCXjdZfphJOJxdL4qtr/C2vSJUbLZss3zvveDNYzH/+JwLUMPqZ4sgGhNUqedcDrwir7VegLfNqsyVQ=@vger.kernel.org, AJvYcCXnbvOjDVxkbOaz9rzFBCQak2a0XzV/FMhTNT9F6vcz8d4anXpU42wkjTw7eso94fv0n53k7Wnu03YBCgE=@vger.kernel.org
-X-Received: by 2002:a05:6102:829:b0:4bb:c670:7ef4 with SMTP id
- ada2fe7eead31-4bc04dbedfdmr3900426137.3.1739531008576; Fri, 14 Feb 2025
- 03:03:28 -0800 (PST)
+        bh=V0lFTwfZZcUWkq9fJmOvcld23qYjy5biwQLrQr9JB8A=;
+        b=d2vf7ZWfNnSpVd2aUT/fzA/OLOnMrp2Pixs19MVnAFKii9JwNcNdKyiZaELNZxzx0U
+         K4bJWIGEAjURk1m751yvXfFdzaG3thIMpQFUMZxa1MKpH0ZV+rS3pqX/MlJMMYj8xM2Y
+         RrdgtKWUBELgLj+qBmob1scxOBBpz+b489TP8E91lgIoadWPZWTFFAtNlE1vPsBa9JyD
+         SnyWdJEENOnHR5sgqiLpUBvrN+UoYDdkhaiA1DZVW+bFRQ0r/naEln+zfKeNrwf8b5pv
+         OS7Nkhm8NFb39SCzyOUuVihB4tJB6rhxkeq3w1W+Po0lLO9pU3hTGw17EKRoz/xSHe3k
+         mu1A==
+X-Forwarded-Encrypted: i=1; AJvYcCX3SVtTmKqMjSI/kZGvc0SPv3wraD4E2YetCEzKlf04w/0TFcHwTTAgY9V2vKq8szpg6qrECWLHRsTQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhU5bncXG8B508Q0fNhctayBod3JSeOorm5RZ7WGNVJEL/Klhr
+	xFaWXoa06D5sZxZ3b7KYMETTYYHv3beOul5aAUj2N2SRx5bqXv3iKaT/voKHv2jnKKpamlUeAYC
+	X2EGEOceas4fEzfdojMuhnJqs7PTC7OrfIPfeJA==
+X-Gm-Gg: ASbGnctX0SjJAQfckecM63XLmg23DsydnGOV9rckrJRbZSp1s2+Y6MbKrOC04r1frUY
+	jHKYQa8J8YMBdQoKUdyGG0KEvhSGu90M09YuMp6wvEB9+oICw5g999YMmPs1HV9xjKaPXNOcwdQ
+	==
+X-Google-Smtp-Source: AGHT+IHgAlZM0IOqZW2VzEw1FYIV10AUY+XwYeC5PGfb6gr8KMhdCaMYxrQJlkGON4FNOU8B5yXkDtD2hxcjbR8IEvM=
+X-Received: by 2002:a05:6902:2b11:b0:e5b:18ff:8cf4 with SMTP id
+ 3f1490d57ef6-e5d9f0c85afmr10803625276.5.1739532391918; Fri, 14 Feb 2025
+ 03:26:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738329458.git.geert+renesas@glider.be> <1824412519cb8791ab428065116927ee7b77cf35.1738329459.git.geert+renesas@glider.be>
- <e20a177a-30cd-4088-89e1-b479aba1356c@wanadoo.fr> <Z5-xMUqrDuaE8Eo_@thinkpad>
- <74cab7d1ec31e7531cdda0f1eb47acdebd5c8d3f.camel@sipsolutions.net>
- <45920591-e1d6-4337-a906-35bb5319836c@wanadoo.fr> <CAMuHMdXZKNtAmiMP8uuSngZMsDLGcYwrLS0xNWzN4UfLaccdyA@mail.gmail.com>
- <16e1568d-8747-41e0-91b9-ce23c5592799@wanadoo.fr> <Z6DzQHebEKBb12Wo@thinkpad>
-In-Reply-To: <Z6DzQHebEKBb12Wo@thinkpad>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 14 Feb 2025 12:03:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
-X-Gm-Features: AWEUYZnx82TO-9m0J2Kj8kCR7cxX7DuFclptN97k0_3_zHZhXPo2iBI5bXbywtI
-Message-ID: <CAMuHMdVFG57rUVC-XXk6bsZupVTeV0YAcue=zKWGnm4owjDiEA@mail.gmail.com>
-Subject: Re: [PATCH treewide v2 1/3] bitfield: Add non-constant
- field_{prep,get}() helpers
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Johannes Berg <johannes@sipsolutions.net>, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-renesas-soc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	qat-linux@intel.com, linux-gpio@vger.kernel.org, 
-	linux-aspeed@lists.ozlabs.org, linux-iio@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Joel Stanley <joel@jms.id.au>, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, Crt Mori <cmo@melexis.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Shan-Chun Hung <schung@nuvoton.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Alex Elder <elder@ieee.org>
+References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
+In-Reply-To: <20250205125225.1152849-1-szemzo.andras@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 14 Feb 2025 12:25:55 +0100
+X-Gm-Features: AWEUYZkzFAbsbuTJhoDDXcEDwXJNLijMk4rdL9iJXNhVee2PTovAo1vxRBOIWOQ
+Message-ID: <CAPDyKFq72fqa9xOOw3m2z2ceTj18JFn42PaqxA4Ks+o9dd3FXg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] Support for Allwinner V853 SoC
+To: Andras Szemzo <szemzo.andras@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hu Yury,
+On Wed, 5 Feb 2025 at 13:52, Andras Szemzo <szemzo.andras@gmail.com> wrote:
+>
+> V85x is a SoC from Allwinner with video encoding targeted for the field of
+> IP Camera. It integrates the single CA7 core, and a T-Head E907 RISC-V mcu.
+> The SoC has the usual Allwinner peripherals and a Vivante NPU.
+> V853 is a BGA package without DRAM, V851s/V851s3 has the same die with
+> co-packaged 64MB/128MB DRAM (in a QFN88 package).
+>
+> This patchset tries to add basical support for the V853 device family.
 
-On Mon, 3 Feb 2025 at 17:48, Yury Norov <yury.norov@gmail.com> wrote:
-> On Tue, Feb 04, 2025 at 12:41:55AM +0900, Vincent Mailhol wrote:
-> > On 03/02/2025 at 22:59, Geert Uytterhoeven wrote:
-> > > On Mon, 3 Feb 2025 at 14:37, Vincent Mailhol <mailhol.vincent@wanadoo.fr> wrote:
-> > >> On 03/02/2025 at 16:44, Johannes Berg wrote:
-> > >>> On Sun, 2025-02-02 at 12:53 -0500, Yury Norov wrote:
-> > >>>>> Instead of creating another variant for
-> > >>>>> non-constant bitfields, wouldn't it be better to make the existing macro
-> > >>>>> accept both?
-> > >>>>
-> > >>>> Yes, it would definitely be better IMO.
-> > >>>
-> > >>> On the flip side, there have been discussions in the past (though I
-> > >>> think not all, if any, on the list(s)) about the argument order. Since
-> > >>> the value is typically not a constant, requiring the mask to be a
-> > >>> constant has ensured that the argument order isn't as easily mixed up as
-> > >>> otherwise.
-> > >>
-> > >> If this is a concern, then it can be checked with:
-> > >>
-> > >>   BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask) &&
-> > >>                    __builtin_constant_p(_val),
-> > >>                    _pfx "mask is not constant");
-> > >>
-> > >> It means that we forbid FIELD_PREP(non_const_mask, const_val) but allow
-> > >> any other combination.
-> > >
-> > > Even that case looks valid to me. Actually there is already such a user
-> > > in drivers/iio/temperature/mlx90614.c:
-> > >
-> > >     ret |= field_prep(chip_info->fir_config_mask, MLX90614_CONST_FIR);
-> > >
-> > > So if you want enhanced safety, having both the safer/const upper-case
-> > > variants and the less-safe/non-const lower-case variants makes sense.
->
-> I agree with that. I just don't want the same shift-and operation to be
-> opencoded again and again.
->
-> What I actually meant is that I'm OK with whatever number of field_prep()
-> macro flavors, if we make sure that they don't duplicate each other. So
-> for me, something like this would be the best solution:
->
->  #define field_prep(mask, val) \
->        (((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))
->
->  #define FIELD_PREP(mask, val)                                         \
->          (                                                             \
->                  FIELD_PREP_INPUT_CHECK(_mask, _val,);                 \
->                  field_prep(mask, val);                                \
->          )
->
-> #define FIELD_PREP_CONST(_mask, _val)                                  \
->         (                                                              \
->                 FIELD_PREP_CONST_INPUT_CHECK(mask, val);
->                 FIELD_PREP(mask, val); // or field_prep()
->         )
->
-> We have a similar macro GENMASK() in linux/bits.h. It is implemented
-> like this:
->
->  #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
->  #define GENMASK(h, l) \
->          (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->
-> And it works just well. Can we end up with a similar approach here?
+Patch5 and patch6 applied for next via my pmdomain tree, thanks!
 
-Note that there already exists a FIELD_PREP_CONST() macro, which is
-intended for struct member initialization.
+Note, patch5 (the DT patch) is also available on the immutable dt
+branch, if soc maintainers need to pull it.
 
-Gr{oetje,eeting}s,
+Kind regards
+Uffe
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Changelog - v2:
+>  - rebased on 6.14-rc1
+>  - add a needed gate with key support to sunxi clk
+>  - rewrite the ccu-r driver
+>  - fix license issues
+>  - remove the pinctrl binding, as it has beed applied
+>  - rework the pinctrl driver, use the new sunxi dt based mux support. This new pinctrl
+>    driver depends on the new sunxi device-tree based mux support patch series [1].
+>  - remove the new usb phy binding, as the v853's usb phy is very close to d1/a64
+>  - add a board dts
+>  - ccu: add module description
+>  - ccu: fix PLL enable bits, and min multipliers
+>  - ccu: change PLL flags to CLK_SET_RATE_GATE
+>  - ccu: use SUNXI_CCU_M_HWS at peripheral PLLs
+>  - ccu: convert the VIDEO and CSI PLLs from nm type to nkmp according to BSP
+>  - ccu: cpu axi clk use pointer
+>  - ccu: fix comments
+>  - ccu: swap i2s1 and i2s0 bus clocks
+>  - ccu: fix indentation
+>  - ccu: fix RST_BUS_SPIF order
+>  - ccu: convert RST_RISCV_CLK_GATING from reset to gate
+>
+> [1]: https://lore.kernel.org/linux-sunxi/20241111005750.13071-1-andre.przywara@arm.com/T/
+>
+> Andras Szemzo (10):
+>   clk: sunxi-ng: allow key feature in ccu reset and gate
+>   pinctrl: sunxi: add driver for Allwinner V853
+>   dt-bindings: clock: sunxi-ng: add compatibles for V853
+>   clk: sunxi-ng: add CCU drivers for V853
+>   dt-bindings: power: add V853 ppu bindings
+>   pmdomain: sunxi: add V853 ppu support
+>   dt-bindings: phy: allwinner: add v853 usb phy
+>   phy: allwinner: add v853 usb phy compatible
+>   ARM: dts: sun8i: add DTSI file for V853
+>   ARM: dts: sun8i: add DTS file for yuzuki-lizard V851s
+>
+>  .../clock/allwinner,sun4i-a10-ccu.yaml        |    3 +
+>  .../phy/allwinner,sun50i-a64-usb-phy.yaml     |    2 +
+>  .../power/allwinner,sun20i-d1-ppu.yaml        |    1 +
+>  arch/arm/boot/dts/allwinner/Makefile          |    1 +
+>  .../boot/dts/allwinner/sun8i-v851s-lizard.dts |  196 +++
+>  arch/arm/boot/dts/allwinner/sun8i-v853.dtsi   |  656 ++++++++++
+>  drivers/clk/sunxi-ng/Kconfig                  |   10 +
+>  drivers/clk/sunxi-ng/Makefile                 |    4 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-v853-r.c       |  120 ++
+>  drivers/clk/sunxi-ng/ccu-sun8i-v853-r.h       |   14 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-v853.c         | 1145 +++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-v853.h         |   14 +
+>  drivers/clk/sunxi-ng/ccu_common.h             |    2 +
+>  drivers/clk/sunxi-ng/ccu_gate.c               |    6 +
+>  drivers/clk/sunxi-ng/ccu_gate.h               |   14 +
+>  drivers/clk/sunxi-ng/ccu_mux.c                |    4 +-
+>  drivers/clk/sunxi-ng/ccu_reset.c              |    7 +
+>  drivers/clk/sunxi-ng/ccu_reset.h              |    2 +-
+>  drivers/phy/allwinner/phy-sun4i-usb.c         |   10 +
+>  drivers/pinctrl/sunxi/Kconfig                 |    5 +
+>  drivers/pinctrl/sunxi/Makefile                |    1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c    |   53 +
+>  drivers/pmdomain/sunxi/sun20i-ppu.c           |   15 +
+>  .../clock/allwinner,sun8i-v853-ccu.h          |  132 ++
+>  .../clock/allwinner,sun8i-v853-r-ccu.h        |   16 +
+>  .../power/allwinner,sun8i-v853-ppu.h          |   10 +
+>  .../reset/allwinner,sun8i-v853-ccu.h          |   60 +
+>  .../reset/allwinner,sun8i-v853-r-ccu.h        |   14 +
+>  28 files changed, 2513 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v851s-lizard.dts
+>  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v853-r.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v853-r.h
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v853.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-v853.h
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
+>  create mode 100644 include/dt-bindings/clock/allwinner,sun8i-v853-ccu.h
+>  create mode 100644 include/dt-bindings/clock/allwinner,sun8i-v853-r-ccu.h
+>  create mode 100644 include/dt-bindings/power/allwinner,sun8i-v853-ppu.h
+>  create mode 100644 include/dt-bindings/reset/allwinner,sun8i-v853-ccu.h
+>  create mode 100644 include/dt-bindings/reset/allwinner,sun8i-v853-r-ccu.h
+>
+> --
+> 2.39.5
+>
 
