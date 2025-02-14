@@ -1,126 +1,126 @@
-Return-Path: <linux-gpio+bounces-16031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D397A35FE0
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 15:08:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ADBEA36090
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 15:35:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DECD13A7215
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 14:07:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 514F5168BFB
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 14:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485FC265626;
-	Fri, 14 Feb 2025 14:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0E7266560;
+	Fri, 14 Feb 2025 14:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UGyKqFgd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMvbPIiq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E08261376;
-	Fri, 14 Feb 2025 14:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDDC86346;
+	Fri, 14 Feb 2025 14:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739542079; cv=none; b=fKwvauErL3LA7Y9ggEED9azeeCy5dbdUHdjDG1+Zkq+Vlpu+662sKuXxOncdG/BMYWuK6c+EYnoTRunad9y5qvRWzuuONlSZCfdac5xztjtaCHknHqwUuPJHKhq7TY1iZUplecftaYPYsBnQObGAg2TGHczrVRWxoptyR8s+HO4=
+	t=1739543746; cv=none; b=s/Dzm/H8+dWf8gGn3UbFIv3LNKAQURvptlPo5zWHpJSi66GiJjYgSV7qDLBMohWV0uLpFBV+DJxXQ/tZg1q+dvjmfWxSWgB5uXBKStqqlEjAXCzA2joS8+1cOoAu8divm9+9AOEUZNamOjxb2NMIzvBbFxF05S+i6abmwm3FDA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739542079; c=relaxed/simple;
-	bh=+qlyWOt9BFdScl2fAkOoVcKrD94Xs5Sy+VSI9gOFmTM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=RwEBdY+yRZmy1hYTn+n0Zgo2avHLelbr7pZwm+uHMGicbZpn3iHfAvyevXm7HwQAKuorTIAftiAUXwaku1obWyl3pN6Xr5QNHLCwUE/9zLa3J41clPwGE0epf3jnaqZiPv7Cqh0DzXi0wQUHbXpoXiZca9tZ0e8iLAiOqLGdtVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UGyKqFgd; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BAF63441A0;
-	Fri, 14 Feb 2025 14:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739542068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AZNk4MMG+BjXDI3SUcRM1PO+mJxRM0nz461OGI70YGY=;
-	b=UGyKqFgdY0/qLOPkrqBcCcKctfnNti4DwOgm8Y2vxNVP9rLV1zMiNA93ESy3g/xvTdjTzK
-	ENTB87GB9wHnQf7o6YMDRAQXKOvb0B7N3U3mRIR7vNUks0Exv50v7ZaOVR+G3n31EEHD40
-	/5PNRxmOZu9UoUxC9rlFGst3xgEEhioKj19M+4yPxyWmbHwyPxwLD6cFNv/eYuFBL2iHBm
-	AFk1JjhQRg20VtNLN9tPM35HPFq/pX9E1Gq46tuznvOpOoFVmQ6XtOKRqjnsjoW5NreHrx
-	ldJS9hm7KFx+Z5x94iU0Nrc+TFQ4scgsuDnAERvq0s5I2o7cCRjoVjnu9Jo9TA==
+	s=arc-20240116; t=1739543746; c=relaxed/simple;
+	bh=I9TvN3GHsWgFRWoiVsp3AGhFWp0rf5GhN/XQoJge3J4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dQjud53a0ylLvY5f+dQg0cI9M5TpODAaPEf7X44tuKlEirpxBQgIisvDCbrxjxtEpXcI5dGcxfPP2wmDrj3PS8SQNu6oS8Uro51cMYTaJnLXHoepXtfdPoyj5lR6Gp5M+MiV//QyWGomAfJ9s1Exhgvvk+fLvBgZ612xMa0NPlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MMvbPIiq; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7e1286126so376001166b.0;
+        Fri, 14 Feb 2025 06:35:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739543742; x=1740148542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0N53k3Mv7p8S+u3QWaaS2dkskmcl5RUICb2LIij7Obo=;
+        b=MMvbPIiq0Cnf9IW7NptdpQddfRbeRSgbfooQmtWLFyUxqy97fQjvSyJUNgfWi1qweZ
+         aw1mcMMEyOOH6hNZb8kTjhF/xCfu++FlTKuRe3X/vUOvCzuBH15gFLSRSbBOxsK1g6Cy
+         9uoiDiUbIDjj6UFNS6s6u0Sx6V4H8MhHbjkhdiH61Ee5QBiy84vh4otHVxgGqgQdRjOX
+         iwxD/JcDFVJGGe+5galovQ1o6RQd3vJtlz+I4t5h5LsFAlRDDvG9vVGYFu4JblyunWwm
+         YddEfZMV7s6cMWHtfR1ZdiZVIrzZfp5eInjymJr7tkff4XQqh1KYjraXisBEVgJt7IH+
+         /uDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739543742; x=1740148542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0N53k3Mv7p8S+u3QWaaS2dkskmcl5RUICb2LIij7Obo=;
+        b=EjeT5qcJg4D2gSYFrHb1Cw5PnZ8j5NVmv0LTDs8ADZj8pNDIrQkcJU61wfOOSJ5JqG
+         HZjTkXF7MYOKG22jrEIsPwp7ziCiqBw8/WlnnUqQWJ10WJ6m/6y1c9Uj4BnUX/P90ZWd
+         63SifEpICjZHF6JLap93wwd2tLUryl58jd/IgE2ncyDuEyai8klRkeNx2DEkyeXXyWhi
+         1PvtqSTRD/7WEmX0ZyaP+HIjI2sW5Fn73IxU7nxTbq3eS1XOER5tKa8PQNNTesWTWwpH
+         dS6mUSjzJ/x8Fv2CCWkI5690Yi/mntgH/AgaR+3qBHYYHyQFz6pGNwKB2SbxLPu4nv47
+         nWiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVb91wMttq9rl/Wg1C/5zy7XytunXrrrA0MrMjlidE07Z8umYNq3znFCOZsa9epAqwjbw1gyucwTNv@vger.kernel.org, AJvYcCWA+SkDFPxwagaDeuQK7cLJj39kGjgSyOoujk8QzGu/6LuBiNOmiuOt/hjUBZM9kiQ8r/F+2xOyuiosryYz@vger.kernel.org, AJvYcCWdBrxmnqkXIuwwo7PxcKhvg0W+hrq8JSlyoks+iEMjHWAsKypC+dUso49C5a0k3SZ7fENABD45bKgS@vger.kernel.org, AJvYcCWgmn+dn6ccI/4sRT4mRopXpVX4FhMcDk2N+LDVoRD3qxHJCY3UDi0bJUpy6uemq5RWfleOEEnx94A1@vger.kernel.org, AJvYcCWieTdzY2eAW2O5kfIrVvkqu7BOUl3GbMgsbCUSBUlubi5YJQ2t8+U3nKake4pBiv5bb0yvUSqu@vger.kernel.org, AJvYcCWmD8QPeaV9mO2msquY3l8Y4bbra1aMfbpuqeym1ZHxNmx0D4PAgMnYQJFm/vr4FT+lzr+Q8Va2GbN92Yc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbPDs6wkrIMJpniBSB/7ddfyj77R4bh11GHtKsKMA+4C3I1Ay+
+	V3fc/3aHL2mfwux5LljYCHdy7f4Q2ClRWx2YQFU/V7JtZqQZ3GfiluL6LeZk685FX1aOGFkXB9A
+	lv8xYFJjMNLkKEwKqufH2934oufo=
+X-Gm-Gg: ASbGncsmFq8S8UUhaqFJn0V/TocE9g5db4TJ229LU+AP/grsLRj1ktXZX8sq2Lzgr61
+	OHXOTglixmadS7MMRqUQO1Y1BdRqgaDb2m02Vd3rAF9zVhnensLQgpajefY5MN4x/nbt6l80ymd
+	U=
+X-Google-Smtp-Source: AGHT+IHxLwa+LdK+RIXBQ61ufPDBdw4TCe0dzmGVWhQ+eDRL2W7fpPEWqmtiDOs8fU5xo2LozSswPlPXUTchqM8RUgI=
+X-Received: by 2002:a17:907:7251:b0:ab6:d7c5:124 with SMTP id
+ a640c23a62f3a-ab7f347db92mr1285351166b.43.1739543741827; Fri, 14 Feb 2025
+ 06:35:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com> <173952845012.57797.11986673064009251713.b4-ty@linaro.org>
+In-Reply-To: <173952845012.57797.11986673064009251713.b4-ty@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 14 Feb 2025 16:35:04 +0200
+X-Gm-Features: AWEUYZkvU1c5l4b-twNM_d1j1Z5Bjc4iuI1xUAHGQWgComsx2eFjxZsFC8qZig0
+Message-ID: <CAHp75VcjAFEdaDQAMXVMO96uxwz5byWZvybhq2fdL9ur4WP3rg@mail.gmail.com>
+Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add gpiod_multi_set_value_cansleep
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, David Lechner <dlechner@baylibre.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 14 Feb 2025 15:07:44 +0100
-Message-Id: <D7S874FN28TV.3EJHJXB60GQ76@bootlin.com>
-Subject: Re: [PATCH v1 0/5] gpio: regmap: Make use of 'ngpios' property
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Michael
- Walle" <mwalle@kernel.org>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
- <D7S21NAXRW2A.2LB56QSTDCV6Z@bootlin.com>
- <Z69KBATz7I80r0sl@smile.fi.intel.com>
-In-Reply-To: <Z69KBATz7I80r0sl@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemsgdukehfmeegrggvieemtgejgeegmehfjeelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemsgdukehfmeegrggvieemtgejgeegmehfjeeliedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsggrrhhtohhsi
- idrghholhgrshiivgifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Fri Feb 14, 2025 at 2:49 PM CET, Andy Shevchenko wrote:
-> On Fri, Feb 14, 2025 at 10:18:29AM +0100, Mathieu Dubois-Briand wrote:
-> > On Thu Feb 13, 2025 at 8:48 PM CET, Andy Shevchenko wrote:
-> > > It appears that regmap GPIO doesn't take into account 'ngpios' proper=
-ty
-> > > and requires hard coded values or duplication of the parsing the same
-> > > outside of GPIO library. This miniseries addresses that.
-> > >
-> > > For the record, I have checked all bgpio_init() users and haven't see=
-n
-> > > the suspicious code that this series might break, e.g., an equivalent=
- of
-> > > something like this:
-> > >
-> > > static int foo_probe(struct device *dev)
-> > > {
-> > > 	struct gpio_chip *gc =3D devm_kzalloc(...);
-> > > 	struct fwnode_handle *fwnode =3D ...; // NOT dev_fwnode(dev)!
-> > >
-> > > 	...
-> > > 	gc->parent =3D dev;
-> > > 	gc->fwnode =3D fwnode;
-> > >
-> > > 	ret =3D bgpio_init(gc, dev, ...);
-> > > 	...
-> > > }
-> > >
-> > > Reported-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
->
->
-> ...
->
-> > Thanks, I confirm I tested this series and it does fix my case: I can
-> > leave the ngpio field uninitialized and its value will be correctly
-> > retrieved from the "ngpios" property.
-> >=20
-> > Also the whole series looks good to me.
->
-> Thank you! Can you give a formal tag(s)?
+On Fri, Feb 14, 2025 at 12:21=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote:
+> > This series was inspired by some minor annoyance I have experienced a
+> > few times in recent reviews.
 
-Sure!
+...
 
-Tested-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Reviewed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> [07/15] iio: adc: ad7606: use gpiod_multi_set_value_cansleep
+>         commit: 8203bc81f025a3fb084357a3d8a6eb3053bc613a
+> [08/15] iio: amplifiers: hmc425a: use gpiod_multi_set_value_cansleep
+>         commit: e18d359b0a132eb6619836d1bf701f5b3b53299b
+> [09/15] iio: resolver: ad2s1210: use gpiod_multi_set_value_cansleep
+>         commit: 7920df29f0dd3aae3acd8a7115d5a25414eed68f
+> [10/15] iio: resolver: ad2s1210: use bitmap_write
+>         commit: a67e45055ea90048372066811da7c7fe2d91f9aa
+
+FWIW, Jonathan usually takes care of patch queue on weekends.
+But whatever, it's not my business after all :-)
 
 --=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+With Best Regards,
+Andy Shevchenko
 
