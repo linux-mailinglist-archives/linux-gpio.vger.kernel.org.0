@@ -1,80 +1,79 @@
-Return-Path: <linux-gpio+bounces-16054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7B37A368EA
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3C8CA368EB
 	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 00:12:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3B4C3AB2B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 23:12:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8E0D1725D5
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 23:12:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B70B1FCCF6;
-	Fri, 14 Feb 2025 23:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B7271FCCE5;
+	Fri, 14 Feb 2025 23:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z1T7OEzi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMFeGglc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61521FC0F7
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 23:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7141FCCE7
+	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 23:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739574771; cv=none; b=aG7zjt8qxXtOQniSyk4XFrCTcKDWu2ZfwGhsqrgK2H6xe1HkyE7CpxLinDBfbVLlLeNUG/1HBSDZwRj+rMIGhrZB+Ppq5hXD8T/xtr2bx5Ttgr1osqL+94A08m3MGzKmQ/TwWtTLEt8h5qTnV2SfZ0tfhxdzIUYR8fYWMPmrjtM=
+	t=1739574773; cv=none; b=kvhjNYv60TLXLW0i0xtzPN0VcDnX1PIqABb2q0Otyk2vROZiIRnYm99/b2NP8BDS3OgASMG5mRvQ6zr9YJbtwWOCXoigjX+iJWd9r4NygQ8ySN/9JNudJ7BPfeWsIKrORru04fKaYVNpTSSqrZt4QX2rZpfNhHQpO8HErdwnY6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739574771; c=relaxed/simple;
-	bh=Z9LTzZRPFLnZJT5XMSZGdfur7lQk3IZ92SFbdqLDh9Q=;
+	s=arc-20240116; t=1739574773; c=relaxed/simple;
+	bh=cuhl++Eyo/qWEdI+HlBE6Uho06BsrNfrptp+HT6udsk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XDI6Ib9BGcbC3oWAaIzsLBwThFbwO6v+7uk00oI9cdq1TPC3FwunXKIKdGricNyLNaxlF0nbNFSwZAFm6PHHSQcVv+a4YEBF7JZSxgLiTIjOq6r2sBy64k8StjLNyYnGXICo7VM7T0aEQRL3Xk3jFhi9LInp/69cn7Wd9azrymc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z1T7OEzi; arc=none smtp.client-ip=209.85.208.178
+	 In-Reply-To:To:Cc; b=s2aNnyzwv6AteZ6LVsWN1ILCOMEoyBABy/vU9QYmCwUfW85bsgTQEZXs4HqWhnIEon++pRRml5spQO8b14tSCDs/hW3tFTycoKI6yv/Fi3BBzodvUiRSvl0y63Is80K3XpW6EE0iXowXMYB/dFjnuEDK8ShQAb7KriYchPeUYQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MMFeGglc; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30737db1ab1so25235711fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 15:12:49 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54298ec925bso3487504e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 15:12:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739574768; x=1740179568; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739574769; x=1740179569; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Hj7mvcg1AIpuBCAS0OPKw5ndsiDf9b+OHpTi8fYuGx0=;
-        b=z1T7OEzi5pANFQihVNKuM4QbqBzCCBd3IlFs80nWJhYs8uwzDZW/zb8IUE8iqCXLp5
-         E2PPZpMjRevWGC/9+qAOLqy8RCK4aW6XP4hVN8M5dKNQ/K39PD/jJKIn5r9UAs2fGInB
-         au9rP5oBBcRznB6fj3HnICGZy3E6JEOx6BBndMqLdEY1o3t89NzNYoA7QSVZQm45CJWl
-         B0vah/COCVU28qsbovMK1daWHJ0DieJIVoi2LJ7T7Z3tsUL/rAlMdbbTdLOBQ8d56a3D
-         j7BRnJ1TW84chs1pkl6rYintfPrYFPRTud16OnFlrUJLOxUMX41MqI6zCVmq8Z/yfPeA
-         MqIg==
+        bh=ek6NvBPszR8V6i4FwDin84fMqwnP1H0VyLQiYB0Bg0E=;
+        b=MMFeGglcptxaWBIj/GAaXgguGmhTrZt9Zyf4YLXa2gpu4AiyacBYJiCf9jsfQZfBBG
+         y1Rph+FMhH1qi3zSPPtfYgO/RkSaAejjfpA+j3DpC4kR4eK+3OTRamGVmtPUzhrnLzWc
+         gIq59Q09OweU6sFRjxoxws6nroOse1No9ySc2+hfpLfo5R8EhaXRFF9APBN1oO6IoRTS
+         voiXlP1tl6yN5ThepFA//XHBVLFEHUQfTplhhae/9fGfEhLBEzwVbAEsiwlr/hKyWrV0
+         3v01xwRaXGHdsWYaLUv9DocO3P2t03kjyiRKrET61N1rV657xaXXyZqTcGyEXoLGzJPI
+         LNaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739574768; x=1740179568;
+        d=1e100.net; s=20230601; t=1739574769; x=1740179569;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Hj7mvcg1AIpuBCAS0OPKw5ndsiDf9b+OHpTi8fYuGx0=;
-        b=h9oxyCtPNWiSViX3H2qizV/tLZmmVrtIkTUxsXaxsI+KQvpSi3yNpj4AR2WtbD7Zty
-         cxYCUUfjjiqO5TGngqvyv7CupAMl/XO4bfoGLDXmqdtpz5LB5iyeTbc4BjwccqVnY/pC
-         eCu8L31VgeGtz1dG4uAuP/fRWxnGMtoy8Ds4T6DawyQn/6x2EquEfeJSck/dbgvKUP3H
-         xClocITiQl22ZF1OiqgbSe6LR/onUc97ytX8w6Y3msXRLLxtn20Hg/D/GOU4pTv4Mylt
-         DOjPQDXxfZi0nLOUHISqFho3b2pk40JVmz5EdzS5k9Oeyeh7XIx8aUHd//bRFhp1F0hY
-         i7iw==
-X-Gm-Message-State: AOJu0Ywxt7zcGmgCyP0FrD7Iu3muuDjSkHSz62QuP1NS+EwxGJoiQqLt
-	ozxqiywP9e58tpjdUASC/uO11YoJT0L00mdy9NWPt2GpcD661XbbTErBcVxWqm8/XA8FtLRINxg
-	6
-X-Gm-Gg: ASbGncvLuZRva2J0Cwr3luV4ddTunIRgaqHvDozrYK3JLkl/MUC69acDYTgvB3iShey
-	HLmrOyGae3CePLxUIrG/p31yMYOOsNUa0QFD/jtNFvF9wU0rKQXJzMXwZcOybVQJHXegXaw3gNI
-	amktbpU39PyUPYLy4LjE7TTPE4bDTx5AIblmarHO80poFSnvH+H4IniGoH89IQB5Q0U9eVe5Bq0
-	yli46NyjcgaS/O2G1TDx9iKY+rD5kcxzZAQoTzQQ4k2GUDTMtk83pyUVSohLXeINNJbSAxZdv/E
-	ZY4RFCwierHMrlHjDK8AAFCw/Q==
-X-Google-Smtp-Source: AGHT+IEMDnufbBzp39ppn9ewPPziBTwCqLLg1QleH6Y1u6YA1C75d+PqFQkmEpwc1Czn6L+CJqvfMg==
-X-Received: by 2002:a05:6512:2342:b0:545:60b:f394 with SMTP id 2adb3069b0e04-5452fe27255mr451237e87.4.1739574767900;
-        Fri, 14 Feb 2025 15:12:47 -0800 (PST)
+        bh=ek6NvBPszR8V6i4FwDin84fMqwnP1H0VyLQiYB0Bg0E=;
+        b=ulGB8bqgfxMJzv67aTSbB19/pZ4fhY0Iwgxx23L21Pt00Z3BsbOep+Z7EidxGYbZQI
+         09VX0wvyvt6l5NhIYfIXaQYeLN1dawY9SFtqWH2oJdy8V4e1D2PhTyAdXC9DdaLJZ14l
+         bqTpba06QrUwt0jKxan4clXL5UKzttd0OiiD6MQO0xuzNWh6tbQo3r1MmA9dl8omRWCp
+         ZNxW0I7m4VPugddEqQh476wJktVmpXHidUQgqUiiEE6C1Dsfb98Dixlg4iyjC0Q/uAD1
+         e2WEJ68spOSDhy+OGtTGFV/gB5F/td7OK5hsOdC3f2tD1g6ACTDYPQJTKYdzoYeRmlSD
+         b7Dg==
+X-Gm-Message-State: AOJu0Yyn4StW7IDeWLO2V64ekcNElQzgz8KoCFF4Cmo2/sIAdu7WZ5RZ
+	pL5/aNhSNU4sbNueNjQBiKpJ/iHyElqOlDnICDWMc30j717Edc6mFZJJIhfJlWI=
+X-Gm-Gg: ASbGncsHnpH3MZdr9IekiLMfqvARncPJHZZyGQknhuRtY0QaHRzYP4JdRW+XHxwp4ui
+	dHUoh/tb+Cj5VQKcGdFBq9XbveTtZ+6ysVjzZn1p0IJBijaR88o+3dABb4uAT3xSuIORKjugIPo
+	QxhpLc9ztNJDbIyB0vwo3bCgQjKBo0ZmnJc9/M8osphWTXuSuklrXjW4k+HuED0prZsAYwqEkNP
+	X2hXtseSgQTI4mY+9NNtgAAUU2cc2zTjQwAHLjOY55EP6VOyt4VdhEWeqGOPextOv8gMw2pbffI
+	6koaxM5RFSp1zFgHe6OTStJZ4g==
+X-Google-Smtp-Source: AGHT+IGiOMBB2u+MqncvLemR46Vdhf8U5YlleypLkibqmqpHv4xVyBgspHJatjQXnrsALf51494Nbg==
+X-Received: by 2002:a05:6512:1249:b0:544:ead:e1d6 with SMTP id 2adb3069b0e04-5452fe8076dmr326534e87.38.1739574769328;
+        Fri, 14 Feb 2025 15:12:49 -0800 (PST)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452f676aa5sm158515e87.50.2025.02.14.15.12.47
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452f676aa5sm158515e87.50.2025.02.14.15.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 15:12:47 -0800 (PST)
+        Fri, 14 Feb 2025 15:12:48 -0800 (PST)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 15 Feb 2025 00:12:45 +0100
-Subject: [PATCH v2 1/2] gpio: mmio: Add flag for calling pinctrl back-end
+Date: Sat, 15 Feb 2025 00:12:46 +0100
+Subject: [PATCH v2 2/2] gpio: vf610: Switch to gpio-mmio
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,7 +82,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250215-vf610-mmio-v2-1-4a91f8c8e8d5@linaro.org>
+Message-Id: <20250215-vf610-mmio-v2-2-4a91f8c8e8d5@linaro.org>
 References: <20250215-vf610-mmio-v2-0-4a91f8c8e8d5@linaro.org>
 In-Reply-To: <20250215-vf610-mmio-v2-0-4a91f8c8e8d5@linaro.org>
 To: Johan Korsnes <johan.korsnes@remarkable.no>, 
@@ -92,151 +91,194 @@ To: Johan Korsnes <johan.korsnes@remarkable.no>,
 Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 X-Mailer: b4 0.14.2
 
-It turns out that with this flag we can switch over an entire
-driver to use gpio-mmio instead of a bunch of custom code,
-also providing get/set_multiple() to it in the process, so it
-seems like a reasonable feature to add.
+After adding a pinctrl flag to gpio-mmio we can use it
+for driving gpio-vf610.
 
-The generic pin control backend requires us to call the
-gpiochip_generic_request(), gpiochip_generic_free(),
-pinctrl_gpio_direction_output() and pinctrl_gpio_direction_input()
-callbacks, so if the new flag for a pin control back-end
-is set, we make sure these functions get called as
-expected.
+The existing code has the same semantics and the generic
+gpio-mmio, including reading from the data out register
+when the direction is set to input, and it can also handle
+the absence of the direction register better than the
+current driver: we get the direction from the shadow
+direction registers in gpio-mmio instead.
+
+Since gpio-mmio has an internal spinlock we can drop the
+direction-protecting spinlock from the driver.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-mmio.c    | 36 ++++++++++++++++++++++++++++--------
- include/linux/gpio/driver.h |  3 +++
- 2 files changed, 31 insertions(+), 8 deletions(-)
+ChangeLog v1->v2:
+- Use the dual input/output set/clear registers for output.
+- Provide the BGPIOF_READ_OUTPUT_REG_SET flag so the driver
+  behaves as described in the commit message...
+- Drop the now unused spinlock (gpio-mmio has its own).
+---
+ drivers/gpio/Kconfig      |   1 +
+ drivers/gpio/gpio-vf610.c | 109 ++++++++--------------------------------------
+ 2 files changed, 18 insertions(+), 92 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index d89e78f0ead31f30c014b201cca4e32ecb377118..d4f72a0f6ed89878d64055ab28d888a7be08b126 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -49,6 +49,7 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
- #include <linux/log2.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-@@ -323,9 +324,19 @@ static void bgpio_set_multiple_with_clear(struct gpio_chip *gc,
- 		gc->write_reg(gc->reg_clr, clear_mask);
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index add5ad29a673c09082a913cb2404073b2034af48..ab104ce85ee6cef1549d31744625bcc625d75179 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -756,6 +756,7 @@ config GPIO_VF610
+ 	default y if SOC_VF610
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	select GPIOLIB_IRQCHIP
++	select GPIO_GENERIC
+ 	help
+ 	  Say yes here to support i.MX or Vybrid vf610 GPIOs.
+ 
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 3527487d42c8ac3ef39c3be468dd5177c85f6b44..4aa80dae9badbe8a9cc7b2adacf321ed237c3b57 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -36,7 +36,6 @@ struct vf610_gpio_port {
+ 	struct clk *clk_port;
+ 	struct clk *clk_gpio;
+ 	int irq;
+-	spinlock_t lock; /* protect gpio direction registers */
+ };
+ 
+ #define GPIO_PDOR		0x00
+@@ -94,82 +93,6 @@ static inline u32 vf610_gpio_readl(void __iomem *reg)
+ 	return readl_relaxed(reg);
  }
  
-+static int bgpio_dir_return(struct gpio_chip *gc, unsigned int gpio, bool dir_out)
-+{
-+	if (!gc->bgpio_pinctrl)
-+		return 0;
-+	if (dir_out)
-+		return pinctrl_gpio_direction_output(gc, gpio);
-+	else
-+		return pinctrl_gpio_direction_input(gc, gpio);
-+}
-+
- static int bgpio_simple_dir_in(struct gpio_chip *gc, unsigned int gpio)
+-static int vf610_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+-{
+-	struct vf610_gpio_port *port = gpiochip_get_data(gc);
+-	u32 mask = BIT(gpio);
+-	unsigned long offset = GPIO_PDIR;
+-
+-	if (port->sdata->have_paddr) {
+-		mask &= vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+-		if (mask)
+-			offset = GPIO_PDOR;
+-	}
+-
+-	return !!(vf610_gpio_readl(port->gpio_base + offset) & BIT(gpio));
+-}
+-
+-static void vf610_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+-{
+-	struct vf610_gpio_port *port = gpiochip_get_data(gc);
+-	u32 mask = BIT(gpio);
+-	unsigned long offset = val ? GPIO_PSOR : GPIO_PCOR;
+-
+-	vf610_gpio_writel(mask, port->gpio_base + offset);
+-}
+-
+-static int vf610_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+-{
+-	struct vf610_gpio_port *port = gpiochip_get_data(chip);
+-	u32 mask = BIT(gpio);
+-	unsigned long flags;
+-	u32 val;
+-
+-	if (port->sdata->have_paddr) {
+-		spin_lock_irqsave(&port->lock, flags);
+-		val = vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+-		val &= ~mask;
+-		vf610_gpio_writel(val, port->gpio_base + GPIO_PDDR);
+-		spin_unlock_irqrestore(&port->lock, flags);
+-	}
+-
+-	return pinctrl_gpio_direction_input(chip, gpio);
+-}
+-
+-static int vf610_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+-				       int value)
+-{
+-	struct vf610_gpio_port *port = gpiochip_get_data(chip);
+-	u32 mask = BIT(gpio);
+-	unsigned long flags;
+-	u32 val;
+-
+-	vf610_gpio_set(chip, gpio, value);
+-
+-	if (port->sdata->have_paddr) {
+-		spin_lock_irqsave(&port->lock, flags);
+-		val = vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+-		val |= mask;
+-		vf610_gpio_writel(val, port->gpio_base + GPIO_PDDR);
+-		spin_unlock_irqrestore(&port->lock, flags);
+-	}
+-
+-	return pinctrl_gpio_direction_output(chip, gpio);
+-}
+-
+-static int vf610_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
+-{
+-	struct vf610_gpio_port *port = gpiochip_get_data(gc);
+-	u32 mask = BIT(gpio);
+-
+-	mask &= vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+-
+-	if (mask)
+-		return GPIO_LINE_DIRECTION_OUT;
+-
+-	return GPIO_LINE_DIRECTION_IN;
+-}
+-
+ static void vf610_gpio_irq_handler(struct irq_desc *desc)
  {
--	return 0;
-+	return bgpio_dir_return(gc, gpio, false);
- }
+ 	struct vf610_gpio_port *port =
+@@ -295,6 +218,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct vf610_gpio_port *port;
+ 	struct gpio_chip *gc;
+ 	struct gpio_irq_chip *girq;
++	unsigned long flags;
+ 	int i;
+ 	int ret;
+ 	bool dual_base;
+@@ -304,7 +228,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- static int bgpio_dir_out_err(struct gpio_chip *gc, unsigned int gpio,
-@@ -339,7 +350,7 @@ static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
- {
- 	gc->set(gc, gpio, val);
+ 	port->sdata = device_get_match_data(dev);
+-	spin_lock_init(&port->lock);
  
--	return 0;
-+	return bgpio_dir_return(gc, gpio, true);
- }
+ 	dual_base = port->sdata->have_dual_base;
  
- static int bgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
-@@ -357,7 +368,7 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+@@ -371,23 +294,25 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	}
  
- 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+ 	gc = &port->gc;
+-	gc->parent = dev;
+-	gc->label = dev_name(dev);
+-	gc->ngpio = VF610_GPIO_PER_PORT;
+-	gc->base = -1;
+-
+-	gc->request = gpiochip_generic_request;
+-	gc->free = gpiochip_generic_free;
+-	gc->direction_input = vf610_gpio_direction_input;
+-	gc->get = vf610_gpio_get;
+-	gc->direction_output = vf610_gpio_direction_output;
+-	gc->set = vf610_gpio_set;
++	flags = BGPIOF_PINCTRL_BACKEND;
+ 	/*
+-	 * only IP has Port Data Direction Register(PDDR) can
+-	 * support get direction
++	 * We only read the output register for current value on output
++	 * lines if the direction register is available so we can switch
++	 * direction.
+ 	 */
+ 	if (port->sdata->have_paddr)
+-		gc->get_direction = vf610_gpio_get_direction;
++		flags |= BGPIOF_READ_OUTPUT_REG_SET;
++	ret = bgpio_init(gc, dev, 4,
++			 port->base + GPIO_PDOR,
++			 port->base + GPIO_PSOR,
++			 port->base + GPIO_PCOR,
++			 port->sdata->have_paddr ? port->base + GPIO_PDDR : NULL,
++			 NULL,
++			 flags);
++	if (ret)
++		return dev_err_probe(dev, ret, "unable to init generic GPIO\n");
++	gc->label = dev_name(dev);
++	gc->base = -1;
  
--	return 0;
-+	return bgpio_dir_return(gc, gpio, false);
- }
- 
- static int bgpio_get_dir(struct gpio_chip *gc, unsigned int gpio)
-@@ -403,7 +414,7 @@ static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gpio,
- {
- 	bgpio_dir_out(gc, gpio, val);
- 	gc->set(gc, gpio, val);
--	return 0;
-+	return bgpio_dir_return(gc, gpio, true);
- }
- 
- static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int gpio,
-@@ -411,7 +422,7 @@ static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int gpio,
- {
- 	gc->set(gc, gpio, val);
- 	bgpio_dir_out(gc, gpio, val);
--	return 0;
-+	return bgpio_dir_return(gc, gpio, true);
- }
- 
- static int bgpio_setup_accessors(struct device *dev,
-@@ -562,10 +573,13 @@ static int bgpio_setup_direction(struct gpio_chip *gc,
- 
- static int bgpio_request(struct gpio_chip *chip, unsigned gpio_pin)
- {
--	if (gpio_pin < chip->ngpio)
--		return 0;
-+	if (gpio_pin >= chip->ngpio)
-+		return -EINVAL;
- 
--	return -EINVAL;
-+	if (chip->bgpio_pinctrl)
-+		return gpiochip_generic_request(chip, gpio_pin);
-+
-+	return 0;
- }
- 
- /**
-@@ -632,6 +646,12 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (flags & BGPIOF_PINCTRL_BACKEND) {
-+		gc->bgpio_pinctrl = true;
-+		/* Currently this callback is only used for pincontrol */
-+		gc->free = gpiochip_generic_free;
-+	}
-+
- 	gc->bgpio_data = gc->read_reg(gc->reg_dat);
- 	if (gc->set == bgpio_set_set &&
- 			!(flags & BGPIOF_UNREADABLE_REG_SET))
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 2dd7cb9cc270a68ddedbcdd5d44e0d0f88dfa785..e867d52daaf26827324f9e17b5c19c55978ed7e7 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -394,6 +394,7 @@ struct gpio_irq_chip {
-  * @reg_dir_in: direction in setting register for generic GPIO
-  * @bgpio_dir_unreadable: indicates that the direction register(s) cannot
-  *	be read and we need to rely on out internal state tracking.
-+ * @bgpio_pinctrl: the generic GPIO uses a pin control backend.
-  * @bgpio_bits: number of register bits used for a generic GPIO i.e.
-  *	<register width> * 8
-  * @bgpio_lock: used to lock chip->bgpio_data. Also, this is needed to keep
-@@ -478,6 +479,7 @@ struct gpio_chip {
- 	void __iomem *reg_dir_out;
- 	void __iomem *reg_dir_in;
- 	bool bgpio_dir_unreadable;
-+	bool bgpio_pinctrl;
- 	int bgpio_bits;
- 	raw_spinlock_t bgpio_lock;
- 	unsigned long bgpio_data;
-@@ -713,6 +715,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- #define BGPIOF_READ_OUTPUT_REG_SET	BIT(4) /* reg_set stores output value */
- #define BGPIOF_NO_OUTPUT		BIT(5) /* only input */
- #define BGPIOF_NO_SET_ON_INPUT		BIT(6)
-+#define BGPIOF_PINCTRL_BACKEND		BIT(7) /* Call pinctrl direction setters */
- 
- #ifdef CONFIG_GPIOLIB_IRQCHIP
- int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
+ 	/* Mask all GPIO interrupts */
+ 	for (i = 0; i < gc->ngpio; i++)
 
 -- 
 2.48.1
