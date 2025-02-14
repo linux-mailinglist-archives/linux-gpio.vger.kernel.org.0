@@ -1,166 +1,120 @@
-Return-Path: <linux-gpio+bounces-15982-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-15983-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3597A35321
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 01:41:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37DEFA3539C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 02:19:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 434C97A49F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 00:41:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F7233ABF3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 01:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67B915198F;
-	Fri, 14 Feb 2025 00:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E707E42A9E;
+	Fri, 14 Feb 2025 01:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiSQLD90"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF291487FA;
-	Fri, 14 Feb 2025 00:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9802E1E502;
+	Fri, 14 Feb 2025 01:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739493616; cv=none; b=JqTGngirpOnyVDuQTXAz7SEFjEvG4J7hxeFwTond1zTzB6jimf0DC0IGKNeIdobJsOSQZaoRn03fr0Lil6MluBObWFsXg0jNFAtbDHWyZUa5rWAdTPmGfYOnJBoJJXWHHJ+ZJmZ6cB6cTFFaNwYl0yrjWdmqidPXHY2w4noMl20=
+	t=1739495990; cv=none; b=iZ80SGXW7/XLzglsN2pntSyLt79VVYbQR/ZGccf5ENrcdg/Gx48IkeRSelZA7tAQ0npR7gZ/I9A+UliauutuJW988aIMoiYBJkHDTAgFtXmE5VpuvM51qBSrjIGW/dmA6HgmjPyLEP+/DdLCcUNwFlzp+zcxckgxx+8YyDY4ScQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739493616; c=relaxed/simple;
-	bh=9DJX4GeezJm5XmMAY97rH2s9kYvmm6DkOakDepGm7+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i1xJefPUoa9SeSo+joji7NHEaM21MjBmDTb73eFQWt3MYXUbjU5DPEFAQJJVS4QQsFg7/bPnbiQTGR6A2NVanjmTwitOwiDasV2HzuvKLClOeyoLWt3QRojb6FjTbMmNH7G0umVcRztZ8ytyqLeoa9L2jpccYZ0XPiwBbXVugw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C5F6113E;
-	Thu, 13 Feb 2025 16:40:35 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBE353F5A1;
-	Thu, 13 Feb 2025 16:40:12 -0800 (PST)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] pinctrl: sunxi: Add support for the secondary A523 GPIO ports
-Date: Fri, 14 Feb 2025 00:37:34 +0000
-Message-ID: <20250214003734.14944-9-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <20250214003734.14944-1-andre.przywara@arm.com>
-References: <20250214003734.14944-1-andre.przywara@arm.com>
+	s=arc-20240116; t=1739495990; c=relaxed/simple;
+	bh=sfaPPZ9gP5kgndwhB/ECTbbp0IEu/QeHTgJVNdmuwy0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=HrvzebVQyobWBI9CpPxD6XJA7tTQEpgXwa7j7uf5n56YVZKusq8lromVXrMztNbVGvezmYKdFKb730SMeQviLc/tnVhpIFQ7wrQBtMghW1393kYyKxMegfyQoxMGu+/jELVB3GYTIMaJNHxNFH+esjmcoAH1PleeyN1wS65Q39Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiSQLD90; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC4EC4CED1;
+	Fri, 14 Feb 2025 01:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739495990;
+	bh=sfaPPZ9gP5kgndwhB/ECTbbp0IEu/QeHTgJVNdmuwy0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=XiSQLD906pcu2WDC2EPROMCXXWeS6auijB21WC1/0APPV98P5nxNnepP2GpHUYEqM
+	 nLtVUv3yqX9KjfSqpqyPfGJcmj4/pvaUMw4yj6uO4rS7pdtXBc2Uau8q14OTtrshAa
+	 12MV0IwP/2ZdGYhbdIpHSiIIeQuv24gd2B8FKNklG97FBHf84pIvHRBhvFN6BLH6Ap
+	 fsdeaHGb7rDR1qhVMoOwHbqH7IAZ84OtOlqUKaDlC8hDCJuV/64GnZvKhrGtFyPCUO
+	 p88qN0HJ69LTcXjyAw9xvVP6lbdTLQGR5ZsHlo1N8bcuoKiuNkBrEBlZsl0x6SFD0E
+	 UxlOKeUATTtHQ==
+Date: Thu, 13 Feb 2025 19:19:48 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ Chen-Yu Tsai <wens@csie.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Samuel Holland <samuel@sholland.org>
+To: Andre Przywara <andre.przywara@arm.com>
+In-Reply-To: <20250214003734.14944-7-andre.przywara@arm.com>
+References: <20250214003734.14944-1-andre.przywara@arm.com>
+ <20250214003734.14944-7-andre.przywara@arm.com>
+Message-Id: <173949598874.895319.6861900349653451498.robh@kernel.org>
+Subject: Re: [PATCH v2 6/8] dt-bindings: pinctrl: add compatible for
+ Allwinner A523/T527
 
-As most other Allwinner SoCs before, the A523 chip contains a second
-GPIO controller, managing banks PL and PM.
-Use the newly introduced DT based pinctrl driver to describe just the
-generic pinctrl properties, so advertise the number of pins per bank
-and the interrupt capabilities. The actual function/mux assignment is
-taken from the devicetree.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- drivers/pinctrl/sunxi/Kconfig                 |  5 ++
- drivers/pinctrl/sunxi/Makefile                |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c | 54 +++++++++++++++++++
- 3 files changed, 60 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+On Fri, 14 Feb 2025 00:37:32 +0000, Andre Przywara wrote:
+> The A523 contains a pin controller similar to previous SoCs, although
+> using 10 GPIO banks (PortB-PortK), all of them being IRQ capable.
+> With this SoC we introduce a new style of binding, where the pinmux values
+> for each pin group are stored in the new "allwinner,pinmux" property in
+> the DT node, instead of requiring every driver to store a mapping between
+> the function names and the required pinmux.
+> 
+> Add a new binding file, since all the different variants of the old
+> binding are making the file a bit unwieldy to handle already, and the new
+> property would make the situation worse.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../allwinner,sun55i-a523-pinctrl.yaml        | 177 ++++++++++++++++++
+>  1 file changed, 177 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+> 
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 0cbe466683650..dc62eba96348e 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -136,4 +136,9 @@ config PINCTRL_SUN55I_A523
- 	default ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN55I_A523_R
-+	bool "Support for the Allwinner A523 R-PIO"
-+	default ARM64 && ARCH_SUNXI
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 4e55508ff7f76..951b3f1e4b4f1 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -28,5 +28,6 @@ obj-$(CONFIG_PINCTRL_SUN50I_H6_R)	+= pinctrl-sun50i-h6-r.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616)	+= pinctrl-sun50i-h616.o
- obj-$(CONFIG_PINCTRL_SUN50I_H616_R)	+= pinctrl-sun50i-h616-r.o
- obj-$(CONFIG_PINCTRL_SUN55I_A523)	+= pinctrl-sun55i-a523.o
-+obj-$(CONFIG_PINCTRL_SUN55I_A523_R)	+= pinctrl-sun55i-a523-r.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-new file mode 100644
-index 0000000000000..69cd2b4ebd7d7
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Allwinner A523 SoC r-pinctrl driver.
-+ *
-+ * Copyright (C) 2024 Arm Ltd.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const u8 a523_r_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
-+/*	  PL  PM */
-+	{ 14,  6 };
-+
-+static const unsigned int a523_r_irq_bank_map[] = { 0, 1 };
-+
-+static const u8 a523_r_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
-+/*	  PL  PM */
-+	{ 14, 14 };
-+
-+static struct sunxi_pinctrl_desc a523_r_pinctrl_data = {
-+	.irq_banks = ARRAY_SIZE(a523_r_irq_bank_map),
-+	.irq_bank_map = a523_r_irq_bank_map,
-+	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
-+	.pin_base = PL_BASE,
-+};
-+
-+static int a523_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_dt_table_init(pdev, a523_r_nr_bank_pins,
-+					   a523_r_irq_bank_muxes,
-+					   &a523_r_pinctrl_data,
-+					   SUNXI_PINCTRL_NEW_REG_LAYOUT);
-+}
-+
-+static const struct of_device_id a523_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun55i-a523-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver a523_r_pinctrl_driver = {
-+	.probe	= a523_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun55i-a523-r-pinctrl",
-+		.of_match_table	= a523_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(a523_r_pinctrl_driver);
--- 
-2.46.3
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.example.dts:24:18: fatal error: dt-bindings/clock/sun55i-a523-r-ccu.h: No such file or directory
+   24 |         #include <dt-bindings/clock/sun55i-a523-r-ccu.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250214003734.14944-7-andre.przywara@arm.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
