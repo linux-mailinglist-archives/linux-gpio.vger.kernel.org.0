@@ -1,124 +1,79 @@
-Return-Path: <linux-gpio+bounces-16066-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16067-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5115DA36E6A
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 14:12:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 430B7A36F55
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 17:17:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2B993B0A57
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 13:12:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00EDB1894A1B
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 16:17:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDC01C6FE1;
-	Sat, 15 Feb 2025 13:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B4741D8DE0;
+	Sat, 15 Feb 2025 16:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="imVYqRTM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExOKTVB8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC791C701F
-	for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 13:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165EBD529;
+	Sat, 15 Feb 2025 16:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739625161; cv=none; b=ovaEfMXXkFghGRR1I7VwPKq8eAzrbZ2+er/Y366FbjoOH16GQJhPnytxdDNpcj2WAR6v25striE6GdMICFbZuG31UHIhNeGD/1WhHaX6J/FMqADegTj0o8qppsIGUlgyyuHAgCZWop5ZUfN9RAsL2JF6YAMtX9xKOnHcupV/GMg=
+	t=1739636257; cv=none; b=AjFR6/IJeU5WApmZszDVi1svRq1vzdAqoI4wtzQ/3on6G2zvxlEZ3/Ob9uhjl0hnwPASiipgzKTcduaZHtaeWH7uIlLOl78V9e/MI1EGB+GncRvTLS1Iws3GtxKdJL5S21/8kxwemLIa8VOo3bfQ6nqp8QrVYe5lezkuDU1GSz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739625161; c=relaxed/simple;
-	bh=kqJhfXI+i5MZlzlpH0kJljCFi2elURZJY0oYoLVGE3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G4rlgMG++dwKUMvXP3dau1WJfGSyLUlDaxriVCXoDC+ge9b9FmGIlJOmy5C78XdiI6KHRZ+mINxjYKQ5jrUq6bGcxKV7oSjN7oOMCS6ku3fylgty4Jsakj5Za70vUNDMvhmHTpW3l5UP1mz08sWz1AdUBHM+jhR49PpYxH7I/j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=imVYqRTM; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab771575040so795112966b.1
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 05:12:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1739625158; x=1740229958; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+v/olVdsNjQIMDpCltiAzjI2f/hzh2HRF4DFpt5Fqo=;
-        b=imVYqRTMA0rIzrydAiNEWiefpuq22JBt/svuZKlnJ057iC2L53yfhk13g+HtQ5GPm0
-         lrqghby0kM+OZZ6MRD+NcOqwwoCstcGFAj6wYfPFau820PR0b7lKI4fEYHIwqjrooltc
-         iP6P23szwbsNgKNU9h0uxv7r9KIMjfnk/rcxGPKiGmn5EWeaoTHxYYOWl9JSW53p02Y9
-         +XmCNfPi766DajUd097vRbrvMmjyDBfi/TbZEGBwU1Ock26A/2Epax/GZB63R5YjI53L
-         xX2dZgyUP4iD0VAwxMZXAvwldWzXfbSUfBLwQwPGyfcpz0bxU77Q/7ZIGey5HEmflnqe
-         T/2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739625158; x=1740229958;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T+v/olVdsNjQIMDpCltiAzjI2f/hzh2HRF4DFpt5Fqo=;
-        b=CW2y+Mwx89bx5yvAHtxNnF45sSYAJ4SsZmFfHNEeT9TUgNNBrLSP3qm+Sfb302ejT0
-         AFnampXUbBFneWjmf3KX2nYlbseaQ7Jq4iu9aRDggcMkW4I2Fty55iqCKqzHXZph9661
-         Nm5NgFxPemi3hAYTH7aPzlb3nqBr4/7J7tu1SYqQ5PL9zgG42AA/XIWfSAi6/8PvN7YB
-         3P1nrjIZllNdUzewpb88zPqjF/34hF0wp4GNdz6bk1tCfD8xe7ACqkqVjVrtoac9aofB
-         HGHEjV4u34MLuwOKS4+iXPdeSZgd1ksTX41/vQuD3NcPq2Cb14N1m9V5MstxcnsGUo7/
-         i0RA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOebhEZAmC6R5Rc2vN7SaPj7cpd7oB+2MIFlRAOJUdqqADoIGDlCkqz3Ss4mOkebbUnbnPHPm5FBD9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyslM+C0GWH0glN3NGy1Gw4cV3I+iPc2ZdYSaOxM+2hR9xVI6tX
-	AhQh4fw/ZJapG0vIC+NezAJETUUOnOcYF54CeAq4RZXZHxzWgSW1RulrD7gSNIg=
-X-Gm-Gg: ASbGncvURAeIvLNKfFx54MEPzsceDaInwzY/3hnY+ZtIbJilKnHJkrHerS8OxcN2xkc
-	mBGVu5fk1KmwQMx6qIKerSw5YIm9h+4f1n8+yi2ds99s62+OC+4D0V9hAaoYdAsGjw6AXRaV1iT
-	UT3Qcli3gwEWB5fm/kbEeOGFSH/7qfRqfbFwbArcCda+anQ8CRSghCzNJFg8PgGOKjG4tvlshUE
-	hWxS6zIErh/fYyQxHTt01bav5lAMOio1QwuD/kDGLjzHSmIvM3rW237LLMVAVdvm4wkUepR7QbY
-	Holp2uE/5WwNZNoMyaXE/3GPn1kVefESPQsy85EKa0cfMg==
-X-Google-Smtp-Source: AGHT+IHGlrrgVz5JEinVT+JSgLk0BgO7y0QXdyl23G+Z1dOq1A3nA6LJrZK0R2Q+k2rxgykw6+EBqg==
-X-Received: by 2002:a17:906:6a0c:b0:ab7:d34a:8f83 with SMTP id a640c23a62f3a-abb70ab8b5emr267680566b.17.1739625158403;
-        Sat, 15 Feb 2025 05:12:38 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb837378e7sm39289266b.52.2025.02.15.05.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 05:12:37 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	biju.das.jz@bp.renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: Suppress binding attributes
-Date: Sat, 15 Feb 2025 15:12:35 +0200
-Message-ID: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1739636257; c=relaxed/simple;
+	bh=7Y8zneOxUR44b1m1nN9u7Cnlk6W916zNl0JV8P9Imk0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=M2xwykKakmuzZNwlTnro0Vw5I3bSraePVTl3GWZZg4IPsMDqDjJe/4eRd6+uME+smyMrttxa4GhYfT8bC4Ing2n79/Tbs8m5xHXD54G/EXYkBeYSD8FomydzTXiHnuNEiQ7eRe3IHd+czw/J7FD+jjpRfRWVAjV7NiB9YVNMoao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExOKTVB8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94004C4CEDF;
+	Sat, 15 Feb 2025 16:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739636256;
+	bh=7Y8zneOxUR44b1m1nN9u7Cnlk6W916zNl0JV8P9Imk0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ExOKTVB8q6DFW3v+rWpZHo7Z95/dr5l2gZPjSRpfVTBSUAp3PSA92cEh8Z0dduPoA
+	 nx505O18gOc6d5Vid/hanGeje99RT/p1+BVmVIAQGYhAaBufaa1Ro7e8CDKYWPHTqw
+	 9wJe4KkbOiNqWc2gxUa7HVt9ybQCW8VnD0VPWFePTNpCVIsY2s2jwji+cIVBKM1bji
+	 e6pJpg9k+A8MedUA2oHtTcbSdrASuo5WOdbuSHtL8xxinJTn6B+Ch9Ag9DGyMZ2xBC
+	 LHHJUwECpwmUgGFrWrzJMuJ5/1rlUiHBEGCANJ3lhpD+I86DNIt22LNKVQQSdak9l4
+	 Y3xmAqa/F4BqQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71395380AA7E;
+	Sat, 15 Feb 2025 16:18:07 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.14-rc3 - take 2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250215092508.5849-1-brgl@bgdev.pl>
+References: <20250215092508.5849-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250215092508.5849-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc3-take2
+X-PR-Tracked-Commit-Id: 7b4aebeecbbd5b5fe73e35fad3f62ed21aa7ef44
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6452feaf29a6a1cc1c904520c4b1b4cd90133fac
+Message-Id: <173963628616.2294964.8421624057006025098.pr-tracker-bot@kernel.org>
+Date: Sat, 15 Feb 2025 16:18:06 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+The pull request you sent on Sat, 15 Feb 2025 10:25:08 +0100:
 
-Suppress binding attributes for the rzg2l pinctrl driver, as it is an
-essential block for Renesas SoCs. Unbinding the driver leads to warnings
-from __device_links_no_driver() and can eventually render the system
-inaccessible.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc3-take2
 
-Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
- 1 file changed, 1 insertion(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6452feaf29a6a1cc1c904520c4b1b4cd90133fac
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index ce4a07a3df49..5f006a059d9c 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -3386,6 +3386,7 @@ static struct platform_driver rzg2l_pinctrl_driver = {
- 		.name = DRV_NAME,
- 		.of_match_table = of_match_ptr(rzg2l_pinctrl_of_table),
- 		.pm = pm_sleep_ptr(&rzg2l_pinctrl_pm_ops),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe = rzg2l_pinctrl_probe,
- };
+Thank you!
+
 -- 
-2.43.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
