@@ -1,84 +1,83 @@
-Return-Path: <linux-gpio+bounces-16058-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16059-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 069E7A36CDD
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 10:25:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35065A36D28
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 10:57:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 534213B0F09
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 09:25:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1B791895969
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 09:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2577C19DF66;
-	Sat, 15 Feb 2025 09:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D207E1A239E;
+	Sat, 15 Feb 2025 09:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kudGv7dj"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lOPYx0Uo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7B219DFA5
-	for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 09:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69DB1A08B8
+	for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 09:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739611515; cv=none; b=ija7WEAwIeAx9UMcp22RCCQbWm4bMqFRRuncUOR/en1pO4ZliQcwpZegQyUHlZ363pfTKJWBwPfqTBOLqxQsHrW7/P3sV+LJEA9s10kbYMHZvIeYTyl1uLGu1tMuIDMvliZhyh6uyk68aeosxfYnw/PfKQgsyL4zrL8Mq0+Q4O4=
+	t=1739613421; cv=none; b=b9Jmr5HXwD7/Iepbd7yXP8EunJNHN6TRO4G2hIUBly5xa3JP8KK7PGdL6wTsWFmMERfOglatua2pS4xPAdVroF3R6IzBLme18WVEydqRRH0oG8NWT3T4MzELarLFFoPFvW0Ujflu83ds8clrBGL3im7VyCF5t0hoXGafpOC/ba4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739611515; c=relaxed/simple;
-	bh=fUEhJUJqOaQ6kqDr/ymTWQoQOscJJR6mrSLqxVNnVhc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dSDP0VVouNxZWw/U73mjZ3Vx851v3t8PP2NpThCLfrqyIYd1EXWSQOfI38Z1urGx3VG7VaVH4fLCRyBpRiiF1XpD5j9mB1WU4CoDrz4uw7WH3238wJZ8l+1MNI/hmej4RPXzbxScX3QwQJUQU3Vg/1W4Vc0QJf28z9OFhvln1j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kudGv7dj; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1739613421; c=relaxed/simple;
+	bh=aRiipxX9PXCfz0OVancq4CX7H77aJDwgpGuHlKHBlGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e5Bs1+VzAvpbfWcpo3N6ZzjDJW0Tx08vGFsOLYwZSn+BvmQ57E4s3j5RglD/R6CvpttZAy2MDrn2pSkS6ZbrSq6FrpLqHsVFi4/M9+eKY8CcscILuKAq5ApWup7hrxuOE7SlZPh88CBOJWdYmNJsoAvRiL1vVzeVu7Q+Sg6tJew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lOPYx0Uo; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so19984545e9.0
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 01:25:13 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4396a4d5e3bso12524105e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 01:56:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739611512; x=1740216312; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739613418; x=1740218218; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
-        b=kudGv7djwhYMRO3Ou4v/47TcrnQk6Hgr7X9RPe6o2yWg/wOQ+nLh0apMEmcMa7M3f9
-         sqNguNOtInbQpL8oHKtTVtbigdEv9bmpNU5kaUiOj9WzUuaezgsCaTaCYc7iaWYqXOPZ
-         Z/4XRgslioiPTzktxOtjAOpNIUvBKHMR/oGSGhv6gOHGWDl35VQxaxtSkrZ//uOsqERm
-         agolgOaUZyKpg9uVbtkiDL4qw7kl17DRaf++i6RwNIV0EwkRSB6FfGljDwhyNqPPBU/D
-         GvoJXY/En9vBmbBEvSwec6BcVj3RptnHX9PgJPHevyx+Bn6hVg7HyjfPsDzbZeWE2+4q
-         A5hw==
+        bh=5ccqoRdy3IFCtoPhUXTcl3PCdc7rDr7VoqvtAi8zyjc=;
+        b=lOPYx0UoA+I18uk1PC3QyK1ApBTpdGtcYBq3DBTKKh5gbUEB2DgZD1mR9jBtoeTGFO
+         tDYS4B5rGeYVmUTNN8WcYqVWMuX6fSRkBityYqxAXq+UoCFHep/M+J7Qa3MnOm3e9+8M
+         46eb1SdK0rms3euqGPKAqm1vLS8eQR3n7+u6LNwiBYZxHM/UyG7z3Dq4PKNtGEaExMhK
+         3jL/9f3xXUziDlfZyhCuhMa8lO6Ga8+S3eWgjSJ6wgn6CKANH27WbA5BsUboehQRy4rC
+         VlUO2NBNICoWCOa+BtLM17UFWowESqMELQL+BNNPeQ1E+xm7T+7GtKaVKB5GpLlJ3bhR
+         5ACQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739611512; x=1740216312;
+        d=1e100.net; s=20230601; t=1739613418; x=1740218218;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
-        b=hU4dLr/eJ9PcnFf5Bxk6We3sWw0liC8VLahmHr1CgH1xzBYSW/7+vQyssSh2AcvIft
-         XTrqOyYGC8IoSGLSSBW/kPrNXBD7kuSmOslwu6A9KKuCOQ2x1MyGTuYIjmr0wsaneJh+
-         XUHELSGTIkSD/d8uFpgejXKrImF5Zvzro9wLvYjoUZkXAfofECt+TG2Btl3ql0Cky4Hd
-         YZc28i1kVcw4wtzU0FN7r52ndFwqIYRMcXcMp++fkrv2ZeQ7eT24lAYmYdvduvuk40Kp
-         ELBvzj43ql7qrhnbPJgJqaIPdcFZ6nAkWOC/9kCCrZoqrePjDlCQYnjZqhlLFoylicrA
-         j3Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2q4SfEIkRxSK9fdvxcODrEQ54qeYf/EIeZhcXfWgLh+eKO9PUGo8m5lZYOe/mZjUKUe3tTme2GwkD@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpvk6niYP2qWROvDB/OjLoTNqewQUxmFaQF2OK35FUuhtBUom5
-	GeILh0nGJ5yPJJ6lv8hzkCXaVOWT39c/GUOWWj57UVjW3pdkCk9QD2JXlWV7z3A=
-X-Gm-Gg: ASbGnctJc+M/aWKIIez7c2v5vu09+gj47PfpQzkECVbJ//BdDrxl3KMs6USFYMK1KJU
-	q3sk3ZCrnMo0ghBlZD07y5O9f3bsaRyT7jHHIfO7Q25S8Ut4xsLJlMU8OUj5qOn5uuTqb3wp8r5
-	wWCQas1n+IuRnIVZqI0fTAYgxiuZ51vPp0RgHdkq6brMzjPG0xl/qCEpFowRcVV9XnNgGTBAjWG
-	W8jwohCA8vllACoYyrFGg+bHGo2WTN+kpCFXL+SVr0QyOecfPwdze6LeLc92o/QbWegY+HD+wLH
-	Rf63u+f4YV2o
-X-Google-Smtp-Source: AGHT+IFkUX2lCfN6as9yUxvWctb2+wcKM91fqinvxlY72zNbgOkS02wV6iv5kqX++4LIwQqaOdaE+A==
-X-Received: by 2002:a05:600c:4fc9:b0:439:564a:6503 with SMTP id 5b1f17b1804b1-4396e705d5fmr28556145e9.18.1739611511767;
-        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
+        bh=5ccqoRdy3IFCtoPhUXTcl3PCdc7rDr7VoqvtAi8zyjc=;
+        b=jjGiW9pNXk61NutDjxqMeQz6WYxmDEjxTiIaVa9a9C4EEqDwjhSdOC6z95jRZqldrq
+         ThRM1mfzu9MBKyp2HXs3DcwG/UKdTBhAEeDHJg5trgS+NZyWze0mFw6YoHbxwpqfgPxP
+         AmpUEOaRHnZQKACC7yNywCL+8n3cR/mWzUF/r1YHjjT+MWFnbFHLVD1HVXt8vPZs46aJ
+         xMBebKOFfbJNevcedEQPua4RkpSaetk28oNKbGiTMB6JWd3Rh+gi0X4TQNP4IboNn7lW
+         eN7h+2XZnc88JAgJrt4VJHKZdMEC8oHhNhAxt82qHQJT0+wD8Z5qTNGQuFlXmesvm1XO
+         pcfA==
+X-Gm-Message-State: AOJu0YySO5aXqEqBGLt2J5OjPjVU+yWktlragWQ0i9ZCsdwm9kz2w+kh
+	6jY0OtdaTDe4JKJ8+ARDY2nYDhHUXqRP2DnnKTn0CbS2UBS6UcGJDfc+7ss3spY=
+X-Gm-Gg: ASbGncugFKLpnInaDRdOcv2SKRRxdmL+kyK7B57o8uhtyqOOqQvkYx0E9UyhjlYltsS
+	dH9gBSKpJoK3j9gBGUqyaIoh+LHNq+zgJqTetPrZEH44YxzEsG+0DD2H3ArVbRIqyIOZPrdegI7
+	mOIp9huiRZOY8WhwzMNtmdi59RkTOYHMn7aE5tBVCfwFQt/HkmQjnwfCvDyIJndiHJYEQxfE1Ik
+	xAUwRvNa1RlxPP+ekxw7rRofh0vs5eB/unWL4aJEIug2qy+W0BDkkaHnosFp4xnSnMSE72+NwbY
+	sG5VIoui20g5
+X-Google-Smtp-Source: AGHT+IHHNZFXsC358QTF7hf1bx5kVWb2BCn3B3u37dcgTY3hT3aTRwvkVXbOfaVvGlcYBKIgYDRTMQ==
+X-Received: by 2002:a05:600c:4f11:b0:439:65fa:586a with SMTP id 5b1f17b1804b1-4396e728bc4mr23699275e9.28.1739613417998;
+        Sat, 15 Feb 2025 01:56:57 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:de0:6b3:d799:3d4f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04ee2fsm95776445e9.4.2025.02.15.01.25.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1aa779sm96746025e9.30.2025.02.15.01.56.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
+        Sat, 15 Feb 2025 01:56:57 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.14-rc3 - take 2
-Date: Sat, 15 Feb 2025 10:25:08 +0100
-Message-ID: <20250215092508.5849-1-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
+Date: Sat, 15 Feb 2025 10:56:55 +0100
+Message-ID: <20250215095655.23152-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -90,58 +89,201 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Linus,
+During the locking rework in GPIOLIB, we omitted one important use-case,
+namely: setting and getting values for GPIO descriptor arrays with
+array_info present.
 
-Here's a second attempt at the PR with fixes for the upcoming RC. The
-sparse warning I mentioned in my previous email turned out to be a false
-positive - the "offending" commit wasn't the culprit - but I removed it
-anyway and will send it again next week with the sparse issue fixed
-separately.
+This patch does two things: first it makes struct gpio_array store the
+address of the underlying GPIO device and not chip. Next: it protects
+the chip with SRCU from removal in gpiod_get_array_value_complex() and
+gpiod_set_array_value_complex().
 
-Details for this one are in the signed tag.
+Cc: stable@vger.kernel.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- fix sparse warning about differing address spaces by checking for
+  open-drain/source flags directly in the descriptor
 
-Please pull,
-Bartosz
+ drivers/gpio/gpiolib.c | 48 +++++++++++++++++++++++++++++-------------
+ drivers/gpio/gpiolib.h |  4 ++--
+ 2 files changed, 35 insertions(+), 17 deletions(-)
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f261f7893f85..fddbcf8a360e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3128,6 +3128,8 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ static int gpio_chip_get_multiple(struct gpio_chip *gc,
+ 				  unsigned long *mask, unsigned long *bits)
+ {
++	lockdep_assert_held(&gc->gpiodev->srcu);
++
+ 	if (gc->get_multiple)
+ 		return gc->get_multiple(gc, mask, bits);
+ 	if (gc->get) {
+@@ -3158,6 +3160,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ 				  struct gpio_array *array_info,
+ 				  unsigned long *value_bitmap)
+ {
++	struct gpio_chip *gc;
+ 	int ret, i = 0;
+ 
+ 	/*
+@@ -3169,10 +3172,15 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ 	    array_size <= array_info->size &&
+ 	    (void *)array_info == desc_array + array_info->size) {
+ 		if (!can_sleep)
+-			WARN_ON(array_info->chip->can_sleep);
++			WARN_ON(array_info->gdev->can_sleep);
+ 
+-		ret = gpio_chip_get_multiple(array_info->chip,
+-					     array_info->get_mask,
++		guard(srcu)(&array_info->gdev->srcu);
++		gc = srcu_dereference(array_info->gdev->chip,
++				      &array_info->gdev->srcu);
++		if (!gc)
++			return -ENODEV;
++
++		ret = gpio_chip_get_multiple(gc, array_info->get_mask,
+ 					     value_bitmap);
+ 		if (ret)
+ 			return ret;
+@@ -3453,6 +3461,8 @@ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ static void gpio_chip_set_multiple(struct gpio_chip *gc,
+ 				   unsigned long *mask, unsigned long *bits)
+ {
++	lockdep_assert_held(&gc->gpiodev->srcu);
++
+ 	if (gc->set_multiple) {
+ 		gc->set_multiple(gc, mask, bits);
+ 	} else {
+@@ -3470,6 +3480,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 				  struct gpio_array *array_info,
+ 				  unsigned long *value_bitmap)
+ {
++	struct gpio_chip *gc;
+ 	int i = 0;
+ 
+ 	/*
+@@ -3481,14 +3492,19 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 	    array_size <= array_info->size &&
+ 	    (void *)array_info == desc_array + array_info->size) {
+ 		if (!can_sleep)
+-			WARN_ON(array_info->chip->can_sleep);
++			WARN_ON(array_info->gdev->can_sleep);
++
++		guard(srcu)(&array_info->gdev->srcu);
++		gc = srcu_dereference(array_info->gdev->chip,
++				      &array_info->gdev->srcu);
++		if (!gc)
++			return -ENODEV;
+ 
+ 		if (!raw && !bitmap_empty(array_info->invert_mask, array_size))
+ 			bitmap_xor(value_bitmap, value_bitmap,
+ 				   array_info->invert_mask, array_size);
+ 
+-		gpio_chip_set_multiple(array_info->chip, array_info->set_mask,
+-				       value_bitmap);
++		gpio_chip_set_multiple(gc, array_info->set_mask, value_bitmap);
+ 
+ 		i = find_first_zero_bit(array_info->set_mask, array_size);
+ 		if (i == array_size)
+@@ -4750,9 +4766,10 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ {
+ 	struct gpio_desc *desc;
+ 	struct gpio_descs *descs;
++	struct gpio_device *gdev;
+ 	struct gpio_array *array_info = NULL;
+-	struct gpio_chip *gc;
+ 	int count, bitmap_size;
++	unsigned long dflags;
+ 	size_t descs_size;
+ 
+ 	count = gpiod_count(dev, con_id);
+@@ -4773,7 +4790,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 
+ 		descs->desc[descs->ndescs] = desc;
+ 
+-		gc = gpiod_to_chip(desc);
++		gdev = gpiod_to_gpio_device(desc);
+ 		/*
+ 		 * If pin hardware number of array member 0 is also 0, select
+ 		 * its chip as a candidate for fast bitmap processing path.
+@@ -4781,8 +4798,8 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 		if (descs->ndescs == 0 && gpio_chip_hwgpio(desc) == 0) {
+ 			struct gpio_descs *array;
+ 
+-			bitmap_size = BITS_TO_LONGS(gc->ngpio > count ?
+-						    gc->ngpio : count);
++			bitmap_size = BITS_TO_LONGS(gdev->ngpio > count ?
++						    gdev->ngpio : count);
+ 
+ 			array = krealloc(descs, descs_size +
+ 					 struct_size(array_info, invert_mask, 3 * bitmap_size),
+@@ -4802,7 +4819,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 
+ 			array_info->desc = descs->desc;
+ 			array_info->size = count;
+-			array_info->chip = gc;
++			array_info->gdev = gdev;
+ 			bitmap_set(array_info->get_mask, descs->ndescs,
+ 				   count - descs->ndescs);
+ 			bitmap_set(array_info->set_mask, descs->ndescs,
+@@ -4815,7 +4832,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 			continue;
+ 
+ 		/* Unmark array members which don't belong to the 'fast' chip */
+-		if (array_info->chip != gc) {
++		if (array_info->gdev != gdev) {
+ 			__clear_bit(descs->ndescs, array_info->get_mask);
+ 			__clear_bit(descs->ndescs, array_info->set_mask);
+ 		}
+@@ -4838,9 +4855,10 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 					    array_info->set_mask);
+ 			}
+ 		} else {
++			dflags = READ_ONCE(desc->flags);
+ 			/* Exclude open drain or open source from fast output */
+-			if (gpiochip_line_is_open_drain(gc, descs->ndescs) ||
+-			    gpiochip_line_is_open_source(gc, descs->ndescs))
++			if (test_bit(FLAG_OPEN_DRAIN, &dflags) ||
++			    test_bit(FLAG_OPEN_SOURCE, &dflags))
+ 				__clear_bit(descs->ndescs,
+ 					    array_info->set_mask);
+ 			/* Identify 'fast' pins which require invertion */
+@@ -4852,7 +4870,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+ 	if (array_info)
+ 		dev_dbg(dev,
+ 			"GPIO array info: chip=%s, size=%d, get_mask=%lx, set_mask=%lx, invert_mask=%lx\n",
+-			array_info->chip->label, array_info->size,
++			array_info->gdev->label, array_info->size,
+ 			*array_info->get_mask, *array_info->set_mask,
+ 			*array_info->invert_mask);
+ 	return descs;
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 83690f72f7e5..147156ec502b 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -114,7 +114,7 @@ extern const char *const gpio_suffixes[];
+  *
+  * @desc:		Array of pointers to the GPIO descriptors
+  * @size:		Number of elements in desc
+- * @chip:		Parent GPIO chip
++ * @gdev:		Parent GPIO device
+  * @get_mask:		Get mask used in fastpath
+  * @set_mask:		Set mask used in fastpath
+  * @invert_mask:	Invert mask used in fastpath
+@@ -126,7 +126,7 @@ extern const char *const gpio_suffixes[];
+ struct gpio_array {
+ 	struct gpio_desc	**desc;
+ 	unsigned int		size;
+-	struct gpio_chip	*chip;
++	struct gpio_device	*gdev;
+ 	unsigned long		*get_mask;
+ 	unsigned long		*set_mask;
+ 	unsigned long		invert_mask[];
+-- 
+2.45.2
 
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc3-take2
-
-for you to fetch changes up to 7b4aebeecbbd5b5fe73e35fad3f62ed21aa7ef44:
-
-  gpiolib: Fix crash on error in gpiochip_get_ngpios() (2025-02-13 18:51:39 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.14-rc3 - take 2
-
-- fix interrupt handling issues in gpio-bcm-kona
-- add an ACPI quirk for Acer Nitro ANV14 fixing an issue with spurious
-  wake up events
-- add missing return value checks to gpio-stmpe
-- fix a crash in error path in gpiochip_get_ngpios()
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpiolib: Fix crash on error in gpiochip_get_ngpios()
-
-Artur Weber (3):
-      gpio: bcm-kona: Fix GPIO lock/unlock for banks above bank 0
-      gpio: bcm-kona: Make sure GPIO bits are unlocked when requesting IRQ
-      gpio: bcm-kona: Add missing newline to dev_err format string
-
-Mario Limonciello (1):
-      gpiolib: acpi: Add a quirk for Acer Nitro ANV14
-
-Wentao Liang (1):
-      gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
-
- drivers/gpio/gpio-bcm-kona.c | 71 ++++++++++++++++++++++++++++++++++++--------
- drivers/gpio/gpio-stmpe.c    | 15 ++++++++--
- drivers/gpio/gpiolib-acpi.c  | 14 +++++++++
- drivers/gpio/gpiolib.c       |  6 ++--
- 4 files changed, 87 insertions(+), 19 deletions(-)
 
