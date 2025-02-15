@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-16063-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10FDCA36DC0
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 12:33:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DF55A36DC1
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 12:33:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54DCD171721
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 11:33:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A0CE1895979
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 11:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB2C1C32EA;
-	Sat, 15 Feb 2025 11:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477321C84C5;
+	Sat, 15 Feb 2025 11:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrT1oqFt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoO/bo9h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFBE19F464;
-	Sat, 15 Feb 2025 11:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A291A23BA;
+	Sat, 15 Feb 2025 11:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739619189; cv=none; b=qI9anvGdPBWOPxzemSu5P7YPcsO5JjTGbqCZCo5wVtLJg1yUEpZukSrIfh2zUsTuqnY5Eez9Zk25z8u9pYUZkB767SaGHi5m6fjfXHxPxfySHvNG0q8oD/VPv4IiHj0qkIfWiUbAt5aPDgg0jlNjdFmXETRbH1HpDh2ELgThxZA=
+	t=1739619191; cv=none; b=hftSU1YRvIKO5FS1NHZEF8eIz6zSlogd8y+gcslt3X4eq6FNBfn5X1TseFvDTXfQfodd87GoU7vmPd/VNYTzIaO9bKcZSoiIh6tfaACJaA94AlQC1HPcm8+S11Qnf6GZhGtmMdOe8MFhbwfcyeq1kXng6qeQCTRK1utR2WE3YIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739619189; c=relaxed/simple;
-	bh=xrFccTCQhNjW4FlGna92NqWGcHO/SN/bjKxMvgfvHEs=;
+	s=arc-20240116; t=1739619191; c=relaxed/simple;
+	bh=kxrZnd9zUzE94UlbrUTj8ZudyO0RJY5GpD01ivIsldU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OxkVgPUh6asqhmOwEAoLz67KbbQEtlaYxSsUlV7jtLvdpK9W5BPPotHXvACCXWnUC+FTCg1u6KtXcfRhGgOGSgIVX7zn4xVB+7sG/oCQBDX+N4zkn6pfShUXFQNqFXTqrN4hnt+dKE3tnJjLBnrU591mtuGxu/LPka03fc8YLBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TrT1oqFt; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=i2tkvdI2SWfIHSMzGqhrm6N6ML/nLi8MoRok1dWSfhUjxjTkoFvp4Y0ymnyt+7jzUY3LG0q7Ioih+8g9e/uKxlvlSRLhZE++h4q6Wdifk1PY9BvDID5voB34FMp1EDCz2og8tL/tDKpBArR2CDyY1hYKnJD7o/vh7gKT2cVdrVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoO/bo9h; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f325ddbc2so712815f8f.1;
-        Sat, 15 Feb 2025 03:33:07 -0800 (PST)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a823036so30617715e9.0;
+        Sat, 15 Feb 2025 03:33:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739619186; x=1740223986; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739619188; x=1740223988; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R1Tvnq+LrVTpNcD6SOjzWHbTaQO8qIplkrwBXtqGldE=;
-        b=TrT1oqFtQP+Egy6mJHPL8z/vjZTnsKS++YhIJiyyrUjfL9lm2klTRi/WNWMM1d3Oy5
-         KIKdv39qDQBXfSPk152qhK4ctG8C0yEbthYPFKGZ7F69fG32xWE2eGgB1k3p3jBeFhL+
-         66Bi4dSP/UMD2DB0j45XfHd6E836UDgzWiKZSXUXGY/E9dkd7G3Sr5Wo6ZRT3t13ZXxe
-         A3CDFICp9qOekA2XVvqdVha/nhV6t09GdKs2uDzND0d1x6bEs/GJfM+3FxmCvgJW94Yw
-         lcgqZZkC34BE9S4avnKojEWOhVt54d/a+Rk2B5Fje57FnIeIB7gs+7Ytp9AJngYNoP9/
-         m5rQ==
+        bh=/quxB6BHlHDqC0i5JxTff+VNeJbi29B/IjgyVMrnZrc=;
+        b=ZoO/bo9hZ/6kWRJr20ByI0UxvZXO/a0BXDJU3uoAS30ym+1C/zR947OlVNy+P4fSLR
+         cWkeb/ztKzZTYXmAaPbiGEd3d9PMvaR7kRQ4zFCZyjnkT+cyHU4TlKITpQoBS7LV0B82
+         N5RBrNnT2TJKow6YS8fVhEsOlNbKXYPUozrabeA82fSh5LXF8hVAMlCDR6vRdutFsN8Y
+         FqpT7ifZZEd4BJFmwimhIvNA+vKe9kGaHRhZYhNUckspHvCkq7TADXyhJ34jyVxANIp0
+         2f4KHRivTNw3VeEkCDpxc5Xri0II96xB/1SHEUPtROffeR7NxZ7yeUkMzvwC3SV1xCDI
+         NqPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739619186; x=1740223986;
+        d=1e100.net; s=20230601; t=1739619188; x=1740223988;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=R1Tvnq+LrVTpNcD6SOjzWHbTaQO8qIplkrwBXtqGldE=;
-        b=lTGf6v14rMHfHQDFE4Xpv1vYGgemEVW5jrStNwYJhkP47WsCIEh/Xyr6ljgRpIaw0C
-         o1V9PrAFORswgFpcCe2K9FxxNU5R3eMJ9XMN/sZ8Xv0/dfxFBjuQa20vTmAwf8ZMzjsb
-         5bvQ7H4JCUKD63UHZpOocpPxq1J3j8JUHVCZx8XYzT5HZQCaWsWpmDjLmc0pkCOAeq0X
-         cBskDjzcRAnWVx9q+qfh73Zkn/8rJKCkma9K1y/yHDzH/efvBgHke1eKicvymZiC1wCU
-         ZEalVpjXpZ3iCWMkRFnRRWNHsWloR3ZrliagA3bk6kc0IfSNF+SmO1Yr11RePJbA+x1g
-         uTcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKOozFZouOSwC7ququ/ZohD6bakEfv+ylmubJSZ2QGDlf9422XDYX4ZIgAEA5EpFTPRMYXLJuGn+U9@vger.kernel.org, AJvYcCV3+9X2v9mJiVgLYQLmyQanwXDr5d27w3tC0N+em6jzkbZsvRuSbyiUSf0Fi5d/W3uXiIFnWJtUfJcX/w==@vger.kernel.org, AJvYcCVoscMj04IPyhY2YcaU3y20jYRxyI5pVcJu9nk7HPOxoSGkEzMLdigHBSMUjWbmLvhALZd8SbECqv6Tsywt+IXFuJY=@vger.kernel.org, AJvYcCW8yWSAeVUVXD1F0hXVX3P8rcefa+gLAGbW1bruTAxLt4r37Fx4jA+97n0W4BD/rMXY0ZoqEH0JJScoL0fd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfYUWilOC0ilHFubk4uw9aenSydRaucUkhtrXbAtuuv7INusew
-	g3J+ppn9u2mFpmA7tLSMhOw5K+Xjoa9V4bQPomZhEzjImP83sJ7r
-X-Gm-Gg: ASbGncuC7qt0M7OARnvZbFbGMtGJj9X7VNigs2uVWOOHIIYy6Si9JQAk3DrxO007gEH
-	mXG0WgPH8iSdJVgvgAt5s95wUsMvlXSKMeb4/Dfza5VbpaMDVvvkC7pT0qYFeMrfghLx8+4ifnH
-	a7gGUNtgtQ5TegqHBHtg4vVShnFL8kRT6KeJ7zC4EA53wZcDYUJ8hEZNsEPrHpWTMIDJbF36yYS
-	Jw7vtIrHKqWlwfUReyqfCZ2mU0ob7EqosLNjf1V10W7v8JAq7JMK21dN+hKM0/OuRHgMvydpqRo
-	pjrgu6qRysYQCXenvr0sNozEK1HFxa6DqEJ000P32T3yyVErI+sF4idI4mO2cslAuQc=
-X-Google-Smtp-Source: AGHT+IFmakpoCCXWSEw/L27VxX7gbfbjGhmA9fL1AnfWp8TEfa5fuTujZtmv6nXNEKdXKcoQ+q7oBA==
-X-Received: by 2002:a5d:59ab:0:b0:38f:32ac:7e69 with SMTP id ffacd0b85a97d-38f3406786dmr3053506f8f.41.1739619185887;
-        Sat, 15 Feb 2025 03:33:05 -0800 (PST)
+        bh=/quxB6BHlHDqC0i5JxTff+VNeJbi29B/IjgyVMrnZrc=;
+        b=c2nMM/k4jbKBunofk067GfP++yMRWbuw4/msCLnABUqG+Cx8YFHUBMe7wmYjM/Ezv+
+         I/vL2X4Nq9JMklIwzXxpkajUbjX3lVeKVR4/izFaxQH62MDewnpX94TvIawLA/nR98hL
+         17ycA23xOzwSd3ZwP+jeLKMVn10zX4EB2h+exz9gg0AWUe+p5tNZ/BOQ0fRhFA0M9R05
+         Ak1q9syPh7RUdMVnQBYxZAESUjlahwxjZVC2nDrAz4fjQnU3sY5JSSRTAFmQ7ZanXNtk
+         CPeDIlxuwv/ADS7ti6UGl+Y/OrJvUmaioojuIfcOQI26S26JIekk6MMGR+1rU4cworA8
+         AwMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHcjIZ7+CcnPNacG9gp4EYZMdgwt52bMSe4cO+iBape4893b38WGspIvSmaZjGNbJQLv5viKEiWlxtQg==@vger.kernel.org, AJvYcCVOjuCAMY9Pk97csPkwY56y1DFMWx22riHS1iOObpnFvp+ydDT2tSpvfCa34bh2ZBeojrfR8az4hLLRxsql@vger.kernel.org, AJvYcCWXfmWhxv7G8hGXi2nzQopnAxaTw04gYz+d2RCDwELQMKBuv265/5oNacqvNnhumccolUU5XuZgL7ce@vger.kernel.org, AJvYcCXFwEW0GB+HuyXxtcszcwSEvZ3FHjaIlMZ9cpEty2MQjjX3QNihdpNRZHg3ZXwxLRES5yNdNACCFMJGLfBMpBytjAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc5mlm2n7dSjICPd9C3zRZHDlYpiLdaorS0fDVx4On3kEdl0S5
+	UqDDLbflMa2ENbveBFa2X47Cu2fZHt/tRyLFwQDhtwap05odS436
+X-Gm-Gg: ASbGncuSwu1MzebVWZGvYurNH9lwcVwiSAxbSHpqvCvbeIi9tuB7fYGjQ1i+8Pkkipu
+	FLvmTMy2NreXfGAjRrx8FIYJoVIVBypyWZnc+HN7KoiDC/kbkiQroN746Xo/QyQQPaMQYaDa8r/
+	mJw+wujM1m/Ei7Lnj/M06+bq7C2tEntv4EehEXfyvSmcM05dObggvK8K/SrcQD/osdqlR5sFIEx
+	2TjxjSgSnxbNMrU01PpZ5tNYm7dGHiSp4cfDIbLgOSm2X6/GjyuEpBGEdd7m3qp6DFuWrkYXzDY
+	jOHPya0Ako0QkUSB8yVrTK64hwOLcrsAzYG0hf4FjZwq8iOh4k7aZX0iTHnK7UjBSSQ=
+X-Google-Smtp-Source: AGHT+IEP6aAh/Io2wIRKUzFE7varPmPkl8lIkBPxvX5iyzJD9r30P0SFXfObAZ7acHHQQFS0zDOKVA==
+X-Received: by 2002:a05:600c:3583:b0:439:5b82:b9d7 with SMTP id 5b1f17b1804b1-4396e727076mr33086015e9.18.1739619187438;
+        Sat, 15 Feb 2025 03:33:07 -0800 (PST)
 Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e9esm7147538f8f.61.2025.02.15.03.33.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e9esm7147538f8f.61.2025.02.15.03.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 03:33:05 -0800 (PST)
+        Sat, 15 Feb 2025 03:33:06 -0800 (PST)
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -84,9 +84,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] dt-bindings: pinctrl: samsung: add exynos2200-wakeup-eint compatible
-Date: Sat, 15 Feb 2025 13:32:46 +0200
-Message-ID: <20250215113248.159386-2-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v1 2/3] dt-bindings: pinctrl: samsung: add exynos2200 compatible
+Date: Sat, 15 Feb 2025 13:32:47 +0200
+Message-ID: <20250215113248.159386-3-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250215113248.159386-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20250215113248.159386-1-ivo.ivanov.ivanov1@gmail.com>
@@ -98,25 +98,25 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a dedicated compatible for exynos2200.
+Document the compatible for Exynos2200 SoC.
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 ---
- .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml       | 1 +
+ Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-index 68ed714eb..64db551d8 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-@@ -47,6 +47,7 @@ properties:
-       - items:
-           - enum:
-               - google,gs101-wakeup-eint
-+              - samsung,exynos2200-wakeup-eint
-               - samsung,exynos9810-wakeup-eint
-               - samsung,exynos990-wakeup-eint
-               - samsung,exynosautov9-wakeup-eint
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+index 5296a9e4f..c3b82da0c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+@@ -42,6 +42,7 @@ properties:
+       - samsung,s3c2450-pinctrl
+       - samsung,s3c64xx-pinctrl
+       - samsung,s5pv210-pinctrl
++      - samsung,exynos2200-pinctrl
+       - samsung,exynos3250-pinctrl
+       - samsung,exynos4210-pinctrl
+       - samsung,exynos4x12-pinctrl
 -- 
 2.43.0
 
