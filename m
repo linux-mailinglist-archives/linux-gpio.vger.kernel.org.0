@@ -1,135 +1,147 @@
-Return-Path: <linux-gpio+bounces-16057-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16058-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3DB0A36AAD
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 02:13:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 069E7A36CDD
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 10:25:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8A6716A711
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 01:13:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 534213B0F09
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 09:25:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D97C474BE1;
-	Sat, 15 Feb 2025 01:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2577C19DF66;
+	Sat, 15 Feb 2025 09:25:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMXHNTG/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kudGv7dj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A34911187;
-	Sat, 15 Feb 2025 01:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7B219DFA5
+	for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 09:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739582025; cv=none; b=awDEbnjIC8HNmJIcqbrw+F/vkOm+FkPPVOMIf1QBpf5t8ks/WsECGpDzlNFEIlWo0G23qjM9cT2xFE05k5LwP8azyZe496fp1MhS9xTHQsvkP74PAeThht4YkpkIJFwjT+MXZ6r7vY60sgsSzllmcU/DPsbOLoGU1i1nycuGc44=
+	t=1739611515; cv=none; b=ija7WEAwIeAx9UMcp22RCCQbWm4bMqFRRuncUOR/en1pO4ZliQcwpZegQyUHlZ363pfTKJWBwPfqTBOLqxQsHrW7/P3sV+LJEA9s10kbYMHZvIeYTyl1uLGu1tMuIDMvliZhyh6uyk68aeosxfYnw/PfKQgsyL4zrL8Mq0+Q4O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739582025; c=relaxed/simple;
-	bh=WRCtZXjO6Wvl3SDyjYTihILfLHQlQU18HhuRJvAJYEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V2AbjQuT6Dk/9C19GSRySJA++4B1ca1F/xhsvIB+7nPiT0R2295AfjIpFafv6EoGMCxFC7+lNbDqOCG3IQRBCzZYqzQ7une9XUnqoFPfsC7RLDoRBeZ9x7bI3JlNCeczqRNCt3jKHIcHeR87DFTwKHu+PaDuLw4rQWjPpzdzIHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMXHNTG/; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739582023; x=1771118023;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WRCtZXjO6Wvl3SDyjYTihILfLHQlQU18HhuRJvAJYEc=;
-  b=EMXHNTG/YaLeiAZxYmBbGeIGGwEnAMLIFo75Nf/rWQHPubR7fr0bB9kX
-   15dzsf6w/Mbk6EHy0A6QZAnuAsxD8/+hgc9aoV5crWoKoMYsg0KTkoY+h
-   jPlLhMnoBUfFpTwpQs5P/hKAGytadz3gH3Put16HB8ul/DYDxBKNWTF3d
-   yqnLZdHEguxZVvD/TMRPc+/eAdeCh9+MERgPUEV1hmYgcrplv0EI0Sfrs
-   nmy/1ntPWEZObCy6qd0o3jAVFYO37/90SOX+Tbbp/MyCDKYc5las5ceLS
-   /h19XnejKagNuf5YJehCq4FXZk0L7RZOS3LxNNM899Y75yYOUO+XBfHmw
-   A==;
-X-CSE-ConnectionGUID: 58WddrJhR8+lRd3BXW/Shg==
-X-CSE-MsgGUID: rf4lZmH0STiXjkXRcgp0QA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="39575182"
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="39575182"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 17:13:42 -0800
-X-CSE-ConnectionGUID: enkUg1f+SUGU47QDEBs55g==
-X-CSE-MsgGUID: BklhlydLS5ShgQeqQP7G7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
-   d="scan'208";a="113580628"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2025 17:13:40 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tj6kU-001ANT-0D;
-	Sat, 15 Feb 2025 01:13:38 +0000
-Date: Sat, 15 Feb 2025 09:12:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kim Seer Paller <kimseer.paller@analog.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kim Seer Paller <kimseer.paller@analog.com>
-Subject: Re: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
-Message-ID: <202502150933.vtaQAJRw-lkp@intel.com>
-References: <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com>
+	s=arc-20240116; t=1739611515; c=relaxed/simple;
+	bh=fUEhJUJqOaQ6kqDr/ymTWQoQOscJJR6mrSLqxVNnVhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dSDP0VVouNxZWw/U73mjZ3Vx851v3t8PP2NpThCLfrqyIYd1EXWSQOfI38Z1urGx3VG7VaVH4fLCRyBpRiiF1XpD5j9mB1WU4CoDrz4uw7WH3238wJZ8l+1MNI/hmej4RPXzbxScX3QwQJUQU3Vg/1W4Vc0QJf28z9OFhvln1j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kudGv7dj; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so19984545e9.0
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 01:25:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739611512; x=1740216312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
+        b=kudGv7djwhYMRO3Ou4v/47TcrnQk6Hgr7X9RPe6o2yWg/wOQ+nLh0apMEmcMa7M3f9
+         sqNguNOtInbQpL8oHKtTVtbigdEv9bmpNU5kaUiOj9WzUuaezgsCaTaCYc7iaWYqXOPZ
+         Z/4XRgslioiPTzktxOtjAOpNIUvBKHMR/oGSGhv6gOHGWDl35VQxaxtSkrZ//uOsqERm
+         agolgOaUZyKpg9uVbtkiDL4qw7kl17DRaf++i6RwNIV0EwkRSB6FfGljDwhyNqPPBU/D
+         GvoJXY/En9vBmbBEvSwec6BcVj3RptnHX9PgJPHevyx+Bn6hVg7HyjfPsDzbZeWE2+4q
+         A5hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739611512; x=1740216312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KbpcipICDHXuME30jOt6GpmvUkIPw+/TuJhtLOZoIJE=;
+        b=hU4dLr/eJ9PcnFf5Bxk6We3sWw0liC8VLahmHr1CgH1xzBYSW/7+vQyssSh2AcvIft
+         XTrqOyYGC8IoSGLSSBW/kPrNXBD7kuSmOslwu6A9KKuCOQ2x1MyGTuYIjmr0wsaneJh+
+         XUHELSGTIkSD/d8uFpgejXKrImF5Zvzro9wLvYjoUZkXAfofECt+TG2Btl3ql0Cky4Hd
+         YZc28i1kVcw4wtzU0FN7r52ndFwqIYRMcXcMp++fkrv2ZeQ7eT24lAYmYdvduvuk40Kp
+         ELBvzj43ql7qrhnbPJgJqaIPdcFZ6nAkWOC/9kCCrZoqrePjDlCQYnjZqhlLFoylicrA
+         j3Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2q4SfEIkRxSK9fdvxcODrEQ54qeYf/EIeZhcXfWgLh+eKO9PUGo8m5lZYOe/mZjUKUe3tTme2GwkD@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpvk6niYP2qWROvDB/OjLoTNqewQUxmFaQF2OK35FUuhtBUom5
+	GeILh0nGJ5yPJJ6lv8hzkCXaVOWT39c/GUOWWj57UVjW3pdkCk9QD2JXlWV7z3A=
+X-Gm-Gg: ASbGnctJc+M/aWKIIez7c2v5vu09+gj47PfpQzkECVbJ//BdDrxl3KMs6USFYMK1KJU
+	q3sk3ZCrnMo0ghBlZD07y5O9f3bsaRyT7jHHIfO7Q25S8Ut4xsLJlMU8OUj5qOn5uuTqb3wp8r5
+	wWCQas1n+IuRnIVZqI0fTAYgxiuZ51vPp0RgHdkq6brMzjPG0xl/qCEpFowRcVV9XnNgGTBAjWG
+	W8jwohCA8vllACoYyrFGg+bHGo2WTN+kpCFXL+SVr0QyOecfPwdze6LeLc92o/QbWegY+HD+wLH
+	Rf63u+f4YV2o
+X-Google-Smtp-Source: AGHT+IFkUX2lCfN6as9yUxvWctb2+wcKM91fqinvxlY72zNbgOkS02wV6iv5kqX++4LIwQqaOdaE+A==
+X-Received: by 2002:a05:600c:4fc9:b0:439:564a:6503 with SMTP id 5b1f17b1804b1-4396e705d5fmr28556145e9.18.1739611511767;
+        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:de0:6b3:d799:3d4f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a04ee2fsm95776445e9.4.2025.02.15.01.25.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2025 01:25:11 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc3 - take 2
+Date: Sat, 15 Feb 2025 10:25:08 +0100
+Message-ID: <20250215092508.5849-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Kim,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-kernel test robot noticed the following build warnings:
+Linus,
 
-[auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
+Here's a second attempt at the PR with fixes for the upcoming RC. The
+sparse warning I mentioned in my previous email turned out to be a false
+positive - the "offending" commit wasn't the culprit - but I removed it
+anyway and will send it again next week with the sparse issue fixed
+separately.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kim-Seer-Paller/dt-bindings-gpio-add-adg1414/20250213-211900
-base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
-patch link:    https://lore.kernel.org/r/20250213-for_upstream-v2-2-ec4eff3b3cd5%40analog.com
-patch subject: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
-config: alpha-randconfig-r132-20250215 (https://download.01.org/0day-ci/archive/20250215/202502150933.vtaQAJRw-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250215/202502150933.vtaQAJRw-lkp@intel.com/reproduce)
+Details for this one are in the signed tag.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502150933.vtaQAJRw-lkp@intel.com/
+Please pull,
+Bartosz
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/gpio/gpio-adg1414.c:68:31: sparse: sparse: Using plain integer as NULL pointer
-   drivers/gpio/gpio-adg1414.c: note: in included file (through include/linux/smp.h, include/linux/lockdep.h, include/linux/spinlock.h, ...):
-   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
-vim +68 drivers/gpio/gpio-adg1414.c
+  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
 
-    54	
-    55	static void adg1414_set(struct gpio_chip *chip, unsigned int offset, int value)
-    56	{
-    57		struct adg1414_state *st = gpiochip_get_data(chip);
-    58	
-    59		guard(mutex)(&st->lock);
-    60	
-    61		if (value)
-    62			st->buf |= BIT(offset);
-    63		else
-    64			st->buf &= ~BIT(offset);
-    65	
-    66		st->tx = cpu_to_be32(st->buf << (32 - st->chip.ngpio));
-    67	
-  > 68		adg1414_spi_write(st, 0, st->chip.ngpio / 8);
-    69	}
-    70	
+are available in the Git repository at:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc3-take2
+
+for you to fetch changes up to 7b4aebeecbbd5b5fe73e35fad3f62ed21aa7ef44:
+
+  gpiolib: Fix crash on error in gpiochip_get_ngpios() (2025-02-13 18:51:39 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc3 - take 2
+
+- fix interrupt handling issues in gpio-bcm-kona
+- add an ACPI quirk for Acer Nitro ANV14 fixing an issue with spurious
+  wake up events
+- add missing return value checks to gpio-stmpe
+- fix a crash in error path in gpiochip_get_ngpios()
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      gpiolib: Fix crash on error in gpiochip_get_ngpios()
+
+Artur Weber (3):
+      gpio: bcm-kona: Fix GPIO lock/unlock for banks above bank 0
+      gpio: bcm-kona: Make sure GPIO bits are unlocked when requesting IRQ
+      gpio: bcm-kona: Add missing newline to dev_err format string
+
+Mario Limonciello (1):
+      gpiolib: acpi: Add a quirk for Acer Nitro ANV14
+
+Wentao Liang (1):
+      gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
+
+ drivers/gpio/gpio-bcm-kona.c | 71 ++++++++++++++++++++++++++++++++++++--------
+ drivers/gpio/gpio-stmpe.c    | 15 ++++++++--
+ drivers/gpio/gpiolib-acpi.c  | 14 +++++++++
+ drivers/gpio/gpiolib.c       |  6 ++--
+ 4 files changed, 87 insertions(+), 19 deletions(-)
 
