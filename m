@@ -1,263 +1,120 @@
-Return-Path: <linux-gpio+bounces-16061-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16062-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F96AA36D5F
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 11:38:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4D6BA36DBB
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 12:33:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEF9D16F1C7
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 10:38:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F59E171269
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 11:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C271A23AA;
-	Sat, 15 Feb 2025 10:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3201AAA1B;
+	Sat, 15 Feb 2025 11:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XcYdvcVm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7q3HGDn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB60719ABDE
-	for <linux-gpio@vger.kernel.org>; Sat, 15 Feb 2025 10:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B5A194C61;
+	Sat, 15 Feb 2025 11:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739615913; cv=none; b=mb/DaQLdT4Uyz7BiicUd0a3+Gn3K4TwcoRVAaGdjqYheLHHzujOnLq7KNBIhjHbB6bh0EXeTRTvKJvQyicYFfx0itlcZObhEJxr86pCn73uu480Zar+SsUJ3cHn8Vqg9DG8cW9OK9kD8LA5cfxB3WIu1MyK4kvCRk6oVjlTgxZU=
+	t=1739619188; cv=none; b=ECk7NrGChb+90d/cjzcY74s8I1u9ru/+h23GM/w/AmOjAfWD0Wdn1YRX8rawrQjdx+743ElbWggmVvEy8A2kIE2+EHzRa+5GaVJfi9T4HX4ffTgwPnv+Gbp+1g9SqsEWkMcWRxJIin7I4AUvlQURHQ2PcrJ+4mSK6uS6uFuF7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739615913; c=relaxed/simple;
-	bh=8UhiVaCdGuWfKJiFaABKkj/nJ3OmSlRhjv9/cugpidA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ksX0isDAbU79TrUquDu6P6UHoaTYsDnwZwoYmvGnzhjhnRzcvz59TEppm8pZMdJlYBTbyWiy0D8gfhZbcPnYuWVwfxHkjzFtLShc3xklki3n5nQ1TeCHGXhLN16i1a4O+wXAfUJo3flOWmVE++WvHe9bdS12+XlFBNaXdvLoru0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XcYdvcVm; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739615911; x=1771151911;
-  h=date:from:to:cc:subject:message-id;
-  bh=8UhiVaCdGuWfKJiFaABKkj/nJ3OmSlRhjv9/cugpidA=;
-  b=XcYdvcVm/7O6h858wEnRck9zUDap+gPupZTDd80Pc2JcXs90GbeJ2cou
-   qBaBmx9tPkzPQVVAjoWtyRpO0hZwTYrDhxO9hnBU4kJKjsfE3pboZJL7s
-   1Cag2OE4PTIn+PNNUKeMBb8sJD7EeE+1NpnAxAvuEvPZHy+HjX1LBhmt7
-   H6BoPjB1MKytmUycc2t+slooMTeq0oz3rtLeo1gZtK9LoEuZViapNsUDL
-   CvHBR8bqQw1BtTvEW5CvBvxTaFV2QJ1FcQytmgQ94lrrk3wGFeZgaG7wo
-   Jjkz7pViyFRE2Pw9NpYlJg/s2G16oxO+TLDKCOfNIh4VWILJYY7NGtBv0
-   g==;
-X-CSE-ConnectionGUID: UFczLcBYTA+RvwM+ucUn1g==
-X-CSE-MsgGUID: ZEoIsoPmQDiqNrNLLEJdMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="50576220"
-X-IronPort-AV: E=Sophos;i="6.13,288,1732608000"; 
-   d="scan'208";a="50576220"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2025 02:38:30 -0800
-X-CSE-ConnectionGUID: zWeaTEqcSpuZB0vtSvl5yA==
-X-CSE-MsgGUID: X3a8ODXdTa6EQxOlqAUZHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113543675"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 15 Feb 2025 02:38:30 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tjFZ5-001Aii-0W;
-	Sat, 15 Feb 2025 10:38:27 +0000
-Date: Sat, 15 Feb 2025 18:37:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- c88aa68297390695b16fd9b7a33612257d8ef548
-Message-ID: <202502151839.0GNXeUsl-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1739619188; c=relaxed/simple;
+	bh=0aXkkETEfzydD+wuCQodo9EH259mIY564Np1Y3qqLlI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HYsCjPZ06yeG6utIsadC3BhfcqFn+3lC2Jbgre4aAk95aggJLvt9l19vDpvcCHijK4h1bnPGV2zlxufLfmXLHPCQvqG7ulruwKdnJzeMRKezOYWEbpiULeOOJeb0NPC6qtLHaeORvZjWlJBAFJS3G8vG0B6Shgc/D79aj/ulnFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7q3HGDn; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4396e9ee133so2619805e9.0;
+        Sat, 15 Feb 2025 03:33:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739619185; x=1740223985; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZ4h7/VfporGRJI05sMYLRTIp37UC/VZX1ejowPlgvU=;
+        b=B7q3HGDnRXgSIKyZH4EDJA7gadPpu3dY95jb0osG8xYItplL0aY8IwbHraSAL8JfN7
+         kB+xrwAG0+bDFZfQ0ZiJ9U/pBn4tiaI3Re4DGWMS95wdJk95jwRUkrkdGobBGPuCiA9z
+         itvt7ZjLw4PKAaru/HhSJuHcWy6+lMmvCL0PpDtdo5gqzzXsOXnrmRNXS2WIZiTGFCVD
+         bCL+lmFuxAGvp9ATRNT9XNZkxmXHvbq0xKmylsCKFMMh3xTGSHr0x9otz+PuWPtolL0b
+         Hbeo96eZBWxp6x/B/phmKCpcqJSS78Xi41tNDv6T/1qiH1nQmGSBA8Qzhyj6d2nAZyc1
+         +BNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739619185; x=1740223985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aZ4h7/VfporGRJI05sMYLRTIp37UC/VZX1ejowPlgvU=;
+        b=F2gHjJXzlc4XjsYM0nEVaATFinBcm4vHSixrmz0upP6HxqeKr61Q+9Y2Gfgh+u0uGR
+         bAKKN99MvYFMAqMjmAxp8kiIwhIpE0SYyhvzmY9OZ99AQl5MjkrLz+LJj4GqotB/p8YK
+         nf0dWsh0ca2Y7eE6Qlkv+4PmEn9t8Cj608zVeNSeCi8kAV/DcwDGkPqAZE6TgHz2L6Nj
+         aGlPEz+hsItDGF/LFxReSKbzK6FfWnSLyIYhU595AJLVqr0ZpYctUbP0PPsmw6fAF5VC
+         ie0ocuqaBJYoJVlq120rH8oh+9dmsdBRhRITcOn/GVkgP+KHTcUdmjBvVW/P97zLU+ZL
+         7s0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVySIDLl2WmI90PjnBO6DVLhozaGUm3yT61aziYUZH/eTejD5Mw/99ICrCjy+2B9uPzMOuctoa6ob5gp3T1@vger.kernel.org, AJvYcCWIkWhc0lCvSg12ZY7R3mO65j/nUfKxjmd78ham43g3Bz0nFXJMrNimiHjowMw8TeE+htALzNAX9NEReXch2XlsxOM=@vger.kernel.org, AJvYcCXtrlfpzO3tGAvOz6LKXdD24PDllqSGFEkdq6T3DQ8HXlZVHMRBzJCALFmm4ZnBUoAGsezAXGwD6XL+6w==@vger.kernel.org, AJvYcCXwB3jzAgvKYfp73C3D5uyOsElBS0OARXTV/YQTUKygBOmNgMjy9pkKgailvTyICMWiZ3KZCGURBpnn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI9ZrxpJjIiEpVcsAzSlL4wtk2CEWn9TG2K2LN4iLfDfGdGAyF
+	EU8UVaJD6s2iXr0+kZI94rEoKGxMDggWQeKLbZDKHArLIy82lMsV
+X-Gm-Gg: ASbGnctHfR6ejQ5H/6eiMvbnItbtCRekkDc8IvPWAw3CH3bNsG3+QZELD2/EoyslEzV
+	DlcB7DLxyIqCDVp60YEGE5aUIVCR4n9cvSLIR2Xe4UAhuQcjFfbC781hWpMHIFAUeRG/VK3s1et
+	teXIRxVWHOw5VJUfvNXQ4nlEfSZya0NsZDTmbnhuGvRKqvn9U8FrNPSdHcewd8y+u000YrEhG2A
+	WcuccgwPKYQtGF5IRNiibAudxCE8DUIWCvMTogVm0mjMiYjVj+g5/I/BrirSZsqXJvQ7nNVpsqC
+	oqnSu6JVs9P3Fg06lv7+vBnFtTkc+QUWct4pPzaiYsDsjOolziRj8LSxVBjo1xi3qVg=
+X-Google-Smtp-Source: AGHT+IFYiWapyROaWFGJrtPpnydYDug7fSPS0XbGrBAzQyfn9wLIe9lWK3e/1ZvQx9E1whB4ioWIbQ==
+X-Received: by 2002:a05:600c:46ce:b0:439:5fbd:19d2 with SMTP id 5b1f17b1804b1-4396ec7c92amr28910915e9.10.1739619184524;
+        Sat, 15 Feb 2025 03:33:04 -0800 (PST)
+Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e9esm7147538f8f.61.2025.02.15.03.33.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Feb 2025 03:33:03 -0800 (PST)
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] pinctrl: samsung: add exynos2200 SoC pinctrl configuration
+Date: Sat, 15 Feb 2025 13:32:45 +0200
+Message-ID: <20250215113248.159386-1-ivo.ivanov.ivanov1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: c88aa68297390695b16fd9b7a33612257d8ef548  phy: mapphone-mdm6600: use gpiod_multi_set_value_cansleep
+Hey folks,
 
-Warning ids grouped by kconfigs:
+This patchset adds support for pinctrl of Exynos 2200, as well as
+documents the pinctrl and wakeup-eint compatibles for that SoC.
 
-recent_errors
-|-- arm-randconfig-051-20250215
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|-- arm-randconfig-052-20250215
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|-- arm-randconfig-053-20250215
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|-- arm-randconfig-054-20250215
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-`-- arm-randconfig-055-20250215
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
-    `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+Best regards,
+Ivaylo
 
-elapsed time: 1454m
+Ivaylo Ivanov (3):
+  dt-bindings: pinctrl: samsung: add exynos2200-wakeup-eint compatible
+  dt-bindings: pinctrl: samsung: add exynos2200 compatible
+  pinctrl: samsung: add exynos2200 SoC pinctrl configuration
 
-configs tested: 91
-configs skipped: 1
+ .../samsung,pinctrl-wakeup-interrupt.yaml     |   1 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml     |   1 +
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 168 ++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
+ 5 files changed, 173 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+-- 
+2.43.0
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250214    gcc-13.2.0
-arc                   randconfig-002-20250214    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250214    clang-16
-arm                   randconfig-002-20250214    gcc-14.2.0
-arm                   randconfig-003-20250214    clang-21
-arm                   randconfig-004-20250214    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                 randconfig-001-20250214    gcc-14.2.0
-arm64                 randconfig-002-20250214    gcc-14.2.0
-arm64                 randconfig-003-20250214    gcc-14.2.0
-arm64                 randconfig-004-20250214    gcc-14.2.0
-csky                  randconfig-001-20250214    gcc-14.2.0
-csky                  randconfig-002-20250214    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250214    clang-21
-hexagon               randconfig-002-20250214    clang-15
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250214    gcc-12
-i386        buildonly-randconfig-002-20250214    gcc-12
-i386        buildonly-randconfig-003-20250214    clang-19
-i386        buildonly-randconfig-004-20250214    gcc-12
-i386        buildonly-randconfig-005-20250214    gcc-12
-i386        buildonly-randconfig-006-20250214    gcc-12
-i386                                defconfig    clang-19
-loongarch             randconfig-001-20250214    gcc-14.2.0
-loongarch             randconfig-002-20250214    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250214    gcc-14.2.0
-nios2                 randconfig-002-20250214    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250214    gcc-14.2.0
-parisc                randconfig-002-20250214    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250214    gcc-14.2.0
-powerpc               randconfig-002-20250214    clang-18
-powerpc               randconfig-003-20250214    clang-21
-powerpc64             randconfig-001-20250214    clang-18
-powerpc64             randconfig-002-20250214    gcc-14.2.0
-powerpc64             randconfig-003-20250214    gcc-14.2.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250214    clang-18
-riscv                 randconfig-002-20250214    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250214    gcc-14.2.0
-s390                  randconfig-002-20250214    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250214    gcc-14.2.0
-sh                    randconfig-002-20250214    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250214    gcc-14.2.0
-sparc                 randconfig-002-20250214    gcc-14.2.0
-sparc64               randconfig-001-20250214    gcc-14.2.0
-sparc64               randconfig-002-20250214    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250214    gcc-12
-um                    randconfig-002-20250214    clang-16
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250214    clang-19
-x86_64      buildonly-randconfig-002-20250214    clang-19
-x86_64      buildonly-randconfig-003-20250214    gcc-12
-x86_64      buildonly-randconfig-004-20250214    clang-19
-x86_64      buildonly-randconfig-005-20250214    gcc-12
-x86_64      buildonly-randconfig-006-20250214    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250214    gcc-14.2.0
-xtensa                randconfig-002-20250214    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
