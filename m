@@ -1,159 +1,135 @@
-Return-Path: <linux-gpio+bounces-16056-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16057-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F99A3690B
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 00:22:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3DB0A36AAD
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 02:13:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 993633A1E69
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2025 23:22:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8A6716A711
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2025 01:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56CB1FDA93;
-	Fri, 14 Feb 2025 23:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D97C474BE1;
+	Sat, 15 Feb 2025 01:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OBDZtdyJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMXHNTG/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2E71FCF41
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 23:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A34911187;
+	Sat, 15 Feb 2025 01:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739575355; cv=none; b=MZZnJTICBlX6Cp9zYhIQSvo7+Sdy2jMSn3M5Lx7pgTndnRfAdEiQI1z8GxruSbNQZ8rmy9qfvPKjd9/ot8KEQlydnlClTtV8rxhOD11UQp+iLlKXqHsbiK8NyG9uVYRT07HA9cR+a6KTuT/r1otajgd+kLjAfvTjMFksx1i+RIs=
+	t=1739582025; cv=none; b=awDEbnjIC8HNmJIcqbrw+F/vkOm+FkPPVOMIf1QBpf5t8ks/WsECGpDzlNFEIlWo0G23qjM9cT2xFE05k5LwP8azyZe496fp1MhS9xTHQsvkP74PAeThht4YkpkIJFwjT+MXZ6r7vY60sgsSzllmcU/DPsbOLoGU1i1nycuGc44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739575355; c=relaxed/simple;
-	bh=pPXxk7x2My9xLVR9K8CXlSChtd6DwTCfsKgijzf+gsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ucUsHAgapofZ1jY4z76qYrEegbl75VBuKntdp52+wORqtPl974fSmmGtGyti6nWpjlb3UgrgmRFWIJbNxq/qTgS48vydmG6GodSjN437O24hKk0CDEnmU0+py6WhLGlkyo83BdJv2vBHlA82NonlgNohXsQR/yoOnYysQm75EH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OBDZtdyJ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-307d1ab59c6so26086111fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2025 15:22:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739575352; x=1740180152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPXxk7x2My9xLVR9K8CXlSChtd6DwTCfsKgijzf+gsE=;
-        b=OBDZtdyJ4d/E+ur1M3Tgx2Qw/mNwPFaYwJ38XVG+zU+YDoK8xrPe94knh2OzVjdgt9
-         zKV8+BuiVeb8mjW+fG2v6Iiwey5cK2PATaFGf1ICCB3XOj8kWWqmJG3/8U5i/Oglrkpj
-         jrOAhsrSxu0vtvWR6qeroXIVLocievGEBe1OwfjkTMPCvUudmZYnxPtrfmS6JuLq+frZ
-         vYhEzB35RaNTJlyBfESrMIWxwRWo1GU31MMCx+3j3HRAUbbhkgFQzYxAO7CF4YhDiK1q
-         5XboGfcCyPrYH5S9ZeQzBBVcYAm+kwi/rMotsmVd/uFAuUIN73Ze+zTIIf+vhouWLUEq
-         R3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739575352; x=1740180152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pPXxk7x2My9xLVR9K8CXlSChtd6DwTCfsKgijzf+gsE=;
-        b=ny6FRqthFTIWVJqs+iUF3tU4Y86ghFx8jFuuYyVXtxNs4hG6skx/vPRtlP/9ck7DhE
-         nCQc2iirWnqqDVJA4doaWazT4HrrO1rcKYGJWROe80O+BG0KUFFeVKmwrXj/PhRxNs/t
-         ak5jlg5LgwQXpEPn/HVv6IbN76gQ3m8a6PptaCI5oa/1TI4GAZNku13Iv9nk15pSTPrM
-         am4fgRfIydCYC5lePtMoVtQj9ov1VFkp4EHv5qXSw0kv248uAvB26WS3+Bl1KqYq5DE7
-         Sdz86IBEF7tskMiTIpzE8P4BitXFd+DbDWHcliUtA7iwrtc+3ubxQs84KYsWc0YfZ9so
-         Ba3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWZogtSEvE1cry9z00YtvRw7an/Bx8eut3c+1eSG+X+hB20jdTSn70Io5LnZTHsNX+V8spfKfBOpOXJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLIG6csaTc19spWOW5cdi25r065pqKhnv2W1lUW87KtgKfRbUA
-	eSXkv/TaEKLus8DP9oxzW2Au9XBmGV6Afi8St5kyIU1FgNmtoVr+jM3MvA1oKyAt+D1waPOaNVK
-	2a9DFAmIofyBJg9EK0zNN7/P9Z8c9BFbjb1H0qg==
-X-Gm-Gg: ASbGncvRhl2khuL7QV3PRLZ0FdfyPHfNE0I0JM1gUywHEczbDb3RKzAGOB/9Uqdwtcq
-	mMcEQgy/tJM3JobFOPSGuqdrH4SFetaW2aR6ZCFtUBrBNyDdwBMubL72/jla18Yjn+1bUO+Py
-X-Google-Smtp-Source: AGHT+IFCZppwGEdjNtyl7ODyKVY01soCR8dNMEESTZbrHvR4pUct3wzFqBQ7B0wq3Q534KzSfMqIBbfBb/GCa/7i7Z0=
-X-Received: by 2002:a2e:9397:0:b0:308:f860:7e8 with SMTP id
- 38308e7fff4ca-30927a63f50mr4179131fa.20.1739575351788; Fri, 14 Feb 2025
- 15:22:31 -0800 (PST)
+	s=arc-20240116; t=1739582025; c=relaxed/simple;
+	bh=WRCtZXjO6Wvl3SDyjYTihILfLHQlQU18HhuRJvAJYEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2AbjQuT6Dk/9C19GSRySJA++4B1ca1F/xhsvIB+7nPiT0R2295AfjIpFafv6EoGMCxFC7+lNbDqOCG3IQRBCzZYqzQ7une9XUnqoFPfsC7RLDoRBeZ9x7bI3JlNCeczqRNCt3jKHIcHeR87DFTwKHu+PaDuLw4rQWjPpzdzIHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMXHNTG/; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739582023; x=1771118023;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WRCtZXjO6Wvl3SDyjYTihILfLHQlQU18HhuRJvAJYEc=;
+  b=EMXHNTG/YaLeiAZxYmBbGeIGGwEnAMLIFo75Nf/rWQHPubR7fr0bB9kX
+   15dzsf6w/Mbk6EHy0A6QZAnuAsxD8/+hgc9aoV5crWoKoMYsg0KTkoY+h
+   jPlLhMnoBUfFpTwpQs5P/hKAGytadz3gH3Put16HB8ul/DYDxBKNWTF3d
+   yqnLZdHEguxZVvD/TMRPc+/eAdeCh9+MERgPUEV1hmYgcrplv0EI0Sfrs
+   nmy/1ntPWEZObCy6qd0o3jAVFYO37/90SOX+Tbbp/MyCDKYc5las5ceLS
+   /h19XnejKagNuf5YJehCq4FXZk0L7RZOS3LxNNM899Y75yYOUO+XBfHmw
+   A==;
+X-CSE-ConnectionGUID: 58WddrJhR8+lRd3BXW/Shg==
+X-CSE-MsgGUID: rf4lZmH0STiXjkXRcgp0QA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="39575182"
+X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
+   d="scan'208";a="39575182"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 17:13:42 -0800
+X-CSE-ConnectionGUID: enkUg1f+SUGU47QDEBs55g==
+X-CSE-MsgGUID: BklhlydLS5ShgQeqQP7G7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,287,1732608000"; 
+   d="scan'208";a="113580628"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2025 17:13:40 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tj6kU-001ANT-0D;
+	Sat, 15 Feb 2025 01:13:38 +0000
+Date: Sat, 15 Feb 2025 09:12:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kim Seer Paller <kimseer.paller@analog.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kim Seer Paller <kimseer.paller@analog.com>
+Subject: Re: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
+Message-ID: <202502150933.vtaQAJRw-lkp@intel.com>
+References: <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250213-for_upstream-v2-0-ec4eff3b3cd5@analog.com>
- <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com> <CACRpkdZR8X17Bn-i2anqjxf0Gk60V175F7Xfwytkhy7_K+LsSA@mail.gmail.com>
- <880631da17a6d8ed4afe5a8c453fd4f7d0e4fca5.camel@gmail.com>
-In-Reply-To: <880631da17a6d8ed4afe5a8c453fd4f7d0e4fca5.camel@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 15 Feb 2025 00:22:20 +0100
-X-Gm-Features: AWEUYZlCgILVTBH640MzYpGgtGlpknzKmD0qMEIE1z0T6Iw6f5ZqTnHVDhruggg
-Message-ID: <CACRpkda+CDRMYKmjw7kewenkteLhPYb040E4B=ZG6pgdy=65pg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>
-Cc: Kim Seer Paller <kimseer.paller@analog.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com>
 
-Let's check with Jonathan Cameron (IIO maintainer) on this as well.
-He might have ideas.
+Hi Kim,
 
-For reference, the datasheet:
-https://www.analog.com/media/en/technical-documentation/data-sheets/adg1414=
-.pdf
+kernel test robot noticed the following build warnings:
 
-(By the way: add the datasheet to a special Datasheet: tag in the
-commit please!)
+[auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
 
-On Fri, Feb 14, 2025 at 2:17=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
-> On Fri, 2025-02-14 at 00:25 +0100, Linus Walleij wrote:
+url:    https://github.com/intel-lab-lkp/linux/commits/Kim-Seer-Paller/dt-bindings-gpio-add-adg1414/20250213-211900
+base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
+patch link:    https://lore.kernel.org/r/20250213-for_upstream-v2-2-ec4eff3b3cd5%40analog.com
+patch subject: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
+config: alpha-randconfig-r132-20250215 (https://download.01.org/0day-ci/archive/20250215/202502150933.vtaQAJRw-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250215/202502150933.vtaQAJRw-lkp@intel.com/reproduce)
 
-> > Now, the kernel does not have switch subsystem I think,
-> > so this is something like a special case, so we might be
-> > compelled to make an exception, if the users will all be in
->
-> Exactly, since we could not find anything, the best fit seemed like the g=
-pio
-> subsystem. I was the one suggesting it since a new subsystem for a simple=
- device
-> like this looked excessive. If we had more devices that would fit such a =
-class
-> of devices, maybe it would make more sense to start thinking on such a
-> subsystem?
->
-> > say userspace and make use of this switch for factory lines
-> > or similar.
->
-> Kim should know better again (about usecases) but I would also assume thi=
-s is
-> for userspace use.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502150933.vtaQAJRw-lkp@intel.com/
 
-Actually the GPIO documentation Documentation/driver-api/gpio/using-gpio.rs=
-t
-even talks about this for userspace use cases:
+sparse warnings: (new ones prefixed by >>)
+>> drivers/gpio/gpio-adg1414.c:68:31: sparse: sparse: Using plain integer as NULL pointer
+   drivers/gpio/gpio-adg1414.c: note: in included file (through include/linux/smp.h, include/linux/lockdep.h, include/linux/spinlock.h, ...):
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
 
-"The userspace ABI is intended for one-off deployments. Examples are protot=
-ypes,
-factory lines, maker community projects, workshop specimen, production tool=
-s,
-industrial automation, PLC-type use cases, door controllers, in short a pie=
-ce
-of specialized equipment that is not produced by the numbers, requiring
-operators to have a deep knowledge of the equipment and knows about the
-software-hardware interface to be set up. They should not have a natural fi=
-t
-to any existing kernel subsystem and not be a good fit for an operating sys=
-tem,
-because of not being reusable or abstract enough, or involving a lot of non
-computer hardware related policy."
+vim +68 drivers/gpio/gpio-adg1414.c
 
-If this is the usecase, like controlling an external switch for such things=
-,
-using the GPIO subsystem might actually be reasonable in my opinion,
-(even if the DT bindings end up in their own category).
+    54	
+    55	static void adg1414_set(struct gpio_chip *chip, unsigned int offset, int value)
+    56	{
+    57		struct adg1414_state *st = gpiochip_get_data(chip);
+    58	
+    59		guard(mutex)(&st->lock);
+    60	
+    61		if (value)
+    62			st->buf |= BIT(offset);
+    63		else
+    64			st->buf &= ~BIT(offset);
+    65	
+    66		st->tx = cpu_to_be32(st->buf << (32 - st->chip.ngpio));
+    67	
+  > 68		adg1414_spi_write(st, 0, st->chip.ngpio / 8);
+    69	}
+    70	
 
-If the switches control stuff related to computer machinery (i.e. integrate=
-d
-into a laptop to switch on/off the fans...) then no. So it depends on how
-and where it will be used.
-
-Yours,
-Linus Walleij
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
