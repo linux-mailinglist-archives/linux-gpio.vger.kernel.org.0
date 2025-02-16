@@ -1,147 +1,160 @@
-Return-Path: <linux-gpio+bounces-16089-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16090-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B42A9A374B3
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 15:31:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 947D1A37517
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 16:33:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F1E4188F5BB
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 14:31:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA9C13AA447
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 15:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 964CD192D7C;
-	Sun, 16 Feb 2025 14:31:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D201802B;
+	Sun, 16 Feb 2025 15:33:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4TzT68C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HMCejJGs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4579218DB2B;
-	Sun, 16 Feb 2025 14:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDDE208A0;
+	Sun, 16 Feb 2025 15:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739716263; cv=none; b=LyuAK0oFVQA5YVAZdOFnDRwgUWI4ARZmGFRJ7tlhGGnTjH7Ghi5muzCDuYR2UkfO6ap3FGE2uN1wDXBt4jbTOZxiU4Uzj38rFu3yTvMORPVMytoprkhHz9YKMdIf3MtQ1KjZGA/ZXJeKiG86ZoofnwhC5OfJkT5Y1lSjO0y0KE8=
+	t=1739720006; cv=none; b=sDf4I0vC+fVvwgJZavGgSFvdHme9SGSUT8KtCXX+t3t1cowQSwcuOgUZGXHgWO5+JH+2El3nmlKdS5AfMuGzBnzzXGiQUxsV/J3RqSzHbj+BhIyw6NlguGSVahGPU3/8+A+bb5T+HMbUdQEqgZEDm3Jd04OP/6+4YvU/wG3AtI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739716263; c=relaxed/simple;
-	bh=3olusQxlP2lV5Ne2h6cljoQ1pOoB5XyJHYVk4XIXQUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OqR8l4hONmeSTwt3zsoNxvuX28URmLJu3hqocN1XqVhG4QJK1W/DAvibNMpV7lky+wKCAQ5TJ1RL2WwiW7lSdg3dqW/mzDqFI41ltu39WbSOzLi5JKKiB323I2VPeaP33QqWVzz9JNfosU9k+AukUHne/lQCE9eWS7RA+9zr07E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4TzT68C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE32BC4CEDD;
-	Sun, 16 Feb 2025 14:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739716262;
-	bh=3olusQxlP2lV5Ne2h6cljoQ1pOoB5XyJHYVk4XIXQUg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k4TzT68CAkXwVqBa35Yq+TjiwuvYfFJ7jMxhPzLvnZsJUUnWlbBnJnh/3UaF0XiHf
-	 qBi/9ZghtKhdxXApECAMTcuut06w8DcTBdudoCyqsaH1YPVcil8Z1JvSz8f4N/k0Xh
-	 W9EnQIDcPUyQrhpCGa4DSuug2uHS4Co0G2es6a71Q3Xgbw2tsxmita0Na1zd8up/tc
-	 4F0RGFqWAMS4khZirBgBOE0tgzvGK/0jWmoE2zM3O/bF+4YDnWzzC6MGvpCGgma/6c
-	 BUgwxS8wfU33Mwq6o7XrrBPzIWCt6stM2gwASiiicuwT1DJrsSuyXr4/+ylPq5OYtm
-	 FJ59DJMmYO1Pg==
-Date: Sun, 16 Feb 2025 14:30:52 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Kim Seer Paller
- <kimseer.paller@analog.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio
- <linux-iio@vger.kernel.org>, Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
-Message-ID: <20250216143052.6f21ace0@jic23-huawei>
-In-Reply-To: <CACRpkda+CDRMYKmjw7kewenkteLhPYb040E4B=ZG6pgdy=65pg@mail.gmail.com>
-References: <20250213-for_upstream-v2-0-ec4eff3b3cd5@analog.com>
-	<20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com>
-	<CACRpkdZR8X17Bn-i2anqjxf0Gk60V175F7Xfwytkhy7_K+LsSA@mail.gmail.com>
-	<880631da17a6d8ed4afe5a8c453fd4f7d0e4fca5.camel@gmail.com>
-	<CACRpkda+CDRMYKmjw7kewenkteLhPYb040E4B=ZG6pgdy=65pg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739720006; c=relaxed/simple;
+	bh=zpGAUL2A6gkU3zldFOJ6dcxKJ8KW2u6T2qeA9Zh6zyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VhxkV7UmYW8cDrzIbTVXXQNd/iwQoNE75C4OFABXgE7RaUzmSDrTgHQnknNBhLc2B01mv2t4q5i1glLivacd4Q1khpPqFE6/bg8o0LQzPfPxmVBcOmexO/m7Nwtj6x4ksrQGAvtjGAdMxaCAe3P10v2KDdoHkQsm3uXryjNMyCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HMCejJGs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739720005; x=1771256005;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zpGAUL2A6gkU3zldFOJ6dcxKJ8KW2u6T2qeA9Zh6zyA=;
+  b=HMCejJGsg5N41Op9N63kYz2f/Zz71wB8egfHxkIl/pBIw6CkXno+4DRW
+   696diqYsbetUU8536fKK2XhkFCGBRH94mif6dCwgYCZnzx8u1gWwoDRKG
+   KBPxChys0+1XT8yV8dQEu3uAq98znh8VhMnWrToXqClTfDgiYKgYZh/eS
+   /4LGWzMHduw8GhCiuKFtbttxkz3r1oc9S8UQGxxL+q9cBl0LknhxWstAh
+   +/pLIaq4qnF2z2F4VOOau/ai8Mh1RbVZ1BWlXZByBgzNZp02cAOVkOwTj
+   tSzJdpU3gw7S88faYg5my+WySm4RYqz5774KKQkXey5xAP1F0UneAAVjU
+   w==;
+X-CSE-ConnectionGUID: Wqsyu2KvThq5rrvyD1tHhA==
+X-CSE-MsgGUID: x6Jy28y5TWeqdEOB1TyT8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51836689"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51836689"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 07:33:24 -0800
+X-CSE-ConnectionGUID: livIVoLVSXmbyGoEui878g==
+X-CSE-MsgGUID: CKzRqbeLQpS/MAeYtiuhfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113768074"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 16 Feb 2025 07:33:22 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tjgdz-001C1b-1z;
+	Sun, 16 Feb 2025 15:33:19 +0000
+Date: Sun, 16 Feb 2025 23:32:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Koichiro Den <koichiro.den@canonical.com>, linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, brgl@bgdev.pl, geert+renesas@glider.be,
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/13] gpio: virtuser: convert to use gpio-pseudo
+ utilities
+Message-ID: <202502162345.FT5z7kr9-lkp@intel.com>
+References: <20250216125816.14430-6-koichiro.den@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250216125816.14430-6-koichiro.den@canonical.com>
 
-On Sat, 15 Feb 2025 00:22:20 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Koichiro,
 
-> Let's check with Jonathan Cameron (IIO maintainer) on this as well.
-> He might have ideas.
->=20
-> For reference, the datasheet:
-> https://www.analog.com/media/en/technical-documentation/data-sheets/adg14=
-14.pdf
->=20
-> (By the way: add the datasheet to a special Datasheet: tag in the
-> commit please!)
->=20
-> On Fri, Feb 14, 2025 at 2:17=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.c=
-om> wrote:
-> > On Fri, 2025-02-14 at 00:25 +0100, Linus Walleij wrote: =20
->=20
-> > > Now, the kernel does not have switch subsystem I think,
-> > > so this is something like a special case, so we might be
-> > > compelled to make an exception, if the users will all be in =20
-> >
-> > Exactly, since we could not find anything, the best fit seemed like the=
- gpio
-> > subsystem. I was the one suggesting it since a new subsystem for a simp=
-le device
-> > like this looked excessive. If we had more devices that would fit such =
-a class
-> > of devices, maybe it would make more sense to start thinking on such a
-> > subsystem?
-> > =20
-> > > say userspace and make use of this switch for factory lines
-> > > or similar. =20
-> >
-> > Kim should know better again (about usecases) but I would also assume t=
-his is
-> > for userspace use. =20
->=20
-> Actually the GPIO documentation Documentation/driver-api/gpio/using-gpio.=
-rst
-> even talks about this for userspace use cases:
->=20
-> "The userspace ABI is intended for one-off deployments. Examples are prot=
-otypes,
-> factory lines, maker community projects, workshop specimen, production to=
-ols,
-> industrial automation, PLC-type use cases, door controllers, in short a p=
-iece
-> of specialized equipment that is not produced by the numbers, requiring
-> operators to have a deep knowledge of the equipment and knows about the
-> software-hardware interface to be set up. They should not have a natural =
-fit
-> to any existing kernel subsystem and not be a good fit for an operating s=
-ystem,
-> because of not being reusable or abstract enough, or involving a lot of n=
-on
-> computer hardware related policy."
->=20
-> If this is the usecase, like controlling an external switch for such thin=
-gs,
-> using the GPIO subsystem might actually be reasonable in my opinion,
-> (even if the DT bindings end up in their own category).
->=20
-> If the switches control stuff related to computer machinery (i.e. integra=
-ted
-> into a laptop to switch on/off the fans...) then no. So it depends on how
-> and where it will be used.
+kernel test robot noticed the following build errors:
 
-Maybe, treat them as a weird mux? A switch is similar to a mux with only
-one connected path.  +CC Peter.=20
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on linus/master v6.14-rc2 next-20250214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Jonathan
+url:    https://github.com/intel-lab-lkp/linux/commits/Koichiro-Den/gpio-aggregator-reorder-functions-to-prepare-for-configfs-introduction/20250216-210413
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20250216125816.14430-6-koichiro.den%40canonical.com
+patch subject: [PATCH v3 05/13] gpio: virtuser: convert to use gpio-pseudo utilities
+config: csky-randconfig-002-20250216 (https://download.01.org/0day-ci/archive/20250216/202502162345.FT5z7kr9-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250216/202502162345.FT5z7kr9-lkp@intel.com/reproduce)
 
->=20
-> Yours,
-> Linus Walleij
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502162345.FT5z7kr9-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   drivers/gpio/gpio-pseudo.c: In function 'pseudo_gpio_register':
+>> drivers/gpio/gpio-pseudo.c:62:17: error: implicit declaration of function 'kfree'; did you mean 'kvfree'? [-Wimplicit-function-declaration]
+      62 |                 kfree(common->name);
+         |                 ^~~~~
+         |                 kvfree
+
+
+vim +62 drivers/gpio/gpio-pseudo.c
+
+ef524a2229b717 Koichiro Den 2025-02-16  43  
+ef524a2229b717 Koichiro Den 2025-02-16  44  int pseudo_gpio_register(struct pseudo_gpio_common *common,
+ef524a2229b717 Koichiro Den 2025-02-16  45  			 struct platform_device_info *pdevinfo)
+ef524a2229b717 Koichiro Den 2025-02-16  46  {
+ef524a2229b717 Koichiro Den 2025-02-16  47  	struct platform_device *pdev;
+ef524a2229b717 Koichiro Den 2025-02-16  48  	char *name;
+ef524a2229b717 Koichiro Den 2025-02-16  49  
+ef524a2229b717 Koichiro Den 2025-02-16  50  	name = kasprintf(GFP_KERNEL, "%s.%u", pdevinfo->name, pdevinfo->id);
+ef524a2229b717 Koichiro Den 2025-02-16  51  	if (!name)
+ef524a2229b717 Koichiro Den 2025-02-16  52  		return -ENOMEM;
+ef524a2229b717 Koichiro Den 2025-02-16  53  
+ef524a2229b717 Koichiro Den 2025-02-16  54  	common->driver_bound = false;
+ef524a2229b717 Koichiro Den 2025-02-16  55  	common->name = name;
+ef524a2229b717 Koichiro Den 2025-02-16  56  	reinit_completion(&common->probe_completion);
+ef524a2229b717 Koichiro Den 2025-02-16  57  	bus_register_notifier(&platform_bus_type, &common->bus_notifier);
+ef524a2229b717 Koichiro Den 2025-02-16  58  
+ef524a2229b717 Koichiro Den 2025-02-16  59  	pdev = platform_device_register_full(pdevinfo);
+ef524a2229b717 Koichiro Den 2025-02-16  60  	if (IS_ERR(pdev)) {
+ef524a2229b717 Koichiro Den 2025-02-16  61  		bus_unregister_notifier(&platform_bus_type, &common->bus_notifier);
+ef524a2229b717 Koichiro Den 2025-02-16 @62  		kfree(common->name);
+ef524a2229b717 Koichiro Den 2025-02-16  63  		return PTR_ERR(pdev);
+ef524a2229b717 Koichiro Den 2025-02-16  64  	}
+ef524a2229b717 Koichiro Den 2025-02-16  65  
+ef524a2229b717 Koichiro Den 2025-02-16  66  	wait_for_completion(&common->probe_completion);
+ef524a2229b717 Koichiro Den 2025-02-16  67  	bus_unregister_notifier(&platform_bus_type, &common->bus_notifier);
+ef524a2229b717 Koichiro Den 2025-02-16  68  
+ef524a2229b717 Koichiro Den 2025-02-16  69  	if (!common->driver_bound) {
+ef524a2229b717 Koichiro Den 2025-02-16  70  		platform_device_unregister(pdev);
+ef524a2229b717 Koichiro Den 2025-02-16  71  		kfree(common->name);
+ef524a2229b717 Koichiro Den 2025-02-16  72  		return -ENXIO;
+ef524a2229b717 Koichiro Den 2025-02-16  73  	}
+ef524a2229b717 Koichiro Den 2025-02-16  74  
+ef524a2229b717 Koichiro Den 2025-02-16  75  	common->pdev = pdev;
+ef524a2229b717 Koichiro Den 2025-02-16  76  	return 0;
+ef524a2229b717 Koichiro Den 2025-02-16  77  }
+ef524a2229b717 Koichiro Den 2025-02-16  78  EXPORT_SYMBOL_GPL(pseudo_gpio_register);
+ef524a2229b717 Koichiro Den 2025-02-16  79  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
