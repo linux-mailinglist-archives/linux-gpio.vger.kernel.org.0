@@ -1,100 +1,98 @@
-Return-Path: <linux-gpio+bounces-16096-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16097-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0F48A3761D
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 17:59:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7AEA37873
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 00:18:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A20F57A2288
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 16:58:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95A8D3AF42B
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 23:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75AD19D081;
-	Sun, 16 Feb 2025 16:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C7E19CC02;
+	Sun, 16 Feb 2025 23:18:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjOK0BAh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KzVR2OqT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B729450FE;
-	Sun, 16 Feb 2025 16:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22677189BB5
+	for <linux-gpio@vger.kernel.org>; Sun, 16 Feb 2025 23:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739725188; cv=none; b=c9RC1m3h34kdDIwPBPV8ke4V/T6mgZRC9e5eK0HTasMxwzZGskg6vExMXSjKJpV4NO6uTrCCyXpWyAfcatxa8q1YiOneSrubN1tK6Q2gv11ONEGztMPisggo1O+0rv542WB+RmRDPD5i51b0eJV7xScqsWnRuX+Cz7XU/8MN+8I=
+	t=1739747894; cv=none; b=Qty8n16YzokG623+oBrnZXKlQbl78kOSDx2xOZfGeo0P5kb6sKR3oXVda2ElvyH+hREMBWBpFo3slcJAE18DCgJT4pS/C1TQeRcsFrQKCVvteKe+qE0uQjC8a4t4QcbCqYVRk2abXgYBpYFItZV8CR8NO2H5ePYvtddIKpddpTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739725188; c=relaxed/simple;
-	bh=SC/tuAOm11oCVUJiOo+McB3iHWTWiP1gMTvFuGu89bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MpK9qa5+sJ4bzrg/bmD5rt5sJ5TMrKNMVDEl4WY7f2WWc6qzo56ik7F35n1kl8kr22ANwvXar7afpK+ief+lHpv9FumFTkAYnm6Ua0hpLmTzrBxZRIiXAf2RNhfFFgsPvnL+j7mHpEwV4CYV+fz7vTy2IOh4kZ4YSGCWF1BoCno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjOK0BAh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70575C4CEDD;
-	Sun, 16 Feb 2025 16:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739725187;
-	bh=SC/tuAOm11oCVUJiOo+McB3iHWTWiP1gMTvFuGu89bk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LjOK0BAhP4tBI99Nx5vy4ZiuXj1NO3gslpAEUnCkgPVmaZbtVzp+7U0Gc0QARywLo
-	 hN70p05uB7/X2PfK05gNdKRgjq+A7ZkmI5wJWzLRYfCVXNT4xFBdGw+5QtUY03ToSm
-	 nw3+phcjHe8Slp0xIE1PFgySsx735f7meh+Qtx7uwlG1IvEdyjVrXi0hB92wZZQm24
-	 VIG7vofvWX6djtnOKo47FwpFtU7FqK3St46CzRF6vTOfdp01F4+wO3iz5OZeeEE7dR
-	 cxpAlsOluSe7u5qWo6f36DTqYASC84d4Ut6Vj1+HUN3inYk9Lo9xBlqxADFihM21t0
-	 SY3xdX+a08lRw==
-Date: Sun, 16 Feb 2025 16:59:39 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, rafael@kernel.org,
- linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
- andriy.shevchenko@linux.intel.com, dmitry.torokhov@gmail.com,
- przemyslaw.kitszel@intel.com, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 10/12] iio: adc: xilinx-xadc-core: use
- devm_kmemdup_array()
-Message-ID: <20250216165939.4780c4f4@jic23-huawei>
-In-Reply-To: <20250212062513.2254767-11-raag.jadav@intel.com>
-References: <20250212062513.2254767-1-raag.jadav@intel.com>
-	<20250212062513.2254767-11-raag.jadav@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739747894; c=relaxed/simple;
+	bh=+bAqTBhrAThIXvpuQvboYe7dAvPcu2hd3DhUbwVIyS4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LtdaNo8ZIGPHzn0ix25N7hPI+wCdHf312GKp/bez/0cGizya3KWy3o1F4LD4Az7qF/fCAr5SMPnOc7MKf6O0yJDrEWJRVW+IUb4avxX+3BOx9IvyOAb9ajNdeM64k3HAjlr/FC4TKJrtBTdEW6sJmXbo4sL5gEWfTV7wkM/rY1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KzVR2OqT; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30797730cbdso39448771fa.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Feb 2025 15:18:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739747891; x=1740352691; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+bAqTBhrAThIXvpuQvboYe7dAvPcu2hd3DhUbwVIyS4=;
+        b=KzVR2OqT967+7vlMuxXlMZYmohEEp/kMrlg0E8UwCqo5ACPcCmOkZDdnzGNC3xaz0X
+         c6ob/6gOLvcpSkbOaAzDF7e6Csz90jH6EqBbiSGCMhTZGJ0fnyOxGztKwrAe/BzTfReU
+         Y19UDyecdvwlH/JfU91Zh1xVUFUwBpcu12jkn6CP5BJN4+aES+Zrd1Y57VoQ6Z0PrTa6
+         USH2rIsEcCrGpP/GJA2pKMRBohPO5mjLkfHVW4D+2jv6a/u6XlVaWOW4EloA8nQOFxZD
+         1hWD+8M3aA3ajTDHF+zVT4YWV5zrPnU3gaZrB8039Pb6Rejv7me/DsE2igc2uSzK7/c6
+         g/aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739747891; x=1740352691;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+bAqTBhrAThIXvpuQvboYe7dAvPcu2hd3DhUbwVIyS4=;
+        b=ZVEc9OFPZ+rwrSF6Jlt73NOzWzg/v7/1L7BzjTG9bRHNv3ul9E8IiF4Sh2GTK02Ryt
+         y24Ys1ye/bq9/C5BtKJXx68+bLW054nitx0HLANO+SkT37HcZE//gkiIlfSZAZBjdIAH
+         UOuW7oOliOjaj9K099PTx4RfTaX5fYjXvkq/Getr2VPO1hzM+/ZJunoapnm5CFlCDck1
+         eqvuys3aNB+uuOjYjqWXLwK3QwtpTRooXM8+29OrRjC5p1up1+nsmi3RQcxMT1+erzj4
+         QgXIEbDG+Z9Hd46TLwP7FHJNii+WAsfuLt6AKDr2+ulBA7D/SuqaAPTDZdw2kNrRDZdi
+         FgBQ==
+X-Gm-Message-State: AOJu0YyC1pJ9nMqnudxXrFvMZITBPR66cZEIlimeRGHQwMSBUPyw8Ys1
+	UWkBdmMLVrJqD9YSty6inyjY+jYzBuCWqCCFtko56cB67OpkiNT/ZR3OVKck4mdEqLLfu/NApc7
+	1yl8sYoPAW3GIfBvhqC5OQ95XnhtiM/BQGkM2wHWd41609BHy
+X-Gm-Gg: ASbGncv3JRlFivi4gd8teVY3uppseC7neIiVy5h0z/xA5KH03Il3yrZsHcq7gc2hzqw
+	3LBH5O7dbijmzE362IYeSfqqYRVVgQ8NaI9FMIgKmCBobf53TYsPsJAWx8Yvo9YjTRiwXCDoq
+X-Google-Smtp-Source: AGHT+IH/OWXvrol1+DdRrFrzWglz3AqCuNE43oqbEWm7V54q9GVCswPDnbSkJPvotsmoZT4v+6bsiaAYAPbgKv7XEdo=
+X-Received: by 2002:a2e:80d8:0:b0:308:f827:f8e4 with SMTP id
+ 38308e7fff4ca-30927a59c85mr17193991fa.7.1739747891108; Sun, 16 Feb 2025
+ 15:18:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250205095243.512292-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250205095243.512292-1-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 17 Feb 2025 00:18:00 +0100
+X-Gm-Features: AWEUYZlC_cindjOgw85q9grQQ8yCUl2UyiaEPS3QjFkrs5er0YSYXY6AOy6niqA
+Message-ID: <CACRpkdZAAszLedDTANa-v+s0-6XTJOqVSVnWvyRwu5Z-RiOoDw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] pinctrl: cy8c95x0: Clean up series
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Feb 2025 11:55:11 +0530
-Raag Jadav <raag.jadav@intel.com> wrote:
+On Wed, Feb 5, 2025 at 10:52=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Convert to use devm_kmemdup_array() and while at it, use source size
-> instead of destination.
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> This a set of the cleanups I have collected so far while testing
+> the driver on Intel Galileo Gen 1 last year.
 
-Seems fine to me.
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Patches applied now that -rc3 is out!
 
-> ---
->  drivers/iio/adc/xilinx-xadc-core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-> index cfbfcaefec0f..e1f8740ae688 100644
-> --- a/drivers/iio/adc/xilinx-xadc-core.c
-> +++ b/drivers/iio/adc/xilinx-xadc-core.c
-> @@ -1245,8 +1245,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, unsigned int *conf, int irq)
->  		channel_templates = xadc_us_channels;
->  		max_channels = ARRAY_SIZE(xadc_us_channels);
->  	}
-> -	channels = devm_kmemdup(dev, channel_templates,
-> -				sizeof(channels[0]) * max_channels, GFP_KERNEL);
-> +	channels = devm_kmemdup_array(dev, channel_templates, max_channels,
-> +				      sizeof(*channel_templates), GFP_KERNEL);
->  	if (!channels)
->  		return -ENOMEM;
->  
-
+Yours,
+Linus Walleij
 
