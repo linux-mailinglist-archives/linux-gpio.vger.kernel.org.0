@@ -1,683 +1,216 @@
-Return-Path: <linux-gpio+bounces-16070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DFD7A37445
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 13:56:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98756A37449
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 13:58:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 246E5188C5AD
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 12:56:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0F65169C8A
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Feb 2025 12:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23679191499;
-	Sun, 16 Feb 2025 12:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D06391922E8;
+	Sun, 16 Feb 2025 12:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ZcyZa6Ve"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0971519B4;
-	Sun, 16 Feb 2025 12:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AD418F2D8
+	for <linux-gpio@vger.kernel.org>; Sun, 16 Feb 2025 12:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739710580; cv=none; b=I74IZBlHSd6nzb4O9DUxIUzvfczGd7RxYwdWoEZG3DtFzRdl3Nci/9YPyDozmozXqKnD7Z2QjW5LVte5y7Nslr6xssmSgmsjwes7HOGqUPY2kL2KFM5aPtgpUVoL5Gd5xQb5lrfGwqiapEYu0K1iUh7KEGnq7cMgUqg12ee4r5w=
+	t=1739710719; cv=none; b=lWQXgp9GQDduMqnpnzfNo+4NFQObl0PkALR+130koT+ii7nAZrMAf+kaz9uMwIuml6rTpu0BplFD+tHGUiWHEihd+Z/l0NmFbYdUQBOSg2jicrjRuzrCXsKPyqO15NCiV/0kR/pVwwB2vtTJiTAs6gIKPna5hzhkWyew9W4PJW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739710580; c=relaxed/simple;
-	bh=IluO3fm46uzNOm4O1i7QNvpAIOwjjDH4LPr0ur8tJPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hBEgWzti9Wdg6rmOGF+BOQOe589sSa7FmShIOlraLjzxbCzrVI3AoFsGBX7pMo5VQmQ9lfkch2dkuvH86aF6qL8Yh4kR7NpyWiPi9XTcopx9wS80lDCmO4bXSOAHaXW7C0yKGNfR+UcBQGjtLkJZogxF/jLKZK2IgVsS9CcH50A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [180.172.76.141])
+	s=arc-20240116; t=1739710719; c=relaxed/simple;
+	bh=Y3Eq5npod820HDDk+whumboey0KpP+cmOx47ILQ2Mn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NfDrS7BLtIord7OkV8GXa5usEoyZv+gzN8b6EpAzuvIxEmVqUEgZNTdOgKUAXs9Pym9XFEdQAehohkzc9tgfjRJT/dS2T4hh5zZqfmSXbrtaiSsHIj2y60wy5C6IV+CpFjvM0VbROfOrHHTA+r3RIooaAn3ByCrJpNwatFKL+vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ZcyZa6Ve; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 56E86342FED;
-	Sun, 16 Feb 2025 12:56:14 +0000 (UTC)
-Date: Sun, 16 Feb 2025 12:56:01 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 2/4] gpio: spacemit: add support for K1 SoC
-Message-ID: <20250216125601-GYA23642@gentoo>
-References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
- <20250121-03-k1-gpio-v4-2-4641c95c0194@gentoo.org>
- <0133988a-b0d9-4451-b06c-480dd7f559cd@riscstar.com>
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 563BF3F296
+	for <linux-gpio@vger.kernel.org>; Sun, 16 Feb 2025 12:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1739710708;
+	bh=PGgtoygEZyqOFgPwIgdXQ26igU8BH6DrWQjW4Xtuubg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=ZcyZa6Ve67ywZ6pUZe/mjRnTB0SXhdrjl9UyBoXevZxODdVozMNQeuymifht8gpmu
+	 4LQ0svN9erH/+NRupuk7YqPaolq4UeyFYucnK/wpw7b0FK1WpneMZOlX+Bozscjk8w
+	 2isiUqEngMfkrTYtH1xI1mUk376EQEIY1E58Ei0IvmFeFqcgbSixJmEK1sHOrZz6KL
+	 zeJEW/6EvwWeWiGfNOfHgW0H+nOjLgwwZ95VNrUlRlPf6KzWvpiTUyFNWVMCq2JH8J
+	 Zh2rQd8aqzvdfRVRWjFy7sqHmjlxJHFFvbVGW6B7WGgycFZ8iF1UOyEYk24L5D0C3t
+	 M9Hp60xgDOReQ==
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fc4dc34291so1358816a91.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Feb 2025 04:58:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739710706; x=1740315506;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PGgtoygEZyqOFgPwIgdXQ26igU8BH6DrWQjW4Xtuubg=;
+        b=fbt0mXF/xSrLSVX1rYKNnAm+XzCylH0X1WW+q+Tk8bckBY89t2P1rwl07JwQCrRTHa
+         nJufbkzi7SopGyD2WYeKyGLZFXAlKn1LuC7Cyt+GYc1cNMl+QMJqwNdkyxLP9nG7CKdJ
+         x5eXRjMDyWZSxlLSWZNDzOAI6OBAdwkaKGRjZOGNZb4DIlW2LuEVyHVYNzlrT/jUZxRQ
+         4M9BodJ4T7H/nX5p21SSjL/KDD4nczl5B2dxFqa84Yy080Q0eUYcdM3cJ/RgwoSnkMlC
+         Ei2d8NI7sPPrT9ZS+zZRWEkKdb9f3XsNuAoepNYg/rrceAJViv+zp8Z3G7x9fFUwtVIY
+         T3Mg==
+X-Gm-Message-State: AOJu0YzFxV74w60u35Vjo76ReyO02IU1yf9X2QVkj9F1448aE4JOWB5s
+	Dk1FykUi4AV6FIsxKiYYLolyu1LPXaeVLNAOzMTYPeIXhTa0XrWQgVT21Vm5RSDbPlCmh8/vJym
+	7zNPXIvryx26iy5Kv/cEC8dXJSF4QJHcJzKxAKua1PURMy6E8bFGcLwD+lvVQ1kNekunAIG0JVk
+	Co6G/z1BA=
+X-Gm-Gg: ASbGnct/Jme+urcNLMkk6QvLXbAdwT0cs/KqLqlc6zN7KcSJXeJiJVquyUTlxqz8MiL
+	nibjSD4Ov3t/dpKdCjYJDWBucGyjTM7pjMYAV/C3ajUw5/82JWwLP7thsccvg6PG1vezPLvG6h5
+	USIZW0US1JVUu1utXXW+3V9eQgCGypy/uqcGMB4MFm/L08PgAn7zsfS11x5q1V9+qwVsnTMC4s6
+	YLyheOj7e796v40+5UiZtR+uCnUCW+QG8acDcDEjpJM1mh2kwn5AGIfYrTfBoPvLpbEo/XAmP9R
+	2X62PQ==
+X-Received: by 2002:a05:6a00:2351:b0:732:564e:1ec6 with SMTP id d2e1a72fcca58-7326193a7e0mr8265465b3a.22.1739710706561;
+        Sun, 16 Feb 2025 04:58:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH0qbE/n5mu0tASnF+5N8DQzEYSJ5Kf7UDRAQHhn/CvgBZfi+nSdGNEDxZcHiqN8kWwHjQUqw==
+X-Received: by 2002:a05:6a00:2351:b0:732:564e:1ec6 with SMTP id d2e1a72fcca58-7326193a7e0mr8265441b3a.22.1739710706210;
+        Sun, 16 Feb 2025 04:58:26 -0800 (PST)
+Received: from z790sl.. ([240f:74:7be:1:eaa9:d394:f21d:ee9f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73256fb09e1sm4316545b3a.65.2025.02.16.04.58.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 04:58:25 -0800 (PST)
+From: Koichiro Den <koichiro.den@canonical.com>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@bgdev.pl,
+	geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	maciej.borzecki@canonical.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/13] Introduce configfs-based interface for gpio-aggregator
+Date: Sun, 16 Feb 2025 21:58:03 +0900
+Message-ID: <20250216125816.14430-1-koichiro.den@canonical.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0133988a-b0d9-4451-b06c-480dd7f559cd@riscstar.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Alex:
+This patch series introduces a configfs-based interface to gpio-aggregator
+to address limitations in the existing 'new_device' interface.
 
-thanks for your fully review
+The existing 'new_device' interface has several limitations:
 
-On 15:11 Sat 15 Feb     , Alex Elder wrote:
-> On 1/20/25 9:38 PM, Yixun Lan wrote:
-> > Implement GPIO functionality which capable of setting pin as
-> > input, output. Also, each pin can be used as interrupt which
-> > support rising, failing, or both edge type trigger.
-> > 
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> 
-> It sounds like the hardware will be modeled in DTS with
-> explicit banks, which makes sense.  The hardware looks like:
-> 
->      GPIO controller ---> bank0 --> GPIOs 0..31
->                      |
->                      |--> bank1 --> GPIOs 0..31
->                      |
->                      |--> bank2 --> GPIOs 0..31
->                      |
->                      ---> bank3 --> GPIOs 0..31
-> 
-> Each bank has its own set of 15 registers, but all are managed
-> by the same controller (driver instance).
-> 
-Yes, this is the hardware, the driver will populate each bank with one gpio chip
+  Issue#1. No way to determine when GPIO aggregator creation is complete.
+  Issue#2. No way to retrieve errors when creating a GPIO aggregator.
+  Issue#3. No way to trace a GPIO line of an aggregator back to its
+           corresponding physical device.
+  Issue#4. The 'new_device' echo does not indicate which virtual
+           gpiochip<N> was created.
+  Issue#5. No way to assign names to GPIO lines exported through an
+           aggregator.
 
-and notice that, we've got some comments from DT maintainer that it's better to
-fold children nodes into parent and switch to three cells gpio node.
-see following link for more detail discussion
-https://lore.kernel.org/all/CACRpkdZYYZ5tUR4gJXuCrix0k56rPPB2TUGP3KpwqMgjs_Vd5w@mail.gmail.com/
+Although Issue#1 to #3 could technically be resolved easily without
+configfs, using configfs offers a streamlined, modern, and extensible
+approach, especially since gpio-sim and gpio-virtuser already utilize
+configfs.
 
-so, probably I will massively re-construct this driver in next version...
+This v3 patch series includes 13 patches:
 
-> Anyway, I'm going to comment on just the code...
-> 
-> > ---
-> >   drivers/gpio/Kconfig            |   7 +
-> >   drivers/gpio/Makefile           |   1 +
-> >   drivers/gpio/gpio-spacemit-k1.c | 295 ++++++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 303 insertions(+)
-> > 
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 56fee58e281e7cac7f287eb04e4c17a17f75ed04..c153f5439649da020ee42c38e88cb8df31a8e307 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -654,6 +654,13 @@ config GPIO_SNPS_CREG
-> >   	  where only several fields in register belong to GPIO lines and
-> >   	  each GPIO line owns a field with different length and on/off value.
-> >   
-> > +config GPIO_SPACEMIT_K1
-> > +	bool "SPACEMIT K1 GPIO support"
-> > +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> > +	select GPIOLIB_IRQCHIP
-> > +	help
-> > +	  Say yes here to support the SpacemiT's K1 GPIO device.
-> > +
-> >   config GPIO_SPEAR_SPICS
-> >   	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
-> >   	depends on PLAT_SPEAR
-> > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> > index af3ba4d81b583842893ea69e677fbe2abf31bc7b..6709ce511a0cf10310a94521c85a2d382dcfa696 100644
-> > --- a/drivers/gpio/Makefile
-> > +++ b/drivers/gpio/Makefile
-> > @@ -156,6 +156,7 @@ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
-> >   obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
-> >   obj-$(CONFIG_GPIO_SLOPPY_LOGIC_ANALYZER) += gpio-sloppy-logic-analyzer.o
-> >   obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
-> > +obj-$(CONFIG_GPIO_SPACEMIT_K1)		+= gpio-spacemit-k1.o
-> >   obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
-> >   obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
-> >   obj-$(CONFIG_GPIO_STMPE)		+= gpio-stmpe.o
-> > diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..de0491af494c10f528095efee9b3a140bdcc0b0d
-> > --- /dev/null
-> > +++ b/drivers/gpio/gpio-spacemit-k1.c
-> > @@ -0,0 +1,295 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> > +/*
-> > + * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
-> > + * Copyright (c) 2025 Yixun Lan <dlan@gentoo.org>
-> > + */
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/init.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/property.h>
-> > +#include <linux/seq_file.h>
-> > +#include <linux/module.h>
-> > +
-> > +/* register offset */
-> 
-> Please add one-line comments explaining the purpose of these registers.
-> I explain my understanding below but you can maybe shorten it and add
-> something to the right of each definition.
-> 
-I didn't consider to add comments in the first place, it's kind of tedious,
- also it will mostly duplicate what in the docs from spacemit
+  Patch#1-7: Prepare for Patch#8
+             * #1: Prepare for the following patches.
+             * #2: Fix an issue that was spotted during v3 preparation.
+             * #3: Add gpio-pseudo.[ch] to reduce code duplications.
+             * #4: Update gpio-sim to use gpio-pseudo.[ch].
+             * #5: Update gpio-virtuser to use gpio-pseudo.[ch].
+             * #6: Update gpio-aggregator to use gpio-pseudo.[ch].
+             * #7: Add aggr_alloc() to reduce code duplication.
+  Patch#8:   Introduce basic configfs interface. Address Issue#1 to #4.
+  Patch#9:   Address Issue#5.
+  Patch#10:  Prepare for Patch#11.
+  Patch#11:  Expose devices created with sysfs to configfs.
+  Patch#12:  Suppress deferred probe for purely configfs-based aggregators.
+  Patch#13:  Documentation for the new configfs interface.
 
-but I can do this, I will try to come up with a short version,
-if it's not enough, then people can always consult the documentation
-
-> > +#define GPLR		0x00
-> 
-> Current port (or pin?) level (port value, regardless of in or out) (r)
-> 
-#define GPLR               0x00	/* GPIO port level register */
-
-> > +#define GPDR		0x0c
-> 
-> Current port direction (clear/0 = in, set/1 = out) (r)
-> This is currently never used.
-> 
-#define GPDR               0x0c /* GPIO port direction register - R/W */
-
-> > +#define GPSR		0x18
-> 
-> Set port value (set output level high for any set bits) (w)
-> 
-#define GPSR               0x18	/* GPIO port set register - W */
-> > +#define GPCR		0x24
-> 
-> Clear port value (set output level low for any set bits) (w)
-#define GPCR               0x24 /* GPIO port clear register - W */
-> 
-..
-> > +#define GRER		0x30
-> 
-> Ports configured for rising edge detect (r)
-> This is currently never used.
-> 
-#define GRER               0x30 /* GPIO port rising edge register R/W */
-> > +#define GFER		0x3c
-> 
-> Ports configured for falling edge detect (r)
-> This is currently never used.
-> 
-#define GFER               0x3c /* GPIO port falling edge register R/W */
-
-No, the above two registers are not used, as I think it's has duplicated functionality
- with GSRER, GCRER, GSFER, GCFER
-
-but, I don't know why the hw design like this, may need more clarification from vendor
-the code from vendor also doesn't touch these two registers
-from my testing, the GPIO interrupt's rising/falling edge trigger works fine without them
-
-> > +#define GEDR		0x48
-> 
-> Edge detect status register (set bits indicate edge detected) (r/w)
-> 
-#define GEDR               0x48 /* GPIO Edge Detect Status Registers - R/W1C */
-
-> > +#define GSDR		0x54
-> 
-> Set port direction (set bits indicate output pins) (w)
-> 
-#define GSDR               0x54 /*  GPIO (set) Direction Registers - W */
-
-> > +#define GCDR		0x60
-> 
-> Clear port direction (set bits indicate input pins) (w)
-> 
-#define GCDR               0x60 /* GPIO (clear) Direction Registers - W */
-> > +#define GSRER		0x6c
-> 
-> Enable rising edge detect (set bits indicate rising edge detect) (w)
-> 
-#define GSRER              0x6c /* GPIO (set) rising edge detect enable register - W */
+N.B. v3 developed based on the latest gpio/for-next as of this writing:
+c88aa6829739 ("phy: mapphone-mdm6600: use gpiod_multi_set_value_cansleep")
 
 
-> > +#define GCRER		0x78
-> 
-> Disable rising edge detect (w)
-> 
-#define GCRER              0x78 /* GPIO (clear) rising edge detect enable register - W */
+v2->v3 changes:
+  - Addressed feedback from Bartosz:
+    * Factored out the common mechanism for synchronizing platform device
+      probe by adding gpio-pseudo.[ch].
+    * Renamed "_auto." prefix to "_sysfs." for auto-generated
+      configfs entries corresponding to sysfs-created devices.
+    * Squashed v2 Patch#3 into its predecessor.
+  - Addressed feedback from Geert:
+    * Factored out duplicate code in struct gpio_aggregator initialization
+      by adding gpio_alloc()/gpio_free() functions. Note that v2 Patch#7
+      was dropped for other reasons as mentioned below, so aggr_free() in
+      v3 is unrelated to the same-named function in v2.
+    * Removed redundant parsing of gpio-line-names and unnecessary
+      chip->names assignments; squashed v2 Patch#4 + v2 Patch#5 into v3
+      Patch#9.
+    * Updated to use sysfs_emit().
+    * Updated Kconfig (select CONFIGFS_FS).
+    * Fixed typos, coding style issues, missing const qualifiers, and other
+      minor issues.
+  - Resolved an issue that was spotted during v3 preparation. See Patch#2.
+  - Reordered resource initialization order in gpio_aggregator_init() to
+    both eliminate a potential race condition (as noted in the source code
+    comment) and simplify the code. See Patch#8. This enabled:
+    * Removal of v2 Patch#7.
+    * Merging of aggr_unregister_lines() and aggr_free_lines() into a
+      unified function.
+  - Disabled 'delete_device' functionality for devices created via configfs
+    for simplicity. It was mistakenly allowed in v2 and proved buggy. See
+    Patch #8.
 
-> > +#define GSFER		0x84
-> 
-> Enable falling edge detect (set bits indicate falling edge detect) (w)
-> 
+RFC->v2 changes:
+  - Addressed feedback from Bartosz:
+    * Expose devices created with sysfs to configfs.
+    * Drop 'num_lines' attribute.
+    * Fix bugs and crashes.
+    * Organize internal symbol prefixes more cleanly.
+  - Split diffs for improved reviewability.
+  - Update kernel doc to reflect the changes.
 
-#define GSFER              0x84 /* GPIO (set) falling edge detect enable register - W */
+v2: https://lore.kernel.org/all/20250203031213.399914-1-koichiro.den@canonical.com/
+RFC (v1): https://lore.kernel.org/linux-gpio/20250129155525.663780-1-koichiro.den@canonical.com/T/#u
 
-> > +#define GCFER		0x90
-> 
-> Disable falling edge detect (w)
-> 
-#define GCFER              0x90 /* GPIO (clear) falling edge detect enable register - W */
 
-> > +#define GAPMASK		0x9c
-> 
-> I don't know what this is.  You write it with ~0 after you
-> clear both rising and falling edge detection on all 32 pins.
-> 
-I haven't found documentation from spacemit's web, just copied the logic from vendor code..
+Koichiro Den (13):
+  gpio: aggregator: reorder functions to prepare for configfs
+    introduction
+  gpio: aggregator: protect driver attr handlers against module unload
+  gpio: pseudo: common helper functions for pseudo gpio devices
+  gpio: sim: convert to use gpio-pseudo utilities
+  gpio: virtuser: convert to use gpio-pseudo utilities
+  gpio: aggregator: convert to use gpio-pseudo utilities
+  gpio: aggregator: add aggr_alloc()/aggr_free()
+  gpio: aggregator: introduce basic configfs interface
+  gpio: aggregator: add 'name' attribute for custom GPIO line names
+  gpio: aggregator: rename 'name' to 'key' in aggr_parse()
+  gpio: aggregator: expose aggregator created via legacy sysfs to
+    configfs
+  gpio: aggregator: cancel deferred probe for devices created via
+    configfs
+  Documentation: gpio: document configfs interface for gpio-aggregator
 
-from my understanding (best guess), it's the mask bit to AP (application processor)
-writing 1 should enable GPIO interrupt functionality to AP?
-
-> > +#define GCPMASK		0xa8
-> 
-> I don't know what this is.  It's currently never used.
-> 
-my guess, it's used to mask bits to disable interrupt to AP? 
-since we don't need to do this, so not used 
-
-> > +
-> > +#define K1_BANK_GPIO_NUMBER	(32)
-> 
-> No need for parentheses around a simple constant.
-> 
-Ok
-
-> > +
-> > +#define to_spacemit_gpio_port(x) container_of((x), struct spacemit_gpio_port, gc)
-> > +
-> > +struct spacemit_gpio;
-> > +
-> 
-> I might just not understand what a "port" means in this context
-> (I think here it represents a "bank" of 32 GPIOs.)  Based on the
-> DT discussion it seems like your structures might change, and
-> I'd like to know what you'll call them.
-> 
-> Here are terms I'll use:  There will be a top-level "controller"
-> structure which will be able to access four distinct "banks",
-> each of which has 32 "ports".
-> 
-what I mean is "ports == banks", but after looking at docs and take your suggestion here,
-we'd might better rename "ports" to "banks"
-
-> > +struct spacemit_gpio_port {
-> > +	struct gpio_chip		gc;
-> > +	struct spacemit_gpio		*gpio;
-> > +	struct fwnode_handle		*fwnode;
-> > +	void __iomem			*base;
-> > +	int				irq;
-> > +	u32				irq_mask;
-> > +	u32				irq_rising_edge;
-> > +	u32				irq_falling_edge;
-> > +	u32				index;
-> > +};
-> > +
-> > +struct spacemit_gpio {
-> > +	struct	device			*dev;
-> > +	struct spacemit_gpio_port	*ports;
-> > +	u32				nr_ports;
-> > +};
-> > +
-> 
-> Basically all of the write registers allow you to specify an
-> entire mask of bits, where the register write changes the
-> state of every port in a bank whose corresponding bit is set.
-yes, these registers are only able to W1 (write), not readable,
-also write 0 takes no effect
-
-> That capability is probably worth exposing, even though the
-> driver currently doesn't use it.
-> 
-no idea how to expose, or where it can be used..
-
-> Meanwhile, most (maybe all) of your functions are only used
-> to update the state of a single port in a bank.
-> 
-right
-
-> I think the argument names should distinguish these two cases.
-> I find the argument name "bit" (which now represents a 32-bit
-> mask with only one bit set) to be ambiguous.
-> 
-> If exactly one port is affected, maybe its number (0-31) can
-> be passed as the argument.  But where multiple ports in a
-> bank can be affected by the same operation, pass a "mask".
-> 
-I got your idea, and I will see what I can do..
-
-> > +static inline void spacemit_clear_edge_detection(struct spacemit_gpio_port *port, u32 bit)
-> > +{
-> 
-> I'd do:
-> 	if (bit & port->irq_rising_edge)
-> 		writel(bit, port->base + GSRER);
-> 
-Ok, strictly we can add extra checking
-
-> (And similar below, and in spacemit_set_edge_detection().)
-> 
-> > +	writel(bit, port->base + GCRER);
-> > +	writel(bit, port->base + GCFER);
-> > +}
-> > +
-> 
-> Two comments about the function above and the next one:
-> - I think their names should be about masking IRQs, not about
->    edge detection.
-> - Each is called only once, and they're trivial enough that I
->    don't think encapsulating them in a function adds any value.
->    Just open-code them where they're used.
-> 
-I thought giving a function name would make it more readable,
-it shouldn't bring extra price as compiler will inline it
-
-but, I'm open mind with this, "open-code + one line comment" is also fine
-
-> > +static inline void spacemit_set_edge_detection(struct spacemit_gpio_port *port, u32 bit)
-> > +{
-> > +	writel(bit & port->irq_rising_edge,  port->base + GSRER);
-> > +	writel(bit & port->irq_falling_edge, port->base + GSFER);
-> > +}
-> > +
-> 
-> This is used to disable IRQ generation on all ports in a bank.
-> I would offer the same two comments about this function as I
-> gave above.
-> 
-ok
-
-> > +static inline void spacemit_reset_edge_detection(struct spacemit_gpio_port *port)
-> > +{
-> > +	writel(0xffffffff, port->base + GCFER);
-> > +	writel(0xffffffff, port->base + GCRER);
-> > +	writel(0xffffffff, port->base + GAPMASK);
-> > +
-> 
-> Use names that align with the callback function names.  I.e.,
-> this should be spacemit_irq_set_type().
-> 
-ok
-> > +static int spacemit_gpio_irq_type(struct irq_data *d, unsigned int type)
-> > +{
-> > +	struct spacemit_gpio_port *port = irq_data_get_irq_chip_data(d);
-> > +	u32 bit = BIT(irqd_to_hwirq(d));
-> > +
-> > +	if (type & IRQ_TYPE_EDGE_RISING) {
-> > +		port->irq_rising_edge |= bit;
-> 
-> Here too, maybe avoid doing the write if the bit was already
-> set in the rising edge mask.
-> 
-I thought it's tedious to do extra checking.. kind of unnecessary
-making the mask bit match underlying hw write operation is more intuitive
-
-> > +		writel(bit, port->base + GSRER);
-> > +	} else {
-> > +		port->irq_rising_edge &= ~bit;
-> > +		writel(bit, port->base + GCRER);
-> > +	}
-> > +
-> > +	if (type & IRQ_TYPE_EDGE_FALLING) {
-> > +		port->irq_falling_edge |= bit;
-> > +		writel(bit, port->base + GSFER);
-> > +	} else {
-> > +		port->irq_falling_edge &= ~bit;
-> > +		writel(bit, port->base + GCFER);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
-> > +{
-> > +	struct spacemit_gpio_port *port = dev_id;
-> > +	unsigned long pending;
-> > +	u32 n, gedr;
-> > +
-> > +	gedr = readl(port->base + GEDR);
-> > +	if (!gedr)
-> > +		return IRQ_NONE;
-> > +
-> > +	writel(gedr, port->base + GEDR);
-> 
-> I'd have the blank line here, instead of above the writel().
-> 
-ok
-
-> > +	gedr = gedr & port->irq_mask;
-> 
-> 	pending = gedr & port->irq_mask;
-> 	if (!pending)
-> 
-> > +
-> > +	if (!gedr)
-> > +		return IRQ_NONE;
-> > +
-> > +	pending = gedr;
-> > +
-> > +	for_each_set_bit(n, &pending, BITS_PER_LONG)
-> > +		handle_nested_irq(irq_find_mapping(port->gc.irq.domain, n));
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> 
-> I don't think "muxed" is necessary in these names.  Just call
-> this spacemit_irq_ack().
-> 
-ok
-> > +static void spacemit_ack_muxed_gpio(struct irq_data *d)
-> > +{
-> > +	struct spacemit_gpio_port *port = irq_data_get_irq_chip_data(d);
-> > +
-> > +	writel(BIT(irqd_to_hwirq(d)), port->base + GEDR);
-> > +}
-> > +
-> 
-> spacemit_irq_mask()
-> 
-ok
-> > +static void spacemit_mask_muxed_gpio(struct irq_data *d)
-> > +{
-> > +	struct spacemit_gpio_port *port = irq_data_get_irq_chip_data(d);
-> > +	u32 bit = BIT(irqd_to_hwirq(d));
-> > +
-> > +	port->irq_mask &= ~bit;
-> > +
-> 
-> As I said earlier, I think you should just open-code the two
-> writes done by the next function.
-> 
-ok
-> > +	spacemit_clear_edge_detection(port, bit);
-> > +}
-> > +
-> 
-> spacemit_irq_unmask()
-> 
-ok
-> > +static void spacemit_unmask_muxed_gpio(struct irq_data *d)
-> > +{
-> > +	struct spacemit_gpio_port *port = irq_data_get_irq_chip_data(d);
-> > +	u32 bit = BIT(irqd_to_hwirq(d));
-> > +
-> > +	port->irq_mask |= bit;
-> > +
-> 
-> Open-code this call too.
-> 
-ok
-> > +	spacemit_set_edge_detection(port, bit);
-> > +}
-> > +
-> > +static void spacemit_irq_print_chip(struct irq_data *data, struct seq_file *p)
-> > +{
-> > +	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-> > +	struct spacemit_gpio_port *port = to_spacemit_gpio_port(gc);
-> > +
-> > +	seq_printf(p, "%s-%d", dev_name(gc->parent), port->index);
-> > +}
-> > +
-> > +static struct irq_chip spacemit_muxed_gpio_chip = {
-> > +	.name		= "k1-gpio-irqchip",
-> > +	.irq_ack	= spacemit_ack_muxed_gpio,
-> > +	.irq_mask	= spacemit_mask_muxed_gpio,
-> > +	.irq_unmask	= spacemit_unmask_muxed_gpio,
-> > +	.irq_set_type	= spacemit_gpio_irq_type,
-> > +	.irq_print_chip	= spacemit_irq_print_chip,
-> > +	.flags		= IRQCHIP_IMMUTABLE,
-> > +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> > +};
-> > +
-> > +static int spacemit_gpio_get_ports(struct device *dev, struct spacemit_gpio *gpio,
-> > +				   void __iomem *regs)
-> > +{
-> > +	struct spacemit_gpio_port *port;
-> > +	u32 i = 0, offset;
-> > +
-> > +	gpio->nr_ports = device_get_child_node_count(dev);
-> > +	if (gpio->nr_ports == 0)
-> > +		return -ENODEV;
-> > +
-> > +	gpio->ports = devm_kcalloc(dev, gpio->nr_ports, sizeof(*gpio->ports), GFP_KERNEL);
-> > +	if (!gpio->ports)
-> > +		return -ENOMEM;
-> > +
-> > +	device_for_each_child_node_scoped(dev, fwnode)  {
-> 
-> Make sure i never exceeds gpio->nr_ports.
-> 
-Ok, will see, as this function need to refactor
-
-> > +		port		= &gpio->ports[i];
-> > +		port->fwnode	= fwnode;
-> > +		port->index	= i++;
-> > +
-> > +		if (fwnode_property_read_u32(fwnode, "reg", &offset))
-> > +			return -EINVAL;
-> > +
-> > +		port->base	= regs + offset;
-> > +		port->irq	= fwnode_irq_get(fwnode, 0);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int spacemit_gpio_add_port(struct spacemit_gpio *gpio, int index)
-> > +{
-> > +	struct spacemit_gpio_port *port;
-> > +	struct device *dev = gpio->dev;
-> > +	struct gpio_irq_chip *girq;
-> > +	void __iomem *dat, *set, *clr, *dirin, *dirout;
-> > +	int ret;
-> > +
-> > +	port = &gpio->ports[index];
-> > +	port->gpio = gpio;
-> > +
-> > +	dat	= port->base + GPLR;
-> > +	set	= port->base + GPSR;
-> > +	clr	= port->base + GPCR;
-> > +	dirin	= port->base + GCDR;
-> > +	dirout	= port->base + GSDR;
-> > +
-> > +	/* This registers 32 GPIO lines per port */
-> > +	ret = bgpio_init(&port->gc, dev, 4, dat, set, clr, dirout, dirin,
-> > +			 BGPIOF_UNREADABLE_REG_SET | BGPIOF_UNREADABLE_REG_DIR);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to init gpio chip for port\n");
-> > +
-> > +	port->gc.label		= dev_name(dev);
-> > +	port->gc.fwnode		= port->fwnode;
-> > +	port->gc.request	= gpiochip_generic_request;
-> > +	port->gc.free		= gpiochip_generic_free;
-> > +	port->gc.ngpio		= K1_BANK_GPIO_NUMBER;
-> > +	port->gc.base		= -1;
-> > +
-> > +	girq			= &port->gc.irq;
-> > +	girq->threaded		= true;
-> > +	girq->handler		= handle_simple_irq;
-> > +
-> > +	gpio_irq_chip_set_chip(girq, &spacemit_muxed_gpio_chip);
-> > +
-> > +	spacemit_reset_edge_detection(port);
-> > +
-> 
-> I *think* you should call devm_gpiochip_add_data() *before*
-> you register the interrupt handler, because conceivably an
-> interrupt could fire the instant it's registered.  Maybe it
-> doesn't matter though.
-> 
-good point, I will check this, we probably better to enable(unmask) interrupt
- after all registration is done
-
-> 					-Alex
-> 
-> > +	ret = devm_request_threaded_irq(dev, port->irq, NULL,
-> > +					spacemit_gpio_irq_handler,
-> > +					IRQF_ONESHOT | IRQF_SHARED,
-> > +					port->gc.label, port);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret, "failed to request IRQ\n");
-> > +
-> > +	return devm_gpiochip_add_data(dev, &port->gc, port);
-> > +}
-> > +
-> > +static int spacemit_gpio_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct spacemit_gpio *gpio;
-> > +	struct resource *res;
-> > +	void __iomem *regs;
-> > +	int i, ret;
-> > +
-> > +	gpio = devm_kzalloc(dev, sizeof(*gpio), GFP_KERNEL);
-> > +	if (!gpio)
-> > +		return -ENOMEM;
-> > +
-> > +	gpio->dev = dev;
-> > +
-> > +	regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-> > +	if (IS_ERR(regs))
-> > +		return PTR_ERR(regs);
-> > +
-> > +	ret = spacemit_gpio_get_ports(dev, gpio, regs);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "fail to get gpio ports\n");
-> > +
-> > +	for (i = 0; i < gpio->nr_ports; i++) {
-> > +		ret = spacemit_gpio_add_port(gpio, i);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id spacemit_gpio_dt_ids[] = {
-> > +	{ .compatible = "spacemit,k1-gpio" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> > +static struct platform_driver spacemit_gpio_driver = {
-> > +	.probe		= spacemit_gpio_probe,
-> > +	.driver		= {
-> > +		.name	= "k1-gpio",
-> > +		.of_match_table = spacemit_gpio_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(spacemit_gpio_driver);
-> > +
-> > +MODULE_AUTHOR("Yixun Lan <dlan@gentoo.org>");
-> > +MODULE_DESCRIPTION("GPIO driver for SpacemiT K1 SoC");
-> > +MODULE_LICENSE("GPL");
-> > 
-> 
+ .../admin-guide/gpio/gpio-aggregator.rst      |  107 ++
+ drivers/gpio/Kconfig                          |    8 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-aggregator.c                | 1129 ++++++++++++++---
+ drivers/gpio/gpio-pseudo.c                    |   86 ++
+ drivers/gpio/gpio-pseudo.h                    |   24 +
+ drivers/gpio/gpio-sim.c                       |   84 +-
+ drivers/gpio/gpio-virtuser.c                  |   73 +-
+ 8 files changed, 1189 insertions(+), 323 deletions(-)
+ create mode 100644 drivers/gpio/gpio-pseudo.c
+ create mode 100644 drivers/gpio/gpio-pseudo.h
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.45.2
+
 
