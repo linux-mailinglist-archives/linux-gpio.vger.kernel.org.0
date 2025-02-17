@@ -1,84 +1,84 @@
-Return-Path: <linux-gpio+bounces-16156-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16157-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0152FA38744
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:12:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A48DAA38747
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:13:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE42A188C85C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:12:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DA8C188C7C6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:13:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415CA2236F6;
-	Mon, 17 Feb 2025 15:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20ADC2236F6;
+	Mon, 17 Feb 2025 15:13:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DC9153BE4;
-	Mon, 17 Feb 2025 15:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076AA153BE4;
+	Mon, 17 Feb 2025 15:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739805115; cv=none; b=H3PdofwlbaE3h2N517Nh69J2I6dybN8o6tR2UblZUm5iSTGjNy49xTRiJjkDVcKIle37K8zZSob5uS0+aGpLS//L3Bhe//pEVNQJXwqwpPm8d9JnM61jpBbdFlHIFjhpTnE/V9jIB/P4ZeiIwZaIFfubL2mgCKL1oYZ8pKgSSJc=
+	t=1739805190; cv=none; b=HCbo3NkZRyqpcZ06CMqTQhrYNvPGBwxL8PX043W233R6dz5q+lmoKeUSSoA92AkHipa1ScLZne/NTKtlh04B0rvt+aMENXRS8XNj/xVu18dyf0iML7pim1n+G7YX/1iAk3XRo6XSuhkyB2SEAiLCwz5+qOhOtvUWBmoti85sduc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739805115; c=relaxed/simple;
-	bh=CX0cKuWIN/izcmRShlftpFObnQaAOxE9smmXy7S4rN8=;
+	s=arc-20240116; t=1739805190; c=relaxed/simple;
+	bh=WqBPs7TXi1TZ+t7BcT1Oc3H2Z/zeW3wGdbgAmH8XYY0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LYmyWZmC4V7oxDIky215ws4aU2wAjs5bDjL0WjuTZSAk8n6DwW/xiV8PeCsjoQ93AuURxp9WE3MLBimsgpP6765OKgpdLnKCtH62GxxCt2YRfUpiBwCvQv3vvNwD1ihOj6P40h9+z1btHOHhM8zvkvlzFGdMG/+f4x1pSk7Eaw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.170
+	 To:Cc:Content-Type; b=mmYhFlfJvbajH1Jehn+H57B8onXGPnNwjfx4vwD+Stlen0J8ulZLvA1Wd6jqju8ppN3zL9wFy6nTzSB6TXJrMQ2I6FOAIzPKdHvDAbOgEPTOSBr1EB5a8nGAl7C+ux+lemZ0PAw0TwLrasFNh+i0UV3PUPegnvjVHfTbHfWGeP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30a29f4bd43so13223831fa.0;
-        Mon, 17 Feb 2025 07:11:51 -0800 (PST)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307c13298eeso45966241fa.0;
+        Mon, 17 Feb 2025 07:13:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739805109; x=1740409909;
+        d=1e100.net; s=20230601; t=1739805185; x=1740409985;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :reply-to:in-reply-to:references:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CX0cKuWIN/izcmRShlftpFObnQaAOxE9smmXy7S4rN8=;
-        b=iFUdX6H2WJ4tNge5kwtZkgtcafLDYRl6iQkytXA/jigtHf+orWvYrJsn6TpFDBPEVH
-         M4ySPH9ww+R2SwiKmD6n/NUg17IY8xPNOEhpZsZqz2u67Ha7xjHQ6bzr9XFxOb95FNgU
-         A2vKDtKRlw7srC8I3n1ULyk7eB99UEQpgP1RESfvLmhxNZvrXdHY4pD983EnAKfoepXr
-         c2ytzu+SSdD+v66ldVo2b1P2A76vleDpRzSojUJEJIEFh+roBOgB6hknVx/kzKsM9xF0
-         YvySV00MEm+PW6yyJi4OgO0a2iK4HnScaqk2Hw5+ddZFTchyWOYnYdBcs2TGjMjiuKSO
-         UTFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYoTML8GH7qySOQLr8GAUV3WYUiEbM7cGUj3H5W5xqoWcEA45yJdckILOnejgipfQ25+Ad9NgLMO24fdmP@vger.kernel.org, AJvYcCV1VQKpefQiQ+bBRSkmws9yxhmbBJgvTeABGq9P6xyMtQ9ZPs7IWnWjytCvHhkduIC5CPEDq7DtLkEf@vger.kernel.org, AJvYcCWzjH/Sv/DS51CG0qUvA7LUNhLJw34bzobrPIVFBL6ETidCn/URbjLAT4wRgbM5yXLm9I3wtzioJry8xw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxywsegRZfioq7sSF6t2KSVHrdVpQIwjViAwUaK8dRssiNFnJgL
-	YFBQh02McPMRniBzr1iWdBQecEjgH4m7nP99kuyMkelQV68mhx8JqHOhA6U8
-X-Gm-Gg: ASbGncuAfRQcpJHRuOzxF9XJBUj1KtivHiJ4OrO2WMMCALIcEA1NKqvmUercWt1119U
-	+4lNGkP3w09pLtRuFV8YD0mXUFJrmW80N8UhOpSmW/uBbSsa2sGpnpUcK7lT8Z/JkYL89YfaZQz
-	CzMENTHZu+D9krFUTK7GomsRoR5gPbPyo0/x4YKVrTxZ1XolUopdQmLt6WLhWSi0WyzFZ9DRAUN
-	UogJiUCR6ynApJCgAzh4qeVggbKE6U5HLmJp5GwWVX3IPWoKBpUcr+PPdJQprd0oguc6415RtY5
-	vuue0UtVmyhnAyGl24eVkYqm7RMJPbTRD4jvDF3TpqhzzHyM
-X-Google-Smtp-Source: AGHT+IHj++LTeIzgNST746kkDxodEu67oATgfZGueeInGzoWvyYEL5TkAsuwx5AUOYyg7LdHQBAQkg==
-X-Received: by 2002:a2e:380f:0:b0:306:10d6:28ad with SMTP id 38308e7fff4ca-30927a2e2a2mr23540951fa.8.1739805109320;
-        Mon, 17 Feb 2025 07:11:49 -0800 (PST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30922dc69bdsm13543631fa.12.2025.02.17.07.11.48
+        bh=WqBPs7TXi1TZ+t7BcT1Oc3H2Z/zeW3wGdbgAmH8XYY0=;
+        b=SVE8uJBsU0Zcx654UHEXuJjlhT7obVYG9SzxDJC2mKch+k6P+Mcj/zzz3vOd1ePtNW
+         llwJWbBjWRWtlFgpjaYDvNx+iQDCctyC1iTGvD9FS6B+nPrO3hQ9PxqFwqWclrTEJXwl
+         dSiVI/hq6ssrQGJbTuxVuevcuoUBfBDX/fpRt0WPSjJmTaPZseBsrl0DMdOMXFV09C0G
+         /3SA8GHYaAmKJikSSrVQ+5/gHCQop0ABYvN7nUzU+hlGNw9bnDeOZdQ9omHEq5++sq1+
+         H3zs9CpnZawhELpiqUDQkt9CJdH2N9em1XUv1cNuAhy/Nn+ofHfnVrZJjdW8085sZvjQ
+         +A8g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+qD23RB3ZZRhiibbeoaTmR5c5B0EIyg2/sotN1utClgWWH5Y9p++RDlQDcFCljYZu/oL5CAFGCa90wGdx@vger.kernel.org, AJvYcCWCLW/nvU4xkj+D4KjanV4bftQDQjp5QJ477i0+JixTOc6Hasq45tOzsLQvmuxEexJwW7QdGeOxcfS8Ig==@vger.kernel.org, AJvYcCWm8ZCW36DSG8QPFcCXkmc5ql6pjx3ddTiLsk5SebWXVuJKLXzwI+8gR/BjrT/k5ZKGH3SrmfTN32BO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpfMxs8/B36p3TsWGEPw/zMSDyIxxVs/uSpLBVacgj8FxReqer
+	UToMUU8Bt1OiGB5pIb5TR/djK+L2u9XpsMOenE3s9vPSva4S/JCr4vJ5TYV0
+X-Gm-Gg: ASbGncvt/yJWk1dMnTdDW99W4x2vDTmUP7FuRVzNz+qjJiFkxrzhSlCknFt/xekSH8k
+	CGqZWThvr1I72Lfxy9JqhjDxjax4MCgLlfty8fAQdt51b1VSHeW08aZyiSivjoFltrVUcXpJZmm
+	+lr/dd5uwHgWHGXQMvUXsD3VJxypU1vk2BbOOdkQ831D3nemxHWwqQXwCYe0dF+sR6JTAZR1uzM
+	X4KPWSF5d3MZzS6jQZjtccZU6qkH97lncpVZAHEs0aKI2oDyHXP5cbBpS/qgv2VYpkRThdfClNf
+	6W3qo8JvP82wv/mFo2VekGd669jDOtTSc7vadBRTmDPN1mHT
+X-Google-Smtp-Source: AGHT+IHTsNMZxlzR4SEolEYaoZ1TqhJ/B9csMx4+jJe+ehMTAJFy8DTqIfDM19IJqTgBA1X5O7hjnw==
+X-Received: by 2002:a2e:910e:0:b0:309:28c9:54c3 with SMTP id 38308e7fff4ca-30928c955aamr24560051fa.12.1739805185385;
+        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a27206f15sm6691021fa.61.2025.02.17.07.13.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 07:11:49 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3072f8dc069so45721231fa.3;
-        Mon, 17 Feb 2025 07:11:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUxVmwRrvOH0h6OVhImMgIsOcfcAcHbwX/Z+Mz+3jMDYITgyEp/z1CDvC76GB5RebOvnaiyk3IhVlKjTlUc@vger.kernel.org, AJvYcCVPX8LpOyuDPFBXxZPwg8KpX2wSguIRbP8hhXCxmEN01CTtDYNEf8V7/Koi5ns+nAi4UdlDrXyPw1Kilw==@vger.kernel.org, AJvYcCXOXWo2+igayphfla5YxFcKWKPEmjUEJQJDqOYukPRj6o40h4oo247TiODB2EAtDXOSsAr8ym07hWpz@vger.kernel.org
-X-Received: by 2002:a2e:8757:0:b0:308:eb58:657d with SMTP id
- 38308e7fff4ca-30927952830mr26737901fa.0.1739805108110; Mon, 17 Feb 2025
- 07:11:48 -0800 (PST)
+        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307c13298eeso45965951fa.0;
+        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV/vnJLy4AD88mx+dUHOnVWzZWLu2yHq14iUPupGoijXs/hO9ISXn5xob6f32e4iLdZu/xokPz+1Oj6CQ==@vger.kernel.org, AJvYcCVokJRMXJYE6pk9FzQw7ZfFjd4Nj+99f0YJoxCBIGUkM3tiFe+/GqJYsjcP7VV37/q5Tb2oqv423Qkf@vger.kernel.org, AJvYcCW4dnL9qdUwx4UM9bWNhaHnbksEfqRjVTtjdIEcrOQC+BnABLbH21l6XkkRiWjJGPMYF82gQhnb7iNysUIk@vger.kernel.org
+X-Received: by 2002:a2e:bcc1:0:b0:308:e521:591 with SMTP id
+ 38308e7fff4ca-30928b55670mr39756701fa.16.1739805185075; Mon, 17 Feb 2025
+ 07:13:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-3-andre.przywara@arm.com>
-In-Reply-To: <20250214003734.14944-3-andre.przywara@arm.com>
+References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-4-andre.przywara@arm.com>
+In-Reply-To: <20250214003734.14944-4-andre.przywara@arm.com>
 Reply-To: wens@csie.org
 From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 17 Feb 2025 23:11:35 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66gSuv6egek05QfpRZNH=Rn-eZXxQ_GVfDWpJ-HuojX_w@mail.gmail.com>
-X-Gm-Features: AWEUYZnwpP6pvAEUU7QbWQG6w8gtn-pOi6TW3aQOb0FOCh7uCxrlelNQmMUxnZU
-Message-ID: <CAGb2v66gSuv6egek05QfpRZNH=Rn-eZXxQ_GVfDWpJ-HuojX_w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] pinctrl: sunxi: increase number of GPIO bank regulators
+Date: Mon, 17 Feb 2025 23:12:52 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65PNymVgAW5gJzoaAN9bCvbNrUPh=MOGT71wimkGnT8Hg@mail.gmail.com>
+X-Gm-Features: AWEUYZkPH3DyqUAjqlsWUrgFVAz25I3j7gx6gVj35UBevzeFHJcZOXdE_CBm2aU
+Message-ID: <CAGb2v65PNymVgAW5gJzoaAN9bCvbNrUPh=MOGT71wimkGnT8Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] pinctrl: sunxi: move bank K register offset
 To: Andre Przywara <andre.przywara@arm.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -92,13 +92,24 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Feb 14, 2025 at 8:40=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
 com> wrote:
 >
-> By design, the Allwinner pinctrl IP always supported up to 11 GPIO banks,
-> though no SoC ever used more than 9 banks so far.
-> The Allwinner A523 has pins in all 11 banks, which exceeds the number of
-> per-bank regulators that we currently support, as this was set to 9.
+> The Allwinner pincontroller register layout used to allow for at least
+> 11 banks per controller, any more banks would reside at a second
+> controller instance.
+> When the per-bank register map size was increased with the D1, it turned
+> out that the last bank (port K) of those maximum 11 banks actually would
+> not fit anymore in the 512 bytes reserved for the pincontroller registers=
+.
+> On new SoCs Allwinner thus moved the last bank beyond the existing
+> registers, at offset 0x500.
 >
-> Increase the size of the array to hold up to 11 regulator structs, to
-> support pins in bank J and K as well.
+> So far SoCs never used more than 9 banks per controller, but the new
+> Allwinner A523 actually uses all 11 banks. Since that SoC also uses the
+> extended layout, its PortK needs to be programmed at offset 0x500.
+>
+> Factor out the bank offset calculation into a new function, and handle
+> the case for the last bank separately. Since none of the older SoCs ever
+> used PortK, we can ignore this case, and just always use offset 0x500
+> for the last bank.
 >
 > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
