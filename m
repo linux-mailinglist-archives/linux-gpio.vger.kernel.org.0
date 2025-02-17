@@ -1,117 +1,105 @@
-Return-Path: <linux-gpio+bounces-16157-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16158-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A48DAA38747
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:13:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C8C9A3874B
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:14:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DA8C188C7C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:13:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E21B3A9630
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:13:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20ADC2236F6;
-	Mon, 17 Feb 2025 15:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0138B223719;
+	Mon, 17 Feb 2025 15:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OLZuZoX0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076AA153BE4;
-	Mon, 17 Feb 2025 15:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CAB153BE4;
+	Mon, 17 Feb 2025 15:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739805190; cv=none; b=HCbo3NkZRyqpcZ06CMqTQhrYNvPGBwxL8PX043W233R6dz5q+lmoKeUSSoA92AkHipa1ScLZne/NTKtlh04B0rvt+aMENXRS8XNj/xVu18dyf0iML7pim1n+G7YX/1iAk3XRo6XSuhkyB2SEAiLCwz5+qOhOtvUWBmoti85sduc=
+	t=1739805235; cv=none; b=h/bmMFlIhof+CgTSONiKr48NcjrzaonO+YM+aq5/U9a4kaD262yRV1Jn5vv1bAOSNzuY+EhNt1ZNFY2c210qt9Vz7f3xcEtTsIaUV1/guZs1tQg5ZyVnWsmgD51ZD02MgQPVi6WL2F51J9jD708tcDJm+ptcNeT7YYLEcLudwXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739805190; c=relaxed/simple;
-	bh=WqBPs7TXi1TZ+t7BcT1Oc3H2Z/zeW3wGdbgAmH8XYY0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mmYhFlfJvbajH1Jehn+H57B8onXGPnNwjfx4vwD+Stlen0J8ulZLvA1Wd6jqju8ppN3zL9wFy6nTzSB6TXJrMQ2I6FOAIzPKdHvDAbOgEPTOSBr1EB5a8nGAl7C+ux+lemZ0PAw0TwLrasFNh+i0UV3PUPegnvjVHfTbHfWGeP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307c13298eeso45966241fa.0;
-        Mon, 17 Feb 2025 07:13:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739805185; x=1740409985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WqBPs7TXi1TZ+t7BcT1Oc3H2Z/zeW3wGdbgAmH8XYY0=;
-        b=SVE8uJBsU0Zcx654UHEXuJjlhT7obVYG9SzxDJC2mKch+k6P+Mcj/zzz3vOd1ePtNW
-         llwJWbBjWRWtlFgpjaYDvNx+iQDCctyC1iTGvD9FS6B+nPrO3hQ9PxqFwqWclrTEJXwl
-         dSiVI/hq6ssrQGJbTuxVuevcuoUBfBDX/fpRt0WPSjJmTaPZseBsrl0DMdOMXFV09C0G
-         /3SA8GHYaAmKJikSSrVQ+5/gHCQop0ABYvN7nUzU+hlGNw9bnDeOZdQ9omHEq5++sq1+
-         H3zs9CpnZawhELpiqUDQkt9CJdH2N9em1XUv1cNuAhy/Nn+ofHfnVrZJjdW8085sZvjQ
-         +A8g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+qD23RB3ZZRhiibbeoaTmR5c5B0EIyg2/sotN1utClgWWH5Y9p++RDlQDcFCljYZu/oL5CAFGCa90wGdx@vger.kernel.org, AJvYcCWCLW/nvU4xkj+D4KjanV4bftQDQjp5QJ477i0+JixTOc6Hasq45tOzsLQvmuxEexJwW7QdGeOxcfS8Ig==@vger.kernel.org, AJvYcCWm8ZCW36DSG8QPFcCXkmc5ql6pjx3ddTiLsk5SebWXVuJKLXzwI+8gR/BjrT/k5ZKGH3SrmfTN32BO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpfMxs8/B36p3TsWGEPw/zMSDyIxxVs/uSpLBVacgj8FxReqer
-	UToMUU8Bt1OiGB5pIb5TR/djK+L2u9XpsMOenE3s9vPSva4S/JCr4vJ5TYV0
-X-Gm-Gg: ASbGncvt/yJWk1dMnTdDW99W4x2vDTmUP7FuRVzNz+qjJiFkxrzhSlCknFt/xekSH8k
-	CGqZWThvr1I72Lfxy9JqhjDxjax4MCgLlfty8fAQdt51b1VSHeW08aZyiSivjoFltrVUcXpJZmm
-	+lr/dd5uwHgWHGXQMvUXsD3VJxypU1vk2BbOOdkQ831D3nemxHWwqQXwCYe0dF+sR6JTAZR1uzM
-	X4KPWSF5d3MZzS6jQZjtccZU6qkH97lncpVZAHEs0aKI2oDyHXP5cbBpS/qgv2VYpkRThdfClNf
-	6W3qo8JvP82wv/mFo2VekGd669jDOtTSc7vadBRTmDPN1mHT
-X-Google-Smtp-Source: AGHT+IHTsNMZxlzR4SEolEYaoZ1TqhJ/B9csMx4+jJe+ehMTAJFy8DTqIfDM19IJqTgBA1X5O7hjnw==
-X-Received: by 2002:a2e:910e:0:b0:309:28c9:54c3 with SMTP id 38308e7fff4ca-30928c955aamr24560051fa.12.1739805185385;
-        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a27206f15sm6691021fa.61.2025.02.17.07.13.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307c13298eeso45965951fa.0;
-        Mon, 17 Feb 2025 07:13:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV/vnJLy4AD88mx+dUHOnVWzZWLu2yHq14iUPupGoijXs/hO9ISXn5xob6f32e4iLdZu/xokPz+1Oj6CQ==@vger.kernel.org, AJvYcCVokJRMXJYE6pk9FzQw7ZfFjd4Nj+99f0YJoxCBIGUkM3tiFe+/GqJYsjcP7VV37/q5Tb2oqv423Qkf@vger.kernel.org, AJvYcCW4dnL9qdUwx4UM9bWNhaHnbksEfqRjVTtjdIEcrOQC+BnABLbH21l6XkkRiWjJGPMYF82gQhnb7iNysUIk@vger.kernel.org
-X-Received: by 2002:a2e:bcc1:0:b0:308:e521:591 with SMTP id
- 38308e7fff4ca-30928b55670mr39756701fa.16.1739805185075; Mon, 17 Feb 2025
- 07:13:05 -0800 (PST)
+	s=arc-20240116; t=1739805235; c=relaxed/simple;
+	bh=4IwqyRNmeNmWY2pPTppluqov5K7ZxD3mXcgZMuOACNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3QOcJrwQc8oQXgdF3gBdzRNGEMW6FtWL+1tDZDnkRl0i82jriR/axmC9D0ELPqy6aEpjPRbvwIGJ0YK9UQmp1GNxEAUQ1JlxDPkZYGlan8CynjJeJzAZbQRSkgLMJu/+jiw1dQafE/sdj7I7gKw5iyECDWQ54lE3no+OAA51Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=OLZuZoX0; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CE45922F;
+	Mon, 17 Feb 2025 16:12:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739805150;
+	bh=4IwqyRNmeNmWY2pPTppluqov5K7ZxD3mXcgZMuOACNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OLZuZoX0U7kyRiwA0oYGdrPwfZVglVW6ApofXbPf8QFsAAKjx+9D3yAyhk6oK6KMy
+	 gTYtmYvPvqpLUiM4eVV6s55AMJY1z5JCAHZAxMMco07iIlK4Oo54oOaVaXGSjnw1vD
+	 FFBHmNKcNbhit4XVHOpze/F3m7VM5ktwAxIUxCgQ=
+Date: Mon, 17 Feb 2025 17:13:36 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: gomba007@gmail.com
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: gpio: Add support for PCF8574T.
+Message-ID: <20250217151336.GA12410@pendragon.ideasonboard.com>
+References: <20250217-gpio-pcf8574t-v1-0-137e140df5fc@gmail.com>
+ <20250217-gpio-pcf8574t-v1-2-137e140df5fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-4-andre.przywara@arm.com>
-In-Reply-To: <20250214003734.14944-4-andre.przywara@arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 17 Feb 2025 23:12:52 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65PNymVgAW5gJzoaAN9bCvbNrUPh=MOGT71wimkGnT8Hg@mail.gmail.com>
-X-Gm-Features: AWEUYZkPH3DyqUAjqlsWUrgFVAz25I3j7gx6gVj35UBevzeFHJcZOXdE_CBm2aU
-Message-ID: <CAGb2v65PNymVgAW5gJzoaAN9bCvbNrUPh=MOGT71wimkGnT8Hg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] pinctrl: sunxi: move bank K register offset
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250217-gpio-pcf8574t-v1-2-137e140df5fc@gmail.com>
 
-On Fri, Feb 14, 2025 at 8:40=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> The Allwinner pincontroller register layout used to allow for at least
-> 11 banks per controller, any more banks would reside at a second
-> controller instance.
-> When the per-bank register map size was increased with the D1, it turned
-> out that the last bank (port K) of those maximum 11 banks actually would
-> not fit anymore in the 512 bytes reserved for the pincontroller registers=
-.
-> On new SoCs Allwinner thus moved the last bank beyond the existing
-> registers, at offset 0x500.
->
-> So far SoCs never used more than 9 banks per controller, but the new
-> Allwinner A523 actually uses all 11 banks. Since that SoC also uses the
-> extended layout, its PortK needs to be programmed at offset 0x500.
->
-> Factor out the bank offset calculation into a new function, and handle
-> the case for the last bank separately. Since none of the older SoCs ever
-> used PortK, we can ignore this case, and just always use offset 0x500
-> for the last bank.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Hi Tóth,
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Thank you for the patch.
+
+On Mon, Feb 17, 2025 at 02:07:52PM +0100, Tóth János via B4 Relay wrote:
+> From: Tóth János <gomba007@gmail.com>
+> 
+> Add the necessary documentation for PCF8574T.
+> 
+> Signed-off-by: Tóth János <gomba007@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> index 3718103e966a..cbe4cf96e942 100644
+> --- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> @@ -34,6 +34,7 @@ properties:
+>        - nxp,pca9675
+>        - nxp,pcf8574
+>        - nxp,pcf8574a
+> +      - nxp,pcf8574t
+
+Judging from patch 2/2, the PCF8574T is compatible with the PCF8574, the
+only difference being the package. It makes no difference from a
+software point of view. It seems you can simply use nxp,pcf8574 as a
+compatible string in your device tree for the PCF8574T, and this patch
+series isn't needed.
+
+>        - nxp,pcf8575
+>  
+>    reg:
+
+-- 
+Regards,
+
+Laurent Pinchart
 
