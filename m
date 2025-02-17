@@ -1,194 +1,225 @@
-Return-Path: <linux-gpio+bounces-16160-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16161-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE7BEA38850
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:52:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05134A388B6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 17:06:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28C021897FB1
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:49:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54B0A1894E3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 16:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577E62253E0;
-	Mon, 17 Feb 2025 15:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA7A22541D;
+	Mon, 17 Feb 2025 15:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S757mGQv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEF121CA0C;
-	Mon, 17 Feb 2025 15:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8B2149E16;
+	Mon, 17 Feb 2025 15:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807313; cv=none; b=X/5TMVS1lol476UE5YoX6FcVHBDvGZrwBzQHjZnMM9komyaPN2O7wTbeUBikiUjT+F5QbXok92Xs4EYgT2JotP/tqOh79v+XoDw1NvjqnkVgBNJKoSz0aZjfTpZMO2iCK1lBcpoWsFsALHkmTToaTc7YjFFXyMSCzOHv4BO6+kk=
+	t=1739807595; cv=none; b=drDf4hA/Pcmt6NsiVh9YPmnj+EA+di453j0W0/ugzvz7b9b1tQfw/Dfx0WwKbR4t0w7LO3tyZiuvPoLAANMV6d4ND4DpKk6nldxWBaqh7R6CPmuzYWmns1ZRkUiCYonqzpOODH6BURxhKT6BQPt+i/fNNqDFovKNVCEkG0rtpBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807313; c=relaxed/simple;
-	bh=06+HsNBqZbxG8SrKyC7xwIUS/afQ5IoCNqI5xrOzpH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d2VTnYJ3nvyNwtGGz7S3vEu4+1NdQhtXGDhnnMMvxGaTP6pp6W1WNQUadK98JJBVlEKVU2zISLdH2m/1ciPaQSlv3bLcR3eK/tEdS7xw01xmcqRgkTlEKRl/2J5XQUVLsR/zlGm2RKOkfE1KvKcgDLYBLX1mwDM/DeBJQHhLfKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5452c1daabeso2531663e87.1;
-        Mon, 17 Feb 2025 07:48:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739807308; x=1740412108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oT48PO3HfIeDjSDux1vBuhE4VoEwoL5q99u+4AwOVE8=;
-        b=X7juZwg0Vaf1j8zTR16m290a06EOcRnUKmriK3MMYU1H6pMXJUwMEH8XlR1Acs1jec
-         i7/sT9U/GkOsjkYcBT8oA0Y/8PibZi7VAh4WhQfDpCubTLUy7+BxvM7R9JQGkvfn2q/L
-         y8Rm5dhMLB5wztVEhWob37beCnAUg+IwRDS4D7aUmkZ/MlMoVRzs7DUGxKo1BwaBekJZ
-         jocH9+2k2+BVdXQZ+rtMv/8IfQeNlMHDI7PH5QXX+QRrSsbBJS2pqXIaql/WeezbPEB1
-         Wu3oBs83TlQCPZKICIz3BDycOeVyZl0qkUr/xax3KXx7fIbF5XbW8lkj3xlRxQ5tCcCZ
-         tAPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrYb8OMYSE/hm9IT6YrgQW2+t7yFTRUR76zKqnOLSw8WHT6Ltkcjb89vrPiqvHkvZzfYp9AbrPxydQ@vger.kernel.org, AJvYcCWIK+/ulHVGj/RLxGpTVH2OksK4CS5INhFH0pc6WxN4FmX55SCxi4OjaCZEBs84L0y3YJrT/wMdY33+LA==@vger.kernel.org, AJvYcCXaIbzjsSnEaMELfLOckhQvnKNuMhcMz/8MU1kzx6CLkoAQC13IsGvnNL5l1TzoNNnwmn+o8DIFwaxNcWy9@vger.kernel.org
-X-Gm-Message-State: AOJu0YytvXEEyVpsn1cQr/dhwyXZ9kC7Y0GVgng9E9kBkcFz855dTzif
-	oL5m3UHS/xFz5iMhnMeBjmVoO3o9pM+i6t4p2zqQvOijqpXdkCj9eky4fvwO
-X-Gm-Gg: ASbGnctdd8HaDm385ZAVStlwPRqsd5QfhHl8tsFevryGy3tgkbTIRMvI1gaoJnO7QYm
-	+OBUbyaAlCmQcVnY2vMM6WxvlgRd3S1Rsp2cAPbasSVNH9o6rkyuFOF3CPT+96qlpNd5beSBncq
-	tfp/uKkk2hJPtA1UGTTwbZzoeEDPdFn/NHnDPNiN+DFLmoiiFyB25Z/KFwcegZRvqFEBbKCpF8E
-	1lmJ2Lw+HxXVyss896pctQKOT1B6S4T/iyNMEGy0RAs4/22DnjkaXuUtoUr3E28k/OieAzwBIG+
-	sHzo557jbYaogkuOn5NWWRiOGxayjQ+y60luhpmqeEKeC8FO
-X-Google-Smtp-Source: AGHT+IHMveMYalbAPmdQk9lzdqMIps0nEuh8cCGZlsvDS6WBd+8FZ+G1TeR4yhJAG+jCdayImAkKWw==
-X-Received: by 2002:a05:6512:3b0b:b0:542:29b6:9c26 with SMTP id 2adb3069b0e04-5452fe95c7emr2982660e87.47.1739807307816;
-        Mon, 17 Feb 2025 07:48:27 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545f60c18bcsm785589e87.2.2025.02.17.07.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30a2dfcfd83so11116301fa.1;
-        Mon, 17 Feb 2025 07:48:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4dib4Sfex2DNoK7Dzi4bh7caniCpvGZJoLgWm2lLqGabG5Y8dQY0YwW2MGjLMtT5N0xjyog6i3vQZBnHf@vger.kernel.org, AJvYcCVUxW6pFEMT50XS3+0MROUODSrZwXQPSBL9RbAXrZuhrPIt0aQlMYNc9ZZ8pdf0Z3qilUUOTdNP8QEMfg==@vger.kernel.org, AJvYcCWbL4hVeP8IIvNVrcX2/QGJRPqomii4TvbYGzVyDLI3CyYAcYiKtgrNxrMfb3RTylIzFZZ1QuTSdolo@vger.kernel.org
-X-Received: by 2002:a2e:88c9:0:b0:309:2012:cc5d with SMTP id
- 38308e7fff4ca-30927ad64e9mr23653441fa.24.1739807306250; Mon, 17 Feb 2025
- 07:48:26 -0800 (PST)
+	s=arc-20240116; t=1739807595; c=relaxed/simple;
+	bh=wMdlwX1zycQ/olpFgvqq2mKqCvRYB6SEdDAMSGU4EHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=amNLHM/7mRIlzMpTjeLZW8qFHWIe+fzZzncSLzQC7LuUa7k/vusUzSHN584WbSyhVEMr8ITg4ZZ1VLVvPxR6/ohluBsdOa2jilVxJapZhXTL6SwUGaI5skXDweeFyHJpqQlxCKyR2bXDu5Pn3qGKRse6j95vgBF8qmbwqIlguSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S757mGQv; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BC6DA4431C;
+	Mon, 17 Feb 2025 15:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739807591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BUY8RBuJLNPYXLzFRSZTltcWOxb/JvQg0i4KGslCkvs=;
+	b=S757mGQvV6XaSYr+mgBWjh0K/YWYYsvnfs9J/kFPfSNhsPJ+UKZgTntfAgOV5a76Ra4iQA
+	JvQHnjeKsW7dOOkALyAJeE97I18GirxyxL+75bh/DaHkQ+VgZwSYgV/K7UI4IXmWotroF2
+	R8D1Sv6uIma2Sd7bR/UZOYq57MOfecag85vXp/cYfMgR/rcKJu79TllCMfbNRgdS0DFtOh
+	w6zH6dvx5KrkkCnCHJ5v+GeGMJgSOFuqAXr8U1zsBMcJwgWlOP1rmdjyNLVY43k5kWWQkL
+	4C+wainse0oqxUNQ8XDKfOV3L4AvpWoa716e9sYsO8Qjtq3MfXSKtmtX1MFykw==
+Date: Mon, 17 Feb 2025 16:53:06 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta
+ <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+ "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250217165306.3f055b94@bootlin.com>
+In-Reply-To: <CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+	<20250213171435.1c2ce376@bootlin.com>
+	<a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+	<CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+	<821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+	<CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+	<20250213195304.3a2df02c@bootlin.com>
+	<CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
+	<20250213220639.373da07b@bootlin.com>
+	<CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214003734.14944-1-andre.przywara@arm.com> <20250214003734.14944-5-andre.przywara@arm.com>
-In-Reply-To: <20250214003734.14944-5-andre.przywara@arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 17 Feb 2025 23:48:13 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
-X-Gm-Features: AWEUYZlCDWHC9MbTz92hd57HNQUJnNXRSXbL_QnKKWLChMmYjVCum1sff3H_yMQ
-Message-ID: <CAGb2v67V7PAOC8MLVzE5SwwvpogN_WLNhQnRVD2pikGVDHtJjA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] pinctrl: sunxi: support moved power configuration registers
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
+ ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, Feb 14, 2025 at 8:40=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> The Allwinner pincontroller IP features some registers to control the
-> withstand voltage of each pin group. So far those registers were always
-> located at the same offset, but the A523 SoC has moved them (probably to
-> accommodate all eleven pin banks).
->
-> Add a flag to note this feature, and use that to program the registers
-> either at offset 0x340 or 0x380. So far no pincontroller driver uses
-> this flag, but we need it for the upcoming A523 support.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++----
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h |  7 +++++--
->  2 files changed, 16 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunx=
-i/pinctrl-sunxi.c
-> index 83a031ceb29f2..a1057122272bd 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> @@ -736,9 +736,9 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi=
-_pinctrl *pctl,
->                 val =3D uV > 1800000 && uV <=3D 2500000 ? BIT(bank) : 0;
->
->                 raw_spin_lock_irqsave(&pctl->lock, flags);
-> -               reg =3D readl(pctl->membase + PIO_POW_MOD_CTL_REG);
-> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset);
->                 reg &=3D ~BIT(bank);
-> -               writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
-> +               writel(reg | val, pctl->membase + pctl->pow_mod_sel_offse=
-t);
->                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
->
->                 fallthrough;
-> @@ -746,9 +746,12 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunx=
-i_pinctrl *pctl,
->                 val =3D uV <=3D 1800000 ? 1 : 0;
->
->                 raw_spin_lock_irqsave(&pctl->lock, flags);
-> -               reg =3D readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-> +               reg =3D readl(pctl->membase + pctl->pow_mod_sel_offset +
-> +                           PIO_POW_MOD_SEL_OFS);
->                 reg &=3D ~(1 << bank);
-> -               writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL=
-_REG);
-> +               writel(reg | val << bank,
-> +                      pctl->membase + pctl->pow_mod_sel_offset +
-> +                      PIO_POW_MOD_SEL_OFS);
->                 raw_spin_unlock_irqrestore(&pctl->lock, flags);
->                 return 0;
->         default:
-> @@ -1520,6 +1523,10 @@ int sunxi_pinctrl_init_with_flags(struct platform_=
-device *pdev,
->                 pctl->pull_regs_offset =3D PULL_REGS_OFFSET;
->                 pctl->dlevel_field_width =3D DLEVEL_FIELD_WIDTH;
->         }
-> +       if (flags & SUNXI_PINCTRL_ELEVEN_BANKS)
-> +               pctl->pow_mod_sel_offset =3D PIO_11B_POW_MOD_SEL_REG;
-> +       else
-> +               pctl->pow_mod_sel_offset =3D PIO_POW_MOD_SEL_REG;
->
->         pctl->irq_array =3D devm_kcalloc(&pdev->dev,
->                                        IRQ_PER_BANK * pctl->desc->irq_ban=
-ks,
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunx=
-i/pinctrl-sunxi.h
-> index 6cf721876d89d..a93385e456a57 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -87,9 +87,11 @@
->  #define SUNXI_PINCTRL_VARIANT_MASK     GENMASK(7, 0)
->  #define SUNXI_PINCTRL_NEW_REG_LAYOUT   BIT(8)
->  #define SUNXI_PINCTRL_PORTF_SWITCH     BIT(9)
-> +#define SUNXI_PINCTRL_ELEVEN_BANKS     BIT(10)
->
-> -#define PIO_POW_MOD_SEL_REG    0x340
-> -#define PIO_POW_MOD_CTL_REG    0x344
-> +#define PIO_POW_MOD_SEL_REG            0x340
-> +#define PIO_11B_POW_MOD_SEL_REG                0x380
-> +#define PIO_POW_MOD_SEL_OFS            0x004
+Hi Phil,
 
-Shouldn't this be PIO_POW_MOD_CTL_OFS instead?
+On Thu, 13 Feb 2025 21:12:43 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
 
-ChenYu
+> On Thu, 13 Feb 2025, 21:06 Herve Codina, <herve.codina@bootlin.com> wrote:
+> >
+> > Hi Phil,
+> >
+> > On Thu, 13 Feb 2025 20:15:06 +0000
+> > Phil Elwell <phil@raspberrypi.com> wrote:
+> >  
+> > > Once more, with plain text, which I'd hoped the Android GMail client
+> > > would work out for itself.
+> > >
+> > > On Thu, 13 Feb 2025, 18:53 Herve Codina, <herve.codina@bootlin.com> wrote:  
+> > > >
+> > > > Hi Phil,
+> > > >
+> > > > On Thu, 13 Feb 2025 17:57:37 +0000
+> > > > Phil Elwell <phil@raspberrypi.com> wrote:
+> > > >  
+> > > > > On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:  
+> > > > > >  
+> > > > > > > > Or do you mean a custom board, which has a CPU, RP1 and the button and
+> > > > > > > > fan are directly on this custom board? You then want a board DTS which
+> > > > > > > > includes all these pieces?  
+> > > > > > >
+> > > > > > > That depends on whether you count the Raspberry Pi 5 as a custom board.  
+> > > > > >
+> > > > > > So you mean the Pi 5 board would itself make use of the resources the
+> > > > > > RP1 device has? They are not simply connected to headers for plugin
+> > > > > > boards, but used by the main board? Hence you want to describe them in
+> > > > > > the board .DTS file.  
+> > > > >
+> > > > > That's correct. But even for plug-in devices, those which are on
+> > > > > non-discoverable buses need overlays to declare them, which causes a
+> > > > > problem when the overlay application happens before the kernel is
+> > > > > started.
+> > > > >  
+> > > >
+> > > > Hum, I see.
+> > > >
+> > > > We worked on overlay usage on non-discoverable buses wired to a connector
+> > > > and we did a talk about issues we are facing on at Plumber [0].
+> > > >
+> > > > You can also find our big picture in [1] and a last contribution introducing
+> > > > export-symbols feature in [2]. export-symbols is also under discussion on
+> > > > some other threads.
+> > > >
+> > > > Also, we proposed the i2c bus extensions feature [3] whose goal is to allow
+> > > > an addon board to add devices on an i2c bus provided by a base board and
+> > > > wired to an connector the addon board is connected to.
+> > > >
+> > > > Maybe in your case, you can decouple resources (gpio, pwm) provided by the
+> > > > addon board and used by the base board using also nexus node.
+> > > >
+> > > > We use a nexus node [4] (not presented at the Plumbers talk because the idea
+> > > > came during 'out of talk' discussions in Plumbers) in order to allow our
+> > > > addon board to use resources provided by the base board.
+> > > >
+> > > > In your case, if I understood, you are in the other direction but why not
+> > > > using also a nexus node to decouple and translate resources in this other
+> > > > direction ?
+> > > >
+> > > > Don't know if this idea can help but feel free to ask for some more
+> > > > information if needed.  
+> > >
+> > > Nexus nodes look interesting - I see them as adding a layer of
+> > > abstraction such that, for example, boards can declare which of their
+> > > specific resources performs a common function so that clients can
+> > > treat them all the same. We do the same thing in a limited way by
+> > > using common labels on nodes, but this goes much further.
+> > >
+> > > In the case of Pi 5 and RP1, I imagine you are proposing that the Pi 5
+> > > dtb declares the connector node and the overlay fills in the content
+> > > with references to its GPIO controller, PWM controller etc. However, I
+> > > think the overlay would also have to be board specific because it's
+> > > not possible to patch part of a property from an overlay, so you'd end
+> > > up overwriting the GPIO number as well as the controller reference.
+> > >
+> > > What is needed to make this work is the ability to cope with
+> > > unresolved references in the base dtb, to be resolved as each overlay
+> > > is applied, with runtime checking that each reference is resolved
+> > > before it is used, all of which sounds like a nightmare. Plus, we
+> > > really don't want to have to change the way all our camera and display
+> > > overlays work on all Raspberry Pis just to accommodate somebody's idea
+> > > of how RP1 should be handled.  
+> >
+> > Just to be clear, my comments were not there to tell you how RP1 should
+> > work. I just proposed ideas without trying to force anything and I can
+> > fully understand that ideas proposed don't feed your needs.
+> >
+> > Sorry if my approach was misunderstood.  
+> 
+> I feel I've been misunderstood - I appreciate your ideas.
+> 
+> Perhaps it would help if you could outline how you think we could
+> apply your suggestions?
+> 
 
->
->  #define PIO_BANK_K_OFFSET              0x500
->
-> @@ -173,6 +175,7 @@ struct sunxi_pinctrl {
->         u32                             bank_mem_size;
->         u32                             pull_regs_offset;
->         u32                             dlevel_field_width;
-> +       u32                             pow_mod_sel_offset;
->  };
->
->  #define SUNXI_PIN(_pin, ...)                                   \
-> --
-> 2.46.3
->
+I was thinking about what your mentioned, i.e. the overlay fill the nexus node.
+No sure to understand why the overlay should patch some properties.
+Also where are the unresolved references in that case. The base DT refers to
+the Nexus node.
+The issue will probably be that the translation performed by the nexus node is
+not available until the overlay is applied. The consumer will see errors other
+than PROBE_DEFER when if probes while the overlay is not applied.
+
+Also, the solution will lead to memory leak at runtime. Indeed, the overlay
+add properties in an already existing node.
+If the overlay is applied by the Kernel itself, this lead to memory leak when
+the overlay is removed.
+Indeed, an overlay can add/remove node without any issue but it cannot
+add/remove properties to/from existing nodes.
+
+In the case described here, the nexus node is already present in the DT and the
+overlay add/remove properties to/from this existing node.
+
+I haven't got any better idea for the moment in order to have this kind of
+'reverse' Nexus node.
+
+Best regards,
+Hervé
 
