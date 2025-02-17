@@ -1,110 +1,145 @@
-Return-Path: <linux-gpio+bounces-16136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16137-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BBF1A3843B
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 14:14:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EDABA3844D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 14:16:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 395B53B7194
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 13:09:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 430483B8ADC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 13:11:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C46821CC6A;
-	Mon, 17 Feb 2025 13:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 514D021C9E3;
+	Mon, 17 Feb 2025 13:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLtC95GD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89AD21CC59;
-	Mon, 17 Feb 2025 13:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE89921B1B4;
+	Mon, 17 Feb 2025 13:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797725; cv=none; b=OC/X6sZrVzJFeQprXR/eXmV8mLaRHmejbfVNq1CQPOWThVG7b7wSfKXHp0wiuBUdPnXDK3tXeJC9BVoqFRkWVEMsd9UDDrlqzZpMJqQQgVN+O8Y/7F3BO/6dpI/RfYVeRmSMTdzea/trIZTcSsNBmHZeZtLo/jgbsc/sf5bfDDY=
+	t=1739797888; cv=none; b=GzxWQBlSRrEmjeztLKRvmDM1ZMgwsrNImyX97Yry5J09ztxwzb/JMX+6t6IRPnj68YXGtdWDzKv6oE+duCzceDucZF07FNBspDWVNPWIWpSt5wl6bS1o0v0Kdmqiz4NsbKwNmmUT1IUeZXzItL1qwHWBES1bXWGoMH6vSro10uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797725; c=relaxed/simple;
-	bh=9itlMG4VipCqg34LawzjG8hG6gTShShEatPS4xcWCdE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFLKJ6BcnBnTaUQ6t1Aau+rDe6aU6GIwh4JpzPQO0mRc2gH3HOgMXtIkKLb8XMZ1iOfx2RIHQ4A1MBlk290LME/ydGLbpH+SM3RenO6lhzpCF4Z+xNOHhugzmycNpvOzr/sT7lxOBEghYlXdzZnCMofIiFKNlUUuRZxCvUtAlk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so3130353a12.0;
-        Mon, 17 Feb 2025 05:08:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739797721; x=1740402521;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MsQsq0G6kuOvD9LC5dEILUwIa70vql8OQQH1JFjxz2c=;
-        b=RU0/icB1pWaYNs3sEXDRkkncuEa3wf4MVPVOaXdN/eeD2YtSub1amfCH2J41Iknntw
-         DyyGHeWFcQB5WbEWYny0fYrva/FHtqTjZ9rFhmKRG4cjpEGSeIhPRmfvvybyorCDALZM
-         mA+7WljjnGFNBHF6lMihRbBQYbX08s0OfI+Mr9u/JfV/MdcIVOy4lfLwGQEKp4nWcCAe
-         LTxZ3FBFFGBsk8Ww03yEoD4TvZ4pZ1KZdJOflHQytRB1GiNV4+aE3jwC+nJ4avjq99ca
-         M30fEm88zxnWjPf7OPsgo0yoP9XhBZkNWzOK4BG0B3wfwUzs8xb8/8v5OJIJYLDJmhcY
-         WFjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQlubsV/7RbGYayYaW2pbrRVw5Fq64R3jFeNfCQi02sbknSBFraekpEHKb0RmGhVV+UBe2KZU2NtNl+aM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxciYy2vSejVo1UL+1KxTt3gu4cGGC79dDXaPOWuhPnetfmvjP
-	swh8t8jz7Hi8oHjdhCSJFJsLBpyfDRlZPbPCoweH4SWWFfbNIgnQKDdVdLeIc1w=
-X-Gm-Gg: ASbGncttI18GDvJt7EE6VFUVoFx7aNZggx0p2AtVv3+lN+WKrWoEhzzB5tDWrkoCA8u
-	m+YCG6JIIIZpAtlKOiq38qSM0pMCLDCx8zkbPF9YNQVVhfnzyPQpwQ7c5slyfrlVsgJPbUuHuP6
-	8Hz8GWaKpNTcp9nnqLMcz/cwPqpegPV7fb4VQY/hWhR977O34+2uoynmQCEmCZvmc+CVm6reBQW
-	5xhSuQfa2muDSgZ8fAd0nFt3p7LNKm6kT5PAn2xFYVQCA3j7AcfWds8sFSCxslXBkRKpGkgP9L/
-	V5vH3TsBaEQK3fKmmzTPIkUCXdmh0suxLVbDO2HmaCQyRS1cQ4yssg==
-X-Google-Smtp-Source: AGHT+IFvlPB05okv2zu7w/TQpvCyUhsivVACxjX6U6oRWRXGSZTIGl42nOueR6xqiwreWKhS0VE6Jg==
-X-Received: by 2002:a17:906:c153:b0:ab7:c3d4:2551 with SMTP id a640c23a62f3a-abb70dde461mr1014877766b.33.1739797721038;
-        Mon, 17 Feb 2025 05:08:41 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9c9b653bsm185902966b.166.2025.02.17.05.08.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 05:08:36 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e05780509dso1563050a12.2;
-        Mon, 17 Feb 2025 05:08:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXg8BqgLRrjJ+UXB/NOryQ+NmgLFd32dnME7qrIkdbSUpqagTxt6EUyjR1TV/qBUfybUs0XeunLOuqBjbU=@vger.kernel.org
-X-Received: by 2002:a17:906:3895:b0:abb:b209:aba6 with SMTP id
- a640c23a62f3a-abbb20a31e7mr6274866b.3.1739797715966; Mon, 17 Feb 2025
- 05:08:35 -0800 (PST)
+	s=arc-20240116; t=1739797888; c=relaxed/simple;
+	bh=1PiBDGXviXFsoAeEznRpjkJuqVWjReFh5mfoR8+tPJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HzyIOBOT0PbYJe+ILGoJ48YZHiqhF2QMfDa7B8OoWKk+hXxIUMx2sAqHQwUaopJj0pyq57ShR6dhce0MmOZs+s6JLuSTfO3opIe7IJtF8MtCjRrpD6IhB973Nd0av49jcaRFYM37E8yv4uRaJbD4SOP8ocglDOqroeWpRxFLgfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLtC95GD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40C3C4CED1;
+	Mon, 17 Feb 2025 13:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739797887;
+	bh=1PiBDGXviXFsoAeEznRpjkJuqVWjReFh5mfoR8+tPJo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WLtC95GDNZ/X0s+hfQucYzO3kU+Rh5UgXxg+E6+ek+M4ridMVG6kAEleF01gndwVH
+	 8kbjGK8bw3shQpq+zR5Sq5mTGyLenbNNTpk6vPcSBAERAm/YqIrevEy6deAw2gYd51
+	 +6Z0P/gt6AH2RWzUjQCrhRXFdo7ErlgscBvdmNbqoywYjXZQybziAkfobxVGYS3OxT
+	 5cOCBqcqHwvqlDolpX+gjqdLDpktZKKuSPwD6bYWh/ueX9jKkMRNJsJfc3krmttNSP
+	 0x5gToctYLmU18WiDPJ6s/4/w8DzpdAuT9WEgRG5brTf7wwxDY2ymWUYBFwU8gqN7U
+	 PmtYI/xK+DYfA==
+Date: Mon, 17 Feb 2025 13:11:10 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, David
+ Lechner <dlechner@baylibre.com>, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-sound@vger.kernel.org, Jonathan
+ Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: (subset) [PATCH v3 00/15] gpiolib: add
+ gpiod_multi_set_value_cansleep
+Message-ID: <20250217131110.5803b68b@jic23-huawei>
+In-Reply-To: <CAMRc=Meq639NMz6TuOw=xQ_A8VDwA5OXoXU47JNt7x0C7jDtGQ@mail.gmail.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+	<173952845012.57797.11986673064009251713.b4-ty@linaro.org>
+	<CAHp75VcjAFEdaDQAMXVMO96uxwz5byWZvybhq2fdL9ur4WP3rg@mail.gmail.com>
+	<CAMRc=MefPRs-REL=OpuUFJe=MVbmeqqodp+wCxLCE8CQqdL4gQ@mail.gmail.com>
+	<20250216142313.743af564@jic23-huawei>
+	<CAMRc=Meq639NMz6TuOw=xQ_A8VDwA5OXoXU47JNt7x0C7jDtGQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250216125816.14430-1-koichiro.den@canonical.com> <20250216125816.14430-11-koichiro.den@canonical.com>
-In-Reply-To: <20250216125816.14430-11-koichiro.den@canonical.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Feb 2025 14:08:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUZ54GJupQc2nz2nh7Myh6eUdwJw1+90smRuVyuJx9PPQ@mail.gmail.com>
-X-Gm-Features: AWEUYZn1fYz8cb1I-zBku3cHDH6DyyJZWaZ8UgZkRlG7QVDNpRfE_L-suKnzX8Q
-Message-ID: <CAMuHMdUZ54GJupQc2nz2nh7Myh6eUdwJw1+90smRuVyuJx9PPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 10/13] gpio: aggregator: rename 'name' to 'key' in aggr_parse()
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 16 Feb 2025 at 13:58, Koichiro Den <koichiro.den@canonical.com> wrote:
-> Rename the local variable 'name' in aggr_parse() to 'key' because struct
-> gpio_aggregator_line now uses the 'name' field for the custom line name
-> and the local variable actually represents a 'key'. This change prepares
-> for the next but one commit.
->
-> No functional change.
->
-> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+On Sun, 16 Feb 2025 16:55:04 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-My
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-is still valid.
+> On Sun, Feb 16, 2025 at 3:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Fri, 14 Feb 2025 15:37:48 +0100
+> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > =20
+> > > On Fri, Feb 14, 2025 at 3:35=E2=80=AFPM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote: =20
+> > > >
+> > > > On Fri, Feb 14, 2025 at 12:21=E2=80=AFPM Bartosz Golaszewski <brgl@=
+bgdev.pl> wrote: =20
+> > > > > On Mon, 10 Feb 2025 16:33:26 -0600, David Lechner wrote: =20
+> > > > > > This series was inspired by some minor annoyance I have experie=
+nced a
+> > > > > > few times in recent reviews. =20
+> > > >
+> > > > ...
+> > > > =20
+> > > > > [07/15] iio: adc: ad7606: use gpiod_multi_set_value_cansleep
+> > > > >         commit: 8203bc81f025a3fb084357a3d8a6eb3053bc613a
+> > > > > [08/15] iio: amplifiers: hmc425a: use gpiod_multi_set_value_cansl=
+eep
+> > > > >         commit: e18d359b0a132eb6619836d1bf701f5b3b53299b
+> > > > > [09/15] iio: resolver: ad2s1210: use gpiod_multi_set_value_cansle=
+ep
+> > > > >         commit: 7920df29f0dd3aae3acd8a7115d5a25414eed68f
+> > > > > [10/15] iio: resolver: ad2s1210: use bitmap_write
+> > > > >         commit: a67e45055ea90048372066811da7c7fe2d91f9aa =20
+> > > >
+> > > > FWIW, Jonathan usually takes care of patch queue on weekends.
+> > > > But whatever, it's not my business after all :-)
+> > > > =20
+> > >
+> > > Too many conflicting suggestions. I just picked up all Acked patches.=
+ =C2=AF\_(=E3=83=84)_/=C2=AF =20
+> >
+> > Resolution of any issues 'should' be easy enough. Let's keep an eye on =
+how
+> > it goes as other series hit Linux next.  Might be a little work to be d=
+one there
+> > and by Linus in next merge window.
+> >
+> > Jonathan
+> > =20
+>=20
+> I'm totally fine with removing the iio commits from my queue if you
+> prefer to take them.
+>=20
+Hi Bartosz,
 
-Gr{oetje,eeting}s,
+That's probably going to prove slightly less painful, so please do.
+I'll merge in that immutable tag and pick them up once you've dropped them.
 
-                        Geert
+Jonathan
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Bartosz
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
