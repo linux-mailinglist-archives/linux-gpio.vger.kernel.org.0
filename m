@@ -1,154 +1,118 @@
-Return-Path: <linux-gpio+bounces-16105-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16106-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2F65A37CD3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 09:12:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D11FA37CDF
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 09:15:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0EB51883812
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:12:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B650E3AEC47
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6818019CC02;
-	Mon, 17 Feb 2025 08:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB6C3191F68;
+	Mon, 17 Feb 2025 08:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PJDHHeob"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2z3v18Rr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4915218F2EA
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 08:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A87155C82
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 08:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739779942; cv=none; b=lyk7giivJDxnOn+JTThpsAb5lA2gzOaVKnc2ZhKzeGYuCjogv8YgVoVC9GgOEXTNYylmeixQoWS1HUw8h2RF6IQI57j0Rrfn7SRnMnok39lagqDkdbYrVzxon/YzwD0gvxd6Z/LGu/pW3wo/jUHnJxPQpjbOXtXX8489LyiJ3Z4=
+	t=1739780151; cv=none; b=UVZ2oZvqm7sCqGh9MYWALnlYdj5xAoLigjo3TOKN2ynTjNUuuj1Sj2QGVMITB+w9In1COz6tyxJ3kt94Th5h4lfaFUYiulk+sNrN9nDKevyV9FwTZyui4AegnTssP5n3u/HVB4MkpuM5S1CmCL9A7KVek6S9F2vo8IZ2yVqODH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739779942; c=relaxed/simple;
-	bh=uPKvXVzPWF+ThRLBxFwXSOKl+47IxC0i5CQD13TwCU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H6u6yzVE+M5/9qKD8KiXIrJen0f8tYxK51zHa1PrPNVNOWacaZ7qHs9zCnu7oy2nfSqYVOWjZ5hMkKQaSFURidVMMBH7pczyv+Vufx2XJj+lNQkeUtL+ToO3PSajRePIJEijidcA6p9ml8wn2uhdXiUy1I5bCMNpgEdSX0kYoUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PJDHHeob; arc=none smtp.client-ip=209.85.167.54
+	s=arc-20240116; t=1739780151; c=relaxed/simple;
+	bh=JbmDUTq3vXnGaGTLeoFijLxTK0aByIFKDc50O6gCEGI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TCYyHgSgusWEApPlIwcBR1KQrBTe9AbPmMg+OZjW2gcvqD3SVEFWEk1CUWX7ORr2yHhkUglLRfStDtfYTcqSoHU2KeCLy+b8HW1j+jaoUeyTbBezwM2z0SOkJi8BV7Q1Yff1qmepKNstYhgFZpV6T+RC9bTXyweuap7hVmHB5o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2z3v18Rr; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5452c2805bcso2796640e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 00:12:19 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f32c1c787so1496349f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 00:15:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739779938; x=1740384738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739780148; x=1740384948; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EMOtdB8uF/f/6s8OjVAdSppDXj08pjjoPjNXDTrhA9A=;
-        b=PJDHHeob2xz/21PJ7K+qXBZ1L30Hj/7jTK3r4zCxf3qNbcDN5AAulsAHrrVbmoaNvf
-         yB9UxVCqYwh2coA6lFVCYI6PFx9/uClaNHbDEu9dJdhsHz6hjedRxVXt1nYo69+9FuN6
-         uB7tNNqRAlP/In2qmADdt+O7PoEHCHbdsEIw2n79JEE6xqfeZWPMUORHJIvYOjnpHg9W
-         LDquafrcg8371XkXblue2tthHwMpDvWVUQh34683rI9/WfZvbF7h1pAs4rfl/rK9aBUM
-         QrUqu5JHvoJjUp8ohSv/l72q2IpRjagOnfYvyrGvkd/7rMMKqfj1HgpZhIOOtBBpIoa1
-         axKA==
+        bh=5m1MxROoOW/42opukpjJQr/KNqsLV/udyoCCGFOefMw=;
+        b=2z3v18Rr+TfBsOWYyIczkuEyX9eiPbk73EbMz2DHG5/Al67suhdoxrt8cVC1oECG2g
+         BjUKHzfEO5nvv1W7FaBsv9vYzwgmKvL/gOVwNZKEWsrbwvANlv0LsV8XZxz/YNsGifQv
+         KABFm6/BVT9g/6VLOTNe+KIufuNAaKAcFhtMgEOPKaOL61vNt5gv8or2JWTZWoxNp4sI
+         oxpF73j6dgrInAjlmECyUt40Na/UwBPOd2c0xhDKEiKpgRt7r1I8HU16+/3TnQ+E5dcf
+         5VhpY7rpE33mFYdQNAZkNu4gUPRtTkP7xS7PfS4tEGk+r1ixzTRsUw7sdPyCfG/P4OZV
+         FVNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739779938; x=1740384738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739780148; x=1740384948;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EMOtdB8uF/f/6s8OjVAdSppDXj08pjjoPjNXDTrhA9A=;
-        b=Muu4zD8/eeKfC/vvOHIiHeN+yrjThITbseT5jvemUxuOp5H6/5Kv7990uLVqC8YYe+
-         Ozzi7YxWJNgQkNvLt0wqlrnCPcL3dHIozRUmqBT7e0qrhcvGG5jaym/IAhToIjEQJ/WD
-         rYp4o6F0grdHt9awZED/pRjBemCN/H7fyp33TYs2MAPp4lNVofVjidBAV5pbdfuYjMjY
-         i34K775ann1bAux9eO9guXjykLAV2Bx2GoCImV5IC+AB2NQvR/TKN3dwWjYfNQsOsjTb
-         VXTfzhcRDdZKXK3VRWLP5VX1tfKJBWdr00RtoVQiDhF61FSMVpot3n+hEm5kmtwzRNPu
-         ZQig==
-X-Gm-Message-State: AOJu0YxV1THBduNy1yuRhhKNEcEyG/4w8etPmBpSK+6tDrQ2X3MWa8ZT
-	bCGMKzeMYaTn6zYV/n4siAu9HsHzWhaPCxrG7Bb16L/7ilii1W5XLJwfAfEvvtKgN96tCFtPTz0
-	v7TUHUay5E63VLyln+/BGbSu7jUPx0vsn1MDBbQ==
-X-Gm-Gg: ASbGncvKQakM3MP52QruraO0UbHGcL+KlMohw93o3LoJKq2YqFBZJOLr5xaDDKsVWr2
-	mjSmfgqY0ZSffiUKYFvEHeO8tu+HJdgazfniI0ykbgcJZAgFsHGrzCyIMwoJOFeJuBCNbcnP3Zs
-	gPskMuu37EI1bQo8XHH6lFInMQLg==
-X-Google-Smtp-Source: AGHT+IGKMXGeAm9gSpXmxD0qlZa8GXly9zzx3z6gIfOpxbl3uTwVkFQRM6Ow0fBUV/AKD4yXnQ7rEPyzlGWnqbEGlpo=
-X-Received: by 2002:a05:6512:2354:b0:545:5d:a5d8 with SMTP id
- 2adb3069b0e04-5452fe2cf29mr2787159e87.7.1739779938150; Mon, 17 Feb 2025
- 00:12:18 -0800 (PST)
+        bh=5m1MxROoOW/42opukpjJQr/KNqsLV/udyoCCGFOefMw=;
+        b=EwXdSBliYxmjmGtMng9PfSlwrfxpZYR8Fnk5kPJSAaAcv0Zl5/B4PG2BXe4KrQxXS+
+         Ds1P+DMajtUYOCtoNXr3d5Rz3UpjpGSjmQapuQanpnjLoXWC8EVkJ8b0QFCBgUznUVqk
+         jm1AymBgJLkCZSJqXOdy2EJgTq9Tx2slf5IQxbqSwXMH98uK2an0jypLVf/Cs6vyf7vj
+         xOeGW9yBuQHOf/6c1JiUAmFRV6nDz0+L6VPpg9vfd98o1U0LnFKKSzOo1DGa5ZC9Wn4D
+         7Ihr3n9d1OBZR4tgS2uz3qP5dq955hPps8X7Kp6sQyEAZQxzuWso3oBUoLkbfHL8Wftg
+         wrOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXog+5S6VZXjxIdzqwCeMXk9Ph/3N+GqcnHkd9zgBZB1PsALjq3LS2FeSp0AWqtE3cS8q9c6gMV9JuT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfsvK0LASwl2bTyupc1+EJIfJKYzDSkkAGLaumXTzVvUC/5Kva
+	lJDOKj2YAjU3QMJd7uyPpVOhK39sosNEViQk1oBtKd+aES85HF/X63ms9ctYc0A=
+X-Gm-Gg: ASbGnctulWM+QeiFB7jAPFGBSNX8clTG8brYEu5VecrX6aDiw+STXrTTqzuMLKViB0M
+	HT31LbEsqwT0yiUOWm11vh65tdpkTyQ0iWD+jm/5bU758rJjNIBwHfj0rsiIvOgT2Oqiv25px3r
+	pCcb4VegmrTEgCQXKc0mDMPcCl0un1Cpz4DwKMX1AQGTHcQM8CbLwnAO/SswLnwYXhry8KmTSPB
+	aMj5bAmMt427M6JsPFDxcbmZajJFqmyfcy0mC9Bi0THfItCwmRZLPEqyFi+16nf/0MC9sD+dcGb
+	vwh54PwiA0ol
+X-Google-Smtp-Source: AGHT+IFX5s8tEHg2FDnLcSYOCY8Y1HYB8nLmzyE55INZD9Kyhy1GNfOAo9r4s6QHbUp6HlfvgUv2Yw==
+X-Received: by 2002:a5d:588b:0:b0:38d:dd32:c939 with SMTP id ffacd0b85a97d-38f33f4ac7fmr7328884f8f.36.1739780148193;
+        Mon, 17 Feb 2025 00:15:48 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8707:ccd:3679:187])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ddbbdsm11650902f8f.37.2025.02.17.00.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 00:15:47 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vincent Fazio <vfazio@xes-inc.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod] gpiosim: defer removal of bank entries when device is not disabled
+Date: Mon, 17 Feb 2025 09:15:45 +0100
+Message-ID: <173978013648.7264.4457406391885888363.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250214102648.71382-1-brgl@bgdev.pl>
+References: <20250214102648.71382-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250216125816.14430-1-koichiro.den@canonical.com>
- <CAMRc=Mef-cg_xt_+mEAyxY_9RfK4=qWEbt_GebeT2mu_8GWVxw@mail.gmail.com>
- <qw5epzoexlteotpuulafg4fyjatlsjjko3ldnzjezoumhodgko@a72wjsaw6fgz> <dc2w6gxdp3rhlhy6hvwocp76zdjh4jhdljhoijbub5q76f4xgw@ulfvg2s3rvub>
-In-Reply-To: <dc2w6gxdp3rhlhy6hvwocp76zdjh4jhdljhoijbub5q76f4xgw@ulfvg2s3rvub>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 17 Feb 2025 09:12:07 +0100
-X-Gm-Features: AWEUYZlrO0DzSDa7Lr8zQsrCfCYGmrfQqWkR1Svx3o2vh5dXwwRAiP5bcweiEI4
-Message-ID: <CAMRc=McL7XJfbb3h3XO+UUhL77sq0TZodS=rjaQ19uvKJj+NWg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] Introduce configfs-based interface for gpio-aggregator
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 17, 2025 at 2:18=E2=80=AFAM Koichiro Den <koichiro.den@canonica=
-l.com> wrote:
->
-> On Mon, Feb 17, 2025 at 10:07:03AM GMT, Koichiro Den wrote:
-> > On Sun, Feb 16, 2025 at 04:56:59PM GMT, Bartosz Golaszewski wrote:
-> > > On Sun, Feb 16, 2025 at 1:58=E2=80=AFPM Koichiro Den <koichiro.den@ca=
-nonical.com> wrote:
-> > > >
-> > > > This patch series introduces a configfs-based interface to gpio-agg=
-regator
-> > > > to address limitations in the existing 'new_device' interface.
-> > > >
-> > > > The existing 'new_device' interface has several limitations:
-> > > >
-> > > >   Issue#1. No way to determine when GPIO aggregator creation is com=
-plete.
-> > > >   Issue#2. No way to retrieve errors when creating a GPIO aggregato=
-r.
-> > > >   Issue#3. No way to trace a GPIO line of an aggregator back to its
-> > > >            corresponding physical device.
-> > > >   Issue#4. The 'new_device' echo does not indicate which virtual
-> > > >            gpiochip<N> was created.
-> > > >   Issue#5. No way to assign names to GPIO lines exported through an
-> > > >            aggregator.
-> > > >
-> > > > Although Issue#1 to #3 could technically be resolved easily without
-> > > > configfs, using configfs offers a streamlined, modern, and extensib=
-le
-> > > > approach, especially since gpio-sim and gpio-virtuser already utili=
-ze
-> > > > configfs.
-> > > >
-> > > > This v3 patch series includes 13 patches:
-> > > >
-> > > >   Patch#1-7: Prepare for Patch#8
-> > > >              * #1: Prepare for the following patches.
-> > > >              * #2: Fix an issue that was spotted during v3 preparat=
-ion.
-> > > >              * #3: Add gpio-pseudo.[ch] to reduce code duplications=
-.
-> > > >              * #4: Update gpio-sim to use gpio-pseudo.[ch].
-> > > >              * #5: Update gpio-virtuser to use gpio-pseudo.[ch].
-> > > >              * #6: Update gpio-aggregator to use gpio-pseudo.[ch].
-> > > >              * #7: Add aggr_alloc() to reduce code duplication.
-> > >
-> > > Please don't ram this new functionality into an unrelated series.
-> > > Split it into the gpio-pseudo code, factoring out common parts and
-> > > converting existing drivers, then send the aggregator series saying i=
-t
-> > > depends on the former. Otherwise it gets way too complex to review.
-> >
-> > Ok, I'll do so.
-> > Thanks,
->
-> Should Patch#2 also be split off into another submission?
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I'd fold it into the aggregator rework but make it come first in the
-series so that I can pick it up into fixes easily and send it for
-stable.
 
-Bart
+On Fri, 14 Feb 2025 11:26:48 +0100, Bartosz Golaszewski wrote:
+> Linux kernel commit 8bd76b3d3f3a ("gpio: sim: lock up configfs that an
+> instantiated device depends on") has uncovered an issue in libgpiosim:
+> we use reference counting for all objects (to make RAII easier for
+> bindings) but, with the above change, if the user doesn't explicitly
+> disable the device before dropping the last reference to a bank object,
+> the parent device will never get correctly cleaned up.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] gpiosim: defer removal of bank entries when device is not disabled
+      commit: 3dac2c5d9c2ed3d77e9bcf89e03a6173ca28b9c5
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
