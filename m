@@ -1,142 +1,165 @@
-Return-Path: <linux-gpio+bounces-16125-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16126-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0C29A38373
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 13:52:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D682A3838E
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 13:58:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C07773A9055
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 12:52:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 530FF172E67
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 12:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008E721B1BF;
-	Mon, 17 Feb 2025 12:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ti2MQg0m"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5331621B905;
+	Mon, 17 Feb 2025 12:58:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD53186E2D
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 12:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF152F5B;
+	Mon, 17 Feb 2025 12:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739796755; cv=none; b=Y8k5IgdJ/SehfuvCkvYNG15F99EM5wREMAdoVgR+fpOfQFlIef93/mlvpMWNUFwlvWocR694Kp+gpEcmgfXNW1JAYBapVoawRkXpdeQYthrZC/guCeJIvOp8JJ27sXBsppcpItxClQBsfyij04VW053KjrRdPoLbjw+I94/4zE8=
+	t=1739797107; cv=none; b=HGZzMWOBDk4HAt7cDQD/ryLYjfrd+AtSUq2Xw9uaURQnULcBvA7QkXGX3Z/dzRa+folAuftl54Etcm9fZweNJWzDEfWxuc/j9zZMcJZHLp0wkZkL16Em0FisogX9AT9FzY3/yqdOAE8j0LPmhrjVeQCGqsBQXD2S7ULbAf31F1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739796755; c=relaxed/simple;
-	bh=4cACiLEYYr8YRJ3XzHa2YQ3pT6PaX+HTa+ntXXOksSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cr6KACj5Bmpu82Uo748XgveZCQewN5UhgtRGOd4k+zZhuPCWljVvCLP8BnTo2fuSZHVYO/XR+yuRvsMzroygaJxTMV+8+pSpVX1iXKxFH48DU/Uf/wITnGZwE20BI1fKyyH51aCTiRKlpJkYaq+iERMCxpo7HDFeJesvOTL3tXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ti2MQg0m; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	s=arc-20240116; t=1739797107; c=relaxed/simple;
+	bh=q1aOfZVqMDouNDrWuVaUzkfmmvEdkbfTZjyFQLgn1Sw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hEyGlt9LYciEl/MfgV5Nn1pAmze3M8D5HHhHgBh450W3rFGBXfILCZcvusgGIxCutO6e2DL+aB/UGHmZ/Kf4jIC9O2CkmLn2JVNMoszFwm6srj4pkkmlaoDN2r7RGGyMGqqD6TY5xn2mfki8jnQF1SZg8nGv7AX4B4hfdVVGnXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [180.172.76.141])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 750CA3F2A0
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 12:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739796751;
-	bh=s+2SaUWzMvUfSiNt+NXq0m9a6gNqN22bx5NADQSxlGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=ti2MQg0mWo1R8u42ozYJ/umbSwxvkE2OyKA80zRUM+XYNUvzMifJE/nbZyJ9GztuA
-	 Jam7AGIhjNa+6rxhNNLnHNODsMZJC8FSH2ly23d9hC+HlCJZwgnGQiT8g7eZXXM/Xk
-	 gQpYlaQKa2sjC/gKqlMfi6pDHQJX9dIFK9/oqN7N2SQe5+aVaytfLwOsi2JNITkqbo
-	 qQt6AWldR/d5aw11n6DoPPg6mimCQ3qCPAqAGFzbqyrZ+pyRlvvnx5flL3xgcp2Kpq
-	 wpMe4nQHYC6BkUESM1KtyQzN/PfhsGCBFpIj2hZx/6YfuX7kMhHbxpi4qOJEnURbtw
-	 rzWUUtSXssurA==
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-220cad2206eso89305875ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 04:52:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739796750; x=1740401550;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+2SaUWzMvUfSiNt+NXq0m9a6gNqN22bx5NADQSxlGw=;
-        b=ONqO7Alt3Fwz0bCBrgoAgbKgWtwDbbNlW+QrJE3NTYZ9P5CUfYcAyVvMZaQ2sKxjlQ
-         0lE82X6EdbKAszQ7flV4+a1G99vtKde/wAv3J8y3O0gxlUpIVn9EfDpUYiDJdSS//Pzv
-         MwSl2uPQraV00AbFnSDuv1s9+Yj26tJIcfPQfJcKpNselNUO3VB+++GZAIVMJHCq8biM
-         Q6o9QOtYMygigalLnFcjJrJaNJdvqKZ122cJElSJGixpRr611MKl4VshYtDKmLb+sMgB
-         14UPQ84MT65d9E347b17QMWL2/Q3HrhlmjyVsTYzRPJngFhwkUckMMmQXRXAqaTE7C+O
-         aPDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCmUxyg/V9KDb+2cPKmZyzBruB1Mryo6UriVgtG09CfYvtp9TGnRPkbnRmnf9vtT525OBoXpljXd7L@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbi3exyw5LG0KknNcM+h+vMZovqOxTDSm0j5y9cnWCj25Dx9ho
-	lUXrWCDWsUd5V6jF2s0Rnih72ZULbfnyWglfw63D7QeF24SGfjZGki7g7c4Z3N6FYp1X+ZuCGG2
-	VE13/cRW17Jo6RYd5YzI5IbmjC436K00tdNzP9z7XK8aQsy0HyJ/JnxWopybhA1Jp1aA+UQxb+v
-	Y=
-X-Gm-Gg: ASbGncvGbkTMpKV+0yA2dp3o7o0sDRTn+wjQNFxwMyTQ5UszA+A1QZ98PMTTX5ezVjt
-	6K0Ic2WmA78mIy5mleVFL7mlv7KeEshVI6WHkRxz5y7B83YMnBC7iY5FrULJVrrQiXCFJwVtGtx
-	tTg27lUqco0u+CicL5xUlb6owL6KqL6GIveB8F75BhmtCUFoqe4gX7e5QLYCWsFzwkswp6S3QyA
-	b+DG7PWSfx3IfRrIYcflKksEiByfIviK2VNrRNvWU60dcODPq8QROhYvpqV014Mr9TszdExSen+
-	s7Jf4EQ=
-X-Received: by 2002:a17:902:c94e:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-2210404a859mr156408805ad.27.1739796750002;
-        Mon, 17 Feb 2025 04:52:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGMbDRI/eqmP12xeqgTEQrGMQASyS3MKQlMIr/reZp0+U4L/JqMmchDaU3atyv0A9DB8o3LaQ==
-X-Received: by 2002:a17:902:c94e:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-2210404a859mr156408525ad.27.1739796749687;
-        Mon, 17 Feb 2025 04:52:29 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:a6da:1fd8:6ba3:4cf3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d62dsm69697615ad.149.2025.02.17.04.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 04:52:29 -0800 (PST)
-Date: Mon, 17 Feb 2025 21:52:26 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-gpio@vger.kernel.org, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/10] gpio: aggregator: cancel deferred probe for
- devices created via configfs
-Message-ID: <4heguj7r4dv5rsbfaokwkslkexqf5r52nm37splnvqwxsfsiig@irvcosdnabjy>
-References: <20250203031213.399914-1-koichiro.den@canonical.com>
- <20250203031213.399914-10-koichiro.den@canonical.com>
- <CAMRc=Meb633zVgemPSeNtnm8oJmk=njcr2CQQbD5UJd=tBC5Zg@mail.gmail.com>
- <CAMuHMdU24x9pxEjBHTKxySxwr-L+iKXSUNFxpM9hvaSTNAWDuQ@mail.gmail.com>
- <5mffw5s3p5biu726cfn6hrgcxiamawxz4qna4jajww3evoievd@itffjdnhijxb>
- <CAMRc=MdjiyzBzdQpYK=qGwS=j55W5mujoTWruRP9DeOv11Y8rg@mail.gmail.com>
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 78B4A343069;
+	Mon, 17 Feb 2025 12:58:18 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v5 0/5] riscv: spacemit: add gpio support for K1 SoC
+Date: Mon, 17 Feb 2025 20:57:43 +0800
+Message-Id: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdjiyzBzdQpYK=qGwS=j55W5mujoTWruRP9DeOv11Y8rg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEcys2cC/2XPQW6DMBAF0Ksgr+tqZmxsnFXvUXUB9phYVXACF
+ LWKuHsdolZBWf6R3tefq5h4TDyJQ3UVIy9pSnkooX6phD+2Q88yhZIFAWloqJGg5CfK/pyyNNh
+ FR9GBIi8KOI8c0/dW9v5xzyNfvkrnfD+Krp1Y+nw6pflQqWApGFBtbC2V7hqQHVjDHAwy1AqVc
+ hwbces6pmnO48+2c8GtbJvkQD9OWlCCNGCJO2bfMrz1PMw5v+ax33oW+rdI6HaWiqVGax0DEfr
+ wZNWDpXpn1c3arrOd1hgMPVn9Z8ubhDtbPpDaaPSu9oBO7+y6rr9SpKuxpQEAAA==
+X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
+ Jesse Taube <mr.bossman075@gmail.com>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3376; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=q1aOfZVqMDouNDrWuVaUzkfmmvEdkbfTZjyFQLgn1Sw=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnszJW6w/KgwwZgBNmPAPOycUH2Qxkc+3vi3ZaP
+ JSoRcMNBXyJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ7MyVl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277WEhEACLcAfqpL5B6tHAOl
+ U14SGmtOnMlrgKiBr4fNU2zuSjN604606hKfN8LRHBk+6KMdrix0adaP9K0Ik7f9IrSAf56/Grm
+ gBti9Cz4M2DD020XPJC1KkftX9YGozwz0J7/PHkTCMel2ydfCbauBl7jIH1f7MvscDFwRDchQ3Y
+ W6a+bgC0+tJBUP76FaL5uGaHaRknoSTCJMSluILFRTCnMAKG3R4Z+qFYPxDvEs1BDC+ip+xL8w9
+ 2qsxh6d42BHtFrHxtBrRPNsf2O67d8Bon1P3uk1e7WMltFjExyNOJhYiPYmzRWPxStrPinBmTKu
+ g/6u00SoRYWoAH3jvUmVEVgpk2md8X8qU2mrof611Ou7ctYGtXWTFPc5EAv7YmBPjULYlDkk8Xe
+ 6QyybGmNKX1cahNNn5Z2cqGjvGxHe02j0hLUSGXPgZ+COKuWZ7NfRP+JfzZtbOU6wBEs2Q03ZY1
+ jCSjISoyAqD2e5LsJ/wceOaWvGdGNU4CJJYVqHzZYZNaJwMucL4wAApMBXKSe9E5HfaQWd7w44a
+ Xi4dYmAhnm1ta0/lfqh/l+lZAEhxT+byyPBKd5QXQLrPiKemIx+Ei1bwzVdgzIMOJOKMZ0vOx1E
+ gZSSWY/v7ogbrSAy+aPbbk6l4TYjRO740JhbVhZt1okVQ698A5llZd15h45/mt6nQffg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Sun, Feb 16, 2025 at 04:58:51PM GMT, Bartosz Golaszewski wrote:
-> On Sun, Feb 16, 2025 at 2:15 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > >
-> > > On one hand, I agree that it would make some scenarios simpler, and
-> > > let us propagate an error code to the sysfs writer in case of failure.
-> > >
-> > > On the other hand, it would change user behavior. Currently people can
-> > > configure a GPIO aggregator, and load the driver module for the parent
-> > > gpiochip later, relying on deferred probing to bring up everything
-> > > when it is ready.
-> >
-> > Thank you both for your insights, Bartosz and Geert. I've just sent v3
-> > (https://lore.kernel.org/all/20250216125816.14430-1-koichiro.den@canonical.com/)
-> > which retains the current behavior, to not suprise anyone now.
-> > I'm now considering whether we might eventually deprecate the sysfs
-> > interface in the future. Doing so could simplify the codebase and bring it
-> > in line with gpio-sim and gpio-virtuser.
-> >
-> 
-> Heh, yeah you'd think so. You can watch my talk[1] on how easy it is
-> to remove sysfs interfaces. :)
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, falling edge,
+or both. There are four GPIO ports, each consisting of 32 pins and
+has indepedent register sets, while still sharing IRQ line and clocks.
 
-Well, I just meant new_device/delete_device in this context so my
-impression was that it would not be that hard. Anyhow, honestly speaking I
-haven't looked through it thoroughly yet. Thank you!
+The GPIO controller request the clock source from APBC block,
+In this series, I haven't added the clock support, but plan
+to fix it after clock driver is merged.
 
-Koichiro
+Due to first three GPIO ports has interleave register settings, some
+resources (IRQ, clock) are shared by all pins.
 
-> 
-> Bartosz
-> 
-> [1] https://fosdem.org/2025/schedule/event/fosdem-2025-5288-the-status-of-removing-sys-class-gpio-and-the-global-gpio-numberspace-from-the-kernel/
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+
+Note, this patch is rebased to v6.14-rc1.
+
+This patch series has been tested on Bananapi-F3 board,
+with following GPIO cases passed:
+ 1) gpio input
+ 2) gpio output - set to high, low
+ 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+
+This version should resolve DT related concern in V4, and register each bank as
+indepedent gpio chip in driver, no more sub children gpio DT node needed.
+
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Changes in v5:
+- export add_pin_range() from gpio core, support to add custom version
+- change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
+- fold children DT nodes into parent
+- Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
+
+Changes in v4:
+- gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
+- gpio interrupt: convert to generic gpio irqchip
+- Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+
+Changes in v3:
+- dt: drop ranges, interrupt-names property
+- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+
+Changes in v2:
+- address dt-bindings comments, simplify example
+- rebase to 6.13-rc3 
+- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
+
+---
+Yixun Lan (5):
+      gpio: of: support to add custom add pin range function
+      dt-bindings: gpio: spacemit: add support for K1 SoC
+      gpio: spacemit: add support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
+      riscv: dts: spacemit: add gpio LED for system heartbeat
+
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  81 +++++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   3 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  15 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spacemit-k1.c                    | 376 +++++++++++++++++++++
+ drivers/gpio/gpiolib-of.c                          |   5 +-
+ include/linux/gpio/driver.h                        |   7 +
+ 9 files changed, 506 insertions(+), 1 deletion(-)
+---
+base-commit: 3d72d603afa72082501e9076eed61e0531339ef8
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+
+Best regards,
+-- 
+Yixun Lan
+
 
