@@ -1,195 +1,121 @@
-Return-Path: <linux-gpio+bounces-16117-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCE9A38065
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 11:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF786A380B6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 11:51:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F28A18846E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 10:39:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B751A188C271
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 10:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9CA217663;
-	Mon, 17 Feb 2025 10:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A467E217646;
+	Mon, 17 Feb 2025 10:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TfwCg1XQ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z01mC7QZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFA8216E2B
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 10:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA038216E1B
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 10:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739788768; cv=none; b=mIp2+d94SifeDBwHGorXy1dUQT2EEq8onttOM+q7yiA7BpEJ0IQkT2qfhGiybc2Bht7UQwIjB465EE0zJQT0jq2ri7cmnb/5PkVoD9X1Olq9m+jBn5p7Asey/6Kv13ltzCE6yrsqOTd3Wogxz9TipcFKVPsFoIa2ZhbYMMEr19s=
+	t=1739789502; cv=none; b=e/+Xen/JQZrARBt53bt2GRsAX4NBMPKOLfLUCR0A8FlqriNkB4Tc328t6uGtJjVElkpdDBBEdG2fOUCM01zpaKmE4oN1qwr7epGzEFCieSIk2sdL6j6wXYmO4WGWRAa3tHAnAbmXZz2a3kYT1dDsfZ5fv1w9EiygsGh2TblvntM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739788768; c=relaxed/simple;
-	bh=vUF/NdChsuF8RX0PL62paJYNXihVr9EN9nW0GqUH6HU=;
+	s=arc-20240116; t=1739789502; c=relaxed/simple;
+	bh=2a6DWia5aelo3+hT4preBpQwhiMBH04u1wwdvEZZTwg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xcx5uUz8eJq+zIcjZnc/V4tfmt7tQQYmP//wMLbVhoD+HfnZSWOkLfs2ZGHG/8YhtvDX2WnWqc/TkiBaJr2SULDuKUMUPOXXgrUElR1KJsHwx4tNfy7F1yWQYcmulhOIpmKY0eghQUOZAZBu7xWy72Qk2C1rdGyvNIEOHe1n8oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TfwCg1XQ; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version:Content-Type; b=AIB7fWSKcfCHlVUl7fvoObgMHW8FFOQC6iXDyjKk5aM6eRiug/KTP20XNDH32b32yczNs1hWvP2KjkXk2zOGCtUh26y2E9/uvhPMu6hK+X8be+wf8anfaMNDlReW5nI6oSVue5LHJ/mR8Sc00TT/5owkA554Bl5Ba61ll5ahaAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z01mC7QZ; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4397dff185fso9515685e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 02:39:26 -0800 (PST)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38f325dd90eso1275611f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 02:51:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739788765; x=1740393565; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739789499; x=1740394299; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bq7tnHLSofTfA2piDpZZwNRhnA5jRBNdKKxEFfHW/ec=;
-        b=TfwCg1XQP43BW6ofJ60nIlueVJdmsPmenMs08VlvdQE9C3JbYJEn4aIFC4oCP0fUtH
-         YGl/D/ieSMfQEGk+nJrc6TzQU7Eot7FgmOjMMTOLIfAyIB4ZUrQYUBYdYkCF1DA2lbPn
-         ysE/qSFXDFVzq/7rP85BVHEvB+jfNDyXeJeyPFJXOE+kxCpuheiF7EizCHq4UZkxC7en
-         qdl4O22yVHnzMLIQqlqrsIBXhRw3VZVWWdS0UGJMgzn885GD6IpRHi+nZj7Pa7+j6L8s
-         xS2oqHJmzJWJ9QP0TRQkgCFUIhTbTnnc4xD40K9wB7JJvxWwamshG1dmt/zeqR2eDrQ8
-         kzwA==
+        bh=j9rL7BFj/LGtJcja3SBY10iTH0HmL8V8oaNVVBtRsuM=;
+        b=Z01mC7QZwOxL1/XXOMz8nWKJZ3L8MAjS0d3cK2A7by6uQfstUzM4Y14rz6xBv/zpPW
+         64ynFLrOUDJCWhSemDJkL5Y1xc/m+vkZLc5PegYqS35Z8puUwKjAGUYd6KuudKb09Aoh
+         2JQrdPAOnccxglYFxBTqdOi6GVooWchcKg6q9sj8JEW/+5KYRi4XpXT1TrFzWPoFzBQu
+         y6gTdKZQE5/upc1psewJIGHEays7sgTxdVvh9q/SKja/ilAM02ZZrDatrSwiJlR3Df1i
+         cNqYmIiZ+SykBt4rivydr/pwudfbhl5nsqjxJtzmXRZMUNR/eF3Sjk7V0KtqmaNHnOXP
+         ScZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739788765; x=1740393565;
+        d=1e100.net; s=20230601; t=1739789499; x=1740394299;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Bq7tnHLSofTfA2piDpZZwNRhnA5jRBNdKKxEFfHW/ec=;
-        b=uVGXNChpYuTANp3y+YapJ48UL6yoe44Vicyfo0QbD8m6Fjudp1URmpQahMId7PO5s8
-         XBA7+fN0UOtZFT7X8NjoX6Rp6yYmwdIi06QT8ieQsD0qXeWSTr3BR5/mHaxu2W6sOMLq
-         N4pRaiskxAWe2v5AgcSx5o6CXlN4JDyBxdu+lz52Iu3x8wOsMndZGtsKhLRlLV0WoO+1
-         N5A4pCOgmh4oXsxlYcXD5YsR6KKhyGseAlG/C6YU13Pj0Iqlp8Db8WfupBX4sTIolpuG
-         4BFM5xNdoO9Cx+FCqD6BDmhqyOXpFCBq3Thq9N5h4EQeu9sn+LxZalkIq6D858XqMs54
-         JaHA==
-X-Gm-Message-State: AOJu0YyAzXm4XyOZXxS48GMcfhFneIXBYYodXR9XAdZSCZR3qzeiDlSJ
-	0kWkobEplXsW/kXpgIWwPl9yHlaTncgp38c5UcFenPt9sj6igO2iVS8lsiZ6eG8=
-X-Gm-Gg: ASbGncszbrbtfTMtul1Mq6j9Y3XarS+bTz+wif1yBJcgE+Ni8Yjf3XbUn7kMJcQlJ25
-	oGq+dMOnaMOC68V0xkM8B8KOn+Wnn5df0UFcR/TaFWgxCLZ2i1mwfcO5+Zs+lf8l7t3JlfRASGh
-	Q8DzadzO53vbZ7KP4B3HrY0LVVRG5BAnuKWe86pGp47SBkRoPkKzBpRgnTOyf3tRQADtCiwa1Pc
-	/w6zoNhLh2QEOEqVy5bxh1QK0vdZWy2FQoJ76uLATIoWfJ59zeC465t902yBvQTjE0DCSCnNwPk
-	7Do7d4zocGka
-X-Google-Smtp-Source: AGHT+IE4CNwnlKoha9ADPAeKHqx7QY4/pSOdlR/jtGXh8ZGwx2i49taknc0Hm9Pgs+7Gplgq0zx0mw==
-X-Received: by 2002:a05:600c:3ca3:b0:439:60bc:71e5 with SMTP id 5b1f17b1804b1-4396e72aac4mr73128495e9.26.1739788765080;
-        Mon, 17 Feb 2025 02:39:25 -0800 (PST)
+        bh=j9rL7BFj/LGtJcja3SBY10iTH0HmL8V8oaNVVBtRsuM=;
+        b=sDLyBg25CVMsaYHZlusQTJyM0JxtyDfgTWqfwKUC2rqjm089phr+vN4P9G4yx6fvg0
+         yfHFtL5lE21Z2qv1r8GfGmZdbN09H3fiWK69+mOhKjwx9XRwBpiujcC6URVb7yap9H22
+         59TIaZfkj1Vyn2E1SCWnwHfCMqIhuLgZHTFWXvZ5JoK0ec+ICKHC34Exqu7G0ToYbCRu
+         d/fcm6tn/nOzlceA4kHxIkoiHq3JqOsb8h8TrOviy1FsO6hDUQckq0A/vPorqgRUuPan
+         MoiOhYPmpgONP5bHNbER/a/bk8exOrW+6CUqYQkiBfLYAu/Ffz3D9BV9vDyEIyGeOdFS
+         2waA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7anyoo071z1LEUubYQdkxZUMpqxZpABZxWiYik8ok1XmV+UOtWrfEq4FLeomdW4Eak0UOt3rFBSz7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6FI/V1JIyWZ40H3HaPmNN2gmwr8/kLxOF2PZXfRyo6gLa54dK
+	gJcGPL38GGg9EhaFqYWW8I3/JWpKbQSFUePgK8nHDDsiHQ7WPvQL9uCvxHnQz40=
+X-Gm-Gg: ASbGncsXIs0W9Z94EtFcQ9HTrYR1+qTbGQfbSmmBnYorh99ya/ArPWyuzZrHSdb4cb4
+	N+ZBRt6JXu0ncJ77XKsiOh0/xm9ArSdYsZTq6G27xO2M3a4h9Rg97rf1ebvbZUp06UwVTuD2Doy
+	aMD2ubnjW1OfkB76YJAu0x7ROs6OOInd3dEH6fciDCAZrXPLXR0NjQ5ZXu0Y5xOW/FLPCbviMti
+	gPTt6ZtiT0uCRM9Bb+5PdAo8ZZFSfJb1WEZPJHGpecGJyTIh1cOQzrYcVrCHKhbhMkzm2b7ktRN
+	ts4e4Rs/kWHJ
+X-Google-Smtp-Source: AGHT+IEcFZLNABjtm5sf5QsAlzR9E7GKqtzQrNge8fNqrR3LiZfoVYgQ3/KTJrrfcZCS1hAQIBqFGw==
+X-Received: by 2002:a05:6000:145:b0:38d:b325:471f with SMTP id ffacd0b85a97d-38f33f1f725mr7557321f8f.15.1739789499204;
+        Mon, 17 Feb 2025 02:51:39 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8707:ccd:3679:187])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a06d1f2sm147990095e9.18.2025.02.17.02.39.24
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f7b68sm11717692f8f.85.2025.02.17.02.51.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:39:24 -0800 (PST)
+        Mon, 17 Feb 2025 02:51:38 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v4 2/2] gpiolib: don't build HTE code with CONFIG_HTE disabled
-Date: Mon, 17 Feb 2025 11:39:22 +0100
-Message-ID: <20250217103922.151047-2-brgl@bgdev.pl>
+	stable@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/8] gpiolib: sanitize return values of callbacks
+Date: Mon, 17 Feb 2025 11:51:37 +0100
+Message-ID: <173978946845.153202.10192575435977387116.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250217103922.151047-1-brgl@bgdev.pl>
-References: <20250217103922.151047-1-brgl@bgdev.pl>
+In-Reply-To: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Hardware timestamping is only used on tegra186 platforms but we include
-the code and export the symbols everywhere. Shrink the binary a bit by
-compiling the relevant functions conditionally.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Changes in v4:
-- rebased after fixing conflicts
+On Mon, 10 Feb 2025 11:51:54 +0100, Bartosz Golaszewski wrote:
+> We've had instances of drivers returning invalid values from gpio_chip
+> calbacks. In several cases these return values would be propagated to
+> user-space and confuse programs that only expect 0 or negative errnos
+> from ioctl()s. Let's sanitize the return values of callbacks and make
+> sure we don't allow anyone see invalid ones.
+> 
+> The first patch checks the return values of get_direction() in kernel
+> where needed and is a backportable fix.
+> 
+> [...]
 
- drivers/gpio/gpiolib.c        |  2 ++
- include/linux/gpio/consumer.h | 36 +++++++++++++++++++++--------------
- 2 files changed, 24 insertions(+), 14 deletions(-)
+Queued this one for fixes. The rest will be picked up next week once this
+is upstream.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f261f7893f85..65ca749a1078 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2906,6 +2906,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_HTE)
- /**
-  * gpiod_enable_hw_timestamp_ns - Enable hardware timestamp in nanoseconds.
-  *
-@@ -2971,6 +2972,7 @@ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(gpiod_disable_hw_timestamp_ns);
-+#endif /* CONFIG_HTE */
- 
- /**
-  * gpiod_set_config - sets @config for a GPIO
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 0dc49b5fca5c..0b2b56199c36 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -114,8 +114,6 @@ int gpiod_get_direction(struct gpio_desc *desc);
- int gpiod_direction_input(struct gpio_desc *desc);
- int gpiod_direction_output(struct gpio_desc *desc, int value);
- int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
--int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
--int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
- 
- /* Value get/set from non-sleeping context */
- int gpiod_get_value(const struct gpio_desc *desc);
-@@ -347,18 +345,6 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 	WARN_ON(desc);
- 	return -ENOSYS;
- }
--static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
--					       unsigned long flags)
--{
--	WARN_ON(desc);
--	return -ENOSYS;
--}
--static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
--						unsigned long flags)
--{
--	WARN_ON(desc);
--	return -ENOSYS;
--}
- static inline int gpiod_get_value(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
-@@ -559,6 +545,28 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #endif /* CONFIG_GPIOLIB */
- 
-+#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
-+int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-+int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-+#else
-+static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
-+					       unsigned long flags)
-+{
-+	if (!IS_ENABLED(CONFIG_GPIOLIB))
-+		WARN_ON(desc);
-+
-+	return -ENOSYS;
-+}
-+static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
-+						unsigned long flags)
-+{
-+	if (!IS_ENABLED(CONFIG_GPIOLIB))
-+		WARN_ON(desc);
-+
-+	return -ENOSYS;
-+}
-+#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
-+
- static inline
- struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
- 					struct fwnode_handle *fwnode,
+[1/8] gpiolib: check the return value of gpio_chip::get_direction()
+      commit: 9d846b1aebbe488f245f1aa463802ff9c34cc078
+
+Best regards,
 -- 
-2.45.2
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
