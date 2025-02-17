@@ -1,93 +1,90 @@
-Return-Path: <linux-gpio+bounces-16107-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16108-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED497A37D27
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 09:27:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31327A37D6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 09:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1D1217090B
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:26:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D374E188FA4B
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32AD719F13F;
-	Mon, 17 Feb 2025 08:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA5A19DF75;
+	Mon, 17 Feb 2025 08:47:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="q4C4n7mK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iX7aPyVh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C20C192B63
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 08:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E211B199FA4
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 08:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739780817; cv=none; b=Ho9ceWygnWn+xlI41V1Av/25eFJ0/kIg9Koq2sBvjBRBXjBP84joZFvTRQoJqmO5op4rAI21Cj+g1dU+WdOjwyTo2omkeRzOVBJkmMvYci+db8Nift1cYRHMayqRDKXw2d61iy7qbsiIAE3UIWeZMoVoo/tyD11yPeU0nEyWwik=
+	t=1739782049; cv=none; b=HOr7M2F8CJS4IWLORSdzvUvUkj9orFD34TVq4HneXf95n76nFfNCZgmacimxdgQ2z8Gq6IQaXvQPk6G8bZwV8yVEwnemEMfnKOFtxDwCE7FeskN0CNb4vGLdTlK+4YjuNu/l7reEmwurw59xHD3pPW22/qn0WC8mmuhsVRSY/zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739780817; c=relaxed/simple;
-	bh=qZ3DrPPS0PbyUiTM6MstGs475Pp7FpAKksdGT+7jhmY=;
+	s=arc-20240116; t=1739782049; c=relaxed/simple;
+	bh=Ue4Ul6Y05UncZ32MPE2fSbcYWky4wxO0AMGYilnHknY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FOSiPxbWL1tbHe+lqvQMv+74QwLNFDJp7gEhvi7aftYw6NL9g6LYJxbCMSzr3wF5uPWIaD5RjCRzvMwRumFsITrV65zx2CX2rYpeBKceB9YVZqCATGg4QRwiLyEoPrbIkbc89Mbh/1R0cmYx4d8h51uAYxjlteYZI7s8NC3Tous=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=q4C4n7mK; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version:Content-Type; b=uG5pgG4isymwMstx30L+9rLe5OtPXArXAO83OJfZwqT0voz7eHEOUYYVm18VWCHRANniKG3EtFDMUx5fFo9OzxjATk09SvEwe8kYUKZJFeIioPn07PeOWK0F2EUpUdqBUkScRKd9Hn8VcJcugH2i09Ag2xFRDLA5vIhuMyRIFLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iX7aPyVh; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so485784f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 00:26:54 -0800 (PST)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4396a24118dso25600435e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 00:47:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739780813; x=1740385613; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739782046; x=1740386846; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=msevzSxLxbbEgD1PYAJEt+KTRILBkRVPCqxrYeVplt8=;
-        b=q4C4n7mKMBjx8/l3bQhj8cMSiiaYUSmANRqJxLol2pJuS+y2Re1PUthsJxuet40bdN
-         50nR/r/1PsI5d7UVBIBeU0Zga1xzCZYw3BkYpNmWO2U7FdGYr/q7h61Q1jGW295WK7j/
-         wavaIKGZqyl5mo441yoT29e/A3qlttQF9U3GwXya11gkgeF4wbqAJ9QxJWs7DSwxmZ6K
-         /rThi7tojrn2c4CT2nMmQDA3yflZJa91SN5HQ+chIXCddQUzzUgb1kMbk4+EkDmxhj0C
-         WEn+GVsEtAI7Gdcd+5bBnIbUxpz10xuNTS9mBQTqhJqIuXY67fo80JOVv9ldARSPcp0I
-         nh7g==
+        bh=Bb3lhINEgDY+UoXToETIm0EmKe9d2I5IoG0cLpEt09A=;
+        b=iX7aPyVh7SDwG8IIbYyY5pw8Lq6883K0paGK83O1vRV6iCOLRQn9ggHdBPD3K0hDJs
+         qJs0JTnkO+NnTZyBLniSevmx/Y+cZBejdJpY3IWH3xjmS0+gSfEK5Je8oX0XYjzF+vEH
+         2hfpHHDHd3WBEMsPcnv1LTmAbLarJF2BbYvrspJu4Moy1rPnkl+RXbOtW2vSlc9mw9r5
+         MoYOqfkdNenccUiL6WwtfUpe2zq6lWbyssQM8u/AMNzYG5ivKHCx2iv8dMfBjXJL/x+I
+         PB65AerbS7Jlh36x4IjI6y3V+NHQr758DQ+SYT2hQp6rnxGKzlzVCIw3TKYtvIeG4BY7
+         pq+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739780813; x=1740385613;
+        d=1e100.net; s=20230601; t=1739782046; x=1740386846;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=msevzSxLxbbEgD1PYAJEt+KTRILBkRVPCqxrYeVplt8=;
-        b=wGa9eJRBywvakNJpuYj4W+suVD8/bzQQiUh8VLaPHEJHlEGPItvhnvuLPg4FdQYUmE
-         0HfAfoGMEcgLzf0tdO0KTgzg1g7mrowGAnP2rwfcZnHFjFPfifTxJ4Qbbb4iXdgPmpeC
-         1QsbnNFPaCd9+6fQCrnOsqGFWKFU1qLN2wiEZmwGYPuv/1855jWib0QmQxd14mJSo5TY
-         3V/onrxqeNQQhS0NwCCvBXGNqEcV82MMh/VvfZUulDB66HW6x+mJ2M93LIoVH2oG5UDO
-         5R19IyMQOFbo9iPvHvtFlHTiR2z7gYs6ym22DFfYv7g12bPHIYqKBjkJC2oEy0GRo5I/
-         YFmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUU9e06qrnKFBk4A7N+y4vkolue7DZafiJ+CwPP0Dd8WHO5GnaqUWYaKzrYloB+enOn2dRwCbLFwa1l@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfzimjJJ2xVHVbCN0ak0mYxJKAAJnpaLsnRDQyrpEChSFGeEff
-	1vZvV+ob1iH8ICEHCPCZZF6j3BiMhLWK8JyFXuDC48yG7LzbDxbS3v3zknzpRXY=
-X-Gm-Gg: ASbGncu2Y7zQ50uTUEL8fFTVw+Pr7K2dl7l6Adjgqwu/ochWdEUTuu3KLK3BX9wWbGn
-	iolhaKSK91LCXubmhup/suV6XDV6JqXHwC66xcOcO4zKDpch0k0IDzXm5YtYNygr0ri9cIG0V5E
-	xQ/4jPpsWYNQiQGqLGVJqGeScZPVpRN0I+hj70dhw+ZhiCAAm99fShTIHJofgwmVkKPyQiyqd+8
-	zBdwGmAbhsziwl4NrAzIXRJm1DQheGMnN/gb1bjBlK1Oe+kFCSbqb50szghAKjbXSHfj32ULqgU
-	coN4YGUuev+/
-X-Google-Smtp-Source: AGHT+IFgRdw92EWtefN37lvXT6ZKrYurtht7S5ytpBGwUaD0zpQLnhiFCY+T5ECKrsij1GF3/gbCFw==
-X-Received: by 2002:a5d:47c9:0:b0:38f:4493:e274 with SMTP id ffacd0b85a97d-38f4493ffe2mr2685265f8f.54.1739780813258;
-        Mon, 17 Feb 2025 00:26:53 -0800 (PST)
+        bh=Bb3lhINEgDY+UoXToETIm0EmKe9d2I5IoG0cLpEt09A=;
+        b=VYwoAMHzSVPsk+1iyxgWLactHpY9i1Y2REPhW5YCbTrsznCtVa/HzGStnwtirzuPPV
+         ngh/bJAvppKmLSV5jihmKUslW4GcRT6iwjEmh3hPmDFMUUidktrFyuqoE+I8iPa1yZUS
+         2iqqzw0brl2UcR+HzVRrSFvAS/ryu5cpRy6sEICYDys9E7JYFtPSMFZqJRM6HDmCheto
+         DkK/LbW5RLbxKNVbwH+NGNnjZ3Kvg8BhDTF6r+UjPydndDnVhE58EvG0Ali0/l0qPos3
+         mT6DCwyYkHl53GxfLkZ3aiR4YPmDgAgAA8VfT7FbpvjQDSgyuB4J/Z+2cWcIRcHGELnU
+         +t8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHmv3I+poMWDcSTjPYpBrxkmudnuTDsCL6ySXL4bY6Ifbd5A7R2hN09BzwyX3Gc6tbE5D6w+tR+Uk0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXuMSZ/rpSHV2ys72RMxdDVjaZf2eGNizJb6/hQf8vSBuKxRk4
+	VaKPvHlT7NJJZJScTJCqlchqcMBp1W90qnv2jAFv/4YXzC9Cnsfhhbg4jZoupAeS03/P6h1y99u
+	beO8=
+X-Gm-Gg: ASbGncuf+26JiDtmoxzHzyINOuNVtTAi0eSxyqE7LSKwTgNodQpaCAMrIVrreWj5AHP
+	yS6UqiWHHXhLuIya9B3HtZtOyCgD3thqE29pkDIW/bMw5unRAxn+xeauUGAAsFdSs6GH8Yf3TOX
+	fBRentjZCTFKNIBdTd7D60TOhArfiFXnZ24yXtQXUFaxjpfReIMRpcl2AE/XnTmM5nrMxyNghrD
+	TDsBHLTb9uZDN+Du9f5uChOnGrbaMKm9wb3pgJGaTPL53jR5S9XBIjjRrQeZoQudLWD3qPodbmk
+	KqFS5USpRlcQ
+X-Google-Smtp-Source: AGHT+IFT+lMKOU/deB2J2ddGkT3HluOwPLwaMtnkgEjYGq7pMKOAsYx3SgC5Rv9p/UAiTeKw5JF2Bw==
+X-Received: by 2002:a05:600c:3b1c:b0:439:64eb:67cf with SMTP id 5b1f17b1804b1-4396e6c18d4mr79637545e9.13.1739782046008;
+        Mon, 17 Feb 2025 00:47:26 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8707:ccd:3679:187])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a1aa7f3sm147815945e9.29.2025.02.17.00.26.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43987396d3dsm13992455e9.36.2025.02.17.00.47.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 00:26:52 -0800 (PST)
+        Mon, 17 Feb 2025 00:47:25 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Vincent Fazio <vfazio@xes-inc.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Phil Howard <phil@gadgetoid.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH libgpiod v4 00/17] doc: improvements for ReadTheDocs
-Date: Mon, 17 Feb 2025 09:26:51 +0100
-Message-ID: <173978077536.64112.16244035934382093305.b4-ty@linaro.org>
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: latch: use generic device properties
+Date: Mon, 17 Feb 2025 09:47:24 +0100
+Message-ID: <173978204242.97470.9398094804481647954.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250211-improve-docs-v4-0-dc56702c2ca8@linaro.org>
-References: <20250211-improve-docs-v4-0-dc56702c2ca8@linaro.org>
+In-Reply-To: <20250211120847.42437-1-brgl@bgdev.pl>
+References: <20250211120847.42437-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -100,56 +97,19 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Tue, 11 Feb 2025 13:59:21 +0100, Bartosz Golaszewski wrote:
-> One thing that this project is missing is nicely looking, accessible and
-> automatically updated documentation. I'd like to finally address it and
-> replace our static doxygen pages with sphinx docs.
+On Tue, 11 Feb 2025 13:08:46 +0100, Bartosz Golaszewski wrote:
+> Replace calls to OF-specific interface with generic device property
+> getters. This is good practice and also drops implicit run-time
+> dependency on CONFIG_OF.
 > 
-> I spent some time playing with sphinx, doxygen, breathe and exhale. It
-> turned out that exhale doesn't support doxygen groups and I really want
-> to have them for the core C API to avoid having to manually assign each
-> function to a specific module. That means we must use breathe on its own
-> to integrate our existing doxygen docs with .rst.
 > 
-> [...]
 
-I'm happy with the series so let's merge it and start building the official
-docs from the master branch.
+Applied, thanks!
 
-[01/17] build: set PACKAGE_URL
-        commit: 588a196abbebc82eaa3495a9db4e9edfbaa44ed9
-[02/17] bindings: cxx: doc: remove the gpiod_cxx doxygen group
-        commit: e025e1cb5cbb5be933ab3d7b34cef2800a41eed1
-[03/17] bindings: python: doc: update the docstring for gpiod.request_lines()
-        commit: 8aa4d84b6f8e2d5d5fbb1b5c23d0eab69f9bf72a
-[04/17] bindings: python: doc: make code examples appear as such in sphinx
-        commit: b1bc6664f697c2aa693192d43f58d01b8210d3e5
-[05/17] bindings: python: doc: describe undocumented members
-        commit: d46e8f67aa45e2acbe8b918ff9815628167aea9b
-[06/17] bindings: gpiod: reword the docstring for LineRequest.__init__()
-        commit: 7ac26508931ce6aa8a5b2f9e45bcdeb4fb9d80a1
-[07/17] bindings: glib: add the configuration file for gi-docgen
-        commit: d0139ffa9c02b594e36681d3bb2b48932b3d573d
-[08/17] dbus: daemon: add a more detailed description to help text
-        commit: 681c0c2767944f668f2e6649ff0663ce4dbbcbd1
-[09/17] dbus: client: tweak help text
-        commit: 1ddfa9fc4b5b58bcf11a8852c5b71a66223de9ac
-[10/17] dbus: improve comments in API xml
-        commit: 91955a1f934452eafbc862de2b3392110cc338c0
-[11/17] doc: create man entries for gpio-manager and gpiocli
-        commit: 3b4a2ced02138c2837f99bfd1ed3773390ded74a
-[12/17] doc: provide sphinx docs for the core C API and C++ bindings
-        commit: 7e11886fffc095b9d3f211d49a49f96cfd73e578
-[13/17] doc: add documentation for python bindings
-        commit: 07da46218683322a246dfe5eda317589cd822a58
-[14/17] doc: add documentation for GLib bindings
-        commit: f37aaf2a6af66f22518091c7c58de596ff613010
-[15/17] doc: add documentation for gpio-tools
-        commit: 6f8b77c712a30ebea4089d317f4f8617287341cc
-[16/17] doc: add documentation for D-Bus API, daemon and command-line client
-        commit: bbcb5d44611d15d4db5d4f9fdb3362a0f84d7d10
-[17/17] doc: move README contents to sphinx docs
-        commit: dda57bd63f220d57bf80e3c1411ee612befda011
+[1/2] gpio: latch: use generic device properties
+      commit: 3c998af7ceae2c86b4b0e128d5e47b3c1e1f8f05
+[2/2] gpio: latch: store the address of pdev->dev in a helper variable
+      commit: 80bcee25b592b018203be1ddb20ede8d207a552a
 
 Best regards,
 -- 
