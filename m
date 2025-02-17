@@ -1,286 +1,149 @@
-Return-Path: <linux-gpio+bounces-16142-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16145-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6AB7A38678
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:34:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DC31A3868B
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 15:35:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD5163A1173
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 14:28:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9153188B3A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 14:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E842F21E0BF;
-	Mon, 17 Feb 2025 14:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33602223300;
+	Mon, 17 Feb 2025 14:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="vv18r0OZ"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Whd1gznZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A465921D00A
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 14:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF75221DBE
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 14:34:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739802523; cv=none; b=pZ91AoJachb+vGASlrPzGbUrDmvFpRdZ2jvcjClGkQ9Mt5Po6Ievxfj0vD0vIePGnLD1gJdN2tk0iO0OKJjH+cmiQTadt+1NB3VyxQuCOKyU3nFHzvVldNLdBcZHhTEF10sCzoiGZs6Injy8vCkSumYgvShZbi/533FMHKpf51k=
+	t=1739802858; cv=none; b=q1UhyVp7v8DUUscqNwUfT5+Xy1CzqSdDJ62V++9TINQc1znYaWS23h9hbprJOL1+GmKE3e7IalM/NojgeRvPKA5DNM9jSfMAJE3A6Tb1xno0apk+XDPPoy5bj1gC3xRojGWfOECOs5lgbRlIW7/kVN2jaIXE2eF9Dgi8wmmfin4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739802523; c=relaxed/simple;
-	bh=kgTHhR4YUfUQvLTcLHSzDC9nY3pfgiRlMVx62VhpKuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dkmAYkZFTRBpmFjzfqbPIKBBafu+DA0UeKMSGYUgtKN2oLljv4nWE9U8oKdaj6R5W4olWskJdFQX/MvlOQRpY0TJEcXCRxnSSPDcUtVTmnt5+a7Q/d1ga27gduRO/fbaSIRzs3fTh7BxLtxwsmPf7VyEhCA9bfS2lXD++0Mr4CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=vv18r0OZ; arc=none smtp.client-ip=185.125.188.123
+	s=arc-20240116; t=1739802858; c=relaxed/simple;
+	bh=+dQh08J2Wrw7tq8kkvKhIgSeuAw3wVHIEItqCvMFpSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RuyDXyKZHBio5waz+yFzPkNcv9m0rCGOGqWTwtXMFPbvoaElZLyS4/jQdPMldLwtxQdUlI311X++Jy0Mi0XSg+3DRGX3CtQgOSAGz3iY7sTnp83ebe3aqSArl6ZgVToPpupgn4Tn47vZkbYz8nR+z3SzSA/S/xGvjn0ATeYU2o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Whd1gznZ; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C37CA40111
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 14:28:39 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 052ED3F2F0
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 14:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1739802519;
-	bh=ejmbjvPRmedRPsWRD+UddjAoJvDsol1360tkb/DZqGw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=vv18r0OZU5QAlenyGnhdDK+5LW8+8/DZhQK7DuAyIYKJ8Gih0lMq8kpYRhWzjHrsV
-	 vxu1Hj7eiT6jaCFMUVekpX7cAemym8J1fVX+CJsqXYaUuNHC4bfP2T84kaKuSPDaVK
-	 vbkodIZ2kr5Q4+1Tcsme+WYsOCnjtW88K3HuP41tuTuAHSCESJPxhm2Ahs0o5P5Hrd
-	 0VexUt5OAU+bvAFJHdzYg0VLRgrO5COo4y6imslXxZlLir0aaQO82moSM8e6I2rIt0
-	 hWFVR4ClfTOjphf0ayp5SRlPNMIa4Op/JRrCv1F68Lc/hNMJp3AeaFyRctb1WgrPlI
-	 w7nXQKzI7uekg==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220ec5c16e9so65943345ad.1
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 06:28:39 -0800 (PST)
+	s=20210705; t=1739802855;
+	bh=fFzE+iQ7/6Nth8qy0xHPs/Cj4g/jlkWpDyJC+gk/5Yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=Whd1gznZS7qjCZPmEOH+BNQXqEuduvatVPqITjO/P2eeXAHjtWPa6E8unkIOR+KW6
+	 eN/CCGITrJfpzylyDPgrwjvfCrNbAdvulHnoa8RGvDKyPXIJk0jLNesmYSnp+4GlWA
+	 IOC0I9M7NIPHBOQuZldKwgs8iPJa3BdZ4UNxYp4JlmdLKs5lmCjV6/T+zN9j6F8UEA
+	 F3XVDlgX4QZ7MTNzFh1zOkHoHW2EZ+xebnx7pXwFw6HzXKE5rZAvRdvsjN9eVkA7OV
+	 KBjjsFWeE/csgWZXrO3wDfKd3Lhm/Pq4VNolYwzro5W5Co3Fz6h53v/QkMZl3HcVnU
+	 ueNpHmashDuYA==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fc43be27f8so6492724a91.1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2025 06:34:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739802518; x=1740407318;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ejmbjvPRmedRPsWRD+UddjAoJvDsol1360tkb/DZqGw=;
-        b=BOKgQFbwa/N4nA9H/kiIZAAC+llS9PYuOoT+qg8orCkhs9UGcCJ6avopsh4akeY2kK
-         KLyMRyg7RfwRMUtYYh1Q9CiQ99UhyiPI+MCzASG0Scfq6PCgYbj1cul0tjOZcanYmfDI
-         sKck7KDpzCR8JF7aiZ5+MbbpZgaGKOiqcYujC0mLzlMJbvQkjTGPbxhO0DozeHaxNc6n
-         dMBVr5wB0qnsKMEV4PLhe47pUstj34MvnNXx2MT1/h1ZHbDWva2FSNL/mtmtOVSK1zGu
-         hLegQFQxN1U7tlf9XiZ6qvjeUcR0NiORxcongW+7cWCo1Cf2mYJw7qO0NgIvhgZJxUOs
-         Przg==
-X-Gm-Message-State: AOJu0Yy7Y4ykYK9Uzx8b28eWRBCPwXjCMFywlxcfSauqFthaTshWWPBO
-	LWPFoqnz9dYLpr7uM1g8jmQdJ4LKLG010/jyRYoACzrUlR1mTkuGzYQv/Q/ReAYpzJ8m72Eb0uH
-	rd/t1m0fjjizfVxAS5ly1Y2brqqe1L5+HL71661jtEVEh8ut+8poWMX+9PHZBEAbAQmUkdHFWqy
-	nYhR/Xq/I=
-X-Gm-Gg: ASbGncssrYG+oTzRvcfqnjjHCY45ef4PWMEdLDxqvAmyG0c1FHoqyIXDRpWiBDyGyp7
-	lgMflPs8MXRTcKZsFaxu2K3AgpDV+l/oNuyN9iaByes43hr27TPJU1BXbEfRA9HshNPEBJ1NUKU
-	2TdSBHDfGhYFvoWBYZTlx3FTA2rfrm0yxBArNQE8WP1i+CxPp3b2sFT9x2wmH5DSezn3YkK5W3C
-	JZ3n0+g4v3V+0qazQSyW0lhP/U7tBbYK3e7soX6VI8N3HKhg64upe5wwYu7uWZzjR8sSxtzpYJJ
-	u1u5uakjFHXrlFHhuQ0Ic14=
-X-Received: by 2002:a17:902:f612:b0:21f:9c7:2d2e with SMTP id d9443c01a7336-221040bdb68mr172681215ad.40.1739802517931;
-        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHOgk8p2bSJvuLs/oEyFap3MbF7dqcx6MlSiZYeTYQTftD3iALVIhnHNeIrILA8yaAsNNn1Bg==
-X-Received: by 2002:a17:902:f612:b0:21f:9c7:2d2e with SMTP id d9443c01a7336-221040bdb68mr172680895ad.40.1739802517600;
-        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
-Received: from localhost.localdomain ([240f:74:7be:1:a6da:1fd8:6ba3:4cf3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d55916c7sm72237735ad.243.2025.02.17.06.28.34
+        d=1e100.net; s=20230601; t=1739802853; x=1740407653;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fFzE+iQ7/6Nth8qy0xHPs/Cj4g/jlkWpDyJC+gk/5Yg=;
+        b=h0vjwwZ0+xmzmgqEhPmEjBELAoe57n8fVU5UjS8jjc6nKa4vwGB1glPTOu2sSFLTnt
+         Wfai+PH+RlasB1lK+wMQPx+DpGz4A39n5KIN5oSasChP2dwzVCmybfD12WSDoTqYefDa
+         nrML6W/bkDJIEWzZ9H+bH5QjKNDlxwF6LFNnEgUEljk4g7JdxhTZTVs2rfqvCcsDnk6K
+         lF+o+CLWqQpiDlbjsoojh2RrkiorVRGqE0Mub5A5RMu6umSNN/g2Ple+BRoVfBn9W3LC
+         OdW3OiwAHyv3yRIBAVIjDPCNJy1KGVPS9f8r87RtMkc6y3NOQHpmpEzaMr/MZFluZx9r
+         8c7w==
+X-Gm-Message-State: AOJu0YwFqXcUQzuCA0MQoXpmlsZq5uHAWzXPCo/iBPYXYTfdxDpYSFVg
+	xgglXgTbESw72dJuow6g7zOyVrK+HKzjAomYBCBo7Vi+8ra14mQ8LsSHOP2SPsydeedLZXFxiPo
+	9nQCXM0X13tSma7VGt2sdr1XvdXahDZ7+yJZbQca3jt7rEX85FGqA341H05Ktlw33CPTwBC0kQl
+	A=
+X-Gm-Gg: ASbGncvzv6208xLeSjK+rb9QVOKDEN+0hp737F2G6iIVqU56xg1+AhIVC9CnuNxUTc1
+	jIATtHdHbIa8Fu0a2F7d/q3U1UDZrNqlGCSGRDitDw0WlPRqqvjgoocLBwaDgJsjO6FFQwjCYJ+
+	LbbvFRvI56WEhzv3kwtLSS8n3RlrRtYVZigfrHd9vsqK5COVA3CSB4n7RcEn4vZO9Hc7lllKZRK
+	qkutv6jhyrQbjOPbGwMevGAWOWtHr4nq7zxUcIzwtjNJcyIZyOBAfS6u4ZMDnWQ9OrBz9RRtEA+
+	CaSjGbA=
+X-Received: by 2002:a05:6a00:1a89:b0:730:9946:5972 with SMTP id d2e1a72fcca58-7326177f450mr15128559b3a.1.1739802853702;
+        Mon, 17 Feb 2025 06:34:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHzREazoIMmolG1CVLrZY207BcM9g0sp5SvtvoFagvZGNZkcgfkEhbB+UfODQIu0yZpQ0fDBg==
+X-Received: by 2002:a05:6a00:1a89:b0:730:9946:5972 with SMTP id d2e1a72fcca58-7326177f450mr15128543b3a.1.1739802853432;
+        Mon, 17 Feb 2025 06:34:13 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:a6da:1fd8:6ba3:4cf3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-732642d908esm4592726b3a.159.2025.02.17.06.34.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 06:28:37 -0800 (PST)
+        Mon, 17 Feb 2025 06:34:13 -0800 (PST)
+Date: Mon, 17 Feb 2025 23:34:10 +0900
 From: Koichiro Den <koichiro.den@canonical.com>
-To: linux-gpio@vger.kernel.org
-Cc: brgl@bgdev.pl,
-	geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	maciej.borzecki@canonical.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] gpio: virtuser: convert to use gpio-pseudo utilities
-Date: Mon, 17 Feb 2025 23:27:58 +0900
-Message-ID: <20250217142758.540601-4-koichiro.den@canonical.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250217142758.540601-1-koichiro.den@canonical.com>
-References: <20250217142758.540601-1-koichiro.den@canonical.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/13] gpio: aggregator: reorder functions to prepare
+ for configfs introduction
+Message-ID: <4ce6vzqsmjk4l7m4riraurpgmdhhvdq7e3spkgo5nvnt5uvgav@6aloxueo7ypw>
+References: <20250216125816.14430-1-koichiro.den@canonical.com>
+ <20250216125816.14430-2-koichiro.den@canonical.com>
+ <CAMuHMdWZy22ckxoLOWH4x40VE4pRsBCfMDXJZ5ZYcu-ABFKRWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWZy22ckxoLOWH4x40VE4pRsBCfMDXJZ5ZYcu-ABFKRWg@mail.gmail.com>
 
-Update gpio-virtuser to use the new gpio-pseudo helper functions for
-synchronized platform device creation, reducing code duplication.
+On Mon, Feb 17, 2025 at 02:07:53PM GMT, Geert Uytterhoeven wrote:
+> On Sun, 16 Feb 2025 at 13:58, Koichiro Den <koichiro.den@canonical.com> wrote:
+> > Reorder functions in drivers/gpio/gpio-aggregator.c to prepare for the
+> > configfs-based interface additions in subsequent commits. Arrange the
+> > code so that the configfs implementations will appear above the existing
+> > sysfs-specific code, since the latter will partly depend on the configfs
+> > interface implementations when it starts to expose the settings to
+> > configfs.
+> >
+> > The order in drivers/gpio/gpio-aggregator.c will be as follows:
+> >
+> > * Basic gpio_aggregator/gpio_aggregator_line representations
+> > * Common utility functions
+> > * GPIO Forwarder implementations
+> > * Configfs interface implementations
+> > * Sysfs interface implementations
+> > * Platform device implementations
+> > * Module init/exit implementations
+> >
+> > This separate commit ensures a clean diff for the subsequent commits.
+> >
+> > No functional change.
+> >
+> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> 
+> My
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> is still valid.
 
-No functional change.
+Thank you, let me add the tag to the two commits in v4 since they remain
+unchanged.
 
-Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
----
- drivers/gpio/Kconfig         |  1 +
- drivers/gpio/gpio-virtuser.c | 73 +++++-------------------------------
- 2 files changed, 11 insertions(+), 63 deletions(-)
+Koichiro
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c482e3494bac..d8fede07149f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1942,6 +1942,7 @@ config GPIO_VIRTUSER
- 	select DEBUG_FS
- 	select CONFIGFS_FS
- 	select IRQ_WORK
-+	select GPIO_PSEUDO
- 	help
- 	  Say Y here to enable the configurable, configfs-based virtual GPIO
- 	  consumer testing driver.
-diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
-index e89f299f2140..a825edc6fbc5 100644
---- a/drivers/gpio/gpio-virtuser.c
-+++ b/drivers/gpio/gpio-virtuser.c
-@@ -11,7 +11,6 @@
- #include <linux/atomic.h>
- #include <linux/bitmap.h>
- #include <linux/cleanup.h>
--#include <linux/completion.h>
- #include <linux/configfs.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
-@@ -37,6 +36,8 @@
- #include <linux/string_helpers.h>
- #include <linux/types.h>
- 
-+#include "gpio-pseudo.h"
-+
- #define GPIO_VIRTUSER_NAME_BUF_LEN 32
- 
- static DEFINE_IDA(gpio_virtuser_ida);
-@@ -973,49 +974,17 @@ static struct platform_driver gpio_virtuser_driver = {
- };
- 
- struct gpio_virtuser_device {
-+	struct pseudo_gpio_common common;
- 	struct config_group group;
- 
--	struct platform_device *pdev;
- 	int id;
- 	struct mutex lock;
- 
--	struct notifier_block bus_notifier;
--	struct completion probe_completion;
--	bool driver_bound;
--
- 	struct gpiod_lookup_table *lookup_table;
- 
- 	struct list_head lookup_list;
- };
- 
--static int gpio_virtuser_bus_notifier_call(struct notifier_block *nb,
--					   unsigned long action, void *data)
--{
--	struct gpio_virtuser_device *vdev;
--	struct device *dev = data;
--	char devname[32];
--
--	vdev = container_of(nb, struct gpio_virtuser_device, bus_notifier);
--	snprintf(devname, sizeof(devname), "gpio-virtuser.%d", vdev->id);
--
--	if (!device_match_name(dev, devname))
--		return NOTIFY_DONE;
--
--	switch (action) {
--	case BUS_NOTIFY_BOUND_DRIVER:
--		vdev->driver_bound = true;
--		break;
--	case BUS_NOTIFY_DRIVER_NOT_BOUND:
--		vdev->driver_bound = false;
--		break;
--	default:
--		return NOTIFY_DONE;
--	}
--
--	complete(&vdev->probe_completion);
--	return NOTIFY_OK;
--}
--
- static struct gpio_virtuser_device *
- to_gpio_virtuser_device(struct config_item *item)
- {
-@@ -1029,7 +998,7 @@ gpio_virtuser_device_is_live(struct gpio_virtuser_device *dev)
- {
- 	lockdep_assert_held(&dev->lock);
- 
--	return !!dev->pdev;
-+	return !!dev->common.pdev;
- }
- 
- struct gpio_virtuser_lookup {
-@@ -1369,7 +1338,7 @@ gpio_virtuser_device_config_dev_name_show(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	pdev = dev->pdev;
-+	pdev = dev->common.pdev;
- 	if (pdev)
- 		return sprintf(page, "%s\n", dev_name(&pdev->dev));
- 
-@@ -1478,7 +1447,6 @@ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
- {
- 	struct platform_device_info pdevinfo;
- 	struct fwnode_handle *swnode;
--	struct platform_device *pdev;
- 	int ret;
- 
- 	lockdep_assert_held(&dev->lock);
-@@ -1499,31 +1467,12 @@ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
- 	if (ret)
- 		goto err_remove_swnode;
- 
--	reinit_completion(&dev->probe_completion);
--	dev->driver_bound = false;
--	bus_register_notifier(&platform_bus_type, &dev->bus_notifier);
--
--	pdev = platform_device_register_full(&pdevinfo);
--	if (IS_ERR(pdev)) {
--		ret = PTR_ERR(pdev);
--		bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
-+	ret = pseudo_gpio_register(&dev->common, &pdevinfo);
-+	if (ret)
- 		goto err_remove_lookup_table;
--	}
--
--	wait_for_completion(&dev->probe_completion);
--	bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
--
--	if (!dev->driver_bound) {
--		ret = -ENXIO;
--		goto err_unregister_pdev;
--	}
--
--	dev->pdev = pdev;
- 
- 	return 0;
- 
--err_unregister_pdev:
--	platform_device_unregister(pdev);
- err_remove_lookup_table:
- 	gpio_virtuser_remove_lookup_table(dev);
- err_remove_swnode:
-@@ -1539,11 +1488,10 @@ gpio_virtuser_device_deactivate(struct gpio_virtuser_device *dev)
- 
- 	lockdep_assert_held(&dev->lock);
- 
--	swnode = dev_fwnode(&dev->pdev->dev);
--	platform_device_unregister(dev->pdev);
-+	swnode = dev_fwnode(&dev->common.pdev->dev);
-+	pseudo_gpio_unregister(&dev->common);
- 	gpio_virtuser_remove_lookup_table(dev);
- 	fwnode_remove_software_node(swnode);
--	dev->pdev = NULL;
- }
- 
- static void
-@@ -1772,8 +1720,7 @@ gpio_virtuser_config_make_device_group(struct config_group *group,
- 				    &gpio_virtuser_device_config_group_type);
- 	mutex_init(&dev->lock);
- 	INIT_LIST_HEAD(&dev->lookup_list);
--	dev->bus_notifier.notifier_call = gpio_virtuser_bus_notifier_call;
--	init_completion(&dev->probe_completion);
-+	pseudo_gpio_init(&dev->common);
- 
- 	return &no_free_ptr(dev)->group;
- }
--- 
-2.45.2
-
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
