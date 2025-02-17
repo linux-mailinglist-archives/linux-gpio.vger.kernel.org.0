@@ -1,96 +1,172 @@
-Return-Path: <linux-gpio+bounces-16103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16104-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C2ABA37C72
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:44:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608CDA37C82
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 08:50:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B65C73AF6F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 07:44:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3D5016850C
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2025 07:49:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614FA19C57C;
-	Mon, 17 Feb 2025 07:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F08199254;
+	Mon, 17 Feb 2025 07:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWzP+qcJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz/n9El0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B413199921;
-	Mon, 17 Feb 2025 07:44:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7842E1922F3;
+	Mon, 17 Feb 2025 07:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739778251; cv=none; b=N4l02TlR2ZYiaR/5m6Zd5MV408Nk552PWSleOLddktGiy7enpt134eH7pqafNESecuPaLFnTCCi/sQwwSFpcZvDk45GZ8BMqmD6sUfJGaxR9GaLnXmF1toH8OpjImIA3fsYw0R0/Lbu/JGAmYD5RcfT7Qf0pOJuFjSm3yrKOKOA=
+	t=1739778579; cv=none; b=rDUtLoVY0Z7J78KmRSsq3eEkZRXFqBoGAYYyGUNJV1u2NIyhYIKV9veyL/5QrTTbYITyQJnsxv+YDnXOpJ0gpSKo6eUix1BjtdOe9REPmiOZpwBtTxTST0BdDKXfR0fEmo78iFAL0DMsVsBq8z14wri8OK8rjz+EQw6b9I8ee0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739778251; c=relaxed/simple;
-	bh=Bbrflya5nVSt2cNXmApP3KAlPYCu7xXoDGFPWYSjhIw=;
+	s=arc-20240116; t=1739778579; c=relaxed/simple;
+	bh=16vj36Lgwd2wcpLYZYILJJ2i3EUzlfBHM+5zf2X9BEo=;
 	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=ZXYvrn9uQx1zBexMEBBUVRx4UiVTUE2GebWNmQurVgNSvruJTp4bKH5ZsFEB8n7JML/By2GDG0zqdDAT0KLFlGWk0Z5P3WEOQ5MnDO7IFZ0V2QyG3t8WiL66ZAYaA2iuaVJs7qawBeOeE5y4AQYF5hl4Grd+oPslySoL6QACR90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWzP+qcJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 408D1C4CED1;
-	Mon, 17 Feb 2025 07:44:09 +0000 (UTC)
+	 In-Reply-To; b=jyudvH9eqeoxY2sYQAdIDSDzbpPcQbVUrT11t1r19wOPZxCeCu8YkdPYqhSY6XUBVEneJqvvFAYOdCtrx5/ccvv7nz8sWbUjDKSkedS+HPAOu8OckYPDJzT5ZHqI16Tcr1L9wjMezEMErSGpNlhNBcUpfhNogZdurb/uGmmSa48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz/n9El0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F094FC4CED1;
+	Mon, 17 Feb 2025 07:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739778249;
-	bh=Bbrflya5nVSt2cNXmApP3KAlPYCu7xXoDGFPWYSjhIw=;
+	s=k20201202; t=1739778579;
+	bh=16vj36Lgwd2wcpLYZYILJJ2i3EUzlfBHM+5zf2X9BEo=;
 	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=dWzP+qcJ5rw51K+nABT/iMYAGtNpVESzmvirOR5HeyRT70yXgyVsGeaY4Z7nbAq3A
-	 ezwzL/HBqUgTcL2SIkG4pxgkdwwu9FTizqOtCHMGx9G8U05OU8R8W1srCbM7LZOnxG
-	 hid16kDzBPsbuDMdgW9q1tV2gW7GDvwomEdF682iJNcAIszO7+w32tXXyGBzMzqphE
-	 GkWbS/KNLTVXKWpPgKaXAY/rdQSYdT+3veh1TmrvX0WNn/br5Pyw1L46RCvHcJMy8s
-	 va6OONszg455uI9r4dVcB2QXMyu7uZObty2+jCFie9yorRgigB08iZB8KeXnUvEuGs
-	 28qKQz26UAj4w==
+	b=gz/n9El09XA1b66t36s/zgS4N3j5iSykcC18LX4iLY54hWCM/LI0ofNFS8rJwYxJ2
+	 NL+oKt0phr9uxNYaxSORuvfoDtARxHSjuqQvAhy5wICxwpdjjE0srVeWm/du+c2FzU
+	 wuSKpGWDGyp004aTWxZxKlfteJoRTUyQU1K26tmPsL4/heVXoZQSIODE+TpfL0Zrdt
+	 wcSRX5qZpnRa8/pylC/EtlQkeRVt4j/rfOvHshuSLIRVFM3jVlE35JVr1LlusCYb+C
+	 HJf/bPO6g8a0y5XXZUwjOO6QrxYn8mpwndOhcY8ywNDu0RRi49XOLp9aTx5SnVW1+r
+	 AivTKhGGJtyaA==
 Content-Type: multipart/signed;
- boundary=5719814fb54f54e3427bc9faeabbd9bbeffba8d88f84dc81ea7fcdb19f0b;
+ boundary=d86e9473d3daa6c97c74ffc63e11b90ba2941869ba77179fbdee0053404e;
  micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 17 Feb 2025 08:44:05 +0100
-Message-Id: <D7UJX0EZK9TK.1V2HDFVSKK0NP@kernel.org>
-Subject: Re: [PATCH v1 5/5] gpio: regmap: Allow ngpio to be read from the
- property
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski"
- <brgl@bgdev.pl>, "athieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+Date: Mon, 17 Feb 2025 08:49:35 +0100
+Message-Id: <D7UK17VYQYF1.1MBG6HEHPVXN3@kernel.org>
+Subject: Re: [PATCH 06/14] gpio: regmap: use value returning setters
+Cc: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@linaro.org>
 From: "Michael Walle" <mwalle@kernel.org>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Bamvor Jian Zhang" <bamv2005@gmail.com>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>, "Keerthy"
+ <j-keerthy@ti.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 X-Mailer: aerc 0.16.0
-References: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
- <20250213195621.3133406-6-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250213195621.3133406-6-andriy.shevchenko@linux.intel.com>
+References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
+ <20250211-gpio-set-retval-v1-6-52d3d613d7d3@linaro.org>
+In-Reply-To: <20250211-gpio-set-retval-v1-6-52d3d613d7d3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
---5719814fb54f54e3427bc9faeabbd9bbeffba8d88f84dc81ea7fcdb19f0b
+--d86e9473d3daa6c97c74ffc63e11b90ba2941869ba77179fbdee0053404e
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
 
-On Thu Feb 13, 2025 at 8:48 PM CET, Andy Shevchenko wrote:
-> GPIOLIB supports the case when number of supported GPIOs can be read
-> from the device property. Enable this for drivers that are using
-> GPIO regmap layer.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi,
 
-Reviewed-by: Michael Walle <mwalle@kernel.org>
+On Tue Feb 11, 2025 at 1:09 PM CET, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has additional variants of the set(_multiple)
+> driver callbacks that return an integer to indicate success or failure.
+> Convert the driver to using them.
+
+Great!
+
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpio-regmap.c | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+> index 05f8781b5204..e3b4e392549b 100644
+> --- a/drivers/gpio/gpio-regmap.c
+> +++ b/drivers/gpio/gpio-regmap.c
+> @@ -81,22 +81,25 @@ static int gpio_regmap_get(struct gpio_chip *chip, un=
+signed int offset)
+>  	return !!(val & mask);
+>  }
+> =20
+> -static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
+> -			    int val)
+> +static int gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
+> +			   int val)
+>  {
+>  	struct gpio_regmap *gpio =3D gpiochip_get_data(chip);
+>  	unsigned int base =3D gpio_regmap_addr(gpio->reg_set_base);
+>  	unsigned int reg, mask;
+> +	int ret;
+> =20
+>  	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+
+reg_mask_xlate() might fail. Please also check the return code.
+
+>  	if (val)
+> -		regmap_update_bits(gpio->regmap, reg, mask, mask);
+> +		ret =3D regmap_update_bits(gpio->regmap, reg, mask, mask);
+>  	else
+> -		regmap_update_bits(gpio->regmap, reg, mask, 0);
+> +		ret =3D regmap_update_bits(gpio->regmap, reg, mask, 0);
+> +
+> +	return ret;
+>  }
+> =20
+> -static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
+> -				       unsigned int offset, int val)
+> +static int gpio_regmap_set_with_clear(struct gpio_chip *chip,
+> +				      unsigned int offset, int val)
+>  {
+>  	struct gpio_regmap *gpio =3D gpiochip_get_data(chip);
+>  	unsigned int base, reg, mask;
+> @@ -107,7 +110,7 @@ static void gpio_regmap_set_with_clear(struct gpio_ch=
+ip *chip,
+>  		base =3D gpio_regmap_addr(gpio->reg_clr_base);
+> =20
+>  	gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+
+same same :)
 
 -michael
 
---5719814fb54f54e3427bc9faeabbd9bbeffba8d88f84dc81ea7fcdb19f0b
+> -	regmap_write(gpio->regmap, reg, mask);
+> +	return regmap_write(gpio->regmap, reg, mask);
+>  }
+> =20
+>  static int gpio_regmap_get_direction(struct gpio_chip *chip,
+> @@ -266,9 +269,9 @@ struct gpio_regmap *gpio_regmap_register(const struct=
+ gpio_regmap_config *config
+>  	chip->free =3D gpiochip_generic_free;
+>  	chip->get =3D gpio_regmap_get;
+>  	if (gpio->reg_set_base && gpio->reg_clr_base)
+> -		chip->set =3D gpio_regmap_set_with_clear;
+> +		chip->set_rv =3D gpio_regmap_set_with_clear;
+>  	else if (gpio->reg_set_base)
+> -		chip->set =3D gpio_regmap_set;
+> +		chip->set_rv =3D gpio_regmap_set;
+> =20
+>  	chip->get_direction =3D gpio_regmap_get_direction;
+>  	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
+
+
+--d86e9473d3daa6c97c74ffc63e11b90ba2941869ba77179fbdee0053404e
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ7LoxhIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/hrrwF+LLHwHr4IqB7oqwwqHcbXb/5yO8S9TN+H
-3nRkLiVxx0V3wxV5mWGi19U+7ckX8QrDAX45wpAh2zHWSDN78aFp+LOIgISQleXo
-bM8CrbBZB07l3Xtf9/GiO8+Q0woimi1PfQc=
-=pZJS
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ7LqDxIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/j86QGAwDBn6Kej4A5j4gOWk1KOBtlcmqgeC1Gl
+Vtt0s14ztQFI5UPjGylsHI36EVvshxiqAX44PdCssuN28N44thtgDtPBt5w+J2wp
+OKFwk+m+4zjM94X+cYtJxwNt9NL6aoQB8To=
+=WujZ
 -----END PGP SIGNATURE-----
 
---5719814fb54f54e3427bc9faeabbd9bbeffba8d88f84dc81ea7fcdb19f0b--
+--d86e9473d3daa6c97c74ffc63e11b90ba2941869ba77179fbdee0053404e--
 
