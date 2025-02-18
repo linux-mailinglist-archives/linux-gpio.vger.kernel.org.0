@@ -1,139 +1,130 @@
-Return-Path: <linux-gpio+bounces-16202-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16203-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5355A3A3CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 18:13:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0C81A3A469
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 18:34:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2849E3ACD72
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 17:11:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FE3C1696E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 17:34:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED642270EA0;
-	Tue, 18 Feb 2025 17:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A281B26F45C;
+	Tue, 18 Feb 2025 17:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivVx7Wjf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sn83F6p0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E743E17B50A;
-	Tue, 18 Feb 2025 17:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A762023497D;
+	Tue, 18 Feb 2025 17:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739898554; cv=none; b=DzFO2NrLF7bZ1K6P36uSkL5FFzKynpEHZRT3HougbU1j90zWY7Pd61Sx6j16UCrDWwDJTFiMm3RpWyiUeGuk0GXiibiDoT1YEdop9wOVbeUrdsMjG/cM3ArqciaByYIWz5fyDq+dn877toCR2cU8n6WdkxLryp9OIJw+QJ2smfQ=
+	t=1739900059; cv=none; b=PvUIathmnUiq5yfGsOj8GBn+JXK6fzmibdD84DGB5LY/q1wtvOjISCp5oGeXkZ9gijNTrCNEyrjbpBvNvX62k7ye1l/KbRarRoKDRXlWNWFZYCeFwIGdIpt97oZbM27sI4IGoYrKwvus+k6BV+WxskCwk7zn3FgaXkwd/JXLYFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739898554; c=relaxed/simple;
-	bh=r3Cn8T3WHhu7Zt4TdPmxIPWpu+uYE3xrjh5sU/rQN8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l/FDd0RDR4B19aZQETDsTU5uNnDPBQr8gLLLB6+EYR1mpxAHIhLRgiosfbYZCx5rjA4Sa2As7P7oSG0HiqciE9YwBWbo39rcp5xKJTWnc5QP7xAA/NSEA93hO4WfeCFI2NlAwoXrji+kJoRjaFTFc5SX25XojfWmgU0IM5gQ2k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ivVx7Wjf; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4396f579634so20772485e9.1;
-        Tue, 18 Feb 2025 09:09:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739898551; x=1740503351; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r3Cn8T3WHhu7Zt4TdPmxIPWpu+uYE3xrjh5sU/rQN8s=;
-        b=ivVx7WjfMFts8eIJQALC65M7ti/ht7ufXfNHgn2IRyfAsvBe0BQ+vzlh2VsBEx6Zgx
-         UBZL4v0QcpKH9G56wprO1dge4zc6CJXL4fp3sjsm9/yrEJZefOl9wLR7+CcgxyQCI8eg
-         b++spxnHq0tV78zQ9fy4ai061iSN8RNvdWlcV5EfjTKTKsciB/4/tegv6530sauODR5Q
-         aOIeyOr0YxOGEsqtd3anWidfTfNjj7pZbcj64+d4rN+lNF7U1t+XtmJ4n/LKDLydrSug
-         QVV5dpcE5QZeI+P8D7paDBMDR4FO1joVZTmYhPVZ9WUj8qvPoszu0DERCU/8Dvji8xQl
-         NmOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739898551; x=1740503351;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r3Cn8T3WHhu7Zt4TdPmxIPWpu+uYE3xrjh5sU/rQN8s=;
-        b=RSQr4G+zG2eP4bEOWRIQxE0rl1FTmywVirRetySTGh+eu5YFvHh4zaqfwU7HzL5ZYz
-         +BGJcdRQ1yzWg3j4f4Liz6v2O2yOsiWPigaxoqTquGOL9ddM2/admijhMaaA7xRwXRcc
-         e9XHnMz8Q4p8p9MtxnXYn+EJla3N8192OMQ4StWY8ABXEkIZbLHpAL7cccBhw7kUwywp
-         P15f6YTGBsM7q538d0DHucFPlTIRTHd8ZTTUBogWUCZj126t3h4sfZyWWUqlElF138Cx
-         5OtuK4KCL9UmOTvcvGSPmf+YMWzSzMa31a1DW9Uhd0rctPcXLVpXavcUTmD+NU9yWjzR
-         eDMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVl3MnlYPw9N6OuSRnnDWNzJayaHnlOljOWfYA2uyzdSo1QcSl4ZM+9x59auGH3XRbpKaFY6GYFGZtn@vger.kernel.org, AJvYcCWN2oaRfZBxyDT+7ZDcWhcW5BpmuS1FT1G3CT1HxGdSp15bJmCXBu7GAfV5fGj9ska4En8cLPSKkd81uqIr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWRdUoHMigSk2YLsHeGYD5rYy/BdSvwpGiCOmCtuWIugYRMJxH
-	JyBAs55H7w2itUUHMEqJ4axy3OjKT5TfmeXcxTv6OKyP4Q8AT0GT
-X-Gm-Gg: ASbGncvszuln+utKK875SrB0q/HHbWAct+5Yc5EN/tMMsma6QFVoJibiQHDjqd8FjtT
-	PnUG0vamFEQRo0Y+h/k+i43YbK3xu4IbZxDYyuRHNVrnxcLIwqwPpvvl9esLSHyx7psHfA7U8IQ
-	EzbNixCIVB7KzP8NH3FxUtA6I95BGMK9K0DlcQ0z83S2DqkBrSH90m4DiXXQnSbR+0TQxQl55kN
-	0l95HUJrBnJb2BFCeEGpFGFr+noHcIo6O/tkTnU3QGgOF0tM40J/Eo13hXoRjfX9CDMOdDSkQ/j
-	s4WKogO3wJB8wztYUM3T3xbgG/rjZTqNdPRsRn6HmZXWUwkPg1Ixl36Pz/vMVunRfXc=
-X-Google-Smtp-Source: AGHT+IFlGMv2miQ0Z9W2VdMNMeh3ECaEZiiURYqLj/so8NoPpJnlEqidY8yQFjrhffXPtAAVjvhFEA==
-X-Received: by 2002:a05:600c:3501:b0:439:955d:7ad9 with SMTP id 5b1f17b1804b1-43999da89c7mr5439285e9.14.1739898550848;
-        Tue, 18 Feb 2025 09:09:10 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398148f4fcsm72046035e9.7.2025.02.18.09.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 09:09:10 -0800 (PST)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- Andre Przywara <andre.przywara@arm.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] pinctrl: sunxi: allow reading mux values from DT
-Date: Tue, 18 Feb 2025 18:09:09 +0100
-Message-ID: <12609538.O9o76ZdvQC@jernej-laptop>
-In-Reply-To: <20250214003734.14944-6-andre.przywara@arm.com>
-References:
- <20250214003734.14944-1-andre.przywara@arm.com>
- <20250214003734.14944-6-andre.przywara@arm.com>
+	s=arc-20240116; t=1739900059; c=relaxed/simple;
+	bh=pxveCCd+0WuDtzslFIWMUmLkuSfXogvGgq1ZCpgIRTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JExUzikuWhPKAD1nwOFtkDbf/e4ci2ZUrKJpNvWM4HvNtj9Di+2PL322Rc0Xx5n7IoDaGUWVmKbyYx8pVV02ZFlgji9Kg5Da4Od1qtq5XDjLcx9AjAN6ZHXBMpD89292ywIfRzeM6PnPX6fqHXIuy5zpx5yB1tkA/c7mpTXzjTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Sn83F6p0; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51IHXhih1719889
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 11:33:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739900024;
+	bh=APPaTWCDnxYJLE0VYqIvhKqd5gtGQPP8bAgHzOeugXU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Sn83F6p0MCJsKg8Rbdis+Xu6V3a/WcTnbV2rN9T80EUPq7dnjRlL2q4HX127vvNgy
+	 VLZ84Y2+553DGxXdJ7UJAw+7sYlUf9u5iPlcB3d1VcMUWo+QSk9LlqeVbsZBNGtTZj
+	 5+bHPVgkpSdgU7QR1O5LadJkkzRVsGJmEm02MyyM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51IHXhrs004385
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Feb 2025 11:33:43 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Feb 2025 11:33:43 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Feb 2025 11:33:43 -0600
+Received: from [128.247.29.251] (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IHXhM5037290;
+	Tue, 18 Feb 2025 11:33:43 -0600
+Message-ID: <a7a2709b-f7ad-469e-86f3-6db4b4b3b37a@ti.com>
+Date: Tue, 18 Feb 2025 11:33:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
+        <christophe.jaillet@wanadoo.fr>
+References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
+ <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
+ <065cdaca-cc37-4b1e-9c1e-e2dedbb2ffd5@ti.com>
+ <CAMRc=MfR2q8TTcEHtbX9HxyFikHP_nS+Mva3dTwmgu4tvkxJ1w@mail.gmail.com>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Organization: PMIC
+In-Reply-To: <CAMRc=MfR2q8TTcEHtbX9HxyFikHP_nS+Mva3dTwmgu4tvkxJ1w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Dne petek, 14. februar 2025 ob 01:37:31 Srednjeevropski standardni =C4=8Das=
- je Andre Przywara napisal(a):
-> So far every Allwinner SoC needs a large table in the kernel code, to
-> describe the mapping between the pinctrl function names ("uart") and
-> the actual pincontroller mux value to be written into the registers.
-> This adds a lot of data into a single image kernel, and also looks
-> somewhat weird, as the DT can easily store the mux value.
->=20
-> Add some code that allows to avoid that table: the struct that describes
-> the existing pins will be build at *runtime*, based on very basic
-> information provided by the respective SoC's pinctrl driver. This
-> consists of the number of pins per bank, plus information which bank
-> provides IRQ support, along with the mux value to use for that.
-> The code will then iterate over all children of the pincontroller DT
-> node (which describe each pin group), and populate that struct with the
-> mapping between function names and mux values. The only thing that needs
-> adding in the DT is a property with that value, per pin group.
->=20
-> When this table is built, it will be handed over to the existing sunxi
-> pinctrl driver, which cannot tell a difference between a hardcoded
-> struct and this new one built at runtime. It will take care of
-> registering the pinctrl device with the pinctrl subsystem.
->=20
-> All a new SoC driver would need to do is to provide two arrays, and then
-> call the sunxi_pinctrl_dt_table_init() function.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Hi,
 
-I went through the code and it makes sense. I wonder if we really need to
-build whole table instead of having on demand lookups into DT. However,
-for now, this will do. So:
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+On 2/13/25 2:11 AM, Bartosz Golaszewski wrote:
+> On Wed, Feb 12, 2025 at 10:12 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>> Hi,
+>>
+>>
+>> On 2/7/25 2:53 AM, Bartosz Golaszewski wrote:
+>>> On Mon, Jan 13, 2025 at 11:55 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>>>> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
+>>>> significant register map overlap with TPS65219. The series introduces
+>>>> TPS65215 and restructures the existing driver to support multiple devices.
+>>>>
+>>>> This follow-up series is dependent on:
+>>>> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
+>>>> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
+>>>> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
+>>>>
+>>> Did these go into v6.14?
+>>>
+>>> Bart
+>> The dependencies listed in the cover letter were just applied by Lee Jones:
+>> https://lore.kernel.org/all/173928615760.2233464.12306998726512431222.b4-ty@kernel.org/
+>>
+>> The rest of this series still applies without a need for code modifications.
+>>
+> I'm not sure I'm following: should this series wait until v6.15-rc1 is
+> tagged? Or did you ask Lee to create an immutable branch? Or doesn't
+> this series depend on the MFD changes at all after all?
+>
+> Bart
 
-Thanks!
+Sorry about the confusion. Lee didn't create an immutable branch and the series does depend on the MFD changes,
+so this GPIO series should wait till v6.15-rc1 is tagged. Thank you!
 
-Best regards,
-Jernej
 
+-- 
+Best,
+Shree Ramamoorthy
+PMIC Software Engineer
 
 
