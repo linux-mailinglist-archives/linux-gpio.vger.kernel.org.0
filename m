@@ -1,120 +1,120 @@
-Return-Path: <linux-gpio+bounces-16183-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA7BA39899
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 11:19:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EC14A398B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 11:25:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE49D160CAF
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 10:18:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AE291886D0B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 10:24:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979FD23237C;
-	Tue, 18 Feb 2025 10:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA152343BE;
+	Tue, 18 Feb 2025 10:23:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BV0bWNze"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SOEGTM40"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB122FADE
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 10:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0A0233D7B
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 10:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739873894; cv=none; b=FCgA90oZa6ujUqwJA27cxglnGiEEAxRPtyHCVSXLsgVY88tWMguhFIUTULZ94uEWmwMNM95PXicNpPS/pJU94WpfU5jCUM0VyyecgiHuCt6q3hvx3U8e6Ma1ewFWbytkovsY+RolVmu8JTxo5myabDY+rmiBbD5+L7/MVutLBdU=
+	t=1739874231; cv=none; b=kH2TyEhm1oB5SN5KW2+MU7gIU16ZTzrHT7tfAAxxkgFUZkcg2R3bO4+uH6IbIshibALf6RhmUfrwRxPSeCXadVjqQSAu8lbXiz1KaA7UocbXp1O/zuE8Jj9a8GqaY9L/BzhHKupvOHEmVjQ5Mzq4QRBdQzIHs81CUBOE57SCayc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739873894; c=relaxed/simple;
-	bh=a3zZKi7KyqePBjsPprnaXEopvwTH/GsVqiLJf8W3hiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eq9PJ1eicNMF8rn6+cGbMlmSp2YYOErhlVu/diabvDZZo4vMHgPAi4q4Z/jltUIVHOF9HT1B8xvK0tVQ8dWCzoNTq9s69dDryUwhB78gL9TjQyBf053x7t1sWy4LOlzN09ncpx1NkhzfHA6SN/MDv48SYb3KM+0at8KuvTzgecc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BV0bWNze; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30930b0b420so25868571fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 02:18:12 -0800 (PST)
+	s=arc-20240116; t=1739874231; c=relaxed/simple;
+	bh=xeujFHMCY+nFtyw83SdDWyTZME25UNmnrW9TcxomagY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RbQTeYm8MEfPQ5POfCXh2lAOHWwlBqp1j6WaoTxwlOqmiQPtU9+3w/NzQAD9/bnsbzduCao0K0RUuc3js/8/HxNQ2Z1+49TfeH4J8frNA9xN95blkMlK/oBiwYqykN+rT/0+G1Sl172CknBrjdwJMsx/mZyY1w7Bi5ncZuJXFSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SOEGTM40; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so55034185e9.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 02:23:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739873891; x=1740478691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739874228; x=1740479028; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a3zZKi7KyqePBjsPprnaXEopvwTH/GsVqiLJf8W3hiY=;
-        b=BV0bWNze84QwlXxejkQUwvjWxPobfaaWYIqiEPxO5iV3s8GZTiqwhQOSiRvdo38Jgt
-         QHtVlCEvhzhQ7velO4otHR2RasmiHzk05aX1ArsMm4kcSsJKp6KUagXPQTJV6y80KRpR
-         DBITmof8Z8gyVJ6URiuzfaTepBniMBKoyw9wqPBjHAFNxB3uWQ2IT9xzXJQTGw5Iuvkc
-         TDU6fIoCtYGsDX6AlwVw6tZ57ETo3mlKco1OD3lM8w3/uXXmhgsJZpunM0BP+aEATZeY
-         nkJry6kokC8iScYihmNGpYyYlXGZjm9aBaNf1HqRUzCAed8tbd32enlM4ywCgkHP02Ng
-         i+Pg==
+        bh=My63cd7ru7HTQ8glNW43+MRkF8+2yn42/caAlR8+Gow=;
+        b=SOEGTM40p1E6aHs8X5oxnrFxTAIIAUR26UlvkjaQ+z+cQn7pkJhxtMSCEwl7N11VW8
+         PX3v2wBKeMK1rcS8hUd0i/5StJVMAnLI7ExCmp4ThyTAc8dm+btd2WUFor1IyCSN75w6
+         aR88KiZp/+2YqqkSwnaoDmeu102CmgXyV3YQPbRGihw67uI1Vu63qI+ZqQ7PZfS52F6/
+         np5QrhqhKY+nxkZNLDitHZsgWPKpnROHzZ1dDwo3DebRAUH6v2q7kSj0KiffLKf1v7BE
+         uzt26sfczw4q+LafGn5HQ0m7ZfrHpb9dWGQc+03qmi9do+RE4aH2qVqXk2LZ3ZNNgDeG
+         8i9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739873891; x=1740478691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739874228; x=1740479028;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a3zZKi7KyqePBjsPprnaXEopvwTH/GsVqiLJf8W3hiY=;
-        b=vWKGCUOn30ItxPTAweWuMTuSpdnUKdWGaIEISnv9b8opElEQvK6kQh/+69GqAYC8Pf
-         DYBB/LsHQXflAaswQOe6XSLXD81tvjIEUhANFaf/9PXY3il6dbYNwB+XrfOj+hCxNC/Y
-         qrrBbE2l23Cv54aAp7kNC+VhhZ7fex5s7wr1c//7+U6TxEwvdGKgDZkV3/ddmyD/AGaN
-         8xr8MemF6r/POF8h16El3Tss2EOStryKg3kGSAemdQRmnOtWTMJNx4vo8VJpzREPLjDW
-         mDY7ri0M+1G4SNiTXgPbydlp/fdNZdSEmOh/x9j4LA5idmTc792yMDKSY2lgp6gEqr0s
-         UZsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFIdQzW7PSaEiO5n6CEr6Ney1upJ7xgM75nrNsXhd015Me51HTKE7P5LC9E5RFUrZAOs/4E8DsLnpl@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf81bsq4W2rVj9c2bpYrx4RGe75zXdFBtz4qMMt68o25AxGC/H
-	z/84MtJzdy/C6L3lwym+YYRdv7qTVrdLuI4nvfUosFB+KcLdbMAIhuKrQw3sCk7y8R85t7m+Zna
-	935eubo5Cm9h5VuIrtXC+JsXPadoAZC75xQPamQ==
-X-Gm-Gg: ASbGnctWPRF4vhCNRmhniZB6MFctKfqwxRznpF+zeJ3U0x8+OCpWVd4z/NQNcgzCPW/
-	RShice9q2NBGqeA33kaaUakdgq0rKNIn2kPYh8QH6Lem2nel3ErLqSm5nOFkGo7xq5YUlVkdE
-X-Google-Smtp-Source: AGHT+IH2phiht3fTcJfb8ofTkI1v/FLe+lY4y9euuHGDawBqpbQ+TlXpkQ41TvHsqZg8ubAlV69gCmhAwRsjaZoaReA=
-X-Received: by 2002:a2e:9f54:0:b0:308:f860:7c1 with SMTP id
- 38308e7fff4ca-30927b1b22amr37848241fa.30.1739873890696; Tue, 18 Feb 2025
- 02:18:10 -0800 (PST)
+        bh=My63cd7ru7HTQ8glNW43+MRkF8+2yn42/caAlR8+Gow=;
+        b=Ik4SHCyBaCjh0A0VMNFfRl4GZPu/H68YSOIIBwxJ6Eo6DEte83u+Qg2OM2EAFU6YUL
+         +FV1XA3KfysrxZyZp515jeAOLs6kQv0n2BXhvKwU4KNN8paHM0opbROz3sdgXF5WqF7h
+         91toMo8PO/2olhDmiSsS2wjDtRrPk5x9VOlKv00o1uRgc8t7J/ovybBeCDJuKEyfDI6L
+         JGUfVvof+RN4H6Uu2URVg10DYK4ao1D504Pi3dRGwKqtFvC1ouhps9R3NOAT5eVAkDKR
+         Nqj5CE8RiY9Y+RmrN9/pX366AMpp30aGBwFSGmEojJ9DdttvystDHM+72TG7g9waxj7B
+         2JcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhXW9ftOk6i6MIHtU9L0qCdEccRQDVSNcHyuq8t5AFwBfg1Zn8AuVsw62wy7XKUir7qCwH2G48pEuf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXQum0yvRPxAoN7QsxMYci+8HKNHZi5y7CjcaWii01XZtPXoRG
+	GURqRh66rsf03FzzBzjw+NfZFHqvXT0LgGIM1yh6VikSlYHzqQvteim5f8ZoF/o=
+X-Gm-Gg: ASbGncsWtt0snvKzRzaIAApAII9kLnaQ2wg7F3kmRa/lOSdxmopWDJaKg4kwQgkwhVt
+	XDwS6OtXJPcZ668hdPggdLiPWn5ifIM/G4pN7uA8e8YUyLDa6iiM4fpFOzvc+ZsBBnYVjzUSMvx
+	zBIQANWuLNYwl9CUt9l9mN4o2/jB6Z9wsuuH1UmlbnqDFQzY+oAIZc91ZR9cNeDY9fJoti1e34f
+	s498i5kXVgNWZlR1bB/oF8HSWblaFuLQ2C+m5OEUPiIm511FbyOREZP4XoYYpn/kRkhB9OC4l33
+	BGD5lm/QaVhlZNw=
+X-Google-Smtp-Source: AGHT+IGfm6PACdfZOJ901GvbcwDEIKFAn3DcZPGAkkqxiXwl2yyk9SVHBulQEueVmU9SugkMZGi/Og==
+X-Received: by 2002:a05:600c:3546:b0:439:419d:ae01 with SMTP id 5b1f17b1804b1-4396e6eda19mr125855325e9.10.1739874227849;
+        Tue, 18 Feb 2025 02:23:47 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:30b8:840a:cf5e:6adf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398a44264csm39952155e9.25.2025.02.18.02.23.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 02:23:47 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
+Date: Tue, 18 Feb 2025 11:23:46 +0100
+Message-ID: <173987422134.23672.3075019208527367982.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250215095655.23152-1-brgl@bgdev.pl>
+References: <20250215095655.23152-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123113042-GYA38135@gentoo> <Z5LOdh-4UxRtteOy@chonkvm.lixom.net>
- <20250127181726.GA538260-robh@kernel.org> <20250128031712-GYB47737@gentoo>
- <CACRpkdYbSOHD9UH5=+qjztxS3Cq_rxaoOT9tFtD8ZWm9zQGnPw@mail.gmail.com>
- <CACRpkdZa887vx4Lmxk1U_8w5n7AxMnyzGexeYzhsxNGT-DTYcQ@mail.gmail.com>
- <20250206133156-GYA5687@gentoo> <CACRpkdZYYZ5tUR4gJXuCrix0k56rPPB2TUGP3KpwqMgjs_Vd5w@mail.gmail.com>
- <20250214115410-GYA21743@gentoo> <CACRpkdaQZ5wJ0S=FfTzBkZOfCE7zvTPQ-wn53rHcZztbHLC8xQ@mail.gmail.com>
- <20250218095540-GYA29065@gentoo>
-In-Reply-To: <20250218095540-GYA29065@gentoo>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Feb 2025 11:17:59 +0100
-X-Gm-Features: AWEUYZlziirybpkwfa2SwWJtaw_DWEb5S7JJMmpNsPZD80yNPZD4D4NQeN62kvc
-Message-ID: <CACRpkdZiD7LRAk3hhvWdnf9DCuQCWGLoE1xd_z9ddRKZP=uvLw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: gpio: spacemit: add support for K1 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Olof Johansson <olof@lixom.net>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>, 
-	Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
-	Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 10:55=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> > I will post it real soon.
-> >
-> can you check the v5 of the patch here [1]? which I just sent out yesterd=
-ay
-> it does 1) implement xlate() 2) instroduce custom add_pin_page()
-> the gpio part works as I tested, the gpio irq probably need more testing
 
-Ah nice! I have the same idea, but I just bring all the stuff you
-need to reimplement in your driver into the core instead.
+On Sat, 15 Feb 2025 10:56:55 +0100, Bartosz Golaszewski wrote:
+> During the locking rework in GPIOLIB, we omitted one important use-case,
+> namely: setting and getting values for GPIO descriptor arrays with
+> array_info present.
+> 
+> This patch does two things: first it makes struct gpio_array store the
+> address of the underlying GPIO device and not chip. Next: it protects
+> the chip with SRCU from removal in gpiod_get_array_value_complex() and
+> gpiod_set_array_value_complex().
+> 
+> [...]
 
-Your driver and bindings will look the same, you will just do
-not need to reimplement the translation functions (if my code
-works as I intended...)
+Applied, thanks!
 
-Yours,
-Linus Walleij
+[1/1] gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
+      commit: 81570d6a7ad37033c7895811551a5a9023706eda
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
