@@ -1,228 +1,119 @@
-Return-Path: <linux-gpio+bounces-16192-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16194-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94451A39C31
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 13:31:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E43AA39D00
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 14:10:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01CC71894056
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 12:31:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B06067A1E2E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 13:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB949243955;
-	Tue, 18 Feb 2025 12:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA5B2673B1;
+	Tue, 18 Feb 2025 13:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ujl1KXG7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtqxb1+r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2044.outbound.protection.outlook.com [40.107.20.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715E21ACEBD;
-	Tue, 18 Feb 2025 12:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881840; cv=fail; b=VhP93FFDF5mOBstBJ/8jfSRUppsHmZLp6Yt+McA2KeiLd5Tt2Mj9Ap4YJTnK0QSzGqjHGd4D4jUVp9Wk5Y4AOzBXtIWAowI10XU5vxVtW34JPUEDD52h/BmrS5AUR6kWwWFOqi5NtibKRFdSMai98uqphffK3boU5/EcNXGY5eM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881840; c=relaxed/simple;
-	bh=QtavOwLKQCzYYcnerNpEwO0V7+5eZCBrpSY7welBMGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FaQtwu/0jDiAlo7fbyJKnKPc1XVBopVvDayg1rBce7kvEc0XpP6MUkoQVg3SD19XfbukGNrbzEOYZmF95cqZE8nDScnTXkxtmyrXGO5Qvu5Nvsz/sZV39Rn6x0pCkBetNqBiWxjli7riyJ73+sB49X5cHOX59qgXbQkJY9iBZds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=ujl1KXG7; arc=fail smtp.client-ip=40.107.20.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g5dFntXsxgy4vVpvjl+vqn19LyW0fjnek4sWn3dMDUxEzkHWlijUx2RoeoQC8+cOBEoPUlPCN/6RaCV44EtmAmphwGQyvq7/R4cvShg49pjjITik5f2XrmrYK47j8dE2u/ff2P2K+h7ATxcxLga8aqhZ7guN6GX6AMI46qj31JTF5sHnqW3wcacFj0XNWDgbTSJYSCSFnNsKLAQ9yn+YGhXL86KJ0sHkpbB3l73b362Wl3TN3n/8dLyEUkIM8WgXOwkK9Rz39dPZabu58lPOO6VXCSpFn652mXdyXTewg8DK5ZutY5bwdGujSxbQFWnxpbDDccCWpMHrmEjfpNez+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yDFWjztJPs3yr5RlsWnRgZPhq8US6m82jcPiU46DXh8=;
- b=FaphcHja7L4LrFExBkx9C7QJ0emh864htw0j4ZnKyGgj9MrUJYdx6Oimy0ZgDvlqriP9+LLi76uymAhMSEmCFyLpDhiRLH+D+wT36KwtcnS+5YmRLLerIVslwrXZUxyjisyNFisjno562zzgFIXLhNWmKarPsvUfvaF9XpYqjPYUhSSGYAAPprykBx83+qz1Nxod0z2xzYogdpIV0OvKqaIjvUAFmzYB00U2/0b2Ux3h9ZdfM75LHoCEPao8r9Lioo8IB3UnY3XBECaC72uTPP7ySAgUef4l8UaEJARqlB4fpdKk5OZhb+moIyVB+T6NA4xCgorllI3kNRQS2Ssl6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yDFWjztJPs3yr5RlsWnRgZPhq8US6m82jcPiU46DXh8=;
- b=ujl1KXG7T70puyRKMlP2wG41noZbQk50wcOJIvA2CJ4PjNPCzIlJT7OwZi2ReApCdBNr9NQFBvH8jT1og8VsOIzq94M9PEmCD9zwj/hU/156/B1X+RbBTx3kIpEH0dpx8BLBA8dgh/aLejhz+8sFnuwJgHakDAAhF2feiyygohvq4LlLWRv3WQhfNNtq2Ly8/4z4wehkWUPWfrK0ZG/oPqL9QSWm6JJzXBgkK3h+wxApjfNgF7FLop0MoAhe3JYa+rxG0NYwhJkkRrGY3Q+64nS1n4sclxH82dUXITdC6FpK8zkg5QZx9mk5JaeLBLlQFHL2ClEWo5SMnbjF7wflCQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
- by VI1PR04MB6831.eurprd04.prod.outlook.com (2603:10a6:803:135::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
- 2025 12:30:33 +0000
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
- 12:30:33 +0000
-Date: Tue, 18 Feb 2025 21:36:19 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <20250218133619.GA22647@nxa18884-linux>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
- <Z6uFMW94QNpFxQLK@bogus>
- <20250212070120.GD15796@localhost.localdomain>
- <Z6x8cNyDt8rJ73_B@bogus>
- <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
- <Z65U2SMwSiOFYC0v@pluto>
- <20250218010949.GB22580@nxa18884-linux>
- <Z7Rf9GPdO2atP89Z@bogus>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7Rf9GPdO2atP89Z@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SG2PR02CA0087.apcprd02.prod.outlook.com
- (2603:1096:4:90::27) To DB9PR04MB8461.eurprd04.prod.outlook.com
- (2603:10a6:10:2cf::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F11156F4A
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 13:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739884210; cv=none; b=Nq4nQBgTKWxWaSRAquGFo5Fi7bIuRugU0Zobp4zvHBmIHm5TphYdk6gXXSCq7PwVxAiwcL4edKN9dCpkl92wUrxTWW4PfFtCMQVCKd7AlxOD39QQVKyLGEvmAmIXuyboiG2RiTYbiqUcgi6VgLbf67a1aXMLvRD8imjxCpTw7I4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739884210; c=relaxed/simple;
+	bh=wChb/6g3sce1C+2S6hz0f4MqiwvzQlvCTwkos7PCRgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o59f8EenB1SwZFbrsQChU+pnbGo+0cdprHSC1kN4/QtyYplxMJ1rUegp8h88sBhu+nUrw7KL9tWddabaZvHm8Dr5z7fqsyU5hyr8g6Noqv3J8uiNVPyBtIjByXhU8ujVlQx0u72gH059+25zZykabMwiESnUy+0FDZfXC2DRkgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dtqxb1+r; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5461b5281bcso2320241e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 05:10:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739884205; x=1740489005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x2H4CFTIInDOtT3tOm3edOpwQRv60P1DUgV4VG+RFkE=;
+        b=dtqxb1+rSM2DZ963SU9zTaHeOR3KsHJWnXi2IOv/fZFsl2tCgDBJsZLDZTWiomZ5gc
+         OdFRSA5aucfV7WEBNL5digHsP5itroS+yfuxrcaf/4memPvtzgN2r33bh7fN1Il9dQXX
+         6OU2oG2DojBUAbqR/xm//lOqJNlVG5nyQwZd31MRXVmlhP7It4aJ46uVRYr7+lshW+P1
+         HVyjwMUGTkK9wx90aFiSqyXOC1DWZL/ewgZ7Yw6l4LygiPjHWAnhZmil2ZKYqv5MiFd3
+         C+vfydEkwR1cTkVR7D9Pdi+X5Xe+sKd6xOiZJXEi73x+igMvsa5/LWEa00Bp5tAFTvrG
+         1ulA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739884205; x=1740489005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x2H4CFTIInDOtT3tOm3edOpwQRv60P1DUgV4VG+RFkE=;
+        b=PCmlrvMOjM/h7/VGCXkJhM6nvt+aw0A7k8q8Ce/H5uqzM2MG9XkA+Hwn4YQ7lIQmDo
+         HzAAO+wibwQOpcZfvuqFSgaFkJZ3w22EjAPZwE7QqMMsRCHNOgLrVkR4CzqLsfkkVGTk
+         vV5BfV8G1cu5VNaLgW7cyPrKZxpwPwCmiSYNm4N2df9dRYMdtrhiAU3GdG5CuaItcMLu
+         tOm1oDD1/5DeYigoBsIWl7eVQW24kem8daazO0BcGZIi1De3JQaCl8brH+ZX9GYqg/E3
+         j8SwpjnnCitUFMCb45s6oNS7Ad6/CjX50QisXriOJjv1jT0hsVg954kOwsq45xeHOWp9
+         dh7w==
+X-Forwarded-Encrypted: i=1; AJvYcCX2evl/gbTEDB+VJOHr2QqgSBUsRv3Sxem2h2/N141vI3YrBMLhh2gvAS4JN812da40mmyTODGjoFz2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCN7yUrIrCpIdCIn3DpUGwvH4vjX80x8GJA9u9s1JWtU9gIwmB
+	4QZXd2oQEKlpSPymSVpB7CP3iC4fFihdOZ1iL72QXuQtUpS5cyrljkFHGK3hXYsFc+YvvK8YvFx
+	LYeGf4bwuM0dUWAzHTCDtCKhKh4BrPvOqI+CnEw==
+X-Gm-Gg: ASbGncusOV7UoWcUkT5cy94H/1ihKOImS1tmQjqJoT9LmVHOUn8R4at6nfn10QQpHFF
+	N9yVKZxtiUfXJgLWnt/B8i7fUlbU0R+n+qNmYu2sQNro8cuXet48zgplG6BtcvdSzQrhghw8O
+X-Google-Smtp-Source: AGHT+IHdB6MXsIp6ZqlQsI40sZGvOLeSKe+AB5abn2fY1o/Am7w1jOVveK3QMy7dhDaAVzYZIDd9lE1wi3yAkqHGnxI=
+X-Received: by 2002:a05:6512:3992:b0:545:2d27:5ae1 with SMTP id
+ 2adb3069b0e04-5452feae86fmr3466160e87.53.1739884205513; Tue, 18 Feb 2025
+ 05:10:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|VI1PR04MB6831:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8cf1356-cce1-4f2a-f1aa-08dd501809d0
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Lx2bMOMcuV1wSTXtsmFCtNuusY7SHvE1lWARkKbdtV4kHMKQow2s+W402dVK?=
- =?us-ascii?Q?217B3jWYSXPcwRF+RIji0ninZDcrqLKh8NOyfGXffJXJajdrEJQfxC6vHrUQ?=
- =?us-ascii?Q?7gwVuHWznMy9FX+OObd0Jw+ZF2dFh+wWLKep6WKmVpC4qRLe6t2e06cLL9ep?=
- =?us-ascii?Q?eY7Qyi5CHp9jsMX+r7jpvOJDrT+c6jw1zB6etVkOUo3KCa8iGjacsfAcQRo6?=
- =?us-ascii?Q?qiYb5wSqJ56mQ7Fn56rmYrnh8431qGNCrtEEtpp42mxUdG5M24qbGqpB9U9c?=
- =?us-ascii?Q?6NRozIORy4TN7uvitdOtf03VF/ZPkrBlpEzeJhoFhWtN0nIbjHVrC/zdsfkc?=
- =?us-ascii?Q?tu9G0TAJvKjB8qu2reJfTgkKP5dGV2Se8BVd9y3buKJmw0sdOM/f8TS24S0t?=
- =?us-ascii?Q?rqpzGMk5gXOmvQbb5MSkHigWNw+dLdiQzlLJthFGrrX4tqvsk+Ykb3GbzMSa?=
- =?us-ascii?Q?rUTan+E0BBVt+pr9PKz7Edmu3nLabPPRFW+41T32gTPAadRsR9pmklGfaDrK?=
- =?us-ascii?Q?NU4URKy/J5aw2gU2PWIvw/RgzlPHDq9yGd6vrz03cRWiyI30cjYiLQRr5ZS/?=
- =?us-ascii?Q?ZWWG6rTc79E3KIy7gYK4Cq/uaBXLxFv3tpFgKIjkI1c4H0GdrDtn6cs1ZG5K?=
- =?us-ascii?Q?NrhIaxz3oiL3lmbSJWESR9VQDHz+LyEvZcFI1et746EEUoke03xe1HuHzr3J?=
- =?us-ascii?Q?EoZa9FnUB8jvGrL6oOX1MhY3wo1S5tNSpL8L6zj4rzHj3MkAhcLOe9egMTkn?=
- =?us-ascii?Q?86FPGEAMH7g23J+RtvPCJs7hL1EcHSBc0pBLwAkw0ohFKQ9BfziWWxPZXtPI?=
- =?us-ascii?Q?KTKhroGS3x4bQFCOyoRLn3E3DzcwQXz+1gY28Om0c6/f3AdMO4RmVVK1Lqxl?=
- =?us-ascii?Q?bds0mecD802Zs7UcEmD1rv9d9iTD8F1yV/yoiahKCU9B1BnCvzXeTvF8nM1E?=
- =?us-ascii?Q?jkmfeYVVfkPKmOh9Mdg2guneNiS3p6s8Vw6Jx2OBwHjp6z4oxcajRtfSKj8C?=
- =?us-ascii?Q?WkV1q9yUdi765riGV+t2WtD/4P6F90Bf1UoW4rYPfjIowuo1vhmVbk7AKyl3?=
- =?us-ascii?Q?YpUX6AijgyAf7cedQV6wPmC06jo/UifNXoj/31w4oHsyz3C4xiUPN6GozDym?=
- =?us-ascii?Q?64tVWSTMROffgywAkN6KJbvVqNOpmT/0TLNNl+N7PzDqDFhTxzhlEQ/Wr42K?=
- =?us-ascii?Q?eZ5VhopgxVVGc15lXVs0cz9HCHZ48vlx1f+ozhCQyQmNnNsBOc0Cm+j+ujmB?=
- =?us-ascii?Q?2VVDdZigmqwENqjzODB2+bUm5kpMTVGKSVBJq5Gr+R7r1Jpi8JbusVWAxFh1?=
- =?us-ascii?Q?p3C7cWFyoftgqkDNIlP3pmQfQuOwEvXVxe7ccxVIfxErF7gPPY+LyQbcekG1?=
- =?us-ascii?Q?0UnxJaWuaCHaDcbcd2PKLFhTvp6EADAyYaTHuyRrPpGLugJcybhkCToowXTF?=
- =?us-ascii?Q?TmguMeN+OIPVCGA8d1B2qF+5LnPryHrb?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lQiZ6DNCR71/bnbMqZ+GjpBuoibi1oaBCykQ86CRhnuW8SX9u6ohojwe0sZ7?=
- =?us-ascii?Q?ij5qALjrl4sKzW/yADdcBYVPkKTqd2dXliaNNFnwePxafNxy4BcNfca8S4G0?=
- =?us-ascii?Q?zCVGpy42A0qNNaLaZQ2WorPwEqLCb+AWkRAgCzbHzrwQuToBFN0ErQsPzV0m?=
- =?us-ascii?Q?55AJYWBS9Uww7xf/aOXlWW6R9tQXJ1LPI1mpgUQfF3ZoG9jgqD899Cei9Xpv?=
- =?us-ascii?Q?jrnyhUcy24VvNTBHr+wZt1t6/IZwsjZZBvMXNzXDdcJUlnC/w0DKikTx/Pmr?=
- =?us-ascii?Q?TYVFQy7I+s3lXcP+Yx+JCW5vluh5Ooh72yxnZ0ZM9QxGt6bx/wKTpfWxhU77?=
- =?us-ascii?Q?rGkUCxBBbyaXn17it0IItNphbioYNUD96i4IYw1hpm9mojkENnxcSSE1eNWA?=
- =?us-ascii?Q?E6CNRktAUA/evi6yAMCe9qSy709ijutGL7PqoOEEpzKM+Cv7nKTlTqNiYSQI?=
- =?us-ascii?Q?UPbGyfNm0CITVqzN0iO8PKjlreJgGbTulkAEWeq4LT2U6+UBs/eTsWKFLFEK?=
- =?us-ascii?Q?u+R509vp7LStoldvDl9SFz7ahzbiDVJjPUloVQTwMj19QjVUYS5vm/i/iPsr?=
- =?us-ascii?Q?E5Q4B/VcuX78oJXBxfxvW91tUUY7PwTdMiwsi0UyNvzdEr0MT5MhOJPBJU9G?=
- =?us-ascii?Q?pA6qtOi4vVDPccnzQwBe1JYo+XchoovsSgXfp7nhZnGp2JVaoH/XXNTPFSBn?=
- =?us-ascii?Q?KI7js8SaCJagk2u//LHfL/Z+KRnlM1BdZjheNkJThQowXPrKQ8U7Ua6uWHhv?=
- =?us-ascii?Q?tiBZC1frlM1Gpq9SHem1fviiTWo0yQVm17l5KcqTnoeU5ObNQ3VSNoQuDEPb?=
- =?us-ascii?Q?d1nbOWb9RjTBqGo6YLzVOppM0qi54LEfvDkMeFxNtPeBsAOq/7ApNwHBVv6x?=
- =?us-ascii?Q?NcA+OC7IbA/LI6V5TGzL9sfC+kQAMxCeMxcpY2cuzC2TwBFHyDLVbEzP1tjF?=
- =?us-ascii?Q?BCTqU2+elUWgVYn9/yXNaJgn3GUkAu7AOPtsqb4UEWcYEtjVFW3LCi0S3cb+?=
- =?us-ascii?Q?OzGAXLb6VtgHiBkJGnbsncbcnrTQyvZ+o+H0c/wq+TAVBro5/SmUAIfMFsSF?=
- =?us-ascii?Q?H4w/hrfkzcfQZM0mF9F2EAMl4Zrr6kD0BdQXzooo1DSAwt8/1O+cnGDNsR++?=
- =?us-ascii?Q?GMgh6YXmZ89pFY1HI6L8Cfa5ssPfGc0LVhGkt+7q2ekmJORr/ax4DX2pAYgD?=
- =?us-ascii?Q?MfcSi4QRMTlh/FLFedax6LUT0vtCq0Qc4qMQZR2Ii8UFnSX68HVzkwOUaaol?=
- =?us-ascii?Q?ebMMwQhwXhKbEfl1zSz+02yeXFoVTmrd6bXaBhBdww23BjEH37B2CynAEN3f?=
- =?us-ascii?Q?AJRZC3uWEcNYsb3xHcSYt14LK7dwWqeN8kNYXeBt2R+2EqxAjIGQgKS8z21o?=
- =?us-ascii?Q?8cFgiI14i3eLU7+m2RtIhz1N6ZrHFcFvKbrA4BJDavcKQCU8Ug3SmOvwQWRz?=
- =?us-ascii?Q?q+v3Zq7/ptC5iVJPUVNfADPjPaAWiEKDYVOr8kV6oysK/rmW+YMvJjKIMS60?=
- =?us-ascii?Q?Juo4qDqUFz0wwjtObcA5MqZu4Fv69Q3RTABt5pUziMGi0qE5oMWl2nyRokrW?=
- =?us-ascii?Q?4VmlPsCNvOK9bI3azP3VPaXSC2OhF8ViXM+Z1Au1?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8cf1356-cce1-4f2a-f1aa-08dd501809d0
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 12:30:33.3035
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YvuGywE/UF7kBivmnp0I+rcZebs+t7hNyHaGDr1AXWV+xtv7EjaqNYaKAg1RkTCMj/zK7HKG/gWr+0FaRpy+qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6831
+References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org> <20250217-03-k1-gpio-v5-2-2863ec3e7b67@gentoo.org>
+In-Reply-To: <20250217-03-k1-gpio-v5-2-2863ec3e7b67@gentoo.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 18 Feb 2025 14:09:54 +0100
+X-Gm-Features: AWEUYZlVwAj_YWqJ9Lyi5dg687EoTYyaneVjRfcETc4JasvXfyarUzHN15z58MI
+Message-ID: <CACRpkdbxatfvPnOY_gNVAWdtoJ+xj3DbKNUqFU=9AC_UKM88sw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] dt-bindings: gpio: spacemit: add support for K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>, 
+	Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
+	Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 10:24:52AM +0000, Sudeep Holla wrote:
->On Tue, Feb 18, 2025 at 09:09:49AM +0800, Peng Fan wrote:
->> A potential solution is not using reg in the protocol nodes. Define nodes
->> as below:
->> devperf {
->> 	compatible ="arm,scmi-devperf";
->> }
->> 
->> cpuperf {
->> 	compatible ="arm,scmi-cpuperf";
->> }
->> 
->> pinctrl {
->> 	compatible ="arm,scmi-pinctrl";
->> }
->> 
->> The reg is coded in driver.
->> 
->> But the upper requires restruction of scmi framework.
->> 
->> Put the above away, could we first purse a simple way first to address
->> the current bug in kernel? Just as I prototyped here:
->> https://github.com/MrVan/linux/tree/b4/scmi-fwdevlink-v2
->> 
+Hi Yixun,
+
+On Mon, Feb 17, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+
+> The GPIO controller of K1 support basic functions as input/output,
+> all pins can be used as interrupt which route to one IRQ line,
+> trigger type can be select between rising edge, failing edge, or both.
+> There are four GPIO banks, each consisting of 32 pins.
 >
->Good luck getting these bindings merged. I don't like it as it is pushing
->software policy or issues into to the devicetree. What we have as SCMI
->binding is more than required for a firmware interface IMO. So, you are
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+(...)
 
-Would you mind share more info on other cases that SCMI not as firmware
-interface?
+> +      gpio-ranges =3D <&pinctrl 0 0 32>,
+> +                    <&pinctrl 0 32 32>,
+> +                    <&pinctrl 0 64 32>,
+> +                    <&pinctrl 0 96 32>;
 
->on your own to get these bindings approved as I am not on board with
->these but if you convince DT maintainers, I will have a look at it then
->to see if we can make that work really.
+In my core patch I assume that we encode the gpiochip instance number
+also into the ranges:
+<&pinctrl 0 0 0 32>, <&pinctrl 1 0 64 32> etc.
 
-The issues are common to SCMI, not i.MX specific.
-I just propose potential solutions. You are the SCMI maintainer, there
-is no chance to get bindings approved without you.
-
-No more ideas from me. Leave this to you in case you have better solution.
-
-Regards,
-Peng
-
->
->-- 
->Regards,
->Sudeep
->
+Yours,
+Linus Walleij
 
