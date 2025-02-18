@@ -1,163 +1,155 @@
-Return-Path: <linux-gpio+bounces-16172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93970A38FF0
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 01:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F041DA390F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 03:47:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61F1C171D2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 00:32:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C514117234B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 02:47:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55A8C2FA;
-	Tue, 18 Feb 2025 00:32:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFCC713B7B3;
+	Tue, 18 Feb 2025 02:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyu/TXCu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0627F6FB0;
-	Tue, 18 Feb 2025 00:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7695C2556E
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 02:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739838730; cv=none; b=jswDo1DITmQjrav6aUQLzCTA5PoH8x+ae89AFlHq6c8FT3vstI0PMMAu4v14NPERztmlgUVvqBNLT4UdJBxq9doHJjUIw41dLYIrnbYnFt71rMM+gWoEgSI+JDwWaXmbUsLUP9jySDXT5tyJZmXRzUimXs6fkTNwb05QVFWEF78=
+	t=1739846841; cv=none; b=J8/dWQNGV5APwil9QxP04UXWshQbWUdi+1Gp9JdU+NQzgkJ3VyX1TbiY2nw4nsxsiN4uhU1vIJaZMg7ars3zDMbuDQwj3DzrLsjRCEUrE7UvAk2Kg7R4x3I5Cs0rw4E8GqPmgMX5v6xDSqWO2Z6e4yU/+0Hx6+ggCHnxywpSzMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739838730; c=relaxed/simple;
-	bh=qyQ+sKQ9+9qwFMd1kJ+yVxNWqzCvsbg6kJ8Eskv5KLc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GQeEfKpueyFe6XX+VJRUx/K3IDPPR3u2WGjwNkVL4DTK+aPlrvL+rTP7Gu1cU27u6c47h5Qs4+Y1gSgcYoMij2oLmKVh902CU4GJa3KcQN0V4VWWF8oXp4m9WR+vcMCRvLYnXDpy1jwGY0PVivOjUrp8u2AhnXdN5ngzk0tslyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id CCCAE34311C;
-	Tue, 18 Feb 2025 00:32:04 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Tue, 18 Feb 2025 08:31:44 +0800
-Subject: [PATCH v3] pinctrl: spacemit: enable config option
+	s=arc-20240116; t=1739846841; c=relaxed/simple;
+	bh=x2Eecg/8hfNz/2Ce0Rh33Iyx57SI8qhqPI6mNxoDnI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVVTeQqN+RsJa7hdg1n1U1DFI0X8SkumTxMBVrBCY9kaQmNdaejSam05Hby7cQFsx5lRhaXgVYIV8/6FtxjLbm2TFCH6y9ZYgbJAEvD/3RZJcPk7qccmeGjQdN9Rau0oQOTdANBPG+GO86vE82TT6urZ9mmM1DWeYITfiHmaFa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyu/TXCu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F12C4CED1;
+	Tue, 18 Feb 2025 02:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739846841;
+	bh=x2Eecg/8hfNz/2Ce0Rh33Iyx57SI8qhqPI6mNxoDnI4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qyu/TXCuDqVcoKXmsIZSQJHeEfNE4GLkqb59BV14h0gQnGxVZ0jmDscizOIGotTN/
+	 6HCPhBkTQJY3rt8G449biNeiScmWoU/7O9sBN83G1joGKn3y2Hnn9dG6sArdbwh67B
+	 GAv0RB1AN8KdXWxJf9740pxmUXt9oCKeAXaSUkgnNUT7meJgtOVn+DczlMYxTuKANH
+	 NELp5FbVo7IXeCnCGEz/IjPJfmoAMEy5dXYK7SVpabRoerd3wZIgL8dRAoyl1cFzLE
+	 Yfu1HCVJZ8hkM4fHV6Fj/jD4pGNEJpAr8K0dBIjjwUwd3GO5j0BYcmUOrjzOi51/ml
+	 1pxVjrntJ91YQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: mario.limonciello@amd.com,
+	Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com,
+	linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: amd: Add an LPS0 check() callback
+Date: Mon, 17 Feb 2025 20:47:00 -0600
+Message-ID: <20250218024702.2139216-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org>
-X-B4-Tracking: v=1; b=H4sIAO/Us2cC/33NwQ7CIAyA4VdZehYDyNz05HsYD2PtNqIBAoRol
- r27bCdNjMe/ab/OECkYinCuZgiUTTTOljjsKuinzo7EDJYGyWXNJW/YXTBvbJ/CgzmfyjZDqjU
- OeNRKEpQ7H2gwz8283kpPJiYXXtuLLNbpPy0LJhi1XUMKW8XVcBnJJuf2Loywcll+EEL+ImQhN
- FKDHdc9x9MXsSzLG7kdA572AAAA
-X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
- Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=qyQ+sKQ9+9qwFMd1kJ+yVxNWqzCvsbg6kJ8Eskv5KLc=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBns9UBSIp+GNcJNVHURIgB8oPCS3L3QZGyR4P2i
- FL+slJ0ueyJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ7PVAV8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277XAFD/4wY7mqXi03X/kJnX
- OIHfqEC5cMQcF39mdaTPKlK2HDQQHBC0OfzfIA7i8SuJX1e633Gi6uI6s5rCY34hAQAM7b3RFN7
- el1uJyPSKRj9X2s3wi4QukxcwlaOD0qZohO+lqiGJZ4+rGwOgmH4Vy0++fHLhYpxdxKnhf0acvq
- nsfd+7cRSpREVwn68nOU1yKdbHrdaQYTUt6UT91SXtXUb61tuEONg9SRyq1wOi4VocxjwpDT+SR
- X+gNJCO+uuTWJ2ipOddY/3FQW5xlFEqKILs0bYuNz11EZ/mfeeBhS2FlgyeKCt1bdgqHE/HIQtn
- xN7qz9BS/wd16SlASObe2/2E3y9e3N0+hFOrnDPtusL11uzZsP3oY7Io9MH4ps2nU2zADnuyBfq
- H7dTEKpXz8lc3GiQ0MOo5wsYyRBB6YHc5V1A6b2H54j+4flN6PxxGh6uCEZDo7XZOuboi2Svt3D
- 1SKB7gsfD4zYTnTjEOTQ9kEVAuXrfXJgFo2FBe4VQdUCRMOBTLlnNtlxsJSuXoCALgEqZ3hlvXa
- Grg9Rs4Q5+UJ/rpjYl4qeX9cy5LzlBMCYMh0/qXkTFVeHoZhNMjLRCR+jYbGsdvWLXo22Q2kr+I
- y4FcPIW56C+1ZmQZR/zg24Og3rxcyVia0kqIJi3pq2bmfmqYTepGwSxI5pkQdnyXcwOg==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Transfer-Encoding: 8bit
 
-Pinctrl is an essential driver for SpacemiT's SoC,
-The uart driver requires it, same as sd card driver,
-so let's enable it by default for this SoC.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-'make defconfig' to select kernel configuration options.
-This result in a broken uart driver where fail at probe()
-stage due to no pins found.
+During suspend the pinctrl_amd driver disables the interrupts for
+any GPIOs that are not marked as wake sources.
 
-Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-Reported-by: Alex Elder <elder@kernel.org>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Tested-by: Alex Elder <elder@riscstar.com>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
+This however does not prevent them from changing the wake status
+bit during suspend, it just stops the system from waking.
+
+If the system wakes from hardware sleep for another reason (such
+as plugging in the AC adapter) this wake bits might be active.
+
+This could potentially cause problems with going back to hardware
+sleep.  Add an extra debugging message when PM debugging is enabled
+to help identify if this is happening.
+
+Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3929
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
-This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-when using make defconfig, thus fail to initilize uart driver which requst
-pins during probe stage.
----
-Changes in v3:
-- switch PINCTRL_SPACEMIT_K1 from tristate to bool
-- Link to v2: https://lore.kernel.org/r/20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org
+ drivers/pinctrl/pinctrl-amd.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Changes in v2:
-- set default as y
-- Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
----
- arch/riscv/Kconfig.socs               | 1 +
- drivers/pinctrl/spacemit/Kconfig      | 3 ++-
- drivers/pinctrl/spacemit/pinctrl-k1.c | 2 +-
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -26,6 +26,7 @@ config ARCH_SOPHGO
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 1d7fdcdec4c85..5b4376b05eafb 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -37,6 +37,8 @@
+ #include "pinctrl-utils.h"
+ #include "pinctrl-amd.h"
  
- config ARCH_SPACEMIT
- 	bool "SpacemiT SoCs"
-+	select PINCTRL
- 	help
- 	  This enables support for SpacemiT SoC platform hardware.
++static struct amd_gpio *pinctrl_dev;
++
+ static int amd_gpio_get_direction(struct gpio_chip *gc, unsigned offset)
+ {
+ 	unsigned long flags;
+@@ -909,6 +911,29 @@ static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
+ 	return false;
+ }
  
-diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..a2f98b3f8a75580d2d157008997cc48f42a89368 100644
---- a/drivers/pinctrl/spacemit/Kconfig
-+++ b/drivers/pinctrl/spacemit/Kconfig
-@@ -4,9 +4,10 @@
- #
++static void amd_gpio_check_pending(void)
++{
++	struct amd_gpio *gpio_dev = pinctrl_dev;
++	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
++	int i;
++
++	if (!pm_debug_messages_on)
++		return;
++
++	for (i = 0; i < desc->npins; i++) {
++		int pin = desc->pins[i].number;
++		u32 tmp;
++
++		tmp = readl(gpio_dev->base + pin * 4);
++		if (tmp & PIN_IRQ_PENDING)
++			pm_pr_dbg("%s: GPIO %d is active: 0x%x.\n", __func__, pin, tmp);
++	}
++}
++
++static struct acpi_s2idle_dev_ops pinctrl_amd_s2idle_dev_ops = {
++	.check = amd_gpio_check_pending,
++};
++
+ static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend)
+ {
+ 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
+@@ -942,6 +967,7 @@ static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend
  
- config PINCTRL_SPACEMIT_K1
--	tristate "SpacemiT K1 SoC Pinctrl driver"
-+	bool "SpacemiT K1 SoC Pinctrl driver"
- 	depends on ARCH_SPACEMIT || COMPILE_TEST
- 	depends on OF
-+	default y
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
-diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index a32579d736130c80bd12f0f9d8b3b2f69c428b3d..59fd555ff38d4453f446263a8fdb4a61faf63cfc 100644
---- a/drivers/pinctrl/spacemit/pinctrl-k1.c
-+++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
-@@ -1044,7 +1044,7 @@ static struct platform_driver k1_pinctrl_driver = {
- 		.of_match_table		= k1_pinctrl_ids,
- 	},
- };
--module_platform_driver(k1_pinctrl_driver);
-+builtin_platform_driver(k1_pinctrl_driver);
+ static int amd_gpio_suspend(struct device *dev)
+ {
++	pinctrl_dev = dev_get_drvdata(dev);
+ 	return amd_gpio_suspend_hibernate_common(dev, true);
+ }
  
- MODULE_AUTHOR("Yixun Lan <dlan@gentoo.org>");
- MODULE_DESCRIPTION("Pinctrl driver for the SpacemiT K1 SoC");
-
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-
-Best regards,
+@@ -1182,6 +1208,10 @@ static int amd_gpio_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, gpio_dev);
+ 	acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
+ 
++	ret = acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
++	if (ret)
++		return ret;
++
+ 	dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
+ 	return ret;
+ 
+@@ -1199,6 +1229,7 @@ static void amd_gpio_remove(struct platform_device *pdev)
+ 
+ 	gpiochip_remove(&gpio_dev->gc);
+ 	acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
++	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+ }
+ 
+ #ifdef CONFIG_ACPI
 -- 
-Yixun Lan
+2.43.0
 
 
