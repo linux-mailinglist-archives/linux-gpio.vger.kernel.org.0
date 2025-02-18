@@ -1,107 +1,121 @@
-Return-Path: <linux-gpio+bounces-16185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 449FFA398BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 11:26:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C925A39920
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 11:37:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4496B18890F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 10:25:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6919F174683
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 10:33:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7B72343BE;
-	Tue, 18 Feb 2025 10:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3992376F7;
+	Tue, 18 Feb 2025 10:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iHEPd0IS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B3D233157;
-	Tue, 18 Feb 2025 10:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB93266F11
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 10:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739874301; cv=none; b=Fk24vHE96QZvnwKf8AttFoRi7zDl3v6qOb9i3mp+dktXzm0Qfq405cEnN2Y4YB6T3OgJXv/lalciLlXOqu2tZ1uA+5qiZHEBRk+a5CK0KS7G6HSyBFJpK/2/UjX/W6sR43cvo2qJE8bfSspEhLRihyxlLl80GL6ZO6HR6qohFRI=
+	t=1739874409; cv=none; b=ff8vVTWWaNJUF5G500eGlOTaps1M1yYdpxSA8Vtc1zlj9yDXLpzidf8hGFKlcQt1RoxRP0Kzw6AHAsXjkUWnNQ8Oydj/iGHu3fKAIWkwFCxHCxxn62e0/2D9w2KzpCyCYLuWYcEyqVLWxv9rbmUempJvafg7bhv2/VtMQ9Mze6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739874301; c=relaxed/simple;
-	bh=m8OhKUntbc2SaOGNpmwf8cIjYThX9QnKGC7Wo5pVxvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iIyX4cfA1dLGp2bM/m72jyDKahFkAbTOoeJbSC0F8j7ZstAVw+OzABJRzmGi5/B4qbrCnSSzG/qnIY8hv3bqDQDOIg6rPJMlcEsEOZ3EukXvCG9jGHOXhHwKFkryFB2IMkAg1mClw4u+jXeBa3z9b8/kb/t8SOaNyg/BwLflp1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8451D13D5;
-	Tue, 18 Feb 2025 02:25:17 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 811B93F6A8;
-	Tue, 18 Feb 2025 02:24:55 -0800 (PST)
-Date: Tue, 18 Feb 2025 10:24:52 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	s=arc-20240116; t=1739874409; c=relaxed/simple;
+	bh=R0qIYgCeEQo9kJBLh0KVPhAphFigMXsi3VlgZ5rPKEc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eUGV01IN6YVo2Dfr/AUKOqVltH2gxQIXzLmuhbMfEq4tEmwdLa17+931VCLK67c9B7jBz7nXqy3PgKeIH4SazIocl7NEi6V3ITnwo2pr0VC4womXjJQq0PM6VCiU85xvSZYWuuR3w1bUv/1epLSVPMFS3H5tYq8q1bJzW45l6L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iHEPd0IS; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so54950525e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 02:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739874405; x=1740479205; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PVuCVswV16narj821ZS0eMp6ZNcBSJyZmwp0vTbPAms=;
+        b=iHEPd0ISjShzufzAnl4S/W2Acq02mQ/0dtK1mcV1pmvuXXdXtpXViY42qmVwYuJbU6
+         hn7LhjpSROd34fYO1QKGi0PSHOrDvCswWo+u19bi6NQhI1MgNHx7qs9ulnHVNlrUkdMz
+         +XAN6l6syHwA1townIBq70PryH+b7leQMqkDCwYQkDvUEmaAC0QA3+NMwSJbDckQFbVw
+         Fk2dSxSi+8vPFPGQ4beOKg6QD9MrCyP0UhwsgrdnD3LRazTcbCmSB8YplNSF/KOt7A7n
+         t/anZfgkmuWG7OGlpNpECAfSPOtJqbkHObvVvCMqFv9dJTS+sdxISXGRWG7ywOLURvrx
+         Rotg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739874405; x=1740479205;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PVuCVswV16narj821ZS0eMp6ZNcBSJyZmwp0vTbPAms=;
+        b=G61LUb1vHzxSHEW1p53iSwJYt2OVRLm2RSQKhXdswSZGax/pfgmvXGSt3K+2takG9t
+         zYFmDOzEnXSiBa8+azSFpjZwOQBnVxKxr+YOstpO0wZ418QGRj5OWB5SIIyaAmk6PZYO
+         Drf1yfFZ1m6ucxrZzJWUhiAvKaXuxh+DmhBbJz/iJUI6EBnnlLgYdKazBVNF0alCGo48
+         iIKqCZr5B8P3i1gQiU9BXmu2ktyaweN7F9v4/c/gUwdrpl3BzixAkh3+LQ577kQ9Guvi
+         PBrU/LLx3xh6nd6+uDwZszLaQj092HmAa2hfwL5RH1PaA/3U2vPZP8lOT8E+JLGsnRur
+         6WFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDI5WQV9weGDBFiXWf8hS8WQIRDn7v7puRtL9pcN+EqlBXxB3gpK720xOgRp+7wXlfiejgOXSM46lR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZCfCB1yx2QFKS15zh0MV+9Up6wv8rvgzERwTd7eLJyvbsYzrI
+	buhQTCS2jXwIK3QddhSnJgJeJYC3U2A0HBiDVwQMmy3CKU0511oeZ6zZ0QVq8SQ=
+X-Gm-Gg: ASbGncvSKo0b9Zy/2raMDxMr2PaOXmL3wiCkn30CDkh0hc+lt0rydeJEaiwB1lm6aPG
+	X3elzmyBGEljax74FLCi84K1MNwKCjLsglZXuV3hJvNNv+h322HzkdN2loX7aNSurn4UEieqSVD
+	oWVYbXP+3J8F+mWp9ITSg/+OPakSYA52NgwDPX+sJYGhRR99rkRWfFV3war6W4I59wLq7h06HC7
+	1Wnr45kShOQg30l6d44R+PgLzTFH39h2q4c7kBTLElj0jg/W1imwR4H6JArI2ANRiSpD3hBgjwL
+	B420crFwBWFTjPg=
+X-Google-Smtp-Source: AGHT+IHYrr9CR1u4TX/WgIeANFN3wkpU/AOROz4viH7ujGhFJvNwmMI6SzTG4mXB4Ko99gH55l7OkA==
+X-Received: by 2002:a05:600c:1d04:b0:439:5f7a:e254 with SMTP id 5b1f17b1804b1-4396e745a72mr106742665e9.21.1739874405324;
+        Tue, 18 Feb 2025 02:26:45 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:30b8:840a:cf5e:6adf])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439618262d3sm145793195e9.22.2025.02.18.02.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 02:26:45 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Dipen Patel <dipenp@nvidia.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, <arm-scmi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<imx@lists.linux.dev>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z7Rf9GPdO2atP89Z@bogus>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
- <Z6uFMW94QNpFxQLK@bogus>
- <20250212070120.GD15796@localhost.localdomain>
- <Z6x8cNyDt8rJ73_B@bogus>
- <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
- <Z65U2SMwSiOFYC0v@pluto>
- <20250218010949.GB22580@nxa18884-linux>
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	timestamp@lists.linux.dev
+Subject: Re: [PATCH v4 1/2] gpiolib: move all includes to the top of gpio/consumer.h
+Date: Tue, 18 Feb 2025 11:26:43 +0100
+Message-ID: <173987440185.24201.6935199130548694687.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250217103922.151047-1-brgl@bgdev.pl>
+References: <20250217103922.151047-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218010949.GB22580@nxa18884-linux>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 09:09:49AM +0800, Peng Fan wrote:
-> A potential solution is not using reg in the protocol nodes. Define nodes
-> as below:
-> devperf {
-> 	compatible ="arm,scmi-devperf";
-> }
-> 
-> cpuperf {
-> 	compatible ="arm,scmi-cpuperf";
-> }
-> 
-> pinctrl {
-> 	compatible ="arm,scmi-pinctrl";
-> }
-> 
-> The reg is coded in driver.
-> 
-> But the upper requires restruction of scmi framework.
-> 
-> Put the above away, could we first purse a simple way first to address
-> the current bug in kernel? Just as I prototyped here:
-> https://github.com/MrVan/linux/tree/b4/scmi-fwdevlink-v2
-> 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Good luck getting these bindings merged. I don't like it as it is pushing
-software policy or issues into to the devicetree. What we have as SCMI
-binding is more than required for a firmware interface IMO. So, you are
-on your own to get these bindings approved as I am not on board with
-these but if you convince DT maintainers, I will have a look at it then
-to see if we can make that work really.
 
+On Mon, 17 Feb 2025 11:39:21 +0100, Bartosz Golaszewski wrote:
+> We have several conditional includes depending on !CONFIG_GPIOLIB. This
+> is supposed to reduce compilation time with CONFIG_GPIOLIB=y but in
+> practice there's no difference on modern machines. It makes adding new
+> stubs that depend on more than just GPIOLIB harder so move them all to
+> the top, unduplicate them and replace asm/ with preferred linux/
+> alternatives.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/2] gpiolib: move all includes to the top of gpio/consumer.h
+      commit: dea69f2d1cc8d9ecdc72ba350d10a1e71940ef18
+[2/2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+      commit: 63cdf6241ac7edd94cb4cd9a8f1ba2c3c61ed219
+
+Best regards,
 -- 
-Regards,
-Sudeep
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
