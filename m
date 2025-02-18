@@ -1,130 +1,114 @@
-Return-Path: <linux-gpio+bounces-16203-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16204-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0C81A3A469
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 18:34:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD9BCA3A61C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 19:50:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FE3C1696E2
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 17:34:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63BAB1896C7A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 18:50:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A281B26F45C;
-	Tue, 18 Feb 2025 17:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFEB61EB5F8;
+	Tue, 18 Feb 2025 18:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sn83F6p0"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Hv4RSM01"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A762023497D;
-	Tue, 18 Feb 2025 17:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B0316C850;
+	Tue, 18 Feb 2025 18:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739900059; cv=none; b=PvUIathmnUiq5yfGsOj8GBn+JXK6fzmibdD84DGB5LY/q1wtvOjISCp5oGeXkZ9gijNTrCNEyrjbpBvNvX62k7ye1l/KbRarRoKDRXlWNWFZYCeFwIGdIpt97oZbM27sI4IGoYrKwvus+k6BV+WxskCwk7zn3FgaXkwd/JXLYFI=
+	t=1739904564; cv=none; b=CRwc2/HA8HZSPq7kJNq60whd+YvVYG5ZY3hqeUy1wafslTQAhqRFQFg0lndpyIAXQVSzLv5/h56SRee82iE9VkA4ekWCJhgSxcMOAHanRY9Y84QtfQ1DLMUs3Pplx14MnkkC5Zt/XvOUpWQe9fHz/W+namCHe2GtzAFbfD7vZAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739900059; c=relaxed/simple;
-	bh=pxveCCd+0WuDtzslFIWMUmLkuSfXogvGgq1ZCpgIRTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JExUzikuWhPKAD1nwOFtkDbf/e4ci2ZUrKJpNvWM4HvNtj9Di+2PL322Rc0Xx5n7IoDaGUWVmKbyYx8pVV02ZFlgji9Kg5Da4Od1qtq5XDjLcx9AjAN6ZHXBMpD89292ywIfRzeM6PnPX6fqHXIuy5zpx5yB1tkA/c7mpTXzjTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Sn83F6p0; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51IHXhih1719889
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Feb 2025 11:33:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739900024;
-	bh=APPaTWCDnxYJLE0VYqIvhKqd5gtGQPP8bAgHzOeugXU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Sn83F6p0MCJsKg8Rbdis+Xu6V3a/WcTnbV2rN9T80EUPq7dnjRlL2q4HX127vvNgy
-	 VLZ84Y2+553DGxXdJ7UJAw+7sYlUf9u5iPlcB3d1VcMUWo+QSk9LlqeVbsZBNGtTZj
-	 5+bHPVgkpSdgU7QR1O5LadJkkzRVsGJmEm02MyyM=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51IHXhrs004385
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 18 Feb 2025 11:33:43 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
- Feb 2025 11:33:43 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 18 Feb 2025 11:33:43 -0600
-Received: from [128.247.29.251] (dmz007xyy.dhcp.ti.com [128.247.29.251])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51IHXhM5037290;
-	Tue, 18 Feb 2025 11:33:43 -0600
-Message-ID: <a7a2709b-f7ad-469e-86f3-6db4b4b3b37a@ti.com>
-Date: Tue, 18 Feb 2025 11:33:43 -0600
+	s=arc-20240116; t=1739904564; c=relaxed/simple;
+	bh=mu4DL52dax5XNXsfxCOUhTgjTpU2ZBw1b0womh5uByM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pKaS0fJ1QDREQxckrYhVAzMmFpRcmbO1rhxtZdr6Yl8PBpN4bq5wqcy38x0iNbumLNSBO7ozi1/yZEUmn3pS0OA+sSMSHBRXcXHQbdgYhthpQdM7ym38HprjrsKdDXzbvPlG/O5EZXxMChJFzxtEoTQtXJlgeSaa7aQvqcKvQQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Hv4RSM01; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 7431825F75;
+	Tue, 18 Feb 2025 19:49:21 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id SBDZ0cCM_kBQ; Tue, 18 Feb 2025 19:49:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1739904557; bh=mu4DL52dax5XNXsfxCOUhTgjTpU2ZBw1b0womh5uByM=;
+	h=From:Subject:Date:To:Cc;
+	b=Hv4RSM013Sz9Np6jahU4+eKmOsRGWTHAO3QNvIoS6wZg+ZwInOpG1cGZCdD+w5jwN
+	 xpL4FyadDiFwJdv6TAOTbr1iKwy5yIJUpS0oYyOXlSvwqV60b24XEF3LYQYypgPVWm
+	 hiv0pWleGiUBbJ74IXh7Lowe2IL1LPZYXHbm3bNRvtYlcumJU7I7eUcZ0QTXvzj3UP
+	 H5SizG2B2nZIokOYOwXtFW6C9gEZim7LmnNOj7YOk8Hos7PT+0OnjR5PaHsVyxtBAM
+	 UTFDEtxo1Fkr/i+CE78VlltbEpYEI2zRw38AFTk7p+UtBLwf9I9XVXYShZuhrNjquz
+	 XAEK/2tj9iOqg==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v2 0/3] Introduce pin controller support for Exynos7870
+Date: Wed, 19 Feb 2025 00:18:56 +0530
+Message-Id: <20250219-exynos7870-pinctrl-v2-0-1ff9b10bf913@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
-        <christophe.jaillet@wanadoo.fr>
-References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
- <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
- <065cdaca-cc37-4b1e-9c1e-e2dedbb2ffd5@ti.com>
- <CAMRc=MfR2q8TTcEHtbX9HxyFikHP_nS+Mva3dTwmgu4tvkxJ1w@mail.gmail.com>
-Content-Language: en-US
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Organization: PMIC
-In-Reply-To: <CAMRc=MfR2q8TTcEHtbX9HxyFikHP_nS+Mva3dTwmgu4tvkxJ1w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABjWtGcC/22NQQqDMBBFryKzbsokVUe76j2Ki6pRB0oikyCKe
+ PemQnddvgf//R2CFbYB7tkOYhcO7F0Cc8mgm15utIr7xGDQFGjwpuy6OR+oIlQzuy7KWyGZshh
+ I11hqSMNZ7MDrGX02iScO0ct2fiz6a3+5/F9u0QoVUVtXiJTXLT16DuJ9vHoZoTmO4wNsWGwLt
+ gAAAA==
+X-Change-ID: 20250203-exynos7870-pinctrl-07265f719061
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739904552; l=1290;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=mu4DL52dax5XNXsfxCOUhTgjTpU2ZBw1b0womh5uByM=;
+ b=PzYnIM2lWsCoLkGa3R8NJ+kI6BmF8pgCNCKA0dWf36zvs4RCqb0sv2q+AkgsNSQZ0eC6dF+lu
+ OkC9Rpdsl2IDeRsyPVPJuDIV/cA6OEJ9nCsaYptnVqcbNJUXTEEt+cF
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-Hi,
+Add support for exynos7870 in the pinctrl driver. Also, document the
+ALIVE pin controller's wakeup interrupt compatible.
 
+This patch series is a part of Exynos7870 upstreaming.
 
-On 2/13/25 2:11 AM, Bartosz Golaszewski wrote:
-> On Wed, Feb 12, 2025 at 10:12 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
->> Hi,
->>
->>
->> On 2/7/25 2:53 AM, Bartosz Golaszewski wrote:
->>> On Mon, Jan 13, 2025 at 11:55 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
->>>> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
->>>> significant register map overlap with TPS65219. The series introduces
->>>> TPS65215 and restructures the existing driver to support multiple devices.
->>>>
->>>> This follow-up series is dependent on:
->>>> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
->>>> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
->>>> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
->>>>
->>> Did these go into v6.14?
->>>
->>> Bart
->> The dependencies listed in the cover letter were just applied by Lee Jones:
->> https://lore.kernel.org/all/173928615760.2233464.12306998726512431222.b4-ty@kernel.org/
->>
->> The rest of this series still applies without a need for code modifications.
->>
-> I'm not sure I'm following: should this series wait until v6.15-rc1 is
-> tagged? Or did you ask Lee to create an immutable branch? Or doesn't
-> this series depend on the MFD changes at all after all?
->
-> Bart
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Changes in v2:
+- Take over ownership of patches by the co-author, upon their request.
+- Link to v1: https://lore.kernel.org/r/20250204-exynos7870-pinctrl-v1-0-77b9800749b7@disroot.org
 
-Sorry about the confusion. Lee didn't create an immutable branch and the series does depend on the MFD changes,
-so this GPIO series should wait till v6.15-rc1 is tagged. Thank you!
+---
+Kaustabh Chakraborty (3):
+      dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
+      pinctrl: samsung: add support for exynos7870 pinctrl
 
+ .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  |   2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |   1 +
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 141 +++++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |  29 +++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
+ 6 files changed, 176 insertions(+)
+---
+base-commit: e5d3fd687aac5eceb1721fa92b9f49afcf4c3717
+change-id: 20250203-exynos7870-pinctrl-07265f719061
 
+Best regards,
 -- 
-Best,
-Shree Ramamoorthy
-PMIC Software Engineer
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
 
