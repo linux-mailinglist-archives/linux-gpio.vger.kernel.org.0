@@ -1,119 +1,151 @@
-Return-Path: <linux-gpio+bounces-16194-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16195-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E43AA39D00
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 14:10:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53DC8A39D72
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 14:30:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B06067A1E2E
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 13:09:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36E9E3B3203
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 13:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA5B2673B1;
-	Tue, 18 Feb 2025 13:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dtqxb1+r"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 529C9269AF5;
+	Tue, 18 Feb 2025 13:24:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F11156F4A
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 13:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166CE2698BF;
+	Tue, 18 Feb 2025 13:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739884210; cv=none; b=Nq4nQBgTKWxWaSRAquGFo5Fi7bIuRugU0Zobp4zvHBmIHm5TphYdk6gXXSCq7PwVxAiwcL4edKN9dCpkl92wUrxTWW4PfFtCMQVCKd7AlxOD39QQVKyLGEvmAmIXuyboiG2RiTYbiqUcgi6VgLbf67a1aXMLvRD8imjxCpTw7I4=
+	t=1739885088; cv=none; b=H916L6xvwRoyfUxpCS2Sa+BlafMuoBhU7HcBFYCboVjos3H61MHB1dvr0gOuDBCpJOBquFg24dd8ChjXx+hEJIMd0xpmh4W4maemyYRRraKTXRMcb4w+thmu3OCvO5drpDedpWnCKZYZq1jq5YEbPWEzb9m3oE7wX0PS0pnyP/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739884210; c=relaxed/simple;
-	bh=wChb/6g3sce1C+2S6hz0f4MqiwvzQlvCTwkos7PCRgQ=;
+	s=arc-20240116; t=1739885088; c=relaxed/simple;
+	bh=EA5T8455k+n31uoB1gHaqCUfM6X4To+0/TVBZuFkZQE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o59f8EenB1SwZFbrsQChU+pnbGo+0cdprHSC1kN4/QtyYplxMJ1rUegp8h88sBhu+nUrw7KL9tWddabaZvHm8Dr5z7fqsyU5hyr8g6Noqv3J8uiNVPyBtIjByXhU8ujVlQx0u72gH059+25zZykabMwiESnUy+0FDZfXC2DRkgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dtqxb1+r; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5461b5281bcso2320241e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2025 05:10:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739884205; x=1740489005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x2H4CFTIInDOtT3tOm3edOpwQRv60P1DUgV4VG+RFkE=;
-        b=dtqxb1+rSM2DZ963SU9zTaHeOR3KsHJWnXi2IOv/fZFsl2tCgDBJsZLDZTWiomZ5gc
-         OdFRSA5aucfV7WEBNL5digHsP5itroS+yfuxrcaf/4memPvtzgN2r33bh7fN1Il9dQXX
-         6OU2oG2DojBUAbqR/xm//lOqJNlVG5nyQwZd31MRXVmlhP7It4aJ46uVRYr7+lshW+P1
-         HVyjwMUGTkK9wx90aFiSqyXOC1DWZL/ewgZ7Yw6l4LygiPjHWAnhZmil2ZKYqv5MiFd3
-         C+vfydEkwR1cTkVR7D9Pdi+X5Xe+sKd6xOiZJXEi73x+igMvsa5/LWEa00Bp5tAFTvrG
-         1ulA==
+	 To:Cc:Content-Type; b=updsWq2a+42ARa4BKHp2WR5qsXyR//j/g/7t/n+6lJlNoT3EWBNuiFbRHAur3AdUmmO7dhzGiJeDnfXzSef824ZORIgFNu75MbDelMMmv0Cgm7pElwvOCrUZaZMhoH2kDhqRMExQLn5xvObH4kkFHvgi1XYZCkcB5yOoTLeJvPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-520a80b1015so414699e0c.2;
+        Tue, 18 Feb 2025 05:24:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739884205; x=1740489005;
+        d=1e100.net; s=20230601; t=1739885084; x=1740489884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x2H4CFTIInDOtT3tOm3edOpwQRv60P1DUgV4VG+RFkE=;
-        b=PCmlrvMOjM/h7/VGCXkJhM6nvt+aw0A7k8q8Ce/H5uqzM2MG9XkA+Hwn4YQ7lIQmDo
-         HzAAO+wibwQOpcZfvuqFSgaFkJZ3w22EjAPZwE7QqMMsRCHNOgLrVkR4CzqLsfkkVGTk
-         vV5BfV8G1cu5VNaLgW7cyPrKZxpwPwCmiSYNm4N2df9dRYMdtrhiAU3GdG5CuaItcMLu
-         tOm1oDD1/5DeYigoBsIWl7eVQW24kem8daazO0BcGZIi1De3JQaCl8brH+ZX9GYqg/E3
-         j8SwpjnnCitUFMCb45s6oNS7Ad6/CjX50QisXriOJjv1jT0hsVg954kOwsq45xeHOWp9
-         dh7w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2evl/gbTEDB+VJOHr2QqgSBUsRv3Sxem2h2/N141vI3YrBMLhh2gvAS4JN812da40mmyTODGjoFz2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCN7yUrIrCpIdCIn3DpUGwvH4vjX80x8GJA9u9s1JWtU9gIwmB
-	4QZXd2oQEKlpSPymSVpB7CP3iC4fFihdOZ1iL72QXuQtUpS5cyrljkFHGK3hXYsFc+YvvK8YvFx
-	LYeGf4bwuM0dUWAzHTCDtCKhKh4BrPvOqI+CnEw==
-X-Gm-Gg: ASbGncusOV7UoWcUkT5cy94H/1ihKOImS1tmQjqJoT9LmVHOUn8R4at6nfn10QQpHFF
-	N9yVKZxtiUfXJgLWnt/B8i7fUlbU0R+n+qNmYu2sQNro8cuXet48zgplG6BtcvdSzQrhghw8O
-X-Google-Smtp-Source: AGHT+IHdB6MXsIp6ZqlQsI40sZGvOLeSKe+AB5abn2fY1o/Am7w1jOVveK3QMy7dhDaAVzYZIDd9lE1wi3yAkqHGnxI=
-X-Received: by 2002:a05:6512:3992:b0:545:2d27:5ae1 with SMTP id
- 2adb3069b0e04-5452feae86fmr3466160e87.53.1739884205513; Tue, 18 Feb 2025
- 05:10:05 -0800 (PST)
+        bh=IMGR/ywEZpSBdeMC5GBoPGH/9E5RjFPCg85if3tnzlA=;
+        b=Po6nlIHzipXBxspnWuI04IBimBeWLNV7HqVw8Tfpe79Gq/AMilvujJIzGnHqqMx+O8
+         90e3+dCGutOyFur32XV0e8ov298jCMnG8tn7MArY7QHPbRhBXLXhZXv3JATf/bTVs1Nh
+         7Tw9H/bv6T4geIXqRi/Yo4txJ0MmBAjDZ7MAq+JdmXGe2PDMwGvHAqeI1phIS5sYSPEH
+         fIPRC36aNGEm+xTtqW1AchcwsBrCjT5eQpQqFPHCTmdboHeTnk4CGd6u470H8okoe00o
+         pUuSIjNNxY5r48kF/4kepJ+UiN48IQWJVO10WIZ74As6KJ7mOA8ytBnLVsCGA6+FRaME
+         Owrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKkAhqnioP5EChZ2FKFt+MXkB5/MZ1kYWeFfhqY2BUQtWv0sOcUhgdjFnFgJrxGGo7YQpRR+vwUiGjNc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlKYAPpgC0IVTrQgtoTxBhZ+/8MxbUI4vqRL3eT9iOa9bKCpYX
+	pK+IC2j38ZDzTDWhAkXyfCqNw8vgKPq7FBuHJ172aChuFTRnEdKoGrz0rUFM
+X-Gm-Gg: ASbGnct7GppwC53BXHE6/pLeeBXqCStR+hhQua7b33J7/hf1GGebvgUsWbTPxN6cj65
+	0AGhy9HNzeisIm4Rhe5W+c76RC6A+ykbK8RepSwAZ0aE2eZgiNKC/VNW7mU0x4pQJLTxQnNxuDP
+	1uSLeytdRlEYac+nS9qRazcZydIhF5RIb62s7PXG8QIsnKqYdSEkHA9LIh/eKE+cGRzkvH7l0vH
+	5Psz/6JbqzOFnZgWE8EAvSYb03tSDoLiac/R6NBcdqAUJuAHgVOLw78mWD6n1NLenLed8DBsKHE
+	vkOw8lr0Tg7HSD8pPkkkka1RQXyD2X46oa9wKfpJTT0aJ1p/0RJhDA==
+X-Google-Smtp-Source: AGHT+IEpZhuQW4FTp/0qCg9b+sWWXJLjGsdwnWvNsZBIjURdkVc68lg0Yhhi6mvHQ9jO1TWKAdAVUw==
+X-Received: by 2002:a05:6122:20a3:b0:520:5a87:66ed with SMTP id 71dfb90a1353d-5209dac20d3mr5824950e0c.5.1739885084431;
+        Tue, 18 Feb 2025 05:24:44 -0800 (PST)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-868e86bce70sm2337976241.27.2025.02.18.05.24.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 05:24:44 -0800 (PST)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-868f169bb56so1465122241.0;
+        Tue, 18 Feb 2025 05:24:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXhpOLJeD+2Eh6u0WwNymfVotODkNPfYj/aJh4Fv3sLh4/f3MIeVUZj5lXCqQ13HjeBWCFQuECmGATM8LE=@vger.kernel.org
+X-Received: by 2002:a05:6102:c4f:b0:4b2:485b:e151 with SMTP id
+ ada2fe7eead31-4bd3fc9b9fbmr6104477137.10.1739885084091; Tue, 18 Feb 2025
+ 05:24:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org> <20250217-03-k1-gpio-v5-2-2863ec3e7b67@gentoo.org>
-In-Reply-To: <20250217-03-k1-gpio-v5-2-2863ec3e7b67@gentoo.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 18 Feb 2025 14:09:54 +0100
-X-Gm-Features: AWEUYZlVwAj_YWqJ9Lyi5dg687EoTYyaneVjRfcETc4JasvXfyarUzHN15z58MI
-Message-ID: <CACRpkdbxatfvPnOY_gNVAWdtoJ+xj3DbKNUqFU=9AC_UKM88sw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] dt-bindings: gpio: spacemit: add support for K1 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>, 
-	Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
-	Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250217142758.540601-1-koichiro.den@canonical.com> <20250217142758.540601-2-koichiro.den@canonical.com>
+In-Reply-To: <20250217142758.540601-2-koichiro.den@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Feb 2025 14:24:32 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWSBXHE9t2pMV+9iZRzrTUGVG+dnxxOMWbVF+HeCpt-xA@mail.gmail.com>
+X-Gm-Features: AWEUYZnOPltRIBVqttBZm59CRgFdIfDDSsicHGinbXJlvgJtt8IxCEmMuNS8Aaw
+Message-ID: <CAMuHMdWSBXHE9t2pMV+9iZRzrTUGVG+dnxxOMWbVF+HeCpt-xA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: pseudo: common helper functions for pseudo gpio devices
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Yixun,
+Hi Den-san,
 
-On Mon, Feb 17, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
-
-> The GPIO controller of K1 support basic functions as input/output,
-> all pins can be used as interrupt which route to one IRQ line,
-> trigger type can be select between rising edge, failing edge, or both.
-> There are four GPIO banks, each consisting of 32 pins.
+On Mon, 17 Feb 2025 at 15:28, Koichiro Den <koichiro.den@canonical.com> wro=
+te:
+> Both gpio-sim and gpio-virtuser share a mechanism to instantiate a
+> platform device and wait synchronously for probe completion.
+> With gpio-aggregator adopting the same approach in a later commit for
+> its configfs interface, it's time to factor out the common code.
 >
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-(...)
+> Add gpio-pseudo.[ch] to house helper functions used by all the pseudo
+> GPIO device implementations.
+>
+> No functional change.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 
-> +      gpio-ranges =3D <&pinctrl 0 0 32>,
-> +                    <&pinctrl 0 32 32>,
-> +                    <&pinctrl 0 64 32>,
-> +                    <&pinctrl 0 96 32>;
+Thanks for your patch!
 
-In my core patch I assume that we encode the gpiochip instance number
-also into the ranges:
-<&pinctrl 0 0 0 32>, <&pinctrl 1 0 64 32> etc.
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-pseudo.c
 
-Yours,
-Linus Walleij
+> +int pseudo_gpio_register(struct pseudo_gpio_common *common,
+> +                        struct platform_device_info *pdevinfo)
+> +{
+> +       struct platform_device *pdev;
+> +       char *name;
+> +
+> +       name =3D kasprintf(GFP_KERNEL, "%s.%u", pdevinfo->name, pdevinfo-=
+>id);
+> +       if (!name)
+> +               return -ENOMEM;
+> +
+> +       common->driver_bound =3D false;
+> +       common->name =3D name;
+> +       reinit_completion(&common->probe_completion);
+> +       bus_register_notifier(&platform_bus_type, &common->bus_notifier);
+> +
+> +       pdev =3D platform_device_register_full(pdevinfo);
+> +       if (IS_ERR(pdev)) {
+> +               bus_unregister_notifier(&platform_bus_type, &common->bus_=
+notifier);
+> +               kfree(common->name);
+
+On arm32:
+error: implicit declaration of function =E2=80=98kfree=E2=80=99
+
+Adding #include <linux/slab.h> fixes that.
+Probably you want to include a few more, to avoid relying on
+implicit includes.
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
