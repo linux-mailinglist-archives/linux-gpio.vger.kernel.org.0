@@ -1,354 +1,163 @@
-Return-Path: <linux-gpio+bounces-16171-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16172-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CE5CA38FD6
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 01:03:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93970A38FF0
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 01:32:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37B737A3512
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 00:02:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61F1C171D2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 00:32:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 647F6A48;
-	Tue, 18 Feb 2025 00:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ph7RLlg2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55A8C2FA;
+	Tue, 18 Feb 2025 00:32:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2054.outbound.protection.outlook.com [40.107.105.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B793D6A;
-	Tue, 18 Feb 2025 00:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739836973; cv=fail; b=ebXF7wgvLDPRsXZs2o0N9Yaw8OGlXZOvNtnlcRsc/BX+qfqLyIG1PdH4/6uByDnt1cWmWGKux/vWr4Hhz69ISlTEjCIr3tsLE/B7zbXf//IhfoNxNuTUmogo4PTb1eYeKrrP790y7yX9ZO/UxfPIrKH8V4ixQgC6RcHAD0KlNNw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739836973; c=relaxed/simple;
-	bh=KDd5KjxewiLBq65RR7PUteltSCNcemyQ6XgftpApX4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mP1RtHILp5b8eEMQQ196MWcyTRrNsWd4DGdX8VqpJCDHfRc+w8zNqxu57/ESg9BL8BLzb4oCraUkI/trBgRIX5Hare4OW6KkPSXVhFDZqj2jSSsFoEWObMR2Aj1Mkf3SqGdKN7zGg1KdWROqnNcvQyKMHfz8rycduRav6AM2Zts=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=ph7RLlg2; arc=fail smtp.client-ip=40.107.105.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l8vsEtlMg+e0HfhVic3yRIU0au/A5vxBNLa4z/nY/tp355syZogQHRF08eLRyYufshD0DyOjtNSzp3KyYYFZl45bj9GLJ4ixoeEHqOsFmGdHdw8OKZ8NSMtVv9EQpSA4S22VWrJeVO0vF569+c0QSV8b5+WTYo280IRtWnHHEiyctWdKokMWL0Df2yhQvBR6K9QkYNnmKUCSBZKVWIKvx19UtZl05MPkEN4usQiXcWVrXW/GVQ7mdKHskMLaqlfVvsPFWfX+4mV4ylgnUZyenakuHC3L9KLKCH1RZwtxMKyH6HKvi7bXE37ZFC9KJX/yjUaFf0/XAF+gqAE2mt42ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8kq4WhBQq1YwSuUCqT1S65fJpW2UlmPYc0xbsOlQ9cc=;
- b=ccX1vsZwyfCGa+h+93gCIiR9nt56t4dYbuU/3hWYU14Jwn197P2qJg31in3vuLD8c02pbcMdbhNzJKRLwJ0a/DYAaOy/iW7qc2mGgP63+GJns29wMkjahvD0eEr4oavrIj4QOQwVo6cYHulZ9xHAnLbHVcGHtG+zEtRpBKcg3GI8AJiSm4BYlzRx9OTJJYMZxNlwyluAwnwNyOedH6RhlJg7ABxycf3IC+avLp2t75VI4LaMdYSLMdhejCOahrxKtO+Xoj8fkV34wPrTPvA2tl7dfnCQDTxq83I/tb3HtYGTdDJ1XH06NfZ/sPNWNkcoqINuP+86VnTNADW0Y+lMvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8kq4WhBQq1YwSuUCqT1S65fJpW2UlmPYc0xbsOlQ9cc=;
- b=ph7RLlg2OMhyQBCkGZjBTOxTN/WpgV/kCPtWChg00Ap4zgsmJWIgfGSxCYLPscDpR2XdgdpYecW9Xp64vDRd3R4PBmkoG2VXxNvjQXe+xx0yMloYnzanbKQsFTb2bCkk/1YJTGoHRnKkR69EF6P3GFGWbUlcTPd3ghXFpdksgx3DVemmUIuE1nrzhxoVsNEGUjPx05axq0CXFgGGMToSdsbWvGH6Pu3g6On8ir4doMX4nsfmB01/3VC+i/aplDzV44Wv8LS04Ue9h3TPVnO+zahCs+WM/yG8eACCYADhXm4TKKihen781q7nFrS39CQ1GpgGAoe6bIvCCcEqswwFqA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PAXPR04MB8607.eurprd04.prod.outlook.com (2603:10a6:102:21a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Tue, 18 Feb
- 2025 00:02:47 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
- 00:02:47 +0000
-Date: Tue, 18 Feb 2025 09:09:49 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <20250218010949.GB22580@nxa18884-linux>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
- <Z6uFMW94QNpFxQLK@bogus>
- <20250212070120.GD15796@localhost.localdomain>
- <Z6x8cNyDt8rJ73_B@bogus>
- <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
- <Z65U2SMwSiOFYC0v@pluto>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z65U2SMwSiOFYC0v@pluto>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR02CA0007.apcprd02.prod.outlook.com
- (2603:1096:4:194::23) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0627F6FB0;
+	Tue, 18 Feb 2025 00:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739838730; cv=none; b=jswDo1DITmQjrav6aUQLzCTA5PoH8x+ae89AFlHq6c8FT3vstI0PMMAu4v14NPERztmlgUVvqBNLT4UdJBxq9doHJjUIw41dLYIrnbYnFt71rMM+gWoEgSI+JDwWaXmbUsLUP9jySDXT5tyJZmXRzUimXs6fkTNwb05QVFWEF78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739838730; c=relaxed/simple;
+	bh=qyQ+sKQ9+9qwFMd1kJ+yVxNWqzCvsbg6kJ8Eskv5KLc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GQeEfKpueyFe6XX+VJRUx/K3IDPPR3u2WGjwNkVL4DTK+aPlrvL+rTP7Gu1cU27u6c47h5Qs4+Y1gSgcYoMij2oLmKVh902CU4GJa3KcQN0V4VWWF8oXp4m9WR+vcMCRvLYnXDpy1jwGY0PVivOjUrp8u2AhnXdN5ngzk0tslyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id CCCAE34311C;
+	Tue, 18 Feb 2025 00:32:04 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Tue, 18 Feb 2025 08:31:44 +0800
+Subject: [PATCH v3] pinctrl: spacemit: enable config option
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB8607:EE_
-X-MS-Office365-Filtering-Correlation-Id: 283389b9-ccce-47df-c2b6-08dd4faf9379
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|52116014|7416014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YTdBTWhGbWNsMzJlbzlFcmFiTkhUNFc2WTlUUFh4SG4ydkFJd0R4RDg3R1dp?=
- =?utf-8?B?dndpbFdaL2pOenRFZVN0S0orNXRKYTRPc04ybFFuOFpsY2JtVWNEUndUS1pX?=
- =?utf-8?B?aE5UZm96eTVuTmN0UWFJcDlSMVIwZzU0SUZ3QnpLanl4QnQyeWc5OWt1d2NY?=
- =?utf-8?B?SXkxOFh6S0xEN3d3dmh4SkxDd1YvM25IcHFkMFF5bWhnSHZCS2h1MmNiMUdE?=
- =?utf-8?B?d0tETEdCOWtSdGJsdi9tbGdxNEszMmZEU1dKazhicFM4ODlOR1BwcVh3YmdT?=
- =?utf-8?B?VEdQS3haU3dwU2F1VUFSMmhFclp4MEEzeElDNXVDUXJzSzgrOWR1YXhCeGlP?=
- =?utf-8?B?cVlmTmZ3RVJKQ3JoaXZ1N0hRcEZ1andTMDlvaTluWng4ZFd0TTAwaHkzQXhY?=
- =?utf-8?B?UVg3ejBEbko2NXA0UFA0blpRc2IybUdmQWdFS0hyWkxycXhUNW5ma2tZMVlK?=
- =?utf-8?B?TTYrdTAvaDVDd0lEMm55RFFEdEY3dkpSYkRlNThWZllMQVNnbDRuTW9nZWhm?=
- =?utf-8?B?NlJxQkcyZFJNd0hKUUIyT1dEc2x0aExHL0dBUXVnWCs1WDdRSWNSaWhuNXNl?=
- =?utf-8?B?V3FhMElKak9UeTlxb01xQzhuVVpoVnJRN2JYMXozeGdJUHM0a29QSVlxZlAx?=
- =?utf-8?B?SGRqWVowNjdYakdSUjFKeU9YNlcya1lVMjV4RjYvZEhtOWhvbzc0VjNKS0pm?=
- =?utf-8?B?dXZHbDhqQlo5dGxHN2tabmtGSTZka2toRzRqTjhJU2VHMzg3QUZrZklOdmFH?=
- =?utf-8?B?QWVSck5tL1kyazNDV2tSNUpPN0liWitxR0RleFFYbzdmOGZKNVBzelZuZVJq?=
- =?utf-8?B?K2l5SG9HRi94ZmowbkNvRnBCYnk1Q3VzRUFUYktCT2owenZtZXRuZ1l5eU5O?=
- =?utf-8?B?OSsvMkRVcm41bEJHeGtyeUdSaXBDYk5rNzJrT0xxdi84V0NnQUd1L2JqODR4?=
- =?utf-8?B?dmYxYnovY05CeDYrTHZjMEhkMWNrczJxbTBSZHVBa2RURVJmejVNRVcxSU9w?=
- =?utf-8?B?ODh5d1htQlJYOXRRbkFsRHpzaUZqcDUrQ0p1K2JwTjJpSGR4bU5NMFNqVHdq?=
- =?utf-8?B?NjZ6dG92bzc3bThzWnRtZVk2ejRlL0pkVE41cFFmQXNqMml5elJxcVR5NVU4?=
- =?utf-8?B?OFR4NDM3SE9MdG5CeTJOczJuc2RBNFJHQVNWNFNWRGhkcUNpWnFHUTRzMmFN?=
- =?utf-8?B?NHFDSjRka1BSUWxjZkFVT1VNYU16bjlPZHl5bE5GNHV0aU9qclhpbG9ZaDlN?=
- =?utf-8?B?eDhWUllrOUpGK25aTk5ibFJ6ZnVJc1B2aWE5dUxYd2d5b3ZINE8zMUdZSjNk?=
- =?utf-8?B?cE15Q0VrSUFpaHlMcEdMQnJFUEErYnF0QUJXWUZvNGdlZ3ErbldGSmxTVHlY?=
- =?utf-8?B?bElqYXVnc1cwUGdLVFZRSWFmK2hPWmd3bWJodHB5U0Q3UHdFSThuTW1tYkQz?=
- =?utf-8?B?d2cyYitGa200d01LL0psKzJEWlVkOWF0N0d6ZzU2NXJQUFhKK2Y1N01MUGky?=
- =?utf-8?B?UHhtTXY5Z1NacEtpYm9WcjZ0SEtodEtJVTdUWkRHcjRDWUJ4T2szOG5ZRGZs?=
- =?utf-8?B?RDdJa0VUcGtVVnpoZXg5cGZRUlhxSFc1dzFIRWFVb0RjTXBCMFRySkkwSDY0?=
- =?utf-8?B?aDBZRDVLalNxWE9VUndVZjVIcmhzRW54cllkMEVoaE1WOFN5Zy9KV05CbUlw?=
- =?utf-8?B?dDBjaGl1VlpKLzFlK1pvakEwblp3bGtDSDFCeE11aUl0dnI0UEhGZ0RZWVFh?=
- =?utf-8?B?a0hwaXNUVFVNemNNVkJjZzFEMXljMXJzdUdzZlQ1OXlIenUvdlc5a2lDT1Rz?=
- =?utf-8?B?MCtEcXZvc21JelpCbVNkaXRSV3dac1IwcUFQTWNXRU5Kc05KZUx6d3BBdS9n?=
- =?utf-8?B?bUZxdGVzUG00U2gyTDFqUUs2WTJBVHYrTjRTd2c4L29uNjI5cnNGMUhYclg5?=
- =?utf-8?B?YldMSXliK1NJdGRYS3RkcWZxUmtJRmZXWUVNN3dyUXp5dDBHWnVlK1RmV0NU?=
- =?utf-8?B?dXc2Z1lkTlhRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T29hV0hlR21oZHR5VWg3V0JFUWFxQ2FISFdpVHRhRHpreEJpNE1TQTgrOUth?=
- =?utf-8?B?WlM2aVFYUCtKQ0s3eThVR2dVS0haYVRjTG5KQ2haVDNNSTJrOGtsZGRiT1lH?=
- =?utf-8?B?Y3dSVlFRWENhK3ZIQmZnY3R1bVFNVzNobHdrWEM0UWJCY3VmRGRWc01PMTdK?=
- =?utf-8?B?czdQQy9meDlLMWp0YnVzV25UdU5zcFFOWXI1TWg1eGxmYk1LU2tEVlE1ZzU3?=
- =?utf-8?B?S1BoODRLUHU4TDR4bW5udURLV01GSDFEQjJNeFFBTTdPWEtHaTB4dXZ4cWJa?=
- =?utf-8?B?K3NxbWhDcFZMWnJ6dzVkT0RENnhMMVNJT0svUzRnY292bHdWc3N5WEcrS3lm?=
- =?utf-8?B?b3l4YTh1bWJxMzBIc3FtOElQMXNHNThNZWMwWVkva2VmTE5Bc3ZmYXZTUVRn?=
- =?utf-8?B?SFFMMzBhMElHNVAydG5ZRlNET2RUR1VvbUIyYjFKN1RMV2xhb2pYYWRPZG9N?=
- =?utf-8?B?bjlHWlAzdGsyZUt0ekF1TmwxajdleEwrTXIreUgyTndQN0hMQmd4OWZTQ1My?=
- =?utf-8?B?QzZoNjZzalF6a0owalhiUUFDQ3RsS0FaeUg5MzNuL1hGaE52Qk5DRjczMVJK?=
- =?utf-8?B?NG1TU3hYbTA0N2k1ZzlucnZ0cXI1cUxQRGowWTZCL3N6SUJjck1WTlRPbUh4?=
- =?utf-8?B?a1ltbVZBYUFNMG9jeUpSeEJXUE5BUU5jVFhiMzgxNGFTYk9uNURTb3lRTlVl?=
- =?utf-8?B?ZDNPbFhZb05jTFI5MTJwUG9OUElvVVlkc1RDRldaUWVZdHVCalZzL1cvVExq?=
- =?utf-8?B?UzUwazc5cytDSm5BZnRvVXRxaWVON3lCVTArUVZiTllvK1MrWERMRGZYTERt?=
- =?utf-8?B?ZHdQRFlKai9CaEpyK1lqNS91emVLWnYxS25GRFBlTFhTVVRyUG5GRXVoYVRo?=
- =?utf-8?B?YVJJMjA5VnRGSENnNk9SZW02M0haSkhCMVdDYmo5dnUwQndwcWdrTFZSR05R?=
- =?utf-8?B?ZndOa3UyRDRKZTAvczI5Rm5VMEFaU2dPemlleHY5S0krZkN1SGx0VW83UUJN?=
- =?utf-8?B?dTVmcFFXZWE5T2NrTnNVeFZLZEZud3Q5OWRjMHBSVE9vNS9JTy9ITUFvNXlO?=
- =?utf-8?B?ZUQvWk51UUJiL1hQdEZOMHh1WXBuYXlGekEyUC9ZMW9lK3l1c1ptN3dSemZu?=
- =?utf-8?B?L2ZBUDMzcUFaY0xpRUY5cnNCTnU4a2x4VXpFbWRwckFVUVVVczBPazFyc2ZL?=
- =?utf-8?B?SHVWek44cUEwUCszMCtaSmNRekd6Zmp2a1VTTmNuMnNZekQxanBYMTcyZWNh?=
- =?utf-8?B?V0lYMFVOUEUxRFRzNkpXUkRMUENENm0vMldsaE1hWTdscnZyYWtzWlRXSElB?=
- =?utf-8?B?ZStsV1lLdzZiQXBnejZuQlJlWGcyb28rLzRLSktOMkhxdjBzblFvUHJXN1BG?=
- =?utf-8?B?azJ1N081eitOeDZhdjl5NFczRkJlb0RnZVpPTzhYYXlIeVU1SFlEZ2NaN3B1?=
- =?utf-8?B?ZTF0eHNVbHpHUkIrcS84bXZnYUh6cHRmajdhaVlGTjczMVpNK3l1VHBUcmNv?=
- =?utf-8?B?T1VCQTZCa0wrR1JTWFRiWjkydVk4a1Z2c0ZEeTJ0Q0IzZFV1ejg5YUZkdTlZ?=
- =?utf-8?B?L1FJMHBOb084dVhqNmk5SmlrK1BZWWhuMk9RMDZRK2FVNDJvWSszNVlqR0R2?=
- =?utf-8?B?QXpMMTVlZnl6ZnR0aTh4QlR6ZnNjbHV4R1hCVVJyclBBOEUyVlpnK2U2ZHBH?=
- =?utf-8?B?ZGNDY1NYN0dYejVvcW1OS0I1OXB5djVLOTNaUzJjSVlEcldNSkRVSHh3M3Z3?=
- =?utf-8?B?WDhqWXhCamdSWkJ1Q1pMUjBFSGx6blhCYm5oQjRQdzQvUlhweUVCUUc5RlB2?=
- =?utf-8?B?SzJ3a1JsRHFnVnJYOWpoM1N4M3RDa0xIYVVzRGVHOS9sbE9aRDlhb0NvcVVU?=
- =?utf-8?B?MWpSWmwyUm1Oa3dOV0E2QzN5YlVLY3p5YVpEUGl2VENsRjdWcFM5SGsybFdt?=
- =?utf-8?B?KzEvejhCR0Y4V0pUWFBidEd6Vm5udVp4a1Y1bGc5aXF3WUpIWGhRblRVVklT?=
- =?utf-8?B?dkRlZWJxK1hpR2lYOGdYZWNYZkVja2lGVENjbEdNMisrL3pzY2R3SHZuaVpw?=
- =?utf-8?B?ZXMzMUxBRm9NVzNHNUNSRFRnUEFrM1A3WDE0SkNDQVVEWnBwcmRIcVkybERh?=
- =?utf-8?Q?9rjwa54fLXx50NEY0gYI9f0Us?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 283389b9-ccce-47df-c2b6-08dd4faf9379
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 00:02:47.1374
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0yLIlgNyNq91fLOzM+FhWZuaF+iqSlhKM/zbnHQi0k8wg24nViqjTkxzDN6JWgBJ1j3S0w5Yb2wWCYc0Ux8iLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8607
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAO/Us2cC/33NwQ7CIAyA4VdZehYDyNz05HsYD2PtNqIBAoRol
+ r27bCdNjMe/ab/OECkYinCuZgiUTTTOljjsKuinzo7EDJYGyWXNJW/YXTBvbJ/CgzmfyjZDqjU
+ OeNRKEpQ7H2gwz8283kpPJiYXXtuLLNbpPy0LJhi1XUMKW8XVcBnJJuf2Loywcll+EEL+ImQhN
+ FKDHdc9x9MXsSzLG7kdA572AAAA
+X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
+ Alex Elder <elder@riscstar.com>, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=qyQ+sKQ9+9qwFMd1kJ+yVxNWqzCvsbg6kJ8Eskv5KLc=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBns9UBSIp+GNcJNVHURIgB8oPCS3L3QZGyR4P2i
+ FL+slJ0ueyJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ7PVAV8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277XAFD/4wY7mqXi03X/kJnX
+ OIHfqEC5cMQcF39mdaTPKlK2HDQQHBC0OfzfIA7i8SuJX1e633Gi6uI6s5rCY34hAQAM7b3RFN7
+ el1uJyPSKRj9X2s3wi4QukxcwlaOD0qZohO+lqiGJZ4+rGwOgmH4Vy0++fHLhYpxdxKnhf0acvq
+ nsfd+7cRSpREVwn68nOU1yKdbHrdaQYTUt6UT91SXtXUb61tuEONg9SRyq1wOi4VocxjwpDT+SR
+ X+gNJCO+uuTWJ2ipOddY/3FQW5xlFEqKILs0bYuNz11EZ/mfeeBhS2FlgyeKCt1bdgqHE/HIQtn
+ xN7qz9BS/wd16SlASObe2/2E3y9e3N0+hFOrnDPtusL11uzZsP3oY7Io9MH4ps2nU2zADnuyBfq
+ H7dTEKpXz8lc3GiQ0MOo5wsYyRBB6YHc5V1A6b2H54j+4flN6PxxGh6uCEZDo7XZOuboi2Svt3D
+ 1SKB7gsfD4zYTnTjEOTQ9kEVAuXrfXJgFo2FBe4VQdUCRMOBTLlnNtlxsJSuXoCALgEqZ3hlvXa
+ Grg9Rs4Q5+UJ/rpjYl4qeX9cy5LzlBMCYMh0/qXkTFVeHoZhNMjLRCR+jYbGsdvWLXo22Q2kr+I
+ y4FcPIW56C+1ZmQZR/zg24Og3rxcyVia0kqIJi3pq2bmfmqYTepGwSxI5pkQdnyXcwOg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Thu, Feb 13, 2025 at 08:23:53PM +0000, Cristian Marussi wrote:
->On Thu, Feb 13, 2025 at 12:03:15AM -0800, Saravana Kannan wrote:
->> On Wed, Feb 12, 2025 at 2:48 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->> >
->
->Hi Saravana,
->
->> > On Wed, Feb 12, 2025 at 03:01:20PM +0800, Peng Fan wrote:
->> > > On Tue, Feb 11, 2025 at 05:13:21PM +0000, Sudeep Holla wrote:
->> > > >On Wed, Dec 25, 2024 at 04:20:44PM +0800, Peng Fan (OSS) wrote:
->> > > >> From: Peng Fan <peng.fan@nxp.com>
->> > > >>
->
->[snip]
->
->> 
->> Cristian,
->> 
->> Thanks for taking the time to give a detailed description here[1]. I
->> seem to have missed that email.
->> [1] - https://lore.kernel.org/arm-scmi/ZryUgTOVr_haiHuh@pluto/
->> 
->> Peng/Cristian,
->> 
->> Yes, we can have the driver core ignore this device for fw_devlink by
->> looking at some flag on the device (and not on the fwnode). But that
->> is just kicking the can down the road. We could easily end up with two
->
->Oh yes this is definitely some sort of hack/workaround that just kicks
->the can down the road, I agree...just I cannot see any better solution
->from what Peng propose (beside maybe we can discuss his implementation
->details as we are doing...)
->
->> SCMI devices needing a separate set of consumers. For example,
->> something like below can have two SCMI devices A and B created where
->> only A needs the mboxes and only B needs shmem and power-domains. This
->
->..not really...it is even worse :P ... the mbox/shmem props down below are
->really definition of a mailbox transport SCMI channel: some transports
->allow multiple channels to be defined and in such case you can dedicate
->one channel to a specific protocol...
->
->...so, in this case, you will see there will be something similar defined
->in terms of mboxes/shmem at the top SCMI DT node to represent an SCMI channel
->used for all the protocols WHILE this additional definition inside the
->protocol node defines a dedicated channel...IOW these props mboxes/shmem
->are really parsed/consumed upfront by the core SCMI stack at probe to
->configure and allocare basic comms channel BEFORE any SCMI device is created
->...then the protocol DT node is no more used by the core and is instead 'lent'
->to create SCMI devices for the drivers needing them...(possibly lending it to
->multiple users...that is the issue) 
->
->> will get messy even for drivers if the driver for A optionally needs
->> power-domains on some machines, but not this one.
->> 
->>         firmware {
->>                 scmi {
->>                         compatible = "arm,scmi";
->>                         scmi_dvfs: protocol@13 {
->>                                 reg = <0x13>;
->>                                 #clock-cells = <1>;
->>                                 mbox-names = "tx", "rx";
->>                                 mboxes = <&mailbox 1 0 &mailbox 1 1>;
->>                                 shmem = <&cpu_scp_hpri0 &cpu_scp_hpri1>;
->>                                 power-domains = <&blah>;
->>                         };
->> 
->> Wait a sec, looking around at the SCMI code, I just realized that you
->> don't even really care about the node name to get the protocol number
->> and you just look at "reg" for protocol number. Why not just have
->> peng's device have two protocol@13 DT nodes?
->> 
->> cpufreq@13 {
->>     reg = <0x13>;
->> }
->> whateverelse@13 {
->>     reg = <0x13>;
->> }
->> 
->> You can also probably throw in a compatible field if you need to help
->> the drivers pick the right node (where they currently pick the same
->> node). Or you can do whatever else would help make sure the cpufreq
->> device is attached to the cpufreq node and the whateverelse device is
->> attached to the whateverelse node.
->
->..well...my longer-than-ever explanation of the innner-workings was
->meant to explain where the problem comes from, and how would be difficult
->to address it WITHOUT changing the DT bindings, BECAUE I pretty much doubt
->that throwing into the mix also multiple nodes definitions and compatibles
->could fly with the DT maintainers, AND certainly it will go against the basic
->rules for 'reg-indexed' properties ...you cannot have 2 prop indexed with the
->same reg-value AFAIK...and the reg-value, here, is indeed the spec protocol
->number so you cannot change that either within the set of nodes sharing
->the same prop....
->
->...moreover the above additional construct of having possibly per-protocol
->channels would create even more a mess in this scenario of explicitly
->declared duplicated protocol-nodes:
-> 
->- should we duplicate the optional mbox/shmem too ? not possible...DT sanity
->  would fail immediately also in this (I suppose due to duplicated entries)
->
->...BUT
->
->- at the same time we should assume that ALL the duplicated protocols inherits
->the optional per-protocol dedicated channel that is defined in one of
->them...seems very dirty to me...
->
->...moreover...explicitly allowing for such duplicate DT protocol definitions
->would open the door to create even more SCMI drivers like pinctrl-imx that
->uses the same PINCTRL protocol as the generic-pinctrl BUT really implements
->the SAME functionalities as the generic one (just slightly differently
->and using a complete distinct set of NXP pinctrl bindings for historical
->reasons AFAIU)....BUT pinctrl-imx is an *unfortunate* exception that we had
->to support for the historical reason I mentioned BUT should NOT be the rule
->NOR the advised way...
->
->....while other drivers exists that share the usage of the same protocol
->(HWMON/IIO GENPD/CPUFREQ), they use the same protocol to achieve different
->things in different subsytems...and they are anyway impacted (even to a less
->degree) by this fw_devlink issue AFAIU so the problem indeed exist also
->out of pinctrl-imx
->
->> 
->> Looks like that'll first help clean up the "two devices for one node"
->> issue. And then the rest should just work? Cristian, am I missing
->> anything?
->
->Yes that is the main issue...but still dont see how to solve it in a
->clean way...
+Pinctrl is an essential driver for SpacemiT's SoC,
+The uart driver requires it, same as sd card driver,
+so let's enable it by default for this SoC.
 
-A potential solution is not using reg in the protocol nodes. Define nodes
-as below:
-devperf {
-	compatible ="arm,scmi-devperf";
-}
+The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+'make defconfig' to select kernel configuration options.
+This result in a broken uart driver where fail at probe()
+stage due to no pins found.
 
-cpuperf {
-	compatible ="arm,scmi-cpuperf";
-}
+Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+Reported-by: Alex Elder <elder@kernel.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Tested-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+when using make defconfig, thus fail to initilize uart driver which requst
+pins during probe stage.
+---
+Changes in v3:
+- switch PINCTRL_SPACEMIT_K1 from tristate to bool
+- Link to v2: https://lore.kernel.org/r/20250212-k1-pinctrl-option-v2-1-bde7da0bc0d9@gentoo.org
 
-pinctrl {
-	compatible ="arm,scmi-pinctrl";
-}
+Changes in v2:
+- set default as y
+- Link to v1: https://lore.kernel.org/r/20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org
+---
+ arch/riscv/Kconfig.socs               | 1 +
+ drivers/pinctrl/spacemit/Kconfig      | 3 ++-
+ drivers/pinctrl/spacemit/pinctrl-k1.c | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-The reg is coded in driver.
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -26,6 +26,7 @@ config ARCH_SOPHGO
+ 
+ config ARCH_SPACEMIT
+ 	bool "SpacemiT SoCs"
++	select PINCTRL
+ 	help
+ 	  This enables support for SpacemiT SoC platform hardware.
+ 
+diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..a2f98b3f8a75580d2d157008997cc48f42a89368 100644
+--- a/drivers/pinctrl/spacemit/Kconfig
++++ b/drivers/pinctrl/spacemit/Kconfig
+@@ -4,9 +4,10 @@
+ #
+ 
+ config PINCTRL_SPACEMIT_K1
+-	tristate "SpacemiT K1 SoC Pinctrl driver"
++	bool "SpacemiT K1 SoC Pinctrl driver"
+ 	depends on ARCH_SPACEMIT || COMPILE_TEST
+ 	depends on OF
++	default y
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GENERIC_PINCONF
+diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+index a32579d736130c80bd12f0f9d8b3b2f69c428b3d..59fd555ff38d4453f446263a8fdb4a61faf63cfc 100644
+--- a/drivers/pinctrl/spacemit/pinctrl-k1.c
++++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+@@ -1044,7 +1044,7 @@ static struct platform_driver k1_pinctrl_driver = {
+ 		.of_match_table		= k1_pinctrl_ids,
+ 	},
+ };
+-module_platform_driver(k1_pinctrl_driver);
++builtin_platform_driver(k1_pinctrl_driver);
+ 
+ MODULE_AUTHOR("Yixun Lan <dlan@gentoo.org>");
+ MODULE_DESCRIPTION("Pinctrl driver for the SpacemiT K1 SoC");
 
-But the upper requires restruction of scmi framework.
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
 
-Put the above away, could we first purse a simple way first to address
-the current bug in kernel? Just as I prototyped here:
-https://github.com/MrVan/linux/tree/b4/scmi-fwdevlink-v2
+Best regards,
+-- 
+Yixun Lan
 
-Thanks,
-Peng.
-
->
->Thanks,
->Cristian
 
