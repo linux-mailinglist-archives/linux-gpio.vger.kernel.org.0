@@ -1,136 +1,100 @@
-Return-Path: <linux-gpio+bounces-16246-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16247-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63A34A3CB09
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 22:11:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AB65A3CB4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 22:22:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD60A16AD7B
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 21:11:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39868176A25
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 21:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE4CD253339;
-	Wed, 19 Feb 2025 21:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2266257428;
+	Wed, 19 Feb 2025 21:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ogSjU4d7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqsPhmw/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B2E1C1F21
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 21:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1DE1B87EF;
+	Wed, 19 Feb 2025 21:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739999459; cv=none; b=N1MErmwyGNPjg722W9jePCf1hFljqa4fyZP1+gvLAM9MH5W/PxEM7so7qqGmN0OUjZQACBUwRYgTZA4+sj7ow/thc8YsLw6Td4VGm7DfU8b25RTdJm2Lzk6kP9x0i1NAmQuDe95IMwMA53jTCJOSaRzJngYl8JFzYUqoefshEGs=
+	t=1740000126; cv=none; b=k7utzbuW8bMwlzVLfEFhF60p2O82S9X2Z/ZKmv/0+dS+K+r8KC9IrjHpu8MAY+jSu+KlvsJEWebmKSDtTgYNjpsmL+H5biZEUhWwKtKKo+Mojj7yMc2DgVbBpuKtE1J7mELXftXsFZQyY0X0WqDy/1n1tMqqyOb8ZMjC/Wf5+W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739999459; c=relaxed/simple;
-	bh=v5P9JdcmAkaoegDp6G807wPeaePuirzxwsGg/y2egdk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HYngM9AcAqmr/JeK6EsYzTinHtLW3XDGh47ywiwln57BAIt8kuJ9DrAKUu0sZWK1bgLQ0iqJGJ/f8wyJzUYhy01kG4e9HpON3oDCuF7Cm0URmfLgj0H6R6d8W/fhd9UUUzyqWv52jgcxthIh1E0OcNyQaXywDPUdvojwqPffsYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ogSjU4d7; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54605bfcc72so1567710e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 13:10:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739999456; x=1740604256; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D+9nshjszkcCQWCB05PcXblSy4ZtTLxbSnQOVwr49OE=;
-        b=ogSjU4d7DOMFbB/Qmm+9C7nT9tpJhnN9k/OQGy9TiQzNH2Ylihoz8vt8YoPb/c+ZTO
-         gl5tRi2cST7AgB7E/nrDHjDQqb6CKz4oROzm9TeUXDncBIWyGPxcq9DdM1jfsLoclKzi
-         qhBqs/ZQHlUiRtei56wdOEU3hK6o86XtsLCsjSfwxrZAk4JkOSKdm/a9mQOjyWBVljtP
-         /RMYdC4Lwjuo3L1Opld0aUCNqfVRhKTCv6T45QdAMZDiKtUavw7Er1mvMmBwENMizEvq
-         rvAGDLgotqRS9Og03ihLWZGRcEAWnbzJiMWUoueIb11fQU5Yg2yqjrqNAk1KlG0pIvt0
-         bOLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739999456; x=1740604256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D+9nshjszkcCQWCB05PcXblSy4ZtTLxbSnQOVwr49OE=;
-        b=NBzan56uvCAuGSTSI4kQbayxr2zvEZPhHVGgjRnDg+Unlx2gadTdgimukas95wxT1r
-         FO9VEUIkG1ANCP2GZ95USR8dXCI7VK0zwVOPL5k5TzExYXFoYx2z1UWg/1DhGGequk1e
-         DkHLExylgmov9qMdAMJrvTQkQP1b85raaRyQSJgd76/N7LiPw78vB81ghqn9S3qAxI0B
-         xd6rLml9Rnnv1Ormbcb8uPrdj+Iov/Mc9QpFF95XdKQ92vaRpTlUQHT9XL1/+FS8qit2
-         Sz2Yq04U7LhOqGE4INwq0+FweOEdlNaCdXjhHa6dXDaMtMVaSwXJRxxL9IiDyzrQmpF8
-         lhaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIHjsu50+OM4fX+IhqcgeuA9e2kRirzBARBW94BRHdgNo0QGVFIia+l8YDkykUfcglmscw+hD/haKb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6w9jaYzDtYuaAGMouri9zpEviQUkxyiqPVIrzZVxWTQr7HPxw
-	fGUFhHeoRYUwbzM/dd8Zq140Fu0S1+v3UV3cQrR8j+As7hlzbvZvRj7DRkGvTenF4GzkKXwF72v
-	KfNBTWccrYw5ot84QtZHLXB1129/fyXxDplFL7g==
-X-Gm-Gg: ASbGncv1PQs51o6k7aePh5g8K1bafBFMBvl3y8qfTaQhDZGlVNgN9xG9bVdkbkzSQjS
-	/h4z0YIZxU5FldmCondlDbFhkBE+JMf+ksqsgKlF/jbXe6VfiDq4iWHzJlrjpnRR2pjvMQxMR
-X-Google-Smtp-Source: AGHT+IFhOg9c7nz7Nl8AqPHQXn/ERl9cr5f9aNzv5wEI7EP9Xr+1zNonhiaiACnauyFsgWXV/OTiuBxpuRx/YDNPCe4=
-X-Received: by 2002:a19:6411:0:b0:545:6a2:e59 with SMTP id 2adb3069b0e04-546e50004aemr198735e87.18.1739999455702;
- Wed, 19 Feb 2025 13:10:55 -0800 (PST)
+	s=arc-20240116; t=1740000126; c=relaxed/simple;
+	bh=5vfdv1IWZ57ad6RST56MifY1lxkn1jnqlk1jC8vaDbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iNqMCHjOJkycEmdYqwbPVbVkAdfipRdzSlrRhQeZkDEPRtZdPMX5U8SXlq+0GLgEHAz+U5yUkTuduzCJJyfICeY37V1Pv2IainfedUHQ99OUroIrsCJ7X7kh8vhquEFPe6az4KKHZDx+M36CGM1rTPT5Ku+gruZMcDAJijl6U1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqsPhmw/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0681C4CED1;
+	Wed, 19 Feb 2025 21:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740000126;
+	bh=5vfdv1IWZ57ad6RST56MifY1lxkn1jnqlk1jC8vaDbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BqsPhmw/qK0EANe/CvcEJA+8Z7bk/OxllNIVXqaqjXdKJa9fPaJ5OVNUTm11/oFnA
+	 GbgQw0Y8scZzq9p/96ioYDwCEMaPUPxOoglzl1CHxEP8QGyEY/WZBfrZgoQY6NLFaa
+	 +qxeTdGSE9i/bKK8QQIFqJf+COujvnJAewLTHnWIGeftIVwzmX62fuOYyQip1YQuvn
+	 ITkVywFW5CwyA2+mF6tjJA7Ut0FfHfUrbfJ8tSL7ySfoeVzGPmjvyhaZV4zIssUOC/
+	 9ea8OB0wJcEkk6Ifgn1aBTC6ncW/P51mCYd7Oj3Za/s++P62Gmxz4OVAsjKyMTZcIy
+	 L9kkJ6SaKnw7g==
+Date: Wed, 19 Feb 2025 15:22:04 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Chen Wang <unicorn_wang@outlook.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Guo Ren <guoren@kernel.org>, linux-riscv@lists.infradead.org,
+	Yixun Lan <dlan@gentoo.org>, Conor Dooley <conor+dt@kernel.org>,
+	Longbin Li <looong.bin@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] dt-bindings: pinctrl: Add pinctrl for Sophgo
+ SG2042 series SoC
+Message-ID: <174000012333.2976359.11039865592765348897.robh@kernel.org>
+References: <20250211051801.470800-1-inochiama@gmail.com>
+ <20250211051801.470800-6-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215-vf610-mmio-v2-0-4a91f8c8e8d5@linaro.org>
- <20250215-vf610-mmio-v2-2-4a91f8c8e8d5@linaro.org> <DU0PR04MB949653EE20B91B84D4B615A590FB2@DU0PR04MB9496.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB949653EE20B91B84D4B615A590FB2@DU0PR04MB9496.eurprd04.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 19 Feb 2025 22:10:44 +0100
-X-Gm-Features: AWEUYZnagEgkG_yMWnK2eJXBuoCS0AflXol8RNjMmUvrT6R5_r_FQz-HR7EiNfk
-Message-ID: <CACRpkdZ=HcPMOWs1Ts=YWW7YcwKGntEGNvEAVWaN8qJZggr0dg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: vf610: Switch to gpio-mmio
-To: Bough Chen <haibo.chen@nxp.com>
-Cc: Johan Korsnes <johan.korsnes@remarkable.no>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211051801.470800-6-inochiama@gmail.com>
 
-Hi Bough,
 
-thanks for testing all my patches!
+On Tue, 11 Feb 2025 13:17:53 +0800, Inochi Amaoto wrote:
+> SG2042 introduces a simple pinctrl device for all configurable pins.
+> For the SG2042 pinctl register file, each register (32 bits) is
+> responsible for two pins, each occupying the upper 16 bits and lower
+> 16 bits of the register. It supports setting pull up/down, drive
+> strength and input schmitt trigger.
+> 
+> Add support for SG2042 pinctrl device.
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  .../pinctrl/sophgo,sg2042-pinctrl.yaml        | 129 ++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-sg2042.h  | 196 ++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-sg2044.h  | 221 ++++++++++++++++++
+>  3 files changed, 546 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/sophgo,sg2042-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2042.h
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2044.h
+> 
 
-On Mon, Feb 17, 2025 at 12:24=E2=80=AFPM Bough Chen <haibo.chen@nxp.com> wr=
-ote:
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> 1, need to use port->gpio_base instead port->base.
-
-Oh, what a mistake. Fixed.
-
-> 2, vf610 has register GPIO_PDIR, if find the direction is input, need to =
-read this register to get the input value.
-> But for mmio driver, it will read the gc->reg_set, which is GPIO_PSOR wit=
-h flags
-> BGPIOF_READ_OUTPUT_REG_SET,  this is not correct. Seems current bgpio_ini=
-t()
-> need to add another parameter to input this GPIO_PDIR, but this will has =
-big impact.
->
-> I try to adjust the bgpio_init like this:
-> ret =3D bgpio_init(gc, dev, 4, port->gpio_base + GPIO_PDIR, port->gpio_ba=
-se + GPIO_PSOR,
->  port->gpio_base + GPIO_PCOR, port->sdata->have_paddr ? port->base + GPIO=
-_PDDR : NULL, NULL, flags);
->
-> But still can't work fine, because when gpio is config in output mode, it=
- will read GPIO_PSOR
-> as output value, but for vf610, read GPIO_PSOR/GPIO_PCOR already return 0
-
-But what happens if we *only* specify PSOR as setting register to bgpio?
-
-Usually when there are set/clear registers, the block also allows direct
-read/modify/write on the output data register (I have seen this once
-before...)
-
-I sent a v3 like that. Does this work?
-
-Else I think we should perhaps simply bite the bullet and add a new
-argument to bgpio_init() for passing set/clear/data triplets. It can't
-be avoided: if this sort of hardware does exist with set and clear
-and a non-writeable data register, then gpio-mmio should support
-it.
-
-Yours,
-Linus Walleij
 
