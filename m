@@ -1,132 +1,153 @@
-Return-Path: <linux-gpio+bounces-16209-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16210-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC004A3AA3E
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 22:00:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A45CBA3AFBB
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 03:42:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2265C7A6D73
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2025 20:56:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DEF03A96B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 02:42:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4E01DEFFE;
-	Tue, 18 Feb 2025 20:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 033DC189F3B;
+	Wed, 19 Feb 2025 02:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PK55lzi1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUXk6k3a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED83B1C07E6;
-	Tue, 18 Feb 2025 20:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB5022EE4;
+	Wed, 19 Feb 2025 02:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739911592; cv=none; b=mp/Zv50/KLJ+eQSZlnZJZQWO6JY4KiZCKeHhv/aPdxi1Uiu2FIOwZd9HWJQp98AOESJSR2N4i5K3I+6d9gcqW5P/ogk1ED+LYOvTY8c936SZMzAsVVi/Feh1hA2bGU1mQoFugH6sxjhi64upJ6wB0wGHX7tn1m7P+Nb5hYmxLkw=
+	t=1739932939; cv=none; b=hdRMncc/25skCktMYpc4Hraogai3bpDOcGZi4179sPqvRHWikffFOiPPRyR5V2TLUskvAmghe1qN6+0KCJ9kbFWWyV/iMP1V47G+a0gxeoOlLQNrLE0qRX1xn2z9Ug28gT8J5FVd0/77ZUG5IAFwiKokgSmj8XPThqyuWNlZUK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739911592; c=relaxed/simple;
-	bh=D+gTGnpF5GaLeuIa9CDoIY8JwWWMQAy5FHTC5P+mL8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F6jAQMUhwnZYgEUR630iwhvVz4HLViCpLw/ZAIEJlExr6Z+q4r3P0whyDA9tKaRIX6TFPjDYQxm3MF/7b2lTWEn0GC6HFWZZPgSbltVZ+8P1/7ccM+R+dfQa6Gu8lVb3p536PJTD+oW7cfqHjII/a90mkIc/3vmC6HrvTCoB8mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PK55lzi1; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5209437e773so1198967e0c.3;
-        Tue, 18 Feb 2025 12:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739911590; x=1740516390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sf+aHspLddnRxhV4gF/h8Tvd3+UesI7DFbahYjZ/f4Y=;
-        b=PK55lzi1DbhLZhWOL4/mgnsybGIu+EvMsaP/0JKDrspaBc6ThrdR2fVJF3HYyqAtjR
-         o+gXE0/grwBXE4Ug8OhzMM8dMnW7LK0FxNsS/dpthtOM125P49Yvct+cIXwAsoqHkvFL
-         DftJzhalBDQZuj6rpiZhYELSf8nancNfxYTfDweHziVETYvV6W7W+d8zdICkoXVwceSG
-         57FIoBBeF5RdwxzMsEjCWUbDtOF2HBdMpclRAd08mwk/x4NMo7oroVmDfRL/434jlEfQ
-         dgpu9xEEcmrTPUaycz/rwHD55H7sZrTHjjVq+WWBYmixaGvF0jfbqbxIVPK5Cc9jxD+G
-         G6MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739911590; x=1740516390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sf+aHspLddnRxhV4gF/h8Tvd3+UesI7DFbahYjZ/f4Y=;
-        b=hvh5crM34+Kqco5VmNmxYL1Td7PqMhBGTNxYYSBJMSzzoG8t3JxvNcCwrZKmhAGE26
-         DT/rEFjtrKjOT6u78cMm4lHyBeJmiPkP9J3OquksM2piP3BzUdFCiN/prwXokgXpRefT
-         /DiBIA1w3cVxn7qYYAKWcViYWcd4Nyj7OtEpwsJ1VeXhK1irwo5Cahh8PiDKcVtyYE6q
-         TSbMufu/OFXuYnIpjpsA4q3dqEU/nzi6iVkiA/BGRsfhuvw7hu7wsS9T1mbeg32jcy1w
-         0JB7D9B+/gYwqmTIElt8/GYlkxCPo020Bqq4I4AyxpEib5R4ks3XNjrXFgBiRAy5Y6qB
-         PJXA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+h6rmuuY5D8ZXWtMGTQdZpCkaXAdLGpcaCv3V/vQM+BOMflm65a1LKxKScAhH2i/AKW67AHK+Yur9yRpnWj6JzMY=@vger.kernel.org, AJvYcCWAjwVaWvFsfvluueKVmLu90DcfHpsqGj5Jskf2bmRJwEeqIDCYnX0qa9t8WzkRUn4JV+bkEgIlH6TWhp3L@vger.kernel.org, AJvYcCWhwmfI1tNfjHtPcJ/g0NlOsPOS8a0QzxSOh3PczJJZCxbpCxZi9aJctFDNLQBpZrLIevoHIts0Mv/N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBYRjPg14mKcDTQkpUo8C5e3vGrxDSTok/Lv6gSd7yyeXYBPOx
-	ynnyJJDAD1DVv6aQOA+7oq/ZKVlFJZcr1DMRgatZn4MCQaHDjgtLaABsv/i4P/YLRtdzZQ4uOC1
-	IRqkjP2CC414xtS5IBou40VxYJ88=
-X-Gm-Gg: ASbGncvhkfjhDX7yUsLTRrzZolIGYnpRAaBu2E4taEYj7JF9NiA1Lq5Z48Ny17pOnyN
-	vShaCGpARnoKrt/ND7D48K01LXTycXkOJ+kb3ScMFhpbFfKQUlVRgb6Ld8VRJCnKtoCO/M+Hz
-X-Google-Smtp-Source: AGHT+IFYF6A3mN3GSsArf28yv5yPwG1HmPAlQ9CCcdrs1oNb+KigWGkerDcV159XsuwafK0DIYTku9RxDqRQxmRR+WI=
-X-Received: by 2002:a05:6122:3785:b0:520:652b:ce18 with SMTP id
- 71dfb90a1353d-521c42391a9mr788423e0c.0.1739911589741; Tue, 18 Feb 2025
- 12:46:29 -0800 (PST)
+	s=arc-20240116; t=1739932939; c=relaxed/simple;
+	bh=wDYQ3FA4cBf7FLdDEcQFrf0u+0LGDQcHJhctJPI1Weo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntJh+35Q2XtVcCYUooDr6FG+QnjEddAMeHu3e6IUzA7J4Z4tujc3/VFD1K5/XY+Sq9LIYYiLG9LRbKv3d08q9no1JjoF23PyvJrVCFfJrIZloTMtyrA5wOXP4OfJZmczpBbkTL76ITVvbPh1VMwerIWocMtxmVtoqZP6ll7r6rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUXk6k3a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45C6C4CEE2;
+	Wed, 19 Feb 2025 02:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739932939;
+	bh=wDYQ3FA4cBf7FLdDEcQFrf0u+0LGDQcHJhctJPI1Weo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SUXk6k3aRF/w7peiQs9NnEQUaLKBuf1CQLitgGMexLnI6zLXdrrxYJkDet2WmOg0F
+	 RYam++i+f55W5ojzSfHAhJ1+fj8lBs5ExfrJ7FKqfZpL7blpU2y0XYfX+Q78Oa7fVs
+	 ZwXvVUdnM2omGMbbsTBAtU/N/sE5yEdca2YVj/PZCc4I/Zw0FkGFiJIH5tFffXkUUo
+	 gNOwSW+kcuoyTA+ilwvbute9Ym5DdIgT+kSKuywdCUhVWXwE6NegevbOSkY6rPTRWl
+	 2ItSggJkGO7RjehAnx/OHDN08+/eJrkvv3YX0r5lmqP20qYTn2aAVUOWuuL2xYh4tj
+	 9Ms5ncC4HPjKg==
+Date: Wed, 19 Feb 2025 02:42:15 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/8] gpiolib: check the return value of
+ gpio_chip::get_direction()
+Message-ID: <Z7VFB1nST6lbmBIo@finisterre.sirena.org.uk>
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+ <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 18 Feb 2025 20:46:03 +0000
-X-Gm-Features: AWEUYZlj20An6Bj7wqjOn_uIEULbOzZDzyKhnuBbIOnqPIJG65p6KQmb0IaUZHE
-Message-ID: <CA+V-a8uQq5s9zYqXWwgi26KgyH7cRDSBFbEeXseht82O=t=JeQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Suppress binding attributes
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: geert+renesas@glider.be, linus.walleij@linaro.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aoTH4OmsM33qFA8R"
+Content-Disposition: inline
+In-Reply-To: <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
+X-Cookie: Mickey Mouse wears a Spiro Agnew watch.
+
+
+--aoTH4OmsM33qFA8R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 15, 2025 at 1:12=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
->
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Suppress binding attributes for the rzg2l pinctrl driver, as it is an
-> essential block for Renesas SoCs. Unbinding the driver leads to warnings
-> from __device_links_no_driver() and can eventually render the system
-> inaccessible.
->
-> Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controlle=
-r driver")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
->  1 file changed, 1 insertion(+)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Feb 10, 2025 at 11:51:55AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> As per the API contract - gpio_chip::get_direction() may fail and return
+> a negative error number. However, we treat it as if it always returned 0
+> or 1. Check the return value of the callback and propagate the error
+> number up the stack.
 
-Cheers,
-Prabhakar
+This is breaking boot for me on both the original Raspberry Pi and the
+Pi 4.  The boot dies without any output on the original Pi, on the Pi 4
+the boot seems to die when disabling clocks:
 
-> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/re=
-nesas/pinctrl-rzg2l.c
-> index ce4a07a3df49..5f006a059d9c 100644
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -3386,6 +3386,7 @@ static struct platform_driver rzg2l_pinctrl_driver =
-=3D {
->                 .name =3D DRV_NAME,
->                 .of_match_table =3D of_match_ptr(rzg2l_pinctrl_of_table),
->                 .pm =3D pm_sleep_ptr(&rzg2l_pinctrl_pm_ops),
-> +               .suppress_bind_attrs =3D true,
->         },
->         .probe =3D rzg2l_pinctrl_probe,
->  };
-> --
-> 2.43.0
->
->
+[   11.695534] amba fe201000.serial: deferred probe pending: amba: wait for=
+ supplier /soc/gpio@7e200000/uart0-gpio32
+[   11.705920] platform leds: deferred probe pending: leds-gpio: Failed to =
+get GPIO '/leds/led-act'
+[   15.032277] clk: Disabling unused clocks
+
+Full log:
+
+   https://lava.sirena.org.uk/scheduler/job/1126311
+
+I've enclosed a bisect log below, it converges fairly smoothly:
+
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [67961d4f4e34f5ed1aeebab08f42c2e706837ec5] Merge branch 'for-linux-n=
+ext-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
+git bisect bad 67961d4f4e34f5ed1aeebab08f42c2e706837ec5
+# status: waiting for good commit(s), bad commit known
+# good: [6537cfb395f352782918d8ee7b7f10ba2cc3cbf2] Merge tag 'sound-6.14-rc=
+4' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+git bisect good 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
+# good: [d59355014fa12fb0033edf64917ac0139cd6423a] Merge branch 'for-next' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git
+git bisect good d59355014fa12fb0033edf64917ac0139cd6423a
+# good: [35c2c30101bf96517108fe969c4aad9e5c4f3614] Merge branch 'fixes' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-omap.git
+git bisect good 35c2c30101bf96517108fe969c4aad9e5c4f3614
+# bad: [e52d7cc2f41223d070975c370f67686bd3213b41] Merge branch 'perf-tools'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools
+git bisect bad e52d7cc2f41223d070975c370f67686bd3213b41
+# good: [163126388d62798769acd2cd1753839771dc12c6] Merge branch 'hyperv-fix=
+es' of git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+git bisect good 163126388d62798769acd2cd1753839771dc12c6
+# good: [5d176a6d15a456002e90e1776648396e7f0d57d3] Merge branch 'fixes' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
+git bisect good 5d176a6d15a456002e90e1776648396e7f0d57d3
+# bad: [c6d16b526a80a3215164f7e66c704dcb838e1810] Merge branch 'gpio/for-cu=
+rrent' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+git bisect bad c6d16b526a80a3215164f7e66c704dcb838e1810
+# bad: [81570d6a7ad37033c7895811551a5a9023706eda] gpiolib: protect gpio_chi=
+p with SRCU in array_info paths in multi get/set
+git bisect bad 81570d6a7ad37033c7895811551a5a9023706eda
+# bad: [4e667a1968099c6deadee2313ecd648f8f0a8956] gpio: vf610: add locking =
+to gpio direction functions
+git bisect bad 4e667a1968099c6deadee2313ecd648f8f0a8956
+# bad: [9d846b1aebbe488f245f1aa463802ff9c34cc078] gpiolib: check the return=
+ value of gpio_chip::get_direction()
+git bisect bad 9d846b1aebbe488f245f1aa463802ff9c34cc078
+# first bad commit: [9d846b1aebbe488f245f1aa463802ff9c34cc078] gpiolib: che=
+ck the return value of gpio_chip::get_direction()
+
+--aoTH4OmsM33qFA8R
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme1RQcACgkQJNaLcl1U
+h9DVbQf/WYjVuEHpCsk9z9te+ryRVt9WbuYB2fSXHLxGXMr96gUvUaaARZhRI6ZH
+D72Adq+AEHVXPcFP+TWPirQaXK98MfRCfWiKrBs/Ja2jm1p2GYc/BMxo2sfbAHDo
+aOKZLWa6XGmBtm0b2mvzCqGYDlFvZeplSKcMeB4XMmhTSfKEZqY3AxG9yHmvaszY
+QvgVUJbf2QP+eCWXaEu04HFperUhBHhWJIRkLtz8Exp24eSp1pcXYozgwGAxWORd
+EkgyvB8gyG9dxM4I/D/X9QRq/0fwQoL4W7Lewmh6hhwc1s2PjNZnC9rIYjo8WYKz
+H0GlzKTD+DnVcXD4yvFdtuePr9vGBA==
+=hB13
+-----END PGP SIGNATURE-----
+
+--aoTH4OmsM33qFA8R--
 
