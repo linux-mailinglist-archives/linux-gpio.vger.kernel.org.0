@@ -1,138 +1,120 @@
-Return-Path: <linux-gpio+bounces-16228-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16229-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA23EA3BE2E
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 13:33:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B63DA3C227
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 15:30:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87BE71896395
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 12:33:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 743703AB271
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 14:27:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717361E0DCE;
-	Wed, 19 Feb 2025 12:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE341F3B83;
+	Wed, 19 Feb 2025 14:27:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RoGlhI8t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otuE2GmS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD39E1E0080;
-	Wed, 19 Feb 2025 12:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47AE1F17E8;
+	Wed, 19 Feb 2025 14:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739968377; cv=none; b=SAF1jAA+sJTY2IVcQ7cCgbc6Jr2N1BCwnb4/AtUcDfCQ9RAwk19GT81n80l1yjKEqxqcfRSIClKOraXquF1BgycITCfSuhA6H4jeRflb7foEJ6URz8HtyP5KfQXvJSpX1TZisiRSi7g8pHG0stMFCDgSTfO3x45mSxdsnJn19Mo=
+	t=1739975245; cv=none; b=kCBAp/a6q3PFeuWF3eFjiKmI1mfTxv0DkUkej6Z3apc0abjSzIUz+mMCy4MsI1eFegWpm1RYjpkzf3oxI1x1TUBGImAUn3nSyosk0NykcIEqXt/hIHugDA99OqnRDPF3jbcxletnIbxWr6g7/3XnBaEgq4uJqzcRxy4CjEGIB+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739968377; c=relaxed/simple;
-	bh=yDIUhMyqlYHrRY20nMSXqUJxRAG2s+oBiIMHyGosyBg=;
+	s=arc-20240116; t=1739975245; c=relaxed/simple;
+	bh=BQOMI1FyOuS4DlKWkS+K/U5NSss8ae/7nZI8hbei1tc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJop2aDB33R6oa0or0Z2HlQGMMvs0/A1vQ6rjYUJFrzFT6rNqGiXAR2i2OryTUdXbV/UglKQcdxs8Y0HlHQ/xmGhQbfZWiGp1RLPHTd3Oyn50svG8nXrbIU+OexjaWXqg6WiT9/3qjq2A17ly/5BMAw+//GDQiF7zf0QN63yeWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RoGlhI8t; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739968374; x=1771504374;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yDIUhMyqlYHrRY20nMSXqUJxRAG2s+oBiIMHyGosyBg=;
-  b=RoGlhI8taAGKT6PI9qqJtbIT0Tmj9MmI7smPws2BxN9gAKJVG7YVSgHC
-   w+8PiVqXMfCbumv4+oowLm+sAf3L6ggdKETj42gzk80uzEcuS7fviaEom
-   L5jXHdfqGFjxBV5xZMuhg/VH0MBV0aqKNLgnOmd1eFPeOrRpcGiguieZs
-   QKiLswICX5kXviKVMyYADHzVhDaMKB+iCYMBndx/8BjKxGQLwP5xQZd6w
-   fCZUAYwSqDTHimd7VkQMc2YXkurG25KkRYFVAZtQ+fIdR4+sAz2vBCM8j
-   aJSXm3dlkWmStEMZIoprFHR64TrUGUXCbzXwm9tVydcQZ60SIxrcKwNQo
-   A==;
-X-CSE-ConnectionGUID: INzGqisJTJa9JyRLp60uDA==
-X-CSE-MsgGUID: Q3yLY/8oQgiZTx4+0BbUQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44618012"
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="44618012"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 04:32:54 -0800
-X-CSE-ConnectionGUID: P6SoXoDrS4CFvqkEzYPl/Q==
-X-CSE-MsgGUID: ubcoNE6GTcOEyO+gJYZUDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
-   d="scan'208";a="114622799"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 04:32:51 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tkjFx-0000000D1RH-1Vab;
-	Wed, 19 Feb 2025 14:32:49 +0200
-Date: Wed, 19 Feb 2025 14:32:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AkxK8XTPRqBtZaUpXqzcQk0QxzWPpsoomk4M/XCU6jVA9jB5UzQgsdF6HfYYByJ8zC4mXWDnWfovFjfnnL5wkDQpa/USX81bKnvvC7jwiODjNQ1dBINz8XKz8TiWvtX/49CuAQub0OfTy3PP/HfK4514Dz4mcnPgsch+fmLRuSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otuE2GmS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9266C4CED1;
+	Wed, 19 Feb 2025 14:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739975245;
+	bh=BQOMI1FyOuS4DlKWkS+K/U5NSss8ae/7nZI8hbei1tc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=otuE2GmSKcq5MR7H6sWYiaCG7LRXKYfvCQpqvJ4gqlYTNKo058XIrJHzuJ9xO2iPI
+	 OtCA2XX7c89kXfYFAOchbnaMyve2Giu2CxMmkZ1B05xWpYNDvbA+6ujETq7qmJrGcR
+	 VZtGUq9H3KN3ArBhG4EfdriIPx+SHLHf34dssx4Wd28nMHijOcKLvtpX6HOxIhtopG
+	 fTr+ISSfUpPk5hDwrqr38J7X1xRjgVgld5khu+jEgZdsyqrOxjFf+Ut+I2Kk/shK+C
+	 qvv06HUG6SLBkCEgGJ6vH9x0T0mpPXLTg+BVeICG/g+DyDO1PV6PuepUpt6BqcBRvM
+	 p0lJavWqqQ6bA==
+Date: Wed, 19 Feb 2025 14:27:21 +0000
+From: Mark Brown <broonie@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>, Liao Chen <liaochen4@huawei.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 1/2] gpiolib: move all includes to the top of
- gpio/consumer.h
-Message-ID: <Z7XPcYtaA4COHDYj@smile.fi.intel.com>
-References: <20250217103922.151047-1-brgl@bgdev.pl>
+Subject: Re: [RFC/RFT PATCH] pinctrl: bcm2835: don't -EINVAL on alternate
+ funcs from get_direction()
+Message-ID: <Z7XqSVfhPGI5J63B@finisterre.sirena.org.uk>
+References: <20250219102750.38519-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RyX3R1pbLNLkRqpZ"
+Content-Disposition: inline
+In-Reply-To: <20250219102750.38519-1-brgl@bgdev.pl>
+X-Cookie: Editing is a rewording activity.
+
+
+--RyX3R1pbLNLkRqpZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250217103922.151047-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 17, 2025 at 11:39:21AM +0100, Bartosz Golaszewski wrote:
+On Wed, Feb 19, 2025 at 11:27:50AM +0100, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> We have several conditional includes depending on !CONFIG_GPIOLIB. This
-> is supposed to reduce compilation time with CONFIG_GPIOLIB=y but in
-> practice there's no difference on modern machines.
+>=20
+> Since commit 9d846b1aebbe ("gpiolib: check the return value of
+> gpio_chip::get_direction()") we check the return value of the
+> get_direction() callback as per its API contract. This driver returns
+> -EINVAL if the pin in question is set to one of the alternative
+> (non-GPIO) functions. This isn't really an error that should be
+> communicated to GPIOLIB so default to returning the "safe" value of
+> INPUT in this case. The GPIO subsystem does not have the notion of
+> "unknown" direction.
 
-It's not about modern machines. If every maintainer will think this way,
-we end up in the complete and utter dead end with the headers.
+I see this was already tested for these specific boards.  I've also
+found that Avenger96 is failing with bisect pointing to the same commit
+this is fixing:
 
-I believe you at least had read the cover letter for the infamous Ingo's series
-about headers and how it speeds up the build (in some cases up to 70% on as you
-said "modern machines").
+    https://lava.sirena.org.uk/scheduler/job/1126314
 
-> It makes adding new stubs that depend on more than just GPIOLIB harder so
-> move them all to the top, unduplicate them and replace asm/ with preferred
-> linux/ alternatives.
+as is the Libretech Potato:
 
-NAK.
+    https://lava.sirena.org.uk/scheduler/job/1126285
 
-This makes dependency hell things much worse and this is a step back on the
-untangling the current situation along with the slowing down the speed of the
-build. Please. consider to revert or discard this patch.
+neither of which produce any output before dying, they'll not be fixed
+by this change.  Seems like an audit of the drivers might be in order?
 
-...
+--RyX3R1pbLNLkRqpZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  #include <linux/bits.h>
-> +#include <linux/bug.h>
+-----BEGIN PGP SIGNATURE-----
 
-Okay to replace, but not okay to move.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme16kYACgkQJNaLcl1U
+h9C7CAf7BdxIloZPelOduxqgYD8I4gVrpuOlA8WSR6iZSEOfanhyMYI1/Ew7Wlai
+HtTQO/wDRJceUaqLiBCURcEyp6QAmioChr9noTiwqzeNlZxRBPk0EDKWbHECSe/T
+GDKwPAsfsA9hF0zHv8evz+nHpuU65NBM/pQVlzWHtMt9gbcgvU4DZUXU66Nze+xf
+lKPtYCJWITisEbCSHxBKawuEkBDR3KZOf1q6/mVfKxIPE9TUGzJ/cbHCWIWw+kD3
+qryvmLxCt/2+okVSLADypTowxCEdFYaZ+cWUsMfKloxBKIv+fRkiE+leCA3xrTuE
+Zz6mQIP51m80nser/HulYq2kiI2mlg==
+=WyAO
+-----END PGP SIGNATURE-----
 
->  #include <linux/err.h>
-> +#include <linux/errno.h>
-
-Please, double check that it uses error codes from it, otherwise err.h includes
-asm/errno.h with basic codes already.
-
-> +#include <linux/kernel.h>
-
-This is definitely no. Please, read what's written in the top of that file and
-here is just a proxy for should come in the future a kind of might_sleep.h.
-Do not move this one at all, please.
-
->  #include <linux/types.h>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--RyX3R1pbLNLkRqpZ--
 
