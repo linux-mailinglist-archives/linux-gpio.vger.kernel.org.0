@@ -1,133 +1,148 @@
-Return-Path: <linux-gpio+bounces-16222-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16223-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F533A3BB85
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 11:22:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC86EA3BBA3
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 11:28:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9D401725DA
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 10:22:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33A767A3E36
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 10:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 290321D7984;
-	Wed, 19 Feb 2025 10:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75D851D7E30;
+	Wed, 19 Feb 2025 10:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XTByGZiU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29EB1C5F0C;
-	Wed, 19 Feb 2025 10:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4271E1CAA6C
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 10:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739960276; cv=none; b=lVtBISD1xTVzPqEdx2t+3pAbEEkyHOxSP/XNLJ/g5MnOMx8+yRQkSVi3rMz+u06SA2AftHkexNicOkv2yR5pqbL9BsffoV820aYCRhlexSA5J9pp66hTJqkddrLn8ZfEFW8bbpxXpvSZJDTSAZK29eW6E3Zb1OPF1kOX2/4vIAc=
+	t=1739960881; cv=none; b=GPCE/9S2/+AHHdUnJ7lVME7P7U+H6MpmOeN0QTZyOyrRpj2xttddeNu8pFEOjQF64EBU5Cp+9bfLutsh+yjR8OXHqQAhXsfAdpAJW3OvOev2no61vFGv7IorYbqxNbwSrBZdlmcMuzMdaTe1VKy/JG6auGmG6pLhTyl4V55D5TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739960276; c=relaxed/simple;
-	bh=DuYlt34xD1e3j0IA7LTc8PQr3bNRl2dT3bWTNzleND4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPEiFgh2hYc1HaiOLlNu2zbS3ayULu/kPb/P339XU3itBnR6/SKpaKJ/EO8KgcxdNVB1G6VZTAD8uHYSGt7iFPueOlSGzSU6mGDRoD+e9y3igxwDzEPk5h2CGQJgmkUSi166+3GMFXoMKo0Mr/XhBTpA2o/mFksQqO8IxPOXxd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3CCD1682;
-	Wed, 19 Feb 2025 02:18:10 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A6503F6A8;
-	Wed, 19 Feb 2025 02:17:49 -0800 (PST)
-Date: Wed, 19 Feb 2025 10:17:46 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, <arm-scmi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<imx@lists.linux.dev>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: bus: Bypass setting fwnode for
- scmi cpufreq
-Message-ID: <Z7Wvyn1QJQMVigf9@bogus>
-References: <20241225-scmi-fwdevlink-v1-0-e9a3a5341362@nxp.com>
- <20241225-scmi-fwdevlink-v1-1-e9a3a5341362@nxp.com>
- <Z6uFMW94QNpFxQLK@bogus>
- <20250212070120.GD15796@localhost.localdomain>
- <Z6x8cNyDt8rJ73_B@bogus>
- <CAGETcx87Stfkru9gJrc1sf=PtFGLY7=jrfFaCzK5Z4hq+2TCzg@mail.gmail.com>
- <Z65U2SMwSiOFYC0v@pluto>
- <20250218010949.GB22580@nxa18884-linux>
- <Z7Rf9GPdO2atP89Z@bogus>
- <20250218133619.GA22647@nxa18884-linux>
+	s=arc-20240116; t=1739960881; c=relaxed/simple;
+	bh=6VKE6e/GxYsDY3pcRKjEGiXCqUCbFBAOACkB4hJUJgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kQQ+HjZjXEyqznpngdn9jpQrnRZRohkBaJcxXjbc8dExyA+FHpROpnnOcCmMbF5jReUn/fMW+V+VTy+8wYHkM5KF+FTNOwh+/T2qQvUnLBKRaK6VSLd5pH9B9e6kZgfGOIH99I9r+p2BxSXGf/fE7t3+c0LEVS+QoEcoUmKjBD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XTByGZiU; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43984e9cc90so3825155e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 02:27:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739960876; x=1740565676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvFx40Wkz1+EUgvvJu1sZ6LkhHVZr+FyaICn1UZ2ZFQ=;
+        b=XTByGZiUC0g6XyQvAMQKKDgZIlICOqthC7lfgHRhLu8hAjbOUzBO2myjzMMTHMEWaG
+         jGHMJrXGP6svTrcLcyELnkegZ5uzyU77ssIYBEM/S4AODB4gIrScvxoFnhbwLW8v3J12
+         0YUdP/72sMf+v+JJ/cxaSkyt2OU+8tvTszna9xqy/C+/dBPk/En8/syHVAnau+OjYGIk
+         mtLnES0xY1gUIKFIGbJmoJZIwEVlBRUT4+JnIlRZ965O78E8kD2sQHMWwoloJj9+Kces
+         cUPj7SbUJ8W8fyw8kO2yNsSkDSVwrWafMqAGP3MIf+f9ZNZIvCg4fpUREj9Z9kTJldFj
+         b89A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739960876; x=1740565676;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fvFx40Wkz1+EUgvvJu1sZ6LkhHVZr+FyaICn1UZ2ZFQ=;
+        b=jbmkiugbUdx4ESDZqV0ivtlRIulIwngxUHVpmzl+xUt+R03nA2Ksl4XPUWILon8OCr
+         SepKINbT1XXoekdoqGAn+4ZI4qhD7GOEIogvkU6WaLN791Wa0xed9AhTtx0L+oWMSegl
+         VEWmR/TKGaney9yda2ZKFD6Agh5PrUxr36AhUc/RN+OIPg6BMAzKrOhDi6gqQz3Thjct
+         YSzQC4qHFnpHcKIZSkmnD3usr0X7Xt3+Pu3kXCl+oKWRjlww3WDu17k3VTiXMwZT7tFV
+         x/9aJfo071B+d0PUorLHynzPgaC/7UCUz5KZxD/LutYgC/t2xipnswwLMGLunN8V6pIG
+         mwvg==
+X-Gm-Message-State: AOJu0YxKux5Ey1qv5HdS8DsFcD7Bs49geIxGwWPcdc5X+UXaFo16HQm2
+	ALNWnv6jzsntK2uSQ0QS7iOlmVzXwPt8ppX8EC0e4e1ILZOXomG3SAH+MNnhYX4=
+X-Gm-Gg: ASbGncvtrklMmch+YRwE4Hj9ceK+8X8fcUybK0LsT1qqDwoHyfTr8vVVSsvbSFMMdpz
+	/p9asMhGXipL5/fSpC7X/xVBpGL2W3jUk0z69Bl2/B0ZgKN0IsFcirjpvDKY5rQnL2keQnSM9XE
+	4Szv+fIo+nVO1eYzHfJo7Vb7pcfgdEVKZWxziKcUrgoSKxYfRvHwEc4h19SD4GZwZQcl5DpI/Q+
+	y3S3+5STcIUVuGyU4M4qbTxQt/G1C+xa49KrCS+x46WtalZwgYP0ZV9njVFbHeiDlN9XqmUNDTM
+	4t35Kb9XhW0Fng==
+X-Google-Smtp-Source: AGHT+IFlkOBpfCVx9q6F8niujWCdyL0EtEeWnSdwbrl7CVR7yKaGyBHih66p6S5yCje9Vgk4wUHg3A==
+X-Received: by 2002:a05:6000:1fa7:b0:38d:d222:ee70 with SMTP id ffacd0b85a97d-38f57d93168mr2442618f8f.20.1739960874730;
+        Wed, 19 Feb 2025 02:27:54 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:f0ed:3532:fe6:315c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5f4fsm17492626f8f.78.2025.02.19.02.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 02:27:54 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Liao Chen <liaochen4@huawei.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Mark Brown <broonie@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFC/RFT PATCH] pinctrl: bcm2835: don't -EINVAL on alternate funcs from get_direction()
+Date: Wed, 19 Feb 2025 11:27:50 +0100
+Message-ID: <20250219102750.38519-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218133619.GA22647@nxa18884-linux>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 09:36:19PM +0800, Peng Fan wrote:
-> On Tue, Feb 18, 2025 at 10:24:52AM +0000, Sudeep Holla wrote:
-> >On Tue, Feb 18, 2025 at 09:09:49AM +0800, Peng Fan wrote:
-> >> A potential solution is not using reg in the protocol nodes. Define nodes
-> >> as below:
-> >> devperf {
-> >> 	compatible ="arm,scmi-devperf";
-> >> }
-> >>
-> >> cpuperf {
-> >> 	compatible ="arm,scmi-cpuperf";
-> >> }
-> >>
-> >> pinctrl {
-> >> 	compatible ="arm,scmi-pinctrl";
-> >> }
-> >>
-> >> The reg is coded in driver.
-> >>
-> >> But the upper requires restruction of scmi framework.
-> >>
-> >> Put the above away, could we first purse a simple way first to address
-> >> the current bug in kernel? Just as I prototyped here:
-> >> https://github.com/MrVan/linux/tree/b4/scmi-fwdevlink-v2
-> >>
-> >
-> >Good luck getting these bindings merged. I don't like it as it is pushing
-> >software policy or issues into to the devicetree. What we have as SCMI
-> >binding is more than required for a firmware interface IMO. So, you are
->
-> Would you mind share more info on other cases that SCMI not as firmware
-> interface?
->
-> >on your own to get these bindings approved as I am not on board with
-> >these but if you convince DT maintainers, I will have a look at it then
-> >to see if we can make that work really.
->
-> The issues are common to SCMI, not i.MX specific.
-> I just propose potential solutions. You are the SCMI maintainer, there
-> is no chance to get bindings approved without you.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I am not blocking you. What I mentioned is I don't agree that DT can be used
-to resolve this issue, but I don't have time or alternate solution ATM. So
-if you propose DT based solution and the maintainers agree for the proposed
-bindings I will take a look and help you to make that work. But I will raise
-any objections I may have if the proposal has issues mainly around the
-compatibility and ease of maintenance.
+Since commit 9d846b1aebbe ("gpiolib: check the return value of
+gpio_chip::get_direction()") we check the return value of the
+get_direction() callback as per its API contract. This driver returns
+-EINVAL if the pin in question is set to one of the alternative
+(non-GPIO) functions. This isn't really an error that should be
+communicated to GPIOLIB so default to returning the "safe" value of
+INPUT in this case. The GPIO subsystem does not have the notion of
+"unknown" direction.
 
-> No more ideas from me. Leave this to you in case you have better solution.
->
+Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_direction()")
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/Z7VFB1nST6lbmBIo@finisterre.sirena.org.uk/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Unfortunately no, I don't have one. I haven't had time to sit and explore
-the issue and think of any solution yet.
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index cc1fe0555e19..eaeec096bc9a 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -346,14 +346,14 @@ static int bcm2835_gpio_get_direction(struct gpio_chip *chip, unsigned int offse
+ 	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
+ 	enum bcm2835_fsel fsel = bcm2835_pinctrl_fsel_get(pc, offset);
+ 
+-	/* Alternative function doesn't clearly provide a direction */
+-	if (fsel > BCM2835_FSEL_GPIO_OUT)
+-		return -EINVAL;
++	if (fsel == BCM2835_FSEL_GPIO_OUT)
++		return GPIO_LINE_DIRECTION_OUT;
+ 
+-	if (fsel == BCM2835_FSEL_GPIO_IN)
+-		return GPIO_LINE_DIRECTION_IN;
+-
+-	return GPIO_LINE_DIRECTION_OUT;
++	/*
++	 * Alternative function doesn't clearly provide a direction. Default
++	 * to INPUT.
++	 */
++	return GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static void bcm2835_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+-- 
+2.45.2
 
---
-Regards,
-Sudeep
 
