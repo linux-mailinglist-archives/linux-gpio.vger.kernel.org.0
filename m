@@ -1,157 +1,135 @@
-Return-Path: <linux-gpio+bounces-16235-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16236-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C16AA3C381
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 16:22:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88388A3C40E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 16:47:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0761189D949
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 15:20:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA5151884DB8
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 15:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E1231F30BE;
-	Wed, 19 Feb 2025 15:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700421F8BCC;
+	Wed, 19 Feb 2025 15:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhtHuPg8"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Db66ij2T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ECA1F3FEC;
-	Wed, 19 Feb 2025 15:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D95F1B983E;
+	Wed, 19 Feb 2025 15:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978336; cv=none; b=KLOWpRYJrFbrs7egaH+Lcr1k8CuUBB7o2vXIRCKbjtl0J/9R+U7puuxl6YaCwjoH13gbf4slWF9VZwEpfMTTfecKCpu71Wt/dVgyg7d5WJI8n1S+zzvHPx+h3pQw1vaX/VT2kmADLCHu0Cz5KfRm4AAWxUIhI9vL4+GLWeQR0BQ=
+	t=1739980041; cv=none; b=eBF05mzsRs+nu89Dp7jrPgKObr0aP5LYhCzucLhzpfVI4Ooffiqri7wONcI9aXNd4daS8L4bNmlPdAwHuLfZuzgvtxFGe1L9oGIumh8/h9zMwWyRDJ7ukIzLAJAWgs1tAfbkX8JOrmLXDz6Dwa53PxUmZB+uS2+QJDzusWI43Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978336; c=relaxed/simple;
-	bh=Nl0GYuXHmj901hRqk+t7mBIs3Q4QkEavHk7DxpHU934=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaGLiNS/FshgJaZrVsUCuAC7Qc7CTRa8IxBBvZhwHvvR1AWg3Dk5H1ZItG4FqWGxYzD8eSyZd53YWnmkjA+v6gGd6AiPiTTBV04LXdw8DttZJoeRk5yNUzI8DlXqW/brOk9RbCkofTv69wzYqx+z0JXzo1Y8ezJzt+ql7B/xlYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhtHuPg8; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739978335; x=1771514335;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nl0GYuXHmj901hRqk+t7mBIs3Q4QkEavHk7DxpHU934=;
-  b=HhtHuPg80kVwdX8XOYVD4dJsnK23uiwYyLcX83awvPv2lIYfI8veP4L1
-   9qKorsHaphmJce+71Xi+xnNibd+SZ2kxWTac5Qc8JWML1RY6+FhUiSY5o
-   HeMiF1FXb3j4W1a+tccJDLTWMV6A+AC+WtJq8/sjKooVBkmPIq/bxdfZI
-   BVZ51TUbYv+aT3iewGP8Ilg7d6osaS0svUp3CiZO24wSIh12GbiIMzv+8
-   /k+KCsHeUGIQEiN9vWmpslWyaxWRM/NtKmUNujnhA6iLYHTn1Nymf5yij
-   z6H+MPsIt4JOTJfmbe6iTnqqQbkwMePsvNB4s/i/GrW8r8hu8LqK0yfGc
-   A==;
-X-CSE-ConnectionGUID: oABPzg6ARyCPgGtFaQJouA==
-X-CSE-MsgGUID: xKlHXqeiT7eB8LOiaG3qXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="39952990"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="39952990"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:18:55 -0800
-X-CSE-ConnectionGUID: friYgSNASTqrno0slJwQmg==
-X-CSE-MsgGUID: ltJHHssXQRGvIrWxAC+Svg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114724670"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 07:18:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tklqc-0000000D3fS-1FQh;
-	Wed, 19 Feb 2025 17:18:50 +0200
-Date: Wed, 19 Feb 2025 17:18:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4 1/2] gpiolib: move all includes to the top of
- gpio/consumer.h
-Message-ID: <Z7X2We_IB2oShJ5w@smile.fi.intel.com>
-References: <20250217103922.151047-1-brgl@bgdev.pl>
- <Z7XPcYtaA4COHDYj@smile.fi.intel.com>
- <CAMRc=Mf6HLoORvth1O=DLGXcSvq75-mbmPR0zXg6cm6VV-LVWA@mail.gmail.com>
+	s=arc-20240116; t=1739980041; c=relaxed/simple;
+	bh=cYruzjU4FwNIcVwrV5mAW2mz/Y+H1RmNdiS+xMs1Zk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GsJolr0CxD6HJsP2i5BQXEDv+yGjY+SkDiTcpvJeTm7qn3Rn4M3E2H4hbrc7lUA68MzAIFi9zRtBxEJNeOT5STlNXrS6CBl4Ys2YiHInf85SwnZJxzxTd7BwT1503vij30ld3wWG6Bn/Qg/VqxYSGdOia50G5VGXQsMtJVut6Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Db66ij2T; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1739980008; x=1740584808; i=wahrenst@gmx.net;
+	bh=cYruzjU4FwNIcVwrV5mAW2mz/Y+H1RmNdiS+xMs1Zk8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Db66ij2TBHIlY53rFt74My9MXdIis00IizkfWAT1zbw826cjT8cw5+gEJuazx3Iw
+	 k+4PF9J0cfA2GLq0QychelZ1dttu2GzXQvQgfoowmbG2eTi7v/uz7qQ9xzmDKgztt
+	 6nIEqeFvcsI4J82MKNcKAnG1ZbhUD30teF0V/gg4EiNFzcQMbmFPshTCbSB5f+Flt
+	 dk5JR5s+2Y8O5Xa/Pze8zVLvRhs/wBn22EVxR3DIYmrauWJG6h1zvNPZhyeXMDc8q
+	 4Bi/A0p5IzgDUHTjG4SE7BQoPXfyyMpIUuO2mNtWmMpamjinEF+5jnXqmhFXH0E2w
+	 Xixhqs9B5oMDu7Z4Fw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMobU-1u1Cfs16LU-00R2gC; Wed, 19
+ Feb 2025 16:46:48 +0100
+Message-ID: <031ca485-4320-4754-a5bc-21f01abb54dc@gmx.net>
+Date: Wed, 19 Feb 2025 16:46:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf6HLoORvth1O=DLGXcSvq75-mbmPR0zXg6cm6VV-LVWA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC/RFT PATCH] pinctrl: bcm2835: don't -EINVAL on alternate
+ funcs from get_direction()
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Liao Chen <liaochen4@huawei.com>,
+ Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250219102750.38519-1-brgl@bgdev.pl>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250219102750.38519-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:XbIxFsuU9ru6GOV1PV0VqJIace0Iq5TQQdtNgYie5vje9MgSaOc
+ EYKfbQ2OzM4FL3uWp4ykqfvWLAGGRUfwUBy78FwB0oDlkAlAYdSKRn73fl68OtjjS4DM5me
+ PYIkHEyNJ5ujkYBrF9zJ813Qqof1P1vh/ZdH1l8+pDERE5nEyW0vpmQy1ajiFOHfQ62hdqE
+ DbH3Qh8upu7MfGKzBf8ag==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RbY3QLmwFVc=;ShI4sQ7ZGZV7OKPb+Ctgp3RQ+BF
+ PX9Ljkd7VKsQp6/jRiIfseQkHCLnT33NJl/eaxIUcpSqLSdpNKyQZl1YpQwnJ+BOdZ26HedR3
+ cDcH98WZnKXD7mfQzi7Oy48pfvn3ye9y5/OpzGXdlIhZSMxvHJ8vxX3WbE2KoLqMlbz3DP/0O
+ i1GGkqtDH5ScNcGI0JS8xjrw74YnTP90dO6NXhaMrWLuJNm2ns1YlHMsx/lGeldcZJNWBQsi1
+ Wz1p73DqeZXJ9GOWR9Q2a44UkZeybZncN/a3SJMSygOsnnE0QxozdrbMWSCEmIL2DGvzC6SL1
+ iVcDnXQJUvBO3o/kBkOKJt6ZU/jcS6pQVDbtFmTakoOtRCkdV953UM23QW7X6prnrU1ip8+wF
+ vr7/hTkCr4gfObFwOgbx/QzbBnsCnyDHgvCYfQEIW5Ld1PhmPegi5rUtNNtso7iwyoFivqheX
+ t3ZZybJl/72pjdfXwfBze0ylkRcEtX64PDnSF/paHBzrLX4s419gHNDdFTFeJ4dyLfZsoxmJN
+ ZX1KJnMtg+BRN9dN/sliMsMpzm4MZzzkcMwLw0IBzG7PsWmB89LdaZr+9SCQTg9wo9dze8yQt
+ YcGIhmle3QIIWoj1N6RNmLLzLMpXUhEEfbIIvgPi7bUpPoTzrxv3+oQuTdzzEBKak3UwaaL/f
+ hW9V5jmy5FnsQbPJH5qTT2SaQBEUiXsRNadsz/+MHTQNEhqVUGISL/xVcuCrCK+cyMX4uIpTB
+ 3j5DnXLeioKti0rL/0qIM8QLAW4aotAsSz7QiOlvzuPVMK6EsQQSj9tIjN2PEL/x26bBhlrJE
+ 33fWxDwgbJurPwljIdEwBrDKp3jZJ+RQInf+R1BFOljfzfeEXQ/XwilPIHeEukUs8BULuET2w
+ 7318bsJEcgknmH13RgWiM3GOHZgqFMSKW2mHUckiiI97Ok7PKXEqd99GS607iIPikAphYciys
+ QpxuVLZASsZ+gPkTAQQdgsSZHDcYrsWxUEWnweGrN+rKVmidZZlGcPb6z6TmI7Jx3AkKbHexy
+ d1PJQFlRE/nX6MFULqSLWNWycA8yc4Yx47/u7cHIxqyRb1N5CFqzokCRd9zrMesKqHs4ugrtD
+ UI5sp6UryWk6z++0r7l2Aqlcqn2jLa9WX2/7tQvfO6Yvju2tcwCc4Nvfm6Hldx2IZx3keAXCq
+ mgZXuM1l2T6RB5oz1QbMZ4hBCZWhl0ZAdl2iMl0YwEaajSbhNJKxkeijr9K5nLIondYqd6bgT
+ ej7Ie2DJp37VC8/cSjae7+ghzxdQb1TfDQ1dCd83ObGpkeKD48fGzl3NJri1A5UOyWtlhr6aj
+ VY0l4QofgUoJeml0WPZDRhf0c1w3KXb59kstw+yFTgOWEXf9yGWuLW8/aqkfKa3n+Sn6VrrNW
+ YoRJgmsgk2y9zeUWeGX52Y3BYTAbGm3cuJGnNQFMGCyB5kLRO6j+3gcQ+q
 
-On Wed, Feb 19, 2025 at 06:35:59AM -0800, Bartosz Golaszewski wrote:
-> On Wed, 19 Feb 2025 13:32:49 +0100, Andy Shevchenko
-> <andriy.shevchenko@intel.com> said:
-> > On Mon, Feb 17, 2025 at 11:39:21AM +0100, Bartosz Golaszewski wrote:
-> >> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>
-> >> We have several conditional includes depending on !CONFIG_GPIOLIB. This
-> >> is supposed to reduce compilation time with CONFIG_GPIOLIB=y but in
-> >> practice there's no difference on modern machines.
-> >
-> > It's not about modern machines. If every maintainer will think this way,
-> > we end up in the complete and utter dead end with the headers.
-> >
-> > I believe you at least had read the cover letter for the infamous Ingo's series
-> > about headers and how it speeds up the build (in some cases up to 70% on as you
-> > said "modern machines").
-> >
-> >> It makes adding new stubs that depend on more than just GPIOLIB harder so
-> >> move them all to the top, unduplicate them and replace asm/ with preferred
-> >> linux/ alternatives.
-> >
-> > NAK.
-> >
-> > This makes dependency hell things much worse and this is a step back on the
-> > untangling the current situation along with the slowing down the speed of the
-> > build. Please. consider to revert or discard this patch.
-> >
-> > ...
-> >
-> >>  #include <linux/bits.h>
-> >> +#include <linux/bug.h>
-> >
-> > Okay to replace, but not okay to move.
-> >
-> >>  #include <linux/err.h>
-> >> +#include <linux/errno.h>
-> >
-> > Please, double check that it uses error codes from it, otherwise err.h includes
-> > asm/errno.h with basic codes already.
-> >
-> >> +#include <linux/kernel.h>
-> >
-> > This is definitely no. Please, read what's written in the top of that file and
-> > here is just a proxy for should come in the future a kind of might_sleep.h.
-> > Do not move this one at all, please.
-> >
-> >>  #include <linux/types.h>
+Am 19.02.25 um 11:27 schrieb Bartosz Golaszewski:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Since commit 9d846b1aebbe ("gpiolib: check the return value of
+> gpio_chip::get_direction()") we check the return value of the
+> get_direction() callback as per its API contract. This driver returns
+> -EINVAL if the pin in question is set to one of the alternative
+> (non-GPIO) functions. This isn't really an error that should be
+> communicated to GPIOLIB so default to returning the "safe" value of
+> INPUT in this case. The GPIO subsystem does not have the notion of
+> "unknown" direction.
+>
+> Fixes: 9d846b1aebbe ("gpiolib: check the return value of gpio_chip::get_direction()")
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/all/Z7VFB1nST6lbmBIo@finisterre.sirena.org.uk/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 
-
-Fair enough. Does this look right to you?
-
-For kernel.h definitely, for err.h you proved your point (but which was unclear
-to me as the repetitions are already being in a number).
-
-For bug.h looks also good. But I prefer to use asm/bug.h as it's the one that
-provides the APIs. Note, the reference to the recommended linux/* headers
-rather than asm/* applies to the C code or custom headers which are not under
-include/*. The latter should be optimized to what it uses exactly.
-
-So, summarizing the above I would return kernel.h to where it belongs and
-move back to asm/bug.h.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
 
