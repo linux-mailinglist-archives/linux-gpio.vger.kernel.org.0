@@ -1,278 +1,223 @@
-Return-Path: <linux-gpio+bounces-16216-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16217-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72279A3B50F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 09:53:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 530DAA3B608
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 10:04:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDEDD179A9D
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 08:46:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5C57178431
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2025 08:58:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4981D1F75A9;
-	Wed, 19 Feb 2025 08:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A3091DED7C;
+	Wed, 19 Feb 2025 08:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tkM/w88C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IeeMj26g"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DB41F3BB7
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 08:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00011DED6B
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 08:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739954331; cv=none; b=fzqKa954ofWW5OUPTlXCMQ4X7kptXqSPKWYxk/EecjPZgRKsyR9/Jeg+Om6DeITaoij6w9tF7zT6do9YULGBfpDljyzAKdMzmm1P9S6rrlETVQMRuvvZFQA5gm/BxLzyo2QxjeH8lRDsYl1LL7lhQdhtYW1eLlUMl40fWJsmuuo=
+	t=1739955037; cv=none; b=ccn9kOeTZYLvZTv0yN5/iF35ZW2WJdzQp/U96UdPCMMNmBFi1j1twgOhmRqlm/OEb7EwRX8M9qDOlGzq9GPRc89J+2KHZVeu/Ljq9HNY9+IQUsa8ZbpREPV8dozQqARJ7SbeB/DRHpUikC+ataTMcYUTtKVzGSMh2O/PhUDjSgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739954331; c=relaxed/simple;
-	bh=sSkJBdJIFGfc3oMTs08rgL6qZZ5qeZIovZ90HYpvPA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=Nj5ifE02AAzfdhegnRiiRgDVZUcOQ6SvR8ud+uDSKGbLP7cqF6Ld9XeVUTl/MjLg1OeCadR2Il3MGxReuIB7lOEjN5Dm8VarC6hQ8ssU4PtEKMh0ZfhZKDwpK5yl0ppAuPZkqWfBS7ty7OjOQn+dV+hl8IBe4PjblrY5zRBoObY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tkM/w88C; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250219083836euoutp02101cba3870c860f086f8bf45c87dd230~ljzuKXBeR2080320803euoutp02x
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250219083836euoutp02101cba3870c860f086f8bf45c87dd230~ljzuKXBeR2080320803euoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739954316;
-	bh=6VHoY15Gd74cbqK2q1xU2So2fYHFema61iUif7A/vgQ=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=tkM/w88COXkKbniUZfISCQZVt0IsWY0RslgoqcRb3gQfLqnQ/IQfxBFqapnn5jc/w
-	 nRCbUXK1WfpP+npHirqtbmgcN4peY4PhuY/uS/EUgYuYVuYQmGhmgFlGujT7+G/PB5
-	 07iGjOJakEFTYnyQM01y66ZlnORr/QlLmYYAfte0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250219083836eucas1p26aa7fe037c01b0828959cd98380501ac~ljzt5nth91811318113eucas1p22;
-	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 95.5C.20397.C8895B76; Wed, 19
-	Feb 2025 08:38:36 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254~ljztcuI5s0030500305eucas1p1g;
-	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250219083836eusmtrp2e7cfb0cca1e4d13332514bb9df6e63e4~ljztcMyMQ2901929019eusmtrp2F;
-	Wed, 19 Feb 2025 08:38:36 +0000 (GMT)
-X-AuditID: cbfec7f5-ed1d670000004fad-f6-67b5988cd40d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 3B.3E.19920.C8895B76; Wed, 19
-	Feb 2025 08:38:36 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250219083835eusmtip13ff514541a0bb992c712835816369505~ljzsg7Vwc2399823998eusmtip1m;
-	Wed, 19 Feb 2025 08:38:35 +0000 (GMT)
-Message-ID: <dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com>
-Date: Wed, 19 Feb 2025 09:38:34 +0100
+	s=arc-20240116; t=1739955037; c=relaxed/simple;
+	bh=gkGF5TGnILOlooV/zopZEYtR/PIV++EoGIcVcIa8KWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPPVGO/Gjgf4g+u/lWF3ugWtkpG2SM6vfGq/BKSu+AyJmwiIzHkjYLkN6fNkvYCv/e0GLp9MC9Vkq42N/lanN1QYFLhygArY5mElGAtuT2+vzudhho/SOyV46s0AZxNR8yv6t4Tvk15t0WWons2gKNJ5HbeHSpg5uFEC8C2k2A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IeeMj26g; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739955032; x=1771491032;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gkGF5TGnILOlooV/zopZEYtR/PIV++EoGIcVcIa8KWw=;
+  b=IeeMj26gmt7rjMPXo2vMQ3O5NN+5APWJ6XUzC3//hMcoAsEK6CnADKIU
+   n53J5ucRTt9K83PNYyZ4KPgraRsllntmYRoaXy6nDwHvFqkV6pbXBtmJU
+   cI/2cbB93YWnj6v5njTpu/u5HDf1OT+2Ujd1fyYylulOkX5y5GBKXc4Fe
+   E0WRFxvoU6k9fDd6zoPGoy4HWFrn85+wrnP2//FxR/4HnThNKqvUxh3HG
+   DdnAXBtvCE5or/j73BW5Kh0MYnSEKo3cA4sBEgAv0bOgHgCCbIf8sgN+l
+   R0MCwfJMplF7XbbZfFKL+h7r3M7RBy+01SkvBS4HKnOLgb3ucIlSqe6o8
+   Q==;
+X-CSE-ConnectionGUID: Tkei4ajVTeqeMqpxdN7ECQ==
+X-CSE-MsgGUID: aUoLqQZNTg6DqqyJvK5gFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28279432"
+X-IronPort-AV: E=Sophos;i="6.13,298,1732608000"; 
+   d="scan'208";a="28279432"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 00:50:31 -0800
+X-CSE-ConnectionGUID: O7wGV6TvS0akj8W7jvr4+g==
+X-CSE-MsgGUID: JEJMzDRoQ+KNxiHBhrI9lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="137900858"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 19 Feb 2025 00:50:25 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkfmh-0001d3-0n;
+	Wed, 19 Feb 2025 08:50:23 +0000
+Date: Wed, 19 Feb 2025 16:48:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>, mario.limonciello@amd.com,
+	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+	linus.walleij@linaro.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: amd: Add an LPS0 check() callback
+Message-ID: <202502191627.fRgoBwcZ-lkp@intel.com>
+References: <20250218024702.2139216-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] gpiolib: check the return value of
- gpio_chip::get_direction()
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
-	<linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
-	Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7djP87o9M7amG5x9rWKx4tsaJotdD7ax
-	WUz5s5zJYvP8P4wWl3fNYbNYsPERowObx+Jrt1k97lzbw+bxeZNcAHMUl01Kak5mWWqRvl0C
-	V0bPvH7mgl7tihcrWpgaGB8odTFyckgImEhM2nuTvYuRi0NIYAWjxLRbjxkhnC+MEufeHGWC
-	cD4zSrx+8ZMFpqXhQCszRGI5o0TfjL9QLR8ZJXY9mM4EUsUrYCfxfssWMJtFQFXi3OZ3bBBx
-	QYmTM5+ATRIVkJe4f2sG0HIODmGBCIn7rfUgYRGBYIkvT2+wgcxkFuhhlLjz4zErSIJZQFzi
-	1pP5YDPZBAwlut52gc3kFPCSeHVsDhNEjbxE89bZYNdJCJzgkLj6ZSc7xNkuEk/X9jNB2MIS
-	r45vgYrLSPzfOZ8JoqGdUWLB7/tQzgRGiYbntxghqqwl7pz7xQZyKrOApsT6XfoQYUeJmys+
-	MoOEJQT4JG68FYQ4gk9i0rbpUGFeiY42IYhqNYlZx9fBrT144RLzBEalWUjBMgvJm7OQvDML
-	Ye8CRpZVjOKppcW56anFxnmp5XrFibnFpXnpesn5uZsYgYnm9L/jX3cwrnj1Ue8QIxMH4yFG
-	CQ5mJRHetvot6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5F+1vTRcSSE8sSc1OTS1ILYLJMnFw
-	SjUwSSju5ly2+zeD2Nf3z9T95/w8N8uz7yxPxWaJO14Bvow1L1+wr3sQonnugKPgJ7187d+B
-	r2O9z/8/LJ1Slb+89Pltrd+ZTYcYl1qpHnrXfsFw5+fqRT7zuq/UyfxzvW757oj6nLr7phOl
-	Z/sIM+5/WNR+/ZyDqqetGot2OYtux1rzHN0nJdoNmY8OKvzJnvS369+duYFuD1vdu9J/RT/Z
-	1nXeWVBqj87P48Vfk9jtWZ0d9Ra/ThVa8pO58LiH7oMlX4L4jIqZr9yYvefFWVEVBu47Pxfn
-	3794frrt2sC64vAWS74FKgb3g77aFWi839J0+8m91aGSPdttnnn/Z/qiq3AjJaF2LX/YLYHG
-	OO6fSizFGYmGWsxFxYkA/eY1OqMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xu7o9M7amG6zYwm6x4tsaJotdD7ax
-	WUz5s5zJYvP8P4wWl3fNYbNYsPERowObx+Jrt1k97lzbw+bxeZNcAHOUnk1RfmlJqkJGfnGJ
-	rVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXkbPvH7mgl7tihcrWpgaGB8o
-	dTFyckgImEg0HGhl7mLk4hASWMoosbrnFAtEQkbi5LQGVghbWOLPtS42iKL3jBKdj/6xgSR4
-	Bewk3m/ZwgRiswioSpzb/A4qLihxcuYTsEGiAvIS92/NYO9i5OAQFoiQuN9aDxIWEQiWWHS3
-	kxHEZhboYZQ4/d4cYn4no8TSn19ZIBLiEreezAebzyZgKNH1tgtsPqeAl8SrY3OYIGrMJLq2
-	dkENkpdo3jqbeQKj0CwkZ8xCMmoWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93E
-	CIyrbcd+bt7BOO/VR71DjEwcjIcYJTiYlUR42+q3pAvxpiRWVqUW5ccXleakFh9iNAWGxURm
-	KdHkfGBk55XEG5oZmBqamFkamFqaGSuJ87pdPp8mJJCeWJKanZpakFoE08fEwSnVwOSlGr39
-	1m7O/1GbK1X3njCSLUi76rl4vv6KsN51qZrlsZ/zvjLYtUSWLhbb1yl0QP7E/H2nbLz2+Kv1
-	SDz8daSf+ee9gw3bT0RufrtU03zh5G3/OAsd/yblue7bE9lsUhxzdpaeej+Ht0v2tm3+Rv69
-	NU/k1rwR1t6mveRvWAv76b+8vzaxas3R/Fl+WE/m37ma2TvM5SPM2uzve8yZfMCxacOlgtCf
-	j0Xm7PJrfqzmPfviX08W3txzX3UeR58R8P/KsTFDdtLd5NJI8XdzTgWICU759IS1WPZ68I2N
-	F3ZNzmrtslY/FxC1i5HXzOrN7FNudafabjFO8nvys7x1+yyjNKdX1m5ZB2O73X6eN1JiKc5I
-	NNRiLipOBAAH3wAGNAMAAA==
-X-CMS-MailID: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254
-References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
-	<20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
-	<CGME20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218024702.2139216-1-superm1@kernel.org>
 
-Hi Bartosz,
+Hi Mario,
 
-On 10.02.2025 11:51, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As per the API contract - gpio_chip::get_direction() may fail and return
-> a negative error number. However, we treat it as if it always returned 0
-> or 1. Check the return value of the callback and propagate the error
-> number up the stack.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   drivers/gpio/gpiolib.c | 44 +++++++++++++++++++++++++++++---------------
->   1 file changed, 29 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 679ed764cb14..5d3774dc748b 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1057,8 +1057,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->   		desc->gdev = gdev;
->   
->   		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
-> -			assign_bit(FLAG_IS_OUT,
-> -				   &desc->flags, !gc->get_direction(gc, desc_index));
-> +			ret = gc->get_direction(gc, desc_index);
-> +			if (ret < 0)
-> +				goto err_cleanup_desc_srcu;
-> +
-> +			assign_bit(FLAG_IS_OUT, &desc->flags, !ret);
->   		} else {
->   			assign_bit(FLAG_IS_OUT,
->   				   &desc->flags, !gc->direction_input);
+kernel test robot noticed the following build errors:
 
-This change breaks bcm2835 pincontrol/gpio driver (and probably others) 
-in next-20250218. The problem is that some gpio lines are initially 
-configured as alternate function (i.e. uart) and .get_direction returns 
--EINVAL for them, what in turn causes the whole gpio chip fail to 
-register. Here is the log with WARN_ON() added to line 
-drivers/pinctrl/bcm/pinctrl-bcm2835.c:350 from Raspberry Pi 4B:
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next linus/master v6.14-rc3 next-20250219]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 1 at drivers/pinctrl/bcm/pinctrl-bcm2835.c:350 
-bcm2835_gpio_get_direction+0x80/0x98
-  Modules linked in:
-  CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
-6.14.0-rc3-next-20250218-dirty #9817
-  Hardware name: Raspberry Pi 4 Model B (DT)
-  pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-  pc : bcm2835_gpio_get_direction+0x80/0x98
-  lr : bcm2835_gpio_get_direction+0x18/0x98
-  ...
-  Call trace:
-   bcm2835_gpio_get_direction+0x80/0x98 (P)
-   gpiochip_add_data_with_key+0x874/0xef0
-   bcm2835_pinctrl_probe+0x354/0x53c
-   platform_probe+0x68/0xdc
-   really_probe+0xbc/0x298
-   __driver_probe_device+0x78/0x12c
-   driver_probe_device+0xdc/0x164
-   __driver_attach+0x9c/0x1ac
-   bus_for_each_dev+0x74/0xd4
-   driver_attach+0x24/0x30
-   bus_add_driver+0xe4/0x208
-   driver_register+0x60/0x128
-   __platform_driver_register+0x24/0x30
-   bcm2835_pinctrl_driver_init+0x20/0x2c
-   do_one_initcall+0x64/0x308
-   kernel_init_freeable+0x280/0x4e8
-   kernel_init+0x20/0x1d8
-   ret_from_fork+0x10/0x20
-  irq event stamp: 100380
-  hardirqs last  enabled at (100379): [<ffff8000812d7d5c>] 
-_raw_spin_unlock_irqrestore+0x74/0x78
-  hardirqs last disabled at (100380): [<ffff8000812c8918>] el1_dbg+0x24/0x8c
-  softirqs last  enabled at (93674): [<ffff80008005ed4c>] 
-handle_softirqs+0x4c4/0x4dc
-  softirqs last disabled at (93669): [<ffff8000800105a0>] 
-__do_softirq+0x14/0x20
-  ---[ end trace 0000000000000000 ]---
-  gpiochip_add_data_with_key: GPIOs 512..569 (pinctrl-bcm2711) failed to 
-register, -22
-  pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
-  pinctrl-bcm2835 fe200000.gpio: probe with driver pinctrl-bcm2835 
-failed with error -22
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/pinctrl-amd-Add-an-LPS0-check-callback/20250218-104906
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20250218024702.2139216-1-superm1%40kernel.org
+patch subject: [PATCH] pinctrl: amd: Add an LPS0 check() callback
+config: x86_64-buildonly-randconfig-003-20250219 (https://download.01.org/0day-ci/archive/20250219/202502191627.fRgoBwcZ-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250219/202502191627.fRgoBwcZ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502191627.fRgoBwcZ-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/pinctrl/pinctrl-amd.c: In function 'amd_gpio_probe':
+>> drivers/pinctrl/pinctrl-amd.c:1211:15: error: implicit declaration of function 'acpi_register_lps0_dev'; did you mean 'acpi_register_gsi'? [-Werror=implicit-function-declaration]
+    1211 |         ret = acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+         |               ^~~~~~~~~~~~~~~~~~~~~~
+         |               acpi_register_gsi
+>> drivers/pinctrl/pinctrl-amd.c:1211:39: error: 'pinctrl_amd_s2idle_dev_ops' undeclared (first use in this function)
+    1211 |         ret = acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-amd.c:1211:39: note: each undeclared identifier is reported only once for each function it appears in
+   drivers/pinctrl/pinctrl-amd.c: In function 'amd_gpio_remove':
+>> drivers/pinctrl/pinctrl-amd.c:1232:9: error: implicit declaration of function 'acpi_unregister_lps0_dev'; did you mean 'acpi_unregister_gsi'? [-Werror=implicit-function-declaration]
+    1232 |         acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+         |         acpi_unregister_gsi
+   drivers/pinctrl/pinctrl-amd.c:1232:35: error: 'pinctrl_amd_s2idle_dev_ops' undeclared (first use in this function)
+    1232 |         acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-amd.c: At top level:
+>> drivers/pinctrl/pinctrl-amd.c:40:25: warning: 'pinctrl_dev' defined but not used [-Wunused-variable]
+      40 | static struct amd_gpio *pinctrl_dev;
+         |                         ^~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
-Any suggestions how to fix this issue? Should we add 
-GPIO_LINE_DIRECTION_UNKNOWN?
+vim +1211 drivers/pinctrl/pinctrl-amd.c
 
+  1151	
+  1152		gpio_dev->pdev = pdev;
+  1153		gpio_dev->gc.get_direction	= amd_gpio_get_direction;
+  1154		gpio_dev->gc.direction_input	= amd_gpio_direction_input;
+  1155		gpio_dev->gc.direction_output	= amd_gpio_direction_output;
+  1156		gpio_dev->gc.get			= amd_gpio_get_value;
+  1157		gpio_dev->gc.set			= amd_gpio_set_value;
+  1158		gpio_dev->gc.set_config		= amd_gpio_set_config;
+  1159		gpio_dev->gc.dbg_show		= amd_gpio_dbg_show;
+  1160	
+  1161		gpio_dev->gc.base		= -1;
+  1162		gpio_dev->gc.label			= pdev->name;
+  1163		gpio_dev->gc.owner			= THIS_MODULE;
+  1164		gpio_dev->gc.parent			= &pdev->dev;
+  1165		gpio_dev->gc.ngpio			= resource_size(res) / 4;
+  1166	
+  1167		gpio_dev->hwbank_num = gpio_dev->gc.ngpio / 64;
+  1168		gpio_dev->groups = kerncz_groups;
+  1169		gpio_dev->ngroups = ARRAY_SIZE(kerncz_groups);
+  1170	
+  1171		amd_pinctrl_desc.name = dev_name(&pdev->dev);
+  1172		amd_get_iomux_res(gpio_dev);
+  1173		gpio_dev->pctrl = devm_pinctrl_register(&pdev->dev, &amd_pinctrl_desc,
+  1174							gpio_dev);
+  1175		if (IS_ERR(gpio_dev->pctrl)) {
+  1176			dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
+  1177			return PTR_ERR(gpio_dev->pctrl);
+  1178		}
+  1179	
+  1180		/* Disable and mask interrupts */
+  1181		amd_gpio_irq_init(gpio_dev);
+  1182	
+  1183		girq = &gpio_dev->gc.irq;
+  1184		gpio_irq_chip_set_chip(girq, &amd_gpio_irqchip);
+  1185		/* This will let us handle the parent IRQ in the driver */
+  1186		girq->parent_handler = NULL;
+  1187		girq->num_parents = 0;
+  1188		girq->parents = NULL;
+  1189		girq->default_type = IRQ_TYPE_NONE;
+  1190		girq->handler = handle_simple_irq;
+  1191	
+  1192		ret = gpiochip_add_data(&gpio_dev->gc, gpio_dev);
+  1193		if (ret)
+  1194			return ret;
+  1195	
+  1196		ret = gpiochip_add_pin_range(&gpio_dev->gc, dev_name(&pdev->dev),
+  1197					0, 0, gpio_dev->gc.ngpio);
+  1198		if (ret) {
+  1199			dev_err(&pdev->dev, "Failed to add pin range\n");
+  1200			goto out2;
+  1201		}
+  1202	
+  1203		ret = devm_request_irq(&pdev->dev, gpio_dev->irq, amd_gpio_irq_handler,
+  1204				       IRQF_SHARED | IRQF_COND_ONESHOT, KBUILD_MODNAME, gpio_dev);
+  1205		if (ret)
+  1206			goto out2;
+  1207	
+  1208		platform_set_drvdata(pdev, gpio_dev);
+  1209		acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
+  1210	
+> 1211		ret = acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+  1212		if (ret)
+  1213			return ret;
+  1214	
+  1215		dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
+  1216		return ret;
+  1217	
+  1218	out2:
+  1219		gpiochip_remove(&gpio_dev->gc);
+  1220	
+  1221		return ret;
+  1222	}
+  1223	
+  1224	static void amd_gpio_remove(struct platform_device *pdev)
+  1225	{
+  1226		struct amd_gpio *gpio_dev;
+  1227	
+  1228		gpio_dev = platform_get_drvdata(pdev);
+  1229	
+  1230		gpiochip_remove(&gpio_dev->gc);
+  1231		acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
+> 1232		acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
+  1233	}
+  1234	
 
-> @@ -2728,13 +2731,18 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
->   	if (guard.gc->direction_input) {
->   		ret = guard.gc->direction_input(guard.gc,
->   						gpio_chip_hwgpio(desc));
-> -	} else if (guard.gc->get_direction &&
-> -		  (guard.gc->get_direction(guard.gc,
-> -					   gpio_chip_hwgpio(desc)) != 1)) {
-> -		gpiod_warn(desc,
-> -			   "%s: missing direction_input() operation and line is output\n",
-> -			   __func__);
-> -		return -EIO;
-> +	} else if (guard.gc->get_direction) {
-> +		ret = guard.gc->get_direction(guard.gc,
-> +					      gpio_chip_hwgpio(desc));
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (ret != GPIO_LINE_DIRECTION_IN) {
-> +			gpiod_warn(desc,
-> +				   "%s: missing direction_input() operation and line is output\n",
-> +				    __func__);
-> +			return -EIO;
-> +		}
->   	}
->   	if (ret == 0) {
->   		clear_bit(FLAG_IS_OUT, &desc->flags);
-> @@ -2771,12 +2779,18 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
->   						 gpio_chip_hwgpio(desc), val);
->   	} else {
->   		/* Check that we are in output mode if we can */
-> -		if (guard.gc->get_direction &&
-> -		    guard.gc->get_direction(guard.gc, gpio_chip_hwgpio(desc))) {
-> -			gpiod_warn(desc,
-> -				"%s: missing direction_output() operation\n",
-> -				__func__);
-> -			return -EIO;
-> +		if (guard.gc->get_direction) {
-> +			ret = guard.gc->get_direction(guard.gc,
-> +						      gpio_chip_hwgpio(desc));
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			if (ret != GPIO_LINE_DIRECTION_OUT) {
-> +				gpiod_warn(desc,
-> +					   "%s: missing direction_output() operation\n",
-> +					   __func__);
-> +				return -EIO;
-> +			}
->   		}
->   		/*
->   		 * If we can't actively set the direction, we are some
->
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
