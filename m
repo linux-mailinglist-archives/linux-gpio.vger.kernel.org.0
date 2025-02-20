@@ -1,177 +1,192 @@
-Return-Path: <linux-gpio+bounces-16277-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16278-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1983A3D6C8
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:32:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468A0A3D76D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:54:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E9D416FAAE
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 10:32:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 740A33A3EDB
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 10:52:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D641F150B;
-	Thu, 20 Feb 2025 10:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBC91F1527;
+	Thu, 20 Feb 2025 10:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="C05FatH4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AD71EE7C6;
-	Thu, 20 Feb 2025 10:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F0C1AF0C8;
+	Thu, 20 Feb 2025 10:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047519; cv=none; b=P71DJb4zuuc6akjegZk53SqnX8mzZbHthJMFh6XmeUtsxvjb3GkP4H3KFeGdf64gW/ODhNs3LmiH+IAhkPFgVovTs1dCqxcPR5aMnVDxZ4+l83oY2O0QLDVNLkNW5Quma+D1iyz5ywMxwyEXjfupp9YFPcIg5D3GIvpSvkn8BO8=
+	t=1740048760; cv=none; b=KFIQjnyLdS57R+UwX/TyKFtS0t1e4nnuZ1i0PepayT9zIWuYShavqogWgZwW/hMESpO+X3ZzF9GkRgXZLZct/czjYNMk4Bud1CN16oYe9TYvIajijwliEeyFI+dd4ajDyzaql+fLEU6TN3gOFcVZT+xkhxCVaD2TVMPcY5/0XII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047519; c=relaxed/simple;
-	bh=EoE8bMHv7xu0prvb8E0epB/K/6l0shvsMw5QSn1M2s4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8BPmiZJO3S1rOon0zYt1JRfAsvkONRUbeIJN9QyyLOyh4wFT+5q7DSDUNPB/wr5MyG2Iu6vn4WoYOyRJXOq1OhqdjvyO/PHEOd2SsEFC0s2fFgBhpgNYNqqGA9dmRDuj0bPfdDS7k+61YXc8rQ8/szdWHXAaXIQAydq/3aLF3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66793C4CED1;
-	Thu, 20 Feb 2025 10:31:52 +0000 (UTC)
-Message-ID: <6dc1e10e-9c40-4da3-b0e0-72bdc9daa827@xs4all.nl>
-Date: Thu, 20 Feb 2025 11:31:50 +0100
+	s=arc-20240116; t=1740048760; c=relaxed/simple;
+	bh=jzc3UeO8gPwWIIcpOp7LoiCQrGSVxTENx4elv1fUfkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fMJ7iADjL+3BVqCRYK24DvE5KHqSQmZIYXei/AgR1GzDVDdMLx5JDZShfyNHVMQg0hXU5ItWbMT0VKjAEM6DqK8DWNYoH9uXSiTO4TGkrwN14HGksZrUynyrwVfJI6jYgsu8Ha0syeWeRPBOmlU153HFDF8e4e9XhS2nVvK1jvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=C05FatH4; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=S+RdLYqZdmsOg0CbsW6QLZRD3BJ6XER56v5MU0dQRVc=; b=C05FatH44QfhrPp864MxbxdgFr
+	RabFjZsr9lUlg6YOhIu6yuvBktL81zlOGNcN2RsYemh78AGxGEdieEEgDWN3r5OprsTBtnpkVFjEX
+	IJOpz4GYbru83ZD5gP36n4V7B4bQwWZ05QV1dk9tr+5ODIzUMrqN5TemnsIrgukQAMMTge+eEy6U/
+	AYK5mMn21/lUaNvD4RgicLpIXUnGdUIH69r29oVGVtWbc4l4O4n0UGO8ScXiLGAmbQyQ48OPG+jke
+	M2uH1h0YT4+NA/qTXDf55qzxm3vJ6d2KC/GeRwhlccGfBZji5cDp0zP9YOsrmEnzpjH1iTX7t9NEK
+	8qJtlhEw==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tl4AR-0004Vd-9R; Thu, 20 Feb 2025 11:52:31 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Quentin Schulz <foss+kernel@0leil.net>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+Subject:
+ Re: [PATCH 2/2] gpio: pcf857x: add support for reset-gpios on (most) PCA967x
+Date: Thu, 20 Feb 2025 11:52:29 +0100
+Message-ID: <6110750.alqRGMn8q6@diego>
+In-Reply-To: <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
+References:
+ <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
+ <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/12] driver core: Constify API device_find_child()
- and adapt for various usages
-To: Zijun Hu <zijun_hu@icloud.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>
-References: <20241224-const_dfc_done-v5-0-6623037414d4@quicinc.com>
- <20241224-const_dfc_done-v5-4-6623037414d4@quicinc.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20241224-const_dfc_done-v5-4-6623037414d4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 24/12/2024 14:05, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> Constify the following API:
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> To :
-> struct device *device_find_child(struct device *dev, const void *data,
->                                  device_match_t match);
-> typedef int (*device_match_t)(struct device *dev, const void *data);
-> with the following reasons:
-> 
-> - Protect caller's match data @*data which is for comparison and lookup
->   and the API does not actually need to modify @*data.
-> 
-> - Make the API's parameters (@match)() and @data have the same type as
->   all of other device finding APIs (bus|class|driver)_find_device().
-> 
-> - All kinds of existing device match functions can be directly taken
->   as the API's argument, they were exported by driver core.
-> 
-> Constify the API and adapt for various existing usages.
-> 
-> BTW, various subsystem changes are squashed into this commit to meet
-> 'git bisect' requirement, and this commit has the minimal and simplest
-> changes to complement squashing shortcoming, and that may bring extra
-> code improvement.
-> 
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> Acked-by: Uwe Kleine-König <ukleinek@kernel.org> # for drivers/pwm
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Am Donnerstag, 20. Februar 2025, 10:56:52 MEZ schrieb Quentin Schulz:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+>=20
+> The PCA9670, PCA9671, PCA9672 and PCA9673 all have a RESETN input pin
+> that is used to reset the I2C GPIO expander.
+>=20
+> One needs to hold this pin low for at least 4us and the reset should be
+> finished after about 100us according to the datasheet[1]. Once the reset
+> is done, the "registers and I2C-bus state machine will be held in their
+> default state until the RESET input is once again HIGH.".
+>=20
+> Because the logic is reset, the latch values eventually provided in the
+> Device Tree via lines-initial-states property are inapplicable so they
+> are simply ignored if a reset GPIO is provided.
+>=20
+> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5 and fig 22.
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  drivers/gpio/gpio-pcf857x.c | 29 ++++++++++++++++++++++++++---
+>  1 file changed, 26 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+> index 7c57eaeb0afeba8953d998d8eec60a65b40efb6d..94077208e24ae99a1e8762e78=
+3f0eabc580fa520 100644
+> --- a/drivers/gpio/gpio-pcf857x.c
+> +++ b/drivers/gpio/gpio-pcf857x.c
+> @@ -5,6 +5,7 @@
+>   * Copyright (C) 2007 David Brownell
+>   */
+> =20
+> +#include <linux/delay.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
 
-<snip>
+this is missing
+#include <linux/gpio/consumer.h>
 
-> diff --git a/drivers/media/pci/mgb4/mgb4_core.c b/drivers/media/pci/mgb4/mgb4_core.c
-> index bc63dc81bcae0d20924174be74b93a2139d5879f..697d50bedfe285d74c702efde61e510df87c1229 100644
-> --- a/drivers/media/pci/mgb4/mgb4_core.c
-> +++ b/drivers/media/pci/mgb4/mgb4_core.c
-> @@ -123,7 +123,7 @@ static const struct hwmon_chip_info temp_chip_info = {
->  };
->  #endif
->  
-> -static int match_i2c_adap(struct device *dev, void *data)
-> +static int match_i2c_adap(struct device *dev, const void *data)
+because otherwise you end up with
+=2E./drivers/gpio/gpio-pcf857x.c: In function =E2=80=98pcf857x_probe=E2=80=
+=99:
+=2E./drivers/gpio/gpio-pcf857x.c:300:21: error: implicit declaration of fun=
+ction =E2=80=98devm_gpiod_get_optional=E2=80=99; did you mean =E2=80=98devm=
+_regulator_get_optional=E2=80=99? [-Wimplicit-function-declaration]
+  300 |         rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset"=
+, GPIOD_OUT_HIGH);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~
+      |                     devm_regulator_get_optional
+=2E./drivers/gpio/gpio-pcf857x.c:300:68: error: =E2=80=98GPIOD_OUT_HIGH=E2=
+=80=99 undeclared (first use in this function)
+  300 |         rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset"=
+, GPIOD_OUT_HIGH);
+      |                                                                    =
+^~~~~~~~~~~~~~
+=2E./drivers/gpio/gpio-pcf857x.c:300:68: note: each undeclared identifier i=
+s reported only once for each function it appears in
+=2E./drivers/gpio/gpio-pcf857x.c:309:17: error: implicit declaration of fun=
+ction =E2=80=98gpiod_set_value=E2=80=99 [-Wimplicit-function-declaration]
+  309 |                 gpiod_set_value(rstn_gpio, 0);
+      |                 ^~~~~~~~~~~~~~~
+
+
+
+> @@ -272,12 +273,11 @@ static const struct irq_chip pcf857x_irq_chip =3D {
+> =20
+>  static int pcf857x_probe(struct i2c_client *client)
 >  {
->  	return i2c_verify_adapter(dev) ? 1 : 0;
->  }
-> @@ -139,7 +139,7 @@ static struct i2c_adapter *get_i2c_adap(struct platform_device *pdev)
->  	return dev ? to_i2c_adapter(dev) : NULL;
->  }
->  
-> -static int match_spi_adap(struct device *dev, void *data)
-> +static int match_spi_adap(struct device *dev, const void *data)
->  {
->  	return to_spi_device(dev) ? 1 : 0;
->  }
+> +	struct gpio_desc *rstn_gpio;
+>  	struct pcf857x *gpio;
+> -	unsigned int n_latch =3D 0;
+> +	unsigned int n_latch;
+>  	int status;
+> =20
+> -	device_property_read_u32(&client->dev, "lines-initial-states", &n_latch=
+);
+> -
+>  	/* Allocate, initialize, and register this gpio_chip. */
+>  	gpio =3D devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+>  	if (!gpio)
+> @@ -297,6 +297,29 @@ static int pcf857x_probe(struct i2c_client *client)
+>  	gpio->chip.direction_output	=3D pcf857x_output;
+>  	gpio->chip.ngpio		=3D (uintptr_t)i2c_get_match_data(client);
+> =20
+> +	rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_=
+HIGH);
+> +	if (IS_ERR(rstn_gpio)) {
+> +		return dev_err_probe(&client->dev, PTR_ERR(rstn_gpio),
+> +				     "failed to get reset GPIO\n");
+> +	}
+> +
+> +	if (rstn_gpio) {
+> +		/* Reset already held with devm_gpiod_get_optional with GPIOD_OUT_HIGH=
+ */
+> +		usleep_range(4, 8); /* tw(rst) > 4us */
+> +		gpiod_set_value(rstn_gpio, 0);
+> +		usleep_range(100, 200); /* trst > 100uS */
+> +
+> +		/*
+> +		 * Reset "will initialize to their default states of all I/Os to
+> +		 * inputs with weak current source to VDD", which is the same as
+> +		 * writing 1 for all I/Os which is 0 in n_latch.
+> +		 */
+> +		n_latch =3D 0;
+> +	} else {
+> +		device_property_read_u32(&client->dev, "lines-initial-states",
+> +					 &n_latch);
 
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
+device_property_read_u32 will not fill n_latch if the property is missing.
+Before n_latch was always set to 0 at the declaration point above.
+I guess that should be kept, because we want 0, except if
+device_property_read_u32 provides a different value.
 
-Regards,
 
-	Hans
+Heiko
+
+
 
