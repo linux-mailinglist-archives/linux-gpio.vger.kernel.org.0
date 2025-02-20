@@ -1,213 +1,190 @@
-Return-Path: <linux-gpio+bounces-16338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3147BA3E28E
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 18:33:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA2F0A3E626
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 21:55:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C82F1884183
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 17:33:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 041F218874C2
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 20:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB13212D66;
-	Thu, 20 Feb 2025 17:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AD5264624;
+	Thu, 20 Feb 2025 20:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YBA/LN7t"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1dXXBJPK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF851FECCD
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 17:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7721226388E
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 20:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072801; cv=none; b=ORQBz7uWmt2zirVJKAWSSyTpI+lvUC2AEP1u6oc2U0TEaIAdo+f0jycDat4O/kYHEcDvnSo4B9fRgM0j84jJY74uKrdQoWSwdYRHBKLoP5/f36dY9WMZY6WpChi0dzVYSTv7LuP1P/5EWimjZznG5GG9A3Smjy5tZPhTN8JeixA=
+	t=1740084899; cv=none; b=r9FguUYrNu01kjHtkdcIdiROCMk35DW8G3AoFWBmIjK4RdNGME5rk2K7Brrnmeczu/4a0Ma6rPrxR5SOMLnDyyaotDldkC7br4vyY0YJWfJMOgKq/4HUROhgYZhpbaZZ6nIVvHt7SFsvhBuPRJTuXUip4WwMPCYSR6EngRh29+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072801; c=relaxed/simple;
-	bh=tdSgk07Qmyb1E0a1lw0F1X8xB3gcZzChTJbUZHLvlvw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CXNi/96+G+l9ph3tQjTPwQKXIE6SsQajmc3fSYCrZygFhZp++AwszbMxiU/rb/ahpADF4jQmodUPVmpyZQDkSwtuPgqA8C5pPyws6ImWSBWBwYZ7VwzBSp2PHwQYSImTJcgY/jf+W+mlRBUSvX8jkXRgoWZENLf5Ta1YYlccTnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YBA/LN7t; arc=none smtp.client-ip=209.85.208.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so4362926a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 09:33:18 -0800 (PST)
+	s=arc-20240116; t=1740084899; c=relaxed/simple;
+	bh=Xc6o9obrZeidO3IrZs20EkZMwxxHvxTSWqEyw4C1voI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LUfjoClW/qdemcC8PLUZNHywFP9NoiPbF9Sy157w7eEPa8NXYitj4iE05s+LfzNlm2IBfHrGJcJxqbqNSPyL/HXd58z+KPnQUDIOMJza73ps6TNvI3gGL7/j54wYcZ+tZQ0CxZ+dowYvfRGbM5srYzOBxjcPuKCFsLwwfFUTMcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1dXXBJPK; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7273b01fe35so842353a34.2
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 12:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740072797; x=1740677597; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANYY81S4UUbSzxGp9vX0hw/u/obOtXq2bTCgGH3coGw=;
-        b=YBA/LN7thNd0kfJi6YUgXpWSohTH4hfKCGstG7P6rVOIvoqYVImMOkWF2SLD/TvS3l
-         zpzriDHW07QsPXQXaeYTV7dArcZpAMR00SnpouK21pHa8IZMfcHCKN9aIW0tYLBti9nL
-         8TcxgOH9SH9ZtwiVdF78otXhfJo0Db4W2ZMF41U/afSvTQIYgGrNe3dk6luNCA2iE42X
-         G0IfBQ4yS/WJwvG6cnMYDSRA4b7cl4AVk0fLBiedZQkYQdjIaBUZE6rSUso+xS9LIAf9
-         tllmocprm5GBV2KAAwnWvpRF5cqADPVnBL/l7qrNdktdMSYVjojg4vzhoU0OCcwZLthF
-         3HOw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740084895; x=1740689695; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lmfqNhipvTzpaPHouDLPUPBFfenRqD8FhVYBJFNu3b0=;
+        b=1dXXBJPKyl79MFL5kY+SZTVMp8uVM+kote9OOwmFCgKZymBx6jdSxG8PDQiRLbSRA8
+         tH+rTa1uqbAqzck8hq68ndXav2GgvFsjPdcV3XtjmJkCwuL2xLawOFMQswMJpB0a/67a
+         Zba8pUzG4LM8ucZ3o4Z4NM0lGhYGAnfbrqjeR2H5p4duEGR3wfJZdqEwPeymH7TMOR+y
+         sDk+n/NvSTlK/+2CYwbjl83wPxNd1wGvgyWbuAilVBCYBXDjFdxsa+mIEPU9pmahYppL
+         f1HdT8HaJPAtIZpPTNwwJHTQluH/ByMUCFdOOgB3wV+bKts9xv6E254vB+tiTdxv3tm5
+         08uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740072797; x=1740677597;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ANYY81S4UUbSzxGp9vX0hw/u/obOtXq2bTCgGH3coGw=;
-        b=u5cdAKBbGPJpv6dPlEEFr0XZcPETfFuGIADOoav38ROf1TOaHp3QPbFfltwMahoa9k
-         Y5xhtWsUzVSGwLw5BKM5MbGTdkjIQB+F3QvFcPsWr9TpM5IOjicjsCTCIoy5lAXxpOeK
-         Ka3OtFziaWbaOUZfk0m4CvefhQ7ePmgOCIWgjsQ8LaskNm0vfSQ0McFdk+VXUgpS1V6x
-         tXHqN1rx4fgd6HQmEYdVGZBLu7CDNGGAu+Xu52atViyuymd0B3WG2ry9igrClDAeYbNP
-         9MWsjLrZi6hZVAS1gioFcWXzjhrmcDxqEE59ddwA06sk9ZH9+oHgmftvxy5pH0aiLa8r
-         mmVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrXedN0PCQvc81obCAvpME2pHY1yY+5JiVRwIWN7AKbm1vkM4ode5iAbraDEzbcZDECw/K61y9xat/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV+Fw1NQMoCbmTk9lL64J/GPS6B5t+w+Ce7jMlZDaP+N8j0D9L
-	bIfH8s9tLZyqSIT1PngjmGPBkubW7KKOCiyEhxBK0TFFteRwQ3UGImyBougxi+U=
-X-Gm-Gg: ASbGncsrkx1zEAi00WC1PLMyo4zU1W3PAWUQohZgk0WkL8aeqwbIbNcAkVaHeLaNS57
-	WwI3K8hkuFSPBzusJ+zoQtSLUK98s4aNsbh1gSxOEmF8+c5Rd6DyqxUIlmSwvw/FPugB861H0t9
-	o3nraP8JniR/2qRpHw9o9mhk496ksnJ6X1UPxDCnm7LG6J2dElmEMUeDjkVQ1nW18ImqPveLFF3
-	DLfXFWDjlvcMPg4v73NX1PaeUXC2hY4bIGpcL1w38PFaaZpAOk4Q/is2Xr+SxszFIu5SBTY7Zc8
-	AQRHP9lerUwistPbN+6QSyDpKQl09T151rbFLLpqhp02bYxL2CnpnAouD3Y=
-X-Google-Smtp-Source: AGHT+IFcZuFtypbIC0ocwrn0UjtnE5zIzW4WQOLazDAdOMAwrDA8BDnjnnZ6hgx+i5rr6QtaeBrAFg==
-X-Received: by 2002:a05:6402:524b:b0:5de:50b4:b71f with SMTP id 4fb4d7f45d1cf-5e0a12baa86mr3394933a12.12.1740072797358;
-        Thu, 20 Feb 2025 09:33:17 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e076048c05sm5023923a12.35.2025.02.20.09.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 09:33:16 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 20 Feb 2025 18:34:21 +0100
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z7dnnW4npJmfOVE0@apocalypse>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
- <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
+        d=1e100.net; s=20230601; t=1740084895; x=1740689695;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmfqNhipvTzpaPHouDLPUPBFfenRqD8FhVYBJFNu3b0=;
+        b=xRdIKS04UpRohBhpN4WnPENaXXQKGqUeiR+t0tJ3W3cwhzSNIFBqlzwMwZG5S78ewA
+         WqU2Po2MWoU1GDE2dLdr9wwTtd64vgmZ77aDCTMon6eAO9eSwsv7JXRERE6mKPCTHqaE
+         erWPhnqiRa8iBfnK81AmPZKxUgwCyCLOpake7cbtNCY7aP1WGSGFLidamxmAZabUBjBg
+         qDyvRyF/pPPiQk6c1UVvYi7nePrdlw2YRqZrAl+KxWo7ZO8EDSTOO04G9Xj7p1lQxR+S
+         C8wT6OARIX4qVJQQE3iyEvNL5ZMSztbgZfql4+hgoJf5qtPdqzn2OWZBx+d3RZLAUdu/
+         sczg==
+X-Gm-Message-State: AOJu0YzPnKIgWB8nt/m1Tr03Aa8aulxmxbUAmTscD8FEIA2DRXb3TbLL
+	9d0VJGuoQJVf9AAQw2LoQv+zpOoAQTWpFlv6udpJ6jOceLnrmiYnnRqAdPkK6uo=
+X-Gm-Gg: ASbGncuGzMZDyJANlb4ynlNhreEo8/ToZFHyQe+Li5yxPwEACXRGBA1rMQ8BHgqqTa4
+	JPBjGDy5CV3y70TMGsgI2R5+svvbcLRJ7300uG70j1y/SICXCCp55BGhcXSy79BUE11V/guyyKR
+	h5FOb9Z0wYHxsW/Y45v8fgQ7vB1Hm/tKwojC3A5BmheyAp4UhKfFKTI+2USLR7lQJ3mgMizd7BS
+	/POLicDHhnA3HxfpLDYSFOx1sbojUQXgeapN/SESgkzK6plB0tSaOkjk7D6PFJeUpdi0i0xIEpP
+	tXYT1dDCAKoJbazrBbxPjJlfojikf4FeIdJkl9YEATFLopUeuLW9
+X-Google-Smtp-Source: AGHT+IF3mi4w+ioATe/neRX31NhU+G5fVnUO+U3AY+NTTkR/32/joj3J25iUisGaUZnzV5dytcgeCw==
+X-Received: by 2002:a05:6830:3817:b0:727:4439:2079 with SMTP id 46e09a7af769-7274c563e6dmr324973a34.17.1740084895336;
+        Thu, 20 Feb 2025 12:54:55 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7272a3751e0sm2223640a34.58.2025.02.20.12.54.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 12:54:54 -0800 (PST)
+Message-ID: <4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
+Date: Thu, 20 Feb 2025 14:54:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+ <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Stefan,
-
-On 15:21 Sat 08 Feb     , Stefan Wahren wrote:
-> Hi Andrea,
+On 2/10/25 4:33 PM, David Lechner wrote:
+> Replace bitmap array access with bitmap_write.
 > 
-> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
-> > The RaspberryPi RP1 is a PCI multi function device containing
-> > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > and others.
-
-...
-
-> > +static int rp1_irq_set_type(struct irq_data *irqd, unsigned int type)
-> > +{
-> > +	struct rp1_dev *rp1 = irqd->domain->host_data;
-> > +	unsigned int hwirq = (unsigned int)irqd->hwirq;
-> > +
-> > +	switch (type) {
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		dev_dbg(&rp1->pdev->dev, "MSIX IACK EN for irq %d\n", hwirq);
-> This looks a little bit inconsistent. Only this type has a debug
-> message. So either we drop this or add at least a message for
-
-I think that this is indeed asymmetric. That warning says
-that the 'special' IACK management is engaged for level triggered
-interrupt, which is mandatory in order to avoid missing further
-interrupts without the performance loss of busy-polling for 
-active interrupts. This is explained in par. 6.2 of:
-
-https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-
-The point is that we're not stating the type of the interrupt
-(edge/level triggered), but we warn that we're enabling a mechanism
-useful for one type only (level triggered).
-
-> IRQ_TYPE_EDGE_RISING, too. Btw the format specifier looks wrong
-> (unsigned int vs %d).
-
-Ack.
-
-> > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
-> > +		rp1->level_triggered_irq[hwirq] = true;
-> > +	break;
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
-> > +		rp1->level_triggered_irq[hwirq] = false;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> It would be nice to document why only IRQ_TYPE_LEVEL_HIGH and
-> IRQ_TYPE_EDGE_RISING are supported. In case it's a software limitation,
-> this function would be a good place. In case this is a hardware
-> limitation this should be in the binding.
-
-All ints are level-triggered. I guess I should add a short comment in
-the bindings.
-
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct irq_chip rp1_irq_chip = {
-> > +	.name		= "rp1_irq_chip",
-> > +	.irq_mask	= rp1_mask_irq,
-> > +	.irq_unmask	= rp1_unmask_irq,
-> > +	.irq_set_type	= rp1_irq_set_type,
-> > +};
-
-...
-
-> > +		irq_set_chip_and_handler(irq, &rp1_irq_chip, handle_level_irq);
-> > +		irq_set_probe(irq);
-> > +		irq_set_chained_handler_and_data(pci_irq_vector(pdev, i),
-> > +						 rp1_chained_handle_irq, rp1);
-> > +	}
-> > +
-> > +	err = of_overlay_fdt_apply(dtbo_start, dtbo_size, &rp1->ovcs_id, rp1_node);
-> > +	if (err)
-> > +		goto err_unregister_interrupts;
-> > +
-> > +	err = of_platform_default_populate(rp1_node, NULL, dev);
-> > +	if (err)
-> > +		goto err_unload_overlay;
-> I think in this case it's worth to add a suitable dev_err() here.
-
-Ack.
-
-Many thanks,
-Andrea
-
+> Accessing the bitmap array directly is not recommended and now there is
+> a helper function that can be used.
 > 
-> Thanks
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/iio/resolver/ad2s1210.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+> index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
+> --- a/drivers/iio/resolver/ad2s1210.c
+> +++ b/drivers/iio/resolver/ad2s1210.c
+> @@ -46,6 +46,7 @@
+>   */
+>  
+>  #include <linux/bitfield.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/clk.h>
+> @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+>  	if (!gpios)
+>  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+>  
+> -	bitmap[0] = mode;
+> +	bitmap_write(bitmap, mode, 0, 2);
+>  
+>  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
+>  }
+> @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+>  			return dev_err_probe(dev, -EINVAL,
+>  				      "requires exactly 2 resolution-gpios\n");
+>  
+> -		bitmap[0] = st->resolution;
+> +		bitmap_write(bitmap, st->resolution, 0, 2);
+>  
+>  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
+>  		if (ret < 0)
+> 
+
+There is actually a bug here pointed out in a similar patch. bitmap_write()
+only modifies the bitmap, so this introduces an unintialized use bug. [1]
+Here, we only use the bits that we set, so runtime behavior would not actually
+be buggy but still best to fully initialize the memory.
+
+I'm a bit surprised that my local compiler and iio/testing both didn't catch that
+since GCC 14 caught it in the other driver.
+
+[1]: https://lore.kernel.org/linux-gpio/20250217132152.29d86d6c@jic23-huawei/T/#m3163d2c5db5b7376504d8ad6f23716f1119de761
+
+The fix is simple, we can zero-initialize the bitmap.
+
+diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+index 04879e6d538b..ab860cedecd1 100644
+--- a/drivers/iio/resolver/ad2s1210.c
++++ b/drivers/iio/resolver/ad2s1210.c
+@@ -176,7 +176,7 @@ struct ad2s1210_state {
+ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+ {
+ 	struct gpio_descs *gpios = st->mode_gpios;
+-	DECLARE_BITMAP(bitmap, 2);
++	DECLARE_BITMAP(bitmap, 2) = { };
+ 
+ 	if (!gpios)
+ 		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+@@ -1427,7 +1427,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+ 	struct device *dev = &st->sdev->dev;
+ 	struct gpio_descs *resolution_gpios;
+ 	struct gpio_desc *reset_gpio;
+-	DECLARE_BITMAP(bitmap, 2);
++	DECLARE_BITMAP(bitmap, 2) = { };
+ 	int ret;
+ 
+ 	/* should not be sampling on startup */
+
 
