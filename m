@@ -1,190 +1,130 @@
-Return-Path: <linux-gpio+bounces-16339-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA2F0A3E626
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 21:55:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 599C8A3E702
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 22:51:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 041F218874C2
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 20:55:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45E533AF860
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 21:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AD5264624;
-	Thu, 20 Feb 2025 20:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A4F51F03FB;
+	Thu, 20 Feb 2025 21:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1dXXBJPK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="jlzZSQ5e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7721226388E
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 20:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA4E1EE03C;
+	Thu, 20 Feb 2025 21:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740084899; cv=none; b=r9FguUYrNu01kjHtkdcIdiROCMk35DW8G3AoFWBmIjK4RdNGME5rk2K7Brrnmeczu/4a0Ma6rPrxR5SOMLnDyyaotDldkC7br4vyY0YJWfJMOgKq/4HUROhgYZhpbaZZ6nIVvHt7SFsvhBuPRJTuXUip4WwMPCYSR6EngRh29+0=
+	t=1740088302; cv=none; b=kvZVbhXFEjYQafUTnyIqvuH08iBqVR5buCsyjiO8LnU9Z8ZTYgJQQBSZDyK6jgyfh3wa9yYIoF30kOmzPHlxV6FFUdaLF0xGaSZpiZULy4Uraut03QHTfZsi/6dguGv0PGD2o/OpNVHNEZHL6P9InFmwVUgzCRxiJ4uzVVZktoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740084899; c=relaxed/simple;
-	bh=Xc6o9obrZeidO3IrZs20EkZMwxxHvxTSWqEyw4C1voI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LUfjoClW/qdemcC8PLUZNHywFP9NoiPbF9Sy157w7eEPa8NXYitj4iE05s+LfzNlm2IBfHrGJcJxqbqNSPyL/HXd58z+KPnQUDIOMJza73ps6TNvI3gGL7/j54wYcZ+tZQ0CxZ+dowYvfRGbM5srYzOBxjcPuKCFsLwwfFUTMcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1dXXBJPK; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7273b01fe35so842353a34.2
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 12:54:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740084895; x=1740689695; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lmfqNhipvTzpaPHouDLPUPBFfenRqD8FhVYBJFNu3b0=;
-        b=1dXXBJPKyl79MFL5kY+SZTVMp8uVM+kote9OOwmFCgKZymBx6jdSxG8PDQiRLbSRA8
-         tH+rTa1uqbAqzck8hq68ndXav2GgvFsjPdcV3XtjmJkCwuL2xLawOFMQswMJpB0a/67a
-         Zba8pUzG4LM8ucZ3o4Z4NM0lGhYGAnfbrqjeR2H5p4duEGR3wfJZdqEwPeymH7TMOR+y
-         sDk+n/NvSTlK/+2CYwbjl83wPxNd1wGvgyWbuAilVBCYBXDjFdxsa+mIEPU9pmahYppL
-         f1HdT8HaJPAtIZpPTNwwJHTQluH/ByMUCFdOOgB3wV+bKts9xv6E254vB+tiTdxv3tm5
-         08uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740084895; x=1740689695;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lmfqNhipvTzpaPHouDLPUPBFfenRqD8FhVYBJFNu3b0=;
-        b=xRdIKS04UpRohBhpN4WnPENaXXQKGqUeiR+t0tJ3W3cwhzSNIFBqlzwMwZG5S78ewA
-         WqU2Po2MWoU1GDE2dLdr9wwTtd64vgmZ77aDCTMon6eAO9eSwsv7JXRERE6mKPCTHqaE
-         erWPhnqiRa8iBfnK81AmPZKxUgwCyCLOpake7cbtNCY7aP1WGSGFLidamxmAZabUBjBg
-         qDyvRyF/pPPiQk6c1UVvYi7nePrdlw2YRqZrAl+KxWo7ZO8EDSTOO04G9Xj7p1lQxR+S
-         C8wT6OARIX4qVJQQE3iyEvNL5ZMSztbgZfql4+hgoJf5qtPdqzn2OWZBx+d3RZLAUdu/
-         sczg==
-X-Gm-Message-State: AOJu0YzPnKIgWB8nt/m1Tr03Aa8aulxmxbUAmTscD8FEIA2DRXb3TbLL
-	9d0VJGuoQJVf9AAQw2LoQv+zpOoAQTWpFlv6udpJ6jOceLnrmiYnnRqAdPkK6uo=
-X-Gm-Gg: ASbGncuGzMZDyJANlb4ynlNhreEo8/ToZFHyQe+Li5yxPwEACXRGBA1rMQ8BHgqqTa4
-	JPBjGDy5CV3y70TMGsgI2R5+svvbcLRJ7300uG70j1y/SICXCCp55BGhcXSy79BUE11V/guyyKR
-	h5FOb9Z0wYHxsW/Y45v8fgQ7vB1Hm/tKwojC3A5BmheyAp4UhKfFKTI+2USLR7lQJ3mgMizd7BS
-	/POLicDHhnA3HxfpLDYSFOx1sbojUQXgeapN/SESgkzK6plB0tSaOkjk7D6PFJeUpdi0i0xIEpP
-	tXYT1dDCAKoJbazrBbxPjJlfojikf4FeIdJkl9YEATFLopUeuLW9
-X-Google-Smtp-Source: AGHT+IF3mi4w+ioATe/neRX31NhU+G5fVnUO+U3AY+NTTkR/32/joj3J25iUisGaUZnzV5dytcgeCw==
-X-Received: by 2002:a05:6830:3817:b0:727:4439:2079 with SMTP id 46e09a7af769-7274c563e6dmr324973a34.17.1740084895336;
-        Thu, 20 Feb 2025 12:54:55 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7272a3751e0sm2223640a34.58.2025.02.20.12.54.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 12:54:54 -0800 (PST)
-Message-ID: <4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
-Date: Thu, 20 Feb 2025 14:54:53 -0600
+	s=arc-20240116; t=1740088302; c=relaxed/simple;
+	bh=/WInj6KSFD9Eu7DaW+kzT33lE//eMMKTc6RI4U4iMZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mjOwGbE1nPSo7A9PohHQheF/B7Kuf20Ss9B+uL3MX03m7+cZ/tfwIhUnMvAK4V9vpAX+aujQFalau+D5MViPCR2Q3/ZHZsc8y7HininjB/CuWx60VCqjsK1S557SsFYtKEC5lPLnnmrb6nFrJwCTz+bTA/h2aggF9BJsUNgzbwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=jlzZSQ5e; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6av8FgpFHpUL/5MXXeDrhtI4EyYOqK8IX0qcjEcFmuw=; b=jlzZSQ5eGVUY42qT2r0KjjlV+v
+	oviic2kKa4jyvgrJL4zbCKf0tWeZJX7Fe8miBNgNQfPzcEL/awPCdBB4d7B05bL5RGhtuurLxfNWC
+	KkFyKTvblpFgCbrgc+q6i8Hey5oY4Tq4vBzTZ6Rq+G1T/4NxaSfDKKdh9KFeZ2zeFn/MCMHrmWyKe
+	nUG/Oageoi4jm+HNcvFxIgh8VaXrEmDiwfPboXmPS5iqpM8U0tNF6S8gFgBUqxHVZY8h8pLscgPrd
+	VWZOFjbeO4YK4IaLwaPlq773YVzsXXYEGX0LkRnpO4Zkl2eYRxKOmgs0J2ho8eblRoaGrBOqTPu3Q
+	k1It5jbQ==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tlES7-0003Gb-UW; Thu, 20 Feb 2025 22:51:27 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ Quentin Schulz <foss+kernel@0leil.net>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: nxp,pcf8575: add reset GPIO
+Date: Thu, 20 Feb 2025 22:51:26 +0100
+Message-ID: <1797373.X513TT2pbd@diego>
+In-Reply-To: <20250220-pca976x-reset-driver-v1-1-6abbf043050e@cherry.de>
+References:
+ <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
+ <20250220-pca976x-reset-driver-v1-1-6abbf043050e@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-sound@vger.kernel.org
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On 2/10/25 4:33 PM, David Lechner wrote:
-> Replace bitmap array access with bitmap_write.
+Am Donnerstag, 20. Februar 2025, 10:56:51 MEZ schrieb Quentin Schulz:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> Accessing the bitmap array directly is not recommended and now there is
-> a helper function that can be used.
+> A few of the I2C GPIO expander chips supported by this binding have a
+> RESETN pin to be able to reset the chip. The chip is held in reset while
+> the pin is low, therefore the polarity of reset-gpios is expected to
+> reflect that, i.e. a GPIO_ACTIVE_HIGH means the GPIO will be held low
+> for reset and released high, GPIO_ACTIVE_LOW means the GPIO will be held
+> high for reset and released low.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> Out of the supported chips, only PCA9670, PCA9671, PCA9672 and PCA9673
+> show a RESETN pin in their datasheets. They all share the same reset
+> timings, that is 4+us reset pulse[0] and 100+us reset time[0].
+> 
+> When performing a reset, "The PCA9670 registers and I2C-bus state
+> machine will be held in their default state until the RESET input is
+> once again HIGH."[1] meaning we now know the state of each line
+> controlled by the GPIO expander. Therefore, setting lines-initial-states
+> and reset-gpios both does not make sense and their presence is XOR'ed.
+> 
+> [0] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf Fig 22.
+> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 > ---
->  drivers/iio/resolver/ad2s1210.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/gpio/nxp,pcf8575.yaml      | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
-> index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
-> --- a/drivers/iio/resolver/ad2s1210.c
-> +++ b/drivers/iio/resolver/ad2s1210.c
-> @@ -46,6 +46,7 @@
->   */
->  
->  #include <linux/bitfield.h>
-> +#include <linux/bitmap.h>
->  #include <linux/bits.h>
->  #include <linux/cleanup.h>
->  #include <linux/clk.h>
-> @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
->  	if (!gpios)
->  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
->  
-> -	bitmap[0] = mode;
-> +	bitmap_write(bitmap, mode, 0, 2);
->  
->  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
->  }
-> @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
->  			return dev_err_probe(dev, -EINVAL,
->  				      "requires exactly 2 resolution-gpios\n");
->  
-> -		bitmap[0] = st->resolution;
-> +		bitmap_write(bitmap, st->resolution, 0, 2);
->  
->  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
->  		if (ret < 0)
-> 
+> diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> index 3718103e966a13e1d77f73335ff73c18a3199469..d08d3f848f82e74de949da16d26a810dc52a74e5 100644
+> --- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+[...]
+> +  # lines-initial-states XOR reset-gpios
+> +  # Performing a reset reinitializes all lines to a known state which
+> +  # may not match passed lines-initial-states
+> +  - if:
+> +      required:
+> +        - lines-initial-states
+> +    then:
+> +      properties:
+> +        reset-gpios: false
+> +
 
-There is actually a bug here pointed out in a similar patch. bitmap_write()
-only modifies the bitmap, so this introduces an unintialized use bug. [1]
-Here, we only use the bits that we set, so runtime behavior would not actually
-be buggy but still best to fully initialize the memory.
+exclusion logic
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-I'm a bit surprised that my local compiler and iio/testing both didn't catch that
-since GCC 14 caught it in the other driver.
+dtbscheck is happy when either reset-gpios or lines-initial-states is
+present, but when both are present complains like
 
-[1]: https://lore.kernel.org/linux-gpio/20250217132152.29d86d6c@jic23-huawei/T/#m3163d2c5db5b7376504d8ad6f23716f1119de761
+    rk3588-tiger-haikou-video-demo.dtb: gpio@27: reset-gpios: False schema does not allow [[205, 17, 1]]
 
-The fix is simple, we can zero-initialize the bitmap.
+as expected.
 
-diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
-index 04879e6d538b..ab860cedecd1 100644
---- a/drivers/iio/resolver/ad2s1210.c
-+++ b/drivers/iio/resolver/ad2s1210.c
-@@ -176,7 +176,7 @@ struct ad2s1210_state {
- static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
- {
- 	struct gpio_descs *gpios = st->mode_gpios;
--	DECLARE_BITMAP(bitmap, 2);
-+	DECLARE_BITMAP(bitmap, 2) = { };
- 
- 	if (!gpios)
- 		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
-@@ -1427,7 +1427,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
- 	struct device *dev = &st->sdev->dev;
- 	struct gpio_descs *resolution_gpios;
- 	struct gpio_desc *reset_gpio;
--	DECLARE_BITMAP(bitmap, 2);
-+	DECLARE_BITMAP(bitmap, 2) = { };
- 	int ret;
- 
- 	/* should not be sampling on startup */
 
 
