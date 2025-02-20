@@ -1,122 +1,116 @@
-Return-Path: <linux-gpio+bounces-16326-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16327-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1452AA3DF83
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 16:57:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B67EA3DFCD
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 17:06:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 729487A9C07
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 15:51:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12CC77AE3F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 15:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A1C200BA8;
-	Thu, 20 Feb 2025 15:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k0d33Cp7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21BB1FECCE;
+	Thu, 20 Feb 2025 15:59:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CD81FF1B3;
-	Thu, 20 Feb 2025 15:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA8C1DF754;
+	Thu, 20 Feb 2025 15:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740066709; cv=none; b=Bqisw05aZBMQawkXA7DPBHwdm9fdlcH0uQFCIcwrL/bni/AKKkJlDPX3NqJINqAtm2VBVMwE6J23lI4uaAa2L08ftuik+quQR+j7xuT2BYHDifWPfm8vFYn1xXk7DtdA/zF3SU3jErOvhKsxoGINVOgZdznXY5//0Vvn4phpOfU=
+	t=1740067163; cv=none; b=RH0MI34vah1JjZRViOnPPtS32PrKHzZq3t4BH3C24A+f6cEsHQwKxXOyuucDDm6KzHgNfFkXyWSjPmlnxiVgGAd5JJ3PHAvB16QSy5Yn53DjIO5jeyU3nzyf4X2HPA8cwp/nk88XM58l6XO7VUhCa4GeSRhkxgf/FvHM+iTmVbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740066709; c=relaxed/simple;
-	bh=feMzcpwBjTp17Xb4J1txFS9+ar+CDecWQnXd+IlpMyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BH27u6jZuzA+Ec00mYG5xrZ1YiuxfBRhaGiCC9h+tgC2htG13mNssHkpmTzO+f655UQZfnbvAh/tL9zb8ISTCvF75+UdbMuuTwS681bGs+lxWU+mrFWMEgr/KjqIwee+ycYhbd7WxqIL8oD+3ft7x7X9szmMz2fRryt1g8UvkYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k0d33Cp7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740066708; x=1771602708;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=feMzcpwBjTp17Xb4J1txFS9+ar+CDecWQnXd+IlpMyM=;
-  b=k0d33Cp7APpik2iMYwDKj3ZeGd/0rgoRZcvIXqX7V1HQCmfzhsaxjd2v
-   veo1KraBRUCNdx8ap1Y8GvVoDaSDRVn9A+LcHqzQ3cH4tcMcpXFVV09aO
-   r9FBM8YvXQZZJtPp5qKlCbvuSbKpW/hI4cKgBREbFIG2KHzUyDGtvGEFX
-   sgqMRn+Oa7pgUzNDRtWIkMZeMVuGNUErZ++BtB+eRb1nEylpJq3LCJPnD
-   UDSeVZooi64MAnxKwt1X12RjfOWDVKBvAQpz8IIotsczaktK2Wiv578Zu
-   RvSPAbu9CetRaVxZclY838NdVt9DhmBwStBuQQ54NBvHEye5X+DvsXM8/
-   Q==;
-X-CSE-ConnectionGUID: I4qy+2u7SPeTsFwOVudziQ==
-X-CSE-MsgGUID: jXzTDJo/SjS4WEzFkkNBzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40717904"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40717904"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:51:47 -0800
-X-CSE-ConnectionGUID: POCzWv0eSkSgRGbmG19wdA==
-X-CSE-MsgGUID: pNZ1xGTITdmYiJmYHq+mgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="114913486"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:51:46 -0800
-Date: Thu, 20 Feb 2025 17:51:42 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 3/4] devres: Add devm_remove_action_optional() helper
-Message-ID: <Z7dPjp4t0MrhulSt@black.fi.intel.com>
-References: <20250220141645.2694039-1-andriy.shevchenko@linux.intel.com>
- <20250220141645.2694039-4-andriy.shevchenko@linux.intel.com>
- <Z7dKfwOrAuhuZvQt@black.fi.intel.com>
- <Z7dM6B-SFQ5Q77zy@smile.fi.intel.com>
+	s=arc-20240116; t=1740067163; c=relaxed/simple;
+	bh=gd3mfG8VrcqHTh2pxAVnaphZe0jsHGM3eczfMJq9OPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kqxJ/sh7i9MOohnx0aE4eM8kVIModQKkimV+2wzQKh4rHA6giWKFnjTym2zvyM+i+u+qRdoA785zBpqzeqZQP5SlDNzjq236kCg/Ex3O3ghnB1bXvrFvnyQbGXNgL7KkhjxkpRfSotwtAPfg9YvgvY5443bGMpxQE5gH3wipi34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-520af4b872bso332299e0c.2;
+        Thu, 20 Feb 2025 07:59:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740067159; x=1740671959;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eejQ75Vf2HsSAhkhKxQyUqAB1hwFl4RxUzvP3qgfJsw=;
+        b=DtofrCD6BtJSDeXPLaNYrer9Sg1YOW7eKuuCJEHMPVAknaatCHk8qDc+8u0/nHEQOY
+         oqU/oSnWhi7HW3k3kcWkGVAdTY0UegrtXyLn9yDxzOWZXrL+bKWlRlsC8M7xb3ARLbdw
+         Y0uxFLwkRxSMWzQ2s3EvFrFB2ibn2i4Kj9HeDyUhW7FgJ38yyeBxxhYSx6+x5VcygSlZ
+         iVelTc/3UQrB6LyL23V1BjJtR8dLwyjJnIZhUzvPLlYzdtJB921S7ArSh5ED0iOmY48z
+         lgBEoFM9ntZ82A200XymtEM9nDsxtoZarXvZPIi0+pl0ghrknvikRaK0ggsclyuPgUnb
+         D6rw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Iar2g76pNaiKuWnX86JoDVXCdB++Awg18sT63rNQREbijro58AXAqEhLTOYwynsQXR+0YL2yhQzI@vger.kernel.org, AJvYcCUa/TT0rleQ22aNOx54WmF/mxqm8BS2mol2+l2OiZFVrPm3wwt3Krpguh5w4vHhIT+hU87lXFegpg8A7kSNxDphNwU=@vger.kernel.org, AJvYcCV9YML3XHRnTzrKsPW3A/n2YMSq3ERsx2L75xL950/Sdm6jYgjQcymnbOamJb8qH3fkTE03MqhSnoOIoe/T@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMen4j5BaZbxaJESlqG2c9yxUwiC0x7RAPJyaPUfsHYOdfZyI+
+	cwPU877qT8Piz3o5hZ6r/9it1F8o7yRRI1TyYX0VbjerY31cqXsyAMh8D6vk
+X-Gm-Gg: ASbGncu1QcHpUMmuDBBpDiCOoU2H+rAN3VF6mc585BbLvcMurjKJBlPShx2cWF3NhMP
+	fDlCnTvq+nr/iX5SIkojRiC4NlKvIRv0s5oaFiAhMkfsJ3H2AgYliyiLtnuonvcDwJSKPfVh871
+	edB6hWseENcKI1pkop6NEbQwNFJEV9liOb/tk4GqtChLXtYw8Aem32sGbiII9L5wzaV2yDjtsnw
+	cPcwbF/yoWQ7S8xJoah+eGCaCGMQCoDGvz5I2g47noadTL8ZGJqbEkBTShwwc7LyE/oDGBHFTzC
+	E9J2y/V9UW854bFewFNX3vWslaqjOz/RddTT9Fl9Y00arDsM7/aJOg==
+X-Google-Smtp-Source: AGHT+IFzO3vx/kmCi+q/6+phknscQnYuQODMakjCYFfBwP0Zi2CdRt9WyI66Lwp7ylBp+2RULXXwOg==
+X-Received: by 2002:a05:6122:308c:b0:520:60c2:3fd with SMTP id 71dfb90a1353d-5209da8bd81mr12004467e0c.3.1740067159674;
+        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52097e27968sm3251110e0c.18.2025.02.20.07.59.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-868ddc4c6b6so288175241.2;
+        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVEUuVgSYiMuzJZWGhlJU148qxizQT9wACtMCUD5YnAwhN2gh4ka1LZA9IfLAvkduSnPYWw0VOySolND7q3@vger.kernel.org, AJvYcCVW+girNYhMmnO1nsCA/kj8yraZ+jh1FrSku8dDwWkIkGtkvxydvG2cxyYJtjeM79vZPUXjBkp66GhV@vger.kernel.org, AJvYcCWX7pjbbDX9FtNaazyo5dY9YxE0+5CWPETgv1DPaIC64AY5cItHNBNk9hanmUoe0xP9f9tbxQ3WZvlWrSbE4bmX88s=@vger.kernel.org
+X-Received: by 2002:a05:6102:2c18:b0:4bb:c4ff:5cb9 with SMTP id
+ ada2fe7eead31-4bd3fd5249cmr14319737137.15.1740067159114; Thu, 20 Feb 2025
+ 07:59:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dM6B-SFQ5Q77zy@smile.fi.intel.com>
+References: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 20 Feb 2025 16:59:06 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVSybU_J_Qn1oabQQv4fJv6eaT7YMQmB_zH=9+vLHs=YA@mail.gmail.com>
+X-Gm-Features: AWEUYZm7DzKUx_jdkzSQKOfhMhFA2yo5hukaEE1mGU2GECJf0FH1kAyIYF6joLY
+Message-ID: <CAMuHMdVSybU_J_Qn1oabQQv4fJv6eaT7YMQmB_zH=9+vLHs=YA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Suppress binding attributes
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linus.walleij@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 20, 2025 at 05:40:24PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 05:30:07PM +0200, Raag Jadav wrote:
-> > On Thu, Feb 20, 2025 at 03:44:59PM +0200, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > +/* Same as devm_remove_action(), but doesn't WARN() if action wasn't added before */
-> > > +static inline
-> > > +void devm_remove_action_optional(struct device *dev, void (*action)(void *), void *data)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = devm_remove_action_nowarn(dev, action, data);
-> > > +	if (ret == -ENOENT)
-> > > +		return;
-> > > +
-> > > +	WARN_ON(ret);
-> > > +}
-> > 
-> > Trying to wrap my head around this one, can't the user simply do
-> > 
-> > 	if (devm_is_action_added())
-> > 		devm_remove_action/_nowarn();
-> 
-> Hmm... Actually it sounds like a good point. I will check
-> (and I like the idea of dropping this patch).
+On Sat, 15 Feb 2025 at 14:12, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Suppress binding attributes for the rzg2l pinctrl driver, as it is an
+> essential block for Renesas SoCs. Unbinding the driver leads to warnings
+> from __device_links_no_driver() and can eventually render the system
+> inaccessible.
+>
+> Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-And perhaps
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.15.
 
-s/devm_is_action_added/devm_action_is_added
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
 
-But whichever you think _is best_ ;)
+Looks like there are more opportunities for similar changes?
 
-Raag
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
