@@ -1,96 +1,79 @@
-Return-Path: <linux-gpio+bounces-16300-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16301-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7D5A3DB18
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 14:18:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EC0CA3DB1A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 14:18:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 913423A8EC1
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:16:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ADB947A8B49
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08B71F8BAF;
-	Thu, 20 Feb 2025 13:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63CDB1F790B;
+	Thu, 20 Feb 2025 13:18:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="BZiG6FQM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MfXvmLIE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B691F428F
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 13:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17B21F5425;
+	Thu, 20 Feb 2025 13:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740057418; cv=none; b=c4wXhu/lGP2k8ko6UQLxwp6jw32SLkqqfb9FHNbSEkyVSCsGjdcL/QWhDg6Qnm3Ohhy0em/NoMMFp/3zflfp5kR8ZRY/huA7cdFL13xGTzCNjZ9NZB6mp4DZTz9/je1/fQBJBClH+60/BcML+wyN+fd5dNWPbkrCs+6LvUfEU8s=
+	t=1740057526; cv=none; b=GyhtoRp1LlAcw3S90sxsdahQYcsdqQQvrmY+g4EMTx6oiajzZ3X0yAfvYvobea6kF55QVcGjlR1fPs5Q76Z2pzVFuaMJfLUp4OzN/sFYcpCVlWETOmCt3ovbvdw7N7t0D0e3y5aRD6xbIZlI92lvUTHe9ElfGsP93fXwRac344M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740057418; c=relaxed/simple;
-	bh=O/pcslFcpr0f5ZTidXgUY3uercvjLQ7TRdPWR0Zdbus=;
+	s=arc-20240116; t=1740057526; c=relaxed/simple;
+	bh=QsaF42+LR1K0MKpatG2MAIISA8K6RjPF2e8LnTjn4CA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UwrpRfLaJSyjtz2FM+w17C93+YmmB8lSx5Rm/28RgaWM2z+BmfFbrRIGDYfgJhdhoJBpRhdYPDu7QJZTs6TWoSi2imhNrf1FwbrEHVYsvUcVh/uLNlGChc0zN+m2et8u4TXcfWissFovPbBoBsH5aFTUOP8F3e1aXVmOG3ehACY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=BZiG6FQM; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 21216403EC
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 13:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1740057409;
-	bh=/8aQoZaTUfoNowvRR47KlMkTIP5mw7gRFDUg5NhsTws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=BZiG6FQMnsP5e2lg1DBizExx6RS1p+CbGq4lXopy/ha5vwdhXT88LxZUf7l/VtJz7
-	 QB8EkWb8mIWfI1N7koL0GQK3augi4U/gR1cdhIeJTTh/MzeKF4C9SQOc29tg9GkZfO
-	 G/7yCuQlVrc6yDbShNy0rYOzXHeT1D2wlM/0gGh8GH1lOO3XxAhecgMfmSZOiVEsZG
-	 wPT4YbFOzHQhwN/94OXDQtZrtC9V9rePVuR3sgbn72+yz+W7LpnYlzrC2+i64rdRN8
-	 6X9qryriF+hHL4ivYYOmWhGYFssiZGTgfkIUF0Od4EEXGwK2rZqvNp9/cXt7rpUa1m
-	 ax7QmFbHRLCYQ==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220ec5c16e9so22293505ad.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 05:16:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740057405; x=1740662205;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/8aQoZaTUfoNowvRR47KlMkTIP5mw7gRFDUg5NhsTws=;
-        b=aZ5K7DtT+IEYTDkwqQ9ngE9OmFNgkykmXHZagXxb5qV2Y4//6w1E9Qu5idQwBWSwTs
-         Qk27+feG32KVP+RI3ZCX4NlKRE2dbbqs0QZ9/6UMD5HYYl00uESrxmprQKxnA1PRrw1l
-         y+aR9I3+7bLkrnxlrQpXkh8NaLBQ5Npsrc6K4V0QoZduXVLGxjmaOF7X0rkW6EvkCGlK
-         xap+Og9PToalwHsgtuFQ7QKwTx3TVUdJllZWJYnWU+E5nsMyevzAOSM0i8GAMR2Wlzyt
-         r1tyZjQwCOVCJSexVbH5hh5jDCPg0wxSpsbelNX7Fvp9UshNux/oArv0cnKMtX7q36t1
-         N1+w==
-X-Gm-Message-State: AOJu0YywWtV8cGJ2xrJvivvlDIO6zK1EXgKESk6OIEpR3bPQ4cv8I6c3
-	RQ+67XX8uA+fwA+o/pbXEfaTEj+H4O9AqYhDZOci+9uibrp10o13hME2LT6B2PzoVPo/IRdQ1B8
-	ngbxTjAqiNC4NIMU+Nr5EoFXt2sblqUTpCRbyYNf+cqV5aojdwJxUF/gXZScWRjYd+lEAQzO43G
-	k=
-X-Gm-Gg: ASbGnctE2gQtzGyUPYKP653CYb4ru3CHFpPMLNLGoPPXkK1rBPBkpsYc6iuOnqpHngL
-	9KoDCDZHe59WAIid7usHnpUwEfcnQS8zGTsqn1dXHyFwSdfHxZoK5aQNCfhhDBnueIkvOutJ3Wv
-	vTStSdMjrPtTc0ukniDwhROx+yeR7F22oBXbDaHw+yhmEM41l2XLJ+vDCJnvJ5kbMV5e67raC8P
-	FvpjlnezAKq+E92IOhkhWIn4Q9rrJq1JrTlMW2tbu8DnvRUXdvX4MEf5Vu8a/CuWRCEOMg08a+v
-	rs7Ds7A=
-X-Received: by 2002:a17:902:e54e:b0:220:ff3f:6cc5 with SMTP id d9443c01a7336-221040bf806mr376361055ad.35.1740057405203;
-        Thu, 20 Feb 2025 05:16:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG2KOSUptvPinX/k5Saw4tMLamZZbv8gxiM+tqxI2xfqILR4P+Ah0orpEgtGVVBfOoZdxm3uA==
-X-Received: by 2002:a17:902:e54e:b0:220:ff3f:6cc5 with SMTP id d9443c01a7336-221040bf806mr376360765ad.35.1740057404797;
-        Thu, 20 Feb 2025 05:16:44 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:256c:5029:b967:ebb0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7327590ff12sm8310169b3a.115.2025.02.20.05.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 05:16:44 -0800 (PST)
-Date: Thu, 20 Feb 2025 22:16:41 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] gpio: introduce utilities for synchronous fake
- device creation
-Message-ID: <guth2xon24ui6qstxtm6lmrdv3z2ktsfwgcdz4n4twzty2b6vd@r5rjsetmfdjt>
-References: <20250218160333.605829-1-koichiro.den@canonical.com>
- <20250218160333.605829-2-koichiro.den@canonical.com>
- <CAMRc=MfmG0okVjV1nH78Aw18dFcoOAZ-UwU-iFc1VKb-BVcTxQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9Ctpau1L9h7YXZF/MXv+3AHagaujdb4D7R4AInBFRDdxEsLByTabUkGu4UY3SAw5QO3G2lyCZbza+Uu0ClvPv8p/PWu2isWJ9RfDDWRoDvo2f0xzdxFgynrOrfQjPXuTPptHpdRL3T9FJa2id2TGngv5aNJDzHoH9x/Bh99+fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MfXvmLIE; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740057524; x=1771593524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=QsaF42+LR1K0MKpatG2MAIISA8K6RjPF2e8LnTjn4CA=;
+  b=MfXvmLIESa2r6GSduj6rXf9ovLaQrq6dMAmavXD2ggDEuzYBUQ+UJKvh
+   EPFqqbWYWgLrj3RXPn6YJMfwa0vU1v2b5C57r8oyH8P86LY+IT/y8Rvzj
+   KDryORLlPMUZKn3aXAoLdTdvcMMyWOPX4KXeg8QgBidblxYc8Ljz9WMSB
+   rmO4N+VZqFzdgpaglraD8mdNoeFldrwHxR0OefEsb6hHecaBvpP1AUoj/
+   IzK3UbAT4D0KoKl9SHXVSTsrDOsN+2zBsm5wz+SP++Kf3h8C+qYEJkzgs
+   N2FAlVoycMevQhThpqTzQ3ciGyrqpE/WDArxsGA7JaewquT1MFMln/BH3
+   w==;
+X-CSE-ConnectionGUID: N5PaKSm9TcK7xZNVWRaU8A==
+X-CSE-MsgGUID: qyLc9yJtTJS0nVxhmvz6sQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41040812"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="41040812"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 05:18:44 -0800
+X-CSE-ConnectionGUID: 11MnNtBGQi+Gm/mnt/vjZQ==
+X-CSE-MsgGUID: hvLRVapYTJyRG3yBRVNVAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="120021542"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 05:18:43 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tl6Rr-0000000DLJ8-1J2q;
+	Thu, 20 Feb 2025 15:18:39 +0200
+Date: Thu, 20 Feb 2025 15:18:38 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	athieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v1 0/5] gpio: regmap: Make use of 'ngpios' property
+Message-ID: <Z7crrgl2iFn34gck@smile.fi.intel.com>
+References: <20250213195621.3133406-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdao27pu+9qFH2LBYNwYkBbWq1B-hE9nZGfTTCnQxhTiAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -100,242 +83,46 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfmG0okVjV1nH78Aw18dFcoOAZ-UwU-iFc1VKb-BVcTxQ@mail.gmail.com>
+In-Reply-To: <CACRpkdao27pu+9qFH2LBYNwYkBbWq1B-hE9nZGfTTCnQxhTiAQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 20, 2025 at 12:06:33PM GMT, Bartosz Golaszewski wrote:
-> On Tue, Feb 18, 2025 at 5:04 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > Both gpio-sim and gpio-virtuser share a mechanism to instantiate a
-> > platform device, wait for probe completion, and retrieve the probe
-> > success or error status synchronously. With gpio-aggregator planned to
-> > adopt this approach for its configfs interface, it's time to factor
-> > out the common code.
-> >
-> > Add dev-sync-probe.[ch] to house helper functions used by all such
-> > implementations.
-> >
-> > No functional change.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
+On Fri, Feb 14, 2025 at 11:50:53AM +0100, Linus Walleij wrote:
+> On Thu, Feb 13, 2025 at 8:56 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> This is looking good now. A couple more nits for this series and the
-> next iteration should be good to go.
+> > It appears that regmap GPIO doesn't take into account 'ngpios' property
+> > and requires hard coded values or duplication of the parsing the same
+> > outside of GPIO library. This miniseries addresses that.
+> >
+> > For the record, I have checked all bgpio_init() users and haven't seen
+> > the suspicious code that this series might break, e.g., an equivalent of
+> > something like this:
+> >
+> > static int foo_probe(struct device *dev)
+> > {
+> >         struct gpio_chip *gc = devm_kzalloc(...);
+> >         struct fwnode_handle *fwnode = ...; // NOT dev_fwnode(dev)!
+> >
+> >         ...
+> >         gc->parent = dev;
+> >         gc->fwnode = fwnode;
+> >
+> >         ret = bgpio_init(gc, dev, ...);
+> >         ...
+> > }
+> >
+> > Reported-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 > 
-> A note on patch versioning: when you split an existing series into
-> smaller, please keep the existing patch versioning. So if you had a
-> series that went up to v3 and you split it into two smaller ones, the
-> next time you submit it, it should be v4.
+> Thanks for fixing this Andy!
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Somehow I forgot to reply here.
-I got it, thank you. I'll be careful not to make the same mistake next time.
+Thank you for the review!
 
-> 
-> >  drivers/gpio/Kconfig          |  7 +++
-> >  drivers/gpio/Makefile         |  3 ++
-> >  drivers/gpio/dev-sync-probe.c | 96 +++++++++++++++++++++++++++++++++++
-> >  drivers/gpio/dev-sync-probe.h | 25 +++++++++
-> >  4 files changed, 131 insertions(+)
-> >  create mode 100644 drivers/gpio/dev-sync-probe.c
-> >  create mode 100644 drivers/gpio/dev-sync-probe.h
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 56c1f30ac195..2e4c5f0a94f7 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1863,6 +1863,13 @@ config GPIO_MPSSE
-> >
-> >  endmenu
-> >
-> > +# This symbol is selected by drivers that need synchronous fake device creation
-> 
-> This comment is unnecessary, please drop it.
-> 
-> > +config DEV_SYNC_PROBE
-> > +       tristate "Utilities for synchronous fake device creation"
-> 
-> Please don't make this available for users to select, this should be a
-> hidden symbol only to be selected by its users.
-> 
-> > +       help
-> > +         Common helper functions for drivers that need synchronous fake
-> > +         device creation.
-> > +
-> >  menu "Virtual GPIO drivers"
-> >
-> >  config GPIO_AGGREGATOR
-> > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> > index af3ba4d81b58..af130882ffee 100644
-> > --- a/drivers/gpio/Makefile
-> > +++ b/drivers/gpio/Makefile
-> > @@ -19,6 +19,9 @@ obj-$(CONFIG_GPIO_GENERIC)    += gpio-generic.o
-> >  # directly supported by gpio-generic
-> >  gpio-generic-$(CONFIG_GPIO_GENERIC)    += gpio-mmio.o
-> >
-> > +# Utilities for drivers that need synchronous fake device creation
-> > +obj-$(CONFIG_DEV_SYNC_PROBE)           += dev-sync-probe.o
-> > +
-> >  obj-$(CONFIG_GPIO_104_DIO_48E)         += gpio-104-dio-48e.o
-> >  obj-$(CONFIG_GPIO_104_IDI_48)          += gpio-104-idi-48.o
-> >  obj-$(CONFIG_GPIO_104_IDIO_16)         += gpio-104-idio-16.o
-> > diff --git a/drivers/gpio/dev-sync-probe.c b/drivers/gpio/dev-sync-probe.c
-> > new file mode 100644
-> > index 000000000000..82c8d7ae9fa7
-> > --- /dev/null
-> > +++ b/drivers/gpio/dev-sync-probe.c
-> > @@ -0,0 +1,96 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> 
-> Use GPL-2.0-or-later, same elsewhere.
-> 
-> > +/*
-> > + * Common code for drivers creating fake platform devices.
-> > + *
-> > + * Provides synchronous device creation: waits for probe completion and
-> > + * returns the probe success or error status to the device creator.
-> > + *
-> > + * Copyright (C) 2025 Bartosz Golaszewski <brgl@bgdev.pl>
-> 
-> Please copy my copyright entry from the gpio-sim with the right date
-> and add yours too, you did spend some time on this after all. Same for
-> MODULE_AUTHOR(), feel free to add yourself too.
-> 
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include "dev-sync-probe.h"
-> > +
-> > +static int dev_sync_probe_notifier_call(struct notifier_block *nb,
-> > +                                       unsigned long action,
-> > +                                       void *data)
-> 
-> No need for this last line break.
-> 
-> > +{
-> > +       struct dev_sync_probe_data *pdata;
-> > +       struct device *dev = data;
-> > +
-> > +       pdata = container_of(nb, struct dev_sync_probe_data, bus_notifier);
-> > +       if (!device_match_name(dev, pdata->name))
-> > +               return NOTIFY_DONE;
-> > +
-> > +       switch (action) {
-> > +       case BUS_NOTIFY_BOUND_DRIVER:
-> > +               pdata->driver_bound = true;
-> > +               break;
-> > +       case BUS_NOTIFY_DRIVER_NOT_BOUND:
-> > +               pdata->driver_bound = false;
-> > +               break;
-> > +       default:
-> > +               return NOTIFY_DONE;
-> > +       }
-> > +
-> > +       complete(&pdata->probe_completion);
-> > +       return NOTIFY_OK;
-> > +}
-> > +
-> > +void dev_sync_probe_init(struct dev_sync_probe_data *data)
-> > +{
-> > +       memset(data, 0, sizeof(*data));
-> > +       init_completion(&data->probe_completion);
-> > +       data->bus_notifier.notifier_call = dev_sync_probe_notifier_call;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_sync_probe_init);
-> > +
-> > +int dev_sync_probe_register(struct dev_sync_probe_data *data,
-> > +                           struct platform_device_info *pdevinfo)
-> > +{
-> > +       struct platform_device *pdev;
-> > +       char *name;
-> > +
-> > +       name = kasprintf(GFP_KERNEL, "%s.%u", pdevinfo->name, pdevinfo->id);
-> 
-> pdevinfo->id is a signed integer
-> 
-> I'm also wondering if we could avoid the allocation here and keep on
-> using snprintf() like in the existing drivers? On the other hand,
-> memory is cheap so no big deal.
-> 
-> > +       if (!name)
-> > +               return -ENOMEM;
-> > +
-> > +       data->driver_bound = false;
-> > +       data->name = name;
-> > +       reinit_completion(&data->probe_completion);
-> > +       bus_register_notifier(&platform_bus_type, &data->bus_notifier);
-> > +
-> > +       pdev = platform_device_register_full(pdevinfo);
-> > +       if (IS_ERR(pdev)) {
-> > +               bus_unregister_notifier(&platform_bus_type, &data->bus_notifier);
-> > +               kfree(data->name);
-> 
-> We could probably simplify it by using __free(kfree) with the name
-> variable and just setting it at the end with no_free_ptr().
-> 
-> Bart
-> 
-> > +               return PTR_ERR(pdev);
-> > +       }
-> > +
-> > +       wait_for_completion(&data->probe_completion);
-> > +       bus_unregister_notifier(&platform_bus_type, &data->bus_notifier);
-> > +
-> > +       if (!data->driver_bound) {
-> > +               platform_device_unregister(pdev);
-> > +               kfree(data->name);
-> > +               return -ENXIO;
-> > +       }
-> > +
-> > +       data->pdev = pdev;
-> > +       return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_sync_probe_register);
-> > +
-> > +void dev_sync_probe_unregister(struct dev_sync_probe_data *data)
-> > +{
-> > +       platform_device_unregister(data->pdev);
-> > +       kfree(data->name);
-> > +       data->pdev = NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_sync_probe_unregister);
-> > +
-> > +MODULE_AUTHOR("Bartosz Golaszewski <brgl@bgdev.pl>");
-> > +MODULE_DESCRIPTION("Utilities for synchronous fake device creation");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/gpio/dev-sync-probe.h b/drivers/gpio/dev-sync-probe.h
-> > new file mode 100644
-> > index 000000000000..4b3d52b70519
-> > --- /dev/null
-> > +++ b/drivers/gpio/dev-sync-probe.h
-> > @@ -0,0 +1,25 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef DEV_SYNC_PROBE_H
-> > +#define DEV_SYNC_PROBE_H
-> > +
-> > +#include <linux/completion.h>
-> > +#include <linux/notifier.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +struct dev_sync_probe_data {
-> > +       struct platform_device *pdev;
-> > +       const char *name;
-> > +
-> > +       /* Synchronize with probe */
-> > +       struct notifier_block bus_notifier;
-> > +       struct completion probe_completion;
-> > +       bool driver_bound;
-> > +};
-> > +
-> > +void dev_sync_probe_init(struct dev_sync_probe_data *data);
-> > +int dev_sync_probe_register(struct dev_sync_probe_data *data,
-> > +                           struct platform_device_info *pdevinfo);
-> > +void dev_sync_probe_unregister(struct dev_sync_probe_data *data);
-> > +
-> > +#endif /* DEV_SYNC_PROBE_H */
-> > --
-> > 2.45.2
-> >
+Bart, do you think it can be applied?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
