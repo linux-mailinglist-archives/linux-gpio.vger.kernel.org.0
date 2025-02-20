@@ -1,67 +1,57 @@
-Return-Path: <linux-gpio+bounces-16281-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16282-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 696B3A3D94B
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:59:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A8C3A3D950
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:59:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4279317897F
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:58:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 998E63B6CDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:59:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC1B1F4701;
-	Thu, 20 Feb 2025 11:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40871F4607;
+	Thu, 20 Feb 2025 11:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OYQk5/m+"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HncoimCz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBC41EE01B;
-	Thu, 20 Feb 2025 11:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DA21EE01B;
+	Thu, 20 Feb 2025 11:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052682; cv=none; b=i2ZDmavDD3t8jwjx22CPe2gdSkTd/alEvSggKcBZivPLsWKWv+64XrsV82pXqHZrgCf4FQB2tw1XIOJncK7BWmQnepcn7B9WYFp/Z3XBLNAIrN6PP65oJJvHUo3/GUP1uIQHtk/W712CPdhHlI6xbvZNsYiOBz2CjuHpeKzDglU=
+	t=1740052745; cv=none; b=GUwvH+JSSyhfdSa2cd4mLSUf/xcRzCNbMCMCM4DxwdD07BAXK3anSeoleRsR8dW6BHJKvYtC7NIIMl9K0KkW4iWENlLEdRVIrttz6MMuWG3/jYZqxoj7UxOrq/dyTympRCpBMwkDp7zw6VvUKSgQ0psORZAtg1LV6i6dDkoStjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052682; c=relaxed/simple;
-	bh=xzdjmc6Zu7NGxG3snHemKuaqt3sbJFF8/MyJnhH7hL0=;
+	s=arc-20240116; t=1740052745; c=relaxed/simple;
+	bh=u5NMKxhWnD/Z/8UewhmeT1rkRCBSaZTnMl4Wu8+zXuo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nRQubtmU0XPhZZX5GJfVCWxSwSSHpX9aI8TkiBn63JKTVeYSdgs/i6Ktd1H1rpXlAFYRAGfPO4euXuPROP8bM2rlxqI7kID0KsINA52mrN95Rm6EdlZH+8jdWuG6vLbzgjoP0mr7Me12D83gpuzKzGTVTKLayfgXUPBtQ+TCKrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OYQk5/m+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F35C4CED1;
-	Thu, 20 Feb 2025 11:58:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=C50C4sEb6GndeCpEIj3W8TFdLeWDurIvl3ydG61+Y/rp6tHVHgBkFOdiNr/+jIBYgtUuDMlE3zisaq9/PWvHsczM/Jccfx8immpRSqXHb4WXplZWo/FVjIyjatYn+JC0PuYOAiWN5eAHQe4vIuvy4DqaXCSxiWjzbXAsj8sAZtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HncoimCz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6DAC4CED1;
+	Thu, 20 Feb 2025 11:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740052682;
-	bh=xzdjmc6Zu7NGxG3snHemKuaqt3sbJFF8/MyJnhH7hL0=;
+	s=korg; t=1740052744;
+	bh=u5NMKxhWnD/Z/8UewhmeT1rkRCBSaZTnMl4Wu8+zXuo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYQk5/m+q4+SX590M3C8ExzIey4Gr8o6swzJLstXWEQUMeivRgxVwSLp/EvD6m1js
-	 ULAgM57l3W3+XGNQBYT2romFBcBrzjYmpy8isN9oaMoHhLPuw1QqxBHaqjqJU8+dv6
-	 H0ItEiDmasjRtbE4N7J2sLPxZfAXq12HWax7/LSQ=
-Date: Thu, 20 Feb 2025 12:57:59 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v7 9/9] misc: add FPC202 dual port controller driver
-Message-ID: <2025022038-hangnail-rehab-c145@gregkh>
-References: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
- <20250204-fpc202-v7-9-78b4b8a35cf1@bootlin.com>
+	b=HncoimCzjpPgiY69pow9cn2yJ35BmIAxe4A4s9l8THAR16vcGz0k2msc+2k13CaTB
+	 O3dGPemm1LjE8XIXkmsybBKNsIo8NfIptc/5ILtiDVlnDJPnCA0VZEwzt4wFamMrh5
+	 2wA3YY21LcFubIwv8X8c5VNygUjtAMkuBxdnLRBc=
+Date: Thu, 20 Feb 2025 12:59:02 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: arnd@arndb.de, rafael@kernel.org, linus.walleij@linaro.org,
+	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	dmitry.torokhov@gmail.com, jic23@kernel.org,
+	przemyslaw.kitszel@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 02/12] driver core: Split devres APIs to
+ device/devres.h
+Message-ID: <2025022052-profound-barmaid-dfe0@gregkh>
+References: <20250212062513.2254767-1-raag.jadav@intel.com>
+ <20250212062513.2254767-3-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,28 +60,22 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204-fpc202-v7-9-78b4b8a35cf1@bootlin.com>
+In-Reply-To: <20250212062513.2254767-3-raag.jadav@intel.com>
 
-On Tue, Feb 04, 2025 at 10:29:20AM +0100, Romain Gantois wrote:
-> The TI FPC202 dual port controller serves as a low-speed signal aggregator
-> for common port types such as SFP, QSFP, Mini-SAS HD, and others.
+On Wed, Feb 12, 2025 at 11:55:03AM +0530, Raag Jadav wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> It aggregates GPIO and I2C signals across two downstream ports, acting as
-> both a GPIO controller and an I2C address translator for up to two logical
-> devices per port.
+> device.h is a huge header which is hard to follow and easy to miss
+> something. Improve that by splitting devres APIs to device/devres.h.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
-> ---
->  MAINTAINERS              |   1 +
->  drivers/misc/Kconfig     |  11 ++
->  drivers/misc/Makefile    |   1 +
->  drivers/misc/ti_fpc202.c | 438 +++++++++++++++++++++++++++++++++++++++++++++++
+> In particular this helps to speedup the build of the code that includes
+> device.h solely for a devres APIs.
+> 
+> While at it, cast the error pointers to __iomem using IOMEM_ERR_PTR()
+> and fix sparse warnings.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-as this is a i2c_driver, why isn't it in drivers/i2c/ somewhere?  Why
-misc?
-
-thanks,
-
-greg k-h
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
