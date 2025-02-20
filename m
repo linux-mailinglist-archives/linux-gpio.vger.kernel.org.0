@@ -1,42 +1,43 @@
-Return-Path: <linux-gpio+bounces-16259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16260-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA78BA3D594
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 10:57:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B03EBA3D595
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 10:58:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B2B016B2C3
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 09:57:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF61D189D32D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 09:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8CB1F1314;
-	Thu, 20 Feb 2025 09:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09BCA1F1515;
+	Thu, 20 Feb 2025 09:57:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1D71F03EE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FAE1F0E2E
 	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 09:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740045443; cv=none; b=fCWoodPuugQJFRwaNShcx5Mnbl7fKHTLCJzehmYLxgqup/51NFsgsEExl6dCreTMv0zVx4t6aANv+qja1IoahDLGr/No3UR9/ZWXUEN3jjwEQAO86B0N1GhNAKfu1JKgjMMCVwF7owhDYzYjSLFuaE5AsoKTyKw9nzlZ3p7PLtk=
+	t=1740045443; cv=none; b=f90XY9nUZcXQAqAe64qVSMVYyTHCdeMxqhjWfG9J9H+HufdFqEEDJf2S7lPG3P9mWSfuJNavlOBopIAOSmVoBF8kot9MhJCoYh+OcQ2YyCc5xOxgwRjDSIZj4sTzwl+XkNJ6ZiuDycljurows2VYdFY3hUNaodljZGL/taR8tKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740045443; c=relaxed/simple;
-	bh=bf8g/YXdtx1VUish3C6E+kFkY2PnMDnh+fkHBlxDPfk=;
+	bh=jq9amKY0ztDFzt6Npf8OLiholOZMh+/kBQFq46MKJTI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g5VxNjXS2lnvBgJ1xZl3zxIXg0Z1FqyUnvHlyfISpnO0SeZ8vJLFxoFsR4+c0Ra34P6qFpl04k6vSicHO349KoK67xoI4YZeq5fMQgqmbUaOiRUBA5iNzIE5nDMEXdP7S+iaeh0AHV6+ZZFLa2XMAtl07x1g3BGMLwJuJRSgdGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.15
+	 In-Reply-To:To:Cc; b=E+IgU3O+d3T7HqeDR9TD8IwXWMXeEtEGqBvnM9cZTqqU0VrXzpZQ4bDXoioonoc8b04ejsh9yBksOtmIGHXKCpGWTGySMi0fUdVrpoU5CfRXv+aJUYwlYcWDgqZsBmrfZhR7FftDYO2Z0LLuMMP8OSD8NMfJbyTknYeOQvjQ3sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
 Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yz7w86PKwzXcq;
-	Thu, 20 Feb 2025 10:57:12 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yz7w82DM1zcNN;
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Yz7w937DtzXgN;
+	Thu, 20 Feb 2025 10:57:13 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Yz7w86HwQzZmv;
 	Thu, 20 Feb 2025 10:57:12 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Thu, 20 Feb 2025 10:56:51 +0100
-Subject: [PATCH 1/2] dt-bindings: gpio: nxp,pcf8575: add reset GPIO
+Date: Thu, 20 Feb 2025 10:56:52 +0100
+Subject: [PATCH 2/2] gpio: pcf857x: add support for reset-gpios on (most)
+ PCA967x
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -45,7 +46,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250220-pca976x-reset-driver-v1-1-6abbf043050e@cherry.de>
+Message-Id: <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
 References: <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
 In-Reply-To: <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -61,75 +62,81 @@ X-Infomaniak-Routing: alpha
 
 From: Quentin Schulz <quentin.schulz@cherry.de>
 
-A few of the I2C GPIO expander chips supported by this binding have a
-RESETN pin to be able to reset the chip. The chip is held in reset while
-the pin is low, therefore the polarity of reset-gpios is expected to
-reflect that, i.e. a GPIO_ACTIVE_HIGH means the GPIO will be held low
-for reset and released high, GPIO_ACTIVE_LOW means the GPIO will be held
-high for reset and released low.
+The PCA9670, PCA9671, PCA9672 and PCA9673 all have a RESETN input pin
+that is used to reset the I2C GPIO expander.
 
-Out of the supported chips, only PCA9670, PCA9671, PCA9672 and PCA9673
-show a RESETN pin in their datasheets. They all share the same reset
-timings, that is 4+us reset pulse[0] and 100+us reset time[0].
+One needs to hold this pin low for at least 4us and the reset should be
+finished after about 100us according to the datasheet[1]. Once the reset
+is done, the "registers and I2C-bus state machine will be held in their
+default state until the RESET input is once again HIGH.".
 
-When performing a reset, "The PCA9670 registers and I2C-bus state
-machine will be held in their default state until the RESET input is
-once again HIGH."[1] meaning we now know the state of each line
-controlled by the GPIO expander. Therefore, setting lines-initial-states
-and reset-gpios both does not make sense and their presence is XOR'ed.
+Because the logic is reset, the latch values eventually provided in the
+Device Tree via lines-initial-states property are inapplicable so they
+are simply ignored if a reset GPIO is provided.
 
-[0] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf Fig 22.
-[1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5
-
+[1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5 and fig 22.
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- .../devicetree/bindings/gpio/nxp,pcf8575.yaml      | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/gpio/gpio-pcf857x.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-index 3718103e966a13e1d77f73335ff73c18a3199469..d08d3f848f82e74de949da16d26a810dc52a74e5 100644
---- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-+++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-@@ -73,6 +73,39 @@ properties:
+diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+index 7c57eaeb0afeba8953d998d8eec60a65b40efb6d..94077208e24ae99a1e8762e783f0eabc580fa520 100644
+--- a/drivers/gpio/gpio-pcf857x.c
++++ b/drivers/gpio/gpio-pcf857x.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2007 David Brownell
+  */
  
-   wakeup-source: true
++#include <linux/delay.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+@@ -272,12 +273,11 @@ static const struct irq_chip pcf857x_irq_chip = {
  
-+  reset-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO controlling the (reset active LOW) RESET# pin.
+ static int pcf857x_probe(struct i2c_client *client)
+ {
++	struct gpio_desc *rstn_gpio;
+ 	struct pcf857x *gpio;
+-	unsigned int n_latch = 0;
++	unsigned int n_latch;
+ 	int status;
+ 
+-	device_property_read_u32(&client->dev, "lines-initial-states", &n_latch);
+-
+ 	/* Allocate, initialize, and register this gpio_chip. */
+ 	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+ 	if (!gpio)
+@@ -297,6 +297,29 @@ static int pcf857x_probe(struct i2c_client *client)
+ 	gpio->chip.direction_output	= pcf857x_output;
+ 	gpio->chip.ngpio		= (uintptr_t)i2c_get_match_data(client);
+ 
++	rstn_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(rstn_gpio)) {
++		return dev_err_probe(&client->dev, PTR_ERR(rstn_gpio),
++				     "failed to get reset GPIO\n");
++	}
 +
-+      Performing a reset makes all lines initialized to their input (pulled-up)
-+      state.
++	if (rstn_gpio) {
++		/* Reset already held with devm_gpiod_get_optional with GPIOD_OUT_HIGH */
++		usleep_range(4, 8); /* tw(rst) > 4us */
++		gpiod_set_value(rstn_gpio, 0);
++		usleep_range(100, 200); /* trst > 100uS */
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              enum:
-+                - nxp,pca9670
-+                - nxp,pca9671
-+                - nxp,pca9672
-+                - nxp,pca9673
-+    then:
-+      properties:
-+        reset-gpios: false
++		/*
++		 * Reset "will initialize to their default states of all I/Os to
++		 * inputs with weak current source to VDD", which is the same as
++		 * writing 1 for all I/Os which is 0 in n_latch.
++		 */
++		n_latch = 0;
++	} else {
++		device_property_read_u32(&client->dev, "lines-initial-states",
++					 &n_latch);
++	}
 +
-+  # lines-initial-states XOR reset-gpios
-+  # Performing a reset reinitializes all lines to a known state which
-+  # may not match passed lines-initial-states
-+  - if:
-+      required:
-+        - lines-initial-states
-+    then:
-+      properties:
-+        reset-gpios: false
-+
- patternProperties:
-   "^(.+-hog(-[0-9]+)?)$":
-     type: object
+ 	/* NOTE:  the OnSemi jlc1562b is also largely compatible with
+ 	 * these parts, notably for output.  It has a low-resolution
+ 	 * DAC instead of pin change IRQs; and its inputs can be the
 
 -- 
 2.48.1
