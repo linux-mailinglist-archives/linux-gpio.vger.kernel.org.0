@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-16330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16332-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D16A5A3E084
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 17:24:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB6F8A3E0AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 17:28:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B89817C737
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 16:22:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DA683AA70E
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 16:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6CBD1FBC82;
-	Thu, 20 Feb 2025 16:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E5ED20C473;
+	Thu, 20 Feb 2025 16:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AUAVfbZ0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BK/GNOqx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAD41F1521;
-	Thu, 20 Feb 2025 16:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33644200BA8;
+	Thu, 20 Feb 2025 16:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068567; cv=none; b=CsbEEBO04gCVScZ06aFHV7K7N3H9gMemU2KYp391jtDmR3t525CJbMKcMCYrvx+As1NVuxCW0ONxx+wYC7umOagkxBGS/vQrCH2fwGI6EWQvDhc5GzwDQbMjQfWeS/XCYEqRyymcZo5H5LxOfCyCe46Vdfr3DOWf6QLe5Wi1LpM=
+	t=1740068570; cv=none; b=Xe1TdgnQ2qGjH7cb9FjDa2mRTEypzBlsEYPigpDz0UwJxh7S1EEpgts/hY5C7p8jVzfcNtTLz1NWNfDjtV4aV+JIKeXnv3GRaWAtRhWNxGEU4FPz8LtRgP51Nev0fUhTRlsciIXcWiWuS39fwLRSkjMySkT4pP0cQ9Cv+PK0wKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068567; c=relaxed/simple;
-	bh=40WcB3T/cbBplqV258++oEsPJzCCXyLpojIXfcnEbPU=;
+	s=arc-20240116; t=1740068570; c=relaxed/simple;
+	bh=qQsvhWzqOhysU7Uf/PP6cJwy1gFVpMq/YUkgWUdWhTI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rdlrCG0+HDmSP+RxYGyv9uFJD1bIyaoYqqQRQXfLNFAVOEUuJRPTX3i3hEGmkiBs7Rn3j5hy2D0a/AHyP3kyaN5yipF3mffGs+Rzt5T+zjoO0JwdIwd65SVXgub6vvSgLsoF9C8hz3b1Os/8mCVaocZgoyWDLh5pv9G4IDxhuxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AUAVfbZ0; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=emRffNKwmjf314OqtnXaYZci7pRD6Vu7kXK4H/v55HdPw6UFnRNXIHBn6J3yMeFi969OnB5K05RjUXWNb9bYgRfD86sfuDK6LxyAjI74vGLXPwIhLVA2iB9h0tDNImXBwwCcPdcyhs+hYtWzwGZ+zN8WyYhIG7xORiOn3DFlWcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BK/GNOqx; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740068566; x=1771604566;
+  t=1740068568; x=1771604568;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=40WcB3T/cbBplqV258++oEsPJzCCXyLpojIXfcnEbPU=;
-  b=AUAVfbZ05715RNuaApXwLM1uZNlBmjmO7zfxRbYtNol0BNyleUPGJjPQ
-   zzPcd6VAGY4fR25plZLpFu7Mu+RAzztgCOc1i79/Jwl6hxKcdN/S4gytm
-   Y6Ej432rdo5HNUGhSLdA51MkErIfXLz/XRwzB9X4+0AYV2IKpseqPqs9o
-   GaGOQCTKEqii8V/BQdZVAIXQj55isGGGo257atbLHHKtsJWb+yN2+Dck/
-   drQb8yZ3kWo8x2QthN7viRQJr0Oyy/uK3eGqDZUCIo4egbmKRgor1T2sq
-   0pEXRkJv98W6whTDl4a19Pzpty9dgKFGrn/2Eeo225O849eBB3Th1cYvn
-   w==;
-X-CSE-ConnectionGUID: 7ZdO1wzNT+SMeSOJ6obTTA==
-X-CSE-MsgGUID: bjUjuANjQeGlxbFrA2BDNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40043963"
+  bh=qQsvhWzqOhysU7Uf/PP6cJwy1gFVpMq/YUkgWUdWhTI=;
+  b=BK/GNOqxYxABWT3eeAtCr0SidLtBVJFS9AsGywl9t/WPEkt7LiJdWyJ+
+   jBn1hRO+MKYFko3lP8Fbeg/8oJ548AE+Lv7SYdhwiXwFU2+lLDm/jwojk
+   WJv+LjqyjtdpGSb9lmK7XwtftHFumyPOy9/GcITz6VM/8tZ64iTO6o6mr
+   LjBgbKWQ+FBn6lCEXadmHiYUonSY/5zvOIVG3haXmOD/FqXp7+kXYS6r8
+   WcNGk7TL3eVvTVWQkgQ4+xpdrWwCooWQ4s8AclkpWl3vOc3i8Re5VDD+o
+   PCHFL1lQRsWT8i2xc63nEO6DIIYrPgP48QSLXEGqoXC2T6eN6oXHwSGTS
+   A==;
+X-CSE-ConnectionGUID: 5/be5t2qTDCHFxnflY0V7Q==
+X-CSE-MsgGUID: d8KXYOwGSayijIjqcIv/5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40043959"
 X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40043963"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+   d="scan'208";a="40043959"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:22:45 -0800
-X-CSE-ConnectionGUID: TVnp2ZHKSO+ficYxx8smDg==
-X-CSE-MsgGUID: hTh7mBYNQaq/XsqDi7nMow==
+X-CSE-ConnectionGUID: isacXEzqTGS4092MUstTMw==
+X-CSE-MsgGUID: XTTGValZQnSLYLAIKlV6hA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="115061332"
+   d="scan'208";a="119702561"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 20 Feb 2025 08:22:42 -0800
+  by fmviesa005.fm.intel.com with ESMTP; 20 Feb 2025 08:22:42 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BA9DF123; Thu, 20 Feb 2025 18:22:40 +0200 (EET)
+	id CA7454DF; Thu, 20 Feb 2025 18:22:40 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Zijun Hu <quic_zijuhu@quicinc.com>,
@@ -72,9 +72,9 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Danilo Krummrich <dakr@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 1/3] devres: Move devm_*_action*() APIs to devres.h
-Date: Thu, 20 Feb 2025 18:20:26 +0200
-Message-ID: <20250220162238.2738038-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/3] devres: Add devm_is_action_added() helper
+Date: Thu, 20 Feb 2025 18:20:27 +0200
+Message-ID: <20250220162238.2738038-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 In-Reply-To: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
 References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
@@ -86,119 +86,47 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We have a newly created header linux/device/devres.h that gathers
-device managed APIs, so users won't need to include entire device.h
-for only these ones. Move devm_*_action*() APIs to devres.h as well.
+In some code we would like to know if the action in device managed resources
+was added by devm_add_action() family of calls. Introduce a helper for that.
 
 Reviewed-by: Raag Jadav <raag.jadav@intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/device.h        | 38 ----------------------------------
- include/linux/device/devres.h | 39 +++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 38 deletions(-)
+ drivers/base/devres.c         | 11 +++++++++++
+ include/linux/device/devres.h |  2 ++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 78ca7fd0e625..d6341a05e4fb 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -281,44 +281,6 @@ int __must_check device_create_bin_file(struct device *dev,
- void device_remove_bin_file(struct device *dev,
- 			    const struct bin_attribute *attr);
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 93e7779ef21e..7c2babfa9396 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -749,6 +749,17 @@ int __devm_add_action(struct device *dev, void (*action)(void *), void *data, co
+ }
+ EXPORT_SYMBOL_GPL(__devm_add_action);
  
--/* allows to add/remove a custom action to devres stack */
--int devm_remove_action_nowarn(struct device *dev, void (*action)(void *), void *data);
--
--/**
-- * devm_remove_action() - removes previously added custom action
-- * @dev: Device that owns the action
-- * @action: Function implementing the action
-- * @data: Pointer to data passed to @action implementation
-- *
-- * Removes instance of @action previously added by devm_add_action().
-- * Both action and data should match one of the existing entries.
-- */
--static inline
--void devm_remove_action(struct device *dev, void (*action)(void *), void *data)
--{
--	WARN_ON(devm_remove_action_nowarn(dev, action, data));
--}
--
--void devm_release_action(struct device *dev, void (*action)(void *), void *data);
--
--int __devm_add_action(struct device *dev, void (*action)(void *), void *data, const char *name);
--#define devm_add_action(dev, action, data) \
--	__devm_add_action(dev, action, data, #action)
--
--static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(void *),
--					     void *data, const char *name)
--{
--	int ret;
--
--	ret = __devm_add_action(dev, action, data, name);
--	if (ret)
--		action(data);
--
--	return ret;
--}
--#define devm_add_action_or_reset(dev, action, data) \
--	__devm_add_action_or_reset(dev, action, data, #action)
--
++bool devm_is_action_added(struct device *dev, void (*action)(void *), void *data)
++{
++	struct action_devres devres = {
++		.data = data,
++		.action = action,
++	};
++
++	return devres_find(dev, devm_action_release, devm_action_match, &devres);
++}
++EXPORT_SYMBOL_GPL(devm_is_action_added);
++
  /**
-  * devm_alloc_percpu - Resource-managed alloc_percpu
-  * @dev: Device to allocate per-cpu memory for
+  * devm_remove_action_nowarn() - removes previously added custom action
+  * @dev: Device that owns the action
 diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
-index 9b49f9915850..9cd1787ef28e 100644
+index 9cd1787ef28e..ae696d10faff 100644
 --- a/include/linux/device/devres.h
 +++ b/include/linux/device/devres.h
-@@ -8,6 +8,7 @@
- #include <linux/overflow.h>
- #include <linux/stdarg.h>
- #include <linux/types.h>
-+#include <asm/bug.h>
+@@ -165,4 +165,6 @@ static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(
+ #define devm_add_action_or_reset(dev, action, data) \
+ 	__devm_add_action_or_reset(dev, action, data, #action)
  
- struct device;
- struct device_node;
-@@ -126,4 +127,42 @@ void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int in
- 
- #endif
- 
-+/* allows to add/remove a custom action to devres stack */
-+int devm_remove_action_nowarn(struct device *dev, void (*action)(void *), void *data);
-+
-+/**
-+ * devm_remove_action() - removes previously added custom action
-+ * @dev: Device that owns the action
-+ * @action: Function implementing the action
-+ * @data: Pointer to data passed to @action implementation
-+ *
-+ * Removes instance of @action previously added by devm_add_action().
-+ * Both action and data should match one of the existing entries.
-+ */
-+static inline
-+void devm_remove_action(struct device *dev, void (*action)(void *), void *data)
-+{
-+	WARN_ON(devm_remove_action_nowarn(dev, action, data));
-+}
-+
-+void devm_release_action(struct device *dev, void (*action)(void *), void *data);
-+
-+int __devm_add_action(struct device *dev, void (*action)(void *), void *data, const char *name);
-+#define devm_add_action(dev, action, data) \
-+	__devm_add_action(dev, action, data, #action)
-+
-+static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(void *),
-+					     void *data, const char *name)
-+{
-+	int ret;
-+
-+	ret = __devm_add_action(dev, action, data, name);
-+	if (ret)
-+		action(data);
-+
-+	return ret;
-+}
-+#define devm_add_action_or_reset(dev, action, data) \
-+	__devm_add_action_or_reset(dev, action, data, #action)
++bool devm_is_action_added(struct device *dev, void (*action)(void *), void *data);
 +
  #endif /* _DEVICE_DEVRES_H_ */
 -- 
