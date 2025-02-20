@@ -1,177 +1,191 @@
-Return-Path: <linux-gpio+bounces-16296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16297-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BB03A3DAEA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 14:10:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1839A3DAF4
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 14:11:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22854189925C
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:10:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E79CA189A55C
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:11:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36271F8BA4;
-	Thu, 20 Feb 2025 13:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 065431F76C6;
+	Thu, 20 Feb 2025 13:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="nrPzNydB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dHQF2dJL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3F01F584A
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 13:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B52B1F7076;
+	Thu, 20 Feb 2025 13:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740057009; cv=none; b=HuYiw4O/PZqO7qqbObZJjiuCYmhrolMZ2nckaNZaL6CGFKZdbzULL4uakLOuCcMvhEV4/2s5/PYcGTyWvemnu/dPZxF1MszNjSxAAtdkysBqGD/SEjz5MDs7m+NZlMfLWSEkjA1R1Rag3aFjghp6cc6tX+EEPt/vgqSPHwcRHJo=
+	t=1740057103; cv=none; b=N994eOC7Jck5KndSBZi7yrYLvta9x/fmtwXl6oxyDEQPLCeOtS8fV8yWHAe4UrETQGu7k/3/LJA1eFy1YVorY2YB95WMsp0WqGvlVqMaIPGyL6HHy0Et+zvoQiLb9MS5nxJ7wJzLhqJUGFX5aJdPVr83jIBW0TKPUqganVRhKdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740057009; c=relaxed/simple;
-	bh=OoFlg/wkEKxRqwkvakP/8WXxrSjDzVgjFkv67QkB3o8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JGJ4/kJb+nBTA2ztjx9YN7mBQVAgXhRfnbH4FK9mEJa3qNfrcz1O6PzTzhMkFdBnsgdctL7SbPJ2rIRCGMS+wpe2DjfBbD4zr/rG0F4m3pOVokJuakb+EQU7z00S6vEDlEzdja8RtT9TSPL43ONnL3FXREfOHQjbNxjMFI9/QzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=nrPzNydB; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E892B403E9
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 13:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1740057001;
-	bh=TDkw57RZdAj5KHZ7bxyyZ0R+TDLfczvy1Fi5CTCDaEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=nrPzNydBZgyAxzL0/e/kTK8olPL4D9S+V6/f/0xMZWN1286S0wbFjw5Ina4j0VqpD
-	 hvdWuLUpid3K0j99uavJ/s6CpljCZds9mbTHN7Y1ShZXmCaKKW5bpSEOXjpCBjFYoC
-	 r96f1yRtxKp7hTi4h20mRBMLpQ2iClhCVrUp8B9wKdPzf7kgYhWjXCyheh5+nQi8h0
-	 fU6SFRlCbGWAo2CAPHoReSRpoJorkvxMSskUt4Iv8FxRTPwo6W+NgFSQfWTO51BfQa
-	 OSeqqsj3wC+FWUTYHqKY/W7uWNwQIMdefOvBA+sH5jZjgCatqUsCPoVBxe8IDdmM/i
-	 Sy5q7eHPb60gQ==
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-220f87a2800so30455005ad.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 05:10:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740056999; x=1740661799;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TDkw57RZdAj5KHZ7bxyyZ0R+TDLfczvy1Fi5CTCDaEU=;
-        b=NlUehkyFtC/CO3d9gB/OiqW7oBhh5GbsVkZYt3JXZG0P1S1Z89XPD/Q8ivFKPPgksD
-         WsWYYWgmY5u9CqNzpEu4izOvt+jNVs1tpaGKQ9uOKfCvYKOGF3JtQ32JZ/j975RmZpYV
-         NQ1sGWokiyAyTi/5n6QElynx++o5WyWGzkdSP6XhuqsDC2TApZa2bWwRsHrNKGPlVqv0
-         E1U7nJ2qhPLHNcI7G4CEIhz6T1ZQ6gPNpw9C5IX9K6Vc+wJcolW1EWUCLJFDNOqZnWTh
-         8pMK3QBcbky7KGV2Hm2SafxztL8yEU/eaT0EOUfzgbP6B6JQ4us/j41oo7lv43qEQYWy
-         iv4w==
-X-Gm-Message-State: AOJu0YxMlR809Q3Cr1jVVspLR3mr1ssr2oLAdT8vPSsddT5nhxqkmISD
-	dOyV/y2Uq1Z2i6pydEdwS7PzzZVFkLcPraetbrWWWGTcguf2JC52aB2kk+8F3U6MZaOvJo10FR6
-	KUREdUWd+BChibAdNkIISOnp5c7zMBpOBujAL+rP0juYNeLfmTUKWeP54Wd4fe9VNO142PqvPv6
-	I=
-X-Gm-Gg: ASbGnctz9nD4rGChO44iMT9u22LycmxuVx5Tb2p2/6Ib27jwTFqfyBKQ6dI1veME79p
-	W/5dj7T48SyQknp+1wULAWM6G3VU1ci1vnJiiPIahNput2IBOX7kzHezWrePKjFp9eSwUDHcyvy
-	gZZki7DQY8eehKqYfPdhIC7ZFhbU9t1E+ZtOnX8riy5G2TwioFHN2CbcweFcOeTyu2tT5OQB7bU
-	m2mfe35eda+6pnM2jxTWva2FzDlnGcdDoiR5+dglyzEerZm+QH0lVnZy/jkZwVst/+zF7+8wjHo
-	1FfjIQw=
-X-Received: by 2002:a05:6a21:6004:b0:1ee:e4f0:62a with SMTP id adf61e73a8af0-1eee4f008a3mr5085212637.20.1740056999406;
-        Thu, 20 Feb 2025 05:09:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEvByjuePrsVHk8y766/+TCh6MsNT6Fs9sPnsreg1VEb5YOiXGj9/bDc37i57PPPNYm+t+Nvw==
-X-Received: by 2002:a05:6a21:6004:b0:1ee:e4f0:62a with SMTP id adf61e73a8af0-1eee4f008a3mr5085179637.20.1740056999115;
-        Thu, 20 Feb 2025 05:09:59 -0800 (PST)
-Received: from localhost ([240f:74:7be:1:256c:5029:b967:ebb0])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb5813a687sm10818259a12.20.2025.02.20.05.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 05:09:58 -0800 (PST)
-Date: Thu, 20 Feb 2025 22:09:55 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] gpio: sim: convert to use dev-sync-probe utilities
-Message-ID: <w6qjqr2uccbli4nejka2z7dusjcyrdqklda6au7qqkesubmfgb@hspgx2zmru3p>
-References: <20250218160333.605829-1-koichiro.den@canonical.com>
- <20250218160333.605829-3-koichiro.den@canonical.com>
- <CAMRc=Mc5XfcQPsw1K70ogT6Oyxhy=PJ8neHT9xA8wrZmk069eQ@mail.gmail.com>
+	s=arc-20240116; t=1740057103; c=relaxed/simple;
+	bh=G/ltyWRCwiZVtASq85ExfwztX9W9pFoWXJ5fwzitFNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=k0DGDwat0YQqnrPfFDvDgU9/okuCZkj+PBgnbs0NCBJXLof9fkz3TdT/pGCkGtADdd9DPYtiHstqUcYcL+hXB0NeOse9KD7ynm7MlEY7lAl0A5ohThbAEYWNzoEhrJN/e7jmo+ukD6z1VrEe/UMEeXgDnInFziK6u8tdo7TlL/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dHQF2dJL; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740057103; x=1771593103;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=G/ltyWRCwiZVtASq85ExfwztX9W9pFoWXJ5fwzitFNc=;
+  b=dHQF2dJL7y7QLSGijzgkmEKajZfJo4kjpruE7cOw09GWxAyMzMvjmv8x
+   Yifd1VSU2paJz6DiVFKo/vOmO1iJlAesOw41/uV4afri/OSq/6pgWGYF6
+   dkA6Hja0aWQ2lROV3xyIAwq/m6T1GCa+5m3LPmYeGUsgZW4HEsD+hJoH1
+   yG3p49g6Rmir+vf09mlz+XhZNR6GQktdktHNUka89+XJoNiYKlVGijtVD
+   xeGtZRrtSPKLK5uGrP+yqxVwqjiAJwf5NPuKwmkY8NUPD0/COp0kO9C1W
+   sR4I43JbGwN/vQmhIlVKwY40wdYAIyd+onZj8LdwckHfbt8reEtCDA6td
+   Q==;
+X-CSE-ConnectionGUID: UuIdjK/QSMS65CD0agEw1w==
+X-CSE-MsgGUID: WaOUcclAQ8iIrWOpfEFrwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40953930"
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="40953930"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 05:11:41 -0800
+X-CSE-ConnectionGUID: VsNGEXNnS6qv3PXkTUt/ig==
+X-CSE-MsgGUID: 4VQ7ug5pQ1e9nQYraTzC0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120261622"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 20 Feb 2025 05:11:39 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 131A6123; Thu, 20 Feb 2025 15:11:37 +0200 (EET)
+Date: Thu, 20 Feb 2025 15:11:37 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux pin control <linux-gpio@vger.kernel.org>,
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [GIT PULL] devres-iio-input-pinctrl-v6.15
+Message-ID: <Z7cqCaME4LxTTBn6@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc5XfcQPsw1K70ogT6Oyxhy=PJ8neHT9xA8wrZmk069eQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 20, 2025 at 12:08:18PM GMT, Bartosz Golaszewski wrote:
-> On Tue, Feb 18, 2025 at 5:04 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > Update gpio-sim to use the new dev-sync-probe helper functions for
-> > synchronized platform device creation, reducing code duplication.
-> >
-> > No functional change.
-> >
-> > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > ---
-> >  drivers/gpio/Kconfig    |  2 +
-> >  drivers/gpio/gpio-sim.c | 84 ++++++-----------------------------------
-> >  2 files changed, 14 insertions(+), 72 deletions(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 2e4c5f0a94f7..ba06f052b9ea 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1866,6 +1866,7 @@ endmenu
-> >  # This symbol is selected by drivers that need synchronous fake device creation
-> >  config DEV_SYNC_PROBE
-> >         tristate "Utilities for synchronous fake device creation"
-> > +       depends on GPIO_SIM
-> 
-> No, it does not. Please drop this.
 
-I'll hide the config as you pointed out, and drop this while at it. Thanks.
+Hi Linux kernel maintainers,
 
-> 
-> >         help
-> >           Common helper functions for drivers that need synchronous fake
-> >           device creation.
-> > @@ -1916,6 +1917,7 @@ config GPIO_SIM
-> >         tristate "GPIO Simulator Module"
-> >         select IRQ_SIM
-> >         select CONFIGFS_FS
-> > +       select DEV_SYNC_PROBE
-> >         help
-> >           This enables the GPIO simulator - a configfs-based GPIO testing
-> >           driver.
-> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> > index a086087ada17..d1cdea450937 100644
-> > --- a/drivers/gpio/gpio-sim.c
-> > +++ b/drivers/gpio/gpio-sim.c
-> > @@ -10,7 +10,6 @@
-> >  #include <linux/array_size.h>
-> >  #include <linux/bitmap.h>
-> >  #include <linux/cleanup.h>
-> > -#include <linux/completion.h>
-> >  #include <linux/configfs.h>
-> >  #include <linux/device.h>
-> >  #include <linux/err.h>
-> > @@ -37,6 +36,8 @@
-> >  #include <linux/sysfs.h>
-> >  #include <linux/types.h>
-> >
-> > +#include "dev-sync-probe.h"
-> > +
-> >  #define GPIO_SIM_NGPIO_MAX     1024
-> >  #define GPIO_SIM_PROP_MAX      4 /* Max 3 properties + sentinel. */
-> >  #define GPIO_SIM_NUM_ATTRS     3 /* value, pull and sentinel */
-> > @@ -541,14 +542,9 @@ static struct platform_driver gpio_sim_driver = {
-> >  };
-> >
-> >  struct gpio_sim_device {
-> > +       struct dev_sync_probe_data data;
-> 
-> Maybe something more indicative of the purpose? probe_data? sync_probe_data?
+Here is an immutable tag of the "Split devres APIs to device/devres.h and
+introduce devm_kmemdup_array()" series [1], please pull if needed.
 
-Hm, right. I'll go with probe_data. Thanks!
+Link: https://lore.kernel.org/r/20250212062513.2254767-1-raag.jadav@intel.com [1]
 
-> 
-> Bart
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/devres-iio-input-pinctrl-v6.15
+
+for you to fetch changes up to 9deb15de8ca27cf9cba0d2bac53bbe37c836591b:
+
+  Merge patch series "Split devres APIs to device/devres.h and introduce devm_kmemdup_array()" (2025-02-20 14:59:10 +0200)
+
+----------------------------------------------------------------
+devres-iio-input-pinctrl for v6.15
+
+* Split devres APIs to separate header (linux/device/devres.h)
+* Move IOMEM_ERR_PTR() to err.h to avoid unneeded loops
+* Introduce devm_kmemdup_array()
+* Use devm_kmemdup_array() in input, IIO, and pinctrl subsystems
+
+The following is an automated git shortlog grouped by driver:
+
+baytrail:
+ -  copy communities using devm_kmemdup_array()
+
+cherryview:
+ -  use devm_kmemdup_array()
+
+devres:
+ -  Introduce devm_kmemdup_array()
+
+driver core:
+ -  Split devres APIs to device/devres.h
+
+err.h:
+ -  move IOMEM_ERR_PTR() to err.h
+
+iio:
+ -  adc: xilinx-xadc-core: use devm_kmemdup_array()
+ -  imu: st_lsm9ds0: Replace device.h with what is needed
+
+input:
+ -  ipaq-micro-keys: use devm_kmemdup_array()
+ -  sparse-keymap: use devm_kmemdup_array()
+
+intel:
+ -  copy communities using devm_kmemdup_array()
+
+pxa2xx:
+ -  use devm_kmemdup_array()
+
+tangier:
+ -  use devm_kmemdup_array()
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      driver core: Split devres APIs to device/devres.h
+      iio: imu: st_lsm9ds0: Replace device.h with what is needed
+      Merge patch series "Split devres APIs to device/devres.h and introduce devm_kmemdup_array()"
+
+Raag Jadav (10):
+      err.h: move IOMEM_ERR_PTR() to err.h
+      devres: Introduce devm_kmemdup_array()
+      pinctrl: intel: copy communities using devm_kmemdup_array()
+      pinctrl: baytrail: copy communities using devm_kmemdup_array()
+      pinctrl: cherryview: use devm_kmemdup_array()
+      pinctrl: tangier: use devm_kmemdup_array()
+      pinctrl: pxa2xx: use devm_kmemdup_array()
+      iio: adc: xilinx-xadc-core: use devm_kmemdup_array()
+      input: sparse-keymap: use devm_kmemdup_array()
+      input: ipaq-micro-keys: use devm_kmemdup_array()
+
+ drivers/iio/adc/xilinx-xadc-core.c          |   4 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_i2c.c |   2 +-
+ drivers/iio/imu/st_lsm9ds0/st_lsm9ds0_spi.c |   2 +-
+ drivers/input/keyboard/ipaq-micro-keys.c    |   5 +-
+ drivers/input/sparse-keymap.c               |   3 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c    |   6 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c  |   5 +-
+ drivers/pinctrl/intel/pinctrl-intel.c       |   6 +-
+ drivers/pinctrl/intel/pinctrl-tangier.c     |   5 +-
+ drivers/pinctrl/pxa/pinctrl-pxa2xx.c        |   8 +-
+ include/linux/device.h                      | 119 +------------------------
+ include/linux/device/devres.h               | 129 ++++++++++++++++++++++++++++
+ include/linux/err.h                         |   3 +
+ include/linux/io.h                          |   2 -
+ 14 files changed, 152 insertions(+), 147 deletions(-)
+ create mode 100644 include/linux/device/devres.h
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
