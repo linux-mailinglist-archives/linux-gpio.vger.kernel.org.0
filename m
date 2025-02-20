@@ -1,129 +1,157 @@
-Return-Path: <linux-gpio+bounces-16289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C66D0A3D9C3
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:21:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D774DA3DA09
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:30:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 591094208CF
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:20:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12DFD3AABB3
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E17D1F5616;
-	Thu, 20 Feb 2025 12:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D641FC7E8;
+	Thu, 20 Feb 2025 12:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DbzWuNxQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ec7ISYIy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406791F236E;
-	Thu, 20 Feb 2025 12:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BF01FBE8F;
+	Thu, 20 Feb 2025 12:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740053978; cv=none; b=VD1dxvjhDUXrD1WMcnfhpF+vlGpBzEYOpq8AyAk+eWOuXaLsJ5tB3XKKFK11ZgWEsTjKGuio3zG0XS8nHCnzzWjstW+S9X3uaDXzrA5WknF3fv6wj4KfX8nhPZ3ImBk4sGOopLt5thZGJZDHYrgWXsqPMcuq/5IBkqLvNeHHiL0=
+	t=1740054284; cv=none; b=jE/3qUlU1GLXQDA3WC5giQfj3492UaUEb/TRbpxyxqb+idI1StsRyTOYYy/foRvl3LsoRUVEbp2CaQx41q5HenhxF0nL4fG3B5Q/TX0OKY5lyVKc2IDEtvGRPN8fpQSCQQbn/mlruqHPs8I3Hz7rF9PFinZhs18ZN5coFdlzR5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740053978; c=relaxed/simple;
-	bh=tP/lrI/hGS2N+0F6CChethc1EFm2eSLcncvZeP8SRJo=;
+	s=arc-20240116; t=1740054284; c=relaxed/simple;
+	bh=Tu6kHcip9wT6NuYvevfbwekjEW8uMu2I+njT1S0ZChs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rzfLdZrIrbi3U8438TEEXzlkQeKMSw4yL4kTMzmMzCai8Cng7MkiEAfGclP52a5qxTKIYjmna3z0MkbWRGAf0Qb5D0uyXZtC74loXhfQUUGr6KoDpKl0GbaKqHDI5L5OYcyqP84nVbeS4Tay1tUN8uXLT/LwP3qiW7tBvXKoFqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DbzWuNxQ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740053977; x=1771589977;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tP/lrI/hGS2N+0F6CChethc1EFm2eSLcncvZeP8SRJo=;
-  b=DbzWuNxQSxrlgnFMToo+yuJBfWZOqvzPoggbxULHsUDE9MueAJSO1pR+
-   rmQOPLsf25itQMbc5vRh/nLIg3TXU2lCpWMdkkTATkuJtfk2/eHPGkvBz
-   ySvJkHVa0f/xYAsSmKUYUO7f2wnX8gxFYRSddFoCB6HiUhbrvuF+9vyHa
-   Dk6V1MdMqQgGPX1KADLbMzIupkpZBdvpvZcY539jBCKjC5szrPvzD4dFH
-   xHXznqTJjw8AXYQGh+qoIK+May3rgGFJZJLevig1pOhBHESHiN0LnU1lD
-   QCHF6JRWsdRnTPdL9DlsWovwMlle4u+NjiBgwRypZ4LsbtQhBfueZVmyJ
-   A==;
-X-CSE-ConnectionGUID: Tbg1prMTRTinm5xL/TdwRA==
-X-CSE-MsgGUID: aSZZHJMkRqSjATekEhnfIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40061245"
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="40061245"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 04:19:37 -0800
-X-CSE-ConnectionGUID: E7ISxJ4DRGey/xI2cmAihA==
-X-CSE-MsgGUID: YgoXLhqOTAqm4U1QtjBxkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="115222212"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 04:19:33 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tl5Wc-0000000DKIh-3Mdu;
-	Thu, 20 Feb 2025 14:19:30 +0200
-Date: Thu, 20 Feb 2025 14:19:30 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org, rafael@kernel.org,
-	linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-	dmitry.torokhov@gmail.com, jic23@kernel.org,
-	przemyslaw.kitszel@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 00/12] Split devres APIs to device/devres.h and
- introduce devm_kmemdup_array()
-Message-ID: <Z7cd0q6-nO1rnUIm@smile.fi.intel.com>
-References: <20250212062513.2254767-1-raag.jadav@intel.com>
- <Z6yAbfVtm8nlZzqu@smile.fi.intel.com>
- <Z6zKrvdPYPKPcjk2@black.fi.intel.com>
- <Z6zYnt4-6KDwErjU@smile.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABmvMF5T6bAqoGxXNb1ZQkmn59xZxPNEZ5cp0zXogk5WdQ7Ask2fe2ZeWuIHQwC8dqzVxcp+3wExESKR4br4TcXxY3w9G+MTrIUkFyOX8T/GqPN6rwlLyBEEz1IjzTtQXL31KIJnZdCXiCDajHVuIc46duETNYGLQPQLTo37mkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ec7ISYIy; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A39E5526;
+	Thu, 20 Feb 2025 13:23:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740054196;
+	bh=Tu6kHcip9wT6NuYvevfbwekjEW8uMu2I+njT1S0ZChs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ec7ISYIyxKj7p1aDBfI0cs3o71ZuFypwEgzlAlAm3Yq34BA92sPP0qFKffE4LIOY/
+	 Tvo/hWawHXXn/WmsFBnlkaacx8+W3GXgc97kLzUhoM5XnAfq3gvbOZktYt/AVVACQF
+	 A20vMZ82NFDzQUwN+W2xeykEgmq2dyXQn0UV8eFY=
+Date: Thu, 20 Feb 2025 14:24:24 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Quentin Schulz <foss+kernel@0leil.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: nxp,pcf8575: add reset GPIO
+Message-ID: <20250220122424.GB20111@pendragon.ideasonboard.com>
+References: <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
+ <20250220-pca976x-reset-driver-v1-1-6abbf043050e@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6zYnt4-6KDwErjU@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250220-pca976x-reset-driver-v1-1-6abbf043050e@cherry.de>
 
-On Wed, Feb 12, 2025 at 07:21:34PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 12, 2025 at 06:22:06PM +0200, Raag Jadav wrote:
-> > On Wed, Feb 12, 2025 at 01:05:17PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Feb 12, 2025 at 11:55:01AM +0530, Raag Jadav wrote:
-> > > > This series
-> > > > 
-> > > > 1. Splits device/devres.h for the users that are only interested in devres APIs.
-> > > >    Original work by Andy Shevchenko:
-> > > >    https://lore.kernel.org/r/20241203195340.855879-1-andriy.shevchenko@linux.intel.com
-> > > > 
-> > > > 2. Introduces a more robust and cleaner devm_kmemdup_array() helper and uses it
-> > > >    across drivers.
-> > > > 
-> > > > The idea behind embedding both work into a single series is to make the review
-> > > > process easier and reduce conflicts while merging.
-> > > > 
-> > > > Current proposal is to merge initial patches with an immutable tag (volunteered
-> > > > by Andy) for other subsystems to use. Feel free to share a better alternative.
-> > > 
-> > > > v5: Move IOMEM_ERR_PTR() to err.h (Andy)
-> > > >     Reduce distribution to pinctrl/iio/input patches
-> > > 
-> > > Weren't there two more patches that were actually Acked by Jonathan?
-> > 
-> > Nope, iio only has one user each.
+Hi Quentin,
+
+Thank you for the patch.
+
+On Thu, Feb 20, 2025 at 10:56:51AM +0100, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> Okay, so we basically waiting then for Greg KH to review / ack the couple of
-> patches (2 and 4) and Dmitry and Jonathan one patch for each.
+> A few of the I2C GPIO expander chips supported by this binding have a
+> RESETN pin to be able to reset the chip. The chip is held in reset while
+> the pin is low, therefore the polarity of reset-gpios is expected to
+> reflect that, i.e. a GPIO_ACTIVE_HIGH means the GPIO will be held low
+> for reset and released high, GPIO_ACTIVE_LOW means the GPIO will be held
+> high for reset and released low.
 
-I'm going to apply this series to Intel pin control tree soon and share
-an immutable tag TWIMC, please tell me if it shouldn't be the case.
+I think the convention in DT is the opposite. The DT property is
+"reset-gpios", no "resetn-gpio", so the polarity should indicate how to
+drive the GPIO to assert a logical "reset". GPIO_ACTIVE_LOW should mean
+that the chip will be in reset when the physical GPIO is 0.
+
+Could DT maintainers confirm this ?
+
+> Out of the supported chips, only PCA9670, PCA9671, PCA9672 and PCA9673
+> show a RESETN pin in their datasheets. They all share the same reset
+> timings, that is 4+us reset pulse[0] and 100+us reset time[0].
+> 
+> When performing a reset, "The PCA9670 registers and I2C-bus state
+> machine will be held in their default state until the RESET input is
+> once again HIGH."[1] meaning we now know the state of each line
+> controlled by the GPIO expander. Therefore, setting lines-initial-states
+> and reset-gpios both does not make sense and their presence is XOR'ed.
+> 
+> [0] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf Fig 22.
+> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+>  .../devicetree/bindings/gpio/nxp,pcf8575.yaml      | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> index 3718103e966a13e1d77f73335ff73c18a3199469..d08d3f848f82e74de949da16d26a810dc52a74e5 100644
+> --- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+> @@ -73,6 +73,39 @@ properties:
+>  
+>    wakeup-source: true
+>  
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO controlling the (reset active LOW) RESET# pin.
+> +
+> +      Performing a reset makes all lines initialized to their input (pulled-up)
+> +      state.
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          not:
+> +            contains:
+> +              enum:
+> +                - nxp,pca9670
+> +                - nxp,pca9671
+> +                - nxp,pca9672
+> +                - nxp,pca9673
+> +    then:
+> +      properties:
+> +        reset-gpios: false
+> +
+> +  # lines-initial-states XOR reset-gpios
+> +  # Performing a reset reinitializes all lines to a known state which
+> +  # may not match passed lines-initial-states
+> +  - if:
+> +      required:
+> +        - lines-initial-states
+> +    then:
+> +      properties:
+> +        reset-gpios: false
+> +
+>  patternProperties:
+>    "^(.+-hog(-[0-9]+)?)$":
+>      type: object
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Laurent Pinchart
 
