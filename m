@@ -1,105 +1,155 @@
-Return-Path: <linux-gpio+bounces-16292-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16293-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCF1FA3DA6A
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:50:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DBB8A3DA72
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 13:51:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BAE53BFFFB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:49:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4082E17E25A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B361A1F561B;
-	Thu, 20 Feb 2025 12:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BCC51F584E;
+	Thu, 20 Feb 2025 12:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMs84AMW"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jranXwu6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B6C1F3FCB;
-	Thu, 20 Feb 2025 12:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C86134B0;
+	Thu, 20 Feb 2025 12:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740055750; cv=none; b=gdMV/drx4WaLFdLt9wx43E50nH+Pov8puFeJm0JiPAcmeb7r43u5Czhb4foWLGyPn3L1uOV3ERFgvyXgN//RoRQ5m5mzzntokLVIOoPlNmZO38FQgEeFDCZmT6OhjcQJpCQNtsU4po5IbNN0w86uhnA7UFVaT7LMYK9aDTdHrPU=
+	t=1740055891; cv=none; b=uNO9HbWwzuKgdSLuN9R15SkVHrQRRWs0e+UqyKP0LYfKrO8D+9tptR7y8TIkjifaTdgeamBOxmqd1L5hxK3RMmwxPQJOIUgA+wnTpbkoYT58VmUOexHyeKUqGtIksICRIIlA4b1shlZOXialHJRonggzn1g5yDjh5906lBKytjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740055750; c=relaxed/simple;
-	bh=1EYif3wQJFRdpUCSTBm7AnM6o4coTGFufZMp24neVSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsXEJPTfrqdsUUdFm1tX1DOB7PMlPXRUpi/0ZfMLN2GYEgj/Ta3rCCfwlXLoM3x3bnUspq3EIu5jelNCKDD/lDICNEZM3HPsLrRqs8iRcEXBPt5l5A5rUqRjuqghjZSRSpUZU+GnQWVqIJs1Ww2sbfy+W8KeUQXtdIsAyGouXNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMs84AMW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2775C4CED1;
-	Thu, 20 Feb 2025 12:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740055750;
-	bh=1EYif3wQJFRdpUCSTBm7AnM6o4coTGFufZMp24neVSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qMs84AMW7ugfVZut9xt/VbJKuvnB72rT5GDRNSA6oauYgcJGHhJgedH9Ed2JhDgM/
-	 cyxuyYAkGNWV0cKzH/3ADqhmlYuQzN4uoY7Kw8yoA7M2YFz9921jxxH9t03KQiGQfE
-	 TcaAVqsXabSCADVQ3l+nEzs35JUSedwupFzVAN3i9TdWpAnlIdZcNsg4ed7hYIaMBV
-	 1L5FVN1P3jbjeE2GsufUM1KfdYU3r/pPnT+OcFi7ALj4OQ7o5uyKhpTuGxHQiXC4Ec
-	 vfgIweO/B4cDguGN+5YWRVcCQHDDlkdaDdKq+CCF55R3R4Z2ykbApw/h32jWA2vUfS
-	 BrtyHsIVgLCxQ==
-Date: Thu, 20 Feb 2025 12:49:06 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] gpiolib: don't bail out if get_direction() fails in
- gpiochip_add_data()
-Message-ID: <Z7ckwrBUgqLyEBSB@finisterre.sirena.org.uk>
-References: <20250219144356.258635-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1740055891; c=relaxed/simple;
+	bh=5ypdshPfI3nsJ88dlIy/T3H0ZdxophNkWHmQ430+TI8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RWOsvp8C2kkBTjJYdFj1elT3LxJ96fdAWZkySBRUINidxHIlDzm38345qsexA2UAbHCSj754om13+umELcFOhfv4aZxls740jkptgkSISOS6vhpFQOUqfBNanexmF1FOIiRFb6GrNOSuvzmIRSeGIj6PjopgRya2GlfZic6ohMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jranXwu6; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EE3BA431ED;
+	Thu, 20 Feb 2025 12:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740055881;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V12Yk4AP6w0Kz77u/6UMamy0PAJDxKPB8Crw7PN4YQw=;
+	b=jranXwu6S39ULr7tv8yQXi5n3abengdJa871FcQj+dJgjWtC3dajQGOATSbkHF2zEk+/vS
+	eZIFEIjX6HCRn9yISFCqVSadBjnXoNr9/uRMgrx9gKjOwZoXCpN3R73hyPWs2pSxQzEBMi
+	ZS0W4JNbwMT37dnOwmc7nG012BIJhdo07Cx2gl04xto8dIgKg4edkf6FghBbmqXKUOaNg6
+	4iR4s5h+7QlIP4SJDZ8LIa7pl6vP+S95Z8fDuabYpfzzksIoYGGQGwuCXNDQhMAoruckrH
+	ANDErgtjbtm/IlAVu7+FSa5I+dEIzg+UKBhTkgDrlBbg1hgJEfl6rFpKasQBVQ==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Romain Gantois <romain.gantois@bootlin.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v7 9/9] misc: add FPC202 dual port controller driver
+Date: Thu, 20 Feb 2025 13:51:13 +0100
+Message-ID: <6232449.lOV4Wx5bFT@fw-rgant>
+In-Reply-To: <Z7cbX5jX3NL4C2GR@shikoro>
+References:
+ <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
+ <2025022038-hangnail-rehab-c145@gregkh> <Z7cbX5jX3NL4C2GR@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jF4LZQGo19Kv/6Vc"
-Content-Disposition: inline
-In-Reply-To: <20250219144356.258635-1-brgl@bgdev.pl>
-X-Cookie: Editing is a rewording activity.
+Content-Type: multipart/signed; boundary="nextPart5091325.31r3eYUQgx";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeijedukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehleefieekgeetkeetieetveeitefhgfejhefggfdtfffgteefieeufeeuteegjeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhomhhirdhvr
+ ghlkhgvihhnvghnsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughirdhshhihthhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: romain.gantois@bootlin.com
 
-
---jF4LZQGo19Kv/6Vc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--nextPart5091325.31r3eYUQgx
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Thu, 20 Feb 2025 13:51:13 +0100
+Message-ID: <6232449.lOV4Wx5bFT@fw-rgant>
+In-Reply-To: <Z7cbX5jX3NL4C2GR@shikoro>
+MIME-Version: 1.0
 
-On Wed, Feb 19, 2025 at 03:43:56PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello Wolfram,
+
+On jeudi 20 f=C3=A9vrier 2025 13:09:03 heure normale d=E2=80=99Europe centr=
+ale Wolfram Sang=20
+wrote:
+> > as this is a i2c_driver, why isn't it in drivers/i2c/ somewhere?  Why
+> > misc?
 >=20
-> Since commit 9d846b1aebbe ("gpiolib: check the return value of
-> gpio_chip::get_direction()") we check the return value of the
-> get_direction() callback as per its API contract. Some drivers have been
-> observed to fail to register now as they may call get_direction() in
-> gpiochip_add_data() in contexts where it has always silently failed.
-> Until we audit all drivers, replace the bail-out to a kernel log
-> warning.
+> Because drivers/i2c is only for I2C controllers and this is not a
+> controller. Other address translators also reside in their respective
+> subsystem, e.g. media for GMSL (de-)serializers. I don't know this chip,
+> maybe it has no "respective" subsystem and, thus, misc?
 
-For at least one of the affected boards:
+That is correct, this chip acts both as an I2C address translator and as a=
+=20
+GPIO controller with LED control and prefetch capabilities. It's meant to=20
+aggregate control signals from multiple SFP cages (or other similar port=20
+types), which have both I2C and low-speed signals.
 
-Tested-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Moreover, the chip can be configured to use an SPI master interface instead=
+ of=20
+an I2C one, although this isn't supported in this driver.
 
---jF4LZQGo19Kv/6Vc
+Considering all of this, I didn't think that either the I2C subsystem or th=
+e=20
+GPIO subsystem were a good fit for this component, which is why I chose the=
+=20
+misc subsystem.
+
+Best Regards,
+
+=2D-=20
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart5091325.31r3eYUQgx
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme3JMIACgkQJNaLcl1U
-h9Dnmwf4mxcie6ZU6YdgcT3L2CV4nI3moL3OBgFvZnui9t2T55gthTEm2ai576jS
-nTbhLwDFKIEZYyNQc0qXDIipNeOKjxYDnImG1KR/F36G7KYNh+NkmsMqZEtRMABB
-JukM2ymwJhjs+IBpierG3HChbBfwtYMTJDc7srRPuNeSiaq5w9SbqtRzBrG3vxiT
-Cz/Ysw6DRJY0E2h21swc1ORL1SJGEHOqVA5YIMa3A6wVuT93Qak2cGLS3ZHSsHKS
-zL4iLkInqBJmJxFmACwTQ9FAsaC1YgQdkNuVYTvQ8iSyzd3i7+0nxp4DfY+AhTfR
-fsErt8UF9tCIJL6r0RIRFBYvIzfm
-=WTjH
+iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAme3JUEACgkQ3R9U/FLj
+285XmQ/+JH6sTra2DHeFaZhXztjqmfO3by20dIZfJUrns3TrzJOsd8LMRdvKo7xu
+TqTrQ5E10KMNtVvu98HkF2Yhig2enCQxdlwpVEnbDA8lH+PjvV9sOA3Rz8n2fokC
+uPzgzVLAA7IOe5UyMdYPU2YmDgVn+kNUJCxJVHGM/qb/H7MUI2HH8QZxj6XNa3KS
+3ZWRMcc0XImISTzDpFC02Vwcfy+Q3wr+BtvWU8aT7OM5J96JBiyzvGWPYTNarSjg
+CTHXmGmRpLmvqfS2576qBV6XUfmUNqDAZhOoDm6zftIOOimUAentfKzFjdJ9Nlam
+ccf9WrWVbjgPsv78dX60N+9DpCsNLNeD7Vg2zHvgFRDs7l9NDztEX60vyAX1YLA7
+E2dMJ2NXgIx0+Co1IHFCBa3rYZLEflLHNem1TVloSZ9JvYNV2P/nlkM+JB3zc3mX
+h/jt/XYaXQvRmURW+kc+7NKYl9yVbBZQ7xt5b5ORxMITnrJjpfay3HEAxSh5oGDv
+7bjs2t9ti/7/JpA6FTbmjHfHiCfhF3FRajqq4JrP1f5i2CVFl9d/fEPFe45hBB4u
+vV1FUr1xOiGAFNO9IdcZKyiYtdcNAkCuzCJv19+bHth9eJL3oAA9caz67gEDtvrX
+YA9mCyW7ldjs3vScFnkZHzlWenElfk+WEPa1wvwOzIA0niWYMPc=
+=J7Vz
 -----END PGP SIGNATURE-----
 
---jF4LZQGo19Kv/6Vc--
+--nextPart5091325.31r3eYUQgx--
+
+
+
 
