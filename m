@@ -1,192 +1,330 @@
-Return-Path: <linux-gpio+bounces-16278-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16279-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 468A0A3D76D
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:54:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3A71A3D7D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 12:08:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 740A33A3EDB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 10:52:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A43C019C0A6F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2025 11:07:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBC91F1527;
-	Thu, 20 Feb 2025 10:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03F241F0E3C;
+	Thu, 20 Feb 2025 11:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="C05FatH4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="o/pvkaOe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F0C1AF0C8;
-	Thu, 20 Feb 2025 10:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BA71D2F53
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 11:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740048760; cv=none; b=KFIQjnyLdS57R+UwX/TyKFtS0t1e4nnuZ1i0PepayT9zIWuYShavqogWgZwW/hMESpO+X3ZzF9GkRgXZLZct/czjYNMk4Bud1CN16oYe9TYvIajijwliEeyFI+dd4ajDyzaql+fLEU6TN3gOFcVZT+xkhxCVaD2TVMPcY5/0XII=
+	t=1740049609; cv=none; b=LEyYfW7umhx4jD69cCP84nevMm87tkh4go+iJXp4NivL6SQgSX1jRDIux4WPnU692z4xqcF8jO7tUyhJWxXko80e4H6aOFGFd/970LBMFLOycbI4f9Fwiw7GExcbH5G0T64nlshz0tEPcJLDE39zyJUmEI317xSrHpEmOQTJM0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740048760; c=relaxed/simple;
-	bh=jzc3UeO8gPwWIIcpOp7LoiCQrGSVxTENx4elv1fUfkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fMJ7iADjL+3BVqCRYK24DvE5KHqSQmZIYXei/AgR1GzDVDdMLx5JDZShfyNHVMQg0hXU5ItWbMT0VKjAEM6DqK8DWNYoH9uXSiTO4TGkrwN14HGksZrUynyrwVfJI6jYgsu8Ha0syeWeRPBOmlU153HFDF8e4e9XhS2nVvK1jvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=C05FatH4; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=S+RdLYqZdmsOg0CbsW6QLZRD3BJ6XER56v5MU0dQRVc=; b=C05FatH44QfhrPp864MxbxdgFr
-	RabFjZsr9lUlg6YOhIu6yuvBktL81zlOGNcN2RsYemh78AGxGEdieEEgDWN3r5OprsTBtnpkVFjEX
-	IJOpz4GYbru83ZD5gP36n4V7B4bQwWZ05QV1dk9tr+5ODIzUMrqN5TemnsIrgukQAMMTge+eEy6U/
-	AYK5mMn21/lUaNvD4RgicLpIXUnGdUIH69r29oVGVtWbc4l4O4n0UGO8ScXiLGAmbQyQ48OPG+jke
-	M2uH1h0YT4+NA/qTXDf55qzxm3vJ6d2KC/GeRwhlccGfBZji5cDp0zP9YOsrmEnzpjH1iTX7t9NEK
-	8qJtlhEw==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tl4AR-0004Vd-9R; Thu, 20 Feb 2025 11:52:31 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Quentin Schulz <foss+kernel@0leil.net>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
-Subject:
- Re: [PATCH 2/2] gpio: pcf857x: add support for reset-gpios on (most) PCA967x
-Date: Thu, 20 Feb 2025 11:52:29 +0100
-Message-ID: <6110750.alqRGMn8q6@diego>
-In-Reply-To: <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
-References:
- <20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de>
- <20250220-pca976x-reset-driver-v1-2-6abbf043050e@cherry.de>
+	s=arc-20240116; t=1740049609; c=relaxed/simple;
+	bh=s4oKU2urhj9RNrtr81iMhTiGLqIjJKH5+GeofWS3KbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SVWvxTdRLcFSVLKBFLGJFktP7vCB8D6Ja9tnQiGVs3OPvD2arWdXuHOZCMya8Yn0DRrvF1rjjbr0qE0K0jyxoI96iqEG38Q/04FtD9+KjfW6RGrXrgypPAAM4xRVaMj/DUgwBXNhrKK1bvL8vpl77W2VQNB5RRt+Ur7wNYhaRP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=o/pvkaOe; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30a2594435dso19010871fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2025 03:06:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740049605; x=1740654405; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=88pa8QCAoCeSDudvr+A5HpADlByWDOmaes4keZ6fQD0=;
+        b=o/pvkaOedVsv+F7Tcrp/wGLNu3KOY68hbjmDmGayeXKI4aQC97c9Y5aPcRs6D4YF7e
+         GZgqT04uHw16nMWTIJ5Uv2YX+Ghy+WYw/hTcraifhBLzh22SrCF+ptkHaON5aw3zeueN
+         2mjlMkUoQcwkTfvJPjwYFsMDZ/1QxgSojcClv3385/YqyBg5OX+1u7jaHGbEuGEBD7Ao
+         BpYusu8dzKmnE1G2ffrf78kJcdDjr2XXBNSPdl4NjRD4uj1uto/ZIvNFMH0oWuOO5sGn
+         SQFUBwHfwsSyvC+ADBrYwUZCGLWg97JiMjk+NGR2o9f/OhoOKolyxtKoNxI8k9h2qE5Y
+         sHOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740049605; x=1740654405;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=88pa8QCAoCeSDudvr+A5HpADlByWDOmaes4keZ6fQD0=;
+        b=LH5wKKBHUc2y0r84yFQbxgsdhki5BvPHKm2LBpemcS7We10D1PVYuXjUhiynBy4Os/
+         rNzBtp5oq7o/Dfj1jCGx7FL2f7jdgcSOLQMSyNSjF/4crVf92VMtPsfaEwlOS+tCUhgD
+         0KOyScIAnpL5DLO2wEFnfTlXHIIsdU7bTB6y5sNxz5bOkojTnjorO0LaKKhJVimI55ix
+         sTOaTrnHB+7tWB/n3Z/y5fDQ/P1fPZtAwsr0MqKH7XDSxO8PwPJDx7mAurgYE4ETi7Al
+         wT+qXCZVQOhF8s06ea64iVllkWnMx1Syv5KhcUFzJI0Cls3RWVqTFuhIQQ15S03mtegS
+         zsxw==
+X-Gm-Message-State: AOJu0YzbBnI6vbjezTwruuxU8+FTcqsHZfINOnS79LYujnl5SkzQ8dJc
+	x9P71szSL0uG6se9eK5eDfELvJBMmGfkJoPAF/OHJxmRS08xCtTp+4qWoEj4lPyNC4+vL28ync/
+	zFKqR9lMA0eTJpw7MMAhs3gUWOgcBqmxdkS5Zxa+PlsoqVIN6lOmETw==
+X-Gm-Gg: ASbGncsyPga0VUSP4sqBM2fU6k1LzCtDtkGHH0uy4c0zn2NnVu6IZfxiYpLclPy4d/b
+	TM12lTuVSig9Qk+Rk+n/2nXAVxQdpYqJTu7VM/juiTlMc0Asa/bQMs8LBC5/nDD4pUUDgv7W1Q2
+	xYuKqSeqdDSwxC1WC6jvJ5e8o7ar4=
+X-Google-Smtp-Source: AGHT+IEIgYaUEeRevJZSYl0tzDjWAxt2VSybbzcorq3JaM2EWX3T7AIQp+wA4GNkixlVXwNuuPED7wcEoxsjycAjSn8=
+X-Received: by 2002:a2e:9212:0:b0:309:20da:6188 with SMTP id
+ 38308e7fff4ca-30a505f0052mr10769781fa.6.1740049604792; Thu, 20 Feb 2025
+ 03:06:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250218160333.605829-1-koichiro.den@canonical.com> <20250218160333.605829-2-koichiro.den@canonical.com>
+In-Reply-To: <20250218160333.605829-2-koichiro.den@canonical.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Feb 2025 12:06:33 +0100
+X-Gm-Features: AWEUYZnaxcokDwDzqhQvZvbVjbnlZ3fuTWp3xxS-BpjrsQuhx8aJz5lOcSxy5Sg
+Message-ID: <CAMRc=MfmG0okVjV1nH78Aw18dFcoOAZ-UwU-iFc1VKb-BVcTxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: introduce utilities for synchronous fake
+ device creation
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Donnerstag, 20. Februar 2025, 10:56:52 MEZ schrieb Quentin Schulz:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
->=20
-> The PCA9670, PCA9671, PCA9672 and PCA9673 all have a RESETN input pin
-> that is used to reset the I2C GPIO expander.
->=20
-> One needs to hold this pin low for at least 4us and the reset should be
-> finished after about 100us according to the datasheet[1]. Once the reset
-> is done, the "registers and I2C-bus state machine will be held in their
-> default state until the RESET input is once again HIGH.".
->=20
-> Because the logic is reset, the latch values eventually provided in the
-> Device Tree via lines-initial-states property are inapplicable so they
-> are simply ignored if a reset GPIO is provided.
->=20
-> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5 and fig 22.
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+On Tue, Feb 18, 2025 at 5:04=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> Both gpio-sim and gpio-virtuser share a mechanism to instantiate a
+> platform device, wait for probe completion, and retrieve the probe
+> success or error status synchronously. With gpio-aggregator planned to
+> adopt this approach for its configfs interface, it's time to factor
+> out the common code.
+>
+> Add dev-sync-probe.[ch] to house helper functions used by all such
+> implementations.
+>
+> No functional change.
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 > ---
->  drivers/gpio/gpio-pcf857x.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-> index 7c57eaeb0afeba8953d998d8eec60a65b40efb6d..94077208e24ae99a1e8762e78=
-3f0eabc580fa520 100644
-> --- a/drivers/gpio/gpio-pcf857x.c
-> +++ b/drivers/gpio/gpio-pcf857x.c
-> @@ -5,6 +5,7 @@
->   * Copyright (C) 2007 David Brownell
->   */
-> =20
-> +#include <linux/delay.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
 
-this is missing
-#include <linux/gpio/consumer.h>
+This is looking good now. A couple more nits for this series and the
+next iteration should be good to go.
 
-because otherwise you end up with
-=2E./drivers/gpio/gpio-pcf857x.c: In function =E2=80=98pcf857x_probe=E2=80=
-=99:
-=2E./drivers/gpio/gpio-pcf857x.c:300:21: error: implicit declaration of fun=
-ction =E2=80=98devm_gpiod_get_optional=E2=80=99; did you mean =E2=80=98devm=
-_regulator_get_optional=E2=80=99? [-Wimplicit-function-declaration]
-  300 |         rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset"=
-, GPIOD_OUT_HIGH);
-      |                     ^~~~~~~~~~~~~~~~~~~~~~~
-      |                     devm_regulator_get_optional
-=2E./drivers/gpio/gpio-pcf857x.c:300:68: error: =E2=80=98GPIOD_OUT_HIGH=E2=
-=80=99 undeclared (first use in this function)
-  300 |         rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset"=
-, GPIOD_OUT_HIGH);
-      |                                                                    =
-^~~~~~~~~~~~~~
-=2E./drivers/gpio/gpio-pcf857x.c:300:68: note: each undeclared identifier i=
-s reported only once for each function it appears in
-=2E./drivers/gpio/gpio-pcf857x.c:309:17: error: implicit declaration of fun=
-ction =E2=80=98gpiod_set_value=E2=80=99 [-Wimplicit-function-declaration]
-  309 |                 gpiod_set_value(rstn_gpio, 0);
-      |                 ^~~~~~~~~~~~~~~
+A note on patch versioning: when you split an existing series into
+smaller, please keep the existing patch versioning. So if you had a
+series that went up to v3 and you split it into two smaller ones, the
+next time you submit it, it should be v4.
 
+>  drivers/gpio/Kconfig          |  7 +++
+>  drivers/gpio/Makefile         |  3 ++
+>  drivers/gpio/dev-sync-probe.c | 96 +++++++++++++++++++++++++++++++++++
+>  drivers/gpio/dev-sync-probe.h | 25 +++++++++
+>  4 files changed, 131 insertions(+)
+>  create mode 100644 drivers/gpio/dev-sync-probe.c
+>  create mode 100644 drivers/gpio/dev-sync-probe.h
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 56c1f30ac195..2e4c5f0a94f7 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1863,6 +1863,13 @@ config GPIO_MPSSE
+>
+>  endmenu
+>
+> +# This symbol is selected by drivers that need synchronous fake device c=
+reation
 
+This comment is unnecessary, please drop it.
 
-> @@ -272,12 +273,11 @@ static const struct irq_chip pcf857x_irq_chip =3D {
-> =20
->  static int pcf857x_probe(struct i2c_client *client)
->  {
-> +	struct gpio_desc *rstn_gpio;
->  	struct pcf857x *gpio;
-> -	unsigned int n_latch =3D 0;
-> +	unsigned int n_latch;
->  	int status;
-> =20
-> -	device_property_read_u32(&client->dev, "lines-initial-states", &n_latch=
-);
-> -
->  	/* Allocate, initialize, and register this gpio_chip. */
->  	gpio =3D devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
->  	if (!gpio)
-> @@ -297,6 +297,29 @@ static int pcf857x_probe(struct i2c_client *client)
->  	gpio->chip.direction_output	=3D pcf857x_output;
->  	gpio->chip.ngpio		=3D (uintptr_t)i2c_get_match_data(client);
-> =20
-> +	rstn_gpio =3D devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_=
-HIGH);
-> +	if (IS_ERR(rstn_gpio)) {
-> +		return dev_err_probe(&client->dev, PTR_ERR(rstn_gpio),
-> +				     "failed to get reset GPIO\n");
-> +	}
+> +config DEV_SYNC_PROBE
+> +       tristate "Utilities for synchronous fake device creation"
+
+Please don't make this available for users to select, this should be a
+hidden symbol only to be selected by its users.
+
+> +       help
+> +         Common helper functions for drivers that need synchronous fake
+> +         device creation.
 > +
-> +	if (rstn_gpio) {
-> +		/* Reset already held with devm_gpiod_get_optional with GPIOD_OUT_HIGH=
- */
-> +		usleep_range(4, 8); /* tw(rst) > 4us */
-> +		gpiod_set_value(rstn_gpio, 0);
-> +		usleep_range(100, 200); /* trst > 100uS */
+>  menu "Virtual GPIO drivers"
+>
+>  config GPIO_AGGREGATOR
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index af3ba4d81b58..af130882ffee 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -19,6 +19,9 @@ obj-$(CONFIG_GPIO_GENERIC)    +=3D gpio-generic.o
+>  # directly supported by gpio-generic
+>  gpio-generic-$(CONFIG_GPIO_GENERIC)    +=3D gpio-mmio.o
+>
+> +# Utilities for drivers that need synchronous fake device creation
+> +obj-$(CONFIG_DEV_SYNC_PROBE)           +=3D dev-sync-probe.o
 > +
-> +		/*
-> +		 * Reset "will initialize to their default states of all I/Os to
-> +		 * inputs with weak current source to VDD", which is the same as
-> +		 * writing 1 for all I/Os which is 0 in n_latch.
-> +		 */
-> +		n_latch =3D 0;
-> +	} else {
-> +		device_property_read_u32(&client->dev, "lines-initial-states",
-> +					 &n_latch);
+>  obj-$(CONFIG_GPIO_104_DIO_48E)         +=3D gpio-104-dio-48e.o
+>  obj-$(CONFIG_GPIO_104_IDI_48)          +=3D gpio-104-idi-48.o
+>  obj-$(CONFIG_GPIO_104_IDIO_16)         +=3D gpio-104-idio-16.o
+> diff --git a/drivers/gpio/dev-sync-probe.c b/drivers/gpio/dev-sync-probe.=
+c
+> new file mode 100644
+> index 000000000000..82c8d7ae9fa7
+> --- /dev/null
+> +++ b/drivers/gpio/dev-sync-probe.c
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 
-device_property_read_u32 will not fill n_latch if the property is missing.
-Before n_latch was always set to 0 at the declaration point above.
-I guess that should be kept, because we want 0, except if
-device_property_read_u32 provides a different value.
+Use GPL-2.0-or-later, same elsewhere.
 
+> +/*
+> + * Common code for drivers creating fake platform devices.
+> + *
+> + * Provides synchronous device creation: waits for probe completion and
+> + * returns the probe success or error status to the device creator.
+> + *
+> + * Copyright (C) 2025 Bartosz Golaszewski <brgl@bgdev.pl>
 
-Heiko
+Please copy my copyright entry from the gpio-sim with the right date
+and add yours too, you did spend some time on this after all. Same for
+MODULE_AUTHOR(), feel free to add yourself too.
 
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +
+> +#include "dev-sync-probe.h"
+> +
+> +static int dev_sync_probe_notifier_call(struct notifier_block *nb,
+> +                                       unsigned long action,
+> +                                       void *data)
 
+No need for this last line break.
+
+> +{
+> +       struct dev_sync_probe_data *pdata;
+> +       struct device *dev =3D data;
+> +
+> +       pdata =3D container_of(nb, struct dev_sync_probe_data, bus_notifi=
+er);
+> +       if (!device_match_name(dev, pdata->name))
+> +               return NOTIFY_DONE;
+> +
+> +       switch (action) {
+> +       case BUS_NOTIFY_BOUND_DRIVER:
+> +               pdata->driver_bound =3D true;
+> +               break;
+> +       case BUS_NOTIFY_DRIVER_NOT_BOUND:
+> +               pdata->driver_bound =3D false;
+> +               break;
+> +       default:
+> +               return NOTIFY_DONE;
+> +       }
+> +
+> +       complete(&pdata->probe_completion);
+> +       return NOTIFY_OK;
+> +}
+> +
+> +void dev_sync_probe_init(struct dev_sync_probe_data *data)
+> +{
+> +       memset(data, 0, sizeof(*data));
+> +       init_completion(&data->probe_completion);
+> +       data->bus_notifier.notifier_call =3D dev_sync_probe_notifier_call=
+;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_sync_probe_init);
+> +
+> +int dev_sync_probe_register(struct dev_sync_probe_data *data,
+> +                           struct platform_device_info *pdevinfo)
+> +{
+> +       struct platform_device *pdev;
+> +       char *name;
+> +
+> +       name =3D kasprintf(GFP_KERNEL, "%s.%u", pdevinfo->name, pdevinfo-=
+>id);
+
+pdevinfo->id is a signed integer
+
+I'm also wondering if we could avoid the allocation here and keep on
+using snprintf() like in the existing drivers? On the other hand,
+memory is cheap so no big deal.
+
+> +       if (!name)
+> +               return -ENOMEM;
+> +
+> +       data->driver_bound =3D false;
+> +       data->name =3D name;
+> +       reinit_completion(&data->probe_completion);
+> +       bus_register_notifier(&platform_bus_type, &data->bus_notifier);
+> +
+> +       pdev =3D platform_device_register_full(pdevinfo);
+> +       if (IS_ERR(pdev)) {
+> +               bus_unregister_notifier(&platform_bus_type, &data->bus_no=
+tifier);
+> +               kfree(data->name);
+
+We could probably simplify it by using __free(kfree) with the name
+variable and just setting it at the end with no_free_ptr().
+
+Bart
+
+> +               return PTR_ERR(pdev);
+> +       }
+> +
+> +       wait_for_completion(&data->probe_completion);
+> +       bus_unregister_notifier(&platform_bus_type, &data->bus_notifier);
+> +
+> +       if (!data->driver_bound) {
+> +               platform_device_unregister(pdev);
+> +               kfree(data->name);
+> +               return -ENXIO;
+> +       }
+> +
+> +       data->pdev =3D pdev;
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_sync_probe_register);
+> +
+> +void dev_sync_probe_unregister(struct dev_sync_probe_data *data)
+> +{
+> +       platform_device_unregister(data->pdev);
+> +       kfree(data->name);
+> +       data->pdev =3D NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_sync_probe_unregister);
+> +
+> +MODULE_AUTHOR("Bartosz Golaszewski <brgl@bgdev.pl>");
+> +MODULE_DESCRIPTION("Utilities for synchronous fake device creation");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/gpio/dev-sync-probe.h b/drivers/gpio/dev-sync-probe.=
+h
+> new file mode 100644
+> index 000000000000..4b3d52b70519
+> --- /dev/null
+> +++ b/drivers/gpio/dev-sync-probe.h
+> @@ -0,0 +1,25 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef DEV_SYNC_PROBE_H
+> +#define DEV_SYNC_PROBE_H
+> +
+> +#include <linux/completion.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct dev_sync_probe_data {
+> +       struct platform_device *pdev;
+> +       const char *name;
+> +
+> +       /* Synchronize with probe */
+> +       struct notifier_block bus_notifier;
+> +       struct completion probe_completion;
+> +       bool driver_bound;
+> +};
+> +
+> +void dev_sync_probe_init(struct dev_sync_probe_data *data);
+> +int dev_sync_probe_register(struct dev_sync_probe_data *data,
+> +                           struct platform_device_info *pdevinfo);
+> +void dev_sync_probe_unregister(struct dev_sync_probe_data *data);
+> +
+> +#endif /* DEV_SYNC_PROBE_H */
+> --
+> 2.45.2
+>
 
