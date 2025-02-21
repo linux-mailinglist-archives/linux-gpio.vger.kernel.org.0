@@ -1,117 +1,151 @@
-Return-Path: <linux-gpio+bounces-16404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E09BA3FFD4
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:37:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37432A40038
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 21:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CD3619E0DAF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 19:37:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58D8A3BCE5A
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 19:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AC9C252914;
-	Fri, 21 Feb 2025 19:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="nXuh8rCG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D19225334A;
+	Fri, 21 Feb 2025 19:56:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2E11D7E50;
-	Fri, 21 Feb 2025 19:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981D01FF1BD
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 19:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740166631; cv=none; b=WruvxAK7FFkF9clZ5vCpWqlkXLGqmWvJRta3G6WMko6FDE8DC3cYwlcLUGMYh9rhkQ5BVpDzGJdzH4SxSnypEQCVg+YousihfUjC4mXWfdg2yR87cEvdQy4AmBJVSl7pAyI/JX+5BosqcnDQhgKgxE4Y3WIMpXa6CTjY/AMAt8E=
+	t=1740167800; cv=none; b=MiB66TkNgvTY11EKOM47J7EOOeLWg7XypWHxmMSbGEm2QPIPEUPyq6GC1T5l6DmWz7Htr6xARqsv+Kk2/hMFJXK2vrH99SSlf5H+kjFwgDIMIFYvmAEzez3AidbJ91AsXzURTqafqpP6jL4g6qwUMemeIsKRZQmO9VxzqGHLDXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740166631; c=relaxed/simple;
-	bh=zDxTSXduPQXA4xHKPlyHXnfxQxWR7o6zkvl4FTCCsPY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dmMWGoXoXEY6oa8NJhs9jrpdSplL+kDw7q2ViLlL0fllnhUaeKbbPldHibjk69kcp+JDhLIgdDjn64HeK+mChoNMUEZPIZpmWG6GvWoWFC8XUaYIrxRjYVJtiUslNOCSHXFSHRhinOh8y343oOmD50Fr5SuOr26mT0jwz/8vYhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=nXuh8rCG; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=zDxTSXduPQXA4xHKPlyHXnfxQxWR7o6zkvl4FTCCsPY=;
-	t=1740166629; x=1741376229; b=nXuh8rCGqsfC3M2xAznPkwmoiPBWtC+d9yFk7989Wm+EiBe
-	cq6CGtatT5XGh/DqtDIy+UVkvnpDwSnALN0h3GIkDMzWpdgd0M5LrLl9kUwr0WoiJ2jv9rXYWI98t
-	BX94haLt4oatQhLfxjfHjJ8bLruAkrTbhAq3hnbNU5LBsY850740i8Yk2zyjzlGjCma/Q8f9c/yHY
-	4YT8TYd3DU76NDpemOfAkK2N1vbWMftzJ6EIK6LI8rw1hG1xmbpVS/h91s7ASEIGED99av4bwzot4
-	uPBPOv8Vz33cBJ18VPWaTfUWMohuHYnxweLYJFnPgprQtfISwoRrqINnv6hgqgDg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tlYp2-00000005Y57-49wJ;
-	Fri, 21 Feb 2025 20:36:29 +0100
-Message-ID: <9af9413b7ab41c6b2db5f862d0fa50e9de279d67.camel@sipsolutions.net>
-Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for
- void APIs
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Stephen Hemminger <stephen@networkplumber.org>, Zijun Hu
-	 <quic_zijuhu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon	
- <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew
- Morton	 <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, Peter
- Zijlstra	 <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Thomas
- Gleixner	 <tglx@linutronix.de>, Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich	 <dakr@kernel.org>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Jamal Hadi Salim
- <jhs@mojatatu.com>, Cong Wang	 <xiyou.wangcong@gmail.com>, Jiri Pirko
- <jiri@resnulli.us>, Jason Gunthorpe	 <jgg@ziepe.ca>, Leon Romanovsky
- <leon@kernel.org>, Linus Walleij	 <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Lee Jones	 <lee@kernel.org>, Thomas Graf
- <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,  Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Miquel
- Raynal	 <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
- Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu <zijun_hu@icloud.com>,
- linux-arch@vger.kernel.org, 	linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, 	iommu@lists.linux.dev,
- linux-mtd@lists.infradead.org
-Date: Fri, 21 Feb 2025 20:36:26 +0100
-In-Reply-To: <20250221110042.2ec3c276@hermes.local>
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
-	 <20250221110042.2ec3c276@hermes.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1740167800; c=relaxed/simple;
+	bh=S1Oo65ZNvSFvSvIr0+0DWNYT4tmcutb6FFm1AYHItis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qdNMPe5BMJnnOBvwDzwwMDBG/qAEICSPaYbzbcGIoi3iJj7CEGcw9MAcKGOPreZLObfMEL2hzEBDZ6Sajbmu362YBOaiHhrDbBCioLuV0ISFYbqkqIO75M/wp2HHB9gpCc5ME4iFmz/ifrruHnTIc3+6QOiHpeo36Fs9HrYRVhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tlZ8R-0002ir-3K; Fri, 21 Feb 2025 20:56:31 +0100
+Message-ID: <9d3f1ca4-d865-45af-9032-c38cacc7fe93@pengutronix.de>
+Date: Fri, 21 Feb 2025 20:56:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?=
+ <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+ <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Fri, 2025-02-21 at 11:00 -0800, Stephen Hemminger wrote:
->=20
-> Is this something that could be done with a coccinelle script?
->=20
+Hello Linus,
 
-Almost enough to do this:
+On 14.02.25 10:14, Linus Walleij wrote:
+> On Sun, Feb 2, 2025 at 1:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+>> I think it was Ahmad or Marek who suggested that users aren't really
+>> attached to the global numbering but to the ease of use of sysfs.
+>>
+>> I floated an idea of introducing a backward compatible change to sysfs
+>> that would allow users to identify GPIOs by the label of their parent
+>> chip and the hardware offset of the line within that chip (...)
+>>
+>> We could then encourage users to switch to using the chip-local
+>> exports and eventually at least remove the global export/unexport pair
+>> if we cannot make the entire sysfs class go away.
+>>
+>> Please let me know what you think about it?
+> 
+> Yes, I think it is mostly equivalent to what I say in drivers/gpio/TODO,
 
-@@
-identifier fn;
-expression E;
-@@
-void fn(...)
-{
-...
--return
-E;
-}
+I wasn't aware of this file. Thanks for pointing it out.
+
+> my only point being that when we add something like this, we
+> put it in debugfs where it belongs, and as illustrated by your
+> example, it is indeed used for debugging/exploring the
+> system:
+
+Why does it belong in debugfs? The whole premise of Bartosz's mail is
+to provide holdouts that haven't yet migrated away from the sysfs global
+number space an alternative _stable_ kernel interface they can rely on.
+
+DebugFS is the opposite of that. It may not even be available in those
+resource-constrained systems that this would be useful for.
+
+> ----------------8<----------------------------8<------------------------
+> Debugfs in place of sysfs
+> 
+> The old sysfs code that enables simple uses of GPIOs from the
+> command line is still popular despite the existance of the proper
+> character device. The reason is that it is simple to use on
+> root filesystems where you only have a minimal set of tools such
+> as "cat", "echo" etc.
+
+And most importantly having the kernel keep the line requested.
+
+> The old sysfs still need to be strongly deprecated and removed
+> as it relies on the global GPIO numberspace that assume a strict
+> order of global GPIO numbers that do not change between boots
+> and is independent of probe order.
+
+The new proposal gets rid of the global numberspace all the same.
+
+> To solve this and provide an ABI that people can use for hacks
+> and development, implement a debugfs interface to manipulate
+> GPIO lines that can do everything that sysfs can do today: one
+> directory per gpiochip and one file entry per line:
+
+[snip]
+
+> The exact files and design of the debugfs interface can be
+> discussed but the idea is to provide a low-level access point
+> for debugging and hacking and to expose all lines without the
+> need of any exporting. Also provide ample ammunition to shoot
+> oneself in the foot, because this is debugfs after all.
+
+I am afraid that if we go the debugfs route, we end up with
+a solution that just needs maintenance, but doesn't win users
+over.
+
+The target audience is not developers doing interactive debugging
+or development. It's embedded folks having init scripts which need
+GPIO lines to stay requested or software like labgrid that needs
+to login to a remote host outside of its control and needs to toggle
+GPIOs.
+
+These users won't consider an unstable debugfs interface.
+
+Thanks,
+Ahmad
 
 
-It takes a long time to run though, and does some wrong things as well:
-if the return is in the middle of the function, it still matches and
-removes it erroneously.
 
-johannes
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
