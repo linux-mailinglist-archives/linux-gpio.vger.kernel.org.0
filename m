@@ -1,138 +1,167 @@
-Return-Path: <linux-gpio+bounces-16393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16394-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40861A3F7B4
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 15:51:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0455A3F924
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 16:42:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F911177600
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 14:48:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6782E7A6A0B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 15:41:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B301D9688;
-	Fri, 21 Feb 2025 14:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ACD51DDA3C;
+	Fri, 21 Feb 2025 15:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BkkJ9/Ma"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Aua5F14v";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hK/x4O6o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a5-smtp.messagingengine.com (flow-a5-smtp.messagingengine.com [103.168.172.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7416E7080D
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 14:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04601D5CCC;
+	Fri, 21 Feb 2025 15:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740149293; cv=none; b=NBzI563JsAimNfxn6BhscFW4XJwjctIMDJBGmPD28VQKwzJpvq60vL8N1WeW3Vko4myaAVcluXp86N1WPT/wCM7Mg00Ek9Q+ipy/ILeKFlAwnkzxAEn7j7IrqaSnz+t7+mfADmHJrQzVchWSPjf7sz0oX3Aai95yuV5VyO7Rw3s=
+	t=1740152532; cv=none; b=Mdx1IT/hsDFGOs8qoan9jttG/uhTSegkMlG843mNtdOwGYF4iM6Ue35+I0M9vQX8QmmShKghlWQgn8dQk8X/zXrRb3h2BiqyKHcoh9cP1/3pE3bT9XWccEa0UJgUVDr8dOzZn5jq1NauABA20fyRB0X24ndpOFbY0env+4bfbUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740149293; c=relaxed/simple;
-	bh=VJc2fD5OV7xtJnzZHXcMaP4k2Fxqrl7cLt4EomVW+yU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJvDoK8qZESO/nn0UBlw6HOA0o9YUb8dbMmDyXLZC1wquQWskNn00J76LW7XlfG8vvim7E/7vNZqRkvYZdxClJqoPooK5cCDXpGaiD0Yn/FXJOreKIune3yaN9Y7OBqwvw4iVy2IhBsLsgA49r2zNgimJq5r+B0qSm+tfJThGNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BkkJ9/Ma; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30930b0b420so19236471fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 06:48:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740149288; x=1740754088; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
-        b=BkkJ9/MaHRka3oTqVwLy+NoNcS81ChGr/wb3b/UvpLG2ohxMt67zJJQi/nWb79GtzB
-         KPC4SnEbYmvfBFP082CqFLoMKiYA/SJA66WdRrOyJKPWbZyq0M+uakkOUPeoPPunmMT4
-         o3PllVhnPDfBThC+4WcXpLGGSP0BPNtDY4spA8Sgs2pdSbsfJIYrLvj7h4cplgGKE9Dp
-         Pn2seKih1woT4v9MhpObSSnpyGjHk1a8vIgM8ZXRU4RZ5uI3WZNqWinp9AeJfBowRvZV
-         8zYkItV4OWY41VW0crpKGMv/+con7y7CNieP1ZvdVBir/mlCc+z+UhhDxz69XPPIAEO3
-         ynSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740149288; x=1740754088;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
-        b=YT8BXUbZDtHPH1gLNVvyTUcZZJB6sIYNrYMekVQ0LPl/hVDIhgGogxUqi2k7sGB8g0
-         5a0dEdsT7oIbzW/+gqz2qF0eZoQL+6XukYmhJMlppzDEf/2Dvu6rEX6ztIICWyPqUp0c
-         VhuyGY2qcLUK6aJe25LdPCOuQNBMfptfZwYd6qyxdpjxnhHck1h5igswslAmpqszyCpF
-         2zfd1clq9Dhu2G1kxsjVVVNBBjxa9t+EJBoHggqY9/Z8ZS4jn50iX98dKNhrpp0X9xTK
-         wDS2Kk121MXdzh0cHeYaqNYuijV8Lnfy5WFDikwlKofpwd1ig+fSnCrvclVUMGhwb8SC
-         nKtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcWVkGM6Bal7Xh+aoeLKQWsBHNp+xn9OlmisTlRld8inQGfEZcjGgyXZjJB69GLHgPZzD6KGihqOu0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvSIPYBCUrj+Ws6oSRbaK7cjYT2syD48N9opR8mo+//Qx3daVG
-	5Ce0Ncth5LUMNpm2ug3QUyh8huN7NWfuTKxgfLbHnbCmS+lXzsZr/C/gpf+iibnRqDRP7drsPod
-	CrVo=
-X-Gm-Gg: ASbGncvDilndYwE1Y0zRYsiTkYEejfbgPCGuLqpVXQOnvHCELHExmFfcgWzJ0bj0HvZ
-	a4uznWntF+dEKRetzjm/aJ1cDDcW8V7EpatWVSEI05D5BXOkJ5MEX5AdkzNK0QZH8NUmfxCdYI0
-	wqdiMFpCeXJds9iSp+82GmU7o23uNEkZlT8Ja7M+1bzjCQEC29Z0/Z2c1aeKKk4V3gH9iUVs3B0
-	wN+OT6hK9UurTy9qjHwSK5Xa3GKj1GJ4bKeG1/eDGyhiQqathmxPRsizkwK22WZV7dO4JYDGnxG
-	oi66Ces3BoIcokEuxUAV4uIU9Q==
-X-Google-Smtp-Source: AGHT+IGZ83OKySBHkM2i7Fteix9HZI2XYcQ7YK7UCGOFlxTyWB4ysreuxLKAdoAc9mvwA33dt4t4AQ==
-X-Received: by 2002:a05:600c:4f91:b0:439:98b0:f8db with SMTP id 5b1f17b1804b1-439ae1f1903mr36508685e9.16.1740149277752;
-        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6cbc:77f7:6f0e:5a7c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399be79d92sm57998475e9.0.2025.02.21.06.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio fixes for v6.14-rc4
-Date: Fri, 21 Feb 2025 15:47:50 +0100
-Message-ID: <20250221144750.108147-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1740152532; c=relaxed/simple;
+	bh=QqbTVfRf9FmdvF8GodySpCwEsO8rjlDVjLOto+qoQ2k=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=WnXfwK3fqOvm3TRp1PBrUIB9WXVsnICw4/qc3hI6slLLAuHcK9BbiYmNd08HfNAm2Blj0qv1vakQ+4Rb/t8yGiQmY19PIJ3ls4l7Y6iFxdQnQO4yK8hs3Sp38AqNdZd4WSEWfg/+/tWWsd5vwA39OEeXlFU0SwmAT7Jr1sTgRD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Aua5F14v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hK/x4O6o; arc=none smtp.client-ip=103.168.172.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailflow.phl.internal (Postfix) with ESMTP id 68A162008E9;
+	Fri, 21 Feb 2025 10:42:07 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-11.internal (MEProxy); Fri, 21 Feb 2025 10:42:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1740152527;
+	 x=1740159727; bh=Zogi8f8M8Um40C2L5aiooebB5l2P6zGuaVkKnMZ0aqo=; b=
+	Aua5F14vWebL0DOxXVcNVFiZkYyvO+ZDn0lBIGthpSro7L8yySiSiaVg08WR7pLs
+	JojgEjUtKFzq3p96R+2HmZUtkfnB835nBY2UB1NRwsKhE3G6/KpCcrJCM9nOPLjg
+	2axdv5yBZa5jZAlSVtFXsSKh6/ocWFYVTAyli8xq5LHUWD1AKQJ5G4+Mr/4ewUSx
+	Yn/azkxhSGwazkgtAuJI1r5HiztAgb54Hy57zjASBXgbNstUSX1FQ056H8+WzBWb
+	bY73DEtylf/GOrATlkUX6KJLQyEzNftkEsaFLVyJSfRZdT3QoOtN3rFZ19iqpA5R
+	KJtz9HVtMoMVC5CtzTJTYw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740152527; x=
+	1740159727; bh=Zogi8f8M8Um40C2L5aiooebB5l2P6zGuaVkKnMZ0aqo=; b=h
+	K/x4O6oyNBPbMt/oANZVu7iwmMXMPEIsjZuQL8HZIOTsUUJO7Auhm1hFIArdijoJ
+	AB7VBKyq2IuRmCYnjPjcsdGs9S/cnI6aMm4jXLNLxVrlFDCnDgv/of6zLAJcxDcI
+	eL4AzPwv+QV8bY2ycaIOH64w/uZlZdCJ8e62DGEoD1siZA0vWqTZ/ReNgiqYKlv1
+	mihPOMp/ykpji+1Q19VspQRFz5r4aZTlYen0gNe9e7yhu15yzjE/MGurq1TMqurP
+	hR+5nH3l3BZzUbTYF6NMvpDtU6o63shcpD1jG8+Rp04xMu2H9dbuLLoa9S/eymhA
+	yXXAttMvAK8zmGaHmjzhA==
+X-ME-Sender: <xms:zJ64Z_O-mJRwvj1sCRG9GGTKNu1XV-MwxBvTkYAwkyjdP5scRxTp6w>
+    <xme:zJ64Z5-7kYr4fO9OJH0gelcDWR2xhP9EYBEJ8--FzYH7AgrGrnjPAP3VTDrGorGbV
+    -A7lGF4HomKqch4ruc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejtdegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeg
+    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihse
+    grrhhmrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthho
+    pehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepug
+    grvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnphhighhgihhnsehg
+    mhgrihhlrdgtohhmpdhrtghpthhtohepgihihihouhdrfigrnhhgtghonhhgsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtohephhgvrhgsvghrthesghhonhguohhrrdgrphgrnhgrrdho
+    rhhgrdgruhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtg
+    hpthhtohepiihijhhunhgphhhusehitghlohhuugdrtghomh
+X-ME-Proxy: <xmx:zJ64Z-QUkr7NyVicJsKDYCmEUML1cB41zvxitesRRl9w-vpZ4FIx9Q>
+    <xmx:zJ64ZzspC6JLy2xq6-H8dKC9b0W5UnN9XvAeR1biFGIhHAZHAhfaHQ>
+    <xmx:zJ64Z3dUc26wh_PxcfOohxsJWUrbvmi2AkE15Toc-0r6NXyMPFxzTg>
+    <xmx:zJ64Z_18mDWkVYuOyPdwsKM_ggsOAz5LQTjd3DnTKUlYpcS_8aoEYw>
+    <xmx:z564Z_SJKpL1igBqLIymTzZOJvFYGQRqn-AF7i_kx_KjtJ_VxT8ih3L7>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 469352220072; Fri, 21 Feb 2025 10:42:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 21 Feb 2025 16:40:58 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Zijun Hu" <quic_zijuhu@quicinc.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Jamal Hadi Salim" <jhs@mojatatu.com>,
+ "Cong Wang" <xiyou.wangcong@gmail.com>, "Jiri Pirko" <jiri@resnulli.us>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>, "Leon Romanovsky" <leon@kernel.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Lee Jones" <lee@kernel.org>,
+ "Thomas Graf" <tgraf@suug.ch>, "Christoph Hellwig" <hch@lst.de>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>,
+ "Robin Murphy" <robin.murphy@arm.com>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>
+Cc: "Zijun Hu" <zijun_hu@icloud.com>, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ linux-mtd@lists.infradead.org
+Message-Id: <5d662c4c-76f7-4e5c-82f3-2aeeaf9e3311@app.fastmail.com>
+In-Reply-To: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void APIs
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Feb 21, 2025, at 14:02, Zijun Hu wrote:
+> This patch series is to remove weird and needless 'return' for
+> void APIs under include/ with the following pattern:
+>
+> api_header.h:
+>
+> void api_func_a(...);
+>
+> static inline void api_func_b(...)
+> {
+> 	return api_func_a(...);
+> }
+>
+> Remove the needless 'return' in api_func_b().
+>
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Linus,
+I have no objection to the changes, but I think you should
+describe the motivation for them beyond them being 'weird'.
 
-Please pull the following set of GPIO fixes for the upcoming RC. There
-are two fixes for GPIO core: one adds missing retval checks to older
-code, while the second adds SRCU synchronization to legs in code that
-were missed during the big rework a few cycles back. There's also one
-small driver fix.
+Do these 'return' statements get in the way of some other
+work you are doing? Is there a compiler warning you want
+to enable to ensure they don't come back? Is this all of
+the instances in the kernel or just the ones you found by
+inspection?
 
-Best Regards,
-Bartosz Golaszewski
-
-The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
-
-  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc4
-
-for you to fetch changes up to 96fa9ec477ff60bed87e1441fd43e003179f3253:
-
-  gpiolib: don't bail out if get_direction() fails in gpiochip_add_data() (2025-02-20 14:08:18 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.14-rc4
-
-- check the return value of the get_direction() callback in struct
-  gpio_chip
-- protect the multi-line get/set legs in GPIO core with SRCU
-- fix a race condition in gpio-vf610
-
-----------------------------------------------------------------
-Bartosz Golaszewski (3):
-      gpiolib: check the return value of gpio_chip::get_direction()
-      gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
-      gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
-
-Johan Korsnes (1):
-      gpio: vf610: add locking to gpio direction functions
-
- drivers/gpio/gpio-vf610.c |   4 ++
- drivers/gpio/gpiolib.c    | 100 ++++++++++++++++++++++++++++++++--------------
- drivers/gpio/gpiolib.h    |   4 +-
- 3 files changed, 76 insertions(+), 32 deletions(-)
+    Arnd
 
