@@ -1,132 +1,117 @@
-Return-Path: <linux-gpio+bounces-16405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC9DCA3FFE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:41:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E09BA3FFD4
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:37:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 821663A7E0C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 19:41:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CD3619E0DAF
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 19:37:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5697D2528E5;
-	Fri, 21 Feb 2025 19:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AC9C252914;
+	Fri, 21 Feb 2025 19:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Mg28JmPm"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="nXuh8rCG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F651FBC93
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 19:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2E11D7E50;
+	Fri, 21 Feb 2025 19:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740166897; cv=none; b=TnSJXWBhIUcswWYrqsnULWUweX2ZRnwsJZ8mcGOjzCL5SCzq/YAZQ+cfdQc2IqEBnngCrkBUjCEr6PPNGIHs9D9F0V9QNIt2aOx2oyUGdyBqx5L/nw+yASZEKh/CTNDBFSPEi0RzE/dIeJIUCS5hh36xYMXl9SmdqCSBFT7wSGY=
+	t=1740166631; cv=none; b=WruvxAK7FFkF9clZ5vCpWqlkXLGqmWvJRta3G6WMko6FDE8DC3cYwlcLUGMYh9rhkQ5BVpDzGJdzH4SxSnypEQCVg+YousihfUjC4mXWfdg2yR87cEvdQy4AmBJVSl7pAyI/JX+5BosqcnDQhgKgxE4Y3WIMpXa6CTjY/AMAt8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740166897; c=relaxed/simple;
-	bh=m7cs4zzvtULX46fKW0sUQXLrwwDkAKqyNIJh8VzHzJA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZGL6BqOy/ilt8dIXIRtD38c+SSalfj918nPN9Q3S8+KcWBLIzLtmhxCD1UQ0xODys3hY7xdCSobxWdWh2kvAx8yNG5S0X3pG7igujiM9BK8ID0aMQ5wdLLjYYVoiJYeVRbBnLMy8WDQZH4QsU7yFtHdmuo8+yL3v6L9DZo1pvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Mg28JmPm; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A7E0310382D3C;
-	Fri, 21 Feb 2025 20:41:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1740166892;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9A0QAegeRtgTsmf6i8nDwpToAmAw4phMNlcNIQAefgQ=;
-	b=Mg28JmPmG205qRzH5B/shpvAXJp7+V33zGZtgd3pQoXMnutFiJkoLwE8y1fv5ImrMachOT
-	d4WXKEGWf/xq5DBS7N08JELPU8jtYOaZsL8/xsDdPGld5MmM8k7cV7dAaFy4kit8ktSpC/
-	++cgq0CAF7w3hK2IimbOcbYotUf7aqjZbpE8Yu5bZqGe3EZsKQI/LAG9k/t27zZKwzQnpE
-	6af8Fn61lPx+I7k1STTkQvcRZVrPS93Q8xyfZKh67OdS7iUKaUo2Dq4BFa+1pd+tJF+7Fp
-	84oBSFnddUGe6HwTF1b5o7bCCZ4Acrm88GYBF9pHCdnrXseWjgV/D2ZcloTHPw==
-Message-ID: <e5bdcca6-4d1b-451c-8fde-990db9db23d8@denx.de>
-Date: Fri, 21 Feb 2025 19:01:35 +0100
+	s=arc-20240116; t=1740166631; c=relaxed/simple;
+	bh=zDxTSXduPQXA4xHKPlyHXnfxQxWR7o6zkvl4FTCCsPY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dmMWGoXoXEY6oa8NJhs9jrpdSplL+kDw7q2ViLlL0fllnhUaeKbbPldHibjk69kcp+JDhLIgdDjn64HeK+mChoNMUEZPIZpmWG6GvWoWFC8XUaYIrxRjYVJtiUslNOCSHXFSHRhinOh8y343oOmD50Fr5SuOr26mT0jwz/8vYhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=nXuh8rCG; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=zDxTSXduPQXA4xHKPlyHXnfxQxWR7o6zkvl4FTCCsPY=;
+	t=1740166629; x=1741376229; b=nXuh8rCGqsfC3M2xAznPkwmoiPBWtC+d9yFk7989Wm+EiBe
+	cq6CGtatT5XGh/DqtDIy+UVkvnpDwSnALN0h3GIkDMzWpdgd0M5LrLl9kUwr0WoiJ2jv9rXYWI98t
+	BX94haLt4oatQhLfxjfHjJ8bLruAkrTbhAq3hnbNU5LBsY850740i8Yk2zyjzlGjCma/Q8f9c/yHY
+	4YT8TYd3DU76NDpemOfAkK2N1vbWMftzJ6EIK6LI8rw1hG1xmbpVS/h91s7ASEIGED99av4bwzot4
+	uPBPOv8Vz33cBJ18VPWaTfUWMohuHYnxweLYJFnPgprQtfISwoRrqINnv6hgqgDg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tlYp2-00000005Y57-49wJ;
+	Fri, 21 Feb 2025 20:36:29 +0100
+Message-ID: <9af9413b7ab41c6b2db5f862d0fa50e9de279d67.camel@sipsolutions.net>
+Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for
+ void APIs
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Stephen Hemminger <stephen@networkplumber.org>, Zijun Hu
+	 <quic_zijuhu@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon	
+ <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew
+ Morton	 <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, Peter
+ Zijlstra	 <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Thomas
+ Gleixner	 <tglx@linutronix.de>, Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich	 <dakr@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>, Jamal Hadi Salim
+ <jhs@mojatatu.com>, Cong Wang	 <xiyou.wangcong@gmail.com>, Jiri Pirko
+ <jiri@resnulli.us>, Jason Gunthorpe	 <jgg@ziepe.ca>, Leon Romanovsky
+ <leon@kernel.org>, Linus Walleij	 <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Lee Jones	 <lee@kernel.org>, Thomas Graf
+ <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Miquel
+ Raynal	 <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu <zijun_hu@icloud.com>,
+ linux-arch@vger.kernel.org, 	linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, 	iommu@lists.linux.dev,
+ linux-mtd@lists.infradead.org
+Date: Fri, 21 Feb 2025 20:36:26 +0100
+In-Reply-To: <20250221110042.2ec3c276@hermes.local>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+	 <20250221110042.2ec3c276@hermes.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson
- <warthog618@gmail.com>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
- <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-malware-bazaar: not-scanned
 
-On 2/14/25 10:14 AM, Linus Walleij wrote:
-> On Sun, Feb 2, 2025 at 1:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, 2025-02-21 at 11:00 -0800, Stephen Hemminger wrote:
+>=20
+> Is this something that could be done with a coccinelle script?
+>=20
 
-Hi,
+Almost enough to do this:
 
-I'm sorry for the late reply.
+@@
+identifier fn;
+expression E;
+@@
+void fn(...)
+{
+...
+-return
+E;
+}
 
->> I think it was Ahmad or Marek who suggested that users aren't really
->> attached to the global numbering but to the ease of use of sysfs.
->>
->> I floated an idea of introducing a backward compatible change to sysfs
->> that would allow users to identify GPIOs by the label of their parent
->> chip and the hardware offset of the line within that chip (...)
->>
->> We could then encourage users to switch to using the chip-local
->> exports and eventually at least remove the global export/unexport pair
->> if we cannot make the entire sysfs class go away.
->>
->> Please let me know what you think about it?
-> 
-> Yes, I think it is mostly equivalent to what I say in drivers/gpio/TODO,
-> my only point being that when we add something like this, we
-> put it in debugfs where it belongs, and as illustrated by your
-> example, it is indeed used for debugging/exploring the
-> system:
 
-I would very much like to avoid having to enable debugfs on production 
-systems to access GPIOs in early userspace (e.g. initramfs). This was so 
-far possible via the sysfs API without tools, currently it is becoming 
-not easily possible. A sysfs API "v2" which makes that possible would be 
-very much appreciated.
+It takes a long time to run though, and does some wrong things as well:
+if the return is in the middle of the function, it still matches and
+removes it erroneously.
 
-Also note that I do not care about static GPIO number assignment in the 
-sysfs API, so that part can go.
-
-> ----------------8<----------------------------8<------------------------
-> Debugfs in place of sysfs
-> 
-> The old sysfs code that enables simple uses of GPIOs from the
-> command line is still popular despite the existance of the proper
-> character device. The reason is that it is simple to use on
-> root filesystems where you only have a minimal set of tools such
-> as "cat", "echo" etc.
-
-Yes
-
-> The old sysfs still need to be strongly deprecated and removed
-> as it relies on the global GPIO numberspace that assume a strict
-> order of global GPIO numbers that do not change between boots
-> and is independent of probe order.
-
-Yes
-
-> To solve this and provide an ABI that people can use for hacks
-> and development, implement a debugfs
-
-sysfs please.
-
-[...]
+johannes
 
