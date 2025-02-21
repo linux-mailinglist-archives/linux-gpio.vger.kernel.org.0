@@ -1,152 +1,138 @@
-Return-Path: <linux-gpio+bounces-16347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F427A3EDF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:09:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1E46A3EED0
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:37:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 062F4170A1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 08:09:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A8371784D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 08:37:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4D3F1FBC9B;
-	Fri, 21 Feb 2025 08:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE7C1FE470;
+	Fri, 21 Feb 2025 08:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="N2CLjoRF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6951FAC57
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 08:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A5C201004
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 08:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740125359; cv=none; b=anjT0MJrgJPayVJzzG5eYfl8NDvgtHVqsstZDMSRDCWSSy0vvN1S/JmlrOzbU3HEuB0Y2Xy8aUmc+7r9LJJ+hv+wVwYrxRJrFOjoWh9TX/2C1Q9SSkxW0KMLmsto++xhpdVJ+3afSZ4ozUBZnWo8IHtHYuHyvfSyggb0A2YJr7c=
+	t=1740127051; cv=none; b=NOca0eVju2Td2olOniOX9+DOehjCuquTA6oYVajhOhXzyt2852GT25EnY5xqOC/IywgrLg3DUlEaEl50+35SCOcss+8MzQ4u0H5z3IrwFoOzTV+wDAAoYhyJVD1E4JzAj/evR2xucWWJi35FRGfUscFBtr45cjQEnv96fFL7Jqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740125359; c=relaxed/simple;
-	bh=W2+lqFB3yvUvKTgq6OrbULXW2hoBiT0kzSTRg8T/j5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AkB0tQ9HEDay0KDYWp3K5KnhVpbT/MrS47jLIbSwI1Y9xLQ85xHNzoR/YMPR6A3jCyXgv9VcKPNqZUoB3Ycv3+VRoYSzgPlpRInXx06Mk9yWhvEvncPolHyLH/TqPis/BElkgf6FuRxa6oV3qBUmmXlfBElNEkiudbXKIJj/YoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tlO5e-0007gh-LR; Fri, 21 Feb 2025 09:08:54 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tlO5b-0024OL-2S;
-	Fri, 21 Feb 2025 09:08:51 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 585363C8315;
-	Fri, 21 Feb 2025 08:08:51 +0000 (UTC)
-Date: Fri, 21 Feb 2025 09:08:51 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
-Message-ID: <20250221-light-neat-doberman-1166a5-mkl@pengutronix.de>
-References: <20250207074502.1055111-1-a0282524688@gmail.com>
- <20250207074502.1055111-5-a0282524688@gmail.com>
- <20250207-savvy-beaver-of-culture-45698d-mkl@pengutronix.de>
- <CAOoeyxX4guHzUap1ieQ_L3PrvpBAYbMiQKrb6ko=MGsF5RcXLg@mail.gmail.com>
+	s=arc-20240116; t=1740127051; c=relaxed/simple;
+	bh=1Pyc5XSXk8/KpOI0I+Y0iOOSNDehTqvQGNhqxWmM4TE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gZ6o2ojMuTysOqAjcHnHEL/gD2MabyYnD1qG473sp1WOPTMnFNrgbWSgxxirOXhC7zAd0QB/+XOL0P6dlBlg7h7CaEqCBKO/k05x0NEeKPkEDVL5whoTJGmdcw9iFUQPsqoqgO6xZcxy1tGTPtODAOGQudwDjrBN+cBVYCrgxRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=N2CLjoRF; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-546267ed92fso2145593e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 00:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740127047; x=1740731847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fW/FAUY+BtuxgqThnl6ySpYQqHb8f9LhIhu4HPMnZ10=;
+        b=N2CLjoRFHcoshO2ncCSOlJbY+mx4oO6D0aFI5TFfFT6oe01+/VcP0Kq7EfOrOR6+nE
+         KDfo4RhqnXmSYSpsdrX69MTYP33TAXvGeN4HBtGKpoMkXAEZI4pGUcolWMIyyP4e/kT4
+         RfROlg08rffd2AWfCu6nFhiTp/rYYcXjMKvF4cA37ECEhSM1penkRhlJw/HBD6i6BTCc
+         5HG1dGQ0JGdcPnYS5iMFM/omdul/l70eKl6NfcUTratis0zsYyTftkTF6Yq1+2XpDV6Q
+         hLmYRqba22AToEmwjvyHnszwJba0Wutkg6XNonuq1e8ae/poJRHOdxw2Gi+nfCrFl6x1
+         Fp2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740127047; x=1740731847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fW/FAUY+BtuxgqThnl6ySpYQqHb8f9LhIhu4HPMnZ10=;
+        b=fPShYDwPTb7KYvckOPSO31y13BrUq/gngEct2FnOmE4+7v5dUt6V6Cy5ZnbAex1iOM
+         dq1fhuCfQ6QNBVk9PzcKYlsdi1c1smy8b+bjko0Pj74V7Gd+vYD77MjqwDYC4PUJPJGm
+         HxlLGHhKETWvpizLpI69rCJdrtcyzbWmu/XgSiCrNaoXT/SVNkCVAChxcZiavMRK6JYA
+         RU4ZcJ236ssVZ3kkXZQaNyNmPq9kkGIv7JOqTReuYTEKq/Z3mgrW0S4Oi7XN8WiE2dhF
+         N+etEd60SuGb7AB8SRt/3yP/dkp08g3LyMQeo51mc6xWGyiTUJ5c4y97brs8mOmH6N3Z
+         +ICg==
+X-Forwarded-Encrypted: i=1; AJvYcCW70nxHapo/L28LcmOdkHJuzSqm5kHPRTbNZIoUPd+OwtI9kzTXpoWZpqh5ShQlwaFgGqLdVWLFXyjx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKhwojOtlWKREv7TF3XOCuNn64Ahl223JS0tmty12dxl+fh1ww
+	gBRhxK2MKeZ9iopX+KR8C2evmTeEnXCrm5IpVSBnusJ8cSJlIKo+YvAoIiL8dSV9lO8OF7ojxG/
+	qXMg6VfE5omAAGJGUAPXSxvAbNbbBf6oQURJ8ig==
+X-Gm-Gg: ASbGnctTgG3JE5mhKJwEK+3+bMKlCMwdVEVyGGWKhivR+AD7Tk+Eu8cK/xYYjRsBSKV
+	+zfxBTYqLTy7TxBWtPKfHjpoPiwVXha4JQbxTvsHaMV59sRZZ/yqnahgF3gDNJE+cpjSoG77pis
+	rWRMEtfpGpE0cdUNtmpPwEaNwE3R2WPhlMN6FnUg4=
+X-Google-Smtp-Source: AGHT+IEVJYqpV94JpnSSmFsbKfheCNp8/0iZB0ZSGoVT/MInSsid5S3N4SwldmQ4L5O1E7gpGonbz4t6nSMa3dwR6i0=
+X-Received: by 2002:a05:6512:230a:b0:545:17b:3cf9 with SMTP id
+ 2adb3069b0e04-54838f5c910mr744359e87.48.1740127047367; Fri, 21 Feb 2025
+ 00:37:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tjblaazmatqfq76v"
-Content-Disposition: inline
-In-Reply-To: <CAOoeyxX4guHzUap1ieQ_L3PrvpBAYbMiQKrb6ko=MGsF5RcXLg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---tjblaazmatqfq76v
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
+ <20250217-03-k1-gpio-v5-3-2863ec3e7b67@gentoo.org> <CAMRc=MdJszmZ8d1MGo=bfJ8TwqOYBPLe2Jfc9MfbErDUCMQktg@mail.gmail.com>
+ <MA0PR01MB567180C0FE89E3BEBAF2B12EFEC42@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <MA0PR01MB567180C0FE89E3BEBAF2B12EFEC42@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Feb 2025 09:37:16 +0100
+X-Gm-Features: AWEUYZkPeZ_f9Qkm0Zlcw9GzT4Sb60CF7RDIsxK-TmMLrjs_ajHOShwiT4OIdzI
+Message-ID: <CAMRc=MdX6KiGk1zBRK3bZpN3iM16-8mDq40sTez6YO2kJEq0zQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpio: spacemit: add support for K1 SoC
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor@kernel.org>, Yangyu Chen <cyy@cyyself.name>, devicetree@vger.kernel.org, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Jesse Taube <mr.bossman075@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Inochi Amaoto <inochiama@outlook.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, spacemit@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
-MIME-Version: 1.0
 
-On 21.02.2025 16:01:07, Ming Yu wrote:
-> Hi Marc,
->=20
-> Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B42=E6=9C=887=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=888:15=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> >
-> > > +static irqreturn_t nct6694_can_irq(int irq, void *data)
-> > > +{
-> > > +     struct net_device *ndev =3D data;
-> > > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
-> > > +     struct nct6694_can_event *evt =3D priv->event;
-> > > +     struct nct6694_cmd_header cmd_hd =3D {
-> > > +             .mod =3D NCT6694_CAN_MOD,
-> > > +             .cmd =3D NCT6694_CAN_EVENT,
-> > > +             .sel =3D NCT6694_CAN_EVENT_SEL(priv->can_idx, NCT6694_C=
-AN_EVENT_MASK),
-> > > +             .len =3D cpu_to_le16(sizeof(priv->event))
-> > > +     };
-> > > +     irqreturn_t handled =3D IRQ_NONE;
-> > > +     int can_idx =3D priv->can_idx;
-> > > +     int ret;
-> >
-> > it would make sense to have a event pointer here instead of the can_idx?
-> >
-> >         const struct nct6694_can_event *event =3D &priv->event[priv->ca=
-n_idx];
-> >
-> The CAN Event command always returns 16bytes: the first 8 bytes
-> correspond to the CAN0 event, and the last 8 bytes correspond to the
-> CAN1 event. Therefore, the event pointer here refers to both event
-> buffers.
+On Fri, Feb 21, 2025 at 12:36=E2=80=AFAM Chen Wang <unicorn_wang@outlook.co=
+m> wrote:
+>
+>
+> On 2025/2/20 21:34, Bartosz Golaszewski wrote:
+> > On Mon, Feb 17, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
+te:
+> [......]
+> >> +#define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gp=
+io_bank, gc)
+> >> +
+> >> +struct spacemit_gpio;
+> >> +
+> >> +struct spacemit_gpio_bank {
+> >> +       struct gpio_chip                gc;
+> >> +       struct spacemit_gpio            *sg;
+> >> +       void __iomem                    *base;
+> >> +       u32                             index;
+> >> +       u32                             irq_mask;
+> >> +       u32                             irq_rising_edge;
+> >> +       u32                             irq_falling_edge;
+> >> +};
+> >> +
+> >> +struct spacemit_gpio {
+> >> +       struct  device                  *dev;
+> >> +       struct  spacemit_gpio_bank      sgb[NR_BANKS];
+> >> +};
+> > Please don't use tabs in struct definitions.
+>
+> Why not=EF=BC=9FI see
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct=
+-declarations-and-initializers
+>
 
-Yes, but in the following code uses "priv->event[can_idx]" several
-times, this is why I proposed to have a dedicated "struct
-nct6694_can_event *event" variable.
+This is for the tip tree, not treewide.
 
-regards,
-Marc
+It's my personal maintainer preference. We do use both under
+drivers/gpio/ but I prefer no-tabs in new code.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---tjblaazmatqfq76v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme4NJAACgkQDHRl3/mQ
-kZwgawgAqcasz/q2z0wDldtBADvSGWJpZYReThQnX06QjplHpEQwiaalyPWXJBK0
-IRkuBRHEj0mNahTZgsl731lg+Y+kz3DxS7QBVJIIKvuq4MebGerv+g96FJHQ/HPE
-6m7vE/Y46rSC5PJQpZgxL3K0V/L8NmFxDCMQjYOFaXvHvwG+4bgPi4vCmCElJYRn
-iOMtP7NhVwmP9c1YcFlraOBQ2exHFPrOnHA2J9myAewvFnXqLZRJDNQrEohPm7ZJ
-jlHgOB7cJYCzL8wed06r9RxSq6ZPHF3tPxCL6n5nVKgmxwTOdW2S8Mk1Z4LANrjY
-bjwfdAqvpMPU/EQQkTxSxIadWDQSWQ==
-=aqP2
------END PGP SIGNATURE-----
-
---tjblaazmatqfq76v--
+Bart
 
