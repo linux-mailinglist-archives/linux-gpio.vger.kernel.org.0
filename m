@@ -1,45 +1,46 @@
-Return-Path: <linux-gpio+bounces-16351-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16352-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 826A5A3EFBF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 10:15:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CBAAA3EFC0
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 10:15:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 870A37A8D82
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:14:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5102C1887696
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:15:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA5A202F99;
-	Fri, 21 Feb 2025 09:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEBC8204098;
+	Fri, 21 Feb 2025 09:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iT8H/NJ9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTgml/M9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E9F1E9B21;
-	Fri, 21 Feb 2025 09:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AD11E9B21;
+	Fri, 21 Feb 2025 09:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129298; cv=none; b=XfBrRdRoZIiP5c7u0HbPsWa8c1D/JTsWTZRXGaYsvo2Z2SGk26tw8ogKjYVAvjGRDiT+l9iGezWaP1Or51EMJ4yAJg+j2b5Xw3Rz1prYxAVRkxLNda3m3KcDEDyrD+ymf6FUbgjV28lT8PMxC/aKCEuPD611nEAULbH0FQWKvzQ=
+	t=1740129301; cv=none; b=IwNFGQuOapAlyM9xIJjibRuYbV6dW+WlPYHq+GRu8kvheN1lhYs7NYHDRNM9ix5Gql7fdQtrmgqk0S+TZ71VLMoEp7KwKDXd3A7uBepb9zO8ZTxq0r8TMRtm1WZ1QLFRnrJ5G/eAwBsC3QtKfyLfzmnYxXqid8UHkfvIF12+of8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129298; c=relaxed/simple;
-	bh=FPSnej4gRORvz9fIoO0ZHKVoxlk58vTwK5PRU598Dfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uzm1fpBeFmu4MswTMeLXXS/mMpBXtG0DMyxHRso7ftBh4WtNcOiy3syLwQbmc4CORORE1oYVleoUY84P3azMh0VeKwp1gtUIsRFQzS5b5zq8I9ZQ07+XuvzFz46Me2dtiqZTFBdMbFoaVZuRgvhgvchCXzZznDqIZJoQ1MexEGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iT8H/NJ9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E32C4CEE7;
-	Fri, 21 Feb 2025 09:14:54 +0000 (UTC)
+	s=arc-20240116; t=1740129301; c=relaxed/simple;
+	bh=BV6VLJUzkK8pZ9XtIRWtZGZDINI77ELQvsoIDlsinko=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c53jsNVnmcSruV/g5vLgv2dMzfDaieyyuPwJy+uVOdDfBh8y0cxjOKZygDHPoz1sIinCZnM7ss6Mx/B2DU5G0O2QJbTHe7+4nK3sHqOWnss8vYeK53QdxAzBZRY7kP6psSscBF/RlwwyS0vsH2RqhHifNgeJKWshx6/7hXveqTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTgml/M9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FB4C4CEE6;
+	Fri, 21 Feb 2025 09:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740129297;
-	bh=FPSnej4gRORvz9fIoO0ZHKVoxlk58vTwK5PRU598Dfk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iT8H/NJ9b3Nb0+G0ar4ucq4X7ucegkJRj4HYn1Urba6EsbH0WMjy/Ivi1CXS1IoyE
-	 /wumnkPZYHrIDSfMbfw3e/AHfFwh3Fk87Tvhg2/CGEkQVqy03Be90x6ObhnxiBbLeF
-	 V1qASkjq2K8SqczFy3H1vwxp2iKN6Ax96ikLus0a3LbvDFPo6GRQOtPDzf+OJlo1oJ
-	 mYhic2hQlq1YPJOdkpdLySZfeIVeOf3TiTEe3JZC/SPnX+ffz8ufV2K5nEr83sSaT/
-	 UTeQJBSbAemajlSfDYgQMWOMyD5J7/8Wb35dYDOJ36RLSNmHdVl0i1Vr/WyFzUXp/0
-	 O3RAiCLqSdcKw==
+	s=k20201202; t=1740129300;
+	bh=BV6VLJUzkK8pZ9XtIRWtZGZDINI77ELQvsoIDlsinko=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YTgml/M9aEOmiCRD9I7H0HQTj6OOGm5IDQahjFQQc/16sBZm3AzsUeczoatVjjzX4
+	 GJWovGRKv0ZbQBji5L13Pkc1XCptpVlq2SWCY84HnEyhyDTMcfYfiU3JLcTCYhm7Dp
+	 Fa3uAl7WIhcmUKbkW0ZvhcoycXJEoDAaZZ9j5oJoF0ZVYYfdv82j4xZ+I7FrVh+VW2
+	 1IbTX+Goo/SoZymon9fIwbIjV5i4z1zlcyYwnSSS+3jquZLwmn1R86HGd0rtMFFfNB
+	 SByCP8N/uY/0QPbTbOzNM6RQOS90mH6iFy61DJwerDAjETB91gMXkln0YVKxEVAQGK
+	 xCYJsrPcIKj8g==
 From: Michael Walle <mwalle@kernel.org>
 To: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
@@ -55,10 +56,12 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-am62p: fix pinctrl settings
-Date: Fri, 21 Feb 2025 10:14:46 +0100
-Message-Id: <20250221091447.595199-1-mwalle@kernel.org>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-j722s: fix pinctrl settings
+Date: Fri, 21 Feb 2025 10:14:47 +0100
+Message-Id: <20250221091447.595199-2-mwalle@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250221091447.595199-1-mwalle@kernel.org>
+References: <20250221091447.595199-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,52 +90,26 @@ covers the entire pad setting instead of just the mux field).
 Remove the pinctrl-single,gpio-range property, so that no settings are
 applied during a gpio_request() call.
 
-Fixes: d72d73a44c3c ("arm64: dts: ti: k3-am62p: Add gpio-ranges properties")
+Fixes: 5e5c50964e2e ("arm64: dts: ti: k3-j722s: Add gpio-ranges properties")
 Signed-off-by: Michael Walle <mwalle@kernel.org>
 ---
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-Maybe one could also switch the pinctrl-single to a pinconf-single node
-which is able to control all the bias settings and restrict
-"pinctrl-single,function-mask" to just the actual function. Not
-sure.
-
- .../boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi     |  8 --------
- arch/arm64/boot/dts/ti/k3-am62p-main.dtsi          | 14 --------------
- 2 files changed, 22 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
-index b33aff0d65c9..bd6a00d13aea 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
-@@ -12,15 +12,7 @@ mcu_pmx0: pinctrl@4084000 {
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
- 		pinctrl-single,function-mask = <0xffffffff>;
--		pinctrl-single,gpio-range =
--			<&mcu_pmx_range 0 21 PIN_GPIO_RANGE_IOPAD>,
--			<&mcu_pmx_range 23 1 PIN_GPIO_RANGE_IOPAD>,
--			<&mcu_pmx_range 32 2 PIN_GPIO_RANGE_IOPAD>;
- 		bootph-all;
--
--		mcu_pmx_range: gpio-range {
--			#pinctrl-single,gpio-range-cells = <3>;
--		};
- 	};
- 
- 	mcu_esm: esm@4100000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-index 420c77c8e9e5..0a888392137c 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-@@ -42,20 +42,6 @@ &inta_main_dmss {
- 	ti,interrupt-ranges = <5 69 35>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+index 3ac2d45a0558..6da7b3a2943c 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+@@ -251,21 +251,6 @@ &inta_main_dmss {
+ 	ti,interrupt-ranges = <7 71 21>;
  };
  
 -&main_pmx0 {
 -	pinctrl-single,gpio-range =
 -		<&main_pmx0_range 0 32 PIN_GPIO_RANGE_IOPAD>,
 -		<&main_pmx0_range 33 38 PIN_GPIO_RANGE_IOPAD>,
--		<&main_pmx0_range 72 22 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 72 17 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 101 25 PIN_GPIO_RANGE_IOPAD>,
 -		<&main_pmx0_range 137 5 PIN_GPIO_RANGE_IOPAD>,
 -		<&main_pmx0_range 143 3 PIN_GPIO_RANGE_IOPAD>,
 -		<&main_pmx0_range 149 2 PIN_GPIO_RANGE_IOPAD>;
@@ -144,7 +121,7 @@ index 420c77c8e9e5..0a888392137c 100644
 -
  &main_gpio0 {
  	gpio-ranges = <&main_pmx0 0 0 32>, <&main_pmx0 32 33 38>,
- 			<&main_pmx0 70 72 22>;
+ 			<&main_pmx0 70 72 17>;
 -- 
 2.39.5
 
