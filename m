@@ -1,180 +1,104 @@
-Return-Path: <linux-gpio+bounces-16399-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16400-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25311A3FC54
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 17:58:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D287A3FCB3
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 18:04:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5234A3A2D8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 16:52:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCB497A6B33
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 17:01:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5107212D6E;
-	Fri, 21 Feb 2025 16:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+mezyth"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C25C24396A;
+	Fri, 21 Feb 2025 17:02:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5DE207A2E;
-	Fri, 21 Feb 2025 16:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2B23CEFB
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 17:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156749; cv=none; b=aAa4tg9oJQ334HIxgFeSKD2PBfJ9ySKGmpw0xhA6kUG3c5R7JRmIPqIbkoOP81d+cw9vOaM4T1By6Dx93ZqWOkCp3wUHWuGWxVz74UWLPgJ47UTBscJji5U+dY0DRhYrelRwEJbk+gq4GRrwT7FUHok5JZ4MRFtbZGJ4mF3hhtU=
+	t=1740157334; cv=none; b=k7n89FD3XfAfxA/tdQ8tri4mNgogsew3XRPo+YB5oydsPaFQ3w0TaHgAxzfV94piJPVAS4Ri+EAosaaCFPynhVy6O+POO6vwWX6RkTdA7sMAxmDAOQrcUBA+y/GMH/XhEFo7TrEfkY8AH8txoQ/Atnn2qAOANIQpP9ljRxAlK9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156749; c=relaxed/simple;
-	bh=lL/MvTZeP9yBIOaMchub2lXV69E2rqGAnYMQrOKZXRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lJWw26dSOLpCzeX6hq7LMNAUB/NxuTqGzI086WTrICKhgmyzYWfxHnhJFau70joLKxQwlrBl9XQrsDLwxvrcs2Um4cyhNh0njCAzDSU/f16AtYzrA+yBz75AjzmL655+sguO28DeIM6hUI38foc8pwAsg7XJ9KwP42Q5MUF8cGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+mezyth; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04B72C4CED6;
-	Fri, 21 Feb 2025 16:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740156749;
-	bh=lL/MvTZeP9yBIOaMchub2lXV69E2rqGAnYMQrOKZXRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+mezythexuErDLP3PWc770FEtoUXJNzMfTarekyooZJpaC+pCCrL/ebHbaRgn6iC
-	 F/vtDW3RhRvc9Mh3Pxhi5OFuZeERBOwcgLzz97ANMaT+JtI37UCiG1+iNPCyHyDBz0
-	 3vVnuIVyCJ2bFxkqAFB37plgwiIVMcm/ZzzeFuyARIolKPMq5Vux1s0a5VzqIyk+5K
-	 ccc/LNpGKoUCPoMmLk4agfPGIANbJ090FPs7l0WCIlGBK2g4gG2BQQH+yvdW1H/rvm
-	 tZMKgulsbwfYZuPUxAu8yXRIRiXsNs67H4KWQNoP4aNLxZ0e5JrcyyHvZemDxo9AT9
-	 I7M/eObZb1K9g==
-Date: Fri, 21 Feb 2025 16:52:24 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: nxp,pcf8575: add reset GPIO
-Message-ID: <20250221-grazing-blooming-d21874a59096@spud>
-References: <20250221-pca976x-reset-driver-v2-0-a2bcb9fdc256@cherry.de>
- <20250221-pca976x-reset-driver-v2-1-a2bcb9fdc256@cherry.de>
+	s=arc-20240116; t=1740157334; c=relaxed/simple;
+	bh=NmoUzmlc2gFy8DtJW0mf6WyAUDiPuHGXJ/F/L5mJS2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pp05KLlbLJwra7uFiDug8M6WyCABWdrF9rb4fwfhqyOBUt7D78BWgFDfKuE5ruejVLBrXvtJH2o9pY8yz7c4sgRqmvb/9WUG9wn84KgjNIqS27uASmmz8J4Ysyz/bdveSofsg0bOzxuJT/8dO1bVxzeaKH+omZMEv2R48rm56SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:ae9a:419e:d123:9695])
+	by albert.telenet-ops.be with cmsmtp
+	id GH2A2E00D0y8aK506H2Ay4; Fri, 21 Feb 2025 18:02:10 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tlWPO-0000000BMt0-0Lpo;
+	Fri, 21 Feb 2025 18:02:10 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tlWPi-0000000EP6Y-1sDL;
+	Fri, 21 Feb 2025 18:02:10 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.15
+Date: Fri, 21 Feb 2025 18:02:09 +0100
+Message-ID: <cover.1740157176.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GiYkKQYTh3xozX1M"
-Content-Disposition: inline
-In-Reply-To: <20250221-pca976x-reset-driver-v2-1-a2bcb9fdc256@cherry.de>
+Content-Transfer-Encoding: 8bit
 
+	Hi Linus,
 
---GiYkKQYTh3xozX1M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-On Fri, Feb 21, 2025 at 11:14:26AM +0100, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
->=20
-> A few of the I2C GPIO expander chips supported by this binding have a
-> RESETN pin to be able to reset the chip. The chip is held in reset while
-> the pin is low, therefore the polarity of reset-gpios is expected to
-> reflect that, i.e. a GPIO_ACTIVE_HIGH means the GPIO will be driven high
-> for reset and then driven low, GPIO_ACTIVE_LOW means the GPIO will be
-> driven low for reset and then driven high. If a GPIO is directly routed
-> to RESETN pin on the IC without any inverter, GPIO_ACTIVE_LOW is thus
-> expected.
->=20
-> Out of the supported chips, only PCA9670, PCA9671, PCA9672 and PCA9673
-> show a RESETN pin in their datasheets. They all share the same reset
-> timings, that is 4+us reset pulse[0] and 100+us reset time[0].
->=20
-> When performing a reset, "The PCA9670 registers and I2C-bus state
-> machine will be held in their default state until the RESET input is
-> once again HIGH."[1] meaning we now know the state of each line
-> controlled by the GPIO expander. Therefore, setting lines-initial-states
-> and reset-gpios both does not make sense and their presence is XOR'ed.
->=20
-> [0] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf Fig 22.
-> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5
->=20
-> Tested-by: Heiko Stuebner <heiko@sntech.de> # exclusion logic
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
-> ---
->  .../devicetree/bindings/gpio/nxp,pcf8575.yaml      | 38 ++++++++++++++++=
-++++++
->  1 file changed, 38 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Do=
-cumentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-> index 3718103e966a13e1d77f73335ff73c18a3199469..633ac5cfa04a10bcbb748b658=
-0938cddae9e5596 100644
-> --- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-> @@ -73,6 +73,44 @@ properties:
-> =20
->    wakeup-source: true
-> =20
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO controlling the (reset active LOW) RESET# pin.
-> +
-> +      The active polarity of the GPIO must translate to the low state
-> +      of the RESET# pin on the IC, i.e. if a GPIO is directly routed
-> +      to the RESET# pin without any inverter, GPIO_ACTIVE_LOW is
-> +      expected.
-> +
-> +      Performing a reset makes all lines initialized to their input (pul=
-led-up)
-> +      state.
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              enum:
-> +                - nxp,pca9670
-> +                - nxp,pca9671
-> +                - nxp,pca9672
-> +                - nxp,pca9673
-> +    then:
-> +      properties:
-> +        reset-gpios: false
-> +
-> +  # lines-initial-states XOR reset-gpios
-> +  # Performing a reset reinitializes all lines to a known state which
-> +  # may not match passed lines-initial-states
-> +  - if:
-> +      required:
-> +        - lines-initial-states
-> +    then:
-> +      properties:
-> +        reset-gpios: false
-> +
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+are available in the Git repository at:
 
->  patternProperties:
->    "^(.+-hog(-[0-9]+)?)$":
->      type: object
->=20
-> --=20
-> 2.48.1
->=20
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.15-tag1
 
---GiYkKQYTh3xozX1M
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to ea4065345643f3163e812e58ed8add2c75c3ee46:
 
------BEGIN PGP SIGNATURE-----
+  pinctrl: renesas: rzg2l: Suppress binding attributes (2025-02-20 17:33:08 +0100)
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ7ivSAAKCRB4tDGHoIJi
-0i4uAQCOotpFqkxjesyA4pzx8vBjHsoaP4kjzuwTp6HUZPpbowD/T/5gmpO+ZEtu
-bcpjC1AoutvVhB2/ora78T73faYGJQA=
-=QQ8C
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.15
 
---GiYkKQYTh3xozX1M--
+  - Add suspend/resume support for pull up/down on RZ/G3S,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Chenyuan Yang (1):
+      pinctrl: renesas: rza2: Fix potential NULL pointer dereference
+
+Claudiu Beznea (2):
+      pinctrl: renesas: rzg2l: Add suspend/resume support for pull up/down
+      pinctrl: renesas: rzg2l: Suppress binding attributes
+
+ drivers/pinctrl/renesas/pinctrl-rza2.c  |  3 +++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 20 +++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
