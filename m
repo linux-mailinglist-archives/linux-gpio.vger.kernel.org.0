@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-16410-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16411-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D61DA400F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 21:33:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 116E0A40106
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 21:34:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73B40188F1D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:33:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7227166CDE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:33:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97856205E09;
-	Fri, 21 Feb 2025 20:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7CD3253F0D;
+	Fri, 21 Feb 2025 20:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBScdTv+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZqozJbC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9375E1EEA2D;
-	Fri, 21 Feb 2025 20:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963A3253B64;
+	Fri, 21 Feb 2025 20:32:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740169967; cv=none; b=q/pjEaHTSotlNqKNCjuIc1DNQEDCEI9jgUWDJSKhPNXQ9VSG+NT99i5QkJaSLp3xuYU1lgtol9hIGFkSxCFz5a6kSVlj0vI/H3HgFtcb29+CEjFc53IWoN3Sxlfe22bxzbqcJg+Clf7wMYOODW9I+ZFwlTKiRzKvBjMiKxP5hBo=
+	t=1740169970; cv=none; b=ZjFSJjreYDi9pejqR2yfRJPmBykC57G1dEMg7qdkZ82E1fSMKbsTgm5eJ0RBwHmztLOA6di9utv6AAfCuswi3BtstbPGtpG4C8icGsCgNTwOQPc9qOT+fc+RPdZtFiq4l8rfMa3jKz3ihSaSh3xaCJZs/vKfh27lRPZ6UDLyfBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740169967; c=relaxed/simple;
-	bh=LrzKwcuKH+7lMFxFZZvTxrTIVtGnQjlfl1kXpaPq4+8=;
+	s=arc-20240116; t=1740169970; c=relaxed/simple;
+	bh=8Mipz4VrzSKXY8BbbxBUC3KcuVRejyAjsTstQRtR2iA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Pwqy/LgEqcOc6qCGkyh3B4AWtUZiA4tt7vOVGPHNPr2yS3O7VHZ+4gwV/VEMaWS4LOxv5qqYCmlAObuC868wrsEA/qH7Lh5MC9dqusMrVbKfkCBSN2zNellShUG+QuchuEoEJv1vLEHTY1neAUxrBW1OgviHywvufTmdU4P/ZQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBScdTv+; arc=none smtp.client-ip=209.85.208.49
+	 In-Reply-To:To:Cc; b=JL6nUa3asMV4IdnBF8G6CsnT0sKkMK6Wvt2gw3YZ4dY8C4qzrb3Pymht4fTMgJEnFnQyLzaOykYn+LMpmgx46xcK96dykAjoZhheM56cUt1G+p1+iUhpzeiEJGg3bi1i9rnz0kDiqUhvdCZ68rSNxwIdOoXemGzn73AIEOY5R6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iZqozJbC; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ded51d31f1so4350238a12.3;
-        Fri, 21 Feb 2025 12:32:45 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso3797970a12.3;
+        Fri, 21 Feb 2025 12:32:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740169964; x=1740774764; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740169967; x=1740774767; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZCn4OXt1rKFxWRXj+H4O8yAzMZpo+ImdOMNPkNdHGXo=;
-        b=HBScdTv+wzY9TKokokt2A3bvU66xMHdNbz2qxu3MICv2aXJLdrbUFc3Cmg7M7Ki8gq
-         1PEHzo7SUEU74g0Vz2GQApXC3eT1ZGzhI9WeWH72XEplpZWtUvGEXY8Xgiyb+CejpX/U
-         DOOlbFNy/C36yqQyGFPdCv4HCXIfU2feh8q/wjq9mm9LesCpPDLTUJIu6dTa5TC9L7oo
-         NHf/xh4PJH2fb7/+Firo28QjhuekD4io5abHCJcYwCkWS+/2sOEMdSpEhzgzYvuh6pHE
-         yWS0wedYAQZZNhpJXItVdbsY40oUj+VV+yKUXB2ALanKhk+ScNu7TUV51vbGJcAAO1HO
-         mGnQ==
+        bh=snTumn4iv+UCdzCDJTBtnrtlkQDZvBl625j3dPFfzu0=;
+        b=iZqozJbCpyIQT+uuGW+slWiRwDAXN9+2VHLrO55ozRiqsC/wBlXF7/50ABatBLosRo
+         Y7YXXH5LN1KKUPKnyyA+ciOp/P/1m5gVFGM0CFfaLyozec0fQtHFmmlE49kj7oTlXJqo
+         R/H9vhQ0M1+XwnRq2YQGNHrKdQV5bsUwsc4t4/s50qjc4EQoZN1i+A62WzYgvKd5Naqw
+         zbRvAY+i+YjjJMUQ/CL1igJkHgjv0fvDsivqJBTZKOKg9Gywttpa16ELSM7LMqEh9Uv7
+         Y4oGAaA1FMWeF/MJtqNFMyodmUxiZOQkW3qZE12C03uQojnjzK3Ypd3OuA8Jv0kGD0A6
+         5rFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740169964; x=1740774764;
+        d=1e100.net; s=20230601; t=1740169967; x=1740774767;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZCn4OXt1rKFxWRXj+H4O8yAzMZpo+ImdOMNPkNdHGXo=;
-        b=TA3h2xqAPZyUvaaKdA2inp9iGWYRT70zFrq3rP4zUkWthCVkjWbU8cIcReG9m5WvBE
-         JN17b8qHgHKaGD/x7Ly6cSw2A4rRfeNhE6TKBBRqCBy8fkbCJ5MDd4BE0Se3hPlXtG1q
-         X6RGFxZKXNJjuO5YZWxRAgQw7crMiLGCgd69zaZJQTklqd5ZlTU5epsmJPEfjDkE37Lo
-         TlZTG32YZ4K6lF9QE6vAv/ogQ0etP4ZFVfrIekPSlXXmhelMnatkOUYE225puwk+IcDq
-         QyWSPViEd6lJufg59nsmzavmfXBLdps4NN/lQkkgsCDPglJHsHlMqBwlkn9p0XOvMILk
-         ottw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8/cgGHzMdT6VkgXI5eOpMFhE14ZwNMfZ/lYC7GSJnhbJEToouTvewFeWhXqFsEIzEAIOouTzSLHPV@vger.kernel.org, AJvYcCW0k62j8/i+JoU853YPB024nrmMK78jHXM40Vkkgz8uWqt/WbwwULQekke52xjffl8yOPVyPwtM2zw1TM84@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVpPkJcn+3Z29sWZSg2IaZxtOBkPfWDafQMV7Svj/pefdM7HMm
-	K37NA4JSg7aIEsumCqj0Pbqs7iaio6gTvuOsA6WC03CwjDR0bBKF
-X-Gm-Gg: ASbGncsEON3eJmMbymFbRl+/UMpBkN1CALUWJ2LRlz03s+lT7b91K0uBbRHdoOHrZo+
-	Sokw3hJHQ3Ie2VRmvjy9ytllti1xGaALIth4nh9zDJg1FjE36x6H54XkT6maFWH1PgmPvT84Sls
-	BFbeWBPQRs341mmRvw1YA1uLb9RUC1fqBrAxkeZ7dnYgFkv1n/amF/k/V8hQwYQXPtskHbhOT/2
-	eViomLP87be+yArkrgK3pAkop0sfAFz6129v3CYkGBDt2QCtldCGn1g6rvjmbOK6DmVUKoHImmo
-	hrmiZjgBkEnmAeCCiMu2+YaNnYyUw4P60kUl549QQGl+aQouAVTP4yoFZ7r3Y4gi4TMd5a99
-X-Google-Smtp-Source: AGHT+IFgnLCCi3RErue61glfb6xjxJDZZ92IhClCzKrH/m+jqwqtiTl7Ly7vqMdOKhmkffKjBQuywQ==
-X-Received: by 2002:a05:6402:2347:b0:5d0:e563:4475 with SMTP id 4fb4d7f45d1cf-5e0b722c319mr4363564a12.29.1740169963795;
-        Fri, 21 Feb 2025 12:32:43 -0800 (PST)
+        bh=snTumn4iv+UCdzCDJTBtnrtlkQDZvBl625j3dPFfzu0=;
+        b=ZLkdPUqigOEJXla5pYV5+NWowa/bJ8DNDDatTsr+a0lfsDiCXDiu9RhTnnFIFZLmn1
+         +wuSJKPyUOdLuLhnH6rUIQinncyauYyYOFd7KMaXPztPaDHeDgvUp+eHvRRFlW38a9Zc
+         RBlIvLp294AV2GWHmzVsyN0VSBTv+Pxi9Qji/WN/Xq68usubtO04jFQgjGd6SOOqGxpc
+         tHBvT0CRJrehhY0pMXZ/uNk6o3d9QDjwFdMFzkSq1Yy5aKPfa/VOxjWr14h1qltrZtXz
+         MMZRKu58UkfLrdeuMRxB0Pl2i3P9e3VW902K4MoIn5TZNiGAaDcbXRJ4d0CBm86xvnom
+         JoyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFiTHhMD74XA5clJ4UxWkTGTRGE7qRcvPaYnTXJb8pPEiiVS7+BbN3zUrPaX8rt781VKBLVHDDr4iQZT32@vger.kernel.org, AJvYcCWzL+afQ/Vi87DLW5DYBPS1XXpa2hs8ERnCq5sTeX2LycISp3qV1eh3sWOTyHfwKXSAPug78oHzl87p@vger.kernel.org
+X-Gm-Message-State: AOJu0YygJBme0IQxkqbTjfQljzqDergSmBeO9CgH+1yL1QcizMRcQrsY
+	U2XOf6rYs83NfYS19Zv5ewb4LHcbZnK9dBqEe159/6rbcwfFieSI
+X-Gm-Gg: ASbGnct9H/uycVRuIg44iyewzdaA3AthqNoRRM2mq8gGLzQRey5MrvyY/VIgUrW3+qU
+	T6gvnBG/7h8Ri/RhacGD2Pk+1d1Kj9KgLB//vaPFGR0UKNca/YItJOBw1FrP57wq88KGxdDZgbB
+	sJdmzHfabIYyIYwMj3IEEs/YXzVnvfjm31g13AU6cz/bBzQCUToluCky8uwdile14zSiTAdXEb0
+	PXsLuhnSIdmVSnuIP2rn6uOeT9hNK8YRcaZq/MhtTbEiW6OqBC0OhoUYZa4JMjvAJfYMIWFwZ4p
+	j7BjSX7/OkpKME5FARjKsLjHT006En7mzWiYgrdL60gDX84CdoWM5kPQDYfa7zP5IznkTUXG
+X-Google-Smtp-Source: AGHT+IFTxkMlCgyEhrq+P+QrT3EEXq7+LvpCxZ7kChZ/0Jf/Wob5JHP2c7HEHF/fdXcS44PmZFoEWw==
+X-Received: by 2002:a05:6402:388e:b0:5e0:818a:5f43 with SMTP id 4fb4d7f45d1cf-5e0b723ee9cmr4508702a12.30.1740169966265;
+        Fri, 21 Feb 2025 12:32:46 -0800 (PST)
 Received: from hex.my.domain (83.8.202.192.ipv4.supernova.orange.pl. [83.8.202.192])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c418bsm14653485a12.24.2025.02.21.12.32.41
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c418bsm14653485a12.24.2025.02.21.12.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 12:32:42 -0800 (PST)
+        Fri, 21 Feb 2025 12:32:45 -0800 (PST)
 From: Artur Weber <aweber.kernel@gmail.com>
-Date: Fri, 21 Feb 2025 21:32:37 +0100
-Subject: [PATCH v2 1/6] dt-bindings: pinctrl: Add bindings for BCM21664 pin
- controller
+Date: Fri, 21 Feb 2025 21:32:38 +0100
+Subject: [PATCH v2 2/6] pinctrl: bcm281xx: Use "unsigned int" instead of
+ bare "unsigned"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-bcm21664-pinctrl-v2-1-7d1f0279fe16@gmail.com>
+Message-Id: <20250221-bcm21664-pinctrl-v2-2-7d1f0279fe16@gmail.com>
 References: <20250221-bcm21664-pinctrl-v2-0-7d1f0279fe16@gmail.com>
 In-Reply-To: <20250221-bcm21664-pinctrl-v2-0-7d1f0279fe16@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -99,174 +99,176 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  ~postmarketos/upstreaming@lists.sr.ht, 
  Artur Weber <aweber.kernel@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740169959; l=5996;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740169959; l=5672;
  i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=LrzKwcuKH+7lMFxFZZvTxrTIVtGnQjlfl1kXpaPq4+8=;
- b=KiP8RteV4d7KyJ/O+JBJXcIu0smkdw/YjWP7kyB9+XWKukjr4V+K0sD4Od+UEIstpKIt1gJ+Z
- qfw1Y0ets6BADhHuoCft0/aZod8vHdFoUefvv+lPlqX9n+Nq//+jI63
+ bh=8Mipz4VrzSKXY8BbbxBUC3KcuVRejyAjsTstQRtR2iA=;
+ b=361j678cJVEP1V9qvwiEzsITzWeF0xPxKGUFsbIxvFBTKMrsoLTjkkVw8eJ1g9mNiTBiDa2m9
+ swVJ5JJYpnoATWOl4KmsMUCH2hQpfUOge9WUV+wrwskkWxXCCScvD+O
 X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
  pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Add device tree bindings for the pin controller included in the
-BCM21664 chip. The bindings are based off brcm,bcm11351-pinctrl.yaml;
-both chips use the same driver, but have different pins, and the
-BCM21664 has 6 alt modes instead of 4.
+Replace uses of bare "unsigned" with "unsigned int" to fix checkpatch
+warnings. No functional change.
 
 Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
-Changes in v2:
-- Drop "property: true" declarations which had no effect with
-  "unevaluatedProperties: false"
-- Define property limits for I2C pins only instead of standard pins,
-  making the pin-specific "if" condition significantly smaller
----
- .../bindings/pinctrl/brcm,bcm21664-pinctrl.yaml    | 138 +++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 44 +++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..32b7e44e25900b9873790480b04f2feb9e54be02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm21664-pinctrl.yaml
-@@ -0,0 +1,138 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/brcm,bcm21664-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom BCM21664 pin controller
-+
-+maintainers:
-+  - Florian Fainelli <florian.fainelli@broadcom.com>
-+  - Ray Jui <rjui@broadcom.com>
-+  - Scott Branden <sbranden@broadcom.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm21664-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '-grp[0-9]$':
-+        type: object
-+        unevaluatedProperties: false
-+
-+        properties:
-+          pins:
-+            description:
-+              Specifies the name(s) of one or more pins to be configured by
-+              this node.
-+            items:
-+              enum: [ adcsyn, batrm, bsc1clk, bsc1dat, camcs0, camcs1, clk32k,
-+                      clk_cx8, dclk1, dclk4, dclkreq1, dclkreq4, dmic0clk,
-+                      dmic0dq, dsi0te, gpio00, gpio01, gpio02, gpio03, gpio04,
-+                      gpio05, gpio06, gpio07, gpio08, gpio09, gpio10, gpio11,
-+                      gpio12, gpio13, gpio14, gpio15, gpio16, gpio17, gpio18,
-+                      gpio19, gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-+                      gpio26, gpio27, gpio28, gpio32, gpio33, gpio34, gpio93,
-+                      gpio94, gps_calreq, gps_hostreq, gps_pablank, gps_tmark,
-+                      icusbdm, icusbdp, lcdcs0, lcdres, lcdscl, lcdsda, lcdte,
-+                      mdmgpio00, mdmgpio01, mdmgpio02, mdmgpio03, mdmgpio04,
-+                      mdmgpio05, mdmgpio06, mdmgpio07, mdmgpio08, mmc0ck,
-+                      mmc0cmd, mmc0dat0, mmc0dat1, mmc0dat2, mmc0dat3, mmc0dat4,
-+                      mmc0dat5, mmc0dat6, mmc0dat7, mmc0rst, mmc1ck, mmc1cmd,
-+                      mmc1dat0, mmc1dat1, mmc1dat2, mmc1dat3, mmc1dat4,
-+                      mmc1dat5, mmc1dat6, mmc1dat7, mmc1rst, pc1, pc2, pmbscclk,
-+                      pmbscdat, pmuint, resetn, rfst2g_mtsloten3g,
-+                      rtxdata2g_txdata3g1, rtxen2g_txdata3g2, rxdata3g0,
-+                      rxdata3g1, rxdata3g2, sdck, sdcmd, sddat0, sddat1, sddat2,
-+                      sddat3, simclk, simdat, simdet, simrst, spi0clk, spi0fss,
-+                      spi0rxd, spi0txd, sri_c, sri_d, sri_e, sspck, sspdi,
-+                      sspdo, sspsyn, stat1, stat2, swclktck, swdiotms, sysclken,
-+                      tdi, tdo, testmode, traceclk, tracedt00, tracedt01,
-+                      tracedt02, tracedt03, tracedt04, tracedt05, tracedt06,
-+                      tracedt07, tracedt08, tracedt09, tracedt10, tracedt11,
-+                      tracedt12, tracedt13, tracedt14, tracedt15, trstb,
-+                      txdata3g0, ubctsn, ubrtsn, ubrx, ubtx ]
-+
-+          function:
-+            description:
-+              Specifies the pin mux selection.
-+            enum: [ alt1, alt2, alt3, alt4, alt5, alt6 ]
-+
-+          slew-rate:
-+            description: |
-+              Meaning depends on configured pin mux:
-+                bsc*clk/pmbscclk or bsc*dat/pmbscdat:
-+                  0: Standard (100 kbps) & Fast (400 kbps) mode
-+                  1: Highspeed (3.4 Mbps) mode
-+                Otherwise:
-+                  0: fast slew rate
-+                  1: normal slew rate
-+
-+          drive-strength:
-+            enum: [ 2, 4, 6, 8, 10, 12, 14, 16 ]
-+
-+        required:
-+          - pins
-+
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+
-+          # Limitations for I2C pins
-+          - if:
-+              properties:
-+                pins:
-+                  contains:
-+                    enum: [ bsc1clk, bsc1dat, gpio16, gpio17, pmbscclk,
-+                            pmbscdat ]
-+            then:
-+              properties:
-+                drive-strength: false
-+                bias-pull-down: false
-+                input-schmitt-enable: false
-+                input-schmitt-disable: false
-+
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pinctrl@35004800 {
-+      compatible = "brcm,bcm21664-pinctrl";
-+      reg = <0x35004800 0x7f0>;
-+
-+      dev-a-active-pins {
-+        /* group node defining 1 standard pin */
-+        std-grp0 {
-+          pins = "gpio00";
-+          function = "alt1";
-+          input-schmitt-enable;
-+          bias-disable;
-+          slew-rate = <1>;
-+          drive-strength = <4>;
-+        };
-+
-+        /* group node defining 2 I2C pins */
-+        i2c-grp0 {
-+          pins = "bsc1clk", "bsc1dat";
-+          function = "alt2";
-+          bias-pull-up = <720>;
-+          input-enable;
-+        };
-+      };
-+    };
-+...
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+index cf6efa9c0364a1ad65885c982e7634f26d19c944..a039b490cdb8e6c41169bfd48abb371447c150a0 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -72,7 +72,7 @@ static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
+ struct bcm281xx_pin_function {
+ 	const char *name;
+ 	const char * const *groups;
+-	const unsigned ngroups;
++	const unsigned int ngroups;
+ };
+ 
+ /*
+@@ -84,10 +84,10 @@ struct bcm281xx_pinctrl_data {
+ 
+ 	/* List of all pins */
+ 	const struct pinctrl_pin_desc *pins;
+-	const unsigned npins;
++	const unsigned int npins;
+ 
+ 	const struct bcm281xx_pin_function *functions;
+-	const unsigned nfunctions;
++	const unsigned int nfunctions;
+ 
+ 	struct regmap *regmap;
+ };
+@@ -941,7 +941,7 @@ static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
+ };
+ 
+ static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
+-						  unsigned pin)
++						  unsigned int pin)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -985,7 +985,7 @@ static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ }
+ 
+ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
+-						   unsigned group)
++						   unsigned int group)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -993,9 +993,9 @@ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+-					   unsigned group,
++					   unsigned int group,
+ 					   const unsigned **pins,
+-					   unsigned *num_pins)
++					   unsigned int *num_pins)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -1007,7 +1007,7 @@ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+ 
+ static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
+ 					  struct seq_file *s,
+-					  unsigned offset)
++					  unsigned int offset)
+ {
+ 	seq_printf(s, " %s", dev_name(pctldev->dev));
+ }
+@@ -1029,7 +1029,7 @@ static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
+ }
+ 
+ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
+-						 unsigned function)
++						 unsigned int function)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -1037,9 +1037,9 @@ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
+-					   unsigned function,
++					   unsigned int function,
+ 					   const char * const **groups,
+-					   unsigned * const num_groups)
++					   unsigned int * const num_groups)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 
+@@ -1050,8 +1050,8 @@ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
+-			       unsigned function,
+-			       unsigned group)
++			       unsigned int function,
++			       unsigned int group)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct bcm281xx_pin_function *f = &pdata->functions[function];
+@@ -1082,7 +1082,7 @@ static const struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
+ };
+ 
+ static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
+-					   unsigned pin,
++					   unsigned int pin,
+ 					   unsigned long *config)
+ {
+ 	return -ENOTSUPP;
+@@ -1091,9 +1091,9 @@ static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
+ 
+ /* Goes through the configs and update register val/mask */
+ static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
+-				   unsigned pin,
++				   unsigned int pin,
+ 				   unsigned long *configs,
+-				   unsigned num_configs,
++				   unsigned int num_configs,
+ 				   u32 *val,
+ 				   u32 *mask)
+ {
+@@ -1207,9 +1207,9 @@ static const u16 bcm281xx_pullup_map[] = {
+ 
+ /* Goes through the configs and update register val/mask */
+ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
+-				   unsigned pin,
++				   unsigned int pin,
+ 				   unsigned long *configs,
+-				   unsigned num_configs,
++				   unsigned int num_configs,
+ 				   u32 *val,
+ 				   u32 *mask)
+ {
+@@ -1277,9 +1277,9 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
+ 
+ /* Goes through the configs and update register val/mask */
+ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
+-				    unsigned pin,
++				    unsigned int pin,
+ 				    unsigned long *configs,
+-				    unsigned num_configs,
++				    unsigned int num_configs,
+ 				    u32 *val,
+ 				    u32 *mask)
+ {
+@@ -1321,9 +1321,9 @@ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
+ }
+ 
+ static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
+-					   unsigned pin,
++					   unsigned int pin,
+ 					   unsigned long *configs,
+-					   unsigned num_configs)
++					   unsigned int num_configs)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	enum bcm281xx_pin_type pin_type;
 
 -- 
 2.48.1
