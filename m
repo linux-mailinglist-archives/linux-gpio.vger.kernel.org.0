@@ -1,194 +1,146 @@
-Return-Path: <linux-gpio+bounces-16353-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16354-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8D9DA3F032
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 10:27:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 017AAA3F056
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 10:33:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7212D8606A4
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:25:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41CED1886DC5
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 09:33:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B78D72045AE;
-	Fri, 21 Feb 2025 09:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C73201017;
+	Fri, 21 Feb 2025 09:33:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lG0mlwtJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="chEgiNjG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D58F202F96;
-	Fri, 21 Feb 2025 09:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD901FF1C7
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 09:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129880; cv=none; b=KmhdntIVP9UB0FpbqQU5bf1gVnEVhY8NhWcuXP0TFh3pPA7YBU4HRZjZIM7mnqocOycB5UTk9cPqMmsFCmUQGJnZSJks/PAUvlNB3BKZqfnPqnHTboKuHhOJmeiQ8f/JgnMllWMyBv7pKjq9CN7/4N36PwtARAkxGOZapVDyZKk=
+	t=1740130393; cv=none; b=mcbxbRyabs2eJdwKF2CDiachLX6Bc9WdGKeZJIiGnIIGbteNVt0SJVoPTvhKf5yja217aZPIK9KHA4HMHeSzo10fNN4L8ItIO3dVqhfCJmPNUV5/XspiAlqjwgr5vFrVhz4RBapuy20Eo4lL50WbEZUbLxE38x2RZHnKs8Icmjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129880; c=relaxed/simple;
-	bh=0XvHhHCp8UD0T0S2F3TcjKx5PbjsjRTd7om3G9mT0zA=;
+	s=arc-20240116; t=1740130393; c=relaxed/simple;
+	bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oo71sZOxC8/iVD8YzYRbh/0cXwfM4XAS6Fk4mqlIu6iK2EvbpVKqTa2396fpPptNd8AJjVbBrM93WNnvHqQKtZabI9LgToykVcSH6g885ZiFJrTDVPLRBOayDO7f1lrmaRQ6ZQnd0ARj2FWUuyKN7z0duq3uLAwR0QYwo7etHII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lG0mlwtJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 337D7C4CED6;
-	Fri, 21 Feb 2025 09:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740129879;
-	bh=0XvHhHCp8UD0T0S2F3TcjKx5PbjsjRTd7om3G9mT0zA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lG0mlwtJZr90iiEgPpXWZcAJeoQ7w6hJnCabn1hKI4nUWNnfPjKxHgPmjZFREDhIc
-	 sOo8AsSd9BxATe2pJaizh0r/gtKN58rIoyunLYb375hBIClvoL8TwtTtrD6DhhE3+P
-	 UM8ayvN8x4zuk2tBlPadja42ddXDzYbevhO/F2nD4jCoCyI22mBrX0h6K+7+y0aW7c
-	 /ddFCibmqojyrq+UHdQeAXco07No29ahVpM5/bJZrkeCjvxWdW4CXnlUeysngvx+Cr
-	 D+pqqRL9iuDE01WMcaZ8qKDPwjX8xWf9Jwfi+Q2fKt07we0zcfWHUWdxZHOZVZEYdb
-	 1YS0IduJaYf2A==
-Date: Fri, 21 Feb 2025 09:24:31 +0000
-From: Simon Horman <horms@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 05/15] bus: ts-nbus: use bitmap_get_value8()
-Message-ID: <20250221092431.GE1615191@kernel.org>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
- <20250210-gpio-set-array-helper-v3-5-d6a673674da8@baylibre.com>
- <20250220101742.GR1615191@kernel.org>
- <0084eef7-3831-4e62-acf1-6c2dc0e15dd1@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a4ymqEL6xEQIUgWrzITVKoy77ALT7bxchiRqmKfNQqRwtwyvO4OVAPHMhLYtnpFpRIWJJfMTMVLIMn3SbxsNuA2yklnB4DGLWodxg4EvMaNwfhx8LQgjPSmQoKoG+4NsrtijNkVoMVbBgLYuVNNGIFQXnxB1dMl743xfppKd1Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=chEgiNjG; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43995b907cfso11513185e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 01:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740130389; x=1740735189; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
+        b=chEgiNjGRHa9+xBD9Yh22tEAQ0NidzEzFhyafjKh/FDqFpV2K3rPH2GgyJn7pU+JDX
+         JFZ0lJX3Hb/sTHM7ZHkhnailidcz3u8MuLcj2eHujfTLIk5aLdRCBcSJJ0fVzh+KP7td
+         120wKC2lSsGhTm6JIO0Xqaop3sUdG4+V+ezzbcEzcrZums1ydCzKuAygtBhd6jKmkoUP
+         YsxZdOBj38AsMrZoILWX0GIsDe+l8SLi9peR1dhQQ5qXaTtTDV++1/1YFS/pwRV1PD8x
+         +HLx2p9FamUb5bBI6yqBidFYjKE4uABfHPDTkGozGprY1fmW+Kb7/vR2ZxLn0OgQgzQX
+         7E9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130389; x=1740735189;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
+        b=sFECtkDO06xqmD4OcbgNnJCVnwp28CBxq+UNiLfqNec7xLZ0R7nX82zaKm5ph3plZv
+         AP9YTWwZSXqDjTge2jKK+rL/Gy09P6Mvz4qMZdzNyJjOwHH7YQ1OOd9At/IBaKfgqyrO
+         LH2k3Kuy0VBZ461Q2TaNfFykJAcawCLC1VvEbdhu48g0hxLPkXXiJvT6WMXcullLnfuq
+         HoTKDoCl27CfE+WreZ1L4rTvn6niqb5D7LzeT/g7tDLpT331tOsjQLdqCl/sQE6H7BsX
+         tX2tQxl/1Sss3PcEXsgfGaqnMHUM5Lb8DlTEUPWL1kFrRUCgjGWCKU8/w/s5SSMYJun6
+         pGGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcTqxPaESk5t+KnSoGZ+Mm7Mx+trRqPotnD+bE5hEc8lAwBKUcXDAE0lg2TnuV+FBEIHjF9edvtHuU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTPJonaqGqjiAO8mIqGRFM0ZwBneMYdWPpgOzqD9lkNwyWf31Y
+	fwUh8Ftrs8CiSi+HJ21Wl2gZpSSWRjiNyXoxaAMvVztFng8gg1zPS64OfD2uQY1Cpb1vPta3dLI
+	i
+X-Gm-Gg: ASbGncsDBPX3yfs0xnqX4mCRW1iRcDTTvkO38K6OkixOC5C+fkUkbtIGPJ5Iy5Bwa72
+	aF4+hdlpNn/4a0P38CY881hncWtr4dGTMwxl2dyRT9r05S/SZQEYRzHCvqMvpaw90G0AbcJ+2Z2
+	4v/qRNjLp4hnHALxbCa31lc1V0WKn19YYWm0fuectX/QIHi9sRKjTREQBBPMd+++8xbgaAxQ+0L
+	7+Fzbh5fttQvQ5vvRQcx3MB+r8qXj8utgJ7VnvKvpirY+pk3JJShir3z/IsLe3YI+sxgz/3jqPq
+	cbyb0wXcEY1UOJ57op7YJ/EZrfAsTw7PjemncEQbdtE6rsV5S4UDyXnPTP3tKCv38hTu
+X-Google-Smtp-Source: AGHT+IGt87vL6VHtDibcXnn7l4Vot51++YIbIpXyONWhhD00l415ZfN7rQ/oDaggzOuuyoMOkbdTPA==
+X-Received: by 2002:a05:600c:45c6:b0:439:84ba:5773 with SMTP id 5b1f17b1804b1-439ae225a44mr19266235e9.31.1740130389494;
+        Fri, 21 Feb 2025 01:33:09 -0800 (PST)
+Received: from localhost (p200300f65f083b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f08:3b04::1b9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce685sm11635085e9.2.2025.02.21.01.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:33:08 -0800 (PST)
+Date: Fri, 21 Feb 2025 10:33:07 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Michael Walle <mwalle@kernel.org>, Bamvor Jian Zhang <bamv2005@gmail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	linux-leds@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 00/15] gpiolib: indicate errors in value setters
+Message-ID: <ms373jlzawhooi5j25pvvubu5hu2rueatglbdnils7sbihxnpz@5f6fbooiusf5>
+References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="et6dryar3l656eqq"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0084eef7-3831-4e62-acf1-6c2dc0e15dd1@baylibre.com>
+In-Reply-To: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 
-On Thu, Feb 20, 2025 at 11:32:10AM -0600, David Lechner wrote:
-> On 2/20/25 4:17 AM, Simon Horman wrote:
-> > On Mon, Feb 10, 2025 at 04:33:31PM -0600, David Lechner wrote:
-> >> Use bitmap_get_value8() instead of accessing the bitmap directly.
-> >>
-> >> Accessing the bitmap directly is not considered good practice. We now
-> >> have a helper function that can be used instead, so let's use it.
-> >>
-> >> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > u> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> >> ---
-> >>  drivers/bus/ts-nbus.c | 5 +++--
-> >>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-> >> index b4c9308caf0647a3261071d9527fffce77784af2..beac67f3b820377f8bb1fc4f4ee77e15ee240834 100644
-> >> --- a/drivers/bus/ts-nbus.c
-> >> +++ b/drivers/bus/ts-nbus.c
-> >> @@ -10,6 +10,7 @@
-> >>   * TS-4600 SoM.
-> >>   */
-> >>  
-> >> +#include <linux/bitmap.h>
-> >>  #include <linux/bitops.h>
-> >>  #include <linux/gpio/consumer.h>
-> >>  #include <linux/kernel.h>
-> >> @@ -107,7 +108,7 @@ static void ts_nbus_reset_bus(struct ts_nbus *ts_nbus)
-> >>  {
-> >>  	DECLARE_BITMAP(values, 8);
-> >>  
-> >> -	values[0] = 0;
-> >> +	bitmap_set_value8(values, byte, 0);
-> > 
-> > Hi David,
-> > 
-> > byte doesn't appear to exist in the scope of this function.
-> > 
-> > I tried this:
-> > 
-> > 	bitmap_set_value8(values, 0, 8);
-> > 
-> > But when compiling with GCC 14.2.0 I see warnings that values
-> > is used uninitialised - bitmap_set_value8() appears to rely on
-> > it being so.
-> 
-> Ah yes, I see the problem (I don't think this driver compiles with
-> allmodconfig so the compiler didn't catch it for me).
 
-Thanks, that would explain things.
+--et6dryar3l656eqq
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 00/15] gpiolib: indicate errors in value setters
+MIME-Version: 1.0
 
-FWIIW, I think you can exercise this with allmodconfig by simply running:
+Hello Bartosz,
 
-  make drivers/bus/ts-nbus.o
+On Thu, Feb 20, 2025 at 10:56:57AM +0100, Bartosz Golaszewski wrote:
+> The value setter callbacks (both for single and multiple lines) return
+> void even though we have many types of controllers that can fail to set
+> a line's value: i2c, SPI, USB, etc.
+>=20
+> For the consumer API: single line setters return void. Multiple line
+> setters do have an integer return value but due to the above, they still
+> cannot be used to indicate problems within the driver.
+>=20
+> This series proposes to start the process of converting the setters to
+> returning int thus making it possible to propagate any errors to the
+> user.
 
-> 
-> > 
-> >   CC      drivers/bus/ts-nbus.o
-> > In file included from drivers/bus/ts-nbus.c:13:
-> > In function ‘bitmap_write’,
-> >     inlined from ‘ts_nbus_reset_bus’ at drivers/bus/ts-nbus.c:111:2:
-> > ./include/linux/bitmap.h:818:12: error: ‘values’ is used uninitialized [-Werror=uninitialized]
-> >   818 |         map[index] &= (fit ? (~(mask << offset)) : ~BITMAP_FIRST_WORD_MASK(start));
-> >       |         ~~~^~~~~~~
-> > In file included from ./include/linux/kasan-checks.h:5,
-> >                  from ./include/asm-generic/rwonce.h:26,
-> >                  from ./arch/x86/include/generated/asm/rwonce.h:1,
-> >                  from ./include/linux/compiler.h:344,
-> >                  from ./include/linux/build_bug.h:5,
-> >                  from ./include/linux/bits.h:22,
-> >                  from ./include/linux/bitops.h:6,
-> >                  from ./include/linux/bitmap.h:8:
-> > drivers/bus/ts-nbus.c: In function ‘ts_nbus_reset_bus’:
-> > drivers/bus/ts-nbus.c:109:24: note: ‘values’ declared here
-> >   109 |         DECLARE_BITMAP(values, 8);
-> >       |                        ^~~~~~
-> > ./include/linux/types.h:11:23: note: in definition of macro ‘DECLARE_BITMAP’
-> >    11 |         unsigned long name[BITS_TO_LONGS(bits)]
-> >       |                       ^~~~
-> > 
-> > 
-> >>  
-> >>  	gpiod_multi_set_value_cansleep(ts_nbus->data, values);
-> >>  	gpiod_set_value_cansleep(ts_nbus->csn, 0);
-> >> @@ -151,7 +152,7 @@ static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
-> >>  {
-> >>  	DECLARE_BITMAP(values, 8);
-> 
-> We can fix by zero-initialing the bitmap.
-> 
-> 	DECLARE_BITMAP(values, 8) = { };
+The lack of error indication is something that bothered me already a few
+times in the past (but never to hard that I invested effort to change
+that). Great that you work on that.
 
-Thanks, I confirmed that adding that to ts_nbus_reset_bus()
-makes the compiler happy. And it seems sensible to me.
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-I guess that theoretically it should also be added to ts_nbus_write_byte(),
-although GCC has nothing to say about that either way.
+Best regards
+Uwe
 
-> Would you like me to send a new version of the patch?
+--et6dryar3l656eqq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It's not really my call. But I would expect that is a good next step.
+-----BEGIN PGP SIGNATURE-----
 
-> >> -	values[0] = byte;
-> >> +	bitmap_set_value8(values, byte, 8);
-> >>  
-> >>  	gpiod_multi_set_value_cansleep(ts_nbus->data, values);
-> >>  }
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAme4SFEACgkQj4D7WH0S
+/k4l8wgAkzdhPhGUsAivrDz+n9J2/GJfIld9jGOHEMMiMXR593L37vPr+fgTTuRK
+NBrq56VRF5fy5rSfW25/AgTqikJ+z5Ne0i3aCntrNUnDxScKBQnNfUH/kQv1hFej
+BsDgBPjTnwj43F3dOUzAQVfze3ZSPheoMuFt+Tb+qAh8gxJP+X56ozXbqW0Y3oCm
+FJN++pH14aEFIw15p0ZWTpTg4EyKcGaNi+T8fWKHxnApkrgLdrXuzlEUpJ6XVIF5
+q1RO8aeJj806zcPKSlagH5hiepRn3szx07dT13KAAXqafFGpRWOTKK+c4FYdH/Ri
+phzUXU5/DjxMEa27RJoRC4oxUAxQHQ==
+=U0AB
+-----END PGP SIGNATURE-----
+
+--et6dryar3l656eqq--
 
