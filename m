@@ -1,181 +1,138 @@
-Return-Path: <linux-gpio+bounces-16392-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16393-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C16ACA3F77E
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 15:41:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40861A3F7B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 15:51:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB1F1860D9B
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 14:41:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F911177600
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 14:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BECA20E33A;
-	Fri, 21 Feb 2025 14:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B301D9688;
+	Fri, 21 Feb 2025 14:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZLDd2hR3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BkkJ9/Ma"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18A420E019
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 14:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7416E7080D
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 14:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740148875; cv=none; b=oeOHkCHjEG97DuL+OCZjYvKGmZ71IJHKsaM4bUdOLfqvrqeF1yJi/HL/Hd02qvnNXXf6lbhSlx+DU8nsG9QmJp17I3nk0/gi6IHR9rUZV9oOtvFVkLoC92gxLQalkYGkhKwC587TYYhfl4AzeTrx5+XZ7Oun2+WKKvalsw4V1G8=
+	t=1740149293; cv=none; b=NBzI563JsAimNfxn6BhscFW4XJwjctIMDJBGmPD28VQKwzJpvq60vL8N1WeW3Vko4myaAVcluXp86N1WPT/wCM7Mg00Ek9Q+ipy/ILeKFlAwnkzxAEn7j7IrqaSnz+t7+mfADmHJrQzVchWSPjf7sz0oX3Aai95yuV5VyO7Rw3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740148875; c=relaxed/simple;
-	bh=eFHEOdurooV0c2GoP/xtLgCeavL84wB0vDKwhLTx6EA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Oh+ArPKl6eUbkpv0xxfh5axUCiIRarHnKczHKfaHZWsFQwFk4319gtJuGmMo8yd0DQ/E+omBY6uGdvcmqhcBC847ko/TbgdVE83F7sz52K3e9+Ps87WpAyePt5rGzT0V7J3RtB/szNAM3n/MGNJO6yR6rVrjTPP+4c/oRWaqdOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZLDd2hR3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740148874; x=1771684874;
-  h=date:from:to:cc:subject:message-id;
-  bh=eFHEOdurooV0c2GoP/xtLgCeavL84wB0vDKwhLTx6EA=;
-  b=ZLDd2hR3f7FViZZa6bAj6P0vjyrUY1gI/iH65XyTNiify15MT8K5P46v
-   YxhOMfE/9oB/uttbJzV6YuYZzO0nHtA0b5Ckl0ZkXFRiJgYVuc08/pf9g
-   XqEpI07cIhe+6gh0uXXMoaZQuS38BwlCWJDSn9DMxahNDaXPNxdlNZfE2
-   o54NRSxDawyDye3nvYXq5dxMNNkxyrd/EqjK+JGYU8jf2Cemo7nK0YrqP
-   gbfxTPd8uW4Og/GPtoSZxWmvY9EdRkDxd8F2DJp/XqIyHBZNFlM0sL2PC
-   bGCNZQqmt6rdgGSn60f1p0eCIzek/3QkdWQn/5202Nlke6mSqvyJGoxIR
-   Q==;
-X-CSE-ConnectionGUID: JmJBZ2KKS3qR9iTLR3S8ow==
-X-CSE-MsgGUID: jdkLhfJZQDKMsFEGpBUJ+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="41092379"
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="41092379"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 06:41:13 -0800
-X-CSE-ConnectionGUID: NZChxYd3Syq+hKXnOsDsSQ==
-X-CSE-MsgGUID: fFTfSysJSA6+CGaltua/fw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="116022869"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 21 Feb 2025 06:41:12 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlUDA-0005cd-0B;
-	Fri, 21 Feb 2025 14:41:05 +0000
-Date: Fri, 21 Feb 2025 22:40:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 96fa9ec477ff60bed87e1441fd43e003179f3253
-Message-ID: <202502212208.h2waL4qv-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740149293; c=relaxed/simple;
+	bh=VJc2fD5OV7xtJnzZHXcMaP4k2Fxqrl7cLt4EomVW+yU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJvDoK8qZESO/nn0UBlw6HOA0o9YUb8dbMmDyXLZC1wquQWskNn00J76LW7XlfG8vvim7E/7vNZqRkvYZdxClJqoPooK5cCDXpGaiD0Yn/FXJOreKIune3yaN9Y7OBqwvw4iVy2IhBsLsgA49r2zNgimJq5r+B0qSm+tfJThGNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BkkJ9/Ma; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30930b0b420so19236471fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 06:48:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740149288; x=1740754088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
+        b=BkkJ9/MaHRka3oTqVwLy+NoNcS81ChGr/wb3b/UvpLG2ohxMt67zJJQi/nWb79GtzB
+         KPC4SnEbYmvfBFP082CqFLoMKiYA/SJA66WdRrOyJKPWbZyq0M+uakkOUPeoPPunmMT4
+         o3PllVhnPDfBThC+4WcXpLGGSP0BPNtDY4spA8Sgs2pdSbsfJIYrLvj7h4cplgGKE9Dp
+         Pn2seKih1woT4v9MhpObSSnpyGjHk1a8vIgM8ZXRU4RZ5uI3WZNqWinp9AeJfBowRvZV
+         8zYkItV4OWY41VW0crpKGMv/+con7y7CNieP1ZvdVBir/mlCc+z+UhhDxz69XPPIAEO3
+         ynSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740149288; x=1740754088;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
+        b=YT8BXUbZDtHPH1gLNVvyTUcZZJB6sIYNrYMekVQ0LPl/hVDIhgGogxUqi2k7sGB8g0
+         5a0dEdsT7oIbzW/+gqz2qF0eZoQL+6XukYmhJMlppzDEf/2Dvu6rEX6ztIICWyPqUp0c
+         VhuyGY2qcLUK6aJe25LdPCOuQNBMfptfZwYd6qyxdpjxnhHck1h5igswslAmpqszyCpF
+         2zfd1clq9Dhu2G1kxsjVVVNBBjxa9t+EJBoHggqY9/Z8ZS4jn50iX98dKNhrpp0X9xTK
+         wDS2Kk121MXdzh0cHeYaqNYuijV8Lnfy5WFDikwlKofpwd1ig+fSnCrvclVUMGhwb8SC
+         nKtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcWVkGM6Bal7Xh+aoeLKQWsBHNp+xn9OlmisTlRld8inQGfEZcjGgyXZjJB69GLHgPZzD6KGihqOu0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvSIPYBCUrj+Ws6oSRbaK7cjYT2syD48N9opR8mo+//Qx3daVG
+	5Ce0Ncth5LUMNpm2ug3QUyh8huN7NWfuTKxgfLbHnbCmS+lXzsZr/C/gpf+iibnRqDRP7drsPod
+	CrVo=
+X-Gm-Gg: ASbGncvDilndYwE1Y0zRYsiTkYEejfbgPCGuLqpVXQOnvHCELHExmFfcgWzJ0bj0HvZ
+	a4uznWntF+dEKRetzjm/aJ1cDDcW8V7EpatWVSEI05D5BXOkJ5MEX5AdkzNK0QZH8NUmfxCdYI0
+	wqdiMFpCeXJds9iSp+82GmU7o23uNEkZlT8Ja7M+1bzjCQEC29Z0/Z2c1aeKKk4V3gH9iUVs3B0
+	wN+OT6hK9UurTy9qjHwSK5Xa3GKj1GJ4bKeG1/eDGyhiQqathmxPRsizkwK22WZV7dO4JYDGnxG
+	oi66Ces3BoIcokEuxUAV4uIU9Q==
+X-Google-Smtp-Source: AGHT+IGZ83OKySBHkM2i7Fteix9HZI2XYcQ7YK7UCGOFlxTyWB4ysreuxLKAdoAc9mvwA33dt4t4AQ==
+X-Received: by 2002:a05:600c:4f91:b0:439:98b0:f8db with SMTP id 5b1f17b1804b1-439ae1f1903mr36508685e9.16.1740149277752;
+        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6cbc:77f7:6f0e:5a7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399be79d92sm57998475e9.0.2025.02.21.06.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc4
+Date: Fri, 21 Feb 2025 15:47:50 +0100
+Message-ID: <20250221144750.108147-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 96fa9ec477ff60bed87e1441fd43e003179f3253  gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-elapsed time: 1461m
+Linus,
 
-configs tested: 88
-configs skipped: 2
+Please pull the following set of GPIO fixes for the upcoming RC. There
+are two fixes for GPIO core: one adds missing retval checks to older
+code, while the second adds SRCU synchronization to legs in code that
+were missed during the big rework a few cycles back. There's also one
+small driver fix.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Best Regards,
+Bartosz Golaszewski
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250221    gcc-13.2.0
-arc                   randconfig-002-20250221    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250221    gcc-14.2.0
-arm                   randconfig-002-20250221    clang-19
-arm                   randconfig-003-20250221    gcc-14.2.0
-arm                   randconfig-004-20250221    clang-21
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250221    clang-15
-arm64                 randconfig-002-20250221    clang-21
-arm64                 randconfig-003-20250221    clang-21
-arm64                 randconfig-004-20250221    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250221    gcc-14.2.0
-csky                  randconfig-002-20250221    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250221    clang-21
-hexagon               randconfig-002-20250221    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386        buildonly-randconfig-001-20250220    gcc-12
-i386        buildonly-randconfig-002-20250220    gcc-12
-i386        buildonly-randconfig-003-20250220    gcc-12
-i386        buildonly-randconfig-004-20250220    clang-19
-i386        buildonly-randconfig-005-20250220    clang-19
-i386        buildonly-randconfig-006-20250220    clang-19
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250221    gcc-14.2.0
-loongarch             randconfig-002-20250221    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250221    gcc-14.2.0
-nios2                 randconfig-002-20250221    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                randconfig-001-20250221    gcc-14.2.0
-parisc                randconfig-002-20250221    gcc-14.2.0
-powerpc               randconfig-001-20250221    clang-21
-powerpc               randconfig-002-20250221    clang-21
-powerpc               randconfig-003-20250221    clang-17
-powerpc64             randconfig-001-20250221    clang-21
-powerpc64             randconfig-002-20250221    clang-21
-powerpc64             randconfig-003-20250221    clang-19
-riscv                 randconfig-001-20250220    gcc-14.2.0
-riscv                 randconfig-002-20250220    clang-21
-s390                             allmodconfig    clang-19
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250220    clang-19
-s390                  randconfig-002-20250220    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250220    gcc-14.2.0
-sh                    randconfig-002-20250220    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250220    gcc-14.2.0
-sparc                 randconfig-002-20250220    gcc-14.2.0
-sparc64               randconfig-001-20250220    gcc-14.2.0
-sparc64               randconfig-002-20250220    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250220    gcc-12
-um                    randconfig-002-20250220    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250220    gcc-12
-x86_64      buildonly-randconfig-002-20250220    gcc-12
-x86_64      buildonly-randconfig-003-20250220    gcc-12
-x86_64      buildonly-randconfig-004-20250220    gcc-12
-x86_64      buildonly-randconfig-005-20250220    gcc-12
-x86_64      buildonly-randconfig-006-20250220    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250220    gcc-14.2.0
-xtensa                randconfig-002-20250220    gcc-14.2.0
+The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc4
+
+for you to fetch changes up to 96fa9ec477ff60bed87e1441fd43e003179f3253:
+
+  gpiolib: don't bail out if get_direction() fails in gpiochip_add_data() (2025-02-20 14:08:18 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc4
+
+- check the return value of the get_direction() callback in struct
+  gpio_chip
+- protect the multi-line get/set legs in GPIO core with SRCU
+- fix a race condition in gpio-vf610
+
+----------------------------------------------------------------
+Bartosz Golaszewski (3):
+      gpiolib: check the return value of gpio_chip::get_direction()
+      gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
+      gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
+
+Johan Korsnes (1):
+      gpio: vf610: add locking to gpio direction functions
+
+ drivers/gpio/gpio-vf610.c |   4 ++
+ drivers/gpio/gpiolib.c    | 100 ++++++++++++++++++++++++++++++++--------------
+ drivers/gpio/gpiolib.h    |   4 +-
+ 3 files changed, 76 insertions(+), 32 deletions(-)
 
