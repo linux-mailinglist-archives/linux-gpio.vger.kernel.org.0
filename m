@@ -1,147 +1,117 @@
-Return-Path: <linux-gpio+bounces-16418-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16419-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F345A4015F
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 21:54:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 11A16A40189
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 22:02:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6DF717E700
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 20:53:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF801420214
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 21:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEE81253B47;
-	Fri, 21 Feb 2025 20:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SF8IWEYQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263AE21E091;
+	Fri, 21 Feb 2025 21:02:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADC01EE028
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 20:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BB41D5CCD;
+	Fri, 21 Feb 2025 21:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740171224; cv=none; b=YMmdYWDi9ZMU8w/blcPxr/Esh4k1y3u+t4TDTCHsRZluoVXwaS2/a/LaLbXHWAVybSNjoWQdAJqEADzEyw1Z36VD12OWSL4ZRN1fa3YybxyIJlqHEaP/HTVJPWWUMxuhUxAlo7AR0SFXMHCFkS1GyXFs00Nq2udli5QpIvAbgPM=
+	t=1740171739; cv=none; b=LNSZxCVNAwbnKoSKHZqLzq4w6oLkGnVE3szOX0l5Uz40zrjDnlkLwqkGyoCpwbpoy8eT2Ey8CJ3a/nKqvME/qw2Yw3s2IJxM6xrsdT7KBsAoVpBHaVdHDfxR8oTJAdjJY5wvjI317GWI1IZt3wWcN+rbD7u2U8+gqbDFqioo8Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740171224; c=relaxed/simple;
-	bh=dSU/Y3o79Oen+g1y/O2ttt6++fluDHaGys/I35lxh6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ndS/G3qdLZtqmM94rL+LJAfpTt6WZETgRAmYI672GiWt0+tWJ8foFwl/NhBlsezJ0pv7oR1DmdvWXNMIoLWhb5S3/83O3G3CcRsHtiWUmuk5Vwj3f7VpoD+m4up55kOxeQy2NGmDPtW0EcBjcR5XttDcF8+v3I98tALyc/JY01E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SF8IWEYQ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30737db1aa9so24379991fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 12:53:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740171220; x=1740776020; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UITCx65oXgxoWzlkKQSoCgIUC5y2VPjQ1zm26AHbirA=;
-        b=SF8IWEYQsSj+XugpzSYdcWrLU+pyPwXutM8Xw3ZtOoTMFS6s0HLaoWvbvZI8qwWNNU
-         DtzcLZn9wr2oDWmKX89/FOwuq9Y9Yj9q/fAwCe4U+89kVy7b8tTrfTCtsJ5/uFYh9RV3
-         UPHuXCeVgvujLFdlQ7zGPYKqKzlRUChO2TTex9OtYeYFIpBOyZy9+9siYGf13rZ3xQWB
-         WRuUNMTxYuMnaaJ0Iefmi7lVj+DRnmLgXqVZ6RGedV3YRAS+lMJMvtCEZLbajYmr4gyK
-         5CN+4Uayo+MKi4sO3URdRcmNeVcCq87cmkujk1ZWKyCM2qMauq35YTkrBqy76wqWkuOQ
-         QkcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740171220; x=1740776020;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UITCx65oXgxoWzlkKQSoCgIUC5y2VPjQ1zm26AHbirA=;
-        b=cPt+r2CAubDgmjTfG6WPpPa7w/DixaIEIrqihDIZ8JgTJ12xvmKw2K6Gzzj/W2xl2f
-         m3PcCjFNJPpItIYbqvfB72dm9J87k2AZGDYJKWj9KlcituU8ww2IQyxVJIjkaUDtfeVE
-         m7t8/71eCLntxDsZ7ptwtBcEGXNGstBhiCnHF8tG7DuU+FyL8mIbQ73ji+R4R59bNEPQ
-         ILNZpzexFtGNAo4SlITRX8BwInzXl3pHY+NmGeH7L+duhCRGFidW38sjKSh7+i120DyY
-         pqWd6Q9WgsR4369KG5OTIo+/fmvKX5gEfhXkMPxw8fR21s5BP1D6z51an2t9WsxajcPD
-         WKxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVE3k3ZWtwwEKiNN6VhIclm1ywo/KF7gmrtiU6t8SMCBveo6RuQpBWvtcVk+/edeUu+DCmtUxPtR32W@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYUm2fd+PMAPATj+7xOHFAwnZICsLCzOeu48pPLOi7Dn7Rnxyd
-	Qg5zpX4/hT3eNhNKdqwfqK/vDWYC2Mqp1AbvqFFEjCc1PKxniZvCXHHYbTrscs2ogx4Dofo+9cs
-	vo2vrQtDa3fzfNgaB3+lFzjAFzmzYsV1w3vxZk2uMGcvHWDwZ5qE=
-X-Gm-Gg: ASbGncsYMr9K7YvvLakV2R89VuVnvwjIWpVbh/Q7pH6RYUnxt03tVoEhLXErKEjV4gz
-	9Ke4AK/pFpNS1tMHcszf46OaUHsYHT9ca3R6zAe5qmsyGKAHwEPDCcyv6daD/uL7ouQlBR5zjKj
-	k7j3wMuWhoyzFQQFCbzsrgfCj0BjtafcxxGWSZkbg=
-X-Google-Smtp-Source: AGHT+IHD/faqLIAxxrUSThF+7Z4ObfCPG5tjOZ5Cb1dKYqP7WiY8zwWQ1Hl9LkauFsK7X0DzVWW2HZxHARnzix6VVHM=
-X-Received: by 2002:a05:6512:3f17:b0:545:a1a:556b with SMTP id
- 2adb3069b0e04-54838d3e458mr1895563e87.0.1740171220459; Fri, 21 Feb 2025
- 12:53:40 -0800 (PST)
+	s=arc-20240116; t=1740171739; c=relaxed/simple;
+	bh=60QCP9a1fc0i2qunXLPEKvoXFDdpZeQTtyvz1y+2kIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P1TS/x7tsKzHklh3OZbwv0zDbiXDvotEP8Lr3PJ4ITUr8XcgnpJZ+VTAb24PYW/DkW9LuHOXM6W5fpm6aHT24kZYBqAfYOsw8BOw8BD6UqaUbXPi9rzXaDC/XAEh49zMUuKM4N/Csm+A8AQbMyAXUA7atNvIHPPpk32S8zFGL9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af2a2.dynamic.kabel-deutschland.de [95.90.242.162])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 839C261E64783;
+	Fri, 21 Feb 2025 22:02:04 +0100 (CET)
+Message-ID: <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+Date: Fri, 21 Feb 2025 22:02:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
 References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
-In-Reply-To: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 21 Feb 2025 21:53:28 +0100
-X-Gm-Features: AWEUYZmvifQGO9hr4odqPIoAEg6jEmQa9XkbaEe-eZbr42YtXkTTJk53aPtcyJY
-Message-ID: <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
-Subject: Re: Linux logs new warning `gpio gpiochip0: gpiochip_add_data_with_key:
- get_direction failed: -22`
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 9:40=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de>=
- wrote:
->
-> Dear Bartosz,
->
->
-> On the Intel Kaby Lake Dell XPS 13 9360, Linux 6.14-rc3+ with your
-> commit 9d846b1aebbe (gpiolib: check the return value of
-> gpio_chip::get_direction()) prints 52 new warnings:
->
->      $ dmesg
->      [=E2=80=A6]
->      [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0
-> 06/02/2022
->      [=E2=80=A6]
->      [    5.148927] pci 0000:00:1d.0: PCI bridge to [bus 3c]
->      [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key:
-> get_direction failed: -22
->      [50 times the same]
->      [    5.151639] gpio gpiochip0: gpiochip_add_data_with_key:
-> get_direction failed: -22
->      [    5.151768] ACPI: PCI: Interrupt link LNKA configured for IRQ 11
->      [=E2=80=A6]
->      $ lspci -nn -k -s 1d.0
->      00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI
-> Express Root Port #9 [8086:9d18] (rev f1)
->         Subsystem: Dell Device [1028:075b]
->         Kernel driver in use: pcieport
->
-> Judging from the commit messages, this is expected. But what should a
-> user seeing this do now?
->
-> Also, it probably should not be applied to the stable series, as people
-> might monitor warnings and new warnings in stable series might be
-> unexpected.
->
->
-> Kind regards,
->
-> Paul
->
->
-> [1]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D9d846b1aebbe488f245f1aa463802ff9c34cc078
->
+Dear Bartosz,
 
-Hi!
 
-What GPIO driver is it using? It's likely that it's not using the
-provider API correctly and this change uncovered it, I'd like to take
-a look at it and fix it.
+Thank you for your quick reply.
 
-Bart
+Am 21.02.25 um 21:53 schrieb Bartosz Golaszewski:
+> On Fri, Feb 21, 2025 at 9:40 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+
+>> On the Intel Kaby Lake Dell XPS 13 9360, Linux 6.14-rc3+ with your
+>> commit 9d846b1aebbe (gpiolib: check the return value of
+>> gpio_chip::get_direction()) prints 52 new warnings:
+>>
+>>       $ dmesg
+>>       […]
+>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
+>>       […]
+>>       [    5.148927] pci 0000:00:1d.0: PCI bridge to [bus 3c]
+>>       [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
+>>       [50 times the same]
+>>       [    5.151639] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
+>>       [    5.151768] ACPI: PCI: Interrupt link LNKA configured for IRQ 11
+>>       […]
+>>       $ lspci -nn -k -s 1d.0
+>>       00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #9 [8086:9d18] (rev f1)
+>>          Subsystem: Dell Device [1028:075b]
+>>          Kernel driver in use: pcieport
+>>
+>> Judging from the commit messages, this is expected. But what should a
+>> user seeing this do now?
+>>
+>> Also, it probably should not be applied to the stable series, as people
+>> might monitor warnings and new warnings in stable series might be
+>> unexpected.
+
+
+>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9d846b1aebbe488f245f1aa463802ff9c34cc078
+
+> What GPIO driver is it using? It's likely that it's not using the
+> provider API correctly and this change uncovered it, I'd like to take
+> a look at it and fix it.
+
+How do I find out? The commands below do not return anything.
+
+     $ lsmod | grep gpio
+     $ lspci -nn | grep -i gpio
+     $ sudo dmesg | grep gpio
+     [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: 
+get_direction failed: -22
+     [Just these lines match.]
+
+
+Kind regards,
+
+Paul
 
