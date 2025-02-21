@@ -1,165 +1,169 @@
-Return-Path: <linux-gpio+bounces-16361-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16362-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B60D2A3F44C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 13:30:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B77EA3F47B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 13:35:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F69B189B42C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 12:30:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 316F8421C79
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 12:33:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB7F520AF74;
-	Fri, 21 Feb 2025 12:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A4C20AF89;
+	Fri, 21 Feb 2025 12:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jbRH15hZ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MMQmj+rk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8014520896B
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 12:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E390720AF92
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 12:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740141015; cv=none; b=Qb/7kp+5iEn7Wvn4YC6R2vByPhcqjrHgMWQxUN09Q8cmGWLTso+VERJqdU9p8lLLUrSpRjrvB/di33HP3Lc33MBboKKan2RdNv+d1E0hWpNemil7U++wZzqdEjCD5L7KG8HkyPaTXf00p45VNXeW8+i4nRcAuCjTg+v+zVsaW8o=
+	t=1740141222; cv=none; b=dZhVJU+q75CMlJgdxNwQzNzG8p0wVl+HUlAptSnu5/Gw4uZN7heUh4rO7x5JtOqPKLSFisoRWKKcOzWerv6YhAC1Bb/a621MHiB7SLDjTo+gYeaPGh7Lz/sGgxkkPLJJDA/Tv4QSWcHfcK5m1IAPqWTmHM2SDq6E+5QeX9Bw6do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740141015; c=relaxed/simple;
-	bh=zwIa9LnPM0/7Lq5mdjdr/aLybJgHHvLha6qt1CTUVyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QNVybqDgbD+hYW9EP/KAJ0K8q/CVmYtZycrgWZD5OO627xJ1og9VYYrCnTjR/xqQbcFBZ1rWYEaJI0Iw9W7PDQApurXvwc3ZoiF4nVNBHtlCEs/glrRGS89K/PU0j1JNte6m6UXH6/hcv/TDpHaYNrv5jQH85Y3WQlUXI1eJj9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jbRH15hZ; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1740141222; c=relaxed/simple;
+	bh=kfzbwTjAyVRMgJOs6AmC7N34SpH3lxEox/yHKjIhldQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ge7LoukJoMDwjDJaYh68F7zGmG6KBRA3YTREPeJCWKUrG+xLqXQP7zskmJP6VjDWuZAeb7sNZV4KUZMr+2bXIoVXqmNGDv8YXHPWEEAK23ogzVeqLk7tnIB9NsoyABAbFTVKyJy3hBs/6uEIXehAdgZ+uwbO+082P+YFfXiWalA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MMQmj+rk; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f403edb4eso1155732f8f.3
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 04:30:13 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5452c2805bcso2311866e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 04:33:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740141012; x=1740745812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZtqJEnmJyWeV1XPhylUERQv6caREg8pEVtLLf8kPmng=;
-        b=jbRH15hZaZ+ZNRj4KGSAp9nu17Fh8EBLRTRgYa6oZe0esyeeKh0Fd9EWaiCvT6eKH+
-         fmFVQzEtMOv4GHy9YggRQost4uIvDTDlrnKcUkJusLM7Qid01vAaqB5gZY4n1J5+afbs
-         0uajak1HLAQXlwJcrN3jdmz0JunFcDaU9+jF1grBeiSS/9afSjfkbF7DVB++XyCZUG87
-         c2NTNIV0mS5RBaYWFx1no8nsTLygliR2U0UWel3X2lsEbBUKgkr94C5Tu8s9pVabQNzG
-         lMFQpsWtIl8Rf74Z02Xw0UkQWeKLh+zX++Rta3MHChy+SEgFrBbkq8sflJnBCUmsW2g+
-         Zjew==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740141218; x=1740746018; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=laCji0wgcejA8pX+AF6wxbOGQS4OFrsspaTrAMdESBk=;
+        b=MMQmj+rkbua7cJj2CYuIUYtz8cSniy9F/3OiPGurOFnU6kvo+o4il0g8FHzuoaZXdU
+         6knQjAtCuOlS/GX3qAzwgy8Fm+sTCZ8/K9dIUo8CYvwdwrzU37e6TNgUeQRb8tHQcXJI
+         2swzAYMkTneiVc1m2+5I5sTkanoLaNVOsIDcf71Mxt2pkU1Z/hrCyFawyfiYAfuBtrut
+         Peh/azaa3hHrl4k/rXO7TbBTLNl8zzDTUaksIbnWc3eq3Kl7coFFVfJIJjVVdE4+wohy
+         M80pLr9UZDShioD+dfXNIp8bN6Op/pbj+2w5fdkrfJNAxv6xfS0UmMhLhGEwcKuEkHrf
+         hbMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740141012; x=1740745812;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZtqJEnmJyWeV1XPhylUERQv6caREg8pEVtLLf8kPmng=;
-        b=Fvsql3WrZnN8e8qYqPSwXIMnCIkHKgIC3Skxmd4QkUTJmqf3+BRu3wzTAGj29b/sre
-         wSyZAr7qcUe0B/cJuhHGr0OUDI5QawWaYVws0rPdBIKcqYQOKAewXNss0MkPx8ES2DKh
-         lH3OY0tYMJiaQ2u/AmbNxMD3LbSIQzctN5ePNtEpxUmVeQQwEYCdAU65f3rEayVt+kyY
-         0W6kmGsjnYS+JiWQAS3IWKWKC0iDvoUafRn/lH8Oq+uDqa18rNP1LAlhje+MO91rJSbG
-         YMrGHr2BDM/yRRqBwLu5TcrKj0P9B6gQLCDMv5ZoPA+aNrYBqwuon2U7z27cZmd4Os+8
-         XphA==
-X-Gm-Message-State: AOJu0YxekJuyWCJDt1jbGph7zMQt3+1qDupCrnF9D8Rzh8mg3WlfikMu
-	NXuSZQ/6rYIoiVpiIO5iEHLVMY6Rz/XOYNLKb8f9VAlXqLz74rPWIK36BBSZHXPhH6Xo3BrIFaH
-	kJpM=
-X-Gm-Gg: ASbGnctliXejUO7ep7+QMAmXBH6isEUMrG5zD6f3+Tf9GUc+S3OTa4Bgw310K3qQ0DP
-	0AtPcwbVXu+9YP8/8RRjGnPF7ZcnbJvY4TalV21dapy32WFC8Lm40p64C/nuHi7EfzGvUCl01aG
-	dZoNOCJcBAsHq9VGhKY92ClwO5+VGPn+ibuo3XIHVI0Tfk0z71zDqbBy1K7pKKZL1fpPJrzKYi5
-	0fOfe9PvZEQXnHfa4pWux4p+w7CUGLC2efrmtPcV8cQ1SvD03iyhSzg0FqAm5kO91W8ARvYBHXf
-	HSLHUGspOAbOfN+DLerr9KSFOA==
-X-Google-Smtp-Source: AGHT+IFXw8oXcA07bB6uKu3QA6RMhy0mON/qnca36kKS/4X4msS4PkMCYOZuWLLD1PSvJnv87kbkJw==
-X-Received: by 2002:a5d:64a9:0:b0:38f:355b:13e9 with SMTP id ffacd0b85a97d-38f6e95af71mr3261259f8f.15.1740141011591;
-        Fri, 21 Feb 2025 04:30:11 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6cbc:77f7:6f0e:5a7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccd51sm23276274f8f.29.2025.02.21.04.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 04:30:10 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH] gpiolib: use the required minimum set of headers
-Date: Fri, 21 Feb 2025 13:30:01 +0100
-Message-ID: <20250221123001.95887-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1740141218; x=1740746018;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=laCji0wgcejA8pX+AF6wxbOGQS4OFrsspaTrAMdESBk=;
+        b=VRBOWIK7YTBE/9/Itc+rFj4pvhU6xEbG9jfyVYetb4Lw+dJlX6LDozi3JB3WDEw7L4
+         l84+2juhoOyc94oThMn+cK/bwFxIgumri1mtLehjTya2omnhoh4H6G5qFlMVkZGko/xG
+         AQ+j9vh0+vUDz4OLitAKQ8VqHIYRELR4nvRzA4FUeHBkfVGPmqzYtf7jeFDaGPf9YzUH
+         wni2Y7R4jbHu5yPqf2u4mQ7Em2bvTNn4OPz7Yv6jKc/kBMmPPIqzfX234vpcC6SwKUaB
+         gmDV8urM5dfq548XtGhPDoTZVv25mOKAgtTWFWjU0Hp4IpS8GxOoHjC/rD1U0R69LQi8
+         kQ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUprA6byfTd3UvqD/1/J29fLGMdbDXFdTVAsSJXeYFuERJP2YJ6xa7F1uKLxrpi3R9/7dJ0GzCAGzjP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyI5nNLe2fZaTGRFJwww2hNte0RgwwWfwU4zm50ucGfVLl4Qfz
+	f4XsW/IOqB3oNLDgT2yrUpJtOmki5rYraI3/JltHoR68iEkR3+Uy9Hq9ZmE9N2AFZlCk2OWq/0X
+	fv1S7OXzSV24doZuzMY6YYNzX5aQU6l2f7dkkdQ==
+X-Gm-Gg: ASbGncutZOJa8zrGrIacxew5gw2fX+r40kX08Ifw4Pdzpub+hVGPIr7Xyh9OhlzjkB+
+	pp59E2qFFZKUJHOVI2V/XCjdvpQq/BnmoX8d2dsUHilidxkjDvwMEzQWM3H8Bih8oGBhWa5uV7R
+	THuzYEAWStPgDIP7B0CXRKMQ0BlUfpnDWL2+nzFcg=
+X-Google-Smtp-Source: AGHT+IF8P3wDFcp9YKaC027dHaySwmaNX5iaDpp3C16lxDq0a06pZGaS/beZ+S8CGUUtscqFetXUQ7xQyX+bCcMlTIE=
+X-Received: by 2002:a05:6512:1319:b0:545:49d:547a with SMTP id
+ 2adb3069b0e04-54838ee933fmr1110810e87.18.1740141217814; Fri, 21 Feb 2025
+ 04:33:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
+ <20250217-03-k1-gpio-v5-3-2863ec3e7b67@gentoo.org> <CAMRc=MdJszmZ8d1MGo=bfJ8TwqOYBPLe2Jfc9MfbErDUCMQktg@mail.gmail.com>
+ <MA0PR01MB567180C0FE89E3BEBAF2B12EFEC42@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMRc=MdX6KiGk1zBRK3bZpN3iM16-8mDq40sTez6YO2kJEq0zQ@mail.gmail.com> <20250221122125-GYA35549@gentoo>
+In-Reply-To: <20250221122125-GYA35549@gentoo>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Feb 2025 13:33:26 +0100
+X-Gm-Features: AWEUYZn-ieTWF1DGfmKnjgr1pt858szsAsKVHHDN3y-ddz38_1CC6vtmW7gZy14
+Message-ID: <CAMRc=Meg6kdEQ6B+u+rfcBc1d6rMO-9Prz4oFoSF-WFZorZeNw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpio: spacemit: add support for K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Chen Wang <unicorn_wang@outlook.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, 
+	linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>, 
+	Yangyu Chen <cyy@cyyself.name>, devicetree@vger.kernel.org, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Jesse Taube <mr.bossman075@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Inochi Amaoto <inochiama@outlook.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, spacemit@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Feb 21, 2025 at 1:21=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Bartosz Golaszewski:
+>
+> On 09:37 Fri 21 Feb     , Bartosz Golaszewski wrote:
+> > On Fri, Feb 21, 2025 at 12:36=E2=80=AFAM Chen Wang <unicorn_wang@outloo=
+k.com> wrote:
+> > >
+> > >
+> > > On 2025/2/20 21:34, Bartosz Golaszewski wrote:
+> > > > On Mon, Feb 17, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org>=
+ wrote:
+> > > [......]
+> > > >> +#define to_spacemit_gpio_bank(x) container_of((x), struct spacemi=
+t_gpio_bank, gc)
+> > > >> +
+> > > >> +struct spacemit_gpio;
+> > > >> +
+> > > >> +struct spacemit_gpio_bank {
+> > > >> +       struct gpio_chip                gc;
+> > > >> +       struct spacemit_gpio            *sg;
+> > > >> +       void __iomem                    *base;
+> > > >> +       u32                             index;
+> > > >> +       u32                             irq_mask;
+> > > >> +       u32                             irq_rising_edge;
+> > > >> +       u32                             irq_falling_edge;
+> > > >> +};
+> > > >> +
+> > > >> +struct spacemit_gpio {
+> > > >> +       struct  device                  *dev;
+> > > >> +       struct  spacemit_gpio_bank      sgb[NR_BANKS];
+> > > >> +};
+> > > > Please don't use tabs in struct definitions.
+> > >
+> > > Why not=EF=BC=9FI see
+> > > https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#st=
+ruct-declarations-and-initializers
+> > >
+> >
+> > This is for the tip tree, not treewide.
+> >
+> > It's my personal maintainer preference. We do use both under
+> > drivers/gpio/ but I prefer no-tabs in new code.
+> >
+>
+> thanks for this explanation..
+>
+> my intention was trying to keep struct members aligned
+> if tabs is a no-go, would using multi blank spaces to align be acceptable=
+?
+>
+> something like:
+>
+> struct spacemit_gpio_bank {
+>         struct gpio_chip       gc;
+>         struct spacemit_gpio   *sg;
+>         void   __iomem         *base;
+>        ...
+> }
+>
 
-Andy suggested we should keep a fine-grained scheme for includes and
-only pull in stuff required within individual ifdef sections. Let's
-revert commit dea69f2d1cc8 ("gpiolib: move all includes to the top of
-gpio/consumer.h") and make the headers situation even more fine-grained
-by only including the first level headers containing requireded symbols
-except for bug.h where checkpatch.pl warns against including asm/bug.h.
+No, that's even worse. :/
 
-Fixes: dea69f2d1cc8 ("gpiolib: move all includes to the top of gpio/consumer.h")
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Closes: https://lore.kernel.org/all/Z7XPcYtaA4COHDYj@smile.fi.intel.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- include/linux/gpio/consumer.h | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Why are we even wasting time arguing, can you just use a single space?
+You'll get a driver merged and may just disappear from kernel
+development, Linus and I will have to maintain the code so we do get
+some degree of discretion when it comes to coding style.
 
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 0b2b56199c36..f53cd8a1eb1e 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -3,10 +3,7 @@
- #define __LINUX_GPIO_CONSUMER_H
- 
- #include <linux/bits.h>
--#include <linux/bug.h>
- #include <linux/err.h>
--#include <linux/errno.h>
--#include <linux/kernel.h>
- #include <linux/types.h>
- 
- struct acpi_device;
-@@ -185,6 +182,9 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #else /* CONFIG_GPIOLIB */
- 
-+#include <linux/bug.h>
-+#include <linux/kernel.h>
-+
- static inline int gpiod_count(struct device *dev, const char *con_id)
- {
- 	return 0;
-@@ -549,6 +549,10 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
- int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
- #else
-+
-+#include <linux/bug.h>
-+#include <asm/errno.h>
-+
- static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
- 					       unsigned long flags)
- {
-@@ -615,6 +619,8 @@ int devm_acpi_dev_add_driver_gpios(struct device *dev,
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
-+#include <asm/errno.h>
-+
- static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios)
- {
-@@ -640,6 +646,8 @@ void gpiod_unexport(struct gpio_desc *desc);
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_GPIO_SYSFS */
- 
-+#include <asm/errno.h>
-+
- static inline int gpiod_export(struct gpio_desc *desc,
- 			       bool direction_may_change)
- {
--- 
-2.45.2
-
+Bart
 
