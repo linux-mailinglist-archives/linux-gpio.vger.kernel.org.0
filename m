@@ -1,104 +1,79 @@
-Return-Path: <linux-gpio+bounces-16400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D287A3FCB3
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 18:04:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C884FA3FD1B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 18:14:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCB497A6B33
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 17:01:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1FCB07B18F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 17:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C25C24396A;
-	Fri, 21 Feb 2025 17:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 367BE24C697;
+	Fri, 21 Feb 2025 17:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6Vlq437"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2B23CEFB
-	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 17:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E573324BD0E;
+	Fri, 21 Feb 2025 17:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157334; cv=none; b=k7n89FD3XfAfxA/tdQ8tri4mNgogsew3XRPo+YB5oydsPaFQ3w0TaHgAxzfV94piJPVAS4Ri+EAosaaCFPynhVy6O+POO6vwWX6RkTdA7sMAxmDAOQrcUBA+y/GMH/XhEFo7TrEfkY8AH8txoQ/Atnn2qAOANIQpP9ljRxAlK9M=
+	t=1740157782; cv=none; b=fIxZ0armJezkNG7u7G0M+Zfz/kZBlLsTWHST7RG+GwoxUgmQLyCpm0DATJopKxQfQhgm1eYEggHt/Wb4aFCClK7WGIknnLMNHSKpLXmd6AODHHkQmgxb+wi08cs1f8Jdc1YR7rW3q1SYYXhu2RsHQM0yR9DsxDHu/DndzG6/DJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157334; c=relaxed/simple;
-	bh=NmoUzmlc2gFy8DtJW0mf6WyAUDiPuHGXJ/F/L5mJS2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pp05KLlbLJwra7uFiDug8M6WyCABWdrF9rb4fwfhqyOBUt7D78BWgFDfKuE5ruejVLBrXvtJH2o9pY8yz7c4sgRqmvb/9WUG9wn84KgjNIqS27uASmmz8J4Ysyz/bdveSofsg0bOzxuJT/8dO1bVxzeaKH+omZMEv2R48rm56SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:ae9a:419e:d123:9695])
-	by albert.telenet-ops.be with cmsmtp
-	id GH2A2E00D0y8aK506H2Ay4; Fri, 21 Feb 2025 18:02:10 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tlWPO-0000000BMt0-0Lpo;
-	Fri, 21 Feb 2025 18:02:10 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tlWPi-0000000EP6Y-1sDL;
-	Fri, 21 Feb 2025 18:02:10 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v6.15
-Date: Fri, 21 Feb 2025 18:02:09 +0100
-Message-ID: <cover.1740157176.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1740157782; c=relaxed/simple;
+	bh=Sx8CUdWSR8m8fVhuRwZ8nVHVYSso8rrmeDD2S+IaxEM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fsGEPl3yLczWd00U3dqtstOl6ie3DGBKQI5zD0W4l/gP+cqnKsT9wsMqQwsfomLKTeowChEkHD2HPJY6RL/4xPNhFJ1df6sST7q1qnGo4kTNhzDyl+2F0D0heNjlMIxTjrI+4pQlQFj390+yWg9yFqdGKLcgZkVbB7+kHuH3lPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6Vlq437; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9271C4CED6;
+	Fri, 21 Feb 2025 17:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740157781;
+	bh=Sx8CUdWSR8m8fVhuRwZ8nVHVYSso8rrmeDD2S+IaxEM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=f6Vlq437iaUI3VyxLy8rKDR8ZCZjlT3yTdWtcNToA41n0v75Tvs5QKr5G1IZflaSN
+	 /VtQxX0DWoze7dwhSI/h66E3JppoTyJPldGoZ66no/Qx3nn58i1B/FIDWu30+EJVsh
+	 xJB300lbLPuDknKn6emzO3E/qOSeG0nu+WJlLrGxAyXAJk55JDCHfmJE+TnEh3xP83
+	 tecybbPfMFb9vRDOMTrVU/yqABVS2FgkLEA35isvkXc+uby79aLc8/6w0J5AcuufOY
+	 dXQ6bUI2seOfksgtppfaeqV3VzV87dq0Ig9A4wH2USq1ofNYfykQNnItX5Wqax6eew
+	 f1bOCZJzbDuig==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EBF23380CEEE;
+	Fri, 21 Feb 2025 17:10:13 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.14-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250221144750.108147-1-brgl@bgdev.pl>
+References: <20250221144750.108147-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250221144750.108147-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc4
+X-PR-Tracked-Commit-Id: 96fa9ec477ff60bed87e1441fd43e003179f3253
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 534a2c6217f21a66e72d246417e0cae25c5a3d62
+Message-Id: <174015781259.2120607.15538489442058797181.pr-tracker-bot@kernel.org>
+Date: Fri, 21 Feb 2025 17:10:12 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-	Hi Linus,
+The pull request you sent on Fri, 21 Feb 2025 15:47:50 +0100:
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc4
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/534a2c6217f21a66e72d246417e0cae25c5a3d62
 
-are available in the Git repository at:
+Thank you!
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.15-tag1
-
-for you to fetch changes up to ea4065345643f3163e812e58ed8add2c75c3ee46:
-
-  pinctrl: renesas: rzg2l: Suppress binding attributes (2025-02-20 17:33:08 +0100)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v6.15
-
-  - Add suspend/resume support for pull up/down on RZ/G3S,
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Chenyuan Yang (1):
-      pinctrl: renesas: rza2: Fix potential NULL pointer dereference
-
-Claudiu Beznea (2):
-      pinctrl: renesas: rzg2l: Add suspend/resume support for pull up/down
-      pinctrl: renesas: rzg2l: Suppress binding attributes
-
- drivers/pinctrl/renesas/pinctrl-rza2.c  |  3 +++
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 20 +++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
