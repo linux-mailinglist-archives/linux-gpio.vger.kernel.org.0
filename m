@@ -1,147 +1,153 @@
-Return-Path: <linux-gpio+bounces-16386-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16387-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D94F3A3F5B7
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 14:21:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1353A3F62C
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 14:37:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CEDC862D33
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 13:17:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC139188841A
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2025 13:35:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D389420E038;
-	Fri, 21 Feb 2025 13:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC4F207A2E;
+	Fri, 21 Feb 2025 13:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GXpc4jkm"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lLZ83f2r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3911320DD46;
-	Fri, 21 Feb 2025 13:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6E41EEE9
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 13:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740143822; cv=none; b=kt7kRusM5NSG/u6zbE5vYkLP2rJGAyPSZ9VebUmlKufFAlsX3tVQjBdMaDKUAnjkxrwlQEKdVVGj9r5qZEGiGL+joPIhFOwtDHXRPzxc39coBaJvaQOK47QB1Z7sTM+GJ60xnHz9ncWM2BM6V5SHAwvGC3ZrfqiUGEkWp2ihMrk=
+	t=1740144917; cv=none; b=IOfkKaIOuFLtDIW7n+VtRI5S3fGRvGTWjD/fjA/B6vAB3r4vNOJvak8+GwWfP3B04Wco3gzXTA27AxnMCAQgO2AQDNDLlhw1Lbi2upC2JuBv5hlWisc7Yc2kBhW6u/K1wj0ywhZugKX1kC0y8pUUWf4BYNPw4Tr9cmKyL1dBvRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740143822; c=relaxed/simple;
-	bh=7Q/D8RghOyQ/KqhFnFzSNOl6lXSfSgLpiiU60rl6VL4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Gj3ElOhC4EFX1RWj8C3hZfCfu9jj7Z0DmWyig3myCVtSYYMmKv7Pl1tHE3sFnysIEJNv4ZPa0SeuP8WxHwT5wHw7qixcKRAwInIgG5b2JNp7qHyd+4yJqg8s154EejeSusyas2GDgNi8KYqlEh/wP7GSbl6A+PUDOZyrJDIdySM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GXpc4jkm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LCoZSC012227;
-	Fri, 21 Feb 2025 13:15:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hXZATStOuQiUIAFb67THfjHdGBUb7YTvKE8kj2FT690=; b=GXpc4jkmdL/MQPOr
-	pZp6PmeL5Mi6h+yjuc7De9EjOcGwyLk5Pzt+DWsFuvR/4zMHpji7JNti0PzDAsuF
-	iuZbvlN3vWkCNT3dXV3XjsLyd/9+5x7WucaTYx/SwXM5Uzym3sMyZpu2PA0fcbZ/
-	ElH+Q7hSqBEDGfS94WFZxNChfTCTL7xbpz94nJjmDLZximaFc7Kdx+cS+jv4InpO
-	O3MC+FBUWRZZ3ovwFu7u/g+N2IJy4VU44DrfTPhwtfk8/cjY2U/UvWRPue8rGldQ
-	Upx+Cvchd4mqxlWfdssnCq94EEAFk8TQ1ubenUTdIjdE5cgzjvAL1GTrzmDcT1TW
-	Dlg9cw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1t4hf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 13:15:49 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51LDFmDi007900
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 13:15:48 GMT
-Received: from [10.133.33.29] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Feb
- 2025 05:15:40 -0800
-Message-ID: <7a151447-4961-4cba-b989-9a9e890d7ba3@quicinc.com>
-Date: Fri, 21 Feb 2025 21:15:38 +0800
+	s=arc-20240116; t=1740144917; c=relaxed/simple;
+	bh=JCwBGCIWQQYwvBo1RGFgynH2V74O4Vo5jpW5Ascsdwk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XT22mFFRQ7NAg6Gole+mjsT4bFy+8figWB9ZKgfcDuX6Mpm+6yAHMMbskKWnozqh+auuhdEihslmsKX6G9p+oKE6OkZu7sK9/QekCQ61brMSkUk7uhGCG/B2i49wGAy/KqTPqTQhNLSiLrqknbAFubJZkHV9KzOZWQrq0L/mrLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lLZ83f2r; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D0A6041231
+	for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 13:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1740144911;
+	bh=4mV4RIbIjlD+y6YWR/tN/fQ+WDkZUX/byyo07QreGuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=lLZ83f2rIkkxGeJc6ujLF4y8yxOs3NPTiAKDEq2eanmXFmD78NuJS/z/64NPPTx72
+	 CMKxjOUrXZc6kwLPrLbzW91bZDcJ9OYdW0envaE0d8+nG1T+IaYiG1oUlhvXAEwXeE
+	 6Y7YkcwtVmAIFpbABBxtAGc9fBS8I1peqeLyTnBOGXXTt4P8DHoGFrOA/XRqePWQ7u
+	 EaUw1HvJZeS11+sf6jJaFnFgI1X86AyXiYKg2Lesbrf6h1aJh+zt0M26c/Vnzk9127
+	 qN21jVw/uxPe+Tgemr1p3K1g6aGYMtxOn8GYnukVP4Su9xvXa96sUlY7aSjQ20sP+7
+	 G71GYGQb9Bi+A==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fc261eca15so6431078a91.1
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2025 05:35:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740144910; x=1740749710;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4mV4RIbIjlD+y6YWR/tN/fQ+WDkZUX/byyo07QreGuM=;
+        b=dU67EG7zQJ/CkaFxXcXXvlqNe7qogkuJ3fgQ5B/3exRp6fkANKJkxc7B+p4EFM5LjH
+         Dy/ZodFPuV2q5KEHnrM7DRkQNks7K6Js6ndrRE0G2HNjXpFtsOPM4aehOlU6Tt66Mkwj
+         XGQLRB6bsC9Teda2GhmqgZhPvT2cAiv4uNfoq9K5yIJJwJk1OlGnR+75RHY9eQeGHuYA
+         G8upibHS/QWgrtfPxxZGKw5wZDOhSCxiEEA3csb+ytgcGC9HGI9P8L5VCYRu3BISQbD0
+         ZzB4ZSW5ZB9qFtoXfqXC3MvEYAUoSaW1xUr756TzWqIxH11F5QZbaOaSkeUUDEj+1br6
+         n36Q==
+X-Gm-Message-State: AOJu0YzsS0TF2ZNjmQdtvBRHPLMLix87rs10SY0cOc2hhgwxWzb02ks6
+	XEXDtgsAnaLtqNfIfSYw0eLvao1rgmk+WIZPWficffnsmzWyjd71nFkEZMR8u0KlLqjAd3OFLho
+	WgP2l0E/OFJyStCFIou2HNv+ykECpkh93SKEpGDCZFVf0phYpsGUWwTsax7Mh7MRhE0eSWPLDJZ
+	ulVAm6i38=
+X-Gm-Gg: ASbGncsYQrlODpoy7U+NhAPNzknl+5ndLTN5V53ACCZHgKLK9ioxHpcw96DqLFZJ+fI
+	jGAkdduDdoLx7X9IdRdZKmi/k10SLJPvmOt+06ewseML3b+ByAnBan4z+gSnrBgA13KTMcz99T7
+	fTxaWDd7lmVvJxEshN2tpivxf/Xp0UlqPM4OA/jGTB5YvCpjOE/azd0iG7o5uwUc8bKrnvd61vb
+	HzuZsEdRSMpqXKmzBzklDwkgM+JGmsRZqVV33YNwedm3jVngF8B3VwT7e1dhsGn5DsMemgrCdkm
+	K30zGCK95rZP9Mqb
+X-Received: by 2002:a05:6a00:2e14:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73425ca201fmr5092582b3a.7.1740144909754;
+        Fri, 21 Feb 2025 05:35:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE9cThE2TLeyZ3v29gmKIYQTJjFCHfD+VOXkksuQsyP1lmxTtH9LYVHO1h/J0OAS+61OnPX5Q==
+X-Received: by 2002:a05:6a00:2e14:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73425ca201fmr5092533b3a.7.1740144909269;
+        Fri, 21 Feb 2025 05:35:09 -0800 (PST)
+Received: from z790sl.. ([240f:74:7be:1:2777:7867:71cd:dd56])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7325d65619bsm12565459b3a.113.2025.02.21.05.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 05:35:08 -0800 (PST)
+From: Koichiro Den <koichiro.den@canonical.com>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@bgdev.pl,
+	geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	maciej.borzecki@canonical.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] Add synchronous fake device creation utility for GPIO drivers
+Date: Fri, 21 Feb 2025 22:34:58 +0900
+Message-ID: <20250221133501.2203897-1-koichiro.den@canonical.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void
- APIs
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Will Deacon <will@kernel.org>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Thomas
- Gleixner <tglx@linutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang
-	<xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-        Jason Gunthorpe
-	<jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones
-	<lee@kernel.org>,
-        Thomas Graf <tgraf@suug.ch>, Christoph Hellwig
-	<hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy
-	<robin.murphy@arm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard
- Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu
-	<zijun_hu@icloud.com>,
-        <linux-arch@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <iommu@lists.linux.dev>,
-        <linux-mtd@lists.infradead.org>
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
- <2025022145-ungodly-hanky-499e@gregkh>
-Content-Language: en-US
-From: Zijun Hu <quic_zijuhu@quicinc.com>
-In-Reply-To: <2025022145-ungodly-hanky-499e@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PjXLPSlfU4X8CAU-woeSzf1fJQlgHVdf
-X-Proofpoint-ORIG-GUID: PjXLPSlfU4X8CAU-woeSzf1fJQlgHVdf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=775 suspectscore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502210097
+Content-Transfer-Encoding: 8bit
 
-On 2/21/2025 9:12 PM, Greg Kroah-Hartman wrote:
-> These span loads of different subsystems, please just submit them all to
-> the different subsystems directly, not as one big patch series which
-> none of us could take individually.
-> 
+This patch series introduces a utility for some GPIO devices to reduce
+code duplication. There are no functional changes.
 
-sure. will do it as you suggest.
-thank you.
+In this series, only gpio-sim and gpio-virtuser are updated to use
+dev-sync-probe, as the current gpio-aggregator does not benefit from it at
+all. A follow-up patch series that introduces a configfs interface for
+gpio-aggregator will convert it to use dev-sync-probe as well.
 
-> thanks,
-> 
-> greg k-h
+This work originated from a suggestion by Bartosz:
+https://lore.kernel.org/all/CAMRc=MfcooZXBqVpbQ0ak+8LGsPDzwKSN3Zfb0eZDx1Bx4duzQ@mail.gmail.com/
+
+N.B. this submission is based on the same (gpio/for-next) commit as v2:
+f04867a5d0d3 ("gpio: loongson-64bit: Remove unneeded ngpio assignment").
+
+
+v2->v3 changes:
+  - Fixed Kconfig (hide it from users with removing 'depends on', move it
+    outside of 'if GPIOLIB ...').
+  - Dropped an unnecessary comment, an unnecessary line break.
+  - Fixed Copyright (Year 2025 -> 2021 for Bartosz, add mine) + add my
+    MODULE_AUTHOR.
+  - Renamed dev_sync_probe_data fields ('data' -> 'probe_data') for both
+    gpio-virtuser and gpio-sim.
+
+v1->v2 changes:
+  - Renamed the files (gpio-pseudo.[ch] -> dev-sync-probe.[ch]).
+  - Renamed the helper functions and a struct.
+  - Fixed Kconfig (correcting bool to tristate, etc.).
+  - Fixed Copyright.
+  - Added some missing #include.
+
+v2: https://lore.kernel.org/all/20250218160333.605829-1-koichiro.den@canonical.com/
+v1: https://lore.kernel.org/all/20250217142758.540601-1-koichiro.den@canonical.com/
+
+
+Koichiro Den (3):
+  gpio: introduce utilities for synchronous fake device creation
+  gpio: sim: convert to use dev-sync-probe utilities
+  gpio: virtuser: convert to use dev-sync-probe utilities
+
+ drivers/gpio/Kconfig          |  5 ++
+ drivers/gpio/Makefile         |  3 ++
+ drivers/gpio/dev-sync-probe.c | 97 +++++++++++++++++++++++++++++++++++
+ drivers/gpio/dev-sync-probe.h | 25 +++++++++
+ drivers/gpio/gpio-sim.c       | 84 +++++-------------------------
+ drivers/gpio/gpio-virtuser.c  | 73 ++++----------------------
+ 6 files changed, 152 insertions(+), 135 deletions(-)
+ create mode 100644 drivers/gpio/dev-sync-probe.c
+ create mode 100644 drivers/gpio/dev-sync-probe.h
+
+-- 
+2.45.2
 
 
