@@ -1,165 +1,145 @@
-Return-Path: <linux-gpio+bounces-16426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 896EBA40814
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 12:51:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3391FA408A1
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 14:23:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFEB719C6448
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:52:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 89DDA3B2A33
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 13:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C58B20ADD1;
-	Sat, 22 Feb 2025 11:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MnTsDy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF6F20AF6D;
+	Sat, 22 Feb 2025 13:23:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A0207E18;
-	Sat, 22 Feb 2025 11:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FE520967F;
+	Sat, 22 Feb 2025 13:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740225110; cv=none; b=dk6WsQaVHxULKJxMuEcbHhhAj4VDCQzmqtATicjsLx6KyswiVv7lHney3N+hNZgO9bva8FE4CjbskxhrvT5TGL8F942kmCdRLuJVxuKverHqqjn2KgGHYAFZMtMT0kyL/23d1aJ3uMCA2Wkcl4rXz0JMa/bQdc2h/zWHJeotLdo=
+	t=1740230589; cv=none; b=m3irBCW/oM/6LX3R2z+np7aX07H9Zg0waa9LWjtuTSLi+996MD1wkzoU9phNmI2FlYj1Zp/AOyG9nE96E1qwG2UsqBTBFl8lxrXpXGbGF3KiRm8V9ZkttMtn+t+uYsWsugNSZC1kNO6UtvjWHCuiCOdj0li+NIZpA68kyWsmMO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740225110; c=relaxed/simple;
-	bh=sifDgvYlQN5FrcMLya3et5Zf5/0nSv8Le44LEJPVOBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=shNkUiBwM7bgvrzzsNqRxg64nN8kBD60uOhi6zD3gD6zYalEittS98h9akF7uXtGeQYm/nw85HAXlO7gOmdr/zP/WAzMnk4rjFBhOzfXMU2kf5Wv1YQw1azZsuR5w4bAvPnn519gDKTmhP+56C3VLm59Zz4twBxqTRDabPWlnV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MnTsDy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD18CC4CED1;
-	Sat, 22 Feb 2025 11:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740225110;
-	bh=sifDgvYlQN5FrcMLya3et5Zf5/0nSv8Le44LEJPVOBY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o1MnTsDy7B2ADdlQeonDeLn/bPpPFyOtYvttzKdblxFD2XxoY7ShPnHXf3XPJ2Cxd
-	 tPSR6pQspqTlbXMcbM3c5gCwkD2tdh3CkJhCc1Kk++fCG0bVcIYy1qIKjN7s/IpaZk
-	 9WZyTjucoFNU8hg+r8vAs9hSg6cXKhyQiY/REj9Qkb9Q0zfp2in7aegcZpi/HtRKUl
-	 OAeM5BZnhLowo6McrOfKl45uhs4OlzKy4EiIbQsXV0rEu+57oXYB5WdDWtaXP+K672
-	 x5kmB5UkDMg7YZEDbIpRlZVdnMG5xUYcEWVbedH7CkU08KVsQ9fuNt7cehavP1i9Tl
-	 MiXi1OF+BQ3/Q==
-Date: Sat, 22 Feb 2025 11:51:34 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
- Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-sound@vger.kernel.org
-Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
-Message-ID: <20250222115134.7379f785@jic23-huawei>
-In-Reply-To: <4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
-References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
-	<20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
-	<4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740230589; c=relaxed/simple;
+	bh=cHo6vTlfrzwUzW/DT/egpBCH21mBMOMH3CKUk8ZULrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u8HUgX6s+BtIeUHuGeDwqcI7PRP8OlqgLCd8sEmILs5zIZg6grQP2pTcrbs+pZ9PmCT+JhXkZESvbCyKaMtaHiVoB0PALdnfA9t1KPQ6Ha0sRyMwN2nnD+1o0JoF8Y+IU1Q8ZLl38WVt0SjKVqoxUb/tT9ZjHcxSWeDVrDvPPJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.118.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 21D1C3431F0;
+	Sat, 22 Feb 2025 13:23:06 +0000 (UTC)
+Date: Sat, 22 Feb 2025 13:23:01 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v5 1/5] gpio: of: support to add custom add pin range
+ function
+Message-ID: <20250222132301-GYA37325@gentoo>
+References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
+ <20250217-03-k1-gpio-v5-1-2863ec3e7b67@gentoo.org>
+ <CAMRc=MdGBTXRSAgY2vjOrqVVRzOyYh7N8yZsjK+W4cYFCQAwhQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdGBTXRSAgY2vjOrqVVRzOyYh7N8yZsjK+W4cYFCQAwhQ@mail.gmail.com>
 
-On Thu, 20 Feb 2025 14:54:53 -0600
-David Lechner <dlechner@baylibre.com> wrote:
+Hi Bartosz Golaszewski:
 
-> On 2/10/25 4:33 PM, David Lechner wrote:
-> > Replace bitmap array access with bitmap_write.
-> > 
-> > Accessing the bitmap array directly is not recommended and now there is
-> > a helper function that can be used.
-> > 
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+On 11:22 Thu 20 Feb     , Bartosz Golaszewski wrote:
+> On Mon, Feb 17, 2025 at 1:58 PM Yixun Lan <dlan@gentoo.org> wrote:
+> >
+> > Export custom function to add gpio pin range from pinctrl
+> > subsystem. This would make it possible to add pins to multi
+> > gpio chips.
+> >
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
 > > ---
-> >  drivers/iio/resolver/ad2s1210.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
-> > index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
-> > --- a/drivers/iio/resolver/ad2s1210.c
-> > +++ b/drivers/iio/resolver/ad2s1210.c
-> > @@ -46,6 +46,7 @@
-> >   */
-> >  
-> >  #include <linux/bitfield.h>
-> > +#include <linux/bitmap.h>
-> >  #include <linux/bits.h>
-> >  #include <linux/cleanup.h>
-> >  #include <linux/clk.h>
-> > @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
-> >  	if (!gpios)
-> >  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
-> >  
-> > -	bitmap[0] = mode;
-> > +	bitmap_write(bitmap, mode, 0, 2);
-> >  
-> >  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
-> >  }
-> > @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
-> >  			return dev_err_probe(dev, -EINVAL,
-> >  				      "requires exactly 2 resolution-gpios\n");
-> >  
-> > -		bitmap[0] = st->resolution;
-> > +		bitmap_write(bitmap, st->resolution, 0, 2);
-> >  
-> >  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
-> >  		if (ret < 0)
-> >   
+> >  drivers/gpio/gpiolib-of.c   | 5 ++++-
+> >  include/linux/gpio/driver.h | 7 +++++++
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> > index 2e537ee979f3e2b6e8d5f86f3e121a66f2a8e083..64c8a153b823d65faebed9c4cd87952359b42765 100644
+> > --- a/drivers/gpio/gpiolib-of.c
+> > +++ b/drivers/gpio/gpiolib-of.c
+> > @@ -1170,7 +1170,10 @@ int of_gpiochip_add(struct gpio_chip *chip)
+> >         if (chip->of_gpio_n_cells > MAX_PHANDLE_ARGS)
+> >                 return -EINVAL;
+> >
+> > -       ret = of_gpiochip_add_pin_range(chip);
+> > +       if (!chip->of_add_pin_range)
+> > +               chip->of_add_pin_range = of_gpiochip_add_pin_range;
+> > +
+> > +       ret = chip->of_add_pin_range(chip);
+> >         if (ret)
+> >                 return ret;
+> >
+> > diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> > index 2dd7cb9cc270a68ddedbcdd5d44e0d0f88dfa785..a7b966c78a2f62075fb7804f6e96028564dda161 100644
+> > --- a/include/linux/gpio/driver.h
+> > +++ b/include/linux/gpio/driver.h
+> > @@ -528,6 +528,13 @@ struct gpio_chip {
+> >          */
+> >         int (*of_xlate)(struct gpio_chip *gc,
+> >                         const struct of_phandle_args *gpiospec, u32 *flags);
+> > +
+> > +       /**
+> > +        * @of_add_pin_range:
+> > +        *
+> > +        * Callback to add pin ranges from pinctrl
+> > +        */
 > 
-> There is actually a bug here pointed out in a similar patch. bitmap_write()
-> only modifies the bitmap, so this introduces an unintialized use bug. [1]
-> Here, we only use the bits that we set, so runtime behavior would not actually
-> be buggy but still best to fully initialize the memory.
+> Please, make the API contract more specific: describe the return value
+> and check it in the call place if it can return errors.
 > 
-> I'm a bit surprised that my local compiler and iio/testing both didn't catch that
-> since GCC 14 caught it in the other driver.
+> Also: is this even OF-specific if it doesn't take any OF argument? Why
+> not just add_pin_range()?
 > 
-> [1]: https://lore.kernel.org/linux-gpio/20250217132152.29d86d6c@jic23-huawei/T/#m3163d2c5db5b7376504d8ad6f23716f1119de761
-> 
-> The fix is simple, we can zero-initialize the bitmap.
-Ignore previous. I'm looking at wrong branch. I can tweak this just fine.
-Done so and tree pushed out.
+now, this patch is obsolete, please ignore
+it will be replaced by the one sent by LinusW
+https://lore.kernel.org/all/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org/
 
+> Bart
 > 
-> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
-> index 04879e6d538b..ab860cedecd1 100644
-> --- a/drivers/iio/resolver/ad2s1210.c
-> +++ b/drivers/iio/resolver/ad2s1210.c
-> @@ -176,7 +176,7 @@ struct ad2s1210_state {
->  static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
->  {
->  	struct gpio_descs *gpios = st->mode_gpios;
-> -	DECLARE_BITMAP(bitmap, 2);
-> +	DECLARE_BITMAP(bitmap, 2) = { };
->  
->  	if (!gpios)
->  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
-> @@ -1427,7 +1427,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
->  	struct device *dev = &st->sdev->dev;
->  	struct gpio_descs *resolution_gpios;
->  	struct gpio_desc *reset_gpio;
-> -	DECLARE_BITMAP(bitmap, 2);
-> +	DECLARE_BITMAP(bitmap, 2) = { };
->  	int ret;
->  
->  	/* should not be sampling on startup */
+> 
+> > +       int (*of_add_pin_range)(struct gpio_chip *chip);
+> >  #endif /* CONFIG_OF_GPIO */
+> >  };
+> >
+> >
+> > --
+> > 2.48.1
+> >
 > 
 
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
