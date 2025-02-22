@@ -1,155 +1,153 @@
-Return-Path: <linux-gpio+bounces-16421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3B80A4073D
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:04:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1987BA4077D
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:40:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D17963AD0CF
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 10:02:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 188627AC9BD
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 10:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B460C202C5B;
-	Sat, 22 Feb 2025 10:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC50209686;
+	Sat, 22 Feb 2025 10:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAfuPScI"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="yYDN+E04"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from pv50p00im-ztdg10012001.me.com (pv50p00im-ztdg10012001.me.com [17.58.6.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E9CB663
-	for <linux-gpio@vger.kernel.org>; Sat, 22 Feb 2025 10:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15EB2066E4
+	for <linux-gpio@vger.kernel.org>; Sat, 22 Feb 2025 10:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740218579; cv=none; b=p16k0WktHfVM1km3hngUNt+gTMJUcyS7o/qbEcg8tXVTw/hcbu83cv5VlEL29bGDMBAtuWeXry7Vca9gHK0pQwuK4LN2rgugbPWPqsMIaysdYwwuLOtvm4fWA6G2OyfTenG7oP0S3ewsMEmnaa/f++5nW0eptry1+pNfMDs36WE=
+	t=1740220783; cv=none; b=QN4xgnvFz/VpKNyMJ0m2hQ71dGLcJ240+hj8MRnXpdIes95bB7+2ttL4tEKC3M26i9UGsMzLay5c0zP+CqcI94tujGJUG/h7hkEzQr5/DD+soubnJ9vw4zBAOiokLNeOOO6BnQxeMogDwP989I8yYJZLgg+HdU9hl406EQcZiKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740218579; c=relaxed/simple;
-	bh=hWR8EblvqTzEo6Fgy7oFzUbQOktC1MeFawuD7fyxMXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=RTQga87qec4hE5tE0ZaxLfqYwUrU3Sm5ehi8YikJNABR49h7y+OBwbagu2chaju7p/WWoY8QQOjKUUuMcfN2BPaQuAUTyQfE2PqGF0sd1v0/IMqZwtmIL3DoQPpEYGcgJ+Rxf8Xq7zA3yfIi3uawqmsA043QowEWiyJyyOTUxao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAfuPScI; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740218577; x=1771754577;
-  h=date:from:to:cc:subject:message-id;
-  bh=hWR8EblvqTzEo6Fgy7oFzUbQOktC1MeFawuD7fyxMXQ=;
-  b=HAfuPScIZR+ZpkzN9X2OSrg6jXWFOJa+cIRsE3S3Ly8uSWMaqHSSO+XH
-   4Apit91Z66d/JW8DYjjj86MUL3heLbmwy2+k4I5vWuWjHwQls+F3ZzUBY
-   SJ4DrScDdAqoOBTO21p+DP/GGUdBroui5b4zNU3pLNRj2luh+cM0prU3U
-   OT/UZw3sz7wB4/T2WTg47m6GH20fYQTTsmZWrG3qnqlG6Mkn6QPAmGos+
-   xZPsmXLsuxGpSayas19Mvm0j5CkHCLovqIvsMcKdui9fCew9Gc+Q33QEf
-   aQcrNMXHE/uFIeoKqHh9ZPyfZSyYQplIW83BaStRgb5rErOWmnjRaFYgh
-   w==;
-X-CSE-ConnectionGUID: j8gii1USQ5ublhxRStTnQQ==
-X-CSE-MsgGUID: UHA22iBLSHSGxkq7RWD7fg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="44812808"
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="44812808"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2025 02:02:57 -0800
-X-CSE-ConnectionGUID: tiERWJI4Tg6Vq5v2M9fdhQ==
-X-CSE-MsgGUID: H/OY1vt4ScOUwfyeAMyZMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116087574"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 22 Feb 2025 02:02:56 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlmLV-0006TD-2S;
-	Sat, 22 Feb 2025 10:02:53 +0000
-Date: Sat, 22 Feb 2025 18:02:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- db305161880a024a43f4b1cbafa7a294793d7a9e
-Message-ID: <202502221835.BElmGIDz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740220783; c=relaxed/simple;
+	bh=+MM+Sj3Py0FG+77MBxvX9ur6eehoj2ClCYpV/HT4iwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tcMq98J6FRmjjTmbnFhGsdqZPjc2ldH95WgXmh5883KLG6OxeiOVts1LPTG76B4QiHLW30ThjhknXo3p6Q2/p9GDTatCnv3yqnHEeGjIIELY+GdZBLUrrEs7dEG0HWsHu5zq2OiVYC5ZgdN11CvM42c307zktdqQ4QrfbO0FuCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=yYDN+E04; arc=none smtp.client-ip=17.58.6.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=mbxficQPTzs09LWwBbFhdunStNbxz1Db5LUu+U2NlSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=yYDN+E04f3AdizaUiroUuQGY41SPVVZcRqALdOpH6NFQhX3QCjWpHGcmHdHvZgXyw
+	 lY1ddO0XjuI5jwoyQLYS2xsXRa555rOew3qMgB02ajNFY2naY0JiMg3EzOtw/vDBsm
+	 rNcbU3RkjyAdmQBUnnLpBha3Hg45RvWSCLNO8oK0o5dE+ouOgYdV9O7OaddprvalcC
+	 F7e6FcKQyQxquf6C4CR09WnXr4uHh4OXsP+wDyxaBcn55oVkRsljjd3IOmoDXx5njY
+	 kMIwNWVp9xmRX9kyVkPTFuHEolnlCaw5jRp5Hj9sFk69BnUaESstfS78tB+JnoKuuq
+	 DJolzLt315u8g==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10012001.me.com (Postfix) with ESMTPSA id 00694A0092;
+	Sat, 22 Feb 2025 10:38:11 +0000 (UTC)
+Message-ID: <732f9f29-f794-4491-b942-45ad01b01db5@icloud.com>
+Date: Sat, 22 Feb 2025 18:38:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void
+ APIs
+To: Arnd Bergmann <arnd@arndb.de>, Zijun Hu <quic_zijuhu@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Nicholas Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+ Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-wireless@vger.kernel.org,
+ linux-rdma@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ linux-mtd@lists.infradead.org
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <5d662c4c-76f7-4e5c-82f3-2aeeaf9e3311@app.fastmail.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <5d662c4c-76f7-4e5c-82f3-2aeeaf9e3311@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 5BaBpFy7OfeZq74ITSrzTheUfV5JFE1_
+X-Proofpoint-ORIG-GUID: 5BaBpFy7OfeZq74ITSrzTheUfV5JFE1_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-22_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 clxscore=1011 phishscore=0
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502220085
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: db305161880a024a43f4b1cbafa7a294793d7a9e  gpio: regmap: Allow ngpio to be read from the property
+On 2025/2/21 23:40, Arnd Bergmann wrote:
+>> This patch series is to remove weird and needless 'return' for
+>> void APIs under include/ with the following pattern:
+>>
+>> api_header.h:
+>>
+>> void api_func_a(...);
+>>
+>> static inline void api_func_b(...)
+>> {
+>> 	return api_func_a(...);
+>> }
+>>
+>> Remove the needless 'return' in api_func_b().
+>>
+>> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> I have no objection to the changes, but I think you should
+> describe the motivation for them beyond them being 'weird'.
+> 
 
-elapsed time: 1459m
+yes. C spec such as C17 have this description about return
+statement:
 
-configs tested: 62
-configs skipped: 1
+6.8.6.4:
+A return statement with an expression shall not appear in a function
+whose return type is void. A return statement without an expression
+shall only appear in a function whose return type is void.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+do we need to treat below return statement as bad code style ?
 
-tested configs:
-alpha                           allyesconfig    gcc-14.2.0
-arc                  randconfig-001-20250221    gcc-13.2.0
-arc                  randconfig-002-20250221    gcc-13.2.0
-arm                  randconfig-001-20250221    gcc-14.2.0
-arm                  randconfig-002-20250221    clang-19
-arm                  randconfig-003-20250221    gcc-14.2.0
-arm                  randconfig-004-20250221    clang-21
-arm64                randconfig-001-20250221    clang-15
-arm64                randconfig-002-20250221    clang-21
-arm64                randconfig-003-20250221    clang-21
-arm64                randconfig-004-20250221    gcc-14.2.0
-csky                 randconfig-001-20250221    gcc-14.2.0
-csky                 randconfig-002-20250221    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250221    clang-21
-hexagon              randconfig-002-20250221    clang-21
-i386       buildonly-randconfig-001-20250221    gcc-12
-i386       buildonly-randconfig-002-20250221    gcc-12
-i386       buildonly-randconfig-003-20250221    gcc-12
-i386       buildonly-randconfig-004-20250221    gcc-12
-i386       buildonly-randconfig-005-20250221    clang-19
-i386       buildonly-randconfig-006-20250221    clang-19
-loongarch            randconfig-001-20250221    gcc-14.2.0
-loongarch            randconfig-002-20250221    gcc-14.2.0
-nios2                randconfig-001-20250221    gcc-14.2.0
-nios2                randconfig-002-20250221    gcc-14.2.0
-parisc               randconfig-001-20250221    gcc-14.2.0
-parisc               randconfig-002-20250221    gcc-14.2.0
-powerpc              randconfig-001-20250221    clang-21
-powerpc              randconfig-002-20250221    clang-21
-powerpc              randconfig-003-20250221    clang-17
-powerpc64            randconfig-001-20250221    clang-21
-powerpc64            randconfig-002-20250221    clang-21
-powerpc64            randconfig-003-20250221    clang-19
-riscv                randconfig-001-20250221    clang-21
-riscv                randconfig-002-20250221    clang-21
-s390                            allmodconfig    clang-19
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250221    gcc-14.2.0
-s390                 randconfig-002-20250221    gcc-14.2.0
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250221    gcc-14.2.0
-sh                   randconfig-002-20250221    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250221    gcc-14.2.0
-sparc                randconfig-002-20250221    gcc-14.2.0
-sparc64              randconfig-001-20250221    gcc-14.2.0
-sparc64              randconfig-002-20250221    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250221    gcc-12
-um                   randconfig-002-20250221    gcc-12
-x86_64     buildonly-randconfig-001-20250221    gcc-12
-x86_64     buildonly-randconfig-002-20250221    clang-19
-x86_64     buildonly-randconfig-003-20250221    clang-19
-x86_64     buildonly-randconfig-004-20250221    clang-19
-x86_64     buildonly-randconfig-005-20250221    clang-19
-x86_64     buildonly-randconfig-006-20250221    clang-19
-xtensa               randconfig-001-20250221    gcc-14.2.0
-xtensa               randconfig-002-20250221    gcc-14.2.0
+void api_func_a(...);
+void api_func_b(...) {
+...
+	return api_func_a(...); // return void function in void func
+...
+}
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Do these 'return' statements get in the way of some other
+> work you are doing? Is there a compiler warning you want
+> to enable to ensure they don't come back? Is this all of
+> the instances in the kernel or just the ones you found by
+> inspection?
+
+actually, i find this weird return usage by reading code by accident
+in driver core firstly:
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-testing&id=a44073c28bc6d4118891d61e31c9fa9dc4333dc0
+
+then i check folder include/ and work out this patch series.
+
+not sure if there are still such instances in current kernel tree.
+
 
