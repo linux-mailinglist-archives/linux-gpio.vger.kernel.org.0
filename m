@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-16425-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16426-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CCFFA407F3
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 12:39:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 896EBA40814
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 12:51:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCC7C19C1A96
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:39:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFEB719C6448
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D939220ADDC;
-	Sat, 22 Feb 2025 11:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C58B20ADD1;
+	Sat, 22 Feb 2025 11:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV+Inc/j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MnTsDy"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77202481D1;
-	Sat, 22 Feb 2025 11:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A0207E18;
+	Sat, 22 Feb 2025 11:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740224344; cv=none; b=U00x98L2ht5n2fhOuNGWrdPQdRRQmVsHwGapQCy7KsOeEij88fmkuEjdcBYRi61CmBtngDqRbNOhYduNY/5XqR7agIjT+br1mvjkGHZ0DtA4tn0skLm28wyoBYPNZv6DYGOieJI2CM83rRpQZGcwlb4Qik8WC4PNaJP+el9V00s=
+	t=1740225110; cv=none; b=dk6WsQaVHxULKJxMuEcbHhhAj4VDCQzmqtATicjsLx6KyswiVv7lHney3N+hNZgO9bva8FE4CjbskxhrvT5TGL8F942kmCdRLuJVxuKverHqqjn2KgGHYAFZMtMT0kyL/23d1aJ3uMCA2Wkcl4rXz0JMa/bQdc2h/zWHJeotLdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740224344; c=relaxed/simple;
-	bh=hGYACRH4NSFXISS0yNXyHQkm5sHgl63iunTToFzBQes=;
+	s=arc-20240116; t=1740225110; c=relaxed/simple;
+	bh=sifDgvYlQN5FrcMLya3et5Zf5/0nSv8Le44LEJPVOBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8ycBYrssLkmlUj5Y06UhHD9D8YIa92dMIDSsnNAjr6ZG2IQ959ZPmhnxBqtBWcmFa6xJZHcD9PLoS18tiqJQpArkOYH3cyFTL5FqXahlsKZRqZ7d3JSPj9bkbADaVcOhdmBblqw72mgk8VG9LffTLH4PaWgxbzDTS0SlbQSBec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV+Inc/j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747F4C4CEE6;
-	Sat, 22 Feb 2025 11:38:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=shNkUiBwM7bgvrzzsNqRxg64nN8kBD60uOhi6zD3gD6zYalEittS98h9akF7uXtGeQYm/nw85HAXlO7gOmdr/zP/WAzMnk4rjFBhOzfXMU2kf5Wv1YQw1azZsuR5w4bAvPnn519gDKTmhP+56C3VLm59Zz4twBxqTRDabPWlnV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MnTsDy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD18CC4CED1;
+	Sat, 22 Feb 2025 11:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740224344;
-	bh=hGYACRH4NSFXISS0yNXyHQkm5sHgl63iunTToFzBQes=;
+	s=k20201202; t=1740225110;
+	bh=sifDgvYlQN5FrcMLya3et5Zf5/0nSv8Le44LEJPVOBY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bV+Inc/jpruzlj+Oqx3JK5QXBD3gH4CK+1Asp1nPagpbRbnTZElz2BbHfuxl9ycsd
-	 He2f2g7PIvdpfqtpmUJJQtqTBz2PQHI27JyjPd0dnbxW3wQrnohQnM9/TPInqrk6W8
-	 7fIm4yGfNTGn9ACtFweHqgS2qHxrdnX+N7begLyCO0AQc0NpsMEbYSOwtZO+V1E/Pg
-	 Vu/Mt7EpH9zVnsLzWAXJ2+4+SCjhpzVbu7bHySbteeA6clGk5Gu8OiwhmvWrEOWX3T
-	 N+zW/Gg5DQKxoNhCFgQCKhbW9g7q7o9Qa27BfW7nRZxEuu3xqCH0D7bgq7BvBt+2Os
-	 jNEK7FGOhteXg==
-Date: Sat, 22 Feb 2025 11:38:48 +0000
+	b=o1MnTsDy7B2ADdlQeonDeLn/bPpPFyOtYvttzKdblxFD2XxoY7ShPnHXf3XPJ2Cxd
+	 tPSR6pQspqTlbXMcbM3c5gCwkD2tdh3CkJhCc1Kk++fCG0bVcIYy1qIKjN7s/IpaZk
+	 9WZyTjucoFNU8hg+r8vAs9hSg6cXKhyQiY/REj9Qkb9Q0zfp2in7aegcZpi/HtRKUl
+	 OAeM5BZnhLowo6McrOfKl45uhs4OlzKy4EiIbQsXV0rEu+57oXYB5WdDWtaXP+K672
+	 x5kmB5UkDMg7YZEDbIpRlZVdnMG5xUYcEWVbedH7CkU08KVsQ9fuNt7cehavP1i9Tl
+	 MiXi1OF+BQ3/Q==
+Date: Sat, 22 Feb 2025 11:51:34 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: David Lechner <dlechner@baylibre.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
@@ -61,7 +61,7 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
  netdev@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-sound@vger.kernel.org
 Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
-Message-ID: <20250222113848.75baa883@jic23-huawei>
+Message-ID: <20250222115134.7379f785@jic23-huawei>
 In-Reply-To: <4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
 References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
 	<20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
@@ -134,10 +134,8 @@ David Lechner <dlechner@baylibre.com> wrote:
 > [1]: https://lore.kernel.org/linux-gpio/20250217132152.29d86d6c@jic23-huawei/T/#m3163d2c5db5b7376504d8ad6f23716f1119de761
 > 
 > The fix is simple, we can zero-initialize the bitmap.
-
-Please send this as a fix patch on top as I'd rather not unwind my tree
-for just this and the patch is already pushed out on what is mostly a non
-rebasing branch.
+Ignore previous. I'm looking at wrong branch. I can tweak this just fine.
+Done so and tree pushed out.
 
 > 
 > diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
