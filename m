@@ -1,126 +1,167 @@
-Return-Path: <linux-gpio+bounces-16424-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16425-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCB3FA407C8
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 12:01:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CCFFA407F3
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 12:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C98F5425766
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:01:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCC7C19C1A96
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2025 11:39:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94E9B20A5F1;
-	Sat, 22 Feb 2025 11:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D939220ADDC;
+	Sat, 22 Feb 2025 11:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="HhStBCZN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV+Inc/j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A931D7E42
-	for <linux-gpio@vger.kernel.org>; Sat, 22 Feb 2025 11:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77202481D1;
+	Sat, 22 Feb 2025 11:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740222055; cv=none; b=gFx+Z68FAE9yv2sfU6gKclmIOtRzQZ9TGSVmKDSxSVBztmL2ZXtfJt3gf8yO13U8Y24BG5kNdHZV9oFRpWHn9lMQM8G8F83VvP/MjRQBaCVR/nR7npZwSeWHlrbr3zln5boDRtQkDFWTAWUUMzTtxwzMID4fgD19X11JX8EnaBg=
+	t=1740224344; cv=none; b=U00x98L2ht5n2fhOuNGWrdPQdRRQmVsHwGapQCy7KsOeEij88fmkuEjdcBYRi61CmBtngDqRbNOhYduNY/5XqR7agIjT+br1mvjkGHZ0DtA4tn0skLm28wyoBYPNZv6DYGOieJI2CM83rRpQZGcwlb4Qik8WC4PNaJP+el9V00s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740222055; c=relaxed/simple;
-	bh=s5PMq4K2vUmCJ7mWo835mcJtSukLKOG4lecc2nZmroI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qTjnA98nYQvX3BVm8uaLrFNPv06CcThv6gZjXsemvJSt5Rixsbd/g6zfCduQPa+EdyqYojzqD1InRC1EGhN3+NAVyqyeX9exR85IdmM23HLnQm/w7ykjwMR296q2jz/47NV7qtAe96vJFEPvaIicpvmXlrA/TUZ5r9YZOLj+LJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=HhStBCZN; arc=none smtp.client-ip=17.58.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=UhO/oKP5iMw5fHjgaGRWOOpphrslB5BPutH1Bqw2Dkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=HhStBCZN3rVcd9EC6oBRvG6abifGqlnPtcBVpdm6i/PmmBuQa0QJPHyLR1FLsYmXk
-	 MvvGwxnVyjgIAQUePoznfvb7VEqM2/2CzwoYBfpUQAlvZbnYih/hmf83Ex5BvNFrdQ
-	 PbfYoJ6GNXR9EuX2Q1IkypReed+wxDFG/c9O7uFQFsKRQdeX9qYk5H4Dvd9QURFidN
-	 MaOu/D4ITgbWB/BaBzseWqBas93vN7EeBu7C7tTfSVogYryn4akeV915HBecUZbsev
-	 T9vaSLH2CkX0yMcrX7poOXKdwAfoNE9h2RgWTSTlng3BI8SOCu2qBQQAo94LS+WVDT
-	 77yqa5YwGC84Q==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id C1B66201011A;
-	Sat, 22 Feb 2025 11:00:33 +0000 (UTC)
-Message-ID: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
-Date: Sat, 22 Feb 2025 19:00:28 +0800
+	s=arc-20240116; t=1740224344; c=relaxed/simple;
+	bh=hGYACRH4NSFXISS0yNXyHQkm5sHgl63iunTToFzBQes=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W8ycBYrssLkmlUj5Y06UhHD9D8YIa92dMIDSsnNAjr6ZG2IQ959ZPmhnxBqtBWcmFa6xJZHcD9PLoS18tiqJQpArkOYH3cyFTL5FqXahlsKZRqZ7d3JSPj9bkbADaVcOhdmBblqw72mgk8VG9LffTLH4PaWgxbzDTS0SlbQSBec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV+Inc/j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747F4C4CEE6;
+	Sat, 22 Feb 2025 11:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740224344;
+	bh=hGYACRH4NSFXISS0yNXyHQkm5sHgl63iunTToFzBQes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bV+Inc/jpruzlj+Oqx3JK5QXBD3gH4CK+1Asp1nPagpbRbnTZElz2BbHfuxl9ycsd
+	 He2f2g7PIvdpfqtpmUJJQtqTBz2PQHI27JyjPd0dnbxW3wQrnohQnM9/TPInqrk6W8
+	 7fIm4yGfNTGn9ACtFweHqgS2qHxrdnX+N7begLyCO0AQc0NpsMEbYSOwtZO+V1E/Pg
+	 Vu/Mt7EpH9zVnsLzWAXJ2+4+SCjhpzVbu7bHySbteeA6clGk5Gu8OiwhmvWrEOWX3T
+	 N+zW/Gg5DQKxoNhCFgQCKhbW9g7q7o9Qa27BfW7nRZxEuu3xqCH0D7bgq7BvBt+2Os
+	 jNEK7FGOhteXg==
+Date: Sat, 22 Feb 2025 11:38:48 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-sound@vger.kernel.org
+Subject: Re: [PATCH v3 10/15] iio: resolver: ad2s1210: use bitmap_write
+Message-ID: <20250222113848.75baa883@jic23-huawei>
+In-Reply-To: <4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+	<20250210-gpio-set-array-helper-v3-10-d6a673674da8@baylibre.com>
+	<4052fd7b-dd8c-4a5a-8f82-dd515de14d20@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in
- void API tlb_remove_page()
-To: Peter Zijlstra <peterz@infradead.org>, Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
- Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, iommu@lists.linux.dev,
- linux-mtd@lists.infradead.org
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
- <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com>
- <20250221200137.GH7373@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250221200137.GH7373@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: xYMDZO87E-9u-9wzotp6QmCV6S-rGtqV
-X-Proofpoint-ORIG-GUID: xYMDZO87E-9u-9wzotp6QmCV6S-rGtqV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-22_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 adultscore=0
- suspectscore=0 spamscore=0 malwarescore=0 phishscore=0 mlxlogscore=885
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502220088
 
-On 2025/2/22 04:01, Peter Zijlstra wrote:
->>   */
->>  static inline void tlb_remove_page(struct mmu_gather *tlb, struct page *page)
->>  {
->> -	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
->> +	tlb_remove_page_size(tlb, page, PAGE_SIZE);
->>  }
-> So I don't mind removing it, but note that that return enforces
-> tlb_remove_page_size() has void return type.
->
+On Thu, 20 Feb 2025 14:54:53 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-tlb_remove_page_size() is void function already. (^^)
+> On 2/10/25 4:33 PM, David Lechner wrote:
+> > Replace bitmap array access with bitmap_write.
+> > 
+> > Accessing the bitmap array directly is not recommended and now there is
+> > a helper function that can be used.
+> > 
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > ---
+> >  drivers/iio/resolver/ad2s1210.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+> > index 7f18df790157f1e411fb70de193a49f0677c999f..04879e6d538bce664469c5f6759d8b1cedea16e9 100644
+> > --- a/drivers/iio/resolver/ad2s1210.c
+> > +++ b/drivers/iio/resolver/ad2s1210.c
+> > @@ -46,6 +46,7 @@
+> >   */
+> >  
+> >  #include <linux/bitfield.h>
+> > +#include <linux/bitmap.h>
+> >  #include <linux/bits.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/clk.h>
+> > @@ -180,7 +181,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+> >  	if (!gpios)
+> >  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+> >  
+> > -	bitmap[0] = mode;
+> > +	bitmap_write(bitmap, mode, 0, 2);
+> >  
+> >  	return gpiod_multi_set_value_cansleep(gpios, bitmap);
+> >  }
+> > @@ -1470,7 +1471,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+> >  			return dev_err_probe(dev, -EINVAL,
+> >  				      "requires exactly 2 resolution-gpios\n");
+> >  
+> > -		bitmap[0] = st->resolution;
+> > +		bitmap_write(bitmap, st->resolution, 0, 2);
+> >  
+> >  		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
+> >  		if (ret < 0)
+> >   
+> 
+> There is actually a bug here pointed out in a similar patch. bitmap_write()
+> only modifies the bitmap, so this introduces an unintialized use bug. [1]
+> Here, we only use the bits that we set, so runtime behavior would not actually
+> be buggy but still best to fully initialize the memory.
+> 
+> I'm a bit surprised that my local compiler and iio/testing both didn't catch that
+> since GCC 14 caught it in the other driver.
+> 
+> [1]: https://lore.kernel.org/linux-gpio/20250217132152.29d86d6c@jic23-huawei/T/#m3163d2c5db5b7376504d8ad6f23716f1119de761
+> 
+> The fix is simple, we can zero-initialize the bitmap.
 
-> It might not be your preferred coding style, but it is not completely
-> pointless.
+Please send this as a fix patch on top as I'd rather not unwind my tree
+for just this and the patch is already pushed out on what is mostly a non
+rebasing branch.
 
-based on below C spec such as C17 description. i guess language C does
-not like this usage "return void function in void function";
+> 
+> diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+> index 04879e6d538b..ab860cedecd1 100644
+> --- a/drivers/iio/resolver/ad2s1210.c
+> +++ b/drivers/iio/resolver/ad2s1210.c
+> @@ -176,7 +176,7 @@ struct ad2s1210_state {
+>  static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
+>  {
+>  	struct gpio_descs *gpios = st->mode_gpios;
+> -	DECLARE_BITMAP(bitmap, 2);
+> +	DECLARE_BITMAP(bitmap, 2) = { };
+>  
+>  	if (!gpios)
+>  		return mode == st->fixed_mode ? 0 : -EOPNOTSUPP;
+> @@ -1427,7 +1427,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
+>  	struct device *dev = &st->sdev->dev;
+>  	struct gpio_descs *resolution_gpios;
+>  	struct gpio_desc *reset_gpio;
+> -	DECLARE_BITMAP(bitmap, 2);
+> +	DECLARE_BITMAP(bitmap, 2) = { };
+>  	int ret;
+>  
+>  	/* should not be sampling on startup */
+> 
 
-C spec such as C17 have this description about return
-statement:
-6.8.6.4:
-A return statement with an expression shall not appear in a function
-whose return type is void. A return statement without an expression
-shall only appear in a function whose return type is void.
 
