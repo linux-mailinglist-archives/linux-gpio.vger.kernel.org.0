@@ -1,93 +1,105 @@
-Return-Path: <linux-gpio+bounces-16429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFAF3A40CA3
-	for <lists+linux-gpio@lfdr.de>; Sun, 23 Feb 2025 04:23:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38DC5A40E17
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 Feb 2025 11:34:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32560189A3CC
-	for <lists+linux-gpio@lfdr.de>; Sun, 23 Feb 2025 03:23:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EDF73BA9D7
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 Feb 2025 10:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BAD3A8F7;
-	Sun, 23 Feb 2025 03:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5A3204C2C;
+	Sun, 23 Feb 2025 10:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+gd4JXl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FD717D2;
-	Sun, 23 Feb 2025 03:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B791FCFC6;
+	Sun, 23 Feb 2025 10:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740281000; cv=none; b=EDZLhfyK8p/+GQhSntO0caPgh79gnkfQG1EDLRfaESQkZpJ+K7NGCAKbBMyn8p9TS2qWjY4arKzdi4d0pHiNIIxD0iHcbxV0MKER+ktHxbuv0KJpRB/5VClA5TW2sq8jxJXSz3i8Lf4+cO2I40ruyEGYiG6YEhpR5YN5MT+g5A8=
+	t=1740306799; cv=none; b=FY0O8E4Zp8N4kr5yoh2dFx+A6X2ekDmonuG9Sts8WNcMoNGvydjYUt1lSr24Oa7vq00pS1RTsL+hbRxSubUV/rkDNo4esdVPWzAe7h/3jSGXhvJtA8gaRlS2bZlU6mvuEfty3Rcl5wHSN5nCBXHjTe+09wXR8C+EVUknA4LXlyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740281000; c=relaxed/simple;
-	bh=ybEuh9mXdFe2N3eI3z6GwXQG2B9Khh6pcNZq9U+xH/4=;
+	s=arc-20240116; t=1740306799; c=relaxed/simple;
+	bh=FLirW3ftLfXRJNxdSRNnrqsyTaGJiadECUqG3czTtBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XmYuCAEEwp8iItAunCeek/wm9NvE/n9QQClTch3Idut5oedBcGbYD3wYQjXuTdBGSuoj/z5/rZ7RJ8Bom5Z1GO1TWMFErmyo0xsukHdAXad1PU12QJa+qO9xslbY2Wf2/hS6YFLBRnjZ4gLF3+xglr7uZq0ckC4DnTHEtUMi/Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [180.172.118.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id CB1E0343208;
-	Sun, 23 Feb 2025 03:23:17 +0000 (UTC)
-Date: Sun, 23 Feb 2025 03:23:12 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH RTF 0/2] gpiolib: of: Handle threecell gpios
-Message-ID: <20250223032312-GYB33864@gentoo>
-References: <20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlwDJTyxq9qgO1U/Er72aIT6vliph4P3l87BdqQ67WWUVnzIOsC8yk3uCkxeU7/SVK5JKqEMrN7OVlb0JG/j5Sgz8MKFDGHvtvs+bwdcVBhRqvQrdBqnbPDV4OYetbqon//w6aNHlSrNyUfpoR4IZPIoYLEHLsCUA89BRv7IsCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+gd4JXl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC8DC4CEDD;
+	Sun, 23 Feb 2025 10:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740306797;
+	bh=FLirW3ftLfXRJNxdSRNnrqsyTaGJiadECUqG3czTtBs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V+gd4JXlabh+DhfEPBhrqC28xt0zFouB40fJznlRA8WX25vNK4NpubB/XTu9wdohm
+	 TUGFxqw3M5vfgiYGMVDeJw93JSRd0+pzHg6bwb+p0POjtkPZpR5FBWvKR2IvCGFgaL
+	 qvfBnula+H7SpAGtgz43ix3B2A63IznR0saRl7T6fbhv1GcpsyGBhmvHW1cTVA244W
+	 rg87/ohN6zauB+kSi9VAq9DWeT/OGUIZPAGBc9I5O/Be2KEd2VuJDI+LjdGCFO5oUG
+	 k/iZVR2YHYsJobPDLZlBWjG6i258UqwoEIDZWqNSALq65CSxUM4RClCltHUPSDyfQ4
+	 ml4X5nhorGRMQ==
+Date: Sun, 23 Feb 2025 11:33:14 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] pinctrl: samsung: add support for exynos7870
+ pinctrl
+Message-ID: <20250223-peculiar-coati-of-gallantry-6556ee@krzk-bin>
+References: <20250219-exynos7870-pinctrl-v2-0-1ff9b10bf913@disroot.org>
+ <20250219-exynos7870-pinctrl-v2-3-1ff9b10bf913@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org>
+In-Reply-To: <20250219-exynos7870-pinctrl-v2-3-1ff9b10bf913@disroot.org>
 
-Hi Linus Walleij:
+On Wed, Feb 19, 2025 at 12:18:59AM +0530, Kaustabh Chakraborty wrote:
+ +
+> +/* pin banks of exynos7870 pin-controller 2 (ESE) */
+> +static const struct samsung_pin_bank_data exynos7870_pin_banks2[] __initconst = {
+> +	EXYNOS7870_PIN_BANK_EINTG(5, 0x000, "gpc7", 0x00),
+> +};
+> +
+> +/* pin banks of exynos7870 pin-controller 3 (FSYS) */
+> +static const struct samsung_pin_bank_data exynos7870_pin_banks3[] __initconst = {
+> +	EXYNOS7870_PIN_BANK_EINTG(3, 0x000, "gpr0", 0x00),
+> +	EXYNOS7870_PIN_BANK_EINTG(8, 0x020, "gpr1", 0x04),
+> +	EXYNOS7870_PIN_BANK_EINTG(2, 0x040, "gpr2", 0x08),
+> +	EXYNOS7870_PIN_BANK_EINTG(4, 0x060, "gpr3", 0x0c),
+> +	EXYNOS7870_PIN_BANK_EINTG(6, 0x080, "gpr4", 0x10),
+> +};
+> +
+> +/* pin banks of exynos7870 pin-controller 4 (MIF) */
+> +static const struct samsung_pin_bank_data exynos7870_pin_banks4[] __initconst = {
+> +	EXYNOS7870_PIN_BANK_EINTG(2, 0x000, "gpm0", 0x00),
+> +};
+> +
+> +/* pin banks of exynos7870 pin-controller 5 (NFC) */
+> +static const struct samsung_pin_bank_data exynos7870_pin_banks5[] __initconst = {
+> +	EXYNOS7870_PIN_BANK_EINTG(4, 0x000, "gpc2", 0x00),
+> +};
+> +
+> +/* pin banks of exynos7870 pin-controller 6 (TOP) */
+> +static const struct samsung_pin_bank_data exynos7870_pin_banks6[] __initconst = {
+> +	EXYNOS7870_PIN_BANK_EINTG(4, 0x000, "gpb0", 0x00),
 
-On 11:28 Tue 18 Feb     , Linus Walleij wrote:
-> This adds some code in the gpiolib OF core to deal with
-> several gpio chip instances per OF node.
-> 
-> The change was prompted by the need of the Spacemit GPIO
-> controller.
-> 
-this patch works for me, many thanks
-I will send a patch v6 of spacemit's gpio on top of this 
+Why do you need this new macro? Isn't this the same as existing
+exynos8895? Maybe just rename exynos8895 driver bits/structs/types into
+7870?
 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Linus Walleij (2):
->       gpiolib: of: Use local variables
->       gpiolib: of: Handle threecell GPIO chips
-> 
->  drivers/gpio/gpiolib-of.c   | 126 ++++++++++++++++++++++++++++++++++++--------
->  include/linux/gpio/driver.h |  24 ++++++++-
->  2 files changed, 126 insertions(+), 24 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250217-gpio-ranges-fourcell-85888ad219da
-> 
-> Best regards,
-> -- 
-> Linus Walleij <linus.walleij@linaro.org>
-> 
+Best regards,
+Krzysztof
 
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
 
