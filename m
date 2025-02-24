@@ -1,133 +1,226 @@
-Return-Path: <linux-gpio+bounces-16508-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16509-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C48A42494
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 15:58:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74A16A426A3
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 16:42:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED73842585B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 14:48:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08A941898DBA
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 15:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9DF2561B4;
-	Mon, 24 Feb 2025 14:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB70224EF6D;
+	Mon, 24 Feb 2025 15:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="QlrLaWEd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jniKeYp6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pv50p00im-ztdg10021801.me.com (pv50p00im-ztdg10021801.me.com [17.58.6.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7177F19F42F
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 14:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADAC1A0BD6;
+	Mon, 24 Feb 2025 15:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408372; cv=none; b=Hn+PfC9nhYKGrSGVfRv37UWTOWTDIzNVEzTegYbSudI621okHry2dw5wiKngHmqshjKQFzF51o6gKXrQvnXVeRETZpxY2ed4G5TsEfw07hDAEu1cEGFk6+VVQpBaEUsuKWu7ACAu7OpQ0jZ2+ZEWjtcxrC2oQztg9c8Q9p9dehc=
+	t=1740411438; cv=none; b=ieZrBmKOphAp1WjZN+13HMm3XRroKBTbqpYRXrSUnUo/zVze2qH9NfbNapFtSkbT4JukYZJW9XylvtBLIb8zmxEjEYCnogp89T899RottK06kgOJ5dq6wsKisyNZViexYbjDy4GZr51YJUUoHVjuSS5PzJEnVwuqF2s3c/OsnOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408372; c=relaxed/simple;
-	bh=fxHn5PpLrOvrhy3T9+DU0/Qq00yPM+Mp8t95xmMWsSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ppREOxntXM4gV6nKSftPh4K3ywf56l/61J0pDsgXD9QSUDRp0WKVO6uh7NQfuVkJXLCLuc400wfwEvzJJj4ZtAqIYX1r8XWpEhKoHkEGKb5E1r9WsIAKmGmoFZ1GwL9dnOYj6/5wmEqfrn0QFOVyJ/aw13ZBCF4jseOwLvaI7Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=QlrLaWEd; arc=none smtp.client-ip=17.58.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=SxARc5+mPnL0BjR2iW5rWJ4TF8233iOHpKnJbbHiSqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=QlrLaWEdYFkfsu8fuz6nbUdcj79Q8tJSmKk2HA1yeaCmsuHQSOTGqxvHL7yUmSH26
-	 akU6WkcZrQNFnHq+BJaLeGPq0iB3wrn9quZ3+XX7TL6W2416KdFvIkp5eq2vQ9b1mC
-	 1W3KDPpIj0DisqfGR5RfGhPUGajT30GJk6SpSRctraMh5Bn8xJKesYr+HLgu8FHVrW
-	 5Dfwx7CMvdnY4JwcEN6gg2auvHgazI6WEAwJkihz3N6RwdjmSunhSudO5G6dDlNdEp
-	 B1QbwPUm6oUVtf0ONAKjCUdMnGgia+x/d6OTzrZdtjaV4ethm0Xnv3yRyjfFnT2Mpt
-	 tk5oRw9q9GBwg==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021801.me.com (Postfix) with ESMTPSA id 01FF82010282;
-	Mon, 24 Feb 2025 14:45:49 +0000 (UTC)
-Message-ID: <a28f04e5-ccde-4a08-b8fa-a9fa685240b1@icloud.com>
-Date: Mon, 24 Feb 2025 22:45:44 +0800
+	s=arc-20240116; t=1740411438; c=relaxed/simple;
+	bh=yhH5CefLifdIL3/VFY7y8OY6C4KGgUDfVENSrOJRD6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jP0gU2CIBmkdyW/JU142/br9N4P4TYk43/rWT8N8gqrJ0c+Hd6ZNTboePl18Qbf8Mi/sPZ0dhav+WmN4iBRtSZlOwqVo2omQVi8fcs4q1p++XtsSN30Pg6yn1jInRKo8pPGA7dQqRp8NhNm8b7dVZUYWpZ0tcTJeTjVr7rs6SY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jniKeYp6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE423C4CED6;
+	Mon, 24 Feb 2025 15:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740411437;
+	bh=yhH5CefLifdIL3/VFY7y8OY6C4KGgUDfVENSrOJRD6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jniKeYp6f0hbItNPYyxoaqFxMZ9Aj53HJ9oTyPeiazwTL+ROU2sK8joQ/KV8C4Mp4
+	 tCm3xjIy4bvWgF0dOzK1e4un1nopNwXanjWh4or3x1pHyHqU6Pg0p9UCgS+6b6kWca
+	 g8rLJiytSiXNuReVDrW6/rNoP0VNqo3clpNmbfO1HQULGhJfKcDMp+HBOsRNov/nGF
+	 GRIKKvHpkGTyvEPw5ljzs3sew3WHgiM2NhZu9PyezjSDDN0rDNjU9cI6PCMjiQfgAl
+	 LYH9tuSIsHZPhZ7PKBlzkQXShHZfGN71G2a32ahB4vKefeJGfs1oC9eOrNpv2Lk5PD
+	 dPG4MAsMDaTPQ==
+Date: Mon, 24 Feb 2025 09:37:16 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add max77759 binding
+Message-ID: <20250224153716.GA3137990-robh@kernel.org>
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+ <20250224-max77759-mfd-v1-1-2bff36f9d055@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in
- void API tlb_remove_page()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
- Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, iommu@lists.linux.dev,
- linux-mtd@lists.infradead.org
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
- <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com>
- <20250221200137.GH7373@noisy.programming.kicks-ass.net>
- <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
- <20250224132354.GC11590@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250224132354.GC11590@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: rwcKYw_iCScrLPUxt294xX4BCs8xvrO1
-X-Proofpoint-GUID: rwcKYw_iCScrLPUxt294xX4BCs8xvrO1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_06,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=911 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 malwarescore=0 phishscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502240105
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250224-max77759-mfd-v1-1-2bff36f9d055@linaro.org>
 
-On 2025/2/24 21:23, Peter Zijlstra wrote:
-> On Sat, Feb 22, 2025 at 07:00:28PM +0800, Zijun Hu wrote:
->> On 2025/2/22 04:01, Peter Zijlstra wrote:
->>>>   */
->>>>  static inline void tlb_remove_page(struct mmu_gather *tlb, struct page *page)
->>>>  {
->>>> -	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
->>>> +	tlb_remove_page_size(tlb, page, PAGE_SIZE);
->>>>  }
->>> So I don't mind removing it, but note that that return enforces
->>> tlb_remove_page_size() has void return type.
->>>
->>
->> tlb_remove_page_size() is void function already. (^^)
+On Mon, Feb 24, 2025 at 10:28:49AM +0000, André Draszik wrote:
+> Add device tree binding for the Maxim MAX77759 companion PMIC for USB
+> Type-C applications.
 > 
-> Yes, but if you were to change that, the above return would complain.
+> The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors,
+> USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
 > 
->>> It might not be your preferred coding style, but it is not completely
->>> pointless.
->>
->> based on below C spec such as C17 description. i guess language C does
->> not like this usage "return void function in void function";
+> This describes the core mfd device.
 > 
-> This is GNU extension IIRC. Note kernel uses GNU11, not C11
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+>  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 ++
+>  2 files changed, 110 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> new file mode 100644
+> index 000000000000..1efb841289fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
+> +
+> +maintainers:
+> +  - André Draszik <andre.draszik@linaro.org>
+> +
+> +description: |
+> +  This is a part of device tree bindings for the MAX77759 companion Power
+> +  Management IC for USB Type-C applications.
+> +
+> +  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors, USB
+> +  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> +
+> +properties:
+> +  compatible:
+> +    const: maxim,max77759
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio:
+> +    $ref: /schemas/gpio/maxim,max77759-gpio.yaml
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  pmic-nvmem:
 
-any link to share about GNU11's description for this aspect ? (^^)
+Just 'nvmem'
 
+> +    $ref: /schemas/nvmem/maxim,max77759-nvmem.yaml
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@66 {
+> +            compatible = "maxim,max77759";
+> +            reg = <0x66>;
+> +            interrupts-extended = <&gpa8 3 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +
+> +            gpio {
+> +                compatible = "maxim,max77759-gpio";
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +            };
+> +
+> +            pmic-nvmem {
 
+nvmem {
 
+> +                compatible = "maxim,max77759-nvmem";
+> +
+> +                nvmem-layout {
+> +                    compatible = "fixed-layout";
+> +                    #address-cells = <1>;
+> +                    #size-cells = <1>;
+> +
+> +                    reboot-mode@0 {
+> +                        reg = <0x0 0x4>;
+> +                    };
+> +
+> +                    boot-reason@4 {
+> +                        reg = <0x4 0x4>;
+> +                    };
+> +
+> +                    shutdown-user-flag@8 {
+> +                        reg = <0x8 0x1>;
+> +                    };
+> +
+> +                    rsoc@10 {
+> +                        reg = <0xa 0x2>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f076360ce3c6..f2c19a1b4c05 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14322,6 +14322,12 @@ F:	Documentation/devicetree/bindings/mfd/maxim,max77714.yaml
+>  F:	drivers/mfd/max77714.c
+>  F:	include/linux/mfd/max77714.h
+>  
+> +MAXIM MAX77759 PMIC MFD DRIVER
+> +M:	André Draszik <andre.draszik@linaro.org>
+> +L:	linux-kernel@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
+> +
+>  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+>  M:	Javier Martinez Canillas <javier@dowhile0.org>
+>  L:	linux-kernel@vger.kernel.org
+> 
+> -- 
+> 2.48.1.658.g4767266eb4-goog
+> 
 
