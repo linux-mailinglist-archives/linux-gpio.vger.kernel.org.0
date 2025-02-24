@@ -1,121 +1,120 @@
-Return-Path: <linux-gpio+bounces-16467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16468-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A58CEA4144F
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 04:46:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9845A41757
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 09:29:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3AC3C7A4E28
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 03:45:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B8F5167EA4
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 08:29:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22691DF990;
-	Mon, 24 Feb 2025 03:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkR+ERFx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A271AA782;
+	Mon, 24 Feb 2025 08:29:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892271DE4D3;
-	Mon, 24 Feb 2025 03:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC13719CD1D
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 08:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740368747; cv=none; b=lYbIURcFIdXDWiTEKMEIJcVruvTEIyxXLjPnKyQYmqaQn54jmyYMV35keusWchjGMTyhPsKZQZVzHRPlxOWIzzAUvZtn3aBXmfaotr7J0WPLBdhJwbIMyzvR8UD0v9ptO50WwS+svDJpeq9S5QUiJr8Piefw8Zf+QbQdn2tPb20=
+	t=1740385747; cv=none; b=oaL+KtO7F7SlcbieBqvQHgO3uhli6ZqpmuoXX/njQz3nj+KlW+G+43qX2sjKpXgBfSNFhn7xyN20LMDCsQguFieb9bjkM1UwL71NZC78OVsoC1IM/ql4XTDtf4wgCXnjmOjRGelJqAmEDl+LX6OqrRGVryKqfbzFkN9P3fdQO3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740368747; c=relaxed/simple;
-	bh=6a0qjdqlzvGzQVstllexhGYhGqe+l900EvniR1D7J4g=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=MZlduORlIkAWXAsNBymZ6D2T3jU5lglU/az/H05lgGt1MdTR9Bb08E8fT9FfgSV8fCS/I8B0fz8WtaaHdarD8l1e7+/vTnJ9Wwx5/fcSLV111NU0u/LyvFOm0AQ7ZDXn8shaYrYxPxmeLTQ/5qrU4CNCFr+asZFMXYjtgqLxQ7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkR+ERFx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D322C4CEE8;
-	Mon, 24 Feb 2025 03:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740368747;
-	bh=6a0qjdqlzvGzQVstllexhGYhGqe+l900EvniR1D7J4g=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=RkR+ERFxNZmnBs2BeeB0SYJ1Z1A24/AlraglZB+UaMuqntfYU2Uar+pP3y+iob1ik
-	 TNPWnR06qmZut+a++1LJvHnNlxVYnMpOVMW9GcXLteZjsedOkqhVuGF8kwBC7iaY/c
-	 as3BPFNKnYsVyVKU8N6W1NyTISlx4tVvaSjiOSlE+enNGXks/RxQAEyel1MzddQVt3
-	 2XeYg4SuIp6ZseOLWkUXVfjtdQfuJ4f36xltML4JACN2cWtMDp8VlxjSlGJHrAWObq
-	 aoCp8FztTrFLZzeKus2vDfG1t0hC/UY5IfvD+T08OTK0m44Sajjf+y6CkJtwxBpVAd
-	 l12y9aAZjgAbQ==
-Date: Sun, 23 Feb 2025 21:45:46 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1740385747; c=relaxed/simple;
+	bh=fhRDAo5az9m8qfVGRpDV9iK8y7sKQVyiAKRcfP2pbbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mlQhdO2uuKKhgyls4l6onE9d/GPZWMLwRqEmuAWXFZaak6vPPpoU/sQ2BZ64iYH+AFoyXak8798WS+OvIrBpVIb8wolPPA7zFt+goPNumz2ZesYiRQenpg7FkmSGG5XRdYDoXtNhI7G78RxBm/oNokba+sJPhE4CWc6Pc9+GH1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-868e5684712so1151156241.3
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 00:29:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740385743; x=1740990543;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KjOjRkWrv71j3kflYLEW2Mi/geGzPHfPlcz7yblISDg=;
+        b=vdDbC4RK4doppMc37igCZPRcccSsnYot0+ggzr3yelgMz5YwHkHBhTjt2kxHPAUj8+
+         7l4J6KG4ZFxLlPBPzbq1wfhOdsFVdzwGElIXfnHMyjXEm2rMTGj0K58ozImnA8niWHkP
+         OfQCLWp5TfuKw8v5sjTWlbiEytZ/AjdRiZKU38IbiXES/MxkfUGK+nEFYnZDArUSYJCG
+         W4SW/sTWTTjeX4vMmMytvMRHsTCfm7M2yONPwitxSIdoIoVLOUrervigEhDMzuiG3kgV
+         iJg1XdRE5+4YRDWZnkbCWaVrIJlgoaqKdULzzDYkcralPVY0rshIwgm9bKzElnJBEfyd
+         A+hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHY92/KmGjaNPWyrzCOPnNkd7fYoFtSEgIl7PoVTVJTgaIH0ed6Rg5k32LTB5aFwEA2Vxxv8iCkZkt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyME2bErxAZXKfz+wEivAk2V9MlrcgeGc06M4K/YOZVLXDoxF6i
+	P9xVtigChOLPvnH1aQBUBqyxcp7FoKtjezQ3VqacPqV0VlMW6QGi9JS+Nn4h
+X-Gm-Gg: ASbGncs99OIXNSzcjfro8wtM1yQJQMI841C/bnlWV1psNdu3kZv17h1ZsqrRRcMmZKs
+	pba825y6Z91WbbtY6ZmynkUE2a8p6wKecqHhLYZCTz7CsEzBSsVxIMMZ4mzPg8NlJc+9HiuMuft
+	vf0XueQUtvIZjcc86zBc9BDtfNHM1V7E31kdMkpURIJADgZWPvcEgJxNGSunv0xXnqaF8kH55BW
+	4HLoqc2wbiz3R8ZDnOYcnk7ZVU/O7RZQ0cqtLSqsV+esmZ1Ul+F4/kmeix+qT6VYVPBYZdcy4Lq
+	8oyQoxAATQsRJdBwxjauCRYfbuYov78QNBXQR1Dbk+T+jEwzZ/qz6B4GfiD8rZdD
+X-Google-Smtp-Source: AGHT+IFpszEtO+dj+wOkNMQuKHMJaLiNge6RUvpNasCjmyg5kMeWkFzFmt4r7d7SwKubd4ET5XA02g==
+X-Received: by 2002:a05:6102:2ac9:b0:4be:68fe:e698 with SMTP id ada2fe7eead31-4bfc00568c1mr6146513137.10.1740385742931;
+        Mon, 24 Feb 2025 00:29:02 -0800 (PST)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-868e86bd45csm4562907241.24.2025.02.24.00.29.02
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 00:29:02 -0800 (PST)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4be74b9de53so1175493137.3
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 00:29:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVSGkYDgmaeMopz2eoZaDba5UPtbCmuhW245LICJVs8IQLuR3V2fPdP+HqOAXqwNN2s+b2OfapwOzg7@vger.kernel.org
+X-Received: by 2002:a05:6102:508c:b0:4b9:bc52:e050 with SMTP id
+ ada2fe7eead31-4bfbffcfb2fmr6444989137.2.1740385742462; Mon, 24 Feb 2025
+ 00:29:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Lee Jones <lee@kernel.org>, 
- linux-gpio@vger.kernel.org, Joerg Roedel <joro@8bytes.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- dri-devel@lists.freedesktop.org, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- Maxime Ripard <mripard@kernel.org>, linux-clk@vger.kernel.org, 
- freedreno@lists.freedesktop.org, Stephan Gerhold <stephan@gerhold.net>, 
- Thomas Zimmermann <tzimmermann@suse.de>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Stephen Boyd <sboyd@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
- Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org, 
- David Airlie <airlied@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Rob Clark <robdclark@gmail.com>, iommu@lists.linux.dev, 
- devicetree@vger.kernel.org
-To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-In-Reply-To: <20250224-msm8937-v3-7-dad7c182cccb@mainlining.org>
-References: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
- <20250224-msm8937-v3-7-dad7c182cccb@mainlining.org>
-Message-Id: <174036874208.769324.12190196634420728570.robh@kernel.org>
-Subject: Re: [PATCH v3 7/8] dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+ <20250224014936.GA12854@rigel>
+In-Reply-To: <20250224014936.GA12854@rigel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Feb 2025 09:28:50 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWtmgbgriKvTWQEJ8PRvPJDuJK+naQybHjRKRj-SKOvRw@mail.gmail.com>
+X-Gm-Features: AWEUYZlLxQgteAJpmanpC-5yioFR0oNL5LG9GPbAluGgCviRFfX9coUAPsfJ1aU
+Message-ID: <CAMuHMdWtmgbgriKvTWQEJ8PRvPJDuJK+naQybHjRKRj-SKOvRw@mail.gmail.com>
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
+	Ahmad Fatoum <a.fatoum@pengutronix.de>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+	Marek Vasut <marex@denx.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Kent,
 
-On Mon, 24 Feb 2025 02:56:22 +0100, Barnabás Czémán wrote:
-> Document Xiaomi Redmi 3S (land).
-> Add qcom,msm8937 for msm-id, board-id allow-list.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+On Mon, 24 Feb 2025 at 02:49, Kent Gibson <warthog618@gmail.com> wrote:
+> TBH, I think you will have trouble getting users to adopt it - they
+> require a solution no more complex than what they already have or they
+> will resist the change for as long as they possibly can.  So if you want
+> them to migrate before removing the global numberspace then that will
+> never happen.
+>
+> As it stands the user needs to search the gpiochipXYZs looking for the
+> matching label. It would be easier if the chip was identified in sysfs by
+> its label, rather than (as well as) its base address.
+> So no searching required.
+>
+> Aside: Speaking of which, once the global numberspace is removed does
+> exposing the base address serve any purpose?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+l doubt the global numberspace will really go away: some number
+scheme is still needed internally, cfr. I2C bus numbers and virtual
+interrupts numbers.
 
-yamllint warnings/errors:
+Gr{oetje,eeting}s,
 
-dtschema/dtc warnings/errors:
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224-msm8937-v3-7-dad7c182cccb@mainlining.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
