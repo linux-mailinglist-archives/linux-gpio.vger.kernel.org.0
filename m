@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-16465-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16466-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF1D7A41442
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 04:46:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F69AA4144D
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 04:46:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F7E918944A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 03:46:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5857F168663
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 03:46:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E036D1C6FF6;
-	Mon, 24 Feb 2025 03:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2C11DA634;
+	Mon, 24 Feb 2025 03:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="laWMqAKY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQfan/Iv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8591A1C32EA;
-	Mon, 24 Feb 2025 03:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FCE1D619F;
+	Mon, 24 Feb 2025 03:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740368745; cv=none; b=fYREXmJcb3IB0RBlal6FrznyTfmvgkGl6TmJ3peL1Ja+PHWb8Xy/TTUqzikLkUW/0iGJoyeIJV5NfKKhKKLj2oGM7M02PhQ8cXgCvcHpWlOAv2Wi/SV3BQyu5aznNecY5bjEZZv8vLgF5W81vYzRPcILiGrAot6WaM054v+Ud5U=
+	t=1740368746; cv=none; b=OHPAYbmibWCwaf5DTj9dp4esrmgL6Dzi729B1i3Sv2hogkX/zKxNg89vSOO/Vmx5kBuI44xCPbapeOYtDe/Oz2PHQHysNhuSB6oAErnMpMZ7gAIggr9QSznJfjmmrQ2TDjJKvJv15jiIQ4WFBqTveT+jwQfRyLb0JhZJ3iNXlRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740368745; c=relaxed/simple;
-	bh=42koWRG4Nt5OGSGJb7NMr+y/fPtNaNyRskHNI2gE81U=;
+	s=arc-20240116; t=1740368746; c=relaxed/simple;
+	bh=qUFe4UpqBfFhFksfcMUFZKdum1MPLs1H5ZB+gO4zfFY=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=A+dRwc67YIq/cIM/FLypoxjtDrcG6lg9XyElLRslaKiiHVCYBkCvzOwJZRmydmkHDsuGkcpzsnotf3Cny4an8Lr5XHrjBxcS39LJos8yRTSVrPeHXFT/Z6A7LHpUNQ8o5grX3gMsq1hq2mDl4qqm0Z2ANn73rBHoG5BSWzbYVBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=laWMqAKY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA71C4CEE9;
-	Mon, 24 Feb 2025 03:45:44 +0000 (UTC)
+	 Message-Id:Subject; b=h2bV76ixnYFLmRn9fxTZLlFcSoVH/3O/rOWvO38JT4g6vJgoEUNAKD5v1gSsEjbSR0toAaS+f9y/lDhY7v7QlUwnKg4wYMWHlmwaRXKZfNl8ib5A4PKMiOjwni81ONhcMP6FaQTMiqLZXpLhUlWUCebrh5o6oH0SIvyjJVUlMhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQfan/Iv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB64FC4CEEA;
+	Mon, 24 Feb 2025 03:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740368745;
-	bh=42koWRG4Nt5OGSGJb7NMr+y/fPtNaNyRskHNI2gE81U=;
+	s=k20201202; t=1740368746;
+	bh=qUFe4UpqBfFhFksfcMUFZKdum1MPLs1H5ZB+gO4zfFY=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=laWMqAKYVQAXnVx4W/oAOhBswNz1hxhxWsgKscEtN4qNik7+QwQzZlD/ak8ONwwJm
-	 29vkZn5x7tgzS+ZM+b97b28cAfKcGOJVuBSaPQvSnQkCDvbf2wUzlP0kAaUq8fxmy2
-	 skJBVi8tyGq82SFuPBs4K1RxV/ecV6i9ExEACUqGP/DYOOR+CTQAaUZM54fTYKhre2
-	 crjQhUuz0P+mVGCJeK1IZykq5o26XK9tZJld+HiC02MlL1k2gfSPQmk4ciJmTMx5ts
-	 harq9iFQOwIikOrem7Jli1Cqs8yaBJNpS2JTCtjutwhkv4U4tTgKsl9lyVcfyK5KD1
-	 42iqtuiYcWmbg==
-Date: Sun, 23 Feb 2025 21:45:43 -0600
+	b=VQfan/Iv4Y9TzOMYqSNVSOsUCmtvnlwiK3HdxmznH6xj6G8HcNLH+41M3XIsuGBP6
+	 oG4xsCddQ53ccSIuco6whQ6gqaK09azWoX7fgWCO8sKXxARPieOVtwnue+iXiaXp9O
+	 XU0ALoPgI7BvYETedwjXQ/IB5ymMT9gRuFEa9AUGn+RGqH1msqmLDu0S/pdHqqYa04
+	 8v2WjYQO1aLtO+1U3/CtreGCdOG9tHd5e35TGmD0uQayFqXzR7FOiOy2tTVbB+KbRX
+	 6utsBGtAHCH7q1eOC5ak46c8biDkn7vc1jXaN6kgu6wSNSNtb2YkYfIeTPcLmyWkIc
+	 IpelMr2K567Pg==
+Date: Sun, 23 Feb 2025 21:45:45 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -51,49 +51,49 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org, 
+Cc: Will Deacon <will@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
  linux-clk@vger.kernel.org, 
- =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
- Joerg Roedel <joro@8bytes.org>, iommu@lists.linux.dev, 
- linux-gpio@vger.kernel.org, Sean Paul <sean@poorly.run>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Robin Murphy <robin.murphy@arm.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
- devicetree@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>, 
- Lee Jones <lee@kernel.org>, Will Deacon <will@kernel.org>, 
- Maxime Ripard <mripard@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ linux-arm-msm@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
  Stephan Gerhold <stephan@gerhold.net>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Rob Clark <robdclark@gmail.com>, 
- David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org
+ Konrad Dybcio <konradybcio@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joerg Roedel <joro@8bytes.org>, 
+ Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Adam Skladowski <a39.skl@gmail.com>, David Airlie <airlied@gmail.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Simona Vetter <simona@ffwll.ch>, Robin Murphy <robin.murphy@arm.com>, 
+ iommu@lists.linux.dev, freedreno@lists.freedesktop.org, 
+ Stephen Boyd <sboyd@kernel.org>, Sean Paul <sean@poorly.run>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Clark <robdclark@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>
 To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-In-Reply-To: <20250224-msm8937-v3-4-dad7c182cccb@mainlining.org>
+In-Reply-To: <20250224-msm8937-v3-5-dad7c182cccb@mainlining.org>
 References: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
- <20250224-msm8937-v3-4-dad7c182cccb@mainlining.org>
-Message-Id: <174036874061.769245.15872803802181415691.robh@kernel.org>
-Subject: Re: [PATCH v3 4/8] dt-bindings: iommu: qcom,iommu: Add MSM8937
- IOMMU to SMMUv1 compatibles
+ <20250224-msm8937-v3-5-dad7c182cccb@mainlining.org>
+Message-Id: <174036874131.769285.18190619820973305083.robh@kernel.org>
+Subject: Re: [PATCH v3 5/8] dt-bindings: drm/msm/gpu: Document AON clock
+ for A505/A506/A510
 
 
-On Mon, 24 Feb 2025 02:56:19 +0100, Barnabás Czémán wrote:
-> Add MSM8937 compatible string with "qcom,msm-iommu-v1" as fallback
-> for the MSM8937 IOMMU which is compatible with Qualcomm's secure
-> fw "SMMU v1" implementation.
+On Mon, 24 Feb 2025 02:56:20 +0100, Barnabás Czémán wrote:
+> From: Adam Skladowski <a39.skl@gmail.com>
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Adreno 505 (MSM8937), Adreno 506(MSM8953) and Adreno 510(MSM8976)
+> require Always-on branch clock to be enabled, describe it.
+> 
+> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+> [reword commit, move alwayson on the first place]
 > Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 > ---
->  Documentation/devicetree/bindings/iommu/qcom,iommu.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/display/msm/gpu.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -105,7 +105,7 @@ dtschema/dtc warnings/errors:
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224-msm8937-v3-4-dad7c182cccb@mainlining.org
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224-msm8937-v3-5-dad7c182cccb@mainlining.org
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
