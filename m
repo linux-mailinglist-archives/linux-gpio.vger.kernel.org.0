@@ -1,115 +1,105 @@
-Return-Path: <linux-gpio+bounces-16471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA33BA4182C
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 10:08:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D538A41A35
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 11:08:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DADF116C55A
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 09:06:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1965218962D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 10:05:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FB6242929;
-	Mon, 24 Feb 2025 09:06:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B64C2512E4;
+	Mon, 24 Feb 2025 10:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vFbagN9F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0bkq428"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54F423F406
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 09:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3684E250BFD;
+	Mon, 24 Feb 2025 10:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388013; cv=none; b=gKdsXr1SHmERhVu4qFfrikC/zNLz9N+9yofp4ah4pVwHwMxVgeFLoC3QjBDI0YsRi7gHRiDaor/HgtT1xS4GN0pX/4awoXhdePYmNp7iYgNBoXIupPSmutAPkjdPbUMSlNlyeqX3X5qRxjitPCKuEPY7dQ7GelRJg8dGr7tHfmQ=
+	t=1740391407; cv=none; b=ChIu1/tz4+JjPAW8Gk84dX2kHOey1WfrUHKeFZ1nlRzXjL/UUeBb3QcwReS6OXuO02js+HHtCytIGEPHaYfNUGyhzp7JJpSqp+p3Tp3NfmrtB3K1lsfe8CAux0pcfsTy8+9buonvG1GMpYnFuExJTufzFPa+/VQ18WiYmL2Kj+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740388013; c=relaxed/simple;
-	bh=yDGWepIHLbPVLZ5Rl3jNTHF4R70JWVTndC2BD1bDldE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h0blsrY06r0mGZ5bSNTJ27jtY/mvt+eUvTlIvZhuUGm6km+/xzPDFYllQgyKSg0KCUznqB8s1pG0o2KyErZY35SAbkKNKTKu1xOxkwwMRll1y+bqlRchfnaAJsbHHH9lubaDorKaS63KwaBkHcq4ghqrqPLozPjHi3lf7GYAFIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vFbagN9F; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4397e5d5d99so24580425e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 01:06:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740388010; x=1740992810; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cYxTXn3Dc5cnG8TtU5kqenlM0ZtDWqWGDCzwlccpQPg=;
-        b=vFbagN9FmbhemAI6Czy6FhzH63lWSBF/QJAsiHbbdazPYSqCX9cZ4bWF64x29rNDhq
-         xbV1DANnZIwIl5JeTXcaI9j1oUZFNd1e8piaCyXbNxCyZmPbbPmMJZXG6lJEPRNBVM47
-         sd81GT2xPKWSkjCelBABAFOZXfqY39QU8txF7Mv7xXCr6uaSIBlQi7MfUQ0zpoBzWvGw
-         sRWaGK9RzzY7rjmii10m3teEHq9ISff8T3gvy5v83YUC2g1y8RP9v7O9exzunWd7LVYc
-         gdVuhyJ3HuFylRGGI8qqO8PH/0YR03yZSJqWFDlunqzNOScfFa1M4x/ggLEnKbfwZF8F
-         J0Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740388010; x=1740992810;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cYxTXn3Dc5cnG8TtU5kqenlM0ZtDWqWGDCzwlccpQPg=;
-        b=uJkyqq1UvAJn3IC3HMSAWwgGE8cpP4iaTKQpmYCMuQRLjMc1YKTc96OqZ+zrFwRDe1
-         j+2YZbKBgKfUiaBYzOdeEi4kqZ8+nWUX3Ue70QNlC8XM5vFJNFJUEUqxoKGsPEZF52/5
-         9haEOQLqZF4OKW/8Bk6mdOjCXVZK/BpxxJdO677S1CTxbHt0YQL+p13WlGHqC3G0WScK
-         Fg3hluOkDWbSlAfmGGXXLsELJ1dG5y+3o2CtRARwc2L1Lluy/9gINRHF9djeRWFOSr6b
-         JEd/AwQsOBkQe2h4KwbDH+JGmt6hwxIYjgwbpRbn1rKX5ZwJ80ePR50ayZ9aq+iM9Aua
-         xSYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbQ5YlqJC+4dJJreoA3ALUbKTI80ZmSr5hF/6fx5Hu89iWOcxKwEU9u0VjHBMJZUDv4BHKPrTGG80c@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHtyEUTaU2c038mrDfw4uqxv732QWdqpsb3quy5Yta9HXUhTL/
-	lBP4UbltcVbEv/BMuwIqnT4oRczS702FpssGxhpX1BzsGW7aHbYVqkytvSBXYlc=
-X-Gm-Gg: ASbGncuu5Vb4PEB5JeNBSX7J3Hob+5jAZsqmO9mNM8MHUk56jYFJLodRWYkjT4qUCRt
-	AAN2FisTIGxt8KPBNPOndMUbsvk5TzmnrFARTsbU3C6QO9HrPLtF71VJ1Q0W3ic0Qds8/0g+Kjl
-	tXMSq7BKBNdsPouVFxZ3fOJo4/FMoPZqEyIKcyc5OcGcn3gR8wIFDVfWYv9GdgL9K2y0z/fV7IL
-	sIcZI89A18O1vXizhS4YMoGFCh14MuoRJajkbAh8IxROX6fF6kZ5DCBeLLmKRT+nVtZD1507ZLI
-	i78ri3bgd7jpmZFjG6CXEjgp
-X-Google-Smtp-Source: AGHT+IH6mI67VN6+LJhW4CQixdQKl6hq9aE0FVeh49meEBwPyv6KSQ0mFCOhMgKfSlM+rzBNT1MX8A==
-X-Received: by 2002:a05:600c:468e:b0:439:9b3f:2de1 with SMTP id 5b1f17b1804b1-439ae1f199cmr96841805e9.15.1740388010179;
-        Mon, 24 Feb 2025 01:06:50 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:eb70:990:c1af:664a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399c4df982sm131355455e9.1.2025.02.24.01.06.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 01:06:49 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: read descriptor flags once in gpiolib_dbg_show()
-Date: Mon, 24 Feb 2025 10:06:48 +0100
-Message-ID: <174038800639.24858.15060256292022357731.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250215100847.30136-1-brgl@bgdev.pl>
-References: <20250215100847.30136-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1740391407; c=relaxed/simple;
+	bh=KQ22hIAPpKO2ylb4LULSdWfYR5KIsCrd+boJQZ3jYNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fg9NPp7gB+AC/m9FrhJzhV8Nu6LDRQbL+wXFpBjqiRsI68BjmmPkA2S9a9/zOS6aT5aNgl+M4yIQ+wl/RAzcGoZbhhjGulM8CkL6FotCcmPoWPJG/YqdMFAgx2Mb9t0L3DK0JIlWqXbWCx8iIQ+a9erOwi0dNilThMWkm0a33FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0bkq428; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740391407; x=1771927407;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KQ22hIAPpKO2ylb4LULSdWfYR5KIsCrd+boJQZ3jYNA=;
+  b=d0bkq428NtGl3DzqDa3Cs7O2849pUhkY7dPojf8SlBxakyx/tey5vf1f
+   USQ1vb00lVPac5WY+PYOhb45jdvP2dKLmfzrANpimbD6K3q8Zb5XEgizI
+   cOLtWWKms2xrPkceHxzNmfyR/yC8nsR5xIqd7MLLAtANb6jGXKGTeK0og
+   ObFTzb6LuudBgkLb+YKeyP3EYulJHiiLMD+207f7fdlNBS9W+e8LITUoE
+   1pzMZhjpEmDN93RksuMo6VSIvPWYMkUkhZ8dAtWVVblPOTytMtP6WmCcP
+   KGtpLeesnOE73x03zvjnOc9jqL4usnCy0dLsXgr07+Wfy08qlzYfXG6qs
+   g==;
+X-CSE-ConnectionGUID: KJjfjTDBQWCcHOysW09lcw==
+X-CSE-MsgGUID: iAUwRwQ/QH6hAbXyvxLfWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="41050692"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="41050692"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 02:03:26 -0800
+X-CSE-ConnectionGUID: uj88UQdMR8SCvxpT/Z2gzQ==
+X-CSE-MsgGUID: Cb3A/5pxTMGR+phwiX1iIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121284335"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 02:03:23 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmVJ2-0000000Eevo-0M9z;
+	Mon, 24 Feb 2025 12:03:20 +0200
+Date: Mon, 24 Feb 2025 12:03:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux pin control <linux-gpio@vger.kernel.org>,
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [GIT PULL] devres-iio-input-pinctrl-v6.15
+Message-ID: <Z7xD57sjj4sbwMv5@smile.fi.intel.com>
+References: <Z7cqCaME4LxTTBn6@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7cqCaME4LxTTBn6@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Sat, 15 Feb 2025 11:08:47 +0100, Bartosz Golaszewski wrote:
-> For consistency with most other code that can access requested
-> descriptors: read the flags once atomically and then test individual
-> bits from the helper variable. This avoids any potential discrepancies
-> should flags change during the debug print.
+On Thu, Feb 20, 2025 at 03:11:37PM +0200, Andy Shevchenko wrote:
 > 
+> Hi Linux kernel maintainers,
 > 
+> Here is an immutable tag of the "Split devres APIs to device/devres.h and
+> introduce devm_kmemdup_array()" series [1], please pull if needed.
+> 
+> Link: https://lore.kernel.org/r/20250212062513.2254767-1-raag.jadav@intel.com [1]
 
-Applied, thanks!
+Stephen reported that some of the commits miss my SoB tag (as the committer).
+I will issue another tag with than being fixed.
 
-[1/1] gpiolib: read descriptor flags once in gpiolib_dbg_show()
-      commit: 11067f50458a5bb3b72f83c508e03f321e0c0c34
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+With Best Regards,
+Andy Shevchenko
+
+
 
