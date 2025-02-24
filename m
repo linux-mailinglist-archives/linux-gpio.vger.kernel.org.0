@@ -1,82 +1,81 @@
-Return-Path: <linux-gpio+bounces-16480-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16481-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21F55A41B07
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 11:31:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8EC4A41AF1
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 11:29:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28D2D170E31
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 10:29:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ACA01896AB5
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 10:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258522512D1;
-	Mon, 24 Feb 2025 10:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCCA2528EB;
+	Mon, 24 Feb 2025 10:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PLb5KMKp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yls4iqky"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05B824F5A5
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 10:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B7C2505B3
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 10:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740392936; cv=none; b=CHOv09yHjvM6RAEC227YZw1t5mM7ya7CUgHG93BQ7vS+dZei0nM9umN8OgUywkybBSpJQsWkDEuRrFt7VXnRHh/wH9aomOn8vpQYowoa4l/lxe3AQEklPiU5+HNkLz3XzP+1KQyF324NFSZ43vIJUvpbMC4/9QbhQDywS3+EBbs=
+	t=1740392937; cv=none; b=nVEJAUtXtGn9xCwxj3HcEIs2cmiYjl3AajHkx/GIh3OYLf+02FaINUh7xPxUBfYUv7qfmHzcxk+1IT5qJkHasKYBkj8TEH8Qt0bBcjBwdIu1X/Ku8epDooM0gLGdsXxRIaBAoUiOw9fwGvWV5XvSdXmcO8Iju6ZVIhh7V3bExBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740392936; c=relaxed/simple;
-	bh=nQJBIUhPLwK8sP/au/kpUVGthmufT8a/T2KHwyqpg6k=;
+	s=arc-20240116; t=1740392937; c=relaxed/simple;
+	bh=SbxyZVFzeep/C5H/BzJACz2cstijlLoAVmx4b9KRzx4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KKllEDKwd28YjypIVuBjuATzotCx62+W6WI3N98he4z7fMP8V4L09ALMwkklDmoCnXu2Xk6lj7iWaBVsnfFI5K0UCxL+RJnUZJJmUUTO05CcasnzHXzKS7r8kVsE8uWRT0cVrHqhzTuVaGfyYJNHws3fJemCOviuriO98yxCY24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PLb5KMKp; arc=none smtp.client-ip=209.85.218.42
+	 In-Reply-To:To:Cc; b=DbYd5D8oMKW30E6mB9/93WUUrqDVTMRNVpJGPIkErGJB2Vs40Pcp4nS4PqDpIv3CrJtqUF0yPxgS69zw1nZe5EtaCJ72msO1LK1BxxdbCBO0TkNpCof7PNwQmEJNxHE92QTekjKpHAe1mmP5W3w/o3EIHSlRIIA3G/daGnjV6Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yls4iqky; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb8d63b447so535892566b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 02:28:54 -0800 (PST)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abb7a6ee2deso648459766b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 02:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1740392933; x=1740997733; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fd8CWfeG8+6FfaIh+fTT4LnoouZsbi9TX6aHe3LpoDQ=;
-        b=PLb5KMKp6dktPX2RaD4AtP3jyJWlcCbQGMKvmKDoOsJEx0Qc9jQ6zonUfsHuppb92s
-         BJiK0FcJWxH1Z78ngSdHHyR9cl9Dg0Bxvq/u36fn6MEF/mtxQ18LsjnHryXpfthpph1L
-         AtI+A9oE46814zySqHuvZfGZXWZug+x3sDjFUMGrZsvi1kCSaJHfPvqcYblIn1fto/Uf
-         unF1XgfcvoWSmFq/XF/xppqJsJSungYz6uZMb2M0YWjQuj0wUaMbIvIDWeHHJGQ0ySjn
-         3tQBuJ0LwB+ZQ397f7NBh2eFvaG9Wcn8e4BEM6uki45r5ZfvM8phADAsRjpy59bBQFJA
-         rnJw==
+        bh=WbhcZtzS5EwoX+spb+fb7Z6TUP96XJcoUjJrW1dm9ac=;
+        b=Yls4iqkywa3myn9tbq8ErI4PwyN1xABko277p6G8VTDqy2DCPKdDutj4kpYcVlXW0Y
+         ZjTmnZ310vjKbNIJc1VfeAV4jPwnzjbc6rRKQYSuxg3tWrQzhi9M4tXczIxmrn042x3/
+         9KxfY7kHhF77ioSbWKA8BZ32Sx4thJiFZnd23zoxK7zKUMsSxSv0+jkc1fGWv9xQWsAc
+         bukYC+P5y6z66cibcsCTfpQITvu5W1TDDrVQmYBOulv+mfapDqIKprl4hdPawVjno8Km
+         394Ct3atD6xWBy1ht1pl87erI13tMEXDKriLhH475CrgspZGJQGIau2Q8RZ7KTLG/nQ0
+         QQeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740392933; x=1740997733;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fd8CWfeG8+6FfaIh+fTT4LnoouZsbi9TX6aHe3LpoDQ=;
-        b=s4dX5JplirL/vxBVAuL7libuUm0TlHpB15m2YL24hKYrbPTCKaRFvStCQUTOrZlsvZ
-         Nb2wIjtPXKXOfgzUDZpAMyqsBXRnrZYdgteIrBUbxR+dNRXZwpiRs0Rl5P91czNWN9aP
-         opDc/i81oXzGHYKlQb/jy3BkBEb/V/yKXuTHx2XlWUjRse249Dho+kK/VFVmbZPfxGeP
-         5tOt6lVmbkCdQMLjmfu3eyi8RTYOKlpDkpbUNxFcVERw5vSGgbEEsW2Ct5ZBpGb3oi1g
-         B/IKd6hsVYVpvemQ2VEUa9VJrrHAA4e5VGMgxWUsoPLzDE7u8BpzxoT/VgswB4MuybYw
-         O96Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVP4Vm4Lpb721JB9Uz4ktUQcQV9mODHr2F7WQ8UWl6VrjV0IFd/wnSW+JC0Ekc9nOQ0RkMEZkI3d0Ft@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFifkjHgkvEFqGOVF6iGk4S3lZArZtKY9CUnZ+vkIZkesEHGhs
-	WQmHQcZGam+oTNqRQD9vXhPMAuVNKK4pHTWKDb32syYayTT3zAtptMK35JEMOw5iVVI6o0QR4Y6
-	vB6U=
-X-Gm-Gg: ASbGncspS5Lk2gXxEVhXCZa7ITMOBaF7N0A401t9Ooj1/PDU4N7ffgU/9M2ZSPUee9r
-	P9SwBoFkNhj1vvXB2Fvz0lyStgedQ6hNc7b/bqNQXn5vKDOXzb65VIKWLQeFCsgPUueqz1RtEdg
-	99NercD21uNj9/Pk9RzRdGy1CZMi4Y/Ch/bt+LRzUu90gOHB3hCqK5o/pSUQMg71wwW8WNqZkJ1
-	SY53m5sJHngrDrbnFDLEf7wQQu3/OzfWbJ4qe6tbwq4pJ1eC/RPlyB9/X+R8RjnyaHD4gOYenW9
-	eqTvUsY5EwY5hLJIW29MqbPmSwKMBPJkthasV7dKhM34sCsmnFt60e3MvS+e+WOjOydLLPngJjN
-	WcMpgIST0Ww==
-X-Google-Smtp-Source: AGHT+IE4q27LpmwxJ6khnxFSWavRGTvEjWQZ/aQgFTEve7pPUfHXEj5f+O5XTnie9HbVpDVpkSkYgw==
-X-Received: by 2002:a17:907:1b26:b0:ab7:be81:8944 with SMTP id a640c23a62f3a-abc099b88ccmr1369497166b.6.1740392932757;
-        Mon, 24 Feb 2025 02:28:52 -0800 (PST)
+        bh=WbhcZtzS5EwoX+spb+fb7Z6TUP96XJcoUjJrW1dm9ac=;
+        b=IZnSxXTEmlCqmZ97ArQ/8PyQqvPDpgQv6qZPMsnhziR2Js1rSPiIXDY27VjipCuh1z
+         Vn0pLuiDkEG79vrweN8wtJEC7Aqm7vkJuYQbVRpdYP7aUV5Iv1Tftmn3hhgMgcUWu2aZ
+         apdx1hfHDKtt+pgK75MxUNb6qKcPjwcJmLx3DW483vbi7LDOU+kDHlvTNZ+4LnVbYydy
+         EX8+D25DmBaZKE28d5R9m9pbi2h6XNrsgudjfCtYwML3ZbqVTYSD18Pg347D16madKHj
+         yyxQvBEjW0P+ck5DWI9tsv/buvbPnWcOzbPsBsWDSgBr4vX+bzyrjJ9Glb876K5qBImq
+         d7Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCWY+6fKRw+UijiZFFU9mSmA5cQW5o5+muSin12LGb1duBx9pnF17psLzU0EKUV2po40/085nUv3NyJv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw61hIHHW/qnXAenXanXb01iXnNTC1DQmlS4H0VCyQq5KRrYsRw
+	wCiHkDqN0y3k71bOa3vgbDNd/yvPshIOthTYo3CXnnQ8yFBuTec+qdIjXOgTh/g=
+X-Gm-Gg: ASbGncvA/eny87JBFaiDrcPxfYtLUA+fE8mlM28TeexCqTYLA1kY3UPx5677XLWB+Ce
+	xrbGLz469F915ri9ZVzwxfCO6QCAfxeUTnDOsri5ytFfDOo4LMNL5MCHYNBDVGFRRl6rRF38xX9
+	s8p2WlX1tZIdAFNbqH4DP4eoI9ihcuHzlGOlorBLTOFxT7W0OVUPlFYkiVgiaGp5JwD9OzgHYUK
+	9LvxSYR+KV+nNkj/Ps5NCj5EGvLwyv26sI7jky1XwxRcsfmK7iTiNy4T4ggJ1d+awsWkPNOSLzk
+	Sue4C8TpDpxkx299zeam1uIvHr7tj8kXL+cRU7d3I7F7Z+03UJUn4vZ3ttEDMI0dCyfTtrkUsGe
+	qalklkpxclQ==
+X-Google-Smtp-Source: AGHT+IH4RZjl08rR2sE5UQioxf9Tb8q7zCAreWXLTS8Ohg3GQ4mI+vcJ4QA6lsBdoNmgXsyuVz1NiA==
+X-Received: by 2002:a17:907:3f92:b0:abb:e259:2a64 with SMTP id a640c23a62f3a-abc09b21c99mr1220180466b.33.1740392933327;
+        Mon, 24 Feb 2025 02:28:53 -0800 (PST)
 Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
         by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbb186c5d5sm1349206666b.51.2025.02.24.02.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 24 Feb 2025 02:28:52 -0800 (PST)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 24 Feb 2025 10:28:50 +0000
-Subject: [PATCH 2/6] dt-bindings: gpio: add max77759 binding
+Date: Mon, 24 Feb 2025 10:28:51 +0000
+Subject: [PATCH 3/6] dt-bindings: nvmem: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,7 +84,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250224-max77759-mfd-v1-2-2bff36f9d055@linaro.org>
+Message-Id: <20250224-max77759-mfd-v1-3-2bff36f9d055@linaro.org>
 References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
 In-Reply-To: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -103,26 +102,26 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.1
 
-Add the DT binding document for the GPIO module of the Maxim MAX77759.
+Add the DT binding document for the NVMEM module of the Maxim MAX77759.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- .../bindings/gpio/maxim,max77759-gpio.yaml         | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+diff --git a/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
 new file mode 100644
-index 000000000000..9bafb16ad688
+index 000000000000..d3b7430ef551
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
-@@ -0,0 +1,47 @@
++++ b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
+@@ -0,0 +1,50 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/maxim,max77759-gpio.yaml#
++$id: http://devicetree.org/schemas/nvmem/maxim,max77759-nvmem.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim Integrated MAX77759 GPIO
++title: Maxim Integrated MAX77759 Non Volatile Memory
 +
 +maintainers:
 +  - André Draszik <andre.draszik@linaro.org>
@@ -131,38 +130,41 @@ index 000000000000..9bafb16ad688
 +  This module is part of the MAX77759 PMIC. For additional information, see
 +  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
 +
-+  The MAX77759 is a PMIC integrating, amongst others, a GPIO controller
-+  including interrupt support for 2 GPIO lines.
++  The MAX77759 is a PMIC integrating, amongst others, Non Volatile Memory
++  (NVMEM) with 30 bytes of storage which can be used by software to store
++  information or communicate with a boot loader.
 +
 +properties:
 +  compatible:
-+    const: maxim,max77759-gpio
++    const: maxim,max77759-nvmem
 +
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 2
++  wp-gpios: false
 +
 +required:
 +  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - "#interrupt-cells"
-+  - interrupt-controller
 +
-+additionalProperties: false
++allOf:
++  - $ref: nvmem.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    nvmem {
++        compatible = "maxim,max77759-nvmem";
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        nvmem-layout {
++            compatible = "fixed-layout";
++            #address-cells = <1>;
++            #size-cells = <1>;
++
++            rsoc@a {
++                reg = <0xa 2>;
++            };
++        };
++    };
 
 -- 
 2.48.1.658.g4767266eb4-goog
