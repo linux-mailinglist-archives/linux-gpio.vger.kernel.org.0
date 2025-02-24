@@ -1,233 +1,139 @@
-Return-Path: <linux-gpio+bounces-16502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59030A42338
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 15:37:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC53A4238B
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 15:45:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46E117A1DD9
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 14:35:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E83A3A8C48
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 14:37:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 774C12561A3;
-	Mon, 24 Feb 2025 14:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32C7194A75;
+	Mon, 24 Feb 2025 14:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="X5sk5TFm"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eoLN/1nr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A43125C6E9
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 14:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5131624F8
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 14:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740407533; cv=none; b=oQqIeQFsLvUoGryqLTCz/4U/lDMNF7UIHZ23vu58/5sp7kL+V72l7LcFWLXhvvjxs1A/By944mnjVr/XLG4aeAr8TOJEoEEtjn0iGIA9ZLhzgQH0ieowmEuBRN8ZAjMQoYp4nlTCwSA2HrfNrWcinQCdC+YZnBJTd3UytMn6ae8=
+	t=1740407669; cv=none; b=sw3KnoxyhJcOdHQzLAUtlMJJYsC21DcVz8SuQXbo6uc7mP+tyUz46TJmHdrY4eoV7o2hkSTzumbvPLWHEaKB3TgTZTTBGdK/1aLjNB9dMXCBQydG61H1evCMkpGtr60SSNZ+ehQFINSU6BK+IVj3Ie8MtA+RTn2XCNBfCXV8X80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740407533; c=relaxed/simple;
-	bh=5z75klJulPBK3euVFo5jCw9QXY35/qZ4NCunDCR/9Jo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TAyPjtj7VoHvY6bLdssUxCO74MaLjUZ/43vRE2DB+Sk00t45CPCAyj+aJHl2RRrgNeqEesqXEtHsSRLQ1hf/4ztnoRFY3BEEM4t4s08Da/LPkjzFzoM8DX1SGsYUfRzf+MM9o3LudP1bcL/eiOZYG4e9aoiKsFOXxHh6kUvthLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=X5sk5TFm; arc=none smtp.client-ip=185.125.188.122
+	s=arc-20240116; t=1740407669; c=relaxed/simple;
+	bh=gtWoGKMaCntSoWB3c03NP4J9WjVIr1FotK1T44+GyYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uWYW8tYo+3oCIanqMjixxPRanb62qszSw3Vsk7tOt2p/OXCs7ZQPehBuXBm0EgrjF8CL6qyMRck4UwisUHvusISP9prvBcb5TUJA8L3sfsm42pwrCpha9qWs7dbS9iblpWcecU9uCDfllwJGEff0gXFmDYp11jb/NwKGuuDh4QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=eoLN/1nr; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id C8F813F84B
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 14:32:08 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 295F2403E3
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 14:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1740407528;
-	bh=VbN0B6Oenuw6+py3+N6wdefqtqSm9CuUWAW6b8DJ97M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=X5sk5TFmTopWRUURxS3AisP1L4ZqBngZoeRafiP9zjRzKwMtLaRZvZN3WxkRkVuNV
-	 UpGE+LQ8DUuPA4nBPSno+/+ucCujOjI3US2Xs1l1F/buxiNPpTkvxrocEzAozPexbo
-	 4xvr/RlNcPGIsEeIoIS8gYf+eEyMb2SFTgO37gARWjR0tg9IIXnD/mm7eeK/GvzAp6
-	 vfQTrnEzQQatpHCAT5zmsQQ2P5U8JkXWs8btEp/rNseH1fUFNUMkYl9qHXcslCQCr9
-	 jLGFHI8MygER0aQ3G8BEck26GKlBmyY06zGnvW6fScwZflsom0LVyrIljvt+tWmOkw
-	 +36A/b1dqrGsQ==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-220ec5c16e9so92169975ad.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 06:32:08 -0800 (PST)
+	s=20210705; t=1740407665;
+	bh=yhFJ4UHx5R5lOf0wcq1Nd4uhLZ5ZR5NOQL7ZBIbthnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=eoLN/1nrS8znZf4RX+gEGhlWGQlrRndvkWojrWEh37KqeJNz1hfQHKcmiRobkHgwE
+	 v7x7CuUuq2zfgr6hDYBFwmSEhD4ZMNXpt0gn3xhKyfQIqLK+EYlh/Rc/1hgda7uZgy
+	 xqq9UnSc4j190bYFbvZ8Rfqi5rTBX3AcOepxREGUhUj7+pIzvtNHk4eUS73NM3z9QW
+	 aUcqx+PK631wEdi+dK2VSkVd7cpvdWQwCwXByMTLcu9ogbH1uY+xkH6+Jr4fETR8hy
+	 Tldfds4EuP0hnvw3oWDSdCM6H6VsblxgOWmRZOsgp/DpiBzYvnsn216xc3AsPI+ZPU
+	 Hpp9kW3xJHOmw==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fc45101191so8633401a91.1
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 06:34:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740407527; x=1741012327;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VbN0B6Oenuw6+py3+N6wdefqtqSm9CuUWAW6b8DJ97M=;
-        b=sdOIOi89WPvauxpZYlZXqZxjQf8IEyZH+Om8Q6G6Fg4GXDBGohMlkt1GkgqtLEEwH9
-         bpL/DLgndSGuNRsub9Q2gk7kGYmggDxWSlq5Hq7VfT+O/7MK1JG4ShHPN7q0o9sGSsue
-         IDd9wKSWveCeyImjo6iURbCUn5cwry0rvP2xJRr3TmhG/IO4lSGPKeRBOW7R1sapgiuG
-         P6HpzlkT/eag2ATsoZAz4htQau/Jlox/fJNeV7YO0NVNwmSUv0Ot9HmXIpPHj3Dudncv
-         6lQJ1JIg00W9w0fgRymE380TXTUv09FwLr3nocBvya1zFSprQWcWIDQLR2tlPnjl+/A5
-         STNQ==
-X-Gm-Message-State: AOJu0YxApfwEOFbpZrkL5UzdXCCNCKgCuGtSZFC5We4oUyLK86uHZTaw
-	n2vDmROSh0V5GZWrxYlYSgfVN32KdHuRpLf84dUvG8hxhRyWxT1SATLTtYP3moLVZHAy1lTwNvj
-	QHho4yKGHXBz4jSx4fVkBNiRw0JcEl50vDMuREAYqBfNKQNg+Vnv/xFcDiuiTCYu7AVNAbwjgVT
-	RvqR/ZWoo=
-X-Gm-Gg: ASbGnct4v8rPaTN2iEKrQM4pnjum4gepaaPTSnzeSB8PSTtwTAPDM6Fs6KX43DEDoBY
-	y2tSSPmj4dhS9eXl8bd+ajuJ1Xv9ZtpAXisqA+qLELwB6JTFNhO+7piLURm1w8dSoNce9LJ8sxy
-	iypFoBgATyoWTnxLFxsPfJKKlRM7INaBo4CuS6dUTcNJmI1HzSs8LY30G+XdKm9Vhn6uDB/fxB8
-	prG/aSgSJl14qZnZE/RwFFwguj/TrwjoJFw2eBC5nY+4Jepo2gY2VBLGHZR62RYu9967CvFEWm1
-	g5FU2Nm9V7b3P9lX
-X-Received: by 2002:a17:902:ce8c:b0:21f:522b:690f with SMTP id d9443c01a7336-221a11b9bfdmr221006905ad.46.1740407526723;
-        Mon, 24 Feb 2025 06:32:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHSZQwlljMmmYRCC7Y9lX6+uL/BcL5sVp/WVmnDYsqhnw8DVA1aShXde+2Ht/xNGnXwOQ2afA==
-X-Received: by 2002:a17:902:ce8c:b0:21f:522b:690f with SMTP id d9443c01a7336-221a11b9bfdmr221006465ad.46.1740407526306;
-        Mon, 24 Feb 2025 06:32:06 -0800 (PST)
-Received: from z790sl.. ([240f:74:7be:1:de7b:58db:ab85:24ee])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d067sm177613895ad.109.2025.02.24.06.32.03
+        d=1e100.net; s=20230601; t=1740407664; x=1741012464;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yhFJ4UHx5R5lOf0wcq1Nd4uhLZ5ZR5NOQL7ZBIbthnY=;
+        b=UolZowNRJr6na4Hi3Dp5bOM9dFZTSpQRbkBcWRMo5Q9lAZybuRoL6h1kgonP1D8IKr
+         slhNazBzKSJhbzuRhIx/d+VZ4KUmuydX/e5ts6YKaRM4cTFdJ6I653m+RWHdVJZkKtMI
+         6TDAKSt5eCPAxMPuS4CeZRCWAi4LQ50PLB4m1fOaw7qaIkmwijdUZppn3fkbL4W7WmQr
+         FzlAzDk0ZfMdL7KKeRQyKFW2pBE7zCYIrFoy+ZNH7X9Jbr6UaPF5m0ENy5eWQ5RzuITT
+         ELSA9qXpQDNgwH/cc6cf+Kv/1Nd7AxDnds2nagZjq+F3C72QXV795QUwCd89yeOHfqkm
+         8Z/w==
+X-Gm-Message-State: AOJu0Yx+g5/ARI8iwtbms5coIMKmwgzo/BLODgrg9DSpMAQmin4ovKi4
+	+LjV/yZuKc5RdksVqGkv17Ngz0EQHge6unSlYgdawHT0fumOWjJ0Eu8+it7fQxD1az9FCnszf1b
+	Ndz5nP4puHPh1v8tF5WxYQxfC9tt7xSN1EMDIxFgZdkHSExCUEX4eHmR1YfbhhlYpva6uGVnOfw
+	Q=
+X-Gm-Gg: ASbGnctDRG8M75+kKLscUsdsCkvxoG10s2UmiT43m9iqZbVLUFGsnBSXrd2AYfZJMwG
+	11Hbh0StjbsThondZp8vkZMZ7qK85n3dQn5Kgm0eagzvFEw/Oe2XfUk0PPTU22Hog1SVRkuVagv
+	Rr9aPOxoxFA8ojkHI2yosox8xUUfq4KdgsNUfkq2jCcauSZnLlRsd/3T5nDu7VUOL0RVatFFd1o
+	thPwGP65M2Csv5VVXjPD26YneDUgOszhMJBE9JHOhJ6bK86CN38uwvDYdqVotlDH2r2rdbaXLx2
+	MTIfpbeLnoVA81hu2A==
+X-Received: by 2002:a05:6a21:4613:b0:1ee:be05:1e2 with SMTP id adf61e73a8af0-1eef3c889c7mr24653478637.15.1740407663753;
+        Mon, 24 Feb 2025 06:34:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHZoGO5+6SYNEGvQLUG/Lrjbn6pkdcM+ukmw/rDgYUp43ttu6AmhAB4GYyEKrbM+g8j74n7bw==
+X-Received: by 2002:a05:6a21:4613:b0:1ee:be05:1e2 with SMTP id adf61e73a8af0-1eef3c889c7mr24653444637.15.1740407663438;
+        Mon, 24 Feb 2025 06:34:23 -0800 (PST)
+Received: from localhost ([240f:74:7be:1:de7b:58db:ab85:24ee])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7328371e36esm14345854b3a.61.2025.02.24.06.34.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 06:32:06 -0800 (PST)
+        Mon, 24 Feb 2025 06:34:22 -0800 (PST)
+Date: Mon, 24 Feb 2025 23:34:21 +0900
 From: Koichiro Den <koichiro.den@canonical.com>
-To: linux-gpio@vger.kernel.org
-Cc: brgl@bgdev.pl,
-	geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	maciej.borzecki@canonical.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 9/9] Documentation: gpio: document configfs interface for gpio-aggregator
-Date: Mon, 24 Feb 2025 23:31:34 +0900
-Message-ID: <20250224143134.3024598-10-koichiro.den@canonical.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250224143134.3024598-1-koichiro.den@canonical.com>
-References: <20250224143134.3024598-1-koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, geert+renesas@glider.be, linus.walleij@linaro.org, 
+	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Add synchronous fake device creation utility for
+ GPIO drivers
+Message-ID: <htq76fls75dk7a5nn6u6lqwzm6k5evbgp4uip2jf7kuoq7tjaw@dck7tgbmek3y>
+References: <20250221133501.2203897-1-koichiro.den@canonical.com>
+ <174040547574.48618.1949653889364615138.b4-ty@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174040547574.48618.1949653889364615138.b4-ty@linaro.org>
 
-Add documentation for the newly added configfs-based interface for GPIO
-aggregator.
+On Mon, Feb 24, 2025 at 02:58:58PM GMT, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> 
+> On Fri, 21 Feb 2025 22:34:58 +0900, Koichiro Den wrote:
+> > This patch series introduces a utility for some GPIO devices to reduce
+> > code duplication. There are no functional changes.
+> > 
+> > In this series, only gpio-sim and gpio-virtuser are updated to use
+> > dev-sync-probe, as the current gpio-aggregator does not benefit from it at
+> > all. A follow-up patch series that introduces a configfs interface for
+> > gpio-aggregator will convert it to use dev-sync-probe as well.
+> > 
+> > [...]
+> 
+> I don't see any further issues and it passes my libgpiod tests so I queued
+> this series for v6.15. You can now base your aggregator work on top of my
+> gpio/for-next branch. Thanks!
 
-Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
----
- .../admin-guide/gpio/gpio-aggregator.rst      | 107 ++++++++++++++++++
- 1 file changed, 107 insertions(+)
+Thank you! I've just sent the aggregator work v5:
+https://lore.kernel.org/all/20250224143134.3024598-1-koichiro.den@canonical.com/
 
-diff --git a/Documentation/admin-guide/gpio/gpio-aggregator.rst b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-index 5cd1e7221756..8374a9df9105 100644
---- a/Documentation/admin-guide/gpio/gpio-aggregator.rst
-+++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-@@ -69,6 +69,113 @@ write-only attribute files in sysfs.
- 		    $ echo gpio-aggregator.0 > delete_device
- 
- 
-+Aggregating GPIOs using Configfs
-+--------------------------------
-+
-+**Group:** ``/config/gpio-aggregator``
-+
-+    This is the root directory of the gpio-aggregator configfs tree.
-+
-+**Group:** ``/config/gpio-aggregator/<example-name>``
-+
-+    This directory represents a GPIO aggregator device. You can assign any
-+    name to ``<example-name>`` (e.g. ``agg0``), except names starting with
-+    ``_sysfs`` prefix, which are reserved for auto-generated configfs
-+    entries corresponding to devices created via Sysfs.
-+
-+**Attribute:** ``/config/gpio-aggregator/<example-name>/live``
-+
-+    The ``live`` attribute allows to trigger the actual creation of the device
-+    once it's fully configured. Accepted values are:
-+
-+    * ``1``, ``yes``, ``true`` : enable the virtual device
-+    * ``0``, ``no``, ``false`` : disable the virtual device
-+
-+**Attribute:** ``/config/gpio-aggregator/<example-name>/dev_name``
-+
-+    The read-only ``dev_name`` attribute exposes the name of the device as it
-+    will appear in the system on the platform bus (e.g. ``gpio-aggregator.0``).
-+    This is useful for identifying a character device for the newly created
-+    aggregator. If it's ``gpio-aggregator.0``,
-+    ``/sys/devices/platform/gpio-aggregator.0/gpiochipX`` path tells you that the
-+    GPIO device id is ``X``.
-+
-+You must create subdirectories for each virtual line you want to
-+instantiate, named exactly as ``line0``, ``line1``, ..., ``lineY``, when
-+you want to instantiate ``Y+1`` (Y >= 0) lines.  Configure all lines before
-+activating the device by setting ``live`` to 1.
-+
-+**Group:** ``/config/gpio-aggregator/<example-name>/<lineY>/``
-+
-+    This directory represents a GPIO line to include in the aggregator.
-+
-+**Attribute:** ``/config/gpio-aggregator/<example-name>/<lineY>/key``
-+
-+**Attribute:** ``/config/gpio-aggregator/<example-name>/<lineY>/offset``
-+
-+    The default values after creating the ``<lineY>`` directory are:
-+
-+    * ``key`` : <empty>
-+    * ``offset`` : -1
-+
-+    ``key`` must always be explicitly configured, while ``offset`` depends.
-+    Two configuration patterns exist for each ``<lineY>``:
-+
-+    (a). For lookup by GPIO line name:
-+
-+         * Set ``key`` to the line name.
-+         * Ensure ``offset`` remains -1 (the default).
-+
-+    (b). For lookup by GPIO chip name and the line offset within the chip:
-+
-+         * Set ``key`` to the chip name.
-+         * Set ``offset`` to the line offset (0 <= ``offset`` < 65535).
-+
-+**Attribute:** ``/config/gpio-aggregator/<example-name>/<lineY>/name``
-+
-+    The ``name`` attribute sets a custom name for lineY. If left unset, the
-+    line will remain unnamed.
-+
-+Once the configuration is done, the ``'live'`` attribute must be set to 1
-+in order to instantiate the aggregator device. It can be set back to 0 to
-+destroy the virtual device. The module will synchronously wait for the new
-+aggregator device to be successfully probed and if this doesn't happen, writing
-+to ``'live'`` will result in an error. This is a different behaviour from the
-+case when you create it using sysfs ``new_device`` interface.
-+
-+.. note::
-+
-+   For aggregators created via Sysfs, the configfs entries are
-+   auto-generated and appear as ``/config/gpio-aggregator/_sysfs.<N>/``. You
-+   cannot add or remove line directories with mkdir(2)/rmdir(2). To modify
-+   lines, you must use the "delete_device" interface to tear down the
-+   existing device and reconfigure it from scratch. However, you can still
-+   toggle the aggregator with the ``live`` attribute and adjust the
-+   ``key``, ``offset``, and ``name`` attributes for each line when ``live``
-+   is set to 0 by hand (i.e. it's not waiting for deferred probe).
-+
-+Sample configuration commands
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+.. code-block:: sh
-+
-+    # Create a directory for an aggregator device
-+    $ mkdir /sys/kernel/config/gpio-aggregator/agg0
-+
-+    # Configure each line
-+    $ mkdir /sys/kernel/config/gpio-aggregator/agg0/line0
-+    $ echo gpiochip0 > /sys/kernel/config/gpio-aggregator/agg0/line0/key
-+    $ echo 6         > /sys/kernel/config/gpio-aggregator/agg0/line0/offset
-+    $ echo test0     > /sys/kernel/config/gpio-aggregator/agg0/line0/name
-+    $ mkdir /sys/kernel/config/gpio-aggregator/agg0/line1
-+    $ echo gpiochip0 > /sys/kernel/config/gpio-aggregator/agg0/line1/key
-+    $ echo 7         > /sys/kernel/config/gpio-aggregator/agg0/line1/offset
-+    $ echo test1     > /sys/kernel/config/gpio-aggregator/agg0/line1/name
-+
-+    # Activate the aggregator device
-+    $ echo 1         > /sys/kernel/config/gpio-aggregator/agg0/live
-+
-+
- Generic GPIO Driver
- -------------------
- 
--- 
-2.45.2
+Koichiro
 
+> 
+> [1/3] gpio: introduce utilities for synchronous fake device creation
+>       commit: eb5ab6ffb4ca2d28121455dd7452061367ed5588
+> [2/3] gpio: sim: convert to use dev-sync-probe utilities
+>       commit: 2f41dbf9cb84349f510ebf2165c13102f79a550b
+> [3/3] gpio: virtuser: convert to use dev-sync-probe utilities
+>       commit: 45af02f06f6943d73cf9309fd2a63a908b587f57
+> 
+> Best regards,
+> -- 
+> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
