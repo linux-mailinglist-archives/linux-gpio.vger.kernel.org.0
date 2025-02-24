@@ -1,199 +1,165 @@
-Return-Path: <linux-gpio+bounces-16454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AD94A412CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 02:49:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1A7FA412DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 02:56:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCC4E3B1811
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 01:49:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 42747188737E
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 01:56:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C5ABE40;
-	Mon, 24 Feb 2025 01:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1BC919ABA3;
+	Mon, 24 Feb 2025 01:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaSWpB2g"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="vUWC3Dgv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA318802
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 01:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5F1802;
+	Mon, 24 Feb 2025 01:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740361785; cv=none; b=VQLhsONO/kZnasZahoS62a6WViqH/JYuDaGf4/WdfWQp50tetG+iETq33tIGIpICB/t3dEAu6MrW1aIn5oAt/7HBbHyBqHy3mk40oY/eCPB2bBzmJT0Gg7yzDT49QS8HHXJ1oCyAu+2+G0A2XbMJH8anJSDK4V8hdqFX7+u3IO8=
+	t=1740362189; cv=none; b=cLBd0nPaeO+q85pDO3z94i11C9AOAApeDMQBlyefh8FTP0SD6pKS0H1o7vV7x/bqpS1X5iCWIBajd4zn8ughaPxgG7VKvB2fjS2DlCf3f3ZrxR1e/GObiw8/+7K2scGuDtjYSYzIm68C8xUeaRVPpMuY7kfXU7xrJfxSgENZJd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740361785; c=relaxed/simple;
-	bh=q5AtDy3Pq//3EF/2zPaZfVGjcPenuWNZCBVqPyBwvsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QT1SmksA9D+uAVVPVrVMFcAXXVK21UqdbJlVBM7VoRDbCZTrL5v5z6QCwj1TDr64+VNfeFvkhDJAQ8QQzs4yMAMqfqfDPtkriaUip89j+kITf+LJUeo2/GKS2lHPyZxqZ1GMl0c/VSfzPhuApP31mDxfcxpTenYZHVP6Y7Oom4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaSWpB2g; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fbf77b2b64so7930154a91.2
-        for <linux-gpio@vger.kernel.org>; Sun, 23 Feb 2025 17:49:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740361783; x=1740966583; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aCBtThWYi5+i+WATMlI9jlgX9eHetjIpVt9hn65foQ4=;
-        b=jaSWpB2ghLf2UKMNmsrugxephZ856zcu8AFq2A6cmrCW31GMImLEB5ZNhNYVtoZvvf
-         ZUt2kNsTNWBC4qenJ2S7oyG07sQHADfuSE1vAN5pWv0AyYKARjLbeonOpAlh9dFPeXNt
-         WITEf62iO6NNHXcM/WNE8qjBeJ9rH274x1EnDFmms/9+30YIIYfcrf65tuU6g/LMo0ct
-         1mTG3zi0bGxkQqIcleToU0plHICR0VF4v3TA1Y/EeXVlLZsg+V7uf62KaPl+FtzN5ujM
-         u0mfGOI5eQtFaMrljn0PlPfr+JWc/e3gEkUoFy5soh78N17Eg1HvYkahS0vIHAD14bQC
-         hqbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740361783; x=1740966583;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aCBtThWYi5+i+WATMlI9jlgX9eHetjIpVt9hn65foQ4=;
-        b=PbTVktVrnUAuvW4RpwnZ1AMmUGMtVySwOFnZpFbFRZZR209YwytWCoRIPlqs7+eExv
-         wW+OdmNz/e+By5gEuT52L03sT9IfFQbZIIF1tb9rdDv2XTQxPKGnKZVTRAWRvzyXNww+
-         fobf6wBOvdeQWY5ZRlUkNaCBsOHX1i38KFQOjcVD8jd44XUtvE6MOQFoqyZNP+gKxXoU
-         KAzqafSIFQxm2pKYgmvxLX8HcPRYqEIKud7f50f9EM7sSMqUDjF6kGxrpwPHlrnk/6IH
-         ByH+CW9eeKslR8vedDiPJDmyRqLPZRCQ2CJOTldfX6nIprj62/scC387/QvH72lx4pEU
-         7Uhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGGwfcYXO7DjesqQAZQ4RcvpEMIPJQNc4DzZgHhsdm1zo16VnZ24R1p/gGM+1qstA8mlRJHPKbkmpp@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFRLTbc7u1qoiB/LYmnUEZlC9a/+6UnnkLIuFL9gWAak7YvOVQ
-	AZdngx/Li0uEDfX9D7IBtbbBH8KqJrII9vUq8OWZD5wRqmzIT+6u
-X-Gm-Gg: ASbGncs9VyKNiuWsOUVPumxBrqSE+Dbw/S236EbhP1sp7XajpAubSKcB/Qtsruq7Bhm
-	R9gGoRTWhu6wLSzqGrR/1plX9fzbtDs1WSp8ZYaI3CNBstRiXcEmNvT/WOpQSTTtNQLSd4iVmX7
-	IBHMh4RiNQmy6QQsXAPzIsLfIlrr0xxO04BMhIX/mD0ag3YqwzzNlqjWUnWBnTq4luJPJH3RXrD
-	VUKeqshSXY5ZnTLZThA1guso7Auowz+WamOzWv2/SYGlWK+3GvukdCKjqDM7wnDKnqByCQEVyNE
-	/uoYTcZcNozQfsUULwE//XbfDL93Z8l25ZRF0I9xZ6yBqAxz6Q==
-X-Google-Smtp-Source: AGHT+IEDcROmbLVDhTf+j6JExAIIBytnAqYwHIzPrNtSyBd78ELJZmBLk3SzTUyFuRFh+QF7WeZ96w==
-X-Received: by 2002:a17:90b:2688:b0:2ee:f687:6adb with SMTP id 98e67ed59e1d1-2fce77a0195mr17625471a91.3.1740361782851;
-        Sun, 23 Feb 2025 17:49:42 -0800 (PST)
-Received: from rigel (27-32-83-166.static.tpgi.com.au. [27.32.83.166])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb02d990sm5961314a91.1.2025.02.23.17.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 17:49:42 -0800 (PST)
-Date: Mon, 24 Feb 2025 09:49:36 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
-Message-ID: <20250224014936.GA12854@rigel>
-References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+	s=arc-20240116; t=1740362189; c=relaxed/simple;
+	bh=39Uf86IT8UF4N2Vx5vcprNQTR3BbrL/jvdHL965ABuc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TS0mGr6lcZv09CdlsqaCZ0xBzC8MhYo3xkFEIlk27ns4pjPYQt7mMQ+ZQoPcjSZIZfaIo/PAOVIULxEapoKm45JXFHz1ZiKwU5wgALvv7G6/bHqxgo7KlRbCVjlDyPWkBUP3nG/McKdKZRadMYHRhlJ2wQ+6nOktl1QD0xMLMR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=vUWC3Dgv; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+Received: from [192.168.34.162] (254C2546.nat.pool.telekom.hu [37.76.37.70])
+	by mail.mainlining.org (Postfix) with ESMTPSA id E0D92BBAA8;
+	Mon, 24 Feb 2025 01:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1740362183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EeWF7qvyGL3cKqaH36H4ZYKJfxDKcwMXmA2Q9/6WF7o=;
+	b=vUWC3Dgvz/Qcmo7z5YOqSE1Px0lihfOQEyxwThU7Cyyg+EpT6I9/12w8DAy3wLIxnIlByT
+	dEAn3vUHyUxzxqI0L4Cpnw9GKulPB6eV0kSXyJ0T1Oqyt4vLQXXcGqQjKCCCKqpJmlpmRW
+	4sex6Bugyomo629RS2SKA9/+x1H2q235gO6+MbXVO7ncHD/UFWqI0Ntcx15eWUaPOLIJ4j
+	ocaZO3MX80T6egu07ywBpGty1siY4zbT6sBXYZZPyAdOZwFpRkqw3kcEHwVNARz+wSEn5Z
+	3RMqKrAQzeXHtY4ohwUvfDG6msepI7u5v1UbBYhfCGaWJVHyxSNpHLr8IjnUVQ==
+From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+Subject: [PATCH v3 0/8] Initial support of MSM8937 and Xiaomi Redmi 3S
+Date: Mon, 24 Feb 2025 02:56:15 +0100
+Message-Id: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAL/Ru2cC/2WMywqDMBBFf0Vm3ZRkQo3pqv9RurBm1IEaJSmhR
+ fz3RqEP6PJc7jkzRApMEY7FDIESRx59Br0roOlr35FglxlQ4kGikmKIQ2W1EYgVtdI1mhoL+T0
+ Favmxlc6XzD3H+xieWzipdX031KeRlJDCODTkStMaWZ2Gmv2NPftuP4YO1lDCHxn1V8YsX601e
+ Sw1Of0nL8vyArnkN8XgAAAA
+X-Change-ID: 20250210-msm8937-228ef0dc3ec9
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
+ Daniil Titov <daniilt971@gmail.com>, Dang Huynh <danct12@riseup.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Adam Skladowski <a39.skl@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740362181; l=2642;
+ i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
+ bh=39Uf86IT8UF4N2Vx5vcprNQTR3BbrL/jvdHL965ABuc=;
+ b=DGnjk8uWs3nhnJlH5Lm9Ib3OhsX7hivrg8dhP+ylonwxTUz9rpRv0ZMBprDyQYkpcBnRYbInp
+ aVHI0g3q0b0C5X4+XvdwlSByVYHddozxk3iuzr08JpnLubW3HzP6veA
+X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
+ pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-On Sun, Feb 02, 2025 at 01:45:58PM +0100, Bartosz Golaszewski wrote:
-> Hi!
+This patch series add initial support for MSM8937 SoC
+and Xiaomi Redmi 3S (land).
 
-Sorry for being late to the party - was AFK for a bit.
+The series is extending the MSM8917 gcc and pinctrl drivers
+because they are sibling SoCs.
+MSM8937 have 4 more A53 cores and have one more dsi port then
+MSM8917.
+It implements little-big architecture and uses Adreno 505.
 
->
-> I'll allow myself to start a thread about it before anyone invests a
-> significant amount of work into it. Yesterday (01.02.2025) during the
-> "embedded dinner" after the FOSDEM 2025 embedded devroom concluded, we
-> discussed the motivation behind my wish to remove /sys/class/gpio and
-> the reasons why many users prefer it over libgpiod or even a
-> user-space compatibility layer I presented during my talk earlier that
-> day[1].
->
-> The gist of it is: some people need to play with GPIOs very early, for
-> example in an initramfs that is very limited in size and doesn't
-> contain anything other than busybox so echoing into sysfs attributes
-> is preferable over trying to cram additional tools or even the entire
-> python interpreter into the limited system. An alternative to consider
-> is of course adding some limited GPIO functionality to busybox.
->
-> The main thing that bothers me in the GPIO sysfs class is not its
-> existence per se but the fact that it identifies individual GPIOs by
-> their global numbers and not hardware offsets which is the biggest
-> obstacle to removing the global numberspace and the legacy GPIO API
-> from the kernel.
->
-> I think it was Ahmad or Marek who suggested that users aren't really
-> attached to the global numbering but to the ease of use of sysfs.
->
-> I floated an idea of introducing a backward compatible change to sysfs
-> that would allow users to identify GPIOs by the label of their parent
-> chip and the hardware offset of the line within that chip (like what
-> we do for the character device) in the form of the export/unexport
-> pair of attributes inside the gpiochipXYZ directory associated with
-> given controller. These attributes, unlike the "global"
-> export/unexport would take the hardware offset and create the line
-> directory within the chip directory of which the layout would be the
-> same as that of its global counterpart (in fact: it could point to the
-> same directory in sysfs as a single line can only be requested once).
->
-> We could then encourage users to switch to using the chip-local
-> exports and eventually at least remove the global export/unexport pair
-> if we cannot make the entire sysfs class go away.
->
-> Please let me know what you think about it?
->
+Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+---
+Changes in v3:
+- Fix qcom,gcc-msm8937 dtbinding example 
+- Link to v2: https://lore.kernel.org/r/20250223-msm8937-v2-0-b99722363ed3@mainlining.org
 
-TBH, I think you will have trouble getting users to adopt it - they
-require a solution no more complex than what they already have or they
-will resist the change for as long as they possibly can.  So if you want
-them to migrate before removing the global numberspace then that will
-never happen.
+Changes in v2:
+- drop applied patches
+- drop gcc schema commits infavor of a new schema for gcc-msm8937
+- document always on clock for adreno 505/506/510
+- msm8937:
+  - set cache size
+  - rename cpu labels
+  - fix style issues addressed by review
+- msm8937-xiaom-land:
+  - remove unused serial0 alias
+  - remove regulator-always-on from pm8937_l6
+  - add blue indicator led for aw2013
+- Link to v1: https://lore.kernel.org/r/20250211-msm8937-v1-0-7d27ed67f708@mainlining.org
 
-As it stands the user needs to search the gpiochipXYZs looking for the
-matching label. It would be easier if the chip was identified in sysfs by
-its label, rather than (as well as) its base address.
-So no searching required.
+---
+Adam Skladowski (1):
+      dt-bindings: drm/msm/gpu: Document AON clock for A505/A506/A510
 
-Aside: Speaking of which, once the global numberspace is removed does
-exposing the base address serve any purpose?
+Barnabás Czémán (4):
+      dt-bindings: clock: qcom: Add MSM8937 Global Clock Controller
+      dt-bindings: iommu: qcom,iommu: Add MSM8937 IOMMU to SMMUv1 compatibles
+      dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
+      arm64: dts: qcom: Add Xiaomi Redmi 3S
 
-Similarly, it would be even simpler if the line could be exported by
-name, so the user wouldn't need to pull magic chip labels and offsets out
-of the air.
-Though that would be a much more extensive change.
+Dang Huynh (2):
+      pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
+      arm64: dts: qcom: Add initial support for MSM8937
 
-Btw, I am well aware that line names are not guaranteed unique, so this
-approach would only be viable/enabled (potentially on a line by line
-basis) where they are - and that would provide some incentive for them to
-be made unique downstream, if not in mainline.
+Daniil Titov (1):
+      clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
 
-> Bart
->
-> [1] https://fosdem.org/2025/schedule/event/fosdem-2025-5288-the-status-of-removing-sys-class-gpio-and-the-global-gpio-numberspace-from-the-kernel/
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../bindings/clock/qcom,gcc-msm8937.yaml           |   73 +
+ .../devicetree/bindings/display/msm/gpu.yaml       |    6 +-
+ .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  408 ++++
+ arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2149 ++++++++++++++++++++
+ drivers/clk/qcom/Kconfig                           |    6 +-
+ drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
+ drivers/pinctrl/qcom/Kconfig.msm                   |    4 +-
+ drivers/pinctrl/qcom/pinctrl-msm8917.c             |    8 +-
+ include/dt-bindings/clock/qcom,gcc-msm8917.h       |   17 +
+ 12 files changed, 3285 insertions(+), 12 deletions(-)
+---
+base-commit: d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8afa
+change-id: 20250210-msm8937-228ef0dc3ec9
 
-My primary takeaway from your talk is that you are more of a thrill
-seeker than I am comfortable with - making jokes about Rust in a
-live forum - THAT is living on the edge ;).
-
-Wrt the Q&A at 19:42 - the Pi BCM driver with its module parameter and
-"why only this one driver is allowed to have it and the others not" and
-the suggestion that there be some flag that can be passed to the driver
-to request persistence:  I don't like your answer - it conflates specifying
-the default/safe state, generally defined at boot time, with an ability to
-override that at runtime.
-Extending the driver API to allow the gpio_chip user to request that the
-driver NOT reset an output to its default state when released seems like a
-viable solution to me.  Am I missing something?
-
-It also didn't address the fact that, even at FOSDEM, there are developers
-out there that think that some drivers are getting special treatment.
-In this case the Pi devs have pushed their own downstream solution
-upstream to reduce their own maintenance burden.  And that was accepted as
-it didn't conflict with anything in mainline.
-There is nothing preventing other drivers doing the same, though no one
-has AFAIAA.
-Though the module parameter solution is rather crude - if we are going to
-start touching all the drivers then why not address it via the API?
-
-Cheers,
-Kent.
+Best regards,
+-- 
+Barnabás Czémán <barnabas.czeman@mainlining.org>
 
 
