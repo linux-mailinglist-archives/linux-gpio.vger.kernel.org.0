@@ -1,207 +1,159 @@
-Return-Path: <linux-gpio+bounces-16525-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16526-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2A9EA42F85
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 22:52:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E53C5A435E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 08:01:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D31F81787FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2025 21:52:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2323E3AE7B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 07:01:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545B41E7C0A;
-	Mon, 24 Feb 2025 21:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423BA257429;
+	Tue, 25 Feb 2025 07:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RTijXo78"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9m2A9cz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF221A2397
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 21:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576451FCD1F;
+	Tue, 25 Feb 2025 07:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740433933; cv=none; b=WiZtLH5EXqYgkLjj/75pMBWIcD8Xfd7j/4M8K6jL2RmdoXVuWqGX5MfyPOWKRxiJwZaoSrv3a6WleVdh5yGYVMq9eb966F6dKp+/0VIVhmC96AVEFo6sRAp6whnDYRtLctYV8OEccmxxltftWjA/9/15At7hZRAW9HuTsEGU7kQ=
+	t=1740466867; cv=none; b=kXtm5JN3QcUIr+OchAgQlwvDSxTJMVr7icuAjzUTWgPibRUH05sb5g+cZ1xp0+wPQ3VNpoEq5eQ0iaUi781i62ApbnHqQ6SVb/Od2ifPtObf3+KdIMvcM8hneUXn7zRQ1KWBwyaSUEhTYPpnk2IOiaKLlvMIxipPlBpRuddXAvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740433933; c=relaxed/simple;
-	bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BghHmY9RmFpSdF6FGfe0gzVnAYVXbWC0e+OVklg9nZ4n5AYXFef9jrEioF6RBjzipAgI4Xoj80OOZv3NbEJhamqWk9fVyUPbihj8GZBHhkhJoHAgU9ZaZatqqFmH/8rX5yPGuHsQHNfJfK8UL0ln9kGyLhzXGreOtLjqM/1TIV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RTijXo78; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4397e5d5d99so30471065e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Feb 2025 13:52:10 -0800 (PST)
+	s=arc-20240116; t=1740466867; c=relaxed/simple;
+	bh=KWUdJgIpUQsVXCnBiWxg3+iKKy8Ujl9Xa6y63DyZMJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=s+osidvlNux9w/d4YxQ9yXBH2dVrfC2lbUpSnOih8zbFAyRJ4Mfv/2eGmbjxkwRrBQh6H7bVCTdB1KYTDfECIKeFS5ibfCkVqb79ROgPv+JD7F+W71n/Fn5BhGNUCxdkIGbt7vwvp38tAtLnZkCd/p8SEn0brMtktUpvKiBPML8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9m2A9cz; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so6062233e87.1;
+        Mon, 24 Feb 2025 23:01:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740433928; x=1741038728; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
-        b=RTijXo78K7Nkv6aS8jriXBFtU45mxiRA841f06CFVKYew5ga2WuR8XL/6K05nsw/l3
-         cwmsN4Q42fRCWBz3Oaut7qoUBOqG26O4crrzPnUsmDRwCq6DjZkAHHEPFtajNhYps3i9
-         J9DkOwGW7zJnp53siwqPF8N5IQt+4HKvR/9iPUP2roG0b7kTJKbwMXO3WlPhXFOZAMSZ
-         nss9LCsXb7EZrLZ+Xny7d7HoV/31YXZdlLTrClPiMz4J7ex7sisPprFSwld0qE1SZUwA
-         j2m67KCrtTtHsAGg4ARX62FlqO72YI50tHJhPgzf+R9sHLMll3ufUy7MHmj39cUKvqet
-         2a+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740433928; x=1741038728;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=gmail.com; s=20230601; t=1740466863; x=1741071663; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7vTZ4bcifDx0uBbn/YdD+tR5nT8QjS33t2BFPkAir4g=;
-        b=GdxN0j8y70WarebfhIjWTtfJqmREigXUNEO7M/9J6yoC0exWtHVnLRuUMB6fm/CQY7
-         AR5U5Xcx12oXePKgI31HIcn+Va7fK47LluVFs8n10K2nxYqFSbhPSfPr49XzlywxBAdU
-         xeQwiicgt6k3uYr6ZmGWMPrcvqjPBSzdTG96l92z5XUOVTCkI6cealV7pPhqivPGB4Qg
-         XO2U83T7i1zRYO/LzcGWi2HurcVQR2FXS+1YNWCWTxLLaNbbtK42cTg9vp4AJKJ9lrQz
-         npHgrxhRoZbemvMfeliqIxbRmXnZ3ir9/LYZhPrVMx9MLP51nk43DrhLZ7woWzd4eGPh
-         WVLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTsfD/3YvGvzGuRKsj+tdZ0TQX8H2ppvIMohe/TZHyWEHl0WFpR+KMSBkCot5T5Zu0ijdF+8asB5To@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWd8pmbqiVffpA+VTF5okt/GXdLosxSISRMg/AAhvUyUM8ZFCo
-	OiWUn0J9nq+Rgabz26TOVb/ekoKCxgDrfA3esO7ZrzSCXwFLx4DvIwiH2vpRqio=
-X-Gm-Gg: ASbGnctjPeQTkj0w1ymH93ILAJ/PkgkRWkiGs/T2R4d0a9F5R6/+hzW8TL48w3WlcRr
-	ZXuPb4RKvuurWI+B4HyUx0hdjfzuV0Trf2IU6M7J3w92ENT16fxp8rdjkgSdmQpecAhEuDRKJ7s
-	OSBEH4nNnNny0CK4SBSCH1KFXNeHuUP/OELeQGntUTRdMoTBLJNEdV8VKmeDk4bbqSNMDlI9Xvi
-	J/DxjH1k1wU3ZB6Dj50q5FfELGrGa3BURBJLRTNy6UugjfThAuzEgvZRMixdHRaozY34Z+yvlXq
-	CX5sKaDs8vcEY/FwhZAm1NHp+SaeOw==
-X-Google-Smtp-Source: AGHT+IHmJNkurL7RO4E3X7dffqrJqghhJyUiAOpbxbEyAGEjCiGP4Aji7mTnE2UrlwDFQi5MR+cgww==
-X-Received: by 2002:a05:600c:468c:b0:439:a1c7:7b29 with SMTP id 5b1f17b1804b1-43ab0f426c6mr7915255e9.17.1740433928545;
-        Mon, 24 Feb 2025 13:52:08 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd88371asm216037f8f.57.2025.02.24.13.52.07
+        bh=xEybYvWRx/5H4FjB4f3Tj6B5Z+fVUBC9NtkC11fk+HI=;
+        b=h9m2A9czLVH9gA+NEYe0i6EdRCuqOk7RSatYxmTqXAU/2OJT3eKSJwloPwC9Fp1INY
+         19PQKhtuOaFXvnLTjnTPyUdplBd6ZexqEPMXbZycQ4LmtfxxzxLfFrFPaTg6ycRnBp5j
+         oD84tseCGa7oxVENbxlNf4xPYYLGykCxa7wG4VE8zkYYA8z38KwlM6YO1qP3b94ebITh
+         basPuU5PGl/MWD5sytGt4Xqyt5Moe5p4u25DcUAok21vGV29MJeN5UCqgSedDIDptfID
+         KyLQKGMA92x6ZYBfssiHkYzKwVz8Rcd0k4iqwAujFVSO0yCjUoOU00+7ahth0sgpSWs1
+         nQeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740466863; x=1741071663;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xEybYvWRx/5H4FjB4f3Tj6B5Z+fVUBC9NtkC11fk+HI=;
+        b=HoZExk67o7yYknjjcWeaR/nXA5G6b4psa/tEQdO48SZ/PxMN/AcgEcWiuNqTDCePon
+         Ix1SHVQFFxf5vki4JqUlf0LReNuL2h1gl/OhKynibprZUsWyQ0UNTF+NDDSxw1IYWLCU
+         ++EiGQXzoePOlP/I/eTkIO/OueaNF1FPCxbJBlClo2s7dusKNwUY8S4wwknyR4dCvwIp
+         hiCyw9pBXaSVyLj9ZcPigrgpkCzYJvPc0+MikasGowxyL9KiF6iF2pQSjWqlL7CyefOW
+         flIkYe9/bvovKrpZy+/AScFvRCjld3eaqhLUpO6KscFHhu94NGMYTcRXUhGuTuxxaDJg
+         jjJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBJ257/Mrd2dDqYCU5TeDhipFJiWzPNi9Rq+O/uCuAm2kliHtgvUNcRjiScxUMlt0IBslWUNZluddS@vger.kernel.org, AJvYcCVFwaLLFiqkWTsOjRzY1CFsQS6FMdox61gVGgi/USsKDMI90ZtITLl9K0SoJVaPWxRZAQVW1wtJU3Vq0gPM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzevdS4JUKve0AFZiFWPnNc4Lv/nhmLCBpqW8PgEJ6QdV/j2aI
+	QB9cXicwDd9eo+S+dgKUjYX1mTIGawrkkL46wwdXs4276INgwqodtMf/3g==
+X-Gm-Gg: ASbGncsACHkGMsMalrgfXrdXOGgK+xAmH8TKwAwkO1x0/9HjSG0re/q6GIMROZIr9f8
+	d6bzA6bnsI9VTZ3iK+vAtlORMzbdxYvHrBl8QBF8Mx+LlPUU58d6oVFPqoLYGt97n4urCAosYa2
+	N31jtVpCbHF8OnmMixIqG/K2vKVAv9Z+j+mR5DYMTibfXPmR8n0pftPNPvM8ypjPwYqVL5ZfibK
+	yxbdRWiGl34XaLldq7n4uMGqanJ4kD2CbRXVGnR9BdPREbW18qF8UREnKH8Y/424Gx3PrrVQK7f
+	SBKbk8SZjdJN234/dIjiS+9iPi2l
+X-Google-Smtp-Source: AGHT+IHPzr4IY0sdvXocyj/XL6Du+23H0ztIQzDiz5JA+sv+RHXoJQj9XCviYpfMdtltpBPy8ALGdw==
+X-Received: by 2002:a05:6512:acc:b0:545:2b68:936a with SMTP id 2adb3069b0e04-54838eff533mr5287219e87.29.1740466863000;
+        Mon, 24 Feb 2025 23:01:03 -0800 (PST)
+Received: from mva-rohm ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819ebe18sm1393931fa.36.2025.02.24.23.01.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 13:52:07 -0800 (PST)
-Message-ID: <854925a6204f36fff6d653bb4a30c55a6adb3aef.camel@linaro.org>
-Subject: Re: [PATCH 2/6] dt-bindings: gpio: add max77759 binding
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
- Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
- <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
- McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
-Date: Mon, 24 Feb 2025 21:52:06 +0000
-In-Reply-To: <20250224153858.GC3137990-robh@kernel.org>
-References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
-	 <20250224-max77759-mfd-v1-2-2bff36f9d055@linaro.org>
-	 <20250224153858.GC3137990-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+        Mon, 24 Feb 2025 23:01:01 -0800 (PST)
+Date: Tue, 25 Feb 2025 09:00:54 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: Document the 'valid_mask' being internal
+Message-ID: <Z71qphikHPGB0Yuv@mva-rohm>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2t/6T+yCC05nv9en"
+Content-Disposition: inline
 
-Hi Rob,
 
-On Mon, 2025-02-24 at 09:38 -0600, Rob Herring wrote:
-> On Mon, Feb 24, 2025 at 10:28:50AM +0000, Andr=C3=A9 Draszik wrote:
-> > Add the DT binding document for the GPIO module of the Maxim MAX77759.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > ---
-> > =C2=A0.../bindings/gpio/maxim,max77759-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 47 ++++++++++++++++++++++
-> > =C2=A01 file changed, 47 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio=
-.yaml
-> > b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
-> > new file mode 100644
-> > index 000000000000..9bafb16ad688
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
-> > @@ -0,0 +1,47 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/maxim,max77759-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Maxim Integrated MAX77759 GPIO
-> > +
-> > +maintainers:
-> > +=C2=A0 - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > +
-> > +description: |
-> > +=C2=A0 This module is part of the MAX77759 PMIC. For additional inform=
-ation, see
-> > +=C2=A0 Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
-> > +
-> > +=C2=A0 The MAX77759 is a PMIC integrating, amongst others, a GPIO cont=
-roller
-> > +=C2=A0 including interrupt support for 2 GPIO lines.
-> > +
-> > +properties:
-> > +=C2=A0 compatible:
-> > +=C2=A0=C2=A0=C2=A0 const: maxim,max77759-gpio
-> > +
-> > +=C2=A0 "#interrupt-cells":
-> > +=C2=A0=C2=A0=C2=A0 const: 2
-> > +
-> > +=C2=A0 interrupt-controller: true
-> > +
-> > +=C2=A0 interrupts:
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
->=20
-> You need to define what each interrupt is.
+--2t/6T+yCC05nv9en
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think maybe the interrupts property is not needed after all:
+The valid_mask member of the struct gpio_chip is unconditionally written
+by the GPIO core at driver registration. Current documentation does not
+mention this but just says the valid_mask is used if it's not NULL. This
+lured me to try populating it directly in the GPIO driver probe instead
+of using the init_valid_mask() callback. It took some retries with
+different bitmaps and eventually a bit of code-reading to understand why
+the valid_mask was not obeyed. I could've avoided this trial and error if
+it was mentioned in the documentation.
 
-The PMIC has one external interrupt line (described by the top-level
-device), and the two interrupts here are just a representation of
-the PMIC's internal status register (i.e. top level interrupt is
-raised when status register for one of the gpio lines changes,
-amongst other things).
+Help the next developer who decides to directly populate the valid_mask
+in struct gpio_chip by documenting the valid_mask as internal to the
+GPIO core.
 
-The intention is for a gpio driver to just treat and model them as
-cascaded interrupts, but they don't need to be configured in any
-way via device tree, as everything happens internally inside the
-PMIC, there is no board-dependent routing or trigger type possible.
-(Of course, there can be drivers subscribing to one (or both) of the two
-cascaded interrupts here, but that shouldn't matter I believe).
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+---
+Alternative approach would be to check whether the valid_mask is NULL at
+gpio_chip registration and touch it only if it is NULL. This, however,
+might cause problems if any of the existing drivers pass the struct
+gpio_chip with uninitialized valid_mask field to the registration. In
+order to avoid this I decided to keep current behaviour while
+documenting it a bit better.
+---
+ include/linux/gpio/driver.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Does that make sense? I added the property because
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-says it's a requirement to have an interrupts property, but I
-believe it doesn't actually apply in this case as there's nothing
-than can be configured.
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 2dd7cb9cc270..fe80c65dacb0 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -503,7 +503,8 @@ struct gpio_chip {
+ 	 * @valid_mask:
+ 	 *
+ 	 * If not %NULL, holds bitmask of GPIOs which are valid to be used
+-	 * from the chip.
++	 * from the chip. Internal to GPIO core. Chip drivers should populate
++	 * init_valid_mask instead.
+ 	 */
+ 	unsigned long *valid_mask;
+=20
 
-Am I missing something?
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+--=20
+2.48.1
 
-Cheers,
-Andre'
 
->=20
-> > +
-> > +=C2=A0 "#gpio-cells":
-> > +=C2=A0=C2=A0=C2=A0 const: 2
-> > +
-> > +=C2=A0 gpio-controller: true
-> > +
-> > +=C2=A0 gpio-line-names:
-> > +=C2=A0=C2=A0=C2=A0 minItems: 1
-> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
-> > +
-> > +required:
-> > +=C2=A0 - compatible
-> > +=C2=A0 - "#gpio-cells"
-> > +=C2=A0 - gpio-controller
-> > +=C2=A0 - "#interrupt-cells"
-> > +=C2=A0 - interrupt-controller
-> > +
-> > +additionalProperties: false
-> >=20
-> > --=20
-> > 2.48.1.658.g4767266eb4-goog
-> >=20
+--2t/6T+yCC05nv9en
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAme9aqAACgkQeFA3/03a
+ocWu1Qf/Zg9npoNinOajhrBvsxKQo4LtxOmy78IOWILnNX+SEIH4e8VKLNMnOcBZ
+vqKq2ZqUyAOUojsJv+pslsIcL6hVT/Evm9FLp6nAhtxHxLAihXIg1LP3tOzW1f/z
+F0ljNXFMSWgrOObnBg2ym2TWMnUwrjnX7pwEdgm/OHnlSSe2xIfjirubRv+kCViZ
+tuDxGOL5w+ydsivFituRhCK+RIkYNQvjp9CWhZvyHgEkgbEHIcCieUK+M7pieOET
+opLAMKnrCrVhgZw9fBdOexW/3DfuqhxBu7PEe99QhF5+MwNyH75lVCQ5JTFARt8+
+b2CJtG9N+gvl17s3Tmaghcnx0StxLQ==
+=gU03
+-----END PGP SIGNATURE-----
+
+--2t/6T+yCC05nv9en--
 
