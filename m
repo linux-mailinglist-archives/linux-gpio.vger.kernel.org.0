@@ -1,157 +1,192 @@
-Return-Path: <linux-gpio+bounces-16553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7293BA43E8B
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 13:01:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44633A43FF2
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 14:02:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A757A425612
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 11:57:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49441189BAC1
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 13:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995742686BA;
-	Tue, 25 Feb 2025 11:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192D0268FF0;
+	Tue, 25 Feb 2025 13:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KwSkPt55"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJriC2lM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707AB267F57
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 11:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD84F268FE4;
+	Tue, 25 Feb 2025 13:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740484594; cv=none; b=i9HdfmiYSJfKi+wjRm67w6x+CXibfJ0G30wYjL8BtLsq52zP/73oQPEcPlXdKHY/Wm9DOPHOgTPkqFTTXPj1KdeAIKsgLbjaYf7g0KxacaJexmiOkbNch6jHGQgyXS9OXEoFbUYoi4NU45fqhCYB/jHEhi2ho8GVMytqhNgLCmA=
+	t=1740488402; cv=none; b=OF9OPjtwppVS3SlbGvH9OWiqdhRbT0Hz8mvMpd7KrR5ofgD9rlbPSr1Z+c3892qKGqIpIMQeaq+++rqi6o5aSrulxs3nJxlzicZOuhDjDun9FSBPs0SKymnb2SbsTTSXTu0ltPUaGvPsaSchIokCfv2Rp3eIuDIvO/TDv6em2G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740484594; c=relaxed/simple;
-	bh=Mti7N7TampMJEA85fEFqM/SWyPHekb4T8hMC5Q9KEIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nr0rnkwwSF5M+YbeRNXKBw1OrVvenH1bySIMu/WTbHsGZbKxIbMYNp7pj48u+e0ypM8ahDBz26QWLJvdUsgf8F3GT7/YC6v+3++/U2CmXuWCvprag83+5eExPMPsMwSM90RQRjNL6tkxNeNMVZHsdeu7vpSI66U7e9N4tg3bZPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KwSkPt55; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f325ddbc2so3988481f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 03:56:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740484590; x=1741089390; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9VXUEb/ixDS8VUxbNTLQP4mnGoLEwCu+P5iIlLIClao=;
-        b=KwSkPt55zD8GpgiTHELk3OCn6SOVqmR0IowNtdRHohS1Uz4l8Vbr6V9s721KB+VJ7j
-         /J3xkEYWda7X0jRevxqYr3yb50HqF6EgpOa+SMQRdFNQDUWjLqAiOAlIhs3SNuEPQPQe
-         fx89DKthg+lpayiVwf6k8z1KcNOZc1j2Coh+OomI4Ya8Za+cnjD6nId88QSN7eU9jXLM
-         weACdEqBew5y3/+BB+tHJPsqI2CijFvhrzOqUn7gHF0ouNYIVmPfqm4BAsSS2ypx8WLX
-         R7hzaUfHv+Z5sj6f5dPTg0aQVXutORkfHlZkM9e9QStafrGykvuSZNgbTwD1GVZ5VtDc
-         z4/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740484590; x=1741089390;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9VXUEb/ixDS8VUxbNTLQP4mnGoLEwCu+P5iIlLIClao=;
-        b=T3HG3KNGQVh9RbHmUyDLKhnxflkwGAi5QSERyHWRhDNbCJVyzmsBjGVO0W3aoT3oXZ
-         UZ7obY+DLY6ih/EnduuOPwZ9URfiiEgsoKc/CIrCclLINhCas9JV+Uc306vi2JL3dM84
-         ODfBdyKjhEglLgrmYVsDlrLugnhE5v3VJTHZ3Z+goe/IOWJQZnQbcSS/b1TG+qdX2J8L
-         /SbVdKrR7lhP8yApokQyY+cHxrgDHePVrgteH2jMF7kQxuZrBTj0nX1f1pYgmgSqeCv5
-         QfBn1Q40Zanex1kYwwiNpTN23NgR7/YhyVmgHpmxESFGe5Xn5CHMEtgIuxiacPpaPTag
-         KXGw==
-X-Gm-Message-State: AOJu0YxVdeJAKIZsKws+QVB7AOSbBH5L0uf/KhOE9jjmWWrRxtQVOt1d
-	N7JEG1qDbv8BuWQ0fnvMnRPlY/rKq1j3Yquky2UezGh7+5Ww2ji+DtcI+wanzts=
-X-Gm-Gg: ASbGncvmEUVfM0sn8nORv+DNwAn0z2ZeP7nzfZzeyojah+hPwgFjNiQY99NAYgTZ36G
-	xH4OQHLOltBI+pGL+j+QWLmkmGAYZkQVll9Ev7bflF+HOaLtQGe6y8wJplRjPCtPm5DFn4I67Rt
-	Lv+u6cJo0eWqWK/4Qze7wI+yrCA76eSYfEXAoIwsBtsNT75MAo/fMoI3wFULJbQZMJmFgLHTcA9
-	UUpM74RfKA1zpqhe7EioBL0VJwWxOeTB7os4TdVYVH5MUmr/Vc4Z1I9Czzn25ZXpL+uvBSfvYrA
-	IN9sRH5Rd5VHyVm7gqQ=
-X-Google-Smtp-Source: AGHT+IGhNAzd0cwvKJlCcUBz4fFnTGPxFvxtGsmUDBHWAvkZ/S5MMekNH4MM1kJfOrBEzZienQf0IA==
-X-Received: by 2002:a05:6000:186e:b0:38d:e572:4dc2 with SMTP id ffacd0b85a97d-38f70826839mr16768704f8f.40.1740484590445;
-        Tue, 25 Feb 2025 03:56:30 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:15ae:2cfe:447a:4a32])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd883521sm2058054f8f.56.2025.02.25.03.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:56:29 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 25 Feb 2025 12:56:25 +0100
-Subject: [PATCH 3/3] gpiolib: don't double-check the gc->get callback's
- existence
+	s=arc-20240116; t=1740488402; c=relaxed/simple;
+	bh=MIpWmATnHWUCuVfECKFeEj874VPeRJVVLzeFDtK35xw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YBVZlwgrjyVxLABaaVYsA1hsRvjtxsmuU1BNDb5Qs1XUtADMPAuLQYmlb40sqqpOaWXoNgeAuwB295oUYq+Vh7cFlhBmJ83fFx2mTaz2k90W9jAcQh2QFdHISD4Fy8j+yM1U7urY9TUoBPFZQK6gQ3Fxrkakmoxqs52GeBzkH6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJriC2lM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3456CC4CEE6;
+	Tue, 25 Feb 2025 12:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740488402;
+	bh=MIpWmATnHWUCuVfECKFeEj874VPeRJVVLzeFDtK35xw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VJriC2lMNCLIQ1ThvHdLSX03oyJ8xu3BNNoJY1+o7W36I7HVPZm7yz8lwZImyBLyq
+	 ph/FhIVsZNGsuuF1uPpgtd+Gkp4j8nS05DIPh8OyV4DKVNEq0GmC/lAX+zZClCVUCy
+	 qTlQXltHhWnDfYERKPx0s3cXKzQuGw69nVu2rbGmudt83LSRKApK06P0HnouTcNN/2
+	 9bbwdKM4Oyy1QefprDjb5eN6hoaGcN4kptol8MxDWRzMgRFBvv7sabkWU4XPngZFJF
+	 p5qIQ8H6tix6Has227bgRCYuHsdM0R/nOAjOUTL/xF2Ew+Q/a5biZMGoRooysLFUHv
+	 OD7GgJWGvGtHQ==
+Message-ID: <1990c649-668e-4ae9-82b5-ed9931f41ec4@kernel.org>
+Date: Tue, 25 Feb 2025 13:59:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-retval-fixes-v1-3-078c4c98517a@linaro.org>
-References: <20250225-retval-fixes-v1-0-078c4c98517a@linaro.org>
-In-Reply-To: <20250225-retval-fixes-v1-0-078c4c98517a@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1494;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=6atFFEarXWb+TlxXxAZ8zvN/XwNKSrTyBdSfh9C2z2g=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnva/q/AmJ17Wymqe4xC7L2pemu0T0vkY2LjS/L
- 033mY+Bz6uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ72v6gAKCRARpy6gFHHX
- cqegD/96DdPjR+YM/W3XOgAGfDVn4rpB1amn1VB167231QWyCHnDLZcC1GA0i3dBcu8oLunOygq
- ud1Yh7DH821xcPFiYkURVHaM/1UWGDkF91NgroW10LLpCzG9QtxczwyRqVn3Iyx82pvjcm6dt+z
- 5H/KlXAqJDpX5jvHh74if1UQ6z+z4Wk3jYq7CGCbSSWJhgheKUenVFxqnMdOFO4cbXZz8kZ8/tW
- 9gYBMKLIVhI1wLvVxxxwVRv4AEn4szanmnxSwaR5+oPpzDdOomLNwbmfvzsicjMAfUlmgM6h99E
- fRYX1DX/jZiORTaZS+zGepDSj0jpcRwzY5I1RmdoC7PUdrkon7XeBxgjuF5nqSCDN7A9EQN9KZY
- jYhJE8Obxj6o4WIS6IEm1YsD2bcQMpuJhV4XO/+rLHSRQwGVEgBg8E4NWCqCSD/xtgi4FfR+kpJ
- vkybu+DQLYbPPpA0cnl2btyb4s2b2x9SyA5wUdFz1Wubv0hi8ZtzW6kz3Q2VgYE3qwyct9tdZCA
- CYGGp6W9+y2BPJAnZ3o8PBGH9BAV5fH/1K0ScP98J8lbjvu+WbwbJg+e6U8dYBrwuCKMXuZU8AU
- sKnm1nHNyZv/O+p33x0glx437P59HBdzjAaZDcYyHSwX/8bqmUQHEsyNMy8VcpFmoDPiraXAXKN
- mH9qS4d1LgjjOwQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/9] pinctrl: stm32: Introduce HDP driver
+To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-3-9d049c65330a@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250225-hdp-upstream-v1-3-9d049c65330a@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 25/02/2025 09:48, Clément Le Goffic wrote:
+> This patch introduce the driver for the Hardware Debug Port available on
 
-gpiochip_get() is called only in two places: in gpio_chip_get_value()
-and in gpiochip_get_multiple() where the existence of the gc->get()
-callback is already checked. It makes sense to unduplicate the check by
-moving it one level up the stack.
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Fixes: 86ef402d805d ("gpiolib: sanitize the return value of gpio_chip::get()")
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Closes: https://lore.kernel.org/all/Z7yekJ8uRh8dphKn@black.fi.intel.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> STM32MP platforms. The HDP allows the observation of internal SoC
+> signals by using multiplexers. Each HDP port can provide up to 16
+> internal signals (one of them can be software controlled as a GPO)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d076b2ec633f..b8f10192f27e 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3158,9 +3158,7 @@ static int gpiochip_get(struct gpio_chip *gc, unsigned int offset)
- 
- 	lockdep_assert_held(&gc->gpiodev->srcu);
- 
--	if (!gc->get)
--		return -EIO;
--
-+	/* Make sure this is called after checking for gc->get(). */
- 	ret = gc->get(gc, offset);
- 	if (ret > 1)
- 		ret = -EBADE;
-@@ -3170,7 +3168,7 @@ static int gpiochip_get(struct gpio_chip *gc, unsigned int offset)
- 
- static int gpio_chip_get_value(struct gpio_chip *gc, const struct gpio_desc *desc)
- {
--	return gpiochip_get(gc, gpio_chip_hwgpio(desc));
-+	return gc->get ? gpiochip_get(gc, gpio_chip_hwgpio(desc)) : -EIO;
- }
- 
- /* I/O calls are only valid after configuration completed; the relevant
 
--- 
-2.45.2
 
+....
+
+> +
+> +static int stm32_hdp_suspend(struct device *dev)
+> +{
+> +	struct stm32_hdp *hdp = dev_get_drvdata(dev);
+> +
+> +	hdp->gposet_conf = readl_relaxed(hdp->base + HDP_GPOSET);
+> +
+> +	pinctrl_pm_select_sleep_state(dev);
+> +
+> +	clk_disable_unprepare(hdp->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int stm32_hdp_resume(struct device *dev)
+> +{
+> +	struct stm32_hdp *hdp = dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	err = clk_prepare_enable(hdp->clk);
+> +	if (err)
+> +		return dev_err_probe(hdp->dev, err, "Failed to prepare_enable clk");
+
+
+That's wrong, it is not a probe path.
+
+> +
+> +	writel_relaxed(HDP_CTRL_ENABLE, hdp->base + HDP_CTRL);
+> +	writel_relaxed(hdp->gposet_conf, hdp->base + HDP_GPOSET);
+> +	writel_relaxed(hdp->mux_conf, hdp->base + HDP_MUX);
+> +
+> +	pinctrl_pm_select_default_state(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_SIMPLE_DEV_PM_OPS(stm32_hdp_pm_ops, stm32_hdp_suspend, stm32_hdp_resume);
+> +
+> +static struct platform_driver stm32_hdp_driver = {
+> +	.probe = stm32_hdp_probe,
+> +	.remove = stm32_hdp_remove,
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.pm = pm_sleep_ptr(&stm32_hdp_pm_ops),
+> +		.of_match_table = stm32_hdp_of_match,
+> +	}
+> +};
+> +
+> +module_platform_driver(stm32_hdp_driver);
+> +
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+
+
+You should not need MODULE_ALIAS() in normal cases. If you need it,
+usually it means your device ID table is wrong (e.g. misses either
+entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+for incomplete ID table.
+
+
+
+
+Best regards,
+Krzysztof
 
