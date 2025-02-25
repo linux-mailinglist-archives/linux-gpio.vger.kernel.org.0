@@ -1,351 +1,215 @@
-Return-Path: <linux-gpio+bounces-16590-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16591-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35417A44DF2
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 21:44:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A07C9A44E1D
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 21:58:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 169DF19C28BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 20:44:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BE381896813
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 20:58:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B21C20D4FC;
-	Tue, 25 Feb 2025 20:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60BDC1A9B58;
+	Tue, 25 Feb 2025 20:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhHiLeQb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FC31A2C0E;
-	Tue, 25 Feb 2025 20:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A9ADF59
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 20:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740516245; cv=none; b=nxgzcErj6vcdS2lXbGkVZpzXPAa35U8txGIN2Ens9cZEpm4Y2x/lD6QhJzduYBYcMbky1L4BA3Sp37Fn3F9ychS6rmtPl1DU3l+OOAehZ+0wod8MaJ+VvFMNcUGkphoB8hv9ewugYre7mivFR6ULCf3+TPvU5H5GtBf5n7dj7og=
+	t=1740517089; cv=none; b=CMAwwBWBzI2fsE85m+PerkbFVWThA1hK8hOWNevBnTKJIbMTSI4lQelQJnSFoj9wZ2SHOJ5H2F1m2z/yYKRSC/MTvTMiPOASksv0wZcIeiOMgeUxORgvA/AoRuNAONKGRZeIK4Wqi2ILYT5ZEWsNgSaqn6MJrskGLx7vEF0Rk+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740516245; c=relaxed/simple;
-	bh=Yv+Z9Y+3B4jBCJ4/yx5U464umiGC38OjXZxWPi4QusE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aTojWX4A/83V77UtmNTM81e6qLf5qtG/BU2PKHv+V6X1aTPCm36aRU07gnFB0rSzyuVygq4PTiKPCd5oUGxew7hduXKablPfL126ZBpwGQ/8/B2TFrZaFTw625k2KtJkHXye5ezqj5qqZQDZ2D1GIjDdiU0Bu50KqOq2qY2X57A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af513.dynamic.kabel-deutschland.de [95.90.245.19])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D9D4061E646F9;
-	Tue, 25 Feb 2025 21:43:47 +0100 (CET)
-Message-ID: <d1661817-1036-420a-9f76-a7124e6550a7@molgen.mpg.de>
-Date: Tue, 25 Feb 2025 21:43:47 +0100
+	s=arc-20240116; t=1740517089; c=relaxed/simple;
+	bh=kJboif61TnMGQuN9oL0m+nnYPGVKGJb71dRUpdp28Oc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OaGPqN/fNkpfpH8jhxEXbeSUVZDVqlvs5u0Q7epBCMkKsdGD4XeDUtlPShgDorNsQBuSX32GkUQ8He1z6B9nYXngGDJ/1SsBEl9FPkUdOcYg/43DIrT8836zSgF/vlIglokIxzglvyvAzXDsnRhthvXoeWqq0izHA4aH1WguXn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhHiLeQb; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740517086; x=1772053086;
+  h=date:from:to:cc:subject:message-id;
+  bh=kJboif61TnMGQuN9oL0m+nnYPGVKGJb71dRUpdp28Oc=;
+  b=HhHiLeQb6fmUG99/EIOFPE0YdUJywRl1cfPx5xT1XwXEnQkBIxO8GQJ8
+   S0zp+a/9IW3FEko5Gq52ijJ4CSLvdNQJn24zTWOp95+pDICNLDVIIOi3E
+   sIFWGroFzzW89OrF0r+1UhUNQMnBXSff69Kdj95faH2JXHX+UWIil7Q3N
+   XZ7OKMAXfJESE1Gz2MhCcUBvw7yXQJRStDb1MTESvfuMCnGQZdyeJPSc4
+   EIfBttV+T0vt4Y3Ghi4fANcFXhKVKqlxgCHEd+dvh5KNq3IwV2vNNY2Ku
+   Qum6kjmTdLzGEO9NOkyJkBQ9NTsAfV+GGydoYm3RFyw6BoWHNkoU6HpRM
+   Q==;
+X-CSE-ConnectionGUID: 5/YcrD3PTFKePTXXcGG//Q==
+X-CSE-MsgGUID: r1M0x7eEQfqHO7yoMDOWTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41548237"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="41548237"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:58:06 -0800
+X-CSE-ConnectionGUID: pqO3XYtJRN2c6TTvIXzW2w==
+X-CSE-MsgGUID: xPHiVlHIScGkliR5pY5paA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116279804"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 25 Feb 2025 12:58:05 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tn205-000Am3-2V;
+	Tue, 25 Feb 2025 20:57:59 +0000
+Date: Wed, 26 Feb 2025 04:57:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ da5dd31efd2465ccc9a70a85bdc325e394256689
+Message-ID: <202502260410.LICdog11-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Dear Bartosz,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: da5dd31efd2465ccc9a70a85bdc325e394256689  gpio: vf610: Switch to gpio-mmio
 
+Warning ids grouped by kconfigs:
 
-Thank you for your support.
+recent_errors
+|-- arm-randconfig-051-20250225
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+|   `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+`-- arm-randconfig-052-20250225
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ampere-mtjade.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-arm-stardragon4800-rep2.dtb:gpio-1e780000:pin_gpio_c7-pin_gpio_d1-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-asrock-e3c246d4i.dtb:gpio-1e780000:bmc-ready-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-bytedance-g220a.dtb:gpio-1e780000:pin_gpio_b6-pin_gpio_i3-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-delta-ahe50dc.dtb:gpio-1e780000:doom-guardrail-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-bonnell.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-everest.dtb:gpio-1e780000:usb_power-does-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-1s4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier-4u.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-ibm-rainier.dtb:gpio-1e780000:i2c3_mux_oe_n-usb_power-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-lanyang.dtb:gpio-1e780000:pin_gpio_aa6-pin_gpio_aa7-pin_gpio_ab0-pin_gpio_b0-pin_gpio_b5-pin_gpio_h5-pin_gpio_z2-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-nicole.dtb:gpio-1e780000:func_mode0-func_mode1-func_mode2-ncsi_cfg-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    |-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-romulus.dtb:gpio-1e780000:nic_func_mode0-nic_func_mode1-seq_cont-do-not-match-any-of-the-regexes:hog(-)-pinctrl
+    `-- arch-arm-boot-dts-aspeed-aspeed-bmc-opp-zaius.dtb:gpio-1e780000:line_bmc_i2c2_sw_rst_n-line_bmc_i2c5_sw_rst_n-line_iso_u146_en-ncsi_mux_en_n-do-not-match-any-of-the-regexes:hog(-)-pinctrl
 
-Am 24.02.25 um 09:51 schrieb brgl@bgdev.pl:
-> On Sun, 23 Feb 2025 23:04:05 +0100, Paul Menzel <pmenzel@molgen.mpg.de> said:
+elapsed time: 1455m
 
->> Am 23.02.25 um 21:54 schrieb Bartosz Golaszewski:
->>> On Fri, Feb 21, 2025 at 10:02 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->>>>
->>>>> What GPIO driver is it using? It's likely that it's not using the
->>>>> provider API correctly and this change uncovered it, I'd like to take
->>>>> a look at it and fix it.
->>>>
->>>> How do I find out? The commands below do not return anything.
->>>>
->>>>        $ lsmod | grep gpio
->>>>        $ lspci -nn | grep -i gpio
->>>>        $ sudo dmesg | grep gpio
->>>>        [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
->>>>        [Just these lines match.]
->>
->>> If you have libgpiod-tools installed, you can post the output of
->>> gpiodetect here.
->>
->>       $ sudo gpiodetect
->>       gpiochip0 [INT344B:00] (152 lines)
-> 
-> So it's pinctrl-intel, specifically this function in
-> drivers/pinctrl/intel/pinctrl-intel.c:
-> 
-> static int intel_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-> {
-> 	struct intel_pinctrl *pctrl = gpiochip_get_data(chip);
-> 	void __iomem *reg;
-> 	u32 padcfg0;
-> 	int pin;
-> 
-> 	pin = intel_gpio_to_pin(pctrl, offset, NULL, NULL);
-> 	if (pin < 0)
-> 		return -EINVAL;
-> 
-> 	reg = intel_get_padcfg(pctrl, pin, PADCFG0);
-> 	if (!reg)
-> 		return -EINVAL;
-> 
-> 	scoped_guard(raw_spinlock_irqsave, &pctrl->lock)
-> 		padcfg0 = readl(reg);
-> 
-> 	if (padcfg0 & PADCFG0_PMODE_MASK)
-> 		return -EINVAL;
-> 
-> 	if (__intel_gpio_get_direction(padcfg0) & PAD_CONNECT_OUTPUT)
-> 		return GPIO_LINE_DIRECTION_OUT;
-> 
-> 	return GPIO_LINE_DIRECTION_IN;
-> }
-> 
-> Can you add some logs and see which -EINVAL is returned here specifically?
+configs tested: 88
+configs skipped: 2
 
-Sure. I used the diff below, and added `dyndbg="file pinctrl-intel.c 
-+p"` added to `/boot/grub/grub.cfg`.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-```
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c 
-b/drivers/pinctrl/intel/pinctrl-intel.c
-index 527e4b87ae52..f0922d9e64ee 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1067,18 +1067,24 @@ static int intel_gpio_get_direction(struct 
-gpio_chip *chip, unsigned int offset)
-         int pin;
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+alpha                              defconfig    gcc-14.2.0
+arc                             allmodconfig    gcc-13.2.0
+arc                             allyesconfig    gcc-13.2.0
+arc                  randconfig-001-20250225    gcc-13.2.0
+arc                  randconfig-002-20250225    gcc-13.2.0
+arm                             alldefconfig    gcc-14.2.0
+arm                             allmodconfig    gcc-14.2.0
+arm                             allyesconfig    gcc-14.2.0
+arm                  randconfig-001-20250225    gcc-14.2.0
+arm                  randconfig-002-20250225    gcc-14.2.0
+arm                  randconfig-003-20250225    gcc-14.2.0
+arm                  randconfig-004-20250225    clang-15
+arm64                           allmodconfig    clang-18
+arm64                randconfig-001-20250225    clang-19
+arm64                randconfig-002-20250225    clang-17
+arm64                randconfig-003-20250225    clang-15
+arm64                randconfig-004-20250225    clang-21
+csky                 randconfig-001-20250225    gcc-14.2.0
+csky                 randconfig-002-20250225    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250225    clang-21
+hexagon              randconfig-002-20250225    clang-21
+i386                            allmodconfig    gcc-12
+i386                             allnoconfig    gcc-12
+i386                            allyesconfig    gcc-12
+i386       buildonly-randconfig-001-20250225    clang-19
+i386       buildonly-randconfig-002-20250225    gcc-11
+i386       buildonly-randconfig-003-20250225    clang-19
+i386       buildonly-randconfig-004-20250225    clang-19
+i386       buildonly-randconfig-005-20250225    gcc-12
+i386       buildonly-randconfig-006-20250225    clang-19
+i386                               defconfig    clang-19
+loongarch                       allmodconfig    gcc-14.2.0
+loongarch            randconfig-001-20250225    gcc-14.2.0
+loongarch            randconfig-002-20250225    gcc-14.2.0
+m68k                            allmodconfig    gcc-14.2.0
+m68k                            allyesconfig    gcc-14.2.0
+m68k                       m5272c3_defconfig    gcc-14.2.0
+mips                         eyeq5_defconfig    gcc-14.2.0
+nios2                randconfig-001-20250225    gcc-14.2.0
+nios2                randconfig-002-20250225    gcc-14.2.0
+openrisc                        allyesconfig    gcc-14.2.0
+parisc                          allmodconfig    gcc-14.2.0
+parisc                          allyesconfig    gcc-14.2.0
+parisc               randconfig-001-20250225    gcc-14.2.0
+parisc               randconfig-002-20250225    gcc-14.2.0
+powerpc                         allmodconfig    gcc-14.2.0
+powerpc                         allyesconfig    clang-16
+powerpc              randconfig-001-20250225    gcc-14.2.0
+powerpc              randconfig-002-20250225    clang-19
+powerpc              randconfig-003-20250225    clang-21
+powerpc64            randconfig-001-20250225    gcc-14.2.0
+powerpc64            randconfig-002-20250225    gcc-14.2.0
+powerpc64            randconfig-003-20250225    gcc-14.2.0
+riscv                           allmodconfig    clang-21
+riscv                           allyesconfig    clang-21
+riscv                randconfig-001-20250225    clang-15
+riscv                randconfig-002-20250225    clang-21
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250225    clang-15
+s390                 randconfig-002-20250225    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250225    gcc-14.2.0
+sh                   randconfig-002-20250225    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250225    gcc-14.2.0
+sparc                randconfig-002-20250225    gcc-14.2.0
+sparc64              randconfig-001-20250225    gcc-14.2.0
+sparc64              randconfig-002-20250225    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250225    clang-21
+um                   randconfig-002-20250225    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64                          allyesconfig    clang-19
+x86_64     buildonly-randconfig-001-20250225    gcc-12
+x86_64     buildonly-randconfig-002-20250225    clang-19
+x86_64     buildonly-randconfig-003-20250225    clang-19
+x86_64     buildonly-randconfig-004-20250225    gcc-11
+x86_64     buildonly-randconfig-005-20250225    gcc-12
+x86_64     buildonly-randconfig-006-20250225    clang-19
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250225    gcc-14.2.0
+xtensa               randconfig-002-20250225    gcc-14.2.0
 
-         pin = intel_gpio_to_pin(pctrl, offset, NULL, NULL);
--       if (pin < 0)
-+       if (pin < 0) {
-+               dev_dbg(pctrl->dev, "pin < 0");
-                 return -EINVAL;
-+       }
-
-         reg = intel_get_padcfg(pctrl, pin, PADCFG0);
--       if (!reg)
-+       if (!reg) {
-+               dev_dbg(pctrl->dev, "not reg");
-                 return -EINVAL;
-+       }
-
-         scoped_guard(raw_spinlock_irqsave, &pctrl->lock)
-                 padcfg0 = readl(reg);
-
--       if (padcfg0 & PADCFG0_PMODE_MASK)
-+       if (padcfg0 & PADCFG0_PMODE_MASK) {
-+               dev_dbg(pctrl->dev, "padcfg0 = %x", padcfg0);
-                 return -EINVAL;
-+       }
-
-         if (__intel_gpio_get_direction(padcfg0) & PAD_CONNECT_OUTPUT)
-                 return GPIO_LINE_DIRECTION_OUT;
-```
-
-These are the logs:
-
-```
-[    0.198584] sunrisepoint-pinctrl INT344B:00: Community0 features: 
-0x000000
-[    0.198613] sunrisepoint-pinctrl INT344B:00: Community1 features: 
-0x00000c
-[    0.198629] sunrisepoint-pinctrl INT344B:00: Community2 features: 
-0x000000
-[    0.198687] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198688] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198693] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198694] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198699] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198700] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198704] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198705] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198709] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198710] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198715] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198715] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198720] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198721] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198730] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198731] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198735] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198736] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198741] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198741] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198746] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198747] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198756] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198757] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198766] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198767] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198812] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198812] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198817] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198818] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198822] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198823] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198837] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198838] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198843] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198843] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198848] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198849] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198853] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198854] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198863] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198864] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198874] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
-[    0.198875] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198879] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198880] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198884] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
-[    0.198885] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198938] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198939] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198944] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198945] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198950] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198951] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198972] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198973] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198978] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.198979] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.198989] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.198990] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199006] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199007] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199011] sunrisepoint-pinctrl INT344B:00: padcfg0 = 84000700
-[    0.199012] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199028] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199029] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199034] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199035] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199040] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199041] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199045] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199046] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199211] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199211] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199217] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199217] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199239] sunrisepoint-pinctrl INT344B:00: padcfg0 = 4000700
-[    0.199240] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199255] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199256] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199261] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199262] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199267] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199268] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199273] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000702
-[    0.199274] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199278] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199279] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199284] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199285] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199301] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000502
-[    0.199302] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199307] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199308] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199312] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199313] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199318] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199319] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199324] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000700
-[    0.199325] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199382] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000600
-[    0.199383] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-[    0.199387] sunrisepoint-pinctrl INT344B:00: padcfg0 = 44000600
-[    0.199388] gpio gpiochip0: gpiochip_add_data_with_key: get_direction 
-failed: -22
-```
-
-With
-
-     #define PADCFG0_PMODE_MASK              GENMASK(13, 10)
-
-indeed one bit is always set in this range.
-
-> In any case: Linus: what should be our policy here? There are some pinctrl
-> drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
-> think this is an error. Returning errors should be reserved for read failures
-> and so on. Are you fine with changing the logic here to explicitly default to
-> INPUT as until recently all errors would be interpreted as such anyway?
-
-
-Kind regards,
-
-Paul
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
