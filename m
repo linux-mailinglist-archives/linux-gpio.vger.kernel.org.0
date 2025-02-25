@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-16554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44633A43FF2
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 14:02:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3CADA43FF1
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 14:02:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49441189BAC1
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 13:00:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 321D13BFDBE
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 13:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192D0268FF0;
-	Tue, 25 Feb 2025 13:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B032C268FE9;
+	Tue, 25 Feb 2025 13:01:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJriC2lM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTvKnFrO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD84F268FE4;
-	Tue, 25 Feb 2025 13:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609BB268C67;
+	Tue, 25 Feb 2025 13:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488402; cv=none; b=OF9OPjtwppVS3SlbGvH9OWiqdhRbT0Hz8mvMpd7KrR5ofgD9rlbPSr1Z+c3892qKGqIpIMQeaq+++rqi6o5aSrulxs3nJxlzicZOuhDjDun9FSBPs0SKymnb2SbsTTSXTu0ltPUaGvPsaSchIokCfv2Rp3eIuDIvO/TDv6em2G0=
+	t=1740488493; cv=none; b=LcmRIzgD/Sq16uR3cGk/xyg8lb6QluS+lImZU2NJbepjfeuJNOLnmehKaPXvrlJ9sxBLCbTDBAwd1UHcut1+bEzUA4iCF2Uqv3RCGQ67kJHFR/xSnPCAFqvY9m4mdGXGIgM3LO7tIfUQ7IA61viERdt1mPeOszHhs38Hj6aBXIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488402; c=relaxed/simple;
-	bh=MIpWmATnHWUCuVfECKFeEj874VPeRJVVLzeFDtK35xw=;
+	s=arc-20240116; t=1740488493; c=relaxed/simple;
+	bh=Wre+7TIAdIAjgCV/VfB9/8j835OKXCFH6jzeJStgQ90=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBVZlwgrjyVxLABaaVYsA1hsRvjtxsmuU1BNDb5Qs1XUtADMPAuLQYmlb40sqqpOaWXoNgeAuwB295oUYq+Vh7cFlhBmJ83fFx2mTaz2k90W9jAcQh2QFdHISD4Fy8j+yM1U7urY9TUoBPFZQK6gQ3Fxrkakmoxqs52GeBzkH6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJriC2lM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3456CC4CEE6;
-	Tue, 25 Feb 2025 12:59:57 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=EiZcDIN3Y/zE/dZEIPqIWVcw0SHwOmZtv11/7p9OzCqYAEykx+DS3Y52JM3L0/alqGbadO8SxwQHTLP4GSMFu47aFdZMF+xTXJUNTOdo7F1NSjFW55irbcPY0qJWB0++nw7tho8zShOHX30AHkfSnl/l6sOa0acXBCeHvNyaeLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTvKnFrO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BECC4CEDD;
+	Tue, 25 Feb 2025 13:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740488402;
-	bh=MIpWmATnHWUCuVfECKFeEj874VPeRJVVLzeFDtK35xw=;
+	s=k20201202; t=1740488492;
+	bh=Wre+7TIAdIAjgCV/VfB9/8j835OKXCFH6jzeJStgQ90=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VJriC2lMNCLIQ1ThvHdLSX03oyJ8xu3BNNoJY1+o7W36I7HVPZm7yz8lwZImyBLyq
-	 ph/FhIVsZNGsuuF1uPpgtd+Gkp4j8nS05DIPh8OyV4DKVNEq0GmC/lAX+zZClCVUCy
-	 qTlQXltHhWnDfYERKPx0s3cXKzQuGw69nVu2rbGmudt83LSRKApK06P0HnouTcNN/2
-	 9bbwdKM4Oyy1QefprDjb5eN6hoaGcN4kptol8MxDWRzMgRFBvv7sabkWU4XPngZFJF
-	 p5qIQ8H6tix6Has227bgRCYuHsdM0R/nOAjOUTL/xF2Ew+Q/a5biZMGoRooysLFUHv
-	 OD7GgJWGvGtHQ==
-Message-ID: <1990c649-668e-4ae9-82b5-ed9931f41ec4@kernel.org>
-Date: Tue, 25 Feb 2025 13:59:56 +0100
+	b=UTvKnFrOm+rZzOfDvIL4G00yiS2ehq8If6jU34ZVXeObXVBjpE+lxO86yNLsam5gP
+	 KqaUa7rdVWWplwTGan7LIcOQIi2CygjvMnsud/JAWDIl0qATrie56UwA7REnmDoPKp
+	 l5IiLyRA/kw098HOqdMOS0qloSfjKIW0czXpDnELBZp5/Y+QoKh4V6a1fZQ/R217UJ
+	 pv3M34ryurGa79QdK+UUHShGAjjcxErVc3GllJwdMjsoEWtcPdBy4Nq9KoIXeiBhyi
+	 qJtALB+/J3OjsjEJ2yKaeGTQbrquItr4JEoScFunKe7AgC7SDhnpNgEJvpR6V0cn8H
+	 2yH1yUyeKf40g==
+Message-ID: <f17eadf3-eb2d-470d-ad77-909f00584d44@kernel.org>
+Date: Tue, 25 Feb 2025 14:01:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/9] pinctrl: stm32: Introduce HDP driver
+Subject: Re: [PATCH 1/9] dt-bindings: pinctrl: stm32: Add HDP includes for
+ stm32mp platforms
 To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -61,7 +62,7 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org
 References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-3-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-1-9d049c65330a@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,85 +108,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250225-hdp-upstream-v1-3-9d049c65330a@foss.st.com>
+In-Reply-To: <20250225-hdp-upstream-v1-1-9d049c65330a@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 25/02/2025 09:48, Clément Le Goffic wrote:
-> This patch introduce the driver for the Hardware Debug Port available on
+> Each file introduces helpers to choose the signal to monitor through the
+> HDP pin.
+> Signals are different for each platforms: stm32mp13, stm32mp15, stm32mp25.
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-> STM32MP platforms. The HDP allows the observation of internal SoC
-> signals by using multiplexers. Each HDP port can provide up to 16
-> internal signals (one of them can be software controlled as a GPO)
+Headers are part of bindings commit, assuming this stays...
 
 
-
-....
-
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  include/dt-bindings/pinctrl/stm32mp13-hdp.h | 130 +++++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/stm32mp15-hdp.h | 116 ++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/stm32mp25-hdp.h | 144 ++++++++++++++++++++++++++++
+>  3 files changed, 390 insertions(+)
+> 
+> diff --git a/include/dt-bindings/pinctrl/stm32mp13-hdp.h b/include/dt-bindings/pinctrl/stm32mp13-hdp.h
+> new file mode 100644
+> index 000000000000..a3487e700143
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/stm32mp13-hdp.h
+> @@ -0,0 +1,130 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+> +/*
+> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
+> + * Author: Clément Le Goffic <clement.legoffic@foss.st.com> for STMicroelectronics.
+> + */
 > +
-> +static int stm32_hdp_suspend(struct device *dev)
-> +{
-> +	struct stm32_hdp *hdp = dev_get_drvdata(dev);
+> +#ifndef _DT_BINDINGS_STM32MP13_HDP_H
+> +#define _DT_BINDINGS_STM32MP13_HDP_H
 > +
-> +	hdp->gposet_conf = readl_relaxed(hdp->base + HDP_GPOSET);
-> +
-> +	pinctrl_pm_select_sleep_state(dev);
-> +
-> +	clk_disable_unprepare(hdp->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_hdp_resume(struct device *dev)
-> +{
-> +	struct stm32_hdp *hdp = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	err = clk_prepare_enable(hdp->clk);
-> +	if (err)
-> +		return dev_err_probe(hdp->dev, err, "Failed to prepare_enable clk");
-
-
-That's wrong, it is not a probe path.
-
-> +
-> +	writel_relaxed(HDP_CTRL_ENABLE, hdp->base + HDP_CTRL);
-> +	writel_relaxed(hdp->gposet_conf, hdp->base + HDP_GPOSET);
-> +	writel_relaxed(hdp->mux_conf, hdp->base + HDP_MUX);
-> +
-> +	pinctrl_pm_select_default_state(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SIMPLE_DEV_PM_OPS(stm32_hdp_pm_ops, stm32_hdp_suspend, stm32_hdp_resume);
-> +
-> +static struct platform_driver stm32_hdp_driver = {
-> +	.probe = stm32_hdp_probe,
-> +	.remove = stm32_hdp_remove,
-> +	.driver = {
-> +		.name = DRIVER_NAME,
-> +		.pm = pm_sleep_ptr(&stm32_hdp_pm_ops),
-> +		.of_match_table = stm32_hdp_of_match,
-> +	}
-> +};
-> +
-> +module_platform_driver(stm32_hdp_driver);
-> +
-> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> +/* define a macro for each function a HDP pin can transmit */
+> +#define HDP0_PWR_PWRWAKE_SYS			 "0"
 
 
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
+Why this is a string not a number?
 
-
-
+Where is it used? I don't see usage in the driver, so this does not look
+like binding (and DTS is not a driver).
 
 Best regards,
 Krzysztof
