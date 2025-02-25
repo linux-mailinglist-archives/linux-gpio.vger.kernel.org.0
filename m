@@ -1,130 +1,133 @@
-Return-Path: <linux-gpio+bounces-16567-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E79D6A44392
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 15:53:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCF9BA44423
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 16:18:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 459C53BBE7E
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 14:46:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC3977A9570
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 15:17:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679FC257AD7;
-	Tue, 25 Feb 2025 14:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD24E268689;
+	Tue, 25 Feb 2025 15:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyh9QqRA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gT/W0ND6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7DA21ABD8;
-	Tue, 25 Feb 2025 14:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72AE26BDA2
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 15:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740494795; cv=none; b=kXBQCuil4yJUo+/+j5kiMZbAulniSUJIIh2tRDm8UJpuFxU3AYjE9kqmxZLIZZEEdbEQRzayyFe/Bb2RG/QU6BZvloabWbkRSxENPHyYPKSo7GZIkxOydaBqObSxJuvU45o5MJ2xhj9eaRhVp/53RYC2w7B2AM/6hVAwRZ4H1mw=
+	t=1740496680; cv=none; b=QfvrWsw320g5XJuBUWQasc0+Q1ciB1Gz19x/LwzuZI/gDZbwlwC8WnF7P3G9S7oozXDY5BM3KHMl4m7FhbJD6iKPYMo0E673Kpm8r3rhjQj/eHpqciUccuUn++55BZwCA8jM6LLIaFHFen7WVUJz+UrxnnoCXdrd6CPzN5Vwa00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740494795; c=relaxed/simple;
-	bh=xRLtya76a4CWMfPZLUXOt80YfMIxPHShG70qhWNfxpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SI/lejSbaFeueY5m+mQ1BU8mfjAX3ATjfQWGcKA6rHXXRONjo3HWXpqoeMBuA6duayQKEMxDhgVKA1s/KIDY9ZZ+fgZFs4nabdaNSfr5YGUap2pKzm+9TXj8c7C5sSKvZxz0F1AStFlWBe8AwxREo4y2DJW+kKYiYzEfNbgRImY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyh9QqRA; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740494793; x=1772030793;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xRLtya76a4CWMfPZLUXOt80YfMIxPHShG70qhWNfxpU=;
-  b=hyh9QqRAPbMEica0aNtokanrzQct2PhXxrjnNksXs2AduT0CkzT8+70l
-   /plhT5bUyuHiDIherYoeO/Ygvrfx/ZjH5V88qGnU39ZtXtLRIdEx6ubp0
-   ncQFB1BuGf16H9GXgbBKLfOPPd16rkqOhWj8bykZedMy1SZdy0dA2lfuL
-   P/fNwX91NVnly5QCZjoCu7wNINvz58q1zdJl4H05bFmvz9sjwvNXlTUsL
-   w4dWeOzxBKO3IsB7us5p+UEcjeVKoOPeqUQ3EwtCsnkKoTOCdMm0BavFp
-   dwrJPOM5FidJ9+DkH0mBosE9BSHwxJuuY+ytf9FtMAFEE+vufrr1zdGi9
-   Q==;
-X-CSE-ConnectionGUID: v4zCleIyQv+5dwhiiFFPCQ==
-X-CSE-MsgGUID: R3GL86FISG2AhB7OWUFGoA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="51934117"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="51934117"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:46:33 -0800
-X-CSE-ConnectionGUID: IK9Jn9FQTmKygRaa2Eyg1w==
-X-CSE-MsgGUID: GvxWqsPiRQKFVGuE/vp2gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="121497166"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:46:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmwCa-0000000F1Ky-3BCD;
-	Tue, 25 Feb 2025 16:46:28 +0200
-Date: Tue, 25 Feb 2025 16:46:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/3] gpiolib: don't use gpiochip_get_direction() when
- registering a chip
-Message-ID: <Z73XxMwvFYjA0_6s@smile.fi.intel.com>
-References: <20250225-retval-fixes-v1-0-078c4c98517a@linaro.org>
- <20250225-retval-fixes-v1-1-078c4c98517a@linaro.org>
- <Z73EIu0AqnfPU33k@smile.fi.intel.com>
- <CAMRc=MdTKCtwrDouTV4YHoWa1F8cenSVEtTXicSUdrmEk3TxCQ@mail.gmail.com>
+	s=arc-20240116; t=1740496680; c=relaxed/simple;
+	bh=rALszVeWffksEsP/Rrj6WAtB7agsaUXOmR/msDwji8U=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=X49nCBSekph2bgFl9vJHxiMBJCFqh9rXc9RMOi5X76gBHxdHCvVid3a4Djx0qLRvWwQC41TkUwWetCt+ScJRBB+IoIJ2RXvrq5txst7WaHCf267otwbcdHCqwRYoaZlIu0uyO4qELxC6RgfocBB9i3C/ATnar8nVmxWd23UI/F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gT/W0ND6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740496677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+QyH+Q7MigOrd7puvdyRTTPCeyR6wog0WvQSvTNgWAg=;
+	b=gT/W0ND6+aBEAKJjZFtHe9tOmmZgfzcdx2NjgUyDkj1+S6NSUNDtJhvWfQEI9iChfsINgu
+	zZWr9FL3Bc0TUomSAp0FzMQIF2RliCrhjNLgaphxx7kkJjJoUdZZoyDDpV8nnPABuZJhQy
+	DQNCVvrDt3J5NUOknnA/I4sYPdDJZT0=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-184-q8YtqpU0OC6xToOGXJ3YDQ-1; Tue,
+ 25 Feb 2025 10:17:53 -0500
+X-MC-Unique: q8YtqpU0OC6xToOGXJ3YDQ-1
+X-Mimecast-MFC-AGG-ID: q8YtqpU0OC6xToOGXJ3YDQ_1740496667
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1840F1A24789;
+	Tue, 25 Feb 2025 15:16:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A8A29180194B;
+	Tue, 25 Feb 2025 15:16:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
+References: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com> <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com> <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com> <20250221200137.GH7373@noisy.programming.kicks-ass.net>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+    Will Deacon <will@kernel.org>,
+    "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+    Andrew Morton <akpm@linux-foundation.org>,
+    Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+    Thomas Gleixner <tglx@linutronix.de>,
+    Herbert Xu <herbert@gondor.apana.org.au>,
+    "David S. Miller" <davem@davemloft.net>,
+    "Rafael J. Wysocki" <rafael@kernel.org>,
+    Danilo Krummrich <dakr@kernel.org>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+    Johannes Berg <johannes@sipsolutions.net>,
+    Jamal Hadi Salim <jhs@mojatatu.com>,
+    Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+    Linus Walleij <linus.walleij@linaro.org>,
+    Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+    Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
+    Marek Szyprowski <m.szyprowski@samsung.com>,
+    Robin Murphy <robin.murphy@arm.com>,
+    Miquel Raynal <miquel.raynal@bootlin.com>,
+    Richard Weinberger <richard@nod.at>,
+    Vignesh Raghavendra <vigneshr@ti.com>, linux-arch@vger.kernel.org,
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+    linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+    linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+    linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+    iommu@lists.linux.dev, linux-mtd@lists.infradead.org
+Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in void API tlb_remove_page()
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdTKCtwrDouTV4YHoWa1F8cenSVEtTXicSUdrmEk3TxCQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2298250.1740496596.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 25 Feb 2025 15:16:36 +0000
+Message-ID: <2298251.1740496596@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Feb 25, 2025 at 03:43:29PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Feb 25, 2025 at 2:22 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Feb 25, 2025 at 12:56:23PM +0100, Bartosz Golaszewski wrote:
+Zijun Hu <zijun_hu@icloud.com> wrote:
 
-> > > During chip registration we should neither check the return value of
-> > > gc->get_direction() nor hold the SRCU lock when calling it. The former
-> > > is because pin controllers may have pins set to alternate functions and
-> > > return errors from their get_direction() callbacks. That's alright - we
-> > > should default to the safe INPUT state and not bail-out. The latter is
-> > > not needed because we haven't registered the chip yet so there's nothing
-> > > to protect against dynamic removal. In fact: we currently hit a lockdep
-> > > splat. Revert to calling the gc->get_direction() callback directly not
-> > > not checking its value.
-
-...
-
-> > I think the below code deserves a commit (as a summary of the above commit
-> > message).
-> 
-> Can you rephrase? I'm not getting this one.
-
-Ah, s/commit/comment/
-
-> > > +             if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index))
-> > > +                     assign_bit(FLAG_IS_OUT, &desc->flags,
-> > > +                                !gc->get_direction(gc, desc_index));
-> > > +             else
-> > >                       assign_bit(FLAG_IS_OUT,
-> > >                                  &desc->flags, !gc->direction_input);
+> >>  static inline void tlb_remove_page(struct mmu_gather *tlb, struct pa=
+ge *page)
+> >>  {
+> >> -	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
+> >> +	tlb_remove_page_size(tlb, page, PAGE_SIZE);
+> >>  }
+> > So I don't mind removing it, but note that that return enforces
+> > tlb_remove_page_size() has void return type.
 > >
-> > Otherwise LGTM,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> =
 
--- 
-With Best Regards,
-Andy Shevchenko
+> tlb_remove_page_size() is void function already. (^^)
 
+That may be true... for now.  But if that is changed in the future, then y=
+ou
+will get an error indicating something you need to go and look at... so in
+that regard, it's *better* to do this ;-)
+
+David
 
 
