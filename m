@@ -1,159 +1,249 @@
-Return-Path: <linux-gpio+bounces-16526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E53C5A435E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 08:01:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6502AA43723
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 09:17:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2323E3AE7B6
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 07:01:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7B7B1896456
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 08:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423BA257429;
-	Tue, 25 Feb 2025 07:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B7EE25EFBB;
+	Tue, 25 Feb 2025 08:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9m2A9cz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjPO8MY4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576451FCD1F;
-	Tue, 25 Feb 2025 07:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADCC25E473;
+	Tue, 25 Feb 2025 08:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740466867; cv=none; b=kXtm5JN3QcUIr+OchAgQlwvDSxTJMVr7icuAjzUTWgPibRUH05sb5g+cZ1xp0+wPQ3VNpoEq5eQ0iaUi781i62ApbnHqQ6SVb/Od2ifPtObf3+KdIMvcM8hneUXn7zRQ1KWBwyaSUEhTYPpnk2IOiaKLlvMIxipPlBpRuddXAvQ=
+	t=1740471424; cv=none; b=fUNWX5PTd2TKH3GToBIgi6GK/XRcin6D+d6KBre2fpPvglrgqExWamQwSBCmbOhbifW9QEBZK8l4Nw5lwaNd5yZTICF0AAWLGgbfLckBFcjVJt3ztTAw9BYCC8WzBchxCwEUX+ixzELUgQEdqAi4AUHxSIRoYhAsktkbw+DSrjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740466867; c=relaxed/simple;
-	bh=KWUdJgIpUQsVXCnBiWxg3+iKKy8Ujl9Xa6y63DyZMJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s+osidvlNux9w/d4YxQ9yXBH2dVrfC2lbUpSnOih8zbFAyRJ4Mfv/2eGmbjxkwRrBQh6H7bVCTdB1KYTDfECIKeFS5ibfCkVqb79ROgPv+JD7F+W71n/Fn5BhGNUCxdkIGbt7vwvp38tAtLnZkCd/p8SEn0brMtktUpvKiBPML8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9m2A9cz; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1740471424; c=relaxed/simple;
+	bh=BfekZDsUNdvKtB9OBR1tH04nEjz7Dci5U+bZ0eYDUZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=og5CB6jZX/gPuYfkv0geUTV6jICJwiu2SDfk9iOkuWNn/qpIGeauqXvnwYzTvNvdkjd/Q3fD/bijwbr5Nn9y/sFXD05GrkYCPT7RNeZl4LGqyFFkkw702wf4pEjS414vPn18JxLLULFY8mTdSBjqFWBufulf4gLGJ5ELEuQpgdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UjPO8MY4; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so6062233e87.1;
-        Mon, 24 Feb 2025 23:01:05 -0800 (PST)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22128b7d587so101888345ad.3;
+        Tue, 25 Feb 2025 00:17:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740466863; x=1741071663; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xEybYvWRx/5H4FjB4f3Tj6B5Z+fVUBC9NtkC11fk+HI=;
-        b=h9m2A9czLVH9gA+NEYe0i6EdRCuqOk7RSatYxmTqXAU/2OJT3eKSJwloPwC9Fp1INY
-         19PQKhtuOaFXvnLTjnTPyUdplBd6ZexqEPMXbZycQ4LmtfxxzxLfFrFPaTg6ycRnBp5j
-         oD84tseCGa7oxVENbxlNf4xPYYLGykCxa7wG4VE8zkYYA8z38KwlM6YO1qP3b94ebITh
-         basPuU5PGl/MWD5sytGt4Xqyt5Moe5p4u25DcUAok21vGV29MJeN5UCqgSedDIDptfID
-         KyLQKGMA92x6ZYBfssiHkYzKwVz8Rcd0k4iqwAujFVSO0yCjUoOU00+7ahth0sgpSWs1
-         nQeQ==
+        d=gmail.com; s=20230601; t=1740471421; x=1741076221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UZ4pVbM1DCtU59HnFcpqSu0S4laqWHZt11qRCqs8PiE=;
+        b=UjPO8MY42cq4NW7ZVBdjFhfJbpumqAEMa4s+8NdFoZbtp9e6mEzx+m905l5VjxTVtM
+         s/zllCbz6z8V5iGz6kQLs7aW3OGq3VGwOq08f3JGH4POH1Zq81VeSgSEvxlZYuRaJXrk
+         lMxuNosuXGDtYSTWzAyB49iZhxrCasjyRs2QbyUY5L1PcxPM1HvGGgNXIJp9H0FUS8/4
+         EhI8BM6SEmjrcvt12eTkWfhhGGXIPvWmPCnv7SFnVjLvk8F7oE9oEZXQ2NZnDQqBDn87
+         7n3kEPHW/2zkH7l8/18aBLY0w9PqDhYbDrn7SVU2PEnlLG7s2wVHA5Kri/iRzWEe/+aP
+         OZOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740466863; x=1741071663;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xEybYvWRx/5H4FjB4f3Tj6B5Z+fVUBC9NtkC11fk+HI=;
-        b=HoZExk67o7yYknjjcWeaR/nXA5G6b4psa/tEQdO48SZ/PxMN/AcgEcWiuNqTDCePon
-         Ix1SHVQFFxf5vki4JqUlf0LReNuL2h1gl/OhKynibprZUsWyQ0UNTF+NDDSxw1IYWLCU
-         ++EiGQXzoePOlP/I/eTkIO/OueaNF1FPCxbJBlClo2s7dusKNwUY8S4wwknyR4dCvwIp
-         hiCyw9pBXaSVyLj9ZcPigrgpkCzYJvPc0+MikasGowxyL9KiF6iF2pQSjWqlL7CyefOW
-         flIkYe9/bvovKrpZy+/AScFvRCjld3eaqhLUpO6KscFHhu94NGMYTcRXUhGuTuxxaDJg
-         jjJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBJ257/Mrd2dDqYCU5TeDhipFJiWzPNi9Rq+O/uCuAm2kliHtgvUNcRjiScxUMlt0IBslWUNZluddS@vger.kernel.org, AJvYcCVFwaLLFiqkWTsOjRzY1CFsQS6FMdox61gVGgi/USsKDMI90ZtITLl9K0SoJVaPWxRZAQVW1wtJU3Vq0gPM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzevdS4JUKve0AFZiFWPnNc4Lv/nhmLCBpqW8PgEJ6QdV/j2aI
-	QB9cXicwDd9eo+S+dgKUjYX1mTIGawrkkL46wwdXs4276INgwqodtMf/3g==
-X-Gm-Gg: ASbGncsACHkGMsMalrgfXrdXOGgK+xAmH8TKwAwkO1x0/9HjSG0re/q6GIMROZIr9f8
-	d6bzA6bnsI9VTZ3iK+vAtlORMzbdxYvHrBl8QBF8Mx+LlPUU58d6oVFPqoLYGt97n4urCAosYa2
-	N31jtVpCbHF8OnmMixIqG/K2vKVAv9Z+j+mR5DYMTibfXPmR8n0pftPNPvM8ypjPwYqVL5ZfibK
-	yxbdRWiGl34XaLldq7n4uMGqanJ4kD2CbRXVGnR9BdPREbW18qF8UREnKH8Y/424Gx3PrrVQK7f
-	SBKbk8SZjdJN234/dIjiS+9iPi2l
-X-Google-Smtp-Source: AGHT+IHPzr4IY0sdvXocyj/XL6Du+23H0ztIQzDiz5JA+sv+RHXoJQj9XCviYpfMdtltpBPy8ALGdw==
-X-Received: by 2002:a05:6512:acc:b0:545:2b68:936a with SMTP id 2adb3069b0e04-54838eff533mr5287219e87.29.1740466863000;
-        Mon, 24 Feb 2025 23:01:03 -0800 (PST)
-Received: from mva-rohm ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819ebe18sm1393931fa.36.2025.02.24.23.01.00
+        d=1e100.net; s=20230601; t=1740471421; x=1741076221;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UZ4pVbM1DCtU59HnFcpqSu0S4laqWHZt11qRCqs8PiE=;
+        b=ctaTEhuXKJCIC/hLZ36YoEpQ0ZI+2z5c9J7A06XaJ1+ghROqG5Kyrza/g5rQgUE956
+         ELTYePZ9MFQ68/rJJb2vrUr0xZRsSb6rYdICzdAIYrcXjXEqrw5L4cOGoOOXtzcHE5qb
+         WOJ1Vq6aS9pSl2rxgxId5eTvJXYgxhdkJf+f3gAKxuZyNHE+BaMhN0vxRdAbCMjUQope
+         HGzrS1ynj0fuDfg2Np13vdIlcVIpj3UnphYXECBgLzxPBQfxYP2TvtPgYbSeqXBlXgym
+         PATQWqCHErqcWFwLdNtF7NESwM1PeKWasVysuhYakHirhGmfbNFOaswqu1BigcEzzxIJ
+         Oghg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaxSdCbsPeG7xnr7BoE7trAAPJv4yLE4LhCiDn3SkuwW3eDKqYMbGRdlj6KcXLJH2csCGRunPC7qzW@vger.kernel.org, AJvYcCVbn5f9O82T+gs5VpgDj38ttQpf/nI70WtVwpuwYCpemk2vdBwulAsvaXIesKJMfMgMlqIBtBkBaqdX@vger.kernel.org, AJvYcCVsfbLpw0MFHYjR6dqfEDXCIcB7HhXnjn2Zn8SPucE43VsSgueDD3uCoMAFrBrCQSVmJey3zskX+ic86A==@vger.kernel.org, AJvYcCWfkbOZqFhcX3AWAegPgaGF3UCVy9ZB2g4Ts7X/0D9hpqMkPYMtUu2t63u8erqGRK9SEdNHXGgB1ege@vger.kernel.org, AJvYcCWgo0oJSg0xKamEE3S5Gc6/Zm+XvBoLkvcEFDwMcq2OK78iDoORhhP83A3bXLF0epXt5qKq0DP6nTs=@vger.kernel.org, AJvYcCWvFqGFGdI6UjXM/d9S32NCU5OoieHtM03/rF1W5KzGrZzWOi/QHxl7jbU/09UYODHDzt3AQYuSaaSb4QA=@vger.kernel.org, AJvYcCXYJiApuCg7t6maZk4xpvR/KvdMgnvl3LbBz+3H9lWrciuCE+6RcWwdse45CNZIXlkJIcA5b7O1Ar9uO91Kltk=@vger.kernel.org, AJvYcCXziHYubD1/v6rgTrMouNBHPUyA5YMpdr8FrcTQINqX19BZzaJGAxIaZ+csyerSTWdcOcC+R0qn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW84iEVVj9yFYR1WHT/IFJQNuBdB6m9WMbMIbrCmu/2AmtZmFL
+	l4DzUzP1OzGkBy4fgFnML7egfjwfoSOkZETQUGtW6D9ZpiyE3/1v
+X-Gm-Gg: ASbGncs4wQwLhrgDJsyeD9zqYLWAV0J+cUq0QFxLlYz1ZoKijGDSIpowQx6+uwK79WR
+	7ZWBZPhbJ28H94Ab4nvfqgKrxdAfBdLOr1YxvfsFIpVrJGZ4Qm2h3goBtpbkYAZkpiV5/onROJA
+	y4nZ522xikwF0G87moXs6FwSnB31aDxNM6xReON8M/PxLkRO/wAvP2e3Q+QvkiKD/41rBdTyCyV
+	Y1KtB80YKzzMnFU6dRgO4gYFRTsmn8vEZzQWjud0YLJk8foqmwxWPIix22CWkpcRpkffFi96iK0
+	SN6CXWV9Q5ZCHcZWrX6cGOgc2+g+SnNaOwOF9OwBt0x7fF25INK7Kg9CiLnD3+QcFjzr8w==
+X-Google-Smtp-Source: AGHT+IGJqhnWMpFd5AzrwtLP6iOv45ubCmVHfs7719Fi8vUpiDSkoN0uet8AEms++4EMHN3X5ehjoQ==
+X-Received: by 2002:a05:6a21:69b:b0:1e1:aef4:9ce8 with SMTP id adf61e73a8af0-1eef3d87138mr32217027637.28.1740471421179;
+        Tue, 25 Feb 2025 00:17:01 -0800 (PST)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6abaddsm902178b3a.20.2025.02.25.00.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 23:01:01 -0800 (PST)
-Date: Tue, 25 Feb 2025 09:00:54 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: Document the 'valid_mask' being internal
-Message-ID: <Z71qphikHPGB0Yuv@mva-rohm>
+        Tue, 25 Feb 2025 00:17:00 -0800 (PST)
+From: Ming Yu <a0282524688@gmail.com>
+To: tmyu0@nuvoton.com,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <a0282524688@gmail.com>
+Subject: [PATCH v8 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Tue, 25 Feb 2025 16:16:37 +0800
+Message-Id: <20250225081644.3524915-1-a0282524688@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2t/6T+yCC05nv9en"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
+
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
+
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
+
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+			    Receive bulk-in pipe to read response packet
+			    Receive bulk-in pipe to read data packet
+
+Changes since version 7:
+- Add error handling for devm_mutex_init()
+- Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
+- Fix multiline comments to net-dev style in nct6694_canfd.c
+
+Changes since version 6:
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+- Fix warnings in nct6694_canfd.c
+- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+- Fix warning in nct6694_wdt.c
+- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
+
+Changes since version 5:
+- Modify the module name and the driver name consistently
+- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+- Drop unnecessary macros in nct6694.c
+- Update private data and drop mutex in nct6694_canfd.c
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
+
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
+
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
+
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
 
 
---2t/6T+yCC05nv9en
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CANFD support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
 
-The valid_mask member of the struct gpio_chip is unconditionally written
-by the GPIO core at driver registration. Current documentation does not
-mention this but just says the valid_mask is used if it's not NULL. This
-lured me to try populating it directly in the GPIO driver probe instead
-of using the init_valid_mask() callback. It took some retries with
-different bitmaps and eventually a bit of code-reading to understand why
-the valid_mask was not obeyed. I could've avoided this trial and error if
-it was mentioned in the documentation.
+ MAINTAINERS                         |  13 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 463 ++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 152 +++++
+ drivers/mfd/Kconfig                 |  18 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 378 +++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 799 +++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 286 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 298 +++++++++
+ include/linux/mfd/nct6694.h         | 102 +++
+ 23 files changed, 3530 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
 
-Help the next developer who decides to directly populate the valid_mask
-in struct gpio_chip by documenting the valid_mask as internal to the
-GPIO core.
+-- 
+2.34.1
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
----
-Alternative approach would be to check whether the valid_mask is NULL at
-gpio_chip registration and touch it only if it is NULL. This, however,
-might cause problems if any of the existing drivers pass the struct
-gpio_chip with uninitialized valid_mask field to the registration. In
-order to avoid this I decided to keep current behaviour while
-documenting it a bit better.
----
- include/linux/gpio/driver.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 2dd7cb9cc270..fe80c65dacb0 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -503,7 +503,8 @@ struct gpio_chip {
- 	 * @valid_mask:
- 	 *
- 	 * If not %NULL, holds bitmask of GPIOs which are valid to be used
--	 * from the chip.
-+	 * from the chip. Internal to GPIO core. Chip drivers should populate
-+	 * init_valid_mask instead.
- 	 */
- 	unsigned long *valid_mask;
-=20
-
-base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
---=20
-2.48.1
-
-
---2t/6T+yCC05nv9en
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAme9aqAACgkQeFA3/03a
-ocWu1Qf/Zg9npoNinOajhrBvsxKQo4LtxOmy78IOWILnNX+SEIH4e8VKLNMnOcBZ
-vqKq2ZqUyAOUojsJv+pslsIcL6hVT/Evm9FLp6nAhtxHxLAihXIg1LP3tOzW1f/z
-F0ljNXFMSWgrOObnBg2ym2TWMnUwrjnX7pwEdgm/OHnlSSe2xIfjirubRv+kCViZ
-tuDxGOL5w+ydsivFituRhCK+RIkYNQvjp9CWhZvyHgEkgbEHIcCieUK+M7pieOET
-opLAMKnrCrVhgZw9fBdOexW/3DfuqhxBu7PEe99QhF5+MwNyH75lVCQ5JTFARt8+
-b2CJtG9N+gvl17s3Tmaghcnx0StxLQ==
-=gU03
------END PGP SIGNATURE-----
-
---2t/6T+yCC05nv9en--
 
