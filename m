@@ -1,133 +1,128 @@
-Return-Path: <linux-gpio+bounces-16569-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16570-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCF9BA44423
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 16:18:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 860B9A445BC
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 17:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC3977A9570
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 15:17:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B66519C64AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 16:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD24E268689;
-	Tue, 25 Feb 2025 15:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 712EB18DF81;
+	Tue, 25 Feb 2025 16:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gT/W0ND6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o4EsVQ+K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72AE26BDA2
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 15:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5A91624F7
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 16:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740496680; cv=none; b=QfvrWsw320g5XJuBUWQasc0+Q1ciB1Gz19x/LwzuZI/gDZbwlwC8WnF7P3G9S7oozXDY5BM3KHMl4m7FhbJD6iKPYMo0E673Kpm8r3rhjQj/eHpqciUccuUn++55BZwCA8jM6LLIaFHFen7WVUJz+UrxnnoCXdrd6CPzN5Vwa00=
+	t=1740500152; cv=none; b=imsZOwtc9VSSUR0NlZ74k6t4Kuuk6BtZ7ZFvpR1mvwF3/s14so+0mPbGv/FoTX6d7O2J2tUKr2GpAcgFBpvPh3Xuxn0TWrUfvzmrvi8Z1XOVR0XE0CiuZWRQ/3sfRriCg2mmRKhPojR9Mh3e0nI1vwC9+kslhtTYFdDGZVk/94M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740496680; c=relaxed/simple;
-	bh=rALszVeWffksEsP/Rrj6WAtB7agsaUXOmR/msDwji8U=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=X49nCBSekph2bgFl9vJHxiMBJCFqh9rXc9RMOi5X76gBHxdHCvVid3a4Djx0qLRvWwQC41TkUwWetCt+ScJRBB+IoIJ2RXvrq5txst7WaHCf267otwbcdHCqwRYoaZlIu0uyO4qELxC6RgfocBB9i3C/ATnar8nVmxWd23UI/F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gT/W0ND6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740496677;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+QyH+Q7MigOrd7puvdyRTTPCeyR6wog0WvQSvTNgWAg=;
-	b=gT/W0ND6+aBEAKJjZFtHe9tOmmZgfzcdx2NjgUyDkj1+S6NSUNDtJhvWfQEI9iChfsINgu
-	zZWr9FL3Bc0TUomSAp0FzMQIF2RliCrhjNLgaphxx7kkJjJoUdZZoyDDpV8nnPABuZJhQy
-	DQNCVvrDt3J5NUOknnA/I4sYPdDJZT0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-184-q8YtqpU0OC6xToOGXJ3YDQ-1; Tue,
- 25 Feb 2025 10:17:53 -0500
-X-MC-Unique: q8YtqpU0OC6xToOGXJ3YDQ-1
-X-Mimecast-MFC-AGG-ID: q8YtqpU0OC6xToOGXJ3YDQ_1740496667
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1840F1A24789;
-	Tue, 25 Feb 2025 15:16:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A8A29180194B;
-	Tue, 25 Feb 2025 15:16:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
-References: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com> <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com> <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com> <20250221200137.GH7373@noisy.programming.kicks-ass.net>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-    Will Deacon <will@kernel.org>,
-    "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-    Thomas Gleixner <tglx@linutronix.de>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    "David S. Miller" <davem@davemloft.net>,
-    "Rafael J. Wysocki" <rafael@kernel.org>,
-    Danilo Krummrich <dakr@kernel.org>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-    Johannes Berg <johannes@sipsolutions.net>,
-    Jamal Hadi Salim <jhs@mojatatu.com>,
-    Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-    Linus Walleij <linus.walleij@linaro.org>,
-    Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
-    Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
-    Marek Szyprowski <m.szyprowski@samsung.com>,
-    Robin Murphy <robin.murphy@arm.com>,
-    Miquel Raynal <miquel.raynal@bootlin.com>,
-    Richard Weinberger <richard@nod.at>,
-    Vignesh Raghavendra <vigneshr@ti.com>, linux-arch@vger.kernel.org,
-    linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-    linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
-    linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
-    linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-    iommu@lists.linux.dev, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in void API tlb_remove_page()
+	s=arc-20240116; t=1740500152; c=relaxed/simple;
+	bh=qiRG4jZ6oRGcl3fPvlgBnVduisLVRerw1nnxQkq92fk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FpmW/i87ggwecemD8in9OMVTwPuvs8g6GYsKW8/e2QlP3y5FuzRMxzKakolwO6A7APUwUJ/cTPIFYwrwuWUcywdcSbDUaDIpxZXdtp/LqZoJs/iPu6+8G9v5+09NA2eoFgGLpdiFkDuRXA2P87XSP/SujXqQwFu6kuN6U6Zo+7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o4EsVQ+K; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so6654326e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 08:15:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740500148; x=1741104948; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6QV46TQbbowuZaidKwQKybXS8KlFzTUfykk67zDNY8=;
+        b=o4EsVQ+Kdx2rVS1vTH8ULPhnT73KzX0nbtevOuOL5pUrU6JZyH13vTINYrVaJ51jnv
+         G7cU5gAcNYskSUJlHv6HJfGdhYn9urr9yJFqT0i47mxXy4zCylXbonpRcWuWHiczx7RJ
+         lxUkLyfgopEKnCe980y4zlQuQSxuKHKlsrh5NyON2rYaeGxFBtObCeIrZp+NMa59VYPJ
+         U2ml8EZeLKrnHA6nl0o6uRHhY3GHPz9S+3fVowNnDkVktgwVjiO04+aTzyrkyNMfpKvM
+         nCCcvlylWiBMdgCzbIh1zjsWCyFDs4DfrZ8Ojr1Z6WCK5Cz33Tg5Ca1afTFhKjtrmis+
+         70Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740500148; x=1741104948;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z6QV46TQbbowuZaidKwQKybXS8KlFzTUfykk67zDNY8=;
+        b=oagNg+LdDnHjl3vyTVh+Xp5wFsWH0o7JD/BFT3Nom3co1Pj3OJoDW7k067ukfpiB6V
+         QHS36Js7fSYp66k9VLRjF54UxYhhqxdLSS/AAFfJ+7lsvkc/2h7pWHJVM0THd+iNPUZY
+         eJWCIWMUcB1e298bHgktNT37AjKjmUYXuvRIjZ/f2586a/9DEauq+/e7dlGj6VwR8qZ9
+         1pGG5sVsdjNGIemRyG04qBrDDl4sMyMSJaLVYx0vB6M1F5g1tnaU8oWc+lynn6UbXzyq
+         PPHMkpseGw7N8PGQiWkg4g7/MA8CAliTvvDcpbaEbH4NwCHa0sLfFnCg1iPhpaXXE5de
+         f2WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWK7W2yN2gFuVqdy1k2SZ9x1CHxal9xIvQyVcfYB+hA/0KLqf2B47/ly2mTCfYqW0ybmUmNagWjHyzM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNGDhA6a3UbD2vhqT6PcTcstw7VUgSJoqlzciR2Eh6CaVsG6eQ
+	opD+4HO7r2nRQrIwjlak/tSs99bfzPuR4RvtXsYml6tVbPIipt2lUMiChDY530k=
+X-Gm-Gg: ASbGncvKoHJkOgbFzUR7hD9MYYAfQCsrpfNFi/i/ZBumCoC/hgi12kC5osfhCFkk1qf
+	J2wXph/jJN1eQYcuWhLR518cs+PfQ8z6kvpzzOfrNzzniMkRzYsizsXDW7xExmXSiQ5m8jtTn8p
+	FtSEr9NrdCN7ChknXfThpBFpmzvgAUt3NQWPpXXG7x+V29DdiGLPgQye1XGDr+Ru8SrZanz4VV7
+	gBPEArVny8zvssOQuEVvIjIeRQ+GOmlEDoiwmnwZknLmPHLRqN4+m9LanUVVC8HVhTC5YwQVx8l
+	brQvy1LoLQf+b0e0VEPiXJBdVE6xaV6mnC0V
+X-Google-Smtp-Source: AGHT+IFn5GUKE31nP7tgT7niJ4SWR4mxLNvOZVrLeT7oIthbVOOg0Ui1M0Y4d9f4fXVVzIRrZZQBmw==
+X-Received: by 2002:a05:6512:304c:b0:545:721:b7d1 with SMTP id 2adb3069b0e04-54838eefe80mr8602073e87.15.1740500148372;
+        Tue, 25 Feb 2025 08:15:48 -0800 (PST)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514f512dsm212587e87.178.2025.02.25.08.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 08:15:48 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 0/2] gpiolib: of: Handle threecell gpios
+Date: Tue, 25 Feb 2025 17:15:45 +0100
+Message-Id: <20250225-gpio-ranges-fourcell-v2-0-8da9998fa976@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2298250.1740496596.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 25 Feb 2025 15:16:36 +0000
-Message-ID: <2298251.1740496596@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALHsvWcC/22NwQqDMBBEf0X23C1JRJv21P8oHmISdUGMbNrQI
+ vn3RqG3Ht8M82aD6Jl8hFu1AftEkcJSQJ0qsJNZRo/kCoMSqhFKXnBcKSDvTcQhvNj6eUbdaK2
+ NU/LqDJTpyn6g96F9dIUnis/An+MlyT39CfV/YZIosJdD7frWalG395kWw+EceIQu5/wFyb0vx
+ LkAAAA=
+X-Change-ID: 20250217-gpio-ranges-fourcell-85888ad219da
+To: Yixun Lan <dlan@gentoo.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>, Alex Elder <elder@riscstar.com>
+X-Mailer: b4 0.14.2
 
-Zijun Hu <zijun_hu@icloud.com> wrote:
+This adds some code in the gpiolib OF core to deal with
+several gpio chip instances per OF node.
 
-> >>  static inline void tlb_remove_page(struct mmu_gather *tlb, struct pa=
-ge *page)
-> >>  {
-> >> -	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
-> >> +	tlb_remove_page_size(tlb, page, PAGE_SIZE);
-> >>  }
-> > So I don't mind removing it, but note that that return enforces
-> > tlb_remove_page_size() has void return type.
-> >
-> =
+The change was prompted by the need of the Spacemit GPIO
+controller.
 
-> tlb_remove_page_size() is void function already. (^^)
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes in v2:
+- Fix a speling error in first patch.
+- Fix coding errors and documentation errors in second patch.
+- Collected review tags.
+- Drop RFT tag, this is for applying.
+- Link to v1: https://lore.kernel.org/r/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org
 
-That may be true... for now.  But if that is changed in the future, then y=
-ou
-will get an error indicating something you need to go and look at... so in
-that regard, it's *better* to do this ;-)
+---
+Linus Walleij (2):
+      gpiolib: of: Use local variables
+      gpiolib: of: Handle threecell GPIO chips
 
-David
+ drivers/gpio/gpiolib-of.c   | 126 ++++++++++++++++++++++++++++++++++++--------
+ include/linux/gpio/driver.h |  24 ++++++++-
+ 2 files changed, 126 insertions(+), 24 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250217-gpio-ranges-fourcell-85888ad219da
+
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
 
