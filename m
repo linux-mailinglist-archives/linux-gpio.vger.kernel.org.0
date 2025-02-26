@@ -1,434 +1,189 @@
-Return-Path: <linux-gpio+bounces-16594-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16595-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8C6EA450FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 00:41:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93485A451A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 01:43:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6E2317F925
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Feb 2025 23:41:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7C1A3A606A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 00:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F360923A980;
-	Tue, 25 Feb 2025 23:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="dHlyydQ1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C481E148FE6;
+	Wed, 26 Feb 2025 00:42:13 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315BC213E8A
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 23:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181B1383A5;
+	Wed, 26 Feb 2025 00:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740526887; cv=none; b=AkoVuMUtIpnlo1oajsOWjXq+CgmrfWKPUeXMrb98zuoYkkJJwzY4zwN9ppkvpPnrJf4nKkxRe/4QhDeUZ/w9kbtxIc1Bn8b0sM/tbSjdHAXMx+F8Db+uAi2P8KAXUos0Sc4KYNlfPOfcY5ZzLmfUY3oBHdlZxbiAC15cbbl/N1k=
+	t=1740530533; cv=none; b=f7hgIp0set51F55HYK3TKazTN5CpzlfHhrpProVLGPVz3GWSTEsxvtwjPn+Ue64Af8mlza1PNcBqDpIsPASDctWKD+304uWXEDr1Vl+b+UcJ5+7KlWZNVZ8Yhh/sqpCZRUSXBLGR+Sgh4rKg1OGIPwdnT+2yK2MJ03ywfkK5BF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740526887; c=relaxed/simple;
-	bh=kVCWcs8B1LAWxbENKPOFY6SU0jzG1k4/6GWKjaeQD1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GhfKyGuMNTky8EyezOUk4FeFRuA9y/wxIkXi4Eg0KlhY5LlmWyi0RNVo7qRlfx0gaWZ5ewwk+bmZzukRbzJaCfXk1g7e7XzfjlwjbfeHWbz7egTqNobzCf6LzUmSfdb5tmwza+6t8WzVwfu/9fkbRazEfKSdnGPco/xFQTsimZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=dHlyydQ1; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8559461c2c2so164186039f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 15:41:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1740526884; x=1741131684; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BHaj9gvBk8zG1gGIlEStQCmYqgUrifgWPrJTCoeAM04=;
-        b=dHlyydQ1TuXa5fUAiJLJypQUpeWTHZIx76GmypkzWwtU9x8aWBScCsylP1g0BvdeA4
-         M2KOubegKxBQQ7lrU3Db/FxCSCq4wNKUMYQ5awRrnOko99oUHhY/jI2io8BIoIVV9LiG
-         PMeTwoOAZ1lAODJVVTd8eg3JW7bU0ozR6mg5E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740526884; x=1741131684;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BHaj9gvBk8zG1gGIlEStQCmYqgUrifgWPrJTCoeAM04=;
-        b=UeL/8OnXkkK5Nv5jX73mmq+rLxAqFz8vJDSrQ0/YYDhBnoagvid6uhKxfc6HYp1CL0
-         W2xWDV+1XzihzcRZzi4OiLkdd10692C3/3tobvWXwCHfGDwdkEMPspV2pmIK4v1zdmSo
-         Qoi59MgTd2qsSLXcRtoYQrHFTF/47B8Z+CftPQtPTeDCZa6MKQEK/gTy5XGNKn/rGvY9
-         NYakXp8vBpN7zKYVoZbt7akzePIkMx04enjPQ+AYpprVrg+njhdF+jxRWLZJyr3yZ23m
-         oGdfGBAOvFhDYViYAHtI92rMeQrWTUEB3Faf/OuCfTRa4KCoGSfrX6KQ3C062gBBhnT+
-         70fA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZfx41AdUaQq57HfCPL45FLQA4MDGrontZs2jovkTaL16C+D9fryyGM7nsUWEnCKSnnUH3Xsu9mzRE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF7+bmz7983pmivEQX18zw8mbwUUW7bMQS1GxYrctfWRvlxikV
-	T1kjmm7x9jBNWtvwTy4Rw8ZLotpxy9er5UUvh0hwpB3jww2rd2OF9xzEPZjPuA==
-X-Gm-Gg: ASbGnctW52BE/Avzf67BFDiypizcMp5L+bVzFWp+IX4X83fxryRfhrRzn5vIVjL6Ogq
-	mTDW8FPkbtdJ4KiX6Gf3/zxzzAbPeXU72LluzZUI9Rfe/2Wg3zOONhbZFjdKt8q59Mc+P8Mc30b
-	dKOj5BE2kvYInq6EvQHVbNL62XKHrTtyn9jli4v1yVv0bR7+X4SKkLrMmLJyj/n/l8tUXPo0xeS
-	9acl8DHiFM1rXwwe8GRhnCF58MZBaArgxCCM+SbX0/3lKk0Q+IqLxnWzfFqO+9hq6IjuXujnbsG
-	HIccyZaCR5SQw2nVD0Gkv9BpN0Fdfq8jrV+ZV/FC5DH7iL6Qkq1fF70KkM4w
-X-Google-Smtp-Source: AGHT+IELLUqvdHtIjF5ex7T70YIAG/gx6Cyym6wtg7dAB0E9NnbIVc9NER59uaYfyzMZJTQ3DMqU6w==
-X-Received: by 2002:a05:6602:6d05:b0:84f:2929:5ec0 with SMTP id ca18e2360f4ac-857c176b95cmr154503239f.4.1740526884172;
-        Tue, 25 Feb 2025 15:41:24 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4f04747aed8sm643964173.52.2025.02.25.15.41.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 15:41:23 -0800 (PST)
-Message-ID: <e2e65a3a-fa42-4bdf-9e6d-9122d5fc07bf@ieee.org>
-Date: Tue, 25 Feb 2025 17:41:21 -0600
+	s=arc-20240116; t=1740530533; c=relaxed/simple;
+	bh=UWPU2G9kLDNS6nKvBYXIylw9swDhkp6TjVyIYMZ2kAA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XegQiI1VWZlSjoEM2FCnReDzPVLjNmeQAJj8vMuBSKPYZhu4n0LyZwPzTjYTvrQ/KgEjoZF2+lck8zlr2Lqub/2wjeEg3ptSI7/UTTy+BFf2VWcv6dKry6EolAo29XdUbaaa9jRIE5kkZOYJq0+Td0zsnDUkn7y5fSC3vnxRtn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.55.252])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 42D0B343295;
+	Wed, 26 Feb 2025 00:42:04 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v7 0/4] riscv: spacemit: add gpio support for K1 SoC
+Date: Wed, 26 Feb 2025 08:41:16 +0800
+Message-Id: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] gpio: spacemit: add support for K1 SoC
-To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
- Jesse Taube <mr.bossman075@gmail.com>, Inochi Amaoto
- <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>,
- Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-References: <20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org>
- <20250223-03-k1-gpio-v6-2-db2e4adeef1c@gentoo.org>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20250223-03-k1-gpio-v6-2-db2e4adeef1c@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACxjvmcC/2XQTU7DMBAF4KtUXmNkj/+z4h6IRWyP04hSFyeNQ
+ FXvjpMKSJTlWPqe38yNDFh6HEhzuJGCUz/0+VwH83Qg4dieO6R9rDMBBpJZsJQJ+s5pd+kz1dw
+ nB8kxAYFUcCmY+q8l7PXtMRf8vNbM8fFIfDsgDfnjox+bg4gGomaiTa2Bmq0YR8eMRoyaI1OCC
+ +EwWbLu0hxqE8WAm0eHMr8PNOVrCXg6UaustW0E7mLbTILMPY79MObyvew48aXIso5jcr3OxCm
+ jmhlAjxhaZC8dnsecn3PplpwJ/iyvH2wsVAtWSpkiAA9xZ8XKgtpYMVvjvfFS8qhhZ+WvrScCv
+ rF1Ayq15MGpwLiTO6v+7Xy0tVVLZy0wCDRem53VKwtiY3W10QPKNiImHjb2fr//AGAAuDhZAgA
+ A
+X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>, 
+ Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4477; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=UWPU2G9kLDNS6nKvBYXIylw9swDhkp6TjVyIYMZ2kAA=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnvmNMqLtiu2OxpFDZQX22A2YH993qpWDZMZ81I
+ xst+pizDOCJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ75jTF8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277ZsND/9S2mioO4CNFsRhPU
+ ucm7rw+lbP1rfXfp8FFlSa2Ot6SOvKNE4PoPpiOSymGsbgx1/DWV/LPPvo6sT9bam+n6y81iCmz
+ rV/y/SOm5zfhubkwid5Gv2ix3vZeXTJF8sQ5UsN0KdxBp+1JgR1idnbCtg8B2mS7OEoLdTbFGry
+ NqAOdsJUur1K1dB9K63nfN6gxBoqVtMq2mWnjRucKk8+a0/K/5eBSMuzWt4WklxmUj8R+3sCrOp
+ jaAi4gAJSmZpwdmKJAJ3ZyQOq5FG+DUTrkKAtR5pQwGVqhH+xye6pKTuHT8+HnB3AnKFFaRyxkx
+ roW7tptC38IPpUQhJmdNwgoPqqZd0izS7Xvud9DpRstwSgdUDMct4ff6Vgl9ZZq3D8HFHBqSZMC
+ Ja8/SlDSQZPBl72+RfDvtURavZR4aqiHq9Tp4c/DGjN4LD2FnviKMeHeT8OZbx3G//8zKn0Gf7N
+ Yc0u1L1SaxZLueV8TnxS02Y6ehY6IAahLhQAMtwOq0mZHs3K4/TJHyaDzNfsiLylFS54YPVc5hg
+ YbHmSJcAoIdaPw4IfmCK24gCDQjcoOyqY2bsm8m/56ySxWv3uHDaT9Saf9mhLqFA8u4evxWJCH3
+ o8r6TDtQoULiWFS+JUPq2R8fEU+NutsO1vYFSfZHbzqD1w7YTbO1rsB8LPX/2bJBj1Vg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On 2/23/25 5:49 AM, Yixun Lan wrote:
-> Implement GPIO functionality which capable of setting pin as
-> input, output. Also, each pin can be used as interrupt which
-> support rising, falling, or both edge type trigger.
-> 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, falling edge,
+or both. There are four GPIO ports, each consisting of 32 pins and
+has indepedent register sets, while still sharing IRQ line and clocks.
 
-This looks very good.
+The GPIO controller request the clock source from APBC block,
+In this series, I haven't added the clock support, but plan
+to fix it after clock driver is merged.
 
-Reviewed-by: Alex Elder <elder@riscstar.com>
+Due to first three GPIO ports has interleave register settings, some
+resources (IRQ, clock) are shared by all pins.
 
-> ---
->   drivers/gpio/Kconfig            |   8 ++
->   drivers/gpio/Makefile           |   1 +
->   drivers/gpio/gpio-spacemit-k1.c | 277 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 286 insertions(+)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index add5ad29a673c09082a913cb2404073b2034af48..eaae729eec00a3d6d2b83769aed3e2b0ca9927e5 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -655,6 +655,14 @@ config GPIO_SNPS_CREG
->   	  where only several fields in register belong to GPIO lines and
->   	  each GPIO line owns a field with different length and on/off value.
->   
-> +config GPIO_SPACEMIT_K1
-> +	bool "SPACEMIT K1 GPIO support"
-> +	depends on ARCH_SPACEMIT || COMPILE_TEST
-> +	depends on OF_GPIO
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say yes here to support the SpacemiT's K1 GPIO device.
-> +
->   config GPIO_SPEAR_SPICS
->   	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
->   	depends on PLAT_SPEAR
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index af3ba4d81b583842893ea69e677fbe2abf31bc7b..6709ce511a0cf10310a94521c85a2d382dcfa696 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -156,6 +156,7 @@ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
->   obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
->   obj-$(CONFIG_GPIO_SLOPPY_LOGIC_ANALYZER) += gpio-sloppy-logic-analyzer.o
->   obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
-> +obj-$(CONFIG_GPIO_SPACEMIT_K1)		+= gpio-spacemit-k1.o
->   obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
->   obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
->   obj-$(CONFIG_GPIO_STMPE)		+= gpio-stmpe.o
-> diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d9a0a10cf76d9b886970753296ce7f4174246f8c
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-spacemit-k1.c
-> @@ -0,0 +1,277 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +/*
-> + * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
-> + * Copyright (C) 2025 Yixun Lan <dlan@gentoo.org>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/seq_file.h>
-> +
-> +/* register offset */
-> +#define SPACEMIT_GPLR		0x00 /* port level - R */
-> +#define SPACEMIT_GPDR		0x0c /* port direction - R/W */
-> +#define SPACEMIT_GPSR		0x18 /* port set - W */
-> +#define SPACEMIT_GPCR		0x24 /* port clear - W */
-> +#define SPACEMIT_GRER		0x30 /* port rising edge R/W */
-> +#define SPACEMIT_GFER		0x3c /* port falling edge R/W */
-> +#define SPACEMIT_GEDR		0x48 /* edge detect status - R/W1C */
-> +#define SPACEMIT_GSDR		0x54 /* (set) direction - W */
-> +#define SPACEMIT_GCDR		0x60 /* (clear) direction - W */
-> +#define SPACEMIT_GSRER		0x6c /* (set) rising edge detect enable - W */
-> +#define SPACEMIT_GCRER		0x78 /* (clear) rising edge detect enable - W */
-> +#define SPACEMIT_GSFER		0x84 /* (set) falling edge detect enable - W */
-> +#define SPACEMIT_GCFER		0x90 /* (clear) falling edge detect enable - W */
-> +#define SPACEMIT_GAPMASK	0x9c /* interrupt mask , 0 disable, 1 enable - R/W */
-> +
-> +#define SPACEMIT_NR_BANKS		4
-> +#define SPACEMIT_NR_GPIOS_PER_BANK	32
-> +
-> +#define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gpio_bank, gc)
-> +
-> +struct spacemit_gpio;
-> +
-> +struct spacemit_gpio_bank {
-> +	struct gpio_chip gc;
-> +	struct spacemit_gpio *sg;
-> +	void __iomem *base;
-> +	u32 irq_mask;
-> +	u32 irq_rising_edge;
-> +	u32 irq_falling_edge;
-> +};
-> +
-> +struct spacemit_gpio {
-> +	struct device *dev;
-> +	struct spacemit_gpio_bank sgb[SPACEMIT_NR_BANKS];
-> +};
-> +
-> +static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
-> +{
-> +	return (u32)(gb - gb->sg->sgb);
-> +}
-> +
-> +static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct spacemit_gpio_bank *gb = dev_id;
-> +	unsigned long pending;
-> +	u32 n, gedr;
-> +
-> +	gedr = readl(gb->base + SPACEMIT_GEDR);
-> +	if (!gedr)
-> +		return IRQ_NONE;
-> +	writel(gedr, gb->base + SPACEMIT_GEDR);
-> +
-> +	pending = gedr & gb->irq_mask;
-> +	if (!pending)
-> +		return IRQ_NONE;
-> +
-> +	for_each_set_bit(n, &pending, BITS_PER_LONG)
-> +		handle_nested_irq(irq_find_mapping(gb->gc.irq.domain, n));
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void spacemit_gpio_irq_ack(struct irq_data *d)
-> +{
-> +	struct spacemit_gpio_bank *gb = irq_data_get_irq_chip_data(d);
-> +
-> +	writel(BIT(irqd_to_hwirq(d)), gb->base + SPACEMIT_GEDR);
-> +}
-> +
-> +static void spacemit_gpio_irq_mask(struct irq_data *d)
-> +{
-> +	struct spacemit_gpio_bank *gb = irq_data_get_irq_chip_data(d);
-> +	u32 bit = BIT(irqd_to_hwirq(d));
-> +
-> +	gb->irq_mask &= ~bit;
-> +	writel(gb->irq_mask, gb->base + SPACEMIT_GAPMASK);
-> +
-> +	if (bit & gb->irq_rising_edge)
-> +		writel(bit, gb->base + SPACEMIT_GCRER);
-> +
-> +	if (bit & gb->irq_falling_edge)
-> +		writel(bit, gb->base + SPACEMIT_GCFER);
-> +}
-> +
-> +static void spacemit_gpio_irq_unmask(struct irq_data *d)
-> +{
-> +	struct spacemit_gpio_bank *gb = irq_data_get_irq_chip_data(d);
-> +	u32 bit = BIT(irqd_to_hwirq(d));
-> +
-> +	gb->irq_mask |= bit;
-> +
-> +	if (bit & gb->irq_rising_edge)
-> +		writel(bit, gb->base + SPACEMIT_GSRER);
-> +
-> +	if (bit & gb->irq_falling_edge)
-> +		writel(bit, gb->base + SPACEMIT_GSFER);
-> +
-> +	writel(gb->irq_mask, gb->base + SPACEMIT_GAPMASK);
-> +}
-> +
-> +static int spacemit_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct spacemit_gpio_bank *gb = irq_data_get_irq_chip_data(d);
-> +	u32 bit = BIT(irqd_to_hwirq(d));
-> +
-> +	if (type & IRQ_TYPE_EDGE_RISING) {
-> +		gb->irq_rising_edge |= bit;
-> +		writel(bit, gb->base + SPACEMIT_GSRER);
-> +	} else {
-> +		gb->irq_rising_edge &= ~bit;
-> +		writel(bit, gb->base + SPACEMIT_GCRER);
-> +	}
-> +
-> +	if (type & IRQ_TYPE_EDGE_FALLING) {
-> +		gb->irq_falling_edge |= bit;
-> +		writel(bit, gb->base + SPACEMIT_GSFER);
-> +	} else {
-> +		gb->irq_falling_edge &= ~bit;
-> +		writel(bit, gb->base + SPACEMIT_GCFER);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void spacemit_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
-> +{
-> +	struct spacemit_gpio_bank *gb = irq_data_get_irq_chip_data(data);
-> +
-> +	seq_printf(p, "%s-%d", dev_name(gb->gc.parent), spacemit_gpio_bank_index(gb));
-> +}
-> +
-> +static struct irq_chip spacemit_gpio_chip = {
-> +	.name		= "k1-gpio-irqchip",
-> +	.irq_ack	= spacemit_gpio_irq_ack,
-> +	.irq_mask	= spacemit_gpio_irq_mask,
-> +	.irq_unmask	= spacemit_gpio_irq_unmask,
-> +	.irq_set_type	= spacemit_gpio_irq_set_type,
-> +	.irq_print_chip	= spacemit_gpio_irq_print_chip,
-> +	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_SKIP_SET_WAKE,
-> +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> +};
-> +
-> +static bool spacemit_of_node_instance_match(struct gpio_chip *gc, unsigned int i)
-> +{
-> +	struct spacemit_gpio_bank *gb = gpiochip_get_data(gc);
-> +	struct spacemit_gpio *sg = gb->sg;
-> +
-> +	if (i >= SPACEMIT_NR_BANKS)
-> +		return false;
-> +
-> +	return gc == &sg->sgb[i].gc;
-> +}
-> +
-> +static int spacemit_gpio_add_bank(struct spacemit_gpio *sg,
-> +				  void __iomem *regs,
-> +				  int index, int irq)
-> +{
-> +	struct spacemit_gpio_bank *gb = &sg->sgb[index];
-> +	struct gpio_chip *gc = &gb->gc;
-> +	struct device *dev = sg->dev;
-> +	struct gpio_irq_chip *girq;
-> +	void __iomem *dat, *set, *clr, *dirin, *dirout;
-> +	int ret, bank_base[] = { 0x0, 0x4, 0x8, 0x100 };
-> +
-> +	gb->base = regs + bank_base[index];
-> +
-> +	dat	= gb->base + SPACEMIT_GPLR;
-> +	set	= gb->base + SPACEMIT_GPSR;
-> +	clr	= gb->base + SPACEMIT_GPCR;
-> +	dirin	= gb->base + SPACEMIT_GCDR;
-> +	dirout	= gb->base + SPACEMIT_GSDR;
-> +
-> +	/* This registers 32 GPIO lines per bank */
-> +	ret = bgpio_init(gc, dev, 4, dat, set, clr, dirout, dirin,
-> +			 BGPIOF_UNREADABLE_REG_SET | BGPIOF_UNREADABLE_REG_DIR);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to init gpio chip\n");
-> +
-> +	gb->sg = sg;
-> +
-> +	gc->label		= dev_name(dev);
-> +	gc->request		= gpiochip_generic_request;
-> +	gc->free		= gpiochip_generic_free;
-> +	gc->ngpio		= SPACEMIT_NR_GPIOS_PER_BANK;
-> +	gc->base		= -1;
-> +	gc->of_gpio_n_cells	= 3;
-> +	gc->of_node_instance_match = spacemit_of_node_instance_match;
-> +
-> +	girq			= &gc->irq;
-> +	girq->threaded		= true;
-> +	girq->handler		= handle_simple_irq;
-> +
-> +	gpio_irq_chip_set_chip(girq, &spacemit_gpio_chip);
-> +
-> +	/* Disable Interrupt */
-> +	writel(0, gb->base + SPACEMIT_GAPMASK);
-> +	/* Disable Edge Detection Settings */
-> +	writel(0x0, gb->base + SPACEMIT_GRER);
-> +	writel(0x0, gb->base + SPACEMIT_GFER);
-> +	/* Clear Interrupt */
-> +	writel(0xffffffff, gb->base + SPACEMIT_GCRER);
-> +	writel(0xffffffff, gb->base + SPACEMIT_GCFER);
-> +
-> +	ret = devm_request_threaded_irq(dev, irq, NULL,
-> +					spacemit_gpio_irq_handler,
-> +					IRQF_ONESHOT | IRQF_SHARED,
-> +					gb->gc.label, gb);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "failed to register IRQ\n");
-> +
-> +	return devm_gpiochip_add_data(dev, gc, gb);
-> +}
-> +
-> +static int spacemit_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct spacemit_gpio *sg;
-> +	struct resource *res;
-> +	void __iomem *regs;
-> +	int i, irq, ret;
-> +
-> +	sg = devm_kzalloc(dev, sizeof(*sg), GFP_KERNEL);
-> +	if (!sg)
-> +		return -ENOMEM;
-> +
-> +	regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	sg->dev	= dev;
-> +
-> +	for (i = 0; i < SPACEMIT_NR_BANKS; i++) {
-> +		ret = spacemit_gpio_add_bank(sg, regs, i, irq);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id spacemit_gpio_dt_ids[] = {
-> +	{ .compatible = "spacemit,k1-gpio" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver spacemit_gpio_driver = {
-> +	.probe		= spacemit_gpio_probe,
-> +	.driver		= {
-> +		.name	= "k1-gpio",
-> +		.of_match_table = spacemit_gpio_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(spacemit_gpio_driver);
-> +
-> +MODULE_AUTHOR("Yixun Lan <dlan@gentoo.org>");
-> +MODULE_DESCRIPTION("GPIO driver for SpacemiT K1 SoC");
-> +MODULE_LICENSE("GPL");
-> 
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+
+Note, this patch is rebased to v6.14-rc1.
+
+This patch series has been tested on Bananapi-F3 board,
+with following GPIO cases passed:
+ 1) gpio input
+ 2) gpio output - set to high, low
+ 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+
+This version should resolve DT related concern in V4, and register each bank as
+indepedent gpio chip in driver, no more sub children gpio DT node needed.
+
+One problem is still not resolved, the interrupt cells parsing isn't correct.
+but it works if request gpio irq via gpiod_get() + gpiod_to_irq()
+
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+Link: https://lore.kernel.org/all/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org [4]
+Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [5]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Changes in v7:
+- dt-binding: fix 80 column, drop unneeded dependencies
+- tested with patch v3 of "gpiolib: of: Handle threecell gpios" [5]
+- collect review tags
+- Link to v6: https://lore.kernel.org/r/20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org
+
+Changes in v6:
+- rebase to threecell gpio patch which proposed by LinusW at [4], 
+  drop unneeded *xlate(), *add_pin_range() function
+- add SPACEMIT prefix to macro
+- adjust register comments
+- drop 'index' member, instead calculate from offset
+- add IRQCHIP_SKIP_SET_WAKE as gpio doesn't support irq wake up
+- drop #ifdef CONFIG_OF_GPIO
+- move interrupt mask disabling/enabling into irq_*mask()
+- Link to v5: https://lore.kernel.org/r/20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org
+
+Changes in v5:
+- export add_pin_range() from gpio core, support to add custom version
+- change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
+- fold children DT nodes into parent
+- Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
+
+Changes in v4:
+- gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
+- gpio interrupt: convert to generic gpio irqchip
+- Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+
+Changes in v3:
+- dt: drop ranges, interrupt-names property
+- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+
+Changes in v2:
+- address dt-bindings comments, simplify example
+- rebase to 6.13-rc3 
+- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
+
+---
+Yixun Lan (4):
+      dt-bindings: gpio: spacemit: add support for K1 SoC
+      gpio: spacemit: add support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
+      riscv: dts: spacemit: add gpio LED for system heartbeat
+
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  79 ++++++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   3 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  15 ++
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spacemit-k1.c                    | 277 +++++++++++++++++++++
+ 7 files changed, 394 insertions(+)
+---
+base-commit: 3d72d603afa72082501e9076eed61e0531339ef8
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+prerequisite-change-id: 20250217-gpio-ranges-fourcell-85888ad219da:v3
+prerequisite-patch-id: 9d4c8b05cc56d25bfb93f3b06420ba6e93340d31
+prerequisite-patch-id: 7949035abd05ec02a9426bb17819d9108e66e0d7
+
+Best regards,
+-- 
+Yixun Lan
 
 
