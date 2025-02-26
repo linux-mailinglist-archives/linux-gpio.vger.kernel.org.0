@@ -1,118 +1,124 @@
-Return-Path: <linux-gpio+bounces-16611-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16612-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C500EA45B87
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:17:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 298C2A45B8D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:19:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EBC913AE24F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 10:15:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94F6E189A074
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 10:19:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF6624E003;
-	Wed, 26 Feb 2025 10:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7A872135DA;
+	Wed, 26 Feb 2025 10:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CXc3Vro9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="utWFaXvL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37192459F2
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 10:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF85420E302
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 10:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564921; cv=none; b=R/ioGWRphxqAKvJ/aGpiNUHHX6y1g5SuAOHUt/33HsOU0kBgiLWPXg35CYUAIKFXtWV5i1PHp0ZFCec8bLfdQWJn/pY6wbkUPeQf/lZK0Zltt/21cEU0pI8TP2q84jSQaieb6OUIifOB1eeSDYMd+VCnp7VRNjq4UuRUcngCjCQ=
+	t=1740565150; cv=none; b=FQwZKPkRBChzmZ9KxZw4c2USojgxUZHMTHCX8YLvMOVqvlctwel0TMJSKdOF9AtCZaVhiDvEEjjZeEitCfhKcvfuW2WQVvIIAxlWrfRSBElnmZZAQDAnacvxnNIFVnVsZfAND20X8Ztr2+GTMw8HECMyN5dsTB0JPZK2/i7kD48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740564921; c=relaxed/simple;
-	bh=lmaHsdIjyeoXwlxTnbkpP3HL5d/owFOlMVcngpMhhDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iNSZyllRmRSxAnDy3ZK6b3FwixYj1lg0CQUx2bX3ebWrwL1s4fEg8h3GKv+f5h7xHGkAueLHnQD8P1X7RpEw6IKIxhkZfA5ZkCOVvNqiQmyVIWYfbfY5wNxFETWW/lWGwnyCmfgAWUYaJDA8AotuUR+0xbZkt3UZbooG2JJppuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CXc3Vro9; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4399ee18a57so4203175e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 02:15:19 -0800 (PST)
+	s=arc-20240116; t=1740565150; c=relaxed/simple;
+	bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nr729N7cLwCzGXzJCOu1bf/CRNd3Cf1eOamXSwrdFT7DmBueSCGSKpL/GsvLnYjUWcHci6s6pAQOeEJ++6rN0fS0qqhcl+cXh/up1eshLTw65V9d/T4hOQ7dzxBf/RlZD7msNusY5Rk6COJ4psMp8gEA6IdNDLmBZuW1xxnnNcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=utWFaXvL; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54622e97753so753917e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 02:19:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740564918; x=1741169718; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1740565147; x=1741169947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aGbaXyM3Jpdsq99NC8sU65wH5v68rhdD4yTSLXIyXtw=;
-        b=CXc3Vro91izrzt3YQpCK1JQBx/6Vew++Pzjw8KHw7u3j9hlCTZSWlyQKr9UosR6Ldy
-         5NHxJPliUZH2+OQucmujYc/DH0IXAXFB8s1XMCa1v+wJd9KpXT6GzD7zy5YXx6zqIiEw
-         444rSIoV4jTJf+HlvqLt/xc9meIWYkRKWEz5wH7ZHwFiAxpxMwMuVtnyg91dStWa5oH0
-         B6ki0obMcW0dTTN/YO1RUNfKlW3XMOR/Msv8SSd6pDCzyIa/erAxMpc7XIYEMfpy9avB
-         Cak1HrQNYuEs9weOcSUgJvyuNR28Sf8QW+FQ94T0CM5YlsHaLJ2at4tN6ZY8ogHY9h6p
-         8T2A==
+        bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
+        b=utWFaXvLMnJxUSS5zmFp1zMLVLctrM8Cbe1nzLsNRGWhBJoACvjkquhXJBV+3rkJHW
+         rtzapm8lDzWTq2lmp8rNzk3Qe5NkHrMHC+9kYftMvfzDHusMfhnav9JyRMz2jICebb6h
+         O+iepKZpSvAXjmf+f3NkFWoeWhdxTqj0UbgvPDJeCpz0owP78ivQsQfzf543q32lZbDW
+         RXH9PCQBklsOO2OJpTx9AU1u8Gx3KLm9AuyriTecz7/PX4IJ9UQEnp+0YLTrltNZqght
+         DoAWSdnmQLnxe3fPn2vTM8vXJkx5FBbWNXmn3kOVz8bSybKyXhO7iq5xMiRpCiRscy9Z
+         wWMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740564918; x=1741169718;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740565147; x=1741169947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aGbaXyM3Jpdsq99NC8sU65wH5v68rhdD4yTSLXIyXtw=;
-        b=YhMGHYN7jt9bEuc/LLVdeDQMnC6aN/XM/I82sDI+JGil150lBTrHoFJd4vivqzT7wN
-         duo7fXC3ahWMVOsvYoYomZ6pBbZfrYyI2ppG/39mdHV1cTM409/qhfSUsbon7Su6HSHc
-         oxiLxCqzYMqEB0121+a5SwKmKZgIzhlpYqeTYwcXE1sqK0qOlgPguuUHPntT89PwsMdg
-         Iu+r9v1hpjTYcQJiNcNVf6ANCAioBm+Lse8QplegDIpgSnQFzs2J1HCYNmzVNeO0AIw2
-         Mmp1W6UR7UYDa3Ee05MI+03dX4W6GHYhEf+DACBtvr6x5Qlp4JWpY5JsiFCVp5BzpWyt
-         akYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXErJ4ROB0hX0+6yJeZIWmyXHm+5bBpER+yGN7GUqdOQc3u0CP5xsPeC/zKqAXJYf9lMChkRDj4szRR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs+Rpln4Gco91FHIXvTPadPsJdxCF0eKZPzOVXIThdsBNLHzY0
-	o+atxfwIWEoRVmASt5G4yOJM3vFqK8MwLWmziamte92ksM6PdvwjCqnnCG4psxE=
-X-Gm-Gg: ASbGncs6ocn5+RRbxSLUQBQO5iHOkmyiAEypxH4YW7cTBegwhsaR/qhw3BDdoHtRAhI
-	DdC0lHoANnmF6shm78vjEGULA4gbGz+9OZ0OBdx6PqaFX47GnfOY69Ffg2MyQbEuZzIeRWVPWxD
-	TqBAhcmSlHceu6KE8LlhbZfuHv1TEH18jNCewcQ2uMCjLjt4de3zNqmniHRg+PWzyzuE6rgrA7z
-	dbEr7EtR126RZI+b3lJeSlKv7jK5FVRWQ7oZHqSHgPgNHZV0OT2AZUsVuUPXMNvVQMxrmVqNYBk
-	Jf4Bn3A6K2wcPB3Pfqp6AmQ=
-X-Google-Smtp-Source: AGHT+IHJ1cyASwzwsO+YvriZVv8hoDmiSBsK+ybOnr9953bvfTy7VHWnbh89iSzieYU/NqrxhGQkNg==
-X-Received: by 2002:a7b:cd8b:0:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-439a30afaecmr221385665e9.9.1740564917888;
-        Wed, 26 Feb 2025 02:15:17 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7d02:26:5770:658c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8fc1f9sm4924418f8f.88.2025.02.26.02.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 02:15:17 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v2] gpiolib: use the required minimum set of headers
-Date: Wed, 26 Feb 2025 11:15:15 +0100
-Message-ID: <174056490934.34383.5628472134451605193.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250225095210.25910-1-brgl@bgdev.pl>
-References: <20250225095210.25910-1-brgl@bgdev.pl>
+        bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
+        b=UQ6ujJoo+zkZrQEUoizubGyIhcjIeRpAuxpx4zl5CQepnKwTO2zN4t7uhlgKzgph85
+         bjcLjSGqkVYGvvEi0354k9Yg2ivSmEGev4aTo2oLAE590jTilDTfbCh9gozPrCn/MXSM
+         fLT8d5ALRCFu1yRKUWwQO2LmY7DSuMjdsj+KLIlxdvbTXBjR5Sf6VUFWHqIZK5cBHuyz
+         8fvElG0eiDNAq6NW2LhDsUBi0Qw85y49RC4W1jxvqixY0xaEH7jHzzM/UT2QvSrbO/gv
+         BA84b0Y+o2WO2wg/W77yWqy4x7N8JekF647pE5xteVcRYr7MTIr9uLO90xbOqHk8aGoK
+         OB+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqLj1Oou+HraVjdOojY1cszQIgTr4rhAxba/pbz8gqevXvuqhukmJ0BFmpxgfkp2q651IuUGDdlxYg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye/4MDvws/bSHuR6W6yb2C2etkbqHYzf1t/p+Dohu3tCcz3o7V
+	ZBegklK6rowNPfwqXv57BNuZDpxjoa4qQjSmJZ/dQyJQ/XEa+olN4KxDaYNyNNpgNU5/d2/gHG2
+	2hF1bKRuqCT9T1fF8GOhYo/qwfgestidCQhqNb52Hc+QqvG7I
+X-Gm-Gg: ASbGncuo3JaUBouY+G3qQjSKxjguazLbMF4mKNcgqZqEUkdK5b3u8t3nvnTho/P777B
+	4DnQ3CiBFnxS8zbtg4IqnNdo8Rc+IZ7bXx/413K9QfbPoDEHKm10z4MVxtNHnOgpRtPEI058Bew
+	v/hoyKdsc=
+X-Google-Smtp-Source: AGHT+IH9IyLn8GVoExU+oQLlxh7oTefH69fzA03PH2aYFHwj0v/wUocnCBinUIb/4NLpBPrOJ0p2aprs1CvgBYqqRcA=
+X-Received: by 2002:a05:6512:308f:b0:546:1d8c:60f1 with SMTP id
+ 2adb3069b0e04-546e4662ce7mr11792066e87.15.1740565146777; Wed, 26 Feb 2025
+ 02:19:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <Z71qphikHPGB0Yuv@mva-rohm> <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+ <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
+In-Reply-To: <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 26 Feb 2025 11:18:54 +0100
+X-Gm-Features: AQ5f1Jp5WtBrqIoIAmiHI68a90umMToYtMRHUCvv-S3W-GZVg3ZNkYQ-qANM-U8
+Message-ID: <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Feb 26, 2025 at 7:09=E2=80=AFAM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+> On 25/02/2025 23:36, Linus Walleij wrote:
+> > we can maybe move it to struct gpio_device in
+> > drivers/gpio/gpiolib.h?
+> >
+> > This struct exist for every gpio_chip but is entirely gpiolib-internal.
+> >
+> > Then it becomes impossible to do it wrong...
+>
+> True. I can try seeing what it'd require to do that. But ... If there
+> are any drivers out there altering the valid_mask _after_ registering
+> the driver to the gpio-core ... Then it may be a can of worms and I may
+> just keep the lid closed :)
 
+That's easy to check with some git grep valid_mask
+and intuition. I think all calls actually changing the valid_mask
+are in the init_valid_mask() callback as they should be.
 
-On Tue, 25 Feb 2025 10:52:10 +0100, Bartosz Golaszewski wrote:
-> Andy suggested we should keep a fine-grained scheme for includes and
-> only pull in stuff required within individual ifdef sections. Let's
-> revert commit dea69f2d1cc8 ("gpiolib: move all includes to the top of
-> gpio/consumer.h") and make the headers situation even more fine-grained
-> by only including the first level headers containing requireded symbols
-> except for bug.h where checkpatch.pl warns against including asm/bug.h.
-> 
-> [...]
+> Furthermore, I was not 100% sure the valid_mask was not intended to be
+> used directly by the drivers. I hoped you and Bart have an opinion on tha=
+t.
 
-Applied, thanks!
+Oh it was. First we just had .valid_mask and then it was
+manipulated directly.
 
-[1/1] gpiolib: use the required minimum set of headers
-      commit: 007094c83872ed33c1d9e39b3ef7168d85a3f214
+Then we introduced init_valid_mask() and all users switched over
+to using that.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+So evolution, not intelligent design...
+
+Yours,
+Linus Walleij
 
