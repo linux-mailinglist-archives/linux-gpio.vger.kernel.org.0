@@ -1,65 +1,50 @@
-Return-Path: <linux-gpio+bounces-16623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C520DA45F05
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:30:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E310A45D28
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 12:30:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 233AB163B84
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 12:30:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EC0616F747
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F20921ABA1;
-	Wed, 26 Feb 2025 12:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF00215769;
+	Wed, 26 Feb 2025 11:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MdEAhItm"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="rWtw35VN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6180A214803;
-	Wed, 26 Feb 2025 12:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D0A214A96
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 11:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572880; cv=none; b=tsWsO2en/oN5CzQjWe2zdKrRQtQVtd19VTLdrEyCo0ysOQOAqvetljVRKEje3QAT7IuZ1SvKAiui2hCQNF2q+71h4fE38hHvcCjJa6V2rHoNjREiV0YV75hQWcyXH5X6Fz7wQIkCvJ2QIfc3IUvON2YiaVUzNhXK3OjrQPgGEPM=
+	t=1740569439; cv=none; b=FqHAyGEP8Drhq0zo8nGU6SlhoIWq+FbuzAtEkQIl/voEyDnUUqcjHOqN7wzwMn1hw6nlogFuWGE8vsd6qxKrjOzdxmhck5Mwv46SCCR7tvSQMp3OygyA+wZd30c8IkCqYPmiMbbj5XQBYdFl3D31Krw4KAE6T8o0adxIxTqN+CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572880; c=relaxed/simple;
-	bh=K9oUygm4AKDUmgMf4aFOL3Lbp7QFh/wmXeF8uUXzjec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tM7CtNEWIS2dBlhmxGRzbwHSvZ6ab/QVcDvj5iXrEEa6vZtz5m/iYX0v9x21GiVAs9Tm09GWGz8aKr6reOPI3/b5eUI3ltDc+LrTBfVsd3Vdiw9NT/KUMjBm8ElvkZaUoEwtmnW/1+2Lxds+RjJRHQ2jp+pwkV03mDc1e1znNYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=MdEAhItm; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q8wODq012375;
-	Wed, 26 Feb 2025 13:27:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hZZuGvujbz+DHcZWLDWVwgKdZX6e4AC0NKcxZ1Mlhwc=; b=MdEAhItmw3+E1u3C
-	r8HueeBOvKLTCaKleXHh1C8dodj135VyASWo0XfJ2NifRuQ+x5lYfjjzWR3X6tNZ
-	802co02i0Mxx6VYM7W6BoZCSIULZCePY/KRWEATaZLQAxf5AYkJ0yf4vhcgUHl3s
-	OmG3W/wVw4GweHAFey0xk3IMjY1X0qCo7jpD4FsoH7GScd27EdJwj2wfRnV9ZNLn
-	T6F4onw9J6qRweP5pioK2Dxie2OQQG5w26nW5KoQeoJaD7ajkK9qrFwT2+Qe41e7
-	ZZYxL9oEobWQ1SoYMT7XqbOFC2djKKvCQh73Gtl5HSr/Ui749DxYb++YCioXf4fu
-	SJFQ5A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv4a64-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 13:27:41 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DA74B40051;
-	Wed, 26 Feb 2025 13:26:31 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CC916495277;
-	Wed, 26 Feb 2025 11:52:59 +0100 (CET)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 11:52:59 +0100
-Message-ID: <264d7fb8-06c2-4ada-82bc-4d3a7cc5e184@foss.st.com>
-Date: Wed, 26 Feb 2025 11:52:58 +0100
+	s=arc-20240116; t=1740569439; c=relaxed/simple;
+	bh=SNcREccD3RAme9xYt3R+kilxl7SAdbri9ontWGXnon8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NATwmVanCs5baVK1/l8S0p3WIm48X6Se3M3TuL+tlPtnraRmF931pCL2aMWQwSe9vqJrPLCmJx0/Zi9JXc8jioWVX03fNH3wPZNG9GQRtgTKZNBTH4ik0dJK9xF3fHxW3YOGNm4YwsYVh0ANh1xNqZWlZfnAhvqryHoWMPwSq/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=rWtw35VN; arc=none smtp.client-ip=17.58.6.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=SOdlXl7RXO630hj2D8KbTA/iuYN0f3n9ChpjV2oMRbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=rWtw35VN5C7ebUryxGYabBiGNkfRxevNXaKu3lmmbcfRwCfqvGmsARTKGVlEDc3vJ
+	 IUw+i/jF2/O7wPykYL7GtrScwR7YHPk2KZArZBlYEByVg4HG2euMsCf4SLAhxqqINe
+	 T4aLRNRVMNlFJyn+/hO3Lmf6LkZiGLt8eWLCMvUUCNYIgCuhqhS16/5+FYQBrqDBv9
+	 cTNT5EvlskIwUWEEZthrUNkKMbaMBoPHtGY9C1f3/Wkj+mhDFLP1F1CqAqbIZvoN+x
+	 V8XpPNLsrc2QkugOEEdKPXC0Zg7dBaQpmDQ+gMVmCM7ShlzUTzFJzMqx6xBRgIBMy+
+	 ioIbkere3zE9w==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id EAC1C18036A;
+	Wed, 26 Feb 2025 11:30:23 +0000 (UTC)
+Message-ID: <d70d059e-37aa-431d-986c-5666f006d610@icloud.com>
+Date: Wed, 26 Feb 2025 19:30:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,121 +52,96 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
- <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
- <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
- <00526b1d-b753-4ee5-8f83-67d27d66a43c@kernel.org>
+Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in
+ void API tlb_remove_page()
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>, Peter Zijlstra
+ <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+ Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+ netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+ linux-mtd@lists.infradead.org
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com>
+ <20250221200137.GH7373@noisy.programming.kicks-ass.net>
+ <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
+ <20250224132354.GC11590@noisy.programming.kicks-ass.net>
+ <a28f04e5-ccde-4a08-b8fa-a9fa685240b1@icloud.com>
+ <15c121c7-aeed-480e-8b1a-8ff23b4a3654@intel.com>
 Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <00526b1d-b753-4ee5-8f83-67d27d66a43c@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <15c121c7-aeed-480e-8b1a-8ff23b4a3654@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
+X-Proofpoint-GUID: BXt7ADwYEBiuzX8MsPltF1M0d6Q_8HN4
+X-Proofpoint-ORIG-GUID: BXt7ADwYEBiuzX8MsPltF1M0d6Q_8HN4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
+ clxscore=1015 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=993
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502260092
 
-On 2/26/25 08:21, Krzysztof Kozlowski wrote:
-> On 25/02/2025 16:51, Clement LE GOFFIC wrote:
->> On 2/25/25 14:04, Krzysztof Kozlowski wrote:
->>> On 25/02/2025 09:48, Clément Le Goffic wrote:
->>>> +
->>>> +maintainers:
->>>> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
->>>> +
->>>> +description: |
+On 2025/2/26 01:27, Przemek Kitszel wrote:
+>>>>> It might not be your preferred coding style, but it is not completely
+>>>>> pointless.
+>>>>
+>>>> based on below C spec such as C17 description. i guess language C does
+>>>> not like this usage "return void function in void function";
 >>>
->>>
->>> Do not need '|' unless you need to preserve formatting.
+>>> This is GNU extension IIRC. Note kernel uses GNU11, not C11
 >>
->> Ok
->>
->>>> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
->>>> +  It allows to output internal signals on SoC's GPIO.
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: st,stm32mp-hdp
->>>
->>> There is a mess in STM SoCs. Sometimes you call SoC stm32, sometimes
->>> stm32mp and sometimes stm32mpXX.
->>>
->>> Define for all your STM contributions what is the actual SoC. This
->>> feedback was already given to ST.
->>>
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  clocks:
->>>> +    maxItems: 1
->>>> +
->>>> +patternProperties:
->>>> +  '-pins$':
->>>> +    type: object
->>>> +    $ref: pinmux-node.yaml#
->>>> +
->>>> +    properties:
->>>> +      function:
->>>> +        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
->>>> +                "8", "9", "10", "11", "12", "13", "14",
->>>> +                "15" ]
->>>
->>> Function which has a number is not really useful. What does it even express?
->>
->> As said in my previous answer, function names are very different from
->> one platform to another. Numbers were used as string to be generic.
->> I'll consider it in a V2.
+>> any link to share about GNU11's description for this aspect ? (^^)
+> this is new for C17 or was there for long time?
 > 
-> What does it mean "one platform to another"? This is one platform! Is
-> this some sort of continuation of SoC compatible mess?
 
-I may used incorrectly the word platform.
-This driver is the same for the three SoC families STM32MP13, STM32MP15 
-and STM32MP25 because the hardware is mostly the same.
+Standard C spec has that description for long time.
+Standard C11 spec also has that description.
 
-Why mostly ?
+> even if this is an extension, it is very nice for generating locked
+> wrappers, so you don't have to handle void case specially
+> 
+> void foo_bar(...)
+> {
+>     lockdep_assert_held(&a_lock);
+>     /// ...
+> }
+> 
+> // generated
+> void foo_bar_lock(...)
+> {
+>     scoped_guard(mutex, &a_lock)
+>         return foo_bar(...);
 
-The peripheral is behaving as a mux, there are 8 HDP ports, for each 
-port there is up to 16 possible hardware signals. Numbered from 0 to 15.
-Each of this number represent a signal on the port.
+above is able to be written as below:
+      scoped_guard(mutex, &a_lock) {
+	foo_bar(...);
+	return;
+      }
+> }
+i will list my reasons why this usage "return void function in void
+function" is not good in cover letter [00/18] of this series.
 
-But the hardware signal behind the number is not the same from one SoC 
-family to another.
-As example, in STM32MP15 family the HDP is able to output GPU hardware 
-signals because the family has a GPU but in the STM32MP13 family this 
-signal is not present.
-
-The purpose of my helpers was to give a readable name to facilitate the 
-configuration in boards devicetree's. If needed I can get rid of that 
-and use only the number as string.
-
-> What are the exact functions written in datasheet?
-
-The exact functions name written in the datasheet are the ones of my 
-helper file without the HDP prefix.
-
-
-> Best regards,
-> Krzysztof
 
 
