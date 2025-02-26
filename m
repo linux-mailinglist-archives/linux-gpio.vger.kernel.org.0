@@ -1,114 +1,118 @@
-Return-Path: <linux-gpio+bounces-16625-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C35EA46089
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 14:18:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28766A46105
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 14:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C569716E360
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:18:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D215A189B1DA
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:38:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA5E214A67;
-	Wed, 26 Feb 2025 13:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5AF02185B1;
+	Wed, 26 Feb 2025 13:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZpAmK6O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3HOIt5R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EAD7464;
-	Wed, 26 Feb 2025 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE72154C00;
+	Wed, 26 Feb 2025 13:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575905; cv=none; b=IdoVfEhlsEbJsbmhqaHTdxSJbRXb7xZ5913MfziZLo+68CMMwLrHufPF8of10659mxxlsxhc1vwJFMDRZ0ckSwW/kjzmi++AJ8hCZDmB3jlFqmMvMVlgRUizLAb8p0G1WjTf+I433ljACiKVqt73sYG7ZuL/ypPHpTGrUsVWWSA=
+	t=1740577072; cv=none; b=d95t1cVLdMDYOgf07b07eYO6GUqqrHoRIqPrniN7RFAKYTkMmKwgXsdDo6lMWgthuxDDq6bFhxJrC6WS0Z++BPw8m5xvU2Et6WUV9wMnTUaCyIGOivt5WY1DM+9vbXznlGSc8sueBpnx5o9nVm8aAPCCcBA6W9pDDWD4Uy3DOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740575905; c=relaxed/simple;
-	bh=bjVlsvLBOM7oVxLFv550/V99CFQCpay+9nslgLYQNs8=;
+	s=arc-20240116; t=1740577072; c=relaxed/simple;
+	bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXsYIWrNvUII1nyEErAQfVGW26IVOcpVCwrhbKxK3sQTgDiKkIAkCtrOviN9HIO+EyI7Thnx7r1mBCa5AQXZWBU9II0FKhJaEDBNVUBObEZMAZ9bFE6UhfRu7ft6HodGn0Yj8Go5e1xc6E940DfHWdJyje+8RQUnEyY7U40GLTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZpAmK6O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25D4C4CED6;
-	Wed, 26 Feb 2025 13:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740575904;
-	bh=bjVlsvLBOM7oVxLFv550/V99CFQCpay+9nslgLYQNs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DZpAmK6OmPPXdOKdQAJ8TDd3iL5slf4J8ox7f8bN33QeX9duxiSN0tIJNQVkHN8Ro
-	 GM+AcGcws6AghkcU2OoXo7xCulRGWLVBERRvSvO90RNgcuR33A7aeqhTCedASa57aD
-	 p16JUBGgvjeoFD2CGefXIkLbDcCQ8k0PrM7uXVcCnNsuzX1R9u8P0BDvAWp26aCzOV
-	 TNHYtC5wWM6OVXJPSYSFrnpiNPE9sTXRaQeQzOYg9QxjmArTIK8kWmLK0wsgQxqwZc
-	 HYU1AStDgPGgaHtDjcShDBSAJHGKZo7BlWTcH9oh8LSELCopc+/2pmVvb/bwxVg9Xs
-	 7EQ/hGrqDDYfg==
-Date: Wed, 26 Feb 2025 13:18:16 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 06/10] regmap: irq: Add support for chips without
- separate IRQ status
-Message-ID: <ef7b9c80-88f9-4985-814e-e58cd44a3611@sirena.org.uk>
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
- <20250214-mdb-max7360-support-v4-6-8a35c6dbb966@bootlin.com>
- <Z69eue2dV37vw61v@smile.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iq+x3Wh6u2yb28Umw9HWibwAFiNBzkyMTvMApfDsXkmDGKpmKpQ5qXT0vLgvdxG/bqf6VJ5/BiLNwGtaqLUdSpg46z2FQ5eDptkUiLEotxtLEeMpNMR2684BvnSe6jmfRSI/9ey6I7H8to4dF3+RjBfjPo3ePHrLCGQ5r0/caGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3HOIt5R; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740577071; x=1772113071;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
+  b=K3HOIt5RZrR7peYJP6soUi12hpykDgW356qIcWqNrsm7xvLMivQ3clsG
+   phWPb5Bl5++MZwN/FdAcJkJ+BeJZNjgrQZRRnPmSO157Iq40atwTHIpFD
+   PEJD1LaXXN5L2yQIYcUyJ8Wcydw0TdZJcRbrR2cYfIcB8bBUFK4fLeZ49
+   Sj101DbpPREG52ySgUKkHuOhDtB9MqynwIYoF3xhO0+gL481XfUm/f0BN
+   OvIB1Mza5oI853x0eiw1j4W4rHYjhRYYaGcwdeV6N+cnmlZfRIJfTVa1G
+   w7SRs8UCZSL3WPc/1P1nQDyl2D9UZlhOfVrOqjM51a1jB4zUHaTkoZVNl
+   Q==;
+X-CSE-ConnectionGUID: +yER9GoXQGW1vfyyPSzhCg==
+X-CSE-MsgGUID: gJvLnvBCTru/OvotLTY/Yg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="52811469"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="52811469"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:37:51 -0800
+X-CSE-ConnectionGUID: eQSqF4AvSzmI9Z1mI7/vVQ==
+X-CSE-MsgGUID: 4th0tnM9TamQqQ7t3N9YMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="116488206"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 26 Feb 2025 05:37:49 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 425DF2FB; Wed, 26 Feb 2025 15:37:47 +0200 (EET)
+Date: Wed, 26 Feb 2025 15:37:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: brgl@bgdev.pl, Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+Message-ID: <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/ZnMkqajxP1BmR2o"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z69eue2dV37vw61v@smile.fi.intel.com>
-X-Cookie: I've been there.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
+> On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
+> 
+> > In any case: Linus: what should be our policy here? There are some pinctrl
+> > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+> > think this is an error. Returning errors should be reserved for read failures
+> > and so on. Are you fine with changing the logic here to explicitly default to
+> > INPUT as until recently all errors would be interpreted as such anyway?
+> 
+> Oh hm I guess. There was no defined semantic until now anyway. Maybe
+> Andy has something to say about it though, it's very much his pin controller.
+
+Driver is doing correct things. If you want to be pedantic, we need to return
+all possible pin states (which are currently absent from GPIO get_direction()
+perspective) and even though it's not possible to tell from the pin muxer
+p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
+different, but pin muxer might only guesstimate the state of the particular
+function is and I do not think guesstimation is a right approach.
+
+We may use the specific error code, though. and document that semantics.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---/ZnMkqajxP1BmR2o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Feb 14, 2025 at 05:18:17PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 14, 2025 at 12:49:56PM +0100, Mathieu Dubois-Briand wrote:
-
-> > +	int ret, i;
-
-> 	unsigned int i;
-> ?
-
-If it's just an iterator it's idiomatic to use signed ints.  IIRC if it
-makes a difference to the code generation it's likely to be positive.
-
---/ZnMkqajxP1BmR2o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme/FJcACgkQJNaLcl1U
-h9DQ8Af/fxLiNmnQb8ioOReWGeFUKZvjmO/mJ5ANAtemDTiaMKVnIsLZMihmn/B2
-+70z79eF26afBgEU1LBny6ne+p8KRWLGUL6vs92uHUla5bfKe1ZgAI8BUUV8Ogbx
-GZyPQ+bBWUUcqPczn9ttmLum7ekJvVybhBOvp588OiWUcOt1FNhp8eRyQlWzy+Ed
-RRrKTS1tJUqQ4Yph7qv2nHN5cXW1qihotymBqR2biySVSoPleXZNfJAmiZL25SSd
-RpuG5LAzY11iS2Mbg/nLRHRdppdaMdJvhMgcnY3RS+G4KHeozJhLy0KpI18/tB5d
-TZp4Krkq13kYk/mGspSpeUqDVNXs7g==
-=zw63
------END PGP SIGNATURE-----
-
---/ZnMkqajxP1BmR2o--
 
