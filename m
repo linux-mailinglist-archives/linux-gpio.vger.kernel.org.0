@@ -1,205 +1,139 @@
-Return-Path: <linux-gpio+bounces-16622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB2BAA45E0B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:00:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A83A2A45F9A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:44:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBAFD3AA529
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:59:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA0DC16A439
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 12:44:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A621E218591;
-	Wed, 26 Feb 2025 12:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E545F215769;
+	Wed, 26 Feb 2025 12:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="ZOca+AcB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C084217718;
-	Wed, 26 Feb 2025 12:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972FD2153D1
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 12:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571205; cv=none; b=EvHfmikrgSXo5w8kFTNstOIR5XaCa+ngZJu/d5jkvHGOBUIlebKgfkT1Z5q9GIywdgRY9fyNDMsghxqTCDBYZMDHbanpswFgv1smYF/NCAuWYhFJhEyf6vIBKi277UXg5t9FNR2j0HZUCr9uRBmhdsbh9tAmKgQrHgu4frM5ZuI=
+	t=1740573840; cv=none; b=RU958hFFOYV+MBSTEp8V18WztU+vRpmDrKMw8EriBJW9O75Hq/vVQw0pSgBivZfZAfHIUdp5F+aLx5ItvbDr+ulveQQ/3cCsWlTFQGS+RpSCUEfo5JqG2QZen2C/hCKiW0S6Z9JaGtJSDg0sYv1XBOOWBR2s0OsgUITc+5t2PD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740571205; c=relaxed/simple;
-	bh=1rPLZ7Ny+tavg+eVzEq79uWoftJ4xcrjRHDV3jxiGGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jo+x+Bgc50sOmDftw0iUezZlUGt1C2pHJTwsypnm0shftDgrS1Hba1vAN8zwZ6tVRmiM8qpaef1FhUdA1bokzmhk41UhVbmf4DMq4zyOP6ahkDP1Q8Q0c3iU+sUBvPs3Ab0KGKRPZWK/JoVHXdBrkKMPxsN1sMq+wdIIxFGtgKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.55.252])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 7197134133B;
-	Wed, 26 Feb 2025 12:00:01 +0000 (UTC)
-Date: Wed, 26 Feb 2025 11:59:57 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH v7 0/4] riscv: spacemit: add gpio support for K1 SoC
-Message-ID: <20250226115957-GYA45508@gentoo>
-References: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
- <20250226010108-GYA44567@gentoo>
- <CACRpkdY7nzzu3-+FwpSYqmX+O559LoXHiqcvP2OxkhX+9f-3wg@mail.gmail.com>
+	s=arc-20240116; t=1740573840; c=relaxed/simple;
+	bh=grg2ChQ79XyecY0CzWhPK5SAmwCC/4Sunav/rUhQNaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HWiSm/FXMPaDyySqeox91M0tvvT9JeC1kLidu8aMsyspE6aiKRN2QhUOQqpWBBlrbFknDMbkOgEHHHqzX3RkWn/SuYR63pWcKHHzDUSSfBuy7sFxHWLgc7vB1tZbfdcPf/clbgMutGFxYxuDVwhvn0WBdRfqRihRDgkuKuzkzGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=ZOca+AcB; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BE8E810382F09;
+	Wed, 26 Feb 2025 13:43:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1740573836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7csNVPskAQxdNjUyIDD/mnxx7lmRTPv6uYgkh/1wXQI=;
+	b=ZOca+AcBQ1rk3EIs0Blvpv4TGJExujSM4MHwC5rrn4+HhhZLZdr7n7AZa77Zwvt5CXEduq
+	zIW3xNzxHsj9kLwewxcU/xusiRCwxttDZLEmvEEtK2S22a3xiqPB/bTwzMaFjqbGP3mcfI
+	woUyW4H0oSgNB6GaVUEfP+NG+MBtaaduzVnXPyooBU8rFw4fHUeyrywCysAixYfRvMbZV1
+	ra3xvp/pxRsrOCmFnOGI+uEsmwafJoU/0TiqglqQ3utWThRjp4JtXq8Xh/1Ghz9GwDy3gQ
+	903bqtOP/NJCn8JM1sD5p8fLTIX2jX5qwkWurGy0x9G6hOY3zxyNpZJ5APciLA==
+Message-ID: <d29f36d1-53e0-42d3-beed-cc228553f658@denx.de>
+Date: Wed, 26 Feb 2025 13:36:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>,
+ =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com>
+ <CACRpkdZXm9eFJ2nzb5Gsm_ddirt6XZTQyu2G+vX2FB+=L6Lttw@mail.gmail.com>
+ <e5bdcca6-4d1b-451c-8fde-990db9db23d8@denx.de>
+ <CACRpkdaGeV3v80QuWwus5rg9GfKkT_gzhvRgfOobnDMUO2cPEQ@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <CACRpkdaGeV3v80QuWwus5rg9GfKkT_gzhvRgfOobnDMUO2cPEQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdY7nzzu3-+FwpSYqmX+O559LoXHiqcvP2OxkhX+9f-3wg@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Linus Walleij:
-
-On 11:24 Wed 26 Feb     , Linus Walleij wrote:
-> On Wed, Feb 26, 2025 at 2:01 AM Yixun Lan <dlan@gentoo.org> wrote:
+On 2/25/25 8:54 PM, Linus Walleij wrote:
+> On Fri, Feb 21, 2025 at 8:41 PM Marek Vasut <marex@denx.de> wrote:
 > 
-> > Current this v7 version work great with request irq from gpio, like:
-> >         pin = devm_gpiod_get_optional(dev, "myirq", GPIOD_IN);
-> >         irq = gpiod_to_irq(pin);
-> >         devm_request_threaded_irq(dev, irq, ..)
-> >
-> > but have problem if request irq via of_irq_get(), something like this:
-> > DT part
-> >         mytst {
-> >                 ..
-> >                 interrupt-parent = <&gpio>;
-> >                 interrupts = <1 28 IRQ_TYPE_EDGE_RISING>;
-> >                 interrupt-names = "wakeup";
-> >         }
-> >
-> > In source code
-> >         irq = of_irq_get_byname(dev->of_node, "wakeup");
-> >
-> > I've made an attempt to patch gpiolib to support three cells "interrupts"
-> > syntax, but still fail, it always get last gpio irqchip of four, thus using
-> > the wrong pin (e.g: will always get 3 from gpiochips 0, 1, 2, 3)
+>> I would very much like to avoid having to enable debugfs on production
+>> systems to access GPIOs in early userspace (e.g. initramfs).
 > 
-> Right, we need a proper patch to fix this.
+> I didn't understand that. It was because Bartosz used the word "play":
+
+Uh oh ... in short, the entire discussion between me and Bartosz at 
+FOSDEM could be summarized to (please correct me if I'm wrong and I'm 
+stuffing words into someone's mouth):
+
+- Bartosz does not like fixed static GPIO number assignment, we agree
+- Bartosz wants to write more userspace tools to operate GPIO chardev
+   API, we do not agree, Marek already has all the tools built into shell
+   (printf, echo, cat)
+
+=> Some sysfs API "v2" which does not suffer from the defects of the
+    current one would be great. The benefit would be:
+    - Can be operated without extra tools, simple printf/echo/cat into
+      sysfs attributes would suffice
+    - Would work even in the simplest of userspaces (initramfs, remote
+      access VMs, etc.), which is practical for board bring up and well,
+      other limited deployments
+
+That's really all this is about, get rid of the defects of the old sysfs 
+API, but keep the tooling requirements to minimum.
+
+Also note that API "v2" attribute layout could differ from API "v1" , 
+that is not a problem.
+
+>>> The gist of it is: some people need to play with GPIOs very early, for
+>>> example in an initramfs
 > 
-> Can you paste your patch so I can see if I can spot/fix
-> the problem?
+> So I took that word literal: explore, play around. Not develop
+> products.
 > 
-> I think the irq cell parser needs to call out to
-> of_node_instance_match() - or similar - as well.
-do you have any suggestion where to implement this similar function?
+>> This was so
+>> far possible via the sysfs API without tools, currently it is becoming
+>> not easily possible. A sysfs API "v2" which makes that possible would be
+>> very much appreciated.
+> 
+> I understand, I'm fine with sysfs if it needs to be a "support forever"
+> ABI, as long as it's:
+> 
+> - Using the per-chip HW numberspace
 
-I actually miss this logic, the patch here only support parsing
-interrupts with 3 cells
+This is no issue for me.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 679ed764cb14..9aa88c3fa485 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1454,6 +1454,10 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
- 		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
- 	}
- 
-+	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 3) {
-+		return irq_domain_translate_threecell(d, fwspec, hwirq, type);
-+	}
-+
- 	/* This is for board files and others not using DT */
- 	if (is_fwnode_irqchip(fwspec->fwnode)) {
- 		int ret;
-@@ -1758,7 +1762,8 @@ static const struct irq_domain_ops gpiochip_domain_ops = {
- 	.map	= gpiochip_irq_map,
- 	.unmap	= gpiochip_irq_unmap,
- 	/* Virtually all GPIO irqchips are twocell:ed */
--	.xlate	= irq_domain_xlate_twocell,
-+	/* FIXME: force switch to three cells */
-+	.xlate	= irq_domain_xlate_threecell,
- };
- 
- static struct irq_domain *gpiochip_simple_create_domain(struct gpio_chip *gc)
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index e432b6a12a32..69a9540ec253 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -568,10 +568,18 @@ int irq_domain_xlate_onecell(struct irq_domain *d, struct device_node *ctrlr,
- int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
- 			const u32 *intspec, unsigned int intsize,
- 			irq_hw_number_t *out_hwirq, unsigned int *out_type);
-+int irq_domain_xlate_threecell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type);
- int irq_domain_xlate_onetwocell(struct irq_domain *d, struct device_node *ctrlr,
- 			const u32 *intspec, unsigned int intsize,
- 			irq_hw_number_t *out_hwirq, unsigned int *out_type);
- 
-+int irq_domain_translate_threecell(struct irq_domain *d,
-+				 struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type);
-+
- int irq_domain_translate_twocell(struct irq_domain *d,
- 				 struct irq_fwspec *fwspec,
- 				 unsigned long *out_hwirq,
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index ec6d8e72d980..995e5e0ec2db 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1132,6 +1132,17 @@ int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
- }
- EXPORT_SYMBOL_GPL(irq_domain_xlate_twocell);
- 
-+int irq_domain_xlate_threecell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type)
-+{
-+	struct irq_fwspec fwspec;
-+
-+	of_phandle_args_to_fwspec(ctrlr, intspec, intsize, &fwspec);
-+	return irq_domain_translate_threecell(d, &fwspec, out_hwirq, out_type);
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_xlate_threecell);
-+
- /**
-  * irq_domain_xlate_onetwocell() - Generic xlate for one or two cell bindings
-  * @d:		Interrupt domain involved in the translation
-@@ -1216,6 +1227,19 @@ int irq_domain_translate_twocell(struct irq_domain *d,
- }
- EXPORT_SYMBOL_GPL(irq_domain_translate_twocell);
- 
-+int irq_domain_translate_threecell(struct irq_domain *d,
-+				 struct irq_fwspec *fwspec,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type)
-+{
-+	if (WARN_ON(fwspec->param_count < 3))
-+		return -EINVAL;
-+	*out_hwirq = fwspec->param[1];
-+	*out_type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_translate_threecell);
-+
- int irq_domain_alloc_descs(int virq, unsigned int cnt, irq_hw_number_t hwirq,
- 			   int node, const struct irq_affinity_desc *affinity)
- {
+> - Doesn't need any echo NN > export to see the lines in
+>    sysfs.
 
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Can we really make do without export/unexport ?
+
+Consider this scenario:
+
+- User open()s and write()s /sys/bus/gpio/gpiochip0/gpio0/value
+- User keeps FD to /sys/bus/gpio/gpiochip0/gpio0/value open
+- Kernel module gets loaded, binds to DT node which references the same GPIO
+- User write()s /sys/bus/gpio/gpiochip0/gpio0/value open again
+
+I wonder if this could pose a problem ?
+
+I suspect the kernel module loading should fail , right ?
 
