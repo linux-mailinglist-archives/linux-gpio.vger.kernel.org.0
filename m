@@ -1,162 +1,139 @@
-Return-Path: <linux-gpio+bounces-16617-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40548A45C04
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:39:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16B63A45B67
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:14:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A8863A77AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 10:39:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AA5F188ED3A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 10:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB4CE24DFE8;
-	Wed, 26 Feb 2025 10:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7F02459E4;
+	Wed, 26 Feb 2025 10:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="L5QE9qAH"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XgqEY3wr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE44238170;
-	Wed, 26 Feb 2025 10:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45E02459D0
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 10:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566365; cv=none; b=TN9iWkaus2Q+c9KS3URhuR6XBkbuc4A2Rtg/30xyfIxdXQCag2Vz8eq/IBmrjWx+K2HsvfCq3MTjGufwjS1QFVRXzg7Q9PdZ0dxhuGl88ShrA0aDgvE13wDg8NJArQQGKSIhCBTpO/yJlxt1gFmXG7m6M+3dLwEiH9luNh1+1Nw=
+	t=1740564759; cv=none; b=Iv7KlJJErQF9GnqZ+ZseTpsczIqTq5B5bUDOOKc4xW8cYtGOXQD+104yqhOCqfLNCBfy41h9I5zREgWADl8SHeEVAjua9HeMWWTo5k9vqJ+jAhFAVmq6TTT7eVIISt8IiA8e0FOHbnk2BccnW1QuPvDlhigLpv6BtmeHWgqQ6kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566365; c=relaxed/simple;
-	bh=NrarBek56uZxDZEPM93Oqgy8N6FqDNNWnxTnWqaqfFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P8YYGcXuttqB88AGJ9smwc0p+KUVVSV8x1bcjhBY/LgtA2eYkWNQ4h0xCyjgbbOo1N8F2KJVyF4tvNs9EfpFEkqFC+LY5k8ugXNPO3hBI2/23ZB2hUsgpbKP6ecuUL4uq5N9Rl4LBLHEHj+u6+0j2wpwaP2N9z22b2whl0NOjvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=L5QE9qAH; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q8p0Zu015440;
-	Wed, 26 Feb 2025 11:39:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	r6EeS/1e2mk1YAgnjgtBzqRGy/8kMpjtGs49piq0D0c=; b=L5QE9qAHsY8p2q2y
-	GK0BVRIAOPU8OoNVa7s5NOyCOPheqBGKtNDvftIP7T4ipdE0mnTg65cidM8ReFuk
-	7C2yUAr/qqFd/1fLzL7KL39sGOn9EyWyOWNy5qoSfWkvJ+0wbQUlHGWxK869loTx
-	rya5AyDXShceg/vx3gmE6B83sZWoB79G0jqZhHpXDInQAs+qCR4E5W8AxT66XVYv
-	xduJw6vKpU5l1vGHMuTqTnrprUQ194zHSEUIZsVe5OHVosFYp3kCa0iTgOGLIKeD
-	h5yvghK+Mnn5oGDguugDLCkyI5X78jOsNq88slAI+GFPE7Dx9vtIU9uTuDyr32Wl
-	gqgxBw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psubfhv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 11:39:10 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4A22A4004C;
-	Wed, 26 Feb 2025 11:38:01 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 252624E1E64;
-	Wed, 26 Feb 2025 10:33:37 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 10:33:36 +0100
-Message-ID: <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
-Date: Wed, 26 Feb 2025 10:33:35 +0100
+	s=arc-20240116; t=1740564759; c=relaxed/simple;
+	bh=VxKpfliG9vLDZJxpO/sed0hj5Bn5EAr6JHwX003RlX8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c5CoBAra/B6eSH/NkZa9+8qxQJ92Amiqq73zdkobaIcWzz4n/yZZh4nHA7lVEUNw90IWGc6z6MlJLW8xxBi8oZb9Dru55WrqtORrKhhNr3EJ9bWofgo7mTmcxhH1uLu6UsL37YRtbC+5eTQhRT1WV2dliveW741Z6msoj4az1Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XgqEY3wr; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-390dc0a7605so182861f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 02:12:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740564755; x=1741169555; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KIB2ha813d36LF5F7eRTUAAyixj9sbfb77BwfH3ridc=;
+        b=XgqEY3wryXRS5JSodHiGfqK0QtrmLJVLZ+hKmzWwXFk+xjN+QEM6IVCV0FFS0Ej4x5
+         0wO4GFWWI5JaDiqbFHETljLwz2RvK28bHSu18qsqG+29ZBRhIfvZevprbkmmeLToWYUS
+         R3Q/dw4rX06FLJ3s8df4rpkxXWITgvkWwZ6mKyf2TOs4j+PvvhPjtz0EMpIkxOyyp0Fo
+         qERxlWGnj0h13pd+UJWj8yDg9lqHURpsNs+zz5ga36fDUHY3TCMy/QIWmx3p93KHk5tP
+         BlX2C8yF5f7vHwBrgsWTKnZoYFkSk7EmP7BIicWKyWpwpAeDaa0NgSHf1HQvutk0nUxz
+         KsAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740564755; x=1741169555;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KIB2ha813d36LF5F7eRTUAAyixj9sbfb77BwfH3ridc=;
+        b=pxaFJoN7M9cyJVr9NYQvtBPONT/wgjuVd0RZ9bOPRWPOpNg06lZEWPCWkalFtxiXGm
+         /IFKV26BrZVNzM3CsvrI4jqO/+RP90To5dxyZxNKL+f5ap8q2QU+pu/522vaePMxlyEc
+         gd2TiP3YP3dwMglK1BVmJH+2YimDEK8O0gjXiW5dnjpmqq0drFa9gbZ6Ts/pyt9dx0Lt
+         zwMzyi4X5noDjNeMi+4oWUFghs9C3ScnaFOys8oKrczM1WS/HjzN+VJcFdwau+onAoJY
+         8ULwr+g90m/fg/3o4KlypMBS8W7/qI0TAQIx0X+LCAFU1qNXvKGIi09xztw1RkulF92y
+         96qA==
+X-Gm-Message-State: AOJu0YyAIkwCVgMQ+FxbXyGytjUQiSpkN6JUXObIz44zFMpK/EWl3lZi
+	wpgaL/uGvNBPGA7wYgWnJ+scIKyn49NqB/kE22LDLLYFRcYYppw8z5c9dnKSVTY=
+X-Gm-Gg: ASbGnctLgOblVK5WQdCg+Rk5dOLc73+zK3srZhimWAXy7ah8i5KAwNads+GMsuGAnNH
+	1QKuMV3+LAOQ7pc7rtAWx7l9Zvy40r37R+4Ek1M+q1igJU831HZGW4b2a+WUfzz7YxCZI+Ec6Bw
+	N1jua1BFIeRMtyoFp7bYx+QBLEPqg/9LRyeGwzHwIIK3Vu0Xd1qNPb5C56GiZ/TKJjhci9jvQth
+	mspZ1MRfTubB2n7JP22dx/8TDwGWkW5aUtYvrO9Rf79ndvjs8BVmS9VYPbDd7Ln3M5q2Sp9HquG
+	wf+R3w0nnHvCP1T1
+X-Google-Smtp-Source: AGHT+IHFyeBiXdbYsbZ7/FlJ8q8tqZhxlyBL4+swbA8trmwvM3grI2Jm5FnG3kWSEVA0xFqgFJIBvw==
+X-Received: by 2002:adf:ffc8:0:b0:38f:4d91:c123 with SMTP id ffacd0b85a97d-390cc60cf53mr4259931f8f.32.1740564754802;
+        Wed, 26 Feb 2025 02:12:34 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:7d02:26:5770:658c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390d649cd17sm1483971f8f.79.2025.02.26.02.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 02:12:34 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 0/3] gpiolib: fix bugs in retval sanitization
+Date: Wed, 26 Feb 2025 11:12:28 +0100
+Message-Id: <20250226-retval-fixes-v2-0-c8dc57182441@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Clement LE GOFFIC
-	<clement.legoffic@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA3pvmcC/3WMQQrCMBBFr1JmbSSJhqaueg/pYohjO1ASmZSgl
+ Nzd2L3L9z/v7ZBJmDLcuh2ECmdOsYE9dRAWjDMpfjQGq63T1joltBVc1ZPflBUa1AMauqD20JS
+ X0HE04z41XjhvST5HvZjf+idUjNJK9z5cw+Cd6XFcOaKkc5IZplrrF4dZVrKpAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=945;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=VxKpfliG9vLDZJxpO/sed0hj5Bn5EAr6JHwX003RlX8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnvukQ82tgd7xM5Fo6Wlv7G2NOI6bghCS23K8E4
+ wavNKKLPouJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ77pEAAKCRARpy6gFHHX
+ cttRD/4oEnxssYx/uLckWtzsG97i+z9axzsrNrWYVJIt8saFL1oQL7BQkoMq9uZd1LLskU/wnv1
+ O+7x4LKjSr6DfPkCl2BX/XIyRj/CYzk1Tqte2hxfJFbZ2z84W7HLApvzJepindMzPYuSHDZK2v+
+ mqKXFKPpuyyRsxI3KKgDp+VyHoySMP3zSRSCQs3zwmOf5QcbLQWsGfUhcZ05CAIZHdIjIvLOTAh
+ tI5n7v31ITSGhs760J5/xJOEvY63SegLCnowxp8S0rIACOxXgZkYaWmP/HIhoZKvH3z86c8jUVt
+ C2wJxANbFYhFmhpIWTdctttpwDYGqScYt+OO0Yx3y0cTxrCrt8zTYg+7/qogXu7z1H3DrzcsQn8
+ X+0Tp6aEHMl9BoDgEhnrRyAMdvTmPjJ3qTKBqUHwy4E5+ZLB3jXeG9geBGyQo4KYYYNx7KzjoTH
+ mzfQAqxPz0/hqjoxPKQ0nXggjQFENvUuD9p3ueUzob9dSvyDuv+FEKQOnD/2xdNoQaJ+ONXN7Vv
+ An7yzEpbqCKMe7wtNCGDc6/nph4Gdp98N116OSSV5w6f3+qG2yqOya+F8Lt8/lJMdGgqCyVTyW8
+ LdEuclO1TBbGyNNw9PYaJziGOfJs4UM5GiYCHkHhrqJUqZzG2gn83/AcTMNYDO1sSGsVXYdDyfZ
+ kOrcam0BxtF9XKg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hi Krzysztof
+Here's a set of fixes to issues spotted in next after queuing the series
+adding return value sanitization to GPIO core.
 
-On 2/26/25 08:23, Krzysztof Kozlowski wrote:
-> On 25/02/2025 17:09, Clement LE GOFFIC wrote:
->> On 2/25/25 14:05, Krzysztof Kozlowski wrote:
->>> On 25/02/2025 09:48, Clément Le Goffic wrote:
->>>> Add the hdp devicetree node for stm32mp25 SoC family
->>>>
->>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>>> ---
->>>>    arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++++
->>>>    1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> index f3c6cdfd7008..43aaed4fcf10 100644
->>>> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> @@ -918,6 +918,13 @@ package_otp@1e8 {
->>>>    			};
->>>>    		};
->>>>    
->>>> +		hdp: pinctrl@44090000 {
->>>> +			compatible = "st,stm32mp-hdp";
->>>
->>> So here again - you have stm32mp251 SoC, but use entirely different
->>> compatible.
->>
->> Ok so I will use "st,stm32mp15-hdp"
-> 
-> 
-> This means this is stm32mp15 SoC. I do not see such SoC on list of your
-> SoCs in bindings. What's more, there are no bindings for other SoC
-> components for stm32mp15!
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- add a comment to patch 1/3
+- rework the retval logic even more in patch 2/3
+- Link to v1: https://lore.kernel.org/r/20250225-retval-fixes-v1-0-078c4c98517a@linaro.org
 
-Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the 
-STM32 story we didn't have a clear rule/view to correctly naming our 
-compatible. We tried to improve the situation to avoid compatible like 
-"st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced 
-"st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes 
-it represents a SoC family and not a real SoC. We haven't had much 
-negative feedback it.
+---
+Bartosz Golaszewski (3):
+      gpiolib: don't use gpiochip_get_direction() when registering a chip
+      gpiolib: use a more explicit retval logic in gpiochip_get_direction()
+      gpiolib: don't double-check the gc->get callback's existence
 
-But, if it's not clean to do it in this way, lets define SoC compatible 
-for any new driver.
-For the HDP case it is: "st,stm32mp157" and used for STM32MP13, 
-STM32MP15 end STM32MP25 SoC families (if driver is the same for all 
-those SoCs).
+ drivers/gpio/gpiolib.c | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20250225-retval-fixes-a1a09a1e3a08
 
-regards
-Alex
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-
-> Something is here not matching - this change, this DTSI, top level
-> bindings or all of your SoC device/blocks bindings.
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
 
