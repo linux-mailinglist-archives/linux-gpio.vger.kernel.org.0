@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-16601-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16602-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E29BBA45550
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:10:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 526EAA45587
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:26:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9D4A7A2318
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 06:09:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EE1217535C
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 06:26:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0BC2676DD;
-	Wed, 26 Feb 2025 06:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93829266EF3;
+	Wed, 26 Feb 2025 06:26:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrQnoEPZ"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="mB23+NoR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9D8266F07;
-	Wed, 26 Feb 2025 06:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F451925A6
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 06:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740550194; cv=none; b=Z7CD85vGUgkKiJHXEit3a9VjPoSpDE82ExDCCbMScMh8/RiFlrXtEVxgL2oUh/h2iXM7O3dG9aRtQxKw1Ehczr/FH7Yfjbo5DrX+XWQLEgepeCk2FZ0Fi4nsYtn20FVolfHs15YSCgpZm4HGZW2Q0OmKls1NnMDbJT2unkHP0ME=
+	t=1740551168; cv=none; b=hIZYyABaSlmJwFlSkyZ8LY5p6UW27oY+rcdXPKWW5M8aP0nOvHQRBwaIPU3w8yRFTicqpK0Nz9jHDdgd7eHbQnel/icvzj9/R2RXzgY8WQRuoy8tq+LTSDQd7LFAnh3CgeVjSF09CFEMtXgU+NUK3C+SsyIYNFzrCKVHgcxRTk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740550194; c=relaxed/simple;
-	bh=iAc22T3HLdg9MoIWIu6HrXNwZZHyWM7nNlh5x6uZYuY=;
+	s=arc-20240116; t=1740551168; c=relaxed/simple;
+	bh=5WNIZySp/V6TQkBqYfphpwXWnPMox8YDnZHsop4KXV0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KnfVq9zTVy3Ocd6YS7HJTyS5NY2rheJEP3foBPBSIG+fnect4+K6Hh3ZlT1dGl+sS1BuVMCvp+pDvh4jPQb/rcPiBzhnQPTyhd3nad0OUuLxey31VA+TAMz0V+ZB2DGPlV3Wnl0zeIyLjo3L4UPUtEBPst67q+447+BhoxJpcys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UrQnoEPZ; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30613802a04so68296381fa.2;
-        Tue, 25 Feb 2025 22:09:52 -0800 (PST)
+	 In-Reply-To:Content-Type; b=lZsZbjbOMBXRVI788ShAjVMMAT0ef99vuL96NEBrhd7OkmAG7Rp7S2SUZcAduCK03dLi5uxndqtP/9JAz0Pg1hQ95RFFO7gAq6m07SQ7OOjuaHwKPxXYZEHBpuyE+IIZ7HPGybfQGX76NFP/chOzp08V+u0+qGoYhVSrUakpy20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=mB23+NoR; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22334203781so1595095ad.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 22:26:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740550191; x=1741154991; darn=vger.kernel.org;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1740551165; x=1741155965; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wo0R2waQkz/+BFp9U5SUX15rq39Vkclag114XFhluP4=;
-        b=UrQnoEPZhDb9c9e3J0KiDekADhnTODYzyX+lj4+2WyZ9MKRewdal9xJIs7WFFT9mWH
-         fux+a6MXFIflOFF2KbGaN6Q0Vv2UgRQp4K6i4xAZf7BRVUfy7hkbAs5VrnrgtLvCkOp0
-         x/LxpvYpIaqg+6Bwrrz1NXlII8CJHTUd7nreENl+5TGEQmJfhpky4XhCHU3zi0CSi2Zq
-         BgMbnzHrxSoSQvxBntHm/BUQHeANDQcPEycjmeDaXg9gl8iwJlrUTOtuhZXq4dZRuAG3
-         OSU3XgGWFZnl0BCbIinZhb3ViTp6BlHQ+8wYeu64788wpvxe41peBiB7Vq52IVVRjApY
-         TI2Q==
+        bh=uGreOp4PElamjoD3W2aSIe8M7Z91tErWuXXcKL9KHkw=;
+        b=mB23+NoR5czhLLAdwXVNPi58FUISW/clw4Yoih/9mAT/Ay9am6n/oaely9qiAdkcLI
+         MR8aJL8hUfTD3ud+4svChb2KM8LpV0FsX20YnDYXCKirxDPk45Zx5JjkAzTfTPkxCHSI
+         VfG2lKYEfYrcXN1MeZa8c6h/+VikEOBLTIZKvkjZxgFS63R6uJTJEupYKev4d7RxsNEB
+         zzo34QNVjCoDyI/0u984N8NI3RDgd2ezVbuwtI1OUcW/HVrxnXXskwDdnSJvq9phcgYm
+         rRwanhKQmRLLZdDgK/AoA2Z/m1N/2/Juyi7tQ/fzAlsn+fliFwU/vUDXSOk9C/JBY/Vm
+         CC4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740550191; x=1741154991;
+        d=1e100.net; s=20230601; t=1740551165; x=1741155965;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wo0R2waQkz/+BFp9U5SUX15rq39Vkclag114XFhluP4=;
-        b=u+JlsPhnj+LTRcZ6E6u5yRoDtJZRkC43l+D+ZaHZB+0/HJgwogpwXcs0Wl3zFgqmGJ
-         ta6a+Oz0ktcacSUgx02mQIe6QL5saPj15yD7ckuRNtLqKRSpyqRGgjSoR8mEbATNyGk8
-         TTOLuZZL6i2JvyOEQ4eBffrVBg+7frVT+OPQc19hGqjht7zmTRSd1k0Q/DFiISpT8gLa
-         iuMmVaTyyF+iVIsaFVgtXv+CHq2q/7S3/Psfhrlw4+fHWLKezGBQUJem79oUVlmNlTws
-         qMqTq/cyzgk2mgQSqKqC/i3Ti6T3TBlpkHGy3pf/xbDhHkg7C2PnuzQb6VycnASGoNsL
-         8d6w==
-X-Forwarded-Encrypted: i=1; AJvYcCW606AZm5MCOTVVc6adMn5SAMBE7Eu2pmC6UqJjLEZxqJVuIXd3ddRgFdOqxM2dYhzAbL1qxOfu2RUqjvr+@vger.kernel.org, AJvYcCXIf7UFuYmSrVtNDM/X/4/TrVwnSypQz1xotEN32VRyf95OFCZf71uOkKqCbh7cnqdyOtMbPjTZpSmr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJwNjzsqkdKwXjd6cm/9YFcGpml01h9oDWgr0mTgyAqriJWOsH
-	/QSgojYhyMuT0ZPFSaphyV7KhwEf41t2ndmAUp8SPvkMooFfCZ1L
-X-Gm-Gg: ASbGncvI+OCNN845EMYzJUUS1cJcmKpSvaLnFAqRXedn6NZ3Y1vn1Y6YiGUYJ+Ggq1R
-	EUJxYFuKAmH26Fw+z3Ey9uNl5Our3PZlYwKxXayeBNHJsu/PcXhXPyW+YjZzcC1VBXQaxKoE7H5
-	ijIawKud5B+dq2bqZGY+kN+rkBm5EtzdBN8L0YYvy/v5MNoE1lF67To6hA22XKPJumCfDc8oyrY
-	0CEnHppw/LQvDw4kkm1cKa7r9MmIpSGCEyi4s53qk+UGgy/1vzHxRTUadrKg+0JNpDNxipK8zfV
-	KK7FEcY+RaYLal2AdgsYr78CrpvnBHRa2uqUX5F5iLnfoPsXhNNT/ENcOq4nd8cBBeSUknDJlFn
-	l1UrMgiI=
-X-Google-Smtp-Source: AGHT+IEAkaEvaXKfYvkTudZqULWt1MJEbpkYLs8mH5rY2WeODCsGKUKzd/mcYoopST4g2xRs0X7QFA==
-X-Received: by 2002:a2e:9c8b:0:b0:302:4130:e0c7 with SMTP id 38308e7fff4ca-30a5b16873bmr81239231fa.5.1740550190497;
-        Tue, 25 Feb 2025 22:09:50 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819ec2dfsm4216321fa.45.2025.02.25.22.09.46
+        bh=uGreOp4PElamjoD3W2aSIe8M7Z91tErWuXXcKL9KHkw=;
+        b=kyJWSVkmx6tszjNFrL9LoOb621jB468D60s3y/QcJ9mNBLBn2DTYn1ZdYD3mUC6edn
+         V/EKgPAATOfTvcy9+PsW2Kxphf+cYS3WPt8pglF75vBRJ+tGO+8nlEtZbOlAaxHv3RR9
+         1mw/G6MekHbN5PSD4wwmVZW5CKs2OWCXWZBHm9b0S3gBVLOO7d1jsPEd91EygND4FdCS
+         xG4TyTaVzKbYtW+wOtWACqD+CNEMEDAb4x1S/cBBsPNg+BryLJEQcjH28TUTtWIPLu4R
+         U5/Q05AYiMoSY+MpsmnQmsce2x1hk/SLyNn9JX4RTxWVMuNua2XXYuEKJebWYDt0oIVg
+         d8Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9NuEsvsEzkwDJPs1av74o6SpOUfiPdRm99nY2BlPnqx1bDvVppfTGLIvrMqQ9y4Z1qKOhmQGNfbty@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhIV1vf24VEfuHN4K4LnaGHUgMIAbZudHNWAjaRcJyYChuCrcp
+	euWwfoQ8w4aboJNNpH5H/NW8+obgnvU0kPCR1m6w7CSuNrrlNpdk+N9ztmQDUpOrTgYmpvYw6XU
+	=
+X-Gm-Gg: ASbGncsevcI4ZlrZI2zbRy49gUgouSCuhLAj8MIzUGgzwnt1MQVih6soySxG0pXGXeb
+	wC10TskoYCT0QXwdk/AA/8nnkrTvVzkL624IqOtHmyk5KZSsbCTB5rOpxFLCGXHYmLWL7lQu1vw
+	4YspGA+BJ84g5ub2oTVE2uD7vgVjPBBAUnWNOCktZvhScOYwJ+2aJJQZbFLuY/YFrrx2ZaDAUgP
+	/isrUQth1mW9N6q/49tlX2mDu8MIw9aqgBgtb/An602d/eaFJ+drpI4P1vkHMCNioC5dntllm4q
+	I+huQw5MCBSRv9k24Rx7UwDbLpFBYiOwRQ==
+X-Google-Smtp-Source: AGHT+IHngpceDEuazp39/vkQXaNvFGawu11j3gjWJYcTczcy5si8OGZ0XGoXiweX075LH537Vh+MMg==
+X-Received: by 2002:a17:902:d4cf:b0:21f:6546:9adc with SMTP id d9443c01a7336-2218c3f4333mr396597595ad.13.1740551165261;
+        Tue, 25 Feb 2025 22:26:05 -0800 (PST)
+Received: from [172.16.119.211] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825ed0b0sm671891a91.39.2025.02.25.22.26.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 22:09:48 -0800 (PST)
-Message-ID: <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
-Date: Wed, 26 Feb 2025 08:09:46 +0200
+        Tue, 25 Feb 2025 22:26:04 -0800 (PST)
+Message-ID: <961cdedc-af40-4053-ba9d-88d9f84d9904@beagleboard.org>
+Date: Wed, 26 Feb 2025 11:55:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,99 +82,165 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
+Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z71qphikHPGB0Yuv@mva-rohm>
- <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+Cc: geert@linux-m68k.org, a.fatoum@pengutronix.de, brgl@bgdev.pl,
+ jlu@pengutronix.de, linux-gpio@vger.kernel.org, marex@denx.de,
+ warthog618@gmail.com
+References: <CAMuHMdVxZab5X4HyKj2d_21WohKfpFrsnRYYjx9X1ys22xCvLA@mail.gmail.com>
+ <6c53bc06-34d1-4ac3-be12-f29d4e5031f8@gmail.com>
+ <CACRpkdZOYz6do2r+HNTJu0Zzs+3KqEgJ7SRM0Q0TQKH8fs8VRQ@mail.gmail.com>
+Content-Language: en-US
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <CACRpkdZOYz6do2r+HNTJu0Zzs+3KqEgJ7SRM0Q0TQKH8fs8VRQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 25/02/2025 23:36, Linus Walleij wrote:
-> On Tue, Feb 25, 2025 at 8:01 AM Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
-> 
->> The valid_mask member of the struct gpio_chip is unconditionally written
->> by the GPIO core at driver registration. Current documentation does not
->> mention this but just says the valid_mask is used if it's not NULL. This
->> lured me to try populating it directly in the GPIO driver probe instead
->> of using the init_valid_mask() callback. It took some retries with
->> different bitmaps and eventually a bit of code-reading to understand why
->> the valid_mask was not obeyed. I could've avoided this trial and error if
->> it was mentioned in the documentation.
->>
->> Help the next developer who decides to directly populate the valid_mask
->> in struct gpio_chip by documenting the valid_mask as internal to the
->> GPIO core.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> 
-> Ah typical.
-> 
->>           * If not %NULL, holds bitmask of GPIOs which are valid to be used
->> -        * from the chip.
->> +        * from the chip. Internal to GPIO core. Chip drivers should populate
->> +        * init_valid_mask instead.
->>           */
->>          unsigned long *valid_mask;
-> 
-> Actually if we want to protect this struct member from being manipulated
-> outside of gpiolib, we can maybe move it to struct gpio_device in
-> drivers/gpio/gpiolib.h?
-> 
-> This struct exist for every gpio_chip but is entirely gpiolib-internal.
-> 
-> Then it becomes impossible to do it wrong...
+On 2/26/25 01:50, Linus Walleij wrote:
 
-True. I can try seeing what it'd require to do that. But ... If there 
-are any drivers out there altering the valid_mask _after_ registering 
-the driver to the gpio-core ... Then it may be a can of worms and I may 
-just keep the lid closed :)
+> On Tue, Feb 25, 2025 at 7:25 PM Ayush Singh <ayushsingh1325@gmail.com> wrote:
+>
+>> One of the reasons of the prevalence of userspace drivers (and probably
+>> the reason why kernel drivers for stuff like motors are not attractive)
+>> is the lack of upstream solution for runtime devicetree overlays.
+> Given how long device tree overlays have been talked about
+> and hypothesized I am of the opinion that they are never
+> going to fly.
+>
+> My main complaints being that they are just too complex and hard
+> on users: special tools needed, compile files, files relate to other
+> existing dts(i) files that you also need to have at your disposal etc.
 
-Furthermore, I was not 100% sure the valid_mask was not intended to be 
-used directly by the drivers. I hoped you and Bart have an opinion on that.
+Well, devicetree overlays also have some benefits. Particularly that it
 
-We can also try:
+is an open standard, and can be shared with ZephyrRTOS, if done properly.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ca2f58a2cd45..68fc0c6e2ed3 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1047,9 +1047,11 @@ int gpiochip_add_data_with_key(struct gpio_chip 
-*gc, void *data,
-         if (ret)
-                 goto err_cleanup_desc_srcu;
+The syntax itself is not particularly hard, and it isn't difficult to
 
--       ret = gpiochip_init_valid_mask(gc);
--       if (ret)
--               goto err_cleanup_desc_srcu;
-+       if (!gc->valid_mask) {
-+               ret = gpiochip_init_valid_mask(gc);
-+               if (ret)
-+                       goto err_cleanup_desc_srcu;
-+       }
+create tools to make creating device trees easier.
 
-         for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
-                 struct gpio_desc *desc = &gdev->descs[desc_index];
 
-if you think this is safe enough.
+The current compiler errors are not great to be honest, but that is
 
-For example the BD79124 driver digs the pin config (GPO or ADC-input) 
-during the probe. It needs this to decide which ADC channels to 
-register, and also to configure the pinmux. So, the BD79124 could just 
-populate the bitmask directly to the valid_mask and omit the 
-init_valid_mask() - which might be a tiny simplification in driver. 
-Still, I'm not sure if it's worth having two mechanisms to populate 
-valid masks - I suppose supporting only the init_valid_mask() might be 
-simpler for the gpiolib maintainers ;)
+mostly due to the fact the barrier to entry for end users is quite
 
-Yours,
-	-- Matti
+high (go u-boot route or modify the current device tree) instead of
 
+sysfs APIs which other tools can interact with to generate overlays
+
+on the fly. In short, if the kernel provides a userspace API, the
+
+development on compiler and other userspace tools side can make
+
+the process much simpler.
+
+I don't think many people will directly write devicetree overlays,
+
+but generating them is not difficult since it is a defined standard.
+
+> It's harder to use than BPF, which is already really hard to use.
+>
+> I don't think the ACPI situation is any better for the matter, and
+> a solution using DT overlays will not play nice with ACPI systems
+> so we just leave that part of the world out.
+
+
+Can't really comment on ACPI since have not interacted with that much.
+
+>> It is
+>> simply not attractive to have tutorials or examples that will require a
+>> reboot to work. And since a lot of people will start with those examples,
+>> they will continue using userspace drivers for their future projects.
+> I agree.
+>
+> I have an idea about this.
+>
+> If we want to use an existing kernel drivers for dynamic devices,
+> something in-kernel and Linux-specific that is easy to use is
+> needed. I would rather look into something that enables
+> creation of some devices using the Linux-specific software nodes,
+> because *those* we can control how we configure, preferably
+> from configfs I suppose, but Bartosz already burnt himself trying
+> to use configfs once so I don't know about that specific.
+>
+> Consider for example, if we have a sysfs like I suggested:
+>
+> /sys/bus/gpio/gpiochip0
+> /sys/bus/gpio/gpiochip0/gpio0
+> /sys/bus/gpio/gpiochip0/gpio0/
+> userspace
+> /sys/bus/gpio/gpiochip0/gpio0/value
+> /sys/bus/gpio/gpiochip0/gpio1
+> /sys/bus/gpio/gpiochip0/gpio1/userspace
+> /sys/bus/gpio/gpiochip0/gpio1/value
+>
+> With software nodes we can:
+>
+> cd /sys/bus/gpio
+> cat available_gpio_drivers
+> i2c-gpio leds-gpio
+> echo leds-gpio > gpio_drivers
+>
+> [/sys/bus/gpio/drivers/leds-gpio.0 appears in sysfs]
+>
+> ln -s gpiochip0/gpio4 drivers/leds-gpio.0/gpios
+>
+> [ probe of leds-gpio driver happens using that gpio line
+>    now that its GPIO resources are provided]
+>
+> I easily see this working for any of the drivers in
+> Documentation/driver-api/gpio/drivers-on-gpio.rst
+>
+> Yes, it is not a solution to everything no matter how
+> complex a user may attach to their system, which is
+> the ambition of device tree overlays.
+>
+> It solves the issue of dynamically probing devices
+> *only* using GPIO lines.
+>
+> Yes: it will drive a truck through any kind of kernel integrity
+> and security, it provides a userspace footgun to shoot
+> oneself in the foot. But users want it, so hey. We point it
+> out. We put it as an expert option. Whatever of those.
+
+Well, any solution we come up with, has to be for endusers
+
+and not just a developer interface. I have suggested
+
+maybe locking down the dt overlays to some specific
+
+nodes which need to be declared in devicetree [0], but I am
+
+not the maintainer of the subsystem, so many people need
+
+to agree there, but let's see.
+
+
+Btw, I do agree that there should be a sysfs based API for GPIO.
+
+It's quite a pain when you want to not have external dependencies.
+
+I have used the `ioctl` based API directly, but even then you end
+
+up depending on libc (and ioctl signature is different between musl
+
+and glibc). Additionally, all the structures and error handling just
+
+builds up.
+
+> However these devices *will* be performant as they are
+> regular kernel drivers, and they *will* be able to use
+> interrupts in a proper way.
+>
+> Yours,
+> Linus Walleij
+
+
+[0]: 
+https://lore.kernel.org/all/d5bed265-1dbd-44d1-8287-8ca993624b79@beagleboard.org/
+
+Best Regards,
+
+Ayush Singh
 
 
