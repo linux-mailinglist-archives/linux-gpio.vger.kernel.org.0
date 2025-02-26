@@ -1,119 +1,122 @@
-Return-Path: <linux-gpio+bounces-16627-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16628-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32131A4613B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 14:47:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D21BA46150
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 14:52:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5560F7AB1D4
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:46:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FB8116DFAC
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 13:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E09218ADF;
-	Wed, 26 Feb 2025 13:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C581721E0B2;
+	Wed, 26 Feb 2025 13:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6tBQvtx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgWYYnD3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76025DDCD;
-	Wed, 26 Feb 2025 13:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04FC1F8908;
+	Wed, 26 Feb 2025 13:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740577621; cv=none; b=pgpHuKCwUaczhQUmXYoZxtuBeV24rHRROPwr5yT0B7o3Qg858iAAOAtC9PaqB4dZm3Chv1CVmB9+rMuaX4rNcGjclwp9Lucfmypox49cEZjYlp+9ArCfGs5tlI3Q2SUB6TjHt2TVbXGOU9PoeopjIjooFVnDQGxBqDdG99rZHvw=
+	t=1740577939; cv=none; b=mrm4+56qCyb6yyW8//jQ3B5iNsl4U1kGi56pOMt1UVzH2ZTxiGy3aG5EJne6AKggYU4lyX5IVh/rGDDV/y7Svx51K8IOYV70mmUyJpniNncQwdkCAVdpqBHakwVi5TUBy1c/mP8upel+swZJIK2K2H3Q1L5zFazkz38dLiCgM7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740577621; c=relaxed/simple;
-	bh=ghYoPmkesmE/DQEdj+zyBDgNwpAW1ZQ1GHICBwEW7hM=;
+	s=arc-20240116; t=1740577939; c=relaxed/simple;
+	bh=5Z4E6ng1tNXYID7Liza4dEBXbcEx4WGsS4h66Z54u8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Za0y/mrBzLQonv3WYbyOOaOIp2I9dm9jaK1o3eOLZW6QaovK9SGVuFd71R0rgl2OYkX/SCLOVaF6EtEm3KZuJ8ilSBYE+o/JtCx1Q/SyGoEM/eXZBKWFErvhFE6LXk56u4YPP6FeJEGUaEYs2+PNhHcGcnae9RUnzBor5emo0SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6tBQvtx; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=S5fEN8HiHm+bnjATafluG7kkPSdTW/PVrHi9q62LrDGVShfLo/Pc0hIQJhJIrfaizezHSk5cnP6AK14qqX05gn0dBfo5D9XW/vRzbMzN1/ugThG8Jyjx66/MSfnwp+9/x4u2NGmESah72uHypkKgcd3VJrvQNsgB1UY3kncJHQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgWYYnD3; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740577620; x=1772113620;
+  t=1740577938; x=1772113938;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ghYoPmkesmE/DQEdj+zyBDgNwpAW1ZQ1GHICBwEW7hM=;
-  b=c6tBQvtxjF+rPWD2A6yrjdGvEnGkJfmb3XgudjbDDxtMLet63RAL98ws
-   CsUwKE2hjZLK1i6ECKVwLCojQ+DR+FNxPsTqUckfg8RhaNsJsXBDnAsTD
-   9cHbak6mAD2NCE8nVsjobp1/gBhW67QE9QbRWsm7W2Tv+x3sByqnDPx1c
-   K4RNhb3tHogI8GVi7M6Ze7fP5b52nRPEt1BLhNiEzLh4LIXaz7ZlSgUDS
-   ZWggx4/pjwekb8QIkqvjusCyLNiC/zD76KLsw+GnfpCdwKl0QLNevQR+e
-   UHA9L9wxy77Iwd9+oXexQyCEz0yrHshE6V9VQ+/c2Q2ZQHXu1aXVP8FIX
-   A==;
-X-CSE-ConnectionGUID: 11BQ+e1eQdW4LNLPAmDH6g==
-X-CSE-MsgGUID: XaSWX9BTS7a0+n6hHMm+3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="58840480"
+   mime-version:in-reply-to;
+  bh=5Z4E6ng1tNXYID7Liza4dEBXbcEx4WGsS4h66Z54u8E=;
+  b=hgWYYnD3ipGsoFL74dnsh720jOJMToRxazvHJyoYY+ZO3lqSAQ2ZyDJB
+   cQN4ykoKmzITBdW1jEHCV+4YkbM9Dema8lJqFi7qXaYhgS6FCvfU+rFiA
+   PVmGQlkVgOnzqTwHPRTWRqU3dlmD84ssMcNENwVwQ+flIoAfZFfxvbgyX
+   o+Ei4odE5arwEbCHFhlk8kiS1k2degZK7/D7BIy5umwmp8Uxss8Wza8G0
+   BPMTZrsSNSuuPVSiSM6WUPrquMJIkvHSF3RiFPn0A8ZR00YrGSBvtgEzm
+   JaGEwFTCBI5f2uISFPS/mBAROqI5QT0cijVeRGQt9sw8kioUXUfaKlsOq
+   w==;
+X-CSE-ConnectionGUID: nyEbAfKwTPi/5npFNabbpQ==
+X-CSE-MsgGUID: UjhTCPTET9CS3+Zf/Itvdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="66794088"
 X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="58840480"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:47:00 -0800
-X-CSE-ConnectionGUID: 4yKCyGZwSImGOCOMBTV8JQ==
-X-CSE-MsgGUID: c3S/ek64QHmxAkSq+S5Idg==
+   d="scan'208";a="66794088"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:52:17 -0800
+X-CSE-ConnectionGUID: wZ+mC6ZCRI+N9nRsDy+ybw==
+X-CSE-MsgGUID: glZ3Ut2tTcmzHLEetw8ZQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="116895285"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Feb 2025 05:46:57 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 61B7E2FB; Wed, 26 Feb 2025 15:46:56 +0200 (EET)
-Date: Wed, 26 Feb 2025 15:46:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: brgl@bgdev.pl, Paul Menzel <pmenzel@molgen.mpg.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-Message-ID: <Z78bUPN7kdSnbIjW@black.fi.intel.com>
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
- <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
- <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+   d="scan'208";a="116521095"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:52:12 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tnHpZ-0000000FL5W-2COf;
+	Wed, 26 Feb 2025 15:52:09 +0200
+Date: Wed, 26 Feb 2025 15:52:09 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 06/10] regmap: irq: Add support for chips without
+ separate IRQ status
+Message-ID: <Z78ciWeu_e7_04Yb@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-6-8a35c6dbb966@bootlin.com>
+ <Z69eue2dV37vw61v@smile.fi.intel.com>
+ <ef7b9c80-88f9-4985-814e-e58cd44a3611@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+In-Reply-To: <ef7b9c80-88f9-4985-814e-e58cd44a3611@sirena.org.uk>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 26, 2025 at 03:37:47PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
-> > On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
-> > 
-> > > In any case: Linus: what should be our policy here? There are some pinctrl
-> > > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
-> > > think this is an error. Returning errors should be reserved for read failures
-> > > and so on. Are you fine with changing the logic here to explicitly default to
-> > > INPUT as until recently all errors would be interpreted as such anyway?
-> > 
-> > Oh hm I guess. There was no defined semantic until now anyway. Maybe
-> > Andy has something to say about it though, it's very much his pin controller.
+On Wed, Feb 26, 2025 at 01:18:16PM +0000, Mark Brown wrote:
+> On Fri, Feb 14, 2025 at 05:18:17PM +0200, Andy Shevchenko wrote:
+> > On Fri, Feb 14, 2025 at 12:49:56PM +0100, Mathieu Dubois-Briand wrote:
 > 
-> Driver is doing correct things. If you want to be pedantic, we need to return
-> all possible pin states (which are currently absent from GPIO get_direction()
-> perspective) and even though it's not possible to tell from the pin muxer
-> p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
-> different, but pin muxer might only guesstimate the state of the particular
-> function is and I do not think guesstimation is a right approach.
+> > > +	int ret, i;
 > 
-> We may use the specific error code, though. and document that semantics.
+> > 	unsigned int i;
+> > ?
+> 
+> If it's just an iterator it's idiomatic to use signed ints.  IIRC if it
+> makes a difference to the code generation it's likely to be positive.
 
-Brief looking at the error descriptions and the practical use the best (and
-unique enough) choice may be EBADSLT.
+It depends on the subsystem, V4L2, for example, is strict to unsigned types
+when they are unsigned. It also helps to catch some strange conditionals at
+some point when one checks for negative value in the (incrementing) counter.
+
+But I'm not insisting as you may notice by question mark used.
 
 -- 
 With Best Regards,
