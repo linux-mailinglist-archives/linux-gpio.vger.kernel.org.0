@@ -1,140 +1,135 @@
-Return-Path: <linux-gpio+bounces-16639-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 149C3A467BB
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 18:16:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A96F3A467E8
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 18:22:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B07B17DA6B
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 17:06:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D4583A7EDF
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 17:22:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D6A224895;
-	Wed, 26 Feb 2025 17:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1C520CCEB;
+	Wed, 26 Feb 2025 17:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/8x3DgJ"
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="d4NSzTHy";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jzU8aYoK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B4E221DA1;
-	Wed, 26 Feb 2025 17:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589599; cv=none; b=CaEeYgcns8BONft+EgJNvRfBAfjeDwKA8KD8rJbgYjpVxbuNK2kfV3xAxbRsWoB7yEAV/IUO43e2u9Acv3Lgja47HgHI/z+iWtP9VHhJs23tNiZC8xmFMCxehYwdZAjtKlwTRUSKeQQUFA1GnP/Sy9fIbA2Gb4IrS2/+3SjC9pY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589599; c=relaxed/simple;
-	bh=2R180IJ7APaALd1g+yyfkVhGYnf3hIvGDgk8lsKLG8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m8TRhcxJ8E3aPz7bLSpfkPrnIcocCIott6ZVLDDO4z+gY8rni9T+BvmmjRIctFzF+QofmMWLcAbFzwExQjXQKv+VdbrC7nG5puN8Tlh/W1fTC0RneefW5rLhcyxMzR4OaDhIurtyCinpqBw8CK1ldNMHBnFs7mFA3Ih+1KSupnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/8x3DgJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC56BC116B1;
-	Wed, 26 Feb 2025 17:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740589599;
-	bh=2R180IJ7APaALd1g+yyfkVhGYnf3hIvGDgk8lsKLG8A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a/8x3DgJgskglabgyo16PGJtzrAVaL3wlI4GWiUa2t3h6Arsj1fdxCDGHHUKE1qz+
-	 MkWqGYj4HEBPBct7yYViRQUjlal1IbYHMnBCcmswporwMRHlB0Nx9dMjqXBPC9R6BF
-	 4qXyHcAPiRTt8nxgOwp7kjYrgjhT3u1JQIevs3oxA6uy6x3/jSFm7QuEaI+C811iY+
-	 4AL2jhdvnuhR4d5R91R5M0A3eER7PnxdjHvqOLqUclMX+1F16ZGFfW+dcq/tsjnLMP
-	 kSGz3A674HrBV9uFQqMNpCDNbxrVVIxuFXU3Ie1gj1RsPLiIjEfUxTtzaPunB5VN6E
-	 gP899WOFULZWA==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5fcd811d939so580383eaf.0;
-        Wed, 26 Feb 2025 09:06:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1vPJFgkoyBTCdNw1rIiYiW8YUNF9HhM9VaqAZ4B4yEPdqoAAbEIDZ0o0Q6Rg5rux9WYh+meLb8lRKx12/@vger.kernel.org, AJvYcCUSDPE2Kl8M+7tbz7bCGjoKzqd1onjZylURVRI7FCYD6YzZyFNz6OdTPv/yOB0vjrMYKxRtBtjs5iD/hQ==@vger.kernel.org, AJvYcCUe+0MrzgLg5q81ot+3P7kXDFDDpCqjtquPJiLom3G8IZ/8+eEHtpmsu/JMEky5b95OP+iinJOa40YGBQ==@vger.kernel.org, AJvYcCV4bSwqvhjKgmoG7xQK1fRFqHrNEzNyFrQKgf8A3P/jZ7IA907+RNDZvJBWZJ6Bpirf5av6EhxOGc/4pd4ID/0=@vger.kernel.org, AJvYcCVPbHi1at06YwsIaMt0Yofh9Iwv1VohDT4wWsmGIcx4EpBCu4T/tD7p9UEfYG9rlvSwSAoVlLHREZrQFlwV@vger.kernel.org, AJvYcCVTiZbwv8Bom8+ndrw4bl9f5hnk6gLmH0fayyhA5BVKbndv4YgviLbEX6DI8qlpCDqPcjsvG5kv@vger.kernel.org, AJvYcCXMHLoZc61wf+WW7M961lIzX55prjUjgLz7iTtu4ijfS77SVyJYe4v5UlPajl+1kFx25VCrojkxJ0Oz@vger.kernel.org, AJvYcCXZPGPzuoeF0XjVRL9NSA/jtSnHijtGwqtGUeFEJ6VjYlVg8dhoxntEjp6qhuAJqrAI7eQ0MD8Nyrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUiLgECOSOV+P096p4zKi6lxpj31zoCwRXzUM5tyAHOu1AF5mD
-	ZW3hbalWNlyMwAQpTLuHY8M5UEb3cCkCAJm1MCd6JNjTztaTELU4KRvgfYXrI+t+qzqkEFYJi52
-	bSGcfhHiGLdpvzdJFsVkC6RobjMc=
-X-Google-Smtp-Source: AGHT+IHyPLVjXp7kw5kgInAMNb4jd7h5cWQZCWKEZs0yMGYHKslrekdKrqf86zX892n/fj3IchT6bMpb2Dem6Q8+U3o=
-X-Received: by 2002:a05:6871:d20d:b0:2bd:286:d713 with SMTP id
- 586e51a60fabf-2c155700434mr67466fac.11.1740589597661; Wed, 26 Feb 2025
- 09:06:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA31221701;
+	Wed, 26 Feb 2025 17:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740590548; cv=pass; b=eeaA7D22NCughijhWR6shBaswpSWedKP0/6Lf0v8GiD64RyI/Xljd2HqTXD1NEht6IpisCq06IlIy0cS29Z7JQH0SeEfSkTUGrvDx6GRnYMASXrmdvbmHHTPQTTe+vIcIranetU9qPmgFGknmgtMzeGxZiN7sl0N9/0wSUSMdBM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740590548; c=relaxed/simple;
+	bh=zaPQGZakIJ5e1FIIOipa9PeTaMKtCnQvOQQNRGVUfcU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gD4p+kIRxQpBzMnhDE3A93UCZsRPmXpgTw7Zy4UwJ2HdEBMHfi2zfCg4NZROdLM6oQOZsLGMHDq+1cqWmYrCp1CBcZsdjaRC6MnXlYLWiQrJs66kP5bvQNLbNeuDXFBFSkE5w8fNikEN9sL9TZUaa1i1QYKqvhgG0hthXiq3zkI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=d4NSzTHy; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=jzU8aYoK; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+ARC-Seal: i=1; a=rsa-sha256; t=1740590183; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=kpdTkzwL2m3RfU15u8+8R8+tE295/4UPz5vcYu2WM4aUrUb/bqSfI1XmDJgB9KLBHV
+    jH2LRtS5HvxsGOnGRQJsassiUM0NgP/kCQZGIPJ9TuzaJDlwTfQtHj15b8v8sI7hMWa6
+    jZzfURC30LMDHu/jKEoFeMmiNYYA2dnjtfd4+yYYH8ohfYSLb6RLOksXkxY3xn2Ipiul
+    HDGi618Q4rB9cJGjK5UrxtWfRlsNGcAa41lTcXsOdNn1dkB19mdnnElaZoir4Gt+4qv1
+    Xz7cAzOqVe4dApVzBYObhAZl9ULwYhsv0mLHb8yOoi1yKMGe5TLnJux3XuO2ifbeLW3J
+    3oOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590183;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=4v/XI+GHsK5iNyWyu0JIeFOmhfLFNQbdUVuziJCkONg=;
+    b=JDN74OXl0Bw4P6g1LetHoVIEUjHkh8fKSkRNOq9LUbY8AaQGFM1vUuw7SBffvhwGBO
+    RamJ54dhaUnW3RZaEcZp2PCpuWsjHcmt5a3PucaVfK+nr3W2ao8AYryCjmgNktLm+qDq
+    RuUUGR5xGV7PDAwY0s64Q3Pm6LXsSgLz82lN81kMvqn4PI7t741c8Orei5czef/l9OI1
+    E7yGZaTjCKvJZH6yeBMyohkETwUSwIQtRciyL0euzoj/FV1K2a+2mD+xxwScKoG42nCF
+    2JOoGOXlhf6eDbll/ROFURAwpFWIeEtZBJZTk6HYSb9E0KdrxsSW4jloeX58pSlMuHEj
+    bWuA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590183;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=4v/XI+GHsK5iNyWyu0JIeFOmhfLFNQbdUVuziJCkONg=;
+    b=d4NSzTHyZLeC3k5Z+DJRjEYCPrbsNpKqVmYAZV2m5K+ouQ2Zupgk8fjhK60ocVXghz
+    Gl4lv6qhO/jVgltqm2OdfX6ijP9L9yFZayTm3ltXQQOEMFxkZCvAIOwF+KEqgJu4GWsG
+    Ev+OPTwgBhyfaGMc60+/e7mL9/pLyTqwbqEoiy6MHVOiXa2g7+jAJGAnsdVw475KAydS
+    XYCTIBejVTjNzFANVa8dCw+idT9gGAySoRqVuJ05PUlOJ8yyqm+dGoy+e6ejoBEZaGdJ
+    RZCrm6Vdq9Ub1CFRevVP441gC3WeHcrUIEOh4QRDp4bWanDlylkJFnJNPrSbfqtq+Q1N
+    g9zQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590183;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=Message-ID:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=4v/XI+GHsK5iNyWyu0JIeFOmhfLFNQbdUVuziJCkONg=;
+    b=jzU8aYoKhju2bqGEWFzNlod30Lv069KlILRo10wp5EdWAAp+eli72oNeHSmKfo/DEK
+    VTwb5/ghmRuP5LNIFBAA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
+Received: from localhost.localdomain
+    by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
+    with ESMTPSA id Qe5b2211QHGNfpw
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 26 Feb 2025 18:16:23 +0100 (CET)
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>
+Cc: Andreas Kemnade <andreas@kemnade.info>,
+	Paul Boddie <paul@boddie.org.uk>,
+	Tim Bysun <tim.bysun@ingenic.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	letux-kernel@openphoenux.org,
+	"H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 0/4] pinctrl: ingenic: add support for x1600 SoC and MII and I2S for jz4730
+Date: Wed, 26 Feb 2025 18:16:03 +0100
+Message-ID: <cover.1740590093.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com> <20250221-rmv_return-v1-14-cc8dff275827@quicinc.com>
-In-Reply-To: <20250221-rmv_return-v1-14-cc8dff275827@quicinc.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 26 Feb 2025 18:06:26 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0i-_08mhOpsecuU+XzS8rKbk9mtgr_Kwx-QGRPh9jumKw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo18T3Py72uAV75_Jf5fdQvWu4rZ8JYWNQWcMOGXjnJR1QY3tpi4Yj9mbE
-Message-ID: <CAJZ5v0i-_08mhOpsecuU+XzS8rKbk9mtgr_Kwx-QGRPh9jumKw@mail.gmail.com>
-Subject: Re: [PATCH *-next 14/18] PM: wakeup: Remove needless return in three
- void APIs
-To: Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Thomas Graf <tgraf@suug.ch>, 
-	Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu <zijun_hu@icloud.com>, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Feb 21, 2025 at 2:03=E2=80=AFPM Zijun Hu <quic_zijuhu@quicinc.com> =
-wrote:
->
-> Remove needless 'return' in the following void APIs:
->
->  __pm_wakeup_event()
->  pm_wakeup_event()
->  pm_wakeup_hard_event()
->
-> Since both the API and callee involved are void functions.
->
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  include/linux/pm_wakeup.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index d501c09c60cd..51e0e8dd5f9e 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -205,17 +205,17 @@ static inline void device_set_awake_path(struct dev=
-ice *dev)
->
->  static inline void __pm_wakeup_event(struct wakeup_source *ws, unsigned =
-int msec)
->  {
-> -       return pm_wakeup_ws_event(ws, msec, false);
-> +       pm_wakeup_ws_event(ws, msec, false);
->  }
->
->  static inline void pm_wakeup_event(struct device *dev, unsigned int msec=
-)
->  {
-> -       return pm_wakeup_dev_event(dev, msec, false);
-> +       pm_wakeup_dev_event(dev, msec, false);
->  }
->
->  static inline void pm_wakeup_hard_event(struct device *dev)
->  {
-> -       return pm_wakeup_dev_event(dev, 0, true);
-> +       pm_wakeup_dev_event(dev, 0, true);
->  }
->
->  /**
->
-> --
+PATCH V1 2025-02-26 18:14:53:
+This series expands pinctrl support for some Ingenic/Lumissil SoC.
+For the jz4730 we add MII and I2S pinctrl and general x1600 support.
 
-Applied as 6.15 material, thanks!
+The x1600 parts were jointly developed.
+
+Code was tested on LX16 board (x1600) and Alpha400 (jz4730) and
+on CI20 (jz4780).
+
+Co-authored-by: Andreas Kemnade <andreas@kemnade.info>
+Co-authored-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+
+H. Nikolaus Schaller (3):
+  bindings: ingenic,pinctrl: add x1600
+  pinctrl: ingenic: jz4730: add pinmux for MII
+  pinctrl: ingenic: jz4730: add pinmux for I2S interface
+
+Paul Boddie (1):
+  pinctrl: ingenic: add x1600 support
+
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             | 259 +++++++++++++++++-
+ 2 files changed, 259 insertions(+), 2 deletions(-)
+
+-- 
+2.47.0
+
 
