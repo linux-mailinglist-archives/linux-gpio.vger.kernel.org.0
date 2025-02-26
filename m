@@ -1,50 +1,80 @@
-Return-Path: <linux-gpio+bounces-16619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E310A45D28
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 12:30:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9382A45D6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 12:43:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EC0616F747
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:30:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB4127A1A91
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 11:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF00215769;
-	Wed, 26 Feb 2025 11:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 690782153EA;
+	Wed, 26 Feb 2025 11:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="rWtw35VN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBLyiBHY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D0A214A96
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 11:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A652321505D;
+	Wed, 26 Feb 2025 11:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740569439; cv=none; b=FqHAyGEP8Drhq0zo8nGU6SlhoIWq+FbuzAtEkQIl/voEyDnUUqcjHOqN7wzwMn1hw6nlogFuWGE8vsd6qxKrjOzdxmhck5Mwv46SCCR7tvSQMp3OygyA+wZd30c8IkCqYPmiMbbj5XQBYdFl3D31Krw4KAE6T8o0adxIxTqN+CU=
+	t=1740570181; cv=none; b=knFhLJEaabqn6M5HPjEtbz2l8Y2RR5pru3joBFLMKd1tJCY0mNp1rFekE5hJToheBAdzpPzYBss0n+7DLDjOVt3F0brjFVK+EWRyr1sex9iPJRbNuiubQ4ooBabvyhjuwtYZU1w8OrnE/rHBI/XPfXhN1UI08jlQbVJ6aSx3c54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740569439; c=relaxed/simple;
-	bh=SNcREccD3RAme9xYt3R+kilxl7SAdbri9ontWGXnon8=;
+	s=arc-20240116; t=1740570181; c=relaxed/simple;
+	bh=5i/OknVHZIgAS7fy0fc/g2sApGx+XqAVMHcU0hKTur8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NATwmVanCs5baVK1/l8S0p3WIm48X6Se3M3TuL+tlPtnraRmF931pCL2aMWQwSe9vqJrPLCmJx0/Zi9JXc8jioWVX03fNH3wPZNG9GQRtgTKZNBTH4ik0dJK9xF3fHxW3YOGNm4YwsYVh0ANh1xNqZWlZfnAhvqryHoWMPwSq/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=rWtw35VN; arc=none smtp.client-ip=17.58.6.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=SOdlXl7RXO630hj2D8KbTA/iuYN0f3n9ChpjV2oMRbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=rWtw35VN5C7ebUryxGYabBiGNkfRxevNXaKu3lmmbcfRwCfqvGmsARTKGVlEDc3vJ
-	 IUw+i/jF2/O7wPykYL7GtrScwR7YHPk2KZArZBlYEByVg4HG2euMsCf4SLAhxqqINe
-	 T4aLRNRVMNlFJyn+/hO3Lmf6LkZiGLt8eWLCMvUUCNYIgCuhqhS16/5+FYQBrqDBv9
-	 cTNT5EvlskIwUWEEZthrUNkKMbaMBoPHtGY9C1f3/Wkj+mhDFLP1F1CqAqbIZvoN+x
-	 V8XpPNLsrc2QkugOEEdKPXC0Zg7dBaQpmDQ+gMVmCM7ShlzUTzFJzMqx6xBRgIBMy+
-	 ioIbkere3zE9w==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id EAC1C18036A;
-	Wed, 26 Feb 2025 11:30:23 +0000 (UTC)
-Message-ID: <d70d059e-37aa-431d-986c-5666f006d610@icloud.com>
-Date: Wed, 26 Feb 2025 19:30:20 +0800
+	 In-Reply-To:Content-Type; b=i5oK8zgAgIF8/Pc9QEB1eBQMCc5t01hvT0Wrj2+zMWDE1eQEsXIw+Wir1KqOsSPPjpTGoNmMy2xPsuryCGnhvdRUDpOU3wQZdIbitQsW4W/DMFoHFfFVUpKt2epgQ59T60jnhtSzf4ZZ2Gvoj7GvgnYEPgZG7YOhOHXDb+mpWso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBLyiBHY; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54838cd334cso5763908e87.1;
+        Wed, 26 Feb 2025 03:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740570178; x=1741174978; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L5hrGQtYfhc5Y+HY7h904Luh/ddK0W6WhpT8KbPVtUc=;
+        b=NBLyiBHYCPyuZ6VxRa/b9eUn51wslQDiMgx8zyTznQ4UcE/rzXKLMfIkJgTc27gYrT
+         UlGrFIM9S5MBv2onMJnbB8WMIbfMfZORn9bfOK6CJkjHeDzdIyco99V69L+hbRSxHsTb
+         6AzLDlIossix8m478tYzP+OLcjd1HaOJ0enyNDbEZ/sZJg+WmQJZuj3m0oLj77XU1nEN
+         qyXctGUdx7KJR7/kavkBusr1V6jfJ82+wdxKcR61OMTcz7AYpbsXBw/yekiGo8MkSAVK
+         DkkVTnXVsQ+/G6tTWs7tYjaHwKPpchVk+K1vaqiwz7hNwScQ4RA6OqlaN5KS26bahlv9
+         OO4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740570178; x=1741174978;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5hrGQtYfhc5Y+HY7h904Luh/ddK0W6WhpT8KbPVtUc=;
+        b=aUV/wsBJGOeGUlZfVvVewiHQyTOpidqh3xQCaB41rt3UQkbaMgwf7raJ8Hhg+fVcN4
+         uy1qYIxOIuMMr66kxmwQZujEbRy37nQ09k1ZotUeWlbg1ZR0PNo9i0sm05XKND/ox1go
+         cCXyKYPGcm0Xq5LotPmjhEIUWVt+175l9h/or4ZEA1yX1Ma6BjDCqeoABNZIaHVvYLSy
+         F1CktVxVNMg8NzmBGH3T46x3MJntkXg39ZveUeWatA0l6lYMzm8PtvxYypJy+sFOVyhn
+         /Y2eEPOmy9X5D/vsmsgKQA539SymKbjsSz685jSXvmveCrm6jEeCkHg3aIYfPwSnyY+y
+         JK4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUUFUJJuRvEsbVzqtMtNphkkIw1wctvR1K/MvXFpd8TCZHJyTQOTeJjyj7UDeLZ/S7MRsNvS+JLSOdJqcpo@vger.kernel.org, AJvYcCX4f7XMVtkQo7jfgCKeamMJrxbMt316/7REqxTJ/+jXR32eGnDEOBvlXaD/bzHp0f3AQtqFv4HZldp3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+l4ikjAB9YIkdECl5NKgAzQvRax7OzDg9+vUVpgEzTECNwT63
+	EaENA2g5SSpIj0EW2brnt2jUSkZ+KKpvhJyhOPAm4n70V/aUZVbeuG3GHw==
+X-Gm-Gg: ASbGncsjkyHZ8Q7dCPAqhty1y7sqi8mC1QLxWKkxGoHyYhiLEXCV3G73A8aScPjPt88
+	jrPIHE7ZPwZbOomQ82OfjPgZh60/z/mHiVGMcOvdcfa27xicGaYc4CRHli/pxwRECrLqiYu3l8N
+	LFD48H7L0mcOCtBGl7gi7fzYdw6Rz42QOoFg+IDDpL+9zgEDxNGgeq6HdGY2yirid3ytxGJaEE6
+	boAkAr6lJoz6QmPD/MjcoKX9D1+NLnqIvb52B7TawjHrzhtU1D4jqjghPOeeQJIWcQXI9h7wviS
+	IbUo8QlaoaZNqgTPtwGfJ5l0b54YCNIK6i8JmuM/dKW0+88QpK0QphsifUv3R9E2B52iWsYAXq5
+	5x5tpyAM=
+X-Google-Smtp-Source: AGHT+IGWmhNVTANspZfihUtvglm0GZovp+BUZPoZB6tq8t5oZerY9iOeHToM9Prhn88TfpdSdzHrIg==
+X-Received: by 2002:a05:6512:3f07:b0:545:a1a:556b with SMTP id 2adb3069b0e04-5493c373156mr2643553e87.0.1740570177524;
+        Wed, 26 Feb 2025 03:42:57 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efcd5sm432787e87.141.2025.02.26.03.42.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 03:42:56 -0800 (PST)
+Message-ID: <8979f8d4-8768-40b0-a3a7-6638ddb626cd@gmail.com>
+Date: Wed, 26 Feb 2025 13:42:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,96 +82,83 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in
- void API tlb_remove_page()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, Peter Zijlstra
- <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
- Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, iommu@lists.linux.dev,
- linux-mtd@lists.infradead.org
-References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
- <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com>
- <20250221200137.GH7373@noisy.programming.kicks-ass.net>
- <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
- <20250224132354.GC11590@noisy.programming.kicks-ass.net>
- <a28f04e5-ccde-4a08-b8fa-a9fa685240b1@icloud.com>
- <15c121c7-aeed-480e-8b1a-8ff23b4a3654@intel.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <15c121c7-aeed-480e-8b1a-8ff23b4a3654@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <Z71qphikHPGB0Yuv@mva-rohm>
+ <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+ <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
+ <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: BXt7ADwYEBiuzX8MsPltF1M0d6Q_8HN4
-X-Proofpoint-ORIG-GUID: BXt7ADwYEBiuzX8MsPltF1M0d6Q_8HN4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- clxscore=1015 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=993
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502260092
 
-On 2025/2/26 01:27, Przemek Kitszel wrote:
->>>>> It might not be your preferred coding style, but it is not completely
->>>>> pointless.
->>>>
->>>> based on below C spec such as C17 description. i guess language C does
->>>> not like this usage "return void function in void function";
+On 26/02/2025 12:18, Linus Walleij wrote:
+> On Wed, Feb 26, 2025 at 7:09 AM Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+>> On 25/02/2025 23:36, Linus Walleij wrote:
+>>> we can maybe move it to struct gpio_device in
+>>> drivers/gpio/gpiolib.h?
 >>>
->>> This is GNU extension IIRC. Note kernel uses GNU11, not C11
+>>> This struct exist for every gpio_chip but is entirely gpiolib-internal.
+>>>
+>>> Then it becomes impossible to do it wrong...
 >>
->> any link to share about GNU11's description for this aspect ? (^^)
-> this is new for C17 or was there for long time?
+>> True. I can try seeing what it'd require to do that. But ... If there
+>> are any drivers out there altering the valid_mask _after_ registering
+>> the driver to the gpio-core ... Then it may be a can of worms and I may
+>> just keep the lid closed :)
 > 
+> That's easy to check with some git grep valid_mask
 
-Standard C spec has that description for long time.
-Standard C11 spec also has that description.
+True. I just tried. It seems mostly Ok, but...
+For example the drivers/gpio/gpio-rcar.c uses the contents of the 
+'valid_mask' in it's set_multiple callback to disallow setting the value 
+of masked GPIOs.
 
-> even if this is an extension, it is very nice for generating locked
-> wrappers, so you don't have to handle void case specially
+For uneducated person like me, it feels this check should be done and 
+enforced by the gpiolib and not left for untrustworthy driver writers 
+like me! (I am working on BD79124 driver and it didn't occur to me I 
+should check for the valid_mask in driver :) If gpiolib may call the 
+driver's set_multiple() with masked lines - then the bd79124 driver just 
+had one unknown bug less :rolleyes:) )
+
+I tried looking at the gpiolib to see how this works... It seems to me:
+
+gpio_chip_set_multiple() does not seem to check for valid_mask. This is 
+called from the gpiod_set_array_value_complex() - which gave me a 
+headache as it is, as name says, complex. Well, I didn't spot valid_mask 
+check but I may have missed a thing or 2...
+
+If someone remembers straight away how this is supposed to work - I 
+appreciate any guidance. If not, then I try doing some testing when I 
+wire the BD79124 to my board for the next version of the BD79124 series.
+
+> and intuition. I think all calls actually changing the valid_mask
+> are in the init_valid_mask() callback as they should be.
 > 
-> void foo_bar(...)
-> {
->     lockdep_assert_held(&a_lock);
->     /// ...
-> }
+>> Furthermore, I was not 100% sure the valid_mask was not intended to be
+>> used directly by the drivers. I hoped you and Bart have an opinion on that.
 > 
-> // generated
-> void foo_bar_lock(...)
-> {
->     scoped_guard(mutex, &a_lock)
->         return foo_bar(...);
+> Oh it was. First we just had .valid_mask and then it was
+> manipulated directly.
 
-above is able to be written as below:
-      scoped_guard(mutex, &a_lock) {
-	foo_bar(...);
-	return;
-      }
-> }
-i will list my reasons why this usage "return void function in void
-function" is not good in cover letter [00/18] of this series.
+I still can't decide if hiding the valid_mask is the right thing to do, 
+or if we should just respect it if it is set by driver (as it was 
+originally intended).
 
+> Then we introduced init_valid_mask() and all users switched over
+> to using that.
+> 
+> So evolution, not intelligent design...
+
+Like anything we actually get done ^_^;
+
+Yours,
+	-- Matti
 
 
