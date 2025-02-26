@@ -1,80 +1,48 @@
-Return-Path: <linux-gpio+bounces-16602-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16603-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 526EAA45587
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:26:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CAE2A45684
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 08:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EE1217535C
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 06:26:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BC461746AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93829266EF3;
-	Wed, 26 Feb 2025 06:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9BE268684;
+	Wed, 26 Feb 2025 07:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="mB23+NoR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCkFmz/5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F451925A6
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 06:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54CB19CD17;
+	Wed, 26 Feb 2025 07:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740551168; cv=none; b=hIZYyABaSlmJwFlSkyZ8LY5p6UW27oY+rcdXPKWW5M8aP0nOvHQRBwaIPU3w8yRFTicqpK0Nz9jHDdgd7eHbQnel/icvzj9/R2RXzgY8WQRuoy8tq+LTSDQd7LFAnh3CgeVjSF09CFEMtXgU+NUK3C+SsyIYNFzrCKVHgcxRTk0=
+	t=1740554404; cv=none; b=fBMdETn5Q5DBAkqXrvqbXxGFCRTCB1P0D/V1kzbW8PbBynUHrg0xem4zsz1L3StNRB4Y0u4iKXkfzyxYn33x8KYzFXbbzBOPBKMcwWimMvZMys6PbOHXaXR+G3YUkAKdgKAL8/R6E5Wmmj/UsUYcbW2g7nVVyxY1gs52/+20KHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740551168; c=relaxed/simple;
-	bh=5WNIZySp/V6TQkBqYfphpwXWnPMox8YDnZHsop4KXV0=;
+	s=arc-20240116; t=1740554404; c=relaxed/simple;
+	bh=wTTdKmIse4ca7h/gjxh9HC9YCPX8M8gZcWnwJ0f1gQ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lZsZbjbOMBXRVI788ShAjVMMAT0ef99vuL96NEBrhd7OkmAG7Rp7S2SUZcAduCK03dLi5uxndqtP/9JAz0Pg1hQ95RFFO7gAq6m07SQ7OOjuaHwKPxXYZEHBpuyE+IIZ7HPGybfQGX76NFP/chOzp08V+u0+qGoYhVSrUakpy20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=mB23+NoR; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22334203781so1595095ad.0
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Feb 2025 22:26:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1740551165; x=1741155965; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uGreOp4PElamjoD3W2aSIe8M7Z91tErWuXXcKL9KHkw=;
-        b=mB23+NoR5czhLLAdwXVNPi58FUISW/clw4Yoih/9mAT/Ay9am6n/oaely9qiAdkcLI
-         MR8aJL8hUfTD3ud+4svChb2KM8LpV0FsX20YnDYXCKirxDPk45Zx5JjkAzTfTPkxCHSI
-         VfG2lKYEfYrcXN1MeZa8c6h/+VikEOBLTIZKvkjZxgFS63R6uJTJEupYKev4d7RxsNEB
-         zzo34QNVjCoDyI/0u984N8NI3RDgd2ezVbuwtI1OUcW/HVrxnXXskwDdnSJvq9phcgYm
-         rRwanhKQmRLLZdDgK/AoA2Z/m1N/2/Juyi7tQ/fzAlsn+fliFwU/vUDXSOk9C/JBY/Vm
-         CC4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740551165; x=1741155965;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uGreOp4PElamjoD3W2aSIe8M7Z91tErWuXXcKL9KHkw=;
-        b=kyJWSVkmx6tszjNFrL9LoOb621jB468D60s3y/QcJ9mNBLBn2DTYn1ZdYD3mUC6edn
-         V/EKgPAATOfTvcy9+PsW2Kxphf+cYS3WPt8pglF75vBRJ+tGO+8nlEtZbOlAaxHv3RR9
-         1mw/G6MekHbN5PSD4wwmVZW5CKs2OWCXWZBHm9b0S3gBVLOO7d1jsPEd91EygND4FdCS
-         xG4TyTaVzKbYtW+wOtWACqD+CNEMEDAb4x1S/cBBsPNg+BryLJEQcjH28TUTtWIPLu4R
-         U5/Q05AYiMoSY+MpsmnQmsce2x1hk/SLyNn9JX4RTxWVMuNua2XXYuEKJebWYDt0oIVg
-         d8Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9NuEsvsEzkwDJPs1av74o6SpOUfiPdRm99nY2BlPnqx1bDvVppfTGLIvrMqQ9y4Z1qKOhmQGNfbty@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhIV1vf24VEfuHN4K4LnaGHUgMIAbZudHNWAjaRcJyYChuCrcp
-	euWwfoQ8w4aboJNNpH5H/NW8+obgnvU0kPCR1m6w7CSuNrrlNpdk+N9ztmQDUpOrTgYmpvYw6XU
-	=
-X-Gm-Gg: ASbGncsevcI4ZlrZI2zbRy49gUgouSCuhLAj8MIzUGgzwnt1MQVih6soySxG0pXGXeb
-	wC10TskoYCT0QXwdk/AA/8nnkrTvVzkL624IqOtHmyk5KZSsbCTB5rOpxFLCGXHYmLWL7lQu1vw
-	4YspGA+BJ84g5ub2oTVE2uD7vgVjPBBAUnWNOCktZvhScOYwJ+2aJJQZbFLuY/YFrrx2ZaDAUgP
-	/isrUQth1mW9N6q/49tlX2mDu8MIw9aqgBgtb/An602d/eaFJ+drpI4P1vkHMCNioC5dntllm4q
-	I+huQw5MCBSRv9k24Rx7UwDbLpFBYiOwRQ==
-X-Google-Smtp-Source: AGHT+IHngpceDEuazp39/vkQXaNvFGawu11j3gjWJYcTczcy5si8OGZ0XGoXiweX075LH537Vh+MMg==
-X-Received: by 2002:a17:902:d4cf:b0:21f:6546:9adc with SMTP id d9443c01a7336-2218c3f4333mr396597595ad.13.1740551165261;
-        Tue, 25 Feb 2025 22:26:05 -0800 (PST)
-Received: from [172.16.119.211] ([103.15.228.94])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825ed0b0sm671891a91.39.2025.02.25.22.26.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 22:26:04 -0800 (PST)
-Message-ID: <961cdedc-af40-4053-ba9d-88d9f84d9904@beagleboard.org>
-Date: Wed, 26 Feb 2025 11:55:59 +0530
+	 In-Reply-To:Content-Type; b=Fy1uO/g2nNrOO7xa5A/ggOY4gzRDYagTP6lXPHiB8M5nl5FOVE7JiLBPwdt0ZAFVeQh3+pyD5k5nqRVAdt+e/CcTEBpXSrTyET0NIEooRuY84ZoI3VXTu72mZ8RR27aciUyvLAaZEpC44lTsIg6m5EYAFD4RFQ81gtN12Y4RWJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCkFmz/5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F849C4CED6;
+	Wed, 26 Feb 2025 07:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740554404;
+	bh=wTTdKmIse4ca7h/gjxh9HC9YCPX8M8gZcWnwJ0f1gQ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VCkFmz/5Bu/vlRbdiwFTbonhh+iN0v9QN90eaCbsoGIU3Xg9HVuyTsODOWhxiZDX2
+	 p5sGIaW0ym40ew7DKIACUGi4U6tA9ERtL+fo/IAInghpemXtwcIUrgla3vBDBaFjLt
+	 XCa/dRCBOFlkbtoZiptJgbS14IRUiznBSXquRUJbbQT/seFfszWRYmCJIq+ij5T4jS
+	 41qo+3jwDqoxs+XU8QlfY3pE0dyrYzdcDtME7bFY1wJ/PLCW1Ut9ClpoV8LoaSSSMN
+	 eCnDGr2WJyWV/+mue8xUZkGK7O+elEOHo4dt+sW7csVsGhlSPvs0RhL2KfBkwU9irT
+	 7WXDEK0KzQrZg==
+Message-ID: <459fe67d-0602-41c5-a94c-d9e9697c80b4@kernel.org>
+Date: Wed, 26 Feb 2025 08:19:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,165 +50,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Replacing global GPIO numbers in sysfs with hardware offsets
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: geert@linux-m68k.org, a.fatoum@pengutronix.de, brgl@bgdev.pl,
- jlu@pengutronix.de, linux-gpio@vger.kernel.org, marex@denx.de,
- warthog618@gmail.com
-References: <CAMuHMdVxZab5X4HyKj2d_21WohKfpFrsnRYYjx9X1ys22xCvLA@mail.gmail.com>
- <6c53bc06-34d1-4ac3-be12-f29d4e5031f8@gmail.com>
- <CACRpkdZOYz6do2r+HNTJu0Zzs+3KqEgJ7SRM0Q0TQKH8fs8VRQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: pinctrl: stm32: Add HDP includes for
+ stm32mp platforms
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-1-9d049c65330a@foss.st.com>
+ <f17eadf3-eb2d-470d-ad77-909f00584d44@kernel.org>
+ <7bc5c425-1d6e-4e25-b913-287478d4149f@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <CACRpkdZOYz6do2r+HNTJu0Zzs+3KqEgJ7SRM0Q0TQKH8fs8VRQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7bc5c425-1d6e-4e25-b913-287478d4149f@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2/26/25 01:50, Linus Walleij wrote:
+On 25/02/2025 16:46, Clement LE GOFFIC wrote:
+>>
+>> Why this is a string not a number?
+>>
+>> Where is it used? I don't see usage in the driver, so this does not look
+>> like binding (and DTS is not a driver).
+> 
+> Those files are helpers for the devicetrees and may be included in 
+> stm32mp*-pinctrl.dtsi files.
 
-> On Tue, Feb 25, 2025 at 7:25 PM Ayush Singh <ayushsingh1325@gmail.com> wrote:
->
->> One of the reasons of the prevalence of userspace drivers (and probably
->> the reason why kernel drivers for stuff like motors are not attractive)
->> is the lack of upstream solution for runtime devicetree overlays.
-> Given how long device tree overlays have been talked about
-> and hypothesized I am of the opinion that they are never
-> going to fly.
->
-> My main complaints being that they are just too complex and hard
-> on users: special tools needed, compile files, files relate to other
-> existing dts(i) files that you also need to have at your disposal etc.
+So not a binding, see other platforms/header files how it is done.
 
-Well, devicetree overlays also have some benefits. Particularly that it
+> It is a string because it is an helper for the `function` property of 
+> `pinmux-node.yaml` which is a string.
+> 
+> I understand that having a number as a string is not easily understandable.
+> I'll consider it in a V2 by trying to use the `pinmux` property.
 
-is an open standard, and can be shared with ZephyrRTOS, if done properly.
+Let's keep discussing this part in the bindings doc patch.
 
-The syntax itself is not particularly hard, and it isn't difficult to
-
-create tools to make creating device trees easier.
-
-
-The current compiler errors are not great to be honest, but that is
-
-mostly due to the fact the barrier to entry for end users is quite
-
-high (go u-boot route or modify the current device tree) instead of
-
-sysfs APIs which other tools can interact with to generate overlays
-
-on the fly. In short, if the kernel provides a userspace API, the
-
-development on compiler and other userspace tools side can make
-
-the process much simpler.
-
-I don't think many people will directly write devicetree overlays,
-
-but generating them is not difficult since it is a defined standard.
-
-> It's harder to use than BPF, which is already really hard to use.
->
-> I don't think the ACPI situation is any better for the matter, and
-> a solution using DT overlays will not play nice with ACPI systems
-> so we just leave that part of the world out.
-
-
-Can't really comment on ACPI since have not interacted with that much.
-
->> It is
->> simply not attractive to have tutorials or examples that will require a
->> reboot to work. And since a lot of people will start with those examples,
->> they will continue using userspace drivers for their future projects.
-> I agree.
->
-> I have an idea about this.
->
-> If we want to use an existing kernel drivers for dynamic devices,
-> something in-kernel and Linux-specific that is easy to use is
-> needed. I would rather look into something that enables
-> creation of some devices using the Linux-specific software nodes,
-> because *those* we can control how we configure, preferably
-> from configfs I suppose, but Bartosz already burnt himself trying
-> to use configfs once so I don't know about that specific.
->
-> Consider for example, if we have a sysfs like I suggested:
->
-> /sys/bus/gpio/gpiochip0
-> /sys/bus/gpio/gpiochip0/gpio0
-> /sys/bus/gpio/gpiochip0/gpio0/
-> userspace
-> /sys/bus/gpio/gpiochip0/gpio0/value
-> /sys/bus/gpio/gpiochip0/gpio1
-> /sys/bus/gpio/gpiochip0/gpio1/userspace
-> /sys/bus/gpio/gpiochip0/gpio1/value
->
-> With software nodes we can:
->
-> cd /sys/bus/gpio
-> cat available_gpio_drivers
-> i2c-gpio leds-gpio
-> echo leds-gpio > gpio_drivers
->
-> [/sys/bus/gpio/drivers/leds-gpio.0 appears in sysfs]
->
-> ln -s gpiochip0/gpio4 drivers/leds-gpio.0/gpios
->
-> [ probe of leds-gpio driver happens using that gpio line
->    now that its GPIO resources are provided]
->
-> I easily see this working for any of the drivers in
-> Documentation/driver-api/gpio/drivers-on-gpio.rst
->
-> Yes, it is not a solution to everything no matter how
-> complex a user may attach to their system, which is
-> the ambition of device tree overlays.
->
-> It solves the issue of dynamically probing devices
-> *only* using GPIO lines.
->
-> Yes: it will drive a truck through any kind of kernel integrity
-> and security, it provides a userspace footgun to shoot
-> oneself in the foot. But users want it, so hey. We point it
-> out. We put it as an expert option. Whatever of those.
-
-Well, any solution we come up with, has to be for endusers
-
-and not just a developer interface. I have suggested
-
-maybe locking down the dt overlays to some specific
-
-nodes which need to be declared in devicetree [0], but I am
-
-not the maintainer of the subsystem, so many people need
-
-to agree there, but let's see.
-
-
-Btw, I do agree that there should be a sysfs based API for GPIO.
-
-It's quite a pain when you want to not have external dependencies.
-
-I have used the `ioctl` based API directly, but even then you end
-
-up depending on libc (and ioctl signature is different between musl
-
-and glibc). Additionally, all the structures and error handling just
-
-builds up.
-
-> However these devices *will* be performant as they are
-> regular kernel drivers, and they *will* be able to use
-> interrupts in a proper way.
->
-> Yours,
-> Linus Walleij
-
-
-[0]: 
-https://lore.kernel.org/all/d5bed265-1dbd-44d1-8287-8ca993624b79@beagleboard.org/
-
-Best Regards,
-
-Ayush Singh
-
+Best regards,
+Krzysztof
 
