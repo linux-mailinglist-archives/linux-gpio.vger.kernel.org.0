@@ -1,196 +1,127 @@
-Return-Path: <linux-gpio+bounces-16664-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16665-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55438A46D82
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 22:31:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 988D3A46DD6
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 22:46:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9307188A5C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 21:31:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A29C63AA1FF
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 21:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD57D25C6E7;
-	Wed, 26 Feb 2025 21:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D9225D529;
+	Wed, 26 Feb 2025 21:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbT+32uo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xk/u0j4I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49B192D63;
-	Wed, 26 Feb 2025 21:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F4025D520;
+	Wed, 26 Feb 2025 21:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740605485; cv=none; b=DZPzF6BD8O2EN/UBgEOMKpgjH44c7Utt5g7VfrgOGc+M3iJtkHsN3YbJd8kGRr+oOhAtVN3NTRqFwMGPZIEQK9UsKYyDlEI8Kh3uTU2/3UlGUCGrrABif47ZlLE50f0ca6RaKjifnkIW/N6akm4Gg8SU4sABGJqoJGJc9cOhygs=
+	t=1740606382; cv=none; b=It2DYItEUQQqvhqZd9/fUh8FqCV7RG+/JCAsBY6OPKt8EF0fGasicYhUAJcnuTull65B6Z5knTD17vR5CBUARIdR5xUUZ3lWomdQxgDNIPABsWkjzanOBnth5hV4mQ6G/cEHo7wMp9rcImdvcxO3/EEotXFWSYce8sKZ/w5izgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740605485; c=relaxed/simple;
-	bh=PRE/A1VqtcxDcp5QHrfXCdxA0NkFgqWuo0KK3OU5E/o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=esE+Ya5uikLz8jx275t9dHjHJt4NwCqC4ZBfCAw4omWFSiwHB+3DQKALdrSh03rtlzeeIXctu2apfl9JfwvezixcKiwZri8VfFAOKywArOKq8kBo+apmThR1frgBQiH/UN1rr/DunIUL/0UMa5aW/PV8jAG7RaqEPeNLoB+oDf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbT+32uo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AF5C4CEE7;
-	Wed, 26 Feb 2025 21:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740605484;
-	bh=PRE/A1VqtcxDcp5QHrfXCdxA0NkFgqWuo0KK3OU5E/o=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=VbT+32uoi+S966XSIV43IVdHDOCkoR4xt4GkRsdG5Gfx0l/lk1OZaGmab0b9KJBJH
-	 PPnRDqjW1RQZPJl35PtQKX7iCuxXhRoCatilQzGbYf3TRETC4bv+lfwo/fgLQldyhf
-	 dNwjEvsTbU5kS2bPjXX7kHW6Vm4MAbhYCsNw0GgRaHR4sAADfynFS1pdGgH/fTHzNn
-	 MVInle6Att2aa+UNdkDx41uw3/9Fqxslx/pRhfaEUavE57Ai6nypu1uqF/CtDnmzEC
-	 InDnIgYKUi+0s2+ZiBWM0fk7yk5IBnq/IWJvlLg/V3SXnAtftMVIhixKbYmmNwbMJw
-	 FXDXX4fOk9O3g==
-Message-ID: <17450f7d-d398-4a75-8b53-6c9c396661ab@kernel.org>
-Date: Wed, 26 Feb 2025 22:31:17 +0100
+	s=arc-20240116; t=1740606382; c=relaxed/simple;
+	bh=vDS2m86MVEOOJ/jODeGIyoehwvTtnHgSNxooCbbAH/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N5H/v5zI/JezE6bEBwF5swVIeuL14hDg/N9VfGWCTYqf1kfOawDqZdfWT9d+7zBA/P98RIvtFlFkEyTifzXmn3XY5Q89TlSkB92lIJkJBHV+4fL4nCFlnF9xUtdbOBDxOnT6lJdkCX2pQ86diJBml23n3akWx4B6eT19/JfF8xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xk/u0j4I; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so2110355e9.0;
+        Wed, 26 Feb 2025 13:46:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740606379; x=1741211179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v52o9iFz2RvmSJmry90JmfMqduEAHrHJVM746pOYQ90=;
+        b=Xk/u0j4IekaZzyWl3dszAqoEpIR1p3tNOc4D6bAPpBDd6oUfe2AZRluGdPOrs0ISH9
+         6ayUDsfTenHDjJaiRCv3ByPaelX5ZPqFTB0idI2tDXWWvXFaQIzXROm1IZkOKpwdDBu0
+         6qHU8qAVStiqOswgKTMgsfx3zf8JMDGp8x5R7jxSOUmJ9hW/C8+CUrFmONxizZ1e/35T
+         tJPEg1DEc4Hh44ohp49QLtcXfmDbhuOEzS0eCbrWCOBd3Rd6xLE0MxEPGWVi/swTKPMD
+         8Xtqrv++K4q/Wwh903NJ7pNPkVJWsVU4NTw017MeT1TzrydvEuWV3dLojmAxnQOhyqhc
+         EEFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740606379; x=1741211179;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v52o9iFz2RvmSJmry90JmfMqduEAHrHJVM746pOYQ90=;
+        b=Gi+qnLCdvqbtiA/QSmEDLHjhH+v/drt9f1q9y9fL8DS09YZwNAgM0IttIaJGFWbIR/
+         ay0WcxEc2blDM7sdu0eL9DSGGyQ0icBlLZ8GJSIOgKa2XP4eai3EfEeZ6L/Ti0fV+KsP
+         Ck7UWUJgvXh5fre1l1nvZ7tsKYuShLV0YyxSuUhmd4lHP+7t+EBlWwYLzScKH45qKS5E
+         FChaXihn0kzdWNBkdTV6vxyySc6oJXTtTGmzWsHhpFJTua/8KEPR6/02bLBIzD6d11Mx
+         LA0tT3jJFaWW4kqS3sLTnrtxdnq3wamTqZvpg/VidOSMto2bOMMmZLHoD8fyiX/i8hnU
+         q+oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3cdfcB8wQA2zNy0InLcJlKDzJrdY5je6SHUXlaQuw2rTlm0tLhsg07tBBzm0lNAU4OhAXLxFASHI/Klda@vger.kernel.org, AJvYcCX6sHb9+ZmWmsD2Es8u64i3KBs3Ys8jbHu2wvXbuKGIIKI8qSokUmG4qQKihZnDW5JhyvGMmunEN2Tq@vger.kernel.org
+X-Gm-Message-State: AOJu0YysfBbscqtAVdLMUJrXWH1DJwJlV7cqYsH2WjpuUDSFHA+tbNRL
+	c3/Cv69T1BpKSdQbTKxrhJZHAQQB4gwNyr6LyZCfzpQyx+UWpx8k
+X-Gm-Gg: ASbGncvAR26juGInw6tzPk5E+D+fvdTsLNq/zeVEM2juFeGwSahV7HYnFZedHzGeb8Q
+	0+39QjFInmCZ18XpSWO27Cyh/2NbrMb1FMyBlp9CrwFiu44t1IRs6BamqITr2+pkVv+slOuZeZH
+	k1E+ixD1SkiDG34xs11vJj49XrFeo277/xg2LxgzGDTv52cMftEIHHD3lGvpthI5I5Ff4Bo3KGZ
+	dxF5edMIv6yDktbyZdKoZRpr8pG8b3+7JY+nPgi1h6YYX+uJJlBraQtHQWPTsM+pa7lT+Ri+Ejx
+	TCfSx1UeLuPXT5MLdw6RQGqee7+eZfPjtliVRKBGeRuCSVQZV6K4RvGJkxuh7Yr5
+X-Google-Smtp-Source: AGHT+IH2F/nrBIX+jYcZEENuWK+JQ6D/Yvxr0QqyXWYSNiGB6DiVbth6DgCaUN9pisIAXAjJHPHLwQ==
+X-Received: by 2002:a05:600c:3b04:b0:439:98ca:e39e with SMTP id 5b1f17b1804b1-439aebc36a9mr152755485e9.24.1740606377462;
+        Wed, 26 Feb 2025 13:46:17 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba532b0dsm33608875e9.13.2025.02.26.13.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 13:46:16 -0800 (PST)
+Date: Wed, 26 Feb 2025 21:46:13 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+ <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpiolib: use the required minimum set of headers
+Message-ID: <20250226214613.1e814f9a@pumpkin>
+In-Reply-To: <Z72fBfM4afo5SL0m@smile.fi.intel.com>
+References: <20250225095210.25910-1-brgl@bgdev.pl>
+	<Z72fBfM4afo5SL0m@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
- Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
- <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
- <55beb3e7-65ac-4145-adae-fb064378c78d@kernel.org>
- <8cdc7e52-f9e2-4fc9-be68-0dd72a25ee1b@foss.st.com>
- <48cc626a-d632-444f-8563-07a9ea0ecc71@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <48cc626a-d632-444f-8563-07a9ea0ecc71@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 26/02/2025 22:26, Krzysztof Kozlowski wrote:
-> On 26/02/2025 16:30, Alexandre TORGUE wrote:
->>
->>
->> On 2/26/25 16:08, Krzysztof Kozlowski wrote:
->>> On 26/02/2025 10:33, Alexandre TORGUE wrote:
->>>>>>>> +		hdp: pinctrl@44090000 {
->>>>>>>> +			compatible = "st,stm32mp-hdp";
->>>>>>>
->>>>>>> So here again - you have stm32mp251 SoC, but use entirely different
->>>>>>> compatible.
->>>>>>
->>>>>> Ok so I will use "st,stm32mp15-hdp"
->>>>>
->>>>>
->>>>> This means this is stm32mp15 SoC. I do not see such SoC on list of your
->>>>> SoCs in bindings. What's more, there are no bindings for other SoC
->>>>> components for stm32mp15!
->>>>
->>>> Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the
->>>> STM32 story we didn't have a clear rule/view to correctly naming our
->>>> compatible. We tried to improve the situation to avoid compatible like
->>>> "st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced
->>>> "st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes
->>>> it represents a SoC family and not a real SoC. We haven't had much
->>>> negative feedback it.
->>>>
->>>> But, if it's not clean to do it in this way, lets define SoC compatible
->>>> for any new driver.
->>>
->>> Compatibles are for hardware.
->>>
->>>> For the HDP case it is: "st,stm32mp157" and used for STM32MP13,
->>>> STM32MP15 end STM32MP25 SoC families (if driver is the same for all
->>>> those SoCs).
->>>
->>> No, it's three compatibles, because you have three SoCs. BTW, writing
->>> bindings (and online resources and previous reviews and my talks) are
->>> saying that, so we do not ask for anything new here, anything different.
->>> At least not new when looking at last 5 years, because 10 years ago many
->>> rules were relaxed...
->>
->> So adding 3 times the same IP in 3 different SoCs implies to have 3 
-> 
-> Yes. Always, as requested by writing bindings.
-> 
->> different compatibles. So each time we use this same IP in a new SoC, we 
->> have to add a new compatible. My (wrong) understanding was: as we have 
-> 
-> Yes, as requested by writing bindings and followed up by all recent
-> platforms having decent/active upstream support. See qcom, nxp, renesas
-> for example.
-> 
->> the same IP (same hardware) in each SoC we have the same compatible (and 
-> 
-> You do not have same hardware. You have same IP, or almost same because
-> they are almost never same, implemented in different hardware.
-> 
->> IP integration differences (clocks, interrupts) are handled by DT 
->> properties.
-> 
-> Which binding doc/guide suggested such way? Countless reviews from DT
-> maintainers were saying opposite.
-I was not precise: IP integration differences are of course handles as
-DT properties, but I wanted to say that it does not solve the problem
-that IP integration means you might have differences in this device and
-you should have different quirks.
+On Tue, 25 Feb 2025 12:44:21 +0200
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-And the example in this patchset: entirely different pin functions is a
-proof. This device behaves/operates/integrates differently, thus
-different compatible.
+> On Tue, Feb 25, 2025 at 10:52:10AM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > 
+> > Andy suggested we should keep a fine-grained scheme for includes and
+> > only pull in stuff required within individual ifdef sections. Let's
+> > revert commit dea69f2d1cc8 ("gpiolib: move all includes to the top of
+> > gpio/consumer.h") and make the headers situation even more fine-grained
+> > by only including the first level headers containing requireded symbols
+> > except for bug.h where checkpatch.pl warns against including asm/bug.h.  
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> 
+> FWIW, I have checked the current state of affairs of linux/bug.h vs. asm/bug.h
+> and found no possible issues with the dependencies. While linux/bug.h drags
+> more than needed into this header it won't prevent cleaning up the rest of
+> the headers. So for now we can stick with linux/bug.h, but at some point it
+> would be better to be more pedantic on this.
+> 
 
-Best regards,
-Krzysztof
+A 'fun' activity is to pick a random file add "#define _IOW xxx" at the
+top and see where ioctl.h is is first included from.
+(I've not got a build machine up at the moment.)
+
+Then start fixing that include sequence.
+Moving a few headers around is otherwise pretty pointless.
+
+	David
 
