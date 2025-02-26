@@ -1,171 +1,191 @@
-Return-Path: <linux-gpio+bounces-16644-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16EDAA467FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 18:24:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFD43A4686E
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 18:51:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28EDC188934D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 17:22:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9F043AD99C
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 17:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A715D2253ED;
-	Wed, 26 Feb 2025 17:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF78229B36;
+	Wed, 26 Feb 2025 17:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WNZ1vcFY";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="qvxkKLCD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4VdmL0M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEF2220680;
-	Wed, 26 Feb 2025 17:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740590549; cv=pass; b=X9O8X2tlBvFneVF4Ie5R6K7UQZPJuPYRp4vllTfGG3MgtGQb7jhcpJ09O7zZiWaUs0AVgYu5lCnT2QfRimGHGA6BjVnwPzmd6y2NShwZ0iJLBwDDNmWc7tNrzJ5ca6Vp6qjF9KNHdqYVY6S1DsaRLpsY56k8gLLj379KOs+si0o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740590549; c=relaxed/simple;
-	bh=S/PiPzCVRmka0OjHHthPnqNxfP8KG+E7z2CDbxI51JM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eaUjM0nFe/nUV/BrdrlTIVNclvoZJT1zc2/oABOuBbcZpIc7fw4pz/DVhf2PQsMD/J61epKYdVHwbl64rbKvhMlWgbjITSAmiwWDKhtwIn0HLvP0LddTuzDDt1j2x0H1aOqPCoE1IDCgFflxylnukeAV4vmxdSs/p+79dH1/V4A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=WNZ1vcFY; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=qvxkKLCD; arc=pass smtp.client-ip=81.169.146.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
-ARC-Seal: i=1; a=rsa-sha256; t=1740590185; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=XzegoGgoNCNxR/DpTLYhpmeVC7GAAlAso1mUkbxW+HtcDmzhz9+/o1bMaxdVfDcaoz
-    NP8vA4dODxV/O1nBZ47ElGyqvqFXNNl4j8mlQ5d0H8m83ZJQJH77tJdztkkB3huWmDlj
-    0hMuUU9RV4I2bgElzzKIFidKrztWl+kb/sMPQP072WwTokt+leKr/p0reXJRLDlWaROQ
-    e0HIt3QJ6So0cN41kmqPUszQWF2V/dy62iSyhASXuRgNsXX4ATdyrlNx/UQRuxOyZWye
-    +AcjfHlSRMu5NQY2hQOZ+bhPwdgrfH//E+uxARtJEHfl7sq0Yk+D8B0mcZ9XFFSE8fvw
-    i3TQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590185;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=GbY1FLE78d7HUAAoF/6GehoDyAWxuk3FuXFDDvxwZJY=;
-    b=XQqPefzFDqQWJwhVAN9ETVgWHLJBGq+GVarRrcpkzHRo/KmzHh5PcWg/UXA2Zh0zLe
-    0JGNsfS/BaMprSe7XVsTYPyThIoHT15UJBr6P3MV4fHlPAgya6mAos/DfkcCH5rR+R4e
-    4jiUAHJZtOPz9IDYQOu7gyUElCiFy7JUanDL5VJIOG1IUFBuGK0kLAOfWzBQ/9OlUpSh
-    zIPg3AIg9kvHrMMSGyARn+fq2aCeHaOVmcsPKrf6PGYZMRSccxo/CGpF8eivRnazlbmQ
-    UUtLXJ7FK+vSuSxkGaEQLlV6c9X2zFJrRt+2viy9fw9miHZCUX4P1JU1FxV7Qd3RawYc
-    Cc8Q==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590185;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=GbY1FLE78d7HUAAoF/6GehoDyAWxuk3FuXFDDvxwZJY=;
-    b=WNZ1vcFYyuY9VeOKiO7EFAoEYmnXfiFFixQKAYxAxWEmy61ioYgIfB1hWDbhPdN0ei
-    veVdhhke7fYURoXsEepa+jnfVE/5QP3B5l5gE4zZFf1gywHGBq1hUcZZh+brcAgCwUdy
-    kjSNLla3EOw34Tltdb6UqPxYKgt3ShANj8T4vmhGvkF3dnePPRvwYANhGQNVDW+FKvVt
-    o5QsLz754NHf87GIxGkHnDFk6Gw9nB5hKmP103A/KnndlquRPyaktftmGgrD1zwY8HVM
-    Vdm/TSVdf95qf5ZcYuBCxZkyPIIpz93IWhYpo69+KV24Pt61s/Y3MyIHItcFyIrCgPXX
-    2kUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590185;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=GbY1FLE78d7HUAAoF/6GehoDyAWxuk3FuXFDDvxwZJY=;
-    b=qvxkKLCDRHQgEZ7+dC9e9mg0S6+Qx4kEXvP5tG/Zen8Kzp+9pa2dViqoqsO3Rbn5cL
-    iB6xR6ZdKu7XH7lWl9Dg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
-Received: from localhost.localdomain
-    by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
-    with ESMTPSA id Qe5b2211QHGPfq1
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 26 Feb 2025 18:16:25 +0100 (CET)
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>
-Cc: Andreas Kemnade <andreas@kemnade.info>,
-	Paul Boddie <paul@boddie.org.uk>,
-	Tim Bysun <tim.bysun@ingenic.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	letux-kernel@openphoenux.org,
-	"H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4/4] pinctrl: ingenic: jz4730: add pinmux for I2S interface
-Date: Wed, 26 Feb 2025 18:16:07 +0100
-Message-ID: <7541ff32baf429db4efc1e69b11fe911a75b296d.1740590093.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1740590093.git.hns@goldelico.com>
-References: <cover.1740590093.git.hns@goldelico.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF2A229B3C
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 17:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740592287; cv=none; b=hZ/wpeIcnC0KqGW0NUJ2s+jzAnEYTzRfa85WouKdqJjuZH76n6V7OrGZVNSDEMbprBrStcoOY6wvnExlN+xsXI+yh8bnFhQ3CDNLjHZrLdwqarS4gVdH6QGShoR1sQ7X6IZyZXXU2IX/cDwwSSKGe9GbGAjiS0WAMlwmG33aAZ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740592287; c=relaxed/simple;
+	bh=ZwtfC3nYp8CaPNEdKWyu9wlMvkqQmVSEvE+qMTsLNlE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OeejNHtiFpVAid7ztKRvexbdxtLAp2oZLmg+Y58Ov8x3cZO+s028sKIwn9uycXbNDLILX/cPp0Xw9/89J3MS4Jc9iSPWgIeUXL4NMQQY80uQm8tml4vikBV9jpU3Xz2yPzyOyY7YcBI8l2xa/3lu5NF7JjFG86z/77RIFTmmXRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J4VdmL0M; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abbec6a0bfeso2130266b.2
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2025 09:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740592284; x=1741197084; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WafmvwMcW3hiVK+DWV4tC0TIwlo3nMf0b8z1NxQd6Ao=;
+        b=J4VdmL0M3YOVCStd8+G2z/+ufICtF16Rc9EtX8mL+/aqbVT/1P9q2oXoij99jz4vXp
+         NXdK9r0RDO+SV8vKMwcPkpGfLayiVjVgAwuNlNFCVx7HF/zgQXzIrp9ptvp7rNx382hG
+         LXcuYcfz38J4HhUDnEpqz4oIjWQp/IAcejhK/1PibLQXPt4q1GVnvl93kuG8Equ0fc3p
+         7JjVQWT/pMWJOmepvc/Q/h2XSNDWRCrB6RFrVAlTzJ8tJFPCkJsziOslkz5xb3c7TWCr
+         jfOL+KSsteOS24dtMYqrZYo7vQYfhMLMZJLabdGIMhvCDUJ4zq4SjAWtMGcPWWPP3FnS
+         L7ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740592284; x=1741197084;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WafmvwMcW3hiVK+DWV4tC0TIwlo3nMf0b8z1NxQd6Ao=;
+        b=jRxKG3Yj0MszVInx4wIYw5oVQzlbdEepGgRrQTZdFzb9khzuFAsSlOWhQnhKgWZ1TK
+         C9McdbzzrfaZYUXUNGlKFTJjTVnciqkh9vMr6I5ZDxDIuKOqL8uknjGi9uDqn4XRxBxG
+         k9rdRhemPc7QSBaTbt2MwgXd4OjL6kuKoSou5iw/ezxkBsCUqFzdYaHV6CQgJEej5o6r
+         /0f6XQTv1vsNhkkU4lJ7TRDJD5DoMhrNaeaxC9fQUovVlgCHOmwXels8jdG5/iE/jJ9Z
+         9DApeEOIL4gqJtrv2XckA0XNrNPIqbw4U3Dz6/h3HmbNIhjj3KAKL7EX+ba1W4g458rC
+         T2dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpPCapvVH3UGtBYoCivGgQK+z9KjygKl/EmiAcnMtYkIL6ffc8pMJvf0fDv2w5Gvdpy1+aJezEpwxR@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlcagZxdVhGw+6wCJEOAcNWzbYVj7yna31e8WkPauvOQeLuklj
+	MqKGuqQ+qjtBnRmtmlzuoRu4JEOMjuFK1BQxvqEZJpDwiWdxw9JHEqIlkSDMs7s=
+X-Gm-Gg: ASbGncvUCo1GO+itsQDV9L7QFOWkszv5ngg0bYvDMlCa+meLx/3C2NiWDBEBdrpBO6R
+	wQ+gjfO278l+IUY6EjIEvq2iE7SSfxBpVNqEwVqnMOijGSAxeTTz8cesh8dOzWBRi/k4/8nqvuG
+	2dxeu5PqhuL2X+7jS6OyEVe7TUj5kdQwj7MZChs0APlxSEUqAS41vemGaYYW/66kbg9OiVoxeSt
+	ivDit6TDKXOGUE/F7lUuFGa6/J6nt/qWF8i8q822fBNxMFyeqJHgeMtr96h/Z6nPqH6ZoeFH88t
+	uUc3MVEFGAcThAAnf8jtj67df9/SYqJtqD2QYRLUQCwgyftWxvRdJL5UEjRiQrJuXd7Lt37iyVi
+	/pSdas9ypYQ==
+X-Google-Smtp-Source: AGHT+IEdPDAKGl/ciZ2BN9WrypNhCZ3g9/t9yKy7hpDMmhF9Ng5D1SSHBpZpIWrlovd12eP54BeIwg==
+X-Received: by 2002:a17:906:30cb:b0:ab7:b878:e8bc with SMTP id a640c23a62f3a-abc09c19ea5mr2172730166b.38.1740592283838;
+        Wed, 26 Feb 2025 09:51:23 -0800 (PST)
+Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdb131sm361889866b.7.2025.02.26.09.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 09:51:23 -0800 (PST)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH v2 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
+Date: Wed, 26 Feb 2025 17:51:19 +0000
+Message-Id: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+X-B4-Tracking: v=1; b=H4sIAJhUv2cC/3XMQQ7CIBCF4as0sxYDUympK+9hupgKtJPYYsCQm
+ oa7i927/F/yvh2Si+wSXJsdosucOKw18NTAY6Z1coJtbUCJWiJexEKbMUb3YvFWEJGhVqEaO4R
+ 6eUXneTu4+1B75vQO8XPoWf3WP1BWQgocvW8731up9e3JK8VwDnGCoZTyBWTk/bWpAAAA
+X-Change-ID: 20250224-max77759-mfd-aaa7a3121b62
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-I2S is used for the sound codec of the Alpha400.
+Hi,
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+This series improves support for the Maxim Integrated MAX77759
+companion PMIC for USB Type-C applications using the MFD framework.
+
+This series must be applied in-order, due to interdependencies of some
+of the patches:
+* to avoid use of undocumented compatibles by the newly added drivers,
+  the bindings are added first in this series
+* patch 1 ("dt-bindings: gpio: add max77759 binding") also creates a
+  new MAINTAINERS entry, including a wildcard match for the other
+  bindings in this series
+* patch 3 ("dt-bindings: mfd: add max77759 binding") references the
+  bindings added in patch 1 and 2 and can not work if those aren't
+  available
+* patch 4 ("mfd: max77759: add Maxim MAX77759 core mfd driver") adds
+  the core MFD driver, which also exposes an API to its leaf drivers
+  and is used by patches 5 and 6
+* patches 5 and 6 won't compile without patch 4
+
+The MAX77759 PMIC includes Battery Charger, Fuel Gauge, temperature
+sensors, USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+
+This PMIC is used on the Google Pixel 6 and 6 Pro (oriole / raven).
+
+This series adds support for the top-level MFD device, the gpio, and
+nvmem cells. Other components are excluded for the following reasons:
+
+    While in the same package, Fuel Gauge and TCPC have separate and
+    independent I2C addresses, register maps, interrupt lines, and
+    aren't part of the top-level package interrupt hierarchy.
+    Furthermore, a driver for the TCPC part exists already (in
+    drivers/usb/typec/tcpm/tcpci_maxim_core.c).
+
+    I'm leaving out temperature sensors and charger in this submission,
+    because the former are not in use on Pixel 6 and I therefore can
+    not test them, and the latter can be added later, once we look at
+    the whole charging topic in more detail.
+
+To make maintainers' work easier, I am planning to send the relevant
+DTS and defconfig changes via a different series, unless everything
+is expected to go via Lee's MFD tree in one series?
+
+Cheers,
+Andre'
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Changes in v2:
+- reorder bindings patches to avoid validation failures
+- add dependency information to cover letter (Krzysztof)
+- fix max77759_gpio_direction_from_control() in gpio driver
+- Link to v1: https://lore.kernel.org/r/20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 86d285a800c5d..6a16729d0a235 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -209,10 +209,14 @@ static int jz4730_nand_cs4_pins[] = { 0x56, };
- static int jz4730_nand_cs5_pins[] = { 0x57, };
- static int jz4730_pwm_pwm0_pins[] = { 0x5e, };
- static int jz4730_pwm_pwm1_pins[] = { 0x5f, };
--
- static int jz4730_mii_pins[] = { 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
- 				 0x77, 0x78, 0x19, 0x7a, 0x1b, 0x7c, };
- 
-+static int jz4730_i2s_mclk_pins[] = { 0x44, };
-+static int jz4730_i2s_acreset_pins[] = { 0x45, };
-+static int jz4730_i2s_data_pins[] = { 0x46, 0x47, };
-+static int jz4730_i2s_clock_pins[] = { 0x4d, 0x4e, };
-+
- static u8 jz4730_lcd_8bit_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, };
- 
- static const struct group_desc jz4730_groups[] = {
-@@ -235,6 +239,11 @@ static const struct group_desc jz4730_groups[] = {
- 	INGENIC_PIN_GROUP("pwm0", jz4730_pwm_pwm0, 1),
- 	INGENIC_PIN_GROUP("pwm1", jz4730_pwm_pwm1, 1),
- 	INGENIC_PIN_GROUP("mii", jz4730_mii, 1),
-+	INGENIC_PIN_GROUP("i2s-mclk-out", jz4730_i2s_mclk, 1),
-+	INGENIC_PIN_GROUP("i2s-acreset", jz4730_i2s_acreset, 1),
-+	INGENIC_PIN_GROUP("i2s-data", jz4730_i2s_data, 1),
-+	INGENIC_PIN_GROUP("i2s-master", jz4730_i2s_clock, 1),
-+	INGENIC_PIN_GROUP("i2s-slave", jz4730_i2s_clock, 2),
- };
- 
- static const char *jz4730_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
-@@ -251,6 +260,7 @@ static const char *jz4730_nand_groups[] = {
- static const char *jz4730_pwm0_groups[] = { "pwm0", };
- static const char *jz4730_pwm1_groups[] = { "pwm1", };
- static const char *jz4730_mii_groups[] = { "mii", };
-+static const char *jz4730_i2s_groups[] = { "i2s-data", "i2s-master", "i2s-slave", };
- 
- static const struct function_desc jz4730_functions[] = {
- 	INGENIC_PIN_FUNCTION("mmc", jz4730_mmc),
-@@ -263,6 +273,7 @@ static const struct function_desc jz4730_functions[] = {
- 	INGENIC_PIN_FUNCTION("pwm0", jz4730_pwm0),
- 	INGENIC_PIN_FUNCTION("pwm1", jz4730_pwm1),
- 	INGENIC_PIN_FUNCTION("mii", jz4730_mii),
-+	INGENIC_PIN_FUNCTION("i2s", jz4730_i2s),
- };
- 
- static const struct ingenic_chip_info jz4730_chip_info = {
+---
+André Draszik (6):
+      dt-bindings: gpio: add max77759 binding
+      dt-bindings: nvmem: add max77759 binding
+      dt-bindings: mfd: add max77759 binding
+      mfd: max77759: add Maxim MAX77759 core mfd driver
+      gpio: max77759: add Maxim MAX77759 gpio driver
+      nvmem: max77759: add Maxim MAX77759 NVMEM driver
+
+ .../bindings/gpio/maxim,max77759-gpio.yaml         |  44 ++
+ .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++
+ .../bindings/nvmem/maxim,max77759-nvmem.yaml       |  32 +
+ MAINTAINERS                                        |  10 +
+ drivers/gpio/Kconfig                               |  13 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max77759.c                       | 528 +++++++++++++++
+ drivers/mfd/Kconfig                                |  20 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max77759.c                             | 737 +++++++++++++++++++++
+ drivers/nvmem/Kconfig                              |  12 +
+ drivers/nvmem/Makefile                             |   2 +
+ drivers/nvmem/max77759-nvmem.c                     | 156 +++++
+ include/linux/mfd/max77759.h                       |  98 +++
+ 14 files changed, 1758 insertions(+)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20250224-max77759-mfd-aaa7a3121b62
+
+Best regards,
 -- 
-2.47.0
+André Draszik <andre.draszik@linaro.org>
 
 
