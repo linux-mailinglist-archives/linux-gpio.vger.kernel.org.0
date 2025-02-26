@@ -1,211 +1,180 @@
-Return-Path: <linux-gpio+bounces-16600-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6BB9A451CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 02:01:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E29BBA45550
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:10:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B71131743F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 01:01:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9D4A7A2318
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 06:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F212F5B;
-	Wed, 26 Feb 2025 01:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0BC2676DD;
+	Wed, 26 Feb 2025 06:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrQnoEPZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5480C63CF;
-	Wed, 26 Feb 2025 01:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9D8266F07;
+	Wed, 26 Feb 2025 06:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740531675; cv=none; b=LZRIFcLubh0ycPS34WX9clD5e4aEZcJpcmD9nsBY4DYrt7/Jgk2R8/T3IHEV7m07QbUj9avKS04QfeQ2til+ayuCKcsWd6XftyclqPUsgAdltOC/DOTG4If3g/dM6b+KEht2xVay2lvPemrw3EAiC5bjhsYKCtiXM26TdyTjFBw=
+	t=1740550194; cv=none; b=Z7CD85vGUgkKiJHXEit3a9VjPoSpDE82ExDCCbMScMh8/RiFlrXtEVxgL2oUh/h2iXM7O3dG9aRtQxKw1Ehczr/FH7Yfjbo5DrX+XWQLEgepeCk2FZ0Fi4nsYtn20FVolfHs15YSCgpZm4HGZW2Q0OmKls1NnMDbJT2unkHP0ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740531675; c=relaxed/simple;
-	bh=ndgmvJpYY0f5d8nmPn7hN8YJZl0cgL5q7U04Kq5JPHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPPQbi/mRPTI59mlCiusJG5f9M9D716UdsHiKwejQyEVcPizgr1jugJZIUBEP4dFS42CQ/7mX0H9UJgVzc1b/eKVk27c2XZTiZLP7kFxebRTbLWdMEVSYn8tNXf2/DVZWvP3tayzqocyd043WWo53WqbWvbXQuAy+tEFn5n9Ji4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.55.252])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 22AB134300C;
-	Wed, 26 Feb 2025 01:01:12 +0000 (UTC)
-Date: Wed, 26 Feb 2025 01:01:08 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH v7 0/4] riscv: spacemit: add gpio support for K1 SoC
-Message-ID: <20250226010108-GYA44567@gentoo>
-References: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
+	s=arc-20240116; t=1740550194; c=relaxed/simple;
+	bh=iAc22T3HLdg9MoIWIu6HrXNwZZHyWM7nNlh5x6uZYuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KnfVq9zTVy3Ocd6YS7HJTyS5NY2rheJEP3foBPBSIG+fnect4+K6Hh3ZlT1dGl+sS1BuVMCvp+pDvh4jPQb/rcPiBzhnQPTyhd3nad0OUuLxey31VA+TAMz0V+ZB2DGPlV3Wnl0zeIyLjo3L4UPUtEBPst67q+447+BhoxJpcys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UrQnoEPZ; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30613802a04so68296381fa.2;
+        Tue, 25 Feb 2025 22:09:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740550191; x=1741154991; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wo0R2waQkz/+BFp9U5SUX15rq39Vkclag114XFhluP4=;
+        b=UrQnoEPZhDb9c9e3J0KiDekADhnTODYzyX+lj4+2WyZ9MKRewdal9xJIs7WFFT9mWH
+         fux+a6MXFIflOFF2KbGaN6Q0Vv2UgRQp4K6i4xAZf7BRVUfy7hkbAs5VrnrgtLvCkOp0
+         x/LxpvYpIaqg+6Bwrrz1NXlII8CJHTUd7nreENl+5TGEQmJfhpky4XhCHU3zi0CSi2Zq
+         BgMbnzHrxSoSQvxBntHm/BUQHeANDQcPEycjmeDaXg9gl8iwJlrUTOtuhZXq4dZRuAG3
+         OSU3XgGWFZnl0BCbIinZhb3ViTp6BlHQ+8wYeu64788wpvxe41peBiB7Vq52IVVRjApY
+         TI2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740550191; x=1741154991;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wo0R2waQkz/+BFp9U5SUX15rq39Vkclag114XFhluP4=;
+        b=u+JlsPhnj+LTRcZ6E6u5yRoDtJZRkC43l+D+ZaHZB+0/HJgwogpwXcs0Wl3zFgqmGJ
+         ta6a+Oz0ktcacSUgx02mQIe6QL5saPj15yD7ckuRNtLqKRSpyqRGgjSoR8mEbATNyGk8
+         TTOLuZZL6i2JvyOEQ4eBffrVBg+7frVT+OPQc19hGqjht7zmTRSd1k0Q/DFiISpT8gLa
+         iuMmVaTyyF+iVIsaFVgtXv+CHq2q/7S3/Psfhrlw4+fHWLKezGBQUJem79oUVlmNlTws
+         qMqTq/cyzgk2mgQSqKqC/i3Ti6T3TBlpkHGy3pf/xbDhHkg7C2PnuzQb6VycnASGoNsL
+         8d6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW606AZm5MCOTVVc6adMn5SAMBE7Eu2pmC6UqJjLEZxqJVuIXd3ddRgFdOqxM2dYhzAbL1qxOfu2RUqjvr+@vger.kernel.org, AJvYcCXIf7UFuYmSrVtNDM/X/4/TrVwnSypQz1xotEN32VRyf95OFCZf71uOkKqCbh7cnqdyOtMbPjTZpSmr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJwNjzsqkdKwXjd6cm/9YFcGpml01h9oDWgr0mTgyAqriJWOsH
+	/QSgojYhyMuT0ZPFSaphyV7KhwEf41t2ndmAUp8SPvkMooFfCZ1L
+X-Gm-Gg: ASbGncvI+OCNN845EMYzJUUS1cJcmKpSvaLnFAqRXedn6NZ3Y1vn1Y6YiGUYJ+Ggq1R
+	EUJxYFuKAmH26Fw+z3Ey9uNl5Our3PZlYwKxXayeBNHJsu/PcXhXPyW+YjZzcC1VBXQaxKoE7H5
+	ijIawKud5B+dq2bqZGY+kN+rkBm5EtzdBN8L0YYvy/v5MNoE1lF67To6hA22XKPJumCfDc8oyrY
+	0CEnHppw/LQvDw4kkm1cKa7r9MmIpSGCEyi4s53qk+UGgy/1vzHxRTUadrKg+0JNpDNxipK8zfV
+	KK7FEcY+RaYLal2AdgsYr78CrpvnBHRa2uqUX5F5iLnfoPsXhNNT/ENcOq4nd8cBBeSUknDJlFn
+	l1UrMgiI=
+X-Google-Smtp-Source: AGHT+IEAkaEvaXKfYvkTudZqULWt1MJEbpkYLs8mH5rY2WeODCsGKUKzd/mcYoopST4g2xRs0X7QFA==
+X-Received: by 2002:a2e:9c8b:0:b0:302:4130:e0c7 with SMTP id 38308e7fff4ca-30a5b16873bmr81239231fa.5.1740550190497;
+        Tue, 25 Feb 2025 22:09:50 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819ec2dfsm4216321fa.45.2025.02.25.22.09.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 22:09:48 -0800 (PST)
+Message-ID: <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
+Date: Wed, 26 Feb 2025 08:09:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <Z71qphikHPGB0Yuv@mva-rohm>
+ <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Linus Walleij:
+On 25/02/2025 23:36, Linus Walleij wrote:
+> On Tue, Feb 25, 2025 at 8:01 AM Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+> 
+>> The valid_mask member of the struct gpio_chip is unconditionally written
+>> by the GPIO core at driver registration. Current documentation does not
+>> mention this but just says the valid_mask is used if it's not NULL. This
+>> lured me to try populating it directly in the GPIO driver probe instead
+>> of using the init_valid_mask() callback. It took some retries with
+>> different bitmaps and eventually a bit of code-reading to understand why
+>> the valid_mask was not obeyed. I could've avoided this trial and error if
+>> it was mentioned in the documentation.
+>>
+>> Help the next developer who decides to directly populate the valid_mask
+>> in struct gpio_chip by documenting the valid_mask as internal to the
+>> GPIO core.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> Ah typical.
+> 
+>>           * If not %NULL, holds bitmask of GPIOs which are valid to be used
+>> -        * from the chip.
+>> +        * from the chip. Internal to GPIO core. Chip drivers should populate
+>> +        * init_valid_mask instead.
+>>           */
+>>          unsigned long *valid_mask;
+> 
+> Actually if we want to protect this struct member from being manipulated
+> outside of gpiolib, we can maybe move it to struct gpio_device in
+> drivers/gpio/gpiolib.h?
+> 
+> This struct exist for every gpio_chip but is entirely gpiolib-internal.
+> 
+> Then it becomes impossible to do it wrong...
 
-  I'm quite satisfied with this version, but there is still one problem
-of irq parsing that haven't been resolved, although it probably is 
-an independent patch that we can submit it later.
+True. I can try seeing what it'd require to do that. But ... If there 
+are any drivers out there altering the valid_mask _after_ registering 
+the driver to the gpio-core ... Then it may be a can of worms and I may 
+just keep the lid closed :)
 
-  For this, I'm not sure what's the approach we should proceed,
-1) if we can get current version merged first then solve it later, or 
-2) find a solution now and get it eventually fixed in this cycle
+Furthermore, I was not 100% sure the valid_mask was not intended to be 
+used directly by the drivers. I hoped you and Bart have an opinion on that.
 
-for the detail problem, see comments below
+We can also try:
 
-On 08:41 Wed 26 Feb     , Yixun Lan wrote:
-> The gpio controller of K1 support basic GPIO functions,
-> which capable of enabling as input, output. It can also be used
-> as GPIO interrupt which able to detect rising edge, falling edge,
-> or both. There are four GPIO ports, each consisting of 32 pins and
-> has indepedent register sets, while still sharing IRQ line and clocks.
-> 
-> The GPIO controller request the clock source from APBC block,
-> In this series, I haven't added the clock support, but plan
-> to fix it after clock driver is merged.
-> 
-> Due to first three GPIO ports has interleave register settings, some
-> resources (IRQ, clock) are shared by all pins.
-> 
-> The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
-> 
-> Note, this patch is rebased to v6.14-rc1.
-> 
-> This patch series has been tested on Bananapi-F3 board,
-> with following GPIO cases passed:
->  1) gpio input
->  2) gpio output - set to high, low
->  3) gpio interrupt - rising trigger, falling trigger, both edge trigger
-> 
-> This version should resolve DT related concern in V4, and register each bank as
-> indepedent gpio chip in driver, no more sub children gpio DT node needed.
-> 
-> One problem is still not resolved, the interrupt cells parsing isn't correct.
-> but it works if request gpio irq via gpiod_get() + gpiod_to_irq()
-> 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ca2f58a2cd45..68fc0c6e2ed3 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1047,9 +1047,11 @@ int gpiochip_add_data_with_key(struct gpio_chip 
+*gc, void *data,
+         if (ret)
+                 goto err_cleanup_desc_srcu;
 
-Let me iterate a little bit more detail on this..
+-       ret = gpiochip_init_valid_mask(gc);
+-       if (ret)
+-               goto err_cleanup_desc_srcu;
++       if (!gc->valid_mask) {
++               ret = gpiochip_init_valid_mask(gc);
++               if (ret)
++                       goto err_cleanup_desc_srcu;
++       }
 
-Current this v7 version work great with request irq from gpio, like:
-	pin = devm_gpiod_get_optional(dev, "myirq", GPIOD_IN);
-	irq = gpiod_to_irq(pin);
-	devm_request_threaded_irq(dev, irq, ..)
+         for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
+                 struct gpio_desc *desc = &gdev->descs[desc_index];
 
-but have problem if request irq via of_irq_get(), something like this:
-DT part 
-	mytst {
-		..
-		interrupt-parent = <&gpio>;
-		interrupts = <1 28 IRQ_TYPE_EDGE_RISING>;
-		interrupt-names = "wakeup";
-	}
+if you think this is safe enough.
 
-In source code
-	irq = of_irq_get_byname(dev->of_node, "wakeup");
+For example the BD79124 driver digs the pin config (GPO or ADC-input) 
+during the probe. It needs this to decide which ADC channels to 
+register, and also to configure the pinmux. So, the BD79124 could just 
+populate the bitmask directly to the valid_mask and omit the 
+init_valid_mask() - which might be a tiny simplification in driver. 
+Still, I'm not sure if it's worth having two mechanisms to populate 
+valid masks - I suppose supporting only the init_valid_mask() might be 
+simpler for the gpiolib maintainers ;)
 
-I've made an attempt to patch gpiolib to support three cells "interrupts"
-syntax, but still fail, it always get last gpio irqchip of four, thus using
-the wrong pin (e.g: will always get 3 from gpiochips 0, 1, 2, 3)
+Yours,
+	-- Matti
 
 
-> Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
-> Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
-> Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
-> Link: https://lore.kernel.org/all/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org [4]
-> Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [5]
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
-> Changes in v7:
-> - dt-binding: fix 80 column, drop unneeded dependencies
-> - tested with patch v3 of "gpiolib: of: Handle threecell gpios" [5]
-> - collect review tags
-> - Link to v6: https://lore.kernel.org/r/20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org
-> 
-> Changes in v6:
-> - rebase to threecell gpio patch which proposed by LinusW at [4], 
->   drop unneeded *xlate(), *add_pin_range() function
-> - add SPACEMIT prefix to macro
-> - adjust register comments
-> - drop 'index' member, instead calculate from offset
-> - add IRQCHIP_SKIP_SET_WAKE as gpio doesn't support irq wake up
-> - drop #ifdef CONFIG_OF_GPIO
-> - move interrupt mask disabling/enabling into irq_*mask()
-> - Link to v5: https://lore.kernel.org/r/20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org
-> 
-> Changes in v5:
-> - export add_pin_range() from gpio core, support to add custom version
-> - change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
-> - fold children DT nodes into parent
-> - Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
-> 
-> Changes in v4:
-> - gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
-> - gpio interrupt: convert to generic gpio irqchip
-> - Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
-> 
-> Changes in v3:
-> - dt: drop ranges, interrupt-names property
-> - Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
-> 
-> Changes in v2:
-> - address dt-bindings comments, simplify example
-> - rebase to 6.13-rc3 
-> - Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
-> 
-> ---
-> Yixun Lan (4):
->       dt-bindings: gpio: spacemit: add support for K1 SoC
->       gpio: spacemit: add support for K1 SoC
->       riscv: dts: spacemit: add gpio support for K1 SoC
->       riscv: dts: spacemit: add gpio LED for system heartbeat
-> 
->  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  79 ++++++
->  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  11 +
->  arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   3 +
->  arch/riscv/boot/dts/spacemit/k1.dtsi               |  15 ++
->  drivers/gpio/Kconfig                               |   8 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-spacemit-k1.c                    | 277 +++++++++++++++++++++
->  7 files changed, 394 insertions(+)
-> ---
-> base-commit: 3d72d603afa72082501e9076eed61e0531339ef8
-> change-id: 20240828-03-k1-gpio-61bf92f9032c
-> prerequisite-change-id: 20250217-gpio-ranges-fourcell-85888ad219da:v3
-> prerequisite-patch-id: 9d4c8b05cc56d25bfb93f3b06420ba6e93340d31
-> prerequisite-patch-id: 7949035abd05ec02a9426bb17819d9108e66e0d7
-> 
-> Best regards,
-> -- 
-> Yixun Lan
-> 
-
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
 
