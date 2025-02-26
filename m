@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-16603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CAE2A45684
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 08:20:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE0BA45689
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 08:21:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BC461746AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:20:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38BE27A1EB3
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 07:20:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9BE268684;
-	Wed, 26 Feb 2025 07:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60E826869E;
+	Wed, 26 Feb 2025 07:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VCkFmz/5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CP3R7TuX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54CB19CD17;
-	Wed, 26 Feb 2025 07:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE3918DB11;
+	Wed, 26 Feb 2025 07:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740554404; cv=none; b=fBMdETn5Q5DBAkqXrvqbXxGFCRTCB1P0D/V1kzbW8PbBynUHrg0xem4zsz1L3StNRB4Y0u4iKXkfzyxYn33x8KYzFXbbzBOPBKMcwWimMvZMys6PbOHXaXR+G3YUkAKdgKAL8/R6E5Wmmj/UsUYcbW2g7nVVyxY1gs52/+20KHQ=
+	t=1740554467; cv=none; b=QU4F0tXCsOKIh3xRmF3n2tlCWzslzn586k/a4aDHNi/Y94snB8hywLOu4HD8iTME5+9yN7zA4qzN3Zmq4AGVgNlAgOwGtXiAeaOA5ykJtLnBuSevOVUT0KRrNHXkczTiDy2Tq8WTia7XfCiyY+46tHev7pMq6QG1gCJpzGLvqKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740554404; c=relaxed/simple;
-	bh=wTTdKmIse4ca7h/gjxh9HC9YCPX8M8gZcWnwJ0f1gQ8=;
+	s=arc-20240116; t=1740554467; c=relaxed/simple;
+	bh=QegaP2Da7E1JZvVAchd05hz3+HLw4pHhxmZVYmicUQQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fy1uO/g2nNrOO7xa5A/ggOY4gzRDYagTP6lXPHiB8M5nl5FOVE7JiLBPwdt0ZAFVeQh3+pyD5k5nqRVAdt+e/CcTEBpXSrTyET0NIEooRuY84ZoI3VXTu72mZ8RR27aciUyvLAaZEpC44lTsIg6m5EYAFD4RFQ81gtN12Y4RWJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VCkFmz/5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F849C4CED6;
-	Wed, 26 Feb 2025 07:20:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Y/Pyy2aEiRuTFQqoZP/xqqDtH7EmuWe/GlwjpnW07IKv3Y7wUnfib3QeGJL0k55bEfbY8KPq/dh87z4Kd8VBfRDMaK/TFV11MjRAHXSpYxNzIoS95niyFfc7MXwdscxZep2le4rfdP5jWTkYYN8QhWofQQLHjSdPZwKXz2fdXIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CP3R7TuX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5E6C4CEE2;
+	Wed, 26 Feb 2025 07:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740554404;
-	bh=wTTdKmIse4ca7h/gjxh9HC9YCPX8M8gZcWnwJ0f1gQ8=;
+	s=k20201202; t=1740554467;
+	bh=QegaP2Da7E1JZvVAchd05hz3+HLw4pHhxmZVYmicUQQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VCkFmz/5Bu/vlRbdiwFTbonhh+iN0v9QN90eaCbsoGIU3Xg9HVuyTsODOWhxiZDX2
-	 p5sGIaW0ym40ew7DKIACUGi4U6tA9ERtL+fo/IAInghpemXtwcIUrgla3vBDBaFjLt
-	 XCa/dRCBOFlkbtoZiptJgbS14IRUiznBSXquRUJbbQT/seFfszWRYmCJIq+ij5T4jS
-	 41qo+3jwDqoxs+XU8QlfY3pE0dyrYzdcDtME7bFY1wJ/PLCW1Ut9ClpoV8LoaSSSMN
-	 eCnDGr2WJyWV/+mue8xUZkGK7O+elEOHo4dt+sW7csVsGhlSPvs0RhL2KfBkwU9irT
-	 7WXDEK0KzQrZg==
-Message-ID: <459fe67d-0602-41c5-a94c-d9e9697c80b4@kernel.org>
-Date: Wed, 26 Feb 2025 08:19:58 +0100
+	b=CP3R7TuXqviDoYcwaepIbuSIGdnf60Nsa9lHT+WW8r7Too1AZKMSjmCD1LS3zePkV
+	 BFeKkSOeWhjoTYlTOfJB5P2eJbN0Dwyh8kMNvxgdYvE4w/+wyc6q7cujyW/3puCbbn
+	 fguCBEjAxmDYpsHHuKS2O8zj24BYfPIQn2KJic/Rfdl1VCG4835z703J8I/v08yazJ
+	 G1ABsieQNik94oYbOoRuHLhyLwPjXDzVxXyaRyLNK3U5IRsL/79f/x5UNlo8Y9Icpx
+	 C+V/Vm9ukQCEMOAkmw8Sk25afT9qMKvepBls4oNiZYEhbyOBVinWxCEyb8LNnuq7h+
+	 X3bznEDKsSIBg==
+Message-ID: <00526b1d-b753-4ee5-8f83-67d27d66a43c@kernel.org>
+Date: Wed, 26 Feb 2025 08:21:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] dt-bindings: pinctrl: stm32: Add HDP includes for
- stm32mp platforms
+Subject: Re: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
 To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -62,9 +61,9 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org
 References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-1-9d049c65330a@foss.st.com>
- <f17eadf3-eb2d-470d-ad77-909f00584d44@kernel.org>
- <7bc5c425-1d6e-4e25-b913-287478d4149f@foss.st.com>
+ <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
+ <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
+ <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,29 +109,65 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <7bc5c425-1d6e-4e25-b913-287478d4149f@foss.st.com>
+In-Reply-To: <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/02/2025 16:46, Clement LE GOFFIC wrote:
+On 25/02/2025 16:51, Clement LE GOFFIC wrote:
+> On 2/25/25 14:04, Krzysztof Kozlowski wrote:
+>> On 25/02/2025 09:48, Clément Le Goffic wrote:
+>>> +
+>>> +maintainers:
+>>> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
+>>> +
+>>> +description: |
 >>
->> Why this is a string not a number?
 >>
->> Where is it used? I don't see usage in the driver, so this does not look
->> like binding (and DTS is not a driver).
+>> Do not need '|' unless you need to preserve formatting.
 > 
-> Those files are helpers for the devicetrees and may be included in 
-> stm32mp*-pinctrl.dtsi files.
-
-So not a binding, see other platforms/header files how it is done.
-
-> It is a string because it is an helper for the `function` property of 
-> `pinmux-node.yaml` which is a string.
+> Ok
 > 
-> I understand that having a number as a string is not easily understandable.
-> I'll consider it in a V2 by trying to use the `pinmux` property.
+>>> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
+>>> +  It allows to output internal signals on SoC's GPIO.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: st,stm32mp-hdp
+>>
+>> There is a mess in STM SoCs. Sometimes you call SoC stm32, sometimes
+>> stm32mp and sometimes stm32mpXX.
+>>
+>> Define for all your STM contributions what is the actual SoC. This
+>> feedback was already given to ST.
+>>
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  clocks:
+>>> +    maxItems: 1
+>>> +
+>>> +patternProperties:
+>>> +  '-pins$':
+>>> +    type: object
+>>> +    $ref: pinmux-node.yaml#
+>>> +
+>>> +    properties:
+>>> +      function:
+>>> +        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
+>>> +                "8", "9", "10", "11", "12", "13", "14",
+>>> +                "15" ]
+>>
+>> Function which has a number is not really useful. What does it even express?
+> 
+> As said in my previous answer, function names are very different from 
+> one platform to another. Numbers were used as string to be generic.
+> I'll consider it in a V2.
 
-Let's keep discussing this part in the bindings doc patch.
+What does it mean "one platform to another"? This is one platform! Is
+this some sort of continuation of SoC compatible mess?
+
+What are the exact functions written in datasheet?
 
 Best regards,
 Krzysztof
