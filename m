@@ -1,156 +1,102 @@
-Return-Path: <linux-gpio+bounces-16638-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03282A4672F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 17:58:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75656A4658C
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 16:52:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13AE73A6F1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 16:58:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B54403B434F
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2025 15:48:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123CF223321;
-	Wed, 26 Feb 2025 16:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CE214D2B7;
+	Wed, 26 Feb 2025 15:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5ieszlWO"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kv9/3dWd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ixIkh3m0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287D01A01BF;
-	Wed, 26 Feb 2025 16:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947B118BC3B;
+	Wed, 26 Feb 2025 15:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589115; cv=none; b=PE6FcvC5RL2oORj3WVy8t5HbWXhHm8qK8xLKy5PKgHSYF40BrsLpxOQxsEY+rjxMZwU7buqu4IWyHdSATfDRr/QWqfwWM+ME5e8MT0iQWWnG7XOkQb61B2/m//NAr1tvLH/5EMRRTRrQHVvE3QpHmb6ktaLRIaqVE0453bO7buc=
+	t=1740584711; cv=none; b=k/c6h5QlTLHR+yDkCnLSxU5nlG1bIphVtar0J4gQazPBlJSmYcGJqayGJDOFQmD7PmT3T9e2Hp8dKAgQfgZoc3K/Vwlg4oeN3UTetK2n1dzI6a35CMInIyFFxhyLxwSGiA4qv0eGs3b2lJP3k1rn8TdYzQV+bVlNv8FJjtTkBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589115; c=relaxed/simple;
-	bh=ua8zdJO/nQe7lxupptSqK1mPFmVWzWD9UITddfiAOto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G1HucXihW+DTsnL25nGCgYFe+pMazPPWPCMyNtsAfdSkrc6AOWxcgyjIhFMUEC8hRfgr3IE3Fz0uGJ1FHRhjDi1wydQIXm2bHn2L+zHLLlxfv+qNC7JFiwG4k1qSmzb6++7Rl21jSNeriXfGrpPOL4Mm/OLfoM1QTSMJMJdcKuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5ieszlWO; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFX00h022198;
-	Wed, 26 Feb 2025 17:58:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	IZb1xMqSNQN2PP8hwkcWMj27cX0fMVgLYG7qNf4LP2k=; b=5ieszlWO2WceWL1Z
-	kY3yIkTr3K8hw6CaL11JmkPDIpVrhkPUTKcIPekxJ4OCKEgiYXenDfTxzL1wlkri
-	sCdIxRI7jXt2k9zlqSwUWry3id0Q1Oj08yRg/yMQlATGxsiVs8Jt8I00xjQMuTkJ
-	oN+xyKiaIKf+IkgKNyEPBJkqvRysw9ADuzpeivaRJC40Cy3r7eprTXaUKc7Zw4Dp
-	z1ziDbdYuMW+MnvMQcocohzAQvUJHXP8Cjyt4bsaKWswEhyUC8J6PoybXAPb1CGc
-	e+WuNlw2jEJ/DGH7ceAC8SZSuakxLuvl3dXD5qk7auZDszK+5dr5p/Ck1a9jP94K
-	Eld91g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psrdy1b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 17:58:22 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 87D8540063;
-	Wed, 26 Feb 2025 17:57:12 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 79595484FF1;
-	Wed, 26 Feb 2025 16:30:20 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 16:30:19 +0100
-Message-ID: <8cdc7e52-f9e2-4fc9-be68-0dd72a25ee1b@foss.st.com>
-Date: Wed, 26 Feb 2025 16:30:19 +0100
+	s=arc-20240116; t=1740584711; c=relaxed/simple;
+	bh=JAsKYRCmpSi3tnXTqqLf4H3CovqP6Od5db5bBj4KatA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QrwM1NnII137aXS8FG9yZvbyj9ysdU9JwMt0O3inLhfxxfPO3sNnN4aRTCZw13CWDM53j5TWuleUmlVt/KPBuN+S13kdfjjg6ScwXORi6+Vx0FgicRT8RP+zVHxInFUfCtutkDkwNawKYhN4Ube5UlkzAoPUnzfpWM/K68WA/rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kv9/3dWd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ixIkh3m0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740584707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s9YAfmlQr9Pd5bXVqXHzhDo0hk63Ti5/f8ktIw5AJhI=;
+	b=Kv9/3dWd+GXsGs7cU1xLIlW2zlePQy31R7G6Jy6QJFpJYBbsDogO0A4tPcqH2iqy6FlsJ+
+	YJk/B9nxmFA+MHnOA5EB5BazjUZeXo6ZO2GhQ0a2odsrE0E5pf/JF4UlNInVv+1AS14qV5
+	8SDQwtT8m3Jp50XfzUOOsnhjBuO9ZK7WHUIDQO/queig6lykW1ZfuXsqIi1NE7RNtPwL/c
+	1ubsW8nlIrnKz0QuzMEA1aFYFs2v2rCg2zxSeLSQ1ne86Cq4FQpOeD1L+HwRiy8DIZuPoc
+	uo9TcSrDqf/s5V4bB+NkfCaTvTvtKgOHTjpU0X8aujMZabOz2GZ7wsVL2CLN5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740584707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s9YAfmlQr9Pd5bXVqXHzhDo0hk63Ti5/f8ktIw5AJhI=;
+	b=ixIkh3m0apqeFPy9Qpy7CjIrvlJ4/WlAEuk0T/7wkqfv/ktP1pgsZB5HNeC5O7xJsKatxe
+	FnzDFatK/PE7L1DA==
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Alex
+ Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang
+ <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, Inochi Amaoto
+ <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, Meng Zhang
+ <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v7 0/4] riscv: spacemit: add gpio support for K1 SoC
+In-Reply-To: <20250226135635-GYA45740@gentoo>
+References: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
+ <20250226010108-GYA44567@gentoo>
+ <CACRpkdY7nzzu3-+FwpSYqmX+O559LoXHiqcvP2OxkhX+9f-3wg@mail.gmail.com>
+ <20250226115957-GYA45508@gentoo> <20250226135635-GYA45740@gentoo>
+Date: Wed, 26 Feb 2025 16:45:07 +0100
+Message-ID: <87tt8gemm4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Clement LE GOFFIC
-	<clement.legoffic@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
- <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
- <55beb3e7-65ac-4145-adae-fb064378c78d@kernel.org>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <55beb3e7-65ac-4145-adae-fb064378c78d@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+Content-Type: text/plain
 
+On Wed, Feb 26 2025 at 13:56, Yixun Lan wrote:
+> sounds we need to implement .select() or .match() in irq_domain_ops,
+> then find the irq_domain.. here is a prototype version 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 995e5e0ec2db..c4d18267e86e 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -553,7 +553,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+>  	 */
+>  	mutex_lock(&irq_domain_mutex);
+>  	list_for_each_entry(h, &irq_domain_list, link) {
+> -		if (h->ops->select && bus_token != DOMAIN_BUS_ANY)
+> +		if (h->ops->select /* && bus_token != DOMAIN_BUS_ANY */)
 
+This breaks existing usage and reintroduces the regression, which was
+fixed with the commit which added the bus token check....
 
-On 2/26/25 16:08, Krzysztof Kozlowski wrote:
-> On 26/02/2025 10:33, Alexandre TORGUE wrote:
->>>>>> +		hdp: pinctrl@44090000 {
->>>>>> +			compatible = "st,stm32mp-hdp";
->>>>>
->>>>> So here again - you have stm32mp251 SoC, but use entirely different
->>>>> compatible.
->>>>
->>>> Ok so I will use "st,stm32mp15-hdp"
->>>
->>>
->>> This means this is stm32mp15 SoC. I do not see such SoC on list of your
->>> SoCs in bindings. What's more, there are no bindings for other SoC
->>> components for stm32mp15!
->>
->> Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the
->> STM32 story we didn't have a clear rule/view to correctly naming our
->> compatible. We tried to improve the situation to avoid compatible like
->> "st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced
->> "st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes
->> it represents a SoC family and not a real SoC. We haven't had much
->> negative feedback it.
->>
->> But, if it's not clean to do it in this way, lets define SoC compatible
->> for any new driver.
-> 
-> Compatibles are for hardware.
-> 
->> For the HDP case it is: "st,stm32mp157" and used for STM32MP13,
->> STM32MP15 end STM32MP25 SoC families (if driver is the same for all
->> those SoCs).
-> 
-> No, it's three compatibles, because you have three SoCs. BTW, writing
-> bindings (and online resources and previous reviews and my talks) are
-> saying that, so we do not ask for anything new here, anything different.
-> At least not new when looking at last 5 years, because 10 years ago many
-> rules were relaxed...
+Thanks,
 
-So adding 3 times the same IP in 3 different SoCs implies to have 3 
-different compatibles. So each time we use this same IP in a new SoC, we 
-have to add a new compatible. My (wrong) understanding was: as we have 
-the same IP (same hardware) in each SoC we have the same compatible (and 
-IP integration differences (clocks, interrupts) are handled by DT 
-properties.
-
-> 
-> 
-> Best regards,
-> Krzysztof
+        tglx
 
