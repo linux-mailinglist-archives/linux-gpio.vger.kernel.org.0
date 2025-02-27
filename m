@@ -1,193 +1,140 @@
-Return-Path: <linux-gpio+bounces-16730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F5F9A48AFB
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:00:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07C0BA48C09
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 23:53:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 043DA188D9AA
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 22:00:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11FDA16D528
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 22:53:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3B727182D;
-	Thu, 27 Feb 2025 22:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D93EA23E335;
+	Thu, 27 Feb 2025 22:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmPQhNmf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94D32702D7;
-	Thu, 27 Feb 2025 21:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1F31AA1E4
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 22:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740693606; cv=none; b=A/uoztrbNP0bUdvTnTq85bE3TNKcFuVkYIriHyKWbGXWrad9fJKHQQrSSfBjl4buhZJrgrR33bJoJscLH5fDL//JOuX0zSeqEmqBHACNMBL4rnkHoxGPIvbfcrRJ0F2y4VCwMCLPtevZqGm/EeveRULP3IWIpBYTKiBiZrz8i6g=
+	t=1740696806; cv=none; b=ukREOCfNB4QhhcmPOTvgwXXgt+agXyGVC/zonV+iR7+1G4KgqzY4Fulm7aXZTXL+oQ9mWi4om/fWeEHv/6eY+gguR7Btxk6OQKCJ5Dw5Eu6pxR0SL8JvPc6OJ4tsEGTN8PF97dTP81G5lYrUtWU56YmGmZ54YJEMXk+wx8bGCBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740693606; c=relaxed/simple;
-	bh=CgxQyljhqVTXpgSL0JHUD5jTBBLWxifnrh+FlSuppPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pfZ8eSp7Vt9YW6zy80ieyYiVhWN6lWQX7dhWbMRCev48h+mKZjt9WyAP/ytGF/hOfLFsdpayhDII7ZWhm3GDov/m+qW2h29dMyPR6EjirKsEi3okuCYVU+eSE5/qBO39XFhTATpojR5KMdRedAidnI4jeRAkq26cFv7uo7lh0Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD021516;
-	Thu, 27 Feb 2025 14:00:14 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6013F5A1;
-	Thu, 27 Feb 2025 13:59:55 -0800 (PST)
-Date: Thu, 27 Feb 2025 21:57:32 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
- Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
- Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 02/10] pinctrl: sunxi: add driver for Allwinner V853
-Message-ID: <20250227215732.5f5753d9@minigeek.lan>
-In-Reply-To: <20250205125225.1152849-3-szemzo.andras@gmail.com>
-References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
-	<20250205125225.1152849-3-szemzo.andras@gmail.com>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1740696806; c=relaxed/simple;
+	bh=sGvdnue/B5GYlmaUtedTZkS3J2gnunXBcoKQK+BG5Cw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MGgtaGvoKjJ4GgexWwy3YLeI8aSbYFrNMUH8oI/XmVHq4t49uq//SXjmjWw+IXy1Bpk9TxTBKld0NMhCTHagXC7hmweJdGEgmjRKJuXQBLivusiTMbKhaJvGa/SOWId+PDKJ9vqaUPTF546kjttOEmyi5G2uq/W1G+UJGez9NCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QmPQhNmf; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-547bcef2f96so1517213e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 14:53:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740696803; x=1741301603; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sYAfR6rT+J2Pmezoedxv/QKmEL6vhTnAGCGwcyVDn58=;
+        b=QmPQhNmfL8rp1P+SsJQ31uOC9I0E1xF4FAHT/u4+BneXewIjwpCGKgMWfm6MUGl6dL
+         PnTFPecK2+A2RSvqLMRJA8RjyyNHvWKN+RiwrX2iziOQFLDhBLQHhxnBfavV3Bs/jyPa
+         J1b1NUguH4GIvHd0EF7wY3BonhF37V2CVAVJohpw3nARrF9AMGQcsBrhZIVDrXSt7dL8
+         keQVZ1ENwE7OyMjGEhYERKekNdQVcZR85PHNXOFbKY7NfoZdIUP4Xl9b4ehfHHkprx3w
+         3ED/qXY6qpvZ+/ZgJuMWwWq996sw9pD1gfnEMz5QBfgHRgLGRWjdrwXxghKtT4LTo+PP
+         lRPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740696803; x=1741301603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sYAfR6rT+J2Pmezoedxv/QKmEL6vhTnAGCGwcyVDn58=;
+        b=PjLCnyMtOE3LXjkMPuRl2mpqxIhDaTXx++PusRyjiJ0pssc08c7G9JhDB8qtJaFXZ5
+         dWEb7ncOnTs/wuRVUDVukaNp2XjP0CCSFTCj6sXKSfam+ovxKWrRy9IVFvnLtFv0cUec
+         VoSp4Am1s6pu4Gi4d3QiSl3V/Se+NeQWIM0hMPR+UNn7Pi7MXC7sAHFqYL+WW3htfJIp
+         XzFgIc8W3FC2Wdk9cY5F2GZWgBtcobFWa25m9yBqE9aAqh0ToX2cBojsIFrF/r94ZIkw
+         pc5GLEdAoQz3jVDkt3NAeuISLL3XRlriKITx1znrP67KwzzbIw6bx+pOrltLRLl3XesH
+         hZ+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBQwOTLClTLOxD8IFo7+2++8xPrEBrmLmAY/1bHQVLxb++eDlPA+sVOuo8fxjWqe7mSFzHPWq6OrNk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyefGjP7tm7OJL6iEqUGs/bAc+tS1L+ka9hoJexsSUdGyIyIRM
+	fY0dsoNybclcc7tznbhRWS2sMzX9DBP/4ed5OoB8D40J7lBcpp9/5u7zrPT/0pUrQXUNnKNTMpv
+	O7B4RrdGEJ60f1p2lfEGOHcvFdvRYjHRQYU0wcg==
+X-Gm-Gg: ASbGncvJPe2wMALdCJhYpkU2xfUcyNgYO/d6r4mra3BpKxdD/t+2ren3vkk1ig1mmxk
+	H2AzGLQODbzpshwBm3QOsqnI95nxJND5PjJL5IVVo5r+qlzQgP6CxSAWW3769PP+7rVvkV/F3Lo
+	n5xHhrFtQ=
+X-Google-Smtp-Source: AGHT+IEtwiHtj9LHUcW0e/otkeY6xFx8rK1S/vfrLBTeffolkmIjfF0YZc4BMa7wskN4DXcOEuc/fyfJLasqmpJiYAc=
+X-Received: by 2002:ac2:4c4f:0:b0:545:2770:79b2 with SMTP id
+ 2adb3069b0e04-5494c351b83mr499150e87.33.1740696802619; Thu, 27 Feb 2025
+ 14:53:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250219102750.38519-1-brgl@bgdev.pl> <Z7XqSVfhPGI5J63B@finisterre.sirena.org.uk>
+ <CAMRc=MdEcjFUp2OEutcnDqSHbbait3f25NEWbdp7mARyKZLvBw@mail.gmail.com>
+In-Reply-To: <CAMRc=MdEcjFUp2OEutcnDqSHbbait3f25NEWbdp7mARyKZLvBw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 27 Feb 2025 23:53:10 +0100
+X-Gm-Features: AQ5f1Jp6iZursAYFoyZhYUa8R_xOEcekX9mX715XkkcwLe7KRWmfwikYltCeIOs
+Message-ID: <CACRpkdbkcX5pEeikkDZAxSGp+M3kJH5SWimxQA6P35iiDAUNdA@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH] pinctrl: bcm2835: don't -EINVAL on alternate
+ funcs from get_direction()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Brown <broonie@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, 
+	Liao Chen <liaochen4@huawei.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-gpio@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  5 Feb 2025 13:52:17 +0100
-Andras Szemzo <szemzo.andras@gmail.com> wrote:
+On Wed, Feb 19, 2025 at 3:30=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Wed, Feb 19, 2025 at 3:27=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> >
+> > On Wed, Feb 19, 2025 at 11:27:50AM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Since commit 9d846b1aebbe ("gpiolib: check the return value of
+> > > gpio_chip::get_direction()") we check the return value of the
+> > > get_direction() callback as per its API contract. This driver returns
+> > > -EINVAL if the pin in question is set to one of the alternative
+> > > (non-GPIO) functions. This isn't really an error that should be
+> > > communicated to GPIOLIB so default to returning the "safe" value of
+> > > INPUT in this case. The GPIO subsystem does not have the notion of
+> > > "unknown" direction.
+> >
+> > I see this was already tested for these specific boards.  I've also
+> > found that Avenger96 is failing with bisect pointing to the same commit
+> > this is fixing:
+> >
+> >     https://lava.sirena.org.uk/scheduler/job/1126314
+> >
+> > as is the Libretech Potato:
+> >
+> >     https://lava.sirena.org.uk/scheduler/job/1126285
+> >
+> > neither of which produce any output before dying, they'll not be fixed
+> > by this change.  Seems like an audit of the drivers might be in order?
+>
+> Right. I don't know if they return EINVAL or some other error so let
+> me prepare a change that will not bail-out but simply warn on
+> get_direction() errors in gpiochip_add_data() instead.
+>
+> This patch can still go upstream IMO.
 
-Hi,
+I'm fine to apply it, maybe as non-urgent fix at this point? (for -next)
 
-> The V853 family has multiple package variants, from BGA to QFN88.
-> The latter has co-packaged DRAM and fewer pins, and less features (pin muxes).
-> All family members can be supported by a single driver, as the available pins
-> with allowed muxes is the same across the devices.
-> 
-> This new pinctrl driver depends on the new sunxi device-tree based mux support
-> patch series [1].
-> 
-> [1]: https://lore.kernel.org/linux-sunxi/20241111005750.13071-1-andre.przywara@arm.com/T/
-> 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
-> ---
->  drivers/pinctrl/sunxi/Kconfig              |  5 ++
->  drivers/pinctrl/sunxi/Makefile             |  1 +
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c | 53 ++++++++++++++++++++++
->  3 files changed, 59 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> 
-> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-> index a78fdbbdfc0c..fac9c61039e2 100644
-> --- a/drivers/pinctrl/sunxi/Kconfig
-> +++ b/drivers/pinctrl/sunxi/Kconfig
-> @@ -81,6 +81,11 @@ config PINCTRL_SUN9I_A80_R
->  	default MACH_SUN9I
->  	select PINCTRL_SUNXI
->  
-> +config PINCTRL_SUN8I_V853
-> +	bool "Support for the Allwinner V853/V851S/V851SE PIO"
-> +	default MACH_SUN8I
-> +	select PINCTRL_SUNXI
-> +
->  config PINCTRL_SUN20I_D1
->  	bool "Support for the Allwinner D1 PIO"
->  	default MACH_SUN8I || (RISCV && ARCH_SUNXI)
-> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-> index 2ff5a55927ad..8937b56b2ef4 100644
-> --- a/drivers/pinctrl/sunxi/Makefile
-> +++ b/drivers/pinctrl/sunxi/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
-> +obj-$(CONFIG_PINCTRL_SUN8I_V853)	+= pinctrl-sun8i-v853.o
->  obj-$(CONFIG_PINCTRL_SUN20I_D1)		+= pinctrl-sun20i-d1.o
->  obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
->  obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> new file mode 100644
-> index 000000000000..fb2112ee12d0
-> --- /dev/null
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Allwinner V853 SoC pinctrl driver.
-> + *
-> + * Copyright (c) 2025 Andras Szemzo <szemzo.andras@gmail.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-sunxi.h"
-> +
-> +static const u8 v853_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
-> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI  */
-> +	{ 22,  0, 12, 23, 18,  7,  8, 16,  5 };
-> +
-> +static const unsigned int v853_irq_bank_map[] = { 0, 2, 3, 4, 5, 6, 7, 8 };
-> +
-> +static const u8 v853_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
-> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI */
-> +	{ 14,  0, 14, 14, 14, 14, 14, 14, 14 };
-> +
-> +static struct sunxi_pinctrl_desc v853_pinctrl_data = {
-> +	.irq_banks = ARRAY_SIZE(v853_irq_bank_map),
-> +	.irq_bank_map = v853_irq_bank_map,
-> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
-> +};
-> +
-> +static int v853_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return sunxi_pinctrl_dt_table_init(pdev, v853_nr_bank_pins,
-> +					   v853_irq_bank_muxes,
-> +					   &v853_pinctrl_data,
-> +					   SUNXI_PINCTRL_NEW_REG_LAYOUT |
-> +					   SUNXI_PINCTRL_ELEVEN_BANKS);
+Do you want to send a non-RFC/RFT version or should I just apply it?
 
-This last flag doesn't apply: it would put the offset for the
-POW_MOD_SEL registers at 0x380, but the manual says it's 0x340, as with
-the previous SoCs.
-I compared the rest against the A523 driver, and the V853 specific bits
-against the manual: they match, so with that line removed:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
-> +}
-> +
-> +static const struct of_device_id v853_pinctrl_match[] = {
-> +	{ .compatible = "allwinner,sun8i-v853-pinctrl", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver v853_pinctrl_driver = {
-> +	.probe	= v853_pinctrl_probe,
-> +	.driver	= {
-> +		.name		= "sun8i-v853-pinctrl",
-> +		.of_match_table	= v853_pinctrl_match,
-> +	},
-> +};
-> +builtin_platform_driver(v853_pinctrl_driver);
-
+Yours,
+Linus Walleij
 
