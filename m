@@ -1,121 +1,143 @@
-Return-Path: <linux-gpio+bounces-16717-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-16718-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75961A482ED
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 16:28:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E891A484C7
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 17:24:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B2F93B318C
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 15:28:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 258E6170F64
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2025 16:16:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C451B26B0A1;
-	Thu, 27 Feb 2025 15:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6670225EF9C;
+	Thu, 27 Feb 2025 16:12:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tkEcuOSk"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="eidkHi4r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93DC22FAD3
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 15:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E691A83E6
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 16:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670118; cv=none; b=scxCGwF/EiGgzzGeJBnqs5Oa/5EbNMlwJH4FQMabSACkBjgWuPstXfgafBzNacRjq7WRL4tEAbcAgLT8AzOeyQHcplK42fsFuMIEK6prCS2LQIndtXkm7MX2PiJtYv5lX4QuJIG39SJ2uI7zYaFDk6AQbgR8cbSYfiLy/RQV0FA=
+	t=1740672777; cv=none; b=Fi54Hqz0KJ6Kf8P2pLyVEKKdfjZXY4r4CFhKy8/Cygrs00qCIU/OCgq3rixgB1bhdpAvaRGKqmlOjjlpLWJsiEYHX1r0QLPo/1c5sMMrNPiCuaP4kKj2M/K5yUVt6lFyfG5qw9rgsosoRPM8ixospvBiM/WaWE9dMIbsFsE3AVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670118; c=relaxed/simple;
-	bh=BStIM3Q7aMRwq331CSOFWaO4WkNTxhb2jNd4nMSki1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YkLg9bPzCO0/ob1LQhiRPDbp2unKgacmd5oIuVE4t+hTbSjotZuoYxrtv7LARMAgshpjSh/sOB4qTNf8SXPfis6LzMo2/oiC5Iv64YRZmhAwkZYNcdnrbNYL+FiXkbCudqytlpZ/QXTt/ti2j3jWtF4V7YhaKuNK2O8HfhvRucc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tkEcuOSk; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso7972805e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 07:28:36 -0800 (PST)
+	s=arc-20240116; t=1740672777; c=relaxed/simple;
+	bh=u/jEDuM2cZEF60dp/4fSw3VAkOYWYed4gReCbmcZt2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GbFQNZqD3/PM1DsBbgBj8J3t1VeiwCrI1ZHexyw86Gs+hG7ud057jUwOyUBRp0XWvSykMG8Fr8+hhqIXdVeMZai66oyKbpTyXUpVeNjM/AdnLwESWW033P9+WSH0Gd05roXJxDHby7CDBDXzzaDVYq9cuWByCkxJNhTU9xlIj2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=eidkHi4r; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d191bfeafbso4654235ab.0
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Feb 2025 08:12:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740670115; x=1741274915; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q7624OFG3qUFRR8VK+5r19R1qPbs5o2C0+F6XuFtMrc=;
-        b=tkEcuOSkhHGDdv//67ud61P8dBDyAHjDRfsqECkXBxx0b9bBKJ+zHQYNX/Yl2CcgzD
-         YQqkQ1NGpuAAiZJisv1PQurQum+U5zm3q8uTDHr6bl57X0mZD8ZM+KBEdj1XWf2ElLZT
-         N8bbtOrIA9Bw+qF14yoEOWCbCRksE6VNkbv171PNam/om4ZgtZfG0fiLosd9jPl357KC
-         olC4D1CShktQ7EyN5mEckX+cdaNPsNGGsnSHO2V6ERAPmNuaAQlGIC5ledpXcZmtuGpN
-         JvWQLBFbp+hv0ZFa15cbPybBxDRlimLszMTWdbetniPJ+GUqUHGBtQeUqMB+fiPRHXwD
-         2QjA==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1740672774; x=1741277574; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A4a+PIYpn9cYVWDOKIU06eghAJvUip+lThQ1gAkAfoE=;
+        b=eidkHi4r87Fldfjn8a20pDRsC5czfcZEKFOpY4yI9jU3uuvB/0NPzEwwHG0HK7V0uz
+         Px9JEXICNZ7IUq3XNhB9eNDggzSNiAxdP6spz0YpSt0eVMf8q+Q2uAz6242vrs+cXpda
+         ZW1pSPKmHmVTf6W8Tfx7BISbP5dtXecGlRMnvRJlDAUqJgdZ/Fvlmxs7RzUz64MLDKOu
+         zgYhspehtPd+Wk0KhKkPmIfKFoMxv3mq31cWgtabi1yoR1QHSokfnJwVU7m9w9plrlpx
+         38H3S0RRrtpnGwl14RB6HeYtD1wlSI7w1enZ1GOW4gTvwkvU3SbxSfXhCGs/FAV9giUP
+         ETSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740670115; x=1741274915;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q7624OFG3qUFRR8VK+5r19R1qPbs5o2C0+F6XuFtMrc=;
-        b=K21Rkh8daIsXvZEqgeadNE2QAgFk5A/UauZ6v730hmjcqkQItOfKXrlV5aleuhSEZD
-         rovLewupMwe62HKuR8VTkuXq/AC8xxpdi75ejg0NeWAZI8apmccI8hZC3cQ5p22ci6w6
-         aXJ3CPzesOU11mVjE0LothfEIhzgenRK1kQ1WKhJDKuVYn/r9uBUVS59RykBpD6HiFqB
-         OV81uF66qyHeHO1hFZjOqJdkxXrPQh1J9HKVjKnLzCXE6S2X5naoqJtjUcUOFCnLYKEy
-         r6MDqixnWFz0CStAXtUSNzARMudZPGwFaOjQlCp3G8Scdia1byOWOY0OdHBDxTPhQ7Ld
-         +PmA==
-X-Gm-Message-State: AOJu0YxJ21aovqyPttoC597wj5NMQhdMEqG41UuVynbA/UVirlCIzvrA
-	3uRd7849VgnYFs8pq4sGBGG7p+mjBa3UVbkXiNHrFLNmbgrHQNzh/M4WQuAwNyk=
-X-Gm-Gg: ASbGnctJ0ibgv18Q/ZaeZb9CCsRnfuRLsv/RO0LFI8+PBHIc986IRbLOHJqaRWikBI5
-	LA11rutnGryWeQ+PQflvdt8pz9epJ5M80Pk+tD5FpDmhIeqaelXCRbqZpzR2LM2tBV9J4qvAla0
-	ABsvt2cqh0aHE5wKlhMR9st8AuLRnvmmFHtYN93xADHdntMqjPVxlE9gLiFmkgWaSmbK0d5/XxC
-	7mw4hmVV8/0vgqm5lh9sG2n+N+egFZSxrLZb2O5Xq85MpRjJUlfJ0DlHBnxfKpGFUU/aC8XlbrJ
-	eIZRaHSDohAYuA60QeodSgDIGA==
-X-Google-Smtp-Source: AGHT+IHcKD1/SdfUB9xzo7Is4+i7lHq2eb7AMjlPIjV3WON0VG0sd7gLXvwwR7Rnwswx9QdNhmKzww==
-X-Received: by 2002:a05:600c:1387:b0:439:9f12:1809 with SMTP id 5b1f17b1804b1-43ba3b47d85mr16911445e9.20.1740670114206;
-        Thu, 27 Feb 2025 07:28:34 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b50f:c403:bf52:2dbb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b73717171sm26179345e9.18.2025.02.27.07.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 07:28:33 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] gpiolib: remove unneeded WARN_ON() from gpiochip_set_multiple()
-Date: Thu, 27 Feb 2025 16:28:31 +0100
-Message-ID: <20250227152831.59784-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1740672774; x=1741277574;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A4a+PIYpn9cYVWDOKIU06eghAJvUip+lThQ1gAkAfoE=;
+        b=e51PnqUcA7q8LPpe445bBi9b2wdBJl5x0zYsC116j+OS6BIEM8okolznoCcHe2ZfwL
+         d4LU+u/M3AnvKUVmXxIMTOx9pUivRzJyHgS4wJmhmlFxFE1TF9Vda2o5D0zS2PFJl/6z
+         dQNcAWv8oEcYBOXIUTpd1NJwv1NhiJ0VHMKq8EbQZHDz4sHgx1n5FL5xPm7PbleHwK4+
+         KoTL5w9hKmX4a+Kj3skyVDBVuRCmwuEgjE66w3HdCpciThrb9e08uTAMFTxBJe+wTENq
+         WrawpEOOVNdlQ3jd7FAHopX84X5lplXYD9yYnMuND0eZyH4q1f1PNor4+/Vz4Y7n7hPh
+         2RIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcDnamZnNb0axA8pvAIrrC6QeoDU9xjHnZRC7eXlox/S+Ar2LTW0dJ292rPMg9dz40YpcVycT4fx0Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCoWfCg3Gtgok8/qnK9Qc+DxkI3iLHV8ol/n8clqde7HSTc03J
+	4ZozBo0KI9eo+v90BmgBsHd2DiJi+z6xsORb5mp11eL4ev9y0hCGBNsDirU9VGY=
+X-Gm-Gg: ASbGncvTxAuZVXvf+Gj+ZUeZuRv9SKVNbblzgw3IdnT+mKP277uuGEK1AOdxAlDPUAc
+	hJToNbVvqszVYMIefbPZgE0tHN2HHpQUIwRFiBhPvYP3K5ZNFEF0PxRZBQzrteVx5oJUI/ycqOg
+	rKLUQ4axYiPP9jaaDay4PrAECicdRFEC6yWzKUm7+hWhIKadovhL+UXN1aPJFLwiyCjpxBCaYrD
+	C5BJYwk8OFoS2xtIDWG9d2kgxHlLBBpf5PQGmh9HZRDiT+SOEnn+0+ZgYa2d+iinFIsvJNw2gYe
+	L7hN1k3qLgPyp0ufSIpguXeA+jzBxrSChiuqLPYlUmLnzUUzI1Gjcp/7Q01gCZdhcg==
+X-Google-Smtp-Source: AGHT+IECEOEF/3IgUpjExo3hn+o7d72t1ArCxVXIIzsvV1Vpk9+T4m/ul07rs6wpKxf4ijf45waAXQ==
+X-Received: by 2002:a92:c545:0:b0:3d1:79ec:bef2 with SMTP id e9e14a558f8ab-3d2fecce699mr113973395ab.6.1740672773762;
+        Thu, 27 Feb 2025 08:12:53 -0800 (PST)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d3deeca7ffsm3742305ab.53.2025.02.27.08.12.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 08:12:53 -0800 (PST)
+Message-ID: <8fce8a9c-7946-4e3c-bbf3-25f8b4f4466f@riscstar.com>
+Date: Thu, 27 Feb 2025 10:12:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] irqdomain: support three-cell scheme interrupts
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+ spacemit@lists.linux.dev
+References: <20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org>
+ <20250227-04-gpio-irq-threecell-v1-1-4ae4d91baadc@gentoo.org>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250227-04-gpio-irq-threecell-v1-1-4ae4d91baadc@gentoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2/27/25 5:24 AM, Yixun Lan wrote:
+> The is a prerequisite patch to support parsing three-cell
+> interrupts which encoded as <instance hwirq irqflag>,
+> the translate function will always retrieve irq number and
+> flag from last two cells.
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>   kernel/irq/irqdomain.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index ec6d8e72d980f604ded2bfa2143420e0e0095920..cb874ab5e54a4763d601122becd63b6d759e55d2 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -1208,10 +1208,17 @@ int irq_domain_translate_twocell(struct irq_domain *d,
+>   				 unsigned long *out_hwirq,
+>   				 unsigned int *out_type)
+>   {
 
-GPIO drivers are not required to support set_multiple() - the core will
-fallback to calling set() for each line if it's missing. Remove the
-offending check from gpiochip_set_multiple().
+This function is meant for "twocell".  There is also another function
+irq_domain_translate_onecell().  Why don't you just create
+irq_domain_translate_threecell" instead?
 
-Fixes: 98ce1eb1fd87 ("gpiolib: introduce gpio_chip setters that return values")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Closes: https://lore.kernel.org/all/ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 3 ---
- 1 file changed, 3 deletions(-)
+					-Alex
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1b4af0f97e5a..6cfbc8869cf8 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3608,9 +3608,6 @@ static int gpiochip_set_multiple(struct gpio_chip *gc,
- 
- 	lockdep_assert_held(&gc->gpiodev->srcu);
- 
--	if (WARN_ON(unlikely(!gc->set_multiple && !gc->set_multiple_rv)))
--		return -EOPNOTSUPP;
--
- 	if (gc->set_multiple_rv) {
- 		ret = gc->set_multiple_rv(gc, mask, bits);
- 		if (ret > 0)
--- 
-2.45.2
+
+> +	u32 irq, type;
+> +
+>   	if (WARN_ON(fwspec->param_count < 2))
+>   		return -EINVAL;
+> -	*out_hwirq = fwspec->param[0];
+> -	*out_type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+> +
+> +	irq = fwspec->param_count - 2;
+> +	type = fwspec->param_count - 1;
+> +
+> +	*out_hwirq = fwspec->param[irq];
+> +	*out_type = fwspec->param[type] & IRQ_TYPE_SENSE_MASK;
+> +
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(irq_domain_translate_twocell);
+> 
 
 
